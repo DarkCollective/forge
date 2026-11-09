@@ -13,9 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { expect, test } from "vitest";
-import { FORGE_OPS_PLACEHOLDER } from "./index.js";
+import { describe, expect, test } from "vitest";
+import * as ops from "./index.js";
 
-test("placeholder export exists", () => {
-  expect(FORGE_OPS_PLACEHOLDER).toBe(true);
+describe("the main entry (RECIPES 11.5)", () => {
+  test("exports exactly the documented values", () => {
+    expect(Object.keys(ops).sort()).toEqual([
+      "CATALOGUE_FORMAT",
+      "INTERNAL_VOCABS",
+      "REGEX_LIMITS",
+      "UI_PARAM_TYPES",
+      "assembleRuntime",
+      "buildCatalogue",
+      "createBundleLoader",
+      "execAll",
+      "isCatalogueOp",
+      "isRegexPrimitive",
+      "markRegexPrimitive",
+      "scanVocab",
+    ]);
+  });
+
+  test("has no loader: those are in @forge/ops/node and @forge/ops/vite (R24)", () => {
+    expect("loadBundleNode" in ops).toBe(false);
+    expect("loadBundleVite" in ops).toBe(false);
+    expect("createNodeProvider" in ops).toBe(false);
+  });
+
+  test("the functions work from the entry", () => {
+    expect(ops.scanVocab([], [])).toEqual({ units: [], vocabs: [] });
+    expect(ops.execAll("a", "", "bab")).toHaveLength(1);
+    expect(ops.isRegexPrimitive("regex:test")).toBe(false);
+    expect(ops.REGEX_LIMITS.maxMatches).toBe(100_000);
+  });
 });
