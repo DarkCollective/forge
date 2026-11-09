@@ -10,13 +10,14 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
-    }
+    },
+    "./recipe.schema.json": "./dist/recipe.schema.json"
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "tsc -p tsconfig.build.json && node -e \"require('node:fs').copyFileSync('src/recipe.schema.json','dist/recipe.schema.json')\"",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {

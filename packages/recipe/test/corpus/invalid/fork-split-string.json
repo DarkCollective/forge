@@ -1,0 +1,14 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "fork",
+      "split": "x",
+      "join": {
+        "value": "0a",
+        "enc": "hex"
+      },
+      "steps": []
+    }
+  ]
+}

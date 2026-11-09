@@ -1,0 +1,12 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "if",
+      "test": {
+        "kind": "regex"
+      },
+      "then": []
+    }
+  ]
+}

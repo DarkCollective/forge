@@ -1,0 +1,6 @@
+\ forge-recipe 1
+: main ( bytes -- any )
+  "standard" base64:decode
+  13 classical:rot
+  "none" "lower" hex:encode
+;

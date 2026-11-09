@@ -1,0 +1,17 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "fork",
+      "split": {
+        "value": "",
+        "enc": "utf8"
+      },
+      "join": {
+        "value": "0a",
+        "enc": "hex"
+      },
+      "steps": []
+    }
+  ]
+}

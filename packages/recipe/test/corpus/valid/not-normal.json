@@ -1,0 +1,21 @@
+{
+  "forge": 1,
+  "name": "",
+  "steps": [
+    {
+      "kind": "op",
+      "op": "text:upper",
+      "params": {},
+      "disabled": false,
+      "breakpoint": false,
+      "note": ""
+    },
+    {
+      "kind": "subsection",
+      "pattern": "a",
+      "flags": "",
+      "encoding": "utf8",
+      "steps": []
+    }
+  ]
+}

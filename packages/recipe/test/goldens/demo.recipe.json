@@ -1,0 +1,90 @@
+{
+  "forge": 1,
+  "name": "Demo",
+  "steps": [
+    {
+      "kind": "op",
+      "op": "base64:decode",
+      "params": {
+        "alphabet": "standard"
+      }
+    },
+    {
+      "kind": "comment",
+      "text": "split into lines"
+    },
+    {
+      "kind": "fork",
+      "split": {
+        "value": "\n",
+        "enc": "utf8"
+      },
+      "join": {
+        "value": "0a",
+        "enc": "hex"
+      },
+      "steps": [
+        {
+          "kind": "op",
+          "op": "classical:rot",
+          "params": {
+            "amount": 13
+          },
+          "breakpoint": true
+        },
+        {
+          "kind": "op",
+          "op": "text:upper",
+          "disabled": true,
+          "note": "off for now"
+        }
+      ]
+    },
+    {
+      "kind": "subsection",
+      "pattern": "[a-z]+",
+      "flags": "i",
+      "steps": [
+        {
+          "kind": "op",
+          "op": "text:reverse"
+        }
+      ]
+    },
+    {
+      "kind": "if",
+      "test": {
+        "kind": "regex",
+        "pattern": "^o"
+      },
+      "then": [
+        {
+          "kind": "op",
+          "op": "text:lower"
+        }
+      ],
+      "else": []
+    },
+    {
+      "kind": "repeat",
+      "until": "stable",
+      "steps": [
+        {
+          "kind": "op",
+          "op": "regex:replace",
+          "params": {
+            "pattern": "aa",
+            "replacement": "a"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "op",
+      "op": "hex:encode",
+      "params": {
+        "delimiter": "space"
+      }
+    }
+  ]
+}

@@ -1,0 +1,378 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:forge:schema:recipe:1",
+  "title": "Forge recipe, version 1",
+  "type": "object",
+  "properties": {
+    "forge": {
+      "const": 1
+    },
+    "name": {
+      "type": "string",
+      "maxLength": 120
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 2000
+    },
+    "catalogue": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{16}$"
+    },
+    "steps": {
+      "$ref": "#/$defs/steps"
+    }
+  },
+  "required": ["forge", "steps"],
+  "additionalProperties": false,
+  "$defs": {
+    "steps": {
+      "type": "array",
+      "maxItems": 500,
+      "items": {
+        "$ref": "#/$defs/step"
+      }
+    },
+    "step": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/opStep"
+        },
+        {
+          "$ref": "#/$defs/forkStep"
+        },
+        {
+          "$ref": "#/$defs/subsectionStep"
+        },
+        {
+          "$ref": "#/$defs/ifStep"
+        },
+        {
+          "$ref": "#/$defs/repeatStep"
+        },
+        {
+          "$ref": "#/$defs/commentStep"
+        }
+      ]
+    },
+    "common": {
+      "type": "object",
+      "properties": {
+        "disabled": {
+          "type": "boolean"
+        },
+        "breakpoint": {
+          "type": "boolean"
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 500
+        }
+      }
+    },
+    "qname": {
+      "type": "string",
+      "maxLength": 193,
+      "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,63}:[^\\s:]{1,128}$"
+    },
+    "hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "encoding": {
+      "enum": ["utf8", "hex", "latin1", "base64"]
+    },
+    "encoded": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string"
+        },
+        "enc": {
+          "$ref": "#/$defs/encoding"
+        }
+      },
+      "required": ["value", "enc"],
+      "additionalProperties": false
+    },
+    "paramValue": {
+      "oneOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "$ref": "#/$defs/encoded"
+        }
+      ]
+    },
+    "params": {
+      "type": "object",
+      "maxProperties": 32,
+      "propertyNames": {
+        "pattern": "^[a-z][a-z0-9-]{0,63}$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/paramValue"
+      }
+    },
+    "regexSource": {
+      "type": "string",
+      "maxLength": 1024
+    },
+    "regexFlags": {
+      "type": "string",
+      "maxLength": 3,
+      "pattern": "^[ims]*$"
+    },
+    "sectionEncoding": {
+      "enum": ["utf8", "latin1"]
+    },
+    "opStep": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/common"
+        }
+      ],
+      "properties": {
+        "kind": {
+          "const": "op"
+        },
+        "op": {
+          "$ref": "#/$defs/qname"
+        },
+        "params": {
+          "$ref": "#/$defs/params"
+        },
+        "hash": {
+          "$ref": "#/$defs/hash"
+        },
+        "disabled": true,
+        "breakpoint": true,
+        "note": true
+      },
+      "required": ["kind", "op"],
+      "additionalProperties": false
+    },
+    "forkStep": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/common"
+        }
+      ],
+      "properties": {
+        "kind": {
+          "const": "fork"
+        },
+        "split": {
+          "$ref": "#/$defs/encodedNonEmpty"
+        },
+        "join": {
+          "$ref": "#/$defs/encoded"
+        },
+        "steps": {
+          "$ref": "#/$defs/steps"
+        },
+        "disabled": true,
+        "breakpoint": true,
+        "note": true
+      },
+      "required": ["kind", "split", "join", "steps"],
+      "additionalProperties": false
+    },
+    "subsectionStep": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/common"
+        }
+      ],
+      "properties": {
+        "kind": {
+          "const": "subsection"
+        },
+        "pattern": {
+          "$ref": "#/$defs/regexSource"
+        },
+        "flags": {
+          "$ref": "#/$defs/regexFlags"
+        },
+        "encoding": {
+          "$ref": "#/$defs/sectionEncoding"
+        },
+        "steps": {
+          "$ref": "#/$defs/steps"
+        },
+        "disabled": true,
+        "breakpoint": true,
+        "note": true
+      },
+      "required": ["kind", "pattern", "steps"],
+      "additionalProperties": false
+    },
+    "ifTest": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "regex"
+            },
+            "pattern": {
+              "$ref": "#/$defs/regexSource"
+            },
+            "flags": {
+              "$ref": "#/$defs/regexFlags"
+            },
+            "encoding": {
+              "$ref": "#/$defs/sectionEncoding"
+            }
+          },
+          "required": ["kind", "pattern"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "op"
+            },
+            "op": {
+              "$ref": "#/$defs/qname"
+            },
+            "params": {
+              "$ref": "#/$defs/params"
+            },
+            "hash": {
+              "$ref": "#/$defs/hash"
+            }
+          },
+          "required": ["kind", "op"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "ifStep": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/common"
+        }
+      ],
+      "properties": {
+        "kind": {
+          "const": "if"
+        },
+        "test": {
+          "$ref": "#/$defs/ifTest"
+        },
+        "then": {
+          "$ref": "#/$defs/steps"
+        },
+        "else": {
+          "$ref": "#/$defs/steps"
+        },
+        "disabled": true,
+        "breakpoint": true,
+        "note": true
+      },
+      "required": ["kind", "test", "then"],
+      "additionalProperties": false
+    },
+    "repeatStep": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/common"
+        }
+      ],
+      "properties": {
+        "kind": {
+          "const": "repeat"
+        },
+        "times": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000
+        },
+        "until": {
+          "const": "stable"
+        },
+        "max": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000
+        },
+        "steps": {
+          "$ref": "#/$defs/steps"
+        },
+        "disabled": true,
+        "breakpoint": true,
+        "note": true
+      },
+      "required": ["kind", "steps"],
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "times": true
+          },
+          "required": ["times"]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "until": true
+          },
+          "required": ["until"]
+        }
+      ],
+      "dependentSchemas": {
+        "max": {
+          "type": "object",
+          "properties": {
+            "until": true
+          },
+          "required": ["until"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "commentStep": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "comment"
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 2000
+        }
+      },
+      "required": ["kind", "text"],
+      "additionalProperties": false
+    },
+    "encodedNonEmpty": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "minLength": 1
+        },
+        "enc": {
+          "$ref": "#/$defs/encoding"
+        }
+      },
+      "required": ["value", "enc"],
+      "additionalProperties": false
+    }
+  }
+}

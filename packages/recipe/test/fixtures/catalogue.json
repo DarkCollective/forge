@@ -1,0 +1,362 @@
+{
+  "format": 1,
+  "version": "5b1c9e7f02a4d3c8",
+  "vocabs": ["base64", "classical", "hex", "regex", "text"],
+  "ops": [
+    {
+      "qname": "base64:decode",
+      "name": "decode",
+      "vocab": "base64",
+      "category": "Encodings",
+      "doc": "Decode Base64 text to bytes.",
+      "aliases": [],
+      "seeAlso": [],
+      "input": "bytes",
+      "output": "bytes",
+      "effect": "( bytes alphabet:choice{standard|url}=standard -- bytes )",
+      "params": [
+        {
+          "name": "alphabet",
+          "index": 1,
+          "type": "choice",
+          "required": false,
+          "options": ["standard", "url"],
+          "default": "standard",
+          "doc": "The alphabet of the text: standard (+ /) or url (- _)."
+        }
+      ],
+      "effects": [],
+      "version": "1",
+      "hash": "1000100010001000100010001000100010001000100010001000100010001000",
+      "needsHardKill": false
+    },
+    {
+      "qname": "base64:encode",
+      "name": "encode",
+      "vocab": "base64",
+      "category": "Encodings",
+      "doc": "Encode bytes as Base64 text.",
+      "aliases": [],
+      "seeAlso": [],
+      "input": "bytes",
+      "output": "str",
+      "effect": "( bytes alphabet:choice{standard|url}=standard padding:bool=true -- str )",
+      "params": [
+        {
+          "name": "alphabet",
+          "index": 1,
+          "type": "choice",
+          "required": false,
+          "options": ["standard", "url"],
+          "default": "standard",
+          "doc": "The alphabet to use: standard (+ /) or url (- _)."
+        },
+        {
+          "name": "padding",
+          "index": 2,
+          "type": "bool",
+          "required": false,
+          "default": true,
+          "doc": "Append = padding to a multiple of four characters."
+        }
+      ],
+      "effects": [],
+      "version": "1",
+      "hash": "1111111111111111111111111111111111111111111111111111111111111111",
+      "needsHardKill": false
+    },
+    {
+      "qname": "classical:rot",
+      "name": "rot",
+      "vocab": "classical",
+      "category": "Classical ciphers",
+      "doc": "Rotate each ASCII letter by a fixed amount; other bytes pass through.",
+      "aliases": ["rot13"],
+      "seeAlso": ["classical:atbash"],
+      "input": "bytes",
+      "output": "bytes",
+      "effect": "( bytes amount:int[0..25]=13 -- bytes )",
+      "params": [
+        {
+          "name": "amount",
+          "index": 1,
+          "type": "int",
+          "required": false,
+          "constraint": {
+            "min": 0,
+            "max": 25
+          },
+          "default": 13,
+          "doc": "Shift (13 = ROT13)"
+        }
+      ],
+      "effects": [],
+      "version": "1",
+      "hash": "1222122212221222122212221222122212221222122212221222122212221222",
+      "needsHardKill": false
+    },
+    {
+      "qname": "hex:decode",
+      "name": "decode",
+      "vocab": "hex",
+      "category": "Encodings",
+      "doc": "Decode hexadecimal text to bytes.",
+      "aliases": [],
+      "seeAlso": [],
+      "input": "bytes",
+      "output": "bytes",
+      "effect": "( bytes -- bytes )",
+      "params": [],
+      "effects": [],
+      "version": "1",
+      "hash": "1333133313331333133313331333133313331333133313331333133313331333",
+      "needsHardKill": false
+    },
+    {
+      "qname": "hex:encode",
+      "name": "encode",
+      "vocab": "hex",
+      "category": "Encodings",
+      "doc": "Encode bytes as hexadecimal text.",
+      "aliases": [],
+      "seeAlso": [],
+      "input": "bytes",
+      "output": "str",
+      "effect": "( bytes delimiter:choice{none|space|colon}=none case:choice{lower|upper}=lower -- str )",
+      "params": [
+        {
+          "name": "delimiter",
+          "index": 1,
+          "type": "choice",
+          "required": false,
+          "options": ["none", "space", "colon"],
+          "default": "none",
+          "doc": "What to put between the bytes."
+        },
+        {
+          "name": "case",
+          "index": 2,
+          "type": "choice",
+          "required": false,
+          "options": ["lower", "upper"],
+          "default": "lower",
+          "doc": "Letter case of the digits a to f."
+        }
+      ],
+      "effects": [],
+      "version": "1",
+      "hash": "1444144414441444144414441444144414441444144414441444144414441444",
+      "needsHardKill": false
+    },
+    {
+      "qname": "regex:find-all",
+      "name": "find-all",
+      "vocab": "regex",
+      "category": "Regular expressions",
+      "doc": "Every match of a pattern, as a list of records.",
+      "aliases": [],
+      "seeAlso": [],
+      "input": "str",
+      "output": "list",
+      "effect": "( str pattern:regex flags:str[0..3,/[ims]*/]=\"\" -- list )",
+      "params": [
+        {
+          "name": "pattern",
+          "index": 1,
+          "type": "regex",
+          "required": true,
+          "doc": "The regular expression."
+        },
+        {
+          "name": "flags",
+          "index": 2,
+          "type": "str",
+          "required": false,
+          "constraint": {
+            "minLength": 0,
+            "maxLength": 3,
+            "pattern": "[ims]*"
+          },
+          "default": "",
+          "doc": "Regex flags: any of i, m, s"
+        }
+      ],
+      "effects": [],
+      "version": "1",
+      "hash": "1555155515551555155515551555155515551555155515551555155515551555",
+      "needsHardKill": true
+    },
+    {
+      "qname": "regex:replace",
+      "name": "replace",
+      "vocab": "regex",
+      "category": "Regular expressions",
+      "doc": "Replace every match of a pattern.",
+      "aliases": [],
+      "seeAlso": [],
+      "input": "str",
+      "output": "str",
+      "effect": "( str pattern:regex replacement:str flags:str[0..3,/[ims]*/]=\"\" -- str )",
+      "params": [
+        {
+          "name": "pattern",
+          "index": 1,
+          "type": "regex",
+          "required": true,
+          "doc": "The regular expression."
+        },
+        {
+          "name": "replacement",
+          "index": 2,
+          "type": "str",
+          "required": true,
+          "doc": "The replacement text."
+        },
+        {
+          "name": "flags",
+          "index": 3,
+          "type": "str",
+          "required": false,
+          "constraint": {
+            "minLength": 0,
+            "maxLength": 3,
+            "pattern": "[ims]*"
+          },
+          "default": "",
+          "doc": "Regex flags: any of i, m, s"
+        }
+      ],
+      "effects": [],
+      "version": "1",
+      "hash": "1666166616661666166616661666166616661666166616661666166616661666",
+      "needsHardKill": true
+    },
+    {
+      "qname": "regex:split",
+      "name": "split",
+      "vocab": "regex",
+      "category": "Regular expressions",
+      "doc": "Split the text at every non-empty match.",
+      "aliases": [],
+      "seeAlso": [],
+      "input": "str",
+      "output": "list",
+      "effect": "( str pattern:regex flags:str[0..3,/[ims]*/]=\"\" -- list )",
+      "params": [
+        {
+          "name": "pattern",
+          "index": 1,
+          "type": "regex",
+          "required": true,
+          "doc": "The regular expression."
+        },
+        {
+          "name": "flags",
+          "index": 2,
+          "type": "str",
+          "required": false,
+          "constraint": {
+            "minLength": 0,
+            "maxLength": 3,
+            "pattern": "[ims]*"
+          },
+          "default": "",
+          "doc": "Regex flags: any of i, m, s"
+        }
+      ],
+      "effects": [],
+      "version": "1",
+      "hash": "1777177717771777177717771777177717771777177717771777177717771777",
+      "needsHardKill": true
+    },
+    {
+      "qname": "regex:test",
+      "name": "test",
+      "vocab": "regex",
+      "category": "Regular expressions",
+      "doc": "True when the pattern matches anywhere in the text.",
+      "aliases": [],
+      "seeAlso": [],
+      "input": "str",
+      "output": "bool",
+      "effect": "( str pattern:regex flags:str[0..3,/[ims]*/]=\"\" -- bool )",
+      "params": [
+        {
+          "name": "pattern",
+          "index": 1,
+          "type": "regex",
+          "required": true,
+          "doc": "The regular expression."
+        },
+        {
+          "name": "flags",
+          "index": 2,
+          "type": "str",
+          "required": false,
+          "constraint": {
+            "minLength": 0,
+            "maxLength": 3,
+            "pattern": "[ims]*"
+          },
+          "default": "",
+          "doc": "Regex flags: any of i, m, s"
+        }
+      ],
+      "effects": [],
+      "version": "1",
+      "hash": "1888188818881888188818881888188818881888188818881888188818881888",
+      "needsHardKill": true
+    },
+    {
+      "qname": "text:lower",
+      "name": "lower",
+      "vocab": "text",
+      "category": "Text",
+      "doc": "Convert to lower case.",
+      "aliases": [],
+      "seeAlso": [],
+      "input": "str",
+      "output": "str",
+      "effect": "( str -- str )",
+      "params": [],
+      "effects": [],
+      "version": "1",
+      "hash": "1999199919991999199919991999199919991999199919991999199919991999",
+      "needsHardKill": false
+    },
+    {
+      "qname": "text:reverse",
+      "name": "reverse",
+      "vocab": "text",
+      "category": "Text",
+      "doc": "Reverse the order of the characters (code points).",
+      "aliases": [],
+      "seeAlso": [],
+      "input": "str",
+      "output": "str",
+      "effect": "( str -- str )",
+      "params": [],
+      "effects": [],
+      "version": "1",
+      "hash": "1aaa1aaa1aaa1aaa1aaa1aaa1aaa1aaa1aaa1aaa1aaa1aaa1aaa1aaa1aaa1aaa",
+      "needsHardKill": false
+    },
+    {
+      "qname": "text:upper",
+      "name": "upper",
+      "vocab": "text",
+      "category": "Text",
+      "doc": "Convert to upper case.",
+      "aliases": [],
+      "seeAlso": [],
+      "input": "str",
+      "output": "str",
+      "effect": "( str -- str )",
+      "params": [],
+      "effects": [],
+      "version": "1",
+      "hash": "1bbb1bbb1bbb1bbb1bbb1bbb1bbb1bbb1bbb1bbb1bbb1bbb1bbb1bbb1bbb1bbb",
+      "needsHardKill": false
+    }
+  ]
+}
