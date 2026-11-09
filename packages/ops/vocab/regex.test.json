@@ -1,0 +1,823 @@
+[
+  {
+    "name": "test ^h is false for Hello",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:test",
+    "params": {
+      "pattern": "^h"
+    },
+    "input": {
+      "value": "Hello",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": false
+    }
+  },
+  {
+    "name": "test ^h with i is true",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:test",
+    "params": {
+      "pattern": "^h",
+      "flags": "i"
+    },
+    "input": {
+      "value": "Hello",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": true
+    }
+  },
+  {
+    "name": "test ^b without m is false",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:test",
+    "params": {
+      "pattern": "^b"
+    },
+    "input": {
+      "value": "a\nb",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": false
+    }
+  },
+  {
+    "name": "test ^b with m is true",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:test",
+    "params": {
+      "pattern": "^b",
+      "flags": "m"
+    },
+    "input": {
+      "value": "a\nb",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": true
+    }
+  },
+  {
+    "name": "test a.b without s is false",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:test",
+    "params": {
+      "pattern": "a.b"
+    },
+    "input": {
+      "value": "a\nb",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": false
+    }
+  },
+  {
+    "name": "test a.b with s is true",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:test",
+    "params": {
+      "pattern": "a.b",
+      "flags": "s"
+    },
+    "input": {
+      "value": "a\nb",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": true
+    }
+  },
+  {
+    "name": "test digit after an astral character",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:test",
+    "params": {
+      "pattern": "\\d"
+    },
+    "input": {
+      "value": "😀a1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": true
+    }
+  },
+  {
+    "name": "test an empty match counts as a match",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:test",
+    "params": {
+      "pattern": "x*"
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": true
+    }
+  },
+  {
+    "name": "test an empty input with an anchored empty pattern",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:test",
+    "params": {
+      "pattern": "^$"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": true
+    }
+  },
+  {
+    "name": "test repeated i flag is the same as i",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:test",
+    "params": {
+      "pattern": "a",
+      "flags": "ii"
+    },
+    "input": {
+      "value": "ABC",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": true
+    }
+  },
+  {
+    "name": "test with an unknown flag is E_PARAM_INVALID (run-time)",
+    "ref": "spec §4.2 and §9.2 (flags constraint)",
+    "op": "regex:test",
+    "params": {
+      "pattern": "a",
+      "flags": "x"
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_PARAM_INVALID"
+    }
+  },
+  {
+    "name": "test with g flag is E_PARAM_INVALID (run-time)",
+    "ref": "spec §4.1 (user flags are a subset of ims)",
+    "op": "regex:test",
+    "params": {
+      "pattern": "a",
+      "flags": "g"
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_PARAM_INVALID"
+    }
+  },
+  {
+    "name": "test with four flags is E_RECIPE_INVALID (length form, static)",
+    "ref": "spec §3.4 and §9.2 (length is static)",
+    "op": "regex:test",
+    "params": {
+      "pattern": "a",
+      "flags": "imsm"
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "test with an unclosed group is E_RECIPE_INVALID (static bad-regex)",
+    "ref": "spec §3.7 bad-regex",
+    "op": "regex:test",
+    "params": {
+      "pattern": "("
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "test with an invalid quantifier range is E_RECIPE_INVALID",
+    "ref": "spec §3.7 bad-regex (u flag)",
+    "op": "regex:test",
+    "params": {
+      "pattern": "a{2,1}"
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "find-all digits, two matches",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:find-all",
+    "params": {
+      "pattern": "\\d+"
+    },
+    "input": {
+      "value": "a1b22",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": [
+        {
+          "start": 1,
+          "end": 2,
+          "text": "1",
+          "groups": []
+        },
+        {
+          "start": 3,
+          "end": 5,
+          "text": "22",
+          "groups": []
+        }
+      ]
+    }
+  },
+  {
+    "name": "find-all with astral before the match (code points)",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:find-all",
+    "params": {
+      "pattern": "\\d"
+    },
+    "input": {
+      "value": "😀a1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": [
+        {
+          "start": 2,
+          "end": 3,
+          "text": "1",
+          "groups": []
+        }
+      ]
+    }
+  },
+  {
+    "name": "find-all offsets count astral characters",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:find-all",
+    "params": {
+      "pattern": "\\d"
+    },
+    "input": {
+      "value": "😀😀9",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": [
+        {
+          "start": 2,
+          "end": 3,
+          "text": "9",
+          "groups": []
+        }
+      ]
+    }
+  },
+  {
+    "name": "find-all alternation around astral characters",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:find-all",
+    "params": {
+      "pattern": "b|c"
+    },
+    "input": {
+      "value": "a😀b😀c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": [
+        {
+          "start": 2,
+          "end": 3,
+          "text": "b",
+          "groups": []
+        },
+        {
+          "start": 4,
+          "end": 5,
+          "text": "c",
+          "groups": []
+        }
+      ]
+    }
+  },
+  {
+    "name": "find-all includes empty matches",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:find-all",
+    "params": {
+      "pattern": "x*"
+    },
+    "input": {
+      "value": "ab",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": [
+        {
+          "start": 0,
+          "end": 0,
+          "text": "",
+          "groups": []
+        },
+        {
+          "start": 1,
+          "end": 1,
+          "text": "",
+          "groups": []
+        },
+        {
+          "start": 2,
+          "end": 2,
+          "text": "",
+          "groups": []
+        }
+      ]
+    }
+  },
+  {
+    "name": "find-all with capture groups, one missing",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:find-all",
+    "params": {
+      "pattern": "(\\d)(x)?"
+    },
+    "input": {
+      "value": "a1b2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": [
+        {
+          "start": 1,
+          "end": 2,
+          "text": "1",
+          "groups": ["1", ""]
+        },
+        {
+          "start": 3,
+          "end": 4,
+          "text": "2",
+          "groups": ["2", ""]
+        }
+      ]
+    }
+  },
+  {
+    "name": "find-all with i flag",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:find-all",
+    "params": {
+      "pattern": "b",
+      "flags": "i"
+    },
+    "input": {
+      "value": "aBc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": [
+        {
+          "start": 1,
+          "end": 2,
+          "text": "B",
+          "groups": []
+        }
+      ]
+    }
+  },
+  {
+    "name": "find-all with m flag",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:find-all",
+    "params": {
+      "pattern": "^b",
+      "flags": "m"
+    },
+    "input": {
+      "value": "a\nb",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": [
+        {
+          "start": 2,
+          "end": 3,
+          "text": "b",
+          "groups": []
+        }
+      ]
+    }
+  },
+  {
+    "name": "find-all with no match gives empty list",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:find-all",
+    "params": {
+      "pattern": "\\d"
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": []
+    }
+  },
+  {
+    "name": "find-all with an astral letter in the text",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:find-all",
+    "params": {
+      "pattern": "y"
+    },
+    "input": {
+      "value": "x😀y😀z",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": [
+        {
+          "start": 2,
+          "end": 3,
+          "text": "y",
+          "groups": []
+        }
+      ]
+    }
+  },
+  {
+    "name": "find-all with s flag across a line break",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:find-all",
+    "params": {
+      "pattern": "a.b",
+      "flags": "s"
+    },
+    "input": {
+      "value": "a\nb",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": [
+        {
+          "start": 0,
+          "end": 3,
+          "text": "a\nb",
+          "groups": []
+        }
+      ]
+    }
+  },
+  {
+    "name": "replace swaps two words with groups",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:replace",
+    "params": {
+      "pattern": "(\\w+) (\\w+)",
+      "replacement": "$2, $1"
+    },
+    "input": {
+      "value": "John Smith",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Smith, John",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "replace with named group and $& and $$",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:replace",
+    "params": {
+      "pattern": "(?<x>-)",
+      "replacement": "[$<x>$&$$]"
+    },
+    "input": {
+      "value": "a-b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a[--$]b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "replace astral match",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:replace",
+    "params": {
+      "pattern": "😀",
+      "replacement": "[$&]"
+    },
+    "input": {
+      "value": "a😀b😀c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a[😀]b[😀]c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "replace with prefix and suffix substitutions",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:replace",
+    "params": {
+      "pattern": "a",
+      "replacement": "$`|$'"
+    },
+    "input": {
+      "value": "aaa",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "|aaa|aaa|",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "replace $1 without a group stays literal",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:replace",
+    "params": {
+      "pattern": "\\d",
+      "replacement": "$1"
+    },
+    "input": {
+      "value": "a1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a$1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "replace with $& twice",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:replace",
+    "params": {
+      "pattern": "x",
+      "replacement": "$&$&"
+    },
+    "input": {
+      "value": "x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "xx",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "replace with empty pattern puts text around each character",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:replace",
+    "params": {
+      "pattern": "",
+      "replacement": "-"
+    },
+    "input": {
+      "value": "ab",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-a-b-",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "replace with empty pattern steps over an astral character",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:replace",
+    "params": {
+      "pattern": "",
+      "replacement": "-"
+    },
+    "input": {
+      "value": "😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-😀-",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "replace with i flag",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:replace",
+    "params": {
+      "pattern": "x",
+      "replacement": "y",
+      "flags": "i"
+    },
+    "input": {
+      "value": "aXa",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "aya",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "split on digit runs",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:split",
+    "params": {
+      "pattern": "\\d+"
+    },
+    "input": {
+      "value": "a1b22c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": ["a", "b", "c"]
+    }
+  },
+  {
+    "name": "split keeps an empty piece between commas",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:split",
+    "params": {
+      "pattern": ","
+    },
+    "input": {
+      "value": "a,b,,c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": ["a", "b", "", "c"]
+    }
+  },
+  {
+    "name": "split with no non-empty match gives the whole text",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:split",
+    "params": {
+      "pattern": "x*"
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": ["abc"]
+    }
+  },
+  {
+    "name": "split of empty input gives one empty piece",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:split",
+    "params": {
+      "pattern": ","
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": [""]
+    }
+  },
+  {
+    "name": "split with a trailing separator gives a trailing empty piece",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:split",
+    "params": {
+      "pattern": ","
+    },
+    "input": {
+      "value": "a,b,",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": ["a", "b", ""]
+    }
+  },
+  {
+    "name": "split on astral separator",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:split",
+    "params": {
+      "pattern": "😀"
+    },
+    "input": {
+      "value": "a😀b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": ["a", "b"]
+    }
+  },
+  {
+    "name": "split on comma with astral pieces",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:split",
+    "params": {
+      "pattern": ","
+    },
+    "input": {
+      "value": "😀,😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": ["😀", "😀"]
+    }
+  },
+  {
+    "name": "split does not include capture groups",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:split",
+    "params": {
+      "pattern": "(\\d)"
+    },
+    "input": {
+      "value": "a1b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": ["a", "b"]
+    }
+  },
+  {
+    "name": "split with i flag",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:split",
+    "params": {
+      "pattern": "x",
+      "flags": "i"
+    },
+    "input": {
+      "value": "aXbxc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": ["a", "b", "c"]
+    }
+  },
+  {
+    "name": "split with m flag and a non-empty match at a line start",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:split",
+    "params": {
+      "pattern": "^b",
+      "flags": "m"
+    },
+    "input": {
+      "value": "a\nb",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": ["a\n", ""]
+    }
+  },
+  {
+    "name": "split with an empty-only pattern never splits",
+    "ref": "ECMAScript RegExp with the u flag (spec §4.1)",
+    "op": "regex:split",
+    "params": {
+      "pattern": ""
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": ["abc"]
+    }
+  }
+]

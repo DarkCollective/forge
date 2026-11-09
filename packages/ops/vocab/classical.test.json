@@ -1,0 +1,332 @@
+[
+  {
+    "name": "ROT13 default amount",
+    "ref": "ROT13 and the Caesar shift definition, hand-computed and checked by a Node script",
+    "op": "classical:rot",
+    "params": {},
+    "input": {
+      "value": "Hello",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "5572797962",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "ROT13 explicit amount 13",
+    "ref": "ROT13 and the Caesar shift definition, hand-computed and checked by a Node script",
+    "op": "classical:rot",
+    "params": {
+      "amount": 13
+    },
+    "input": {
+      "value": "Hello",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "5572797962",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "ROT13 is an involution",
+    "ref": "ROT13 and the Caesar shift definition, hand-computed and checked by a Node script",
+    "op": "classical:rot",
+    "params": {
+      "amount": 13
+    },
+    "input": {
+      "value": "Uryyb",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "48656c6c6f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "amount 0 leaves letters unchanged",
+    "ref": "ROT13 and the Caesar shift definition, hand-computed and checked by a Node script",
+    "op": "classical:rot",
+    "params": {
+      "amount": 0
+    },
+    "input": {
+      "value": "Hello",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "48656c6c6f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "amount 25 wraps upper and lower case",
+    "ref": "ROT13 and the Caesar shift definition, hand-computed and checked by a Node script",
+    "op": "classical:rot",
+    "params": {
+      "amount": 25
+    },
+    "input": {
+      "value": "abc XYZ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "7a616220575859",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "amount 25 lower case",
+    "ref": "ROT13 and the Caesar shift definition, hand-computed and checked by a Node script",
+    "op": "classical:rot",
+    "params": {
+      "amount": 25
+    },
+    "input": {
+      "value": "abc xyz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "7a616220777879",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "amount 25 on Hello",
+    "ref": "ROT13 and the Caesar shift definition, hand-computed and checked by a Node script",
+    "op": "classical:rot",
+    "params": {
+      "amount": 25
+    },
+    "input": {
+      "value": "Hello",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "47646b6b6e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "amount 25 wraps at the end of the alphabet",
+    "ref": "ROT13 and the Caesar shift definition, hand-computed and checked by a Node script",
+    "op": "classical:rot",
+    "params": {
+      "amount": 25
+    },
+    "input": {
+      "value": "az",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "7a79",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "amount 1 wraps Z to A",
+    "ref": "ROT13 and the Caesar shift definition, hand-computed and checked by a Node script",
+    "op": "classical:rot",
+    "params": {
+      "amount": 1
+    },
+    "input": {
+      "value": "Zz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4161",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "ROT13 with non-ASCII UTF-8 text passes through",
+    "ref": "ROT13 and the Caesar shift definition, hand-computed and checked by a Node script",
+    "op": "classical:rot",
+    "params": {
+      "amount": 13
+    },
+    "input": {
+      "value": "Grüße, Welt!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "5465c3bcc39f722c204a72796721",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "ROT13 of a UTF-8 two-byte letter passes through",
+    "ref": "ROT13 and the Caesar shift definition, hand-computed and checked by a Node script",
+    "op": "classical:rot",
+    "params": {
+      "amount": 13
+    },
+    "input": {
+      "value": "é",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c3a9",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "amount 1 on binary bytes, 0xff passes through",
+    "ref": "ROT13 and the Caesar shift definition, hand-computed and checked by a Node script",
+    "op": "classical:rot",
+    "params": {
+      "amount": 1
+    },
+    "input": {
+      "value": "ff41",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ff42",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "amount 13 on binary bytes passes through",
+    "ref": "ROT13 and the Caesar shift definition, hand-computed and checked by a Node script",
+    "op": "classical:rot",
+    "params": {
+      "amount": 13
+    },
+    "input": {
+      "value": "00ff80",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00ff80",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "non-letters pass through",
+    "ref": "ROT13 and the Caesar shift definition, hand-computed and checked by a Node script",
+    "op": "classical:rot",
+    "params": {
+      "amount": 13
+    },
+    "input": {
+      "value": "0123 !@#",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3031323320214023",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "full alphabet with ROT13",
+    "ref": "ROT13 and the Caesar shift definition, hand-computed and checked by a Node script",
+    "op": "classical:rot",
+    "params": {
+      "amount": 13
+    },
+    "input": {
+      "value": "abcdefghijklmnopqrstuvwxyz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "6e6f707172737475767778797a6162636465666768696a6b6c6d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "empty input",
+    "ref": "ROT13 and the Caesar shift definition, hand-computed and checked by a Node script",
+    "op": "classical:rot",
+    "params": {
+      "amount": 13
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "amount 25 on a single letter",
+    "ref": "ROT13 and the Caesar shift definition, hand-computed and checked by a Node script",
+    "op": "classical:rot",
+    "params": {
+      "amount": 25
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "7a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "amount 26 is out of range (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:rot",
+    "params": {
+      "amount": 26
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "amount -1 is out of range (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:rot",
+    "params": {
+      "amount": -1
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "amount 100 is out of range (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:rot",
+    "params": {
+      "amount": 100
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "amount 1.5 is not an integer (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:rot",
+    "params": {
+      "amount": 1.5
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  }
+]
