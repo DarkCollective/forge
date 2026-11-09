@@ -64,3 +64,4 @@ export {
   valueHelpers,
 } from "./values.js";
 export type { CoerceResult } from "./values.js";
+export { read } from "./reader.js";

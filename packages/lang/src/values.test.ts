@@ -365,7 +365,7 @@ describe("equality", () => {
   test("quotations compare by identity", () => {
     const q = quotValue();
     expect(equals(q, q)).toBe(true);
-    expect(equals(q, { tag: "quot", v: (q as { v: never }).v })).toBe(true);
+    expect(equals(q, { tag: "quot", v: (q as unknown as { v: never }).v })).toBe(true);
     expect(equals(q, quotValue())).toBe(false);
   });
 
