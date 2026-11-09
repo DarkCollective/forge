@@ -14,3 +14,5 @@
  * limitations under the License.
  */
 export const FORGE_OPS_PLACEHOLDER = true;
+export type * from "./types.js";
+export { CATALOGUE_FORMAT, INTERNAL_VOCABS, UI_PARAM_TYPES } from "./types.js";
