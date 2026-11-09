@@ -22,7 +22,7 @@ Two things set Forge apart:
 
 ## 2. Repository
 
-A single public monorepo, `forge` (npm workspaces, Node ≥ 20, TypeScript strict, Vite, Lit, Vitest, ESLint and Prettier, Apache-2.0). It is public at https://github.com/DarkCollective/forge. Commits and PRs carry **no AI/tool attribution trailers**.
+A single public monorepo, `forge` (npm workspaces, Node ≥ 20, TypeScript strict, Vite, Lit, Vitest, ESLint and Prettier). Licensing matches Relix: Apache License 2.0 (`LICENSE.txt`), a `NOTICE` file, and the standard header "Copyright 2026 Darkcollective, LLC" at the top of every source file. It is public at https://github.com/DarkCollective/forge. Commits and PRs carry **no AI/tool attribution trailers**.
 
 ```
 packages/lang     @forge/lang   FL language: reader, compiler, VM, values, vocabularies, metadata
@@ -84,10 +84,11 @@ META: rot
 
 ### 3.3 Vocabularies and name resolution
 
-- A vocabulary is a wordlist with a name.
-- Resolution is **lexical per source unit**, not a mutable global search order. Lookup goes through the current `IN:` vocabulary, then the `USING:` list in order, then `core`.
-- A qualified reference `vocab:word` always resolves through exactly that vocabulary.
-- An unqualified name that is found in two `USING:` vocabularies is a **compile error**, which is resolved by qualifying it.
+- A vocabulary is a wordlist with a name. Word and vocabulary names are **case-sensitive**, written in lower-kebab-case by convention.
+- Every source unit and console session has a **current vocabulary**. In a source unit it is set with `IN: classical`; at the console it is set with `VOCAB classical` and shown by `current-vocab`. The console also has a vocab picker, and the setting persists for the session. New definitions go into the current vocabulary, **and unqualified names resolve there first**, so with current vocab `classical`, `rot` means `classical:rot`.
+- Resolution is **lexical per source unit**, not a mutable global search order. Lookup goes through the current vocabulary, then the `USING:` list in order, then `core`. The first of these to define the name wins, so the current vocabulary shadows imports.
+- A qualified reference `vocab:word` always resolves through exactly that vocabulary, whatever the current vocabulary is.
+- An unqualified name that is not in the current vocabulary but is found in two `USING:` vocabularies is a **compile error**, which is resolved by qualifying it.
 - Recipes and saved words always store **fully qualified names**, plus a word version or content hash, so their meaning cannot drift.
 - Classic `ALSO`/`ONLY`/`PREVIOUS` are left out on purpose.
 
@@ -156,7 +157,7 @@ It uses Lit web components and plain CSS grid with custom properties for themes 
 
 - FL has **no ambient authority**: no DOM, fetch, storage or eval words. The capability set is the primitive registry. A network operation such as HTTP request, if ever added, would be a separately granted capability with a confirmation prompt.
 - Recipes from URLs may reference only registered words and cannot define primitives. User vocabularies loaded from files can define FL words, which can never exceed what primitives allow.
-- All baking happens in a Worker with hard limits (§3.4). We deploy with a strict CSP, `connect-src 'none'` for the worker origin where hosting allows.
+- All baking happens in a Worker with hard limits (§3.4). The CloudFront response-headers policy (§10) enforces a strict CSP and cross-origin isolation.
 - Metadata, help and errors are rendered as text or sanitised Markdown, never raw HTML. Regex parameters are bounded in length and time-boxed.
 
 ## 6. Testing and quality
@@ -213,6 +214,7 @@ Each work package (WP) is sized for one sub-agent and has a verifiable "done". T
 | 3.7 | Persistence (IndexedDB): saved recipes, favourites, options; promote recipe → user word |
 | 3.8 | FL console pane |
 | 3.9 | Playwright e2e suite + a11y audit (axe) |
+| 3.10 | `infra/` Terraform + deploy workflow for CloudFront hosting (§10). This WP is independent, so it can run at any time; deploying the placeholder shell early is worthwhile. `terraform apply` and the first deploy are run only with the owner's go-ahead. |
 
 **Gate 3:** End to end in the browser, a user can search, drag, configure, bake, share a URL, reload it and get the same result, using the keyboard only.
 
@@ -245,15 +247,38 @@ Magic auto-detection (declarative `checks` in META, depth-limited search). An op
 - **Verification per WP**: read the diff, then re-run `npm run lint && npm run typecheck && npm test && npm run build` (+e2e from Phase 3) on the merged result, then spot-check behaviour by hand.
 - **Order**: Phase 1 is mostly sequential (1.1 → 1.2/1.3 in parallel → 1.4 → 1.5 → 1.6/1.7/1.8 in parallel). Phase 3.1–3.2 can start once Gate 1 passes, against a mocked catalogue. Phases 4 and 5 are highly parallel.
 
-## 9. Decisions to confirm
+## 9. Decisions
 
-1. **Licence**: Apache-2.0 (matches the ecosystem; scaffolded). Change now if you prefer MIT or GPL.
-2. **Qualified-name syntax**: `vocab:word` (proposed) vs `vocab::word` vs `vocab.word`.
-3. **Parameter binding**: stack inputs that are *also* named locals (proposed) vs stack-only, which is purer Forth but painful for multi-parameter ciphers.
-4. **Case sensitivity**: word names case-insensitive (traditional Forth) or case-sensitive (proposed: case-sensitive, lower-kebab convention).
-5. ~~Repo name/owner~~ — decided: public at `DarkCollective/forge`.
-6. **Hosting**: GitHub Pages from CI (proposed) vs elsewhere.
+Decided 2026-11-09:
 
-## 10. Environment notes
+1. **Licence**: same as Relix. Apache-2.0 with `LICENSE.txt` and `NOTICE`, copyright Darkcollective, LLC, and a licence header in every source file.
+2. **Qualified names**: `vocab:word`. A current vocabulary (`IN:` / `VOCAB`) makes qualification unnecessary for its own words (§3.3).
+3. **Parameter binding**: parameters are stack inputs that are also bound as named locals.
+4. **Case sensitivity**: names are case-sensitive, with a lower-kebab-case convention.
+5. **Repository**: public at `DarkCollective/forge`.
+6. **Hosting**: AWS S3 + CloudFront, in the same pattern as the Relix site (§10).
+
+Still open (needed before WP 3.10 only):
+
+7. **Hostname**: `forge.darkcollective.com` (proposed).
+8. **Deploy runner**: GitHub-hosted runner assuming an AWS role via GitHub OIDC (proposed, as Forge's npm build needs no build cache), or the CodeBuild-hosted runner that Relix uses.
+
+## 10. Hosting and deployment
+
+Forge is a fully static site (`apps/web/dist`), hosted the same way as the Relix site, whose setup is in `relix/infra`.
+
+- **Origin**: a private, versioned, SSE-S3 bucket (e.g. `forge-darkcollective-com`) with all public access blocked. CloudFront reads it through **Origin Access Control** (sigv4, signing always), and the bucket policy allows only this distribution.
+- **Distribution**: `default_root_object = "index.html"`, `PriceClass_100`, HTTP/2+3, IPv6, TLS ≥ `TLSv1.2_2021` (SNI). Routing is hash-based (`#r=…`), so no SPA rewrite function is needed. 403 and 404 map to `/404.html`.
+- **Caching**: `index.html` is short-TTL. Vite's content-hashed `assets/*` and lazy op modules get a long-lived `immutable` policy, as with Relix's `/static/*` split.
+- **Response headers policy** (adapted from Relix's default):
+  - HSTS (preload), `frame-options DENY`, `referrer-policy no-referrer`.
+  - COOP `same-origin` + COEP `require-corp`. This makes the page `crossOriginIsolated`, which enables `SharedArrayBuffer` for fast cooperative cancellation between the UI and the bake Worker.
+  - CSP: `default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self'; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'`.
+  - `connect-src 'self'` is needed only to fetch lazy WASM, `.fth` and catalogue files from our own origin. Forge never talks to any other host, and the optional recipe store (Phase 6) would add exactly one origin.
+- **DNS/TLS**: reuse the existing `darkcollective.com` Route 53 zone and the `*.darkcollective.com` ACM certificate (us-east-1) via Terraform **data sources**. They stay owned by the Relix stack, and Forge adds only its own A/AAAA alias records.
+- **Terraform**: `forge/infra/`, with the same backend bucket (`darkcollective-terraform-state`, us-east-1, `use_lockfile`) under its own key (`forge.darkcollective.com/terraform.tfstate`), so Forge and Relix can never clobber each other. Providers are `hashicorp/aws ~> 6.0` and Terraform ≥ 1.10. Access logs go to the existing `darkcollective-cloudfront-logs` bucket under a `forge/` prefix.
+- **Deploy**: `.github/workflows/deploy.yml` runs on push to `main` after CI passes. It builds, runs `aws s3 sync --delete` (hashed assets first, `index.html` last), then `cloudfront create-invalidation` for `/index.html` and `/` only, then a smoke check.
+
+## 11. Environment notes
 
 - The local `~/.npmrc` pins `cafile` to the mkcert root only, which breaks registry access. The scaffold was installed with `NPM_CONFIG_CAFILE` pointing at an export of the macOS system roots. Either add the system roots to that bundle or remove the `cafile` line. CI is unaffected.
