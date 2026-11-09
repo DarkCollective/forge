@@ -236,10 +236,15 @@ export interface BakeOptions {
   readonly pins?: PinPolicy;
   readonly debug?: DebugOptions;
   readonly onEvent?: (event: BakeEvent) => void;
+  /**
+   * For hosts: a shared flag the VM polls (element 0 nonzero aborts the bake). The worker side of the
+   * protocol sets it from `ClientMessage.abort`; callers of a `Baker` never need it.
+   */
+  readonly abortFlag?: Int32Array;
 }
 
-/** `BakeOptions` as sent over a message port (no functions). */
-export type SerialBakeOptions = Omit<BakeOptions, "onEvent">;
+/** `BakeOptions` as sent over a message port (no functions, no typed arrays: the flag travels as `bake.abort`). */
+export type SerialBakeOptions = Omit<BakeOptions, "onEvent" | "abortFlag">;
 
 // ---------------------------------------------------------------------------------------------
 // The Baker interface (RECIPES.md section 8.2)
@@ -287,6 +292,12 @@ export interface BakerCoreOptions {
    * Node tests pass `loadBundleNode` (`@forge/ops/node`); tests may wrap either to add fixture vocabularies.
    */
   readonly loadBundle: LoadBundleFn;
+  /**
+   * True when whatever runs this core can terminate it, so that an untrusted bake of a recipe that needs a hard
+   * kill may proceed (`E_UNSAFE_HOST` otherwise, RECIPES.md section 8.2 step 3). Default false. The worker
+   * entries set it: their host (`BakerClient`) owns the watchdog.
+   */
+  readonly hardKill?: boolean;
 }
 
 export type CreateBakerCoreFn = (options?: BakerCoreOptions) => Baker;
@@ -435,7 +446,7 @@ export type CreateInProcessBakerFn = (options: BakerCoreOptions) => Baker;
 
 /** The part of a `Worker` that `createWebWorkerHost` uses. */
 export interface WebWorkerLike {
-  postMessage(message: unknown, transfer?: ArrayBuffer[]): void;
+  postMessage(message: unknown, transfer: ArrayBuffer[]): void;
   terminate(): void;
   addEventListener(type: "message", listener: (event: { readonly data: unknown }) => void): void;
   addEventListener(type: "error", listener: (event: { readonly message?: string }) => void): void;
