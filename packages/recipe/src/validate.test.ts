@@ -975,8 +975,16 @@ describe("validateRecipe: limits (RECIPES.md section 3.8)", () => {
       steps: [],
     });
     // find the largest n that fits, by the real size, and check the validator agrees at the boundary
-    let n = 1;
-    while (sizeOf(make(n + 1)) <= RECIPE_LIMITS.maxJsonBytes) n++;
+    // binary search: sizeOf(make(n)) is monotonic in n
+    let lo = 1;
+    let hi = 2;
+    while (sizeOf(make(hi)) <= RECIPE_LIMITS.maxJsonBytes) hi *= 2;
+    while (hi - lo > 1) {
+      const mid = (lo + hi) >>> 1;
+      if (sizeOf(make(mid)) <= RECIPE_LIMITS.maxJsonBytes) lo = mid;
+      else hi = mid;
+    }
+    const n = lo;
     const fits = run(make(n)).issues.filter((i) => i.code === "limit");
     const over = run(make(n + 1)).issues.filter((i) => i.code === "limit");
     expect(fits).toEqual([]);
