@@ -22,7 +22,7 @@ Two things set Forge apart:
 
 ## 2. Repository
 
-A single public monorepo, `forge` (npm workspaces, Node ≥ 20, TypeScript strict, Vite, Lit, Vitest, ESLint and Prettier, Apache-2.0). It currently exists locally at `~/workspace/forge`. The GitHub repo will be created when we're ready to publish. Commits and PRs carry **no AI/tool attribution trailers**.
+A single public monorepo, `forge` (npm workspaces, Node ≥ 20, TypeScript strict, Vite, Lit, Vitest, ESLint and Prettier, Apache-2.0). It is public at https://github.com/DarkCollective/forge. Commits and PRs carry **no AI/tool attribution trailers**.
 
 ```
 packages/lang     @forge/lang   FL language: reader, compiler, VM, values, vocabularies, metadata
@@ -251,7 +251,7 @@ Magic auto-detection (declarative `checks` in META, depth-limited search). An op
 2. **Qualified-name syntax**: `vocab:word` (proposed) vs `vocab::word` vs `vocab.word`.
 3. **Parameter binding**: stack inputs that are *also* named locals (proposed) vs stack-only, which is purer Forth but painful for multi-parameter ciphers.
 4. **Case sensitivity**: word names case-insensitive (traditional Forth) or case-sensitive (proposed: case-sensitive, lower-kebab convention).
-5. **Repo name/owner** on GitHub (`david-Darkcollective/forge`?) and when to make it public.
+5. ~~Repo name/owner~~ — decided: public at `DarkCollective/forge`.
 6. **Hosting**: GitHub Pages from CI (proposed) vs elsewhere.
 
 ## 10. Environment notes
