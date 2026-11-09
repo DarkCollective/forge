@@ -1,0 +1,17 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "fork",
+      "split": {
+        "value": "3q2+7w",
+        "enc": "base64"
+      },
+      "join": {
+        "value": "é",
+        "enc": "latin1"
+      },
+      "steps": []
+    }
+  ]
+}

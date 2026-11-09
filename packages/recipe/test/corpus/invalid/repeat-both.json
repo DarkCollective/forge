@@ -1,0 +1,11 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "repeat",
+      "times": 2,
+      "until": "stable",
+      "steps": []
+    }
+  ]
+}

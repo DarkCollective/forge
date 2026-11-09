@@ -1,0 +1,16 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "op",
+      "op": "a:b",
+      "params": {
+        "a": {
+          "value": "x",
+          "enc": "utf8",
+          "more": 1
+        }
+      }
+    }
+  ]
+}

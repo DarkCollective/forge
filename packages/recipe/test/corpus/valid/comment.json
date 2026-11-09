@@ -1,0 +1,9 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "comment",
+      "text": "a \"note\"\nwith lines"
+    }
+  ]
+}

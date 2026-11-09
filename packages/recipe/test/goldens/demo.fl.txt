@@ -1,0 +1,21 @@
+\ forge-recipe 1
+\ name "Demo"
+: main ( bytes -- any )
+  "standard" base64:decode
+  \ # "split into lines"
+  recipe:as-bytes "\n" #[ 0a ] [
+    13 classical:rot  \ @break
+    \ ~ text:upper  \ @note="off for now"
+  ] fork
+  recipe:as-bytes "[a-z]+" "i" "utf8" [
+    text:reverse
+  ] recipe:section
+  recipe:as-bytes [ "^o" "" "utf8" recipe:matches ] [
+    text:lower
+  ] [
+  ] recipe:branch
+  recipe:as-bytes 100 [
+    "aa" "a" "" regex:replace
+  ] recipe:settle
+  "space" "lower" hex:encode
+;

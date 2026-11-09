@@ -1,0 +1,14 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "if",
+      "test": {
+        "kind": "op",
+        "op": "a:b",
+        "note": "x"
+      },
+      "then": []
+    }
+  ]
+}

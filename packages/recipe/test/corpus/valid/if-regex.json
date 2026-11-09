@@ -1,0 +1,16 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "if",
+      "test": {
+        "kind": "regex",
+        "pattern": "^o",
+        "flags": "i",
+        "encoding": "utf8"
+      },
+      "then": [],
+      "else": []
+    }
+  ]
+}

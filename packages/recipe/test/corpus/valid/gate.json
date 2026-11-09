@@ -1,0 +1,27 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "op",
+      "op": "base64:decode",
+      "params": {
+        "alphabet": "standard"
+      }
+    },
+    {
+      "kind": "op",
+      "op": "classical:rot",
+      "params": {
+        "amount": 13
+      }
+    },
+    {
+      "kind": "op",
+      "op": "hex:encode",
+      "params": {
+        "case": "lower",
+        "delimiter": "none"
+      }
+    }
+  ]
+}

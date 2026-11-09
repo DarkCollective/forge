@@ -1,0 +1,22 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "if",
+      "test": {
+        "kind": "op",
+        "op": "regex:test",
+        "params": {
+          "pattern": "^o"
+        },
+        "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "then": [
+        {
+          "kind": "op",
+          "op": "text:lower"
+        }
+      ]
+    }
+  ]
+}
