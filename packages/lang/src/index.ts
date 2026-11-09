@@ -14,3 +14,5 @@
  * limitations under the License.
  */
 export const FORGE_LANG_VERSION = "0.0.0";
+export type * from "./types.js";
+export { DEFAULT_LIMITS } from "./types.js";

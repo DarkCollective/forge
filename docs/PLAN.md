@@ -54,7 +54,7 @@ Values on the stack are tagged:
 | `record` | `Map<string, Value>` | structured results (parsed headers, JSON, …) |
 | `file` | `{name, type, bytes}` | later |
 
-A small **coercion table** (for example `str→bytes` as UTF-8 and `bytes→str` as UTF-8 strict) is applied only at word boundaries, when the declared input type differs. It is strict by default: invalid UTF-8 is an error, not U+FFFD. Every coercion is recorded in the trace so the UI can show it.
+A small **coercion table** (for example `str→bytes` as UTF-8 and `bytes→str` as UTF-8 strict) is applied only at word boundaries, when the declared input type differs. It is strict by default: invalid UTF-8 is an error, not U+FFFD. Every coercion is recorded in the trace so the UI can show it. Coercion applies to inputs only, and v0.1 has exactly two coercion pairs: `str↔bytes` (strict UTF-8) and `int↔num` (exact). `int` payloads are always normalised. Ops that make sense on arbitrary data (ROT, XOR, substitution) are declared over `bytes`, so binary input never hits a UTF-8 error. The authoritative definition is [LANGUAGE.md](LANGUAGE.md).
 
 ### 3.2 Syntax
 
@@ -78,7 +78,7 @@ META: rot
 
 - **Stack-effect header** `( inputs -- outputs )` is mandatory on exported words. Each *input* after the first (the data input) can be a **parameter**, written `name:type[constraint]=default`. Parameter types are `int`, `num`, `str`, `bool`, `bytes`, `choice{a|b|c}`, `toggle{hex|utf8|latin1|base64}` (CyberChef's toggleString), `regex`, `charset` and `key` (bytes with an encoding picker).
 - **Parameters are passed on the stack** in declaration order, so a recipe step is simply `<literals> word`. Inside the body they are also **bound as named locals**, as in Factor's `::`, so a five-parameter cipher needs no stack juggling.
-- The header and `META:` desugar to one **JSON metadata record** stored on the dictionary entry. Its fields are `name`, `vocab`, `effect`, `params[]`, `category`, `doc`, `aliases`, `seeAlso`, `effects` (`+random`, `+time`, `+async`) and `version`/`hash`. The TS registry and the UI read only this record.
+- The header and `META:` desugar to one **JSON metadata record** stored on the dictionary entry. Its fields are `name`, `vocab`, `effect`, `params[]`, `category`, `doc`, `aliases`, `seeAlso`, `effects` (`+random`, `+time`, `+async`) and `version`/`hash`. The TS registry and the UI read only this record. `"…" doc` and `"…" category` are allowed only straight after the header, and a `META:` block ends with an empty `;`. Parameters of type `toggle`, `key` and `charset` reach the word already decoded (`bytes`/`str`). In recipe JSON they are `{value, enc}`, and the recipe compiler decodes them.
 - **Quotations** `[ ... ]` are first-class and support combinators: `map`, `each`, `if`, `times`, `fork`, `try`.
 - **Defining words** are `:` and `;`, `CONSTANT`, `VARIABLE` (scoped per run) and `PRIMITIVE` (binds only to TS registry entries; it cannot be used from untrusted code).
 
@@ -86,7 +86,7 @@ META: rot
 
 - A vocabulary is a wordlist with a name. Word and vocabulary names are **case-sensitive**, written in lower-kebab-case by convention.
 - Every source unit and console session has a **current vocabulary**. In a source unit it is set with `IN: classical`; at the console it is set with `VOCAB classical` and shown by `current-vocab`. The console also has a vocab picker, and the setting persists for the session. New definitions go into the current vocabulary, **and unqualified names resolve there first**, so with current vocab `classical`, `rot` means `classical:rot`.
-- Resolution is **lexical per source unit**, not a mutable global search order. Lookup goes through the current vocabulary, then the `USING:` list in order, then `core`. The first of these to define the name wins, so the current vocabulary shadows imports.
+- Resolution is **lexical per source unit**, not a mutable global search order. Lookup goes through the current vocabulary, then all `USING:` vocabularies together, then `core`. The current vocabulary shadows imports, and imports shadow `core`. Words named `_name` are private to their vocabulary.
 - A qualified reference `vocab:word` always resolves through exactly that vocabulary, whatever the current vocabulary is.
 - An unqualified name that is not in the current vocabulary but is found in two `USING:` vocabularies is a **compile error**, which is resolved by qualifying it.
 - Recipes and saved words always store **fully qualified names**, plus a word version or content hash, so their meaning cannot drift.
@@ -97,11 +97,11 @@ META: rot
 - A compiler turns the source into a **flat instruction array** per word (literal, call, primitive call, branch, quotation ref). Interpreting that array in a VM loop with explicit data and return stacks gives:
   - single-step and breakpoints at instruction or recipe-step granularity;
   - an execution trace (stack snapshots per step) for the debugger UI;
-  - cooperative cancellation through `AbortSignal`, checked every N instructions;
+  - cooperative cancellation through `AbortSignal` (polled every N steps), plus an optional `SharedArrayBuffer` abort flag; the VM yields to the event loop periodically;
   - **resource limits**: max steps, stack depth, return depth, bytes per value and total, and a wall-clock deadline;
   - **async primitives** (WebCrypto, CompressionStream, lazily loaded WASM). A primitive may return a Promise, and the loop awaits it.
 - The VM runs identically in Node (tests and CLI) and in a Web Worker (the UI). There is one async code path, never a sync/async split.
-- Errors are structured `ForgeError {code, message, word, vocab, step, ip, stackSnapshot}`. They are never smuggled into output text.
+- Errors are structured `ForgeError` values: code, message, word/vocab, position, call frames, stack snapshot and detail (LANGUAGE.md §11). They are never smuggled into output text.
 
 ### 3.5 Primitives (the TypeScript FFI)
 
@@ -184,9 +184,9 @@ Each work package (WP) is sized for one sub-agent and has a verifiable "done". T
 | 1.3 | Values, coercion table, `ForgeError` | unit tests per coercion pair |
 | 1.4 | Dictionary, vocabularies, `IN:`/`USING:`, qualified lookup, ambiguity errors | resolution test matrix |
 | 1.5 | Compiler to instruction arrays; quotations; locals for parameters; `:` `;` `CONSTANT` `VARIABLE` | compiles the spec examples |
-| 1.6 | VM: run loop, async primitives, AbortSignal, limits, step/breakpoint hooks, trace | limit and cancel tests; 1e6 simple steps < 200 ms |
+| 1.6 | VM: run loop, async primitives, AbortSignal, limits, step/breakpoint hooks, trace | limit and cancel tests; 1e6 simple steps < 200 ms including event-loop yields |
 | 1.7 | Primitive registry/FFI + `core` vocabulary (stack, arithmetic, control, combinators, bytes/str basics) | core words documented and tested |
-| 1.8 | Metadata desugaring (header + META → JSON) with a JSON Schema; `help`/`see` words | schema-validated for every word |
+| 1.8 | Metadata desugaring (header + META → JSON) with a JSON Schema; synchronous SHA-256 word hashes covering callees; `help`/`see`/`words`/`vocabs`/`current-vocab` are runtime-supplied | schema-validated for every word |
 | 1.9 | Node REPL script for development | `npm run repl` works |
 
 **Gate 1:** `classical:rot` is written in FL with a validated parameter, runs in Node, and its metadata JSON validates.
