@@ -10,7 +10,17 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
-    }
+    },
+    "./node": {
+      "types": "./dist/sources-node.d.ts",
+      "default": "./dist/sources-node.js"
+    },
+    "./vite": {
+      "types": "./dist/sources-vite.d.ts",
+      "default": "./src/sources-vite.ts"
+    },
+    "./catalogue.json": "./dist/catalogue.json",
+    "./catalogue.schema.json": "./dist/catalogue.schema.json"
   },
   "files": [
     "dist",
@@ -18,7 +28,7 @@
     "vocab"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "tsc -p tsconfig.build.json && tsc -p tsconfig.scripts.json && node dist-scripts/catalogue.js",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {

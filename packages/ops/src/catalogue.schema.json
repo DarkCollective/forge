@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:forge:schema:catalogue:1",
+  "title": "Forge operation catalogue, format 1",
+  "type": "object",
+  "properties": {
+    "format": { "const": 1 },
+    "version": { "type": "string", "pattern": "^[0-9a-f]{16}$" },
+    "vocabs": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,63}$" },
+      "uniqueItems": true
+    },
+    "ops": { "type": "array", "items": { "$ref": "#/$defs/op" } }
+  },
+  "required": ["format", "version", "vocabs", "ops"],
+  "additionalProperties": false,
+  "$defs": {
+    "op": {
+      "type": "object",
+      "properties": {
+        "qname": {
+          "$ref": "https://forge.darkcollective.com/schemas/word-meta.schema.json#/$defs/qname"
+        },
+        "name": {
+          "$ref": "https://forge.darkcollective.com/schemas/word-meta.schema.json#/$defs/wordName"
+        },
+        "vocab": {
+          "$ref": "https://forge.darkcollective.com/schemas/word-meta.schema.json#/$defs/vocabName"
+        },
+        "category": { "type": ["string", "null"], "maxLength": 200 },
+        "doc": { "type": ["string", "null"], "maxLength": 2000 },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "https://forge.darkcollective.com/schemas/word-meta.schema.json#/$defs/wordName"
+          },
+          "uniqueItems": true
+        },
+        "seeAlso": {
+          "type": "array",
+          "items": {
+            "$ref": "https://forge.darkcollective.com/schemas/word-meta.schema.json#/$defs/qname"
+          },
+          "uniqueItems": true
+        },
+        "input": {
+          "$ref": "https://forge.darkcollective.com/schemas/word-meta.schema.json#/$defs/paramType"
+        },
+        "output": {
+          "$ref": "https://forge.darkcollective.com/schemas/word-meta.schema.json#/$defs/paramType"
+        },
+        "effect": { "type": "string", "maxLength": 4000 },
+        "params": {
+          "type": "array",
+          "items": {
+            "$ref": "https://forge.darkcollective.com/schemas/word-meta.schema.json#/$defs/param"
+          }
+        },
+        "effects": {
+          "type": "array",
+          "items": { "enum": ["+async", "+random", "+time"] },
+          "uniqueItems": true
+        },
+        "version": { "type": "string", "maxLength": 200 },
+        "hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "needsHardKill": { "type": "boolean" }
+      },
+      "required": [
+        "qname",
+        "name",
+        "vocab",
+        "category",
+        "doc",
+        "aliases",
+        "seeAlso",
+        "input",
+        "output",
+        "effect",
+        "params",
+        "effects",
+        "version",
+        "hash",
+        "needsHardKill"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
