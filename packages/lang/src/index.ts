@@ -64,3 +64,21 @@ export {
   valueHelpers,
 } from "./values.js";
 export type { CoerceResult } from "./values.js";
+export {
+  RESERVED_WORDS,
+  WORD_META_SCHEMA,
+  WordMetaBuilder,
+  computeHash,
+  effectText,
+  isPrivateName,
+  isReservedWord,
+  isVocabName,
+  isWordName,
+  ownText,
+  parseHeader,
+  renderHelp,
+  renderSee,
+  slotText,
+} from "./meta.js";
+export type { ClauseArg, MetaClause, WordMetaInit } from "./meta.js";
+export { sha256 } from "./sha256.js";

@@ -1,0 +1,186 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge.darkcollective.com/schemas/word-meta.schema.json",
+  "title": "WordMeta",
+  "description": "The JSON-serialisable metadata record of a Forge FL word (LANGUAGE.md section 12.1).",
+  "type": "object",
+  "properties": {
+    "name": { "$ref": "#/$defs/wordName" },
+    "vocab": { "$ref": "#/$defs/vocabName" },
+    "qname": { "$ref": "#/$defs/qname" },
+    "kind": { "enum": ["fl", "primitive", "intrinsic", "constant", "variable"] },
+    "exported": { "type": "boolean" },
+    "op": { "type": "boolean" },
+    "effect": { "$ref": "#/$defs/effect" },
+    "params": { "type": "array", "items": { "$ref": "#/$defs/param" } },
+    "category": { "type": ["string", "null"], "maxLength": 200 },
+    "doc": { "type": ["string", "null"], "maxLength": 2000 },
+    "aliases": { "type": "array", "items": { "$ref": "#/$defs/wordName" }, "uniqueItems": true },
+    "seeAlso": { "type": "array", "items": { "$ref": "#/$defs/qname" }, "uniqueItems": true },
+    "effects": {
+      "type": "array",
+      "items": { "enum": ["+async", "+random", "+time"] },
+      "uniqueItems": true
+    },
+    "version": { "type": "string", "maxLength": 200 },
+    "hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "source": { "$ref": "#/$defs/source" }
+  },
+  "required": [
+    "name",
+    "vocab",
+    "qname",
+    "kind",
+    "exported",
+    "op",
+    "effect",
+    "params",
+    "category",
+    "doc",
+    "aliases",
+    "seeAlso",
+    "effects",
+    "version",
+    "hash",
+    "source"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "wordName": {
+      "description": "word-name of section 2.11: 1 to 128 code points, no ':'.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^(?!-[0-9])(?:[A-Za-z_\\-!$%&*+,./<=>?@^|~]|(?![\\p{Zs}\\p{Zl}\\p{Zp}\\p{Cc}\\p{Cf}])[^\\x00-\\x7f])(?:[A-Za-z0-9_\\-!$%&*+,./<=>?@^|~]|(?![\\p{Zs}\\p{Zl}\\p{Zp}\\p{Cc}\\p{Cf}])[^\\x00-\\x7f])*$"
+    },
+    "vocabName": {
+      "description": "vocab-name of section 2.11: 1 to 64 characters.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+    },
+    "qname": {
+      "description": "vocab-name ':' word-name.",
+      "type": "string",
+      "maxLength": 193,
+      "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,63}:(?!-[0-9])(?:[A-Za-z_\\-!$%&*+,./<=>?@^|~]|(?![\\p{Zs}\\p{Zl}\\p{Zp}\\p{Cc}\\p{Cf}])[^\\x00-\\x7f])(?:[A-Za-z0-9_\\-!$%&*+,./<=>?@^|~]|(?![\\p{Zs}\\p{Zl}\\p{Zp}\\p{Cc}\\p{Cf}])[^\\x00-\\x7f])*$"
+    },
+    "slotName": {
+      "description": "A parameter name or label (pname of section 5.4).",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "paramType": {
+      "enum": [
+        "any",
+        "bytes",
+        "str",
+        "int",
+        "num",
+        "number",
+        "bool",
+        "list",
+        "quot",
+        "record",
+        "file",
+        "choice",
+        "toggle",
+        "regex",
+        "charset",
+        "key"
+      ]
+    },
+    "length": { "type": "integer", "minimum": 0 },
+    "constraint": {
+      "type": "object",
+      "properties": {
+        "min": { "type": "number" },
+        "max": { "type": "number" },
+        "oneOf": { "type": "array", "items": { "type": "number" }, "minItems": 1 },
+        "minLength": { "$ref": "#/$defs/length" },
+        "maxLength": { "$ref": "#/$defs/length" },
+        "lengthOneOf": { "type": "array", "items": { "$ref": "#/$defs/length" }, "minItems": 1 },
+        "pattern": { "type": "string" }
+      },
+      "minProperties": 1,
+      "additionalProperties": false
+    },
+    "default": {
+      "oneOf": [
+        { "type": "number" },
+        { "type": "string" },
+        { "type": "boolean" },
+        {
+          "type": "object",
+          "properties": {
+            "value": { "type": "string" },
+            "enc": { "enum": ["hex", "utf8", "latin1", "base64"] }
+          },
+          "required": ["value", "enc"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "slotBody": {
+      "type": "object",
+      "properties": {
+        "name": { "oneOf": [{ "$ref": "#/$defs/slotName" }, { "type": "null" }] },
+        "type": { "$ref": "#/$defs/paramType" },
+        "options": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "constraint": { "$ref": "#/$defs/constraint" },
+        "default": { "$ref": "#/$defs/default" },
+        "doc": { "type": "string", "maxLength": 200 }
+      },
+      "required": ["name", "type"]
+    },
+    "slot": {
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/slotBody" }],
+      "unevaluatedProperties": false
+    },
+    "param": {
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/slotBody" }],
+      "properties": {
+        "name": { "$ref": "#/$defs/slotName" },
+        "index": { "type": "integer", "minimum": 1 },
+        "required": { "type": "boolean" }
+      },
+      "required": ["name", "index", "required"],
+      "unevaluatedProperties": false
+    },
+    "effect": {
+      "type": "object",
+      "properties": {
+        "inputs": { "type": "array", "items": { "$ref": "#/$defs/slot" } },
+        "outputs": { "type": "array", "items": { "$ref": "#/$defs/slot" } },
+        "unchecked": { "type": "boolean" },
+        "variadicInput": { "type": "boolean" },
+        "text": { "type": "string" }
+      },
+      "required": ["inputs", "outputs", "unchecked", "variadicInput", "text"],
+      "additionalProperties": false
+    },
+    "sourcePos": {
+      "type": "object",
+      "properties": {
+        "offset": { "type": "integer", "minimum": 0 },
+        "line": { "type": "integer", "minimum": 1 },
+        "col": { "type": "integer", "minimum": 1 }
+      },
+      "required": ["offset", "line", "col"],
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "properties": {
+        "unit": { "type": ["string", "null"] },
+        "text": { "type": ["string", "null"] },
+        "pos": { "oneOf": [{ "$ref": "#/$defs/sourcePos" }, { "type": "null" }] }
+      },
+      "required": ["unit", "text", "pos"],
+      "additionalProperties": false
+    }
+  }
+}
