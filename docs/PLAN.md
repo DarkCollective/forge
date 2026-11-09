@@ -176,7 +176,9 @@ Each work package (WP) is sized for one sub-agent and has a verifiable "done". T
 ### Phase 0 — Foundations ✅
 - Monorepo scaffold, CI, licence and research. *Done 2026-11-09.*
 
-### Phase 1 — Language core (`@forge/lang`)
+### Phase 1 — Language core (`@forge/lang`) ✅
+*Done 2026-11-09. Spec: [LANGUAGE.md](LANGUAGE.md). All 171 conformance tests pass, and 1,342 tests in total. `npm run repl` starts a console.*
+
 | WP | Scope | Done when |
 |---|---|---|
 | 1.1 | `docs/LANGUAGE.md` spec (grammar EBNF, value model, coercions, header and META syntax, resolution rules, error codes) | reviewed and frozen as v0.1 |
