@@ -66,3 +66,20 @@ export {
 export type { CoerceResult } from "./values.js";
 export { CORE_VOCAB, createDictionary, isPrivateName, listWords } from "./dictionary.js";
 export { read } from "./reader.js";
+export {
+  RESERVED_WORDS,
+  WORD_META_SCHEMA,
+  WordMetaBuilder,
+  computeHash,
+  effectText,
+  isReservedWord,
+  isVocabName,
+  isWordName,
+  ownText,
+  parseHeader,
+  renderHelp,
+  renderSee,
+  slotText,
+} from "./meta.js";
+export type { ClauseArg, MetaClause, WordMetaInit } from "./meta.js";
+export { sha256 } from "./sha256.js";

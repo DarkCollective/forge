@@ -10,7 +10,8 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
-    }
+    },
+    "./meta.schema.json": "./dist/meta.schema.json"
   },
   "files": [
     "dist"
