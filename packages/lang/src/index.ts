@@ -83,3 +83,16 @@ export {
 } from "./meta.js";
 export type { ClauseArg, MetaClause, WordMetaInit } from "./meta.js";
 export { sha256 } from "./sha256.js";
+export {
+  callPrimitive,
+  createPrimitiveRegistry,
+  definePrimitive,
+  primitiveEffect,
+} from "./primitives.js";
+export type { PrimitiveOptions } from "./primitives.js";
+export {
+  CORE_INTRINSIC_WORDS,
+  CORE_PRIMITIVES,
+  CORE_RUNTIME_WORDS,
+  registerCorePrimitives,
+} from "./vocab/core.js";
