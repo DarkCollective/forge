@@ -67,6 +67,14 @@ export type { CoerceResult } from "./values.js";
 export { CORE_VOCAB, createDictionary, isPrivateName, listWords } from "./dictionary.js";
 export { read } from "./reader.js";
 export {
+  INTRINSIC_NAMES,
+  compile,
+  createIntrinsicEntries,
+  createIntrinsicEntry,
+  createPrimitiveEntry,
+} from "./compiler.js";
+export type { EntryOptions } from "./compiler.js";
+export {
   RESERVED_WORDS,
   WORD_META_SCHEMA,
   WordMetaBuilder,
