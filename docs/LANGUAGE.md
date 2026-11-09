@@ -482,7 +482,7 @@ A constraint is checked at every word boundary where the slot is an input (§4.3
 
 At most one length/range part and at most one `pattern` part may appear per constraint. `lo > hi`, a negative length, or `..` with no bounds is `E_HEADER`. Bounds of `int` constraints MUST be safe integers.
 
-`pattern` is a JavaScript regular expression source compiled with the `u` flag and tested as `^(?:source)$`. It MUST compile (else `E_HEADER`) and be at most `limits.maxRegexLength` (default 1024) code points. Patterns are evaluated by the host regex engine. **Risk**: a JavaScript regex can backtrack catastrophically, and a synchronous `RegExp.test` cannot be interrupted by the VM (§10.7). v0.1 only bounds the pattern length; real time-boxing of user-supplied regexes (a restricted engine or a step budget) is Phase 5 work, and primitives that run user regexes against input SHOULD NOT be exposed to untrusted recipes before then.
+`pattern` is a JavaScript regular expression source compiled with the `u` flag and tested as `^(?:source)$`. It MUST compile (else `E_HEADER`) and be at most `limits.maxRegexLength` (default 1024) code points. Patterns are evaluated by the host regex engine. (Phase 2 exception, see RECIPES.md §4.1: the regex primitives of `@forge/ops` run user regexes on the host `RegExp` and are time-boxed from outside, by terminating the Worker; a bake that uses them is refused on a host that cannot do that.) **Risk**: a JavaScript regex can backtrack catastrophically, and a synchronous `RegExp.test` cannot be interrupted by the VM (§10.7). v0.1 only bounds the pattern length; real time-boxing of user-supplied regexes (a restricted engine or a step budget) is Phase 5 work, and primitives that run user regexes against input SHOULD NOT be exposed to untrusted recipes before then.
 
 ### 5.6 Parameter types: runtime type and validation
 
@@ -1145,22 +1145,9 @@ Recipe-oriented vocabularies (`encoding`, `classical`, …) arrive in Phase 4. N
 
 ---
 
-## 14. Recipe compilation (summary; implemented in Phase 2)
+## 14. Recipe compilation
 
-A recipe step `{ "op": "classical:rot", "params": { "amount": 13 } }` compiles to **literals followed by a qualified word call**, one step per source line:
-
-```
-13 classical:rot
-```
-
-Rules:
-
-1. The op reference is always fully qualified. The recipe also stores the word's `version`/`hash`; if the dictionary's `hash` differs, the loader reports drift.
-2. For each parameter in `meta.params` order: take `params[name]` if present, else `default`, else error. Render it as a literal by runtime type: `int` decimal, `num` with `.0` if integral, `str`/`choice`/`regex`/`charset` string literal with escapes, `bool` `true`/`false`, `bytes`/`toggle`/`key` as a byte-array literal after decoding `{ value, enc }` with the chosen encoding.
-3. A disabled step compiles to nothing. A breakpoint step sets `breakpoints` on the `call`'s `ip`, found through `positions` (the step's line).
-4. A `fork` step compiles to its separator and joiner string literals, a quotation of its sub-steps, then `fork`: `"\n" "\n" [ 13 classical:rot ] fork`.
-5. The whole recipe is one word: `: name ( bytes -- bytes ) <steps…> ;` using `IN:`/`USING:` or qualified names only.
-6. Step lines are emitted one per line, so line numbers map to recipe step indices.
+Superseded by [RECIPES.md](RECIPES.md) (§3 recipe JSON, §5 compilation to FL, §6 the canonical text form). In short: a recipe compiles to one colon word of literals followed by qualified word calls, one step per line, and `fork` uses the `fork` combinator of §8. The header is `( bytes -- any )`, not `( bytes -- bytes )`, and the exact text, the parameter literals, disabled steps and breakpoints are defined there.
 
 ---
 

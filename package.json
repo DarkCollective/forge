@@ -16,11 +16,11 @@
     "node": ">=20"
   },
   "scripts": {
-    "build": "npm run build -w @forge/lang && npm run build -w @forge/ops && npm run build -w @forge/web",
+    "build": "npm run build -w @forge/lang && npm run build -w @forge/ops && npm run build -w @forge/recipe && npm run build -w @forge/worker && npm run build -w @forge/web",
     "test": "vitest run",
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",
-    "typecheck": "npm run build -w @forge/lang && npm run build -w @forge/ops && npm run typecheck --workspaces --if-present",
+    "typecheck": "npm run build -w @forge/lang && npm run build -w @forge/ops && npm run build -w @forge/recipe && npm run build -w @forge/worker && npm run typecheck --workspaces --if-present",
     "dev": "npm run dev -w @forge/web",
     "repl": "npm run build -w @forge/lang && node packages/lang/dist-scripts/repl.js"
   },

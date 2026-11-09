@@ -27,7 +27,7 @@ A single public monorepo, `forge` (npm workspaces, Node ≥ 20, TypeScript stric
 
 ```
 packages/lang     @forge/lang   FL language: reader, compiler, VM, values, vocabularies, metadata
-packages/ops      @forge/ops    Operation vocabularies (vocab/*.fth) + TS primitives they need
+packages/ops      @forge/ops    Operation vocabularies (vocab/*.fth), TS primitives, internal `recipe` vocab, catalogue
 packages/recipe   @forge/recipe Recipe model, JSON schema, URL codec, recipe→word compiler  (Phase 2)
 packages/worker   @forge/worker Web Worker host: baking, cancellation, limits             (Phase 2)
 apps/web          @forge/web    The Lit UI
@@ -120,22 +120,13 @@ Rule of thumb: codecs, ciphers with real arithmetic, hashes and compression are 
 
 ### 3.6 Recipes are words
 
-The recipe model in `@forge/recipe` is a **tree**, not a flat list. Flow control is structural, which fixes CyberChef's Fork/Merge-by-name problem:
+The recipe model in `@forge/recipe` is a **tree**, not a flat list. Flow control is structural (step kinds `op`, `fork`, `subsection`, `if`, `repeat`, `comment`), which fixes CyberChef's Fork/Merge-by-name problem. **[RECIPES.md](RECIPES.md) is the authoritative Phase 2 spec**; this section is a summary.
 
-```jsonc
-{ "forge": 1, "name": "decode-blob",
-  "steps": [
-    { "op": "base64:decode", "params": { "alphabet": "standard" } },
-    { "fork": { "split": "\\n", "join": "\\n" }, "steps": [
-        { "op": "classical:rot", "params": { "amount": 13 } } ] },
-    { "op": "hash:sha256", "disabled": true, "breakpoint": false } ] }
-```
-
-- It compiles deterministically to FL. Literals are pushed and then the word is called, and a fork becomes a quotation plus `fork`:
-  `: decode-blob ( bytes -- bytes ) "standard" base64:decode "\n" "\n" [ 13 classical:rot ] fork ;`
-- The UI edits only the JSON. The FL is derived from it, and words hand-written outside the canonical subset appear as a single opaque step.
-- **Named parameters** with a recipe schema version mean that adding a parameter to an op never breaks old links.
-- **URL encoding**: `#r=<base64url(deflate(JSON))>&i=<…>` plus a human-readable FL form for copy and paste. The format is versioned from day one.
+- A recipe compiles deterministically to an FL word `( bytes -- any )`. Literals are pushed and then the qualified op is called; container steps compile to quotations passed to `fork` / `recipe:*` words.
+- The compiled FL **is** the canonical human-readable text form. It is parsed back by a restricted line parser (never `runtime.load`), so JSON → text → JSON is the identity on canonical JSON. Disabled steps become `\ ~` comment lines.
+- The UI edits only the JSON. Words hand-written outside the canonical subset appear as a single opaque step.
+- **Named parameters**, defaults resolved from the catalogue and optional per-step op hashes (pinning) mean that adding a parameter to an op never breaks old links.
+- **Share URL**: `#v=1&r=…&i=…&ie=…`, base64url of deflate-raw JSON, versioned, size-capped, and decoded under an output budget because fragments are untrusted.
 - A saved recipe can be **promoted to a word** in the user's `user` vocabulary and then appears in the operations list like any other op.
 
 ## 4. The UI (`apps/web`)
@@ -159,7 +150,7 @@ It uses Lit web components and plain CSS grid with custom properties for themes 
 - FL has **no ambient authority**: no DOM, fetch, storage or eval words. The capability set is the primitive registry. A network operation such as HTTP request, if ever added, would be a separately granted capability with a confirmation prompt.
 - Recipes from URLs may reference only registered words and cannot define primitives. User vocabularies loaded from files can define FL words, which can never exceed what primitives allow.
 - All baking happens in a Worker with hard limits (§3.4). The CloudFront response-headers policy (§10) enforces a strict CSP and cross-origin isolation.
-- Metadata, help and errors are rendered as text or sanitised Markdown, never raw HTML. Regex parameters are bounded in length and time-boxed.
+- Metadata, help and errors are rendered as text or sanitised Markdown, never raw HTML. Regex parameters are bounded in length. In v1 a regex is time-boxed by hard kill: the client watchdog terminates the bake Worker. A bounded regex engine can replace it in Phase 5 behind one seam (`regex-engine.ts`).
 
 ## 6. Testing and quality
 
@@ -167,7 +158,7 @@ It uses Lit web components and plain CSS grid with custom properties for themes 
 - **Operation conformance tests**: each word has a test vectors table (`vocab/<name>.test.json`). A generic runner executes all of them through the VM. Vectors come from RFCs and standards, and published known-answer tests are preferred.
 - **Golden recipe tests** check the JSON ⇄ FL ⇄ URL round-trip, and that compiled output is identical.
 - **Property tests** (fast-check) check `decode(encode(x)) == x` for every codec pair.
-- **Browser end-to-end** (Playwright, from Phase 3) covers drag-and-drop, param validation, bake, share URL and keyboard-only use.
+- **Browser end-to-end** (Playwright; used by `@forge/worker` for the Gate 2 harness from Phase 2, full UI suite from Phase 3) covers drag-and-drop, param validation, bake, share URL and keyboard-only use.
 - **CI** runs lint, typecheck, tests, build and e2e on every PR. Bundle-size budget: the core plus UI shell must be under 250 kB gzip, and op modules are lazy.
 
 ## 7. Phases and work packages
@@ -197,7 +188,7 @@ Each work package (WP) is sized for one sub-agent and has a verifiable "done". T
 ### Phase 2 — Operation runtime (`@forge/recipe`, `@forge/worker`, `@forge/ops` loader)
 | WP | Scope |
 |---|---|
-| 2.1 | `.fth` vocabulary loading (Vite plugin that bundles `vocab/*.fth`; catalogue JSON derived at build time, no hand-maintained registry) |
+| 2.1 | `.fth` vocabulary loading via a Node fs provider and Vite `import.meta.glob`, with no plugin; dependency order from `USING:`; catalogue JSON derived at build time, no hand-maintained registry |
 | 2.2 | Recipe JSON schema + validator + recipe→FL compiler (incl. fork/subsection/conditional/label-free loops) |
 | 2.3 | URL codec (versioned, deflate+base64url) + human-readable FL form; round-trip goldens |
 | 2.4 | Worker host: bake API, cancellation, watchdog, lazy primitive module loading, progress events |
@@ -222,7 +213,7 @@ Each work package (WP) is sized for one sub-agent and has a verifiable "done". T
 **Gate 3:** End to end in the browser, a user can search, drag, configure, bake, share a URL, reload it and get the same result, using the keyboard only.
 
 ### Phase 4 — Starter operation set (proves the model)
-About 40 ops in the `encoding`, `classical`, `bits` and `text` vocabularies. They include To/From Hex, Base32, Base64, Base58 and Base85, Binary, Decimal, Charcode, URL encoding and HTML entities, ROT13/ROT47, Caesar/rot, Atbash, Affine, Vigenère, Bacon, Bifid, Rail Fence, A1Z26, Morse, Substitute, XOR (+brute force), AND/OR/NOT/ADD/SUB, bit shift and rotate, Reverse, Upper/Lower case, Find/Replace, Split/Join, Fork/Merge (structural), Entropy and Frequency distribution.
+About 40 ops in per-format and per-topic vocabularies (`base64`, `hex`, `base32`, …, `classical`, `bits`, `text`). Names are Forge-native (`base64:decode`, not CyberChef names). They cover hex, Base32, Base64, Base58 and Base85, Binary, Decimal, Charcode, URL encoding and HTML entities, ROT13/ROT47, Caesar/rot, Atbash, Affine, Vigenère, Bacon, Bifid, Rail Fence, A1Z26, Morse, Substitute, XOR (+brute force), AND/OR/NOT/ADD/SUB, bit shift and rotate, Reverse, Upper/Lower case, Find/Replace, Split/Join, Fork/Merge (structural), Entropy and Frequency distribution.
 These are split across about four parallel agents by vocabulary. Every op ships with test vectors.
 
 **Gate 4:** All starter ops pass conformance in Node and in the browser e2e smoke test.
