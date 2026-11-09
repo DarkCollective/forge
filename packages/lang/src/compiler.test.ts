@@ -283,10 +283,10 @@ function stackWord(word: string, s: Value[]): void {
     case "over":
       s.push(top(2));
       return;
-    case "2dup":
+    case "dup2":
       s.push(top(2), top(1));
       return;
-    case "2drop":
+    case "drop2":
       s.length -= 2;
       return;
     default:
@@ -1971,9 +1971,7 @@ describe("intrinsic and primitive entry helpers", () => {
       expect(e.meta.op).toBe(false);
       expect(e.meta.doc).toBeTruthy();
       expect(e.meta.source).toEqual({ unit: null, text: null, pos: null });
-      // `2dup` and `2drop` (spec 13.1) start with a digit, which the metadata schema's name
-      // pattern (spec 2.11) rejects; every other intrinsic validates.
-      if (e.name !== "2dup" && e.name !== "2drop") expectValidMeta(e.meta);
+      expectValidMeta(e.meta);
     }
     const text = (n: string): string => entries.find((e) => e.name === n)?.meta.effect.text ?? "";
     expect(text("dup")).toBe("( a -- a a )");

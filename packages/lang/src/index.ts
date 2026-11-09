@@ -104,3 +104,5 @@ export {
   CORE_RUNTIME_WORDS,
   registerCorePrimitives,
 } from "./vocab/core.js";
+export { createRuntime } from "./runtime.js";
+export { runVm } from "./vm.js";

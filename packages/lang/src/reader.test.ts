@@ -516,7 +516,7 @@ describe("integers (2.4)", () => {
   test("a digit-leading or minus-digit token is never a word", () => {
     lexAt("1+", 1, 1);
     lexAt("-1x", 1, 1);
-    lexAt("2dup", 1, 1);
+    lexAt("2x", 1, 1);
     lexAt("a\n  3d", 2, 3);
   });
 
