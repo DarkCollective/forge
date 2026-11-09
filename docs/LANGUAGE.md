@@ -1301,25 +1301,25 @@ IN: user  5 dup .s      \ <2> 5 5       (no demo:dup in scope: core:dup)
 
 ### 16.1 Test block format
 
-Every test is a fenced block with info string `fl-test`. The first line is `# C<number> <title>`. Lines starting with `@` begin a section; section content is every following line up to the next `@` line (a single trailing newline is dropped). Sections:
+Every test is a fenced block with info string `fl-test`. The first line is `# C<number> <title>`. Lines starting with `@` begin a section; section content is every following line up to the next `@` line (a single trailing newline is dropped). A test needs at least one `@use`, `@unit` or `@run` section. Sections:
 
 | section | meaning |
 |---|---|
 | `@unit` | source loaded with `load()` before the run (trusted = false). May appear several times; they load in order. |
 | `@unit-fails CODE` | like `@unit`, but the load MUST fail with `CODE`, and the test continues (nothing from that unit may be defined) |
 | `@use U-rot` | loads the unit of §15.1 (the code block tagged `forth U-rot`: the `classical` vocabulary) before the other units |
-| `@trusted` | the previous `@unit` is loaded with `trusted: true` |
+| `@trusted` | the most recent preceding `@unit` is loaded with `trusted: true` |
 | `@run` | console source executed with `run()`. A test may contain several `@run` sections; they execute in order in one console session (the session scope persists; the final data stack of one run is the initial stack of the next) |
 | `@stack-in` | the initial data stack of the first run: whitespace-separated literal tokens (§2: ints, floats, strings, chars, bytes, bool), pushed in order via `RunOptions.stack` |
-| `@vars shared` | all runs of the test share one variable store (otherwise each run gets a fresh one) |
+| `@vars shared` | may appear anywhere in the test and applies to all of its runs: they share one variable store (otherwise each run gets a fresh one) |
 | `@stack` | expected final data stack of the nearest preceding `@run`, in `.s` format (e.g. `<2> 1 "a"`) |
-| `@out` | expected output of the nearest preceding `@run`: the section's lines joined with `\n` plus one final `\n`; an empty or absent section means no output (so a trailing blank line in the block stands for the extra `\n` printed by `.` after a text that already ends in a newline) |
-| `@error` | expected failure of the nearest preceding `@run`: `CODE key=value …` (code, then optional `line=`, `col=`, `word=`, or `detail.<field>=` assertions; `a,b` after `candidates=` is a list). If the test has no `@run` at all, the failure is expected from the last `@unit`'s `load()`. Otherwise the `run()` result must have `ok: false`. When an error is expected, `@out` (if present) is the output produced before it. |
+| `@out` | expected output of the nearest preceding `@run`: the section's lines joined with `\n` plus one final `\n`; an empty or absent section means no output |
+| `@error` | expected failure of the nearest preceding `@run`: `CODE key=value …` (code, then optional `line=`, `col=`, `word=`, or `detail.<key>=` assertions, one per detail key; `a,b` after `detail.candidates=` is a list). If the test has no `@run` at all, the failure is expected from the last `@unit`'s `load()`. Otherwise the `run()` result must have `ok: false`. When an error is expected, `@out` is the output produced before it; if `@out` is absent, the output must be empty. |
 | `@limits` | `name=value` pairs (space-separated) overriding `DEFAULT_LIMITS` for every run of the test |
 | `@abort` | `<n>ms`: abort the signal this long after each run starts |
 | `@deny` | space-separated effect labels for `RunOptions.deny`, for every run |
 | `@coercions` | expected `RunResult.coercions` of the nearest preceding `@run`, as lines `word slot from to` |
-| `@warnings` | expected diagnostic codes (`W_REDEFINED`, `W_SHADOW`), one per line, in order, of the nearest preceding `@unit` |
+| `@warnings` | expected diagnostic codes (`W_REDEFINED`, `W_SHADOW`), one per line, in order. It refers to the nearest preceding `@unit`, so it must follow that `@unit`. |
 | `@break` | `<qname>` or `<qname> <ip>`: add a breakpoint to every run |
 | `@hook` | `record` (the harness records every breakpoint hit) or `stop` (the hook returns `"stop"` at the first hit) |
 | `@hits` | the recorded breakpoint hits, one line `<word> <ip> <op>` each |

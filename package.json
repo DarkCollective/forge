@@ -21,7 +21,8 @@
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",
     "typecheck": "npm run build -w @forge/lang && npm run build -w @forge/ops && npm run typecheck --workspaces --if-present",
-    "dev": "npm run dev -w @forge/web"
+    "dev": "npm run dev -w @forge/web",
+    "repl": "npm run build -w @forge/lang && node packages/lang/dist-scripts/repl.js"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
