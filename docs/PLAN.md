@@ -185,7 +185,9 @@ Each work package (WP) is sized for one sub-agent and has a verifiable "done". T
 
 **Gate 1:** `classical:rot` is written in FL with a validated parameter, runs in Node, and its metadata JSON validates.
 
-### Phase 2 — Operation runtime (`@forge/recipe`, `@forge/worker`, `@forge/ops` loader)
+### Phase 2 — Operation runtime (`@forge/recipe`, `@forge/worker`, `@forge/ops` loader) ✅
+*Done 2026-11-09. Spec: [RECIPES.md](RECIPES.md). Gate 2 passes in Node, in `worker_threads`, and in Chromium Web Workers with and without cross-origin isolation (`npm run gate2:browser -w @forge/worker`). All 151 seed op vectors pass; 2,366 tests in total.*
+
 | WP | Scope |
 |---|---|
 | 2.1 | `.fth` vocabulary loading via a Node fs provider and Vite `import.meta.glob`, with no plugin; dependency order from `USING:`; catalogue JSON derived at build time, no hand-maintained registry |
