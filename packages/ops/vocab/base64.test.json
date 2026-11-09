@@ -1,0 +1,613 @@
+[
+  {
+    "name": "encode RFC 4648 §10 \"\"",
+    "ref": "RFC 4648 §10",
+    "op": "base64:encode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode RFC 4648 §10 \"f\"",
+    "ref": "RFC 4648 §10",
+    "op": "base64:encode",
+    "params": {},
+    "input": {
+      "value": "f",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Zg==",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode RFC 4648 §10 \"fo\"",
+    "ref": "RFC 4648 §10",
+    "op": "base64:encode",
+    "params": {},
+    "input": {
+      "value": "fo",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Zm8=",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode RFC 4648 §10 \"foo\"",
+    "ref": "RFC 4648 §10",
+    "op": "base64:encode",
+    "params": {},
+    "input": {
+      "value": "foo",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Zm9v",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode RFC 4648 §10 \"foob\"",
+    "ref": "RFC 4648 §10",
+    "op": "base64:encode",
+    "params": {},
+    "input": {
+      "value": "foob",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Zm9vYg==",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode RFC 4648 §10 \"fooba\"",
+    "ref": "RFC 4648 §10",
+    "op": "base64:encode",
+    "params": {},
+    "input": {
+      "value": "fooba",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Zm9vYmE=",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode RFC 4648 §10 \"foobar\"",
+    "ref": "RFC 4648 §10",
+    "op": "base64:encode",
+    "params": {},
+    "input": {
+      "value": "foobar",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Zm9vYmFy",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode without padding \"f\"",
+    "ref": "RFC 4648 §3.2 (padding is optional for this op)",
+    "op": "base64:encode",
+    "params": {
+      "padding": false
+    },
+    "input": {
+      "value": "f",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Zg",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode without padding \"fo\"",
+    "ref": "RFC 4648 §3.2 (padding is optional for this op)",
+    "op": "base64:encode",
+    "params": {
+      "padding": false
+    },
+    "input": {
+      "value": "fo",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Zm8",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode without padding \"foob\"",
+    "ref": "RFC 4648 §3.2 (padding is optional for this op)",
+    "op": "base64:encode",
+    "params": {
+      "padding": false
+    },
+    "input": {
+      "value": "foob",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Zm9vYg",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode without padding \"foobar\"",
+    "ref": "RFC 4648 §3.2 (padding is optional for this op)",
+    "op": "base64:encode",
+    "params": {
+      "padding": false
+    },
+    "input": {
+      "value": "foobar",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Zm9vYmFy",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode url alphabet, padded",
+    "ref": "RFC 4648 §5",
+    "op": "base64:encode",
+    "params": {
+      "alphabet": "url"
+    },
+    "input": {
+      "value": "fbff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "-_8=",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode standard alphabet, padded",
+    "ref": "RFC 4648 §4",
+    "op": "base64:encode",
+    "params": {},
+    "input": {
+      "value": "fbff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "+/8=",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode url alphabet, unpadded",
+    "ref": "RFC 4648 §5 and §3.2",
+    "op": "base64:encode",
+    "params": {
+      "alphabet": "url",
+      "padding": false
+    },
+    "input": {
+      "value": "fbff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "-_8",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode sextets 62 and 63 (standard)",
+    "ref": "RFC 4648 §4 (index 62 is +, 63 is /)",
+    "op": "base64:encode",
+    "params": {},
+    "input": {
+      "value": "fbefbe",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "++++",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode sextets 62 and 63 (url)",
+    "ref": "RFC 4648 §5 (index 62 is -, 63 is _)",
+    "op": "base64:encode",
+    "params": {
+      "alphabet": "url"
+    },
+    "input": {
+      "value": "fbefbe",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "----",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode non-ASCII UTF-8 bytes",
+    "ref": "RFC 4648 §10 applied to UTF-8 bytes",
+    "op": "base64:encode",
+    "params": {},
+    "input": {
+      "value": "é€",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "w6nigqw=",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode RFC 4648 §10 \"\"",
+    "ref": "RFC 4648 §10",
+    "op": "base64:decode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode RFC 4648 §10 \"Zg==\"",
+    "ref": "RFC 4648 §10",
+    "op": "base64:decode",
+    "params": {},
+    "input": {
+      "value": "Zg==",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode RFC 4648 §10 \"Zm8=\"",
+    "ref": "RFC 4648 §10",
+    "op": "base64:decode",
+    "params": {},
+    "input": {
+      "value": "Zm8=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fo",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode RFC 4648 §10 \"Zm9v\"",
+    "ref": "RFC 4648 §10",
+    "op": "base64:decode",
+    "params": {},
+    "input": {
+      "value": "Zm9v",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "foo",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode RFC 4648 §10 \"Zm9vYg==\"",
+    "ref": "RFC 4648 §10",
+    "op": "base64:decode",
+    "params": {},
+    "input": {
+      "value": "Zm9vYg==",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "foob",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode RFC 4648 §10 \"Zm9vYmE=\"",
+    "ref": "RFC 4648 §10",
+    "op": "base64:decode",
+    "params": {},
+    "input": {
+      "value": "Zm9vYmE=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fooba",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode RFC 4648 §10 \"Zm9vYmFy\"",
+    "ref": "RFC 4648 §10",
+    "op": "base64:decode",
+    "params": {},
+    "input": {
+      "value": "Zm9vYmFy",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "foobar",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode without padding Zg",
+    "ref": "RFC 4648 §3.2",
+    "op": "base64:decode",
+    "params": {},
+    "input": {
+      "value": "Zg",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode without padding Zm8",
+    "ref": "RFC 4648 §3.2",
+    "op": "base64:decode",
+    "params": {},
+    "input": {
+      "value": "Zm8",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fo",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode without padding Zm9vYg",
+    "ref": "RFC 4648 §3.2",
+    "op": "base64:decode",
+    "params": {},
+    "input": {
+      "value": "Zm9vYg",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "foob",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ignores ASCII line feed",
+    "ref": "spec §10.1 (whitespace ignored)",
+    "op": "base64:decode",
+    "params": {},
+    "input": {
+      "value": "Zm9v\nYmFy",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "foobar",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ignores spaces and tabs",
+    "ref": "spec §10.1 (whitespace ignored)",
+    "op": "base64:decode",
+    "params": {},
+    "input": {
+      "value": "Zm9v YmFy\t",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "foobar",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode url alphabet",
+    "ref": "RFC 4648 §5",
+    "op": "base64:decode",
+    "params": {
+      "alphabet": "url"
+    },
+    "input": {
+      "value": "-_8",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fbff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode url alphabet, padded",
+    "ref": "RFC 4648 §5",
+    "op": "base64:decode",
+    "params": {
+      "alphabet": "url"
+    },
+    "input": {
+      "value": "-_8=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fbff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode standard alphabet +/",
+    "ref": "RFC 4648 §4",
+    "op": "base64:decode",
+    "params": {},
+    "input": {
+      "value": "+/8=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fbff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode /w== to 0xff",
+    "ref": "RFC 4648 §4 (pad bits zero)",
+    "op": "base64:decode",
+    "params": {},
+    "input": {
+      "value": "/w==",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode error: url characters under the standard alphabet",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base64:decode",
+    "params": {},
+    "input": {
+      "value": "-_8",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: url characters with padding under the standard alphabet",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base64:decode",
+    "params": {},
+    "input": {
+      "value": "-_8=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: one pad character for a length that needs two",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base64:decode",
+    "params": {},
+    "input": {
+      "value": "Zg=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: non-zero pad bits (Zh==)",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base64:decode",
+    "params": {},
+    "input": {
+      "value": "Zh==",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: non-zero pad bits without padding (Zm9=)",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base64:decode",
+    "params": {},
+    "input": {
+      "value": "Zm9=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: length 1 mod 4",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base64:decode",
+    "params": {},
+    "input": {
+      "value": "Z",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: character outside the alphabet",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base64:decode",
+    "params": {},
+    "input": {
+      "value": "Zm9v!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: non-ASCII character",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base64:decode",
+    "params": {},
+    "input": {
+      "value": "Zm9v€",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: padding that does not reach a multiple of four",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base64:decode",
+    "params": {},
+    "input": {
+      "value": "Zm9v=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: trailing url character under the standard alphabet",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base64:decode",
+    "params": {},
+    "input": {
+      "value": "Zm9vYmFy-",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

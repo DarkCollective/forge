@@ -1,0 +1,351 @@
+[
+  {
+    "name": "encode foobar",
+    "ref": "RFC 4648 §8 (base16) and spec §10.1",
+    "op": "hex:encode",
+    "params": {},
+    "input": {
+      "value": "foobar",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "666f6f626172",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode empty input",
+    "ref": "RFC 4648 §8 (base16) and spec §10.1",
+    "op": "hex:encode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode with space delimiter",
+    "ref": "RFC 4648 §8 (base16) and spec §10.1",
+    "op": "hex:encode",
+    "params": {
+      "delimiter": "space"
+    },
+    "input": {
+      "value": "foo",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "66 6f 6f",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode with colon delimiter and upper case",
+    "ref": "RFC 4648 §8 (base16) and spec §10.1",
+    "op": "hex:encode",
+    "params": {
+      "delimiter": "colon",
+      "case": "upper"
+    },
+    "input": {
+      "value": "ff0a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "FF:0A",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode defaults lower, no delimiter",
+    "ref": "RFC 4648 §8 (base16) and spec §10.1",
+    "op": "hex:encode",
+    "params": {},
+    "input": {
+      "value": "ff0a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ff0a",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode no delimiter, upper",
+    "ref": "RFC 4648 §8 (base16) and spec §10.1",
+    "op": "hex:encode",
+    "params": {
+      "case": "upper"
+    },
+    "input": {
+      "value": "ff0a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "FF0A",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode space delimiter, lower",
+    "ref": "RFC 4648 §8 (base16) and spec §10.1",
+    "op": "hex:encode",
+    "params": {
+      "delimiter": "space",
+      "case": "lower"
+    },
+    "input": {
+      "value": "ff0a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ff 0a",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode colon delimiter, lower, four bytes",
+    "ref": "RFC 4648 §8 (base16) and spec §10.1",
+    "op": "hex:encode",
+    "params": {
+      "delimiter": "colon"
+    },
+    "input": {
+      "value": "00ff7f80",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00:ff:7f:80",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode non-ASCII UTF-8 bytes",
+    "ref": "RFC 4648 §8 (base16) and spec §10.1",
+    "op": "hex:encode",
+    "params": {},
+    "input": {
+      "value": "é",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c3a9",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode non-ASCII UTF-8 bytes, space and upper",
+    "ref": "RFC 4648 §8 (base16) and spec §10.1",
+    "op": "hex:encode",
+    "params": {
+      "delimiter": "space",
+      "case": "upper"
+    },
+    "input": {
+      "value": "é",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "C3 A9",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode one zero byte",
+    "ref": "RFC 4648 §8 (base16) and spec §10.1",
+    "op": "hex:encode",
+    "params": {},
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode five bytes, colon, upper",
+    "ref": "RFC 4648 §8 (base16) and spec §10.1",
+    "op": "hex:encode",
+    "params": {
+      "delimiter": "colon",
+      "case": "upper"
+    },
+    "input": {
+      "value": "0102030405",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "01:02:03:04:05",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode lower case",
+    "ref": "RFC 4648 §8 (base16) and spec §10.1",
+    "op": "hex:decode",
+    "params": {},
+    "input": {
+      "value": "666f6f",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "foo",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode six digits",
+    "ref": "RFC 4648 §8 (base16) and spec §10.1",
+    "op": "hex:decode",
+    "params": {},
+    "input": {
+      "value": "666f6f626172",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "foobar",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode with spaces and LF",
+    "ref": "RFC 4648 §8 (base16) and spec §10.1",
+    "op": "hex:decode",
+    "params": {},
+    "input": {
+      "value": "66 6F\n6f",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "foo",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode with tab, CR and LF between pairs",
+    "ref": "RFC 4648 §8 (base16) and spec §10.1",
+    "op": "hex:decode",
+    "params": {},
+    "input": {
+      "value": "66\t6f\r\n6f",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "foo",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode empty input",
+    "ref": "RFC 4648 §8 (base16) and spec §10.1",
+    "op": "hex:decode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode mixed case to binary",
+    "ref": "RFC 4648 §8 (base16) and spec §10.1",
+    "op": "hex:decode",
+    "params": {},
+    "input": {
+      "value": "FFfe",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fffe",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode upper case UTF-8 bytes",
+    "ref": "RFC 4648 §8 (base16) and spec §10.1",
+    "op": "hex:decode",
+    "params": {},
+    "input": {
+      "value": "C3A9",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "é",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode error: one digit",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "hex:decode",
+    "params": {},
+    "input": {
+      "value": "6",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: invalid digit zz",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "hex:decode",
+    "params": {},
+    "input": {
+      "value": "zz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: odd number of digits",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "hex:decode",
+    "params": {},
+    "input": {
+      "value": "666",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: 0x prefix",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "hex:decode",
+    "params": {},
+    "input": {
+      "value": "0x66",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: odd number of digits after a space",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "hex:decode",
+    "params": {},
+    "input": {
+      "value": "66 6",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

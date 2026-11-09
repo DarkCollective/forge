@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:forge:schema:op-vectors:1",
+  "title": "Forge operation test vectors, one file per vocabulary",
+  "type": "array",
+  "items": { "$ref": "#/$defs/vector" },
+  "$defs": {
+    "encoded": {
+      "type": "object",
+      "properties": {
+        "value": { "type": "string" },
+        "enc": { "enum": ["utf8", "hex", "latin1", "base64"] }
+      },
+      "required": ["value", "enc"],
+      "additionalProperties": false
+    },
+    "vector": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 200 },
+        "ref": { "type": "string", "maxLength": 200 },
+        "op": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,63}:[^\\s:]{1,128}$" },
+        "params": {
+          "type": "object",
+          "additionalProperties": {
+            "oneOf": [
+              { "type": "number" },
+              { "type": "string" },
+              { "type": "boolean" },
+              { "$ref": "#/$defs/encoded" }
+            ]
+          }
+        },
+        "input": { "$ref": "#/$defs/encoded" },
+        "expect": {
+          "oneOf": [
+            { "$ref": "#/$defs/encoded" },
+            {
+              "type": "object",
+              "properties": { "error": { "type": "string", "pattern": "^E_[A-Z_]+$" } },
+              "required": ["error"],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": { "json": {} },
+              "required": ["json"],
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "required": ["op", "params", "input", "expect"],
+      "additionalProperties": false
+    }
+  }
+}

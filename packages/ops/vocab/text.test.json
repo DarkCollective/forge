@@ -1,0 +1,237 @@
+[
+  {
+    "name": "upper straße gives STRASSE",
+    "ref": "Unicode default case mapping (String.prototype), spec §10.1",
+    "op": "text:upper",
+    "params": {},
+    "input": {
+      "value": "straße",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "STRASSE",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "upper accented letters",
+    "ref": "Unicode default case mapping (String.prototype), spec §10.1",
+    "op": "text:upper",
+    "params": {},
+    "input": {
+      "value": "àé",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ÀÉ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "upper keeps astral emoji",
+    "ref": "Unicode default case mapping (String.prototype), spec §10.1",
+    "op": "text:upper",
+    "params": {},
+    "input": {
+      "value": "a😀b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "A😀B",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "upper maps an astral letter (Deseret)",
+    "ref": "Unicode UnicodeData (U+10428 to U+10400)",
+    "op": "text:upper",
+    "params": {},
+    "input": {
+      "value": "𐐨",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "𐐀",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "upper of empty input",
+    "ref": "Unicode default case mapping (String.prototype), spec §10.1",
+    "op": "text:upper",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "lower of ÀB",
+    "ref": "Unicode default case mapping (String.prototype), spec §10.1",
+    "op": "text:lower",
+    "params": {},
+    "input": {
+      "value": "ÀB",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "àb",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "lower of dotted capital I (two code points)",
+    "ref": "Unicode SpecialCasing.txt (U+0130)",
+    "op": "text:lower",
+    "params": {},
+    "input": {
+      "value": "İ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "i̇",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "lower applies final sigma",
+    "ref": "Unicode SpecialCasing.txt (Final_Sigma)",
+    "op": "text:lower",
+    "params": {},
+    "input": {
+      "value": "ΟΔΟΣ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "οδος",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "lower keeps astral emoji",
+    "ref": "Unicode default case mapping (String.prototype), spec §10.1",
+    "op": "text:lower",
+    "params": {},
+    "input": {
+      "value": "😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "😀",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "reverse a😀b",
+    "ref": "spec §10.1 (reverse by code point)",
+    "op": "text:reverse",
+    "params": {},
+    "input": {
+      "value": "a😀b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "b😀a",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "reverse by code point, not grapheme (combining mark)",
+    "ref": "spec §10.1 (reverse by code point)",
+    "op": "text:reverse",
+    "params": {},
+    "input": {
+      "value": "é",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "́e",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "reverse Grüße",
+    "ref": "spec §10.1 (reverse by code point)",
+    "op": "text:reverse",
+    "params": {},
+    "input": {
+      "value": "Grüße",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "eßürG",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "reverse astral math letters",
+    "ref": "spec §10.1 (reverse by code point)",
+    "op": "text:reverse",
+    "params": {},
+    "input": {
+      "value": "𝒜b𝒞",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "𝒞b𝒜",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "reverse empty input",
+    "ref": "spec §10.1",
+    "op": "text:reverse",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "upper rejects invalid UTF-8 (E_COERCE)",
+    "ref": "spec §10.1 (strict UTF-8)",
+    "op": "text:upper",
+    "params": {},
+    "input": {
+      "value": "ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "lower rejects invalid UTF-8 (E_COERCE)",
+    "ref": "spec §10.1 (strict UTF-8)",
+    "op": "text:lower",
+    "params": {},
+    "input": {
+      "value": "ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "reverse rejects a truncated UTF-8 sequence (E_COERCE)",
+    "ref": "spec §10.1 (strict UTF-8)",
+    "op": "text:reverse",
+    "params": {},
+    "input": {
+      "value": "c3",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]
