@@ -79,8 +79,8 @@ const INTRINSIC_TABLE: Readonly<Record<IntrinsicName, readonly [string, string]>
   "-rot": ["a b c -- c a b", "rotate the top to third"],
   nip: ["a b -- b", "drop the second"],
   tuck: ["a b -- b a b", "copy the top below the second"],
-  "2dup": ["a b -- a b a b", "duplicate the top pair"],
-  "2drop": ["a b --", "discard the top pair"],
+  dup2: ["a b -- a b a b", "duplicate the top pair"],
+  drop2: ["a b --", "discard the top pair"],
   depth: ["-- int", "push the number of values above the floor (before the push)"],
   clear: [".. --", "remove all values above the floor"],
   call: ["quot -- ..", "run a quotation"],
@@ -251,8 +251,8 @@ function intrinsicInstruction(name: IntrinsicName): Instruction {
     case "-rot":
     case "nip":
     case "tuck":
-    case "2dup":
-    case "2drop":
+    case "dup2":
+    case "drop2":
     case "depth":
     case "clear":
       return { op: "stack", word: name satisfies StackWord };

@@ -706,7 +706,7 @@ cond [ A ] when          →   jumpf L1 ; A ; L1:
 |---|---|---|
 | `lit` | `value` | `( -- v )` push `value` (a literal; constants are inlined here) |
 | `local` | `slot` | `( -- v )` push `locals[slot]` |
-| `stack` | `word` | one of `dup drop swap over rot -rot nip tuck 2dup 2drop depth clear`, with the effects in §13.1. Underflow (below the floor) is `E_STACK_UNDERFLOW` |
+| `stack` | `word` | one of `dup drop swap over rot -rot nip tuck dup2 drop2 depth clear`, with the effects in §13.1. Underflow (below the floor) is `E_STACK_UNDERFLOW` |
 | `call` | `entry` (kind `fl`) | pops the word's inputs, does the entry sequence (§10.5), pushes a `word` frame, sets `ip := 0` of the callee |
 | `prim` | `entry` (kind `primitive`) | pops inputs, validates, calls `fn` (awaiting a returned thenable), validates results, pushes them |
 | `varGet` | `entry` | `( -- v )` current value of the variable |
@@ -1011,8 +1011,8 @@ All stack words operate above the current floor (§10.1).
 | `-rot` | I | `( a b c -- c a b )` | rotate the top to third |
 | `nip` | I | `( a b -- b )` | drop the second |
 | `tuck` | I | `( a b -- b a b )` | copy the top below the second |
-| `2dup` | I | `( a b -- a b a b )` | duplicate the top pair |
-| `2drop` | I | `( a b -- )` | discard the top pair |
+| `dup2` | I | `( a b -- a b a b )` | duplicate the top pair |
+| `drop2` | I | `( a b -- )` | discard the top pair |
 | `depth` | I | `( -- int )` | push the number of values above the floor (before the push) |
 | `clear` | I | `( .. -- )` | remove all values above the floor |
 
@@ -1484,7 +1484,7 @@ E_LEX line=1 col=1
 1 2 3 -rot .s clear
 1 2 tuck .s clear
 1 2 nip .s clear
-1 2 2dup .s clear
+1 2 dup2 .s clear
 5 6 depth .s
 @out
 <3> 2 3 1
@@ -3244,6 +3244,7 @@ Decisions the plan did not fix. Each is final for v0.1.
 | D46 | An oversize integer literal is `E_LIMIT_VALUE`, raised by the reader. | One code for every over-`maxIntBits` integer. |
 | D47 | Console compile errors roll back scope changes; each console segment records its scope. | An erroring line has no effect; `current-vocab` is predictable mid-line. |
 | D48 | Unicode Zs/Zl/Zp/Cf characters in a token are `E_LEX`. | No invisible look-alike separators or name characters. |
+| D49 | The Forth words `2dup` and `2drop` are named `dup2` and `drop2`. | A word may not start with a digit (§2.11), so the Forth names cannot be lexed. |
 
 ### 17.1 Items deliberately left out of v0.1
 

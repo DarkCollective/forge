@@ -360,8 +360,8 @@ export type StackWord =
   | "-rot"
   | "nip"
   | "tuck"
-  | "2dup"
-  | "2drop"
+  | "dup2"
+  | "drop2"
   | "depth"
   | "clear";
 
