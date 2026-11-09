@@ -56,6 +56,7 @@ import {
   str,
   validate,
 } from "./values.js";
+import { isPrivateName } from "./dictionary.js";
 import { sha256 } from "./sha256.js";
 
 /** The JSON Schema (draft 2020-12) of `WordMeta` (`meta.schema.json`). */
@@ -103,10 +104,8 @@ export function isReservedWord(s: string): boolean {
   return RESERVED_WORDS.includes(s);
 }
 
-/** A name starting with `_` is private (spec 5.7). */
-export function isPrivateName(name: string): boolean {
-  return name.startsWith("_");
-}
+/** A name starting with `_` is private (spec 5.7). The single implementation lives in dictionary.ts. */
+export { isPrivateName };
 
 // ---------------------------------------------------------------------------------------------
 // Canonical text (spec 12.3)
