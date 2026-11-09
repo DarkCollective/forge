@@ -18,7 +18,8 @@ Two things set Forge apart:
 - **Bytes are the canonical data type.** Text always carries an explicit encoding, and bytes are never silently round-tripped through JS strings.
 - **Validation is first-class.** Parameters reach a word only after schema validation.
 - **Untrusted by default.** Shared recipes and vocabularies run with hard resource limits, have no ambient capabilities, and their metadata is treated as text.
-- **Independent implementation.** CyberChef is Apache-2.0 under Crown Copyright. Forge mirrors its *feature set* only. No code, description strings, data tables or branding are copied. See research §6.
+- **Inspired by CyberChef, not compatible with it.** Forge takes CyberChef's feature set as a reference for *capability coverage*. It does not aim for compatibility: operation names, parameters, defaults, behaviours, recipe formats and URLs are Forge's own, and they change wherever a cleaner design is possible. Importing CyberChef recipes is not a goal; at most it could be an optional, best-effort converter later.
+- **Independent implementation.** CyberChef is Apache-2.0 under Crown Copyright. No code, description strings, data tables or branding are copied. See research §6.
 
 ## 2. Repository
 
@@ -226,8 +227,8 @@ These are split across about four parallel agents by vocabulary. Every op ships 
 
 **Gate 4:** All starter ops pass conformance in Node and in the browser e2e smoke test.
 
-### Phase 5 — CyberChef parity waves
-CyberChef has **506 operations** in 16 categories (see research §5 and the appendix). Ports happen in waves ordered for a codes-and-ciphers audience. Each wave is a set of per-vocabulary WPs run as parallel agents, gated by conformance vectors:
+### Phase 5 — Capability coverage waves
+CyberChef has **506 operations** in 16 categories (see research §5 and the appendix). We use that list as a checklist of *capabilities*, not a set of names to reproduce. In Forge, several CyberChef ops may become one parameterised word (e.g. one `rot` instead of ROT13/ROT47/ROT8000 variants, one `xor`), some become vocabulary-qualified names (`base64:decode`), and some are dropped or redesigned. Work happens in waves ordered for a codes-and-ciphers audience. Each wave is a set of per-vocabulary WPs run as parallel agents, gated by conformance vectors:
 
 1. Remaining encodings/data formats (Base45/62/92, Punycode, Quoted-Printable, Braille, BCD, …)
 2. Historical cipher machines (Enigma, Bombe, Typex, Lorenz, SIGABA, …) and remaining classical ciphers
@@ -237,14 +238,14 @@ CyberChef has **506 operations** in 16 categories (see research §5 and the appe
 6. Compression (CompressionStream; WASM zstd/brotli, which CyberChef users have asked for)
 7. Public key, networking parsers, forensics, multimedia, code tidy (lowest priority)
 
-Each WP also records parity in `docs/PARITY.md`, a generated table of CyberChef op → Forge word → status.
+Each WP also updates `docs/COVERAGE.md`, a generated table of CyberChef capability → the Forge word(s) that cover it (or "dropped" / "redesigned", with a reason).
 
-### Phase 6 — Beyond parity
+### Phase 6 — Beyond CyberChef
 Magic auto-detection (declarative `checks` in META, depth-limited search). An optional recipe store backend behind `RecipeStore`. A PWA/offline mode. The `@forge/cli`. Recipe diff/swap. **Relix vocabulary** integration as an `relix:` vocab of primitives.
 
 ## 8. How the orchestration will run
 
-- **Agent mix**: Sonnet-class agents for spec-critical work (1.1, 1.5, 1.6, 2.2, 3.3). Haiku-class agents for well-specified, repetitive WPs (ops with test vectors, parity-table generation, docs). Each agent gets the spec, the WP's "done" line, and the rule *no commits with attribution, no pushes*.
+- **Agent mix**: Sonnet-class agents for spec-critical work (1.1, 1.5, 1.6, 2.2, 3.3). Haiku-class agents for well-specified, repetitive WPs (ops with test vectors, coverage-table generation, docs). Each agent gets the spec, the WP's "done" line, and the rule *no commits with attribution, no pushes*.
 - **Isolation**: parallel WPs run in separate git worktrees on `wp/<id>` branches. The orchestrator merges after review.
 - **Verification per WP**: read the diff, then re-run `npm run lint && npm run typecheck && npm test && npm run build` (+e2e from Phase 3) on the merged result, then spot-check behaviour by hand.
 - **Order**: Phase 1 is mostly sequential (1.1 → 1.2/1.3 in parallel → 1.4 → 1.5 → 1.6/1.7/1.8 in parallel). Phase 3.1–3.2 can start once Gate 1 passes, against a mocked catalogue. Phases 4 and 5 are highly parallel.
