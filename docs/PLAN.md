@@ -199,6 +199,8 @@ Each work package (WP) is sized for one sub-agent and has a verifiable "done". T
 **Gate 2:** A three-step recipe (from-base64 → rot13 → to-hex) built from JSON, encoded in a URL and decoded again bakes identically in Node and in a Worker.
 
 ### Phase 3 — UI (`apps/web`)
+*Spec: [UI.md](UI.md) (layout, file ownership per WP, shared contracts, console design, CSP rules, testing).*
+
 | WP | Scope |
 |---|---|
 | 3.1 | App shell: resizable four-pane layout, themes, responsive breakpoints, design tokens |

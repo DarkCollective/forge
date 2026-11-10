@@ -13,4 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import "./forge-app.js";
+import "./styles/tokens.css";
+import "./styles/global.css";
+import { boot } from "./boot.js";
+
+void boot();
