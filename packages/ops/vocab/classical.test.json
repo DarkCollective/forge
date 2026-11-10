@@ -328,5 +328,2621 @@
     "expect": {
       "error": "E_RECIPE_INVALID"
     }
+  },
+  {
+    "name": "ROT47 Hello, World!",
+    "ref": "ROT47 definition (bytes 33..126 rotated by 47); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:rot47",
+    "params": {},
+    "input": {
+      "value": "Hello, World!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "77363d3d405b202840433d3550",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "ROT47 range ends ! and ~",
+    "ref": "ROT47 definition (bytes 33..126 rotated by 47); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:rot47",
+    "params": {},
+    "input": {
+      "value": "!~",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "504f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "ROT47 space and digits",
+    "ref": "ROT47 definition (bytes 33..126 rotated by 47); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:rot47",
+    "params": {},
+    "input": {
+      "value": "09 az",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "5f6820324b",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "ROT47 full printable run",
+    "ref": "ROT47 definition (bytes 33..126 rotated by 47); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:rot47",
+    "params": {},
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog 0123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2539362042463a343c20334340483f20374049203b463e4144204047364320453936203d324b4a20354038205f606162636465666768",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "ROT47 is an involution",
+    "ref": "ROT47 definition (bytes 33..126 rotated by 47); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:rot47",
+    "params": {},
+    "input": {
+      "value": "w6==@[ (@C=5P",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "48656c6c6f2c20576f726c6421",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "ROT47 empty input",
+    "ref": "ROT47 definition (bytes 33..126 rotated by 47); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:rot47",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "ROT47 non-ASCII UTF-8 passes through, ASCII rotates",
+    "ref": "ROT47 definition (bytes 33..126 rotated by 47); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:rot47",
+    "params": {},
+    "input": {
+      "value": "Grüße!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "7643c3bcc39f3650",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "ROT47 binary bytes (0x00, 0x20, 0x7f, 0xff pass through)",
+    "ref": "ROT47 definition (bytes 33..126 rotated by 47); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:rot47",
+    "params": {},
+    "input": {
+      "value": "0020217e7fff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0020504f7fff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Atbash Hello",
+    "ref": "Atbash definition (A<->Z); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:atbash",
+    "params": {},
+    "input": {
+      "value": "Hello",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "53766f6f6c",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Atbash WIZARD",
+    "ref": "Atbash definition (A<->Z); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:atbash",
+    "params": {},
+    "input": {
+      "value": "WIZARD",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4452415a4957",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Atbash is an involution",
+    "ref": "Atbash definition (A<->Z); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:atbash",
+    "params": {},
+    "input": {
+      "value": "Svool, Dliow! 123",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "48656c6c6f2c20576f726c642120313233",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Atbash empty input",
+    "ref": "Atbash definition (A<->Z); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:atbash",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Atbash non-ASCII UTF-8 passes through",
+    "ref": "Atbash definition (A<->Z); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:atbash",
+    "params": {},
+    "input": {
+      "value": "Grüße",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "5469c3bcc39f76",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Atbash binary bytes",
+    "ref": "Atbash definition (A<->Z); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:atbash",
+    "params": {},
+    "input": {
+      "value": "00ff4180c35a7a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00ff5a80c34161",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Affine encrypt AFFINE CIPHER (published)",
+    "ref": "Wikipedia, Affine cipher worked example (a=5, b=8)",
+    "op": "classical:affine-encrypt",
+    "params": {
+      "a": 5,
+      "b": 8
+    },
+    "input": {
+      "value": "AFFINE CIPHER",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "IHHWVC SWFRCP",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Affine decrypt IHHWVC SWFRCP (published)",
+    "ref": "Wikipedia, Affine cipher worked example (a=5, b=8)",
+    "op": "classical:affine-decrypt",
+    "params": {
+      "a": 5,
+      "b": 8
+    },
+    "input": {
+      "value": "IHHWVC SWFRCP",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "AFFINE CIPHER",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Affine encrypt defaults are a=5 b=8",
+    "ref": "Wikipedia, Affine cipher worked example (a=5, b=8)",
+    "op": "classical:affine-encrypt",
+    "params": {},
+    "input": {
+      "value": "AFFINE CIPHER",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "IHHWVC SWFRCP",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Affine decrypt defaults are a=5 b=8",
+    "ref": "Wikipedia, Affine cipher worked example (a=5, b=8)",
+    "op": "classical:affine-decrypt",
+    "params": {},
+    "input": {
+      "value": "IHHWVC SWFRCP",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "AFFINE CIPHER",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Affine encrypt keeps case and punctuation",
+    "ref": "affine definition E(x)=(a*x+b) mod 26; hand-computed, cross-checked with an independent Node script",
+    "op": "classical:affine-encrypt",
+    "params": {
+      "a": 7,
+      "b": 3
+    },
+    "input": {
+      "value": "Hello, World! 42",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "41666363782c20427873637921203432",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Affine decrypt keeps case and punctuation",
+    "ref": "affine definition E(x)=(a*x+b) mod 26; hand-computed, cross-checked with an independent Node script",
+    "op": "classical:affine-decrypt",
+    "params": {
+      "a": 7,
+      "b": 3
+    },
+    "input": {
+      "value": "41666363782c20427873637921203432",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Hello, World! 42",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Affine encrypt a=25 b=25 is Z for A",
+    "ref": "affine definition E(x)=(a*x+b) mod 26; hand-computed, cross-checked with an independent Node script",
+    "op": "classical:affine-encrypt",
+    "params": {
+      "a": 25,
+      "b": 25
+    },
+    "input": {
+      "value": "Aa",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "5a7a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Affine encrypt a=1 b=0 is the identity",
+    "ref": "affine definition E(x)=(a*x+b) mod 26; hand-computed, cross-checked with an independent Node script",
+    "op": "classical:affine-encrypt",
+    "params": {
+      "a": 1,
+      "b": 0
+    },
+    "input": {
+      "value": "Identity",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4964656e74697479",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Affine decrypt a=25 b=25",
+    "ref": "affine definition E(x)=(a*x+b) mod 26; hand-computed, cross-checked with an independent Node script",
+    "op": "classical:affine-decrypt",
+    "params": {
+      "a": 25,
+      "b": 25
+    },
+    "input": {
+      "value": "Zz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4161",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Affine decrypt a=1 b=0 is the identity",
+    "ref": "affine definition E(x)=(a*x+b) mod 26; hand-computed, cross-checked with an independent Node script",
+    "op": "classical:affine-decrypt",
+    "params": {
+      "a": 1,
+      "b": 0
+    },
+    "input": {
+      "value": "Identity",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4964656e74697479",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "affine-encrypt empty input",
+    "ref": "affine definition E(x)=(a*x+b) mod 26; hand-computed, cross-checked with an independent Node script",
+    "op": "classical:affine-encrypt",
+    "params": {
+      "a": 3,
+      "b": 4
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "affine-encrypt non-ASCII UTF-8 passes through",
+    "ref": "affine definition E(x)=(a*x+b) mod 26; hand-computed, cross-checked with an independent Node script",
+    "op": "classical:affine-encrypt",
+    "params": {
+      "a": 3,
+      "b": 4
+    },
+    "input": {
+      "value": "Grüße",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "5764c3bcc39f71",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "affine-encrypt binary bytes",
+    "ref": "affine definition E(x)=(a*x+b) mod 26; hand-computed, cross-checked with an independent Node script",
+    "op": "classical:affine-encrypt",
+    "params": {
+      "a": 3,
+      "b": 4
+    },
+    "input": {
+      "value": "00ff4180c35a7a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00ff4580c34262",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "affine-encrypt a=2 is not coprime to 26 (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:affine-encrypt",
+    "params": {
+      "a": 2,
+      "b": 0
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "affine-encrypt a=13 is not coprime to 26 (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:affine-encrypt",
+    "params": {
+      "a": 13,
+      "b": 0
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "affine-encrypt a=0 (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:affine-encrypt",
+    "params": {
+      "a": 0,
+      "b": 0
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "affine-encrypt a=27 (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:affine-encrypt",
+    "params": {
+      "a": 27,
+      "b": 0
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "affine-encrypt b=26 is out of range (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:affine-encrypt",
+    "params": {
+      "a": 5,
+      "b": 26
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "affine-encrypt b=-1 is out of range (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:affine-encrypt",
+    "params": {
+      "a": 5,
+      "b": -1
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "affine-encrypt b=1.5 is not an integer (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:affine-encrypt",
+    "params": {
+      "a": 5,
+      "b": 1.5
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "affine-decrypt empty input",
+    "ref": "affine definition E(x)=(a*x+b) mod 26; hand-computed, cross-checked with an independent Node script",
+    "op": "classical:affine-decrypt",
+    "params": {
+      "a": 3,
+      "b": 4
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "affine-decrypt non-ASCII UTF-8 passes through",
+    "ref": "affine definition E(x)=(a*x+b) mod 26; hand-computed, cross-checked with an independent Node script",
+    "op": "classical:affine-decrypt",
+    "params": {
+      "a": 3,
+      "b": 4
+    },
+    "input": {
+      "value": "Grüße",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "536ec3bcc39f61",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "affine-decrypt binary bytes",
+    "ref": "affine definition E(x)=(a*x+b) mod 26; hand-computed, cross-checked with an independent Node script",
+    "op": "classical:affine-decrypt",
+    "params": {
+      "a": 3,
+      "b": 4
+    },
+    "input": {
+      "value": "00ff4180c35a7a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00ff5180c34868",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "affine-decrypt a=2 is not coprime to 26 (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:affine-decrypt",
+    "params": {
+      "a": 2,
+      "b": 0
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "affine-decrypt a=13 is not coprime to 26 (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:affine-decrypt",
+    "params": {
+      "a": 13,
+      "b": 0
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "affine-decrypt a=0 (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:affine-decrypt",
+    "params": {
+      "a": 0,
+      "b": 0
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "affine-decrypt a=27 (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:affine-decrypt",
+    "params": {
+      "a": 27,
+      "b": 0
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "affine-decrypt b=26 is out of range (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:affine-decrypt",
+    "params": {
+      "a": 5,
+      "b": 26
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "affine-decrypt b=-1 is out of range (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:affine-decrypt",
+    "params": {
+      "a": 5,
+      "b": -1
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "affine-decrypt b=1.5 is not an integer (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:affine-decrypt",
+    "params": {
+      "a": 5,
+      "b": 1.5
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "Vigenere encrypt ATTACKATDAWN (published)",
+    "ref": "Wikipedia, Vigenère cipher, basic example (ATTACKATDAWN, key LEMON)",
+    "op": "classical:vigenere-encrypt",
+    "params": {
+      "key": "LEMON"
+    },
+    "input": {
+      "value": "ATTACKATDAWN",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "LXFOPVEFRNHR",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Vigenere decrypt LXFOPVEFRNHR (published)",
+    "ref": "Wikipedia, Vigenère cipher, basic example (ATTACKATDAWN, key LEMON)",
+    "op": "classical:vigenere-decrypt",
+    "params": {
+      "key": "LEMON"
+    },
+    "input": {
+      "value": "LXFOPVEFRNHR",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ATTACKATDAWN",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Vigenere encrypt: case kept, non-letters skip the key",
+    "ref": "Vigenère definition (shift by key letter, key advances on letters only); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:vigenere-encrypt",
+    "params": {
+      "key": "Lemon"
+    },
+    "input": {
+      "value": "Attack at Dawn!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4c78666f707620656620526e687221",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Vigenere decrypt: case kept, non-letters skip the key",
+    "ref": "Vigenère definition (shift by key letter, key advances on letters only); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:vigenere-decrypt",
+    "params": {
+      "key": "Lemon"
+    },
+    "input": {
+      "value": "4c78666f707620656620526e687221",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Attack at Dawn!",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Vigenere key letters are case-insensitive",
+    "ref": "Vigenère definition (shift by key letter, key advances on letters only); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:vigenere-encrypt",
+    "params": {
+      "key": "lEmOn"
+    },
+    "input": {
+      "value": "ATTACKATDAWN",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4c58464f50564546524e4852",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Vigenere key A is the identity",
+    "ref": "Vigenère definition (shift by key letter, key advances on letters only); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:vigenere-encrypt",
+    "params": {
+      "key": "A"
+    },
+    "input": {
+      "value": "Same text",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "53616d652074657874",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Vigenere single key letter equals a Caesar shift",
+    "ref": "Vigenère definition (shift by key letter, key advances on letters only); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:vigenere-encrypt",
+    "params": {
+      "key": "d"
+    },
+    "input": {
+      "value": "xyz XYZ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "61626320414243",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Vigenere key longer than the text",
+    "ref": "Vigenère definition (shift by key letter, key advances on letters only); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:vigenere-encrypt",
+    "params": {
+      "key": "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    },
+    "input": {
+      "value": "aaa",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "616263",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "vigenere-encrypt empty input",
+    "ref": "Vigenère definition (shift by key letter, key advances on letters only); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:vigenere-encrypt",
+    "params": {
+      "key": "KEY"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "vigenere-encrypt non-ASCII UTF-8 passes through",
+    "ref": "Vigenère definition (shift by key letter, key advances on letters only); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:vigenere-encrypt",
+    "params": {
+      "key": "KEY"
+    },
+    "input": {
+      "value": "Grüße, Welt",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "5176c3bcc39f632c2047696a64",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "vigenere-encrypt binary bytes",
+    "ref": "Vigenère definition (shift by key letter, key advances on letters only); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:vigenere-encrypt",
+    "params": {
+      "key": "KEY"
+    },
+    "input": {
+      "value": "00ff4180c35a7a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00ff4b80c34478",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "vigenere-encrypt empty key (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:vigenere-encrypt",
+    "params": {
+      "key": ""
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "vigenere-encrypt key over 256 characters (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:vigenere-encrypt",
+    "params": {
+      "key": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "vigenere-encrypt key with a digit (pattern, run time)",
+    "ref": "spec §9.1 (run-time error)",
+    "op": "classical:vigenere-encrypt",
+    "params": {
+      "key": "KEY1"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_PARAM_INVALID"
+    }
+  },
+  {
+    "name": "vigenere-encrypt key with a space (pattern, run time)",
+    "ref": "spec §9.1 (run-time error)",
+    "op": "classical:vigenere-encrypt",
+    "params": {
+      "key": "KE Y"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_PARAM_INVALID"
+    }
+  },
+  {
+    "name": "vigenere-decrypt empty input",
+    "ref": "Vigenère definition (shift by key letter, key advances on letters only); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:vigenere-decrypt",
+    "params": {
+      "key": "KEY"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "vigenere-decrypt non-ASCII UTF-8 passes through",
+    "ref": "Vigenère definition (shift by key letter, key advances on letters only); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:vigenere-decrypt",
+    "params": {
+      "key": "KEY"
+    },
+    "input": {
+      "value": "Grüße, Welt",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "576ec3bcc39f672c204d616e6a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "vigenere-decrypt binary bytes",
+    "ref": "Vigenère definition (shift by key letter, key advances on letters only); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:vigenere-decrypt",
+    "params": {
+      "key": "KEY"
+    },
+    "input": {
+      "value": "00ff4180c35a7a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00ff5180c35662",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "vigenere-decrypt empty key (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:vigenere-decrypt",
+    "params": {
+      "key": ""
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "vigenere-decrypt key over 256 characters (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:vigenere-decrypt",
+    "params": {
+      "key": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "vigenere-decrypt key with a digit (pattern, run time)",
+    "ref": "spec §9.1 (run-time error)",
+    "op": "classical:vigenere-decrypt",
+    "params": {
+      "key": "KEY1"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_PARAM_INVALID"
+    }
+  },
+  {
+    "name": "vigenere-decrypt key with a space (pattern, run time)",
+    "ref": "spec §9.1 (run-time error)",
+    "op": "classical:vigenere-decrypt",
+    "params": {
+      "key": "KE Y"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_PARAM_INVALID"
+    }
+  },
+  {
+    "name": "Bacon encode Hello (classic)",
+    "ref": "Wikipedia, Bacon's cipher, 24-letter table (A=aaaaa ... Z=babbb)",
+    "op": "classical:bacon-encode",
+    "params": {
+      "alphabet": "classic"
+    },
+    "input": {
+      "value": "Hello",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "AABBB AABAA ABABA ABABA ABBAB",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Bacon encode default alphabet is classic",
+    "ref": "Wikipedia, Bacon's cipher, 24-letter table (A=aaaaa ... Z=babbb)",
+    "op": "classical:bacon-encode",
+    "params": {},
+    "input": {
+      "value": "Hello",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "AABBB AABAA ABABA ABABA ABBAB",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Bacon decode Hello (classic)",
+    "ref": "Wikipedia, Bacon's cipher, 24-letter table (A=aaaaa ... Z=babbb)",
+    "op": "classical:bacon-decode",
+    "params": {
+      "alphabet": "classic"
+    },
+    "input": {
+      "value": "AABBB AABAA ABABA ABABA ABBAB",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "HELLO",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Bacon classic: I and J, U and V share codes",
+    "ref": "Wikipedia, Bacon's cipher, 24-letter table (A=aaaaa ... Z=babbb)",
+    "op": "classical:bacon-encode",
+    "params": {},
+    "input": {
+      "value": "IJUV",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ABAAA ABAAA BAABB BAABB",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Bacon classic decode gives I and U",
+    "ref": "Wikipedia, Bacon's cipher, 24-letter table (A=aaaaa ... Z=babbb)",
+    "op": "classical:bacon-decode",
+    "params": {},
+    "input": {
+      "value": "ABAAA BAABB",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "IU",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Bacon classic: first and last letters",
+    "ref": "Wikipedia, Bacon's cipher, 24-letter table (A=aaaaa ... Z=babbb)",
+    "op": "classical:bacon-encode",
+    "params": {},
+    "input": {
+      "value": "az",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "AAAAA BABBB",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Bacon complete: J U V have their own codes",
+    "ref": "Bacon definition, 5-bit index with A=0, B=1; hand-computed, cross-checked with an independent Node script",
+    "op": "classical:bacon-encode",
+    "params": {
+      "alphabet": "complete"
+    },
+    "input": {
+      "value": "JUV",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4142414142204241424141204241424142",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Bacon complete decode",
+    "ref": "Bacon definition, 5-bit index with A=0, B=1; hand-computed, cross-checked with an independent Node script",
+    "op": "classical:bacon-decode",
+    "params": {
+      "alphabet": "complete"
+    },
+    "input": {
+      "value": "ABAAB BABAA BABAB",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "JUV",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Bacon complete: Z is 11001",
+    "ref": "Bacon definition, 5-bit index with A=0, B=1; hand-computed, cross-checked with an independent Node script",
+    "op": "classical:bacon-encode",
+    "params": {
+      "alphabet": "complete"
+    },
+    "input": {
+      "value": "Z",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "BBAAB",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Bacon encode drops non-letters",
+    "ref": "Bacon definition, 5-bit index with A=0, B=1; hand-computed, cross-checked with an independent Node script",
+    "op": "classical:bacon-encode",
+    "params": {},
+    "input": {
+      "value": "a1, b!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "AAAAA AAAAB",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Bacon encode empty input",
+    "ref": "Bacon definition, 5-bit index with A=0, B=1; hand-computed, cross-checked with an independent Node script",
+    "op": "classical:bacon-encode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Bacon encode non-ASCII letters are dropped",
+    "ref": "Bacon definition, 5-bit index with A=0, B=1; hand-computed, cross-checked with an independent Node script",
+    "op": "classical:bacon-encode",
+    "params": {},
+    "input": {
+      "value": "zé",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "BABBB",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Bacon decode ignores case and white space",
+    "ref": "Bacon definition, 5-bit index with A=0, B=1; hand-computed, cross-checked with an independent Node script",
+    "op": "classical:bacon-decode",
+    "params": {},
+    "input": {
+      "value": "aabbb\n AaBaA\t",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "HE",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Bacon decode empty input",
+    "ref": "Bacon definition, 5-bit index with A=0, B=1; hand-computed, cross-checked with an independent Node script",
+    "op": "classical:bacon-decode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Bacon encode binary input is not UTF-8",
+    "ref": "spec §9.1 (run-time error)",
+    "op": "classical:bacon-encode",
+    "params": {},
+    "input": {
+      "value": "ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "Bacon decode binary input is not UTF-8",
+    "ref": "spec §9.1 (run-time error)",
+    "op": "classical:bacon-decode",
+    "params": {},
+    "input": {
+      "value": "c328",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "Bacon decode rejects a foreign symbol",
+    "ref": "spec §9.1 (run-time error)",
+    "op": "classical:bacon-decode",
+    "params": {},
+    "input": {
+      "value": "AABBC",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_USER"
+    }
+  },
+  {
+    "name": "Bacon decode rejects a count not divisible by five",
+    "ref": "spec §9.1 (run-time error)",
+    "op": "classical:bacon-decode",
+    "params": {},
+    "input": {
+      "value": "AABBBA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_USER"
+    }
+  },
+  {
+    "name": "Bacon decode rejects a classic group beyond the 24 letters",
+    "ref": "spec §9.1 (run-time error)",
+    "op": "classical:bacon-decode",
+    "params": {},
+    "input": {
+      "value": "BBBBB",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_USER"
+    }
+  },
+  {
+    "name": "Bacon decode rejects a complete group beyond the 26 letters",
+    "ref": "spec §9.1 (run-time error)",
+    "op": "classical:bacon-decode",
+    "params": {
+      "alphabet": "complete"
+    },
+    "input": {
+      "value": "BBABA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_USER"
+    }
+  },
+  {
+    "name": "Bacon decode rejects non-ASCII symbols",
+    "ref": "spec §9.1 (run-time error)",
+    "op": "classical:bacon-decode",
+    "params": {},
+    "input": {
+      "value": "AABBBé",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_USER"
+    }
+  },
+  {
+    "name": "Bacon encode alphabet not a choice option (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:bacon-encode",
+    "params": {
+      "alphabet": "full"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "Bacon decode alphabet not a choice option (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:bacon-decode",
+    "params": {
+      "alphabet": "full"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "Bifid encrypt FLEEATONCE (published)",
+    "ref": "Wikipedia, Bifid cipher, worked example (FLEEATONCE, square BGWKZ QPNDS IOAXE FCLUM THYVR)",
+    "op": "classical:bifid-encrypt",
+    "params": {
+      "key": "BGWKZQPNDSIOAXEFCLUMTHYVR"
+    },
+    "input": {
+      "value": "FLEEATONCE",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "UAEOLWRINS",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Bifid decrypt UAEOLWRINS (published)",
+    "ref": "Wikipedia, Bifid cipher, worked example (FLEEATONCE, square BGWKZ QPNDS IOAXE FCLUM THYVR)",
+    "op": "classical:bifid-decrypt",
+    "params": {
+      "key": "BGWKZQPNDSIOAXEFCLUMTHYVR"
+    },
+    "input": {
+      "value": "UAEOLWRINS",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "FLEEATONCE",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Bifid encrypt with a keyword",
+    "ref": "Bifid definition (rows then columns, read in pairs); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:bifid-encrypt",
+    "params": {
+      "key": "Keyword"
+    },
+    "input": {
+      "value": "Defend the east wall",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "52464e564b42544147524452474154505a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Bifid decrypt with a keyword",
+    "ref": "Bifid definition (rows then columns, read in pairs); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:bifid-decrypt",
+    "params": {
+      "key": "Keyword"
+    },
+    "input": {
+      "value": "52464e564b42544147524452474154505a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "DEFENDTHEEASTWALL",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Bifid encrypt default key is the plain square; J becomes I; non-letters dropped",
+    "ref": "Bifid definition (rows then columns, read in pairs); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:bifid-encrypt",
+    "params": {},
+    "input": {
+      "value": "Attack at dawn, J!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4451424441584654435654424f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Bifid decrypt default key",
+    "ref": "Bifid definition (rows then columns, read in pairs); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:bifid-decrypt",
+    "params": {},
+    "input": {
+      "value": "4451424441584654435654424f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ATTACKATDAWNI",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Bifid key with repeated letters and J",
+    "ref": "Bifid definition (rows then columns, read in pairs); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:bifid-encrypt",
+    "params": {
+      "key": "JAMBOREE"
+    },
+    "input": {
+      "value": "HELLOWORLD",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "484b4f41484554575654",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Bifid single letter",
+    "ref": "Bifid definition (rows then columns, read in pairs); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:bifid-encrypt",
+    "params": {},
+    "input": {
+      "value": "z",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "5a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Bifid decrypt of a single letter",
+    "ref": "Bifid definition (rows then columns, read in pairs); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:bifid-decrypt",
+    "params": {},
+    "input": {
+      "value": "z",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "5a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "bifid-encrypt empty input",
+    "ref": "Bifid definition (rows then columns, read in pairs); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:bifid-encrypt",
+    "params": {
+      "key": "K"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "bifid-encrypt non-ASCII UTF-8 is dropped",
+    "ref": "Bifid definition (rows then columns, read in pairs); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:bifid-encrypt",
+    "params": {
+      "key": "K"
+    },
+    "input": {
+      "value": "Grüße",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "484745",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "bifid-encrypt binary bytes are dropped",
+    "ref": "Bifid definition (rows then columns, read in pairs); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:bifid-encrypt",
+    "params": {
+      "key": "K"
+    },
+    "input": {
+      "value": "00ff4180c35a7a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "44575a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "bifid-encrypt key over 25 characters (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:bifid-encrypt",
+    "params": {
+      "key": "AAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "bifid-encrypt key with a digit (pattern, run time)",
+    "ref": "spec §9.1 (run-time error)",
+    "op": "classical:bifid-encrypt",
+    "params": {
+      "key": "K3Y"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_PARAM_INVALID"
+    }
+  },
+  {
+    "name": "bifid-decrypt empty input",
+    "ref": "Bifid definition (rows then columns, read in pairs); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:bifid-decrypt",
+    "params": {
+      "key": "K"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "bifid-decrypt non-ASCII UTF-8 is dropped",
+    "ref": "Bifid definition (rows then columns, read in pairs); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:bifid-decrypt",
+    "params": {
+      "key": "K"
+    },
+    "input": {
+      "value": "Grüße",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "464d51",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "bifid-decrypt binary bytes are dropped",
+    "ref": "Bifid definition (rows then columns, read in pairs); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:bifid-decrypt",
+    "params": {
+      "key": "K"
+    },
+    "input": {
+      "value": "00ff4180c35a7a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "44495a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "bifid-decrypt key over 25 characters (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:bifid-decrypt",
+    "params": {
+      "key": "AAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "bifid-decrypt key with a digit (pattern, run time)",
+    "ref": "spec §9.1 (run-time error)",
+    "op": "classical:bifid-decrypt",
+    "params": {
+      "key": "K3Y"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_PARAM_INVALID"
+    }
+  },
+  {
+    "name": "Rail fence encrypt (published)",
+    "ref": "Wikipedia, Rail fence cipher, WEAREDISCOVEREDFLEEATONCE with 3 rails",
+    "op": "classical:rail-fence-encrypt",
+    "params": {
+      "rails": 3,
+      "offset": 0
+    },
+    "input": {
+      "value": "WEAREDISCOVEREDFLEEATONCE",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "WECRLTEERDSOEEFEAOCAIVDEN",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Rail fence decrypt (published)",
+    "ref": "Wikipedia, Rail fence cipher, WEAREDISCOVEREDFLEEATONCE with 3 rails",
+    "op": "classical:rail-fence-decrypt",
+    "params": {
+      "rails": 3,
+      "offset": 0
+    },
+    "input": {
+      "value": "WECRLTEERDSOEEFEAOCAIVDEN",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "WEAREDISCOVEREDFLEEATONCE",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Rail fence defaults are 3 rails, offset 0",
+    "ref": "Wikipedia, Rail fence cipher, WEAREDISCOVEREDFLEEATONCE with 3 rails",
+    "op": "classical:rail-fence-encrypt",
+    "params": {},
+    "input": {
+      "value": "WEAREDISCOVEREDFLEEATONCE",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "WECRLTEERDSOEEFEAOCAIVDEN",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Rail fence 2 rails",
+    "ref": "rail fence definition (zigzag over all bytes); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:rail-fence-encrypt",
+    "params": {
+      "rails": 2,
+      "offset": 0
+    },
+    "input": {
+      "value": "Attack at dawn",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4174632074647774616b6120616e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Rail fence 4 rails offset 5",
+    "ref": "rail fence definition (zigzag over all bytes); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:rail-fence-encrypt",
+    "params": {
+      "rails": 4,
+      "offset": 5
+    },
+    "input": {
+      "value": "Attack at dawn",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "74616e4174207477616b20616364",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Rail fence 4 rails offset 5 decrypt",
+    "ref": "rail fence definition (zigzag over all bytes); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:rail-fence-decrypt",
+    "params": {
+      "rails": 4,
+      "offset": 5
+    },
+    "input": {
+      "value": "74616e4174207477616b20616364",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Attack at dawn",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Rail fence offset larger than the period",
+    "ref": "rail fence definition (zigzag over all bytes); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:rail-fence-encrypt",
+    "params": {
+      "rails": 3,
+      "offset": 1000
+    },
+    "input": {
+      "value": "WEAREDISCOVEREDFLEEATONCE",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "574543524c5445455244534f45454645414f4341495644454e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Rail fence offset larger than the period decrypt",
+    "ref": "rail fence definition (zigzag over all bytes); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:rail-fence-decrypt",
+    "params": {
+      "rails": 3,
+      "offset": 1000
+    },
+    "input": {
+      "value": "WEAREDISCOVEREDFLEEATONCE",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "57534143454f545641454f5252454e444546434c4445454549",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Rail fence more rails than bytes",
+    "ref": "rail fence definition (zigzag over all bytes); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:rail-fence-encrypt",
+    "params": {
+      "rails": 10,
+      "offset": 0
+    },
+    "input": {
+      "value": "abcdef",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "616263646566",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Rail fence more rails than bytes decrypt",
+    "ref": "rail fence definition (zigzag over all bytes); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:rail-fence-decrypt",
+    "params": {
+      "rails": 10,
+      "offset": 0
+    },
+    "input": {
+      "value": "abcdef",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "616263646566",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Rail fence 1000 rails",
+    "ref": "rail fence definition (zigzag over all bytes); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:rail-fence-encrypt",
+    "params": {
+      "rails": 1000,
+      "offset": 7
+    },
+    "input": {
+      "value": "abcdef",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "616263646566",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "rail-fence-encrypt empty input",
+    "ref": "rail fence definition (zigzag over all bytes); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:rail-fence-encrypt",
+    "params": {
+      "rails": 4,
+      "offset": 2
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "rail-fence-encrypt non-ASCII UTF-8 bytes are moved as bytes",
+    "ref": "rail fence definition (zigzag over all bytes); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:rail-fence-encrypt",
+    "params": {
+      "rails": 2,
+      "offset": 0
+    },
+    "input": {
+      "value": "aéb",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "61a9c362",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "rail-fence-encrypt binary bytes",
+    "ref": "rail fence definition (zigzag over all bytes); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:rail-fence-encrypt",
+    "params": {
+      "rails": 3,
+      "offset": 1
+    },
+    "input": {
+      "value": "00ff80017f3c",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0100807fff3c",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "rail-fence-encrypt single byte",
+    "ref": "rail fence definition (zigzag over all bytes); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:rail-fence-encrypt",
+    "params": {
+      "rails": 3,
+      "offset": 1
+    },
+    "input": {
+      "value": "x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "78",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "rail-fence-encrypt rails=1 (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:rail-fence-encrypt",
+    "params": {
+      "rails": 1
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "rail-fence-encrypt rails=1001 (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:rail-fence-encrypt",
+    "params": {
+      "rails": 1001
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "rail-fence-encrypt offset=-1 (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:rail-fence-encrypt",
+    "params": {
+      "rails": 3,
+      "offset": -1
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "rail-fence-encrypt offset=1001 (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:rail-fence-encrypt",
+    "params": {
+      "rails": 3,
+      "offset": 1001
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "rail-fence-encrypt rails=2.5 (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:rail-fence-encrypt",
+    "params": {
+      "rails": 2.5
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "rail-fence-decrypt empty input",
+    "ref": "rail fence definition (zigzag over all bytes); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:rail-fence-decrypt",
+    "params": {
+      "rails": 4,
+      "offset": 2
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "rail-fence-decrypt non-ASCII UTF-8 bytes are moved as bytes",
+    "ref": "rail fence definition (zigzag over all bytes); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:rail-fence-decrypt",
+    "params": {
+      "rails": 2,
+      "offset": 0
+    },
+    "input": {
+      "value": "aéb",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "61a9c362",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "rail-fence-decrypt binary bytes",
+    "ref": "rail fence definition (zigzag over all bytes); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:rail-fence-decrypt",
+    "params": {
+      "rails": 3,
+      "offset": 1
+    },
+    "input": {
+      "value": "00ff80017f3c",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ff7f8000013c",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "rail-fence-decrypt single byte",
+    "ref": "rail fence definition (zigzag over all bytes); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:rail-fence-decrypt",
+    "params": {
+      "rails": 3,
+      "offset": 1
+    },
+    "input": {
+      "value": "x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "78",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "rail-fence-decrypt rails=1 (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:rail-fence-decrypt",
+    "params": {
+      "rails": 1
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "rail-fence-decrypt rails=1001 (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:rail-fence-decrypt",
+    "params": {
+      "rails": 1001
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "rail-fence-decrypt offset=-1 (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:rail-fence-decrypt",
+    "params": {
+      "rails": 3,
+      "offset": -1
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "rail-fence-decrypt offset=1001 (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:rail-fence-decrypt",
+    "params": {
+      "rails": 3,
+      "offset": 1001
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "rail-fence-decrypt rails=2.5 (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:rail-fence-decrypt",
+    "params": {
+      "rails": 2.5
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "A1Z26 encode HELLO, space",
+    "ref": "A1Z26 definition (A=1 ... Z=26); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:a1z26-encode",
+    "params": {
+      "delimiter": "space"
+    },
+    "input": {
+      "value": "HELLO",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "8 5 12 12 15",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "A1Z26 encode default delimiter is space",
+    "ref": "A1Z26 definition (A=1 ... Z=26); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:a1z26-encode",
+    "params": {},
+    "input": {
+      "value": "Hello",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "8 5 12 12 15",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "A1Z26 encode comma",
+    "ref": "A1Z26 definition (A=1 ... Z=26); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:a1z26-encode",
+    "params": {
+      "delimiter": "comma"
+    },
+    "input": {
+      "value": "Hello, World!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "8,5,12,12,15,23,15,18,12,4",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "A1Z26 encode dash",
+    "ref": "A1Z26 definition (A=1 ... Z=26); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:a1z26-encode",
+    "params": {
+      "delimiter": "dash"
+    },
+    "input": {
+      "value": "az",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1-26",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "A1Z26 encode drops non-letters and non-ASCII",
+    "ref": "A1Z26 definition (A=1 ... Z=26); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:a1z26-encode",
+    "params": {},
+    "input": {
+      "value": "a1é b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1 2",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "A1Z26 encode empty input",
+    "ref": "A1Z26 definition (A=1 ... Z=26); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:a1z26-encode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "A1Z26 encode text without letters",
+    "ref": "A1Z26 definition (A=1 ... Z=26); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:a1z26-encode",
+    "params": {},
+    "input": {
+      "value": "123 !?",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "A1Z26 decode",
+    "ref": "A1Z26 definition (A=1 ... Z=26); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:a1z26-decode",
+    "params": {},
+    "input": {
+      "value": "8 5 12 12 15",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "HELLO",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "A1Z26 decode mixed separators",
+    "ref": "A1Z26 definition (A=1 ... Z=26); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:a1z26-decode",
+    "params": {},
+    "input": {
+      "value": "8,5 12-12\n\n15, 1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "HELLOA",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "A1Z26 decode leading zeros and the limits 1 and 26",
+    "ref": "A1Z26 definition (A=1 ... Z=26); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:a1z26-decode",
+    "params": {},
+    "input": {
+      "value": "08 01 26",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "HAZ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "A1Z26 decode empty input",
+    "ref": "A1Z26 definition (A=1 ... Z=26); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:a1z26-decode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "A1Z26 decode separators only",
+    "ref": "A1Z26 definition (A=1 ... Z=26); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:a1z26-decode",
+    "params": {},
+    "input": {
+      "value": " ,- ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "A1Z26 decode non-ASCII separator",
+    "ref": "A1Z26 definition (A=1 ... Z=26); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:a1z26-decode",
+    "params": {},
+    "input": {
+      "value": "1é2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "AB",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "A1Z26 decode 0 is out of range",
+    "ref": "spec §9.1 (run-time error)",
+    "op": "classical:a1z26-decode",
+    "params": {},
+    "input": {
+      "value": "0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_USER"
+    }
+  },
+  {
+    "name": "A1Z26 decode 27 is out of range",
+    "ref": "spec §9.1 (run-time error)",
+    "op": "classical:a1z26-decode",
+    "params": {},
+    "input": {
+      "value": "1 27",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_USER"
+    }
+  },
+  {
+    "name": "A1Z26 decode a huge number is out of range",
+    "ref": "spec §9.1 (run-time error)",
+    "op": "classical:a1z26-decode",
+    "params": {},
+    "input": {
+      "value": "99999999999999999999999",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_USER"
+    }
+  },
+  {
+    "name": "A1Z26 encode binary input is not UTF-8",
+    "ref": "spec §9.1 (run-time error)",
+    "op": "classical:a1z26-encode",
+    "params": {},
+    "input": {
+      "value": "ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "A1Z26 decode binary input is not UTF-8",
+    "ref": "spec §9.1 (run-time error)",
+    "op": "classical:a1z26-decode",
+    "params": {},
+    "input": {
+      "value": "c328",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "A1Z26 encode delimiter not a choice option (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:a1z26-encode",
+    "params": {
+      "delimiter": "dot"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "Substitute defaults are the Atbash alphabet (upper case only)",
+    "ref": "substitution definition (byte-for-byte, case-sensitive); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:substitute",
+    "params": {},
+    "input": {
+      "value": "Hello WORLD",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "53656c6c6f20444c494f57",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Substitute custom tables",
+    "ref": "substitution definition (byte-for-byte, case-sensitive); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:substitute",
+    "params": {
+      "plaintext": "abc",
+      "ciphertext": "xyz"
+    },
+    "input": {
+      "value": "aabbcc d",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "787879797a7a2064",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Substitute swaps with digits and punctuation",
+    "ref": "substitution definition (byte-for-byte, case-sensitive); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:substitute",
+    "params": {
+      "plaintext": "a1!",
+      "ciphertext": "1!a"
+    },
+    "input": {
+      "value": "a1!a1!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "312161312161",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Substitute with a space in the tables",
+    "ref": "substitution definition (byte-for-byte, case-sensitive); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:substitute",
+    "params": {
+      "plaintext": "a ",
+      "ciphertext": "_-"
+    },
+    "input": {
+      "value": "a b a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "5f2d622d5f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Substitute whole printable range reversed",
+    "ref": "substitution definition (byte-for-byte, case-sensitive); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:substitute",
+    "params": {
+      "plaintext": " ~",
+      "ciphertext": "~ "
+    },
+    "input": {
+      "value": "a ~",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "617e20",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Substitute empty input",
+    "ref": "substitution definition (byte-for-byte, case-sensitive); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:substitute",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Substitute non-ASCII UTF-8 passes through",
+    "ref": "substitution definition (byte-for-byte, case-sensitive); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:substitute",
+    "params": {},
+    "input": {
+      "value": "ÉA é",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c3895a20c3a9",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Substitute binary bytes",
+    "ref": "substitution definition (byte-for-byte, case-sensitive); hand-computed, cross-checked with an independent Node script",
+    "op": "classical:substitute",
+    "params": {
+      "plaintext": "A",
+      "ciphertext": "B"
+    },
+    "input": {
+      "value": "ff00414180",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ff00424280",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Substitute lengths differ",
+    "ref": "spec §9.1 (run-time error)",
+    "op": "classical:substitute",
+    "params": {
+      "plaintext": "ab",
+      "ciphertext": "x"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_USER"
+    }
+  },
+  {
+    "name": "Substitute plaintext with a control character",
+    "ref": "spec §9.1 (run-time error)",
+    "op": "classical:substitute",
+    "params": {
+      "plaintext": "a\tb",
+      "ciphertext": "xyz"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_USER"
+    }
+  },
+  {
+    "name": "Substitute non-ASCII ciphertext",
+    "ref": "spec §9.1 (run-time error)",
+    "op": "classical:substitute",
+    "params": {
+      "plaintext": "a",
+      "ciphertext": "é"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_USER"
+    }
+  },
+  {
+    "name": "Substitute repeated plaintext character (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:substitute",
+    "params": {
+      "plaintext": "aa",
+      "ciphertext": "xy"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "Substitute repeated ciphertext character (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:substitute",
+    "params": {
+      "plaintext": "ab",
+      "ciphertext": "xx"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "Substitute empty plaintext (static)",
+    "ref": "spec §3.4 and §9.1 (static check, E_RECIPE_INVALID)",
+    "op": "classical:substitute",
+    "params": {
+      "plaintext": "",
+      "ciphertext": ""
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
   }
 ]
