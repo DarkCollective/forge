@@ -1,0 +1,446 @@
+[
+  {
+    "name": "encode example 1",
+    "ref": "Cheshire and Baker 1999, as tabulated in Wikipedia 'Consistent Overhead Byte Stuffing' (without the trailing 00)",
+    "op": "cobs:encode",
+    "params": {},
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0101",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode example 2",
+    "ref": "Cheshire and Baker 1999, as tabulated in Wikipedia 'Consistent Overhead Byte Stuffing' (without the trailing 00)",
+    "op": "cobs:encode",
+    "params": {},
+    "input": {
+      "value": "0000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "010101",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode example 3",
+    "ref": "Cheshire and Baker 1999, as tabulated in Wikipedia 'Consistent Overhead Byte Stuffing' (without the trailing 00)",
+    "op": "cobs:encode",
+    "params": {},
+    "input": {
+      "value": "001100",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "01021101",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode example 4",
+    "ref": "Cheshire and Baker 1999, as tabulated in Wikipedia 'Consistent Overhead Byte Stuffing' (without the trailing 00)",
+    "op": "cobs:encode",
+    "params": {},
+    "input": {
+      "value": "11220033",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0311220233",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode example 5",
+    "ref": "Cheshire and Baker 1999, as tabulated in Wikipedia 'Consistent Overhead Byte Stuffing' (without the trailing 00)",
+    "op": "cobs:encode",
+    "params": {},
+    "input": {
+      "value": "11223344",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0511223344",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode example 6",
+    "ref": "Cheshire and Baker 1999, as tabulated in Wikipedia 'Consistent Overhead Byte Stuffing' (without the trailing 00)",
+    "op": "cobs:encode",
+    "params": {},
+    "input": {
+      "value": "11000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0211010101",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode example 7: 254 non-zero bytes",
+    "ref": "Cheshire and Baker 1999, as tabulated in Wikipedia 'Consistent Overhead Byte Stuffing' (without the trailing 00)",
+    "op": "cobs:encode",
+    "params": {},
+    "input": {
+      "value": "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfe",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ff0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfe",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode example 8: 00 then 254 bytes",
+    "ref": "Cheshire and Baker 1999, as tabulated in Wikipedia 'Consistent Overhead Byte Stuffing' (without the trailing 00)",
+    "op": "cobs:encode",
+    "params": {},
+    "input": {
+      "value": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfe",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "01ff0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfe",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode example 9: 255 non-zero bytes",
+    "ref": "Cheshire and Baker 1999, as tabulated in Wikipedia 'Consistent Overhead Byte Stuffing' (without the trailing 00)",
+    "op": "cobs:encode",
+    "params": {},
+    "input": {
+      "value": "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ff0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfe02ff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode example 10: 254 bytes then 00",
+    "ref": "Cheshire and Baker 1999, as tabulated in Wikipedia 'Consistent Overhead Byte Stuffing' (without the trailing 00)",
+    "op": "cobs:encode",
+    "params": {},
+    "input": {
+      "value": "02030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff00",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ff02030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff0101",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode example 11: 253 bytes, 00, 01",
+    "ref": "Cheshire and Baker 1999, as tabulated in Wikipedia 'Consistent Overhead Byte Stuffing' (without the trailing 00)",
+    "op": "cobs:encode",
+    "params": {},
+    "input": {
+      "value": "030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff0001",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "fe030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff0201",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode empty is the single byte 01",
+    "ref": "reference implementations (python cobs): encode(b'') == b'\\x01'",
+    "op": "cobs:encode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "01",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode non-ASCII UTF-8 (é)",
+    "ref": "hand-computed: no zero byte, one block of code 3",
+    "op": "cobs:encode",
+    "params": {},
+    "input": {
+      "value": "é",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "03c3a9",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 600 non-zero bytes (two full blocks and a remainder)",
+    "ref": "hand-computed: ff, 254 bytes, ff, 254 bytes, 93 (92 bytes follow)",
+    "op": "cobs:encode",
+    "params": {},
+    "input": {
+      "value": "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ff0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeffff0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfd5dfeff0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode example 1",
+    "ref": "Cheshire and Baker 1999, as tabulated in Wikipedia 'Consistent Overhead Byte Stuffing' (without the trailing 00)",
+    "op": "cobs:decode",
+    "params": {},
+    "input": {
+      "value": "0101",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode example 2",
+    "ref": "Cheshire and Baker 1999, as tabulated in Wikipedia 'Consistent Overhead Byte Stuffing' (without the trailing 00)",
+    "op": "cobs:decode",
+    "params": {},
+    "input": {
+      "value": "010101",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode example 3",
+    "ref": "Cheshire and Baker 1999, as tabulated in Wikipedia 'Consistent Overhead Byte Stuffing' (without the trailing 00)",
+    "op": "cobs:decode",
+    "params": {},
+    "input": {
+      "value": "01021101",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "001100",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode example 4",
+    "ref": "Cheshire and Baker 1999, as tabulated in Wikipedia 'Consistent Overhead Byte Stuffing' (without the trailing 00)",
+    "op": "cobs:decode",
+    "params": {},
+    "input": {
+      "value": "0311220233",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "11220033",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode example 5",
+    "ref": "Cheshire and Baker 1999, as tabulated in Wikipedia 'Consistent Overhead Byte Stuffing' (without the trailing 00)",
+    "op": "cobs:decode",
+    "params": {},
+    "input": {
+      "value": "0511223344",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "11223344",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode example 6",
+    "ref": "Cheshire and Baker 1999, as tabulated in Wikipedia 'Consistent Overhead Byte Stuffing' (without the trailing 00)",
+    "op": "cobs:decode",
+    "params": {},
+    "input": {
+      "value": "0211010101",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "11000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode example 7",
+    "ref": "Cheshire and Baker 1999, as tabulated in Wikipedia 'Consistent Overhead Byte Stuffing' (without the trailing 00)",
+    "op": "cobs:decode",
+    "params": {},
+    "input": {
+      "value": "ff0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfe",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfe",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode example 8",
+    "ref": "Cheshire and Baker 1999, as tabulated in Wikipedia 'Consistent Overhead Byte Stuffing' (without the trailing 00)",
+    "op": "cobs:decode",
+    "params": {},
+    "input": {
+      "value": "01ff0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfe",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfe",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode example 9",
+    "ref": "Cheshire and Baker 1999, as tabulated in Wikipedia 'Consistent Overhead Byte Stuffing' (without the trailing 00)",
+    "op": "cobs:decode",
+    "params": {},
+    "input": {
+      "value": "ff0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfe02ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode example 10",
+    "ref": "Cheshire and Baker 1999, as tabulated in Wikipedia 'Consistent Overhead Byte Stuffing' (without the trailing 00)",
+    "op": "cobs:decode",
+    "params": {},
+    "input": {
+      "value": "ff02030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff0101",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "02030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff00",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode example 11",
+    "ref": "Cheshire and Baker 1999, as tabulated in Wikipedia 'Consistent Overhead Byte Stuffing' (without the trailing 00)",
+    "op": "cobs:decode",
+    "params": {},
+    "input": {
+      "value": "fe030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff0201",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff0001",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode empty",
+    "ref": "documented: empty input gives empty output",
+    "op": "cobs:decode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode the single byte 01 is empty",
+    "ref": "reference implementations",
+    "op": "cobs:decode",
+    "params": {},
+    "input": {
+      "value": "01",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode non-ASCII UTF-8 data (é as the block 03 c3 a9)",
+    "ref": "hand-computed",
+    "op": "cobs:decode",
+    "params": {},
+    "input": {
+      "value": "03c3a9",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "é",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode a zero byte at the end (frame delimiter)",
+    "ref": "hand-computed",
+    "op": "cobs:decode",
+    "params": {},
+    "input": {
+      "value": "010100",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode a zero byte in the middle",
+    "ref": "hand-computed",
+    "op": "cobs:decode",
+    "params": {},
+    "input": {
+      "value": "02110011",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode a truncated block",
+    "ref": "hand-computed: code 3 needs two more bytes",
+    "op": "cobs:decode",
+    "params": {},
+    "input": {
+      "value": "0311",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode a lone block code with nothing after it",
+    "ref": "hand-computed",
+    "op": "cobs:decode",
+    "params": {},
+    "input": {
+      "value": "05",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

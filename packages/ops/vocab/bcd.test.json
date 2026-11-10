@@ -1,0 +1,562 @@
+[
+  {
+    "name": "encode 1234 packed 8421",
+    "ref": "Wikipedia 'Binary-coded decimal' digit codes; hand-computed",
+    "op": "bcd:encode",
+    "params": {},
+    "input": {
+      "value": "1234",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1234",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode odd digit count gets a leading zero",
+    "ref": "Wikipedia 'Binary-coded decimal' digit codes; hand-computed",
+    "op": "bcd:encode",
+    "params": {},
+    "input": {
+      "value": "123",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0123",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode empty",
+    "ref": "hand-computed",
+    "op": "bcd:encode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode all digits 7421",
+    "ref": "Wikipedia 'Binary-coded decimal' digit codes; hand-computed (7 = 1000, 8 = 1001, 9 = 1010)",
+    "op": "bcd:encode",
+    "params": {
+      "scheme": "7421"
+    },
+    "input": {
+      "value": "0123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "012345689a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode all digits 4221",
+    "ref": "Wikipedia 'Binary-coded decimal' digit codes; hand-computed (self-complementary 4221)",
+    "op": "bcd:encode",
+    "params": {
+      "scheme": "4221"
+    },
+    "input": {
+      "value": "0123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "012387cdef",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode all digits excess-3",
+    "ref": "Wikipedia 'Binary-coded decimal' digit codes; hand-computed (digit + 3)",
+    "op": "bcd:encode",
+    "params": {
+      "scheme": "excess-3"
+    },
+    "input": {
+      "value": "0123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3456789abc",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode odd count in excess-3 pads with the code of 0",
+    "ref": "digit 0 is 0011 in excess-3",
+    "op": "bcd:encode",
+    "params": {
+      "scheme": "excess-3"
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "34",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode unpacked",
+    "ref": "one digit per byte",
+    "op": "bcd:encode",
+    "params": {
+      "packed": false
+    },
+    "input": {
+      "value": "905",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "090005",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode unpacked excess-3",
+    "ref": "one digit per byte, digit + 3",
+    "op": "bcd:encode",
+    "params": {
+      "packed": false,
+      "scheme": "excess-3"
+    },
+    "input": {
+      "value": "19",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "040c",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode signed negative (D)",
+    "ref": "IBM packed decimal sign nibble; Wikipedia 'Binary-coded decimal'",
+    "op": "bcd:encode",
+    "params": {
+      "signed": true
+    },
+    "input": {
+      "value": "-123",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "123d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode signed positive (C), explicit plus",
+    "ref": "IBM packed decimal sign nibble; Wikipedia 'Binary-coded decimal'",
+    "op": "bcd:encode",
+    "params": {
+      "signed": true
+    },
+    "input": {
+      "value": "+123",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "123c",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode signed without a sign is positive; sign nibble forces a leading zero",
+    "ref": "hand-computed: digits 1 2 + C = 3 nibbles, padded to 4",
+    "op": "bcd:encode",
+    "params": {
+      "signed": true
+    },
+    "input": {
+      "value": "12",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "012c",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode signed unpacked: sign in the high nibble of the last byte",
+    "ref": "documented layout",
+    "op": "bcd:encode",
+    "params": {
+      "signed": true,
+      "packed": false
+    },
+    "input": {
+      "value": "-45",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "04d5",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode white space is ignored",
+    "ref": "hand-computed",
+    "op": "bcd:encode",
+    "params": {},
+    "input": {
+      "value": " 12 34\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1234",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode a letter",
+    "ref": "hand-computed",
+    "op": "bcd:encode",
+    "params": {},
+    "input": {
+      "value": "12a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "encode a sign when not signed",
+    "ref": "hand-computed",
+    "op": "bcd:encode",
+    "params": {},
+    "input": {
+      "value": "-1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "encode a sign with no digits",
+    "ref": "hand-computed",
+    "op": "bcd:encode",
+    "params": {
+      "signed": true
+    },
+    "input": {
+      "value": "-",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "encode non-ASCII text (é)",
+    "ref": "hand-computed",
+    "op": "bcd:encode",
+    "params": {},
+    "input": {
+      "value": "é",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "encode unknown scheme is invalid",
+    "ref": "parameter choice",
+    "op": "bcd:encode",
+    "params": {
+      "scheme": "5421"
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "decode 1234",
+    "ref": "Wikipedia 'Binary-coded decimal' digit codes; hand-computed",
+    "op": "bcd:decode",
+    "params": {},
+    "input": {
+      "value": "1234",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1234",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode keeps a leading zero",
+    "ref": "Wikipedia 'Binary-coded decimal' digit codes; hand-computed",
+    "op": "bcd:decode",
+    "params": {},
+    "input": {
+      "value": "0123",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0123",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode empty",
+    "ref": "hand-computed",
+    "op": "bcd:decode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode all digits 7421",
+    "ref": "Wikipedia 'Binary-coded decimal' digit codes; hand-computed",
+    "op": "bcd:decode",
+    "params": {
+      "scheme": "7421"
+    },
+    "input": {
+      "value": "012345689a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0123456789",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode all digits 4221",
+    "ref": "Wikipedia 'Binary-coded decimal' digit codes; hand-computed",
+    "op": "bcd:decode",
+    "params": {
+      "scheme": "4221"
+    },
+    "input": {
+      "value": "012387cdef",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0123456789",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode all digits excess-3",
+    "ref": "Wikipedia 'Binary-coded decimal' digit codes; hand-computed",
+    "op": "bcd:decode",
+    "params": {
+      "scheme": "excess-3"
+    },
+    "input": {
+      "value": "3456789abc",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0123456789",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode unpacked",
+    "ref": "one digit per byte",
+    "op": "bcd:decode",
+    "params": {
+      "packed": false
+    },
+    "input": {
+      "value": "090005",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "905",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode signed minus (D)",
+    "ref": "IBM packed decimal sign nibble",
+    "op": "bcd:decode",
+    "params": {
+      "signed": true
+    },
+    "input": {
+      "value": "123d",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "-123",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode signed plus (C)",
+    "ref": "IBM packed decimal sign nibble",
+    "op": "bcd:decode",
+    "params": {
+      "signed": true
+    },
+    "input": {
+      "value": "123c",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "123",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode signed accepts F (unsigned/plus) and B (minus)",
+    "ref": "Wikipedia 'Binary-coded decimal' sign nibble table",
+    "op": "bcd:decode",
+    "params": {
+      "signed": true
+    },
+    "input": {
+      "value": "123f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "123",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode signed B is minus",
+    "ref": "Wikipedia 'Binary-coded decimal' sign nibble table",
+    "op": "bcd:decode",
+    "params": {
+      "signed": true
+    },
+    "input": {
+      "value": "123b",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "-123",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode signed unpacked",
+    "ref": "documented layout",
+    "op": "bcd:decode",
+    "params": {
+      "signed": true,
+      "packed": false
+    },
+    "input": {
+      "value": "04d5",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "-45",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode a nibble that is no digit (A)",
+    "ref": "hand-computed",
+    "op": "bcd:decode",
+    "params": {},
+    "input": {
+      "value": "12ab",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode a nibble that is no digit in 7421 (B)",
+    "ref": "hand-computed",
+    "op": "bcd:decode",
+    "params": {
+      "scheme": "7421"
+    },
+    "input": {
+      "value": "1b",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode nibble 0 is no digit in excess-3",
+    "ref": "hand-computed",
+    "op": "bcd:decode",
+    "params": {
+      "scheme": "excess-3"
+    },
+    "input": {
+      "value": "0123",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode a sign nibble that is a digit (9)",
+    "ref": "hand-computed",
+    "op": "bcd:decode",
+    "params": {
+      "signed": true
+    },
+    "input": {
+      "value": "1239",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode unpacked with a non-zero high nibble",
+    "ref": "hand-computed",
+    "op": "bcd:decode",
+    "params": {
+      "packed": false
+    },
+    "input": {
+      "value": "1205",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode binary that is not BCD",
+    "ref": "hand-computed",
+    "op": "bcd:decode",
+    "params": {},
+    "input": {
+      "value": "ffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

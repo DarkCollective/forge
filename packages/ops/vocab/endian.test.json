@@ -1,0 +1,155 @@
+[
+  {
+    "name": "swap 4-byte words (default)",
+    "ref": "hand-computed",
+    "op": "endian:swap",
+    "params": {},
+    "input": {
+      "value": "0102030405060708",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0403020108070605",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "swap 2-byte words",
+    "ref": "hand-computed",
+    "op": "endian:swap",
+    "params": {
+      "width": 2
+    },
+    "input": {
+      "value": "0102030405060708",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0201040306050807",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "swap 8-byte word",
+    "ref": "hand-computed",
+    "op": "endian:swap",
+    "params": {
+      "width": 8
+    },
+    "input": {
+      "value": "0102030405060708",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0807060504030201",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "swap empty",
+    "ref": "hand-computed",
+    "op": "endian:swap",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "swap non-ASCII UTF-8 (é) as a 2-byte word",
+    "ref": "é is c3 a9",
+    "op": "endian:swap",
+    "params": {
+      "width": 2
+    },
+    "input": {
+      "value": "é",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a9c3",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "swap binary 12 bytes in 4-byte words",
+    "ref": "hand-computed",
+    "op": "endian:swap",
+    "params": {},
+    "input": {
+      "value": "00ff10ef20df30cf40bf50af",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ef10ff00cf30df20af50bf40",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "swap 3 bytes in 2-byte words without pad",
+    "ref": "hand-computed",
+    "op": "endian:swap",
+    "params": {
+      "width": 2
+    },
+    "input": {
+      "value": "010203",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "swap 3 bytes in 2-byte words with pad",
+    "ref": "pad 01 02 03 00, then swap each word",
+    "op": "endian:swap",
+    "params": {
+      "width": 2,
+      "pad": true
+    },
+    "input": {
+      "value": "010203",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "02010003",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "swap with pad and whole words changes nothing extra",
+    "ref": "hand-computed",
+    "op": "endian:swap",
+    "params": {
+      "pad": true
+    },
+    "input": {
+      "value": "01020304",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "04030201",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "swap width 3 is invalid",
+    "ref": "parameter set",
+    "op": "endian:swap",
+    "params": {
+      "width": 3
+    },
+    "input": {
+      "value": "616263",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  }
+]

@@ -1,0 +1,452 @@
+[
+  {
+    "name": "encode 1 as binary64 (default)",
+    "ref": "Python struct.pack (IEEE 754)",
+    "op": "float:encode",
+    "params": {},
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3ff0000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 0.1 as binary64",
+    "ref": "Python struct.pack (IEEE 754)",
+    "op": "float:encode",
+    "params": {},
+    "input": {
+      "value": "0.1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3fb999999999999a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode negative zero",
+    "ref": "IEEE 754: sign bit set, rest zero",
+    "op": "float:encode",
+    "params": {},
+    "input": {
+      "value": "-0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "8000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode Infinity and -Infinity",
+    "ref": "IEEE 754 binary64 bit patterns",
+    "op": "float:encode",
+    "params": {},
+    "input": {
+      "value": "Infinity -Infinity",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "7ff0000000000000fff0000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode NaN (canonical quiet NaN)",
+    "ref": "IEEE 754 binary64 bit pattern",
+    "op": "float:encode",
+    "params": {},
+    "input": {
+      "value": "NaN",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "7ff8000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode several numbers, space and comma separated",
+    "ref": "Python struct.pack (IEEE 754)",
+    "op": "float:encode",
+    "params": {},
+    "input": {
+      "value": "1.5, -2.5\n1e-7 .5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3ff8000000000000c0040000000000003e7ad7f29abcaf483fe0000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode binary64 little-endian",
+    "ref": "Python struct.pack (IEEE 754)",
+    "op": "float:encode",
+    "params": {
+      "endian": "little"
+    },
+    "input": {
+      "value": "3.141592653589793",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "182d4454fb210940",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode binary32 big-endian",
+    "ref": "Python struct.pack (IEEE 754)",
+    "op": "float:encode",
+    "params": {
+      "size": "32"
+    },
+    "input": {
+      "value": "0.1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3dcccccd",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode binary32 little-endian",
+    "ref": "Python struct.pack (IEEE 754)",
+    "op": "float:encode",
+    "params": {
+      "size": "32",
+      "endian": "little"
+    },
+    "input": {
+      "value": "1 3.4028235e38",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0000803fffff7f7f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode binary32 rounds 16777217 to 16777216",
+    "ref": "Python struct.pack (IEEE 754)",
+    "op": "float:encode",
+    "params": {
+      "size": "32"
+    },
+    "input": {
+      "value": "16777217",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4b800000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode smallest subnormal binary64",
+    "ref": "Python struct.pack (IEEE 754)",
+    "op": "float:encode",
+    "params": {},
+    "input": {
+      "value": "5e-324",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0000000000000001",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode empty",
+    "ref": "hand-computed",
+    "op": "float:encode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode text that is not a number",
+    "ref": "hand-computed",
+    "op": "float:encode",
+    "params": {},
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "encode hex notation is rejected",
+    "ref": "hand-computed",
+    "op": "float:encode",
+    "params": {},
+    "input": {
+      "value": "0x10",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "encode non-ASCII text (é)",
+    "ref": "hand-computed",
+    "op": "float:encode",
+    "params": {},
+    "input": {
+      "value": "é",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "encode 1e39 overflows binary32",
+    "ref": "binary32 max is 3.4028235e38",
+    "op": "float:encode",
+    "params": {
+      "size": "32"
+    },
+    "input": {
+      "value": "1e39",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "encode 1e400 overflows binary64",
+    "ref": "binary64 max is 1.7976931348623157e308",
+    "op": "float:encode",
+    "params": {},
+    "input": {
+      "value": "1e400",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "encode size 16 is invalid",
+    "ref": "parameter choice",
+    "op": "float:encode",
+    "params": {
+      "size": "16"
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "decode 1 and 0.1 as binary64",
+    "ref": "Python struct.pack (IEEE 754)",
+    "op": "float:decode",
+    "params": {},
+    "input": {
+      "value": "3ff00000000000003fb999999999999a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1 0.1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode pi as binary64",
+    "ref": "Python struct.pack (IEEE 754)",
+    "op": "float:decode",
+    "params": {},
+    "input": {
+      "value": "400921fb54442d18",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "3.141592653589793",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode negative zero",
+    "ref": "IEEE 754",
+    "op": "float:decode",
+    "params": {},
+    "input": {
+      "value": "8000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "-0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode NaN and the infinities",
+    "ref": "IEEE 754 binary64 bit patterns",
+    "op": "float:decode",
+    "params": {},
+    "input": {
+      "value": "7ff80000000000007ff0000000000000fff0000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "NaN Infinity -Infinity",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode binary64 little-endian",
+    "ref": "Python struct.pack (IEEE 754)",
+    "op": "float:decode",
+    "params": {
+      "endian": "little"
+    },
+    "input": {
+      "value": "00000000000004c0",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "-2.5",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode binary32 shortest text for 0.1",
+    "ref": "0x3dcccccd is the nearest binary32 to 0.1",
+    "op": "float:decode",
+    "params": {
+      "size": "32"
+    },
+    "input": {
+      "value": "3dcccccd",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0.1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode binary32 maximum and 16777216",
+    "ref": "Python struct.pack (IEEE 754)",
+    "op": "float:decode",
+    "params": {
+      "size": "32"
+    },
+    "input": {
+      "value": "7f7fffff4b800000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "3.4028235e+38 16777216",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode binary32 little-endian 1.0",
+    "ref": "0x3f800000 is 1.0f",
+    "op": "float:decode",
+    "params": {
+      "size": "32",
+      "endian": "little"
+    },
+    "input": {
+      "value": "0000803f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 1e22 and 5e-324 as binary64",
+    "ref": "Python struct.pack (IEEE 754)",
+    "op": "float:decode",
+    "params": {},
+    "input": {
+      "value": "4480f0cf064dd5920000000000000001",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1e+22 5e-324",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode binary32 NaN and -Infinity",
+    "ref": "IEEE 754 binary32 bit patterns",
+    "op": "float:decode",
+    "params": {
+      "size": "32"
+    },
+    "input": {
+      "value": "7fc00000ff800000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "NaN -Infinity",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode empty",
+    "ref": "hand-computed",
+    "op": "float:decode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode a length that is not a whole number of values",
+    "ref": "hand-computed",
+    "op": "float:decode",
+    "params": {},
+    "input": {
+      "value": "000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode 4 bytes as binary64",
+    "ref": "hand-computed",
+    "op": "float:decode",
+    "params": {},
+    "input": {
+      "value": "00000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]
