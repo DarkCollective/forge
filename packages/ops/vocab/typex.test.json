@@ -1,0 +1,635 @@
+[
+  {
+    "name": "example rotors, all defaults",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {},
+    "input": {
+      "value": "HELLOWORLD",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "MKKAQUBTBS",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "example rotors: decipher the previous ciphertext",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {},
+    "input": {
+      "value": "LHVLWTGRXWIZ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ATTACKATDAWN",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "long text across several notches of rotor 3 and 4",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {},
+    "input": {
+      "value": "THEQUICKBROWNFOXJUMPSOVERTHELAZYDOGTHEQUICKBROWNFOXJUMPSOVERTHELAZYDOGTHEQUICKBROWNFOXJUMPSOVERTHELAZYDOGTHEQUICKBROWNFOXJUMPSOVERTHELAZYDOGTHEQUICKBROWNFOXJUMPSOVERTHELAZYDOGTHEQUICKBROWNFOXJUMPSOVERTHELAZYDOGTHEQUICKBROWNFOXJUMPSOVERTHELAZYDOGTHEQUICKBROWNFOXJUMPSOVERTHELAZYDOGTHEQUICKBROWNFOXJUMPSOVERTHELAZYDOGTHEQUICKBROWNFOXJUMPSOVERTHELAZYDOGTHEQUICKBROWNFOXJUMPSOVERTHELAZYDOGTHEQUICKBROWNFOXJUMPSOVERTHELAZYDOG",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "OTBTVPEALXASGANVXZXCVGAJCKBYAQKREGNYPZVIOBGUTLLYMWUHMCJWAXPNNQRPLQPJDLAPIIZSSIUOYMQQUHRXOAYBAVHPSUCOLXMIYSRRVXYWOPUJEQZFPELKRNMJPWGTGZUVXRWHWXYPCQTZCGUHIRMRRJBBMEESGWYFVXYZAHXINFZJWAENSIPIPZTZYTRKPBIQWQHOZJVAQQITQSKVVLTSYFVBFLTKRRCRGAOJCDVYAKRBUSMZXXOGWOPDGRPSKBOSTRCFQFMJFVUSZHAXGCRVJBUCGBLFUQHTMYLBJKLIIYVTNYVNASNYRAYRUKUOYMHSGAUYWHVKYMKAKMLMOEBJGUZALGTXRJSTFDTYCUABQJARNLHRVAEEYXHKKUELSLGXPCTDLIKLMQQUUGFNZYIJURQDIPYW",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "rings and positions as letters",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "rings": "BCDEF",
+      "positions": "QWERT"
+    },
+    "input": {
+      "value": "RINGSANDPOSITIONS",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "OKEBLDOMLMYTOENXV",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "rings and positions as numbers equal the same letters",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "rings": "2 3 4 5 6",
+      "positions": "17 23 5 18 20"
+    },
+    "input": {
+      "value": "RINGSANDPOSITIONS",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "OKEBLDOMLMYTOENXV",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "start positions near notches",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "positions": "AADEC"
+    },
+    "input": {
+      "value": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "JWMEPWVTBZQIEQRWXTDEFUXSIQIJJWFEJGCOCMCTMVCXXUYGNZMVCMSHTCBJQKJTGIXMOTDWZPQUUBGY",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "stators turned: position minus ring only",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "rings": "MQAAA",
+      "positions": "PTAAA"
+    },
+    "input": {
+      "value": "STATORS",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "VQOCTCM",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "stator position and ring shifted together give the same text",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "rings": "BBAAA",
+      "positions": "BBAAA"
+    },
+    "input": {
+      "value": "STATORSSAME",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "CHWQQGMVGIC",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "rotor 2 and rotor 4 fitted back to front",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "reversed": "2 4"
+    },
+    "input": {
+      "value": "BACKTOFRONT",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "WIOBIJPTZKX",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "all five rotors reversed",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "reversed": "1,2,3,4,5"
+    },
+    "input": {
+      "value": "ALLREVERSED",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "UOJCZQVOVXQ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "rotor 3 reversed with a different start",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "reversed": "3",
+      "positions": "ZZZZZ"
+    },
+    "input": {
+      "value": "TURNEDOVER",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "KEAOFRHNUK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "no notches: only the fast rotor moves",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "notches-3": "",
+      "notches-4": ""
+    },
+    "input": {
+      "value": "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "YDRRWEKPVRFYXCVCTIPFQRBICFYDRRWEKPVRFYXCVCTIPFQRBICFYDRRWEKPVRFYXCVCTI",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "every position a notch on rotor 3: the middle rotor steps at every press",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "notches-3": "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    },
+    "input": {
+      "value": "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "LLDZBXSHGAKFOQYTSPTESJKIOIORFJEUAPREWXANVSBFJXTTVOYFUCQRYICP",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "notches given with spaces and lower case",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "notches-3": "a b, c",
+      "notches-4": "x y"
+    },
+    "input": {
+      "value": "NOTCHESNOTCHESNOTCHESNOTCHESNOTCHESNOTCHESNOTCHESNOTCHESNOTCHESNOTCHESNOTCHESNOTCHES",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ZTZXWUYEVFMLBUQVYQPOASTWGJPNWYFLVYGDFAVDSGVEDHMGQXSQLFQNCWEJBBPVDPDUBNEQOTNBFPLZLRQC",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "notches on the middle rotor reach the slow rotor",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "notches-3": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+      "notches-4": "AZ"
+    },
+    "input": {
+      "value": "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "KDXGPYMNGJWCDVKBCRBEAPCLUACFMKTTWLOIPVODUQMYKHMHOCJUCYUMZEABJNQHTLBFNMXMOLZDTLCVVZNVWAWAZWQTUHKXJYEE",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "entry plugboard",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "plugboard": "AB CD EF GH IJ KL MN OP QR ST UV WX YZ"
+    },
+    "input": {
+      "value": "PLUGBOARD",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "SFSXJJPPP",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "entry plugboard with commas and lower case",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "plugboard": "ab,cd ef"
+    },
+    "input": {
+      "value": "plugboard",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "WBIVIQOTO",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "your own wirings (here five arbitrary permutations and a reflector)",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "rotor-1": "EKMFLGDQVZNTOWYHXUSPAIBRCJ",
+      "rotor-2": "AJDKSIRUXBLHWTMCQGZNPYFVOE",
+      "rotor-3": "BDFHJLCPRTXVZNYEIWGAKMUSQO",
+      "rotor-4": "ESOVPZJAYQUIRHXLNFTGKDCMWB",
+      "rotor-5": "VZBRGITYUPSDNHLXAWMJQOFECK",
+      "reflector": "YRUHQSLDPXNGOKMIEBFZCWVJAT"
+    },
+    "input": {
+      "value": "OWNWIRINGS",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "NIGJHNOLWF",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "wirings written in lower case",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "rotor-3": "bdfhjlcprtxvznyeiwgakmusqo",
+      "reflector": "yruhqsldpxngokmiebfzcwvjat"
+    },
+    "input": {
+      "value": "lowercasewiring",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "QLSATFHDHMLNDGZ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "identity rotors leave only the reflector and the shifts",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "rotor-1": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+      "rotor-2": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+      "rotor-3": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+      "rotor-4": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+      "rotor-5": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+      "reflector": "YRUHQSLDPXNGOKMIEBFZCWVJAT",
+      "notches-3": "",
+      "notches-4": ""
+    },
+    "input": {
+      "value": "IDENTITY",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "PHQKZPZA",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "lower case in, upper case out; other characters kept",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {},
+    "input": {
+      "value": "Hello, World! 123 éà\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "MKKAQ, UBTBS! 123 éà\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "others=remove drops other characters",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "others": "remove"
+    },
+    "input": {
+      "value": "Hello, World! 123 éà\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "MKKAQUBTBS",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "binary bytes pass through in keep mode",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {},
+    "input": {
+      "value": "ff0041c3a942",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ff004cc3a951",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "empty input",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "error: a wiring with a letter twice",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "rotor-3": "AACDEFGHIJKLMNOPQRSTUVWXYZ"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "error: a wiring with a repeated letter in the middle (25 distinct)",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "rotor-1": "EKMFLGDQVZNTOWYHXUSPAIBRCE"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "error: reflector with a letter paired with itself",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "reflector": "AACDEFGHIJKLMNOPQRSTUVWXYZ"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "error: reflector that is a permutation but not paired up (an Enigma rotor)",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "reflector": "EKMFLGDQVZNTOWYHXUSPAIBRCJ"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "error: reflector that is the identity",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "reflector": "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "error: notches with a digit",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "notches-3": "A1"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "error: reversed rotor number 6",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "reversed": "6"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "error: reversed rotor number 0",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "reversed": "0"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "error: reversed with letters",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "reversed": "x"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "error: rings with four letters apart",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "rings": "A B C D"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "error: rings with four letters together (static length check)",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "rings": "AAAA"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "error: positions with a bad number",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "positions": "1 2 3 4 27"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "error: plugboard letter twice",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "plugboard": "AB BC"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "error: a wiring of 25 letters (static length check)",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "rotor-2": "AJDKSIRUXBLHWTMCQGZNPYFVO"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "error: a wiring with a digit (pattern check)",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "rotor-4": "1SOVPZJAYQUIRHXLNFTGKDCMWB"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_PARAM_INVALID"
+    }
+  },
+  {
+    "name": "error: others is not one of the choices",
+    "ref": "self-derived with an independent simulator (Python, written outside the repo); Typex rotor wirings are unpublished, so no historical vectors exist",
+    "op": "typex:encrypt",
+    "params": {
+      "others": "drop"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  }
+]
