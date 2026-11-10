@@ -1,0 +1,74 @@
+[
+  {
+    "name": "digest: empty string",
+    "ref": "MD6 report (Rivest et al., 2008) appendix A / Wikipedia MD6 article examples (default d=256, L=64)",
+    "op": "md6:digest",
+    "params": {
+      "size": 256,
+      "levels": 64,
+      "key": ""
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "bca38b24a804aa37d821d31af00f5598230122c5bbfc4c4ad5ed40e4258f04ca",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: abc",
+    "ref": "MD6 report (Rivest et al., 2008) appendix A / Wikipedia MD6 article examples (default d=256, L=64)",
+    "op": "md6:digest",
+    "params": {
+      "size": 256,
+      "levels": 64,
+      "key": ""
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "230637d4e6845cf0d092b558e87625f03881dd53a7439da34cf3b94ed0d8b2c5",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: quick brown fox",
+    "ref": "MD6 report (Rivest et al., 2008) appendix A / Wikipedia MD6 article examples (default d=256, L=64)",
+    "op": "md6:digest",
+    "params": {
+      "size": 256,
+      "levels": 64,
+      "key": ""
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "977592608c45c9923340338450fdcccc21a68888e1e6350e133c5186cd9736ee",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: quick brown cog",
+    "ref": "MD6 report (Rivest et al., 2008) appendix A / Wikipedia MD6 article examples (default d=256, L=64)",
+    "op": "md6:digest",
+    "params": {
+      "size": 256,
+      "levels": 64,
+      "key": ""
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy cog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "85fe717a5896a085a31be5d9457b4da75a6ebc003eded96d7cb0ff1737235bba",
+      "enc": "hex"
+    }
+  }
+]

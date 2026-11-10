@@ -1,0 +1,44 @@
+[
+  {
+    "name": "digest: abc",
+    "ref": "FIPS 180 (1993) appendix: SHA of abc",
+    "op": "sha0:digest",
+    "params": {},
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0164b8a914cd2a5e74c4f7ff082c4d97f1edf880",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: 448-bit message",
+    "ref": "FIPS 180 (1993) / FIPS 180-1 448-bit test message, SHA-0 digest as published",
+    "op": "sha0:digest",
+    "params": {},
+    "input": {
+      "value": "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d2516ee1acfa5baf33dfc1c471e438449ef134c8",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: empty string",
+    "ref": "SHA-0 of the empty message, as published (Wikipedia SHA-1 article, SHA-0 comparison)",
+    "op": "sha0:digest",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f96cea198ad1dd5617ac084a3d92c6107708c0ef",
+      "enc": "hex"
+    }
+  }
+]
