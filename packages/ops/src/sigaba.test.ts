@@ -50,13 +50,14 @@ const DEFAULT: Key = {
   other: "drop",
 };
 
-const enc = new TextEncoder();
-const dec = new TextDecoder();
+// The package has no TextEncoder typings; the text here is ASCII or Latin-1.
+const encode = (t: string): Uint8Array => Uint8Array.from(t, (c) => c.charCodeAt(0) & 255);
+const decode = (b: Uint8Array): string => String.fromCharCode(...b);
 
 async function crypt(text: string | Uint8Array, over: Partial<Key> = {}) {
   const k = { ...DEFAULT, ...over };
   return runtime.call("sigaba:crypt", [
-    bytes(typeof text === "string" ? enc.encode(text) : text),
+    bytes(typeof text === "string" ? encode(text) : text),
     str(k.mode),
     str(k.cipherRotors),
     str(k.controlRotors),
@@ -74,7 +75,7 @@ async function text(t: string, over: Partial<Key> = {}): Promise<string> {
   const r = await crypt(t, over);
   if (!r.ok) throw new Error(`${r.error.code}: ${r.error.message}`);
   const top = r.stack[r.stack.length - 1] as { v: Uint8Array | string };
-  return typeof top.v === "string" ? top.v : dec.decode(top.v);
+  return typeof top.v === "string" ? top.v : decode(top.v);
 }
 
 function rng(seed: number): () => number {
@@ -267,7 +268,7 @@ describe("sigaba size", () => {
     expect(cipher.length).toBe(65536);
     const dec1 = await crypt(cipher, { ...key, mode: "decrypt" });
     expect(dec1.ok).toBe(true);
-    expect(dec.decode((dec1.stack[dec1.stack.length - 1] as { v: Uint8Array }).v)).toBe(plain);
+    expect(decode((dec1.stack[dec1.stack.length - 1] as { v: Uint8Array }).v)).toBe(plain);
   }, 60_000);
 });
 
