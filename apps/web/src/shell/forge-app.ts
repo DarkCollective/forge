@@ -54,6 +54,7 @@ export class ForgeApp extends LitElement {
     css`
       :host {
         display: grid;
+        grid-template-columns: minmax(0, 1fr);
         grid-template-rows: auto minmax(0, 1fr) auto;
         height: 100%;
         background: var(--bg);

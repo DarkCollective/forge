@@ -19,7 +19,7 @@ import { loadCatalogue } from "./catalogue.js";
 import { DEFAULT_LAYOUT } from "./state/layout.js";
 import { createActions, createAppStore } from "./state/actions.js";
 
-const make = (version: string, _ops?: string[]): Catalogue =>
+const make = (version: string): Catalogue =>
   ({
     format: 1,
     version,
@@ -40,30 +40,30 @@ const versionOf = (store: ReturnType<typeof setup>["store"]): string | undefined
 describe("loadCatalogue ordering", () => {
   it("publishes the static catalogue when nothing else has", async () => {
     const { store, actions } = setup();
-    await loadCatalogue(actions, store, async () => make("static", ["a:b"]));
+    await loadCatalogue(actions, store, async () => make("static"));
     expect(versionOf(store)).toBe("static");
   });
 
   it("does not overwrite a catalogue the console worker published during the fetch", async () => {
     const { store, actions } = setup();
     await loadCatalogue(actions, store, async () => {
-      actions.setCatalogue(make("worker", ["a:b", "user:sq"]));
-      return make("static", ["a:b"]);
+      actions.setCatalogue(make("worker"));
+      return make("static");
     });
     expect(versionOf(store)).toBe("worker");
   });
 
   it("lets the worker catalogue replace the static one afterwards", async () => {
     const { store, actions } = setup();
-    await loadCatalogue(actions, store, async () => make("static", ["a:b"]));
-    actions.setCatalogue(make("worker", ["a:b", "user:sq"]));
+    await loadCatalogue(actions, store, async () => make("static"));
+    actions.setCatalogue(make("worker"));
     expect(versionOf(store)).toBe("worker");
   });
 
   it("a failed fetch does not replace a ready catalogue with an error", async () => {
     const { store, actions } = setup();
     await loadCatalogue(actions, store, async () => {
-      actions.setCatalogue(make("worker", []));
+      actions.setCatalogue(make("worker"));
       throw new Error("HTTP 500");
     });
     expect(store.get().catalogue.status).toBe("ready");
