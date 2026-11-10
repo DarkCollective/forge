@@ -13,16 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
+import { fileURLToPath } from "node:url";
 import { describe, expect, test } from "vitest";
 import { assembleRuntime, createBundleLoader } from "./bundle.js";
 import { buildCatalogue } from "./catalogue.js";
 import { createNodeProvider, loadBundleNode, primitiveVocabOf } from "./sources-node.js";
 import { createViteProvider, loadBundleVite } from "./sources-vite.js";
 
-const PRIMS = ["base64", "hex", "recipe", "regex"];
-const VOCABS = ["base64.fth", "classical.fth", "hex.fth", "recipe.fth", "regex.fth", "text.fth"];
+const here = (dir: string): string =>
+  `${fileURLToPath(import.meta.url).replace(/\/[^/]*$/, "")}/../${dir}`;
+// Derived from the directories, so adding a vocabulary does not touch this test.
+const VOCABS = readdirSync(here("vocab"))
+  .filter((n) => n.endsWith(".fth"))
+  .sort();
+const PRIMS = readdirSync(here("src/prims"))
+  .filter((n) => n.endsWith(".ts") && !n.endsWith(".d.ts") && !n.endsWith(".test.ts"))
+  .map((n) => n.slice(0, -3))
+  .sort();
 
 describe("primitiveVocabOf: exclusions", () => {
   test("a module of the selected extension is a vocabulary", () => {
@@ -143,8 +152,8 @@ describe("the Vite provider (under Vitest, which applies import.meta.glob)", () 
 
   test("the package entry @forge/ops/vite loads", async () => {
     const entry = (await import("@forge/ops/vite")) as typeof import("./sources-vite.js");
-    const bundle = await entry.loadBundleVite(["text"]);
-    expect(bundle.vocabs).toEqual(["text"]);
+    const bundle = await entry.loadBundleVite(["hex"]);
+    expect(bundle.vocabs).toEqual(["hex"]);
     expect(Object.keys(entry.createViteProvider().primitiveLoaders()).sort()).toEqual(PRIMS);
   });
 
