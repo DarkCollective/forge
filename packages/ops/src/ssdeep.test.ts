@@ -88,7 +88,7 @@ describe("ssdeep:compare", () => {
   test("one changed byte in 64 KiB scores very high, a different input scores 0", async () => {
     const a = noise(65536, 3);
     const b = a.slice();
-    b[1000] ^= 0xff;
+    b[1000] = (b[1000] ?? 0) ^ 0xff;
     const ha = await digest(a);
     expect((await compare(ha, await digest(b))).score).toBeGreaterThanOrEqual(90);
     expect((await compare(ha, await digest(noise(65536, 4)))).score).toBe(0);
