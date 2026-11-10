@@ -1,0 +1,5 @@
+[
+ {"cyberchef": "XKCD Random Number", "status": "dropped", "note": "A joke: it always returns 4 (the xkcd 'random number')."},
+ {"cyberchef": "Numberwang", "status": "dropped", "note": "A joke based on a comedy sketch; it has no data-processing use."},
+ {"cyberchef": "Automated Validation Test Op", "status": "dropped", "note": "CyberChef's internal fixture for testing parameter validation; it is not a user operation."}
+]
