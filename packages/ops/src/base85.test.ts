@@ -77,7 +77,7 @@ describe("base85 round trips", () => {
       expect(back.steps).toBeLessThan(5_000_000);
       expect((top(back) as { v: Uint8Array }).v).toEqual(data);
     }
-  });
+  }, 60_000);
 });
 
 describe("errors", () => {

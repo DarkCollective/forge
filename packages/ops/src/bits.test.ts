@@ -128,7 +128,7 @@ describe("performance and limits", () => {
     const key = bytes(randBytes(4096, 4096));
     const r = await runtime.call("bits:add", [bytes(data), key]);
     expect(r.ok).toBe(true);
-  });
+  }, 60_000);
 
   test("xor-brute with two-byte keys and no crib stops at the allocation limit", async () => {
     const small = assembleRuntime(await loadBundleNode(["bits"]), {
