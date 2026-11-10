@@ -1,0 +1,113 @@
+# Copyright 2026 Darkcollective, LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Deploy
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+# One deploy at a time; a newer one waits rather than cancelling a half-synced one.
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+env:
+  SITE_URL: https://forge.darkcollective.com
+  BUCKET: ${{ vars.FORGE_BUCKET }}
+  DISTRIBUTION_ID: ${{ vars.FORGE_DISTRIBUTION_ID }}
+  HTML_CACHE: public, max-age=0, must-revalidate
+  ASSET_CACHE: public, max-age=31536000, immutable
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'push')
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.FORGE_DEPLOY_ROLE_ARN }}
+          aws-region: us-east-1
+
+      # 1. Hashed assets first, never deleting: pages still being served (and
+      #    cached) by CloudFront reference the previous build's assets, and the
+      #    new pages must find theirs the moment they are published.
+      - name: Upload hashed assets
+        run: >-
+          aws s3 sync apps/web/dist/assets "s3://$BUCKET/assets/"
+          --cache-control "$ASSET_CACHE"
+
+      # 2. Everything else except HTML (robots, sitemap, favicon, security.txt,
+      #    catalogue, ...). The assets/ prefix is excluded so the pass above owns it.
+      - name: Upload non-HTML files
+        run: >-
+          aws s3 sync apps/web/dist "s3://$BUCKET/"
+          --exclude "assets/*" --exclude "*.html"
+          --cache-control "$HTML_CACHE"
+
+      # 3. HTML last, so no page goes live before everything it references.
+      #    This pass also removes files that left the build. The assets/ prefix
+      #    stays excluded, so --delete never removes old hashed assets (they are
+      #    harmless, and a stale cached page may still need one).
+      - name: Upload HTML and prune removed files
+        run: >-
+          aws s3 sync apps/web/dist "s3://$BUCKET/"
+          --exclude "assets/*" --delete
+          --cache-control "$HTML_CACHE"
+
+      # Everything outside /assets/ is mutable and cached at the edge, so those
+      # keys are invalidated. The viewer-request function rewrites / and /about/
+      # to /index.html and /about/index.html before the cache lookup, so those
+      # rewritten keys are what must be invalidated. Hashed assets are not: their
+      # names change with their content. The list is derived from the build, so
+      # a new page is covered without editing this file.
+      - name: Invalidate CloudFront
+        run: |
+          paths=$(cd apps/web/dist && find . -type f -not -path './assets/*' | sed 's|^\.||' | sort)
+          [ -n "$paths" ] || { echo "no files to invalidate"; exit 1; }
+          id=$(aws cloudfront create-invalidation \
+            --distribution-id "$DISTRIBUTION_ID" \
+            --paths / $paths \
+            --query Invalidation.Id --output text)
+          echo "Invalidation $id"
+          aws cloudfront wait invalidation-completed \
+            --distribution-id "$DISTRIBUTION_ID" --id "$id"
+
+      - name: Smoke check
+        run: |
+          headers=$(curl -fsS -D - -o /dev/null "$SITE_URL/")
+          echo "$headers"
+          echo "$headers" | head -n 1 | grep -q ' 200' || { echo "not 200"; exit 1; }
+          for h in cross-origin-opener-policy cross-origin-embedder-policy content-security-policy; do
+            echo "$headers" | grep -qi "^$h:" || { echo "missing $h"; exit 1; }
+          done
+          curl -fsS -o /dev/null "$SITE_URL/about/"
