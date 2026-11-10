@@ -11,7 +11,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 
 | Category | Covered | Redesigned | Dropped | Not yet | Total |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Data format | 32 | 2 | 0 | 46 | 80 |
+| Data format | 41 | 3 | 0 | 36 | 80 |
 | Encryption / Encoding | 19 | 1 | 0 | 75 | 95 |
 | Public Key | 0 | 0 | 0 | 30 | 30 |
 | Arithmetic / Logic | 9 | 0 | 0 | 17 | 26 |
@@ -27,22 +27,22 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 2 | 0 | 0 | 19 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **68** | **10** | **0** | **428** | **506** |
+| **Total** | **77** | **11** | **0** | **418** | **506** |
 
 ## Data format (80)
 
 | CyberChef | Status | Forge | Note |
 | --- | --- | --- | --- |
-| To Hexdump | not yet |  |  |
-| From Hexdump | not yet |  |  |
+| To Hexdump | covered | `hexdump:encode` | xxd-style layout. |
+| From Hexdump | covered | `hexdump:decode` | Reads this layout, xxd and hexdump -C. |
 | To Hex | covered | `hex:encode` |  |
 | From Hex | covered | `hex:decode` |  |
 | To Charcode | covered | `charcode:encode` |  |
 | From Charcode | covered | `charcode:decode` |  |
 | To Decimal | covered | `decimal:encode` |  |
 | From Decimal | covered | `decimal:decode` |  |
-| To Float | not yet |  |  |
-| From Float | not yet |  |  |
+| To Float | covered | `float:encode` | binary32 and binary64, either byte order; several numbers per input. |
+| From Float | covered | `float:decode` | binary32 and binary64, either byte order; shortest round-trip text. |
 | To Binary | covered | `binary:encode` |  |
 | From Binary | covered | `binary:decode` |  |
 | To Octal | covered | `octal:encode` |  |
@@ -66,9 +66,9 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | From Base85 | covered | `base85:decode` | Ascii85 and Z85 through the variant parameter. |
 | To Base | redesigned | `radix:convert` | To Base and From Base are one word: an integer written in any base from 2 to 36 is rewritten in another, whatever its size. |
 | From Base | redesigned | `radix:convert` | To Base and From Base are one word: an integer written in any base from 2 to 36 is rewritten in another, whatever its size. |
-| To BCD | not yet |  |  |
-| From BCD | not yet |  |  |
-| Text-Integer Conversion | not yet |  |  |
+| To BCD | covered | `bcd:encode` | 8421, 7421, 4221 and excess-3; packed or unpacked; optional sign. |
+| From BCD | covered | `bcd:decode` | 8421, 7421, 4221 and excess-3; packed or unpacked; optional sign. |
+| Text-Integer Conversion | redesigned | `bigint:from-bytes`, `bigint:to-bytes` | Two ops: unsigned big-endian bytes to decimal text and back. |
 | To HTML Entity | covered | `html:encode` |  |
 | From HTML Entity | covered | `html:decode` |  |
 | URL Encode | covered | `url:encode` |  |
@@ -92,7 +92,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Encode text | not yet |  |  |
 | Decode text | not yet |  |  |
 | Text Encoding Brute Force | not yet |  |  |
-| Swap endianness | not yet |  |  |
+| Swap endianness | covered | `endian:swap` | Words of 2, 4 or 8 bytes. |
 | To MessagePack | not yet |  |  |
 | From MessagePack | not yet |  |  |
 | To Braille | not yet |  |  |
@@ -111,8 +111,8 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | To Modhex | covered | `modhex:encode` |  |
 | From Modhex | covered | `modhex:decode` |  |
 | MIME Decoding | not yet |  |  |
-| To COBS | not yet |  |  |
-| From COBS | not yet |  |  |
+| To COBS | covered | `cobs:encode` |  |
+| From COBS | covered | `cobs:decode` |  |
 
 ## Encryption / Encoding (95)
 

@@ -1,0 +1,235 @@
+[
+  {
+    "name": "from-bytes 0100 is 256",
+    "ref": "Python int.from_bytes / int.to_bytes",
+    "op": "bigint:from-bytes",
+    "params": {},
+    "input": {
+      "value": "0100",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "256",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-bytes single zero byte",
+    "ref": "Python int.from_bytes / int.to_bytes",
+    "op": "bigint:from-bytes",
+    "params": {},
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-bytes empty is 0",
+    "ref": "documented: empty input is 0",
+    "op": "bigint:from-bytes",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-bytes leading zero bytes are ignored",
+    "ref": "Python int.from_bytes / int.to_bytes",
+    "op": "bigint:from-bytes",
+    "params": {},
+    "input": {
+      "value": "0000ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "255",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-bytes 2^64-1",
+    "ref": "Python int.from_bytes / int.to_bytes",
+    "op": "bigint:from-bytes",
+    "params": {},
+    "input": {
+      "value": "ffffffffffffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "18446744073709551615",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-bytes 16 bytes",
+    "ref": "Python int.from_bytes / int.to_bytes",
+    "op": "bigint:from-bytes",
+    "params": {},
+    "input": {
+      "value": "0123456789abcdeffedcba9876543210",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1512366075204170947332355369683137040",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-bytes non-ASCII UTF-8 (é)",
+    "ref": "Python int.from_bytes / int.to_bytes",
+    "op": "bigint:from-bytes",
+    "params": {},
+    "input": {
+      "value": "é",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "50089",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-bytes 255",
+    "ref": "Python int.from_bytes / int.to_bytes",
+    "op": "bigint:to-bytes",
+    "params": {},
+    "input": {
+      "value": "255",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "to-bytes 256",
+    "ref": "Python int.from_bytes / int.to_bytes",
+    "op": "bigint:to-bytes",
+    "params": {},
+    "input": {
+      "value": "256",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0100",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "to-bytes 0 is one zero byte",
+    "ref": "documented: at least one byte",
+    "op": "bigint:to-bytes",
+    "params": {},
+    "input": {
+      "value": "0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "to-bytes ignores white space",
+    "ref": "Python int.from_bytes / int.to_bytes",
+    "op": "bigint:to-bytes",
+    "params": {},
+    "input": {
+      "value": " 18446744073709551616\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "010000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "to-bytes 2^128-1",
+    "ref": "Python int.from_bytes / int.to_bytes",
+    "op": "bigint:to-bytes",
+    "params": {},
+    "input": {
+      "value": "340282366920938463463374607431768211455",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ffffffffffffffffffffffffffffffff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "to-bytes negative number",
+    "ref": "documented: unsigned only",
+    "op": "bigint:to-bytes",
+    "params": {},
+    "input": {
+      "value": "-1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-bytes not a number",
+    "ref": "hand-computed",
+    "op": "bigint:to-bytes",
+    "params": {},
+    "input": {
+      "value": "12a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-bytes decimal fraction",
+    "ref": "hand-computed",
+    "op": "bigint:to-bytes",
+    "params": {},
+    "input": {
+      "value": "1.5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-bytes empty text",
+    "ref": "hand-computed",
+    "op": "bigint:to-bytes",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-bytes non-ASCII digits (full-width 1)",
+    "ref": "hand-computed",
+    "op": "bigint:to-bytes",
+    "params": {},
+    "input": {
+      "value": "１",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

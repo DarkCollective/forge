@@ -1,0 +1,435 @@
+[
+  {
+    "name": "encode text, default width",
+    "ref": "xxd (macOS) output",
+    "op": "hexdump:encode",
+    "params": {},
+    "input": {
+      "value": "Hello, world!\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00000000: 4865 6c6c 6f2c 2077 6f72 6c64 210a       Hello, world!.",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode binary, width 5 upper case",
+    "ref": "xxd (macOS) output -c 5 -u",
+    "op": "hexdump:encode",
+    "params": {
+      "width": 5,
+      "case": "upper"
+    },
+    "input": {
+      "value": "48656c6c6f2c20776f726c64210a00ff7f207e",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00000000: 4865 6C6C 6F  Hello\n00000005: 2C20 776F 72  , wor\n0000000a: 6C64 210A 00  ld!..\n0000000f: FF7F 207E     .. ~",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode binary, width 8",
+    "ref": "xxd (macOS) output -c 8",
+    "op": "hexdump:encode",
+    "params": {
+      "width": 8
+    },
+    "input": {
+      "value": "48656c6c6f2c20776f726c64210a00ff7f207e",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00000000: 4865 6c6c 6f2c 2077  Hello, w\n00000008: 6f72 6c64 210a 00ff  orld!...\n00000010: 7f20 7e              . ~",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode width 8 without the ASCII column",
+    "ref": "xxd -c 8 with the ASCII column removed by hand",
+    "op": "hexdump:encode",
+    "params": {
+      "width": 8,
+      "ascii": false
+    },
+    "input": {
+      "value": "48656c6c6f2c20776f726c64210a00ff7f207e",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00000000: 4865 6c6c 6f2c 2077\n00000008: 6f72 6c64 210a 00ff\n00000010: 7f20 7e",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode empty",
+    "ref": "xxd prints nothing for empty input",
+    "op": "hexdump:encode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode non-ASCII UTF-8 (é)",
+    "ref": "xxd (macOS) output",
+    "op": "hexdump:encode",
+    "params": {},
+    "input": {
+      "value": "é",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00000000: c3a9                                     ..",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode text that looks like hex in the ASCII column",
+    "ref": "xxd (macOS) output",
+    "op": "hexdump:encode",
+    "params": {},
+    "input": {
+      "value": "dead",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00000000: 6465 6164                                dead",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode width 1",
+    "ref": "xxd (macOS) output -c 1",
+    "op": "hexdump:encode",
+    "params": {
+      "width": 1
+    },
+    "input": {
+      "value": "Hi",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00000000: 48  H\n00000001: 69  i",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode 70 bytes, width 64 (two lines)",
+    "ref": "xxd (macOS) output -c 64",
+    "op": "hexdump:encode",
+    "params": {
+      "width": 64
+    },
+    "input": {
+      "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dce3eaf1f8ff060d141b222930373e454c535a61686f767d848b9299a0a7aeb5bcc3cad1d8dfe6",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00000000: 030a 1118 1f26 2d34 3b42 4950 575e 656c 737a 8188 8f96 9da4 abb2 b9c0 c7ce d5dc e3ea f1f8 ff06 0d14 1b22 2930 373e 454c 535a 6168 6f76 7d84 8b92 99a0 a7ae b5bc  .....&-4;BIPW^elsz.......................\")07>ELSZahov}.........\n00000040: c3ca d1d8 dfe6                                                                                                                                                   ......",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode width 3 (odd group)",
+    "ref": "xxd (macOS) output -c 3",
+    "op": "hexdump:encode",
+    "params": {
+      "width": 3
+    },
+    "input": {
+      "value": "48656c6c6f2c20776f726c64210a00ff7f207e",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00000000: 4865 6c  Hel\n00000003: 6c6f 2c  lo,\n00000006: 2077 6f   wo\n00000009: 726c 64  rld\n0000000c: 210a 00  !..\n0000000f: ff7f 20  .. \n00000012: 7e       ~",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode width 0 is invalid",
+    "ref": "parameter range",
+    "op": "hexdump:encode",
+    "params": {
+      "width": 0
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "encode width 65 is invalid",
+    "ref": "parameter range",
+    "op": "hexdump:encode",
+    "params": {
+      "width": 65
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "encode unknown case is invalid",
+    "ref": "parameter choice",
+    "op": "hexdump:encode",
+    "params": {
+      "case": "mixed"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "decode xxd output of text",
+    "ref": "xxd (macOS) output",
+    "op": "hexdump:decode",
+    "params": {},
+    "input": {
+      "value": "00000000: 4865 6c6c 6f2c 2077 6f72 6c64 210a       Hello, world!.",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "48656c6c6f2c20776f726c64210a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode xxd output of binary, two lines",
+    "ref": "xxd (macOS) output",
+    "op": "hexdump:decode",
+    "params": {},
+    "input": {
+      "value": "00000000: 4865 6c6c 6f2c 2077 6f72 6c64 210a 00ff  Hello, world!...\n00000010: 7f20 7e                                  . ~",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "48656c6c6f2c20776f726c64210a00ff7f207e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode xxd -c 8 output",
+    "ref": "xxd (macOS) output",
+    "op": "hexdump:decode",
+    "params": {},
+    "input": {
+      "value": "00000000: 4865 6c6c 6f2c 2077  Hello, w\n00000008: 6f72 6c64 210a 00ff  orld!...\n00000010: 7f20 7e              . ~",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "48656c6c6f2c20776f726c64210a00ff7f207e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode xxd -g1 output",
+    "ref": "xxd (macOS) output -g1",
+    "op": "hexdump:decode",
+    "params": {},
+    "input": {
+      "value": "00000000: 48 65 6c 6c 6f 2c 20 77 6f 72 6c 64 21 0a 00 ff  Hello, world!...\n00000010: 7f 20 7e                                         . ~",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "48656c6c6f2c20776f726c64210a00ff7f207e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode xxd -g4 output (4-byte groups)",
+    "ref": "xxd (macOS) output -g4",
+    "op": "hexdump:decode",
+    "params": {},
+    "input": {
+      "value": "00000000: 48656c6c 6f2c2077 6f726c64 210a00ff  Hello, world!...\n00000010: 7f207e                               . ~",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "48656c6c6f2c20776f726c64210a00ff7f207e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode xxd -u output",
+    "ref": "xxd (macOS) output -u",
+    "op": "hexdump:decode",
+    "params": {},
+    "input": {
+      "value": "00000000: 4865 6C6C 6F2C 2077 6F72 6C64 210A 00FF  Hello, world!...\n00000010: 7F20 7E                                  . ~",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "48656c6c6f2c20776f726c64210a00ff7f207e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode hexdump -C output with the final offset line",
+    "ref": "hexdump -C (macOS) output",
+    "op": "hexdump:decode",
+    "params": {},
+    "input": {
+      "value": "00000000  48 65 6c 6c 6f 2c 20 77  6f 72 6c 64 21 0a 00 ff  |Hello, world!...|\n00000010  7f 20 7e                                          |. ~|\n00000013\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "48656c6c6f2c20776f726c64210a00ff7f207e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode xxd output of text that looks like hex",
+    "ref": "xxd (macOS) output",
+    "op": "hexdump:decode",
+    "params": {},
+    "input": {
+      "value": "00000000: 6465 6164                                dead",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "64656164",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode xxd output of UTF-8 (é)",
+    "ref": "xxd (macOS) output",
+    "op": "hexdump:decode",
+    "params": {},
+    "input": {
+      "value": "00000000: c3a9                                     ..",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c3a9",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode own layout with no ASCII column",
+    "ref": "layout documented in hexdump.fth, hand-written",
+    "op": "hexdump:decode",
+    "params": {},
+    "input": {
+      "value": "00000000: 4865 6c6c\n00000004: 6f",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "48656c6c6f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode CRLF line ends, blank lines and indentation",
+    "ref": "hand-written",
+    "op": "hexdump:decode",
+    "params": {},
+    "input": {
+      "value": "  00000000: 4865 6c6c  Hell\r\n\r\n00000004: 6f  o\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "48656c6c6f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode empty",
+    "ref": "hand-computed",
+    "op": "hexdump:decode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode offset-only line",
+    "ref": "hexdump -C ends with one",
+    "op": "hexdump:decode",
+    "params": {},
+    "input": {
+      "value": "00000000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode a line without an offset",
+    "ref": "hand-written",
+    "op": "hexdump:decode",
+    "params": {},
+    "input": {
+      "value": "zz: 41",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode odd number of hex digits",
+    "ref": "hand-written",
+    "op": "hexdump:decode",
+    "params": {},
+    "input": {
+      "value": "00000000: 414",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode non-hex in the hex field",
+    "ref": "hand-written",
+    "op": "hexdump:decode",
+    "params": {},
+    "input": {
+      "value": "00000000: 41zz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode squeezed * line (hexdump without -v)",
+    "ref": "hexdump -C prints * for repeated lines; unsupported",
+    "op": "hexdump:decode",
+    "params": {},
+    "input": {
+      "value": "00000000  00 00  |..|\n*\n00000010",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

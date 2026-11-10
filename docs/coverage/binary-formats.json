@@ -1,0 +1,12 @@
+[
+ { "cyberchef": "To Hexdump", "status": "covered", "forge": ["hexdump:encode"], "note": "xxd-style layout." },
+ { "cyberchef": "From Hexdump", "status": "covered", "forge": ["hexdump:decode"], "note": "Reads this layout, xxd and hexdump -C." },
+ { "cyberchef": "To Float", "status": "covered", "forge": ["float:encode"], "note": "binary32 and binary64, either byte order; several numbers per input." },
+ { "cyberchef": "From Float", "status": "covered", "forge": ["float:decode"], "note": "binary32 and binary64, either byte order; shortest round-trip text." },
+ { "cyberchef": "Swap endianness", "status": "covered", "forge": ["endian:swap"], "note": "Words of 2, 4 or 8 bytes." },
+ { "cyberchef": "Text-Integer Conversion", "status": "redesigned", "forge": ["bigint:from-bytes", "bigint:to-bytes"], "note": "Two ops: unsigned big-endian bytes to decimal text and back." },
+ { "cyberchef": "To BCD", "status": "covered", "forge": ["bcd:encode"], "note": "8421, 7421, 4221 and excess-3; packed or unpacked; optional sign." },
+ { "cyberchef": "From BCD", "status": "covered", "forge": ["bcd:decode"], "note": "8421, 7421, 4221 and excess-3; packed or unpacked; optional sign." },
+ { "cyberchef": "To COBS", "status": "covered", "forge": ["cobs:encode"] },
+ { "cyberchef": "From COBS", "status": "covered", "forge": ["cobs:decode"] }
+]
