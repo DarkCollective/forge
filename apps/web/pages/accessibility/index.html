@@ -1,0 +1,138 @@
+<!doctype html>
+<!--
+ Copyright 2026 Darkcollective, LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="description"
+      content="Accessibility at Forge: the standard we aim for (WCAG 2.2 AA), keyboard use, themes, known limitations and how to report a problem."
+    />
+    <link rel="canonical" href="https://forge.darkcollective.com/accessibility/" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>Accessibility | Forge</title>
+    <link rel="stylesheet" href="/src/styles/tokens.css" />
+    <link rel="stylesheet" href="/src/styles/global.css" />
+    <link rel="stylesheet" href="/src/styles/pages.css" />
+    <script type="module" src="/pages/shared/theme.ts"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="brand" href="/">Forge</a>
+        <nav class="site-nav" aria-label="Site">
+          <ul>
+            <li><a href="/about/">About</a></li>
+            <li><a href="/privacy/">Privacy</a></li>
+            <li><a href="/terms/">Terms</a></li>
+            <li><a href="/security/">Security</a></li>
+            <li><a href="/accessibility/" aria-current="page">Accessibility</a></li>
+          </ul>
+        </nav>
+        <a class="button" href="/">Open Forge</a>
+      </div>
+    </header>
+
+    <main id="main" class="page">
+      <h1>Accessibility</h1>
+      <p class="meta">Last updated: 10 November 2026</p>
+      <p class="lead">
+        Forge is meant to be usable by everyone, with a keyboard, a screen reader, a magnifier or
+        high contrast. Our goal is to meet WCAG 2.2 at level AA. This page says what we aim for,
+        what we know is missing, and how to tell us about a problem.
+      </p>
+
+      <h2>What we aim for</h2>
+      <ul>
+        <li>Everything can be done with the keyboard alone, in a logical focus order.</li>
+        <li>Focus is always visible, and is never removed.</li>
+        <li>Every control has a name, and states such as selected or invalid are announced.</li>
+        <li>Text and controls have enough contrast in every theme.</li>
+        <li>
+          Layouts work at 200% zoom and at a width of 320 CSS pixels, without horizontal scrolling.
+        </li>
+        <li>Motion is reduced when your system asks for it.</li>
+      </ul>
+
+      <h2>Themes</h2>
+      <p>
+        Forge has light, dark and high-contrast themes. High contrast uses black and white, thicker
+        borders and a bright focus ring, and has no shadows. The system setting is followed by
+        default, including the contrast preference of your operating system, and Windows forced
+        colours are respected. Your choice is kept in your browser; see the
+        <a href="/privacy/">privacy page</a>.
+      </p>
+
+      <h2>Keyboard use</h2>
+      <ul>
+        <li>
+          <kbd>Alt</kbd> with <kbd>1</kbd> to <kbd>4</kbd> moves focus to the operations, the
+          recipe, the input and the output. <kbd>Alt</kbd> with <kbd>5</kbd> opens the console.
+        </li>
+        <li>
+          Every action that can be done by dragging, such as adding an operation or reordering
+          steps, also has a keyboard route.
+        </li>
+        <li><kbd>Esc</kbd> closes a menu or dialog, and cancels a drag.</li>
+      </ul>
+
+      <h2>Known limitations</h2>
+      <p>This list is short and will be refined as we test more.</p>
+      <ul>
+        <li>
+          Not every combination of browser and screen reader has been tested, so some announcements
+          may not be what we intend.
+        </li>
+        <li>
+          Results of large inputs can arrive after a short delay. The app announces results in a
+          separate status line rather than interrupting you.
+        </li>
+        <li>
+          Some help text assumes familiarity with encodings and ciphers, and not all of it has been
+          reviewed for plain language yet.
+        </li>
+      </ul>
+
+      <h2>Report a problem</h2>
+      <p>
+        Please tell us what you tried, what happened and what you expected, along with the page or
+        feature, your browser, your operating system and any assistive technology you use. Write to
+        <a href="mailto:david@darkcollective.com">david@darkcollective.com</a>, or open an issue on
+        <a href="https://github.com/DarkCollective/forge/issues">GitHub</a>.
+      </p>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <nav aria-label="Footer">
+          <ul>
+            <li><a href="/">Open Forge</a></li>
+            <li><a href="/about/">About</a></li>
+            <li><a href="/privacy/">Privacy</a></li>
+            <li><a href="/terms/">Terms</a></li>
+            <li><a href="/security/">Security</a></li>
+            <li><a href="/accessibility/">Accessibility</a></li>
+            <li><a href="https://github.com/DarkCollective/forge">GitHub repository</a></li>
+          </ul>
+        </nav>
+        <p>© 2026 Darkcollective, LLC. Forge is licensed under Apache-2.0.</p>
+      </div>
+    </footer>
+  </body>
+</html>

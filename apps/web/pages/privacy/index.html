@@ -1,0 +1,191 @@
+<!doctype html>
+<!--
+ Copyright 2026 Darkcollective, LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="description"
+      content="Privacy at Forge: nothing you type or load is sent anywhere, no cookies, no analytics, no third-party requests. What is stored in your browser and how to delete it."
+    />
+    <link rel="canonical" href="https://forge.darkcollective.com/privacy/" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>Privacy | Forge</title>
+    <link rel="stylesheet" href="/src/styles/tokens.css" />
+    <link rel="stylesheet" href="/src/styles/global.css" />
+    <link rel="stylesheet" href="/src/styles/pages.css" />
+    <script type="module" src="/pages/shared/theme.ts"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="brand" href="/">Forge</a>
+        <nav class="site-nav" aria-label="Site">
+          <ul>
+            <li><a href="/about/">About</a></li>
+            <li><a href="/privacy/" aria-current="page">Privacy</a></li>
+            <li><a href="/terms/">Terms</a></li>
+            <li><a href="/security/">Security</a></li>
+            <li><a href="/accessibility/">Accessibility</a></li>
+          </ul>
+        </nav>
+        <a class="button" href="/">Open Forge</a>
+      </div>
+    </header>
+
+    <main id="main" class="page">
+      <h1>Privacy</h1>
+      <p class="meta">Last updated: 10 November 2026</p>
+      <p class="lead">
+        This page is an inventory rather than a policy. It says what Forge does with what you enter,
+        what is stored in your browser, and what the server records, and what each of those can
+        expose.
+      </p>
+
+      <h2>What Forge does with your data</h2>
+      <p>
+        Forge runs entirely in your browser. The text, files, recipes and outputs you work with are
+        processed by code this site has delivered to you. None of them are sent to any server. The
+        site has no accounts, no forms to submit, no analytics, no advertising and no cookies.
+      </p>
+
+      <h2>What this site loads</h2>
+      <p>
+        Every script, stylesheet, font, worker and data file comes from this site's own address. The
+        app is only allowed to make requests to its own origin, and a content security policy
+        enforces that in your browser. Your browser makes no requests to third parties.
+      </p>
+
+      <h2>Share links</h2>
+      <p>
+        A share link holds the recipe and, if you choose to include it, the input. Both are encoded
+        in the part of the address after <code>#</code>. Browsers never send that part to a server,
+        so it does not appear in the server logs.
+      </p>
+      <p class="notice">
+        That part is not secret. Anyone you give the link to can read the recipe and the input,
+        including any key or password parameters, which travel in the link in clear. Only share
+        links with people you are content to show them to.
+      </p>
+
+      <h2>Server logs</h2>
+      <p>
+        The site is served by Amazon CloudFront. Its access logs record, for each request, the IP
+        address, the time, the path requested, the user agent and the referrer. They never include
+        the part of the address after <code>#</code>. The logs are kept for 90 days, then deleted.
+        They are used only to run the site and to find faults in it.
+      </p>
+
+      <h2>What is stored in your browser</h2>
+      <p>
+        Forge keeps the following in your browser's own storage. None of it leaves your browser.
+        Forge writes each item only when you change the setting or use the feature it belongs to.
+      </p>
+      <table>
+        <caption>
+          Local storage in this browser
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">What it holds</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>forge.layout.v1</code> in local storage</td>
+            <td>The sizes of the panes, and which panes are collapsed.</td>
+          </tr>
+          <tr>
+            <td><code>forge.theme</code> in local storage</td>
+            <td>Your theme choice: system, light, dark or high contrast.</td>
+          </tr>
+        </tbody>
+      </table>
+      <table>
+        <caption>
+          IndexedDB database
+          <code>forge</code>
+          in this browser
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Store</th>
+            <th scope="col">What it holds</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>recipes</code></td>
+            <td>
+              Recipes you save, and the input stored with a recipe if you chose to include it.
+            </td>
+          </tr>
+          <tr>
+            <td><code>kv</code></td>
+            <td>
+              Your favourite operations, your options (such as auto-bake), and the words you define
+              yourself.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>How to delete it</h2>
+      <ul>
+        <li>To remove one saved recipe or one of your own words, delete it inside Forge.</li>
+        <li>
+          To remove everything, clear the site data for <code>forge.darkcollective.com</code> in
+          your browser's settings. That deletes all of the above. Saved recipes, favourites and your
+          words are lost, and the layout and theme return to their defaults.
+        </li>
+      </ul>
+
+      <h2>Changes to this page</h2>
+      <p>
+        This page is published from the Forge repository, so every earlier version is in its git
+        history.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Questions about this page or Forge's data handling:
+        <a href="mailto:david@darkcollective.com">david@darkcollective.com</a>. Security reports
+        have their own route, described on the <a href="/security/">security page</a>.
+      </p>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <nav aria-label="Footer">
+          <ul>
+            <li><a href="/">Open Forge</a></li>
+            <li><a href="/about/">About</a></li>
+            <li><a href="/privacy/">Privacy</a></li>
+            <li><a href="/terms/">Terms</a></li>
+            <li><a href="/security/">Security</a></li>
+            <li><a href="/accessibility/">Accessibility</a></li>
+            <li><a href="https://github.com/DarkCollective/forge">GitHub repository</a></li>
+          </ul>
+        </nav>
+        <p>© 2026 Darkcollective, LLC. Forge is licensed under Apache-2.0.</p>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,245 @@
+/*
+ * Copyright 2026 Darkcollective, LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/*
+ * Static site pages (UI.md section 8): the chrome and the reading styles of /about/, /privacy/,
+ * /terms/, /security/, /accessibility/ and 404.html. Colours, sizes and fonts come from tokens.css
+ * only, so every theme (light, dark, contrast, forced colours) applies here too.
+ */
+
+html,
+body {
+  height: auto;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+  width: 100%;
+}
+
+/* Skip link: off screen until it takes focus */
+.skip-link {
+  position: absolute;
+  left: var(--space-3);
+  top: var(--space-2);
+  z-index: 10;
+  padding: var(--space-2) var(--space-3);
+  border: var(--border-width) solid var(--border-strong);
+  border-radius: var(--radius-s);
+  background: var(--surface);
+  color: var(--text);
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+/* Header */
+
+.site-header {
+  background: var(--surface);
+  border-bottom: var(--border-width) solid var(--border);
+}
+
+.site-header__inner {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-5);
+}
+
+.brand {
+  color: var(--text);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  text-decoration: none;
+}
+
+.site-nav ul,
+.site-footer ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+}
+
+.site-nav {
+  flex: 1 1 auto;
+}
+
+.site-nav a,
+.site-footer a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.5rem;
+  padding-block: var(--space-1);
+  color: var(--link);
+}
+
+.site-nav a[aria-current="page"] {
+  color: var(--text);
+  font-weight: var(--weight-bold);
+  text-decoration: underline;
+  text-underline-offset: 0.3em;
+}
+
+/* Buttons are links here: a visible border keeps them apparent in forced-colours mode */
+.button {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--hit-min);
+  padding: 0 var(--space-4);
+  border: var(--border-width) solid transparent;
+  border-radius: var(--radius-m);
+  background: var(--accent);
+  color: var(--accent-fg);
+  font-weight: var(--weight-medium);
+  text-decoration: none;
+}
+
+.button:hover {
+  background: var(--accent-hover);
+}
+
+/* Main column */
+
+.page h1 {
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-xl);
+  line-height: var(--leading-tight);
+}
+
+.page h2 {
+  margin: var(--space-6) 0 var(--space-2);
+  font-size: var(--text-lg);
+  line-height: var(--leading-tight);
+}
+
+.page h3 {
+  margin: var(--space-5) 0 var(--space-2);
+  font-size: var(--text-md);
+}
+
+.page p,
+.page ul,
+.page ol,
+.page dl {
+  margin: 0 0 var(--space-3);
+}
+
+.page ul,
+.page ol {
+  padding-left: var(--space-5);
+}
+
+.page li + li {
+  margin-top: var(--space-1);
+}
+
+.page code,
+.page kbd {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  padding: 0 0.25em;
+  border-radius: var(--radius-s);
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.page .lead {
+  font-size: var(--text-lg);
+  line-height: var(--leading-body);
+}
+
+.page .meta {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.page .notice {
+  margin: var(--space-4) 0;
+  padding: var(--space-3) var(--space-4);
+  border: var(--border-width) solid var(--border-strong);
+  border-radius: var(--radius-m);
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+.page table {
+  width: 100%;
+  margin: var(--space-3) 0 var(--space-5);
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.page caption {
+  text-align: left;
+  color: var(--text-muted);
+  padding-bottom: var(--space-2);
+}
+
+.page th,
+.page td {
+  padding: var(--space-2);
+  border-bottom: var(--border-width) solid var(--border);
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.page th {
+  color: var(--text);
+  font-weight: var(--weight-bold);
+}
+
+.page .not-found-code {
+  margin: 0 0 var(--space-2);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+/* Footer */
+
+.site-footer {
+  background: var(--surface);
+  border-top: var(--border-width) solid var(--border);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.site-footer__inner {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-4);
+  display: grid;
+  gap: var(--space-3);
+}
+
+.site-footer p {
+  margin: 0;
+}
