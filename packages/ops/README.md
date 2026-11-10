@@ -199,6 +199,18 @@ The sweep reports copies that a promotion would remove. A pair it reports and th
 - `base32:_ungroups` and `classical:_cb-enc` map a helper over an index range and join, over different per-group words.
 - `fractionating:_adf-labels` and `polygraphic:_pl-alpha` each pick one of two unrelated literals by a name.
 
+## Hashing conventions
+
+The hashing vocabularies (wave 3) follow the `sha2` vocabulary, which is the template.
+
+- **Bytes out.** A digest word returns the raw digest as `bytes`, never hex text. Chain `hex:encode` for text. The category is `Hashing`.
+- **Naming.** One vocabulary per family (`sha2`, `sha3`, `blake2`, `md5`, `crc`, ...), lower-kebab-case. The public word of a hash is `digest`, with a parameter for the variants (`sha2:digest` takes `size:choice{"224"|"256"|"384"|"512"|"512/224"|"512/256"}`). Where CyberChef has a variant parameter, use one parameterised word, not one word per variant. Checksums (crc, adler-32, fletcher, ...) are written in FL, not primitives.
+- **Library, not WebCrypto.** Hashes that `@noble/hashes` (audited, MIT, pinned to an exact version) covers use it, and all hash primitives are synchronous. Import only the subpath you need (`@noble/hashes/sha2.js`) so the vocabulary's lazy chunk stays small; the chunk is loaded only when the vocabulary is used and does not count against the first-paint budget.
+- **Wrapping a noble function.** Follow `src/prims/sha2.ts`: one private primitive `_hash ( data:bytes <variant>:str -- bytes )` that looks the variant up in a table (with `Object.hasOwn`, so `toString` is not a variant) and raises `E_RANGE` through `rangeFailure` for an unknown one. The primitive does nothing else. The public word, its doc string, category, `choice{}` parameter, defaults and `META:` stay in `vocab/<v>.fth`. Own the tests: `src/prims/<v>.test.ts` for the primitive and `src/<v>.test.ts` for the word through the runtime.
+- **Vectors.** `vocab/<v>.test.json` takes its vectors from the official specification or an RFC (FIPS 180-4, FIPS 202, RFC 1321, RFC 7693, RFC 2104, ...), and `ref` cites it. CyberChef is only a throwaway cross-check oracle: never copy its tables or outputs into the repository. Include the empty input, the standard short and long messages, and a 64 KiB test inside the default limits (against `node:crypto` where it has the algorithm).
+- **HMAC** is its own vocabulary (`hmac`), taking the hash name and the key as parameters, not a parameter of each hash.
+- **Not here.** CMAC, LM hash, bcrypt, Argon2 and Ascon need AES or DES, or are key derivation functions, and are wave 4.
+
 ## Running the vectors
 
 Every op has vectors in `vocab/<v>.test.json`, and the catalogue test fails if an op has none. All 1,865 vectors (46 files) run through the in-process baker in Node as part of the worker package's tests:

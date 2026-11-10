@@ -306,6 +306,21 @@ Language gaps found in wave 2 (candidates for the core, or for a primitive):
 - A public word whose params are all UI types becomes a catalogue op, so shared data needs zero-input words (`lorenz:kh-patterns`, `enigma:rotor-wirings`).
 - The dupes sweep never sees an exact copy when a helper calls a private helper of the same vocabulary, because the normalised bodies then differ (the Enigma and Typex stepping is such a pair; see the ops README, "Justified exceptions").
 
+**Wave 3** *(wave 3: hashing)*. Hashes use the audited `@noble/hashes` library (pinned, synchronous, not WebCrypto) behind minimal private primitives. Digest words return raw bytes (the user chains `hex:encode`), one parameterised word per family, with Forge-native names (`sha2:digest`). Checksums are written in FL. The conventions are in the ops README ("Hashing conventions").
+
+| WP | Scope |
+|---|---|
+| 5.15 | Setup: `@noble/hashes`, the hashing conventions, the `sha2` exemplar, the hashing coverage table |
+| 5.16 | Mainstream hashes via noble: md5, sha1, sha3, keccak, shake, ripemd-160, blake2b/s, blake3, hmac |
+| 5.17 | Checksums in FL: crc (parameterised, with CyberChef's presets), adler-32, fletcher 8/16/32/64, luhn, tcp/ip, xor, parity bit |
+| 5.18 | Legacy and national hashes as own primitives from the published specs: md2, md4 (+ NT hash), md6, sha0, sm3, has-160, whirlpool, snefru, gost/streebog, ripemd 128/256/320 |
+| 5.19 | Non-cryptographic and fuzzy: murmurhash3, ssdeep/ctph and their compare ops, analyse hash, generate all hashes/checksums |
+| 5.20 | Close-out |
+
+CMAC, LM hash, bcrypt (compare and parse), Argon2 (and compare) and Ascon (hash and MAC) move to wave 4, because they need AES/DES or are key derivation functions.
+
+CyberChef's SHA2 "Rounds" parameter (a non-standard round count) is not supported: `sha2:digest` implements the FIPS 180-4 round counts only.
+
 ### Phase 6 — Beyond CyberChef
 Magic auto-detection (declarative `checks` in META, depth-limited search). An optional recipe store backend behind `RecipeStore`. A PWA/offline mode. The `@forge/cli`. Recipe diff/swap. **Relix vocabulary** integration as an `relix:` vocab of primitives.
 

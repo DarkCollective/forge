@@ -34,6 +34,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@forge/lang": "*"
+    "@forge/lang": "*",
+    "@noble/hashes": "2.4.0"
   }
 }
