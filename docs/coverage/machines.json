@@ -1,0 +1,14 @@
+[
+  {
+    "cyberchef": "Enigma",
+    "status": "covered",
+    "forge": ["enigma:encrypt"],
+    "note": "Enigma I, M3 and M4 with the historical rotors, reflectors and plugboard; one reciprocal word (alias decrypt)."
+  },
+  {
+    "cyberchef": "Typex",
+    "status": "redesigned",
+    "forge": ["typex:encrypt"],
+    "note": "Real Typex rotor wirings were never published, so there is no built-in rotor set: the five rotor wirings, reflector, notches and reversed rotors are parameters (validated permutations of A-Z), with clearly labelled non-historical example defaults."
+  }
+]

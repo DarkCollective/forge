@@ -1,0 +1,847 @@
+[
+  {
+    "name": "1930 manual: decipher the message",
+    "ref": "Enigma instruction manual 1930 test message (cryptocellar.org/enigma/e-message-1930.html): reflector A, II I III, rings 24 13 22, plugs AM FI NV PS TU WZ, message key ABL",
+    "op": "enigma:encrypt",
+    "params": {
+      "rotors": "II I III",
+      "reflector": "A",
+      "rings": "XMV",
+      "positions": "ABL",
+      "plugboard": "AM FI NV PS TU WZ"
+    },
+    "input": {
+      "value": "GCDSEAHUGWTQGRKVLFGXUCALXVYMIGMMNMFDXTGNVHVRMMEVOUYFZSLRHDRRXFJWCFHUHMUNZEFRDISIKBGPMYVXUZ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "FEINDLIQEINFANTERIEKOLONNEBEOBAQTETXANFANGSUEDAUSGANGBAERWALDEXENDEDREIKMOSTWAERTSNEUSTADT",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1930 manual: encipher the message (reciprocal)",
+    "ref": "Enigma instruction manual 1930 test message (cryptocellar.org/enigma/e-message-1930.html): reflector A, II I III, rings 24 13 22, plugs AM FI NV PS TU WZ, message key ABL",
+    "op": "enigma:encrypt",
+    "params": {
+      "rotors": "II I III",
+      "reflector": "A",
+      "rings": "XMV",
+      "positions": "ABL",
+      "plugboard": "AM FI NV PS TU WZ"
+    },
+    "input": {
+      "value": "FEINDLIQEINFANTERIEKOLONNEBEOBAQTETXANFANGSUEDAUSGANGBAERWALDEXENDEDREIKMOSTWAERTSNEUSTADT",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "GCDSEAHUGWTQGRKVLFGXUCALXVYMIGMMNMFDXTGNVHVRMMEVOUYFZSLRHDRRXFJWCFHUHMUNZEFRDISIKBGPMYVXUZ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1930 manual: the doubled message key ABLABL enciphers to PKPJXI",
+    "ref": "Enigma instruction manual 1930 test message (cryptocellar.org/enigma/e-message-1930.html): reflector A, II I III, rings 24 13 22, plugs AM FI NV PS TU WZ, ground setting FOL",
+    "op": "enigma:encrypt",
+    "params": {
+      "rotors": "II I III",
+      "reflector": "A",
+      "rings": "XMV",
+      "positions": "FOL",
+      "plugboard": "AM FI NV PS TU WZ"
+    },
+    "input": {
+      "value": "ABLABL",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "PKPJXI",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1930 manual: PKPJXI deciphers to ABLABL",
+    "ref": "Enigma instruction manual 1930 test message (cryptocellar.org/enigma/e-message-1930.html): reflector A, II I III, rings 24 13 22, plugs AM FI NV PS TU WZ, ground setting FOL",
+    "op": "enigma:encrypt",
+    "params": {
+      "rotors": "II I III",
+      "reflector": "A",
+      "rings": "XMV",
+      "positions": "FOL",
+      "plugboard": "AM FI NV PS TU WZ"
+    },
+    "input": {
+      "value": "PKPJXI",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ABLABL",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1930 manual: rings and positions as numbers",
+    "ref": "Enigma instruction manual 1930 test message (cryptocellar.org/enigma/e-message-1930.html): reflector A, II I III, rings 24 13 22, plugs AM FI NV PS TU WZ, rings 24 13 22, ground setting 6 15 12",
+    "op": "enigma:encrypt",
+    "params": {
+      "rotors": "II I III",
+      "reflector": "A",
+      "rings": "24 13 22",
+      "positions": "6 15 12",
+      "plugboard": "AM FI NV PS TU WZ"
+    },
+    "input": {
+      "value": "PKPJXI",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ABLABL",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "M4 Kriegsnotmeldung: decipher the first lines",
+    "ref": "Enigma M4 message, Crypto Museum p1030681 (cryptomuseum.com/crypto/enigma/msg/p1030681.htm): UKW C thin, Beta, 5 6 8, rings EPEL, plugs AE BF CM DQ HU JN LX PR SZ VW, message key CDSZ",
+    "op": "enigma:encrypt",
+    "params": {
+      "model": "M4",
+      "rotors": "Beta V VI VIII",
+      "reflector": "C-thin",
+      "rings": "EPEL",
+      "positions": "CDSZ",
+      "plugboard": "AE BF CM DQ HU JN LX PR SZ VW"
+    },
+    "input": {
+      "value": "LANOTCTOUARBBFPMHPHGCZXTDYGAHGUFXGEWKBLKGJWLQXXT",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "KRKRALLEXXFOLGENDESISTSOFORTBEKANNTZUGEBENXXICHH",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "M4 Kriegsnotmeldung: ciphertext groups with spaces, others=keep",
+    "ref": "Enigma M4 message, Crypto Museum p1030681 (cryptomuseum.com/crypto/enigma/msg/p1030681.htm): UKW C thin, Beta, 5 6 8, rings EPEL, plugs AE BF CM DQ HU JN LX PR SZ VW, message key CDSZ",
+    "op": "enigma:encrypt",
+    "params": {
+      "model": "M4",
+      "rotors": "Beta V VI VIII",
+      "reflector": "C-thin",
+      "rings": "EPEL",
+      "positions": "CDSZ",
+      "plugboard": "AE BF CM DQ HU JN LX PR SZ VW"
+    },
+    "input": {
+      "value": "LANO TCTO UARB",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "KRKR ALLE XXFO",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "M4 Kriegsnotmeldung: ciphertext groups with spaces, others=remove",
+    "ref": "Enigma M4 message, Crypto Museum p1030681 (cryptomuseum.com/crypto/enigma/msg/p1030681.htm): UKW C thin, Beta, 5 6 8, rings EPEL, plugs AE BF CM DQ HU JN LX PR SZ VW, message key CDSZ",
+    "op": "enigma:encrypt",
+    "params": {
+      "model": "M4",
+      "rotors": "Beta V VI VIII",
+      "reflector": "C-thin",
+      "rings": "EPEL",
+      "positions": "CDSZ",
+      "plugboard": "AE BF CM DQ HU JN LX PR SZ VW",
+      "others": "remove"
+    },
+    "input": {
+      "value": "LANO TCTO UARB",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "KRKRALLEXXFO",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "M4 Kriegsnotmeldung: encipher (reciprocal)",
+    "ref": "Enigma M4 message, Crypto Museum p1030681 (cryptomuseum.com/crypto/enigma/msg/p1030681.htm): UKW C thin, Beta, 5 6 8, rings EPEL, plugs AE BF CM DQ HU JN LX PR SZ VW, message key CDSZ",
+    "op": "enigma:encrypt",
+    "params": {
+      "model": "M4",
+      "rotors": "Beta V VI VIII",
+      "reflector": "C-thin",
+      "rings": "EPEL",
+      "positions": "CDSZ",
+      "plugboard": "AE BF CM DQ HU JN LX PR SZ VW"
+    },
+    "input": {
+      "value": "KRKRALLEXXFOLGENDESISTSOFORTBEKANNTZUGEBENXXICHH",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "LANOTCTOUARBBFPMHPHGCZXTDYGAHGUFXGEWKBLKGJWLQXXT",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "M4 Kriegsnotmeldung: ring settings as numbers 5 16 5 12",
+    "ref": "Enigma M4 message, Crypto Museum p1030681 (cryptomuseum.com/crypto/enigma/msg/p1030681.htm): UKW C thin, Beta, 5 6 8, rings EPEL, plugs AE BF CM DQ HU JN LX PR SZ VW, message key CDSZ",
+    "op": "enigma:encrypt",
+    "params": {
+      "model": "M4",
+      "rotors": "Beta V VI VIII",
+      "reflector": "C-thin",
+      "rings": "5 16 5 12",
+      "positions": "CDSZ",
+      "plugboard": "AE BF CM DQ HU JN LX PR SZ VW"
+    },
+    "input": {
+      "value": "LANOTCTOUARBBFPMHPHGCZXTDYGAHGUFXGEWKBLKGJWLQXXT",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "KRKRALLEXXFOLGENDESISTSOFORTBEKANNTZUGEBENXXICHH",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Enigma I rotors I II III, reflector B, AAAAA",
+    "ref": "Widely published first test of Enigma I (AAAAA enciphers to BDZGO); independent simulator (Python, written outside the repo), checked against published vectors above",
+    "op": "enigma:encrypt",
+    "params": {},
+    "input": {
+      "value": "AAAAA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "BDZGO",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Enigma I, AAAAA decipher BDZGO",
+    "ref": "Reciprocal of the published AAAAA to BDZGO; independent simulator (Python, written outside the repo), checked against published vectors above",
+    "op": "enigma:encrypt",
+    "params": {},
+    "input": {
+      "value": "BDZGO",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "AAAAA",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "empty input",
+    "ref": "hand-computed: nothing to encipher",
+    "op": "enigma:encrypt",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "double step: 6 presses from ADU (ADV AEW BFX BFY BFZ BGA)",
+    "ref": "stepping sequence ADU, ADV, AEW, BFX (Crypto Museum, Enigma stepping); independent simulator (Python, written outside the repo), checked against published vectors above",
+    "op": "enigma:encrypt",
+    "params": {
+      "positions": "ADU"
+    },
+    "input": {
+      "value": "AAAAAA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "EQIBMG",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "double step with II I III and reflector C",
+    "ref": "independent simulator (Python, written outside the repo), checked against published vectors above",
+    "op": "enigma:encrypt",
+    "params": {
+      "positions": "ADU",
+      "rotors": "II I III",
+      "reflector": "C"
+    },
+    "input": {
+      "value": "ENIGMAENIGMA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "JHONIMPIBEXL",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "long run across the turnover of the right rotor and the double step",
+    "ref": "independent simulator (Python, written outside the repo), checked against published vectors above",
+    "op": "enigma:encrypt",
+    "params": {
+      "positions": "AAU",
+      "rotors": "I II III"
+    },
+    "input": {
+      "value": "THEQUICKBROWNFOXJUMPSOVERTHELAZYDOGTHEQUICKBROWNFOXJUMPSOVERTHELAZYDOG",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "UKTNJBUEWMGZHVBUNRPGGFUKHEZCJOEJWIOVPTVHHZQDHDFYUANPZHFWKUMZOGHAXDEXNH",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ring settings BUL, start QWE",
+    "ref": "independent simulator (Python, written outside the repo), checked against published vectors above",
+    "op": "enigma:encrypt",
+    "params": {
+      "rings": "BUL",
+      "positions": "QWE"
+    },
+    "input": {
+      "value": "HELLOWORLD",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "NJYOWSWAYW",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ring settings and start as numbers (2 21 12, 17 23 5)",
+    "ref": "independent simulator (Python, written outside the repo), checked against published vectors above",
+    "op": "enigma:encrypt",
+    "params": {
+      "rings": "2 21 12",
+      "positions": "17 23 5"
+    },
+    "input": {
+      "value": "HELLOWORLD",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "NJYOWSWAYW",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ring settings ZZZ",
+    "ref": "independent simulator (Python, written outside the repo), checked against published vectors above",
+    "op": "enigma:encrypt",
+    "params": {
+      "rings": "ZZZ",
+      "positions": "AAA"
+    },
+    "input": {
+      "value": "ANORTHERNLIGHT",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "PBUFVBPFTHASML",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "rotor V turnover Z, rings AFZ, start ZAV",
+    "ref": "independent simulator (Python, written outside the repo), checked against published vectors above",
+    "op": "enigma:encrypt",
+    "params": {
+      "rings": "AFZ",
+      "positions": "ZAV",
+      "rotors": "V IV I"
+    },
+    "input": {
+      "value": "TURNOVERZTURNOVERZTURNOVERZTURNOVERZTURNOVERZ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "LZKSYKXFFYVAUVEUXDBELOCEKCPWMHGPZRKWGBNAWUULX",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "plugboard with ten pairs",
+    "ref": "independent simulator (Python, written outside the repo), checked against published vectors above",
+    "op": "enigma:encrypt",
+    "params": {
+      "plugboard": "AB CD EF GH IJ KL MN OP QR ST"
+    },
+    "input": {
+      "value": "THISISAPLUGBOARDTEST",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "IWCEOQIRTJXTPFLBUIHS",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "plugboard separated by commas and several spaces, lower case",
+    "ref": "independent simulator (Python, written outside the repo), checked against published vectors above",
+    "op": "enigma:encrypt",
+    "params": {
+      "plugboard": "ab,cd  ef"
+    },
+    "input": {
+      "value": "plugboard",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "LFEBOKJTZ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "plugboard with thirteen pairs",
+    "ref": "independent simulator (Python, written outside the repo), checked against published vectors above",
+    "op": "enigma:encrypt",
+    "params": {
+      "plugboard": "AB CD EF GH IJ KL MN OP QR ST UV WX YZ"
+    },
+    "input": {
+      "value": "THIRTEENPAIRS",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "IXCJARCMNLTXM",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Enigma I reflector C",
+    "ref": "independent simulator (Python, written outside the repo), checked against published vectors above",
+    "op": "enigma:encrypt",
+    "params": {
+      "reflector": "C",
+      "rotors": "V II I",
+      "rings": "MCK",
+      "positions": "XYZ"
+    },
+    "input": {
+      "value": "REFLECTORCTEST",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "MLCPRNJTKAHSTW",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Enigma I reflector A",
+    "ref": "independent simulator (Python, written outside the repo), checked against published vectors above",
+    "op": "enigma:encrypt",
+    "params": {
+      "reflector": "A",
+      "rotors": "III II I"
+    },
+    "input": {
+      "value": "REFLECTORATEST",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "NZLBNSHCNSQCFJ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "M3 rotors VIII VII VI (two notches each)",
+    "ref": "independent simulator (Python, written outside the repo), checked against published vectors above",
+    "op": "enigma:encrypt",
+    "params": {
+      "model": "M3",
+      "rotors": "VIII VII VI",
+      "reflector": "B",
+      "rings": "ABC",
+      "positions": "MZK"
+    },
+    "input": {
+      "value": "NAVYWHEELSNAVYWHEELSNAVYWHEELSNAVYWHEELSNAVYWHEELSNAVYWHEELS",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "TGLGHNZXQBLRRCMAGNJGYMAHXKFUEFSKMZUDMKNQMTQBZAUIPTYVAUSZPAZP",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "M3 right rotor VI: the middle rotor steps at Z and again at M",
+    "ref": "independent simulator (Python, written outside the repo), checked against published vectors above",
+    "op": "enigma:encrypt",
+    "params": {
+      "model": "M3",
+      "rotors": "I II VI",
+      "positions": "AAA"
+    },
+    "input": {
+      "value": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "IJVDTEXKEBYNSRIDVHPBOJCGPBUFIPZEMCMJZZXMFEFNFUUGVCFOYUVRFLCKPQTSDPGPXDEMGBLKBVXV",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "M3 double step with a two-notch middle rotor VII (turnovers Z and M)",
+    "ref": "independent simulator (Python, written outside the repo), checked against published vectors above",
+    "op": "enigma:encrypt",
+    "params": {
+      "model": "M3",
+      "rotors": "I VII VIII",
+      "positions": "AMM"
+    },
+    "input": {
+      "value": "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "RVJAFOMAEADQGIULQAAGGPEUICTAWWVDKNUXDUUUXNFNJOLXUFEVYESMGGMD",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "M4 Beta, reflector B-thin, all A (equals Enigma I rotors I II III with reflector B)",
+    "ref": "M4 with Beta at A and B-thin is Enigma I with reflector B; independent simulator (Python, written outside the repo), checked against published vectors above",
+    "op": "enigma:encrypt",
+    "params": {
+      "model": "M4",
+      "rotors": "Beta I II III",
+      "reflector": "B-thin",
+      "rings": "AAAA",
+      "positions": "AAAA"
+    },
+    "input": {
+      "value": "AAAAA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "BDZGO",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "M4 Gamma, reflector C-thin, plugboard, rings and positions",
+    "ref": "independent simulator (Python, written outside the repo), checked against published vectors above",
+    "op": "enigma:encrypt",
+    "params": {
+      "model": "M4",
+      "rotors": "Gamma IV V VI",
+      "reflector": "C-thin",
+      "rings": "BCDE",
+      "positions": "WXYZ",
+      "plugboard": "AV BS CG DL FU HZ IN KM OW RX"
+    },
+    "input": {
+      "value": "WOLFPACKATTACKSCONVOY",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ORIDGCUCRWPBOMPIQROYL",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "M4 moving rotors VII VIII I",
+    "ref": "independent simulator (Python, written outside the repo), checked against published vectors above",
+    "op": "enigma:encrypt",
+    "params": {
+      "model": "M4",
+      "rotors": "Beta VII VIII I",
+      "reflector": "B-thin",
+      "rings": "ZAZA",
+      "positions": "AZMA"
+    },
+    "input": {
+      "value": "ZEROKNOTSFORTYZEROKNOTSFORTYZEROKNOTSFORTY",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "OHXVLZTMWUPPVCEIPMXFUXDXDVXOUWMGTBXSATHXDL",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "lower case in, upper case out; other characters kept (UTF-8 included)",
+    "ref": "independent simulator (Python, written outside the repo), checked against published vectors above",
+    "op": "enigma:encrypt",
+    "params": {},
+    "input": {
+      "value": "Hello, World! 123 éà\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ILBDA, AMTAZ! 123 éà\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "others=remove drops spaces, digits, punctuation and non-ASCII",
+    "ref": "independent simulator (Python, written outside the repo), checked against published vectors above",
+    "op": "enigma:encrypt",
+    "params": {
+      "others": "remove"
+    },
+    "input": {
+      "value": "Hello, World! 123 éà\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ILBDAAMTAZ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "binary bytes pass through in keep mode",
+    "ref": "independent simulator (Python, written outside the repo), checked against published vectors above",
+    "op": "enigma:encrypt",
+    "params": {},
+    "input": {
+      "value": "ff0041c3a942",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ff0042c3a94a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "error: two rotors for Enigma I",
+    "ref": "argument check",
+    "op": "enigma:encrypt",
+    "params": {
+      "rotors": "I II"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "error: rotor VI is not an Enigma I rotor",
+    "ref": "argument check",
+    "op": "enigma:encrypt",
+    "params": {
+      "rotors": "I II VI"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "error: Beta as a rotor of M3",
+    "ref": "argument check",
+    "op": "enigma:encrypt",
+    "params": {
+      "model": "M3",
+      "rotors": "Beta I II"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "error: M4 without a Greek rotor first",
+    "ref": "argument check",
+    "op": "enigma:encrypt",
+    "params": {
+      "model": "M4",
+      "rotors": "I II III IV",
+      "reflector": "B-thin",
+      "rings": "AAAA",
+      "positions": "AAAA"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "error: thin reflector on M3",
+    "ref": "argument check",
+    "op": "enigma:encrypt",
+    "params": {
+      "model": "M3",
+      "reflector": "B-thin"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "error: reflector A on M3",
+    "ref": "argument check",
+    "op": "enigma:encrypt",
+    "params": {
+      "model": "M3",
+      "reflector": "A"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "error: plugboard letter twice",
+    "ref": "argument check",
+    "op": "enigma:encrypt",
+    "params": {
+      "plugboard": "AB AC"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "error: plugboard pair of one letter",
+    "ref": "argument check",
+    "op": "enigma:encrypt",
+    "params": {
+      "plugboard": "AA"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "error: plugboard group of three letters",
+    "ref": "argument check",
+    "op": "enigma:encrypt",
+    "params": {
+      "plugboard": "ABC"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "error: ring settings with the wrong count",
+    "ref": "argument check",
+    "op": "enigma:encrypt",
+    "params": {
+      "rings": "AB"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "error: ring number 27",
+    "ref": "argument check",
+    "op": "enigma:encrypt",
+    "params": {
+      "rings": "1 27 3"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "error: start position with a digit inside letters",
+    "ref": "argument check",
+    "op": "enigma:encrypt",
+    "params": {
+      "positions": "A1B"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "error: model is not one of the choices",
+    "ref": "static choice check",
+    "op": "enigma:encrypt",
+    "params": {
+      "model": "K"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "error: reflector is not one of the choices",
+    "ref": "static choice check",
+    "op": "enigma:encrypt",
+    "params": {
+      "reflector": "D"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "error: empty rings parameter",
+    "ref": "static length check",
+    "op": "enigma:encrypt",
+    "params": {
+      "rings": ""
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  }
+]
