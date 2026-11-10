@@ -40,22 +40,31 @@ function units(source: string) {
 const empty = { vocabs: [], units: [], primitives: [] };
 
 describe("the bundled catalogue", () => {
-  test("has the twelve seed ops, sorted by qname", () => {
-    expect(catalogue.ops.map((o) => o.qname)).toEqual([
-      "base64:decode",
-      "base64:encode",
-      "classical:rot",
-      "hex:decode",
-      "hex:encode",
-      "regex:find-all",
-      "regex:replace",
-      "regex:split",
-      "regex:test",
-      "text:lower",
-      "text:reverse",
-      "text:upper",
-    ]);
-    expect(catalogue.vocabs).toEqual(["base64", "classical", "hex", "regex", "text"]);
+  test("has the twelve seed ops, sorted by qname, and no internal vocabularies", () => {
+    const names = catalogue.ops.map((o) => o.qname);
+    expect(names).toEqual([...names].sort());
+    expect(names).toEqual(
+      expect.arrayContaining([
+        "base64:decode",
+        "base64:encode",
+        "classical:rot",
+        "hex:decode",
+        "hex:encode",
+        "regex:find-all",
+        "regex:replace",
+        "regex:split",
+        "regex:test",
+        "text:lower",
+        "text:reverse",
+        "text:upper",
+      ]),
+    );
+    expect(catalogue.vocabs).toEqual([...catalogue.vocabs].sort());
+    expect(catalogue.vocabs).toEqual(
+      expect.arrayContaining(["base64", "classical", "hex", "regex", "text"]),
+    );
+    expect(catalogue.vocabs).not.toContain("recipe");
+    expect(names.some((n) => n.startsWith("recipe:"))).toBe(false);
     expect(catalogue.format).toBe(CATALOGUE_FORMAT);
   });
 

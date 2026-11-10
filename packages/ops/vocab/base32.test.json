@@ -1,0 +1,883 @@
+[
+  {
+    "name": "encode RFC 4648 §10 ''",
+    "ref": "RFC 4648 §10",
+    "op": "base32:encode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode RFC 4648 §10 'f'",
+    "ref": "RFC 4648 §10",
+    "op": "base32:encode",
+    "params": {},
+    "input": {
+      "value": "f",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "MY======",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode RFC 4648 §10 'fo'",
+    "ref": "RFC 4648 §10",
+    "op": "base32:encode",
+    "params": {},
+    "input": {
+      "value": "fo",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "MZXQ====",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode RFC 4648 §10 'foo'",
+    "ref": "RFC 4648 §10",
+    "op": "base32:encode",
+    "params": {},
+    "input": {
+      "value": "foo",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "MZXW6===",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode RFC 4648 §10 'foob'",
+    "ref": "RFC 4648 §10",
+    "op": "base32:encode",
+    "params": {},
+    "input": {
+      "value": "foob",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "MZXW6YQ=",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode RFC 4648 §10 'fooba'",
+    "ref": "RFC 4648 §10",
+    "op": "base32:encode",
+    "params": {},
+    "input": {
+      "value": "fooba",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "MZXW6YTB",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode RFC 4648 §10 'foobar'",
+    "ref": "RFC 4648 §10",
+    "op": "base32:encode",
+    "params": {},
+    "input": {
+      "value": "foobar",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "MZXW6YTBOI======",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode base32hex RFC 4648 §10 ''",
+    "ref": "RFC 4648 §10 (base32hex)",
+    "op": "base32:encode",
+    "params": {
+      "alphabet": "hex"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode base32hex RFC 4648 §10 'f'",
+    "ref": "RFC 4648 §10 (base32hex)",
+    "op": "base32:encode",
+    "params": {
+      "alphabet": "hex"
+    },
+    "input": {
+      "value": "f",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "CO======",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode base32hex RFC 4648 §10 'fo'",
+    "ref": "RFC 4648 §10 (base32hex)",
+    "op": "base32:encode",
+    "params": {
+      "alphabet": "hex"
+    },
+    "input": {
+      "value": "fo",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "CPNG====",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode base32hex RFC 4648 §10 'foo'",
+    "ref": "RFC 4648 §10 (base32hex)",
+    "op": "base32:encode",
+    "params": {
+      "alphabet": "hex"
+    },
+    "input": {
+      "value": "foo",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "CPNMU===",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode base32hex RFC 4648 §10 'foob'",
+    "ref": "RFC 4648 §10 (base32hex)",
+    "op": "base32:encode",
+    "params": {
+      "alphabet": "hex"
+    },
+    "input": {
+      "value": "foob",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "CPNMUOG=",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode base32hex RFC 4648 §10 'fooba'",
+    "ref": "RFC 4648 §10 (base32hex)",
+    "op": "base32:encode",
+    "params": {
+      "alphabet": "hex"
+    },
+    "input": {
+      "value": "fooba",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "CPNMUOJ1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode base32hex RFC 4648 §10 'foobar'",
+    "ref": "RFC 4648 §10 (base32hex)",
+    "op": "base32:encode",
+    "params": {
+      "alphabet": "hex"
+    },
+    "input": {
+      "value": "foobar",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "CPNMUOJ1E8======",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode RFC 4648 §10 ''",
+    "ref": "RFC 4648 §10",
+    "op": "base32:decode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode RFC 4648 §10 'f'",
+    "ref": "RFC 4648 §10",
+    "op": "base32:decode",
+    "params": {},
+    "input": {
+      "value": "MY======",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode RFC 4648 §10 'fo'",
+    "ref": "RFC 4648 §10",
+    "op": "base32:decode",
+    "params": {},
+    "input": {
+      "value": "MZXQ====",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fo",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode RFC 4648 §10 'foo'",
+    "ref": "RFC 4648 §10",
+    "op": "base32:decode",
+    "params": {},
+    "input": {
+      "value": "MZXW6===",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "foo",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode RFC 4648 §10 'foob'",
+    "ref": "RFC 4648 §10",
+    "op": "base32:decode",
+    "params": {},
+    "input": {
+      "value": "MZXW6YQ=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "foob",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode RFC 4648 §10 'fooba'",
+    "ref": "RFC 4648 §10",
+    "op": "base32:decode",
+    "params": {},
+    "input": {
+      "value": "MZXW6YTB",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fooba",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode RFC 4648 §10 'foobar'",
+    "ref": "RFC 4648 §10",
+    "op": "base32:decode",
+    "params": {},
+    "input": {
+      "value": "MZXW6YTBOI======",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "foobar",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode base32hex RFC 4648 §10 ''",
+    "ref": "RFC 4648 §10 (base32hex)",
+    "op": "base32:decode",
+    "params": {
+      "alphabet": "hex"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode base32hex RFC 4648 §10 'f'",
+    "ref": "RFC 4648 §10 (base32hex)",
+    "op": "base32:decode",
+    "params": {
+      "alphabet": "hex"
+    },
+    "input": {
+      "value": "CO======",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode base32hex RFC 4648 §10 'fo'",
+    "ref": "RFC 4648 §10 (base32hex)",
+    "op": "base32:decode",
+    "params": {
+      "alphabet": "hex"
+    },
+    "input": {
+      "value": "CPNG====",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fo",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode base32hex RFC 4648 §10 'foo'",
+    "ref": "RFC 4648 §10 (base32hex)",
+    "op": "base32:decode",
+    "params": {
+      "alphabet": "hex"
+    },
+    "input": {
+      "value": "CPNMU===",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "foo",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode base32hex RFC 4648 §10 'foob'",
+    "ref": "RFC 4648 §10 (base32hex)",
+    "op": "base32:decode",
+    "params": {
+      "alphabet": "hex"
+    },
+    "input": {
+      "value": "CPNMUOG=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "foob",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode base32hex RFC 4648 §10 'fooba'",
+    "ref": "RFC 4648 §10 (base32hex)",
+    "op": "base32:decode",
+    "params": {
+      "alphabet": "hex"
+    },
+    "input": {
+      "value": "CPNMUOJ1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fooba",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode base32hex RFC 4648 §10 'foobar'",
+    "ref": "RFC 4648 §10 (base32hex)",
+    "op": "base32:decode",
+    "params": {
+      "alphabet": "hex"
+    },
+    "input": {
+      "value": "CPNMUOJ1E8======",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "foobar",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode without padding 'f'",
+    "ref": "RFC 4648 §3.2 (padding optional), independent: Python base64 module",
+    "op": "base32:encode",
+    "params": {
+      "padding": false
+    },
+    "input": {
+      "value": "f",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "MY",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode without padding 'f'",
+    "ref": "RFC 4648 §3.2 (padding optional), independent: Python base64 module",
+    "op": "base32:decode",
+    "params": {},
+    "input": {
+      "value": "MY",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode without padding 'fo'",
+    "ref": "RFC 4648 §3.2 (padding optional), independent: Python base64 module",
+    "op": "base32:encode",
+    "params": {
+      "padding": false
+    },
+    "input": {
+      "value": "fo",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "MZXQ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode without padding 'fo'",
+    "ref": "RFC 4648 §3.2 (padding optional), independent: Python base64 module",
+    "op": "base32:decode",
+    "params": {},
+    "input": {
+      "value": "MZXQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fo",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode without padding 'foo'",
+    "ref": "RFC 4648 §3.2 (padding optional), independent: Python base64 module",
+    "op": "base32:encode",
+    "params": {
+      "padding": false
+    },
+    "input": {
+      "value": "foo",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "MZXW6",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode without padding 'foo'",
+    "ref": "RFC 4648 §3.2 (padding optional), independent: Python base64 module",
+    "op": "base32:decode",
+    "params": {},
+    "input": {
+      "value": "MZXW6",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "foo",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode without padding 'foob'",
+    "ref": "RFC 4648 §3.2 (padding optional), independent: Python base64 module",
+    "op": "base32:encode",
+    "params": {
+      "padding": false
+    },
+    "input": {
+      "value": "foob",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "MZXW6YQ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode without padding 'foob'",
+    "ref": "RFC 4648 §3.2 (padding optional), independent: Python base64 module",
+    "op": "base32:decode",
+    "params": {},
+    "input": {
+      "value": "MZXW6YQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "foob",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode without padding 'fooba'",
+    "ref": "RFC 4648 §3.2 (padding optional), independent: Python base64 module",
+    "op": "base32:encode",
+    "params": {
+      "padding": false
+    },
+    "input": {
+      "value": "fooba",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "MZXW6YTB",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode without padding 'fooba'",
+    "ref": "RFC 4648 §3.2 (padding optional), independent: Python base64 module",
+    "op": "base32:decode",
+    "params": {},
+    "input": {
+      "value": "MZXW6YTB",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fooba",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode UTF-8 text",
+    "ref": "independent: Python base64 module",
+    "op": "base32:encode",
+    "params": {},
+    "input": {
+      "value": "héllo ✓ wörld 😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "NDB2S3DMN4QOFHETEB34HNTSNRSCB4E7TCAA====",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode UTF-8 text",
+    "ref": "independent: Python base64 module",
+    "op": "base32:decode",
+    "params": {},
+    "input": {
+      "value": "NDB2S3DMN4QOFHETEB34HNTSNRSCB4E7TCAA====",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "68c3a96c6c6f20e29c932077c3b6726c6420f09f9880",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode binary",
+    "ref": "independent: Python base64 module",
+    "op": "base32:encode",
+    "params": {},
+    "input": {
+      "value": "00000102ff807f00fe10aa",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "AAAACAX7QB7QB7QQVI======",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode binary",
+    "ref": "independent: Python base64 module",
+    "op": "base32:decode",
+    "params": {},
+    "input": {
+      "value": "AAAACAX7QB7QB7QQVI======",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00000102ff807f00fe10aa",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode hex alphabet binary",
+    "ref": "independent: Python base64 module",
+    "op": "base32:encode",
+    "params": {
+      "alphabet": "hex"
+    },
+    "input": {
+      "value": "00000102ff807f00fe10aa",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "000020NVG1VG1VGGL8======",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode hex alphabet binary",
+    "ref": "independent: Python base64 module",
+    "op": "base32:decode",
+    "params": {
+      "alphabet": "hex"
+    },
+    "input": {
+      "value": "000020NVG1VG1VGGL8======",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00000102ff807f00fe10aa",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 1 KiB of all byte values",
+    "ref": "independent: Python base64 module",
+    "op": "base32:encode",
+    "params": {},
+    "input": {
+      "value": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "AAAQEAYEAUDAOCAJBIFQYDIOB4IBCEQTCQKRMFYYDENBWHA5DYPSAIJCEMSCKJRHFAUSUKZMFUXC6MBRGIZTINJWG44DSOR3HQ6T4P2AIFBEGRCFIZDUQSKKJNGE2TSPKBIVEU2UKVLFOWCZLJNVYXK6L5QGCYTDMRSWMZ3INFVGW3DNNZXXA4LSON2HK5TXPB4XU634PV7H7AEBQKBYJBMGQ6EITCULRSGY5D4QSGJJHFEVS2LZRGM2TOOJ3HU7UCQ2FI5EUWTKPKFJVKV2ZLNOV6YLDMVTWS23NN5YXG5LXPF5X274BQOCYPCMLRWHZDE4VS6MZXHM7UGR2LJ5JVOW27MNTWW33TO55X7A4HROHZHF43T6R2PK5PWO33XP6DY7F47U6X3PP6HZ7L57Z7P674AACAQDAQCQMBYIBEFAWDANBYHRAEISCMKBKFQXDAMRUGY4DUPB6IBBEIRSIJJGE4UCSKRLFQWS4LZQGEZDGNBVGY3TQOJ2HM6D2PR7IBAUEQ2EIVDEOSCJJJFUYTKOJ5IFCUSTKRKVMV2YLFNFWXC5LZPWAYLCMNSGKZTHNBUWU23MNVXG64DROJZXI5LWO54HS6T3PR6X474AQGBIHBEFQ2DYRCMKROGI3DUPSCIZFE4USWLJPGEZTKNZZHM6T6QKDIVDUSS2NJ5IVGVKXLFNV2X3BMNSWO2LLNVXXC43VO54XW7L7QGBYLB4JROGY7EMTSWLZTG45T6Q2HJNHVGV23L5RWO23PON3XW74DQ6FY7E4XTOP2HJ5LV6Z3PO57YPD4XT6T27N57Y7H5PX7H5737QAAICAMCAKBQHBAEQUCYMBUHA6EARCIJRIFIWC4MBSGQ3DQOR4HZAEERCGJBFEYTSQKJKFMWC2LRPGAYTEMZUGU3DOOBZHI5TYPJ6H5AECQSDIRCUMR2IJFFEWTCNJZHVAUKSKNKFKVSXLBMVUW24LVPF6YDBMJRWIZLGM5UGS2TLNRWW433QOFZHG5DVOZ3XQ6L2PN6H27T7QCAYFA4EQWDIPCEJRKFYZDMOR6IJDEUTSSKZNF4YTGNJXHE5T2P2BINCUOSKLJVHVCU2VK5MVWXK7MFRWKZ3JNNWW64LTOV3XS635P6AYHBMHRGFY3D4RSOKZPGM3TWP2DI5FU6U2XLNPWGZ3LN5ZXO637QODYXD4TS6NZ7I5HVOX3HN53X7B4PS6P2PL5XX7D47V6747X7P6AABAIBQIBIGA4EASCQLBQGQ4DYQCEJBGFAVCYLRQGI2DMOB2HQ7EAQSEIZEEUTCOKBJFIVSYLJOF4YDCMRTGQ2TMNZYHE5DWPB5HY7UAQKCINCEKRSHJBEUUS2MJVHE6UCRKJJVIVKWK5MFSWS3LROV4X3AMFRGGZDFMZTWQ2LKNNWG23TPOBYXE43UOV3HO6DZPJ5XY7L6P6AIDAUDQSCYNB4IRGFIXDENR2HZBEMSSOKJLFUXTCMZVG44TWPJ7IFBUKR2JJNGU6UKTKVLVSW25L5QWGZLHNFVW233RON2XO6L3PV7YDA4FQ6EYXDMPSGJZLF4ZTOOZ7INDUWT2TK5NV6Y3HNNXXG533P6BYPC4PSOLZXH5DU6V27M5XXO74HR6LZ7J5PW674PT6X37T6757Y=",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ignores white space",
+    "ref": "RFC 4648 §3.3 allows ignoring; independent: Python base64 module",
+    "op": "base32:decode",
+    "params": {},
+    "input": {
+      "value": " MZXW6YTB\n OI======\t",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "foobar",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode error: character outside the alphabet",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base32:decode",
+    "params": {
+      "alphabet": "standard"
+    },
+    "input": {
+      "value": "MZXW6YT!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: digit 1 is not in the standard alphabet",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base32:decode",
+    "params": {
+      "alphabet": "standard"
+    },
+    "input": {
+      "value": "MZXW6YT1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: lower case",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base32:decode",
+    "params": {
+      "alphabet": "standard"
+    },
+    "input": {
+      "value": "mzxw6ytb",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: standard letter W under the hex alphabet",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base32:decode",
+    "params": {
+      "alphabet": "hex"
+    },
+    "input": {
+      "value": "MZXW6YTB",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: non-ASCII character",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base32:decode",
+    "params": {
+      "alphabet": "standard"
+    },
+    "input": {
+      "value": "MZXW6YT€",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: padding that is too short",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base32:decode",
+    "params": {
+      "alphabet": "standard"
+    },
+    "input": {
+      "value": "MY=====",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: padding with a full group",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base32:decode",
+    "params": {
+      "alphabet": "standard"
+    },
+    "input": {
+      "value": "MZXW6YTB=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: data after the padding",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base32:decode",
+    "params": {
+      "alphabet": "standard"
+    },
+    "input": {
+      "value": "MY======MY",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: length 1 mod 8",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base32:decode",
+    "params": {
+      "alphabet": "standard"
+    },
+    "input": {
+      "value": "MZXW6YTBO",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: length 3 mod 8",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base32:decode",
+    "params": {
+      "alphabet": "standard"
+    },
+    "input": {
+      "value": "MZX",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: length 6 mod 8",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base32:decode",
+    "params": {
+      "alphabet": "standard"
+    },
+    "input": {
+      "value": "MZXW6Y",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: non-zero trailing bits",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base32:decode",
+    "params": {
+      "alphabet": "standard"
+    },
+    "input": {
+      "value": "MZ======",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: non-zero trailing bits, no padding",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base32:decode",
+    "params": {
+      "alphabet": "standard"
+    },
+    "input": {
+      "value": "MZXW6YR",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]
