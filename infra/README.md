@@ -18,9 +18,10 @@ CloudFront, deployed from GitHub Actions. Design: `docs/PLAN.md` section 10.
 - Route 53 A and AAAA alias records for `forge.darkcollective.com`.
 - CloudFront access logs (standard logging v2) into
   `darkcollective-cloudfront-logs` under `forge/`.
-- IAM role `forge-deploy`, assumable only by GitHub OIDC for
-  `repo:DarkCollective/forge:ref:refs/heads/main`, with S3 access to the site
-  bucket and CloudFront invalidation on this distribution only.
+- IAM role `forge-deploy`, assumable only by GitHub OIDC for the deploy ref
+  (`refs/heads/main`) of the repository, with S3 access to the site bucket and
+  CloudFront invalidation on this distribution only. The trust is keyed on
+  GitHub's immutable subject format, see below.
 
 It does **not** own the `darkcollective.com` hosted zone, the `*.darkcollective.com`
 certificate (us-east-1), the log bucket or the state bucket. Those belong to the
@@ -34,6 +35,38 @@ Relix stack (`relix/infra`) and are read through data sources.
   `token.actions.githubusercontent.com` (check IAM, Identity providers) leave
   `create_github_oidc_provider` at its default `false`. If not, apply with
   `-var create_github_oidc_provider=true`. An account can hold only one.
+
+## GitHub OIDC subject (immutable format)
+
+The deploy role trusts the `sub` claim of the workflow's OIDC token. The
+repository uses GitHub's immutable subject format, so the claim is not
+`repo:<owner>/<repo>:...` but:
+
+```
+repo:<owner>@<owner_id>/<repo>@<repo_id>:ref:refs/heads/main
+```
+
+For this repository that is `repo:DarkCollective@157516510/forge@1451746198:ref:refs/heads/main`.
+The first part (everything before `:ref:`) is the `github_oidc_sub_prefix`
+variable, and the trust condition is `prefix` plus `:ref:` plus `github_deploy_ref`.
+The IDs make the subject survive repository renames and transfers, which the
+name-based format does not.
+
+To find the prefix for a repository:
+
+```sh
+gh api repos/DarkCollective/forge/actions/oidc/customization/sub
+```
+
+The `sub_claim_prefix` field is the value for `github_oidc_sub_prefix`. If the
+response has `"use_immutable_subject": false`, the repository still uses the
+name-based format and the trust must instead be `repo:<owner>/<repo>:ref:...`.
+
+A mismatch between the trusted subject and the token's subject is silent in
+Terraform and only shows at deploy time. The Deploy workflow fails at
+`aws-actions/configure-aws-credentials` with `Not authorized to perform
+sts:AssumeRoleWithWebIdentity`. If that happens after a rename, a transfer or a
+change of the subject format, compare the prefix above with the command output.
 
 ## Apply
 
