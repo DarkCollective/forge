@@ -63,15 +63,24 @@ export function onDragChange(listener: (payload: DragPayload | null) => void): (
 }
 
 /** Elements under a point, innermost first, looking through open shadow roots. */
-export function deepElementsFromPoint(x: number, y: number): Element[] {
+export function deepElementsFromPoint(
+  x: number,
+  y: number,
+  start: Document | ShadowRoot = document,
+): Element[] {
   const out: Element[] = [];
+  // Chromium's `ShadowRoot.elementsFromPoint` returns the shadow host itself, which would recurse
+  // forever: visit each root once and list each element once.
+  const seen = new Set<Node>();
   const visit = (root: Document | ShadowRoot): void => {
+    if (seen.has(root)) return;
+    seen.add(root);
     for (const el of root.elementsFromPoint(x, y)) {
       if (el.shadowRoot !== null) visit(el.shadowRoot);
-      out.push(el);
+      if (!out.includes(el)) out.push(el);
     }
   };
-  visit(document);
+  visit(start);
   return out;
 }
 
