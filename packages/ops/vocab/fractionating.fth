@@ -6,32 +6,9 @@ IN: fractionating
 \ Letters and grids (private helpers)
 \ ---------------------------------------------------------------------------------------------
 
-\ The upper-case code of a letter, with J merged into I.
-\ util-candidate: upper-merge-i
-: _fr-norm ( c:int -- int )
-  c 223 band dup 74 = [ drop 73 ] when ;
-
-\ acc with c appended, when c is in alpha and not yet in acc.
-\ util-candidate: keyed-alphabet-step
-: _kg-step ( acc:bytes alpha:bytes c:int -- bytes )
-  alpha [ c = ] filter len 0 >
-  acc [ c = ] filter len 0 =
-  and
-  [ acc c 1 util:int>be-bytes cat ] [ acc ] if ;
-
-\ The keyword letters (without repeats) followed by the rest of alpha: the square's order.
-\ util-candidate: keyed-alphabet
-: _keyed-alphabet ( key:bytes alpha:bytes -- bytes )
-  key alpha cat #[ ] [ alpha swap _kg-step ] reduce ;
-
 \ The 25 letters of the Polybius square: the alphabet without J.
 : _fr-alpha ( -- bytes )
   "ABCDEFGHIKLMNOPQRSTUVWXYZ" str>bytes ;
-
-\ The position (0 to 24) of each letter in the square grid; 255 for other bytes.
-\ util-candidate: square-positions
-: _fr-pos ( grid:bytes -- bytes )
-  grid bytes>str 255 255 util:decode-table ;
 
 \ The two-digit coordinate (row 1 to 5, column 1 to 5) of the letter c in the square.
 : _fr-coord ( c:int pos:bytes -- int )
@@ -59,8 +36,8 @@ IN: fractionating
 : polybius-encrypt ( data:bytes key:str[0..25,/[A-Za-z]*/]="" -- bytes )
   "Polybius square: each letter of the data (upper case, J as I) becomes its row and column numbers (1 to 5) as two digits. The square is keyed by the key (keyword letters without repeats, then the rest of the alphabet without J). Other bytes are dropped; the output is digits only." doc
   "Classical ciphers" category
-  data [ util:letter? ] filter [ _fr-norm ] map bytes>list
-  key str>bytes [ _fr-norm ] map _fr-alpha _keyed-alphabet _fr-pos _fr-digits ;
+  data [ util:letter? ] filter [ util:upper-merge-i ] map bytes>list
+  key str>bytes [ util:upper-merge-i ] map _fr-alpha util:keyed-alphabet util:square-positions _fr-digits ;
 
 META: polybius-encrypt
   param key "Keyword of letters (either case; repeats dropped); empty for the plain square." ;
@@ -74,7 +51,7 @@ META: polybius-encrypt
   [ ] [ drop "polybius-decrypt: an odd number of digits" raise:coerce ] if
   bytes>list [ 48 - ] map
   dup [ dup 1 < over 5 > or [ "polybius-decrypt: digits must be 1 to 5" raise:coerce ] when drop ] each
-  key str>bytes [ _fr-norm ] map _fr-alpha _keyed-alphabet _fr-decode ;
+  key str>bytes [ util:upper-merge-i ] map _fr-alpha util:keyed-alphabet _fr-decode ;
 
 META: polybius-decrypt
   param key "Keyword used to encrypt; empty for the plain square." ;
@@ -88,7 +65,7 @@ META: polybius-decrypt
 
 \ The coordinates of the key letters in the square.
 : _nh-key-coords ( pos:bytes key:str -- list )
-  key str>bytes bytes>list [ _fr-norm pos _fr-coord ] map ;
+  key str>bytes bytes>list [ util:upper-merge-i pos _fr-coord ] map ;
 
 \ The sum of each letter's coordinate and the key coordinate that repeats over the letters.
 : _nh-sums ( letters:bytes pos:bytes keyc:list -- list )
@@ -106,8 +83,8 @@ META: polybius-decrypt
 : nihilist-encrypt ( data:bytes key:str[1..256,/[A-Za-z]+/] square:str[0..25,/[A-Za-z]*/]="" -- bytes )
   "Nihilist cipher: each letter of the data (upper case, J as I) becomes the number of its square cell (row * 10 + column, 1 to 5 each) and each key letter the same; the key repeats over the letters and the two numbers are added as ordinary integers. The sums are written as decimal numbers separated by spaces. The square is keyed by square (keyword letters without repeats, then the rest of the alphabet without J). Other bytes are dropped." doc
   "Classical ciphers" category
-  data [ util:letter? ] filter [ _fr-norm ] map
-  square str>bytes [ _fr-norm ] map _fr-alpha _keyed-alphabet _fr-pos
+  data [ util:letter? ] filter [ util:upper-merge-i ] map
+  square str>bytes [ util:upper-merge-i ] map _fr-alpha util:keyed-alphabet util:square-positions
   dup key _nh-key-coords
   _nh-sums [ int>str ] map " " join str>bytes ;
 
@@ -120,8 +97,8 @@ META: nihilist-encrypt
 : nihilist-decrypt ( data:bytes key:str[1..256,/[A-Za-z]+/] square:str[0..25,/[A-Za-z]*/]="" -- bytes )
   "Undo the Nihilist cipher with the same key and square: the numbers (separated by white space or commas) have the key coordinate taken off and are read as square cells. A number that is not a sum of two cell coordinates is E_COERCE." doc
   "Classical ciphers" category
-  square str>bytes [ _fr-norm ] map _fr-alpha _keyed-alphabet
-  dup _fr-pos dup key _nh-key-coords swap drop
+  square str>bytes [ util:upper-merge-i ] map _fr-alpha util:keyed-alphabet
+  dup util:square-positions dup key _nh-key-coords swap drop
   data bytes>latin1 util:number-tokens [ str>int ] map
   _nh-decrypt ;
 
@@ -146,12 +123,12 @@ META: nihilist-decrypt
 
 \ The keyed square: the 25 letters of ADFGX (J as I), or the 36 letters and digits of ADFGVX.
 : _adf-grid ( key:str variant:str -- bytes )
-  variant "adfgx" = [ key str>bytes [ _fr-norm ] map _fr-alpha _keyed-alphabet ]
-  [ key upper str>bytes "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" str>bytes _keyed-alphabet ] if ;
+  variant "adfgx" = [ key str>bytes [ util:upper-merge-i ] map _fr-alpha util:keyed-alphabet ]
+  [ key upper str>bytes "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" str>bytes util:keyed-alphabet ] if ;
 
 \ The text put into the square: ADFGX takes the letters (J as I); ADFGVX takes letters and digits. Letters are upper case.
 : _adf-data ( data:bytes variant:str -- bytes )
-  variant "adfgx" = [ data [ util:letter? ] filter [ _fr-norm ] map ]
+  variant "adfgx" = [ data [ util:letter? ] filter [ util:upper-merge-i ] map ]
   [ data [ dup util:letter? swap util:dec-digit? or ] filter [ dup util:letter? [ 223 band ] when ] map ] if ;
 
 \ The two label bytes (row, then column) of the square position p in a w-wide square.
@@ -178,7 +155,7 @@ META: nihilist-decrypt
   "ADFGX and ADFGVX ciphers: each letter (ADFGVX also each digit) of the data becomes the labels of its cell in a keyed square (ADFGX: 5 by 5 square of the 25 letters, J as I; ADFGVX: 6 by 6 square of letters and digits; the square is filled by its key, then the rest of the alphabet). The label pairs (row, then column) are then written under the transposition key trkey and read out by columnar transposition (transposition:columnar-encrypt, no pad). Other bytes are dropped." doc
   "Classical ciphers" category
   data variant _adf-data
-  key variant _adf-grid _fr-pos translate
+  key variant _adf-grid util:square-positions translate
   variant _adf-width variant _adf-labels _adf-pairs
   trkey "" transposition:columnar-encrypt ;
 
@@ -211,7 +188,7 @@ META: adfgx-decrypt
 
 \ The keyed cube: the keyword letters without repeats, then the rest of A to Z and +.
 : _tr-grid ( key:str -- bytes )
-  key upper str>bytes "ABCDEFGHIJKLMNOPQRSTUVWXYZ+" str>bytes _keyed-alphabet ;
+  key upper str>bytes "ABCDEFGHIJKLMNOPQRSTUVWXYZ+" str>bytes util:keyed-alphabet ;
 
 \ The coordinate kind (0 layer, 1 row, 2 column; each 0 to 2) of the cell at position p (0 to 26).
 : _tr-coord ( p:int kind:int -- int )
@@ -260,7 +237,7 @@ META: adfgx-decrypt
   "Trifid cipher: the letters of the data (upper case; other bytes dropped) are written by the 27-symbol cube keyed by key (keyword letters without repeats, then A to Z and + ). Each letter gives its layer, row and column (1 to 3 each). In each block of period letters, the layers, then the rows, then the columns are read as one stream and split into triples, and each triple names a cube cell, giving the cipher letters." doc
   "Classical ciphers" category
   data [ util:letter? ] filter [ 223 band ] map
-  key _tr-grid swap over _fr-pos translate swap
+  key _tr-grid swap over util:square-positions translate swap
   period [ _tr-enc-block ] _tr-blocks ;
 
 META: trifid-encrypt
@@ -273,7 +250,7 @@ META: trifid-encrypt
   "Undo the Trifid cipher with the same cube and period: the cipher symbols (letters, and + for the 27th) give their coordinates, which are written as the stream of each block (layers, then rows, then columns) and split back into the plain symbols. Other bytes are dropped; the output may contain + (the 27th symbol)." doc
   "Classical ciphers" category
   data [ dup util:letter? swap 43 = or ] filter [ dup util:letter? [ 223 band ] when ] map
-  key _tr-grid swap over _fr-pos translate swap
+  key _tr-grid swap over util:square-positions translate swap
   period [ _tr-dec-block ] _tr-blocks ;
 
 META: trifid-decrypt

@@ -325,3 +325,24 @@ IN: util
   dup [ 255 = ] filter len 0 <>
   [ "not an ITA2 character: use the letters, 3 4 5 8 9 / (and + and -); white space is ignored" raise:coerce ] when
   [ 254 <> ] filter ;
+
+\ ---- keyed alphabets and squares ----
+
+\ acc with c appended, when c is in alpha and not yet in acc.
+: _keyed-alphabet-step ( acc:bytes alpha:bytes c:int -- bytes )
+  alpha [ c = ] filter len 0 >
+  acc [ c = ] filter len 0 =
+  and
+  [ acc c 1 int>be-bytes cat ] [ acc ] if ;
+
+: keyed-alphabet ( key:bytes alpha:bytes -- bytes )
+  "The order of a keyed square: the distinct bytes of key that are in alpha, in key order, then the rest of alpha in its order. Repeats and bytes not in alpha are dropped from the key." doc
+  key alpha cat #[ ] [ alpha swap _keyed-alphabet-step ] reduce ;
+
+: square-positions ( grid:bytes -- bytes )
+  "A 256-byte table for translate: entry b is the position of the byte b in grid (0 to len-1), and 255 for any byte not in grid. Build it from keyed-alphabet." doc
+  grid bytes>str 255 255 decode-table ;
+
+: upper-merge-i ( code:int -- int )
+  "A letter code made upper case (bit 5 cleared) with J merged into I. Use it on letters only: other codes are only masked." doc
+  code 223 band dup 74 = [ drop 73 ] when ;

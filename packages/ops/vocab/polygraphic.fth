@@ -16,24 +16,6 @@ IN: polygraphic
 : _pl-alpha ( omit:str -- bytes )
   omit "j" = [ "ABCDEFGHIKLMNOPQRSTUVWXYZ" ] [ "ABCDEFGHJKLMNOPQRSTUVWXYZ" ] if str>bytes ;
 
-\ acc with c appended, when c is in alpha and not yet in acc.
-\ util-candidate: keyed-alphabet-step
-: _kg-step ( acc:bytes alpha:bytes c:int -- bytes )
-  alpha [ c = ] filter len 0 >
-  acc [ c = ] filter len 0 =
-  and
-  [ acc c 1 util:int>be-bytes cat ] [ acc ] if ;
-
-\ The keyword letters (without repeats) followed by the rest of alpha: the square's order.
-\ util-candidate: keyed-alphabet
-: _keyed-alphabet ( key:bytes alpha:bytes -- bytes )
-  key alpha cat #[ ] [ alpha swap _kg-step ] reduce ;
-
-\ The position (0 to 24) of each letter in the square; 255 for other bytes.
-\ util-candidate: square-positions
-: _pl-pos ( grid:bytes -- bytes )
-  grid bytes>str 255 255 util:decode-table ;
-
 \ ---------------------------------------------------------------------------------------------
 \ Digraphs (Playfair and four-square): doubled letters are split with the filler, an odd last letter
 \ takes the filler. A VARIABLE holds the letter waiting for its partner (-1 for none).
@@ -94,7 +76,7 @@ IN: polygraphic
   0 pairs len 2 div range [ pairs grid pos mode _pl-pair ] map #[ ] bjoin ;
 
 : _pl-pairs ( pairs:bytes grid:bytes mode:int -- bytes )
-  pairs grid grid _pl-pos mode _pl-pairs-with ;
+  pairs grid grid util:square-positions mode _pl-pairs-with ;
 
 \ ---------------------------------------------------------------------------------------------
 \ Playfair
@@ -104,7 +86,7 @@ IN: polygraphic
   "Playfair cipher on a 5x5 square built from the keyword (without repeats) and then the rest of the alphabet, with one letter omitted (j: J is merged into I; i: I is merged into J). Only letters take part, taken as upper case with the merge applied; other bytes are dropped. Doubled letters get the filler between them (a pair of the filler itself stays as it is), and an odd last letter gets the filler. Pairs in the same row or column move one step along it; other pairs swap columns. The output is upper-case letters." doc
   "Classical ciphers" category
   data [ util:letter? ] filter [ omit _pl-norm ] map filler str>bytes 0 nth 223 band _pl-digraphs
-  key str>bytes [ omit _pl-norm ] map omit _pl-alpha _keyed-alphabet 1 _pl-pairs ;
+  key str>bytes [ omit _pl-norm ] map omit _pl-alpha util:keyed-alphabet 1 _pl-pairs ;
 
 META: playfair-encrypt
   param key "Keyword of letters (either case; repeats are dropped); empty for the plain square." ;
@@ -118,7 +100,7 @@ META: playfair-encrypt
   "Classical ciphers" category
   data [ util:letter? ] filter [ omit _pl-norm ] map dup len 2 mod 0 =
   [ ] [ drop "playfair-decrypt: the letters must come in pairs" raise:coerce ] if
-  key str>bytes [ omit _pl-norm ] map omit _pl-alpha _keyed-alphabet -1 _pl-pairs ;
+  key str>bytes [ omit _pl-norm ] map omit _pl-alpha util:keyed-alphabet -1 _pl-pairs ;
 
 META: playfair-decrypt
   param key "Keyword used to encrypt; empty for the plain square." ;
@@ -148,9 +130,9 @@ META: playfair-decrypt
   "Four-square cipher: two 5x5 squares are used with the plain alphabet (I and J share a cell). The top left and bottom right squares are plain; the top right square is keyed by key1 and the bottom left by key2 (keyword letters first, repeats dropped). A pair (a, b) becomes the letter of the top right square in a's row and b's column, then the letter of the bottom left square in b's row and a's column. Only letters take part (J is read as I); doubled letters and an odd last letter take the filler as in Playfair." doc
   "Classical ciphers" category
   data [ util:letter? ] filter [ "j" _pl-norm ] map filler str>bytes 0 nth 223 band _pl-digraphs
-  "j" _pl-alpha _pl-pos dup
-  key1 str>bytes [ "j" _pl-norm ] map "j" _pl-alpha _keyed-alphabet
-  key2 str>bytes [ "j" _pl-norm ] map "j" _pl-alpha _keyed-alphabet
+  "j" _pl-alpha util:square-positions dup
+  key1 str>bytes [ "j" _pl-norm ] map "j" _pl-alpha util:keyed-alphabet
+  key2 str>bytes [ "j" _pl-norm ] map "j" _pl-alpha util:keyed-alphabet
   _fs-pairs ;
 
 META: four-square-encrypt
@@ -165,8 +147,8 @@ META: four-square-encrypt
   "Classical ciphers" category
   data [ util:letter? ] filter [ "j" _pl-norm ] map dup len 2 mod 0 =
   [ ] [ drop "four-square-decrypt: the letters must come in pairs" raise:coerce ] if
-  key1 str>bytes [ "j" _pl-norm ] map "j" _pl-alpha _keyed-alphabet _pl-pos
-  key2 str>bytes [ "j" _pl-norm ] map "j" _pl-alpha _keyed-alphabet _pl-pos
+  key1 str>bytes [ "j" _pl-norm ] map "j" _pl-alpha util:keyed-alphabet util:square-positions
+  key2 str>bytes [ "j" _pl-norm ] map "j" _pl-alpha util:keyed-alphabet util:square-positions
   "j" _pl-alpha dup
   _fs-pairs ;
 

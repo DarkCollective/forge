@@ -788,3 +788,64 @@ describe("util is internal", () => {
     expect(() => assembleRuntime(bundle, { units })).toThrowError(/read-only/);
   });
 });
+
+// The keyed squares and the upper-case merge promoted from the classical-cipher vocabularies.
+function asciiBytes(s: string): Uint8Array {
+  return Uint8Array.from(s, (c) => c.charCodeAt(0));
+}
+
+function asText(v: unknown): string {
+  return Array.from(v as Uint8Array, (c) => String.fromCharCode(c)).join("");
+}
+
+describe("util:keyed-alphabet", () => {
+  test("the ZEBRAS square: keyword letters without repeats, then the rest of the alphabet", async () => {
+    const v = await value("util:keyed-alphabet", [
+      valueHelpers.bytes(asciiBytes("ZEBRAS")),
+      valueHelpers.bytes(asciiBytes("ABCDEFGHIKLMNOPQRSTUVWXYZ")),
+    ]);
+    expect(asText(v)).toBe("ZEBRASCDFGHIKLMNOPQTUVWXY");
+  });
+
+  test("bytes of the key that are not in the alphabet, and repeats, are dropped", async () => {
+    const v = await value("util:keyed-alphabet", [
+      valueHelpers.bytes(asciiBytes("AAB?")),
+      valueHelpers.bytes(asciiBytes("ABC")),
+    ]);
+    expect(asText(v)).toBe("ABC");
+  });
+
+  test("an empty key gives the alphabet itself", async () => {
+    const v = await value("util:keyed-alphabet", [
+      valueHelpers.bytes(new Uint8Array(0)),
+      valueHelpers.bytes(asciiBytes("XYZ")),
+    ]);
+    expect(asText(v)).toBe("XYZ");
+  });
+});
+
+describe("util:square-positions", () => {
+  test("the position of each grid byte, 255 for the others", async () => {
+    const table = (await value("util:square-positions", [
+      valueHelpers.bytes(asciiBytes("ZEBRASCDFGHIKLMNOPQTUVWXY")),
+    ])) as Uint8Array;
+    expect(table.length).toBe(256);
+    expect(table[90]).toBe(0); // Z
+    expect(table[83]).toBe(5); // S
+    expect(table[88]).toBe(23); // X
+    expect(table[74]).toBe(255); // J is not in this square
+    expect(table[48]).toBe(255); // a digit
+  });
+});
+
+describe("util:upper-merge-i", () => {
+  test("a lower-case letter becomes upper case, and J becomes I", async () => {
+    for (let c = 97; c <= 122; c++) {
+      const up = c - 32;
+      const expected = up === 74 ? 73 : up;
+      expect(await value("util:upper-merge-i", [int(c)])).toBe(expected);
+    }
+    expect(await value("util:upper-merge-i", [int(74)])).toBe(73);
+    expect(await value("util:upper-merge-i", [int(73)])).toBe(73);
+  });
+});
