@@ -1,0 +1,925 @@
+[
+  {
+    "name": "encode empty",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:encode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode 'Man ' (Wikipedia)",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:encode",
+    "params": {},
+    "input": {
+      "value": "Man ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "9jqo^",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode 'sure' (Wikipedia)",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:encode",
+    "params": {},
+    "input": {
+      "value": "sure",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "F*2M7",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode Wikipedia sentence",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:encode",
+    "params": {},
+    "input": {
+      "value": "Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge, exceeds the short vehemence of any carnal pleasure.",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "9jqo^BlbD-BleB1DJ+*+F(f,q/0JhKF<GL>Cj@.4Gp$d7F!,L7@<6@)/0JDEF<G%<+EV:2F!,O<DJ+*.@<*K0@<6L(Df-\\0Ec5e;DffZ(EZee.Bl.9pF\"AGXBPCsi+DGm>@3BB/F*&OCAfu2/AKYi(DIb:@FD,*)+C]U=@3BN#EcYf8ATD3s@q?d$AftVqCh[NqF<G:8+EV:.+Cf>-FD5W8ARlolDIal(DId<j@<?3r@:F%a+D58'ATD4$Bl@l3De:,-DJs`8ARoFb/0JMK@qB4^F!,R<AKZ&-DfTqBG%G>uD.RTpAKYo'+CT/5+Cei#DII?(E,9)oF*2M7/c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode Wikipedia sentence",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:decode",
+    "params": {},
+    "input": {
+      "value": "9jqo^BlbD-BleB1DJ+*+F(f,q/0JhKF<GL>Cj@.4Gp$d7F!,L7@<6@)/0JDEF<G%<+EV:2F!,O<DJ+*.@<*K0@<6L(Df-\\0Ec5e;DffZ(EZee.Bl.9pF\"AGXBPCsi+DGm>@3BB/F*&OCAfu2/AKYi(DIb:@FD,*)+C]U=@3BN#EcYf8ATD3s@q?d$AftVqCh[NqF<G:8+EV:.+Cf>-FD5W8ARlolDIal(DId<j@<?3r@:F%a+D58'ATD4$Bl@l3De:,-DJs`8ARoFb/0JMK@qB4^F!,R<AKZ&-DfTqBG%G>uD.RTpAKYo'+CT/5+Cei#DII?(E,9)oF*2M7/c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge, exceeds the short vehemence of any carnal pleasure.",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 'Man '",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:decode",
+    "params": {},
+    "input": {
+      "value": "9jqo^",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Man ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode 1 byte(s): partial final group",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:encode",
+    "params": {},
+    "input": {
+      "value": "s",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Er",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 1 byte(s): partial final group",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:decode",
+    "params": {},
+    "input": {
+      "value": "Er",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "s",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode 2 byte(s): partial final group",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:encode",
+    "params": {},
+    "input": {
+      "value": "su",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "F*.",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 2 byte(s): partial final group",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:decode",
+    "params": {},
+    "input": {
+      "value": "F*.",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "su",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode 3 byte(s): partial final group",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:encode",
+    "params": {},
+    "input": {
+      "value": "sur",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "F*2L",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 3 byte(s): partial final group",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:decode",
+    "params": {},
+    "input": {
+      "value": "F*2L",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "sur",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode 5 byte(s): partial final group",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:encode",
+    "params": {},
+    "input": {
+      "value": "sure.",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "F*2M7/c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 5 byte(s): partial final group",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:decode",
+    "params": {},
+    "input": {
+      "value": "F*2M7/c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "sure.",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode 6 byte(s): partial final group",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:encode",
+    "params": {},
+    "input": {
+      "value": "sure.1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "F*2M7/hm",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 6 byte(s): partial final group",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:decode",
+    "params": {},
+    "input": {
+      "value": "F*2M7/hm",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "sure.1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode 7 byte(s): partial final group",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:encode",
+    "params": {},
+    "input": {
+      "value": "sure.12",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "F*2M7/ho*",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 7 byte(s): partial final group",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:decode",
+    "params": {},
+    "input": {
+      "value": "F*2M7/ho*",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "sure.12",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode four zero bytes as z",
+    "ref": "Adobe PostScript Language Reference §3.13.3",
+    "op": "base85:encode",
+    "params": {},
+    "input": {
+      "value": "00000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "z",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode zero group then text",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:encode",
+    "params": {},
+    "input": {
+      "value": "000000004d616e20",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "z9jqo^",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode three zero bytes (partial, no z)",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:encode",
+    "params": {},
+    "input": {
+      "value": "000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "!!!!",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode five zero bytes",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:encode",
+    "params": {},
+    "input": {
+      "value": "0000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "z!!",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode z",
+    "ref": "Adobe PostScript Language Reference §3.13.3",
+    "op": "base85:decode",
+    "params": {},
+    "input": {
+      "value": "z",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode z between groups",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:decode",
+    "params": {},
+    "input": {
+      "value": "9jqo^zF*2M7",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4d616e200000000073757265",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 0xffffffff",
+    "ref": "Adobe PostScript Language Reference §3.13.3 (s8W-! is the largest group)",
+    "op": "base85:encode",
+    "params": {},
+    "input": {
+      "value": "ffffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "s8W-!",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 0xffffffff",
+    "ref": "Adobe PostScript Language Reference §3.13.3",
+    "op": "base85:decode",
+    "params": {},
+    "input": {
+      "value": "s8W-!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ffffffff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode with delimiters",
+    "ref": "Adobe PostScript Language Reference §3.13.3",
+    "op": "base85:encode",
+    "params": {
+      "delimiters": true
+    },
+    "input": {
+      "value": "Man ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<~9jqo^~>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode empty with delimiters",
+    "ref": "Adobe PostScript Language Reference §3.13.3",
+    "op": "base85:encode",
+    "params": {
+      "delimiters": true
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<~~>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode with delimiters",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:decode",
+    "params": {},
+    "input": {
+      "value": "<~9jqo^~>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Man ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode with delimiters and white space",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:decode",
+    "params": {},
+    "input": {
+      "value": " <~9jqo\n^ ~>\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Man ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode empty delimited",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:decode",
+    "params": {},
+    "input": {
+      "value": "<~~>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode empty",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:decode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode UTF-8 text",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:encode",
+    "params": {},
+    "input": {
+      "value": "héllo ✓ wörld 😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "BZ$fcCi:HUS<G(>_mXT%A0CB6R\",",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode UTF-8 text",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:decode",
+    "params": {},
+    "input": {
+      "value": "BZ$fcCi:HUS<G(>_mXT%A0CB6R\",",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "68c3a96c6c6f20e29c932077c3b6726c6420f09f9880",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode binary",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:encode",
+    "params": {},
+    "input": {
+      "value": "00000102ff807f00fe10aa",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "!!!$$s+#S!rXc(",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode binary",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:decode",
+    "params": {},
+    "input": {
+      "value": "!!!$$s+#S!rXc(",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00000102ff807f00fe10aa",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 1 KiB of all byte values",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:encode",
+    "params": {},
+    "input": {
+      "value": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "!!*-'\"9eu7#RLhG$k3[W&.oNg'GVB\"(`=52*$$(B+<_pR,UFcb-n-Vr/1iJ-0JP==1c70M3&s#]4?Ykm5X@_(6q'R884cEH9MJ8X:f1+h<)lt#=BSg3>[:ZC?t!MSA7]@cBPD3sCi+'.E,fo>FEMbNG^4U^I!pHnJ:W<)KS>/9Ll%\"IN/`jYOHG]iPa.Q$R$jD4S=Q7DTV8*TUnsrdW2ZetXKAY/Yd(L?['d?O\\@K2_]Y2%o^qmn*`5Ta:aN;TJbg\"GZd*^:jeCE.%f\\,!5gtgiEi8N\\UjQ5OekiqBum-X60nF?)@o_%qPq\"ad`r;HWp!!*-'\"9eu7#RLhG$k3[W&.oNg'GVB\"(`=52*$$(B+<_pR,UFcb-n-Vr/1iJ-0JP==1c70M3&s#]4?Ykm5X@_(6q'R884cEH9MJ8X:f1+h<)lt#=BSg3>[:ZC?t!MSA7]@cBPD3sCi+'.E,fo>FEMbNG^4U^I!pHnJ:W<)KS>/9Ll%\"IN/`jYOHG]iPa.Q$R$jD4S=Q7DTV8*TUnsrdW2ZetXKAY/Yd(L?['d?O\\@K2_]Y2%o^qmn*`5Ta:aN;TJbg\"GZd*^:jeCE.%f\\,!5gtgiEi8N\\UjQ5OekiqBum-X60nF?)@o_%qPq\"ad`r;HWp!!*-'\"9eu7#RLhG$k3[W&.oNg'GVB\"(`=52*$$(B+<_pR,UFcb-n-Vr/1iJ-0JP==1c70M3&s#]4?Ykm5X@_(6q'R884cEH9MJ8X:f1+h<)lt#=BSg3>[:ZC?t!MSA7]@cBPD3sCi+'.E,fo>FEMbNG^4U^I!pHnJ:W<)KS>/9Ll%\"IN/`jYOHG]iPa.Q$R$jD4S=Q7DTV8*TUnsrdW2ZetXKAY/Yd(L?['d?O\\@K2_]Y2%o^qmn*`5Ta:aN;TJbg\"GZd*^:jeCE.%f\\,!5gtgiEi8N\\UjQ5OekiqBum-X60nF?)@o_%qPq\"ad`r;HWp!!*-'\"9eu7#RLhG$k3[W&.oNg'GVB\"(`=52*$$(B+<_pR,UFcb-n-Vr/1iJ-0JP==1c70M3&s#]4?Ykm5X@_(6q'R884cEH9MJ8X:f1+h<)lt#=BSg3>[:ZC?t!MSA7]@cBPD3sCi+'.E,fo>FEMbNG^4U^I!pHnJ:W<)KS>/9Ll%\"IN/`jYOHG]iPa.Q$R$jD4S=Q7DTV8*TUnsrdW2ZetXKAY/Yd(L?['d?O\\@K2_]Y2%o^qmn*`5Ta:aN;TJbg\"GZd*^:jeCE.%f\\,!5gtgiEi8N\\UjQ5OekiqBum-X60nF?)@o_%qPq\"ad`r;HWp",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 1 KiB of all byte values",
+    "ref": "Adobe PostScript Language Reference §3.13.3 / Wikipedia Ascii85 worked example; cross-checked with Python base64.a85encode",
+    "op": "base85:decode",
+    "params": {},
+    "input": {
+      "value": "!!*-'\"9eu7#RLhG$k3[W&.oNg'GVB\"(`=52*$$(B+<_pR,UFcb-n-Vr/1iJ-0JP==1c70M3&s#]4?Ykm5X@_(6q'R884cEH9MJ8X:f1+h<)lt#=BSg3>[:ZC?t!MSA7]@cBPD3sCi+'.E,fo>FEMbNG^4U^I!pHnJ:W<)KS>/9Ll%\"IN/`jYOHG]iPa.Q$R$jD4S=Q7DTV8*TUnsrdW2ZetXKAY/Yd(L?['d?O\\@K2_]Y2%o^qmn*`5Ta:aN;TJbg\"GZd*^:jeCE.%f\\,!5gtgiEi8N\\UjQ5OekiqBum-X60nF?)@o_%qPq\"ad`r;HWp!!*-'\"9eu7#RLhG$k3[W&.oNg'GVB\"(`=52*$$(B+<_pR,UFcb-n-Vr/1iJ-0JP==1c70M3&s#]4?Ykm5X@_(6q'R884cEH9MJ8X:f1+h<)lt#=BSg3>[:ZC?t!MSA7]@cBPD3sCi+'.E,fo>FEMbNG^4U^I!pHnJ:W<)KS>/9Ll%\"IN/`jYOHG]iPa.Q$R$jD4S=Q7DTV8*TUnsrdW2ZetXKAY/Yd(L?['d?O\\@K2_]Y2%o^qmn*`5Ta:aN;TJbg\"GZd*^:jeCE.%f\\,!5gtgiEi8N\\UjQ5OekiqBum-X60nF?)@o_%qPq\"ad`r;HWp!!*-'\"9eu7#RLhG$k3[W&.oNg'GVB\"(`=52*$$(B+<_pR,UFcb-n-Vr/1iJ-0JP==1c70M3&s#]4?Ykm5X@_(6q'R884cEH9MJ8X:f1+h<)lt#=BSg3>[:ZC?t!MSA7]@cBPD3sCi+'.E,fo>FEMbNG^4U^I!pHnJ:W<)KS>/9Ll%\"IN/`jYOHG]iPa.Q$R$jD4S=Q7DTV8*TUnsrdW2ZetXKAY/Yd(L?['d?O\\@K2_]Y2%o^qmn*`5Ta:aN;TJbg\"GZd*^:jeCE.%f\\,!5gtgiEi8N\\UjQ5OekiqBum-X60nF?)@o_%qPq\"ad`r;HWp!!*-'\"9eu7#RLhG$k3[W&.oNg'GVB\"(`=52*$$(B+<_pR,UFcb-n-Vr/1iJ-0JP==1c70M3&s#]4?Ykm5X@_(6q'R884cEH9MJ8X:f1+h<)lt#=BSg3>[:ZC?t!MSA7]@cBPD3sCi+'.E,fo>FEMbNG^4U^I!pHnJ:W<)KS>/9Ll%\"IN/`jYOHG]iPa.Q$R$jD4S=Q7DTV8*TUnsrdW2ZetXKAY/Yd(L?['d?O\\@K2_]Y2%o^qmn*`5Ta:aN;TJbg\"GZd*^:jeCE.%f\\,!5gtgiEi8N\\UjQ5OekiqBum-X60nF?)@o_%qPq\"ad`r;HWp",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "z85 encode RFC 32 test frame",
+    "ref": "ZeroMQ RFC 32 (Z85)",
+    "op": "base85:encode",
+    "params": {
+      "variant": "z85"
+    },
+    "input": {
+      "value": "864fd26fb559f75b",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "HelloWorld",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "z85 decode RFC 32 test frame",
+    "ref": "ZeroMQ RFC 32 (Z85)",
+    "op": "base85:decode",
+    "params": {
+      "variant": "z85"
+    },
+    "input": {
+      "value": "HelloWorld",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "864fd26fb559f75b",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "z85 encode empty",
+    "ref": "ZeroMQ RFC 32 (Z85)",
+    "op": "base85:encode",
+    "params": {
+      "variant": "z85"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "z85 decode empty",
+    "ref": "ZeroMQ RFC 32 (Z85)",
+    "op": "base85:decode",
+    "params": {
+      "variant": "z85"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "z85 encode zeros (no z shortcut)",
+    "ref": "ZeroMQ RFC 32 (Z85); Python base64.z85encode",
+    "op": "base85:encode",
+    "params": {
+      "variant": "z85"
+    },
+    "input": {
+      "value": "00000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "z85 encode ignores delimiters",
+    "ref": "ZeroMQ RFC 32 (Z85)",
+    "op": "base85:encode",
+    "params": {
+      "variant": "z85",
+      "delimiters": true
+    },
+    "input": {
+      "value": "864fd26fb559f75b",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "HelloWorld",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "z85 encode binary",
+    "ref": "ZeroMQ RFC 32 (Z85); Python base64.z85encode",
+    "op": "base85:encode",
+    "params": {
+      "variant": "z85"
+    },
+    "input": {
+      "value": "00000102ff807f00fe10aa01",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00033%a2O0@T=7g",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "z85 decode binary",
+    "ref": "ZeroMQ RFC 32 (Z85); Python base64.z85encode",
+    "op": "base85:decode",
+    "params": {
+      "variant": "z85"
+    },
+    "input": {
+      "value": "00033%a2O0@T=7g",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00000102ff807f00fe10aa01",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "z85 encode 0xffffffff",
+    "ref": "ZeroMQ RFC 32 (Z85); Python base64.z85encode",
+    "op": "base85:encode",
+    "params": {
+      "variant": "z85"
+    },
+    "input": {
+      "value": "ffffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "%nSc0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "z85 decode ignores white space",
+    "ref": "ZeroMQ RFC 32 (Z85)",
+    "op": "base85:decode",
+    "params": {
+      "variant": "z85"
+    },
+    "input": {
+      "value": "Hello\nWorld ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "864fd26fb559f75b",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "z85 encode UTF-8 text (8 bytes)",
+    "ref": "ZeroMQ RFC 32 (Z85); Python base64.z85encode",
+    "op": "base85:encode",
+    "params": {
+      "variant": "z85"
+    },
+    "input": {
+      "value": "héllo..",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "xV3/=y&p{U",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "z85 encode error: length not a multiple of 4",
+    "ref": "ZeroMQ RFC 32 (Z85)",
+    "op": "base85:encode",
+    "params": {
+      "variant": "z85"
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "z85 encode error: length 5",
+    "ref": "ZeroMQ RFC 32 (Z85)",
+    "op": "base85:encode",
+    "params": {
+      "variant": "z85"
+    },
+    "input": {
+      "value": "abcde",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "decode error: ascii85: character above u",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base85:decode",
+    "params": {
+      "variant": "ascii85"
+    },
+    "input": {
+      "value": "9jqov",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: ascii85: character below !",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base85:decode",
+    "params": {
+      "variant": "ascii85"
+    },
+    "input": {
+      "value": "9jqo\u0001",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: ascii85: non-ASCII character",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base85:decode",
+    "params": {
+      "variant": "ascii85"
+    },
+    "input": {
+      "value": "9jqoé",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: ascii85: z inside a group",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base85:decode",
+    "params": {
+      "variant": "ascii85"
+    },
+    "input": {
+      "value": "9jqzo^",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: ascii85: z after a partial group",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base85:decode",
+    "params": {
+      "variant": "ascii85"
+    },
+    "input": {
+      "value": "9jqz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: ascii85: single digit ends the data",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base85:decode",
+    "params": {
+      "variant": "ascii85"
+    },
+    "input": {
+      "value": "9jqo^F",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: ascii85: group over 2^32-1",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base85:decode",
+    "params": {
+      "variant": "ascii85"
+    },
+    "input": {
+      "value": "s8W-\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: ascii85: group over 2^32-1 (uuuuu)",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base85:decode",
+    "params": {
+      "variant": "ascii85"
+    },
+    "input": {
+      "value": "uuuuu",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: z85: length not a multiple of 5",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base85:decode",
+    "params": {
+      "variant": "z85"
+    },
+    "input": {
+      "value": "HelloWorld1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: z85: character outside the alphabet",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base85:decode",
+    "params": {
+      "variant": "z85"
+    },
+    "input": {
+      "value": "Hello\"orld",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: z85: z85 digits over 2^32-1",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base85:decode",
+    "params": {
+      "variant": "z85"
+    },
+    "input": {
+      "value": "#####",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: z85: ascii85 delimiters",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base85:decode",
+    "params": {
+      "variant": "z85"
+    },
+    "input": {
+      "value": "<~HelloWorld~>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]
