@@ -89,6 +89,12 @@ variable "github_repository" {
   default     = "DarkCollective/forge"
 }
 
+variable "github_oidc_sub_prefix" {
+  description = "GitHub's immutable OIDC subject prefix for the repository, in the form owner@owner_id/repo@repo_id (for example repo:DarkCollective@157516510/forge@1451746198). Shown by `gh api repos/<owner>/<repo>/actions/oidc/customization/sub` as sub_claim_prefix. Unlike the name, it survives repo renames. The deploy role trusts tokens whose sub is this prefix plus the deploy ref."
+  type        = string
+  default     = "repo:DarkCollective@157516510/forge@1451746198"
+}
+
 variable "github_deploy_ref" {
   description = "The git ref allowed to assume the deploy role."
   type        = string
