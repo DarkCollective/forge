@@ -1,0 +1,882 @@
+[
+  {
+    "name": "hmac md5 RFC 2202 case 1",
+    "ref": "RFC 2202 test case 1 (HMAC-MD5)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "md5",
+      "key": {
+        "value": "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "Hi There",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "9294727a3638bb1c13f48ef8158bfc9d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac md5 RFC 2202 case 2",
+    "ref": "RFC 2202 test case 2 (HMAC-MD5)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "md5",
+      "key": {
+        "value": "Jefe",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "what do ya want for nothing?",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "750c783e6ab0b503eaa86e310a5db738",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac md5 RFC 2202 case 3",
+    "ref": "RFC 2202 test case 3 (HMAC-MD5)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "md5",
+      "key": {
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "56be34521d144c88dbb8c733f0e8b3f6",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac md5 RFC 2202 case 4",
+    "ref": "RFC 2202 test case 4 (HMAC-MD5)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "md5",
+      "key": {
+        "value": "0102030405060708090a0b0c0d0e0f10111213141516171819",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "697eaf0aca3a3aea3a75164746ffaa79",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac md5 RFC 2202 case 6",
+    "ref": "RFC 2202 test case 6 (HMAC-MD5)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "md5",
+      "key": {
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "Test Using Larger Than Block-Size Key - Hash Key First",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "6b1ab7fe4bd7bf8f0b62e6ce61b9d0cd",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac md5 RFC 2202 case 7",
+    "ref": "RFC 2202 test case 7 (HMAC-MD5)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "md5",
+      "key": {
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "Test Using Larger Than Block-Size Key and Larger Than One Block-Size Data",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "6f630fad67cda0ee1fb1f562db3aa53e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha1 RFC 2202 case 1",
+    "ref": "RFC 2202 test case 1 (HMAC-SHA1)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha1",
+      "key": {
+        "value": "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "Hi There",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "b617318655057264e28bc0b6fb378c8ef146be00",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha1 RFC 2202 case 2",
+    "ref": "RFC 2202 test case 2 (HMAC-SHA1)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha1",
+      "key": {
+        "value": "Jefe",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "what do ya want for nothing?",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "effcdf6ae5eb2fa2d27416d5f184df9c259a7c79",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha1 RFC 2202 case 3",
+    "ref": "RFC 2202 test case 3 (HMAC-SHA1)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha1",
+      "key": {
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "125d7342b9ac11cd91a39af48aa17b4f63f175d3",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha1 RFC 2202 case 4",
+    "ref": "RFC 2202 test case 4 (HMAC-SHA1)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha1",
+      "key": {
+        "value": "0102030405060708090a0b0c0d0e0f10111213141516171819",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "4c9007f4026250c6bc8414f9bf50c86c2d7235da",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha1 RFC 2202 case 6",
+    "ref": "RFC 2202 test case 6 (HMAC-SHA1)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha1",
+      "key": {
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "Test Using Larger Than Block-Size Key - Hash Key First",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "aa4ae5e15272d00e95705637ce8a3b55ed402112",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha1 RFC 2202 case 7",
+    "ref": "RFC 2202 test case 7 (HMAC-SHA1)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha1",
+      "key": {
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "Test Using Larger Than Block-Size Key and Larger Than One Block-Size Data",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "e8e99d0f45237d786d6bbaa7965c7808bbff1a91",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha224 RFC 4231 case 1",
+    "ref": "RFC 4231 test case 1 (HMAC-SHA224)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha224",
+      "key": {
+        "value": "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "Hi There",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "896fb1128abbdf196832107cd49df33f47b4b1169912ba4f53684b22",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha224 RFC 4231 case 2",
+    "ref": "RFC 4231 test case 2 (HMAC-SHA224)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha224",
+      "key": {
+        "value": "Jefe",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "what do ya want for nothing?",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a30e01098bc6dbbf45690f3a7e9e6d0f8bbea2a39e6148008fd05e44",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha224 RFC 4231 case 3",
+    "ref": "RFC 4231 test case 3 (HMAC-SHA224)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha224",
+      "key": {
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "7fb3cb3588c6c1f6ffa9694d7d6ad2649365b0c1f65d69d1ec8333ea",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha224 RFC 4231 case 4",
+    "ref": "RFC 4231 test case 4 (HMAC-SHA224)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha224",
+      "key": {
+        "value": "0102030405060708090a0b0c0d0e0f10111213141516171819",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6c11506874013cac6a2abc1bb382627cec6a90d86efc012de7afec5a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha224 RFC 4231 case 6",
+    "ref": "RFC 4231 test case 6 (HMAC-SHA224)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha224",
+      "key": {
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "Test Using Larger Than Block-Size Key - Hash Key First",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "95e9a0db962095adaebe9b2d6f0dbce2d499f112f2d2b7273fa6870e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha224 RFC 4231 case 7",
+    "ref": "RFC 4231 test case 7 (HMAC-SHA224)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha224",
+      "key": {
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "This is a test using a larger than block-size key and a larger than block-size data. The key needs to be hashed before being used by the HMAC algorithm.",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3a854166ac5d9f023f54d517d0b39dbd946770db9c2b95c9f6f565d1",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha256 RFC 4231 case 1",
+    "ref": "RFC 4231 test case 1 (HMAC-SHA256)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha256",
+      "key": {
+        "value": "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "Hi There",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "b0344c61d8db38535ca8afceaf0bf12b881dc200c9833da726e9376c2e32cff7",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha256 RFC 4231 case 2",
+    "ref": "RFC 4231 test case 2 (HMAC-SHA256)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha256",
+      "key": {
+        "value": "Jefe",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "what do ya want for nothing?",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "5bdcc146bf60754e6a042426089575c75a003f089d2739839dec58b964ec3843",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha256 RFC 4231 case 3",
+    "ref": "RFC 4231 test case 3 (HMAC-SHA256)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha256",
+      "key": {
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "773ea91e36800e46854db8ebd09181a72959098b3ef8c122d9635514ced565fe",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha256 RFC 4231 case 4",
+    "ref": "RFC 4231 test case 4 (HMAC-SHA256)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha256",
+      "key": {
+        "value": "0102030405060708090a0b0c0d0e0f10111213141516171819",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "82558a389a443c0ea4cc819899f2083a85f0faa3e578f8077a2e3ff46729665b",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha256 RFC 4231 case 6",
+    "ref": "RFC 4231 test case 6 (HMAC-SHA256)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha256",
+      "key": {
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "Test Using Larger Than Block-Size Key - Hash Key First",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "60e431591ee0b67f0d8a26aacbf5b77f8e0bc6213728c5140546040f0ee37f54",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha256 RFC 4231 case 7",
+    "ref": "RFC 4231 test case 7 (HMAC-SHA256)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha256",
+      "key": {
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "This is a test using a larger than block-size key and a larger than block-size data. The key needs to be hashed before being used by the HMAC algorithm.",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "9b09ffa71b942fcb27635fbcd5b0e944bfdc63644f0713938a7f51535c3a35e2",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha384 RFC 4231 case 1",
+    "ref": "RFC 4231 test case 1 (HMAC-SHA384)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha384",
+      "key": {
+        "value": "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "Hi There",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "afd03944d84895626b0825f4ab46907f15f9dadbe4101ec682aa034c7cebc59cfaea9ea9076ede7f4af152e8b2fa9cb6",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha384 RFC 4231 case 2",
+    "ref": "RFC 4231 test case 2 (HMAC-SHA384)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha384",
+      "key": {
+        "value": "Jefe",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "what do ya want for nothing?",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "af45d2e376484031617f78d2b58a6b1b9c7ef464f5a01b47e42ec3736322445e8e2240ca5e69e2c78b3239ecfab21649",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha384 RFC 4231 case 3",
+    "ref": "RFC 4231 test case 3 (HMAC-SHA384)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha384",
+      "key": {
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "88062608d3e6ad8a0aa2ace014c8a86f0aa635d947ac9febe83ef4e55966144b2a5ab39dc13814b94e3ab6e101a34f27",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha384 RFC 4231 case 4",
+    "ref": "RFC 4231 test case 4 (HMAC-SHA384)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha384",
+      "key": {
+        "value": "0102030405060708090a0b0c0d0e0f10111213141516171819",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "3e8a69b7783c25851933ab6290af6ca77a9981480850009cc5577c6e1f573b4e6801dd23c4a7d679ccf8a386c674cffb",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha384 RFC 4231 case 6",
+    "ref": "RFC 4231 test case 6 (HMAC-SHA384)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha384",
+      "key": {
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "Test Using Larger Than Block-Size Key - Hash Key First",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4ece084485813e9088d2c63a041bc5b44f9ef1012a2b588f3cd11f05033ac4c60c2ef6ab4030fe8296248df163f44952",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha384 RFC 4231 case 7",
+    "ref": "RFC 4231 test case 7 (HMAC-SHA384)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha384",
+      "key": {
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "This is a test using a larger than block-size key and a larger than block-size data. The key needs to be hashed before being used by the HMAC algorithm.",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "6617178e941f020d351e2f254e8fd32c602420feb0b8fb9adccebb82461e99c5a678cc31e799176d3860e6110c46523e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha512 RFC 4231 case 1",
+    "ref": "RFC 4231 test case 1 (HMAC-SHA512)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha512",
+      "key": {
+        "value": "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "Hi There",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "87aa7cdea5ef619d4ff0b4241a1d6cb02379f4e2ce4ec2787ad0b30545e17cdedaa833b7d6b8a702038b274eaea3f4e4be9d914eeb61f1702e696c203a126854",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha512 RFC 4231 case 2",
+    "ref": "RFC 4231 test case 2 (HMAC-SHA512)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha512",
+      "key": {
+        "value": "Jefe",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "what do ya want for nothing?",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "164b7a7bfcf819e2e395fbe73b56e0a387bd64222e831fd610270cd7ea2505549758bf75c05a994a6d034f65f8f0e6fdcaeab1a34d4a6b4b636e070a38bce737",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha512 RFC 4231 case 3",
+    "ref": "RFC 4231 test case 3 (HMAC-SHA512)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha512",
+      "key": {
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "fa73b0089d56a284efb0f0756c890be9b1b5dbdd8ee81a3655f83e33b2279d39bf3e848279a722c806b485a47e67c807b946a337bee8942674278859e13292fb",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha512 RFC 4231 case 4",
+    "ref": "RFC 4231 test case 4 (HMAC-SHA512)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha512",
+      "key": {
+        "value": "0102030405060708090a0b0c0d0e0f10111213141516171819",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "b0ba465637458c6990e5a8c5f61d4af7e576d97ff94b872de76f8050361ee3dba91ca5c11aa25eb4d679275cc5788063a5f19741120c4f2de2adebeb10a298dd",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha512 RFC 4231 case 6",
+    "ref": "RFC 4231 test case 6 (HMAC-SHA512)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha512",
+      "key": {
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "Test Using Larger Than Block-Size Key - Hash Key First",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "80b24263c7c1a3ebb71493c1dd7be8b49b46d1f41b4aeec1121b013783f8f3526b56d037e05f2598bd0fd2215d6a1e5295e64f73f63f0aec8b915a985d786598",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha512 RFC 4231 case 7",
+    "ref": "RFC 4231 test case 7 (HMAC-SHA512)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha512",
+      "key": {
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "This is a test using a larger than block-size key and a larger than block-size data. The key needs to be hashed before being used by the HMAC algorithm.",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "e37b6a775dc87dbaa4dfa9f96e5e3ffddebd71f8867289865df5a32d20cdc944b6022cac3c4982b10d5eeb55c3e4de15134676fb6de0446065c97440fa8c6a58",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha512/224 RFC 4231 case 1 key",
+    "ref": "HMAC over RFC 4231 case 1 inputs; not an RFC vector: python hmac, matched by node crypto",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha512/224",
+      "key": {
+        "value": "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "Hi There",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "b244ba01307c0e7a8ccaad13b1067a4cf6b961fe0c6a20bda3d92039",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha512/256 RFC 4231 case 1 key",
+    "ref": "HMAC over RFC 4231 case 1 inputs; not an RFC vector: python hmac, matched by node crypto",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha512/256",
+      "key": {
+        "value": "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "Hi There",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "9f9126c3d9c3c330d760425ca8a217e31feae31bfe70196ff81642b868402eab",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha3-224 RFC 4231 case 1 key",
+    "ref": "HMAC over RFC 4231 case 1 inputs; not an RFC vector: python hmac, matched by node crypto",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha3-224",
+      "key": {
+        "value": "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "Hi There",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3b16546bbc7be2706a031dcafd56373d9884367641d8c59af3c860f7",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha3-256 RFC 4231 case 1 key",
+    "ref": "HMAC over RFC 4231 case 1 inputs; not an RFC vector: python hmac, matched by node crypto",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha3-256",
+      "key": {
+        "value": "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "Hi There",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ba85192310dffa96e2a3a40e69774351140bb7185e1202cdcc917589f95e16bb",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha3-384 RFC 4231 case 1 key",
+    "ref": "HMAC over RFC 4231 case 1 inputs; not an RFC vector: python hmac, matched by node crypto",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha3-384",
+      "key": {
+        "value": "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "Hi There",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "68d2dcf7fd4ddd0a2240c8a437305f61fb7334cfb5d0226e1bc27dc10a2e723a20d370b47743130e26ac7e3d532886bd",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha3-512 RFC 4231 case 1 key",
+    "ref": "HMAC over RFC 4231 case 1 inputs; not an RFC vector: python hmac, matched by node crypto",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha3-512",
+      "key": {
+        "value": "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "Hi There",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "eb3fbd4b2eaab8f5c504bd3a41465aacec15770a7cabac531e482f860b5ec7ba47ccb2c6f2afce8f88d22b6dc61380f23a668fd3888bb80537c0a0b86407689e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac ripemd160 RFC 4231 case 1 key",
+    "ref": "HMAC over RFC 4231 case 1 inputs; not an RFC vector: python hmac, matched by node crypto",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "ripemd160",
+      "key": {
+        "value": "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "Hi There",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "24cb4bd67d20fc1a5d2ed7732dcc39377f0a5668",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha256 empty key and empty data",
+    "ref": "empty key and message; python hmac (standard value)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha256",
+      "key": {
+        "value": "",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "b613679a0814d9ec772f95d778c35fc5ff1697c493715653c6c712144292c5ad",
+      "enc": "hex"
+    }
+  }
+]

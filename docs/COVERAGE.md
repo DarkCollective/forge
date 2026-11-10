@@ -21,13 +21,13 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Date / Time | 0 | 0 | 0 | 9 | 9 |
 | Extractors | 0 | 0 | 0 | 18 | 18 |
 | Compression | 0 | 0 | 0 | 21 | 21 |
-| Hashing | 1 | 0 | 0 | 47 | 48 |
+| Hashing | 8 | 3 | 0 | 37 | 48 |
 | Code tidy | 0 | 0 | 0 | 24 | 24 |
 | Forensics | 0 | 0 | 0 | 9 | 9 |
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 4 | 0 | 3 | 14 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **102** | **22** | **3** | **379** | **506** |
+| **Total** | **109** | **25** | **3** | **369** | **506** |
 
 ## Data format (80)
 
@@ -455,22 +455,22 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Generate all hashes | not yet |  |  |
 | MD2 | not yet |  |  |
 | MD4 | not yet |  |  |
-| MD5 | not yet |  |  |
+| MD5 | covered | `md5:digest` | No parameters. Returns raw bytes (chain hex:encode). |
 | MD6 | not yet |  |  |
 | SHA0 | not yet |  |  |
-| SHA1 | not yet |  |  |
+| SHA1 | covered | `sha1:digest` | No parameters. Returns raw bytes (chain hex:encode). |
 | SHA2 | covered | `sha2:digest` | One word with a size parameter: 224, 256, 384, 512, 512/224, 512/256. Returns raw bytes (chain hex:encode). CyberChef's Rounds parameter is not supported: only the FIPS 180-4 round counts exist. |
-| SHA3 | not yet |  |  |
+| SHA3 | covered | `sha3:digest` | One word with a size parameter in bits: 224, 256, 384, 512. Returns raw bytes (chain hex:encode). |
 | SM3 | not yet |  |  |
-| Keccak | not yet |  |  |
-| Shake | not yet |  |  |
-| RIPEMD | not yet |  |  |
+| Keccak | covered | `keccak:digest` | One word with a size parameter in bits: 224, 256, 384, 512, with the original Keccak padding (not SHA-3). |
+| Shake | redesigned | `shake:digest` | The output length is in bytes (1 to 65536, default 64), where CyberChef's Size is in bits (default 512, passed unchanged to the SHAKE function). The variant is 128 or 256 bytes of security strength, as in CyberChef's Capacity. |
+| RIPEMD | covered | `ripemd160:digest` | Only RIPEMD-160 (size 160) for now. CyberChef's 128, 256 and 320 are the separate RIPEMD vocabulary planned for WP 5.18a. |
 | HAS-160 | not yet |  |  |
 | Whirlpool | not yet |  |  |
 | Snefru | not yet |  |  |
-| BLAKE2b | not yet |  |  |
-| BLAKE2s | not yet |  |  |
-| BLAKE3 | not yet |  |  |
+| BLAKE2b | redesigned | `blake2b:digest` | The output size is in bytes (16, 20, 32, 48 or 64), where CyberChef's Size is in bits (128, 160, 256, 384, 512). The key is an optional key of up to 64 bytes in any of the key encodings. |
+| BLAKE2s | redesigned | `blake2s:digest` | The output size is in bytes (16, 20 or 32), where CyberChef's Size is in bits (128, 160, 256). The key is an optional key of up to 32 bytes in any of the key encodings. |
+| BLAKE3 | covered | `blake3:digest` | The output length is in bytes (1 to 65536, default 32; CyberChef's default is 16). The key is an optional 32-byte key, as in CyberChef. |
 | Ascon Hash | not yet |  |  |
 | Ascon MAC | not yet |  |  |
 | GOST Hash | not yet |  |  |
@@ -479,7 +479,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | CTPH | not yet |  |  |
 | Compare SSDEEP hashes | not yet |  |  |
 | Compare CTPH hashes | not yet |  |  |
-| HMAC | not yet |  |  |
+| HMAC | covered | `hmac:digest` | Hash choice: md5, sha1, the SHA-2 sizes including 512/224 and 512/256, the SHA-3 sizes, and ripemd160. Not offered: MD2, MD4, SHA0, RIPEMD-128, RIPEMD-256, RIPEMD-320, HAS-160, Whirlpool and Snefru (their digests are not yet in Forge). Blake2 and BLAKE3 keyed modes are their own words. |
 | CMAC | not yet |  |  |
 | Bcrypt compare | not yet |  |  |
 | Bcrypt parse | not yet |  |  |
