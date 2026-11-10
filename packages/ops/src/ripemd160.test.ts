@@ -23,16 +23,13 @@ import { describe, expect, test } from "vitest";
 import { assembleRuntime } from "./bundle.js";
 import { loadBundleNode } from "./sources-node.js";
 
-const { bytes, str } = valueHelpers;
+const { bytes } = valueHelpers;
 const runtime = assembleRuntime(await loadBundleNode(["ripemd160"]));
 
 const hex = (u: Uint8Array) => Array.from(u, (b) => b.toString(16).padStart(2, "0")).join("");
 
-async function digest(data: Uint8Array, size?: string) {
-  const r = await runtime.call(
-    "ripemd160:digest",
-    size === undefined ? [bytes(data)] : [bytes(data), str(size)],
-  );
+async function digest(data: Uint8Array) {
+  const r = await runtime.call("ripemd160:digest", [bytes(data)]);
   if (!r.ok) return { code: r.error.code };
   return { out: (r.stack[r.stack.length - 1] as { v: Uint8Array }).v };
 }
@@ -42,10 +39,6 @@ describe("ripemd160:digest", () => {
   // implementation (hashlib) and is fixed here.
   test("64 KiB input", async () => {
     const data = Uint8Array.from({ length: 65536 }, (_, i) => (i * 31 + 7) & 0xff);
-    expect(hex((await digest(data, "160")).out!)).toBe("78e56d5a062d0b746d321343c0859fee257d0c27");
-  });
-
-  test("any size other than 160 is rejected", async () => {
-    expect((await digest(new Uint8Array(), "128")).code).toBeDefined();
+    expect(hex((await digest(data)).out!)).toBe("78e56d5a062d0b746d321343c0859fee257d0c27");
   });
 });

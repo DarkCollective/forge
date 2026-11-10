@@ -26,16 +26,10 @@ describe("ripemd160._hash", () => {
   });
 
   test("the digest is 20 bytes", () => {
-    expect(hash(abc, "160")).toHaveLength(20);
+    expect(hash(abc)).toHaveLength(20);
   });
 
   test("RIPEMD-160 of abc (paper test vector)", () => {
-    expect(hex(hash(abc, "160"))).toBe("8eb208f7e05d987a9b044a8e98c6b087f15a0bfc");
-  });
-
-  test("only size 160 exists: other sizes are E_RANGE", () => {
-    expect(() => hash(abc, "128")).toThrow(/unknown RIPEMD size/);
-    expect(() => hash(abc, "256")).toThrow(/unknown RIPEMD size/);
-    expect(() => hash(abc, "toString")).toThrow(/unknown RIPEMD size/);
+    expect(hex(hash(abc))).toBe("8eb208f7e05d987a9b044a8e98c6b087f15a0bfc");
   });
 });

@@ -21,7 +21,7 @@ USING: md5 sha1 sha2 sha3 ripemd160 ;
   dup "sha3-256" = [ drop "256" sha3:digest ] [
   dup "sha3-384" = [ drop "384" sha3:digest ] [
   dup "sha3-512" = [ drop "512" sha3:digest ] [
-  drop "160" ripemd160:digest
+  drop ripemd160:digest
   ] if ] if ] if ] if ] if ] if ] if ] if ] if ] if ] if ] if ;
 
 \ The block size in bytes of the hash named alg (RFC 2104 section 2: the input block of the hash).
