@@ -1,8 +1,8 @@
 \ base58: Base58 (Bitcoin, Flickr and Ripple alphabets). Written in FL on top of its big integers:
 \ the data is one integer, repeatedly divided by 58. A leading zero byte is a leading first-alphabet
 \ character. The integer limit (maxIntBits, 65 536 bits) caps the data at about 8 KiB, which also
-\ bounds the quadratic cost: a larger input fails with E_LIMIT_VALUE. The one primitive
-\ (src/prims/base58.ts) only raises E_COERCE.
+\ bounds the quadratic cost: a larger input fails with E_LIMIT_VALUE. Errors come
+\ from the raise vocabulary (raise:coerce).
 IN: base58
 
 : _alphabet ( alphabet:str -- str )
@@ -63,7 +63,7 @@ IN: base58
 
 : _decode ( data:bytes table:bytes -- bytes )
   data table translate [ 254 <> ] filter
-  dup [ 255 = ] filter len 0 <> [ "a character is not in the alphabet" _coerce-fail ] when
+  dup [ 255 = ] filter len 0 <> [ "a character is not in the alphabet" raise:coerce ] when
   dup _lead0 swap _value _out ;
 
 : decode ( bytes alphabet:choice{bitcoin|flickr|ripple}=bitcoin -- bytes )

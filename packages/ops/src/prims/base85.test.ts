@@ -18,12 +18,11 @@ import type { Value } from "@forge/lang";
 import { describe, expect, test } from "vitest";
 import { assembleRuntime } from "../bundle.js";
 import { loadBundleNode } from "../sources-node.js";
-import { primitives } from "./base85.js";
 
 // The operations are FL (vocab/base85.fth); the conformance vectors cover the known answers. These
-// tests cover round trips, the size of the work, and the private primitives.
+// tests cover round trips, the size of the work, and the error codes.
 const { bytes, str, bool } = valueHelpers;
-const runtime = assembleRuntime(await loadBundleNode(["base85"]));
+const runtime = assembleRuntime(await loadBundleNode(["base85", "raise"]));
 
 function encode(data: Uint8Array, variant = "ascii85", delimiters = false) {
   return runtime.call("base85:encode", [bytes(data), str(variant), bool(delimiters)]);
@@ -101,13 +100,6 @@ describe("errors", () => {
 });
 
 describe("module", () => {
-  test("has only the private error helpers; the operations are FL", () => {
-    expect(primitives.map((p) => `${p.vocab}:${p.name}`)).toEqual([
-      "base85:_coerce-fail",
-      "base85:_range-fail",
-    ]);
-  });
-
   test("the words carry doc, category and parameter help", () => {
     const meta = runtime.meta("base85:encode");
     expect(meta.params.map((p) => p.doc).every((d) => d && d.length > 0)).toBe(true);

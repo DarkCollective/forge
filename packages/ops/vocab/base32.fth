@@ -1,6 +1,6 @@
 \ base32: Base32 as in RFC 4648 section 6 (standard) and section 7 (extended hex). Written in FL:
-\ five data bytes are one 40-bit integer and eight 5-bit symbols. The one primitive (src/prims/base32.ts)
-\ only raises E_COERCE.
+\ five data bytes are one 40-bit integer and eight 5-bit symbols. Errors come from the
+\ raise vocabulary (raise:coerce).
 IN: base32
 
 : _alphabet ( alphabet:str -- str )
@@ -54,7 +54,7 @@ IN: base32
 \ s is the symbols and padding; core only the symbols. The padding must come last.
 : _check-pad ( s:bytes core:bytes -- bytes int )
   core s len core len -
-  s 0 core len slice core = not [ "data after the padding" _coerce-fail ] when ;
+  s 0 core len slice core = not [ "data after the padding" raise:coerce ] when ;
 
 : _rest-ok ( r:int -- bool )
   r 1 <> r 3 <> and r 6 <> and ;
@@ -69,18 +69,18 @@ IN: base32
   0 ng range [ p swap _ungroup ] map #[ ] bjoin ;
 
 : _finish ( core:bytes p:int -- bytes )
-  core len 8 mod _rest-ok not [ "a length of that kind cannot end Base32 data" _coerce-fail ] when
-  p 0 > p 8 core len 8 mod - 8 mod <> and [ "incorrect padding" _coerce-fail ] when
+  core len 8 mod _rest-ok not [ "a length of that kind cannot end Base32 data" raise:coerce ] when
+  p 0 > p 8 core len 8 mod - 8 mod <> and [ "incorrect padding" raise:coerce ] when
   core len 5 * 8 mod 0 >
   [ core core len 1 - nth 1 core len 5 * 8 mod shl 1 - band 0 <>
-    [ "non-zero bits after the end of the data" _coerce-fail ] when ] when
+    [ "non-zero bits after the end of the data" raise:coerce ] when ] when
   core { 0 0 0 0 0 0 0 } list>bytes 0 8 core len 8 mod - 8 mod slice cat
   core len 7 + 8 div _ungroups
   0 core len 5 * 8 div slice ;
 
 : _decode ( data:bytes table:bytes -- bytes )
   data table translate [ 254 <> ] filter
-  dup [ 255 = ] filter len 0 <> [ "a character is not in the alphabet" _coerce-fail ] when
+  dup [ 255 = ] filter len 0 <> [ "a character is not in the alphabet" raise:coerce ] when
   dup [ 253 < ] filter _check-pad _finish ;
 
 : decode ( bytes alphabet:choice{standard|hex}=standard -- bytes )

@@ -15,8 +15,7 @@
  */
 
 /*
- * base85: the only TypeScript this vocabulary needs are two private helpers that raise typed errors,
- * because FL has no word that raises E_COERCE or E_RANGE. The operations are in `vocab/base85.fth`.
+ * raise: words that raise typed errors from FL, which has only `fail` (E_USER).
  */
 import { definePrimitive } from "@forge/lang";
 import type { PrimitiveDef } from "@forge/lang";
@@ -24,21 +23,24 @@ import { coerceFailure, rangeFailure } from "../prim-util.js";
 
 export const primitives: readonly PrimitiveDef[] = [
   definePrimitive(
-    "base85",
-    "_coerce-fail",
+    "raise",
+    "coerce",
     "( reason:str -- )",
     (reason: string) => {
       throw coerceFailure("str", "bytes", reason);
     },
-    { doc: "Raise E_COERCE: the text cannot be decoded.", category: "Encodings" },
+    {
+      doc: "Raise E_COERCE: the data cannot be read as the format (text that does not decode).",
+      category: "Errors",
+    },
   ),
   definePrimitive(
-    "base85",
-    "_range-fail",
+    "raise",
+    "range",
     "( reason:str -- )",
     (reason: string) => {
       throw rangeFailure(reason);
     },
-    { doc: "Raise E_RANGE: a bad argument value.", category: "Encodings" },
+    { doc: "Raise E_RANGE: an argument has a bad value.", category: "Errors" },
   ),
 ];

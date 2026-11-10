@@ -18,12 +18,11 @@ import type { Value } from "@forge/lang";
 import { describe, expect, test } from "vitest";
 import { assembleRuntime } from "../bundle.js";
 import { loadBundleNode } from "../sources-node.js";
-import { primitives } from "./base32.js";
 
 // The operations are FL (vocab/base32.fth); the conformance vectors cover the known answers. These
 // tests cover round trips, the size of the work, and the one private primitive.
 const { bytes, str, bool } = valueHelpers;
-const runtime = assembleRuntime(await loadBundleNode(["base32"]));
+const runtime = assembleRuntime(await loadBundleNode(["base32", "raise"]));
 
 function encode(data: Uint8Array, alphabet = "standard", padding = true) {
   return runtime.call("base32:encode", [bytes(data), str(alphabet), bool(padding)]);
@@ -78,10 +77,6 @@ describe("base32 round trips", () => {
 });
 
 describe("module", () => {
-  test("has only the private error helper; the operations are FL", () => {
-    expect(primitives.map((p) => `${p.vocab}:${p.name}`)).toEqual(["base32:_coerce-fail"]);
-  });
-
   test("a decode failure is E_COERCE with the reason from the helper", async () => {
     const r = await decode("MZ======");
     expect(r.ok).toBe(false);
