@@ -198,8 +198,8 @@ Each work package (WP) is sized for one sub-agent and has a verifiable "done". T
 
 **Gate 2:** A three-step recipe (from-base64 → rot13 → to-hex) built from JSON, encoded in a URL and decoded again bakes identically in Node and in a Worker.
 
-### Phase 3 — UI (`apps/web`)
-*Spec: [UI.md](UI.md) (layout, file ownership per WP, shared contracts, console design, CSP rules, testing).*
+### Phase 3 — UI (`apps/web`) ✅
+*Done 2026-11-10. Spec: [UI.md](UI.md). Gate 3 passes in the committed Playwright suite (keyboard-only `gate3.spec.ts`) against the production build with the production headers. 71 e2e tests, including 40 axe audits with zero violations; 2,653 unit tests; site pages; infra applied, live at forge.darkcollective.com pending first deploy.*
 
 | WP | Scope |
 |---|---|
@@ -256,10 +256,10 @@ Decided 2026-11-09:
 5. **Repository**: public at `DarkCollective/forge`.
 6. **Hosting**: AWS S3 + CloudFront, in the same pattern as the Relix site (§10).
 
-Still open (needed before WP 3.10 only):
+Decided 2026-11-10:
 
-7. **Hostname**: `forge.darkcollective.com` (proposed).
-8. **Deploy runner**: GitHub-hosted runner assuming an AWS role via GitHub OIDC (proposed, as Forge's npm build needs no build cache), or the CodeBuild-hosted runner that Relix uses.
+7. **Hostname**: `forge.darkcollective.com`.
+8. **Deploy runner**: GitHub-hosted runner assuming an AWS role via GitHub OIDC (Terraform in `infra/`, applied 2026-11-10).
 
 ## 10. Hosting and deployment
 
