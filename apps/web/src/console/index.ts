@@ -14,7 +14,17 @@
  * limitations under the License.
  */
 import type { Feature } from "../state/feature.js";
+import { getConsoleController } from "./instance.js";
 import "./forge-console.js";
 
-/** Entry of the "console" work package: import its elements, export its `feature`. */
-export const feature: Feature = { name: "console" };
+/**
+ * Entry of the "console" work package: registers `forge-console` and, on start, wires the console
+ * controller to the store. The worker starts at once when the user words are non-empty (so the
+ * catalogue lists `user:` ops), otherwise when the console pane is first opened (UI.md section 5.2).
+ */
+export const feature: Feature = {
+  name: "console",
+  start() {
+    getConsoleController().attach();
+  },
+};
