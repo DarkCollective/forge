@@ -131,11 +131,12 @@ describe("performance and limits", () => {
   });
 
   test("xor-brute finds the key of a short message", async () => {
-    const plain = new TextEncoder().encode("attack at dawn");
-    const cipher = plain.map((b) => b ^ 0x5a);
+    const plain = Uint8Array.from("attack at dawn", (c) => c.charCodeAt(0));
+    const cipher = plain.map((b: number) => b ^ 0x5a);
     const r = await runtime.call("bits:xor-brute", [bytes(cipher), int(1), str("attack")]);
     expect(r.ok).toBe(true);
-    if (r.ok) expect((r.stack[r.stack.length - 1] as { v: unknown[] }).v).toHaveLength(1);
+    if (r.ok)
+      expect((r.stack[r.stack.length - 1] as unknown as { v: unknown[] }).v).toHaveLength(1);
   });
 });
 
