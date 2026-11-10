@@ -12,7 +12,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Category | Covered | Redesigned | Dropped | Not yet | Total |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Data format | 54 | 6 | 0 | 20 | 80 |
-| Encryption / Encoding | 21 | 2 | 0 | 72 | 95 |
+| Encryption / Encoding | 28 | 7 | 0 | 60 | 95 |
 | Public Key | 0 | 0 | 0 | 30 | 30 |
 | Arithmetic / Logic | 9 | 0 | 0 | 17 | 26 |
 | Networking | 0 | 0 | 0 | 34 | 34 |
@@ -25,9 +25,9 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Code tidy | 0 | 0 | 0 | 24 | 24 |
 | Forensics | 0 | 0 | 0 | 9 | 9 |
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
-| Other | 2 | 0 | 0 | 19 | 21 |
+| Other | 4 | 0 | 0 | 17 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **92** | **15** | **0** | **399** | **506** |
+| **Total** | **101** | **20** | **0** | **385** | **506** |
 
 ## Data format (80)
 
@@ -128,8 +128,8 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Triple DES Decrypt | not yet |  |  |
 | Fernet Encrypt | not yet |  |  |
 | Fernet Decrypt | not yet |  |  |
-| LS47 Encrypt | not yet |  |  |
-| LS47 Decrypt | not yet |  |  |
+| LS47 Encrypt | covered | `classical:ls47-encrypt` |  |
+| LS47 Decrypt | covered | `classical:ls47-decrypt` |  |
 | RC2 Encrypt | not yet |  |  |
 | RC2 Decrypt | not yet |  |  |
 | RC4 | not yet |  |  |
@@ -156,10 +156,10 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | GOST Key Unwrap | not yet |  |  |
 | ROR13 | not yet |  |  |
 | ROT13 | redesigned | `classical:rot13` | One parameterised word, classical:rot (amount, default 13), replaces ROT13 and Caesar-style shifts; rot13 is an alias. |
-| ROT13 Brute Force | not yet |  |  |
+| ROT13 Brute Force | redesigned | `classical:rot-brute` | One word, classical:rot-brute, for both brute forces (variant rot or rot47); it lists records with the shift and the output, with an optional crib. |
 | ROT47 | covered | `classical:rot47` |  |
-| ROT47 Brute Force | not yet |  |  |
-| ROT8000 | not yet |  |  |
+| ROT47 Brute Force | redesigned | `classical:rot-brute` | Variant rot47 of classical:rot-brute, which also covers ROT13 Brute Force. |
+| ROT8000 | covered | `classical:rot8000` |  |
 | XOR | covered | `bits:xor` |  |
 | XOR Brute Force | covered | `bits:xor-brute` | Keys of 1 or 2 bytes. |
 | Vigenère Encode | covered | `classical:vigenere-encrypt` |  |
@@ -176,7 +176,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Bacon Cipher Decode | covered | `classical:bacon-decode` |  |
 | Bifid Cipher Encode | covered | `classical:bifid-encrypt` |  |
 | Bifid Cipher Decode | covered | `classical:bifid-decrypt` |  |
-| Caesar Box Cipher | not yet |  |  |
+| Caesar Box Cipher | redesigned | `classical:caesar-box-encrypt`, `classical:caesar-box-decrypt` | Two words, encrypt and decrypt, with the box height as the parameter; short columns are not padded. |
 | Affine Cipher Encode | covered | `classical:affine-encrypt` |  |
 | Affine Cipher Decode | covered | `classical:affine-decrypt` |  |
 | A1Z26 Cipher Encode | covered | `classical:a1z26-encode` |  |
@@ -186,8 +186,8 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Atbash Cipher | covered | `classical:atbash` |  |
 | CipherSaber2 Encrypt | not yet |  |  |
 | CipherSaber2 Decrypt | not yet |  |  |
-| Cetacean Cipher Encode | not yet |  |  |
-| Cetacean Cipher Decode | not yet |  |  |
+| Cetacean Cipher Encode | covered | `classical:cetacean-encode` |  |
+| Cetacean Cipher Decode | covered | `classical:cetacean-decode` |  |
 | Substitute | covered | `classical:substitute` |  |
 | Derive PBKDF2 key | not yet |  |  |
 | Derive EVP key | not yet |  |  |
@@ -197,8 +197,8 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | JWT Sign | not yet |  |  |
 | JWT Verify | not yet |  |  |
 | JWT Decode | not yet |  |  |
-| Citrix CTX1 Encode | not yet |  |  |
-| Citrix CTX1 Decode | not yet |  |  |
+| Citrix CTX1 Encode | covered | `classical:ctx1-encode` |  |
+| Citrix CTX1 Decode | covered | `classical:ctx1-decode` |  |
 | AES Key Wrap | not yet |  |  |
 | AES Key Unwrap | not yet |  |  |
 | Pseudo-Random Number Generator | not yet |  |  |
@@ -207,8 +207,8 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Bombe | not yet |  |  |
 | Multiple Bombe | not yet |  |  |
 | Typex | redesigned | `typex:encrypt` | Real Typex rotor wirings were never published, so there is no built-in rotor set: the five rotor wirings, reflector, notches and reversed rotors are parameters (validated permutations of A-Z), with clearly labelled non-historical example defaults. |
-| Lorenz | not yet |  |  |
-| Colossus | not yet |  |  |
+| Lorenz | redesigned | `lorenz:encrypt`, `lorenz:decrypt` | Two words with one set of parameters (model SZ40, SZ42a or SZ42b, the P5 attachment, KH, ZMUG, BREAM or custom wheel patterns, twelve start positions, text or ITA2 in and out); decrypt exists because the P5 limitation makes the key depend on the plain text. |
+| Colossus | redesigned | `colossus:count` | A counting run over the start positions of two chi wheels with a Boolean condition on delta Z and delta chi (the 1+2 break-in by default), a set total and a table of the best settings; it does not model the plug panels and the tape reader of the machine, and it does not search three wheels at once. |
 | SIGABA | covered | `sigaba:crypt` | One word with a mode parameter (encrypt or decrypt), the rotor choice, orientation (R suffix) and start positions of the three banks, and optional rotor wirings; the default wirings are Forge's own, not the historical ones. |
 | Flask Session Decode | not yet |  |  |
 | Flask Session Sign | not yet |  |  |
@@ -580,8 +580,8 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | --- | --- | --- | --- |
 | Entropy | covered | `analysis:entropy` |  |
 | Frequency distribution | covered | `analysis:frequency` |  |
-| Index of Coincidence | not yet |  |  |
-| Chi Square | not yet |  |  |
+| Index of Coincidence | covered | `analysis:index-of-coincidence` |  |
+| Chi Square | covered | `analysis:chi-squared` |  |
 | P-list Viewer | not yet |  |  |
 | Disassemble x86 | not yet |  |  |
 | Disassemble ARM | not yet |  |  |

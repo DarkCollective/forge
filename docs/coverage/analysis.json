@@ -1,4 +1,6 @@
 [
- { "cyberchef": "Entropy", "status": "covered", "forge": ["analysis:entropy"] },
- { "cyberchef": "Frequency distribution", "status": "covered", "forge": ["analysis:frequency"] }
+ {"cyberchef": "Entropy", "status": "covered", "forge": ["analysis:entropy"]},
+ {"cyberchef": "Frequency distribution", "status": "covered", "forge": ["analysis:frequency"]},
+ {"cyberchef": "Index of Coincidence", "status": "covered", "forge": ["analysis:index-of-coincidence"]},
+ {"cyberchef": "Chi Square", "status": "covered", "forge": ["analysis:chi-squared"]}
 ]

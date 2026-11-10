@@ -1,0 +1,4 @@
+[
+ { "cyberchef": "Lorenz", "status": "redesigned", "forge": ["lorenz:encrypt", "lorenz:decrypt"], "note": "Two words with one set of parameters (model SZ40, SZ42a or SZ42b, the P5 attachment, KH, ZMUG, BREAM or custom wheel patterns, twelve start positions, text or ITA2 in and out); decrypt exists because the P5 limitation makes the key depend on the plain text." },
+ { "cyberchef": "Colossus", "status": "redesigned", "forge": ["colossus:count"], "note": "A counting run over the start positions of two chi wheels with a Boolean condition on delta Z and delta chi (the 1+2 break-in by default), a set total and a table of the best settings; it does not model the plug panels and the tape reader of the machine, and it does not search three wheels at once." }
+]
