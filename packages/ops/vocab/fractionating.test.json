@@ -1,0 +1,112 @@
+[
+  {
+    "name": "Polybius, plain square, HELLO",
+    "ref": "standard Polybius square (A = 11 ... Z = 55 without J), the classic HELLO example",
+    "op": "fractionating:polybius-encrypt",
+    "params": {
+      "key": ""
+    },
+    "input": {
+      "value": "HELLO",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2315313134",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Polybius decrypt, plain square",
+    "ref": "standard Polybius square, the classic HELLO example",
+    "op": "fractionating:polybius-decrypt",
+    "params": {
+      "key": ""
+    },
+    "input": {
+      "value": "2315313134",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "HELLO",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Polybius with the keyed square, POLYBIUS CIPHER",
+    "ref": "Polybius square of Wikipedia \"Polybius square\" (keyword POLYBIUS CIPHER gives its grid, checked against the article table)",
+    "op": "fractionating:polybius-encrypt",
+    "params": {
+      "key": "POLYBIUSCIPHER"
+    },
+    "input": {
+      "value": "SOMETEXT",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2312433151315451",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Polybius keyed square decrypt",
+    "ref": "Polybius square of Wikipedia \"Polybius square\" (keyword POLYBIUS CIPHER gives its grid, checked against the article table)",
+    "op": "fractionating:polybius-decrypt",
+    "params": {
+      "key": "POLYBIUSCIPHER"
+    },
+    "input": {
+      "value": "2312433151315451",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "SOMETEXT",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Polybius merges J into I",
+    "ref": "standard Polybius square",
+    "op": "fractionating:polybius-encrypt",
+    "params": {
+      "key": ""
+    },
+    "input": {
+      "value": "JAM",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "241132",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Polybius decrypt of an odd digit count is E_COERCE",
+    "ref": "hand-computed",
+    "op": "fractionating:polybius-decrypt",
+    "params": {
+      "key": ""
+    },
+    "input": {
+      "value": "231",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "Polybius decrypt of a digit 6 is E_COERCE",
+    "ref": "hand-computed",
+    "op": "fractionating:polybius-decrypt",
+    "params": {
+      "key": ""
+    },
+    "input": {
+      "value": "26",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

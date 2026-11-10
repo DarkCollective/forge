@@ -1,0 +1,161 @@
+[
+  {
+    "name": "autokey encrypt, primer QUEENLY",
+    "ref": "Wikipedia \"Autokey cipher\" worked example (primer QUEENLY, attackatdawn -> QNXEPVYTWTWP)",
+    "op": "polyalphabetic:vigenere-autokey-encrypt",
+    "params": {
+      "key": "QUEENLY"
+    },
+    "input": {
+      "value": "attackatdawn",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "qnxepvytwtwp",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "autokey encrypt, upper case",
+    "ref": "Wikipedia \"Autokey cipher\" worked example (primer QUEENLY, attackatdawn -> QNXEPVYTWTWP)",
+    "op": "polyalphabetic:vigenere-autokey-encrypt",
+    "params": {
+      "key": "QUEENLY"
+    },
+    "input": {
+      "value": "ATTACKATDAWN",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "QNXEPVYTWTWP",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "autokey decrypt, primer QUEENLY",
+    "ref": "Wikipedia \"Autokey cipher\" worked example (primer QUEENLY, attackatdawn -> QNXEPVYTWTWP)",
+    "op": "polyalphabetic:vigenere-autokey-decrypt",
+    "params": {
+      "key": "QUEENLY"
+    },
+    "input": {
+      "value": "QNXEPVYTWTWP",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ATTACKATDAWN",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Gronsfeld encrypt, digits 31415",
+    "ref": "Gronsfeld: the Vigenere-style definition with digit shifts, hand-computed and checked by a Python script",
+    "op": "polyalphabetic:gronsfeld-encrypt",
+    "params": {
+      "key": "31415"
+    },
+    "input": {
+      "value": "Attack at dawn",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Duxbhn bx efzo",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Gronsfeld decrypt, digits 31415",
+    "ref": "Gronsfeld: the Vigenere-style definition with digit shifts, hand-computed and checked by a Python script",
+    "op": "polyalphabetic:gronsfeld-decrypt",
+    "params": {
+      "key": "31415"
+    },
+    "input": {
+      "value": "Duxbhn bx efzo",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Attack at dawn",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Gronsfeld with a single digit is a Caesar shift",
+    "ref": "Gronsfeld: the Vigenere-style definition with digit shifts, hand-computed and checked by a Python script",
+    "op": "polyalphabetic:gronsfeld-encrypt",
+    "params": {
+      "key": "3"
+    },
+    "input": {
+      "value": "xyz ABC",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "abc DEF",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Beaufort, key LEMON",
+    "ref": "Beaufort: the standard definition C = (K - P) mod 26, hand-computed and checked by a Python script",
+    "op": "polyalphabetic:beaufort",
+    "params": {
+      "key": "LEMON"
+    },
+    "input": {
+      "value": "ATTACKATDAWN",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "LLTOLBETLNPR",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Beaufort is its own inverse",
+    "ref": "Beaufort: the standard definition C = (K - P) mod 26, hand-computed and checked by a Python script",
+    "op": "polyalphabetic:beaufort",
+    "params": {
+      "key": "LEMON"
+    },
+    "input": {
+      "value": "LLTOLBETLNPR",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ATTACKATDAWN",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Beaufort keeps case and passes other bytes",
+    "ref": "Beaufort: the standard definition C = (K - P) mod 26, hand-computed and checked by a Python script",
+    "op": "polyalphabetic:beaufort",
+    "params": {
+      "key": "B"
+    },
+    "input": {
+      "value": "A-a, A!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "B-b, B!",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Beaufort with an empty key is a parameter error",
+    "ref": "Beaufort: the standard definition C = (K - P) mod 26, hand-computed and checked by a Python script",
+    "op": "polyalphabetic:beaufort",
+    "params": {
+      "key": ""
+    },
+    "input": {
+      "value": "ABC",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  }
+]

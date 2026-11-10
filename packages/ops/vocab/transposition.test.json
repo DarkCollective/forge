@@ -1,0 +1,115 @@
+[
+  {
+    "name": "columnar encrypt, ZEBRAS, short last row",
+    "ref": "Wikipedia \"Transposition cipher\" columnar example (ZEBRAS, irregular last row)",
+    "op": "transposition:transposition-encrypt",
+    "params": {
+      "key": "ZEBRAS"
+    },
+    "input": {
+      "value": "WEAREDISCOVEREDFLEEATONCE",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "EVLNACDTESEAROFODEECWIREE",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "columnar decrypt, ZEBRAS",
+    "ref": "Wikipedia \"Transposition cipher\" columnar example (ZEBRAS, irregular last row)",
+    "op": "transposition:transposition-decrypt",
+    "params": {
+      "key": "ZEBRAS"
+    },
+    "input": {
+      "value": "EVLNACDTESEAROFODEECWIREE",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "WEAREDISCOVEREDFLEEATONCE",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "columnar encrypt with a pad letter",
+    "ref": "hand-computed with a Python script (columnar order from ZEBRAS, pad Z)",
+    "op": "transposition:transposition-encrypt",
+    "params": {
+      "key": "ZEBRAS",
+      "pad": "Z"
+    },
+    "input": {
+      "value": "WEAREDISCOVEREDFLEEATONCE",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "EVLNZACDTZESEAZROFOZDEECZWIREE",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "columnar step of ADFGX, key CARGO",
+    "ref": "Wikipedia \"ADFGVX cipher\" worked example, the transposition step (CARGO)",
+    "op": "transposition:transposition-encrypt",
+    "params": {
+      "key": "CARGO"
+    },
+    "input": {
+      "value": "AFADADAFGFDXAFADDFFXGFXF",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "FAXDFADDDGDGFFFAFAXAFAFX",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "columnar key with a repeated letter keeps left-to-right order",
+    "ref": "hand-computed (column order E1 E3 K0 Y2)",
+    "op": "transposition:transposition-encrypt",
+    "params": {
+      "key": "KEYE"
+    },
+    "input": {
+      "value": "ABCDEFGH",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "BFDHAECG",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "columnar encrypt keeps every byte (spaces and punctuation move)",
+    "ref": "hand-computed (key ZEBRAS, width 6)",
+    "op": "transposition:transposition-encrypt",
+    "params": {
+      "key": "ZEBRAS"
+    },
+    "input": {
+      "value": "ab cd,ef",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d bfc,ae",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "columnar encrypt of the empty input",
+    "ref": "hand-computed",
+    "op": "transposition:transposition-encrypt",
+    "params": {
+      "key": "KEY"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  }
+]
