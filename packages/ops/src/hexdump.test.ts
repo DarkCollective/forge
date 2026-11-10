@@ -97,12 +97,8 @@ describe("hexdump", () => {
 
   test("64 KiB at width 16", async () => {
     const data = randBytes(65536);
-    const t0 = Date.now();
     const text = await encode(data, 16, "lower", true);
-    const t1 = Date.now();
     const back = (await decode(text)).out;
-    const t2 = Date.now();
-    console.log(`hexdump 64 KiB width 16: encode ${t1 - t0} ms, decode ${t2 - t1} ms`);
     expect(back).toEqual(data);
   }, 60_000);
 });

@@ -104,12 +104,8 @@ describe("float", () => {
 
   test("64 KiB each way", async () => {
     const values = Array.from({ length: 8192 }, randDouble);
-    const t0 = Date.now();
     const enc = (await encode(values.join(" "), "64", "big")).out!;
-    const t1 = Date.now();
     const text = (await decode(enc, "64", "big")).out!;
-    const t2 = Date.now();
-    console.log(`float 64 KiB (8192 doubles): encode ${t1 - t0} ms, decode ${t2 - t1} ms`);
     expect(text).toBe(values.join(" "));
   }, 60_000);
 });

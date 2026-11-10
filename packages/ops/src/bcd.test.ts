@@ -84,11 +84,12 @@ describe("bcd", () => {
       const packed = i % 3 !== 0;
       const signed = i % 2 === 0;
       const n = 1 + Math.floor(rand() * 40);
-      const sign = signed ? ["", "-"][Math.floor(rand() * 2)] : "";
+      const sign = signed ? (rand() < 0.5 ? "" : "-") : "";
       const text = sign + digits(n);
       const enc = await encode(text, scheme, packed, signed);
-      expect(enc.out).toBeDefined();
-      const dec = (await decode(enc.out!, scheme, packed, signed)).out as string;
+      const encoded = enc.out;
+      if (encoded === undefined) throw new Error(`encode of ${text} produced no output`);
+      const dec = (await decode(encoded, scheme, packed, signed)).out as string;
       // Packed data of an odd digit count (unsigned) or an even one (signed) shows a leading 0.
       const nibbles = n + (signed ? 1 : 0);
       const lead = packed && nibbles % 2 === 1 ? "0" : "";

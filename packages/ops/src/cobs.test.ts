@@ -85,13 +85,9 @@ describe("cobs", () => {
   test("64 KiB of zeros and of random data round trip", async () => {
     for (const zeros of [1, 0.01, 0]) {
       const data = randBytes(65536, zeros);
-      const t0 = Date.now();
       const enc = (await run("cobs:encode", data)).out!;
-      const t1 = Date.now();
       const dec = (await run("cobs:decode", enc)).out!;
-      const t2 = Date.now();
       expect(dec).toEqual(data);
-      console.log(`cobs 64 KiB zeros=${zeros}: encode ${t1 - t0} ms, decode ${t2 - t1} ms`);
     }
   }, 60_000);
 });

@@ -107,7 +107,8 @@ describe("html:decode named references", () => {
     // FNV-1a over the UTF-8 bytes of the lines "name=hex[,hex]" in the order of entities.json
     // (https://html.spec.whatwg.org/entities.json), the name without its ampersand, joined by LF.
     let h = 0x811c9dc5;
-    for (const byte of new TextEncoder().encode(dataLines.join("\n"))) {
+    // The lines are ASCII, so a char-code copy is the UTF-8 bytes.
+    for (const byte of Uint8Array.from(dataLines.join("\n"), (c) => c.charCodeAt(0))) {
       h ^= byte;
       h = Math.imul(h, 0x01000193) >>> 0;
     }

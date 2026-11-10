@@ -74,9 +74,7 @@ describe("endian:swap", () => {
 
   test("64 KiB", async () => {
     const data = randBytes(65536);
-    const t0 = Date.now();
     const out = (await swap(data, 4, false)).out!;
-    console.log(`endian:swap 64 KiB width 4: ${Date.now() - t0} ms`);
     expect(out[0]).toBe(data[3]);
   }, 60_000);
 });

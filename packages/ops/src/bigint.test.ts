@@ -67,18 +67,11 @@ describe("bigint", () => {
 
   test("64 KiB of leading zeros costs nothing; the largest value takes", async () => {
     const zeros = new Uint8Array(65536);
-    const t0 = Date.now();
     expect((await call("bigint:from-bytes", bytes(zeros))).out).toBe("0");
     const big = randBytes(8192);
     big[0] = 255;
-    const t1 = Date.now();
     const text = (await call("bigint:from-bytes", bytes(big))).out as string;
-    const t2 = Date.now();
     const back = (await call("bigint:to-bytes", str(text))).out as Uint8Array;
-    const t3 = Date.now();
     expect(back).toEqual(big);
-    console.log(
-      `bigint 64 KiB zeros ${t1 - t0} ms; 8192 bytes: from-bytes ${t2 - t1} ms, to-bytes ${t3 - t2} ms`,
-    );
   }, 60_000);
 });
