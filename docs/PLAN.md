@@ -120,6 +120,8 @@ The runtime pops values, coerces and validates them, calls `fn` with plain JS va
 
 The shared internal vocabulary `raise` gives FL ops typed errors, because FL's own `fail` gives only `E_USER`. `raise:coerce ( reason:str -- )` raises `E_COERCE` for data that cannot be decoded, and `raise:range ( reason:str -- )` raises `E_RANGE` for a bad argument. The `raise` words have no outputs, so they are not catalogue ops.
 
+The shared internal vocabulary `util` holds FL helpers that more than one op vocabulary needs. Private (`_`) words cannot be called across vocabularies (LANGUAGE.md §5.7), so a helper used by two vocabularies would otherwise be copied. `util` is in `INTERNAL_VOCABS` (with `recipe` and `bake`): its public words are callable from every vocabulary (`util:space?`, or `USING: util`), are never listed in the catalogue, and a recipe that names one is refused as an unknown operation. Today it holds `space?`, `space-or-comma?`, `separator` and `decode-table` (the alphabet lookup shared by base32, base58 and base85). A test (`packages/ops/src/dupes.test.ts`) fails when two vocabularies define helpers with identical bodies, and `npm run dupes -w @forge/ops` lists exact and near duplicates.
+
 ### 3.6 Recipes are words
 
 The recipe model in `@forge/recipe` is a **tree**, not a flat list. Flow control is structural (step kinds `op`, `fork`, `subsection`, `if`, `repeat`, `comment`), which fixes CyberChef's Fork/Merge-by-name problem. **[RECIPES.md](RECIPES.md) is the authoritative Phase 2 spec**; this section is a summary.
@@ -233,7 +235,7 @@ Names are Forge-native (`base64:decode`, not CyberChef names). The catalogue cov
 | 4.6 | Gate 4 harness: `gate4:browser` and the UI smoke spec |
 | 4.7 | Close-out: recipe-level test (`packages/worker/test/phase4-recipes.test.ts`), docs |
 
-The 61 ops: analysis 2, base32 2, base58 2, base64 2, base85 2, binary 2, bits 11, charcode 2, classical 16, decimal 2, hex 2, html 2, morse 2, regex 4, text 6, url 2. The internal vocabularies are `recipe` and `raise`.
+The 61 ops: analysis 2, base32 2, base58 2, base64 2, base85 2, binary 2, bits 11, charcode 2, classical 16, decimal 2, hex 2, html 2, morse 2, regex 4, text 6, url 2. The internal vocabularies are `recipe`, `raise` and `util`.
 
 **Gate 4:** All starter ops pass conformance in Node and in the browser e2e smoke test. *Met.*
 
@@ -265,6 +267,7 @@ Magic auto-detection (declarative `checks` in META, depth-limited search). An op
 - **Agent mix**: Sonnet-class agents for spec-critical work (1.1, 1.5, 1.6, 2.2, 3.3). Haiku-class agents for well-specified, repetitive WPs (ops with test vectors, coverage-table generation, docs). Each agent gets the spec, the WP's "done" line, and the rule *no commits with attribution, no pushes*.
 - **Isolation**: parallel WPs run in separate git worktrees on `wp/<id>` branches. The orchestrator merges after review.
 - **Verification per WP**: read the diff, then re-run `npm run lint && npm run typecheck && npm test && npm run build` (+e2e from Phase 3) on the merged result, then spot-check behaviour by hand.
+- **Shared utilities**: op agents check `packages/ops/vocab/util.fth` (§3.5) before writing a helper. In their report they list **utility candidates**: helpers they wrote that look generally useful, each with its name, stack effect and why. The orchestrator reviews these, and `npm run dupes -w @forge/ops`, on every WP, and promotes accepted ones into `util` through a small follow-up WP. The dupes test blocks exact copies across vocabularies.
 - **Order**: Phase 1 is mostly sequential (1.1 → 1.2/1.3 in parallel → 1.4 → 1.5 → 1.6/1.7/1.8 in parallel). Phase 3.1–3.2 can start once Gate 1 passes, against a mocked catalogue. Phases 4 and 5 are highly parallel.
 
 ## 9. Decisions

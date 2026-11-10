@@ -1,0 +1,202 @@
+/*
+ * Copyright 2026 Darkcollective, LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+import { readFileSync, readdirSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { describe, expect, test } from "vitest";
+import {
+  extractDefinitions,
+  findDuplicates,
+  formatReport,
+  groupNames,
+  similarity,
+} from "./dupes.js";
+import type { SourceFile } from "./types.js";
+
+const file = (vocab: string, body: string): SourceFile => ({
+  name: `${vocab}.fth`,
+  text: `\\ comment\nIN: ${vocab}\n${body}\n`,
+});
+
+describe("extractDefinitions", () => {
+  test("renames input names to positions, so the names do not matter", () => {
+    const a = extractDefinitions([
+      file("a", ": _ws ( b:int -- bool ) b 32 = b 9 >= b 13 <= and or ;"),
+    ]);
+    const b = extractDefinitions([
+      file("b", ": _sp ( code:int -- bool ) code 32 = code 9 >= code 13 <= and or ;"),
+    ]);
+    expect(a[0]?.tokens).toEqual(b[0]?.tokens);
+    expect(a[0]?.tokens[0]).toBe("$0");
+    expect(a[0]?.inputs).toEqual(["int"]);
+    expect(a[0]?.outputs).toEqual(["bool"]);
+  });
+
+  test("drops comments and the doc and category lines", () => {
+    const [d] = extractDefinitions([
+      file(
+        "a",
+        '\\ a comment\n: op ( x:str -- str )\n  "Does it." doc\n  "Cat" category\n  x upper ( inline ) ;',
+      ),
+    ]);
+    expect(d?.tokens).toEqual(["$0", "w:upper"]);
+  });
+
+  test("keeps other strings and numbers, with their kind", () => {
+    const [d] = extractDefinitions([file("a", ': f ( -- str ) "x" 1 [ 2 ] drop ;')]);
+    expect(d?.tokens).toEqual(["s:x", "int:1", "[", "int:2", "]", "w:drop"]);
+  });
+
+  test("qualifies words of the same vocabulary and qualified words alike", () => {
+    const defs = extractDefinitions([
+      file("a", ": _h ( x:int -- int ) x ;\n: f ( x:int -- int ) x _h util:space? ;"),
+    ]);
+    expect(defs[1]?.tokens).toEqual(["$0", "w:a:_h", "w:util:space?"]);
+  });
+
+  test("parses names and types of the header, ignoring defaults and constraints", () => {
+    const [d] = extractDefinitions([
+      file("a", ": f ( bytes n:int[2..36]=16 c:choice{a|b}=a -- str str ) n ;"),
+    ]);
+    expect(d?.inputs).toEqual(["bytes", "int", "choice"]);
+    expect(d?.outputs).toEqual(["str", "str"]);
+  });
+
+  test("ignores META blocks and non-fth files", () => {
+    const defs = extractDefinitions([
+      file("a", ': f ( -- int ) 1 ;\nMETA: f\n  param x "y" ;\n;'),
+      { name: "notes.txt", text: ": g ( -- int ) 2 ;" },
+    ]);
+    expect(defs.map((d) => d.qname)).toEqual(["a:f"]);
+  });
+});
+
+describe("similarity", () => {
+  test("is 1 for equal sequences, 0 for disjoint ones", () => {
+    expect(similarity(["a", "b", "c"], ["a", "b", "c"])).toBe(1);
+    expect(similarity(["a", "b", "c"], ["x", "y", "z"])).toBe(0);
+  });
+
+  test("is Jaccard over token bigrams", () => {
+    // {ab, bc, cd} against {ab, bc, cx}: 2 common of 4 in total
+    expect(similarity(["a", "b", "c", "d"], ["a", "b", "c", "x"])).toBe(0.5);
+  });
+});
+
+describe("findDuplicates", () => {
+  const body = "b 32 = b 9 >= b 13 <= and or";
+  const sources = (...xs: [string, string, string][]): SourceFile[] =>
+    xs.map(([vocab, name, b]) => file(vocab, `: ${name} ( b:int -- bool ) ${b} ;`));
+
+  test("finds an exact duplicate across vocabularies", () => {
+    const r = findDuplicates(
+      extractDefinitions([
+        file("a", `: _ws ( b:int -- bool ) ${body} ;`),
+        file("b", ": _sp ( code:int -- bool ) code 32 = code 9 >= code 13 <= and or ;"),
+        file("c", ": _x ( b:int -- bool ) 0 drop 1 2 + ;"),
+      ]),
+    );
+    expect(r.exact).toHaveLength(1);
+    expect(groupNames(r.exact[0] as never)).toBe("a:_ws, b:_sp");
+    expect(r.near).toEqual([]);
+  });
+
+  test("two copies in the same vocabulary are not reported", () => {
+    const text = `IN: a\n: _p ( b:int -- bool ) ${body} ;\n: _q ( b:int -- bool ) ${body} ;\n`;
+    expect(findDuplicates(extractDefinitions([{ name: "a.fth", text }])).exact).toEqual([]);
+  });
+
+  test("the same body with a different effect shape is not exact", () => {
+    const r = findDuplicates(
+      extractDefinitions([
+        file("a", `: f ( b:int -- bool ) ${body} ;`),
+        file("b", `: g ( b:str -- bool ) ${body} ;`),
+      ]),
+    );
+    expect(r.exact).toEqual([]);
+  });
+
+  test("a trivial body is ignored", () => {
+    const r = findDuplicates(extractDefinitions(sources(["a", "f", "b 1 +"], ["b", "g", "b 1 +"])));
+    expect(r.exact).toEqual([]);
+    expect(r.near).toEqual([]);
+  });
+
+  test("a call to a private word of its own vocabulary is not the same as in another vocabulary", () => {
+    const r = findDuplicates(
+      extractDefinitions([
+        file("a", ": _h ( x:int -- int ) x 1 + 2 * 3 - ;\n: f ( x:int -- int ) x _h x _h + dup ;"),
+        file("b", ": _h ( x:int -- int ) x 4 + 5 * 6 - ;\n: f ( x:int -- int ) x _h x _h + dup ;"),
+      ]),
+    );
+    expect(r.exact).toEqual([]);
+  });
+
+  test("finds a near duplicate of the same arity, with its similarity", () => {
+    const a = "x 1 + 2 * 3 - 4 + 5 * 6 - 7 + 8 * 9 - 10 + 11 * 12 - 13 + 14 *";
+    const b = "x 1 + 2 * 3 - 4 + 5 * 6 - 7 + 8 * 9 - 10 + 11 * 12 - 13 + 14 -";
+    const r = findDuplicates(
+      extractDefinitions([
+        file("a", `: f ( x:int -- int ) ${a} ;`),
+        file("b", `: g ( x:int -- int ) ${b} ;`),
+      ]),
+    );
+    expect(r.exact).toEqual([]);
+    expect(r.near).toHaveLength(1);
+    expect(r.near[0]?.similarity).toBeGreaterThanOrEqual(0.8);
+    expect(r.near[0]?.similarity).toBeLessThan(1);
+  });
+
+  test("near duplicates need the same arity and a high enough similarity", () => {
+    const a = "x 1 + 2 * 3 - 4 + 5 * 6 - 7 + 8 *";
+    const r = findDuplicates(
+      extractDefinitions([
+        file("a", `: f ( x:int -- int ) ${a} ;`),
+        file("b", `: g ( x:int y:int -- int ) ${a} ;`),
+        file("c", ": h ( x:int -- int ) x dup swap drop over rot nip tuck ;"),
+      ]),
+    );
+    expect(r.near).toEqual([]);
+  });
+
+  test("the report names the words and points at util", () => {
+    const r = findDuplicates(extractDefinitions(sources(["a", "_ws", body], ["b", "_sp", body])));
+    const text = formatReport(r);
+    expect(text).toContain("a:_ws, b:_sp");
+    expect(text).toContain("vocab/util.fth");
+  });
+});
+
+describe("the real vocabularies", () => {
+  const dir = `${fileURLToPath(import.meta.url)
+    .replaceAll("\\", "/")
+    .replace(/\/[^/]*$/, "")}/../vocab`;
+  const files = readdirSync(dir)
+    .filter((name) => name.endsWith(".fth"))
+    .sort()
+    .map((name) => ({ name, text: readFileSync(`${dir}/${name}`, "utf8") }));
+
+  test("no helper is copied between vocabularies", () => {
+    const { exact } = findDuplicates(extractDefinitions(files));
+    const message = exact
+      .map(
+        (g) =>
+          `${groupNames(g)} have identical bodies. Move the helper into vocab/util.fth ` +
+          `(a public word with a doc string) and call it as util:name in each vocabulary.`,
+      )
+      .join("\n");
+    expect(message).toBe("");
+  });
+});

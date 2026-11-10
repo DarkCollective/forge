@@ -35,17 +35,9 @@ IN: base58
 
 \ ---- decode ----
 
-: _isspace ( b:int -- bool )
-  b 32 = b 9 >= b 13 <= and or ;
-
-\ 255 for a byte outside the alphabet, 254 for ASCII white space, else the digit value.
-: _code-of ( alpha:str b:int -- int )
-  b _isspace
-  [ 254 ]
-  [ alpha { b } codes>str split dup len 2 = [ 0 nth len ] [ drop 255 ] if ] if ;
-
+\ The decode table: 255 for a byte outside the alphabet, 254 for ASCII white space, else the digit value.
 : _table ( alpha:str -- bytes )
-  0 256 range [ alpha swap _code-of ] map list>bytes ;
+  alpha 254 255 util:decode-table ;
 
 \ The number of leading zero digits.
 : _lead0 ( b:bytes -- int )

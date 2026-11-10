@@ -2,14 +2,8 @@
 \ need no primitive; E_COERCE comes from the raise vocabulary (raise:coerce).
 IN: binary
 
-: _sep ( d:str -- str )
-  d "none" = [ "" ] [ d "comma" = [ "," ] [ d "newline" = [ "\n" ] [ " " ] if ] if ] if ;
-
 : _byte-bits ( b:int -- str )
   b 256 + 2 int>str-radix 1 9 slice ;
-
-: _bit-ignored? ( b:int -- bool )
-  b 32 = b 44 = or b 9 >= b 13 <= and or ;
 
 : _bit ( b:int -- int )
   b 48 = [ 0 ] [ b 49 = [ 1 ] [ "a binary digit is 0 or 1" raise:coerce ] if ] if ;
@@ -24,12 +18,12 @@ IN: binary
 : encode ( bytes delimiter:choice{space|none|comma|newline}=space -- str )
   "Each byte as eight binary digits, most significant bit first, separated by the delimiter." doc
   "Encodings" category
-  bytes>list [ _byte-bits ] map delimiter _sep join ;
+  bytes>list [ _byte-bits ] map delimiter util:separator join ;
 
 : decode ( bytes -- bytes )
   "Decode 0 and 1 digits, eight per byte. ASCII white space and commas are ignored." doc
   "Encodings" category
-  bytes>list [ _bit-ignored? not ] filter [ _bit ] map _bits-bytes ;
+  bytes>list [ util:space-or-comma? not ] filter [ _bit ] map _bits-bytes ;
 
 META: encode
   param delimiter "What to put between the bytes: a space, nothing, a comma or a newline." ;

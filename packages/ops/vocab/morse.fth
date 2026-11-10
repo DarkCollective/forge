@@ -43,11 +43,8 @@ IN: morse
 : _encode-words ( words:list table:record sep:str -- str )
   words [ table _word-code ] map sep join ;
 
-: _ws? ( c:int -- bool )
-  c 9 >= c 13 <= and c 32 = or ;
-
 : _ws-to-space ( s:str -- str )
-  s str>codes [ dup _ws? [ drop 32 ] when ] map codes>str ;
+  s str>codes [ dup util:space? [ drop 32 ] when ] map codes>str ;
 
 : _breaks ( s:str -- str )
   s "\n" split " / " join "\r" split " / " join "/" split " / " join ;
