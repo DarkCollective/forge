@@ -20,8 +20,8 @@
  */
 import { valueHelpers } from "@forge/lang";
 import { describe, expect, test } from "vitest";
-import { assembleRuntime } from "../bundle.js";
-import { loadBundleNode } from "../sources-node.js";
+import { assembleRuntime } from "./bundle.js";
+import { loadBundleNode } from "./sources-node.js";
 
 const { bytes, int, str } = valueHelpers;
 const runtime = assembleRuntime(await loadBundleNode(["bits"]));
@@ -128,6 +128,15 @@ describe("performance and limits", () => {
     const key = bytes(randBytes(4096, 4096));
     const r = await runtime.call("bits:add", [bytes(data), key]);
     expect(r.ok).toBe(true);
+  });
+
+  test("xor-brute with two-byte keys and no crib stops at the allocation limit", async () => {
+    const small = assembleRuntime(await loadBundleNode(["bits"]), {
+      limits: { maxTotalBytes: 4 * 1024 * 1024 },
+    });
+    const r = await small.call("bits:xor-brute", [bytes(new Uint8Array(4096)), int(2), str("")]);
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.error.code).toBe("E_LIMIT_TOTAL");
   });
 
   test("xor-brute finds the key of a short message", async () => {
