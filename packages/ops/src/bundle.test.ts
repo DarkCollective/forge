@@ -238,7 +238,7 @@ describe("assembleRuntime", () => {
     expect(rt.meta("user:other").qname).toBe("user:other");
   });
 
-  test.each(["hex", "text", "recipe", "bake", "core"])(
+  test.each(["hex", "text", "recipe", "bake", "util", "core"])(
     "a user unit that defines into %s fails with E_READONLY",
     async (vocab) => {
       const b = await bundle();

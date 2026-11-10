@@ -9,9 +9,6 @@ IN: base85
 : _z85-str ( -- str )
   "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-:+=^!/*?&<>()[]{}@%$#" ;
 
-: _isspace ( b:int -- bool )
-  b 32 = b 9 >= b 13 <= and or ;
-
 \ ---- encode ----
 
 \ The big-endian integer of the elements of b, each taken as 8 bits.
@@ -49,12 +46,9 @@ IN: base85
 
 \ ---- decode ----
 
-\ 255 for a byte outside the alphabet, else the digit value.
-: _code-of ( alpha:str b:int -- int )
-  alpha { b } codes>str split dup len 2 = [ 0 nth len ] [ drop 255 ] if ;
-
+\ The decode table: 255 for a byte outside the alphabet, else the digit value.
 : _table ( alpha:str -- bytes )
-  0 256 range [ alpha swap _code-of ] map list>bytes ;
+  alpha 255 255 util:decode-table ;
 
 : _symbols ( b:bytes table:bytes -- bytes )
   b table translate
@@ -104,7 +98,7 @@ IN: base85
 : decode ( bytes variant:choice{ascii85|z85}=ascii85 -- bytes )
   "Decode Ascii85 (optional <~ ~> delimiters, z groups, a short final group) or Z85. White space is ignored." doc
   "Encodings" category
-  [ _isspace not ] filter
+  [ util:space? not ] filter
   variant "z85" =
   [ _z85-str _table _symbols false _finish ]
   [ _strip-delims _expand-z _a85-str _table _symbols true _finish ] if ;

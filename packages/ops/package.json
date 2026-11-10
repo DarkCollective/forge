@@ -29,6 +29,7 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json && tsc -p tsconfig.scripts.json && node dist-scripts/catalogue.js",
+    "dupes": "tsc -p tsconfig.build.json && tsc -p tsconfig.scripts.json && node dist-scripts/dupes.js",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {

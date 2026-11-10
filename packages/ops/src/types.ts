@@ -48,11 +48,11 @@ import type {
 export const CATALOGUE_FORMAT = 1 as const;
 
 /**
- * Vocabularies that hold machinery for compiled recipes (`recipe`: the words they call; `bake`: where the
- * baker loads the compiled recipe word). Their words are never listed in the
- * catalogue, whatever their metadata says.
+ * Internal vocabularies: `recipe` (the words compiled recipes call), `bake` (where the baker loads the
+ * compiled recipe word) and `util` (shared FL helpers for the op vocabularies). Their words are never
+ * listed in the catalogue, whatever their metadata says, and a user unit cannot define into them.
  */
-export const INTERNAL_VOCABS: readonly string[] = Object.freeze(["recipe", "bake"]);
+export const INTERNAL_VOCABS: readonly string[] = Object.freeze(["recipe", "bake", "util"]);
 
 /**
  * Parameter types a UI form can edit and a recipe can carry as JSON. An exported word is a catalogue

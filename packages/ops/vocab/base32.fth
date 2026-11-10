@@ -37,19 +37,10 @@ IN: base32
 
 \ ---- decode ----
 
-\ 255 for a byte outside the alphabet, 254 for ASCII white space, 253 for =, else the symbol value.
-: _isspace ( b:int -- bool )
-  b 32 = b 9 >= b 13 <= and or ;
-
-: _code-of ( alpha:str b:int -- int )
-  b 61 =
-  [ 253 ]
-  [ b _isspace
-    [ 254 ]
-    [ alpha { b } codes>str split dup len 2 = [ 0 nth len ] [ drop 255 ] if ] if ] if ;
-
+\ The decode table: 255 for a byte outside the alphabet, 254 for ASCII white space, 253 for =, else the
+\ symbol value.
 : _table ( alpha:str -- bytes )
-  0 256 range [ alpha swap _code-of ] map list>bytes ;
+  alpha 254 253 util:decode-table ;
 
 \ s is the symbols and padding; core only the symbols. The padding must come last.
 : _check-pad ( s:bytes core:bytes -- bytes int )

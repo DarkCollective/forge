@@ -28,9 +28,6 @@ META: rot
 : _is-letter ( code:int -- bool )
   code 32 bor 97 >= code 32 bor 122 <= and ;
 
-: _is-space ( code:int -- bool )
-  code 32 = code 9 >= code 13 <= and or ;
-
 \ ---------------------------------------------------------------------------------------------
 \ rot47, atbash
 \ ---------------------------------------------------------------------------------------------
@@ -189,7 +186,7 @@ META: bacon-encode
 : bacon-decode ( str alphabet:choice{classic|complete}=classic -- str )
   "Decode Bacon's cipher: read the A/B symbols (any case, white space ignored) in groups of five and give upper-case letters. With classic, I/J decode as I and U/V as U. Other symbols, a symbol count that is not a multiple of five, or a group outside the alphabet are errors (E_COERCE)." doc
   "Classical ciphers" category
-  str>bytes [ _is-space not ] filter [ 32 bor ] map
+  str>bytes [ util:space? not ] filter [ 32 bor ] map
   alphabet "classic" = _bacon-groups ;
 
 META: bacon-decode

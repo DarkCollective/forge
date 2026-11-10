@@ -2,12 +2,6 @@
 \ primitive; E_COERCE comes from the raise vocabulary (raise:coerce).
 IN: charcode
 
-: _sep ( d:str -- str )
-  d "comma" = [ "," ] [ d "newline" = [ "\n" ] [ " " ] if ] if ;
-
-: _sep-char? ( c:int -- bool )
-  c 32 = c 44 = or c 9 >= c 13 <= and or ;
-
 : _surrogate? ( cp:int -- bool )
   cp 55296 >= cp 57343 <= and ;
 
@@ -24,12 +18,12 @@ IN: charcode
 : encode ( str base:int[2..36]=16 delimiter:choice{space|comma|newline}=space -- str )
   "One number per code point (not UTF-16 unit), in the base, lower-case digits, separated by the delimiter." doc
   "Encodings" category
-  str>codes [ base _cp-text ] map delimiter _sep join ;
+  str>codes [ base _cp-text ] map delimiter util:separator join ;
 
 : decode ( str base:int[2..36]=16 -- str )
   "Decode numbers in the base separated by white space and/or commas, one code point each." doc
   "Encodings" category
-  str>codes [ dup _sep-char? [ drop 32 ] when ] map codes>str " " split
+  str>codes [ dup util:space-or-comma? [ drop 32 ] when ] map codes>str " " split
   [ len 0 > ] filter [ base _cp-value ] map codes>str ;
 
 META: encode

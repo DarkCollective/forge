@@ -54,7 +54,29 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `text`      | split, join, replace, reverse, upper, lower                                                                |
 | `url`       | percent-encode and decode (RFC 3986)                                                                       |
 
-Two internal vocabularies are not part of the catalogue as ops: `recipe` (the words recipes compile to) and `raise` (typed errors, above).
+Three internal vocabularies are not part of the catalogue as ops: `recipe` (the words recipes compile to), `raise` (typed errors, above) and `util` (shared helpers, below).
+
+## The `util` vocabulary
+
+`vocab/util.fth` holds FL helpers that more than one op vocabulary needs. A private (`_`) word cannot be called from another vocabulary, so without `util` each author copies the helper. `util` is in `INTERNAL_VOCABS`: its public words are callable from every vocabulary (`util:space?`, or `USING: util`), are never listed in the catalogue, have a doc string and no category, and user units cannot define into it.
+
+| Word                                                 | Meaning                                                                                                                                                  |
+| ---------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `space? ( b:int -- bool )`                           | ASCII white space: 9 to 13 and 32                                                                                                                        |
+| `space-or-comma? ( b:int -- bool )`                  | white space or a comma, the separators of numeric text                                                                                                   |
+| `separator ( choice:str -- str )`                    | none, space, comma, newline to the delimiter text                                                                                                        |
+| `decode-table ( alpha:str ws:int pad:int -- bytes )` | 256-byte lookup table for `translate`: index in the alphabet, else `ws` for white space, `pad` for `=`, else 255 (pass 255 for a marker you do not need) |
+
+**Rule: check `util` before writing a helper. Anything more than one vocabulary needs goes in `util`.** If you wrote a helper that looks generally useful, say so in your report as a **utility candidate** (name, stack effect, why); the orchestrator promotes accepted candidates into `util` in a small follow-up work package. Do not copy a helper into a second vocabulary.
+
+### Finding copies: the dupes test and `npm run dupes`
+
+`src/dupes.ts` (not exported from the package, so not in the browser bundle) reads every `vocab/*.fth`, extracts each colon definition and normalises its body: comments, the `doc` and `category` lines are dropped, input names become positional placeholders (`b 32 =` equals `code 32 =`), and words of the same vocabulary are qualified so two private helpers with the same name are not confused. Two reports:
+
+- **Exact duplicates**: definitions in different vocabularies with the same input and output types and identical normalised bodies. `src/dupes.test.ts` **fails** on any, naming the words; move the helper into `vocab/util.fth`.
+- **Near duplicates**: pairs in different vocabularies with the same input and output arity and a Jaccard similarity of at least 0.8 over token bigrams. Bodies under 4 tokens are ignored. Near duplicates never fail a test.
+
+`npm run dupes -w @forge/ops` builds the package and prints both reports (always exits 0). Run it when reviewing a work package.
 
 ## Running the vectors
 
