@@ -11,7 +11,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 
 | Category | Covered | Redesigned | Dropped | Not yet | Total |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Data format | 20 | 0 | 0 | 60 | 80 |
+| Data format | 32 | 2 | 0 | 46 | 80 |
 | Encryption / Encoding | 19 | 1 | 0 | 75 | 95 |
 | Public Key | 0 | 0 | 0 | 30 | 30 |
 | Arithmetic / Logic | 9 | 0 | 0 | 17 | 26 |
@@ -27,7 +27,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 2 | 0 | 0 | 19 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **56** | **8** | **0** | **442** | **506** |
+| **Total** | **68** | **10** | **0** | **428** | **506** |
 
 ## Data format (80)
 
@@ -45,27 +45,27 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | From Float | not yet |  |  |
 | To Binary | covered | `binary:encode` |  |
 | From Binary | covered | `binary:decode` |  |
-| To Octal | not yet |  |  |
-| From Octal | not yet |  |  |
+| To Octal | covered | `octal:encode` |  |
+| From Octal | covered | `octal:decode` |  |
 | To Base32 | covered | `base32:encode` |  |
 | From Base32 | covered | `base32:decode` |  |
-| To Base45 | not yet |  |  |
-| From Base45 | not yet |  |  |
+| To Base45 | covered | `base45:encode` |  |
+| From Base45 | covered | `base45:decode` |  |
 | To Base58 | covered | `base58:encode` |  |
 | From Base58 | covered | `base58:decode` |  |
-| To Bech32 | not yet |  |  |
-| From Bech32 | not yet |  |  |
-| To Base62 | not yet |  |  |
-| From Base62 | not yet |  |  |
+| To Bech32 | covered | `bech32:encode` | Bech32 and Bech32m through the variant parameter. |
+| From Bech32 | covered | `bech32:decode` | Both checksum variants are accepted; the part parameter returns the data or the human-readable part. |
+| To Base62 | covered | `base62:encode` |  |
+| From Base62 | covered | `base62:decode` |  |
 | To Base64 | covered | `base64:encode` |  |
 | From Base64 | covered | `base64:decode` |  |
 | Show Base64 offsets | not yet |  |  |
-| To Base92 | not yet |  |  |
-| From Base92 | not yet |  |  |
+| To Base92 | covered | `base92:encode` |  |
+| From Base92 | covered | `base92:decode` |  |
 | To Base85 | covered | `base85:encode` | Ascii85 and Z85 through the variant parameter. |
 | From Base85 | covered | `base85:decode` | Ascii85 and Z85 through the variant parameter. |
-| To Base | not yet |  |  |
-| From Base | not yet |  |  |
+| To Base | redesigned | `radix:convert` | To Base and From Base are one word: an integer written in any base from 2 to 36 is rewritten in another, whatever its size. |
+| From Base | redesigned | `radix:convert` | To Base and From Base are one word: an integer written in any base from 2 to 36 is rewritten in another, whatever its size. |
 | To BCD | not yet |  |  |
 | From BCD | not yet |  |  |
 | Text-Integer Conversion | not yet |  |  |
@@ -108,8 +108,8 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Caret/M-decode | not yet |  |  |
 | Rison Encode | not yet |  |  |
 | Rison Decode | not yet |  |  |
-| To Modhex | not yet |  |  |
-| From Modhex | not yet |  |  |
+| To Modhex | covered | `modhex:encode` |  |
+| From Modhex | covered | `modhex:decode` |  |
 | MIME Decoding | not yet |  |  |
 | To COBS | not yet |  |  |
 | From COBS | not yet |  |  |

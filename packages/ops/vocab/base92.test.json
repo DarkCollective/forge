@@ -1,0 +1,374 @@
+[
+  {
+    "name": "encode a",
+    "ref": "independent Python port of the thenoviceoof/base92 reference (base92_encode / base92_decode)",
+    "op": "base92:encode",
+    "params": {},
+    "input": {
+      "value": "61",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "D,",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode a",
+    "ref": "independent Python port of the thenoviceoof/base92 reference (base92_encode / base92_decode)",
+    "op": "base92:decode",
+    "params": {},
+    "input": {
+      "value": "D,",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "61",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode ab",
+    "ref": "independent Python port of the thenoviceoof/base92 reference (base92_encode / base92_decode)",
+    "op": "base92:encode",
+    "params": {},
+    "input": {
+      "value": "6162",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "D82",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ab",
+    "ref": "independent Python port of the thenoviceoof/base92 reference (base92_encode / base92_decode)",
+    "op": "base92:decode",
+    "params": {},
+    "input": {
+      "value": "D82",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "6162",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode abc",
+    "ref": "independent Python port of the thenoviceoof/base92 reference (base92_encode / base92_decode)",
+    "op": "base92:encode",
+    "params": {},
+    "input": {
+      "value": "616263",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "D8<q",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode abc",
+    "ref": "independent Python port of the thenoviceoof/base92 reference (base92_encode / base92_decode)",
+    "op": "base92:decode",
+    "params": {},
+    "input": {
+      "value": "D8<q",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "616263",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode hello world",
+    "ref": "independent Python port of the thenoviceoof/base92 reference (base92_encode / base92_decode)",
+    "op": "base92:encode",
+    "params": {},
+    "input": {
+      "value": "68656c6c6f20776f726c64",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Fc_$aOTdKnsM*k",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode hello world",
+    "ref": "independent Python port of the thenoviceoof/base92 reference (base92_encode / base92_decode)",
+    "op": "base92:decode",
+    "params": {},
+    "input": {
+      "value": "Fc_$aOTdKnsM*k",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "68656c6c6f20776f726c64",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode Hello, World!",
+    "ref": "independent Python port of the thenoviceoof/base92 reference (base92_encode / base92_decode)",
+    "op": "base92:encode",
+    "params": {},
+    "input": {
+      "value": "48656c6c6f2c20576f726c6421",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": ";K_$aOVi#vqDXS-Z",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode Hello, World!",
+    "ref": "independent Python port of the thenoviceoof/base92 reference (base92_encode / base92_decode)",
+    "op": "base92:decode",
+    "params": {},
+    "input": {
+      "value": ";K_$aOVi#vqDXS-Z",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "48656c6c6f2c20576f726c6421",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode binary 00 01 02 ff",
+    "ref": "independent Python port of the thenoviceoof/base92 reference (base92_encode / base92_decode)",
+    "op": "base92:encode",
+    "params": {},
+    "input": {
+      "value": "000102ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "!!-Db",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode binary 00 01 02 ff",
+    "ref": "independent Python port of the thenoviceoof/base92 reference (base92_encode / base92_decode)",
+    "op": "base92:decode",
+    "params": {},
+    "input": {
+      "value": "!!-Db",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "000102ff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode non-ASCII UTF-8",
+    "ref": "independent Python port of the thenoviceoof/base92 reference (base92_encode / base92_decode)",
+    "op": "base92:encode",
+    "params": {},
+    "input": {
+      "value": "68c3a96c6c6f20e282ac",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "FoK4aN5S&|#s!",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode non-ASCII UTF-8",
+    "ref": "independent Python port of the thenoviceoof/base92 reference (base92_encode / base92_decode)",
+    "op": "base92:decode",
+    "params": {},
+    "input": {
+      "value": "FoK4aN5S&|#s!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "68c3a96c6c6f20e282ac",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode ff ff ff ff ff ff ff ff",
+    "ref": "independent Python port of the thenoviceoof/base92 reference (base92_encode / base92_decode)",
+    "op": "base92:encode",
+    "params": {},
+    "input": {
+      "value": "ffffffffffffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "}#}#}#}#}!",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ff ff ff ff ff ff ff ff",
+    "ref": "independent Python port of the thenoviceoof/base92 reference (base92_encode / base92_decode)",
+    "op": "base92:decode",
+    "params": {},
+    "input": {
+      "value": "}#}#}#}#}!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ffffffffffffffff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 13 bytes",
+    "ref": "independent Python port of the thenoviceoof/base92 reference (base92_encode / base92_decode)",
+    "op": "base92:encode",
+    "params": {},
+    "input": {
+      "value": "000102030405060708090a0b0c",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "!!-A&8!sCv']9EA)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 13 bytes",
+    "ref": "independent Python port of the thenoviceoof/base92 reference (base92_encode / base92_decode)",
+    "op": "base92:decode",
+    "params": {},
+    "input": {
+      "value": "!!-A&8!sCv']9EA)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "000102030405060708090a0b0c",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode empty is ~",
+    "ref": "base92 README (empty string is ~)",
+    "op": "base92:encode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "~",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ~ is empty",
+    "ref": "base92 README (empty string is ~)",
+    "op": "base92:decode",
+    "params": {},
+    "input": {
+      "value": "~",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ignores white space",
+    "ref": "independent Python port of the thenoviceoof/base92 reference (base92_encode / base92_decode)",
+    "op": "base92:decode",
+    "params": {},
+    "input": {
+      "value": " Fc_$aOT\ndKnsM*k ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "hello world",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode error: excluded character \"",
+    "ref": "base92 alphabet",
+    "op": "base92:decode",
+    "params": {},
+    "input": {
+      "value": "F\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: excluded character `",
+    "ref": "base92 alphabet",
+    "op": "base92:decode",
+    "params": {},
+    "input": {
+      "value": "F`",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: ~ among other characters",
+    "ref": "base92 alphabet",
+    "op": "base92:decode",
+    "params": {},
+    "input": {
+      "value": "Fc~",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: pair over 13 bits",
+    "ref": "base92 (91*91 > 8192): } } is 90*91+90 = 8280",
+    "op": "base92:decode",
+    "params": {},
+    "input": {
+      "value": "}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: last single character over 6 bits",
+    "ref": "base92 (last character is 6 bits): } is 90",
+    "op": "base92:decode",
+    "params": {},
+    "input": {
+      "value": "}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: non-zero padding bits",
+    "ref": "base92 encoder pads with zero bits: the pair for 8191 (13 one bits) leaves five set padding bits",
+    "op": "base92:decode",
+    "params": {},
+    "input": {
+      "value": "}#",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

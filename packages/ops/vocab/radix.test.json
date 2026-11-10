@@ -1,0 +1,307 @@
+[
+  {
+    "name": "defaults: decimal 255 to hex",
+    "ref": "hand-computed (255 = 0xff)",
+    "op": "radix:convert",
+    "params": {},
+    "input": {
+      "value": "255",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ff",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hex ff to decimal",
+    "ref": "hand-computed",
+    "op": "radix:convert",
+    "params": {
+      "from": 16,
+      "to": 10
+    },
+    "input": {
+      "value": "ff",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "255",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "upper-case digits",
+    "ref": "hand-computed",
+    "op": "radix:convert",
+    "params": {
+      "from": 16,
+      "to": 2
+    },
+    "input": {
+      "value": "FF",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "11111111",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "binary to octal",
+    "ref": "hand-computed",
+    "op": "radix:convert",
+    "params": {
+      "from": 2,
+      "to": 8
+    },
+    "input": {
+      "value": "101010",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "52",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "negative",
+    "ref": "hand-computed",
+    "op": "radix:convert",
+    "params": {
+      "from": 16,
+      "to": 10
+    },
+    "input": {
+      "value": "-ff",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-255",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "zero",
+    "ref": "hand-computed",
+    "op": "radix:convert",
+    "params": {
+      "from": 10,
+      "to": 2
+    },
+    "input": {
+      "value": "0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "negative zero is zero",
+    "ref": "hand-computed",
+    "op": "radix:convert",
+    "params": {
+      "from": 10,
+      "to": 16
+    },
+    "input": {
+      "value": "-0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "leading zeros dropped",
+    "ref": "hand-computed",
+    "op": "radix:convert",
+    "params": {
+      "from": 10,
+      "to": 10
+    },
+    "input": {
+      "value": "000012",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "12",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "base 36",
+    "ref": "hand-computed",
+    "op": "radix:convert",
+    "params": {
+      "from": 36,
+      "to": 10
+    },
+    "input": {
+      "value": "zz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1295",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "base 36 from decimal",
+    "ref": "hand-computed",
+    "op": "radix:convert",
+    "params": {
+      "from": 10,
+      "to": 36
+    },
+    "input": {
+      "value": "1295",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "zz",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "big integer decimal to hex",
+    "ref": "independent Python int arithmetic",
+    "op": "radix:convert",
+    "params": {
+      "from": 10,
+      "to": 16
+    },
+    "input": {
+      "value": "1606938044258990275541962092341162602522202993782792835313721",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "100000000000000000000000000000000000000000000003039",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "big integer hex to base 36",
+    "ref": "independent Python int arithmetic",
+    "op": "radix:convert",
+    "params": {
+      "from": 16,
+      "to": 36
+    },
+    "input": {
+      "value": "100000000000000000000000000000000000000000000003039",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "bnklg118comha6gqury14067gur54n8won6h3y1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "white space ignored",
+    "ref": "hand-computed",
+    "op": "radix:convert",
+    "params": {
+      "from": 2,
+      "to": 10
+    },
+    "input": {
+      "value": " 1 0\n1 ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "5",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "error: digit outside the base",
+    "ref": "spec (E_COERCE)",
+    "op": "radix:convert",
+    "params": {
+      "from": 2,
+      "to": 10
+    },
+    "input": {
+      "value": "12",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: empty input",
+    "ref": "spec (E_COERCE)",
+    "op": "radix:convert",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: only a minus",
+    "ref": "spec (E_COERCE)",
+    "op": "radix:convert",
+    "params": {},
+    "input": {
+      "value": "-",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: non-digit text",
+    "ref": "spec (E_COERCE)",
+    "op": "radix:convert",
+    "params": {
+      "from": 16
+    },
+    "input": {
+      "value": "0xff",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: from base 1",
+    "ref": "spec (static range 2..36)",
+    "op": "radix:convert",
+    "params": {
+      "from": 1
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "error: to base 37",
+    "ref": "spec (static range 2..36)",
+    "op": "radix:convert",
+    "params": {
+      "to": 37
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  }
+]

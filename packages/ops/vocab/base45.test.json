@@ -1,0 +1,347 @@
+[
+  {
+    "name": "encode RFC example AB",
+    "ref": "RFC 9285 section 4.3",
+    "op": "base45:encode",
+    "params": {},
+    "input": {
+      "value": "AB",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "BB8",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode RFC example AB",
+    "ref": "RFC 9285 section 4.3",
+    "op": "base45:decode",
+    "params": {},
+    "input": {
+      "value": "BB8",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "AB",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode RFC example Hello!!",
+    "ref": "RFC 9285 section 4.3",
+    "op": "base45:encode",
+    "params": {},
+    "input": {
+      "value": "Hello!!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "%69 VD92EX0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode RFC example Hello!!",
+    "ref": "RFC 9285 section 4.3",
+    "op": "base45:decode",
+    "params": {},
+    "input": {
+      "value": "%69 VD92EX0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Hello!!",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode RFC example base-45",
+    "ref": "RFC 9285 section 4.3",
+    "op": "base45:encode",
+    "params": {},
+    "input": {
+      "value": "base-45",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "UJCLQE7W581",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode RFC example base-45",
+    "ref": "RFC 9285 section 4.3",
+    "op": "base45:decode",
+    "params": {},
+    "input": {
+      "value": "UJCLQE7W581",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "base-45",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode RFC example ietf!",
+    "ref": "RFC 9285 section 4.3",
+    "op": "base45:decode",
+    "params": {},
+    "input": {
+      "value": "QED8WEX0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ietf!",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode RFC example ietf!",
+    "ref": "RFC 9285 section 4.3",
+    "op": "base45:encode",
+    "params": {},
+    "input": {
+      "value": "ietf!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "QED8WEX0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode empty",
+    "ref": "RFC 9285 section 4 (no groups)",
+    "op": "base45:encode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode empty",
+    "ref": "RFC 9285 section 4 (no groups)",
+    "op": "base45:decode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode binary 00 ff",
+    "ref": "hand-computed from RFC 9285 section 4.1",
+    "op": "base45:encode",
+    "params": {},
+    "input": {
+      "value": "00ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "U50",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode binary 00 ff",
+    "ref": "hand-computed from RFC 9285 section 4.1",
+    "op": "base45:decode",
+    "params": {},
+    "input": {
+      "value": "U50",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00ff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode single zero byte",
+    "ref": "hand-computed from RFC 9285 section 4.1",
+    "op": "base45:encode",
+    "params": {},
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode single zero byte",
+    "ref": "hand-computed from RFC 9285 section 4.1",
+    "op": "base45:decode",
+    "params": {},
+    "input": {
+      "value": "00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode max pair ff ff",
+    "ref": "hand-computed from RFC 9285 section 4.1",
+    "op": "base45:encode",
+    "params": {},
+    "input": {
+      "value": "ffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "FGW",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode max pair ff ff",
+    "ref": "hand-computed from RFC 9285 section 4.1",
+    "op": "base45:decode",
+    "params": {},
+    "input": {
+      "value": "FGW",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ffff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode binary 00 01 fe",
+    "ref": "hand-computed from RFC 9285 section 4.1",
+    "op": "base45:encode",
+    "params": {},
+    "input": {
+      "value": "0001fe",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "100T5",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode binary 00 01 fe",
+    "ref": "hand-computed from RFC 9285 section 4.1",
+    "op": "base45:decode",
+    "params": {},
+    "input": {
+      "value": "100T5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0001fe",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode non-ASCII UTF-8",
+    "ref": "hand-computed from RFC 9285 section 4.1",
+    "op": "base45:encode",
+    "params": {},
+    "input": {
+      "value": "é€",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4XOQSS$3",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode non-ASCII UTF-8",
+    "ref": "hand-computed from RFC 9285 section 4.1",
+    "op": "base45:decode",
+    "params": {},
+    "input": {
+      "value": "4XOQSS$3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "é€",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode error: group over 65535 (GGW)",
+    "ref": "RFC 9285 section 4.3 (GGW is invalid)",
+    "op": "base45:decode",
+    "params": {},
+    "input": {
+      "value": "GGW",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: length 3n+1",
+    "ref": "RFC 9285 section 4.3",
+    "op": "base45:decode",
+    "params": {},
+    "input": {
+      "value": "AAAA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: two-character group over 255",
+    "ref": "RFC 9285 section 4.1 (35 + 35*45 = 1610)",
+    "op": "base45:decode",
+    "params": {},
+    "input": {
+      "value": "ZZ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: lower case letter",
+    "ref": "RFC 9285 table 1 (alphabet)",
+    "op": "base45:decode",
+    "params": {},
+    "input": {
+      "value": "ab",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: new line",
+    "ref": "RFC 9285 table 1 (no white space skipped)",
+    "op": "base45:decode",
+    "params": {},
+    "input": {
+      "value": "QED\n8WEX0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]
