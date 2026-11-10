@@ -85,7 +85,7 @@
   },
   {
     "name": "decode RFC example ietf!",
-    "ref": "RFC 9285 section 4.3",
+    "ref": "RFC 9285 section 4.4",
     "op": "base45:decode",
     "params": {},
     "input": {
@@ -99,7 +99,7 @@
   },
   {
     "name": "encode RFC example ietf!",
-    "ref": "RFC 9285 section 4.3",
+    "ref": "RFC 9285 section 4.4",
     "op": "base45:encode",
     "params": {},
     "input": {
@@ -281,7 +281,7 @@
   },
   {
     "name": "decode error: group over 65535 (GGW)",
-    "ref": "RFC 9285 section 4.3 (GGW is invalid)",
+    "ref": "RFC 9285 section 6 (GGW is invalid)",
     "op": "base45:decode",
     "params": {},
     "input": {
@@ -294,7 +294,7 @@
   },
   {
     "name": "decode error: length 3n+1",
-    "ref": "RFC 9285 section 4.3",
+    "ref": "derived from RFC 9285 section 4.1 (a lone character cannot be a group)",
     "op": "base45:decode",
     "params": {},
     "input": {

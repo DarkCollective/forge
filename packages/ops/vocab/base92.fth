@@ -12,15 +12,6 @@ IN: base92
 
 \ ---- encode ----
 
-\ The byte j of d, or 0 past the end.
-: _at ( d:bytes j:int -- int )
-  j d len < [ d j nth ] [ 0 ] if ;
-
-\ The n bits (n up to 13) of d from bit p, zero padded past the end.
-: _bits ( d:bytes p:int n:int -- int )
-  d p 8 div _at 16 shl d p 8 div 1 + _at 8 shl bor d p 8 div 2 + _at bor
-  24 p 8 mod - n - shr 1 n shl 1 - band ;
-
 \ The two characters of a 13-bit value.
 : _two ( x:int a:bytes -- bytes )
   { } a x 91 div nth append a x 91 mod nth append list>bytes ;
@@ -36,11 +27,11 @@ IN: base92
   d _rest 0 =
   [ #[ ] ]
   [ d _rest 7 <
-    [ { } a d d _start 6 _bits nth append list>bytes ]
-    [ d d _start 13 _bits a _two ] if ] if ;
+    [ { } a d d _start 6 util:bit-field nth append list>bytes ]
+    [ d d _start 13 util:bit-field a _two ] if ] if ;
 
 : _group ( d:bytes i:int a:bytes -- bytes )
-  d i 13 * 13 _bits a _two ;
+  d i 13 * 13 util:bit-field a _two ;
 
 : _enc ( d:bytes a:bytes -- bytes )
   0 d len 8 * 13 div range [ d swap a _group ] map #[ ] bjoin
@@ -59,12 +50,9 @@ IN: base92
   [ v k 2 * nth 91 * v k 2 * 1 + nth + dup 8191 > [ "a pair of characters is more than 13 bits" raise:coerce ] when ]
   [ v k 2 * nth dup 63 > [ "a last character is more than 6 bits" raise:coerce ] when 7 shl ] if ;
 
-: _u ( us:list k:int -- int )
-  k us len < [ us k nth ] [ 0 ] if ;
-
 \ The byte j of the bit stream of the units (zero past the end).
 : _byte ( us:list j:int -- int )
-  us j 8 * 13 div _u 13 shl us j 8 * 13 div 1 + _u bor
+  us j 8 * 13 div util:byte-at 13 shl us j 8 * 13 div 1 + util:byte-at bor
   18 j 8 * 13 mod - shr 255 band ;
 
 \ bits is the number of data bits in the units; the padding bits after them must be zero.

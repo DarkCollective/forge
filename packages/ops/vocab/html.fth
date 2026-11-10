@@ -35,19 +35,13 @@ IN: html
   format "named" = cp _special? and [ cp _named ] [ cp format _numeric ] if ;
 
 : _char-of ( cp:int scope:str format:str -- str )
-  cp scope _escape? [ cp format _ref ] [ { } cp append codes>str ] if ;
-
-: _dec-digit? ( c:int -- bool )
-  c 48 >= c 57 <= and ;
-
-: _hex-digit? ( c:int -- bool )
-  c 48 >= c 57 <= and c 97 >= c 102 <= and or c 65 >= c 70 <= and or ;
+  cp scope _escape? [ cp format _ref ] [ cp util:cp>str ] if ;
 
 : _digit-in? ( c:int radix:int -- bool )
-  radix 16 = [ c _hex-digit? ] [ c _dec-digit? ] if ;
+  radix 16 = [ c util:hex-digit? ] [ c util:dec-digit? ] if ;
 
 : _alnum? ( c:int -- bool )
-  c _dec-digit? c 65 >= c 90 <= and or c 97 >= c 122 <= and or ;
+  c util:dec-digit? c 65 >= c 90 <= and or c 97 >= c 122 <= and or ;
 
 \ ---- the data ----
 
@@ -2299,10 +2293,6 @@ zwnj;=200c" ;
 : _chars ( hex:str -- str )
   hex "," split [ 16 str>int-radix ] map codes>str ;
 
-\ The index of the first element of codes, from i on, that fails pred (or the length of codes).
-: _scan ( codes:list i:int pred:quot -- int )
-  i [ dup codes len < [ dup codes swap nth pred call ] [ false ] if ] [ 1 + ] while ;
-
 : _cp-of ( v:int -- int )
   v 0 = v 1114111 > or v 55296 >= v 57343 <= and or
   [ 65533 ]
@@ -2318,12 +2308,12 @@ zwnj;=200c" ;
   to from - 4000 >
   [ 65533 ]
   [ p from to slice radix str>int-radix _cp-of ] if
-  { } swap append codes>str
+  util:cp>str
   p to _after-semi cat ;
 
 : _num-at ( p:str codes:list start:int radix:int -- str )
-  codes start [ radix _digit-in? ] _scan
-  dup start = [ drop "&" p cat ] [ p start rot radix _num-result ] if ;
+  codes start codes len slice [ radix _digit-in? ] util:count-leading
+  dup 0 = [ drop "&" p cat ] [ start + p start rot radix _num-result ] if ;
 
 : _x? ( codes:list -- bool )
   codes len 1 > [ codes 1 nth dup 120 = swap 88 = or ] [ false ] if ;
@@ -2357,9 +2347,9 @@ zwnj;=200c" ;
 : _piece ( p:str table:record -- str )
   p len 0 =
   [ "&" ]
-  [ p 0 1 slice "#" =
+  [ p "#" util:starts-with?
     [ p _numeric-piece ]
-    [ p str>codes 0 [ _alnum? ] _scan dup 0 =
+    [ p str>codes [ _alnum? ] util:count-leading dup 0 =
       [ drop "&" p cat ]
       [ p table rot _name-at ] if ] if ] if ;
 

@@ -21,6 +21,7 @@ import {
   findDuplicates,
   formatReport,
   groupNames,
+  pendingByName,
   similarity,
 } from "./dupes.js";
 import type { SourceFile } from "./types.js";
@@ -179,6 +180,110 @@ describe("findDuplicates", () => {
   });
 });
 
+describe("util-candidate markers", () => {
+  const body = "b 32 = b 9 >= b 13 <= and or";
+  const marked = (vocab: string, name: string, proposed: string | null, b = body): SourceFile =>
+    file(
+      vocab,
+      `${proposed === null ? "" : `\\ util-candidate: ${proposed}\n`}: ${name} ( b:int -- bool ) ${b} ;`,
+    );
+
+  test("the marker names the proposed util word of the definition right below it", () => {
+    const defs = extractDefinitions([
+      marked("a", "_ws", "ws?"),
+      marked("b", "_sp", null),
+      file("c", `\\ util-candidate: nope\n\n: _x ( b:int -- bool ) ${body} ;`),
+    ]);
+    expect(defs.map((d) => d.candidate)).toEqual(["ws?", null, null]);
+  });
+
+  test("a group whose members all carry the marker is pending, not a failure", () => {
+    const r = findDuplicates(
+      extractDefinitions([marked("a", "_ws", "ws?"), marked("b", "_sp", "ws?")]),
+    );
+    expect(r.exact).toEqual([]);
+    expect(r.pending).toHaveLength(1);
+    expect(pendingByName(r).map(([name]) => name)).toEqual(["ws?"]);
+    const text = formatReport(r);
+    expect(text).toContain("Pending util promotion (util-candidate markers): 1");
+    expect(text).toContain("ws?");
+    expect(text).toContain("a:_ws, b:_sp");
+  });
+
+  test("one unmarked copy makes the whole group a failure", () => {
+    const r = findDuplicates(
+      extractDefinitions([
+        marked("a", "_ws", "ws?"),
+        marked("b", "_sp", "ws?"),
+        marked("c", "_sp2", null),
+      ]),
+    );
+    expect(r.pending).toEqual([]);
+    expect(r.exact).toHaveLength(1);
+    expect(r.exact[0]?.members).toHaveLength(3);
+  });
+
+  test("a marked copy with a changed body is not exact: the structural check is what catches it", () => {
+    const r = findDuplicates(
+      extractDefinitions([
+        marked("a", "_ws", "ws?"),
+        marked("b", "_sp", "ws?", "b 32 = b 13 <= b 9 >= and or"),
+      ]),
+    );
+    expect(r.exact).toEqual([]);
+    expect(r.pending).toEqual([]);
+    expect(r.similar).toHaveLength(1);
+  });
+});
+
+describe("likely re-implementations", () => {
+  const defs = (...xs: [string, string, string, string][]): SourceFile[] =>
+    xs.map(([vocab, name, effect, b]) => file(vocab, `: ${name} ( ${effect} ) ${b} ;`));
+
+  test("the same signature and the same set of core words, in another order, is reported", () => {
+    const r = findDuplicates(
+      extractDefinitions(
+        defs(
+          ["a", "_pad", "s:str n:int -- str", "s len n < [ s n slice ] [ s ] if s len drop"],
+          ["b", "_clip", "s:str n:int -- str", "s s len drop [ s ] [ s n slice ] if n len <"],
+        ),
+      ),
+    );
+    expect(r.exact).toEqual([]);
+    expect(r.similar).toHaveLength(1);
+    expect(r.similar[0]?.members.map((m) => m.qname)).toEqual(["a:_pad", "b:_clip"]);
+    expect(formatReport(r)).toContain("Likely re-implementations");
+  });
+
+  test("a different signature, a public word or too few core words is not reported", () => {
+    const r = findDuplicates(
+      extractDefinitions(
+        defs(
+          ["a", "_f", "s:str n:int -- str", "s len n < [ s n slice ] [ s ] if s len drop"],
+          ["b", "_g", "s:str n:int -- int", "s s len drop [ s ] [ s n slice ] if n len <"],
+          ["c", "pub", "s:str n:int -- str", "s s len drop [ s ] [ s n slice ] if n len <"],
+          ["d", "_h", "x:int y:int -- int", "x y + x y + x y + x y +"],
+          ["e", "_i", "x:int y:int -- int", "x y + y x + y x + x y +"],
+        ),
+      ),
+    );
+    expect(r.similar).toEqual([]);
+  });
+
+  test("copies of one body in several vocabularies are exact duplicates, not re-implementations", () => {
+    const r = findDuplicates(
+      extractDefinitions(
+        defs(
+          ["a", "_f", "s:str n:int -- str", "s len n < [ s n slice ] [ s ] if s len drop"],
+          ["b", "_g", "s:str n:int -- str", "s len n < [ s n slice ] [ s ] if s len drop"],
+        ),
+      ),
+    );
+    expect(r.exact).toHaveLength(1);
+    expect(r.similar).toEqual([]);
+  });
+});
+
 describe("the real vocabularies", () => {
   const dir = `${fileURLToPath(import.meta.url)
     .replaceAll("\\", "/")
@@ -187,6 +292,11 @@ describe("the real vocabularies", () => {
     .filter((name) => name.endsWith(".fth"))
     .sort()
     .map((name) => ({ name, text: readFileSync(`${dir}/${name}`, "utf8") }));
+
+  test("no util-candidate marker is left: every pending copy has been promoted", () => {
+    const result = findDuplicates(extractDefinitions(files));
+    expect(pendingByName(result).map(([name]) => name)).toEqual([]);
+  });
 
   test("no helper is copied between vocabularies", () => {
     const { exact } = findDuplicates(extractDefinitions(files));

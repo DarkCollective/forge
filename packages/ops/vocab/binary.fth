@@ -9,7 +9,7 @@ IN: binary
   b 48 = [ 0 ] [ b 49 = [ 1 ] [ "a binary digit is 0 or 1" raise:coerce ] if ] if ;
 
 : _byte-of ( bits:list i:int -- int )
-  bits i 8 * dup 8 + slice 0 [ swap 2 * + ] reduce ;
+  bits i 8 * dup 8 + slice list>bytes 2 util:digits>int ;
 
 : _bits-bytes ( bits:list -- bytes )
   bits len 8 mod 0 = not [ "binary digits come in groups of eight" raise:coerce ] when

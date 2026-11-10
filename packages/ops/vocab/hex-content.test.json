@@ -2,7 +2,7 @@
   {
     "name": "encode printable text unchanged",
     "ref": "Snort/Suricata content syntax (|41 42| hex sections between literal text); hand-computed",
-    "op": "hexcontent:encode",
+    "op": "hex-content:encode",
     "params": {
       "scope": "non-printable"
     },
@@ -18,7 +18,7 @@
   {
     "name": "encode CRLF and NUL as a hex section",
     "ref": "Snort/Suricata content syntax (|41 42| hex sections between literal text); hand-computed",
-    "op": "hexcontent:encode",
+    "op": "hex-content:encode",
     "params": {},
     "input": {
       "value": "474554200d0a00",
@@ -32,7 +32,7 @@
   {
     "name": "encode | \" ; \\ as hex",
     "ref": "Snort/Suricata content syntax (|41 42| hex sections between literal text); hand-computed",
-    "op": "hexcontent:encode",
+    "op": "hex-content:encode",
     "params": {},
     "input": {
       "value": "617c62223b5c63",
@@ -46,7 +46,7 @@
   {
     "name": "encode all bytes as one hex section",
     "ref": "Snort/Suricata content syntax (|41 42| hex sections between literal text); hand-computed",
-    "op": "hexcontent:encode",
+    "op": "hex-content:encode",
     "params": {
       "scope": "all"
     },
@@ -62,7 +62,7 @@
   {
     "name": "encode empty input",
     "ref": "hand-computed (no bytes)",
-    "op": "hexcontent:encode",
+    "op": "hex-content:encode",
     "params": {},
     "input": {
       "value": "",
@@ -76,7 +76,7 @@
   {
     "name": "encode empty input, scope all",
     "ref": "hand-computed (no bytes)",
-    "op": "hexcontent:encode",
+    "op": "hex-content:encode",
     "params": {
       "scope": "all"
     },
@@ -92,7 +92,7 @@
   {
     "name": "encode non-ASCII UTF-8 as hex",
     "ref": "Snort/Suricata content syntax (|41 42| hex sections between literal text); hand-computed (c3 a9)",
-    "op": "hexcontent:encode",
+    "op": "hex-content:encode",
     "params": {},
     "input": {
       "value": "é",
@@ -106,7 +106,7 @@
   {
     "name": "encode binary ff 00",
     "ref": "Snort/Suricata content syntax (|41 42| hex sections between literal text); hand-computed",
-    "op": "hexcontent:encode",
+    "op": "hex-content:encode",
     "params": {},
     "input": {
       "value": "ff00",
@@ -120,7 +120,7 @@
   {
     "name": "encode text around binary",
     "ref": "Snort/Suricata content syntax (|41 42| hex sections between literal text); hand-computed",
-    "op": "hexcontent:encode",
+    "op": "hex-content:encode",
     "params": {},
     "input": {
       "value": "4142ff4344",
@@ -134,7 +134,7 @@
   {
     "name": "decode literal and hex sections",
     "ref": "Snort/Suricata content syntax (|41 42| hex sections between literal text); hand-computed",
-    "op": "hexcontent:decode",
+    "op": "hex-content:decode",
     "params": {},
     "input": {
       "value": "GET |0D 0A 00|",
@@ -148,7 +148,7 @@
   {
     "name": "decode hex without spaces",
     "ref": "Snort/Suricata content syntax (|41 42| hex sections between literal text); hand-computed",
-    "op": "hexcontent:decode",
+    "op": "hex-content:decode",
     "params": {},
     "input": {
       "value": "|41 42|c|4344|",
@@ -162,7 +162,7 @@
   {
     "name": "decode empty input",
     "ref": "hand-computed",
-    "op": "hexcontent:decode",
+    "op": "hex-content:decode",
     "params": {},
     "input": {
       "value": "",
@@ -176,7 +176,7 @@
   {
     "name": "decode UTF-8 literal text",
     "ref": "Snort/Suricata content syntax (|41 42| hex sections between literal text); hand-computed",
-    "op": "hexcontent:decode",
+    "op": "hex-content:decode",
     "params": {},
     "input": {
       "value": "é|41|",
@@ -190,7 +190,7 @@
   {
     "name": "decode backslash escapes",
     "ref": "Snort: \\; \\\" and \\\\ in content",
-    "op": "hexcontent:decode",
+    "op": "hex-content:decode",
     "params": {},
     "input": {
       "value": "\\;\\\"\\\\",
@@ -204,7 +204,7 @@
   {
     "name": "decode lower-case hex and binary",
     "ref": "Snort/Suricata content syntax (|41 42| hex sections between literal text); hand-computed",
-    "op": "hexcontent:decode",
+    "op": "hex-content:decode",
     "params": {},
     "input": {
       "value": "|ff 00 aB|",
@@ -218,7 +218,7 @@
   {
     "name": "error: unclosed hex section",
     "ref": "Snort/Suricata content syntax (|41 42| hex sections between literal text); hand-computed",
-    "op": "hexcontent:decode",
+    "op": "hex-content:decode",
     "params": {},
     "input": {
       "value": "abc|41",
@@ -231,7 +231,7 @@
   {
     "name": "error: odd number of hex digits",
     "ref": "Snort/Suricata content syntax (|41 42| hex sections between literal text); hand-computed",
-    "op": "hexcontent:decode",
+    "op": "hex-content:decode",
     "params": {},
     "input": {
       "value": "|4|",
@@ -244,7 +244,7 @@
   {
     "name": "error: non-hex character",
     "ref": "Snort/Suricata content syntax (|41 42| hex sections between literal text); hand-computed",
-    "op": "hexcontent:decode",
+    "op": "hex-content:decode",
     "params": {},
     "input": {
       "value": "|zz|",

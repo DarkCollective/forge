@@ -11,17 +11,13 @@ IN: base85
 
 \ ---- encode ----
 
-\ The big-endian integer of the elements of b, each taken as 8 bits.
-: _pack ( b:bytes -- int )
-  b 0 [ swap 8 shl bor ] reduce ;
-
 : _digits ( v:int alpha:bytes -- bytes )
   { v 52200625 div v 614125 div 85 mod v 7225 div 85 mod v 85 div 85 mod v 85 mod }
   [ alpha swap nth ] map list>bytes ;
 
 \ One group: its five digits, or z for an all-zero group (ascii85, full groups only).
 : _group ( p:bytes g:int alpha:bytes zmode:bool nfull:int -- bytes )
-  p g 4 * g 4 * 4 + slice _pack
+  p g 4 * g 4 * 4 + slice 256 util:digits>int
   dup 0 = zmode and g nfull < and
   [ drop { 122 } list>bytes ]
   [ alpha _digits ] if ;

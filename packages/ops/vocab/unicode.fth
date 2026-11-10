@@ -7,19 +7,9 @@ IN: unicode
 
 \ ---- escape ----
 
-: _hexdigit? ( c:int -- bool )
-  c 48 >= c 57 <= and c 65 >= c 70 <= and or c 97 >= c 102 <= and or ;
-
-: _decdigit? ( c:int -- bool )
-  c 47 > c 58 < and ;
-
-: _zeros ( n:int -- str )
-  "000000000" 0 n slice ;
-
 \ v in hex, left-padded with zeros to at least n digits.
 : _hex ( v:int n:int up:bool -- str )
-  v 16 int>str-radix dup len n < [ n over len - _zeros swap cat ] when
-  up [ upper ] when ;
+  v n util:pad-hex up [ upper ] when ;
 
 \ A UTF-16 code unit as pre + 4 hex digits.
 : _unit ( v:int pre:str up:bool -- str )
@@ -41,12 +31,12 @@ IN: unicode
         [ "&#x" c 1 up _hex cat ";" cat ] if ] if ] if ] if ;
 
 : _hex-next? ( cps:list j:int -- bool )
-  j cps len < [ cps j nth _hexdigit? ] [ false ] if ;
+  j cps len < [ cps j nth util:hex-digit? ] [ false ] if ;
 
 : _piece ( c:int i:int cps:list format:str up:bool scope:str -- str )
   scope "all" = c 127 > or
   [ c format up cps i 1 + _hex-next? _esc ]
-  [ { } c append codes>str ] if ;
+  [ c util:cp>str ] if ;
 
 : _escape ( cps:list format:str up:bool scope:str -- str )
   cps [ cps format up scope _piece ] mapi "" join ;
@@ -65,18 +55,11 @@ META: escape
 \ ---- unescape ----
 
 \ Number of leading characters of s (at most max) for which pred holds.
-: _run-step ( acc:int c:int pred:any -- int )
-  acc 0 < [ acc ] [ c pred call [ acc 1 + ] [ acc neg 1 - ] if ] if ;
-
-: _run ( s:str max:int pred:any -- int )
-  s str>codes dup len max min 0 swap slice 0 [ pred _run-step ] reduce
-  dup 0 < [ neg 1 - ] when ;
+: _run ( s:str max:int pred:quot -- int )
+  s str>codes dup len max min 0 swap slice pred util:count-leading ;
 
 : _valid-cp? ( v:int -- bool )
   v 1114111 <= v 55296 >= v 57343 <= and not and ;
-
-: _cp>str ( v:int -- str )
-  { v } codes>str ;
 
 \ The value of the 4 hex digits after the u that starts s, or -1.
 : _u-unit ( s:str -- int )
@@ -101,17 +84,17 @@ META: escape
   [ "" piece false ]
   [ v _high?
     [ piece len 5 = next _u-unit _low? and
-      [ v next _u-unit _pair _cp>str "" true ] [ "" piece false ] if ]
+      [ v next _u-unit _pair util:cp>str "" true ] [ "" piece false ] if ]
     [ v _low?
       [ prev len 5 = prev _u-unit _high? and
         [ "" piece 5 piece len slice true ] [ "" piece false ] if ]
-      [ v _cp>str piece 5 piece len slice true ] if ] if ] if ;
+      [ v util:cp>str piece 5 piece len slice true ] if ] if ] if ;
 
 : _u-parse ( piece:str prev:str next:str -- str str bool )
   piece _u-unit piece prev next _u-parse2 ;
 
 : _x-emit ( v:int piece:str cut:int -- str str bool )
-  v _valid-cp? [ v _cp>str piece cut piece len slice true ] [ "" piece false ] if ;
+  v _valid-cp? [ v util:cp>str piece cut piece len slice true ] [ "" piece false ] if ;
 
 \ k is the number of hex digits after the x{ of piece.
 : _x-parse2 ( piece:str k:int -- str str bool )
@@ -123,7 +106,7 @@ META: escape
 
 : _x-parse ( piece:str -- str str bool )
   piece len 3 >= [ piece 0 2 slice "x{" = ] [ false ] if
-  [ piece piece 2 piece len slice 8 [ _hexdigit? ] _run _x-parse2 ]
+  [ piece piece 2 piece len slice 8 [ util:hex-digit? ] _run _x-parse2 ]
   [ "" piece false ] if ;
 
 : _bs-parse ( piece:str prev:str next:str -- str str bool )
@@ -137,14 +120,14 @@ META: escape
 
 : _plus-emit ( piece:str k:int -- str str bool )
   k 0 = [ "" piece false ]
-  [ piece 0 k slice 16 str>int-radix _cp>str piece k piece len slice true ] if ;
+  [ piece 0 k slice 16 str>int-radix util:cp>str piece k piece len slice true ] if ;
 
 : _plus-parse ( piece:str prev:str next:str -- str str bool )
-  piece dup piece 6 [ _hexdigit? ] _run _pick _plus-emit ;
+  piece dup piece 6 [ util:hex-digit? ] _run _pick _plus-emit ;
 
 \ A numeric reference body: digits from start in the radix, then a ;.
 : _ref-emit ( v:int piece:str cut:int -- str str bool )
-  v _valid-cp? [ v _cp>str piece cut piece len slice true ] [ "" piece false ] if ;
+  v _valid-cp? [ v util:cp>str piece cut piece len slice true ] [ "" piece false ] if ;
 
 : _ref2 ( piece:str start:int radix:int k:int -- str str bool )
   k 0 > piece len start k + 1 + >= and
@@ -156,8 +139,8 @@ META: escape
 : _html-parse ( piece:str prev:str next:str -- str str bool )
   piece len 0 = [ "" piece false ]
   [ piece 0 1 slice lower "x" =
-    [ piece 1 16 piece 1 piece len slice 8 [ _hexdigit? ] _run _ref2 ]
-    [ piece 0 10 piece 8 [ _decdigit? ] _run _ref2 ] if ] if ;
+    [ piece 1 16 piece 1 piece len slice 8 [ util:hex-digit? ] _run _ref2 ]
+    [ piece 0 10 piece 8 [ util:dec-digit? ] _run _ref2 ] if ] if ;
 
 \ One level of unescaping: cut text at intro, give each piece to parse with its neighbours, and
 \ run next over all the text that is not part of an escape (so decoded characters are never read

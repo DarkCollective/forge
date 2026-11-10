@@ -13,16 +13,9 @@ IN: hexdump
 
 \ ---- encode ----
 
-: _spaces ( n:int -- str )
-  0 n range [ drop " " ] map "" join ;
-
-\ The last 8 characters of t.
-: _last8 ( t:str -- str )
-  t t len 8 - t len slice ;
-
 \ The offset as 8 lowercase hex digits.
 : _offset ( v:int -- str )
-  "0000000" v 16 int>str-radix cat _last8 ;
+  v 8 util:pad-hex ;
 
 \ Hex digits in groups of four (two bytes), separated by a space.
 : _group ( h:str -- str )
@@ -41,7 +34,7 @@ IN: hexdump
   off _offset ": " cat
   chunk bytes>hex up [ upper ] when _group cat
   with-ascii
-  [ width _field-len chunk len _field-len - _spaces cat
+  [ width _field-len chunk len _field-len - " " swap util:repeat-str cat
     "  " cat
     text bytes>latin1 cat ]
   when ;
@@ -72,23 +65,13 @@ META: encode
 
 \ ---- decode ----
 
-\ The text without its leading spaces.
-: _ltrim ( s:str -- str )
-  s len 0 =
-  [ s ]
-  [ s 0 1 slice " " = [ s 1 s len slice recurse ] [ s ] if ]
-  if ;
-
 \ True when the text has a character other than a space.
 : _blank? ( s:str -- bool )
   s " " split [ len 0 > ] filter len 0 = ;
 
 \ True when the token ends in a colon (xxd and this vocabulary's own layout).
 : _colon? ( t:str -- bool )
-  t len 0 >
-  [ t t len 1 - t len slice ":" = ]
-  [ false ]
-  if ;
+  t ":" util:ends-with? ;
 
 \ The token without a trailing colon.
 : _uncolon ( t:str -- str )
@@ -123,7 +106,7 @@ META: encode
   "Decode a hex dump to bytes. Accepts this vocabulary's layout, xxd output (any width and grouping) and hexdump -C output: each line is an offset (hex digits, optionally followed by a colon), the bytes as hex, and an ASCII column. Offsets and the ASCII column are ignored and blank lines are skipped. A line with no valid offset, a non-hex or odd-length hex field, or a * line that hexdump uses to squeeze repeated lines (use hexdump -v) raises E_COERCE. Empty input gives empty bytes." doc
   "Encodings" category
   "\r" split "" join "\n" split
-  [ _ltrim ] map [ _blank? not ] filter
+  [ [ 32 = ] util:trim-start ] map [ _blank? not ] filter
   [ _line-bytes ] map #[ ] bjoin ;
 
 META: decode

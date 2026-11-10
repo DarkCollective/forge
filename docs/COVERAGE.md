@@ -77,14 +77,14 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Unescape Unicode Characters | covered | `unicode:unescape` | Reads all the escape formats at once and leaves other text alone. |
 | Normalise Unicode | covered | `unicode:normalize` | NFC, NFD, NFKC and NFKD. |
 | Escape Smart Characters | redesigned | `unicode:smart-to-ascii` | Forge replaces typographic quotes, dashes, the ellipsis and the no-break space by ASCII with a fixed table; there is no option to keep a subset. |
-| To Quoted Printable | covered | `quotedprintable:encode` |  |
-| From Quoted Printable | covered | `quotedprintable:decode` |  |
+| To Quoted Printable | covered | `quoted-printable:encode` |  |
+| From Quoted Printable | covered | `quoted-printable:decode` |  |
 | To Punycode | covered | `punycode:encode` | Label mode (raw RFC 3492) or domain mode (per dotted label, xn-- prefix). |
 | From Punycode | covered | `punycode:decode` | Label mode (raw RFC 3492) or domain mode (per dotted label, xn-- prefix). |
 | AMF Encode | not yet |  |  |
 | AMF Decode | not yet |  |  |
-| To Hex Content | covered | `hexcontent:encode` |  |
-| From Hex Content | covered | `hexcontent:decode` |  |
+| To Hex Content | covered | `hex-content:encode` |  |
+| From Hex Content | covered | `hex-content:decode` |  |
 | PEM to Hex | not yet |  |  |
 | Hex to PEM | not yet |  |  |
 | Parse ASN.1 hex string | not yet |  |  |

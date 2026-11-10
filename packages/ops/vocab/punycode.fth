@@ -35,7 +35,7 @@ IN: punycode
 
 \ Digit value 0 to 35 as a lower-case letter or digit (a to z are 0 to 25, 0 to 9 are 26 to 35).
 : _digit-char ( d:int -- str )
-  d 26 < [ d 97 + ] [ d 22 + ] if { } swap append codes>str ;
+  d 26 < [ d 97 + ] [ d 22 + ] if util:cp>str ;
 
 \ The variable-length integer q of section 6.3, the digit string for threshold weights from k.
 : _vi2 ( q:int k:int bias:int t:int -- str )
@@ -113,7 +113,7 @@ META: encode
 : _insert ( n:int -- )
   n 1114111 > n 55296 >= n 57343 <= and or
   [ "the Punycode decodes to an invalid code point" raise:coerce ] when
-  _out 0 _i slice { } n append codes>str cat
+  _out 0 _i slice n util:cp>str cat
   _out _i _out len slice cat _out! ;
 
 \ Decode a list of code points (no prefix) to text.

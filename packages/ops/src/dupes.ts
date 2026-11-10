@@ -39,6 +39,20 @@
  * of the sets of adjacent token pairs), and which is not already an exact duplicate.
  *
  * Bodies shorter than MIN_TOKENS tokens are ignored: too short to say anything.
+ *
+ * Pending promotion: a private helper may carry a file-local marker, the comment line
+ * `\ util-candidate: <proposed util name>` immediately before its definition. Parallel authors who
+ * cannot edit `util.fth` use it to keep a straight private copy. An exact-duplicate group whose
+ * members ALL carry the marker is not a failure: it is reported as pending promotion, grouped by
+ * proposed name, and the orchestrator promotes it at the wave close-out. A group with even one
+ * unmarked member still fails. Varying a body to evade the check is not allowed: the structural
+ * check below exists to catch that.
+ *
+ * Likely re-implementation (a report, not a failure): two private helpers in different
+ * vocabularies with the same effect signature (input and output types) and the same SET of core
+ * words (every word of the body that is not a parameter and not defined in its own vocabulary,
+ * qualified words included; order and repetition ignored), at least MIN_CORE distinct words, that
+ * are not exact duplicates. The same words in a different order can still be the same idea.
  */
 import { read } from "@forge/lang";
 import type { Token } from "@forge/lang";
@@ -46,6 +60,8 @@ import type { SourceFile } from "./types.js";
 
 /** Bodies with fewer normalised tokens than this are not compared. */
 export const MIN_TOKENS = 4;
+/** Fewest distinct core words for a pair to count as a likely re-implementation. */
+export const MIN_CORE = 3;
 /** The default near-duplicate threshold. */
 export const NEAR_THRESHOLD = 0.8;
 
@@ -59,6 +75,10 @@ export interface Definition {
   readonly outputs: readonly string[];
   /** The normalised body tokens. */
   readonly tokens: readonly string[];
+  /** Distinct core words of the body (not parameters, not own-vocabulary words), sorted. */
+  readonly core: readonly string[];
+  /** The proposed util name of a `\ util-candidate:` marker before the definition, else null. */
+  readonly candidate: string | null;
 }
 
 export interface ExactGroup {
@@ -72,9 +92,20 @@ export interface NearPair {
   readonly similarity: number;
 }
 
+/** A group of private helpers with the same effect signature and the same set of core words. */
+export interface SimilarGroup {
+  readonly shape: string;
+  readonly core: readonly string[];
+  readonly members: readonly Definition[];
+}
+
 export interface DupesResult {
+  /** Exact duplicates that are failures (at least one member has no marker). */
   readonly exact: readonly ExactGroup[];
+  /** Exact duplicates whose members all carry the `util-candidate` marker. */
+  readonly pending: readonly ExactGroup[];
   readonly near: readonly NearPair[];
+  readonly similar: readonly SimilarGroup[];
 }
 
 export interface DupesOptions {
@@ -156,6 +187,21 @@ function tokenText(
   }
 }
 
+const MARKER = /^\\ util-candidate:\s*(\S+)\s*$/;
+const DEFINE = /^:\s+(\S+)/;
+
+/** Maps a definition name to the util name proposed by the marker line right before it. */
+function markersOf(text: string): Map<string, string> {
+  const out = new Map<string, string>();
+  const lines = text.split(/\r?\n/);
+  for (let i = 0; i + 1 < lines.length; i++) {
+    const m = MARKER.exec(lines[i] as string);
+    const d = DEFINE.exec(lines[i + 1] as string);
+    if (m !== null && d !== null) out.set(d[1] as string, m[1] as string);
+  }
+  return out;
+}
+
 /** Every colon definition of the given `.fth` files, normalised. A file the reader rejects throws. */
 export function extractDefinitions(files: readonly SourceFile[]): Definition[] {
   const out: Definition[] = [];
@@ -163,6 +209,7 @@ export function extractDefinitions(files: readonly SourceFile[]): Definition[] {
     if (!file.name.endsWith(".fth")) continue;
     const vocab = file.name.slice(0, -".fth".length);
     const tokens = read(file.text);
+    const markers = markersOf(file.text);
     // pass 1: the names defined in this vocabulary
     const own = new Set<string>();
     for (let i = 0; i + 1 < tokens.length; i++) {
@@ -184,6 +231,7 @@ export function extractDefinitions(files: readonly SourceFile[]): Definition[] {
         if (item.name !== null) locals.set(item.name, k);
       });
       const body: string[] = [];
+      const core = new Set<string>();
       let j = i + 3;
       for (; j < tokens.length; j++) {
         const b = tokens[j] as Token;
@@ -198,7 +246,11 @@ export function extractDefinitions(files: readonly SourceFile[]): Definition[] {
           j++; // drop the pair
           continue;
         }
-        body.push(tokenText(b, locals, own, vocab));
+        const text = tokenText(b, locals, own, vocab);
+        body.push(text);
+        const isCore =
+          (b.kind === "word" && !locals.has(b.text) && !own.has(b.text)) || b.kind === "qword";
+        if (isCore) core.add(text);
       }
       out.push({
         vocab,
@@ -207,6 +259,8 @@ export function extractDefinitions(files: readonly SourceFile[]): Definition[] {
         inputs: effect.inputs.map((x) => x.type),
         outputs: effect.outputs.map((x) => x.type),
         tokens: body,
+        core: [...core].sort(),
+        candidate: markers.get(nameTok.text) ?? null,
       });
       i = j;
     }
@@ -249,11 +303,13 @@ export function findDuplicates(
     else list.push(d);
   }
   const exact: ExactGroup[] = [];
+  const pending: ExactGroup[] = [];
   const exactKey = new Map<Definition, string>();
   for (const [key, members] of groups) {
     for (const m of members) exactKey.set(m, key);
     if (new Set(members.map((m) => m.vocab)).size > 1) {
-      exact.push({ shape: shapeOf(members[0] as Definition), members });
+      const group = { shape: shapeOf(members[0] as Definition), members };
+      (members.every((m) => m.candidate !== null) ? pending : exact).push(group);
     }
   }
 
@@ -270,12 +326,45 @@ export function findDuplicates(
     }
   }
   near.sort((x, y) => y.similarity - x.similarity || x.a.qname.localeCompare(y.a.qname));
-  return { exact, near };
+
+  const similarGroups = new Map<string, Definition[]>();
+  for (const d of eligible) {
+    if (!d.name.startsWith("_") || d.core.length < MIN_CORE) continue;
+    const key = `${shapeOf(d)}\u0001${d.core.join("\u0002")}`;
+    const list = similarGroups.get(key);
+    if (list === undefined) similarGroups.set(key, [d]);
+    else list.push(d);
+  }
+  const similar: SimilarGroup[] = [];
+  for (const members of similarGroups.values()) {
+    if (new Set(members.map((m) => m.vocab)).size < 2) continue;
+    // a group that is only exact copies of one body is already reported as exact or pending
+    if (new Set(members.map((m) => exactKey.get(m))).size < 2) continue;
+    similar.push({
+      shape: shapeOf(members[0] as Definition),
+      core: (members[0] as Definition).core,
+      members,
+    });
+  }
+  similar.sort((x, y) =>
+    (x.members[0] as Definition).qname.localeCompare((y.members[0] as Definition).qname),
+  );
+  return { exact, pending, near, similar };
 }
 
 /** The names in an exact group, for messages: `a:x, b:y`. */
 export function groupNames(group: ExactGroup): string {
   return group.members.map((m) => m.qname).join(", ");
+}
+
+/** The pending-promotion groups by proposed util name: `[name, group]` pairs, sorted by name. */
+export function pendingByName(result: DupesResult): [string, ExactGroup][] {
+  const out: [string, ExactGroup][] = [];
+  for (const g of result.pending) {
+    const names = new Set(g.members.map((m) => m.candidate as string));
+    out.push([[...names].sort().join(" / "), g]);
+  }
+  return out.sort((x, y) => x[0].localeCompare(y[0]));
 }
 
 /** A readable report of the result. */
@@ -287,6 +376,11 @@ export function formatReport(result: DupesResult): string {
     lines.push(`    body: ${(g.members[0] as Definition).tokens.join(" ")}`);
   }
   lines.push("");
+  lines.push(`Pending util promotion (util-candidate markers): ${result.pending.length}`);
+  for (const [name, g] of pendingByName(result)) {
+    lines.push(`  ${name}  ${g.shape}  ${groupNames(g)}`);
+  }
+  lines.push("");
   lines.push(
     `Near duplicates (same arity, bigram Jaccard >= ${NEAR_THRESHOLD}): ${result.near.length}`,
   );
@@ -295,9 +389,21 @@ export function formatReport(result: DupesResult): string {
       `  ${p.similarity.toFixed(2)}  ${p.a.qname} ${shapeOf(p.a)}  ~  ${p.b.qname} ${shapeOf(p.b)}`,
     );
   }
+  lines.push("");
+  lines.push(
+    `Likely re-implementations (private, same signature and same set of core words): ${result.similar.length}`,
+  );
+  for (const g of result.similar) {
+    lines.push(`  ${g.shape}  ${g.members.map((m) => m.qname).join(", ")}`);
+    lines.push(`    words: ${g.core.join(" ")}`);
+  }
   if (result.exact.length > 0) {
     lines.push("");
     lines.push("Move each exact duplicate into vocab/util.fth and call it as util:name.");
+  }
+  if (result.pending.length > 0) {
+    lines.push("");
+    lines.push("Promote each pending candidate into vocab/util.fth at the wave close-out.");
   }
   return lines.join("\n");
 }

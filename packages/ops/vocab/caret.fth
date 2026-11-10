@@ -5,16 +5,13 @@
 \ escape), exactly as for cat -v. The words are FL; E_COERCE comes from raise:coerce.
 IN: caret
 
-: _char ( b:int -- str )
-  { } b append codes>str ;
-
 \ Notation of a byte 0 to 127, without the tab and line feed exception.
 : _ctrl ( b:int -- str )
-  b 127 = [ "^?" ] [ b 32 < [ "^" b 64 + _char cat ] [ b _char ] if ] if ;
+  b 127 = [ "^?" ] [ b 32 < [ "^" b 64 + util:cp>str cat ] [ b util:cp>str ] if ] if ;
 
 : _piece ( b:int -- str )
   b 128 >= [ "M-" b 128 - _ctrl cat ]
-  [ b 9 = b 10 = or [ b _char ] [ b _ctrl ] if ] if ;
+  [ b 9 = b 10 = or [ b util:cp>str ] [ b _ctrl ] if ] if ;
 
 : encode ( bytes -- str )
   "Caret and M- notation as in cat -v: control bytes as ^@ to ^_, DEL as ^?, bytes 128 and up as M- plus the notation of the byte minus 128. Tab and line feed stay literal. A literal ^ or M- in the data is not escaped (as in cat -v), so decode cannot always read it back." doc
@@ -29,7 +26,7 @@ IN: caret
 \ p is the text right after a ^.
 : _caret-piece ( p:str -- str )
   p len 0 = [ "a ^ at the end of the text has nothing to escape" raise:coerce ] when
-  p 0 1 slice str>codes 0 nth _ctrl-of { } swap append codes>str
+  p 0 1 slice str>codes 0 nth _ctrl-of util:cp>str
   p 1 p len slice cat ;
 
 : _join-escapes ( parts:list -- str )
@@ -40,13 +37,13 @@ IN: caret
 
 \ ^^ is an escape (0x1E) whose second character is itself a ^, so cut on pairs first, left to right.
 : _carets ( s:str -- str )
-  s "^^" split [ _caret-seg ] map { 30 } codes>str join ;
+  s "^^" split [ _caret-seg ] map 30 util:cp>str join ;
 
 \ p is the text right after an M-: its first character gets 128 added.
 : _meta-piece ( p:str -- str )
   p len 0 = [ "an M- at the end of the text has no character" raise:coerce ] when
   p 0 1 slice str>codes 0 nth dup 127 > [ "M- must be followed by an ASCII character" raise:coerce ] when
-  128 + { } swap append codes>str
+  128 + util:cp>str
   p 1 p len slice cat ;
 
 : _join-metas ( parts:list -- str )
@@ -54,7 +51,7 @@ IN: caret
 
 \ M-M is the byte 0xCD, so it is cut out first (left to right) before the other M- are read.
 : _metas ( s:str -- str )
-  s "M-M" split { 205 } codes>str join "M-" split _join-metas ;
+  s "M-M" split 205 util:cp>str join "M-" split _join-metas ;
 
 : decode ( str -- bytes )
   "Read cat -v caret and M- notation back to bytes: ^@ to ^_ and ^? are control bytes, M- adds 128 to the byte that follows (a character, or a ^ escape). ASCII characters otherwise stand for themselves. A ^ or M- that is not followed by a valid character, or a non-ASCII character, is E_COERCE. ^ is read before M-, left to right." doc

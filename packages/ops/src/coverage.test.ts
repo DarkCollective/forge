@@ -97,6 +97,16 @@ describe("checkCoverage rules", () => {
     expect(run([{ ...ok, forge: ["util:space?"] }]).join()).toMatch(/not a catalogue op/);
   });
 
+  test("vocabulary names are lower-kebab-case: hyphens inside are fine, other shapes fail the schema", () => {
+    const shape = (w: string) => run([{ ...ok, forge: [w] }]).join();
+    // a well-formed name passes the schema (the only complaint is that it is not in the catalogue)
+    expect(shape("quoted-printable:encode")).toMatch(/not a catalogue op/);
+    expect(shape("a-b-c1:decode")).toMatch(/not a catalogue op/);
+    for (const bad of ["Quoted:x", "-a:b", "a-:b", "a--b:c", "a_b:c", "1a:b", ":x"]) {
+      expect(shape(bad), bad).toMatch(/pattern/);
+    }
+  });
+
   test("schema rules: forge, note and status", () => {
     expect(run([{ cyberchef: "To Foo", status: "covered" }]).length).toBeGreaterThan(0);
     expect(run([{ cyberchef: "To Foo", status: "covered", forge: [] }]).length).toBeGreaterThan(0);

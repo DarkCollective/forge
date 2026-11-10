@@ -4,7 +4,7 @@ IN: analysis
 
 \ Occurrences of byte b in the latin-1 text (one code point per byte): pieces minus one.
 : _count ( text:str b:int -- int )
-  { b } codes>str text swap split len 1 - ;
+  b util:cp>str text swap split len 1 - ;
 
 \ Count of every byte value 0..255, as a list of 256 ints.
 : _counts ( text:str -- list )

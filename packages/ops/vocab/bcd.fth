@@ -42,7 +42,7 @@ IN: bcd
 \ ---- encode ----
 
 : _clean ( text:str -- list )
-  text str>codes [ util:space? not ] filter ;
+  text util:strip-space str>codes ;
 
 : _has-sign ( cs:list signed:bool -- bool )
   signed cs len 0 > and
@@ -67,12 +67,9 @@ IN: bcd
   digits [ 48 - codes swap nth ] map
   signed [ { neg [ 13 ] [ 12 ] if } cat ] when ;
 
-: _pair ( l:list i:int -- int )
-  l i 2 * nth 4 shl l i 2 * 1 + nth bor ;
-
 \ Two nibbles to a byte, most significant first.
 : _pack ( l:list -- bytes )
-  0 l len 2 div range [ l swap _pair ] map list>bytes ;
+  0 l len 2 div range [ l swap util:nibbles>byte ] map list>bytes ;
 
 \ A leading zero digit code when the number of nibbles is odd.
 : _even ( l:list zero:int -- list )

@@ -18,9 +18,9 @@ import { describe, expect, test } from "vitest";
 import { assembleRuntime } from "./bundle.js";
 import { loadBundleNode } from "./sources-node.js";
 
-// quotedprintable is FL (vocab/quotedprintable.fth); these tests drive its public words.
+// quoted-printable is FL (vocab/quoted-printable.fth); these tests drive its public words.
 const { bytes } = valueHelpers;
-const runtime = assembleRuntime(await loadBundleNode(["quotedprintable"]));
+const runtime = assembleRuntime(await loadBundleNode(["quoted-printable"]));
 
 function ascii(s: string): Uint8Array {
   return Uint8Array.from(s, (c) => c.charCodeAt(0));
@@ -39,10 +39,10 @@ function rng(seed: number): () => number {
 }
 
 async function roundTrip(data: Uint8Array): Promise<{ text: string; back: unknown }> {
-  const enc = await runtime.call("quotedprintable:encode", [bytes(data)]);
+  const enc = await runtime.call("quoted-printable:encode", [bytes(data)]);
   expect(enc.ok).toBe(true);
   const text = top(enc).v as string;
-  const dec = await runtime.call("quotedprintable:decode", [bytes(ascii(text))]);
+  const dec = await runtime.call("quoted-printable:decode", [bytes(ascii(text))]);
   expect(dec.ok).toBe(true);
   return { text, back: top(dec).v };
 }
@@ -54,7 +54,7 @@ function checkShape(text: string): void {
   for (const line of text.split(/\r?\n/)) expect(line.length).toBeLessThanOrEqual(76);
 }
 
-describe("quotedprintable round trip", () => {
+describe("quoted-printable round trip", () => {
   test("decode(encode(x)) == x for random bytes, with line breaks and white space", async () => {
     const next = rng(11);
     // Bias the alphabet to the interesting bytes: =, CR, LF, space, tab, high bytes, letters.
@@ -94,9 +94,9 @@ describe("quotedprintable round trip", () => {
   }, 60_000);
 });
 
-describe("quotedprintable:encode line rules", () => {
+describe("quoted-printable:encode line rules", () => {
   async function enc(s: string): Promise<string> {
-    return top(await runtime.call("quotedprintable:encode", [bytes(ascii(s))])).v as string;
+    return top(await runtime.call("quoted-printable:encode", [bytes(ascii(s))])).v as string;
   }
 
   test("a trailing space is encoded, an inner one is not", async () => {
@@ -120,9 +120,9 @@ describe("quotedprintable:encode line rules", () => {
   });
 });
 
-describe("quotedprintable:decode rules", () => {
+describe("quoted-printable:decode rules", () => {
   async function dec(s: string): Promise<{ ok: boolean; v?: unknown; code?: string }> {
-    const r = await runtime.call("quotedprintable:decode", [bytes(ascii(s))]);
+    const r = await runtime.call("quoted-printable:decode", [bytes(ascii(s))]);
     return r.ok ? { ok: true, v: top(r).v } : { ok: false, code: r.error.code };
   }
 
@@ -145,7 +145,7 @@ describe("quotedprintable:decode rules", () => {
 
 describe("module", () => {
   test("both words have a doc string and the Encodings category", () => {
-    for (const w of ["quotedprintable:encode", "quotedprintable:decode"]) {
+    for (const w of ["quoted-printable:encode", "quoted-printable:decode"]) {
       const meta = runtime.meta(w);
       expect(meta.doc).toBeTruthy();
       expect(meta.category).toBe("Encodings");

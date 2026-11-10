@@ -32,7 +32,7 @@ IN: cobs
 : encode ( bytes -- bytes )
   "Encode with COBS (Cheshire and Baker, 1999): the result has no zero byte and is at most one byte longer per 254 input bytes, plus one. No trailing zero delimiter is added. Empty input gives the single byte 01." doc
   "Encodings" category
-  bytes>latin1 { 0 } codes>str split _runs ;
+  bytes>latin1 0 util:cp>str split _runs ;
 
 \ ---- decode ----
 

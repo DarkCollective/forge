@@ -21,7 +21,7 @@
         "uniqueItems": true,
         "items": {
           "type": "string",
-          "pattern": "^(step:(fork|subsection|if|repeat|comment)|[a-z][a-z0-9]*:[^\\s:]+)$"
+          "pattern": "^(step:(fork|subsection|if|repeat|comment)|[a-z][a-z0-9]*(?:-[a-z0-9]+)*:[^\\s:]+)$"
         }
       },
       "note": {
