@@ -9,6 +9,7 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
+    "size": "node scripts/check-size.mjs",
     "e2e": "playwright test"
   },
   "dependencies": {

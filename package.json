@@ -18,6 +18,7 @@
   "scripts": {
     "build": "npm run build -w @forge/lang && npm run build -w @forge/ops && npm run build -w @forge/recipe && npm run build -w @forge/worker && npm run build -w @forge/web",
     "test": "vitest run",
+    "size": "npm run size -w @forge/web",
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",
     "typecheck": "npm run build -w @forge/lang && npm run build -w @forge/ops && npm run build -w @forge/recipe && npm run build -w @forge/worker && npm run typecheck --workspaces --if-present",
