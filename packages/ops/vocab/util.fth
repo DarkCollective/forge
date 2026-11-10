@@ -188,3 +188,106 @@ IN: util
   "The inverse of bytes>symbols. table is a decode table (see decode-table) built with 254 for white space and 255 for a byte outside the alphabet: an unknown symbol is E_COERCE and white space is ignored. Each leading zero digit becomes a zero byte. The integer limit applies (E_LIMIT_VALUE)." doc
   data table check-symbols [ 254 <> ] filter
   dup [ 0 = ] count-leading swap radix digits>int _zero-prefixed ;
+
+\ ---- letters, permutations and rotor machines ----
+
+: letter? ( c:int -- bool )
+  "True for an ASCII letter, A to Z or a to z." doc
+  c 32 bor 97 - dup 0 >= swap 25 <= and ;
+
+: letters? ( t:str -- bool )
+  "True when t is not empty and every character is an ASCII letter (either case)." doc
+  t str>bytes [ letter? not ] filter len 0 = t len 0 > and ;
+
+: digits? ( t:str -- bool )
+  "True when t is not empty and every character is an ASCII decimal digit." doc
+  t str>bytes [ dec-digit? not ] filter len 0 = t len 0 > and ;
+
+: letter-indices ( s:str -- bytes )
+  "The letters of s (either case) as numbers 0 to 25, A = 0. A character that is not a letter gives a meaningless number, so check with letters? first; a character above U+00FF is E_RANGE." doc
+  s upper latin1>bytes [ 65 - ] map ;
+
+: digit-values ( s:str -- bytes )
+  "The digits of s as numbers 0 to 9. A character that is not a digit gives a meaningless number, so check with digits? first; a character above U+00FF is E_RANGE." doc
+  s latin1>bytes [ 48 - ] map ;
+
+: letter-table ( -- bytes )
+  "A 256-byte table for translate: a letter byte (either case) becomes its number 0 to 25, every other byte 255." doc
+  0 256 range [ dup 32 bor 97 - dup 0 >= over 25 <= and [ nip ] [ drop drop 255 ] if ] map list>bytes ;
+
+: count-of ( d:bytes v:int -- int )
+  "How many elements of d (bytes or a list of ints) equal v." doc
+  d [ v = ] filter len ;
+
+: index-of ( p:bytes i:int -- int )
+  "The position of the first element of p equal to i; E_RANGE when there is none. For a permutation this is the inverse permutation at i." doc
+  0 p len range [ p swap nth i = ] filter 0 nth ;
+
+: perm-invert ( p:bytes -- bytes )
+  "The inverse of a permutation of 0 to len-1 given as bytes: element p[i] = j becomes element j = i. E_RANGE if p is not a permutation." doc
+  0 p len range [ p swap index-of ] map list>bytes ;
+
+: perm? ( items n:int -- bool )
+  "True when items (a list or bytes of ints) has exactly n elements and uses each of 0 to n-1 once. n up to 65000 or so (the check is a bit mask)." doc
+  items len n = items 0 [ 1 swap shl bor ] reduce 1 n shl 1 - = and ;
+
+: table-compose3 ( p:bytes f1:bytes f2:bytes -- bytes )
+  "The 26-byte table of x -> f2[f1[p[x]]]: three 26-byte permutations applied in turn, p first." doc
+  0 26 range [ p swap nth f1 swap nth f2 swap nth ] map list>bytes ;
+
+: rotor-shifted ( w:bytes s:int -- bytes )
+  "The 26-byte table of a rotor with wiring w (a permutation of 0 to 25, input contact to output contact) turned by shift s (window position minus ring setting): x -> (w[(x + s) mod 26] - s) mod 26. Use perm-invert of w for the signal going the other way." doc
+  0 26 range [ s + 26 mod w swap nth s - 26 mod ] map list>bytes ;
+
+: rotor-shift-table ( w:bytes -- bytes )
+  "The 676-byte table of a rotor for every shift: entry s*26 + x is rotor-shifted of w at s, for x. A machine keeps s*26 as the row offset of each rotor and steps it with (offset + 26) mod 676." doc
+  0 676 range [ dup 26 div swap 26 mod over + 26 mod w swap nth swap - 26 mod ] map list>bytes ;
+
+: rotor-notch-flags ( turn:bytes ring:int -- bytes )
+  "A 676-byte flag table for a rotor stepped by row offset (see rotor-shift-table). turn holds the window positions 0 to 25 of its turnover notches (any number, or none); ring is the ring setting 0 to 25. Entry s*26 is 1 when the window position (s + ring) mod 26 is a notch, every other entry is 0." doc
+  0 676 range
+  [ dup 26 mod 0 =
+    [ 26 div ring + 26 mod turn swap count-of 0 > [ 1 ] [ 0 ] if ]
+    [ drop 0 ] if ]
+  map list>bytes ;
+
+: rotor-reflect-table ( r:bytes fl:bytes il:bytes -- bytes )
+  "A 676-byte table for the rotor next to the reflector: for each shift s and contact x, the signal goes through the rotor (fl, a rotor-shift-table), then the fixed 26-byte permutation r (a reflector, possibly with fixed rotors folded in), then back through the rotor (il, the rotor-shift-table of its inverse wiring)." doc
+  0 676 range [ dup dup 26 mod - swap fl swap nth r swap nth + il swap nth ] map list>bytes ;
+
+\ The value 0 to 25 of one setting token: a number 1 to 26 or a single letter.
+: _setting-token ( t:str what:str -- int )
+  t digits?
+  [ t len 3 < [ t str>int 1 - ] [ -1 ] if
+    dup 0 < over 25 > or [ what ": a number must be 1 to 26" cat raise:range ] when ]
+  [ t len 1 = t letters? and
+    [ t str>bytes 0 nth 32 bor 97 - ]
+    [ what ": write letters (BUL), letters apart (B U L) or numbers 1 to 26 (2 21 12)" cat raise:range 0 ] if ]
+  if ;
+
+: letter-settings ( s:str n:int what:str -- bytes )
+  "Machine settings (ring settings, start positions) as n numbers 0 to 25: one word of n letters (BUL), or n tokens separated by white space or commas, each a letter or a number 1 to 26 (B U L, 2 21 12). The wrong count or a bad token is E_RANGE with a message that starts with what." doc
+  s number-tokens
+  dup len 0 = [ what ": the setting is empty" cat raise:range ] when
+  dup len 1 = over 0 nth letters? and
+  [ 0 nth str>bytes [ 32 bor 97 - ] map ]
+  [ [ what _setting-token ] map list>bytes ] if
+  dup len n <>
+  [ what ": " cat n int>str cat " settings are needed" cat raise:range ] when ;
+
+\ The partner of letter i in a flat list of plugboard letters (pairs side by side), else i.
+: _plug-partner ( i:int fl:bytes -- int )
+  0 fl len range [ fl swap nth i = ] filter
+  dup len 0 = [ drop i ] [ 0 nth 1 bxor fl swap nth ] if ;
+
+: _plug-pair ( t:str -- bytes )
+  t len 2 = t letters? and not
+  [ "plugboard: each pair is two letters, like AB" raise:range ] when
+  t letter-indices ;
+
+: plugboard-table ( s:str -- bytes )
+  "A plugboard written as letter pairs (AB CD EF, separated by white space or commas, either case) as a 26-byte permutation that swaps each pair and leaves the other letters alone. A group that is not two different letters, or a letter used twice, is E_RANGE." doc
+  s number-tokens [ _plug-pair ] map #[ ] [ cat ] reduce
+  0 26 range [ over swap count-of 1 > ] filter len 0 >
+  [ "plugboard: a letter may be in one pair only" raise:range ] when
+  0 26 range [ over _plug-partner ] map list>bytes nip ;
