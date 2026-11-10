@@ -1,0 +1,44 @@
+[
+  {
+    "name": "digest: Password (MS-NLMP 4.2.2 NTOWFv1)",
+    "ref": "Microsoft MS-NLMP 4.2.2.1.2, NTOWFv1(\"Password\")",
+    "op": "nthash:digest",
+    "params": {},
+    "input": {
+      "value": "Password",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a4f49c406510bdcab6824ee7c30fd852",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: password (well-known NT hash)",
+    "ref": "Microsoft MS-NLMP 3.3.1 (NTOWFv1: MD4 of UTF-16LE) and 4.2.2 (Password); NT hash of password is widely published",
+    "op": "nthash:digest",
+    "params": {},
+    "input": {
+      "value": "password",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "8846f7eaee8fb117ad06bdd830b7586c",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: empty password (MD4 of empty)",
+    "ref": "MS-NLMP 3.3.1: MD4 of the empty string (RFC 1320 A.5)",
+    "op": "nthash:digest",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "31d6cfe0d16ae931b73c59d7e0c089c0",
+      "enc": "hex"
+    }
+  }
+]

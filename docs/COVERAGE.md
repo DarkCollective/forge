@@ -21,13 +21,13 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Date / Time | 0 | 0 | 0 | 9 | 9 |
 | Extractors | 0 | 0 | 0 | 18 | 18 |
 | Compression | 0 | 0 | 0 | 21 | 21 |
-| Hashing | 1 | 0 | 0 | 47 | 48 |
+| Hashing | 6 | 1 | 0 | 41 | 48 |
 | Code tidy | 0 | 0 | 0 | 24 | 24 |
 | Forensics | 0 | 0 | 0 | 9 | 9 |
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 4 | 0 | 3 | 14 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **102** | **22** | **3** | **379** | **506** |
+| **Total** | **107** | **23** | **3** | **373** | **506** |
 
 ## Data format (80)
 
@@ -453,18 +453,18 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Analyse hash | not yet |  |  |
 | Generate all checksums | not yet |  |  |
 | Generate all hashes | not yet |  |  |
-| MD2 | not yet |  |  |
-| MD4 | not yet |  |  |
+| MD2 | covered | `md2:digest` | Returns raw bytes (chain hex:encode). Only the standard 18 rounds of RFC 1319 exist; CyberChef's Rounds parameter is not supported. |
+| MD4 | covered | `md4:digest` | RFC 1320. Returns raw bytes (chain hex:encode). |
 | MD5 | not yet |  |  |
-| MD6 | not yet |  |  |
-| SHA0 | not yet |  |  |
+| MD6 | covered | `md6:digest` | Parameters size (bits, a multiple of 8, 8 to 512), levels (L, 0 to 64) and key (up to 64 bytes). Sizes that are not a multiple of 8 bits are not supported. The round count is the report's default (40 + size/4, at least 80 with a key). |
+| SHA0 | covered | `sha0:digest` | FIPS 180 (1993). Returns raw bytes (chain hex:encode). Only the standard 80 rounds exist; a Rounds parameter is not supported. |
 | SHA1 | not yet |  |  |
 | SHA2 | covered | `sha2:digest` | One word with a size parameter: 224, 256, 384, 512, 512/224, 512/256. Returns raw bytes (chain hex:encode). CyberChef's Rounds parameter is not supported: only the FIPS 180-4 round counts exist. |
 | SHA3 | not yet |  |  |
 | SM3 | not yet |  |  |
 | Keccak | not yet |  |  |
 | Shake | not yet |  |  |
-| RIPEMD | not yet |  |  |
+| RIPEMD | redesigned | `ripemd:digest` | One word with a size choice of 128, 256 or 320. RIPEMD-160 is its own vocabulary, ripemd160:digest. Returns raw bytes (chain hex:encode). |
 | HAS-160 | not yet |  |  |
 | Whirlpool | not yet |  |  |
 | Snefru | not yet |  |  |
@@ -485,7 +485,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Bcrypt parse | not yet |  |  |
 | Argon2 | not yet |  |  |
 | Argon2 compare | not yet |  |  |
-| NT Hash | not yet |  |  |
+| NT Hash | covered | `nthash:digest` | MD4 of the UTF-16LE text (MS-NLMP NTOWFv1), 16 raw bytes. Takes text, not bytes. |
 | LM Hash | not yet |  |  |
 | MurmurHash3 | not yet |  |  |
 | Fletcher-8 Checksum | not yet |  |  |
