@@ -12,7 +12,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Category | Covered | Redesigned | Dropped | Not yet | Total |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Data format | 54 | 6 | 0 | 20 | 80 |
-| Encryption / Encoding | 19 | 1 | 0 | 75 | 95 |
+| Encryption / Encoding | 20 | 1 | 0 | 74 | 95 |
 | Public Key | 0 | 0 | 0 | 30 | 30 |
 | Arithmetic / Logic | 9 | 0 | 0 | 17 | 26 |
 | Networking | 0 | 0 | 0 | 34 | 34 |
@@ -27,7 +27,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 2 | 0 | 0 | 19 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **90** | **14** | **0** | **402** | **506** |
+| **Total** | **91** | **14** | **0** | **401** | **506** |
 
 ## Data format (80)
 
@@ -209,7 +209,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Typex | not yet |  |  |
 | Lorenz | not yet |  |  |
 | Colossus | not yet |  |  |
-| SIGABA | not yet |  |  |
+| SIGABA | covered | `sigaba:crypt` | One word with a mode parameter (encrypt or decrypt), the rotor choice, orientation (R suffix) and start positions of the three banks, and optional rotor wirings; the default wirings are Forge's own, not the historical ones. |
 | Flask Session Decode | not yet |  |  |
 | Flask Session Sign | not yet |  |  |
 | Flask Session Verify | not yet |  |  |
