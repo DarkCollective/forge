@@ -46,10 +46,6 @@ IN: lorenz
 
 \ ---- the alphabet, wheel sizes and published patterns ----
 
-: ita2-alphabet ( -- str )
-  "The 32 teleprinter characters in Bletchley Park notation, ordered by their five-bit code (impulse 1 is bit 0): / null, E, 4 line feed, A, 9 space, S, I, U, 3 carriage return, D, R, J, N, F, C, K, T, Z, L, W, H, Y, P, Q, O, B, G, 5 figure shift, M, X, V, 8 letter shift." doc
-  "/E4A9SIU3DRJNFCKTZLWHYPQOBG5MXV8" ;
-
 : wheel-lengths ( -- list )
   "The cams of the twelve wheels in the order chi1 to chi5, psi1 to psi5, mu37, mu61." doc
   { 41 31 29 26 23 43 47 51 53 59 37 61 } ;
@@ -116,37 +112,11 @@ IN: lorenz
 : _figure-row ( -- str )
   "\u{100}3\n- '87\r\x054\x07,!:(5+)2#6019?&\u{100}./=\u{100}" ;
 
-\ The code of a Bletchley Park character: u is the upper-case byte, tbl the alphabet table;
-\ + and - are figure and letter shift. 254 stands for white space and 255 for anything else.
-\ util-candidate: ita2-code
-: _ita2-code ( u:int tbl:bytes -- int )
-  u 43 = [ 27 ] [ u 45 = [ 31 ] [ tbl u nth ] if ] if ;
-
-\ util-candidate: ita2-entry
-: _ita2-entry ( b:int base:bytes -- int )
-  b 97 122 util:between? [ b 32 - ] [ b ] if base _ita2-code ;
-
-\ util-candidate: ita2-table2
-: _ita2-table2 ( base:bytes -- bytes )
-  0 256 range [ base _ita2-entry ] map list>bytes ;
-
-\ util-candidate: ita2-table
-: _ita2-table ( -- bytes )
-  ita2-alphabet 254 255 util:decode-table _ita2-table2 ;
-
-\ The codes of text in Bletchley Park notation (either case, white space ignored).
-\ util-candidate: from-bp
-: _from-bp ( s:str -- bytes )
-  s str>bytes _ita2-table translate
-  dup [ 255 = ] filter len 0 <>
-  [ "not an ITA2 character: use the letters, 3 4 5 8 9 / (and + and -); white space is ignored" raise:coerce ] when
-  [ 254 <> ] filter ;
-
 : _bp-table2 ( alpha:list -- bytes )
   0 256 range [ dup 32 < [ alpha swap nth ] [ drop 0 ] if ] map list>bytes ;
 
 : _to-bp ( codes:bytes -- str )
-  codes ita2-alphabet str>codes _bp-table2 translate bytes>str ;
+  codes util:ita2-alphabet str>codes _bp-table2 translate bytes>str ;
 
 \ ---- text to codes and back ----
 
@@ -196,16 +166,10 @@ IN: lorenz
   s str>bytes cam-table translate
   0 256 range [ 1 = [ w ] [ 0 ] if ] map list>bytes translate ;
 
-\ n bytes of the endless repetition of pat, the first being pat[start] (start counted from 0).
-\ util-candidate: cycle-bytes
-: _cyc ( pat:bytes start:int n:int -- bytes )
-  pat [ dup len start n + < ] [ dup cat ] while
-  start start n + slice ;
-
 \ Wheel i (0 to 4) of a group of five as a stream of n bytes: its cams weighted by 2^i, from its
 \ start position.
 : _wheel-stream ( i:int pats:list starts:list n:int -- bytes )
-  pats i nth 1 i shl _cams starts i nth 1 - n _cyc ;
+  pats i nth 1 i shl _cams starts i nth 1 - n util:cycle-bytes ;
 
 \ The sum of the five wheel streams of a group (chi or psi): the key, impulse 1 in bit 0.
 : _group-key ( pats:list starts:list n:int -- bytes )
@@ -226,7 +190,7 @@ IN: lorenz
 : _motor ( m61:bytes m37:bytes a:int b:int n:int -- bytes )
   a _ma! b _mn!
   0 n 2257 min range [ drop m61 m37 _motor-step ] map list>bytes
-  dup len n < [ 0 n _cyc ] when ;
+  dup len n < [ 0 n util:cycle-bytes ] when ;
 
 \ ---- the cipher loop ----
 
@@ -271,8 +235,8 @@ IN: lorenz
   pats 0 5 slice starts 0 5 slice n _group-key
   pats 11 nth 1 _cams pats 10 nth 32 _cams starts 11 nth 1 - starts 10 nth 1 - n _motor bxor
   model "SZ40" =
-  [ "x" 64 _cams 0 n _cyc ]
-  [ pats 1 nth 64 _cams starts 1 nth 29 + 31 mod n _cyc ]
+  [ "x" 64 _cams 0 n util:cycle-bytes ]
+  [ pats 1 nth 64 _cams starts 1 nth 29 + 31 mod n util:cycle-bytes ]
   if bxor _cc! ;
 
 \ Encipher (or decipher) a list of codes. With P5 the plain text bit comes from the input when
@@ -303,7 +267,7 @@ IN: lorenz
 
 : _lorenz ( data:str model:str p5:bool pattern:str custom:list starts:list input:str output:str shifts:str dec:bool -- str )
   p5 model "SZ40" = and [ "the P5 limitation needs the SZ42a or SZ42b model" raise:range ] when
-  data input "ita2" = [ _from-bp ] [ shifts "double" = [ 2 ] [ 1 ] if _from-text ] if
+  data input "ita2" = [ util:from-bp ] [ shifts "double" = [ 2 ] [ 1 ] if _from-text ] if
   pattern custom _wheels starts model p5 dec _crypt
   output "ita2" = [ _to-bp ] [ _to-text ] if ;
 

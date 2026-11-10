@@ -2944,5 +2944,1877 @@
     "expect": {
       "error": "E_RECIPE_INVALID"
     }
+  },
+  {
+    "name": "Caesar box encrypt 'ABCDEFGHI' height 3",
+    "ref": "columnar transposition by hand (rows written, columns read; Wikipedia, Transposition cipher), checked with an independent script",
+    "op": "classical:caesar-box-encrypt",
+    "params": {
+      "height": 3
+    },
+    "input": {
+      "value": "ABCDEFGHI",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "414447424548434649",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Caesar box decrypt 'ADGBEHCFI' height 3",
+    "ref": "columnar transposition by hand (rows written, columns read; Wikipedia, Transposition cipher), checked with an independent script",
+    "op": "classical:caesar-box-decrypt",
+    "params": {
+      "height": 3
+    },
+    "input": {
+      "value": "ADGBEHCFI",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "414243444546474849",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Caesar box encrypt 'ABCDEFGHIJ' height 3",
+    "ref": "columnar transposition by hand (rows written, columns read; Wikipedia, Transposition cipher), checked with an independent script",
+    "op": "classical:caesar-box-encrypt",
+    "params": {
+      "height": 3
+    },
+    "input": {
+      "value": "ABCDEFGHIJ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "41454942464a43474448",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Caesar box decrypt 'AEIBFJCGDH' height 3",
+    "ref": "columnar transposition by hand (rows written, columns read; Wikipedia, Transposition cipher), checked with an independent script",
+    "op": "classical:caesar-box-decrypt",
+    "params": {
+      "height": 3
+    },
+    "input": {
+      "value": "AEIBFJCGDH",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4142434445464748494a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Caesar box encrypt 'The quick brown fox' height 4",
+    "ref": "columnar transposition by hand (rows written, columns read; Wikipedia, Transposition cipher), checked with an independent script",
+    "op": "classical:caesar-box-encrypt",
+    "params": {
+      "height": 4
+    },
+    "input": {
+      "value": "The quick brown fox",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "547562206869726665636f6f206b777871206e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Caesar box decrypt 'Tub hirfecoo kwxq n' height 4",
+    "ref": "columnar transposition by hand (rows written, columns read; Wikipedia, Transposition cipher), checked with an independent script",
+    "op": "classical:caesar-box-decrypt",
+    "params": {
+      "height": 4
+    },
+    "input": {
+      "value": "Tub hirfecoo kwxq n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "54686520717569636b2062726f776e20666f78",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Caesar box encrypt 'abc' height 5",
+    "ref": "columnar transposition by hand (rows written, columns read; Wikipedia, Transposition cipher), checked with an independent script",
+    "op": "classical:caesar-box-encrypt",
+    "params": {
+      "height": 5
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "616263",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Caesar box decrypt 'abc' height 5",
+    "ref": "columnar transposition by hand (rows written, columns read; Wikipedia, Transposition cipher), checked with an independent script",
+    "op": "classical:caesar-box-decrypt",
+    "params": {
+      "height": 5
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "616263",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Caesar box encrypt 'ab' height 1",
+    "ref": "columnar transposition by hand (rows written, columns read; Wikipedia, Transposition cipher), checked with an independent script",
+    "op": "classical:caesar-box-encrypt",
+    "params": {
+      "height": 1
+    },
+    "input": {
+      "value": "ab",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "6162",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Caesar box decrypt 'ab' height 1",
+    "ref": "columnar transposition by hand (rows written, columns read; Wikipedia, Transposition cipher), checked with an independent script",
+    "op": "classical:caesar-box-decrypt",
+    "params": {
+      "height": 1
+    },
+    "input": {
+      "value": "ab",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "6162",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Caesar box encrypt 'A' height 2",
+    "ref": "columnar transposition by hand (rows written, columns read; Wikipedia, Transposition cipher), checked with an independent script",
+    "op": "classical:caesar-box-encrypt",
+    "params": {
+      "height": 2
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "41",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Caesar box decrypt 'A' height 2",
+    "ref": "columnar transposition by hand (rows written, columns read; Wikipedia, Transposition cipher), checked with an independent script",
+    "op": "classical:caesar-box-decrypt",
+    "params": {
+      "height": 2
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "41",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Caesar box encrypt '' height 3",
+    "ref": "columnar transposition by hand (rows written, columns read; Wikipedia, Transposition cipher), checked with an independent script",
+    "op": "classical:caesar-box-encrypt",
+    "params": {
+      "height": 3
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Caesar box decrypt '' height 3",
+    "ref": "columnar transposition by hand (rows written, columns read; Wikipedia, Transposition cipher), checked with an independent script",
+    "op": "classical:caesar-box-decrypt",
+    "params": {
+      "height": 3
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Caesar box encrypt '0123456789' height 2",
+    "ref": "columnar transposition by hand (rows written, columns read; Wikipedia, Transposition cipher), checked with an independent script",
+    "op": "classical:caesar-box-encrypt",
+    "params": {
+      "height": 2
+    },
+    "input": {
+      "value": "0123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "30353136323733383439",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Caesar box decrypt '0516273849' height 2",
+    "ref": "columnar transposition by hand (rows written, columns read; Wikipedia, Transposition cipher), checked with an independent script",
+    "op": "classical:caesar-box-decrypt",
+    "params": {
+      "height": 2
+    },
+    "input": {
+      "value": "0516273849",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "30313233343536373839",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Caesar box encrypt '0123456789' height 7",
+    "ref": "columnar transposition by hand (rows written, columns read; Wikipedia, Transposition cipher), checked with an independent script",
+    "op": "classical:caesar-box-encrypt",
+    "params": {
+      "height": 7
+    },
+    "input": {
+      "value": "0123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "30323436383133353739",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Caesar box decrypt '0246813579' height 7",
+    "ref": "columnar transposition by hand (rows written, columns read; Wikipedia, Transposition cipher), checked with an independent script",
+    "op": "classical:caesar-box-decrypt",
+    "params": {
+      "height": 7
+    },
+    "input": {
+      "value": "0246813579",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "30313233343536373839",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Caesar box default height is 2",
+    "ref": "columnar transposition by hand (rows written, columns read; Wikipedia, Transposition cipher), checked with an independent script",
+    "op": "classical:caesar-box-encrypt",
+    "params": {},
+    "input": {
+      "value": "ABCDEF",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "414442454346",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Caesar box height 0 is rejected",
+    "ref": "param constraint",
+    "op": "classical:caesar-box-encrypt",
+    "params": {
+      "height": 0
+    },
+    "input": {
+      "value": "ABC",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "ROT8000 example of rot8000.com",
+    "ref": "rot8000.com (the page's own example) and the rot8000 project's test of A",
+    "op": "classical:rot8000",
+    "params": {},
+    "input": {
+      "value": "The butler did it!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "籝籱籮 籫籾籽籵籮类 籭籲籭 籲籽簪",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ROT8000 undoes the example of rot8000.com",
+    "ref": "rot8000.com (the page's own example) and the rot8000 project's test of A",
+    "op": "classical:rot8000",
+    "params": {},
+    "input": {
+      "value": "籝籱籮 籫籾籽籵籮类 籭籲籭 籲籽簪",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "The butler did it!",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ROT8000 of A",
+    "ref": "rot8000 project test (A becomes U+7C4A)",
+    "op": "classical:rot8000",
+    "params": {},
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "籊",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ROT8000 range starts and ends",
+    "ref": "valid-code-point ranges of the rot8000 project (valid-code-point-transitions.json), rotation worked out independently",
+    "op": "classical:rot8000",
+    "params": {},
+    "input": {
+      "value": "!~¡ᙿᚁ῿​‧‪‮‰⁞⁠⿿、퟿￿",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "簪粇粈鉦鉧鯥鯦鰂鰃鰇鰈鰶鰷ꯖꯗ尩尪簩",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ROT8000 characters that are not valid pass through",
+    "ref": "valid-code-point ranges of the rot8000 project (valid-code-point-transitions.json), rotation worked out independently",
+    "op": "classical:rot8000",
+    "params": {},
+    "input": {
+      "value": "a\tb c d e f g h i j　k\n\u0001",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "籪\t籫 籬 籭 籮 籯 籰 籱 籲 米　籴\n\u0001尪",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ROT8000 outside the BMP passes through",
+    "ref": "valid-code-point ranges of the rot8000 project (valid-code-point-transitions.json), rotation worked out independently",
+    "op": "classical:rot8000",
+    "params": {},
+    "input": {
+      "value": "x😀y",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "粁😀粂",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ROT8000 empty text",
+    "ref": "valid-code-point ranges of the rot8000 project (valid-code-point-transitions.json), rotation worked out independently",
+    "op": "classical:rot8000",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "rot-brute finds ROT13 with a crib",
+    "ref": "definition of rot and rot47, all shifts tried; expected output from an independent script",
+    "op": "classical:rot-brute",
+    "params": {
+      "crib": "Hello"
+    },
+    "input": {
+      "value": "Uryyb Jbeyq",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": [
+        {
+          "shift": 13,
+          "output": {
+            "$bytes": "48656c6c6f20576f726c64"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "rot-brute lists the 25 shifts of Ab",
+    "ref": "definition of rot and rot47, all shifts tried; expected output from an independent script",
+    "op": "classical:rot-brute",
+    "params": {},
+    "input": {
+      "value": "Ab",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": [
+        {
+          "shift": 1,
+          "output": {
+            "$bytes": "4263"
+          }
+        },
+        {
+          "shift": 2,
+          "output": {
+            "$bytes": "4364"
+          }
+        },
+        {
+          "shift": 3,
+          "output": {
+            "$bytes": "4465"
+          }
+        },
+        {
+          "shift": 4,
+          "output": {
+            "$bytes": "4566"
+          }
+        },
+        {
+          "shift": 5,
+          "output": {
+            "$bytes": "4667"
+          }
+        },
+        {
+          "shift": 6,
+          "output": {
+            "$bytes": "4768"
+          }
+        },
+        {
+          "shift": 7,
+          "output": {
+            "$bytes": "4869"
+          }
+        },
+        {
+          "shift": 8,
+          "output": {
+            "$bytes": "496a"
+          }
+        },
+        {
+          "shift": 9,
+          "output": {
+            "$bytes": "4a6b"
+          }
+        },
+        {
+          "shift": 10,
+          "output": {
+            "$bytes": "4b6c"
+          }
+        },
+        {
+          "shift": 11,
+          "output": {
+            "$bytes": "4c6d"
+          }
+        },
+        {
+          "shift": 12,
+          "output": {
+            "$bytes": "4d6e"
+          }
+        },
+        {
+          "shift": 13,
+          "output": {
+            "$bytes": "4e6f"
+          }
+        },
+        {
+          "shift": 14,
+          "output": {
+            "$bytes": "4f70"
+          }
+        },
+        {
+          "shift": 15,
+          "output": {
+            "$bytes": "5071"
+          }
+        },
+        {
+          "shift": 16,
+          "output": {
+            "$bytes": "5172"
+          }
+        },
+        {
+          "shift": 17,
+          "output": {
+            "$bytes": "5273"
+          }
+        },
+        {
+          "shift": 18,
+          "output": {
+            "$bytes": "5374"
+          }
+        },
+        {
+          "shift": 19,
+          "output": {
+            "$bytes": "5475"
+          }
+        },
+        {
+          "shift": 20,
+          "output": {
+            "$bytes": "5576"
+          }
+        },
+        {
+          "shift": 21,
+          "output": {
+            "$bytes": "5677"
+          }
+        },
+        {
+          "shift": 22,
+          "output": {
+            "$bytes": "5778"
+          }
+        },
+        {
+          "shift": 23,
+          "output": {
+            "$bytes": "5879"
+          }
+        },
+        {
+          "shift": 24,
+          "output": {
+            "$bytes": "597a"
+          }
+        },
+        {
+          "shift": 25,
+          "output": {
+            "$bytes": "5a61"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "rot-brute rot47 finds shift 47 with a crib",
+    "ref": "definition of rot and rot47, all shifts tried; expected output from an independent script",
+    "op": "classical:rot-brute",
+    "params": {
+      "variant": "rot47",
+      "crib": "Hello"
+    },
+    "input": {
+      "value": "77363d3d40",
+      "enc": "hex"
+    },
+    "expect": {
+      "json": [
+        {
+          "shift": 47,
+          "output": {
+            "$bytes": "48656c6c6f"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "rot-brute rot47 lists shifts 1 to 93",
+    "ref": "definition of rot and rot47, all shifts tried; expected output from an independent script",
+    "op": "classical:rot-brute",
+    "params": {
+      "variant": "rot47"
+    },
+    "input": {
+      "value": "a!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": [
+        {
+          "shift": 1,
+          "output": {
+            "$bytes": "6222"
+          }
+        },
+        {
+          "shift": 2,
+          "output": {
+            "$bytes": "6323"
+          }
+        },
+        {
+          "shift": 3,
+          "output": {
+            "$bytes": "6424"
+          }
+        },
+        {
+          "shift": 4,
+          "output": {
+            "$bytes": "6525"
+          }
+        },
+        {
+          "shift": 5,
+          "output": {
+            "$bytes": "6626"
+          }
+        },
+        {
+          "shift": 6,
+          "output": {
+            "$bytes": "6727"
+          }
+        },
+        {
+          "shift": 7,
+          "output": {
+            "$bytes": "6828"
+          }
+        },
+        {
+          "shift": 8,
+          "output": {
+            "$bytes": "6929"
+          }
+        },
+        {
+          "shift": 9,
+          "output": {
+            "$bytes": "6a2a"
+          }
+        },
+        {
+          "shift": 10,
+          "output": {
+            "$bytes": "6b2b"
+          }
+        },
+        {
+          "shift": 11,
+          "output": {
+            "$bytes": "6c2c"
+          }
+        },
+        {
+          "shift": 12,
+          "output": {
+            "$bytes": "6d2d"
+          }
+        },
+        {
+          "shift": 13,
+          "output": {
+            "$bytes": "6e2e"
+          }
+        },
+        {
+          "shift": 14,
+          "output": {
+            "$bytes": "6f2f"
+          }
+        },
+        {
+          "shift": 15,
+          "output": {
+            "$bytes": "7030"
+          }
+        },
+        {
+          "shift": 16,
+          "output": {
+            "$bytes": "7131"
+          }
+        },
+        {
+          "shift": 17,
+          "output": {
+            "$bytes": "7232"
+          }
+        },
+        {
+          "shift": 18,
+          "output": {
+            "$bytes": "7333"
+          }
+        },
+        {
+          "shift": 19,
+          "output": {
+            "$bytes": "7434"
+          }
+        },
+        {
+          "shift": 20,
+          "output": {
+            "$bytes": "7535"
+          }
+        },
+        {
+          "shift": 21,
+          "output": {
+            "$bytes": "7636"
+          }
+        },
+        {
+          "shift": 22,
+          "output": {
+            "$bytes": "7737"
+          }
+        },
+        {
+          "shift": 23,
+          "output": {
+            "$bytes": "7838"
+          }
+        },
+        {
+          "shift": 24,
+          "output": {
+            "$bytes": "7939"
+          }
+        },
+        {
+          "shift": 25,
+          "output": {
+            "$bytes": "7a3a"
+          }
+        },
+        {
+          "shift": 26,
+          "output": {
+            "$bytes": "7b3b"
+          }
+        },
+        {
+          "shift": 27,
+          "output": {
+            "$bytes": "7c3c"
+          }
+        },
+        {
+          "shift": 28,
+          "output": {
+            "$bytes": "7d3d"
+          }
+        },
+        {
+          "shift": 29,
+          "output": {
+            "$bytes": "7e3e"
+          }
+        },
+        {
+          "shift": 30,
+          "output": {
+            "$bytes": "213f"
+          }
+        },
+        {
+          "shift": 31,
+          "output": {
+            "$bytes": "2240"
+          }
+        },
+        {
+          "shift": 32,
+          "output": {
+            "$bytes": "2341"
+          }
+        },
+        {
+          "shift": 33,
+          "output": {
+            "$bytes": "2442"
+          }
+        },
+        {
+          "shift": 34,
+          "output": {
+            "$bytes": "2543"
+          }
+        },
+        {
+          "shift": 35,
+          "output": {
+            "$bytes": "2644"
+          }
+        },
+        {
+          "shift": 36,
+          "output": {
+            "$bytes": "2745"
+          }
+        },
+        {
+          "shift": 37,
+          "output": {
+            "$bytes": "2846"
+          }
+        },
+        {
+          "shift": 38,
+          "output": {
+            "$bytes": "2947"
+          }
+        },
+        {
+          "shift": 39,
+          "output": {
+            "$bytes": "2a48"
+          }
+        },
+        {
+          "shift": 40,
+          "output": {
+            "$bytes": "2b49"
+          }
+        },
+        {
+          "shift": 41,
+          "output": {
+            "$bytes": "2c4a"
+          }
+        },
+        {
+          "shift": 42,
+          "output": {
+            "$bytes": "2d4b"
+          }
+        },
+        {
+          "shift": 43,
+          "output": {
+            "$bytes": "2e4c"
+          }
+        },
+        {
+          "shift": 44,
+          "output": {
+            "$bytes": "2f4d"
+          }
+        },
+        {
+          "shift": 45,
+          "output": {
+            "$bytes": "304e"
+          }
+        },
+        {
+          "shift": 46,
+          "output": {
+            "$bytes": "314f"
+          }
+        },
+        {
+          "shift": 47,
+          "output": {
+            "$bytes": "3250"
+          }
+        },
+        {
+          "shift": 48,
+          "output": {
+            "$bytes": "3351"
+          }
+        },
+        {
+          "shift": 49,
+          "output": {
+            "$bytes": "3452"
+          }
+        },
+        {
+          "shift": 50,
+          "output": {
+            "$bytes": "3553"
+          }
+        },
+        {
+          "shift": 51,
+          "output": {
+            "$bytes": "3654"
+          }
+        },
+        {
+          "shift": 52,
+          "output": {
+            "$bytes": "3755"
+          }
+        },
+        {
+          "shift": 53,
+          "output": {
+            "$bytes": "3856"
+          }
+        },
+        {
+          "shift": 54,
+          "output": {
+            "$bytes": "3957"
+          }
+        },
+        {
+          "shift": 55,
+          "output": {
+            "$bytes": "3a58"
+          }
+        },
+        {
+          "shift": 56,
+          "output": {
+            "$bytes": "3b59"
+          }
+        },
+        {
+          "shift": 57,
+          "output": {
+            "$bytes": "3c5a"
+          }
+        },
+        {
+          "shift": 58,
+          "output": {
+            "$bytes": "3d5b"
+          }
+        },
+        {
+          "shift": 59,
+          "output": {
+            "$bytes": "3e5c"
+          }
+        },
+        {
+          "shift": 60,
+          "output": {
+            "$bytes": "3f5d"
+          }
+        },
+        {
+          "shift": 61,
+          "output": {
+            "$bytes": "405e"
+          }
+        },
+        {
+          "shift": 62,
+          "output": {
+            "$bytes": "415f"
+          }
+        },
+        {
+          "shift": 63,
+          "output": {
+            "$bytes": "4260"
+          }
+        },
+        {
+          "shift": 64,
+          "output": {
+            "$bytes": "4361"
+          }
+        },
+        {
+          "shift": 65,
+          "output": {
+            "$bytes": "4462"
+          }
+        },
+        {
+          "shift": 66,
+          "output": {
+            "$bytes": "4563"
+          }
+        },
+        {
+          "shift": 67,
+          "output": {
+            "$bytes": "4664"
+          }
+        },
+        {
+          "shift": 68,
+          "output": {
+            "$bytes": "4765"
+          }
+        },
+        {
+          "shift": 69,
+          "output": {
+            "$bytes": "4866"
+          }
+        },
+        {
+          "shift": 70,
+          "output": {
+            "$bytes": "4967"
+          }
+        },
+        {
+          "shift": 71,
+          "output": {
+            "$bytes": "4a68"
+          }
+        },
+        {
+          "shift": 72,
+          "output": {
+            "$bytes": "4b69"
+          }
+        },
+        {
+          "shift": 73,
+          "output": {
+            "$bytes": "4c6a"
+          }
+        },
+        {
+          "shift": 74,
+          "output": {
+            "$bytes": "4d6b"
+          }
+        },
+        {
+          "shift": 75,
+          "output": {
+            "$bytes": "4e6c"
+          }
+        },
+        {
+          "shift": 76,
+          "output": {
+            "$bytes": "4f6d"
+          }
+        },
+        {
+          "shift": 77,
+          "output": {
+            "$bytes": "506e"
+          }
+        },
+        {
+          "shift": 78,
+          "output": {
+            "$bytes": "516f"
+          }
+        },
+        {
+          "shift": 79,
+          "output": {
+            "$bytes": "5270"
+          }
+        },
+        {
+          "shift": 80,
+          "output": {
+            "$bytes": "5371"
+          }
+        },
+        {
+          "shift": 81,
+          "output": {
+            "$bytes": "5472"
+          }
+        },
+        {
+          "shift": 82,
+          "output": {
+            "$bytes": "5573"
+          }
+        },
+        {
+          "shift": 83,
+          "output": {
+            "$bytes": "5674"
+          }
+        },
+        {
+          "shift": 84,
+          "output": {
+            "$bytes": "5775"
+          }
+        },
+        {
+          "shift": 85,
+          "output": {
+            "$bytes": "5876"
+          }
+        },
+        {
+          "shift": 86,
+          "output": {
+            "$bytes": "5977"
+          }
+        },
+        {
+          "shift": 87,
+          "output": {
+            "$bytes": "5a78"
+          }
+        },
+        {
+          "shift": 88,
+          "output": {
+            "$bytes": "5b79"
+          }
+        },
+        {
+          "shift": 89,
+          "output": {
+            "$bytes": "5c7a"
+          }
+        },
+        {
+          "shift": 90,
+          "output": {
+            "$bytes": "5d7b"
+          }
+        },
+        {
+          "shift": 91,
+          "output": {
+            "$bytes": "5e7c"
+          }
+        },
+        {
+          "shift": 92,
+          "output": {
+            "$bytes": "5f7d"
+          }
+        },
+        {
+          "shift": 93,
+          "output": {
+            "$bytes": "607e"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "rot-brute crib that never occurs",
+    "ref": "definition of rot and rot47, all shifts tried; expected output from an independent script",
+    "op": "classical:rot-brute",
+    "params": {
+      "crib": "zzzz"
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": []
+    }
+  },
+  {
+    "name": "rot-brute printable-only drops other bytes",
+    "ref": "definition of rot and rot47, all shifts tried; expected output from an independent script",
+    "op": "classical:rot-brute",
+    "params": {
+      "printable-only": true,
+      "crib": "Hello"
+    },
+    "input": {
+      "value": "55727979620100ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "json": [
+        {
+          "shift": 13,
+          "output": {
+            "$bytes": "48656c6c6f"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "rot-brute without printable-only keeps other bytes",
+    "ref": "definition of rot and rot47, all shifts tried; expected output from an independent script",
+    "op": "classical:rot-brute",
+    "params": {
+      "crib": "x"
+    },
+    "input": {
+      "value": "6101",
+      "enc": "hex"
+    },
+    "expect": {
+      "json": [
+        {
+          "shift": 23,
+          "output": {
+            "$bytes": "7801"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "rot-brute empty input with a crib finds nothing",
+    "ref": "definition of rot and rot47, all shifts tried; expected output from an independent script",
+    "op": "classical:rot-brute",
+    "params": {
+      "crib": "a"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": []
+    }
+  },
+  {
+    "name": "Cetacean encode hello",
+    "ref": "a.tools Cetacean Cipher page (example: hello), other values from an independent script",
+    "op": "classical:cetacean-encode",
+    "params": {},
+    "input": {
+      "value": "hello",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "EEEEEEEEEeeEeEEEEEEEEEEEEeeEEeEeEEEEEEEEEeeEeeEEEEEEEEEEEeeEeeEEEEEEEEEEEeeEeeee",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Cetacean decode hello",
+    "ref": "a.tools Cetacean Cipher page (example: hello), other values from an independent script",
+    "op": "classical:cetacean-decode",
+    "params": {},
+    "input": {
+      "value": "EEEEEEEEEeeEeEEEEEEEEEEEEeeEEeEeEEEEEEEEEeeEeeEEEEEEEEEEEeeEeeEEEEEEEEEEEeeEeeee",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "hello",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Cetacean encode 'Hello, World!'",
+    "ref": "a.tools Cetacean Cipher page (example: hello), other values from an independent script",
+    "op": "classical:cetacean-encode",
+    "params": {},
+    "input": {
+      "value": "Hello, World!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "EEEEEEEEEeEEeEEEEEEEEEEEEeeEEeEeEEEEEEEEEeeEeeEEEEEEEEEEEeeEeeEEEEEEEEEEEeeEeeeeEEEEEEEEEEeEeeEEEEEEEEEEEEeEEEEEEEEEEEEEEeEeEeeeEEEEEEEEEeeEeeeeEEEEEEEEEeeeEEeEEEEEEEEEEeeEeeEEEEEEEEEEEeeEEeEEEEEEEEEEEEeEEEEe",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Cetacean decode 'Hello, World!'",
+    "ref": "a.tools Cetacean Cipher page (example: hello), other values from an independent script",
+    "op": "classical:cetacean-decode",
+    "params": {},
+    "input": {
+      "value": "EEEEEEEEEeEEeEEEEEEEEEEEEeeEEeEeEEEEEEEEEeeEeeEEEEEEEEEEEeeEeeEEEEEEEEEEEeeEeeeeEEEEEEEEEEeEeeEEEEEEEEEEEEeEEEEEEEEEEEEEEeEeEeeeEEEEEEEEEeeEeeeeEEEEEEEEEeeeEEeEEEEEEEEEEeeEeeEEEEEEEEEEEeeEEeEEEEEEEEEEEEeEEEEe",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Hello, World!",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Cetacean encode 'é€'",
+    "ref": "a.tools Cetacean Cipher page (example: hello), other values from an independent script",
+    "op": "classical:cetacean-encode",
+    "params": {},
+    "input": {
+      "value": "é€",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "EEEEEEEEeeeEeEEeEEeEEEEEeEeEeeEE",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Cetacean decode 'é€'",
+    "ref": "a.tools Cetacean Cipher page (example: hello), other values from an independent script",
+    "op": "classical:cetacean-decode",
+    "params": {},
+    "input": {
+      "value": "EEEEEEEEeeeEeEEeEEeEEEEEeEeEeeEE",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "é€",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Cetacean encode 'a😀b'",
+    "ref": "a.tools Cetacean Cipher page (example: hello), other values from an independent script",
+    "op": "classical:cetacean-encode",
+    "params": {},
+    "input": {
+      "value": "a😀b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "EEEEEEEEEeeEEEEeeeEeeEEEEEeeeeEeeeEeeeeEEEEEEEEEEEEEEEEEEeeEEEeE",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Cetacean decode 'a😀b'",
+    "ref": "a.tools Cetacean Cipher page (example: hello), other values from an independent script",
+    "op": "classical:cetacean-decode",
+    "params": {},
+    "input": {
+      "value": "EEEEEEEEEeeEEEEeeeEeeEEEEEeeeeEeeeEeeeeEEEEEEEEEEEEEEEEEEeeEEEeE",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a😀b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Cetacean encode ''",
+    "ref": "a.tools Cetacean Cipher page (example: hello), other values from an independent script",
+    "op": "classical:cetacean-encode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Cetacean decode ''",
+    "ref": "a.tools Cetacean Cipher page (example: hello), other values from an independent script",
+    "op": "classical:cetacean-decode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Cetacean decode ignores white space",
+    "ref": "a.tools Cetacean Cipher page (example: hello), other values from an independent script",
+    "op": "classical:cetacean-decode",
+    "params": {},
+    "input": {
+      "value": "EEEEEEEEEeeEeEEE EEEEEEEEEeeEEeEe EEEEEEEEEeeEeeEE EEEEEEEEEeeEeeEE EEEEEEEEEeeEeeee\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "hello",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Cetacean decode rejects a foreign symbol",
+    "ref": "spec",
+    "op": "classical:cetacean-decode",
+    "params": {},
+    "input": {
+      "value": "EEEEEEEEEEEEEEEx",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "Cetacean decode needs groups of 16",
+    "ref": "spec",
+    "op": "classical:cetacean-decode",
+    "params": {},
+    "input": {
+      "value": "EEEEEEEEEEEEEEE",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "Cetacean decode rejects a lone surrogate",
+    "ref": "spec",
+    "op": "classical:cetacean-decode",
+    "params": {},
+    "input": {
+      "value": "eeEeeEEEEEEEEEEE",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "CTX1 encode password",
+    "ref": "encoded value of the Citrix web interface example in Remko Weijnen's blog post on Citrix passwords (decodes to password); other values from an independent script",
+    "op": "classical:ctx1-encode",
+    "params": {},
+    "input": {
+      "value": "password",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "NFHALEBBMHGCLEBBMDGGKMAJNOHLLKBP",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTX1 decode the published example",
+    "ref": "encoded value of the Citrix web interface example in Remko Weijnen's blog post on Citrix passwords (decodes to password); other values from an independent script",
+    "op": "classical:ctx1-decode",
+    "params": {},
+    "input": {
+      "value": "NFHALEBBMHGCLEBBMDGGKMAJNOHLLKBP",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "password",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTX1 encode 'a'",
+    "ref": "encoded value of the Citrix web interface example in Remko Weijnen's blog post on Citrix passwords (decodes to password); other values from an independent script",
+    "op": "classical:ctx1-encode",
+    "params": {},
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "MEGB",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTX1 decode 'a'",
+    "ref": "encoded value of the Citrix web interface example in Remko Weijnen's blog post on Citrix passwords (decodes to password); other values from an independent script",
+    "op": "classical:ctx1-decode",
+    "params": {},
+    "input": {
+      "value": "MEGB",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTX1 encode 'Passw0rd!'",
+    "ref": "encoded value of the Citrix web interface example in Remko Weijnen's blog post on Citrix passwords (decodes to password); other values from an independent script",
+    "op": "classical:ctx1-encode",
+    "params": {},
+    "input": {
+      "value": "Passw0rd!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "PFFAJEDBOHECJEDBODEGNDHGKBAEMFGAOEEB",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTX1 decode 'Passw0rd!'",
+    "ref": "encoded value of the Citrix web interface example in Remko Weijnen's blog post on Citrix passwords (decodes to password); other values from an independent script",
+    "op": "classical:ctx1-decode",
+    "params": {},
+    "input": {
+      "value": "PFFAJEDBOHECJEDBODEGNDHGKBAEMFGAOEEB",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Passw0rd!",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTX1 encode 'é😀'",
+    "ref": "encoded value of the Citrix web interface example in Remko Weijnen's blog post on Citrix passwords (decodes to password); other values from an independent script",
+    "op": "classical:ctx1-encode",
+    "params": {},
+    "input": {
+      "value": "é😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "EMOJHBAMKJNC",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTX1 decode 'é😀'",
+    "ref": "encoded value of the Citrix web interface example in Remko Weijnen's blog post on Citrix passwords (decodes to password); other values from an independent script",
+    "op": "classical:ctx1-decode",
+    "params": {},
+    "input": {
+      "value": "EMOJHBAMKJNC",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "é😀",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTX1 encode ''",
+    "ref": "encoded value of the Citrix web interface example in Remko Weijnen's blog post on Citrix passwords (decodes to password); other values from an independent script",
+    "op": "classical:ctx1-encode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTX1 decode ''",
+    "ref": "encoded value of the Citrix web interface example in Remko Weijnen's blog post on Citrix passwords (decodes to password); other values from an independent script",
+    "op": "classical:ctx1-decode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTX1 decode rejects lower case",
+    "ref": "spec",
+    "op": "classical:ctx1-decode",
+    "params": {},
+    "input": {
+      "value": "nfha",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "CTX1 decode needs a multiple of four letters",
+    "ref": "spec",
+    "op": "classical:ctx1-decode",
+    "params": {},
+    "input": {
+      "value": "NFHALE",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "CTX1 decode rejects a lone surrogate",
+    "ref": "spec",
+    "op": "classical:ctx1-decode",
+    "params": {},
+    "input": {
+      "value": "KFNI",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "LS47 encrypt the self-test message with nonce and signature",
+    "ref": "reference implementation ls47.py by Mirek Kratochvil (public domain, github.com/exaexa/ls47), run on these inputs (the nonce is given explicitly)",
+    "op": "classical:ls47-encrypt",
+    "params": {
+      "password": "s3cret_p4ssw0rd/31337",
+      "nonce": "xxxxxxxxxx",
+      "signature": "peace-vector-3"
+    },
+    "input": {
+      "value": "conflagrate_the_rose_bush_at_six!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "mjawexrk*?arzi1i/:svv:8wk'?,d!d.o!5is1h+gngn,g3+j9r9lu*n'v8d",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "LS47 decrypt the self-test message with nonce and signature",
+    "ref": "reference implementation ls47.py by Mirek Kratochvil (public domain, github.com/exaexa/ls47), run on these inputs (the nonce is given explicitly)",
+    "op": "classical:ls47-decrypt",
+    "params": {
+      "password": "s3cret_p4ssw0rd/31337",
+      "nonce-length": 10,
+      "signature": "peace-vector-3"
+    },
+    "input": {
+      "value": "mjawexrk*?arzi1i/:svv:8wk'?,d!d.o!5is1h+gngn,g3+j9r9lu*n'v8d",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "conflagrate_the_rose_bush_at_six!",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "LS47 encrypt without nonce or signature",
+    "ref": "reference implementation ls47.py by Mirek Kratochvil (public domain, github.com/exaexa/ls47), run on these inputs (the nonce is given explicitly)",
+    "op": "classical:ls47-encrypt",
+    "params": {
+      "password": "s3cret_p4ssw0rd/31337"
+    },
+    "input": {
+      "value": "conflagrate_the_rose_bush_at_six!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "nst1ipic!y*u.a0bv?*sn9jo1lpw0+la6",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "LS47 decrypt without nonce or signature",
+    "ref": "reference implementation ls47.py by Mirek Kratochvil (public domain, github.com/exaexa/ls47), run on these inputs (the nonce is given explicitly)",
+    "op": "classical:ls47-decrypt",
+    "params": {
+      "password": "s3cret_p4ssw0rd/31337"
+    },
+    "input": {
+      "value": "nst1ipic!y*u.a0bv?*sn9jo1lpw0+la6",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "conflagrate_the_rose_bush_at_six!",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "LS47 encrypt hello_world with a short password",
+    "ref": "reference implementation ls47.py by Mirek Kratochvil (public domain, github.com/exaexa/ls47), run on these inputs (the nonce is given explicitly)",
+    "op": "classical:ls47-encrypt",
+    "params": {
+      "password": "abc"
+    },
+    "input": {
+      "value": "hello_world",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "gbr1mlv3-q7",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "LS47 encrypt with a nonce and the whole alphabet of symbols",
+    "ref": "reference implementation ls47.py by Mirek Kratochvil (public domain, github.com/exaexa/ls47), run on these inputs (the nonce is given explicitly)",
+    "op": "classical:ls47-encrypt",
+    "params": {
+      "password": "()-+*",
+      "nonce": "ab"
+    },
+    "input": {
+      "value": "0123456789.,:/?!'",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "nzs'gvu.(k+?:bhlm30",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "LS47 decrypt with a nonce",
+    "ref": "reference implementation ls47.py by Mirek Kratochvil (public domain, github.com/exaexa/ls47), run on these inputs (the nonce is given explicitly)",
+    "op": "classical:ls47-decrypt",
+    "params": {
+      "password": "()-+*",
+      "nonce-length": 2
+    },
+    "input": {
+      "value": "nzs'gvu.(k+?:bhlm30",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0123456789.,:/?!'",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "LS47 encrypt empty text",
+    "ref": "reference implementation ls47.py by Mirek Kratochvil (public domain, github.com/exaexa/ls47), run on these inputs (the nonce is given explicitly)",
+    "op": "classical:ls47-encrypt",
+    "params": {
+      "password": "abc"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "LS47 decrypt rejects a wrong signature",
+    "ref": "spec (README: authentication by signature)",
+    "op": "classical:ls47-decrypt",
+    "params": {
+      "password": "s3cret_p4ssw0rd/31337",
+      "nonce-length": 10,
+      "signature": "wrong"
+    },
+    "input": {
+      "value": "mjawexrk*?arzi1i/:svv:8wk'?,d!d.o!5is1h+gngn,g3+j9r9lu*n'v8d",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "LS47 decrypt rejects a nonce longer than the message",
+    "ref": "spec",
+    "op": "classical:ls47-decrypt",
+    "params": {
+      "password": "abc",
+      "nonce-length": 20
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "LS47 encrypt rejects a letter outside the alphabet",
+    "ref": "spec (the 49-letter alphabet is lower case)",
+    "op": "classical:ls47-encrypt",
+    "params": {
+      "password": "abc"
+    },
+    "input": {
+      "value": "Hello",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "LS47 encrypt rejects a password letter outside the alphabet",
+    "ref": "spec",
+    "op": "classical:ls47-encrypt",
+    "params": {
+      "password": "ABC"
+    },
+    "input": {
+      "value": "hello",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "LS47 decrypt rejects a letter outside the alphabet",
+    "ref": "spec",
+    "op": "classical:ls47-decrypt",
+    "params": {
+      "password": "abc"
+    },
+    "input": {
+      "value": "a b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "LS47 empty password is rejected",
+    "ref": "param constraint",
+    "op": "classical:ls47-encrypt",
+    "params": {
+      "password": ""
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
   }
 ]

@@ -104,7 +104,7 @@ function randomPattern(next: () => number, n: number): string {
 describe("lorenz", () => {
   test("the alphabet has 32 different characters and the sets have twelve patterns", async () => {
     expect(new Set(ALPHABET).size).toBe(32);
-    expect(text(await runtime.call("lorenz:ita2-alphabet", []))).toBe(ALPHABET);
+    expect(text(await runtime.call("util:ita2-alphabet", []))).toBe(ALPHABET);
     for (const set of ["kh-patterns", "zmug-patterns", "bream-patterns"]) {
       const r = await runtime.call(`lorenz:${set}`, []);
       const wheels = (top(r).v as { v: string }[]).map((x) => x.v);

@@ -43,39 +43,6 @@
 IN: colossus
 USING: lorenz ;
 
-\ ---- copies of lorenz helpers (waiting to move into util) ----
-
-\ The code of a Bletchley Park character: u is the upper-case byte, tbl the alphabet table;
-\ + and - are figure and letter shift. 254 stands for white space and 255 for anything else.
-\ util-candidate: ita2-code
-: _ita2-code ( u:int tbl:bytes -- int )
-  u 43 = [ 27 ] [ u 45 = [ 31 ] [ tbl u nth ] if ] if ;
-
-\ util-candidate: ita2-entry
-: _ita2-entry ( b:int base:bytes -- int )
-  b 97 122 util:between? [ b 32 - ] [ b ] if base _ita2-code ;
-
-\ util-candidate: ita2-table2
-: _ita2-table2 ( base:bytes -- bytes )
-  0 256 range [ base _ita2-entry ] map list>bytes ;
-
-\ util-candidate: ita2-table
-: _ita2-table ( -- bytes )
-  lorenz:ita2-alphabet 254 255 util:decode-table _ita2-table2 ;
-
-\ The codes of text in Bletchley Park notation (either case, white space ignored).
-\ util-candidate: from-bp
-: _from-bp ( s:str -- bytes )
-  s str>bytes _ita2-table translate
-  dup [ 255 = ] filter len 0 <>
-  [ "not an ITA2 character: use the letters, 3 4 5 8 9 / (and + and -); white space is ignored" raise:coerce ] when
-  [ 254 <> ] filter ;
-
-\ n bytes of the endless repetition of pat, the first being pat[start] (start counted from 0).
-\ util-candidate: cycle-bytes
-: _cyc ( pat:bytes start:int n:int -- bytes )
-  pat [ dup len start n + < ] [ dup cat ] while
-  start start n + slice ;
 
 \ ---- the condition ----
 
@@ -118,7 +85,7 @@ USING: lorenz ;
   d 0 = [ pat ] [ pat pat 1 pat len slice pat 0 1 slice cat bxor ] if ;
 
 : _xstream ( pat:bytes d:int start:int m:int -- bytes )
-  pat d _arr start 1 - m _cyc ;
+  pat d _arr start 1 - m util:cycle-bytes ;
 
 : _need ( pat:bytes w:int -- bytes )
   pat len 0 = [ "chi" w int>str cat " has no pattern: choose KH, ZMUG or BREAM, or give the custom pattern" cat raise:range ] when
@@ -272,7 +239,7 @@ USING: lorenz ;
 
 : _colossus ( cipher:str a:int b:int cond:str target:str pattern:str custom:list starts:list top:int total:int -- str )
   a b = [ "wheel-a and wheel-b must be two different chi wheels" raise:range ] when
-  cipher _from-bp dup len 0 = [ "the ciphertext is empty" raise:range ] when
+  cipher util:from-bp dup len 0 = [ "the ciphertext is empty" raise:range ] when
   cond len 0 = [ a b _default ] [ cond util:strip-space lower ] if
   a b target "cross" = [ 1 ] [ 0 ] if pattern custom starts top total _go ;
 

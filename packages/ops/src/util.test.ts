@@ -555,6 +555,214 @@ describe("util:int>symbols, util:bytes>symbols and util:symbols>bytes", () => {
   });
 });
 
+describe("util letter and permutation words", () => {
+  const b = (...v: number[]) => valueHelpers.bytes(Uint8Array.from(v));
+  const bytesOf = async (q: string, args: Value[]) => [...((await value(q, args)) as Uint8Array)];
+  const ALPHA = Array.from({ length: 26 }, (_, i) => i);
+
+  test("letter?, letters?, digits?", async () => {
+    for (const c of [64, 65, 90, 91, 96, 97, 122, 123, 48]) {
+      expect(await value("util:letter?", [int(c)])).toBe(
+        (c >= 65 && c <= 90) || (c >= 97 && c <= 122),
+      );
+    }
+    expect(await value("util:letters?", [str("AbZ")])).toBe(true);
+    expect(await value("util:letters?", [str("")])).toBe(false);
+    expect(await value("util:letters?", [str("A1")])).toBe(false);
+    expect(await value("util:digits?", [str("0123")])).toBe(true);
+    expect(await value("util:digits?", [str("")])).toBe(false);
+    expect(await value("util:digits?", [str("1a")])).toBe(false);
+  });
+
+  test("letter-indices, digit-values and letter-table", async () => {
+    expect(await bytesOf("util:letter-indices", [str("AbZz")])).toEqual([0, 1, 25, 25]);
+    expect(await bytesOf("util:digit-values", [str("0719")])).toEqual([0, 7, 1, 9]);
+    const t = (await value("util:letter-table", [])) as Uint8Array;
+    expect(t).toHaveLength(256);
+    for (let c = 0; c < 256; c++) {
+      const letter = (c >= 65 && c <= 90) || (c >= 97 && c <= 122);
+      expect(t[c]).toBe(letter ? (c | 32) - 97 : 255);
+    }
+  });
+
+  test("count-of, index-of, perm-invert, perm?", async () => {
+    expect(await value("util:count-of", [b(1, 2, 1, 1), int(1)])).toBe(3);
+    expect(await value("util:count-of", [b(), int(1)])).toBe(0);
+    expect(await value("util:index-of", [b(5, 6, 7), int(7)])).toBe(2);
+    expect((await runtime.call("util:index-of", [b(5, 6, 7), int(9)])).ok).toBe(false);
+    expect(await bytesOf("util:perm-invert", [b(2, 0, 1)])).toEqual([1, 2, 0]);
+    expect(await value("util:perm?", [b(2, 0, 1), int(3)])).toBe(true);
+    expect(await value("util:perm?", [b(2, 0, 2), int(3)])).toBe(false);
+    expect(await value("util:perm?", [b(0, 1), int(3)])).toBe(false);
+    expect(await value("util:perm?", [valueHelpers.list([int(1), int(0)]), int(2)])).toBe(true);
+  });
+
+  test("rotor-shifted, rotor-shift-table and table-compose3", async () => {
+    const w = [
+      4, 10, 12, 5, 11, 6, 3, 16, 21, 25, 13, 19, 14, 22, 24, 7, 23, 20, 18, 15, 0, 8, 1, 17, 2, 9,
+    ];
+    for (const s of [0, 1, 7, 25]) {
+      const expected = ALPHA.map((x) => ((((w[(x + s) % 26] as number) - s) % 26) + 26) % 26);
+      expect(await bytesOf("util:rotor-shifted", [b(...w), int(s)])).toEqual(expected);
+    }
+    const table = await bytesOf("util:rotor-shift-table", [b(...w)]);
+    expect(table).toHaveLength(676);
+    for (const s of [0, 3, 25]) {
+      expect(table.slice(s * 26, s * 26 + 26)).toEqual(
+        await bytesOf("util:rotor-shifted", [b(...w), int(s)]),
+      );
+    }
+    const p = ALPHA.map((x) => (x + 1) % 26);
+    const q = ALPHA.map((x) => ((x * 3) % 26 === x ? x : (x + 2) % 26));
+    const r = ALPHA.map((x) => (x + 5) % 26);
+    expect(await bytesOf("util:table-compose3", [b(...p), b(...q), b(...r)])).toEqual(
+      ALPHA.map((x) => r[q[p[x] as number] as number]),
+    );
+  });
+
+  test("rotor-notch-flags marks the rows whose window position is a notch", async () => {
+    const flags = await bytesOf("util:rotor-notch-flags", [b(16, 25), int(3)]);
+    expect(flags).toHaveLength(676);
+    for (let i = 0; i < 676; i++) {
+      const expected = i % 26 === 0 && [16, 25].includes((i / 26 + 3) % 26) ? 1 : 0;
+      expect(flags[i]).toBe(expected);
+    }
+    expect((await bytesOf("util:rotor-notch-flags", [b(), int(0)])).every((v) => v === 0)).toBe(
+      true,
+    );
+  });
+
+  test("rotor-reflect-table composes rotor, fixed permutation and rotor back", async () => {
+    const w = ALPHA.map((x) => (x * 5 + 3) % 26);
+    const winv = await bytesOf("util:perm-invert", [b(...w)]);
+    const r = ALPHA.map((x) => x ^ 1).map((x) => (x > 25 ? 25 : x));
+    const fl = await bytesOf("util:rotor-shift-table", [b(...w)]);
+    const il = await bytesOf("util:rotor-shift-table", [b(...winv)]);
+    const t = await bytesOf("util:rotor-reflect-table", [b(...r), b(...fl), b(...il)]);
+    for (const [s, x] of [
+      [0, 0],
+      [4, 9],
+      [25, 25],
+    ] as const) {
+      const row = s * 26;
+      const mid = r[fl[row + x] as number] as number;
+      expect(t[row + x]).toBe(il[row + mid]);
+    }
+  });
+
+  test("letter-settings: letters, spaced letters, numbers, errors", async () => {
+    const call = (s: string, n: number) =>
+      runtime.call("util:letter-settings", [str(s), int(n), str("rings")]);
+    expect(await bytesOf("util:letter-settings", [str("BUL"), int(3), str("rings")])).toEqual([
+      1, 20, 11,
+    ]);
+    expect(await bytesOf("util:letter-settings", [str("b u,l"), int(3), str("rings")])).toEqual([
+      1, 20, 11,
+    ]);
+    expect(await bytesOf("util:letter-settings", [str("2 21 12"), int(3), str("rings")])).toEqual([
+      1, 20, 11,
+    ]);
+    expect(await bytesOf("util:letter-settings", [str("26,1"), int(2), str("rings")])).toEqual([
+      25, 0,
+    ]);
+    for (const [s, n] of [
+      ["", 3],
+      ["AB", 3],
+      ["0 1 2", 3],
+      ["1 27 3", 3],
+      ["A1B", 3],
+      ["-1 2 3", 3],
+    ] as const) {
+      const r = await call(s, n);
+      expect(r.ok).toBe(false);
+      if (!r.ok) expect(r.error.code).toBe("E_RANGE");
+    }
+  });
+
+  test("plugboard-table swaps pairs and rejects bad pairs", async () => {
+    const t = await bytesOf("util:plugboard-table", [str("ab, CD")]);
+    expect(t.slice(0, 5)).toEqual([1, 0, 3, 2, 4]);
+    expect(t.slice(5)).toEqual(ALPHA.slice(5));
+    expect(await bytesOf("util:plugboard-table", [str("")])).toEqual(ALPHA);
+    for (const bad of ["AB BC", "AA", "A", "ABC", "A1"]) {
+      const r = await runtime.call("util:plugboard-table", [str(bad)]);
+      expect(r.ok).toBe(false);
+      if (!r.ok) expect(r.error.code).toBe("E_RANGE");
+    }
+  });
+});
+
+describe("util:cycle-bytes", () => {
+  const cyc = (pat: number[], start: number, n: number) =>
+    value("util:cycle-bytes", [valueHelpers.bytes(Uint8Array.from(pat)), int(start), int(n)]);
+
+  test("repeats the pattern from the start cell", async () => {
+    expect(await cyc([1, 2, 3], 0, 7)).toEqual(Uint8Array.of(1, 2, 3, 1, 2, 3, 1));
+    expect(await cyc([1, 2, 3], 2, 5)).toEqual(Uint8Array.of(3, 1, 2, 3, 1));
+    expect(await cyc([9], 0, 4)).toEqual(Uint8Array.of(9, 9, 9, 9));
+    expect(await cyc([1, 2, 3], 1, 0)).toEqual(new Uint8Array(0));
+  });
+
+  test("a long run is linear and exact", async () => {
+    const out = (await cyc([0, 1, 1, 0, 1], 3, 65536)) as Uint8Array;
+    expect(out.length).toBe(65536);
+    const pat = [0, 1, 1, 0, 1];
+    for (const i of [0, 1, 4, 5, 999, 65535]) expect(out[i]).toBe(pat[(3 + i) % 5]);
+  });
+});
+
+describe("the ITA2 words", () => {
+  const alphabet = "/E4A9SIU3DRJNFCKTZLWHYPQOBG5MXV8";
+  const from = (s: string) => runtime.call("util:from-bp", [str(s)]);
+
+  test("ita2-alphabet has 32 different characters, code order", async () => {
+    expect(await value("util:ita2-alphabet", [])).toBe(alphabet);
+    expect(new Set(alphabet).size).toBe(32);
+  });
+
+  test("ita2-table maps every character of the alphabet to its code, either case", async () => {
+    const table = (await value("util:ita2-table", [])) as Uint8Array;
+    expect(table.length).toBe(256);
+    for (let c = 0; c < 32; c++) {
+      const ch = alphabet.charCodeAt(c);
+      expect(table[ch]).toBe(c);
+      expect(table[String.fromCharCode(ch).toLowerCase().charCodeAt(0)]).toBe(c);
+    }
+    expect(table[43]).toBe(27);
+    expect(table[45]).toBe(31);
+    for (const w of [9, 10, 11, 12, 13, 32]) expect(table[w]).toBe(254);
+    expect(table[49]).toBe(255);
+    expect(table[200]).toBe(255);
+  });
+
+  test("ita2-code and ita2-entry agree with the table", async () => {
+    const base = (await value("util:decode-table", [
+      str(alphabet),
+      int(254),
+      int(255),
+    ])) as Uint8Array;
+    const b = valueHelpers.bytes(base);
+    expect(await value("util:ita2-code", [int(43), b])).toBe(27);
+    expect(await value("util:ita2-code", [int(69), b])).toBe(1);
+    expect(await value("util:ita2-entry", [int(101), b])).toBe(1);
+    expect(await value("util:ita2-entry", [int(45), b])).toBe(31);
+    const t2 = (await value("util:ita2-table2", [b])) as Uint8Array;
+    expect(t2).toEqual(await value("util:ita2-table", []));
+  });
+
+  test("from-bp reads either case, ignores white space and refuses other characters", async () => {
+    expect(await value("util:from-bp", [str("e a\n+ 9 -/")])).toEqual(
+      Uint8Array.of(1, 3, 27, 4, 31, 0),
+    );
+    expect(await value("util:from-bp", [str("")])).toEqual(new Uint8Array(0));
+    for (const bad of ["1", "A=", "é"]) {
+      const r = await from(bad);
+      expect(r.ok).toBe(false);
+      if (!r.ok) expect(r.error.code).toBe("E_COERCE");
+    }
+  });
+});
+
 describe("util is internal", () => {
   test("is listed in INTERNAL_VOCABS", () => {
     expect(INTERNAL_VOCABS).toContain("util");

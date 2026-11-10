@@ -32,10 +32,13 @@ META: rot
 \ rot47, atbash
 \ ---------------------------------------------------------------------------------------------
 
+: _rot47-code ( code:int amount:int -- int )
+  code 33 126 util:between? [ code 33 - amount + 94 mod 33 + ] [ code ] if ;
+
 : rot47 ( bytes -- bytes )
   "Rotate the printable ASCII bytes 33 ('!') to 126 ('~') by 47 places; all other bytes pass through. Applying it twice gives the original." doc
   "Classical ciphers" category
-  [ dup 33 >= over 126 <= and [ 33 - 47 + 94 mod 33 + ] when ] map ;
+  [ 47 _rot47-code ] map ;
 
 META: rot47
   see-also classical:rot ;
@@ -199,6 +202,7 @@ META: bacon-decode
 \ ---------------------------------------------------------------------------------------------
 
 \ Upper-case a letter and merge J into I.
+\ util-candidate: upper-merge-i
 : _bifid-norm ( code:int -- int )
   code 223 band dup 74 = [ drop 73 ] when ;
 
@@ -413,4 +417,460 @@ META: substitute
   param plaintext "The characters to replace (printable ASCII, none repeated)." ;
   param ciphertext "Their replacements, in the same order and of the same length." ;
   see-also classical:atbash classical:rot ;
+;
+
+\ ---------------------------------------------------------------------------------------------
+\ Brute force for rot and rot47
+\ ---------------------------------------------------------------------------------------------
+
+\ Printable ASCII, plus tab, line feed and carriage return.
+: _text-printable? ( code:int -- bool )
+  code 32 126 util:between? code 9 = or code 10 = or code 13 = or ;
+
+\ True when the needle is empty or the data contains the UTF-8 bytes of the needle. Both are
+\ viewed as Latin-1 text so that the search is a byte search.
+\ util-candidate: contains-bytes?
+: _contains ( data:bytes needle:str -- bool )
+  needle len 0 =
+  [ true ]
+  [ data bytes>latin1 needle str>bytes bytes>latin1 split len 1 > ]
+  if ;
+
+\ A 256-byte table for translate that applies rot (or rot47) with the shift to every byte.
+: _rot-table ( shift:int v47:bool -- bytes )
+  0 256 range
+  v47 [ [ shift _rot47-code ] map ] [ [ shift _rot-code ] map ] if
+  list>bytes ;
+
+: _brute-record ( shift:int out:bytes -- record )
+  { { "shift" shift } { "output" out } } >record ;
+
+: _rot-brute ( d:bytes v47:bool crib:str -- list )
+  1 v47 [ 94 ] [ 26 ] if range
+  [ dup d swap v47 _rot-table translate _brute-record ] map
+  [ "output" get crib _contains ] filter ;
+
+: rot-brute ( data:bytes variant:choice{rot|rot47}=rot crib:str="" printable-only:bool=false -- list )
+  "Try every shift of rot (shifts 1 to 25) or of rot47 (shifts 1 to 93) and list the candidates as records with shift (int) and output (bytes), in order of shift. With a crib, keep only candidates whose output contains the crib's UTF-8 bytes. With printable-only, first drop every byte that is not printable ASCII (32 to 126, tab, line feed, carriage return): rot and rot47 pass such bytes through unchanged, so every shift would otherwise carry them." doc
+  "Classical ciphers" category
+  printable-only [ data [ _text-printable? ] filter ] [ data ] if
+  variant "rot47" = crib _rot-brute ;
+
+META: rot-brute
+  param variant "rot: letters (shifts 1 to 25). rot47: printable ASCII (shifts 1 to 93)." ;
+  param crib "Text expected in the output (matched as UTF-8 bytes). Empty keeps every candidate." ;
+  param printable-only "Drop bytes that are not printable ASCII (tab, line feed and carriage return are kept) before shifting." ;
+  see-also classical:rot classical:rot47 bits:xor-brute ;
+;
+
+\ ---------------------------------------------------------------------------------------------
+\ ROT8000
+\ ---------------------------------------------------------------------------------------------
+\ The valid characters are the BMP code points in nine ranges (the C0 and C1 controls, space and
+\ the no-break and other Unicode white space, surrogates and the private use area are left
+\ out): 33-126, 161-5759, 5761-8191, 8203-8231, 8234-8238, 8240-8286, 8288-12287, 12289-55295
+\ and 57344-65535. They number 63404; a character moves 31702 places along that list, which
+\ wraps around, so the cipher is its own inverse. Code points outside the BMP pass through.
+
+\ The position of a code point in the list of valid characters, or -1 when it is not one.
+: _r8-index ( cp:int -- int )
+  cp 33 126 util:between? [ cp 33 - ]
+  [ cp 12289 55295 util:between? [ cp 12289 - 12205 + ]
+    [ cp 161 5759 util:between? [ cp 161 - 94 + ]
+      [ cp 5761 8191 util:between? [ cp 5761 - 5693 + ]
+        [ cp 8288 12287 util:between? [ cp 8288 - 8205 + ]
+          [ cp 57344 65535 util:between? [ cp 57344 - 55212 + ]
+            [ cp 8203 8231 util:between? [ cp 8203 - 8124 + ]
+              [ cp 8234 8238 util:between? [ cp 8234 - 8153 + ]
+                [ cp 8240 8286 util:between? [ cp 8240 - 8158 + ] [ -1 ] if ]
+                if ]
+              if ]
+            if ]
+          if ]
+        if ]
+      if ]
+    if ]
+  if ;
+
+\ The code point at a position of the list of valid characters.
+: _r8-cp ( j:int -- int )
+  j 12205 <
+  [ j 94 < [ j 33 + ]
+    [ j 5693 < [ j 94 - 161 + ]
+      [ j 8124 < [ j 5693 - 5761 + ]
+        [ j 8153 < [ j 8124 - 8203 + ]
+          [ j 8158 < [ j 8153 - 8234 + ]
+            [ j 8205 < [ j 8158 - 8240 + ] [ j 8205 - 8288 + ] if ]
+            if ]
+          if ]
+        if ]
+      if ]
+    if ]
+  [ j 55212 < [ j 12205 - 12289 + ] [ j 55212 - 57344 + ] if ]
+  if ;
+
+: _r8-char ( cp:int -- int )
+  cp _r8-index
+  dup 0 < [ drop cp ] [ 31702 + 63404 mod _r8-cp ] if ;
+
+: rot8000 ( str -- str )
+  "ROT8000: rotate every character of the Basic Multilingual Plane (as published at rot8000.com) half way round the list of its 63,404 valid characters. Control characters, white space of every kind, surrogates and the private use area are not valid and pass through, as does everything outside the BMP, so spaces and line breaks survive and the text stays text. It is its own inverse." doc
+  "Classical ciphers" category
+  str>codes [ _r8-char ] map codes>str ;
+
+META: rot8000
+  see-also classical:rot classical:rot47 ;
+;
+
+\ ---------------------------------------------------------------------------------------------
+\ Caesar box
+\ ---------------------------------------------------------------------------------------------
+\ The n bytes are written along the rows of a box of height rows and w = ceil(n / height) columns
+\ (the last row may be short) and read down the columns. Short columns are not padded, so the
+\ cipher text has as many bytes as the plain text and the box can be undone without a marker.
+\ Column c holds the bytes c, c + w, c + 2w, ...
+
+: _cb-col ( data:bytes c:int w:int -- bytes )
+  0 data len c - w + 1 - w div range [ w * c + data swap nth ] map list>bytes ;
+
+: _cb-width ( n:int height:int -- int )
+  n height + 1 - height div ;
+
+: _cb-enc ( data:bytes w:int -- bytes )
+  0 w range [ data swap w _cb-col ] map #[ ] bjoin ;
+
+: _cb-encrypt ( data:bytes height:int -- bytes )
+  data data len height _cb-width _cb-enc ;
+
+\ rho is the number of rows that hold bytes and last the length of the last of them.
+: _cb-shape ( n:int w:int -- rho:int last:int )
+  n w + 1 - w div dup 1 - w * n swap - ;
+
+\ Column cc starts at cc * (rho - 1) + min(cc, last) in the cipher text.
+: _cb-unpack ( data:bytes w:int rho:int last:int -- bytes )
+  0 data len range
+  [ dup w div swap w mod
+    dup rho 1 - * swap last min + +
+    data swap nth ]
+  map list>bytes ;
+
+: _cb-dec ( data:bytes w:int -- bytes )
+  data w data len w _cb-shape _cb-unpack ;
+
+: _cb-decrypt ( data:bytes height:int -- bytes )
+  data len 0 =
+  [ data ]
+  [ data data len height _cb-width _cb-dec ]
+  if ;
+
+: caesar-box-encrypt ( bytes height:int[1..65536]=2 -- bytes )
+  "Caesar box (columnar transposition): write the bytes along the rows of a box of the given height, with as many columns as needed, and read the columns from top to bottom, left to right. The last row may be short; short columns are not padded. A height of 1 changes nothing." doc
+  "Classical ciphers" category
+  height _cb-encrypt ;
+
+META: caesar-box-encrypt
+  param height "Number of rows of the box, 1 to 65536." ;
+  see-also classical:caesar-box-decrypt classical:rail-fence-encrypt ;
+;
+
+: caesar-box-decrypt ( bytes height:int[1..65536]=2 -- bytes )
+  "Undo the Caesar box with the same height: the bytes are read down the columns of the box and written back along its rows." doc
+  "Classical ciphers" category
+  height _cb-decrypt ;
+
+META: caesar-box-decrypt
+  param height "Number of rows of the box used to encrypt, 1 to 65536." ;
+  see-also classical:caesar-box-encrypt ;
+;
+
+\ ---------------------------------------------------------------------------------------------
+\ UTF-16 helpers (private). Both ciphers below work on the 16-bit code units of the text.
+\ ---------------------------------------------------------------------------------------------
+
+: _be-unit ( u:int -- bytes )
+  { u 8 shr u 255 band } list>bytes ;
+
+\ A code point as the big-endian bytes of one or two UTF-16 code units.
+: _cp>be ( cp:int -- bytes )
+  cp 65535 >
+  [ cp 65536 - 10 shr 55296 + _be-unit cp 65536 - 1023 band 56320 + _be-unit cat ]
+  [ cp _be-unit ]
+  if ;
+
+: _text>be ( s:str -- bytes )
+  s str>codes [ _cp>be ] map #[ ] bjoin ;
+
+\ Swap the two bytes of every pair: big-endian becomes little-endian and the other way round.
+: _swap16 ( b:bytes -- bytes )
+  0 b len range [ 1 bxor b swap nth ] map list>bytes ;
+
+: _lone ( -- )
+  "a lone UTF-16 surrogate cannot be decoded" raise:coerce ;
+
+\ The code point that starts at unit i: -1 for the low half of a pair.
+: _unit>cp ( units:list i:int -- int )
+  units i nth
+  dup 55296 56319 util:between?
+  [ i 1 + units len <
+    [ units i 1 + nth ] [ _lone 0 ] if
+    dup 56320 57343 util:between? not [ _lone ] when
+    56320 - swap 55296 - 10 shl + 65536 + ]
+  [ dup 56320 57343 util:between?
+    [ drop i 0 > [ units i 1 - nth 55296 56319 util:between? not ] [ true ] if
+      [ _lone ] when -1 ]
+    when ]
+  if ;
+
+\ Code units as text. Without surrogates the units are the code points.
+: _units>str ( units:list -- str )
+  units [ 55296 57343 util:between? ] filter len 0 =
+  [ units codes>str ]
+  [ units [ nip units swap _unit>cp ] mapi [ -1 <> ] filter codes>str ]
+  if ;
+
+\ UTF-16 bytes (an even number of them), little-endian or big-endian, as text.
+: _utf16>str ( b:bytes le:bool -- str )
+  0 b len 2 div range
+  [ 2 * dup b swap nth swap 1 + b swap nth le [ swap ] when swap 8 shl bor ] map
+  _units>str ;
+
+\ ---------------------------------------------------------------------------------------------
+\ Cetacean cipher
+\ ---------------------------------------------------------------------------------------------
+\ Each UTF-16 code unit of the text becomes 16 symbols, most significant bit first: E for a 0 bit
+\ and e for a 1 bit. Everything else is white space or an error when decoding.
+
+: _cet-bits ( b:int -- str )
+  0 8 range [ 7 swap - b swap shr 1 band 5 shl 69 + ] map list>bytes bytes>str ;
+
+: _cet-encode ( be:bytes table:list -- str )
+  be bytes>list [ table swap nth ] map "" join ;
+
+: cetacean-encode ( str -- str )
+  "Cetacean cipher: write each UTF-16 code unit of the text as 16 symbols, most significant bit first, E for 0 and e for 1. The output has no separators." doc
+  "Classical ciphers" category
+  _text>be 0 256 range [ _cet-bits ] map _cet-encode ;
+
+META: cetacean-encode
+  see-also classical:cetacean-decode ;
+;
+
+\ Like util:check-symbols (translate through a decode table; E_COERCE if a byte maps to 255) but
+\ it looks for the 255 marker in the text view of the bytes instead of visiting every byte, which
+\ takes a few interpreter steps for any length instead of three per byte.
+: _check-symbols ( data:bytes table:bytes -- bytes )
+  data table translate
+  dup bytes>latin1 255 util:cp>str split len 1 >
+  [ "a character is not in the alphabet" raise:coerce ] when ;
+
+\ The bytes without the marker byte 254 (white space after check-symbols), without visiting each
+\ byte: the bytes are split at the marker as Latin-1 text and joined again.
+\ util-candidate: drop-marker
+: _drop-marker ( data:bytes -- bytes )
+  data bytes>latin1 254 util:cp>str split "" join latin1>bytes ;
+
+\ The 0 and 1 characters of a chunk of bits as hex digits.
+: _cet-chunk ( s:str -- str )
+  s 2 str>int-radix s len 4 div util:pad-hex ;
+
+\ Text of 0 and 1 characters as hex, 4096 bits at a time.
+: _cet-hex ( s:str -- str )
+  0 s len 4095 + 4096 div range
+  [ 4096 * dup 4096 + s len min s -rot slice _cet-chunk ] map "" join ;
+
+\ The bits (a byte each, 0 or 1) as big-endian bytes; their number must be a multiple of 16.
+: _cet-pack ( bits:bytes -- bytes )
+  bits len 16 mod 0 <>
+  [ "cetacean-decode: the number of E and e symbols must be a multiple of 16" raise:coerce ] when
+  bits 0 256 range [ 48 + 255 band ] map list>bytes translate bytes>latin1
+  _cet-hex hex>bytes ;
+
+: cetacean-decode ( str -- str )
+  "Undo the Cetacean cipher: read the symbols E (0) and e (1) in groups of 16 as UTF-16 code units. White space is ignored; any other character, a symbol count that is not a multiple of 16, or a lone surrogate is an error (E_COERCE)." doc
+  "Classical ciphers" category
+  str>bytes "Ee" 254 255 util:decode-table _check-symbols
+  _drop-marker
+  _cet-pack false _utf16>str ;
+
+META: cetacean-decode
+  see-also classical:cetacean-encode ;
+;
+
+\ ---------------------------------------------------------------------------------------------
+\ Citrix CTX1
+\ ---------------------------------------------------------------------------------------------
+\ The text is taken as UTF-16 little-endian bytes p0, p1, ... Each byte is chained to the previous
+\ cipher byte: c(i) = p(i) xor 0xA5 xor c(i-1), with c(-1) = 0. Every cipher byte is written as
+\ two letters, the high nibble first, nibble value n being the letter A + n (so A to P).
+
+0 VARIABLE _ctx-prev
+
+: _ctx-chain ( p:bytes -- bytes )
+  0 _ctx-prev! p [ 165 bxor _ctx-prev bxor dup _ctx-prev! ] map ;
+
+\ Hex digit code (0-9, a-f) to its letter A-P; other codes stay as they are.
+: _ctx-letter ( code:int -- int )
+  code 57 <= [ code 48 - 65 + ] [ code 97 - 75 + ] if ;
+
+: _ctx-table ( -- bytes )
+  0 256 range
+  [ dup 48 57 util:between? over 97 102 util:between? or [ _ctx-letter ] when ]
+  map list>bytes ;
+
+: ctx1-encode ( str -- str )
+  "Citrix CTX1 password obfuscation: the text as UTF-16 little-endian bytes, each xor 0xA5 and the previous output byte, written as two letters A to P per byte (high nibble first). It is reversible obfuscation, not encryption." doc
+  "Classical ciphers" category
+  _text>be _swap16 _ctx-chain bytes>hex str>bytes _ctx-table translate bytes>str ;
+
+META: ctx1-encode
+  see-also classical:ctx1-decode ;
+;
+
+\ Undo the chain: p(i) = c(i) xor 0xA5 xor c(i-1).
+: _ctx-unchain ( c:bytes -- bytes )
+  c len 0 =
+  [ c ]
+  [ c #[ a5 ] bxor #[ 00 ] c 0 c len 1 - slice cat bxor ]
+  if ;
+
+\ Index (0 to 15) to the hex digit of that value.
+: _ctx-hex-table ( -- bytes )
+  0 256 range [ dup 16 < [ dup 10 < [ 48 + ] [ 87 + ] if ] [ drop 0 ] if ] map list>bytes ;
+
+\ The letter indexes (two per byte) as bytes, through hex text.
+: _ctx-unpair ( nibs:bytes -- bytes )
+  nibs len 4 mod 0 <>
+  [ "ctx1-decode: the number of letters must be a multiple of four" raise:coerce ] when
+  nibs _ctx-hex-table translate bytes>latin1 hex>bytes ;
+
+: ctx1-decode ( str -- str )
+  "Undo the Citrix CTX1 obfuscation. The letters A to P (upper case; white space ignored) give the cipher bytes, two letters per byte; undoing the chain gives UTF-16 little-endian text. Any other character, a letter count that is not a multiple of four, or a lone surrogate is an error (E_COERCE)." doc
+  "Classical ciphers" category
+  str>bytes "ABCDEFGHIJKLMNOP" 254 255 util:decode-table _check-symbols
+  _drop-marker
+  _ctx-unpair _ctx-unchain true _utf16>str ;
+
+META: ctx1-decode
+  see-also classical:ctx1-encode ;
+;
+
+\ ---------------------------------------------------------------------------------------------
+\ LS47
+\ ---------------------------------------------------------------------------------------------
+\ Mirek Kratochvil's LS47 (public domain reference implementation ls47.py, and the README of
+\ github.com/exaexa/ls47), a hand cipher on a 7x7 board of 49 tiles that improves Alan Kaminsky's
+\ ElsieFour. The 49 letters of the board, in standard order, are
+\   _abcdefghijklmnopqrstuvwxyz.0123456789,-+*/:?!'()
+\ and a tile has the offset (row, column) of its place on the standard board. The key is the
+\ initial arrangement of the board; here it is made from a password. State: the board (the
+\ bytes of its 49 tiles, row by row) and the marker (row, column), starting at (0, 0).
+\ Encrypting a letter P: its place in the board is (pr, pc); the tile under the marker has the
+\ offset (ar, ac); the cipher letter is the tile at (pr + ar, pc + ac), all mod 7. Then the row of
+\ P rotates one place right, the column of the cipher letter (found again after that rotation)
+\ rotates one place down, and the marker moves by the offset of the cipher letter. Decrypting
+\ is the same with P = C - M.
+\ Nothing here is random: the optional leading nonce letters and trailing signature of the
+\ README are given by the caller.
+
+: _ls-alpha ( -- str )
+  "_abcdefghijklmnopqrstuvwxyz.0123456789,-+*/:?!'()" ;
+
+\ Place of a letter on the standard board (0 to 48).
+: _ls-std ( ch:int -- int )
+  _ls-alpha ch util:cp>str split 0 nth len ;
+
+\ Rotate the row starting at byte s by m places left (mid[m:] + mid[:m]).
+: _ls-rr ( k:bytes s:int m:int -- bytes )
+  k 0 s slice
+  k s m + s 7 + slice cat
+  k s s m + slice cat
+  k s 7 + 49 slice cat ;
+
+\ Rotate column col so that new[i] = old[(i + m) mod 7].
+: _ls-rd ( k:bytes col:int m:int -- bytes )
+  0 49 range
+  [ dup 7 mod col = [ 7 div m + 7 mod 7 * col + ] when k swap nth ]
+  map list>bytes ;
+
+\ Rotate a row right by n places / a column down by n places (n >= 0).
+: _ls-right ( k:bytes row:int n:int -- bytes )
+  k row 7 * 7 n 7 mod - 7 mod _ls-rr ;
+
+: _ls-down ( k:bytes col:int n:int -- bytes )
+  k col 7 n 7 mod - 7 mod _ls-rd ;
+
+\ ---- key from a password ----
+
+0 VARIABLE _ls-i
+
+: _ls-dstep ( k:bytes i:int row:int col:int -- bytes )
+  k i col _ls-right i row _ls-down ;
+
+: _ls-derive-char ( k:bytes ch:int -- bytes )
+  k _ls-i ch _ls-std dup 7 div swap 7 mod _ls-dstep
+  _ls-i 1 + 7 mod _ls-i! ;
+
+: _ls-derive ( password:bytes -- bytes )
+  0 _ls-i!
+  password _ls-alpha str>bytes [ _ls-derive-char ] reduce ;
+
+\ ---- the cipher ----
+
+\ The letter-by-letter cipher is the private primitive _ls47 (src/prims/classical.ts).
+: _ls-run ( text:bytes key:bytes dec:bool -- str )
+  text key dec _ls47 bytes>str ;
+
+\ Raise E_COERCE unless every byte is a letter of the board.
+: _ls-check ( data:bytes what:str -- bytes )
+  data _ls-alpha 255 255 util:decode-table translate
+  [ 255 = ] filter len 0 <>
+  [ what raise:coerce ] when
+  data ;
+
+: _ls-text ( s:str what:str -- bytes )
+  s str>bytes what _ls-check ;
+
+: _ls-key-of ( password:str -- bytes )
+  password "ls47: the password may only use the letters of the LS47 board (_abcdefghijklmnopqrstuvwxyz.0123456789,-+*/:?!'())" _ls-text _ls-derive ;
+
+: ls47-encrypt ( text:str password:str[1..4096] nonce:str[0..1000]="" signature:str[0..1000]="" -- str )
+  "LS47 hand cipher (Mirek Kratochvil, after Alan Kaminsky's ElsieFour). Text and password may only use the 49 letters _abcdefghijklmnopqrstuvwxyz.0123456789,-+*/:?!'() (lower case: otherwise E_COERCE). The board is made from the password. The message sent is nonce + text, followed by --- and the signature when one is given; the nonce and signature are chosen by the caller (nothing here is random). Use a different nonce for each message under one password." doc
+  "Classical ciphers" category
+  nonce text cat
+  signature len 0 = [ "" ] [ "---" signature cat ] if cat
+  "ls47: the text, nonce and signature may only use the letters of the LS47 board (_abcdefghijklmnopqrstuvwxyz.0123456789,-+*/:?!'())" _ls-text
+  password _ls-key-of false _ls-run ;
+
+META: ls47-encrypt
+  param password "Makes the board: letters of the LS47 alphabet, 1 to 4096 of them." ;
+  param nonce "Letters put in front of the text, so the same text encrypts differently. Empty for none." ;
+  param signature "Appended as --- plus these letters, so a changed message can be noticed. Empty for none." ;
+  see-also classical:ls47-decrypt ;
+;
+
+\ The plain text with nonce-length letters removed from the front and, when a signature is
+\ given, the --- and signature checked and removed from the end.
+: _ls-strip ( plain:str n:int sig:str -- str )
+  plain len n <
+  [ "ls47-decrypt: the message is shorter than the nonce" raise:coerce ] when
+  plain n plain len slice
+  sig len 0 =
+  [ ]
+  [ dup "---" sig cat util:ends-with? not
+    [ "ls47-decrypt: the signature does not match" raise:coerce ] when
+    dup 0 over len "---" sig cat len - slice nip ]
+  if ;
+
+: ls47-decrypt ( text:str password:str[1..4096] nonce-length:int[0..1000]=0 signature:str[0..1000]="" -- str )
+  "Undo LS47 with the same password. The first nonce-length letters of the result are the nonce and are removed. When a signature is given, the result must end with --- and the signature, which are checked and removed (a mismatch is E_COERCE). Letters outside the LS47 alphabet are E_COERCE." doc
+  "Classical ciphers" category
+  text "ls47: the text may only use the letters of the LS47 board (_abcdefghijklmnopqrstuvwxyz.0123456789,-+*/:?!'())" _ls-text
+  password _ls-key-of true _ls-run
+  nonce-length signature _ls-strip ;
+
+META: ls47-decrypt
+  param password "The password used to encrypt." ;
+  param nonce-length "How many nonce letters were put in front of the text." ;
+  param signature "The signature used to encrypt (checked and removed). Empty for none." ;
+  see-also classical:ls47-encrypt ;
 ;
