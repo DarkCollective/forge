@@ -180,6 +180,12 @@ describe("sigaba round trip", () => {
     expect(new Set([a, b, c, d]).size).toBe(4);
   });
 
+  test("an index rotor at digit d is offset by +d, as in CyberChef (an independent simulator's value)", async () => {
+    expect(await text("ATTACK AT DAWN ATTACK AT DAWN", { indexPositions: "31415" })).toBe(
+      "DYWSWHMOQUSVSUNXBLBWYWYTKOTPS",
+    );
+  });
+
   test("a reversed rotor changes the ciphertext", async () => {
     const a = await text("ATTACK AT DAWN");
     const b = await text("ATTACK AT DAWN", { cipherRotors: "0R 1 2 3 4" });
