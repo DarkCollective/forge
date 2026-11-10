@@ -1,0 +1,1002 @@
+[
+  {
+    "name": "escape BMP character, default format",
+    "ref": "Unicode code points; hand-computed",
+    "op": "unicode:escape",
+    "params": {},
+    "input": {
+      "value": "café",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "caf\\u00E9",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape supplementary character as surrogate pair",
+    "ref": "UTF-16 surrogate pair of U+1F600 is D83D DE00 (Unicode section 3.9); hand-computed",
+    "op": "unicode:escape",
+    "params": {},
+    "input": {
+      "value": "😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\\uD83D\\uDE00",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape in lower case",
+    "ref": "Unicode code points; hand-computed",
+    "op": "unicode:escape",
+    "params": {
+      "case": "lower"
+    },
+    "input": {
+      "value": "é😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\\u00e9\\ud83d\\ude00",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape all code points",
+    "ref": "Unicode code points; hand-computed",
+    "op": "unicode:escape",
+    "params": {
+      "scope": "all"
+    },
+    "input": {
+      "value": "A\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\\u0041\\u000A",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape empty input",
+    "ref": "hand-computed",
+    "op": "unicode:escape",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape ASCII only is unchanged",
+    "ref": "Unicode code points; hand-computed",
+    "op": "unicode:escape",
+    "params": {},
+    "input": {
+      "value": "plain text",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "plain text",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape U+ format",
+    "ref": "Unicode code points; hand-computed",
+    "op": "unicode:escape",
+    "params": {
+      "format": "U+"
+    },
+    "input": {
+      "value": "é😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "U+00E9U+1F600",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape U+ format uses 6 digits before a hex digit",
+    "ref": "hand-computed (keeps U+00E9 apart from the following B)",
+    "op": "unicode:escape",
+    "params": {
+      "format": "U+"
+    },
+    "input": {
+      "value": "éB",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "U+0000E9B",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape %u format",
+    "ref": "UTF-16 surrogate pair of U+1F600 is D83D DE00 (Unicode section 3.9); hand-computed",
+    "op": "unicode:escape",
+    "params": {
+      "format": "%u"
+    },
+    "input": {
+      "value": "é😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "%u00E9%uD83D%uDE00",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape x{} format",
+    "ref": "Unicode code points; hand-computed",
+    "op": "unicode:escape",
+    "params": {
+      "format": "x{}"
+    },
+    "input": {
+      "value": "é😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\\x{E9}\\x{1F600}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape html format",
+    "ref": "Unicode code points; hand-computed",
+    "op": "unicode:escape",
+    "params": {
+      "format": "html"
+    },
+    "input": {
+      "value": "é😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "&#xE9;&#x1F600;",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape x{} all, lower case",
+    "ref": "Unicode code points; hand-computed",
+    "op": "unicode:escape",
+    "params": {
+      "format": "x{}",
+      "case": "lower",
+      "scope": "all"
+    },
+    "input": {
+      "value": "Aé",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\\x{41}\\x{e9}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unescape \\u escapes and a surrogate pair",
+    "ref": "UTF-16 surrogate pair of U+1F600 is D83D DE00 (Unicode section 3.9); hand-computed",
+    "op": "unicode:unescape",
+    "params": {},
+    "input": {
+      "value": "\\u00E9\\uD83D\\uDE00x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "é😀x",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unescape empty input",
+    "ref": "hand-computed",
+    "op": "unicode:unescape",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unescape text without escapes",
+    "ref": "hand-computed",
+    "op": "unicode:unescape",
+    "params": {},
+    "input": {
+      "value": "plain text, 100%",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "plain text, 100%",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unescape \\x{} escapes",
+    "ref": "Unicode code points; hand-computed",
+    "op": "unicode:unescape",
+    "params": {},
+    "input": {
+      "value": "\\x{1F600}\\x{e9}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "😀é",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unescape %u escapes",
+    "ref": "UTF-16 surrogate pair of U+1F600 is D83D DE00 (Unicode section 3.9); hand-computed",
+    "op": "unicode:unescape",
+    "params": {},
+    "input": {
+      "value": "%u00e9%uD83D%uDE00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "é😀",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unescape U+ escapes",
+    "ref": "Unicode code points; hand-computed",
+    "op": "unicode:unescape",
+    "params": {},
+    "input": {
+      "value": "U+00E9 U+1F600",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "é 😀",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unescape numeric references",
+    "ref": "Unicode code points; hand-computed",
+    "op": "unicode:unescape",
+    "params": {},
+    "input": {
+      "value": "&#xE9;&#233;&#x1F600;",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "éé😀",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unescape leaves a lone surrogate alone",
+    "ref": "a lone surrogate has no UTF-8 form; left as written",
+    "op": "unicode:unescape",
+    "params": {},
+    "input": {
+      "value": "\\uD83Dx \\uDE00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\\uD83Dx \\uDE00",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unescape leaves malformed escapes alone",
+    "ref": "hand-computed",
+    "op": "unicode:unescape",
+    "params": {},
+    "input": {
+      "value": "\\x{} \\u12 % U+12 &#; &#xD83D;",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\\x{} \\u12 % U+12 &#; &#xD83D;",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unescape does not read decoded text again",
+    "ref": "hand-computed (\\u005C is a backslash)",
+    "op": "unicode:unescape",
+    "params": {},
+    "input": {
+      "value": "\\u005Cu0041",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\\u0041",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unescape adjacent pairs",
+    "ref": "UTF-16 surrogate pair of U+1F600 is D83D DE00 (Unicode section 3.9); hand-computed",
+    "op": "unicode:unescape",
+    "params": {},
+    "input": {
+      "value": "\\uD83D\\uDE00\\uD83D\\uDE00z",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "😀😀z",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unescape mixed forms in one text",
+    "ref": "Unicode code points; hand-computed",
+    "op": "unicode:unescape",
+    "params": {},
+    "input": {
+      "value": "\\u0041%u0042U+0043&#x44;\\x{45}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ABCDE",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1E9B 0323 (Part 1) nfc",
+    "ref": "Unicode NormalizationTest.txt (UCD); cross-checked with Python unicodedata",
+    "op": "unicode:normalize",
+    "params": {
+      "form": "nfc"
+    },
+    "input": {
+      "value": "ẛ̣",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ẛ̣",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1E9B 0323 (Part 1) nfd",
+    "ref": "Unicode NormalizationTest.txt (UCD); cross-checked with Python unicodedata",
+    "op": "unicode:normalize",
+    "params": {
+      "form": "nfd"
+    },
+    "input": {
+      "value": "ẛ̣",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ẛ̣",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1E9B 0323 (Part 1) nfkc",
+    "ref": "Unicode NormalizationTest.txt (UCD); cross-checked with Python unicodedata",
+    "op": "unicode:normalize",
+    "params": {
+      "form": "nfkc"
+    },
+    "input": {
+      "value": "ẛ̣",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ṩ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1E9B 0323 (Part 1) nfkd",
+    "ref": "Unicode NormalizationTest.txt (UCD); cross-checked with Python unicodedata",
+    "op": "unicode:normalize",
+    "params": {
+      "form": "nfkd"
+    },
+    "input": {
+      "value": "ẛ̣",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ṩ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "D + 0307 (Part 1) nfc",
+    "ref": "Unicode NormalizationTest.txt (UCD); cross-checked with Python unicodedata",
+    "op": "unicode:normalize",
+    "params": {
+      "form": "nfc"
+    },
+    "input": {
+      "value": "Ḋ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Ḋ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "D + 0307 (Part 1) nfd",
+    "ref": "Unicode NormalizationTest.txt (UCD); cross-checked with Python unicodedata",
+    "op": "unicode:normalize",
+    "params": {
+      "form": "nfd"
+    },
+    "input": {
+      "value": "Ḋ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Ḋ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "D + 0307 (Part 1) nfkc",
+    "ref": "Unicode NormalizationTest.txt (UCD); cross-checked with Python unicodedata",
+    "op": "unicode:normalize",
+    "params": {
+      "form": "nfkc"
+    },
+    "input": {
+      "value": "Ḋ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Ḋ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "D + 0307 (Part 1) nfkd",
+    "ref": "Unicode NormalizationTest.txt (UCD); cross-checked with Python unicodedata",
+    "op": "unicode:normalize",
+    "params": {
+      "form": "nfkd"
+    },
+    "input": {
+      "value": "Ḋ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Ḋ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1E0A (Part 1) nfc",
+    "ref": "Unicode NormalizationTest.txt (UCD); cross-checked with Python unicodedata",
+    "op": "unicode:normalize",
+    "params": {
+      "form": "nfc"
+    },
+    "input": {
+      "value": "Ḋ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Ḋ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1E0A (Part 1) nfd",
+    "ref": "Unicode NormalizationTest.txt (UCD); cross-checked with Python unicodedata",
+    "op": "unicode:normalize",
+    "params": {
+      "form": "nfd"
+    },
+    "input": {
+      "value": "Ḋ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Ḋ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1E0A (Part 1) nfkc",
+    "ref": "Unicode NormalizationTest.txt (UCD); cross-checked with Python unicodedata",
+    "op": "unicode:normalize",
+    "params": {
+      "form": "nfkc"
+    },
+    "input": {
+      "value": "Ḋ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Ḋ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1E0A (Part 1) nfkd",
+    "ref": "Unicode NormalizationTest.txt (UCD); cross-checked with Python unicodedata",
+    "op": "unicode:normalize",
+    "params": {
+      "form": "nfkd"
+    },
+    "input": {
+      "value": "Ḋ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Ḋ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "212B angstrom sign nfc",
+    "ref": "Unicode NormalizationTest.txt (UCD); cross-checked with Python unicodedata",
+    "op": "unicode:normalize",
+    "params": {
+      "form": "nfc"
+    },
+    "input": {
+      "value": "Å",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Å",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "212B angstrom sign nfd",
+    "ref": "Unicode NormalizationTest.txt (UCD); cross-checked with Python unicodedata",
+    "op": "unicode:normalize",
+    "params": {
+      "form": "nfd"
+    },
+    "input": {
+      "value": "Å",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Å",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "212B angstrom sign nfkc",
+    "ref": "Unicode NormalizationTest.txt (UCD); cross-checked with Python unicodedata",
+    "op": "unicode:normalize",
+    "params": {
+      "form": "nfkc"
+    },
+    "input": {
+      "value": "Å",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Å",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "212B angstrom sign nfkd",
+    "ref": "Unicode NormalizationTest.txt (UCD); cross-checked with Python unicodedata",
+    "op": "unicode:normalize",
+    "params": {
+      "form": "nfkd"
+    },
+    "input": {
+      "value": "Å",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Å",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "FB01 ligature fi nfc",
+    "ref": "Unicode NormalizationTest.txt (UCD); cross-checked with Python unicodedata",
+    "op": "unicode:normalize",
+    "params": {
+      "form": "nfc"
+    },
+    "input": {
+      "value": "ﬁ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ﬁ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "FB01 ligature fi nfd",
+    "ref": "Unicode NormalizationTest.txt (UCD); cross-checked with Python unicodedata",
+    "op": "unicode:normalize",
+    "params": {
+      "form": "nfd"
+    },
+    "input": {
+      "value": "ﬁ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ﬁ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "FB01 ligature fi nfkc",
+    "ref": "Unicode NormalizationTest.txt (UCD); cross-checked with Python unicodedata",
+    "op": "unicode:normalize",
+    "params": {
+      "form": "nfkc"
+    },
+    "input": {
+      "value": "ﬁ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fi",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "FB01 ligature fi nfkd",
+    "ref": "Unicode NormalizationTest.txt (UCD); cross-checked with Python unicodedata",
+    "op": "unicode:normalize",
+    "params": {
+      "form": "nfkd"
+    },
+    "input": {
+      "value": "ﬁ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fi",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AC00 Hangul syllable nfc",
+    "ref": "Unicode NormalizationTest.txt (UCD); cross-checked with Python unicodedata",
+    "op": "unicode:normalize",
+    "params": {
+      "form": "nfc"
+    },
+    "input": {
+      "value": "가",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "가",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AC00 Hangul syllable nfd",
+    "ref": "Unicode NormalizationTest.txt (UCD); cross-checked with Python unicodedata",
+    "op": "unicode:normalize",
+    "params": {
+      "form": "nfd"
+    },
+    "input": {
+      "value": "가",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "가",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AC00 Hangul syllable nfkc",
+    "ref": "Unicode NormalizationTest.txt (UCD); cross-checked with Python unicodedata",
+    "op": "unicode:normalize",
+    "params": {
+      "form": "nfkc"
+    },
+    "input": {
+      "value": "가",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "가",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AC00 Hangul syllable nfkd",
+    "ref": "Unicode NormalizationTest.txt (UCD); cross-checked with Python unicodedata",
+    "op": "unicode:normalize",
+    "params": {
+      "form": "nfkd"
+    },
+    "input": {
+      "value": "가",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "가",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "2126 ohm sign nfc",
+    "ref": "Unicode NormalizationTest.txt (UCD); cross-checked with Python unicodedata",
+    "op": "unicode:normalize",
+    "params": {
+      "form": "nfc"
+    },
+    "input": {
+      "value": "Ω",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Ω",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "2126 ohm sign nfd",
+    "ref": "Unicode NormalizationTest.txt (UCD); cross-checked with Python unicodedata",
+    "op": "unicode:normalize",
+    "params": {
+      "form": "nfd"
+    },
+    "input": {
+      "value": "Ω",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Ω",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "2126 ohm sign nfkc",
+    "ref": "Unicode NormalizationTest.txt (UCD); cross-checked with Python unicodedata",
+    "op": "unicode:normalize",
+    "params": {
+      "form": "nfkc"
+    },
+    "input": {
+      "value": "Ω",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Ω",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "2126 ohm sign nfkd",
+    "ref": "Unicode NormalizationTest.txt (UCD); cross-checked with Python unicodedata",
+    "op": "unicode:normalize",
+    "params": {
+      "form": "nfkd"
+    },
+    "input": {
+      "value": "Ω",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Ω",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "normalize empty input",
+    "ref": "hand-computed",
+    "op": "unicode:normalize",
+    "params": {
+      "form": "nfc"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "normalize ASCII unchanged, default form",
+    "ref": "hand-computed (NFC of ASCII is itself)",
+    "op": "unicode:normalize",
+    "params": {},
+    "input": {
+      "value": "plain text",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "plain text",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "normalize e + combining acute to e-acute, default form",
+    "ref": "UAX #15; Python unicodedata",
+    "op": "unicode:normalize",
+    "params": {},
+    "input": {
+      "value": "é",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "é",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "LEFT/RIGHT SINGLE QUOTATION MARK",
+    "ref": "Unicode names: LEFT/RIGHT SINGLE QUOTATION MARK",
+    "op": "unicode:smart-to-ascii",
+    "params": {},
+    "input": {
+      "value": "‘a’",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "'a'",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "SINGLE LOW-9 and SINGLE HIGH-REVERSED-9 QUOTATION MARK",
+    "ref": "Unicode names: SINGLE LOW-9 and SINGLE HIGH-REVERSED-9 QUOTATION MARK",
+    "op": "unicode:smart-to-ascii",
+    "params": {},
+    "input": {
+      "value": "‚‛",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "''",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "LEFT/RIGHT DOUBLE QUOTATION MARK",
+    "ref": "Unicode names: LEFT/RIGHT DOUBLE QUOTATION MARK",
+    "op": "unicode:smart-to-ascii",
+    "params": {},
+    "input": {
+      "value": "“b”",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"b\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "DOUBLE LOW-9 and DOUBLE HIGH-REVERSED-9 QUOTATION MARK",
+    "ref": "Unicode names: DOUBLE LOW-9 and DOUBLE HIGH-REVERSED-9 QUOTATION MARK",
+    "op": "unicode:smart-to-ascii",
+    "params": {},
+    "input": {
+      "value": "„‟",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "EN DASH",
+    "ref": "Unicode names: EN DASH",
+    "op": "unicode:smart-to-ascii",
+    "params": {},
+    "input": {
+      "value": "1–2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1-2",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "EM DASH",
+    "ref": "Unicode names: EM DASH",
+    "op": "unicode:smart-to-ascii",
+    "params": {},
+    "input": {
+      "value": "a—b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a--b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "HORIZONTAL ELLIPSIS",
+    "ref": "Unicode names: HORIZONTAL ELLIPSIS",
+    "op": "unicode:smart-to-ascii",
+    "params": {},
+    "input": {
+      "value": "wait…",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "wait...",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "NO-BREAK SPACE",
+    "ref": "Unicode names: NO-BREAK SPACE",
+    "op": "unicode:smart-to-ascii",
+    "params": {},
+    "input": {
+      "value": "a b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "empty input",
+    "ref": "Unicode names: empty input",
+    "op": "unicode:smart-to-ascii",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ASCII text is unchanged",
+    "ref": "Unicode names: ASCII text is unchanged",
+    "op": "unicode:smart-to-ascii",
+    "params": {},
+    "input": {
+      "value": "plain \"ASCII\" - text",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "plain \"ASCII\" - text",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "other non-ASCII is unchanged",
+    "ref": "Unicode names: other non-ASCII is unchanged",
+    "op": "unicode:smart-to-ascii",
+    "params": {},
+    "input": {
+      "value": "café ‘x’ – …",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "café 'x' - ...",
+      "enc": "utf8"
+    }
+  }
+]

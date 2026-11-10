@@ -1,0 +1,257 @@
+[
+  {
+    "name": "encode printable text unchanged",
+    "ref": "Snort/Suricata content syntax (|41 42| hex sections between literal text); hand-computed",
+    "op": "hexcontent:encode",
+    "params": {
+      "scope": "non-printable"
+    },
+    "input": {
+      "value": "GET /index.html",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "GET /index.html",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode CRLF and NUL as a hex section",
+    "ref": "Snort/Suricata content syntax (|41 42| hex sections between literal text); hand-computed",
+    "op": "hexcontent:encode",
+    "params": {},
+    "input": {
+      "value": "474554200d0a00",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "GET |0D 0A 00|",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode | \" ; \\ as hex",
+    "ref": "Snort/Suricata content syntax (|41 42| hex sections between literal text); hand-computed",
+    "op": "hexcontent:encode",
+    "params": {},
+    "input": {
+      "value": "617c62223b5c63",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "a|7C|b|22 3B 5C|c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode all bytes as one hex section",
+    "ref": "Snort/Suricata content syntax (|41 42| hex sections between literal text); hand-computed",
+    "op": "hexcontent:encode",
+    "params": {
+      "scope": "all"
+    },
+    "input": {
+      "value": "AB",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "|41 42|",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode empty input",
+    "ref": "hand-computed (no bytes)",
+    "op": "hexcontent:encode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode empty input, scope all",
+    "ref": "hand-computed (no bytes)",
+    "op": "hexcontent:encode",
+    "params": {
+      "scope": "all"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode non-ASCII UTF-8 as hex",
+    "ref": "Snort/Suricata content syntax (|41 42| hex sections between literal text); hand-computed (c3 a9)",
+    "op": "hexcontent:encode",
+    "params": {},
+    "input": {
+      "value": "é",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "|C3 A9|",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode binary ff 00",
+    "ref": "Snort/Suricata content syntax (|41 42| hex sections between literal text); hand-computed",
+    "op": "hexcontent:encode",
+    "params": {},
+    "input": {
+      "value": "ff00",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "|FF 00|",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode text around binary",
+    "ref": "Snort/Suricata content syntax (|41 42| hex sections between literal text); hand-computed",
+    "op": "hexcontent:encode",
+    "params": {},
+    "input": {
+      "value": "4142ff4344",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "AB|FF|CD",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode literal and hex sections",
+    "ref": "Snort/Suricata content syntax (|41 42| hex sections between literal text); hand-computed",
+    "op": "hexcontent:decode",
+    "params": {},
+    "input": {
+      "value": "GET |0D 0A 00|",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "474554200d0a00",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode hex without spaces",
+    "ref": "Snort/Suricata content syntax (|41 42| hex sections between literal text); hand-computed",
+    "op": "hexcontent:decode",
+    "params": {},
+    "input": {
+      "value": "|41 42|c|4344|",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ABcCD",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode empty input",
+    "ref": "hand-computed",
+    "op": "hexcontent:decode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode UTF-8 literal text",
+    "ref": "Snort/Suricata content syntax (|41 42| hex sections between literal text); hand-computed",
+    "op": "hexcontent:decode",
+    "params": {},
+    "input": {
+      "value": "é|41|",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "éA",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode backslash escapes",
+    "ref": "Snort: \\; \\\" and \\\\ in content",
+    "op": "hexcontent:decode",
+    "params": {},
+    "input": {
+      "value": "\\;\\\"\\\\",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": ";\"\\",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode lower-case hex and binary",
+    "ref": "Snort/Suricata content syntax (|41 42| hex sections between literal text); hand-computed",
+    "op": "hexcontent:decode",
+    "params": {},
+    "input": {
+      "value": "|ff 00 aB|",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ff00ab",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "error: unclosed hex section",
+    "ref": "Snort/Suricata content syntax (|41 42| hex sections between literal text); hand-computed",
+    "op": "hexcontent:decode",
+    "params": {},
+    "input": {
+      "value": "abc|41",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: odd number of hex digits",
+    "ref": "Snort/Suricata content syntax (|41 42| hex sections between literal text); hand-computed",
+    "op": "hexcontent:decode",
+    "params": {},
+    "input": {
+      "value": "|4|",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: non-hex character",
+    "ref": "Snort/Suricata content syntax (|41 42| hex sections between literal text); hand-computed",
+    "op": "hexcontent:decode",
+    "params": {},
+    "input": {
+      "value": "|zz|",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

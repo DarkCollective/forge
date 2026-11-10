@@ -1,0 +1,248 @@
+[
+  {
+    "name": "encode control, DEL, high and UTF-8 bytes",
+    "ref": "cat -v notation (POSIX/GNU/BSD cat), output of cat -v checked on the sample bytes",
+    "op": "caret:encode",
+    "params": {},
+    "input": {
+      "value": "00090a1b417f8089ffc3a9",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "^@\t\n^[A^?M-^@M-^IM-^?M-CM-)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode empty input",
+    "ref": "hand-computed (no bytes)",
+    "op": "caret:encode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode non-ASCII UTF-8 e-acute (c3 a9)",
+    "ref": "cat -v notation (POSIX/GNU/BSD cat), output of cat -v checked on the sample bytes (M-C M-))",
+    "op": "caret:encode",
+    "params": {},
+    "input": {
+      "value": "é",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "M-CM-)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode low control bytes 01 02 1f",
+    "ref": "cat -v notation (POSIX/GNU/BSD cat), output of cat -v checked on the sample bytes (^A ^B ^_)",
+    "op": "caret:encode",
+    "params": {},
+    "input": {
+      "value": "01021f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "^A^B^_",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode every high-bit form (80 9f a0 fe)",
+    "ref": "cat -v notation (POSIX/GNU/BSD cat), output of cat -v checked on the sample bytes (M-^@ M-^_ M-space M-~)",
+    "op": "caret:encode",
+    "params": {},
+    "input": {
+      "value": "809fa0fe",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "M-^@M-^_M- M-~",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode the sample back to bytes",
+    "ref": "cat -v notation (POSIX/GNU/BSD cat), output of cat -v checked on the sample bytes (inverse)",
+    "op": "caret:decode",
+    "params": {},
+    "input": {
+      "value": "^@\t\n^[A^?M-^@M-^IM-^?M-CM-)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00090a1b417f8089ffc3a9",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode empty input",
+    "ref": "hand-computed",
+    "op": "caret:decode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode M- notation to UTF-8 e-acute",
+    "ref": "cat -v notation (POSIX/GNU/BSD cat), output of cat -v checked on the sample bytes (inverse)",
+    "op": "caret:decode",
+    "params": {},
+    "input": {
+      "value": "M-CM-)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "é",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ^^ is 0x1e and M-^^ is 0x9e",
+    "ref": "cat -v notation (POSIX/GNU/BSD cat), output of cat -v checked on the sample bytes (^ + 0x5e)",
+    "op": "caret:decode",
+    "params": {},
+    "input": {
+      "value": "^^M-^^",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1e9e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode M-M- is 0xcd then a hyphen",
+    "ref": "cat -v notation (POSIX/GNU/BSD cat), output of cat -v checked on the sample bytes (M-M is 0xcd)",
+    "op": "caret:decode",
+    "params": {},
+    "input": {
+      "value": "M-M-x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "cd2d78",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode ^M before a hyphen is CR, not M-",
+    "ref": "cat -v notation (POSIX/GNU/BSD cat), output of cat -v checked on the sample bytes (^M is 0x0d)",
+    "op": "caret:decode",
+    "params": {},
+    "input": {
+      "value": "^M-",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0d2d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode plain text unchanged",
+    "ref": "hand-computed",
+    "op": "caret:decode",
+    "params": {},
+    "input": {
+      "value": "hello",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "hello",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "error: lower-case after ^",
+    "ref": "cat -v writes ^ only before @ A-Z [ \\ ] ^ _ ?",
+    "op": "caret:decode",
+    "params": {},
+    "input": {
+      "value": "^a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: ^ at the end",
+    "ref": "hand-computed",
+    "op": "caret:decode",
+    "params": {},
+    "input": {
+      "value": "a^",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: M- at the end",
+    "ref": "hand-computed",
+    "op": "caret:decode",
+    "params": {},
+    "input": {
+      "value": "aM-",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: ^ then space",
+    "ref": "hand-computed",
+    "op": "caret:decode",
+    "params": {},
+    "input": {
+      "value": "^ ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: non-ASCII character",
+    "ref": "cat -v output is ASCII",
+    "op": "caret:decode",
+    "params": {},
+    "input": {
+      "value": "é",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: M- then non-ASCII character",
+    "ref": "cat -v output is ASCII",
+    "op": "caret:decode",
+    "params": {},
+    "input": {
+      "value": "M-é",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]
