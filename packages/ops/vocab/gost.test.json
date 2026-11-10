@@ -1,0 +1,128 @@
+[
+  {
+    "name": "digest test: 32-byte message",
+    "ref": "RFC 5831 section 7.3.1 (test S-box set)",
+    "op": "gost:digest",
+    "params": {
+      "sbox": "test"
+    },
+    "input": {
+      "value": "This is message, length=32 bytes",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "b1c466d37519b82e8319819ff32595e047a28cb6f83eff1c6916a815a637fffa",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest test: 50-byte message (two blocks)",
+    "ref": "RFC 5831 section 7.3.2 (test S-box set)",
+    "op": "gost:digest",
+    "params": {
+      "sbox": "test"
+    },
+    "input": {
+      "value": "Suppose the original message has length = 50 bytes",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "471aba57a60a770d3a76130635c1fbea4ef14de51f78b4ae57dd893b62f55208",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest test: empty string",
+    "ref": "Published GOST R 34.11-94 digest (Wikipedia, GOST (hash function), examples); RFC 4357 section 11.2 gives the S-box",
+    "op": "gost:digest",
+    "params": {
+      "sbox": "test"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ce85b99cc46752fffee35cab9a7b0278abb4c2d2055cff685af4912c49490f8d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest test: abc",
+    "ref": "Published GOST R 34.11-94 digest (Wikipedia, GOST (hash function), examples); RFC 4357 section 11.2 gives the S-box",
+    "op": "gost:digest",
+    "params": {
+      "sbox": "test"
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f3134348c44fb1b2a277729e2285ebb5cb5e0f29c975bc753b70497c06a4d51d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: default S-box is cryptopro",
+    "ref": "Published GOST R 34.11-94 digest (Wikipedia, GOST (hash function), examples); RFC 4357 section 11.2 gives the S-box",
+    "op": "gost:digest",
+    "params": {},
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "b285056dbf18d7392d7677369524dd14747459ed8143997e163b2986f92fd42c",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest cryptopro: empty string",
+    "ref": "Published GOST R 34.11-94 digest (Wikipedia, GOST (hash function), examples); RFC 4357 section 11.2 gives the S-box",
+    "op": "gost:digest",
+    "params": {
+      "sbox": "cryptopro"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "981e5f3ca30c841487830f84fb433e13ac1101569b9c13584ac483234cd656c0",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest cryptopro: abc",
+    "ref": "Published GOST R 34.11-94 digest (Wikipedia, GOST (hash function), examples); RFC 4357 section 11.2 gives the S-box",
+    "op": "gost:digest",
+    "params": {
+      "sbox": "cryptopro"
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "b285056dbf18d7392d7677369524dd14747459ed8143997e163b2986f92fd42c",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest cryptopro: message digest",
+    "ref": "Published GOST R 34.11-94 digest (Wikipedia, GOST (hash function), examples); RFC 4357 section 11.2 gives the S-box",
+    "op": "gost:digest",
+    "params": {
+      "sbox": "cryptopro"
+    },
+    "input": {
+      "value": "message digest",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "bc6041dd2aa401ebfa6e9886734174febdb4729aa972d60f549ac39b29721ba0",
+      "enc": "hex"
+    }
+  }
+]

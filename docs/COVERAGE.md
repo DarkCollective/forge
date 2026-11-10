@@ -21,13 +21,13 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Date / Time | 0 | 0 | 0 | 9 | 9 |
 | Extractors | 0 | 0 | 0 | 18 | 18 |
 | Compression | 0 | 0 | 0 | 21 | 21 |
-| Hashing | 1 | 0 | 0 | 47 | 48 |
+| Hashing | 7 | 0 | 0 | 41 | 48 |
 | Code tidy | 0 | 0 | 0 | 24 | 24 |
 | Forensics | 0 | 0 | 0 | 9 | 9 |
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 4 | 0 | 3 | 14 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **102** | **22** | **3** | **379** | **506** |
+| **Total** | **108** | **22** | **3** | **373** | **506** |
 
 ## Data format (80)
 
@@ -461,20 +461,20 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | SHA1 | not yet |  |  |
 | SHA2 | covered | `sha2:digest` | One word with a size parameter: 224, 256, 384, 512, 512/224, 512/256. Returns raw bytes (chain hex:encode). CyberChef's Rounds parameter is not supported: only the FIPS 180-4 round counts exist. |
 | SHA3 | not yet |  |  |
-| SM3 | not yet |  |  |
+| SM3 | covered | `sm3:digest` | Returns raw bytes (chain hex:encode). CyberChef's Length and Rounds parameters are not supported: the standard GB/T 32905-2016 has one 256-bit output and 64 rounds. |
 | Keccak | not yet |  |  |
 | Shake | not yet |  |  |
 | RIPEMD | not yet |  |  |
-| HAS-160 | not yet |  |  |
-| Whirlpool | not yet |  |  |
-| Snefru | not yet |  |  |
+| HAS-160 | covered | `has160:digest` | Returns raw bytes (chain hex:encode). CyberChef's Rounds parameter is not supported: only the standard 80 steps exist. |
+| Whirlpool | covered | `whirlpool:digest` | The final ISO/IEC 10118-3 version, raw bytes (chain hex:encode). The Whirlpool-0 and Whirlpool-T variants and the Rounds parameter are not offered: the variants have no citable vectors in the original papers, and Whirlpool-0 has a different, random S-box. Only the standard 10 rounds exist. |
+| Snefru | covered | `snefru:digest` | Size 128 or 256 and Rounds 2, 4 or 8, as in CyberChef. Raw bytes (chain hex:encode). Implemented from Merkle's Xerox reference distribution 2.5a, whose S-boxes it uses. |
 | BLAKE2b | not yet |  |  |
 | BLAKE2s | not yet |  |  |
 | BLAKE3 | not yet |  |  |
 | Ascon Hash | not yet |  |  |
 | Ascon MAC | not yet |  |  |
-| GOST Hash | not yet |  |  |
-| Streebog | not yet |  |  |
+| GOST Hash | covered | `gost:digest`, `streebog:digest` | GOST R 34.11-94 is gost:digest with an sbox parameter: test (RFC 5831) or cryptopro (RFC 4357). GOST R 34.11-2012 is the separate streebog:digest. Only the test and CryptoPro S-box sets are offered. Raw bytes (chain hex:encode). |
+| Streebog | covered | `streebog:digest` | Size 256 or 512, as in CyberChef. Raw bytes (chain hex:encode), in the byte order of the RFC 6986 examples reversed (little-endian), which is the conventional digest string. |
 | SSDEEP | not yet |  |  |
 | CTPH | not yet |  |  |
 | Compare SSDEEP hashes | not yet |  |  |
