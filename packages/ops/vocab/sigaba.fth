@@ -55,13 +55,9 @@ IN: sigaba
 
 \ ---- checks ----
 
-\ util-candidate: perm?
-: _perm? ( items n:int -- bool )
-  items len n = items 0 [ 1 swap shl bor ] reduce 1 n shl 1 - = and ;
-
 \ ids must use each of 0 to n-1 once; otherwise E_RANGE with msg.
 : _check-ids ( ids:list n:int msg:str -- )
-  ids n _perm? not [ msg raise:range ] when ;
+  ids n util:perm? not [ msg raise:range ] when ;
 
 \ ---- reading the parameters ----
 
@@ -72,28 +68,21 @@ IN: sigaba
 : _rotor-orient ( str -- bytes )
   util:number-tokens [ len 1 > [ 1 ] [ 0 ] if ] map list>bytes ;
 
-\ Letters A to Z (either case) as 0 to 25.
-: _letters>bytes ( s:str -- bytes )
-  s upper latin1>bytes [ 65 - ] map ;
-
-: _digits>bytes ( s:str -- bytes )
-  s latin1>bytes [ 48 - ] map ;
-
 \ The wirings of a list of words of letters or digits, each a permutation of n values; E_RANGE otherwise.
 : _checked ( ws:list n:int msg:str -- list )
-  ws [ n _perm? not [ msg raise:range ] when ] each ws ;
+  ws [ n util:perm? not [ msg raise:range ] when ] each ws ;
 
 \ The ten 26-letter wirings: the default when w is empty.
 : _wiring-list ( w:str -- list )
   w len 0 = [ _default-wirings ] [ w ] if
-  util:number-tokens [ _letters>bytes ] map
+  util:number-tokens [ util:letter-indices ] map
   dup len 10 <> [ "wirings must be ten words of 26 letters" raise:range ] when
   26 "each wiring must use the 26 letters once" _checked ;
 
 \ The five 10-digit index wirings: the default when w is empty.
 : _index-wiring-list ( w:str -- list )
   w len 0 = [ _default-index-wirings ] [ w ] if
-  util:number-tokens [ _digits>bytes ] map
+  util:number-tokens [ util:digit-values ] map
   dup len 5 <> [ "index wirings must be five words of 10 digits" raise:range ] when
   10 "each index wiring must use the digits 0 to 9 once" _checked ;
 
@@ -150,8 +139,8 @@ IN: sigaba
   data decrypt other _letters-in
   cr _rotor-ids w _wiring-list _bank-wiring
   kr _rotor-ids w _wiring-list _bank-wiring
-  cr _rotor-orient kr _rotor-orient cat cp _letters>bytes cat kp _letters>bytes cat
-  ir _rotor-ids iw _index-wiring-list ip _digits>bytes _index-bank
+  cr _rotor-orient kr _rotor-orient cat cp util:letter-indices cat kp util:letter-indices cat
+  ir _rotor-ids iw _index-wiring-list ip util:digit-values _index-bank
   decrypt _run
   decrypt _out-table translate ;
 

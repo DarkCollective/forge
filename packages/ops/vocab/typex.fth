@@ -40,114 +40,14 @@ IN: typex
 #[ ] VARIABLE _NM
 #[ ] VARIABLE _LT
 
-\ ---- small helpers ----
-
-\ util-candidate: letter-indices
-: _idx ( s:str -- bytes )
-  s upper str>bytes [ 65 - ] map ;
-
-\ util-candidate: letter?
-: _alpha? ( c:int -- bool )
-  c 32 bor 97 - dup 0 >= swap 25 <= and ;
-
-\ util-candidate: letters?
-: _all-alpha? ( t:str -- bool )
-  t str>bytes [ _alpha? not ] filter len 0 = t len 0 > and ;
-
-\ util-candidate: digits?
-: _digits? ( t:str -- bool )
-  t str>bytes [ util:dec-digit? not ] filter len 0 = t len 0 > and ;
-
-
-\ util-candidate: bytes-count
-: _count-in ( d:bytes v:int -- int )
-  d [ v = ] filter len ;
-
-\ util-candidate: perm-where
-: _where ( p:bytes i:int -- int )
-  0 p len range [ p swap nth i = ] filter 0 nth ;
-
-\ util-candidate: perm-invert
-: _invert ( p:bytes -- bytes )
-  0 p len range [ p swap _where ] map list>bytes ;
-
-\ util-candidate: rotor-shift-table
-: _shift-table ( w:bytes -- bytes )
-  0 676 range [ dup 26 div swap 26 mod over + 26 mod w swap nth swap - 26 mod ] map list>bytes ;
-
-\ util-candidate: rotor-shifted
-: _shifted ( w:bytes s:int -- bytes )
-  0 26 range [ s + 26 mod w swap nth s - 26 mod ] map list>bytes ;
-
-\ util-candidate: rotor-notch-flags
-: _notch-flags ( turn:bytes ring:int -- bytes )
-  0 676 range
-  [ dup 26 mod 0 =
-    [ 26 div ring + 26 mod turn swap _count-in 0 > [ 1 ] [ 0 ] if ]
-    [ drop 0 ] if ]
-  map list>bytes ;
-
-\ ---- reading the settings ----
-
-\ The value 0 to 25 of one setting token: a number 1 to 26 or a single letter.
-\ util-candidate: setting-token-value
-: _token-value ( t:str what:str -- int )
-  t _digits?
-  [ t len 3 < [ t str>int 1 - ] [ -1 ] if
-    dup 0 < over 25 > or [ what ": a number must be 1 to 26" cat raise:range ] when ]
-  [ t len 1 = t _all-alpha? and
-    [ t str>bytes 0 nth 32 bor 97 - ]
-    [ what ": write letters (BUL), letters apart (B U L) or numbers 1 to 26 (2 21 12)" cat raise:range 0 ] if ]
-  if ;
-
-\ n settings, each 0 to 25: one word of n letters, or n tokens (letters or numbers).
-\ util-candidate: letter-settings
-: _settings ( s:str n:int what:str -- bytes )
-  s util:number-tokens
-  dup len 0 = [ what ": the setting is empty" cat raise:range ] when
-  dup len 1 = over 0 nth _all-alpha? and
-  [ 0 nth str>bytes [ 32 bor 97 - ] map ]
-  [ [ what _token-value ] map list>bytes ] if
-  dup len n <>
-  [ what ": " cat n int>str cat " settings are needed" cat raise:range ] when ;
-
-\ The plugboard as a 26-byte permutation: pairs of two different letters, each letter once.
-\ util-candidate: plug-partner
-: _partner ( i:int fl:bytes -- int )
-  0 fl len range [ fl swap nth i = ] filter
-  dup len 0 = [ drop i ] [ 0 nth 1 bxor fl swap nth ] if ;
-
-\ util-candidate: plug-pair
-: _plug-pair ( t:str -- bytes )
-  t len 2 = t _all-alpha? and not
-  [ "plugboard: each pair is two letters, like AB" raise:range ] when
-  t _idx ;
-
-\ util-candidate: plugboard-table
-: _plugboard ( s:str -- bytes )
-  s util:number-tokens [ _plug-pair ] map #[ ] [ cat ] reduce
-  0 26 range [ over swap _count-in 1 > ] filter len 0 >
-  [ "plugboard: a letter may be in one pair only" raise:range ] when
-  0 26 range [ over _partner ] map list>bytes nip ;
-
-\ Byte to letter number 0 to 25 (either case), 255 for any other byte; a table for translate.
-\ util-candidate: letter-table
-: _letter-table ( -- bytes )
-  0 256 range [ dup 32 bor 97 - dup 0 >= over 25 <= and [ nip ] [ drop drop 255 ] if ] map list>bytes ;
-
-\ Left rotor forward, the fixed reflector, left rotor back: one table per left shift.
-\ util-candidate: rotor-reflect-table
-: _left-table ( r:bytes fl:bytes il:bytes -- bytes )
-  0 676 range [ dup dup 26 mod - swap fl swap nth r swap nth + il swap nth ] map list>bytes ;
-
 \ ---- checking the parameters ----
 
 \ A wiring as a permutation 0 to 25: 26 distinct letters.
 : _wiring ( s:str what:str -- bytes )
-  s _all-alpha? s len 26 = and not
+  s util:letters? s len 26 = and not
   [ what ": the wiring must be the 26 letters A to Z in some order" cat raise:range ] when
-  s _idx
-  0 26 range [ over swap _count-in 1 <> ] filter len 0 >
+  s util:letter-indices
+  0 26 range [ over swap util:count-of 1 <> ] filter len 0 >
   [ what ": the wiring uses a letter twice, so it is not a permutation" cat raise:range ] when ;
 
 : _bad-reflector? ( i:int r:bytes -- bool )
@@ -161,14 +61,14 @@ IN: typex
 \ The notch letters of a rotor as numbers 0 to 25 (none is allowed), spaces and commas ignored.
 : _notches ( s:str what:str -- bytes )
   s util:number-tokens "" join
-  dup len 0 > over _all-alpha? not and
+  dup len 0 > over util:letters? not and
   [ what ": notches are letters, like EJR" cat raise:range ] when
-  _idx ;
+  util:letter-indices ;
 
 \ The numbers of the rotors fitted back to front: tokens 1 to 5.
 : _reversed ( s:str -- bytes )
   s util:number-tokens
-  [ dup _digits? [ str>int ] [ drop 0 ] if
+  [ dup util:digits? [ str>int ] [ drop 0 ] if
     dup 1 < over 5 > or [ "reversed: rotor numbers are 1 to 5, like 2 4" raise:range ] when ]
   map list>bytes ;
 
@@ -185,37 +85,33 @@ IN: typex
 
 \ A rotor wiring as fitted: a rotor fitted back to front uses the inverse permutation.
 : _fit ( w:bytes n:int -- bytes )
-  _rv n _count-in 0 > [ w _invert ] [ w ] if ;
+  _rv n util:count-of 0 > [ w util:perm-invert ] [ w ] if ;
 
 : _shift-of ( i:int -- int )
   _ps i nth _rg i nth - 26 mod ;
 
-\ util-candidate: table-compose3
-: _compose3 ( p:bytes f1:bytes f2:bytes -- bytes )
-  0 26 range [ p swap nth f1 swap nth f2 swap nth ] map list>bytes ;
-
 : _setup ( r1:str r2:str r3:str r4:str r5:str refl:str n3:str n4:str rv:str rings:str pos:str plugs:str -- )
   rv _reversed _rv!
-  rings 5 "rings" _settings _rg!
-  pos 5 "positions" _settings _ps!
+  rings 5 "rings" util:letter-settings _rg!
+  pos 5 "positions" util:letter-settings _ps!
   r1 "rotor-1" _wiring 1 _fit _w1!
   r2 "rotor-2" _wiring 2 _fit _w2!
   r3 "rotor-3" _wiring 3 _fit _w3!
   r4 "rotor-4" _wiring 4 _fit _w4!
   r5 "rotor-5" _wiring 5 _fit _w5!
-  plugs _plugboard _w1 0 _shift-of _shifted _w2 1 _shift-of _shifted _compose3 _E!
-  _E _invert _EI!
-  _w3 _shift-table _FR!
-  _w3 _invert _shift-table _IR!
-  _w4 _shift-table _FM!
-  _w4 _invert _shift-table _IM!
-  refl _reflector _w5 _shift-table _w5 _invert _shift-table _left-table _CL!
-  n3 "notches-3" _notches _rg 2 nth _notch-flags _NR!
-  n4 "notches-4" _notches _rg 3 nth _notch-flags _NM!
+  plugs util:plugboard-table _w1 0 _shift-of util:rotor-shifted _w2 1 _shift-of util:rotor-shifted util:table-compose3 _E!
+  _E util:perm-invert _EI!
+  _w3 util:rotor-shift-table _FR!
+  _w3 util:perm-invert util:rotor-shift-table _IR!
+  _w4 util:rotor-shift-table _FM!
+  _w4 util:perm-invert util:rotor-shift-table _IM!
+  refl _reflector _w5 util:rotor-shift-table _w5 util:perm-invert util:rotor-shift-table util:rotor-reflect-table _CL!
+  n3 "notches-3" _notches _rg 2 nth util:rotor-notch-flags _NR!
+  n4 "notches-4" _notches _rg 3 nth util:rotor-notch-flags _NM!
   2 _shift-of 26 * _b1!
   3 _shift-of 26 * _b2!
   4 _shift-of 26 * _b3!
-  _letter-table _LT! ;
+  util:letter-table _LT! ;
 
 \ ---- encrypting ----
 

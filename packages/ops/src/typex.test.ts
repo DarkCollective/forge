@@ -24,6 +24,10 @@ import { loadBundleNode } from "./sources-node.js";
 const { str, bytes } = valueHelpers;
 const runtime = assembleRuntime(await loadBundleNode(["typex"]));
 
+// The package has no TextEncoder typings; the text here is ASCII.
+const encode = (t: string): Uint8Array => Uint8Array.from(t, (c) => c.charCodeAt(0) & 255);
+const decode = (b: Uint8Array): string => Array.from(b, (c) => String.fromCharCode(c)).join("");
+
 const PARAM_NAMES = [
   "rotor-1",
   "rotor-2",
@@ -57,17 +61,17 @@ async function run(input: Uint8Array, s: Partial<Settings>) {
 }
 
 async function enc(text: string, s: Partial<Settings> = {}): Promise<string> {
-  const r = await run(new TextEncoder().encode(text), s);
+  const r = await run(encode(text), s);
   if (!r.ok) throw new Error(`${r.error.code}: ${r.error.message}`);
   const top = r.stack[r.stack.length - 1] as { v: Uint8Array };
-  return new TextDecoder().decode(top.v);
+  return decode(top.v);
 }
 
 async function errorOf(
   s: Partial<Settings>,
   text = "HELLO",
 ): Promise<{ code: string; message: string }> {
-  const r = await run(new TextEncoder().encode(text), s);
+  const r = await run(encode(text), s);
   expect(r.ok).toBe(false);
   if (r.ok) throw new Error("expected an error");
   return r.error;
