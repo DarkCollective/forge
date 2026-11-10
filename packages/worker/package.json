@@ -26,7 +26,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p harness/tsconfig.json --noEmit",
-    "gate2:browser": "node scripts/gate2-browser.mjs"
+    "gate2:browser": "node scripts/gate2-browser.mjs",
+    "gate4:browser": "node scripts/gate4-browser.mjs"
   },
   "dependencies": {
     "@forge/lang": "*",
