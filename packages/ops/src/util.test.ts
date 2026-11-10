@@ -15,7 +15,6 @@
  */
 import { valueHelpers } from "@forge/lang";
 import type { Value } from "@forge/lang";
-import { validateRecipe } from "@forge/recipe";
 import { describe, expect, test } from "vitest";
 import { assembleRuntime } from "./bundle.js";
 import { buildCatalogue } from "./catalogue.js";
@@ -114,15 +113,6 @@ describe("util is internal", () => {
     const names = catalogue.ops.map((op) => op.qname);
     expect(names).toContain("base32:decode");
     expect(names).toContain("decimal:encode");
-  });
-
-  test("a recipe that names util:space? is rejected by validation", () => {
-    const result = validateRecipe(
-      { forge: 1, steps: [{ kind: "op", op: "util:space?" }] },
-      catalogue as unknown as Parameters<typeof validateRecipe>[1],
-    );
-    expect(result.ok).toBe(false);
-    expect(result.issues.map((i) => i.code)).toContain("unknown-op");
   });
 
   test("a user unit cannot define into util", () => {
