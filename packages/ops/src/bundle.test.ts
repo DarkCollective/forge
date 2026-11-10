@@ -265,7 +265,10 @@ describe("assembleRuntime", () => {
   });
 
   test("an IN: with a vocabulary that is not in this bundle is allowed", async () => {
-    const rt = assembleRuntime(await bundle(), {
+    // A dependency-free bundle (hex mentions no other vocabulary), so `regex` is outside it for sure.
+    const hexOnly = await loadBundleNode(["hex"]);
+    expect(hexOnly.vocabs).not.toContain("regex");
+    const rt = assembleRuntime(hexOnly, {
       units: [{ name: "w.fth", source: "IN: regex\n: x ( -- int ) 1 ;\n" }],
     });
     expect(rt.meta("regex:x").qname).toBe("regex:x");
