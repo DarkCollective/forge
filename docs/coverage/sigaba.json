@@ -1,0 +1,3 @@
+[
+ { "cyberchef": "SIGABA", "status": "covered", "forge": ["sigaba:crypt"], "note": "One word with a mode parameter (encrypt or decrypt), the rotor choice, orientation (R suffix) and start positions of the three banks, and optional rotor wirings; the default wirings are Forge's own, not the historical ones." }
+]
