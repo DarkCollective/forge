@@ -1,0 +1,279 @@
+[
+  {
+    "name": "digest: empty, seed 0",
+    "ref": "MurmurHash3_x86_32 (A. Appleby, SMHasher): published test value (Wikipedia MurmurHash, Commons Codec MurmurHash3Test); SMHasher verification 0xB0F57EE3 in src/murmur3.test.ts",
+    "op": "murmur3:digest",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: empty, seed 1",
+    "ref": "MurmurHash3_x86_32 (A. Appleby, SMHasher): published test value (Wikipedia MurmurHash, Commons Codec MurmurHash3Test); SMHasher verification 0xB0F57EE3 in src/murmur3.test.ts",
+    "op": "murmur3:digest",
+    "params": {
+      "seed": 1
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "514e28b7",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: empty, seed 0xffffffff",
+    "ref": "MurmurHash3_x86_32 (A. Appleby, SMHasher): published test value (Wikipedia MurmurHash, Commons Codec MurmurHash3Test); SMHasher verification 0xB0F57EE3 in src/murmur3.test.ts",
+    "op": "murmur3:digest",
+    "params": {
+      "seed": 4294967295
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "81f16f39",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: test, seed 0",
+    "ref": "MurmurHash3_x86_32 (A. Appleby, SMHasher): published test value (Wikipedia MurmurHash, Commons Codec MurmurHash3Test); SMHasher verification 0xB0F57EE3 in src/murmur3.test.ts",
+    "op": "murmur3:digest",
+    "params": {},
+    "input": {
+      "value": "test",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ba6bd213",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: Hello, world!, seed 0",
+    "ref": "MurmurHash3_x86_32 (A. Appleby, SMHasher): published test value (Wikipedia MurmurHash, Commons Codec MurmurHash3Test); SMHasher verification 0xB0F57EE3 in src/murmur3.test.ts",
+    "op": "murmur3:digest",
+    "params": {},
+    "input": {
+      "value": "Hello, world!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c0363e43",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: hello, seed 0",
+    "ref": "MurmurHash3_x86_32 (A. Appleby, SMHasher): published test value (Wikipedia MurmurHash, Commons Codec MurmurHash3Test); SMHasher verification 0xB0F57EE3 in src/murmur3.test.ts",
+    "op": "murmur3:digest",
+    "params": {},
+    "input": {
+      "value": "hello",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "248bfa47",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: quick brown fox, seed 0",
+    "ref": "MurmurHash3_x86_32 (A. Appleby, SMHasher): published test value (Wikipedia MurmurHash, Commons Codec MurmurHash3Test); SMHasher verification 0xB0F57EE3 in src/murmur3.test.ts",
+    "op": "murmur3:digest",
+    "params": {},
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2e4ff723",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: quick brown fox, seed 0x9747b28c",
+    "ref": "MurmurHash3_x86_32 (A. Appleby, SMHasher): published test value (Wikipedia MurmurHash, Commons Codec MurmurHash3Test); SMHasher verification 0xB0F57EE3 in src/murmur3.test.ts",
+    "op": "murmur3:digest",
+    "params": {
+      "seed": 2538058380
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2fa826cd",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: Hello, world!, seed 0x9747b28c",
+    "ref": "MurmurHash3_x86_32 (A. Appleby, SMHasher): published test value (Wikipedia MurmurHash, Commons Codec MurmurHash3Test); SMHasher verification 0xB0F57EE3 in src/murmur3.test.ts",
+    "op": "murmur3:digest",
+    "params": {
+      "seed": 2538058380
+    },
+    "input": {
+      "value": "Hello, world!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "24884cba",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: aaaa (one block), seed 0x9747b28c",
+    "ref": "MurmurHash3_x86_32 (A. Appleby, SMHasher): published test value (Wikipedia MurmurHash, Commons Codec MurmurHash3Test); SMHasher verification 0xB0F57EE3 in src/murmur3.test.ts",
+    "op": "murmur3:digest",
+    "params": {
+      "seed": 2538058380
+    },
+    "input": {
+      "value": "aaaa",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "5a97808a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: aaa (3-byte tail), seed 0x9747b28c",
+    "ref": "MurmurHash3_x86_32 (A. Appleby, SMHasher): published test value (Wikipedia MurmurHash, Commons Codec MurmurHash3Test); SMHasher verification 0xB0F57EE3 in src/murmur3.test.ts",
+    "op": "murmur3:digest",
+    "params": {
+      "seed": 2538058380
+    },
+    "input": {
+      "value": "aaa",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "283e0130",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: aa (2-byte tail), seed 0x9747b28c",
+    "ref": "MurmurHash3_x86_32 (A. Appleby, SMHasher): published test value (Wikipedia MurmurHash, Commons Codec MurmurHash3Test); SMHasher verification 0xB0F57EE3 in src/murmur3.test.ts",
+    "op": "murmur3:digest",
+    "params": {
+      "seed": 2538058380
+    },
+    "input": {
+      "value": "aa",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "5d211726",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: a (1-byte tail), seed 0x9747b28c",
+    "ref": "MurmurHash3_x86_32 (A. Appleby, SMHasher): published test value (Wikipedia MurmurHash, Commons Codec MurmurHash3Test); SMHasher verification 0xB0F57EE3 in src/murmur3.test.ts",
+    "op": "murmur3:digest",
+    "params": {
+      "seed": 2538058380
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "7fa09ea6",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: abcd, seed 0x9747b28c",
+    "ref": "MurmurHash3_x86_32 (A. Appleby, SMHasher): published test value (Wikipedia MurmurHash, Commons Codec MurmurHash3Test); SMHasher verification 0xB0F57EE3 in src/murmur3.test.ts",
+    "op": "murmur3:digest",
+    "params": {
+      "seed": 2538058380
+    },
+    "input": {
+      "value": "abcd",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f0478627",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: abc, seed 0x9747b28c",
+    "ref": "MurmurHash3_x86_32 (A. Appleby, SMHasher): published test value (Wikipedia MurmurHash, Commons Codec MurmurHash3Test); SMHasher verification 0xB0F57EE3 in src/murmur3.test.ts",
+    "op": "murmur3:digest",
+    "params": {
+      "seed": 2538058380
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c84a62dd",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: ab, seed 0x9747b28c",
+    "ref": "MurmurHash3_x86_32 (A. Appleby, SMHasher): published test value (Wikipedia MurmurHash, Commons Codec MurmurHash3Test); SMHasher verification 0xB0F57EE3 in src/murmur3.test.ts",
+    "op": "murmur3:digest",
+    "params": {
+      "seed": 2538058380
+    },
+    "input": {
+      "value": "ab",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "74875592",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: eight pi (multi-byte UTF-8), seed 0x9747b28c",
+    "ref": "MurmurHash3_x86_32 (A. Appleby, SMHasher): published test value (Wikipedia MurmurHash, Commons Codec MurmurHash3Test); SMHasher verification 0xB0F57EE3 in src/murmur3.test.ts",
+    "op": "murmur3:digest",
+    "params": {
+      "seed": 2538058380
+    },
+    "input": {
+      "value": "\u03c0\u03c0\u03c0\u03c0\u03c0\u03c0\u03c0\u03c0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d58063c1",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: seed above 32 bits is rejected",
+    "ref": "the seed is a 32-bit unsigned integer (MurmurHash3_x86_32 takes uint32_t seed)",
+    "op": "murmur3:digest",
+    "params": {
+      "seed": 4294967296
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  }
+]
