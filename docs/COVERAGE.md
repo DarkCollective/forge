@@ -11,7 +11,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 
 | Category | Covered | Redesigned | Dropped | Not yet | Total |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Data format | 44 | 3 | 0 | 33 | 80 |
+| Data format | 54 | 6 | 0 | 20 | 80 |
 | Encryption / Encoding | 19 | 1 | 0 | 75 | 95 |
 | Public Key | 0 | 0 | 0 | 30 | 30 |
 | Arithmetic / Logic | 9 | 0 | 0 | 17 | 26 |
@@ -27,7 +27,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 2 | 0 | 0 | 19 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **80** | **11** | **0** | **415** | **506** |
+| **Total** | **90** | **14** | **0** | **402** | **506** |
 
 ## Data format (80)
 
@@ -73,18 +73,18 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | From HTML Entity | covered | `html:decode` | All 2,231 named references of the HTML Living Standard, with the semicolon optional for the 106 legacy names, and decimal and hex numeric references (semicolon optional; 128 to 159 read as windows-1252). Text-context rules; the attribute-value exception is not applied. |
 | URL Encode | covered | `url:encode` |  |
 | URL Decode | covered | `url:decode` |  |
-| Escape Unicode Characters | not yet |  |  |
-| Unescape Unicode Characters | not yet |  |  |
-| Normalise Unicode | not yet |  |  |
-| Escape Smart Characters | not yet |  |  |
-| To Quoted Printable | not yet |  |  |
-| From Quoted Printable | not yet |  |  |
-| To Punycode | not yet |  |  |
-| From Punycode | not yet |  |  |
+| Escape Unicode Characters | covered | `unicode:escape` | Formats u, U+, %u, x{} and html; hex case and scope are parameters. |
+| Unescape Unicode Characters | covered | `unicode:unescape` | Reads all the escape formats at once and leaves other text alone. |
+| Normalise Unicode | covered | `unicode:normalize` | NFC, NFD, NFKC and NFKD. |
+| Escape Smart Characters | redesigned | `unicode:smart-to-ascii` | Forge replaces typographic quotes, dashes, the ellipsis and the no-break space by ASCII with a fixed table; there is no option to keep a subset. |
+| To Quoted Printable | covered | `quotedprintable:encode` |  |
+| From Quoted Printable | covered | `quotedprintable:decode` |  |
+| To Punycode | covered | `punycode:encode` | Label mode (raw RFC 3492) or domain mode (per dotted label, xn-- prefix). |
+| From Punycode | covered | `punycode:decode` | Label mode (raw RFC 3492) or domain mode (per dotted label, xn-- prefix). |
 | AMF Encode | not yet |  |  |
 | AMF Decode | not yet |  |  |
-| To Hex Content | not yet |  |  |
-| From Hex Content | not yet |  |  |
+| To Hex Content | covered | `hexcontent:encode` |  |
+| From Hex Content | covered | `hexcontent:decode` |  |
 | PEM to Hex | not yet |  |  |
 | Hex to PEM | not yet |  |  |
 | Parse ASN.1 hex string | not yet |  |  |
@@ -95,8 +95,8 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Swap endianness | covered | `endian:swap` | Words of 2, 4 or 8 bytes. |
 | To MessagePack | not yet |  |  |
 | From MessagePack | not yet |  |  |
-| To Braille | not yet |  |  |
-| From Braille | not yet |  |  |
+| To Braille | redesigned | `braille:encode` | Forge maps each byte to the 8-dot pattern U+2800 plus the byte, which is lossless; CyberChef maps letters to the 6-dot Braille alphabet. |
+| From Braille | redesigned | `braille:decode` | Forge reads U+2800 to U+28FF back as bytes, which is the inverse of braille:encode; it does not read the 6-dot letter alphabet. |
 | Parse TLV | not yet |  |  |
 | CSV to JSON | not yet |  |  |
 | JSON to CSV | not yet |  |  |
@@ -105,7 +105,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | CBOR Decode | not yet |  |  |
 | YAML to JSON | not yet |  |  |
 | JSON to YAML | not yet |  |  |
-| Caret/M-decode | not yet |  |  |
+| Caret/M-decode | covered | `caret:decode` | The inverse of cat -v; caret:encode is the matching encoder. |
 | Rison Encode | not yet |  |  |
 | Rison Decode | not yet |  |  |
 | To Modhex | covered | `modhex:encode` |  |

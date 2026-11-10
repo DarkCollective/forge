@@ -1,0 +1,153 @@
+[
+  {
+    "name": "encode bytes 00 01 ff 41",
+    "ref": "Forge design: code point U+2800 + byte (Unicode Braille Patterns block U+2800-U+28FF); hand-computed",
+    "op": "braille:encode",
+    "params": {},
+    "input": {
+      "value": "0001ff41",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "⠀⠁⣿⡁",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode empty input",
+    "ref": "hand-computed (no bytes)",
+    "op": "braille:encode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode UTF-8 e-acute (c3 a9)",
+    "ref": "Forge design: code point U+2800 + byte (Unicode Braille Patterns block U+2800-U+28FF); hand-computed",
+    "op": "braille:encode",
+    "params": {},
+    "input": {
+      "value": "é",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "⣃⢩",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode binary ff fe 80 (not UTF-8)",
+    "ref": "Forge design: code point U+2800 + byte (Unicode Braille Patterns block U+2800-U+28FF); hand-computed",
+    "op": "braille:encode",
+    "params": {},
+    "input": {
+      "value": "fffe80",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "⣿⣾⢀",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode patterns to bytes",
+    "ref": "Forge design: code point U+2800 + byte (Unicode Braille Patterns block U+2800-U+28FF); hand-computed",
+    "op": "braille:decode",
+    "params": {},
+    "input": {
+      "value": "⠀⠁⣿⡁",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0001ff41",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode empty input",
+    "ref": "hand-computed (no characters)",
+    "op": "braille:decode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode ignores ASCII white space",
+    "ref": "Forge design (white space between patterns is ignored); hand-computed",
+    "op": "braille:decode",
+    "params": {},
+    "input": {
+      "value": "⠁ \n⠃\t",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0103",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode to UTF-8 bytes",
+    "ref": "Forge design: code point U+2800 + byte (Unicode Braille Patterns block U+2800-U+28FF); hand-computed (c3 a9)",
+    "op": "braille:decode",
+    "params": {},
+    "input": {
+      "value": "⣃⢩",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "é",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "error: ASCII letter",
+    "ref": "Forge design: only U+2800-U+28FF are patterns",
+    "op": "braille:decode",
+    "params": {},
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: U+2900 is past the block",
+    "ref": "Unicode block ends at U+28FF",
+    "op": "braille:decode",
+    "params": {},
+    "input": {
+      "value": "⤀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: U+27FF is before the block",
+    "ref": "Unicode block starts at U+2800",
+    "op": "braille:decode",
+    "params": {},
+    "input": {
+      "value": "⟿",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

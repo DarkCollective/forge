@@ -1,0 +1,835 @@
+[
+  {
+    "name": "encode A Arabic (Egyptian)",
+    "ref": "RFC 3492 section 7.1 sample A",
+    "op": "punycode:encode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "ليهمابتكلموشعربي؟",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "egbpdaj6bu4bxfgehfvwxn",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode A Arabic (Egyptian)",
+    "ref": "RFC 3492 section 7.1 sample A",
+    "op": "punycode:decode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "egbpdaj6bu4bxfgehfvwxn",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ليهمابتكلموشعربي؟",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode B Chinese (simplified)",
+    "ref": "RFC 3492 section 7.1 sample B",
+    "op": "punycode:encode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "他们为什么不说中文",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ihqwcrb4cv8a8dqg056pqjye",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode B Chinese (simplified)",
+    "ref": "RFC 3492 section 7.1 sample B",
+    "op": "punycode:decode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "ihqwcrb4cv8a8dqg056pqjye",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "他们为什么不说中文",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode C Chinese (traditional)",
+    "ref": "RFC 3492 section 7.1 sample C",
+    "op": "punycode:encode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "他們爲什麽不說中文",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ihqwctvzc91f659drss3x8bo0yb",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode C Chinese (traditional)",
+    "ref": "RFC 3492 section 7.1 sample C",
+    "op": "punycode:decode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "ihqwctvzc91f659drss3x8bo0yb",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "他們爲什麽不說中文",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode D Czech",
+    "ref": "RFC 3492 section 7.1 sample D",
+    "op": "punycode:encode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "Pročprostěnemluvíčesky",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Proprostnemluvesky-uyb24dma41a",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode D Czech",
+    "ref": "RFC 3492 section 7.1 sample D",
+    "op": "punycode:decode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "Proprostnemluvesky-uyb24dma41a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Pročprostěnemluvíčesky",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode E Hebrew",
+    "ref": "RFC 3492 section 7.1 sample E",
+    "op": "punycode:encode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "למההםפשוטלאמדבריםעברית",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4dbcagdahymbxekheh6e0a7fei0b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode E Hebrew",
+    "ref": "RFC 3492 section 7.1 sample E",
+    "op": "punycode:decode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "4dbcagdahymbxekheh6e0a7fei0b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "למההםפשוטלאמדבריםעברית",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode F Hindi (Devanagari)",
+    "ref": "RFC 3492 section 7.1 sample F",
+    "op": "punycode:encode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "यहलोगहिन्दीक्योंनहींबोलसकतेहैं",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "i1baa7eci9glrd9b2ae1bj0hfcgg6iyaf8o0a1dig0cd",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode F Hindi (Devanagari)",
+    "ref": "RFC 3492 section 7.1 sample F",
+    "op": "punycode:decode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "i1baa7eci9glrd9b2ae1bj0hfcgg6iyaf8o0a1dig0cd",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "यहलोगहिन्दीक्योंनहींबोलसकतेहैं",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode G Japanese (kanji and hiragana)",
+    "ref": "RFC 3492 section 7.1 sample G",
+    "op": "punycode:encode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "なぜみんな日本語を話してくれないのか",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "n8jok5ay5dzabd5bym9f0cm5685rrjetr6pdxa",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode G Japanese (kanji and hiragana)",
+    "ref": "RFC 3492 section 7.1 sample G",
+    "op": "punycode:decode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "n8jok5ay5dzabd5bym9f0cm5685rrjetr6pdxa",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "なぜみんな日本語を話してくれないのか",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode H Korean (Hangul syllables)",
+    "ref": "RFC 3492 section 7.1 sample H",
+    "op": "punycode:encode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "세계의모든사람들이한국어를이해한다면얼마나좋을까",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "989aomsvi5e83db1d2a355cv1e0vak1dwrv93d5xbh15a0dt30a5jpsd879ccm6fea98c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode H Korean (Hangul syllables)",
+    "ref": "RFC 3492 section 7.1 sample H",
+    "op": "punycode:decode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "989aomsvi5e83db1d2a355cv1e0vak1dwrv93d5xbh15a0dt30a5jpsd879ccm6fea98c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "세계의모든사람들이한국어를이해한다면얼마나좋을까",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode I Russian (Cyrillic)",
+    "ref": "RFC 3492 section 7.1 sample I",
+    "op": "punycode:encode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "почемужеонинеговорятпорусски",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "b1abfaaepdrnnbgefbadotcwatmq2g4l",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode I Russian (Cyrillic)",
+    "ref": "RFC 3492 section 7.1 sample I",
+    "op": "punycode:decode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "b1abfaaepdrnnbgefbaDotcwatmq2g4l",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "почемужеонинеговорятпорусски",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode J Spanish",
+    "ref": "RFC 3492 section 7.1 sample J",
+    "op": "punycode:encode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "PorquénopuedensimplementehablarenEspañol",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "PorqunopuedensimplementehablarenEspaol-fmd56a",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode J Spanish",
+    "ref": "RFC 3492 section 7.1 sample J",
+    "op": "punycode:decode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "PorqunopuedensimplementehablarenEspaol-fmd56a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "PorquénopuedensimplementehablarenEspañol",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode K Vietnamese",
+    "ref": "RFC 3492 section 7.1 sample K",
+    "op": "punycode:encode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "TạisaohọkhôngthểchỉnóitiếngViệt",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "TisaohkhngthchnitingVit-kjcr8268qyxafd2f1b9g",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode K Vietnamese",
+    "ref": "RFC 3492 section 7.1 sample K",
+    "op": "punycode:decode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "TisaohkhngthchnitingVit-kjcr8268qyxafd2f1b9g",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "TạisaohọkhôngthểchỉnóitiếngViệt",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode L 3<nen>B<gumi><kinpachi><sensei>",
+    "ref": "RFC 3492 section 7.1 sample L",
+    "op": "punycode:encode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "3年B組金八先生",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3B-ww4c5e180e575a65lsy2b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode L 3<nen>B<gumi><kinpachi><sensei>",
+    "ref": "RFC 3492 section 7.1 sample L",
+    "op": "punycode:decode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "3B-ww4c5e180e575a65lsy2b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3年B組金八先生",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode M <amuro><namie>-with-SUPER-MONKEYS",
+    "ref": "RFC 3492 section 7.1 sample M",
+    "op": "punycode:encode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "安室奈美恵-with-SUPER-MONKEYS",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-with-SUPER-MONKEYS-pc58ag80a8qai00g7n9n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode M <amuro><namie>-with-SUPER-MONKEYS",
+    "ref": "RFC 3492 section 7.1 sample M",
+    "op": "punycode:decode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "-with-SUPER-MONKEYS-pc58ag80a8qai00g7n9n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "安室奈美恵-with-SUPER-MONKEYS",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode N Hello-Another-Way-<sorezore><no><basho>",
+    "ref": "RFC 3492 section 7.1 sample N",
+    "op": "punycode:encode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "Hello-Another-Way-それぞれの場所",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Hello-Another-Way--fc4qua05auwb3674vfr0b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode N Hello-Another-Way-<sorezore><no><basho>",
+    "ref": "RFC 3492 section 7.1 sample N",
+    "op": "punycode:decode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "Hello-Another-Way--fc4qua05auwb3674vfr0b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Hello-Another-Way-それぞれの場所",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode O <hitotsu><yane><no><shita>2",
+    "ref": "RFC 3492 section 7.1 sample O",
+    "op": "punycode:encode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "ひとつ屋根の下2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2-u9tlzr9756bt3uc0v",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode O <hitotsu><yane><no><shita>2",
+    "ref": "RFC 3492 section 7.1 sample O",
+    "op": "punycode:decode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "2-u9tlzr9756bt3uc0v",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ひとつ屋根の下2",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode P Maji<de>Koi<suru>5<byou><mae>",
+    "ref": "RFC 3492 section 7.1 sample P",
+    "op": "punycode:encode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "MajiでKoiする5秒前",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "MajiKoi5-783gue6qz075azm5e",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode P Maji<de>Koi<suru>5<byou><mae>",
+    "ref": "RFC 3492 section 7.1 sample P",
+    "op": "punycode:decode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "MajiKoi5-783gue6qz075azm5e",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "MajiでKoiする5秒前",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode Q <pafii>de<runba>",
+    "ref": "RFC 3492 section 7.1 sample Q",
+    "op": "punycode:encode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "パフィーdeルンバ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "de-jg4avhby1noc0d",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode Q <pafii>de<runba>",
+    "ref": "RFC 3492 section 7.1 sample Q",
+    "op": "punycode:decode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "de-jg4avhby1noc0d",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "パフィーdeルンバ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode R <sono><supiido><de>",
+    "ref": "RFC 3492 section 7.1 sample R",
+    "op": "punycode:encode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "そのスピードで",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d9juau41awczczp",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode R <sono><supiido><de>",
+    "ref": "RFC 3492 section 7.1 sample R",
+    "op": "punycode:decode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "d9juau41awczczp",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "そのスピードで",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode S -> $1.00 <- (ASCII only)",
+    "ref": "RFC 3492 section 7.1 sample S",
+    "op": "punycode:encode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "-> $1.00 <-",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-> $1.00 <--",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode S -> $1.00 <- (ASCII only)",
+    "ref": "RFC 3492 section 7.1 sample S",
+    "op": "punycode:decode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "-> $1.00 <--",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-> $1.00 <-",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode a label with a supplementary-plane character",
+    "ref": "independent: Python punycode codec ('😀' -> 'e28h')",
+    "op": "punycode:encode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "e28h",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode a label with a supplementary-plane character",
+    "ref": "independent: Python punycode codec ('😀' -> 'e28h')",
+    "op": "punycode:decode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "e28h",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "😀",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode empty input (label)",
+    "ref": "hand-computed (no code points)",
+    "op": "punycode:encode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode empty input (label)",
+    "ref": "hand-computed",
+    "op": "punycode:decode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode a domain, only the non-ASCII labels",
+    "ref": "independent: Python punycode codec (bücher -> bcher-kva, münchen -> mnchen-3ya) with RFC 3490 xn-- prefix",
+    "op": "punycode:encode",
+    "params": {},
+    "input": {
+      "value": "bücher.example.münchen",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "xn--bcher-kva.example.xn--mnchen-3ya",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode a domain, xn-- in any case",
+    "ref": "independent: Python punycode codec; RFC 3490 ACE prefix",
+    "op": "punycode:decode",
+    "params": {
+      "mode": "domain"
+    },
+    "input": {
+      "value": "XN--bcher-kva.example.xn--mnchen-3ya",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "bücher.example.münchen",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode an ASCII domain unchanged",
+    "ref": "RFC 3490 (ASCII labels need no ACE form)",
+    "op": "punycode:encode",
+    "params": {},
+    "input": {
+      "value": "www.example.com",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "www.example.com",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode an ASCII domain unchanged",
+    "ref": "RFC 3490",
+    "op": "punycode:decode",
+    "params": {},
+    "input": {
+      "value": "www.example.com",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "www.example.com",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode empty input (domain)",
+    "ref": "hand-computed",
+    "op": "punycode:encode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode empty input (domain)",
+    "ref": "hand-computed",
+    "op": "punycode:decode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "error: truncated number",
+    "ref": "RFC 3492 section 6.2 (a generalized variable-length integer must end)",
+    "op": "punycode:decode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "ab-9",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: character that is not a Punycode digit",
+    "ref": "RFC 3492 section 5 (digits are a-z, A-Z, 0-9)",
+    "op": "punycode:decode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "ab-!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: non-ASCII before the last delimiter",
+    "ref": "RFC 3492 section 6.2 (basic code points are ASCII)",
+    "op": "punycode:decode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "é-abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: value above U+10FFFF",
+    "ref": "RFC 3492 section 6.2 (n must be a code point)",
+    "op": "punycode:decode",
+    "params": {
+      "mode": "label"
+    },
+    "input": {
+      "value": "9999z",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: bad xn-- label in a domain",
+    "ref": "RFC 3492 section 5",
+    "op": "punycode:decode",
+    "params": {
+      "mode": "domain"
+    },
+    "input": {
+      "value": "ok.xn--ab-!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]
