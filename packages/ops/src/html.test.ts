@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { valueHelpers } from "@forge/lang";
 import { describe, expect, test } from "vitest";
 import { assembleRuntime } from "./bundle.js";
@@ -71,5 +73,126 @@ describe("html round trip", () => {
   test("minimal output contains no raw markup characters", async () => {
     const r = await runtime.call("html:encode", [str("<&>\"'"), str("minimal"), str("named")]);
     expect(top(r).v).toBe("&lt;&amp;&gt;&quot;&apos;");
+  });
+});
+
+// ---- the full table of named references ----
+
+const here = fileURLToPath(import.meta.url).replaceAll("\\", "/");
+const source = readFileSync(here.replace(/\/src\/[^/]*$/, "/vocab/html.fth"), "utf8");
+const dataLines = /: _entities \( -- str \)\n {2}"([^"]*)"/.exec(source)?.[1]?.split("\n") ?? [];
+
+async function decode(text: string): Promise<string> {
+  const r = await runtime.call("html:decode", [str(text)]);
+  expect(r.ok).toBe(true);
+  return top(r).v as string;
+}
+
+describe("html:decode named references", () => {
+  test("the data is the WHATWG list: 2,231 names, 106 of them legacy (no semicolon)", () => {
+    expect(dataLines).toHaveLength(2231);
+    const names = dataLines.map((l) => l.slice(0, l.indexOf("=")));
+    expect(new Set(names).size).toBe(2231);
+    expect(names.filter((n) => !n.endsWith(";"))).toHaveLength(106);
+    // every legacy name also exists with its semicolon, with the same value
+    const value = new Map(
+      dataLines.map((l) => [l.slice(0, l.indexOf("=")), l.slice(l.indexOf("=") + 1)]),
+    );
+    for (const n of names.filter((x) => !x.endsWith(";"))) {
+      expect(value.get(`${n};`)).toBe(value.get(n));
+    }
+  });
+
+  test("the data is unchanged: a checksum over the lines, as derived from entities.json", () => {
+    // FNV-1a over the UTF-8 bytes of the lines "name=hex[,hex]" in the order of entities.json
+    // (https://html.spec.whatwg.org/entities.json), the name without its ampersand, joined by LF.
+    let h = 0x811c9dc5;
+    for (const byte of new TextEncoder().encode(dataLines.join("\n"))) {
+      h ^= byte;
+      h = Math.imul(h, 0x01000193) >>> 0;
+    }
+    expect(h.toString(16)).toBe("c15559d3");
+  });
+
+  test.each([
+    ["&Aacute;", "Á"],
+    ["&AElig;", "Æ"],
+    ["&Zeta;", "Ζ"],
+    ["&hearts;", "♥"],
+    ["&NotEqualTilde;", "≂̸"],
+    ["&fjlig;", "fj"],
+    ["&Afr;", "\u{1d504}"],
+    ["&zwnj;", "‌"],
+    ["&nbsp;", " "],
+    ["&CounterClockwiseContourIntegral;", "∳"],
+  ])("%s", async (input, expected) => {
+    expect(await decode(input)).toBe(expected);
+  });
+
+  test("every name resolves, with and without a semicolon where the standard allows it", async () => {
+    const parts: string[] = [];
+    const expected: string[] = [];
+    for (const l of dataLines) {
+      const eq = l.indexOf("=");
+      const cps = l
+        .slice(eq + 1)
+        .split(",")
+        .map((x) => parseInt(x, 16));
+      parts.push(`&${l.slice(0, eq)}|`);
+      expected.push(`${String.fromCodePoint(...cps)}|`);
+    }
+    expect(await decode(parts.join(""))).toBe(expected.join(""));
+  });
+
+  test("a name that is not legacy needs its semicolon; a legacy one does not", async () => {
+    expect(await decode("&euro")).toBe("&euro");
+    expect(await decode("&copy")).toBe("©");
+    expect(await decode("&notit;")).toBe("¬it;");
+    expect(await decode("&ampx")).toBe("&x");
+    expect(await decode("&frac12&frac1")).toBe("½&frac1");
+  });
+
+  test("names are case sensitive", async () => {
+    expect(await decode("&Copy; &COPY; &copy;")).toBe("&Copy; © ©");
+  });
+});
+
+describe("html:decode numeric references", () => {
+  test("128 to 159 are the windows-1252 characters of the standard", async () => {
+    const all = Array.from({ length: 32 }, (_, i) => `&#${128 + i};`).join("");
+    const w1252 = "€\u0081‚ƒ„…†‡ˆ‰Š‹Œ\u008dŽ\u008f" + "\u0090‘’“”•–—˜™š›œ\u009džŸ";
+    expect(await decode(all)).toBe(w1252);
+    expect(await decode("&#x80;&#X9F;")).toBe("€Ÿ");
+  });
+
+  test("the neighbours of the remap range are not remapped", async () => {
+    expect(await decode("&#127;&#160;")).toBe("\u007f ");
+  });
+
+  test("the semicolon is optional, the run of digits is the longest", async () => {
+    expect(await decode("&#65 &#x41g &#65;;")).toBe("A Ag A;");
+  });
+
+  test("leading zeros and enormous values", async () => {
+    expect(await decode("&#0000000065;")).toBe("A");
+    expect(await decode(`&#${"9".repeat(30)};`)).toBe("�");
+    expect(await decode(`&#x${"f".repeat(5000)};`)).toBe("�");
+  });
+
+  test("no digits: the text is unchanged", async () => {
+    expect(await decode("&#;&#x;&#xg;&#")).toBe("&#;&#x;&#xg;&#");
+  });
+});
+
+describe("html:decode on larger input", () => {
+  test("64 KiB of references decodes in one call", { timeout: 60_000 }, async () => {
+    const unit = "a &lt; b &amp;&copy; &#233;&#x1F600; ";
+    const count = Math.floor(65536 / unit.length);
+    const expected = "a < b &© é\u{1f600} ".repeat(count);
+    expect(await decode(unit.repeat(count))).toBe(expected);
+  });
+
+  test("text without an ampersand is returned as is", async () => {
+    expect(await decode("plain text")).toBe("plain text");
   });
 });

@@ -3,3 +3,12 @@ Copyright 2026 Darkcollective, LLC
 
 This product includes software developed at Darkcollective, LLC
 (https://github.com/DarkCollective/forge).
+
+The HTML named character references used by the html vocabulary (html:decode)
+come from the HTML Living Standard, Copyright (c) WHATWG (Apple, Google,
+Mozilla, Microsoft), licensed under Creative Commons Attribution 4.0
+International (https://creativecommons.org/licenses/by/4.0/); the data is
+https://html.spec.whatwg.org/entities.json. The tables of the single-byte
+encodings in the charset vocabulary (charset:decode, charset:encode) come from
+the indexes of the WHATWG Encoding Standard (https://encoding.spec.whatwg.org/),
+under the same licence.
