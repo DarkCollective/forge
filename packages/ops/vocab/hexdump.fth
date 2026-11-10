@@ -19,7 +19,7 @@ IN: hexdump
 
 \ Hex digits in groups of four (two bytes), separated by a space.
 : _group ( h:str -- str )
-  0 h len 3 + 4 div range [ 4 * dup 4 + h len min h -rot slice ] map " " join ;
+  h 4 util:str-chunks " " join ;
 
 \ The characters of the hex field of n bytes (n at least 1).
 : _field-len ( n:int -- int )

@@ -22,6 +22,14 @@ IN: util
   alpha b cp>str split dup len 2 = [ 0 nth len ]
   [ drop b 61 = [ pad ] [ b space? [ ws ] [ 255 ] if ] if ] if ;
 
+: surrogate? ( cp:int -- bool )
+  "True for a UTF-16 surrogate code point, U+D800 to U+DFFF (55296 to 57343): not a character on its own." doc
+  cp 55296 57343 between? ;
+
+: str-chunks ( s:str n:int -- list )
+  "The pieces of s of n characters each, in order; the last one is shorter when n does not divide the length. The empty string gives no pieces. n must be at least 1." doc
+  0 s len n + 1 - n div range [ n * dup n + s len min s -rot slice ] map ;
+
 : decode-table ( alpha:str ws:int pad:int -- bytes )
   "A 256-byte lookup table for translate: entry b is the index of byte b in alpha. A byte outside alpha gives ws for ASCII white space, pad for = and 255 otherwise; pass 255 for a marker you do not need." doc
   0 256 range [ alpha ws pad _code-of ] map list>bytes ;
@@ -36,9 +44,10 @@ IN: util
   b 44 = b space? or ;
 
 : check-symbols ( data:bytes table:bytes -- bytes )
-  "Translate data through a decode table (see decode-table) and raise E_COERCE (a character is not in the alphabet) if any byte maps to 255. The translated bytes are returned with any other marker (white space, padding) left in place for the caller to handle." doc
+  "Translate data through a decode table (see decode-table) and raise E_COERCE (a character is not in the alphabet) if any byte maps to 255. The translated bytes are returned with any other marker (white space, padding) left in place for the caller to handle. A constant number of interpreter steps for any length: the marker is looked for in the Latin-1 text of the bytes." doc
   data table translate
-  dup [ 255 = ] filter len 0 <> [ "a character is not in the alphabet" raise:coerce ] when ;
+  dup bytes>latin1 255 cp>str split len 1 >
+  [ "a character is not in the alphabet" raise:coerce ] when ;
 
 : int>be-bytes ( v:int n:int -- bytes )
   "The low n bytes of v, most significant first (big-endian); higher bytes are dropped and an n of 0 gives no bytes." doc
@@ -189,6 +198,27 @@ IN: util
   data table check-symbols [ 254 <> ] filter
   dup [ 0 = ] count-leading swap radix digits>int _zero-prefixed ;
 
+\ ---- lists and byte searches ----
+
+: list-flatten ( ll:list -- list )
+  "The elements of a list of lists (or of bytes) joined in order into one list: one level of nesting removed. An empty ll gives the empty list." doc
+  ll { } [ cat ] reduce ;
+
+: contains-bytes? ( data:bytes needle:bytes -- bool )
+  "True when data holds the bytes of needle side by side, in order; an empty needle is always found. The search is done on the Latin-1 text of both, so it takes a few interpreter steps for any length." doc
+  needle len 0 =
+  [ true ]
+  [ data bytes>latin1 needle bytes>latin1 split len 1 > ]
+  if ;
+
+: drop-byte ( data:bytes b:int -- bytes )
+  "The bytes of data without any byte equal to b (0 to 255). Done on the Latin-1 text, so it takes a few interpreter steps for any length." doc
+  data bytes>latin1 b cp>str split "" join latin1>bytes ;
+
+: popcount-26 ( m:int -- int )
+  "How many of the low 26 bits of m are set: the size of a set of letters held as a bit mask (bit 0 = A)." doc
+  0 26 range 0 [ m swap shr 1 band + ] reduce ;
+
 \ ---- letters, permutations and rotor machines ----
 
 : letter? ( c:int -- bool )
@@ -215,9 +245,13 @@ IN: util
   "A 256-byte table for translate: a letter byte (either case) becomes its number 0 to 25, every other byte 255." doc
   0 256 range [ dup 32 bor 97 - dup 0 >= over 25 <= and [ nip ] [ drop drop 255 ] if ] map list>bytes ;
 
-: count-of ( d:bytes v:int -- int )
-  "How many elements of d (bytes or a list of ints) equal v." doc
-  d [ v = ] filter len ;
+: letter-numbers ( s:str -- bytes )
+  "The letters of s (either case) as numbers 0 to 25, A = 0, with every other character dropped. Unlike letter-indices it accepts any text." doc
+  s str>bytes letter-table translate [ 255 <> ] filter ;
+
+: count-of ( items x:any -- int )
+  "How many elements of items (bytes or a list of any values) equal x (compared with =)." doc
+  items [ x = ] filter len ;
 
 : index-of ( p:bytes i:int -- int )
   "The position of the first element of p equal to i; E_RANGE when there is none. For a permutation this is the inverse permutation at i." doc

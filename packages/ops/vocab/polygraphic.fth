@@ -13,6 +13,7 @@ IN: polygraphic
   omit "j" = [ dup 74 = [ drop 73 ] when ] [ dup 73 = [ drop 74 ] when ] if ;
 
 \ The 25 letters of the square in order: the alphabet without the omitted letter.
+\ Not fractionating:_adf-labels: both pick one of two literals by a name, but the two literals are unrelated data.
 : _pl-alpha ( omit:str -- bytes )
   omit "j" = [ "ABCDEFGHIKLMNOPQRSTUVWXYZ" ] [ "ABCDEFGHJKLMNOPQRSTUVWXYZ" ] if str>bytes ;
 

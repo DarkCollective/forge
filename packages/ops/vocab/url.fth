@@ -2,6 +2,7 @@
 \ E_COERCE comes from the raise vocabulary (raise:coerce).
 IN: url
 
+\ Not classical:_text-printable?: a different set of bytes (the RFC 3986 unreserved characters).
 : _unreserved? ( b:int -- bool )
   b 65 90 util:between? b 97 122 util:between? or b 48 57 util:between? or
   b 45 = or b 46 = or b 95 = or b 126 = or ;

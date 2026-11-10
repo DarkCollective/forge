@@ -149,6 +149,10 @@ IN: typex
 
 \ ---- encrypting ----
 
+\ Same stepping as enigma:_step, kept as a separate copy on purpose (see README, "Justified
+\ exceptions"): the rotor state is in this vocabulary's VARIABLEs, so a shared util word would have
+\ to take five values and give back three on every key press, which costs more VM steps on the
+\ per-letter path than the inline test and update here; _turn only names the row-offset update.
 \ Advance the rotors before a letter: the double step (the middle rotor is about to reach its own
 \ notch: it and the slow rotor both step), else the middle rotor steps if the fast rotor is about
 \ to reach a notch; the fast rotor always steps.
@@ -172,7 +176,8 @@ IN: typex
   _b1 + _IR swap nth
   _EI swap nth ;
 
-\ One byte: a letter is enciphered (as an upper-case letter), anything else is left alone.
+\ One byte: a letter is enciphered (as an upper-case letter), anything else is left alone. Not shared
+\ with enigma:_byte: each reads its own _LT and _press on the per-letter path (see README, "Justified exceptions").
 : _byte ( int -- int )
   dup _LT swap nth
   dup 255 =

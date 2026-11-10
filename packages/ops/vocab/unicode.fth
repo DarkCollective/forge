@@ -68,10 +68,10 @@ META: escape
   [ -1 ] if ;
 
 : _high? ( v:int -- bool )
-  v 55296 >= v 56319 <= and ;
+  v 55296 56319 util:between? ;
 
 : _low? ( v:int -- bool )
-  v 56320 >= v 57343 <= and ;
+  v 56320 57343 util:between? ;
 
 \ The pair of two units as a code point.
 : _pair ( hi:int lo:int -- int )

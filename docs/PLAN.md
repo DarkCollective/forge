@@ -278,6 +278,34 @@ Language gaps found in wave 1 (candidates for the core, or for a primitive):
 - The `charset` TextDecoder labels are tested in Chromium and Node only. Firefox and Safari are untested: their label lists and their handling of the legacy sets can differ.
 - There is no early-exit loop over a list or a string. Scanning for a prefix (`util:count-leading`) is a fold over everything, or a `while` that is slower per element.
 
+**Wave 2 ✅** *Done 2026-11-10 (wave 2: historical cipher machines and remaining classical ciphers). 143 ops in 46 vocabularies; CyberChef coverage 101 covered, 22 redesigned, 383 not yet of 506. 1,865 op vectors in 46 files and 3,721 unit tests; `npm run gate4:browser -w @forge/worker` passes in Node and in Chromium Web Workers, with and without cross-origin isolation.*
+
+| WP | Scope |
+|---|---|
+| 5.6 | enigma (I, M3, M4) and typex; 5.6u promoted the rotor, plugboard and letter helpers into util |
+| 5.7 | lorenz (SZ40/42a/42b, KH/ZMUG/BREAM, P5) and colossus counting; 5.7u promoted cycle-bytes and the ITA2 words |
+| 5.8 | sigaba |
+| 5.9 | classical additions (caesar box, rot8000, rot brute force, cetacean, ctx1, ls47) and analysis (index of coincidence, chi-squared) |
+| 5.10 | polyalphabetic, polygraphic, fractionating, transposition (beyond CyberChef); 5.10b finished them and 5.10u promoted their helpers |
+| 5.11 | bombe (one word for Bombe and Multiple Bombe, with one search primitive) |
+| 5.12 | close-out: the Enigma rotor, turnover and reflector data shared once (`enigma:rotor-wirings`, `rotor-turnovers`, `rotor-reflectors`, used by bombe), `util:check-symbols` in a constant number of VM steps, the remaining util-candidate markers promoted or made private, every dupes report resolved or justified (README, "Justified exceptions"), docs |
+| 5.13 | typex and sigaba conventions aligned with CyberChef's for compatibility, verified by a local cross-check against CyberChef (Typex 440/440, SIGABA 800/800, Enigma 180/180 agree with the same wirings and settings) |
+
+Typex and SIGABA ship Forge's own non-historical default wirings, drawn at random for this project, because the real wirings were never published. The real Typex conventions (notch timing, reversed rotors, entry wiring, stepping) are unpublished too, so Forge follows CyberChef's for compatibility, and none of them is historically attested.
+
+Language gaps found in wave 2 (candidates for the core, or for a primitive):
+
+- A `VARIABLE` cannot start as a list or record.
+- A parameter regex cannot contain spaces or parentheses.
+- There is no fast mutable array and no per-element state in `map`. The hot loops of sigaba, ls47 and bombe needed primitives for this reason.
+- There is no sort word, and there is no `pick`.
+- There is no bytes-wise AND.
+- `/` raises an error on integers beyond ±2^53.
+- Param help is limited to 200 code points.
+- Two vocabularies cannot `see-also` each other, because that is a dependency cycle.
+- A public word whose params are all UI types becomes a catalogue op, so shared data needs zero-input words (`lorenz:kh-patterns`, `enigma:rotor-wirings`).
+- The dupes sweep never sees an exact copy when a helper calls a private helper of the same vocabulary, because the normalised bodies then differ (the Enigma and Typex stepping is such a pair; see the ops README, "Justified exceptions").
+
 ### Phase 6 — Beyond CyberChef
 Magic auto-detection (declarative `checks` in META, depth-limited search). An optional recipe store backend behind `RecipeStore`. A PWA/offline mode. The `@forge/cli`. Recipe diff/swap. **Relix vocabulary** integration as an `relix:` vocab of primitives.
 

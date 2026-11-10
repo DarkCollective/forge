@@ -3,9 +3,8 @@
 \ "stops": positions at which the plugboard that the crib implies is consistent. One word, bombe:search.
 \ Written for Forge from the published descriptions of the machine (Wikipedia, "Bombe"; Crypto Museum,
 \ "Bombe", cryptomuseum.com); no code, table, test or description of any other tool was used. The
-\ rotor and reflector wirings are the historical Enigma ones, the same as in vocab/enigma.fth (a
-\ private copy of the data below, because enigma exports no words for it); everything else is
-\ written here.
+\ rotor and reflector wirings are the historical Enigma ones, read from vocab/enigma.fth
+\ (enigma:rotor-wirings, rotor-turnovers, rotor-reflectors); everything else is written here.
 \
 \ The model of the Enigma is the one of enigma.fth: the machine steps before every letter (with the
 \ double step of the middle rotor), the signal goes through the plugboard, the rotors, the reflector
@@ -80,56 +79,31 @@ true VARIABLE _check
 60 CONSTANT _max-orders
 1200 CONSTANT _max-work
 
-\ ---- historical data (a private copy of vocab/enigma.fth's) ----
-
-: _wirings ( -- record )
-  { { "I" "EKMFLGDQVZNTOWYHXUSPAIBRCJ" } { "II" "AJDKSIRUXBLHWTMCQGZNPYFVOE" }
-    { "III" "BDFHJLCPRTXVZNYEIWGAKMUSQO" } { "IV" "ESOVPZJAYQUIRHXLNFTGKDCMWB" }
-    { "V" "VZBRGITYUPSDNHLXAWMJQOFECK" } { "VI" "JPGVOUMFYQBENHZRDKASXLICTW" }
-    { "VII" "NZJHGRCXMYSWBOUFAIVLPEKQDT" } { "VIII" "FKQHTLXOCBJSPDZRAMEWNIUYGV" } } >record ;
-
-\ The window letters at which the rotor carries the next one along.
-: _turnovers ( -- record )
-  { { "I" "Q" } { "II" "E" } { "III" "V" } { "IV" "J" } { "V" "Z" } { "VI" "ZM" }
-    { "VII" "ZM" } { "VIII" "ZM" } } >record ;
-
-: _reflectors ( -- record )
-  { { "A" "EJMZALYXVBWFCRQUONTSPIKHGD" } { "B" "YRUHQSLDPXNGOKMIEBFZCWVJAT" }
-    { "C" "FVPJIAOYEDRZXWGCTKUQSBNMHL" } } >record ;
-
-: _wire ( name:str -- bytes )
-  _wirings name get util:letter-indices ;
+\ ---- historical data (enigma:rotor-wirings, rotor-turnovers and rotor-reflectors) ----
 
 : _turn ( name:str -- bytes )
-  _turnovers name get util:letter-indices ;
+  enigma:rotor-turnovers name get util:letter-indices ;
 
 \ ---- checking the parameters ----
 
 : _names-for ( model:str -- list )
   model "I" = [ { "I" "II" "III" "IV" "V" } ] [ { "I" "II" "III" "IV" "V" "VI" "VII" "VIII" } ] if ;
 
-: _times-in ( items:list x:str -- int )
-  items [ x = ] filter len ;
-
 : _check-reflector ( refl:str model:str -- )
-  model "I" = [ { "A" "B" "C" } ] [ { "B" "C" } ] if refl _times-in 0 =
+  model "I" = [ { "A" "B" "C" } ] [ { "B" "C" } ] if refl util:count-of 0 =
   [ "reflector " refl cat " does not fit model " cat model cat raise:range ] when ;
 
 : _check-rotors ( names:list model:str -- )
   names len 3 <
   [ "rotors: give three rotors, or more to search every order of three of them" raise:range ] when
-  names [ model _names-for swap _times-in 0 = ] filter
+  names [ model _names-for swap util:count-of 0 = ] filter
   dup len 0 >
   [ 0 nth "rotors: " swap cat " is not available in model " cat model cat raise:range ]
   [ drop ] if
-  names [ names swap _times-in 1 > ] filter len 0 >
+  names [ names swap util:count-of 1 > ] filter len 0 >
   [ "rotors: a rotor may be named only once" raise:range ] when ;
 
 \ ---- the orders of the rotors ----
-
-\ util-candidate: list-flatten
-: _flatten ( ll:list -- list )
-  ll { } [ cat ] reduce ;
 
 : _triples-ab ( names:list a:int b:int -- list )
   0 names len range [ dup a <> swap b <> and ] filter
@@ -137,20 +111,15 @@ true VARIABLE _check
 
 : _triples-a ( names:list a:int -- list )
   0 names len range [ a <> ] filter
-  [ names a rot _triples-ab ] map _flatten ;
+  [ names a rot _triples-ab ] map util:list-flatten ;
 
 \ Every ordered choice of three of the names, left rotor first.
 : _orders ( names:list -- list )
   names len 3 =
   [ { names } ]
-  [ 0 names len range [ names swap _triples-a ] map _flatten ] if ;
+  [ 0 names len range [ names swap _triples-a ] map util:list-flatten ] if ;
 
 \ ---- the menu ----
-
-\ The letters of text as numbers 0 to 25, anything else dropped.
-\ util-candidate: letter-numbers
-: _letters ( s:str -- bytes )
-  s str>bytes util:letter-table translate [ 255 <> ] filter ;
 
 : _letter-str ( n:int -- str )
   { n 65 + } codes>str ;
@@ -185,10 +154,6 @@ true VARIABLE _check
 : _reach ( adj:list start:int -- int )
   1 start shl [ dup adj _grow over <> ] [ adj _grow ] while ;
 
-\ util-candidate: popcount-26
-: _bits ( m:int -- int )
-  0 26 range 0 [ m swap shr 1 band + ] reduce ;
-
 \ How many edges have their plain letter in the set mask.
 : _edges-in ( p:bytes mask:int -- int )
   p [ mask swap shr 1 band ] map 0 [ + ] reduce ;
@@ -219,7 +184,7 @@ true VARIABLE _check
 
 : _menu-of ( p:bytes c:bytes mask:int -- bytes )
   0 p len range [ p swap nth mask swap shr 1 band 1 = ] filter
-  [ p c rot _edge ] map _flatten list>bytes ;
+  [ p c rot _edge ] map util:list-flatten list>bytes ;
 
 : _head-text ( edges:int letters:int test:int -- str )
   "# menu: " edges int>str cat " edges between " cat letters int>str cat " letters, " cat
@@ -227,7 +192,7 @@ true VARIABLE _check
 
 \ Store the menu of the component mask: the primitive's menu, which crib steps it has, the test letter.
 : _prepare-menu ( p:bytes c:bytes mask:int -- )
-  p mask _edges-in mask _bits p c mask _pick-test dup _test! _head-text _head!
+  p mask _edges-in mask util:popcount-26 p c mask _pick-test dup _test! _head-text _head!
   p c mask _menu-of _menu!
   p len _m!
   0 p len range [ p swap nth mask swap shr 1 band ] map list>bytes _inmenu!
@@ -249,8 +214,8 @@ true VARIABLE _check
 \ ---- the tables of the rotors (built once for each rotor) ----
 
 : _entry ( name:str rm:int rr:int -- record )
-  name _wire util:rotor-shift-table _f!
-  name _wire util:perm-invert util:rotor-shift-table _i!
+  enigma:rotor-wirings name get util:letter-indices dup util:rotor-shift-table _f!
+  util:perm-invert util:rotor-shift-table _i!
   { { "fwd" _f } { "inv" _i }
     { "cl" _refl _f _i util:rotor-reflect-table }
     { "fm" name _turn rm util:rotor-notch-flags }
@@ -369,7 +334,7 @@ true VARIABLE _check
   [ drop ] if ;
 
 : _go ( data:bytes crib:str names:list -- bytes )
-  crib _letters data _letters _prepare-letters
+  crib util:letter-numbers data util:letter-numbers _prepare-letters
   names len _count _check-work
   names _cache-of names _orders _search-all
   _header "\n" join "\n" cat _lines cat names len _count _footer "\n" join cat str>bytes ;
@@ -387,7 +352,7 @@ true VARIABLE _check
   check "on" = _check!
   0 _found! 0 _trunc! "" _lines!
   rings 3 "rings" util:letter-settings _rings!
-  _reflectors reflector get util:letter-indices _refl!
+  enigma:rotor-reflectors reflector get util:letter-indices _refl!
   data crib rot _go ;
 
 META: search

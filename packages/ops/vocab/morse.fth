@@ -28,6 +28,7 @@ IN: morse
 : _lookup ( table:record key:str -- str )
   [ table key get ] [ drop "no Morse code for this character" raise:coerce ] try ;
 
+\ Not classical:_atbash-code: this folds a lower-case letter to upper case, that reflects a letter within its case.
 : _upper-cp ( cp:int -- int )
   cp 97 122 util:between? [ cp 32 - ] [ cp ] if ;
 

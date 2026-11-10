@@ -43,18 +43,21 @@ IN: enigma
 
 \ ---- historical data ----
 
-: _wirings ( -- record )
+: rotor-wirings ( -- record )
+  "The historical rotor wirings as a record from rotor name (I to VIII, BETA, GAMMA) to the 26 letters its input contacts A to Z lead to. Shared data: bombe uses it too." doc
   { { "I" "EKMFLGDQVZNTOWYHXUSPAIBRCJ" } { "II" "AJDKSIRUXBLHWTMCQGZNPYFVOE" }
     { "III" "BDFHJLCPRTXVZNYEIWGAKMUSQO" } { "IV" "ESOVPZJAYQUIRHXLNFTGKDCMWB" }
     { "V" "VZBRGITYUPSDNHLXAWMJQOFECK" } { "VI" "JPGVOUMFYQBENHZRDKASXLICTW" }
     { "VII" "NZJHGRCXMYSWBOUFAIVLPEKQDT" } { "VIII" "FKQHTLXOCBJSPDZRAMEWNIUYGV" }
     { "BETA" "LEYJVCNIXWPBQMDRTAKZGFUHOS" } { "GAMMA" "FSOKANUERHMBTIYCWLQPZXVGJD" } } >record ;
 
-: _turnovers ( -- record )
+: rotor-turnovers ( -- record )
+  "The turnover letters of each rotor as a record from rotor name to text: the window letters at which the rotor carries the next one along (one letter for I to V, two for VI to VIII, none for BETA and GAMMA)." doc
   { { "I" "Q" } { "II" "E" } { "III" "V" } { "IV" "J" } { "V" "Z" } { "VI" "ZM" }
     { "VII" "ZM" } { "VIII" "ZM" } { "BETA" "" } { "GAMMA" "" } } >record ;
 
-: _reflectors ( -- record )
+: rotor-reflectors ( -- record )
+  "The historical reflector wirings as a record from reflector name (A, B, C, B-thin, C-thin) to 26 letters." doc
   { { "A" "EJMZALYXVBWFCRQUONTSPIKHGD" } { "B" "YRUHQSLDPXNGOKMIEBFZCWVJAT" }
     { "C" "FVPJIAOYEDRZXWGCTKUQSBNMHL" } { "B-thin" "ENKQAUYWJICOPBLMDXZVFTHRGS" }
     { "C-thin" "RDOBJNTKVEHMLFCWZAXGYIPSUQ" } } >record ;
@@ -78,7 +81,7 @@ IN: enigma
 \ ---- the tables ----
 
 : _wire ( name:str -- bytes )
-  _wirings name get util:letter-indices ;
+  rotor-wirings name get util:letter-indices ;
 
 : _wire-at ( idx:int -- bytes )
   _names " " split idx nth _wire ;
@@ -87,14 +90,14 @@ IN: enigma
   _pos idx nth _rings idx nth - 26 mod ;
 
 : _flags-at ( idx:int -- bytes )
-  _turnovers _names " " split idx nth get util:letter-indices _rings idx nth util:rotor-notch-flags ;
+  rotor-turnovers _names " " split idx nth get util:letter-indices _rings idx nth util:rotor-notch-flags ;
 
 \ The Greek rotor, the reflector and the Greek rotor back: one fixed permutation.
 : _greek-wrap ( r:bytes g:bytes s:int -- bytes )
   g s util:rotor-shifted r g util:perm-invert s util:rotor-shifted util:table-compose3 ;
 
 : _static-reflector ( refl:str -- bytes )
-  _reflectors refl get util:letter-indices
+  rotor-reflectors refl get util:letter-indices
   _n 4 = [ _names " " split 0 nth _wire 0 _shift-of _greek-wrap ] when ;
 
 : _tables ( refl:str -- )
@@ -123,7 +126,10 @@ IN: enigma
 
 \ ---- encrypting ----
 
-\ Advance the moving rotors before a letter, with the double step.
+\ Advance the moving rotors before a letter, with the double step. typex:_step is the same rule,
+\ kept as a separate copy on purpose (see README, "Justified exceptions"): the state is in each
+\ vocabulary's VARIABLEs, and a shared util word would take five values and give back three on
+\ every key press, which costs more VM steps on the per-letter path than the inline update.
 : _step ( -- )
   _NM _b2 nth 1 =
   [ _b3 26 + 676 mod _b3! _b2 26 + 676 mod _b2! ]
@@ -141,7 +147,8 @@ IN: enigma
   _b1 + _IR swap nth
   _P swap nth ;
 
-\ One byte: a letter is enciphered (as an upper-case letter), anything else is left alone.
+\ One byte: a letter is enciphered (as an upper-case letter), anything else is left alone. Not shared
+\ with typex:_byte: each reads its own _LT and _press on the per-letter path (see README, "Justified exceptions").
 : _byte ( int -- int )
   dup _LT swap nth
   dup 255 =
