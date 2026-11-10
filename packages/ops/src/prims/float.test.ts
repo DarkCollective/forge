@@ -17,8 +17,8 @@
 import { describe, expect, test } from "vitest";
 import { pack, parseNumber, unpack } from "./float.js";
 
-const hex = (b: Uint8Array) => Buffer.from(b).toString("hex");
-const bytes = (h: string) => Uint8Array.from(Buffer.from(h, "hex"));
+const hex = (b: Uint8Array) => Array.from(b, (x) => x.toString(16).padStart(2, "0")).join("");
+const bytes = (h: string) => Uint8Array.from(h.match(/../g) ?? [], (p) => Number.parseInt(p, 16));
 
 describe("float._pack / float._unpack", () => {
   test("parseNumber accepts decimal text and the special names, and nothing else", () => {

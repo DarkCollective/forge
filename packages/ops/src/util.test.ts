@@ -348,7 +348,7 @@ describe("util:number-tokens and util:numbers>bytes", () => {
 
   const decode = (text: string, radix: number) =>
     runtime.call("util:numbers>bytes", [
-      valueHelpers.bytes(new TextEncoder().encode(text)),
+      valueHelpers.bytes(Uint8Array.from(text, (c) => c.charCodeAt(0))),
       int(radix),
       str("not a byte"),
     ]);
@@ -390,7 +390,7 @@ describe("util:number-tokens and util:numbers>bytes", () => {
 describe("util:hex-unescape", () => {
   const unescape = async (s: string, marker: string) =>
     u8(await value("util:hex-unescape", [str(s), str(marker), str("bad escape")]));
-  const bytesOf = (s: string) => [...Buffer.from(s, "latin1")];
+  const bytesOf = (s: string) => Array.from(s, (c) => c.charCodeAt(0) & 255);
 
   test("replaces each marker and two hex digits by a byte, of either case", async () => {
     expect(await unescape("a%41b", "%")).toEqual(bytesOf("aAb"));
@@ -486,8 +486,9 @@ describe("util:int>bytes", () => {
 });
 
 describe("util:int>symbols, util:bytes>symbols and util:symbols>bytes", () => {
-  const sym = (s: string) => valueHelpers.bytes(new TextEncoder().encode(s));
-  const text = (v: unknown) => new TextDecoder().decode(v as Uint8Array);
+  // The alphabets and outputs here are ASCII, so a char-code copy is the UTF-8 bytes.
+  const sym = (s: string) => valueHelpers.bytes(Uint8Array.from(s, (c) => c.charCodeAt(0)));
+  const text = (v: unknown) => String.fromCharCode(...(v as Uint8Array));
   const table = async (alpha: string) =>
     valueHelpers.bytes(
       (await value("util:decode-table", [str(alpha), int(254), int(255)])) as Uint8Array,

@@ -34,6 +34,14 @@ declare module "node:url" {
   export function pathToFileURL(path: string): { readonly href: string };
 }
 
+/**
+ * Test-only: charset.test.ts compares the package's UTF-8 encoder with the host's. Node 20 and
+ * browsers both provide TextEncoder as a global; only the member the test uses is declared.
+ */
+declare class TextEncoder {
+  encode(input?: string): Uint8Array;
+}
+
 interface ImportMeta {
   readonly url: string;
   /**
