@@ -21,13 +21,13 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Date / Time | 0 | 0 | 0 | 9 | 9 |
 | Extractors | 0 | 0 | 0 | 18 | 18 |
 | Compression | 0 | 0 | 0 | 21 | 21 |
-| Hashing | 8 | 3 | 0 | 37 | 48 |
+| Hashing | 17 | 5 | 0 | 26 | 48 |
 | Code tidy | 0 | 0 | 0 | 24 | 24 |
 | Forensics | 0 | 0 | 0 | 9 | 9 |
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 4 | 0 | 3 | 14 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **109** | **25** | **3** | **369** | **506** |
+| **Total** | **118** | **27** | **3** | **358** | **506** |
 
 ## Data format (80)
 
@@ -450,21 +450,21 @@ it and regenerate this file. An operation listed in several CyberChef categories
 
 | CyberChef | Status | Forge | Note |
 | --- | --- | --- | --- |
-| Analyse hash | not yet |  |  |
+| Analyse hash | covered | `hash-analysis:analyse` | Takes hex text and returns a text report: length in hex characters, bytes and bits, and the hashing functions whose digest has that size. The table is Forge's own and lists some functions that Forge has not implemented. Text that is not hex (or has an odd digit count) is an error. |
 | Generate all checksums | not yet |  |  |
 | Generate all hashes | not yet |  |  |
-| MD2 | not yet |  |  |
-| MD4 | not yet |  |  |
+| MD2 | covered | `md2:digest` | Returns raw bytes (chain hex:encode). Only the standard 18 rounds of RFC 1319 exist; CyberChef's Rounds parameter is not supported. |
+| MD4 | covered | `md4:digest` | RFC 1320. Returns raw bytes (chain hex:encode). |
 | MD5 | covered | `md5:digest` | No parameters. Returns raw bytes (chain hex:encode). |
-| MD6 | not yet |  |  |
-| SHA0 | not yet |  |  |
+| MD6 | covered | `md6:digest` | Parameters size (bits, a multiple of 8, 8 to 512), levels (L, 0 to 64) and key (up to 64 bytes). Sizes that are not a multiple of 8 bits are not supported. The round count is the report's default (40 + size/4, at least 80 with a key). |
+| SHA0 | covered | `sha0:digest` | FIPS 180 (1993). Returns raw bytes (chain hex:encode). Only the standard 80 rounds exist; a Rounds parameter is not supported. |
 | SHA1 | covered | `sha1:digest` | No parameters. Returns raw bytes (chain hex:encode). |
 | SHA2 | covered | `sha2:digest` | One word with a size parameter: 224, 256, 384, 512, 512/224, 512/256. Returns raw bytes (chain hex:encode). CyberChef's Rounds parameter is not supported: only the FIPS 180-4 round counts exist. |
 | SHA3 | covered | `sha3:digest` | One word with a size parameter in bits: 224, 256, 384, 512. Returns raw bytes (chain hex:encode). |
 | SM3 | not yet |  |  |
 | Keccak | covered | `keccak:digest` | One word with a size parameter in bits: 224, 256, 384, 512, with the original Keccak padding (not SHA-3). |
 | Shake | redesigned | `shake:digest` | The output length is in bytes (1 to 65536, default 64), where CyberChef's Size is in bits (default 512, passed unchanged to the SHAKE function). The variant is 128 or 256 bytes of security strength, as in CyberChef's Capacity. |
-| RIPEMD | covered | `ripemd160:digest` | Only RIPEMD-160 (size 160) for now. CyberChef's 128, 256 and 320 are the separate RIPEMD vocabulary planned for WP 5.18a. |
+| RIPEMD | covered | `ripemd:digest` | One word with a size choice of 128, 160, 256 or 320 (default 160). Returns raw bytes (chain hex:encode). ripemd160:digest also exists, for HMAC. |
 | HAS-160 | not yet |  |  |
 | Whirlpool | not yet |  |  |
 | Snefru | not yet |  |  |
@@ -475,19 +475,19 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Ascon MAC | not yet |  |  |
 | GOST Hash | not yet |  |  |
 | Streebog | not yet |  |  |
-| SSDEEP | not yet |  |  |
-| CTPH | not yet |  |  |
-| Compare SSDEEP hashes | not yet |  |  |
-| Compare CTPH hashes | not yet |  |  |
+| SSDEEP | covered | `ssdeep:digest` | Context triggered piecewise hashing (Kornblum 2006). The result is text, blocksize:hash1:hash2, not bytes: it is a structured string that the compare word reads piece by piece. |
+| CTPH | redesigned | `ssdeep:ctph` | CTPH is the algorithm that ssdeep implements, and CyberChef offers it as a second name for the same computation, so one word covers both (ctph is an alias of ssdeep:digest). |
+| Compare SSDEEP hashes | covered | `ssdeep:compare` | The 0 to 100 score of the reference algorithm: block size check, runs of more than three equal characters cut to three, a common substring of 7 characters, a weighted edit distance (insert and remove 1, replace 2) and the cap for small block sizes. The first hash is the data input and the second is the other parameter. |
+| Compare CTPH hashes | redesigned | `ssdeep:compare-ctph` | The same comparison as Compare SSDEEP hashes under the algorithm's other name, so one word covers both (compare-ctph is an alias of ssdeep:compare). |
 | HMAC | covered | `hmac:digest` | Hash choice: md5, sha1, the SHA-2 sizes including 512/224 and 512/256, the SHA-3 sizes, and ripemd160. Not offered: MD2, MD4, SHA0, RIPEMD-128, RIPEMD-256, RIPEMD-320, HAS-160, Whirlpool and Snefru (their digests are not yet in Forge). Blake2 and BLAKE3 keyed modes are their own words. |
 | CMAC | not yet |  |  |
 | Bcrypt compare | not yet |  |  |
 | Bcrypt parse | not yet |  |  |
 | Argon2 | not yet |  |  |
 | Argon2 compare | not yet |  |  |
-| NT Hash | not yet |  |  |
+| NT Hash | covered | `nthash:digest` | MD4 of the UTF-16LE text (MS-NLMP NTOWFv1), 16 raw bytes. Takes text, not bytes. |
 | LM Hash | not yet |  |  |
-| MurmurHash3 | not yet |  |  |
+| MurmurHash3 | covered | `murmur3:digest` | MurmurHash3 x86_32 with a 32-bit seed (default 0), written in FL. Returns the 32-bit value as 4 raw bytes in big-endian order, the usual hex form (chain hex:encode); CyberChef shows the same value as an unsigned decimal. The x86_128 and x64_128 variants are not implemented. |
 | Fletcher-8 Checksum | not yet |  |  |
 | Fletcher-16 Checksum | not yet |  |  |
 | Fletcher-32 Checksum | not yet |  |  |

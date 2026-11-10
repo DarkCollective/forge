@@ -35,6 +35,7 @@ describe("ripemd hash", () => {
   });
 
   test("an unknown size raises", () => {
+    // 160 is handled by the word, through ripemd160:digest, not by this primitive.
     expect(() => hash(enc("abc"), "160")).toThrow();
     expect(() => hash(enc("abc"), "constructor")).toThrow();
   });

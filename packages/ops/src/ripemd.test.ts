@@ -61,8 +61,13 @@ describe("ripemd:digest", () => {
     );
   });
 
-  test("an unknown size, including 160 and an Object.prototype name, is an error", async () => {
-    for (const size of ["160", "toString", "", "512"]) {
+  test("RIPEMD-160 through ripemd160:digest, and the default size is 160", async () => {
+    const abc = new TextEncoder().encode("abc");
+    expect((await digest(abc, "160")).out).toBe("8eb208f7e05d987a9b044a8e98c6b087f15a0bfc");
+  });
+
+  test("an unknown size, including an Object.prototype name, is an error", async () => {
+    for (const size of ["toString", "", "512"]) {
       expect((await digest(new Uint8Array(), size)).code).toBeDefined();
     }
   });
