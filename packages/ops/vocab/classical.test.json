@@ -1601,7 +1601,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "error": "E_USER"
+      "error": "E_COERCE"
     }
   },
   {
@@ -1614,7 +1614,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "error": "E_USER"
+      "error": "E_COERCE"
     }
   },
   {
@@ -1627,7 +1627,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "error": "E_USER"
+      "error": "E_COERCE"
     }
   },
   {
@@ -1642,7 +1642,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "error": "E_USER"
+      "error": "E_COERCE"
     }
   },
   {
@@ -1655,7 +1655,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "error": "E_USER"
+      "error": "E_COERCE"
     }
   },
   {
@@ -2652,7 +2652,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "error": "E_USER"
+      "error": "E_COERCE"
     }
   },
   {
@@ -2665,7 +2665,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "error": "E_USER"
+      "error": "E_COERCE"
     }
   },
   {
@@ -2678,7 +2678,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "error": "E_USER"
+      "error": "E_COERCE"
     }
   },
   {
@@ -2862,7 +2862,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "error": "E_USER"
+      "error": "E_RANGE"
     }
   },
   {
@@ -2878,7 +2878,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "error": "E_USER"
+      "error": "E_RANGE"
     }
   },
   {
@@ -2894,7 +2894,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "error": "E_USER"
+      "error": "E_RANGE"
     }
   },
   {

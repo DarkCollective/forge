@@ -169,16 +169,16 @@ META: bacon-encode
   [ 5 * dup 5 + t -rot slice
     0 [ 98 = [ 1 ] [ 0 ] if swap 2 * + ] reduce
     dup table len >=
-    [ "bacon-decode: a group does not code a letter of this alphabet" fail ] when
+    [ "bacon-decode: a group does not code a letter of this alphabet" raise:coerce ] when
     table swap nth ]
   map
   list>bytes bytes>str ;
 
 : _bacon-groups ( t:bytes classic:bool -- str )
   t [ dup 97 = swap 98 = or ] filter len t len <>
-  [ "bacon-decode: only the symbols A and B (any case) and white space are allowed" fail ] when
+  [ "bacon-decode: only the symbols A and B (any case) and white space are allowed" raise:coerce ] when
   t len 5 mod 0 <>
-  [ "bacon-decode: the number of A/B symbols must be a multiple of five" fail ] when
+  [ "bacon-decode: the number of A/B symbols must be a multiple of five" raise:coerce ] when
   t
   classic
   [ "ABCDEFGHIKLMNOPQRSTUWXYZ" ]
@@ -187,7 +187,7 @@ META: bacon-encode
   _bacon-lookup ;
 
 : bacon-decode ( str alphabet:choice{classic|complete}=classic -- str )
-  "Decode Bacon's cipher: read the A/B symbols (any case, white space ignored) in groups of five and give upper-case letters. With classic, I/J decode as I and U/V as U. Other symbols, a symbol count that is not a multiple of five, or a group outside the alphabet are errors (E_USER)." doc
+  "Decode Bacon's cipher: read the A/B symbols (any case, white space ignored) in groups of five and give upper-case letters. With classic, I/J decode as I and U/V as U. Other symbols, a symbol count that is not a multiple of five, or a group outside the alphabet are errors (E_COERCE)." doc
   "Classical ciphers" category
   str>bytes [ _is-space not ] filter [ 32 bor ] map
   alphabet "classic" = _bacon-groups ;
@@ -371,12 +371,12 @@ META: a1z26-encode
 ;
 
 : a1z26-decode ( str -- str )
-  "Replace each number 1 to 26 by the matching upper-case letter. Any run of characters that are not digits separates numbers (spaces, commas, dashes, newlines). A number outside 1 to 26 is an error (E_USER)." doc
+  "Replace each number 1 to 26 by the matching upper-case letter. Any run of characters that are not digits separates numbers (spaces, commas, dashes, newlines). A number outside 1 to 26 is an error (E_COERCE)." doc
   "Classical ciphers" category
   str>bytes [ dup 48 >= over 57 <= and not [ drop 32 ] when ] map bytes>str
   " " split [ len 0 > ] filter
   [ str>int dup 1 < over 26 > or
-    [ "a1z26-decode: numbers must be between 1 and 26" fail ] when
+    [ "a1z26-decode: numbers must be between 1 and 26" raise:coerce ] when
     64 + ]
   map list>bytes bytes>str ;
 
@@ -402,13 +402,13 @@ META: a1z26-decode
 : _substitute ( data:bytes pb:bytes cb:bytes -- bytes )
   pb [ _printable ] filter len pb len <>
   cb [ _printable ] filter len cb len <> or
-  [ "substitute: plaintext and ciphertext must be printable ASCII" fail ] when
+  [ "substitute: plaintext and ciphertext must be printable ASCII" raise:range ] when
   pb len cb len <>
-  [ "substitute: plaintext and ciphertext must have the same length" fail ] when
+  [ "substitute: plaintext and ciphertext must have the same length" raise:range ] when
   data pb cb _sub-table translate ;
 
 : substitute ( bytes plaintext:charset="ABCDEFGHIJKLMNOPQRSTUVWXYZ" ciphertext:charset="ZYXWVUTSRQPONMLKJIHGFEDCBA" -- bytes )
-  "Monoalphabetic substitution: every byte equal to the n-th character of plaintext is replaced by the n-th character of ciphertext (case-sensitive); other bytes pass through. Both must be printable ASCII and of equal length, else it fails (E_USER). A repeated character in either is E_PARAM_INVALID." doc
+  "Monoalphabetic substitution: every byte equal to the n-th character of plaintext is replaced by the n-th character of ciphertext (case-sensitive); other bytes pass through. Both must be printable ASCII and of equal length, else it fails (E_RANGE). A repeated character in either is rejected as an invalid charset." doc
   "Classical ciphers" category
   plaintext str>bytes ciphertext str>bytes _substitute ;
 
