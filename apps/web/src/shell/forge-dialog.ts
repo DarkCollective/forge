@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { LitElement, css, html } from "lit";
+import { LitElement, css, html, nothing } from "lit";
 import type { CSSResultGroup, TemplateResult } from "lit";
 import { actions, store } from "../state/app.js";
 import { StoreController } from "../state/store-controller.js";
@@ -72,6 +72,9 @@ export abstract class ForgeDialog extends LitElement {
   protected abstract readonly heading: string;
   protected abstract renderBody(): TemplateResult;
 
+  /** True for a dialog with no focusable content that can scroll: the body then takes a tab stop. */
+  protected readonly scrollableBody: boolean = false;
+
   protected readonly current = new StoreController(this, store, (s) => s.ui.dialog);
 
   protected get isOpen(): boolean {
@@ -103,7 +106,14 @@ export abstract class ForgeDialog extends LitElement {
           ${icons.close}
         </button>
       </header>
-      <div class="body">${this.isOpen ? this.renderBody() : null}</div>
+      <div
+        class="body"
+        tabindex=${this.scrollableBody ? "0" : nothing}
+        role=${this.scrollableBody ? "region" : nothing}
+        aria-label=${this.scrollableBody ? this.heading : nothing}
+      >
+        ${this.isOpen ? this.renderBody() : null}
+      </div>
     </dialog>`;
   }
 }

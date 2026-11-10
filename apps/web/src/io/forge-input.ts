@@ -75,6 +75,12 @@ export class ForgeInput extends LitElement {
         overflow-x: auto;
         flex: none;
       }
+      .tablist {
+        display: flex;
+        gap: var(--space-1);
+        align-items: center;
+        flex: none;
+      }
       .tab {
         display: inline-flex;
         align-items: center;
@@ -554,8 +560,10 @@ export class ForgeInput extends LitElement {
         @dragleave=${this.onDragLeave}
         @drop=${this.onDrop}
       >
-        <div class="tabs" role="tablist" aria-label="Inputs">
-          ${this.inputs.value.map((t) => this.renderTab(t))}
+        <div class="tabs">
+          <div class="tablist" role="tablist" aria-label="Inputs">
+            ${this.inputs.value.map((t) => this.renderTab(t))}
+          </div>
           <button class="icon" type="button" aria-label="New input tab" @click=${this.addTab}>
             ${icons.plus}
           </button>

@@ -123,6 +123,7 @@ export class ForgeShortcutsDialog extends ForgeDialog {
 
   protected readonly dialogId: DialogId = "shortcuts";
   protected readonly heading = "Keyboard shortcuts";
+  protected override readonly scrollableBody = true;
 
   protected override renderBody() {
     return html`${SECTIONS.map(

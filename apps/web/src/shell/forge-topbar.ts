@@ -190,21 +190,27 @@ export class ForgeTopbar extends LitElement {
       ${this.dirty.value ? html`<span class="dirty" role="img" aria-label="Unsaved changes">●</span>` : null}
       <span class="spacer"></span>
       <div class="actions">
-        <button type="button" @click=${() => actions.openDialog("share")}>
+        <button type="button" aria-label="Share" @click=${() => actions.openDialog("share")}>
           ${icons.share}<span class="label">Share</span>
         </button>
-        <button type="button" @click=${() => actions.openDialog("save")}>
+        <button type="button" aria-label="Save" @click=${() => actions.openDialog("save")}>
           ${icons.save}<span class="label">Save</span>
         </button>
-        <button type="button" @click=${() => actions.openDialog("open")}>
+        <button type="button" aria-label="Open" @click=${() => actions.openDialog("open")}>
           ${icons.open}<span class="label">Open</span>
         </button>
-        <button type="button" class="optional" @click=${() => actions.openDialog("fl")}>
+        <button
+          type="button"
+          class="optional"
+          aria-label="View FL"
+          @click=${() => actions.openDialog("fl")}
+        >
           ${icons.code}<span class="label">View FL</span>
         </button>
         <button
           type="button"
           class="optional"
+          aria-label="Console"
           aria-pressed=${String(this.consoleOpen.value)}
           @click=${() => actions.setConsoleOpen(!this.consoleOpen.value)}
         >

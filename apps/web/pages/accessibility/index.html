@@ -93,11 +93,22 @@
       </ul>
 
       <h2>Known limitations</h2>
-      <p>This list is short and will be refined as we test more.</p>
+      <p>
+        An automated audit (axe, WCAG 2.2 A and AA) runs on every build against the app in all three
+        themes, the wide and compact layouts, its dialogs and menus, and every page on this site,
+        and it currently reports no failures. Automated checks find only part of the problems, so
+        this list is what we know of beyond them.
+      </p>
       <ul>
         <li>
-          Not every combination of browser and screen reader has been tested, so some announcements
-          may not be what we intend.
+          Only keyboard use and an automated audit have been tested so far. We have not yet tested
+          with screen readers, voice control or switch devices, so some announcements may not be
+          what we intend.
+        </li>
+        <li>
+          In the operations list, the star, help and add buttons beside each operation are hidden
+          from screen readers, which use the keyboard routes instead (<kbd>F</kbd>, <kbd>?</kbd> and
+          <kbd>Enter</kbd>). Activating an operation adds it to the recipe.
         </li>
         <li>
           Results of large inputs can arrive after a short delay. The app announces results in a

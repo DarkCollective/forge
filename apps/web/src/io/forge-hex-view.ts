@@ -15,7 +15,6 @@
  */
 import { LitElement, css, html, nothing } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
-import { styleMap } from "lit/directives/style-map.js";
 import { baseStyles } from "../styles/shared.js";
 import { formatBytes, hexDumpRows, hexRowCount } from "./codec.js";
 
@@ -112,6 +111,20 @@ export class ForgeHexView extends LitElement {
       if (scroller !== null) scroller.scrollTop = 0;
     }
     this.measure();
+    this.place();
+  }
+
+  /** Rows and their offsets are positioned through the CSSOM: a `style` attribute is blocked by the CSP. */
+  private rowsHeight = 0;
+  private firstRow = 0;
+
+  private place(): void {
+    const rows = this.renderRoot.querySelector<HTMLElement>(".rows");
+    if (rows === null) return;
+    rows.style.height = `${this.rowsHeight}px`;
+    this.renderRoot.querySelectorAll<HTMLElement>(".row").forEach((row, i) => {
+      row.style.top = `${(this.firstRow + i) * ROW_PX}px`;
+    });
   }
 
   private measure(): void {
@@ -137,6 +150,8 @@ export class ForgeHexView extends LitElement {
     const first = Math.max(0, Math.floor(this.scrolled / ROW_PX) - OVERSCAN);
     const count = Math.ceil(this.viewport / ROW_PX) + OVERSCAN * 2;
     const rows = hexDumpRows(shown, first, count);
+    this.rowsHeight = total * ROW_PX;
+    this.firstRow = first;
     const note =
       shown.length < this.bytes.length
         ? html`<p class="note" role="note">
@@ -151,10 +166,10 @@ export class ForgeHexView extends LitElement {
         aria-label="${this.label}, ${formatBytes(this.bytes.length)}"
         @scroll=${this.onScroll}
       >
-        <div class="rows" style=${styleMap({ height: `${total * ROW_PX}px` })}>
+        <div class="rows">
           ${rows.map(
-            (r, i) =>
-              html`<div class="row" style=${styleMap({ top: `${(first + i) * ROW_PX}px` })}>
+            (r) =>
+              html`<div class="row">
                 <span class="off">${r.offset}</span><span class="hex">${r.hex}</span
                 ><span class="asc">|${r.ascii}|</span>
               </div>`,
