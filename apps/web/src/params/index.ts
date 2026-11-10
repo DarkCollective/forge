@@ -18,3 +18,4 @@ import "./forge-param-form.js";
 
 /** Entry of the "params" work package: import its elements, export its `feature`. */
 export const feature: Feature = { name: "params" };
+export { issuesForPath, paramIssues } from "./issues.js";
