@@ -16,8 +16,8 @@
 import { valueHelpers } from "@forge/lang";
 import type { Value } from "@forge/lang";
 import { describe, expect, test } from "vitest";
-import { assembleRuntime } from "../bundle.js";
-import { loadBundleNode } from "../sources-node.js";
+import { assembleRuntime } from "./bundle.js";
+import { loadBundleNode } from "./sources-node.js";
 
 // The operations are FL (vocab/base32.fth); the conformance vectors cover the known answers. These
 // tests cover round trips, the size of the work, and the one private primitive.
