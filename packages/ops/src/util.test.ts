@@ -692,6 +692,77 @@ describe("util letter and permutation words", () => {
   });
 });
 
+describe("util:cycle-bytes", () => {
+  const cyc = (pat: number[], start: number, n: number) =>
+    value("util:cycle-bytes", [valueHelpers.bytes(Uint8Array.from(pat)), int(start), int(n)]);
+
+  test("repeats the pattern from the start cell", async () => {
+    expect(await cyc([1, 2, 3], 0, 7)).toEqual(Uint8Array.of(1, 2, 3, 1, 2, 3, 1));
+    expect(await cyc([1, 2, 3], 2, 5)).toEqual(Uint8Array.of(3, 1, 2, 3, 1));
+    expect(await cyc([9], 0, 4)).toEqual(Uint8Array.of(9, 9, 9, 9));
+    expect(await cyc([1, 2, 3], 1, 0)).toEqual(new Uint8Array(0));
+  });
+
+  test("a long run is linear and exact", async () => {
+    const out = (await cyc([0, 1, 1, 0, 1], 3, 65536)) as Uint8Array;
+    expect(out.length).toBe(65536);
+    const pat = [0, 1, 1, 0, 1];
+    for (const i of [0, 1, 4, 5, 999, 65535]) expect(out[i]).toBe(pat[(3 + i) % 5]);
+  });
+});
+
+describe("the ITA2 words", () => {
+  const alphabet = "/E4A9SIU3DRJNFCKTZLWHYPQOBG5MXV8";
+  const from = (s: string) => runtime.call("util:from-bp", [str(s)]);
+
+  test("ita2-alphabet has 32 different characters, code order", async () => {
+    expect(await value("util:ita2-alphabet", [])).toBe(alphabet);
+    expect(new Set(alphabet).size).toBe(32);
+  });
+
+  test("ita2-table maps every character of the alphabet to its code, either case", async () => {
+    const table = (await value("util:ita2-table", [])) as Uint8Array;
+    expect(table.length).toBe(256);
+    for (let c = 0; c < 32; c++) {
+      const ch = alphabet.charCodeAt(c);
+      expect(table[ch]).toBe(c);
+      expect(table[String.fromCharCode(ch).toLowerCase().charCodeAt(0)]).toBe(c);
+    }
+    expect(table[43]).toBe(27);
+    expect(table[45]).toBe(31);
+    for (const w of [9, 10, 11, 12, 13, 32]) expect(table[w]).toBe(254);
+    expect(table[49]).toBe(255);
+    expect(table[200]).toBe(255);
+  });
+
+  test("ita2-code and ita2-entry agree with the table", async () => {
+    const base = (await value("util:decode-table", [
+      str(alphabet),
+      int(254),
+      int(255),
+    ])) as Uint8Array;
+    const b = valueHelpers.bytes(base);
+    expect(await value("util:ita2-code", [int(43), b])).toBe(27);
+    expect(await value("util:ita2-code", [int(69), b])).toBe(1);
+    expect(await value("util:ita2-entry", [int(101), b])).toBe(1);
+    expect(await value("util:ita2-entry", [int(45), b])).toBe(31);
+    const t2 = (await value("util:ita2-table2", [b])) as Uint8Array;
+    expect(t2).toEqual(await value("util:ita2-table", []));
+  });
+
+  test("from-bp reads either case, ignores white space and refuses other characters", async () => {
+    expect(await value("util:from-bp", [str("e a\n+ 9 -/")])).toEqual(
+      Uint8Array.of(1, 3, 27, 4, 31, 0),
+    );
+    expect(await value("util:from-bp", [str("")])).toEqual(new Uint8Array(0));
+    for (const bad of ["1", "A=", "é"]) {
+      const r = await from(bad);
+      expect(r.ok).toBe(false);
+      if (!r.ok) expect(r.error.code).toBe("E_COERCE");
+    }
+  });
+});
+
 describe("util is internal", () => {
   test("is listed in INTERNAL_VOCABS", () => {
     expect(INTERNAL_VOCABS).toContain("util");

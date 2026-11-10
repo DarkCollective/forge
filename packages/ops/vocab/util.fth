@@ -291,3 +291,37 @@ IN: util
   0 26 range [ over swap count-of 1 > ] filter len 0 >
   [ "plugboard: a letter may be in one pair only" raise:range ] when
   0 26 range [ over _plug-partner ] map list>bytes nip ;
+
+\ ---- cycles and teleprinter (ITA2) text ----
+
+: cycle-bytes ( pat:bytes start:int n:int -- bytes )
+  "n bytes of the endless repetition of pat, the first being pat[start] (start counted from 0, below the length of pat). Built by doubling, so it is linear in n; n 0 gives no bytes." doc
+  pat [ dup len start n + < ] [ dup cat ] while
+  start start n + slice ;
+
+: ita2-alphabet ( -- str )
+  "The 32 teleprinter characters (ITA2) in Bletchley Park notation, ordered by their five-bit code (impulse 1 is bit 0): / null, E, 4 line feed, A, 9 space, S, I, U, 3 carriage return, D, R, J, N, F, C, K, T, Z, L, W, H, Y, P, Q, O, B, G, 5 figure shift, M, X, V, 8 letter shift." doc
+  "/E4A9SIU3DRJNFCKTZLWHYPQOBG5MXV8" ;
+
+: ita2-code ( u:int tbl:bytes -- int )
+  "The code of a Bletchley Park character: u is its upper-case byte and tbl the table of ita2-alphabet from decode-table. + gives 27 (figure shift) and - gives 31 (letter shift); otherwise the table entry (254 white space, 255 not a character)." doc
+  u 43 = [ 27 ] [ u 45 = [ 31 ] [ tbl u nth ] if ] if ;
+
+: ita2-entry ( b:int base:bytes -- int )
+  "The code of the byte b (either case) in Bletchley Park notation, through the alphabet table base (see ita2-code)." doc
+  b 97 122 between? [ b 32 - ] [ b ] if base ita2-code ;
+
+: ita2-table2 ( base:bytes -- bytes )
+  "The 256-byte translate table of Bletchley Park notation built from an alphabet table (see ita2-entry)." doc
+  0 256 range [ base ita2-entry ] map list>bytes ;
+
+: ita2-table ( -- bytes )
+  "A 256-byte table for translate: the ITA2 code of each Bletchley Park character in either case, 27 for + and 31 for -, 254 for ASCII white space and 255 for any other byte." doc
+  ita2-alphabet 254 255 decode-table ita2-table2 ;
+
+: from-bp ( s:str -- bytes )
+  "The ITA2 codes (0 to 31) of text in Bletchley Park notation, either case, white space ignored. Any other character is E_COERCE." doc
+  s str>bytes ita2-table translate
+  dup [ 255 = ] filter len 0 <>
+  [ "not an ITA2 character: use the letters, 3 4 5 8 9 / (and + and -); white space is ignored" raise:coerce ] when
+  [ 254 <> ] filter ;

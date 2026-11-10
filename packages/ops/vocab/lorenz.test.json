@@ -1,0 +1,1233 @@
+[
+  {
+    "name": "Report 11B(b) example: P + K = Z (first 19 letters)",
+    "ref": "General Report on Tunny 11B(b), P + K = Z; chi patterns hold the K letters, psi and motors are dots (the Report prints P for letter 20; A + C is F)",
+    "op": "lorenz:encrypt",
+    "params": {
+      "model": "SZ40",
+      "pattern": "custom",
+      "input": "ita2",
+      "chi1": "x..x.xxxx...xx...x..x....................",
+      "chi2": "..xxxx.xxx..x..x.xxx...........",
+      "chi3": "x...xx.x....xxxxx.xx.x.......",
+      "chi4": "..x.xxx.x..xx..x...xxx....",
+      "chi5": "x...xxx..x....xx.......",
+      "psi1": "...........................................",
+      "psi2": "...............................................",
+      "psi3": "...................................................",
+      "psi4": ".....................................................",
+      "psi5": "...........................................................",
+      "mu37": ".....................................",
+      "mu61": "............................................................."
+    },
+    "input": {
+      "value": "9DIE9SCHOENE9JUNGFR",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ZDN4GGQWWWNDJCWLVCN",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Report 11B(h) worked example, SZ42b (chi2 + psi1 limitation)",
+    "ref": "General Report on Tunny 11B(h): chi, psi and basic motor as printed there (mu61 all crosses so mu37 is the basic motor); Z is KNZTW3PHVW8Y4HMC",
+    "op": "lorenz:encrypt",
+    "params": {
+      "model": "SZ42b",
+      "pattern": "custom",
+      "input": "ita2",
+      "chi1": "x.xxx.xxx...xx...........................",
+      "chi2": "x.x..xx.x.x..xx................",
+      "chi3": "x.xxx..x.....x...............",
+      "chi4": ".xxxxxx..xx....x..........",
+      "chi5": ".xxxx..xxx...xx........",
+      "psi1": "..xxx.x.x..................................",
+      "psi2": ".x..x.x..x.....................................",
+      "psi3": "x...x.xx...........................................",
+      "psi4": "x.x...x.x............................................",
+      "psi5": ".x..x..xx..................................................",
+      "mu37": "..xx..x.x.xx...x.....................",
+      "mu61": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    "input": {
+      "value": "9IM9KAMPF9GEGEN9",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "KNZTW3PHVW8Y4HMC",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Report 11B(h) example deciphered",
+    "ref": "General Report on Tunny 11B(h)",
+    "op": "lorenz:decrypt",
+    "params": {
+      "model": "SZ42b",
+      "pattern": "custom",
+      "input": "ita2",
+      "chi1": "x.xxx.xxx...xx...........................",
+      "chi2": "x.x..xx.x.x..xx................",
+      "chi3": "x.xxx..x.....x...............",
+      "chi4": ".xxxxxx..xx....x..........",
+      "chi5": ".xxxx..xxx...xx........",
+      "psi1": "..xxx.x.x..................................",
+      "psi2": ".x..x.x..x.....................................",
+      "psi3": "x...x.xx...........................................",
+      "psi4": "x.x...x.x............................................",
+      "psi5": ".x..x..xx..................................................",
+      "mu37": "..xx..x.x.xx...x.....................",
+      "mu61": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "output": "ita2"
+    },
+    "input": {
+      "value": "KNZTW3PHVW8Y4HMC",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "9IM9KAMPF9GEGEN9",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Report 11B(h) wheels on an SZ42a (chi2 only limitation) differ",
+    "ref": "independent simulator (the Report example uses the psi1 limitation)",
+    "op": "lorenz:encrypt",
+    "params": {
+      "model": "SZ42a",
+      "pattern": "custom",
+      "input": "ita2",
+      "chi1": "x.xxx.xxx...xx...........................",
+      "chi2": "x.x..xx.x.x..xx................",
+      "chi3": "x.xxx..x.....x...............",
+      "chi4": ".xxxxxx..xx....x..........",
+      "chi5": ".xxxx..xxx...xx........",
+      "psi1": "..xxx.x.x..................................",
+      "psi2": ".x..x.x..x.....................................",
+      "psi3": "x...x.xx...........................................",
+      "psi4": "x.x...x.x............................................",
+      "psi5": ".x..x..xx..................................................",
+      "mu37": "..xx..x.x.xx...x.....................",
+      "mu61": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    "input": {
+      "value": "9IM9KAMPF9GEGEN9",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "KNZTWVQNZ39OBPVN",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Gil Hayward's test: NOW IS THE TIME... becomes I WANDERED LONELY AS A CLOUD...",
+    "ref": "Gil Hayward's Tunny test as in Tony Sale's Virtual Colossus (SZ40, all starts 1): the cipher reads I WANDERED LONELY AS A CLOUD ...",
+    "op": "lorenz:encrypt",
+    "params": {
+      "model": "SZ40",
+      "pattern": "custom",
+      "input": "ita2",
+      "chi1": "...x..x.x.........xxxx...................",
+      "chi2": "x..xx..x...xx..x....x.xx.......",
+      "chi3": ".x.x.xx.x...x..x.x..x.x......",
+      "chi4": "xx..xx.x.x..x...xxx....x..",
+      "chi5": ".x.....xx...xx.xxx...xx",
+      "psi1": "...x...xx..x..x......x.xxxx..xx.x.....xx...",
+      "psi2": "...x.......x.xxx...xx.x..xx....x....xxx.x......",
+      "psi3": "...x..x.x.x..xxxx.xx...x.x..x.x.xx..xxxxxx.........",
+      "psi4": ".x..x.xx..x.x.x...xxxx.x...x.x..xx.xxx..x............",
+      "psi5": ".x.x....xxxx..xxxx.x.x.x..x.x.x.x.x..x.x.xxx...............",
+      "mu37": ".xxx.x...............................",
+      "mu61": "......................xxx........................xx.........."
+    },
+    "input": {
+      "value": "NOW9IS9THE9TIME9FOR9ALL9GOOD9MEN9TO9COME9TO9THE9AID9OF9THE9PARTY999S",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "I9WANDERED9LONELY9AS9A9CLOUD9THAT9FLOATS9ON9HIGH9OER9VALES9AND9HILLS",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Gil Hayward's test deciphered to text",
+    "ref": "as above, ITA2 in and text out",
+    "op": "lorenz:decrypt",
+    "params": {
+      "model": "SZ40",
+      "pattern": "custom",
+      "chi1": "...x..x.x.........xxxx...................",
+      "chi2": "x..xx..x...xx..x....x.xx.......",
+      "chi3": ".x.x.xx.x...x..x.x..x.x......",
+      "chi4": "xx..xx.x.x..x...xxx....x..",
+      "chi5": ".x.....xx...xx.xxx...xx",
+      "psi1": "...x...xx..x..x......x.xxxx..xx.x.....xx...",
+      "psi2": "...x.......x.xxx...xx.x..xx....x....xxx.x......",
+      "psi3": "...x..x.x.x..xxxx.xx...x.x..x.x.xx..xxxxxx.........",
+      "psi4": ".x..x.xx..x.x.x...xxxx.x...x.x..xx.xxx..x............",
+      "psi5": ".x.x....xxxx..xxxx.x.x.x..x.x.x.x.x..x.x.xxx...............",
+      "mu37": ".xxx.x...............................",
+      "mu61": "......................xxx........................xx.........."
+    },
+    "input": {
+      "value": "I9WANDERED9LONELY9AS9A9CLOUD9THAT9FLOATS9ON9HIGH9OER9VALES9AND9HILLS",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "NOW IS THE TIME FOR ALL GOOD MEN TO COME TO THE AID OF THE PARTY   S",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "KH setting, SZ42a: the first 80 characters of the 1942 intercept",
+    "ref": "Virtual Colossus example 'Original KH cipher' (SZ42a, KH, X 31,1,1,15,1 S 32,36,11,9,43 M 59,26): a real German message, with transmission errors",
+    "op": "lorenz:decrypt",
+    "params": {
+      "chi1-start": 31,
+      "chi4-start": 15,
+      "psi1-start": 32,
+      "psi2-start": 36,
+      "psi3-start": 11,
+      "psi4-start": 9,
+      "psi5-start": 43,
+      "mu37-start": 26,
+      "mu61-start": 59,
+      "output": "ita2"
+    },
+    "input": {
+      "value": "J3KF5LXT/95YTMLE/RFVC8SE///4GYX3Q9Z3GVWKWDVAPURPYL/9UYAI9EOW3ZBVVAQRTO/PACJ9NLVL",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "XWOLLE9WI9R99AUCH9BLEIBEN955Z88KR99GWFRL5X89FUES959WPYP9QXT9QIPQ9V9AACQEM9959AA8",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "KH setting, SZ42a: text output",
+    "ref": "as above, shift characters followed",
+    "op": "lorenz:decrypt",
+    "params": {
+      "chi1-start": 31,
+      "chi4-start": 15,
+      "psi1-start": 32,
+      "psi2-start": 36,
+      "psi3-start": 11,
+      "psi4-start": 9,
+      "psi5-start": 43,
+      "mu37-start": 26,
+      "mu61-start": 59
+    },
+    "input": {
+      "value": "J3KF5LXT/95YTMLE/RFVC8SE///4GYX3Q9Z3GVWKWDVAPURPYL/9UYAI9EOW3ZBVVAQRTO/PACJ9NLVL",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "XWOLLE WI R  AUCH BLEIBEN +KR  GWFRL/ FUES  2060 1/5 1801 = --:13.   --",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "KH ciphertext on an SZ42b gives noise",
+    "ref": "independent simulator",
+    "op": "lorenz:decrypt",
+    "params": {
+      "chi1-start": 31,
+      "chi4-start": 15,
+      "psi1-start": 32,
+      "psi2-start": 36,
+      "psi3-start": 11,
+      "psi4-start": 9,
+      "psi5-start": 43,
+      "mu37-start": 26,
+      "mu61-start": 59,
+      "model": "SZ42b",
+      "output": "ita2"
+    },
+    "input": {
+      "value": "J3KF5LXT/95YTMLE/RFVC8SE///4GYX3Q9Z3GVWKWDVAPURPYL/9UYAI9EOW3ZBVVAQRTO/PACJ9NLVL",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "XWOLXC9RWGSYNN3M/T8HZBFYRJ5GTVCW9IHRHTQI//4MMMV8MKA8GLIWT38JCI/R9V9AAC3GM9955/AM",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "KH ciphertext on an SZ40 gives noise",
+    "ref": "independent simulator",
+    "op": "lorenz:decrypt",
+    "params": {
+      "chi1-start": 31,
+      "chi4-start": 15,
+      "psi1-start": 32,
+      "psi2-start": 36,
+      "psi3-start": 11,
+      "psi4-start": 9,
+      "psi5-start": 43,
+      "mu37-start": 26,
+      "mu61-start": 59,
+      "model": "SZ40",
+      "output": "ita2"
+    },
+    "input": {
+      "value": "J3KF5LXT/95YTMLE/RFVC8SE///4GYX3Q9Z3GVWKWDVAPURPYL/9UYAI9EOW3ZBVVAQRTO/PACJ9NLVL",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "XWOKKMPETUOPBBXQRZMQ9AQKZK8PMLFATF5SNLYFJGOIIPIXTKUAICFOAC3MKVOMLV9AM54HLRYLFRGG",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "BREAM setting, SZ42a",
+    "ref": "Virtual Colossus example 'Original German decrypt reciphered on BREAM patterns' (start positions X 17,29,7,11,18 S 10,28,18,23,26 M 22,12)",
+    "op": "lorenz:decrypt",
+    "params": {
+      "chi1-start": 17,
+      "chi2-start": 29,
+      "chi3-start": 7,
+      "chi4-start": 11,
+      "chi5-start": 18,
+      "psi1-start": 10,
+      "psi2-start": 28,
+      "psi3-start": 18,
+      "psi4-start": 23,
+      "psi5-start": 26,
+      "mu37-start": 12,
+      "mu61-start": 22,
+      "pattern": "BREAM",
+      "output": "ita2"
+    },
+    "input": {
+      "value": "3OUBCRJKDTSML/DIAWLR4XGYRJCW3/LA3IKUM3HVHPJD5LFAESAUZBZXF5YXJIOU9IA8VFEJF9NRL4LBN/BU5XFHKJCMJCRKLU4O",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "NFR889SCHERENFERNROHREN955QR889Z55955K88SF55L889ALS3NFCHTSEFERUNG9FUER9JAD9NN99FUER9JARFUPSERCXWEI8A",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "BREAM setting, SZ42a with the P5 attachment: same message as the plain BREAM example",
+    "ref": "Virtual Colossus example 'Original German decrypt reciphered on BREAM patterns' (sz42a + p5, X 4,12,17,19,8): deciphers to the same text as the example without P5",
+    "op": "lorenz:decrypt",
+    "params": {
+      "chi1-start": 4,
+      "chi2-start": 12,
+      "chi3-start": 17,
+      "chi4-start": 19,
+      "chi5-start": 8,
+      "psi1-start": 10,
+      "psi2-start": 28,
+      "psi3-start": 18,
+      "psi4-start": 23,
+      "psi5-start": 26,
+      "mu37-start": 12,
+      "mu61-start": 22,
+      "pattern": "BREAM",
+      "p5": true,
+      "output": "ita2"
+    },
+    "input": {
+      "value": "JSKNWQSHY9WCHZYJYVZTMXEUGOF9XXU5TTYC/Q5VOWJQ4VBPSAOOO39/LKIHJWMOXR3X558T3THHY9WJVAU3YI/O39XA5TDP5EN/",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "NFR889SCHERENFERNROHREN955QR889Z55955K88SF55L889ALS3NFCHTSEFERUNG9FUER9JAD9NN99FUER9JARFUPSERCXWEI8A",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "BREAM P5 ciphertext without the P5 attachment is noise",
+    "ref": "independent simulator",
+    "op": "lorenz:decrypt",
+    "params": {
+      "chi1-start": 4,
+      "chi2-start": 12,
+      "chi3-start": 17,
+      "chi4-start": 19,
+      "chi5-start": 8,
+      "psi1-start": 10,
+      "psi2-start": 28,
+      "psi3-start": 18,
+      "psi4-start": 23,
+      "psi5-start": 26,
+      "mu37-start": 12,
+      "mu61-start": 22,
+      "pattern": "BREAM",
+      "output": "ita2"
+    },
+    "input": {
+      "value": "JSKNWQSHY9WCHZYJYVZTMXEUGOF9XXU5TTYC/Q5VOWJQ4VBPSAOOO39/LKIHJWMOXR3X558T3THHY9WJVAU3YI/O39XA5TDP5EN/",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "NFR889TTR88ENFERNROHREKQ8/KX5AXHF/AD5KO8SFS9FG5/ZE5XISCHTQWCLB/RSF9A9HGS/GR4RIDFKPXDI9WW3HSK4VEGPY/Y",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "BREAM with P5: enciphering the plain text gives the intercept back",
+    "ref": "inverse of the previous",
+    "op": "lorenz:encrypt",
+    "params": {
+      "chi1-start": 4,
+      "chi2-start": 12,
+      "chi3-start": 17,
+      "chi4-start": 19,
+      "chi5-start": 8,
+      "psi1-start": 10,
+      "psi2-start": 28,
+      "psi3-start": 18,
+      "psi4-start": 23,
+      "psi5-start": 26,
+      "mu37-start": 12,
+      "mu61-start": 22,
+      "pattern": "BREAM",
+      "p5": true,
+      "input": "ita2"
+    },
+    "input": {
+      "value": "NFR889SCHERENFERNROHREN955QR889Z55955K88SF55L889ALS3NFCHTSEFERUNG9FUER9JAD9NN99FUER9JARFUPSERCXWEI8A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "JSKNWQSHY9WCHZYJYVZTMXEUGOF9XXU5TTYC/Q5VOWJQ4VBPSAOOO39/LKIHJWMOXR3X558T3THHY9WJVAU3YI/O39XA5TDP5EN/",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ZMUG setting, SZ42b",
+    "ref": "Virtual Colossus ZMUG example (sz42b; its internal starts X 34,12,18,18,9 S 32,28,24,11,44 M 50,6 are 8,20,12,9,15 / 12,20,28,43,16 / mu61 12 mu37 32 in order of use)",
+    "op": "lorenz:decrypt",
+    "params": {
+      "chi1-start": 8,
+      "chi2-start": 20,
+      "chi3-start": 12,
+      "chi4-start": 9,
+      "chi5-start": 15,
+      "psi1-start": 12,
+      "psi2-start": 20,
+      "psi3-start": 28,
+      "psi4-start": 43,
+      "psi5-start": 16,
+      "mu37-start": 32,
+      "mu61-start": 12,
+      "pattern": "ZMUG",
+      "model": "SZ42b",
+      "output": "ita2"
+    },
+    "input": {
+      "value": "YQPLQQX4OJGFOKDT/9LXPPCD5OXS3QSMTMHX8VSBBMI",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "IF9I9SAID9BLETCHLEY9PARK55N889ENIGMA9AND9AL",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ZMUG setting, SZ42b: text output",
+    "ref": "as above, shift characters followed",
+    "op": "lorenz:decrypt",
+    "params": {
+      "chi1-start": 8,
+      "chi2-start": 20,
+      "chi3-start": 12,
+      "chi4-start": 9,
+      "chi5-start": 15,
+      "psi1-start": 12,
+      "psi2-start": 20,
+      "psi3-start": 28,
+      "psi4-start": 43,
+      "psi5-start": 16,
+      "mu37-start": 32,
+      "mu61-start": 12,
+      "pattern": "ZMUG",
+      "model": "SZ42b"
+    },
+    "input": {
+      "value": "YQPLQQX4OJGFOKDT/9LXPPCD5OXS3QSMTMHX8VSBBMI",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "IF I SAID BLETCHLEY PARK, ENIGMA AND AL",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "text with a zero key: letters, figures and shifts",
+    "ref": "hand-computed from the ITA2 table (zero key, so the output is the teleprinter code itself)",
+    "op": "lorenz:encrypt",
+    "params": {
+      "chi1": ".........................................",
+      "chi2": "...............................",
+      "chi3": ".............................",
+      "chi4": "..........................",
+      "chi5": ".......................",
+      "psi1": "...........................................",
+      "psi2": "...............................................",
+      "psi3": "...................................................",
+      "psi4": ".....................................................",
+      "psi5": "...........................................................",
+      "mu37": ".....................................",
+      "mu61": ".............................................................",
+      "model": "SZ40",
+      "pattern": "custom"
+    },
+    "input": {
+      "value": "Hello, World 42!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "HELLO5N98WORLD95RWF",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "shifts sent twice",
+    "ref": "hand-computed from the ITA2 table",
+    "op": "lorenz:encrypt",
+    "params": {
+      "chi1": ".........................................",
+      "chi2": "...............................",
+      "chi3": ".............................",
+      "chi4": "..........................",
+      "chi5": ".......................",
+      "psi1": "...........................................",
+      "psi2": "...............................................",
+      "psi3": "...................................................",
+      "psi4": ".....................................................",
+      "psi5": "...........................................................",
+      "mu37": ".....................................",
+      "mu61": ".............................................................",
+      "model": "SZ40",
+      "pattern": "custom",
+      "shifts": "double"
+    },
+    "input": {
+      "value": "Hello, World 42!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "HELLO55N988WORLD955RWF",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "text out follows the shifts",
+    "ref": "hand-computed from the ITA2 table",
+    "op": "lorenz:decrypt",
+    "params": {
+      "chi1": ".........................................",
+      "chi2": "...............................",
+      "chi3": ".............................",
+      "chi4": "..........................",
+      "chi5": ".......................",
+      "psi1": "...........................................",
+      "psi2": "...............................................",
+      "psi3": "...................................................",
+      "psi4": ".....................................................",
+      "psi5": "...........................................................",
+      "mu37": ".....................................",
+      "mu61": ".............................................................",
+      "model": "SZ40",
+      "pattern": "custom"
+    },
+    "input": {
+      "value": "HELLO5N98WORLD95RWF",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "HELLO, WORLD 42!",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "null characters are dropped, CR and LF kept",
+    "ref": "hand-computed from the ITA2 table",
+    "op": "lorenz:decrypt",
+    "params": {
+      "chi1": ".........................................",
+      "chi2": "...............................",
+      "chi3": ".............................",
+      "chi4": "..........................",
+      "chi5": ".......................",
+      "psi1": "...........................................",
+      "psi2": "...............................................",
+      "psi3": "...................................................",
+      "psi4": ".....................................................",
+      "psi5": "...........................................................",
+      "mu37": ".....................................",
+      "mu61": ".............................................................",
+      "model": "SZ40",
+      "pattern": "custom"
+    },
+    "input": {
+      "value": "A/B34C",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "AB\r\nC",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "lower case and white space in ITA2 input, + and - as shifts",
+    "ref": "hand-computed from the ITA2 table",
+    "op": "lorenz:decrypt",
+    "params": {
+      "chi1": ".........................................",
+      "chi2": "...............................",
+      "chi3": ".............................",
+      "chi4": "..........................",
+      "chi5": ".......................",
+      "psi1": "...........................................",
+      "psi2": "...............................................",
+      "psi3": "...................................................",
+      "psi4": ".....................................................",
+      "psi5": "...........................................................",
+      "mu37": ".....................................",
+      "mu61": ".............................................................",
+      "model": "SZ40",
+      "pattern": "custom"
+    },
+    "input": {
+      "value": "a b\n+ e q -a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "AB31A",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "empty input",
+    "ref": "hand-computed",
+    "op": "lorenz:encrypt",
+    "params": {
+      "chi1": ".........................................",
+      "chi2": "...............................",
+      "chi3": ".............................",
+      "chi4": "..........................",
+      "chi5": ".......................",
+      "psi1": "...........................................",
+      "psi2": "...............................................",
+      "psi3": "...................................................",
+      "psi4": ".....................................................",
+      "psi5": "...........................................................",
+      "mu37": ".....................................",
+      "mu61": ".............................................................",
+      "model": "SZ40",
+      "pattern": "custom"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "figure row punctuation",
+    "ref": "hand-computed from the ITA2 table",
+    "op": "lorenz:encrypt",
+    "params": {
+      "chi1": ".........................................",
+      "chi2": "...............................",
+      "chi3": ".............................",
+      "chi4": "..........................",
+      "chi5": ".......................",
+      "psi1": "...........................................",
+      "psi2": "...............................................",
+      "psi3": "...................................................",
+      "psi4": ".....................................................",
+      "psi5": "...........................................................",
+      "mu37": ".....................................",
+      "mu61": ".............................................................",
+      "model": "SZ40",
+      "pattern": "custom"
+    },
+    "input": {
+      "value": "-?:()'+=/.,!&#",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "5ABCKLSZVXMNFGH",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "line ends and spaces need no shift",
+    "ref": "hand-computed from the ITA2 table",
+    "op": "lorenz:encrypt",
+    "params": {
+      "chi1": ".........................................",
+      "chi2": "...............................",
+      "chi3": ".............................",
+      "chi4": "..........................",
+      "chi5": ".......................",
+      "psi1": "...........................................",
+      "psi2": "...............................................",
+      "psi3": "...................................................",
+      "psi4": ".....................................................",
+      "psi5": "...........................................................",
+      "mu37": ".....................................",
+      "mu61": ".............................................................",
+      "model": "SZ40",
+      "pattern": "custom"
+    },
+    "input": {
+      "value": "A B\r\nC 1 2\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "A9B34C95Q9W4",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "random custom wheels, SZ40, 120 characters",
+    "ref": "independent simulator (written outside the repository from the General Report)",
+    "op": "lorenz:encrypt",
+    "params": {
+      "chi1": "xxx..x..xx...xx........xxx..xx..xxx.xx.x.",
+      "chi2": "..x.xx......xxxx..xx.xx.x......",
+      "chi3": "xx..x..xx.xx..xx...x....xx.xx",
+      "chi4": "x......xxx.x.x..x.....xx.x",
+      "chi5": "....x.xxxxx....x.x....x",
+      "psi1": "xx....xx..x.xx...xxx...x.xx...xx..xx.x.x.x.",
+      "psi2": "xx.....xxxxxxx..x.x...xxx.xx...xxx.xxx.x..x.x..",
+      "psi3": ".xx..x..xxx.xxxxxx..x.xxx..xx..x....x.x...xx..x...x",
+      "psi4": "x.x..xx.xx..xxxx.....x.xxx.x..xxxxx...x..x.x.xx..xx.x",
+      "psi5": "xx.x.xx.x..x..x.x...xxxx.xx.xxxx..x.x.......xxx.x.x.x.x.xx.",
+      "mu37": ".....x.xx........xx.xx..x...xx.x..x..",
+      "mu61": ".x.......x...x..xxxxxx.x....xxxxx....x.x.xxx..x.xxx.x...xxx..",
+      "model": "SZ40",
+      "pattern": "custom",
+      "input": "ita2",
+      "chi1-start": 23,
+      "chi2-start": 21,
+      "chi3-start": 29,
+      "chi4-start": 20,
+      "chi5-start": 2,
+      "psi1-start": 15,
+      "psi2-start": 18,
+      "psi3-start": 43,
+      "psi4-start": 20,
+      "psi5-start": 22,
+      "mu37-start": 14,
+      "mu61-start": 43
+    },
+    "input": {
+      "value": "BJ9O8FUBEUIKTMBANO/ITTZYGIM94OROVR8A58GLBWQLVZLLE/K4RGOAHBAH9C5VTK4IXDKUAGXUFAPDUQM3GXTGQ3L3KVUWPZZNZKNKN4A/ZT5E4ICZ9SRK",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "DOQYEFRHAJ8LHA5I/JGYKWFNKFAXBMCP85E5EZXUTBOYUWVQILEXYS/LZZ/PXA95ZFK8GBPLCRX339YMLRE34WADSOQ8Y4BBNCP4EAM8BDC3Q5GECALLTOGJ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "random custom wheels, SZ40, deciphered",
+    "ref": "independent simulator; reciprocal",
+    "op": "lorenz:decrypt",
+    "params": {
+      "chi1": "xxx..x..xx...xx........xxx..xx..xxx.xx.x.",
+      "chi2": "..x.xx......xxxx..xx.xx.x......",
+      "chi3": "xx..x..xx.xx..xx...x....xx.xx",
+      "chi4": "x......xxx.x.x..x.....xx.x",
+      "chi5": "....x.xxxxx....x.x....x",
+      "psi1": "xx....xx..x.xx...xxx...x.xx...xx..xx.x.x.x.",
+      "psi2": "xx.....xxxxxxx..x.x...xxx.xx...xxx.xxx.x..x.x..",
+      "psi3": ".xx..x..xxx.xxxxxx..x.xxx..xx..x....x.x...xx..x...x",
+      "psi4": "x.x..xx.xx..xxxx.....x.xxx.x..xxxxx...x..x.x.xx..xx.x",
+      "psi5": "xx.x.xx.x..x..x.x...xxxx.xx.xxxx..x.x.......xxx.x.x.x.x.xx.",
+      "mu37": ".....x.xx........xx.xx..x...xx.x..x..",
+      "mu61": ".x.......x...x..xxxxxx.x....xxxxx....x.x.xxx..x.xxx.x...xxx..",
+      "model": "SZ40",
+      "pattern": "custom",
+      "input": "ita2",
+      "chi1-start": 23,
+      "chi2-start": 21,
+      "chi3-start": 29,
+      "chi4-start": 20,
+      "chi5-start": 2,
+      "psi1-start": 15,
+      "psi2-start": 18,
+      "psi3-start": 43,
+      "psi4-start": 20,
+      "psi5-start": 22,
+      "mu37-start": 14,
+      "mu61-start": 43,
+      "output": "ita2"
+    },
+    "input": {
+      "value": "DOQYEFRHAJ8LHA5I/JGYKWFNKFAXBMCP85E5EZXUTBOYUWVQILEXYS/LZZ/PXA95ZFK8GBPLCRX339YMLRE34WADSOQ8Y4BBNCP4EAM8BDC3Q5GECALLTOGJ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "BJ9O8FUBEUIKTMBANO/ITTZYGIM94OROVR8A58GLBWQLVZLLE/K4RGOAHBAH9C5VTK4IXDKUAGXUFAPDUQM3GXTGQ3L3KVUWPZZNZKNKN4A/ZT5E4ICZ9SRK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "random custom wheels, SZ42a, 120 characters",
+    "ref": "independent simulator (written outside the repository from the General Report)",
+    "op": "lorenz:encrypt",
+    "params": {
+      "chi1": "xxxx.xxx...x.xxxx.x.xx.xx.xx..xxxx..x..xx",
+      "chi2": "xx..xxx.xxxxxxx.x..xx.xxx.xx...",
+      "chi3": ".xx....x.x.x.x.x.x....x..xxxx",
+      "chi4": "xxx.xx..xx.x.x.x..xx...x.x",
+      "chi5": ".xxxx.xx.x...x.x.x...x.",
+      "psi1": ".x.x.xx.xxxxxx.x.x...xx...xxx.x.x.x.x.x....",
+      "psi2": "....xx.xx.x..x..x..xx.xxxx.xx.x...xx.x.xx.x.x..",
+      "psi3": ".xxxxx.x..x.xxxxxxx........x.x......xx.xx...xxxx.xx",
+      "psi4": "..xx.xxx.x.xx..xx.x........xxxx.xxx.x...x.x...xx.x...",
+      "psi5": "x.x..xx...xx..x.x.x.x.x...xx.xxxxxxxxx..xxx.x.xxxxx...x.x.x",
+      "mu37": "..xx..xx..x.....x.x.x.x..xxx.x..x.xxx",
+      "mu61": "xx.x..x..xxx.......xxxx.xxx...x..x..xxx..x..x..x.x...xxx..x..",
+      "model": "SZ42a",
+      "pattern": "custom",
+      "input": "ita2",
+      "chi1-start": 12,
+      "chi2-start": 9,
+      "chi3-start": 24,
+      "chi4-start": 18,
+      "psi1-start": 12,
+      "psi2-start": 10,
+      "psi3-start": 3,
+      "psi4-start": 40,
+      "psi5-start": 30,
+      "mu37-start": 25
+    },
+    "input": {
+      "value": "8AJ9QHV4LJRU5KMTKT8C8T4NAMJHDE85MTE9UJKDAW54HT8SROTKR8XAHGXQF4383DX4/KGDSBWV594CLTUKGXSCQWYF4RBAYJXBFOOAFGPKJRVFBFXWVM8J",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "DIEKWUYFIC8FQXBT554X4WFXPHDYVRP9OQIKUCYDCTSWJJWHHDJBCAWZY8IM5IVKSGKF8E5ZZTBJE8FV9T45IZG5F8PQGATJO8ZM8Y/QMQC8SEAHOVVICGTE",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "random custom wheels, SZ42a, deciphered",
+    "ref": "independent simulator; reciprocal",
+    "op": "lorenz:decrypt",
+    "params": {
+      "chi1": "xxxx.xxx...x.xxxx.x.xx.xx.xx..xxxx..x..xx",
+      "chi2": "xx..xxx.xxxxxxx.x..xx.xxx.xx...",
+      "chi3": ".xx....x.x.x.x.x.x....x..xxxx",
+      "chi4": "xxx.xx..xx.x.x.x..xx...x.x",
+      "chi5": ".xxxx.xx.x...x.x.x...x.",
+      "psi1": ".x.x.xx.xxxxxx.x.x...xx...xxx.x.x.x.x.x....",
+      "psi2": "....xx.xx.x..x..x..xx.xxxx.xx.x...xx.x.xx.x.x..",
+      "psi3": ".xxxxx.x..x.xxxxxxx........x.x......xx.xx...xxxx.xx",
+      "psi4": "..xx.xxx.x.xx..xx.x........xxxx.xxx.x...x.x...xx.x...",
+      "psi5": "x.x..xx...xx..x.x.x.x.x...xx.xxxxxxxxx..xxx.x.xxxxx...x.x.x",
+      "mu37": "..xx..xx..x.....x.x.x.x..xxx.x..x.xxx",
+      "mu61": "xx.x..x..xxx.......xxxx.xxx...x..x..xxx..x..x..x.x...xxx..x..",
+      "model": "SZ42a",
+      "pattern": "custom",
+      "input": "ita2",
+      "chi1-start": 12,
+      "chi2-start": 9,
+      "chi3-start": 24,
+      "chi4-start": 18,
+      "psi1-start": 12,
+      "psi2-start": 10,
+      "psi3-start": 3,
+      "psi4-start": 40,
+      "psi5-start": 30,
+      "mu37-start": 25,
+      "output": "ita2"
+    },
+    "input": {
+      "value": "DIEKWUYFIC8FQXBT554X4WFXPHDYVRP9OQIKUCYDCTSWJJWHHDJBCAWZY8IM5IVKSGKF8E5ZZTBJE8FV9T45IZG5F8PQGATJO8ZM8Y/QMQC8SEAHOVVICGTE",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "8AJ9QHV4LJRU5KMTKT8C8T4NAMJHDE85MTE9UJKDAW54HT8SROTKR8XAHGXQF4383DX4/KGDSBWV594CLTUKGXSCQWYF4RBAYJXBFOOAFGPKJRVFBFXWVM8J",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "random custom wheels, SZ42b, 120 characters",
+    "ref": "independent simulator (written outside the repository from the General Report)",
+    "op": "lorenz:encrypt",
+    "params": {
+      "chi1": "x.xx..xxx..xx.x.x..x....xxx.xxx.xx.x.....",
+      "chi2": ".xxxx.xxxx..xxx.xx..xxx....x.x.",
+      "chi3": ".x.x.x.x.xx.xxxxxx..x.x.x..xx",
+      "chi4": ".xxx.x.x.xx.xxxxxx...xxxxx",
+      "chi5": ".xxxx....xx.x.xxxx..xxx",
+      "psi1": "xx...x.x...x..x.xxx..x.x....xxxxxxxx..xx...",
+      "psi2": "..x.xx..xx.xxxxxxxx.x..x.x...xx...x.xxxxxx.....",
+      "psi3": ".xx.xx.x.x.xxx.xx.x.x.x..xxx..x.x.xxxx..x.xx....x..",
+      "psi4": ".xx..xx.xxx..xx.x.x......xx.x.x...x.x.xxx.xxxx....xxx",
+      "psi5": "xxxxxx.x.xx.....x..x...xx.x..x.x.x...x..xxx.xx.x.xx.x..x..x",
+      "mu37": "xx..xxxxx.x..xxx..x.xxxx.xx..x......x",
+      "mu61": "x...xxxx..x.xx...xx..x...x..x.x.x.x.x.xx...x.xx.xxx.....x..x.",
+      "model": "SZ42b",
+      "pattern": "custom",
+      "input": "ita2",
+      "chi1-start": 17,
+      "chi2-start": 31,
+      "chi3-start": 12,
+      "chi4-start": 20,
+      "chi5-start": 20,
+      "psi1-start": 23,
+      "psi2-start": 20,
+      "psi3-start": 13,
+      "psi5-start": 5,
+      "mu37-start": 14,
+      "mu61-start": 48
+    },
+    "input": {
+      "value": "QWGND9Z5QGZX3UIPGK8ULULSXCVONGCM9QGYLMZL/K/GQ3TOGZYIIIXFSQEQEPEDV9QRXHVACEB5CUA9XBFF8QDBIS/RTVU5XDEQQEIPGUIWU9K3SWLPKKGX",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4ONUEMJKHF4EBKMBCK4B5HHXNOFVXTI4VUA8FZPZAZNN/SXLNJBDCI5KQNA8WQLQPPGXB9EV3YYWCROOJ9O8K3LPH5X/TSVXGQGRFVDHMCI593GTWOMAGHYR",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "random custom wheels, SZ42b, deciphered",
+    "ref": "independent simulator; reciprocal",
+    "op": "lorenz:decrypt",
+    "params": {
+      "chi1": "x.xx..xxx..xx.x.x..x....xxx.xxx.xx.x.....",
+      "chi2": ".xxxx.xxxx..xxx.xx..xxx....x.x.",
+      "chi3": ".x.x.x.x.xx.xxxxxx..x.x.x..xx",
+      "chi4": ".xxx.x.x.xx.xxxxxx...xxxxx",
+      "chi5": ".xxxx....xx.x.xxxx..xxx",
+      "psi1": "xx...x.x...x..x.xxx..x.x....xxxxxxxx..xx...",
+      "psi2": "..x.xx..xx.xxxxxxxx.x..x.x...xx...x.xxxxxx.....",
+      "psi3": ".xx.xx.x.x.xxx.xx.x.x.x..xxx..x.x.xxxx..x.xx....x..",
+      "psi4": ".xx..xx.xxx..xx.x.x......xx.x.x...x.x.xxx.xxxx....xxx",
+      "psi5": "xxxxxx.x.xx.....x..x...xx.x..x.x.x...x..xxx.xx.x.xx.x..x..x",
+      "mu37": "xx..xxxxx.x..xxx..x.xxxx.xx..x......x",
+      "mu61": "x...xxxx..x.xx...xx..x...x..x.x.x.x.x.xx...x.xx.xxx.....x..x.",
+      "model": "SZ42b",
+      "pattern": "custom",
+      "input": "ita2",
+      "chi1-start": 17,
+      "chi2-start": 31,
+      "chi3-start": 12,
+      "chi4-start": 20,
+      "chi5-start": 20,
+      "psi1-start": 23,
+      "psi2-start": 20,
+      "psi3-start": 13,
+      "psi5-start": 5,
+      "mu37-start": 14,
+      "mu61-start": 48,
+      "output": "ita2"
+    },
+    "input": {
+      "value": "4ONUEMJKHF4EBKMBCK4B5HHXNOFVXTI4VUA8FZPZAZNN/SXLNJBDCI5KQNA8WQLQPPGXB9EV3YYWCROOJ9O8K3LPH5X/TSVXGQGRFVDHMCI593GTWOMAGHYR",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "QWGND9Z5QGZX3UIPGK8ULULSXCVONGCM9QGYLMZL/K/GQ3TOGZYIIIXFSQEQEPEDV9QRXHVACEB5CUA9XBFF8QDBIS/RTVU5XDEQQEIPGUIWU9K3SWLPKKGX",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "random custom wheels, SZ42a with P5, 120 characters",
+    "ref": "independent simulator (written outside the repository from the General Report)",
+    "op": "lorenz:encrypt",
+    "params": {
+      "chi1": "..x..x.....x.x....x.x.x.xx.xxx..x.xxx...x",
+      "chi2": "xxx.x.xxxxxxx..x..xxx..x.xxx.x.",
+      "chi3": "xx..x.xxx..x.x.x...xxxxx.x..x",
+      "chi4": ".xx.x..xx.x.x..x...xxx...x",
+      "chi5": ".xxx.xx..x..xx...xx...x",
+      "psi1": "xx.xx.xxxxx..x..x.xxxxxx.xxx.x.xxx.x.xx..x.",
+      "psi2": ".xxxx....x..x.xxx.xxx.....x....xxx.xx..x..xxxx.",
+      "psi3": "xx.x.xx.x....xx.xx.xxxx.xx....x....xxx.....x..x..xx",
+      "psi4": "..x.x..x...xxx.x..x.xx......xx.x.....x..x.xxx.xx..x.x",
+      "psi5": "xxx.x....xxx.x..xx..x..xx......x..x.xx..x.x.x.xx.x..x.x.x..",
+      "mu37": "...x.xx...x.....xxx.x...x..xx..xxx...",
+      "mu61": "..x..x.xxxxxx...x.xx.x...x....xx.x..x..x.xxxxxx.x.xxxxxx..xx.",
+      "model": "SZ42a",
+      "pattern": "custom",
+      "input": "ita2",
+      "chi1-start": 21,
+      "chi2-start": 8,
+      "chi3-start": 18,
+      "chi4-start": 19,
+      "chi5-start": 13,
+      "psi1-start": 11,
+      "psi2-start": 45,
+      "psi3-start": 22,
+      "psi4-start": 19,
+      "psi5-start": 41,
+      "mu37-start": 7,
+      "mu61-start": 41,
+      "p5": true
+    },
+    "input": {
+      "value": "/PVU8O/8BZ8XASH8VADEZMASZAKB4TNI5PA98VDLHYNFMW3KZWJUVWK4EYVB9RUTLOWTJT3A5GB/T88COP4ER8CCUD5HXZJEZIYYAELWXAYIZF894IAVKLNQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "NRDZYBPSFRIGXIN8L/CCG3YN9TBP5RYTKUQL3UNNFTAA34HEN9FVMCH/88URBA8/IE9GOZAAZPEZZUVZHWP3TAMP3BZE58A8ZVEITMMWMKDDAMRI/FPJ83QN",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "random custom wheels, SZ42a with P5, deciphered",
+    "ref": "independent simulator; reciprocal",
+    "op": "lorenz:decrypt",
+    "params": {
+      "chi1": "..x..x.....x.x....x.x.x.xx.xxx..x.xxx...x",
+      "chi2": "xxx.x.xxxxxxx..x..xxx..x.xxx.x.",
+      "chi3": "xx..x.xxx..x.x.x...xxxxx.x..x",
+      "chi4": ".xx.x..xx.x.x..x...xxx...x",
+      "chi5": ".xxx.xx..x..xx...xx...x",
+      "psi1": "xx.xx.xxxxx..x..x.xxxxxx.xxx.x.xxx.x.xx..x.",
+      "psi2": ".xxxx....x..x.xxx.xxx.....x....xxx.xx..x..xxxx.",
+      "psi3": "xx.x.xx.x....xx.xx.xxxx.xx....x....xxx.....x..x..xx",
+      "psi4": "..x.x..x...xxx.x..x.xx......xx.x.....x..x.xxx.xx..x.x",
+      "psi5": "xxx.x....xxx.x..xx..x..xx......x..x.xx..x.x.x.xx.x..x.x.x..",
+      "mu37": "...x.xx...x.....xxx.x...x..xx..xxx...",
+      "mu61": "..x..x.xxxxxx...x.xx.x...x....xx.x..x..x.xxxxxx.x.xxxxxx..xx.",
+      "model": "SZ42a",
+      "pattern": "custom",
+      "input": "ita2",
+      "chi1-start": 21,
+      "chi2-start": 8,
+      "chi3-start": 18,
+      "chi4-start": 19,
+      "chi5-start": 13,
+      "psi1-start": 11,
+      "psi2-start": 45,
+      "psi3-start": 22,
+      "psi4-start": 19,
+      "psi5-start": 41,
+      "mu37-start": 7,
+      "mu61-start": 41,
+      "p5": true,
+      "output": "ita2"
+    },
+    "input": {
+      "value": "NRDZYBPSFRIGXIN8L/CCG3YN9TBP5RYTKUQL3UNNFTAA34HEN9FVMCH/88URBA8/IE9GOZAAZPEZZUVZHWP3TAMP3BZE58A8ZVEITMMWMKDDAMRI/FPJ83QN",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "/PVU8O/8BZ8XASH8VADEZMASZAKB4TNI5PA98VDLHYNFMW3KZWJUVWK4EYVB9RUTLOWTJT3A5GB/T88COP4ER8CCUD5HXZJEZIYYAELWXAYIZF894IAVKLNQ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "random custom wheels, SZ42b with P5, 120 characters",
+    "ref": "independent simulator (written outside the repository from the General Report)",
+    "op": "lorenz:encrypt",
+    "params": {
+      "chi1": ".xxx.x.xxx.x.x..xxxxxx.......xxx..x.x.x.x",
+      "chi2": "...xxx.xx.x.x.....xx.x.xx...xx.",
+      "chi3": "xx..xx.x..xx.xx.xxx..xx.xxxxx",
+      "chi4": "..x.xx.x..xx.xxxx.x.xx.x.x",
+      "chi5": "..x.xxxxxx...x.xxxx.xxx",
+      "psi1": "x...xxx.xxx...x.x.xx.x.xxx.x........x.x..xx",
+      "psi2": ".xxx.xx.xxx..x.xxx...xxx.x.xx..x....x.xxx..x..x",
+      "psi3": "..x.xx..x.x..xxx..xxx.x....x.xx.xxxxxx.x.xxx..xx.xx",
+      "psi4": "xx.x.....xxx.xx....x.xx...x.x.xx......xx...x....x....",
+      "psi5": ".xxx.x...xxxx.xx..xx...x..xx.xxx..xxx.x...xxxx....x.x.x....",
+      "mu37": ".xx.xx.x.x..x....x....x...x..x.x.....",
+      "mu61": "xx.x.x.xx...x.xxxx..xx..xxxx...xxx..xxx.xx.xxx...xx.xx.xx.x.x",
+      "model": "SZ42b",
+      "pattern": "custom",
+      "input": "ita2",
+      "chi1-start": 33,
+      "chi2-start": 23,
+      "chi3-start": 20,
+      "chi4-start": 7,
+      "chi5-start": 18,
+      "psi1-start": 17,
+      "psi2-start": 13,
+      "psi3-start": 25,
+      "psi4-start": 36,
+      "psi5-start": 39,
+      "mu37-start": 22,
+      "mu61-start": 47,
+      "p5": true
+    },
+    "input": {
+      "value": "/U//YZVE95CVJXVGZHBKHXDN3R4GGJNPAQI43XTTXQUAEVCIER9RP3SPUQQ5KAHLML5XF/MVTVRZA3QQIL9XGZBVBVPSU4BSDMD5ICDMLWQOF//RVD3R3U9D",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ENPPF4PYA/UGEVTJYX8E85PRIU5JNJI4TBCR/BR45Y5/UGU9DRDMWUQZAHA9Q88K3E5HE9P53BA9GTHOD5GSF8PH4GJEVBLXJHODARZE4N8Y3XZEAGS5HA5H",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "random custom wheels, SZ42b with P5, deciphered",
+    "ref": "independent simulator; reciprocal",
+    "op": "lorenz:decrypt",
+    "params": {
+      "chi1": ".xxx.x.xxx.x.x..xxxxxx.......xxx..x.x.x.x",
+      "chi2": "...xxx.xx.x.x.....xx.x.xx...xx.",
+      "chi3": "xx..xx.x..xx.xx.xxx..xx.xxxxx",
+      "chi4": "..x.xx.x..xx.xxxx.x.xx.x.x",
+      "chi5": "..x.xxxxxx...x.xxxx.xxx",
+      "psi1": "x...xxx.xxx...x.x.xx.x.xxx.x........x.x..xx",
+      "psi2": ".xxx.xx.xxx..x.xxx...xxx.x.xx..x....x.xxx..x..x",
+      "psi3": "..x.xx..x.x..xxx..xxx.x....x.xx.xxxxxx.x.xxx..xx.xx",
+      "psi4": "xx.x.....xxx.xx....x.xx...x.x.xx......xx...x....x....",
+      "psi5": ".xxx.x...xxxx.xx..xx...x..xx.xxx..xxx.x...xxxx....x.x.x....",
+      "mu37": ".xx.xx.x.x..x....x....x...x..x.x.....",
+      "mu61": "xx.x.x.xx...x.xxxx..xx..xxxx...xxx..xxx.xx.xxx...xx.xx.xx.x.x",
+      "model": "SZ42b",
+      "pattern": "custom",
+      "input": "ita2",
+      "chi1-start": 33,
+      "chi2-start": 23,
+      "chi3-start": 20,
+      "chi4-start": 7,
+      "chi5-start": 18,
+      "psi1-start": 17,
+      "psi2-start": 13,
+      "psi3-start": 25,
+      "psi4-start": 36,
+      "psi5-start": 39,
+      "mu37-start": 22,
+      "mu61-start": 47,
+      "p5": true,
+      "output": "ita2"
+    },
+    "input": {
+      "value": "ENPPF4PYA/UGEVTJYX8E85PRIU5JNJI4TBCR/BR45Y5/UGU9DRDMWUQZAHA9Q88K3E5HE9P53BA9GTHOD5GSF8PH4GJEVBLXJHODARZE4N8Y3XZEAGS5HA5H",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "/U//YZVE95CVJXVGZHBKHXDN3R4GGJNPAQI43XTTXQUAEVCIER9RP3SPUQQ5KAHLML5XF/MVTVRZA3QQIL9XGZBVBVPSU4BSDMD5ICDMLWQOF//RVD3R3U9D",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "P5 needs an SZ42",
+    "ref": "FL source",
+    "op": "lorenz:encrypt",
+    "params": {
+      "model": "SZ40",
+      "p5": true
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "custom pattern set must be complete",
+    "ref": "FL source",
+    "op": "lorenz:encrypt",
+    "params": {
+      "pattern": "custom"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "a character with no ITA2 code",
+    "ref": "ITA2 table",
+    "op": "lorenz:encrypt",
+    "params": {},
+    "input": {
+      "value": "a€",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "not a Bletchley Park character",
+    "ref": "ITA2 table",
+    "op": "lorenz:decrypt",
+    "params": {},
+    "input": {
+      "value": "AB1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "pattern with a character that is not x or dot",
+    "ref": "FL source",
+    "op": "lorenz:encrypt",
+    "params": {
+      "chi1": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_PARAM_INVALID"
+    }
+  },
+  {
+    "name": "pattern of the wrong length",
+    "ref": "FL source",
+    "op": "lorenz:encrypt",
+    "params": {
+      "chi1": "x.x.x."
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "start position out of range",
+    "ref": "FL source",
+    "op": "lorenz:encrypt",
+    "params": {
+      "chi1-start": 42
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "unknown model",
+    "ref": "FL source",
+    "op": "lorenz:encrypt",
+    "params": {
+      "model": "SZ41"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  }
+]
