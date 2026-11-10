@@ -1,0 +1,200 @@
+[
+  {
+    "name": "entropy of aabb is one bit",
+    "ref": "hand-computed: p = 1/2 for a and b, H = 2 * (1/2) * 1 = 1",
+    "op": "analysis:entropy",
+    "params": {},
+    "input": {
+      "value": "aabb",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 1
+    }
+  },
+  {
+    "name": "entropy of abcd is two bits",
+    "ref": "hand-computed: four equal p = 1/4, H = 4 * (1/4) * 2 = 2",
+    "op": "analysis:entropy",
+    "params": {},
+    "input": {
+      "value": "abcd",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 2
+    }
+  },
+  {
+    "name": "entropy of abcdefgh is three bits",
+    "ref": "hand-computed: eight equal p = 1/8, H = 8 * (1/8) * 3 = 3",
+    "op": "analysis:entropy",
+    "params": {},
+    "input": {
+      "value": "abcdefgh",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 3
+    }
+  },
+  {
+    "name": "entropy of one repeated byte is +0, not -0",
+    "ref": "hand-computed: p = 1 for a, the term is 1 * (0 - log2 1) = +0",
+    "op": "analysis:entropy",
+    "params": {},
+    "input": {
+      "value": "aaaa",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 0
+    }
+  },
+  {
+    "name": "entropy of empty input is 0",
+    "ref": "hand-computed: no byte has a non-zero count, the sum is 0.0",
+    "op": "analysis:entropy",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 0
+    }
+  },
+  {
+    "name": "entropy of all 256 byte values is eight bits",
+    "ref": "hand-computed: 256 equal p = 1/256, H = 256 * (1/256) * 8 = 8",
+    "op": "analysis:entropy",
+    "params": {},
+    "input": {
+      "value": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+      "enc": "hex"
+    },
+    "expect": {
+      "json": 8
+    }
+  },
+  {
+    "name": "entropy of non-ASCII input (é is two bytes)",
+    "ref": "hand-computed: c3 and a9 once each, H = 2 * (1/2) * 1 = 1",
+    "op": "analysis:entropy",
+    "params": {},
+    "input": {
+      "value": "é",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 1
+    }
+  },
+  {
+    "name": "entropy of binary input",
+    "ref": "hand-computed: 00 and ff twice each in four bytes, H = 1",
+    "op": "analysis:entropy",
+    "params": {},
+    "input": {
+      "value": "00ff00ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "json": 1
+    }
+  },
+  {
+    "name": "frequency of aabb",
+    "ref": "hand-computed: a 2 of 4 (50 percent), b 2 of 4 (50 percent), tie ordered by byte",
+    "op": "analysis:frequency",
+    "params": {},
+    "input": {
+      "value": "aabb",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": [
+        { "byte": 97, "count": 2, "percent": 50 },
+        { "byte": 98, "count": 2, "percent": 50 }
+      ]
+    }
+  },
+  {
+    "name": "frequency sorts by count descending",
+    "ref": "hand-computed: a 3 of 4 (75 percent), b 1 of 4 (25 percent)",
+    "op": "analysis:frequency",
+    "params": {},
+    "input": {
+      "value": "aaab",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": [
+        { "byte": 97, "count": 3, "percent": 75 },
+        { "byte": 98, "count": 1, "percent": 25 }
+      ]
+    }
+  },
+  {
+    "name": "frequency of a tie in count orders by byte",
+    "ref": "hand-computed: b before a is still ordered 97 then 98, each 1 of 2 (50 percent)",
+    "op": "analysis:frequency",
+    "params": {},
+    "input": {
+      "value": "ba",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": [
+        { "byte": 97, "count": 1, "percent": 50 },
+        { "byte": 98, "count": 1, "percent": 50 }
+      ]
+    }
+  },
+  {
+    "name": "frequency of empty input is an empty list",
+    "ref": "hand-computed: no byte value is present",
+    "op": "analysis:frequency",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": []
+    }
+  },
+  {
+    "name": "frequency of non-ASCII input (bytes c3 and a9)",
+    "ref": "hand-computed: 169 (a9) and 195 (c3), each 1 of 2 (50 percent), tie ordered by byte",
+    "op": "analysis:frequency",
+    "params": {},
+    "input": {
+      "value": "é",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": [
+        { "byte": 169, "count": 1, "percent": 50 },
+        { "byte": 195, "count": 1, "percent": 50 }
+      ]
+    }
+  },
+  {
+    "name": "frequency of binary input",
+    "ref": "hand-computed: 00 twice (50 percent), 80 once (25 percent), ff once (25 percent)",
+    "op": "analysis:frequency",
+    "params": {},
+    "input": {
+      "value": "ff800000",
+      "enc": "hex"
+    },
+    "expect": {
+      "json": [
+        { "byte": 0, "count": 2, "percent": 50 },
+        { "byte": 128, "count": 1, "percent": 25 },
+        { "byte": 255, "count": 1, "percent": 25 }
+      ]
+    }
+  }
+]
