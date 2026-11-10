@@ -16,18 +16,14 @@ IN: fletcher
 : _words ( data:bytes s:int -- list )
   data bytes>list [ s mod 8 * 1 swap shl * ] mapi ;
 
-\ The number of words of s bytes in n bytes, counting a short last word.
-: _nw ( n:int s:int -- int )
-  n s 1 - + s div ;
-
 \ The sum over the words of (nw - index) * word, from the per-byte values of _words.
 : _weighted ( ws:list s:int nw:int -- int )
-  ws [ s div nw swap - * ] mapi 0 [ + ] reduce ;
+  ws [ s div nw swap - * ] mapi util:sum ;
 
 : _fletcher ( data:bytes bits:int -- bytes )
   data bits _s _words
-  dup 0 [ + ] reduce 1 bits 2 div shl 1 - mod
-  swap bits _s data len bits _s _nw _weighted 1 bits 2 div shl 1 - mod
+  dup util:sum 1 bits 2 div shl 1 - mod
+  swap bits _s data len bits _s util:ceil-div _weighted 1 bits 2 div shl 1 - mod
   1 bits 2 div shl * + bits 8 div util:int>be-bytes ;
 
 : checksum ( data:bytes size:choice{8|16|32|64}=16 -- bytes )

@@ -57,6 +57,14 @@ IN: util
   "The integer whose digits are the elements of vals, most significant digit first, in the given radix: a positional fold. Digits are not checked against the radix. Large inputs are bounded by the integer limit (E_LIMIT_VALUE)." doc
   vals 0 [ swap radix * + ] reduce ;
 
+: ceil-div ( n:int d:int -- int )
+  "n divided by d, rounded up: the number of groups of d needed for n items (0 for n = 0). d must be positive and n non-negative." doc
+  n d 1 - + d div ;
+
+: sum ( xs:list -- int )
+  "The sum of a list of integers (0 for the empty list). For a list of floats write the fold yourself." doc
+  xs 0 [ + ] reduce ;
+
 \ ---- characters and text ----
 
 : dec-digit? ( c:int -- bool )

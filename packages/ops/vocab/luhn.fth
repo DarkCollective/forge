@@ -26,7 +26,7 @@ IN: luhn
 : _sum ( vals:list radix:int shift:int -- int )
   vals rev [
     shift + 2 mod 1 = [ 2 * dup radix div swap radix mod + ] when
-  ] mapi 0 [ + ] reduce radix mod ;
+  ] mapi util:sum radix mod ;
 
 : check-digit ( digits:str radix:int[2..36]=10 -- str )
   "The Luhn check digit for the digits, as one character (0-9, then a-z for radix above 10): append it to make a valid number. Digits are case-insensitive. The radix must be even. The empty input gives the empty text." doc

@@ -8,7 +8,7 @@ IN: tcpip
 : checksum ( data:bytes -- bytes )
   "The Internet checksum (RFC 1071) as two big-endian bytes: the ones' complement of the ones' complement sum of the data read as 16-bit big-endian words, an odd last byte padded with a zero byte on the right. To verify, checksum a message that includes its checksum field: the result is 0000. Unlike CyberChef, which folds the carry once, the carry is folded until it is gone." doc
   "Hashing" category
-  data bytes>list [ 2 mod 0 = [ 256 * ] when ] mapi 0 [ + ] reduce
+  data bytes>list [ 2 mod 0 = [ 256 * ] when ] mapi util:sum
   dup 0 > [ 1 - 65535 mod 1 + ] when
   65535 swap - 2 util:int>be-bytes ;
 

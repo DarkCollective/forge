@@ -84,7 +84,7 @@ IN: analysis
   den 0 = [ 0.0 ] [ num den / ] if ;
 
 : _total ( counts:list -- int )
-  counts 0 [ + ] reduce ;
+  counts util:sum ;
 
 \ The index of coincidence of counts: the sum of n (n - 1) over the symbols divided by N (N - 1),
 \ where N is the sum of the counts; times the number of symbols when normalised.

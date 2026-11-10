@@ -521,15 +521,12 @@ META: rot8000
 : _cb-col ( data:bytes c:int w:int -- bytes )
   0 data len c - w + 1 - w div range [ w * c + data swap nth ] map list>bytes ;
 
-: _cb-width ( n:int height:int -- int )
-  n height + 1 - height div ;
-
 \ Not base32:_ungroups: both map a helper over an index range and join, but over different per-group words, so there is no shared body.
 : _cb-enc ( data:bytes w:int -- bytes )
   0 w range [ data swap w _cb-col ] map #[ ] bjoin ;
 
 : _cb-encrypt ( data:bytes height:int -- bytes )
-  data data len height _cb-width _cb-enc ;
+  data data len height util:ceil-div _cb-enc ;
 
 \ rho is the number of rows that hold bytes and last the length of the last of them.
 : _cb-shape ( n:int w:int -- rho:int last:int )
@@ -549,7 +546,7 @@ META: rot8000
 : _cb-decrypt ( data:bytes height:int -- bytes )
   data len 0 =
   [ data ]
-  [ data data len height _cb-width _cb-dec ]
+  [ data data len height util:ceil-div _cb-dec ]
   if ;
 
 : caesar-box-encrypt ( bytes height:int[1..65536]=2 -- bytes )
