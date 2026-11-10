@@ -116,7 +116,9 @@ definePrimitive({
 
 The runtime pops values, coerces and validates them, calls `fn` with plain JS values, validates the result and pushes it. Primitives never touch the stack. That makes them pure, unit-testable functions, and a stack-discipline bug in a primitive cannot corrupt the VM. Heavy dependencies sit only behind primitives in lazily loaded modules, and a lint rule stops `@forge/lang` from importing them.
 
-Rule of thumb: codecs, ciphers with real arithmetic, hashes and compression are primitives. Classical ciphers, wrappers, aliases, composition and recipes are FL.
+**FL first.** Ops are written in FL wherever feasible, including codecs and ciphers. A TypeScript primitive is allowed only when the core cannot express something (for example `analysis:_log2`, since the core has no logarithm) or when FL is too slow on realistic input, measured at 64 KiB. Even then the primitive is a minimal private `_helper`, and the op logic and metadata stay in FL. Hashes, compression and WebCrypto-backed work are the expected primitives of later phases.
+
+The shared internal vocabulary `raise` gives FL ops typed errors, because FL's own `fail` gives only `E_USER`. `raise:coerce ( reason:str -- )` raises `E_COERCE` for data that cannot be decoded, and `raise:range ( reason:str -- )` raises `E_RANGE` for a bad argument. The `raise` words have no outputs, so they are not catalogue ops.
 
 ### 3.6 Recipes are words
 
@@ -155,7 +157,7 @@ It uses Lit web components and plain CSS grid with custom properties for themes 
 ## 6. Testing and quality
 
 - **Unit tests** cover the reader, compiler, VM, coercion and every primitive (Vitest, run in Node).
-- **Operation conformance tests**: each word has a test vectors table (`vocab/<name>.test.json`). A generic runner executes all of them through the VM. Vectors come from RFCs and standards, and published known-answer tests are preferred.
+- **Operation conformance tests**: each word has a test vectors table (`vocab/<name>.test.json`). A generic runner executes all of them through the VM. Vectors come from RFCs and standards, and published known-answer tests are preferred. The same vectors run in Chromium Web Workers with `npm run gate4:browser -w @forge/worker`, which covers every op in the browser. A data-driven UI smoke test (`apps/web/e2e/ops-smoke.spec.ts`) bakes up to two vectors per vocabulary through the UI. Multi-step recipes across vocabularies are covered by `packages/worker/test/phase4-recipes.test.ts`.
 - **Golden recipe tests** check the JSON ⇄ FL ⇄ URL round-trip, and that compiled output is identical.
 - **Property tests** (fast-check) check `decode(encode(x)) == x` for every codec pair.
 - **Browser end-to-end** (Playwright; used by `@forge/worker` for the Gate 2 harness from Phase 2, full UI suite from Phase 3) covers drag-and-drop, param validation, bake, share URL and keyboard-only use.
@@ -216,11 +218,24 @@ Each work package (WP) is sized for one sub-agent and has a verifiable "done". T
 
 **Gate 3:** End to end in the browser, a user can search, drag, configure, bake, share a URL, reload it and get the same result, using the keyboard only.
 
-### Phase 4 — Starter operation set (proves the model)
-About 40 ops in per-format and per-topic vocabularies (`base64`, `hex`, `base32`, …, `classical`, `bits`, `text`). Names are Forge-native (`base64:decode`, not CyberChef names). They cover hex, Base32, Base64, Base58 and Base85, Binary, Decimal, Charcode, URL encoding and HTML entities, ROT13/ROT47, Caesar/rot, Atbash, Affine, Vigenère, Bacon, Bifid, Rail Fence, A1Z26, Morse, Substitute, XOR (+brute force), AND/OR/NOT/ADD/SUB, bit shift and rotate, Reverse, Upper/Lower case, Find/Replace, Split/Join, Fork/Merge (structural), Entropy and Frequency distribution.
-These are split across about four parallel agents by vocabulary. Every op ships with test vectors.
+### Phase 4 — Starter operation set (proves the model) ✅
+*Done 2026-11-10. 61 ops in 16 vocabularies, 49 of them new in Phase 4 and all written in FL. Gate 4 passes in Node and in Chromium Web Workers, with and without cross-origin isolation (`npm run gate4:browser -w @forge/worker`): all 759 op vectors in 16 files, plus the data-driven UI smoke test `apps/web/e2e/ops-smoke.spec.ts`. 2,793 unit tests and 86 e2e tests; core + UI shell is 96.7 kB gzip.*
 
-**Gate 4:** All starter ops pass conformance in Node and in the browser e2e smoke test.
+Names are Forge-native (`base64:decode`, not CyberChef names). The catalogue covers hex, Base32, Base64, Base58 and Base85, Binary, Decimal, Charcode, URL encoding and HTML entities, ROT13/ROT47, Caesar/rot, Atbash, Affine, Vigenère, Bacon, Bifid, Rail Fence, A1Z26, Morse, Substitute, XOR (+brute force), AND/OR/NOT/ADD/SUB, bit shift and rotate, Reverse, Upper/Lower case, Find/Replace, Split/Join, Entropy and Frequency distribution, and the regex ops. Every op ships with test vectors. Fork/Merge is covered by the structural `fork` step from Phase 2 (§3.6), so it needs no op.
+
+| WP | Scope |
+|---|---|
+| 4.1 | base32, base58, base85, and the shared internal `raise` vocabulary |
+| 4.2 | binary, decimal, charcode, url, html, morse |
+| 4.3 | classical (16 ops) |
+| 4.4 | bits (XOR, XOR brute force, AND/OR/NOT, ADD/SUB, shifts, rotates) |
+| 4.5 | text and analysis |
+| 4.6 | Gate 4 harness: `gate4:browser` and the UI smoke spec |
+| 4.7 | Close-out: recipe-level test (`packages/worker/test/phase4-recipes.test.ts`), docs |
+
+The 61 ops: analysis 2, base32 2, base58 2, base64 2, base85 2, binary 2, bits 11, charcode 2, classical 16, decimal 2, hex 2, html 2, morse 2, regex 4, text 6, url 2. The internal vocabularies are `recipe` and `raise`.
+
+**Gate 4:** All starter ops pass conformance in Node and in the browser e2e smoke test. *Met.*
 
 ### Phase 5 — Capability coverage waves
 CyberChef has **506 operations** in 16 categories (see research §5 and the appendix). We use that list as a checklist of *capabilities*, not a set of names to reproduce. In Forge, several CyberChef ops may become one parameterised word (e.g. one `rot` instead of ROT13/ROT47/ROT8000 variants, one `xor`), some become vocabulary-qualified names (`base64:decode`), and some are dropped or redesigned. Work happens in waves ordered for a codes-and-ciphers audience. Each wave is a set of per-vocabulary WPs run as parallel agents, gated by conformance vectors:
@@ -234,6 +249,13 @@ CyberChef has **506 operations** in 16 categories (see research §5 and the appe
 7. Public key, networking parsers, forensics, multimedia, code tidy (lowest priority)
 
 Each WP also updates `docs/COVERAGE.md`, a generated table of CyberChef capability → the Forge word(s) that cover it (or "dropped" / "redesigned", with a reason).
+
+Phase 5 notes (follow-ups from Phase 4):
+
+- `html:decode` needs the full HTML named-entity table, and the windows-1252 remap of `&#128;`–`&#159;`.
+- `bits:xor-brute` with 2-byte keys hits the total-allocation limit on inputs over a few KiB without a crib.
+- `url:encode` and `morse:encode` use about half the 10M default step budget at 64 KiB.
+- `gate2:browser` and `gate4:browser` are not in CI yet.
 
 ### Phase 6 — Beyond CyberChef
 Magic auto-detection (declarative `checks` in META, depth-limited search). An optional recipe store backend behind `RecipeStore`. A PWA/offline mode. The `@forge/cli`. Recipe diff/swap. **Relix vocabulary** integration as an `relix:` vocab of primitives.
@@ -260,6 +282,8 @@ Decided 2026-11-10:
 
 7. **Hostname**: `forge.darkcollective.com`.
 8. **Deploy runner**: GitHub-hosted runner assuming an AWS role via GitHub OIDC (Terraform in `infra/`, applied 2026-11-10).
+
+9. **FL-first ops, shared `raise` vocabulary**: ops are written in FL wherever feasible. A TypeScript primitive is allowed only when the core cannot express something or FL is too slow on realistic input (measured at 64 KiB), and then only as a minimal private `_helper` with the op logic and metadata in FL. Typed errors come from the internal `raise` vocabulary (`raise:coerce`, `raise:range`), since `fail` gives only `E_USER` (§3.5).
 
 ## 10. Hosting and deployment
 
