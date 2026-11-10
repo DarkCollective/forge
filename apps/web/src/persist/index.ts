@@ -16,6 +16,39 @@
 import type { Feature } from "../state/feature.js";
 import "./forge-save-dialog.js";
 import "./forge-open-dialog.js";
+import { getServices, STORAGE_UNAVAILABLE_MESSAGE } from "./services.js";
+import { loadIntoStore, startWriteBack } from "./sync.js";
 
-/** Entry of the "persist" work package: import its elements, export its `feature`. */
-export const feature: Feature = { name: "persist" };
+/**
+ * Entry of the "persist" work package. Starts first: loads favourites, options and the user words
+ * into the store, then writes changes back (debounced). Without IndexedDB it works in memory and
+ * says so once.
+ */
+export const feature: Feature = {
+  name: "persist",
+  async start({ store, actions }) {
+    const services = await getServices();
+    if (services.unavailable !== null) {
+      console.warn(`persist: IndexedDB unavailable: ${services.unavailable}`);
+      actions.announce(STORAGE_UNAVAILABLE_MESSAGE);
+    }
+    const problems = await loadIntoStore(services.db, actions);
+    for (const p of problems) console.warn(`persist: could not read ${p}`);
+
+    let reported = false;
+    const writer = startWriteBack(store, services.db, (message) => {
+      console.warn(`persist: could not write: ${message}`);
+      if (!reported) {
+        reported = true;
+        actions.announce("Your changes could not be saved to browser storage.");
+      }
+    });
+    // A tab that is closing or hidden must not lose the last 300 ms of changes.
+    if (typeof document !== "undefined") {
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "hidden") void writer.flush();
+      });
+      window.addEventListener("pagehide", () => void writer.flush());
+    }
+  },
+};
