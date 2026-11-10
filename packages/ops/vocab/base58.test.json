@@ -1,0 +1,1099 @@
+[
+  {
+    "name": "encode published vector empty",
+    "ref": "Bitcoin Core base58_encode_decode.json / draft-msporny-base58",
+    "op": "base58:encode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode published vector empty",
+    "ref": "Bitcoin Core base58_encode_decode.json / draft-msporny-base58",
+    "op": "base58:decode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode published vector 61",
+    "ref": "Bitcoin Core base58_encode_decode.json / draft-msporny-base58",
+    "op": "base58:encode",
+    "params": {},
+    "input": {
+      "value": "61",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "2g",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode published vector 61",
+    "ref": "Bitcoin Core base58_encode_decode.json / draft-msporny-base58",
+    "op": "base58:decode",
+    "params": {},
+    "input": {
+      "value": "2g",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "61",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode published vector 626262",
+    "ref": "Bitcoin Core base58_encode_decode.json / draft-msporny-base58",
+    "op": "base58:encode",
+    "params": {},
+    "input": {
+      "value": "626262",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "a3gV",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode published vector 626262",
+    "ref": "Bitcoin Core base58_encode_decode.json / draft-msporny-base58",
+    "op": "base58:decode",
+    "params": {},
+    "input": {
+      "value": "a3gV",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "626262",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode published vector 636363",
+    "ref": "Bitcoin Core base58_encode_decode.json / draft-msporny-base58",
+    "op": "base58:encode",
+    "params": {},
+    "input": {
+      "value": "636363",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "aPEr",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode published vector 636363",
+    "ref": "Bitcoin Core base58_encode_decode.json / draft-msporny-base58",
+    "op": "base58:decode",
+    "params": {},
+    "input": {
+      "value": "aPEr",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "636363",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode published vector 73696d706c792061206c6f6e",
+    "ref": "Bitcoin Core base58_encode_decode.json / draft-msporny-base58",
+    "op": "base58:encode",
+    "params": {},
+    "input": {
+      "value": "73696d706c792061206c6f6e6720737472696e67",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "2cFupjhnEsSn59qHXstmK2ffpLv2",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode published vector 73696d706c792061206c6f6e",
+    "ref": "Bitcoin Core base58_encode_decode.json / draft-msporny-base58",
+    "op": "base58:decode",
+    "params": {},
+    "input": {
+      "value": "2cFupjhnEsSn59qHXstmK2ffpLv2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "73696d706c792061206c6f6e6720737472696e67",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode published vector 00eb15231dfceb60925886b6",
+    "ref": "Bitcoin Core base58_encode_decode.json / draft-msporny-base58",
+    "op": "base58:encode",
+    "params": {},
+    "input": {
+      "value": "00eb15231dfceb60925886b67d065299925915aeb172c06647",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode published vector 00eb15231dfceb60925886b6",
+    "ref": "Bitcoin Core base58_encode_decode.json / draft-msporny-base58",
+    "op": "base58:decode",
+    "params": {},
+    "input": {
+      "value": "1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00eb15231dfceb60925886b67d065299925915aeb172c06647",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode published vector 516b6fcd0f",
+    "ref": "Bitcoin Core base58_encode_decode.json / draft-msporny-base58",
+    "op": "base58:encode",
+    "params": {},
+    "input": {
+      "value": "516b6fcd0f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ABnLTmg",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode published vector 516b6fcd0f",
+    "ref": "Bitcoin Core base58_encode_decode.json / draft-msporny-base58",
+    "op": "base58:decode",
+    "params": {},
+    "input": {
+      "value": "ABnLTmg",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "516b6fcd0f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode published vector bf4f89001e670274dd",
+    "ref": "Bitcoin Core base58_encode_decode.json / draft-msporny-base58",
+    "op": "base58:encode",
+    "params": {},
+    "input": {
+      "value": "bf4f89001e670274dd",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "3SEo3LWLoPntC",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode published vector bf4f89001e670274dd",
+    "ref": "Bitcoin Core base58_encode_decode.json / draft-msporny-base58",
+    "op": "base58:decode",
+    "params": {},
+    "input": {
+      "value": "3SEo3LWLoPntC",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "bf4f89001e670274dd",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode published vector 572e4794",
+    "ref": "Bitcoin Core base58_encode_decode.json / draft-msporny-base58",
+    "op": "base58:encode",
+    "params": {},
+    "input": {
+      "value": "572e4794",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "3EFU7m",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode published vector 572e4794",
+    "ref": "Bitcoin Core base58_encode_decode.json / draft-msporny-base58",
+    "op": "base58:decode",
+    "params": {},
+    "input": {
+      "value": "3EFU7m",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "572e4794",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode published vector ecac89cad93923c02321",
+    "ref": "Bitcoin Core base58_encode_decode.json / draft-msporny-base58",
+    "op": "base58:encode",
+    "params": {},
+    "input": {
+      "value": "ecac89cad93923c02321",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "EJDM8drfXA6uyA",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode published vector ecac89cad93923c02321",
+    "ref": "Bitcoin Core base58_encode_decode.json / draft-msporny-base58",
+    "op": "base58:decode",
+    "params": {},
+    "input": {
+      "value": "EJDM8drfXA6uyA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ecac89cad93923c02321",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode published vector 10c8511e",
+    "ref": "Bitcoin Core base58_encode_decode.json / draft-msporny-base58",
+    "op": "base58:encode",
+    "params": {},
+    "input": {
+      "value": "10c8511e",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Rt5zm",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode published vector 10c8511e",
+    "ref": "Bitcoin Core base58_encode_decode.json / draft-msporny-base58",
+    "op": "base58:decode",
+    "params": {},
+    "input": {
+      "value": "Rt5zm",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "10c8511e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode published vector 00000000000000000000",
+    "ref": "Bitcoin Core base58_encode_decode.json / draft-msporny-base58",
+    "op": "base58:encode",
+    "params": {},
+    "input": {
+      "value": "00000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1111111111",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode published vector 00000000000000000000",
+    "ref": "Bitcoin Core base58_encode_decode.json / draft-msporny-base58",
+    "op": "base58:decode",
+    "params": {},
+    "input": {
+      "value": "1111111111",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00000000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode published vector 0000287fb4cd",
+    "ref": "Bitcoin Core base58_encode_decode.json / draft-msporny-base58",
+    "op": "base58:encode",
+    "params": {},
+    "input": {
+      "value": "0000287fb4cd",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "11233QC4",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode published vector 0000287fb4cd",
+    "ref": "Bitcoin Core base58_encode_decode.json / draft-msporny-base58",
+    "op": "base58:decode",
+    "params": {},
+    "input": {
+      "value": "11233QC4",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0000287fb4cd",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode published vector 48656c6c6f20576f726c6421",
+    "ref": "Bitcoin Core base58_encode_decode.json / draft-msporny-base58",
+    "op": "base58:encode",
+    "params": {},
+    "input": {
+      "value": "48656c6c6f20576f726c6421",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "2NEpo7TZRRrLZSi2U",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode published vector 48656c6c6f20576f726c6421",
+    "ref": "Bitcoin Core base58_encode_decode.json / draft-msporny-base58",
+    "op": "base58:decode",
+    "params": {},
+    "input": {
+      "value": "2NEpo7TZRRrLZSi2U",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "48656c6c6f20576f726c6421",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode published vector 54686520717569636b206272",
+    "ref": "Bitcoin Core base58_encode_decode.json / draft-msporny-base58",
+    "op": "base58:encode",
+    "params": {},
+    "input": {
+      "value": "54686520717569636b2062726f776e20666f78206a756d7073206f76657220746865206c617a7920646f672e",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "USm3fpXnKG5EUBx2ndxBDMPVciP5hGey2Jh4NDv6gmeo1LkMeiKrLJUUBk6Z",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode published vector 54686520717569636b206272",
+    "ref": "Bitcoin Core base58_encode_decode.json / draft-msporny-base58",
+    "op": "base58:decode",
+    "params": {},
+    "input": {
+      "value": "USm3fpXnKG5EUBx2ndxBDMPVciP5hGey2Jh4NDv6gmeo1LkMeiKrLJUUBk6Z",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "54686520717569636b2062726f776e20666f78206a756d7073206f76657220746865206c617a7920646f672e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode flickr empty",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:encode",
+    "params": {
+      "alphabet": "flickr"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode flickr empty",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:decode",
+    "params": {
+      "alphabet": "flickr"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode flickr 00",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:encode",
+    "params": {
+      "alphabet": "flickr"
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode flickr 00",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:decode",
+    "params": {
+      "alphabet": "flickr"
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode flickr 0000ff",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:encode",
+    "params": {
+      "alphabet": "flickr"
+    },
+    "input": {
+      "value": "0000ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "115p",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode flickr 0000ff",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:decode",
+    "params": {
+      "alphabet": "flickr"
+    },
+    "input": {
+      "value": "115p",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0000ff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode flickr 61",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:encode",
+    "params": {
+      "alphabet": "flickr"
+    },
+    "input": {
+      "value": "61",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "2F",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode flickr 61",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:decode",
+    "params": {
+      "alphabet": "flickr"
+    },
+    "input": {
+      "value": "2F",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "61",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode flickr 626262",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:encode",
+    "params": {
+      "alphabet": "flickr"
+    },
+    "input": {
+      "value": "626262",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "z3Fu",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode flickr 626262",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:decode",
+    "params": {
+      "alphabet": "flickr"
+    },
+    "input": {
+      "value": "z3Fu",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "626262",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode flickr 00eb15231dfceb609258",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:encode",
+    "params": {
+      "alphabet": "flickr"
+    },
+    "input": {
+      "value": "00eb15231dfceb60925886b67d065299925915aeb172c06647",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1nr17HzF9JiFshd1uwJVkceMyUp3Ride9k",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode flickr 00eb15231dfceb609258",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:decode",
+    "params": {
+      "alphabet": "flickr"
+    },
+    "input": {
+      "value": "1nr17HzF9JiFshd1uwJVkceMyUp3Ride9k",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00eb15231dfceb60925886b67d065299925915aeb172c06647",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode flickr 48656c6c6f20576f726c",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:encode",
+    "params": {
+      "alphabet": "flickr"
+    },
+    "input": {
+      "value": "48656c6c6f20576f726c6421",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "2nePN7syqqRkyrH2t",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode flickr 48656c6c6f20576f726c",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:decode",
+    "params": {
+      "alphabet": "flickr"
+    },
+    "input": {
+      "value": "2nePN7syqqRkyrH2t",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "48656c6c6f20576f726c6421",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode ripple empty",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:encode",
+    "params": {
+      "alphabet": "ripple"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ripple empty",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:decode",
+    "params": {
+      "alphabet": "ripple"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode ripple 00",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:encode",
+    "params": {
+      "alphabet": "ripple"
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "r",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ripple 00",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:decode",
+    "params": {
+      "alphabet": "ripple"
+    },
+    "input": {
+      "value": "r",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode ripple 0000ff",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:encode",
+    "params": {
+      "alphabet": "ripple"
+    },
+    "input": {
+      "value": "0000ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "rrnQ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ripple 0000ff",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:decode",
+    "params": {
+      "alphabet": "ripple"
+    },
+    "input": {
+      "value": "rrnQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0000ff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode ripple 61",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:encode",
+    "params": {
+      "alphabet": "ripple"
+    },
+    "input": {
+      "value": "61",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "pg",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ripple 61",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:decode",
+    "params": {
+      "alphabet": "ripple"
+    },
+    "input": {
+      "value": "pg",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "61",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode ripple 626262",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:encode",
+    "params": {
+      "alphabet": "ripple"
+    },
+    "input": {
+      "value": "626262",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "2sgV",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ripple 626262",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:decode",
+    "params": {
+      "alphabet": "ripple"
+    },
+    "input": {
+      "value": "2sgV",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "626262",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode ripple 00eb15231dfceb609258",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:encode",
+    "params": {
+      "alphabet": "ripple"
+    },
+    "input": {
+      "value": "00eb15231dfceb60925886b67d065299925915aeb172c06647",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "r4Srf52g9jJgTHDrVXjvLUN8ZuQsiJDN9L",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ripple 00eb15231dfceb609258",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:decode",
+    "params": {
+      "alphabet": "ripple"
+    },
+    "input": {
+      "value": "r4Srf52g9jJgTHDrVXjvLUN8ZuQsiJDN9L",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00eb15231dfceb60925886b67d065299925915aeb172c06647",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode ripple 48656c6c6f20576f726c",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:encode",
+    "params": {
+      "alphabet": "ripple"
+    },
+    "input": {
+      "value": "48656c6c6f20576f726c6421",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "p4NFofTZRRiLZS5p7",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ripple 48656c6c6f20576f726c",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:decode",
+    "params": {
+      "alphabet": "ripple"
+    },
+    "input": {
+      "value": "p4NFofTZRRiLZS5p7",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "48656c6c6f20576f726c6421",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode UTF-8 text",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:encode",
+    "params": {},
+    "input": {
+      "value": "héllo ✓ wörld 😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "VSBbmp5ovTjQBNjeKf8ox829DczGnT",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode UTF-8 text",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:decode",
+    "params": {},
+    "input": {
+      "value": "VSBbmp5ovTjQBNjeKf8ox829DczGnT",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "68c3a96c6c6f20e29c932077c3b6726c6420f09f9880",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode binary",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:encode",
+    "params": {},
+    "input": {
+      "value": "00000102ff807f00fe10aa",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "11kKc87TupHRb",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode binary",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:decode",
+    "params": {},
+    "input": {
+      "value": "11kKc87TupHRb",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00000102ff807f00fe10aa",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 2000 bytes",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:encode",
+    "params": {},
+    "input": {
+      "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dce3eaf1f8ff060d141b222930373e454c535a61686f767d848b9299a0a7aeb5bcc3cad1d8dfe6edf4fb020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dce3eaf1f8ff060d141b222930373e454c535a61686f767d848b9299a0a7aeb5bcc3cad1d8dfe6edf4fb020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dce3eaf1f8ff060d141b222930373e454c535a61686f767d848b9299a0a7aeb5bcc3cad1d8dfe6edf4fb020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dce3eaf1f8ff060d141b222930373e454c535a61686f767d848b9299a0a7aeb5bcc3cad1d8dfe6edf4fb020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dce3eaf1f8ff060d141b222930373e454c535a61686f767d848b9299a0a7aeb5bcc3cad1d8dfe6edf4fb020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dce3eaf1f8ff060d141b222930373e454c535a61686f767d848b9299a0a7aeb5bcc3cad1d8dfe6edf4fb020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dce3eaf1f8ff060d141b222930373e454c535a61686f767d848b9299a0a7aeb5bcc3cad1d8dfe6edf4fb020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dce3eaf1f8ff060d141b222930373e454c535a61686f767d848b9299a0a7aeb5bcc3cad1d8dfe6edf4fb020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979ea5ac",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "3VNPQFXKG76pN6BDaN4boqBJs81MCreeAQDA3fVQB7zrhX3aFA4NS6DCESBgYg7yp1yg7LfPypTiGDvZm4LSAzX6cTqpRGxHy3jMZARL1MsZYoceD14oyim4C5D5eJX18yLEpd9kpMb1JaQM5Jhs9TDqH242RMJK2ZVBb1ci1yqaT5y7dEz581fY9jaBrzGe6Ve8f5y7ME921MdmgGvfe1wiznXwqrsP12UMjqA39G9i64sh5FCyzo4pQFxWgBrBkH9TCCJW9B9xDfCdDCXgM86nzgTo35nmZr5nxrzJiJWQGEtcyu7DFtp3auX956BhmQG3PJwzqNrBYEm3ZAy4pdUrHw2WvZNgak13rbED2vFZG1UZ5VvhH9Py1h5zzb2aFoZGwAsF6pup1c752oZiqNLC2394GCZXkb249nuMtasjWzxnY5BkaA2BtLUhRC1PhFkYZGMZqpRC8np5YGtRmBgxYuiodfiuDhhAAQhfbShN9cTUvP2sPx3Va9DfQr8YTvtCdZe4BfuHMxrAHpcfHDZPR9gaL19iSYuMGqHZpcEFvZxWdK6MMWmDF3aGFVmTmFDVzppooUW5M31Xwdgk7TTxcaPCi1WjLRmGQcsm5veFptGQaFLGKNU1AFyumWmJjWvFBYsv2v7U2cEnufmwJYeZTYuwbvinj5DHsovTVn5Z24AP1eXEgtHz5ngqMVhgze5g6xrEofwVmusxupP2vHPPJq6LHqnseTxD4cDPK3g9XkGGnfc1S7TVHMoo8b1wWd1RAsMhVDN9LD25VTPdFoA3ecba8z3wwjdUzbuMfcQako5mnoSntqsXuBoSHBZ18DuAH1wEFzKqDJ3FgFBTEHSAH2H9EkVYnxbedm3EDwsdvMrVQf4C9Gbj6h9JyBteiZXxhudeYDvWP3mmhjdNaLZ54vgScbDkSSjjk7Lb8vmWoQWAF52S4hsN3FqiZa9Mx73jaw89uCq5Ymcj59MsUfSngfL6Zbv35gDY7x4uLdQuy2tmkciayS6P3s84GJNnQVYyMPBstybkjrN3E1ikjMWjwKBoRA3pqnM7jJRpuEDd3BjMc1MsbqxTapxE8tXnURHnHUM7nndWPKcVp8DTFD7agkaJPuvU8NnGF7AiW1uH3Nt9C6YvMea5wrRuSPUW9rvy6T5gm4vE2jFxQEHbiCZvRDxWpL8eVmR1YEFti65z7CgX69wQD9cfFFfmJrQ9Tvr7RF7rh53GkbptvJdjbmAyDNMe51azaxeM8Jeeda1S76Sc5JfcNsEXKPHDSXhd5pTsumbuGWcTuPoN51f11kZnj4Vrt3aNKgtWPVfFV9bUV5C11eZUJMDECQSinUonvkjCB8cfoNykRzUyH2JWXqJTf2XPCZS6hNCEteKKMAr1pnTYzLr7wCfbX2GaVvgpcvkqixyCNN3KBJhNFcnHRMjBdmPZmL5oxtvjDWbkDBUfHqAjh6ipzFRXkaFf8eFDUUfX5ac7iG7hErU1hs7WkioENZFZYKsLkYXduTQbRp9cq7HE4pziKF6h74eXKdGyVMMBWHtEzonpA6DP9dZn8sYwFYiQxxG59KvWs22UzisV22EcuJr3bvdQ31eG6Tb6mZPDgqCnn8sDXmfrCPEGwRtEoKdHmjv84JWFrrG58k2guSH4NPgiya98NJWzSaWa5pfkQ3NKoYg7c53Cy8pS62B8uTwdeLLp558A6jpcnZ16w6UpjZywAcxUQ7Mqc54dkRGiiadujaYzvACyjcrUz3MrzNGBKbmDdpYZksoL6HiSPAdeLdbgYCy7WUB5ti8FQTq3wphGmoqGLF532bHaoye2GcVSPpbtHxBZWwqauXpE7jmEai1FAC8Vpn8y6Td2SaYP7vDfHERNd92en4HLYzxnAty3jDvbZPWGKHsdAA7K19hjf7v5UwrG9dprsZnPDQHrv4LYfePYPWAe1gCqvZukVmA2bCvfGiUQS2rYJwuNif7xUwwnn6wLmBVDhCCsMeRfDriyDWc4MY3zBaYzqKf65Soydik1HZPngVgk19E1jFR6e4mV2Vw3iXR573DbN6MzdsBRhFEZYcVse5yGTGBidjeBvQUB5guXNJU3iq27M154oi3j7iJA1TPptGfeZJ2QnA4jwgcy36BfXjLeC9xkzxn9TS8FGQbat2JUzq4Q8NY4rDP6YEZ7BirLVzKfyedKbMv3EcN8bu1rXy87YsXkj5u6yxixMbjUxisHhiV9gKUjRNxZLeKkxK9t5KZa7z8rLxwhG2SDBeHgtVDqAYCbtNW69QT8rcfxVSCVBsyVt8PBby2SAb5kC7maVSDHV6a4x9nWL9eCphyprcYpotitCP7Sf3NkixaDkdKv5T2dui737P63RDbAftSu7vqZFa9wVWEXxRdxU1TRoUYJzEcXaMYFNwQW4ay5pCGoc6uEKG6CtB18jnS7YiwWAod5n363yHhMUBNhfFNresAyJ8446WTX3njWC7QhEpZc9udAN2C7jK9X3ECV2yCWWqPiUhg9fio6E7KVjJJLShudivETii3o6rof2csP13gS4XawQdeoeBycwYdG9SDYW42Tq3RsJZGmmNYE3Pj3hTPFFvX9ispJsr9TJ7VGTMKJ8E3B4esbqYqY323uRfvURAkY3A9Xp7BErQr4qdunuNr85woG9nGi5BaveZ4aKPTBZGkVTst6eQu7pWoR18G81TvGgGd44A4rVcK45SgJxY2Leg9TS4gkKsefF5p7wMckwAb",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 2000 bytes",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:decode",
+    "params": {},
+    "input": {
+      "value": "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",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dce3eaf1f8ff060d141b222930373e454c535a61686f767d848b9299a0a7aeb5bcc3cad1d8dfe6edf4fb020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dce3eaf1f8ff060d141b222930373e454c535a61686f767d848b9299a0a7aeb5bcc3cad1d8dfe6edf4fb020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dce3eaf1f8ff060d141b222930373e454c535a61686f767d848b9299a0a7aeb5bcc3cad1d8dfe6edf4fb020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dce3eaf1f8ff060d141b222930373e454c535a61686f767d848b9299a0a7aeb5bcc3cad1d8dfe6edf4fb020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dce3eaf1f8ff060d141b222930373e454c535a61686f767d848b9299a0a7aeb5bcc3cad1d8dfe6edf4fb020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dce3eaf1f8ff060d141b222930373e454c535a61686f767d848b9299a0a7aeb5bcc3cad1d8dfe6edf4fb020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dce3eaf1f8ff060d141b222930373e454c535a61686f767d848b9299a0a7aeb5bcc3cad1d8dfe6edf4fb020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dce3eaf1f8ff060d141b222930373e454c535a61686f767d848b9299a0a7aeb5bcc3cad1d8dfe6edf4fb020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979ea5ac",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode ignores white space",
+    "ref": "independent computation (Python big-integer reimplementation); alphabets as published",
+    "op": "base58:decode",
+    "params": {},
+    "input": {
+      "value": " 2NEpo7TZ\nRRrLZSi2U\t",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Hello World!",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode error: digit 0",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base58:decode",
+    "params": {
+      "alphabet": "bitcoin"
+    },
+    "input": {
+      "value": "2NEpo0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: letter O",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base58:decode",
+    "params": {
+      "alphabet": "bitcoin"
+    },
+    "input": {
+      "value": "2NEpoO",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: letter I",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base58:decode",
+    "params": {
+      "alphabet": "bitcoin"
+    },
+    "input": {
+      "value": "2NEpoI",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: letter l",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base58:decode",
+    "params": {
+      "alphabet": "bitcoin"
+    },
+    "input": {
+      "value": "2NEpol",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: non-ASCII character",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base58:decode",
+    "params": {
+      "alphabet": "bitcoin"
+    },
+    "input": {
+      "value": "2NEpé",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: bitcoin text under the ripple alphabet",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base58:decode",
+    "params": {
+      "alphabet": "ripple"
+    },
+    "input": {
+      "value": "2NEpo7TZRRrLZSi2U0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: underscore",
+    "ref": "spec §10.1 (E_COERCE)",
+    "op": "base58:decode",
+    "params": {
+      "alphabet": "flickr"
+    },
+    "input": {
+      "value": "2NE_po",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "encode error: data over the integer limit (8200 bytes)",
+    "ref": "LANGUAGE.md §10.8 maxIntBits (E_LIMIT_VALUE)",
+    "op": "base58:encode",
+    "params": {},
+    "input": {
+      "value": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_LIMIT_VALUE"
+    }
+  },
+  {
+    "name": "decode error: text over the integer limit (12000 digits)",
+    "ref": "LANGUAGE.md §10.8 maxIntBits (E_LIMIT_VALUE)",
+    "op": "base58:decode",
+    "params": {},
+    "input": {
+      "value": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_LIMIT_VALUE"
+    }
+  }
+]
