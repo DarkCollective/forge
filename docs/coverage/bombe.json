@@ -1,0 +1,14 @@
+[
+  {
+    "cyberchef": "Bombe",
+    "status": "redesigned",
+    "forge": ["bombe:search"],
+    "note": "One Forge-native word covers both Bombe operations: give three rotors for a single rotor order. It searches all 17,576 start positions with a crib at an offset, using the menu, the diagonal board and the test register, and lists the stops with the steckers deduced and a decryption preview made with enigma:encrypt. Enigma I and M3 only (no M4); stops are window letters at the start of the message."
+  },
+  {
+    "cyberchef": "Multiple Bombe",
+    "status": "redesigned",
+    "forge": ["bombe:search"],
+    "note": "The same word: give more than three rotors (up to five, 60 orders) and every order of three of them is searched, left rotor first; the output names the rotor order of each stop. Capped by rotor orders times menu edges so that a run finishes inside a bake."
+  }
+]

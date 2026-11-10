@@ -1,0 +1,320 @@
+[
+  {
+    "name": "one order: a 15-letter menu with 3 closures",
+    "ref": "Enigma I, rotors V I II, reflector B, rings AAA, 11 plugboard letters; crib at offset 7 (settings: positions PSA, plugboard ET NH WJ YS MR ZA VL DC KX QB)",
+    "op": "bombe:search",
+    "params": {
+      "crib": "UEDAUSGANGBAERWAL",
+      "offset": 7,
+      "model": "I",
+      "rotors": "V I II",
+      "reflector": "B",
+      "rings": "AAA",
+      "check": "on",
+      "limit": 20
+    },
+    "input": {
+      "value": "RFLKIIHLSEKZISLXWKIMXBSIZYFBJSIIONXTHVVRBEHZWNVKHKVIEWGQRBDRUYJZJVDSMQUGOCMDZIDCPC",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "# bombe: crib UEDAUSGANGBAERWAL at offset 7, model I, reflector B, rings AAA, check on\n# menu: 15 edges between 13 letters, 3 closures, test letter A\nrotors V I II  positions PSA  steckers AZ BQ CD ET JW KX LV MR SY  crib UEDAUSGAhGBAErWAL\n# rotor orders: 1\n# stops: 1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ring settings BUL: the stops are window letters for those rings",
+    "ref": "Enigma I, rotors II III I, reflector B, rings BUL; crib at offset 7 (settings: positions XMP, plugboard IF TU PN GK WD OS XV ZL)",
+    "op": "bombe:search",
+    "params": {
+      "crib": "UEDAUSGANGBAERWALD",
+      "offset": 7,
+      "model": "I",
+      "rotors": "II III I",
+      "reflector": "B",
+      "rings": "BUL",
+      "check": "on",
+      "limit": 20
+    },
+    "input": {
+      "value": "KAGPHTVXXRVOAXHMCCLLALEVZWZDSBPHOAZZHPDWOCQEFUHYCGUVMUGYWHKRDKJFFXWGLJOULNZCEWACGC",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "# bombe: crib UEDAUSGANGBAERWALD at offset 7, model I, reflector B, rings BUL, check on\n# menu: 17 edges between 16 letters, 2 closures, test letter A\nrotors II III I  positions XMP  steckers DW GK LZ OS TU VX  crib UEDAUSGApGBAERWALD\n# rotor orders: 1\n# stops: 1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "check off lists the stops as the test register shows them, contradictions included",
+    "ref": "Enigma I, rotors II I V, reflector B, 13-letter crib with 2 closures, 22 stops in all; the first six (settings: positions VHU, plugboard PZ AF DO RX IM GH NY UK LC SJ)",
+    "op": "bombe:search",
+    "params": {
+      "crib": "TERVORHERSAGE",
+      "offset": 3,
+      "model": "I",
+      "rotors": "II I V",
+      "reflector": "B",
+      "rings": "AAA",
+      "check": "off",
+      "limit": 6
+    },
+    "input": {
+      "value": "YTGGOEILLJIQPNRRKZRWWGTBXJUXMTRUYRMUDNCLHBNNMXOVCFPESOPPCSSNEXAJINDEQCLJA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "# bombe: crib TERVORHERSAGE at offset 3, model I, reflector B, rings AAA, check off\n# menu: 10 edges between 9 letters, 2 closures, test letter R\nrotors II I V  positions BAF  steckers CG EF IX JL PT RY VW  contradiction at U  crib TQRVURnEThuGE\nrotors II I V  positions DTD  steckers AE BT FL GS HI KV NO  crib TERVORsERcoGE\nrotors II I V  positions EAL  steckers AL BE IU JT RW  contradiction at CN  crib FYRNCRzEAycNE\nrotors II I V  positions EEC  steckers AG BO EM NR QY VW  contradiction at Z  crib ZERFORpCRmoGE\nrotors II I V  positions ISL  steckers GS MV QZ RU TW  contradiction at KY  crib TDXCVUiPRrsGY\nrotors II I V  positions JNQ  steckers CR EW IU LZ OX TY  contradiction at M  crib IERMORnEFkiME\n# rotor orders: 1\n# stops: 6\n# limit reached: more stops may exist, raise the limit to see them",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "check on lists only the stops without a contradiction (the limit counts those)",
+    "ref": "same message as the previous vector (settings: positions VHU, plugboard PZ AF DO RX IM GH NY UK LC SJ)",
+    "op": "bombe:search",
+    "params": {
+      "crib": "TERVORHERSAGE",
+      "offset": 3,
+      "model": "I",
+      "rotors": "II I V",
+      "reflector": "B",
+      "rings": "AAA",
+      "check": "on",
+      "limit": 4
+    },
+    "input": {
+      "value": "YTGGOEILLJIQPNRRKZRWWGTBXJUXMTRUYRMUDNCLHBNNMXOVCFPESOPPCSSNEXAJINDEQCLJA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "# bombe: crib TERVORHERSAGE at offset 3, model I, reflector B, rings AAA, check on\n# menu: 10 edges between 9 letters, 2 closures, test letter R\nrotors II I V  positions DTD  steckers AE BT FL GS HI KV NO  crib TERVORsERcoGE\nrotors II I V  positions JYX  steckers AI BR CO DQ EM GK JT VW  crib TERVORlERurGE\nrotors II I V  positions MWH  steckers EJ HL IX KT MQ OZ PR  crib TERVORuERrfGE\nrotors II I V  positions PSR  steckers AR DG EZ IN KV LP OX QT  crib TERVORpERmbGE\n# rotor orders: 1\n# stops: 4\n# limit reached: more stops may exist, raise the limit to see them",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "M3 rotors VI VII VIII, reflector C, rings CDE",
+    "ref": "Enigma M3 VI VII VIII, reflector C, rings CDE; crib at offset 3 (settings: positions QZE, plugboard AT BS DE FM IR LU PV WN)",
+    "op": "bombe:search",
+    "params": {
+      "crib": "UECKGEZOGENEKRAEFTEBE",
+      "offset": 3,
+      "model": "M3",
+      "rotors": "VI VII VIII",
+      "reflector": "C",
+      "rings": "CDE",
+      "check": "on",
+      "limit": 20
+    },
+    "input": {
+      "value": "JLKBRMLZVTNUCBMISOAYAHOUKWJILPDCSEAOYIGIZTDUBNRGAECDSZOLZZZWLYZJBOXCQRRLWXDKFAFUFZGGWHTKMMDPUZPBPYPQOXTQBNWPICODVKFNOAPTEUPDQRXUTQLBHERKIKXXKIQLAWBSPUFDAWMGDDEMNCIRZ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "# bombe: crib UECKGEZOGENEKRAEFTEBE at offset 3, model M3, reflector C, rings CDE, check on\n# menu: 18 edges between 15 letters, 4 closures, test letter E\nrotors VI VII VIII  positions QZE  steckers AT BS DE FM IR LU NW PV  crib UECkGEZOGENEkRAEfTEBE\nrotors VI VII VIII  positions RAE  steckers AT BS DE FM IR LU NW PV  crib UECkGEZOGENEkRAEfTEBE\n# rotor orders: 1\n# stops: 2",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "the right rotor passes its turnover inside the crib",
+    "ref": "Enigma I, rotors II I III, positions ABT: the middle rotor steps during the crib (settings: positions ABT, plugboard AB CD EF GH IJ)",
+    "op": "bombe:search",
+    "params": {
+      "crib": "KGEZOGENEKRAEFTEBEFI",
+      "offset": 6,
+      "model": "I",
+      "rotors": "II I III",
+      "reflector": "B",
+      "rings": "AAA",
+      "check": "on",
+      "limit": 20
+    },
+    "input": {
+      "value": "EVICQULKLOHHFDLELSXBJHVKNYOCYVVWZPPQJNTTEVEBJTREFYZIIIOSVYXNLWYUQQXYWZRLOCFNLOWHIKAQTDIYRIVLXEQJUSOQUNLNFSFAMQSFHQGLEZMUXLAHTXODXWANZMGMXPUMNQWQEJUZNMBAYJBXIJQRMCFFE",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "# bombe: crib KGEZOGENEKRAEFTEBEFI at offset 6, model I, reflector B, rings AAA, check on\n# menu: 17 edges between 14 letters, 4 closures, test letter E\nrotors II I III  positions ABT  steckers AB CD EF GH  crib KGEZOGENEKRaEFzEBEFj\n# rotor orders: 1\n# stops: 1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "offset 18 with the middle rotor II at its turnover",
+    "ref": "Enigma I, rotors I II IV, positions ADO (settings: positions ADO, plugboard AQ BX CY DZ)",
+    "op": "bombe:search",
+    "params": {
+      "crib": "EFTEBEFINDENSICHIMRAUM",
+      "offset": 18,
+      "model": "I",
+      "rotors": "I II IV",
+      "reflector": "B",
+      "rings": "AAA",
+      "check": "on",
+      "limit": 20
+    },
+    "input": {
+      "value": "OIJJXAEVODQXVICDFSKZOOGADSEKOELTIULSLKVHRZPQRGKCGVFWIHLZEMKRWNQMUWPHQJAVOQWFXUJLHWRLSKBJLBZYABBXBMUNAHJAHWRSSUUNHHSXYPJZDWZPYDSEWNRYQWMZFJBJIZXKCYLDZSWGEBTZLDQDRXGMO",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "# bombe: crib EFTEBEFINDENSICHIMRAUM at offset 18, model I, reflector B, rings AAA, check on\n# menu: 21 edges between 18 letters, 4 closures, test letter E\nrotors I II IV  positions ADO  steckers AQ CY DZ  crib EFTExEFINDENSICHIMRAUM\n# rotor orders: 1\n# stops: 1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "reflector A, a 26-letter crib at offset 30",
+    "ref": "Enigma I, rotors V IV II, reflector A (settings: positions KAY, plugboard AL BN CO DP EQ FR)",
+    "op": "bombe:search",
+    "params": {
+      "crib": "SICHIMRAUMNORDOSTVONSTALIN",
+      "offset": 30,
+      "model": "I",
+      "rotors": "V IV II",
+      "reflector": "A",
+      "rings": "AAA",
+      "check": "on",
+      "limit": 20
+    },
+    "input": {
+      "value": "PZSKHIIHSMMBDJWGNBXCRUXMLGTZJTCTATGNVXSPEAMFVLWOZFEPIHWFBYQRVRJSLAUMHMGLBCGPOIPLHWTHTSORNMLEJHAANHFNAJWDTGIQEBSZFSOPNLHKMWFPRHNWTGCXVFKTLNIZXXUXKXUXMSMOAQIJRFSBLJMZH",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "# bombe: crib SICHIMRAUMNORDOSTVONSTALIN at offset 30, model I, reflector A, rings AAA, check on\n# menu: 26 edges between 21 letters, 6 closures, test letter A\nrotors V IV II  positions KAY  steckers AL BN CO DP EQ FR  crib SICHIMRAUMNORDOSTVONSTALIN\n# rotor orders: 1\n# stops: 1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a set of four rotors is searched in all 24 orders",
+    "ref": "Enigma I, true order V I II, positions PSA",
+    "op": "bombe:search",
+    "params": {
+      "crib": "UEDAUSGANGBAERWAL",
+      "offset": 7,
+      "model": "I",
+      "rotors": "V I II III",
+      "reflector": "B",
+      "rings": "AAA",
+      "check": "on",
+      "limit": 20
+    },
+    "input": {
+      "value": "RFLKIIHLSEKZISLXWKIMXBSIZYFBJSIIONXTHVVRBEHZWNVKHKVIEWGQRBDRUYJZJVDSMQUGOCMDZIDCPC",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "# bombe: crib UEDAUSGANGBAERWAL at offset 7, model I, reflector B, rings AAA, check on\n# menu: 15 edges between 13 letters, 3 closures, test letter A\nrotors V I II  positions PSA  steckers AZ BQ CD ET JW KX LV MR SY  crib UEDAUSGAhGBAErWAL\n# rotor orders: 24\n# stops: 1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a crib with no loop gives a stop almost everywhere: the limit stops the list",
+    "ref": "same message as the first vector, a 5-letter crib",
+    "op": "bombe:search",
+    "params": {
+      "crib": "UEDAU",
+      "offset": 7,
+      "model": "I",
+      "rotors": "V I II",
+      "reflector": "B",
+      "rings": "AAA",
+      "check": "on",
+      "limit": 2
+    },
+    "input": {
+      "value": "RFLKIIHLSEKZISLXWKIMXBSIZYFBJSIIONXTHVVRBEHZWNVKHKVIEWGQRBDRUYJZJVDSMQUGOCMDZIDCPC",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "# bombe: crib UEDAU at offset 7, model I, reflector B, rings AAA, check on\n# menu: 2 edges between 3 letters, 0 closures, test letter E\nrotors V I II  positions AAA  steckers AE BS DN  crib nEDtq\nrotors V I II  positions AAA  steckers AS BE DL  crib dEDtq\n# rotor orders: 1\n# stops: 2\n# limit reached: more stops may exist, raise the limit to see them",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a crib letter equal to the ciphertext letter under it is E_RANGE",
+    "ref": "parameter check",
+    "op": "bombe:search",
+    "params": {
+      "crib": "ABAD",
+      "offset": 0,
+      "model": "I",
+      "rotors": "I II III",
+      "reflector": "B",
+      "rings": "AAA",
+      "check": "on",
+      "limit": 20
+    },
+    "input": {
+      "value": "BCAB",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "a crib that runs past the end of the ciphertext is E_RANGE",
+    "ref": "parameter check",
+    "op": "bombe:search",
+    "params": {
+      "crib": "ABCDE",
+      "offset": 0,
+      "model": "I",
+      "rotors": "I II III",
+      "reflector": "B",
+      "rings": "AAA",
+      "check": "on",
+      "limit": 20
+    },
+    "input": {
+      "value": "BCAB",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "rotor VI is not on the Enigma I",
+    "ref": "parameter check",
+    "op": "bombe:search",
+    "params": {
+      "crib": "AB",
+      "offset": 0,
+      "model": "I",
+      "rotors": "I II VI",
+      "reflector": "B",
+      "rings": "AAA",
+      "check": "on",
+      "limit": 20
+    },
+    "input": {
+      "value": "BCAB",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "reflector A does not fit the M3",
+    "ref": "parameter check",
+    "op": "bombe:search",
+    "params": {
+      "crib": "AB",
+      "offset": 0,
+      "model": "M3",
+      "rotors": "I II III",
+      "reflector": "A",
+      "rings": "AAA",
+      "check": "on",
+      "limit": 20
+    },
+    "input": {
+      "value": "BCAB",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  }
+]
