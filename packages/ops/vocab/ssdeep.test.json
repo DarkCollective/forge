@@ -1,0 +1,104 @@
+[
+  {
+    "name": "digest: python-ssdeep README text 1",
+    "ref": "python-ssdeep documentation (DinoTools), README example; also the ssdeep reference algorithm (Kornblum, DFRWS 2006)",
+    "op": "ssdeep:digest",
+    "params": {},
+    "input": {
+      "value": "Also called fuzzy hashes, Ctph can match inputs that have homologies.",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3:AXGBicFlgVNhBGcL6wCrFQEv:AXGHsNhxLsr2C",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "digest: python-ssdeep README text 2",
+    "ref": "python-ssdeep documentation (DinoTools), README example; also the ssdeep reference algorithm (Kornblum, DFRWS 2006)",
+    "op": "ssdeep:digest",
+    "params": {},
+    "input": {
+      "value": "Also called fuzzy hashes, CTPH can match inputs that have homologies.",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3:AXGBicFlIHBGcL6wCrFQEv:AXGH6xLsr2C",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "digest: empty input",
+    "ref": "ssdeep/libfuzzy: the hash of no data is 3:: (no piece, smallest block size)",
+    "op": "ssdeep:digest",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3::",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "compare: python-ssdeep README pair scores 22",
+    "ref": "python-ssdeep documentation (DinoTools), README example; also the ssdeep reference algorithm (Kornblum, DFRWS 2006)",
+    "op": "ssdeep:compare",
+    "params": {
+      "other": "3:AXGBicFlIHBGcL6wCrFQEv:AXGH6xLsr2C"
+    },
+    "input": {
+      "value": "3:AXGBicFlgVNhBGcL6wCrFQEv:AXGHsNhxLsr2C",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 22
+    }
+  },
+  {
+    "name": "compare: identical hashes score 100",
+    "ref": "ssdeep reference: identical hashes score 100",
+    "op": "ssdeep:compare",
+    "params": {
+      "other": "3:AXGBicFlgVNhBGcL6wCrFQEv:AXGHsNhxLsr2C"
+    },
+    "input": {
+      "value": "3:AXGBicFlgVNhBGcL6wCrFQEv:AXGHsNhxLsr2C",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 100
+    }
+  },
+  {
+    "name": "compare: block sizes more than a factor of 2 apart score 0",
+    "ref": "ssdeep reference: block sizes must be equal or differ by a factor of 2",
+    "op": "ssdeep:compare",
+    "params": {
+      "other": "12:AXGBicFlgVNhBGcL6wCrFQEv:AXGHsNhxLsr2C"
+    },
+    "input": {
+      "value": "3:AXGBicFlgVNhBGcL6wCrFQEv:AXGHsNhxLsr2C",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 0
+    }
+  },
+  {
+    "name": "compare: not an ssdeep hash",
+    "ref": "format blocksize:hash:hash",
+    "op": "ssdeep:compare",
+    "params": {
+      "other": "3:AXGBicFlIHBGcL6wCrFQEv:AXGH6xLsr2C"
+    },
+    "input": {
+      "value": "nonsense",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

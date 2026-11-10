@@ -21,13 +21,13 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Date / Time | 0 | 0 | 0 | 9 | 9 |
 | Extractors | 0 | 0 | 0 | 18 | 18 |
 | Compression | 0 | 0 | 0 | 21 | 21 |
-| Hashing | 6 | 1 | 0 | 41 | 48 |
+| Hashing | 10 | 3 | 0 | 35 | 48 |
 | Code tidy | 0 | 0 | 0 | 24 | 24 |
 | Forensics | 0 | 0 | 0 | 9 | 9 |
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 4 | 0 | 3 | 14 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **107** | **23** | **3** | **373** | **506** |
+| **Total** | **111** | **25** | **3** | **367** | **506** |
 
 ## Data format (80)
 
@@ -450,7 +450,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 
 | CyberChef | Status | Forge | Note |
 | --- | --- | --- | --- |
-| Analyse hash | not yet |  |  |
+| Analyse hash | covered | `hash-analysis:analyse` | Takes hex text and returns a text report: length in hex characters, bytes and bits, and the hashing functions whose digest has that size. The table is Forge's own and lists some functions that Forge has not implemented. Text that is not hex (or has an odd digit count) is an error. |
 | Generate all checksums | not yet |  |  |
 | Generate all hashes | not yet |  |  |
 | MD2 | covered | `md2:digest` | Returns raw bytes (chain hex:encode). Only the standard 18 rounds of RFC 1319 exist; CyberChef's Rounds parameter is not supported. |
@@ -475,10 +475,10 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Ascon MAC | not yet |  |  |
 | GOST Hash | not yet |  |  |
 | Streebog | not yet |  |  |
-| SSDEEP | not yet |  |  |
-| CTPH | not yet |  |  |
-| Compare SSDEEP hashes | not yet |  |  |
-| Compare CTPH hashes | not yet |  |  |
+| SSDEEP | covered | `ssdeep:digest` | Context triggered piecewise hashing (Kornblum 2006). The result is text, blocksize:hash1:hash2, not bytes: it is a structured string that the compare word reads piece by piece. |
+| CTPH | redesigned | `ssdeep:ctph` | CTPH is the algorithm that ssdeep implements, and CyberChef offers it as a second name for the same computation, so one word covers both (ctph is an alias of ssdeep:digest). |
+| Compare SSDEEP hashes | covered | `ssdeep:compare` | The 0 to 100 score of the reference algorithm: block size check, runs of more than three equal characters cut to three, a common substring of 7 characters, a weighted edit distance (insert and remove 1, replace 2) and the cap for small block sizes. The first hash is the data input and the second is the other parameter. |
+| Compare CTPH hashes | redesigned | `ssdeep:compare-ctph` | The same comparison as Compare SSDEEP hashes under the algorithm's other name, so one word covers both (compare-ctph is an alias of ssdeep:compare). |
 | HMAC | not yet |  |  |
 | CMAC | not yet |  |  |
 | Bcrypt compare | not yet |  |  |
@@ -487,7 +487,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Argon2 compare | not yet |  |  |
 | NT Hash | covered | `nthash:digest` | MD4 of the UTF-16LE text (MS-NLMP NTOWFv1), 16 raw bytes. Takes text, not bytes. |
 | LM Hash | not yet |  |  |
-| MurmurHash3 | not yet |  |  |
+| MurmurHash3 | covered | `murmur3:digest` | MurmurHash3 x86_32 with a 32-bit seed (default 0), written in FL. Returns the 32-bit value as 4 raw bytes in big-endian order, the usual hex form (chain hex:encode); CyberChef shows the same value as an unsigned decimal. The x86_128 and x64_128 variants are not implemented. |
 | Fletcher-8 Checksum | not yet |  |  |
 | Fletcher-16 Checksum | not yet |  |  |
 | Fletcher-32 Checksum | not yet |  |  |
