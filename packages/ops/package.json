@@ -17,7 +17,7 @@
     },
     "./vite": {
       "types": "./dist/sources-vite.d.ts",
-      "default": "./src/sources-vite.ts"
+      "default": "./dist/sources-vite.js"
     },
     "./catalogue.json": "./dist/catalogue.json",
     "./catalogue.schema.json": "./dist/catalogue.schema.json"

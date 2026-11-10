@@ -141,11 +141,24 @@ describe("the Vite provider (under Vitest, which applies import.meta.glob)", () 
     expect(buildCatalogue(assembleRuntime(vite))).toEqual(buildCatalogue(assembleRuntime(node)));
   });
 
-  test("the package entry @forge/ops/vite resolves to the source file", async () => {
+  test("the package entry @forge/ops/vite loads", async () => {
     const entry = (await import("@forge/ops/vite")) as typeof import("./sources-vite.js");
     const bundle = await entry.loadBundleVite(["text"]);
     expect(bundle.vocabs).toEqual(["text"]);
     expect(Object.keys(entry.createViteProvider().primitiveLoaders()).sort()).toEqual(PRIMS);
+  });
+
+  test("the package entries share one module graph, so the catalogue is the same from either source", async () => {
+    // A consumer (the worker core, the web app) builds the catalogue with `@forge/ops` and loads the
+    // vocabularies with `@forge/ops/vite`. If the two entries resolved to different copies of
+    // `regex-engine` (src vs dist), the regex marks would be lost and `needsHardKill` would be false.
+    const pkg = await import("@forge/ops");
+    const entry = await import("@forge/ops/vite");
+    const viaVite = pkg.buildCatalogue(pkg.assembleRuntime(await entry.loadBundleVite("all")));
+    const viaNode = pkg.buildCatalogue(pkg.assembleRuntime(await loadBundleNode("all")));
+    expect(viaVite.ops.filter((op) => op.needsHardKill).length).toBeGreaterThan(0);
+    expect(viaVite).toEqual(viaNode);
+    expect(viaVite.version).toBe(viaNode.version);
   });
 
   test("hex alone does not import the other primitive modules", async () => {

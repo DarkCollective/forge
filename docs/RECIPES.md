@@ -318,9 +318,12 @@ any other op).
   `import.meta.glob(["./prims/*.{ts,js}", "!./prims/*.d.ts", "!./prims/*.test.*"])`. Primitive modules therefore become lazy chunks
   (PLAN §4: op modules are lazy). The globs list both extensions so the same file works whether Vite reads `src/` or `dist/`;
   both vocab and prims paths are relative to the file, which sits next to `vocab/` (one level up) in both trees.
-  **Making it work from the pre-built package:** `package.json` maps `"./vite"` to the **source** file `./src/sources-vite.ts`
+  **Making it work from the pre-built package:** `package.json` maps `"./vite"` to the **built** file `./dist/sources-vite.js`
   (types: `./dist/sources-vite.d.ts`) and `files` ships `src`, `dist` and `vocab`. Vite treats a workspace-linked package as source,
-  so `import.meta.glob` is transformed by Vite itself and the globs resolve against `src/prims/*.ts`. The Gate 2 browser harness is the
+  so `import.meta.glob` (left intact by `tsc`) is transformed by Vite itself and the globs resolve against `dist/prims/*.js`. It must
+  not map to `src/`: the primitive modules would then import `src/regex-engine.ts`, a second copy of the module whose registry
+  of regex primitives (`needsHardKill`) `dist/catalogue.js` never sees, and the browser catalogue (and its `version`) would differ
+  from the build-time one. The Gate 2 browser harness is the
   test that this works in a real Vite build (G2-5), and a unit test imports `@forge/ops/vite` under Vitest.
 
 `createBundleLoader(provider)` returns `loadBundle(names?)`: it scans once, then returns, for the requested

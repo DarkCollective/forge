@@ -31,6 +31,7 @@ interface Gate2 {
   done: boolean;
   crossOriginIsolated: boolean;
   sharedAbort: boolean;
+  catalogueVersion?: string;
   result?: BakeResult;
   error?: string;
 }
@@ -84,13 +85,14 @@ async function runGate2(): Promise<void> {
     );
   }
   const baker = newClient();
-  await baker.init({ vocabs: "all" });
+  const info = await baker.init({ vocabs: "all" });
   const result = await baker.bake(decoded.recipe, decoded.input, { trust: "untrusted" });
   await baker.dispose();
   window.__gate2 = {
     done: true,
     crossOriginIsolated: isolated,
     sharedAbort,
+    catalogueVersion: info.catalogueVersion,
     result: stripTimings(result),
   };
   out.textContent = JSON.stringify(window.__gate2, null, 2);
