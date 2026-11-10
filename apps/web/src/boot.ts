@@ -36,7 +36,7 @@ export function watchTheme(): void {
 export async function boot(): Promise<void> {
   watchTheme();
   const ctx = { store, actions };
-  const catalogue = loadCatalogue(actions);
+  const catalogue = loadCatalogue(actions, store);
   await Promise.all(
     features.map(async (feature) => {
       try {

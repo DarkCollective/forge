@@ -17,7 +17,6 @@
 // pending definition, inspector) and the glue between the console worker client and the app store
 // (UI.md section 5): starting the worker, publishing the catalogue with user ops, reloading on user
 // word changes. It lives outside the element so the scrollback survives the pane being closed.
-import type { Catalogue } from "@forge/ops";
 import type { Actions, AppStore } from "../state/actions.js";
 import type { ConsoleClient, InitResult } from "../fl/console-client.js";
 import type { UserUnit } from "../fl/protocol.js";
@@ -130,7 +129,6 @@ export function createConsoleController(options: ConsoleControllerOptions): Cons
   const listeners = new Set<() => void>();
   let nextEntry = 1;
   let started = false;
-  let lastPublished: { catalogue: Catalogue; source: string } | undefined;
   let state: ConsoleViewState = {
     entries: [],
     stack: [],
@@ -169,20 +167,15 @@ export function createConsoleController(options: ConsoleControllerOptions): Cons
   const currentSource = (): string => store.get().user.source;
 
   /** Publish the worker's catalogue (with user ops) and the user unit's load error. */
-  function publish(result: InitResult, source: string): void {
+  function publish(result: InitResult): void {
     const shown = store.get().catalogue;
     const same = shown.status === "ready" && shown.catalogue.version === result.catalogue.version;
     if (!same) actions.setCatalogue(result.catalogue);
-    lastPublished = { catalogue: result.catalogue, source };
     actions.setUserError(result.userError);
   }
 
-  function applyInit(
-    result: InitResult,
-    source: string,
-    why: "start" | "reload" | "restart",
-  ): void {
-    publish(result, source);
+  function applyInit(result: InitResult, why: "start" | "reload" | "restart"): void {
+    publish(result);
     const message =
       why === "start"
         ? "Console ready."
@@ -201,7 +194,7 @@ export function createConsoleController(options: ConsoleControllerOptions): Cons
     try {
       const result = await client.init(userUnits(source));
       // The user words changed while loading: that change has its own pending reload.
-      applyInit(result, source, why);
+      applyInit(result, why);
     } catch (e) {
       started = false;
       set({ starting: false });
@@ -341,7 +334,7 @@ export function createConsoleController(options: ConsoleControllerOptions): Cons
     },
 
     restarted(result) {
-      applyInit(result, currentSource(), "restart");
+      applyInit(result, "restart");
     },
 
     attach() {
@@ -372,22 +365,6 @@ export function createConsoleController(options: ConsoleControllerOptions): Cons
               }
               void load("reload");
             }, debounceMs);
-          },
-        ),
-      );
-      // The build-time catalogue may land after ours (it loads in parallel): put ours back once.
-      offs.push(
-        store.select(
-          (s) => s.catalogue,
-          (c) => {
-            if (
-              c.status === "ready" &&
-              lastPublished !== undefined &&
-              lastPublished.source === currentSource() &&
-              c.catalogue.version !== lastPublished.catalogue.version
-            ) {
-              actions.setCatalogue(lastPublished.catalogue);
-            }
           },
         ),
       );

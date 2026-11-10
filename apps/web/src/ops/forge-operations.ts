@@ -315,7 +315,7 @@ export class ForgeOperations extends LitElement {
       const message = cat.status === "error" ? cat.message : "unknown error";
       return html`<p class="empty" role="alert">Could not load the operations: ${message}</p>
         <div class="empty">
-          <button type="button" @click=${() => loadCatalogue(actions)}>Try again</button>
+          <button type="button" @click=${() => loadCatalogue(actions, store)}>Try again</button>
         </div>`;
     }
     if (model === null) return nothing;

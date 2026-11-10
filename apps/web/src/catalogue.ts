@@ -18,7 +18,7 @@
 // `actions.setCatalogue`.
 import catalogueUrl from "@forge/ops/catalogue.json?url";
 import type { Catalogue } from "@forge/ops";
-import type { Actions } from "./state/actions.js";
+import type { Actions, AppStore } from "./state/actions.js";
 
 export async function fetchCatalogue(url: string = catalogueUrl): Promise<Catalogue> {
   const response = await fetch(url);
@@ -28,11 +28,23 @@ export async function fetchCatalogue(url: string = catalogueUrl): Promise<Catalo
   return data;
 }
 
-export async function loadCatalogue(actions: Actions): Promise<void> {
-  actions.setCatalogueLoading();
+/**
+ * Load the build-time catalogue. Ordering rule: a catalogue already published (by the console worker,
+ * which includes `user:` ops) always wins, so a late fetch never overwrites it and a failed fetch
+ * never replaces it with an error.
+ */
+export async function loadCatalogue(
+  actions: Actions,
+  store: AppStore,
+  fetcher: () => Promise<Catalogue> = fetchCatalogue,
+): Promise<void> {
+  if (store.get().catalogue.status !== "ready") actions.setCatalogueLoading();
   try {
-    actions.setCatalogue(await fetchCatalogue());
+    const catalogue = await fetcher();
+    if (store.get().catalogue.status !== "ready") actions.setCatalogue(catalogue);
   } catch (e) {
-    actions.setCatalogueError(e instanceof Error ? e.message : String(e));
+    if (store.get().catalogue.status !== "ready") {
+      actions.setCatalogueError(e instanceof Error ? e.message : String(e));
+    }
   }
 }

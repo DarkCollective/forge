@@ -13,16 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// Issue selection for step cards. WP 3.4 exports the same idea as params/issues.ts; this copy keeps
-// the recipe pane independent until both have landed.
+// Issue selection for step cards, built on the shared `issuesForPath` of the params module.
 import type { RecipeIssue } from "@forge/recipe";
+import { issuesForPath } from "../params/issues.js";
 import { CHILD_LIST_KEYS } from "../state/recipe-ops.js";
 import type { StepPath } from "../state/recipe-ops.js";
-
-/** Issues at `prefix` or below it. */
-export function issuesForPath(issues: readonly RecipeIssue[], prefix: string): RecipeIssue[] {
-  return issues.filter((i) => i.path === prefix || i.path.startsWith(prefix + "/"));
-}
 
 /** First token after the step path, or "" when the issue is at the step itself. */
 function fieldOf(issue: RecipeIssue, stepPath: StepPath): string {
