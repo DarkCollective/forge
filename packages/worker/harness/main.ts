@@ -19,8 +19,8 @@
 import catalogueUrl from "@forge/ops/catalogue.json?url";
 import { decodeShare } from "@forge/recipe";
 import type { CatalogueView } from "@forge/recipe";
-import { createBakerClient, createWebWorkerHost, stripTimings } from "@forge/worker";
-import type { BakeResult } from "@forge/worker";
+import { createBakerClient, createWebWorkerHost, runOpVectors, stripTimings } from "@forge/worker";
+import type { BakeResult, OpTestVector, VectorReport } from "@forge/worker";
 import WebWorker from "@forge/worker/worker-web?worker";
 
 /** The golden fragment of RECIPES.md section 12.5 (the Gate 2 recipe and its input). */
@@ -44,6 +44,14 @@ interface CancelOutcome {
 
 declare global {
   interface Window {
+    /** Gate 4: `run` bakes every vector in the Web Worker; scripts/gate4-browser.mjs calls it with the vector files. */
+    __gate4?: {
+      ready: boolean;
+      crossOriginIsolated: boolean;
+      sharedAbort: boolean;
+      run?: (files: Record<string, OpTestVector[]>) => Promise<VectorReport>;
+      error?: string;
+    };
     __gate2?: Gate2;
     __gate2cancel?: {
       done: boolean;
@@ -148,10 +156,29 @@ async function runCancel(): Promise<void> {
   out.textContent = JSON.stringify(state, null, 2);
 }
 
+/** Gate 4 (PLAN section 7): the op vector runner against the baker in a real Web Worker. */
+async function runVectors(): Promise<void> {
+  const catalogue = (await (await fetch(catalogueUrl)).json()) as CatalogueView;
+  const baker = newClient();
+  await baker.init({ vocabs: "all" });
+  window.__gate4 = {
+    ready: true,
+    crossOriginIsolated: isolated,
+    sharedAbort,
+    run: (files) => runOpVectors({ baker, catalogue, files }),
+  };
+  out.textContent = "ready: call window.__gate4.run(files)";
+}
+
 const mode = new URLSearchParams(location.search).get("mode");
-(mode === "cancel" ? runCancel() : runGate2()).catch((e: unknown) => {
-  const message = e instanceof Error ? e.message : String(e);
-  if (mode === "cancel") window.__gate2cancel = { done: true, error: message };
-  else window.__gate2 = { done: true, crossOriginIsolated: isolated, sharedAbort, error: message };
-  out.textContent = `error: ${message}`;
-});
+(mode === "cancel" ? runCancel() : mode === "vectors" ? runVectors() : runGate2()).catch(
+  (e: unknown) => {
+    const message = e instanceof Error ? e.message : String(e);
+    if (mode === "vectors")
+      window.__gate4 = { ready: true, crossOriginIsolated: isolated, sharedAbort, error: message };
+    else if (mode === "cancel") window.__gate2cancel = { done: true, error: message };
+    else
+      window.__gate2 = { done: true, crossOriginIsolated: isolated, sharedAbort, error: message };
+    out.textContent = `error: ${message}`;
+  },
+);
