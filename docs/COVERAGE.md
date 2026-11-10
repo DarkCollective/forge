@@ -12,7 +12,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Category | Covered | Redesigned | Dropped | Not yet | Total |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Data format | 54 | 6 | 0 | 20 | 80 |
-| Encryption / Encoding | 19 | 1 | 0 | 75 | 95 |
+| Encryption / Encoding | 19 | 3 | 0 | 73 | 95 |
 | Public Key | 0 | 0 | 0 | 30 | 30 |
 | Arithmetic / Logic | 9 | 0 | 0 | 17 | 26 |
 | Networking | 0 | 0 | 0 | 34 | 34 |
@@ -27,7 +27,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 2 | 0 | 0 | 19 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **90** | **14** | **0** | **402** | **506** |
+| **Total** | **90** | **16** | **0** | **400** | **506** |
 
 ## Data format (80)
 
@@ -207,8 +207,8 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Bombe | not yet |  |  |
 | Multiple Bombe | not yet |  |  |
 | Typex | not yet |  |  |
-| Lorenz | not yet |  |  |
-| Colossus | not yet |  |  |
+| Lorenz | redesigned | `lorenz:encrypt`, `lorenz:decrypt` | Two words with one set of parameters (model SZ40, SZ42a or SZ42b, the P5 attachment, KH, ZMUG, BREAM or custom wheel patterns, twelve start positions, text or ITA2 in and out); decrypt exists because the P5 limitation makes the key depend on the plain text. |
+| Colossus | redesigned | `colossus:count` | A counting run over the start positions of two chi wheels with a Boolean condition on delta Z and delta chi (the 1+2 break-in by default), a set total and a table of the best settings; it does not model the plug panels and the tape reader of the machine, and it does not search three wheels at once. |
 | SIGABA | not yet |  |  |
 | Flask Session Decode | not yet |  |  |
 | Flask Session Sign | not yet |  |  |
