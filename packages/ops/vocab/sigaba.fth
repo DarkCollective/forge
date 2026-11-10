@@ -16,7 +16,8 @@
 \   J. Savard and R. Pekelney, "The ECM Mark II: Design, History and Cryptology", Cryptologia 23(3),
 \     1999 (the reference for the machine; cited by the two above, not read for the wirings).
 \   Crypto Museum, "SIGABA", cryptomuseum.com/crypto/usa/sigaba (physical description).
-\ No CyberChef source, table or description was used.
+\ No CyberChef source, table or text was copied. One convention follows CyberChef's behaviour, for
+\ compatibility: the index rotor offset +d for the digit d (see below); the sources do not fix it.
 \
 \ Per letter: (1) the letter goes through the cipher rotors, (2) F G H I go through the control rotors,
 \ right to left (C4 first), (3) the control outputs A to Z are grouped onto index inputs
@@ -31,7 +32,8 @@
 \ rotor's offset. Forward, left to right: c -> W[(c+p) mod 26] - p, and the letter steps p-1.
 \ Reversed (the rotor turned over, which mirrors the contacts), left to right: c -> p - Winv[(p-c) mod 26]
 \ and the letter steps p+1. Right to left uses the inverse of the same permutation. Index rotors
-\ (10 contacts, never reversed here) use offset -d for the digit d, as their labels run the other way.
+\ (10 contacts, never reversed here) use offset +d for the digit d, like the others: v -> W[(v+d) mod 10] - d.
+\ This sign is the convention CyberChef uses, adopted for compatibility (the sources do not fix it).
 \ The letter Z is enciphered as X and a space as Z; a deciphered Z is a space (so X and Z both come
 \ back as X). Letters are case-insensitive; the output is upper case.
 \
@@ -92,9 +94,9 @@ IN: sigaba
 
 \ ---- the index bank ----
 
-\ One index rotor with wiring w at digit d: a digit v goes to w[v-d] + d (labels run backwards).
+\ One index rotor with wiring w at digit d: a digit v goes to w[v+d] - d (offset +d, CyberChef's).
 : _index-rotor ( v:int w:bytes d:int -- int )
-  w v d - 10 mod nth d + 10 mod ;
+  w v d + 10 mod nth 10 + d - 10 mod ;
 
 \ Rotor j (left to right) of the bank for the digit v.
 : _index-step ( v:int j:int ids:list iw:list pos:bytes -- int )
@@ -156,7 +158,7 @@ META: crypt
   param index-rotors "The index rotors 0 to 4 in left to right order, each once, e.g. 0 1 2 3 4." ;
   param cipher-positions "Window letters of the five cipher rotors, left to right (O is zeroized). A forward rotor steps O to N, a reversed one O to P." ;
   param control-positions "Window letters of the five control rotors, left to right (O is zeroized)." ;
-  param index-positions "Digits 0 to 9 of the five index rotors, left to right (0 is zeroized). The index rotors never step." ;
+  param index-positions "Digits 0 to 9 of the five index rotors, left to right (0 is zeroized). The index rotors never step. A rotor at digit d is offset by +d, as in CyberChef." ;
   param wirings "Ten rotor wirings of 26 letters each, separated by spaces: rotor k maps contact A to the first letter, B to the second, and so on. Empty: Forge's default set (not historical)." ;
   param index-wirings "Five index wirings of 10 digits each, separated by spaces: contact 0 maps to the first digit. Empty: Forge's default set (not historical)." ;
   param other "drop: ignore bytes that are not letters or spaces. error: raise E_COERCE. Decrypting always skips white space." ;

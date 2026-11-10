@@ -9,6 +9,6 @@
     "cyberchef": "Typex",
     "status": "redesigned",
     "forge": ["typex:encrypt"],
-    "note": "Real Typex rotor wirings were never published, so there is no built-in rotor set: the five rotor wirings, reflector, notches and reversed rotors are parameters (validated permutations of A-Z), with clearly labelled non-historical example defaults."
+    "note": "Real Typex rotor wirings were never published, so there is no built-in rotor set: the five rotor wirings, reflector, notches and reversed rotors are parameters (validated permutations of A-Z), with clearly labelled non-historical example defaults. The conventions (rotors written left to right with the signal entering at the right, notch letters tested after the step, reversed rotors as neg o inverse o neg, the entry plugboard as a 26-letter wiring entering c as -P(c), Enigma-style stepping with the double step) follow CyberChef's for compatibility; the real Typex conventions are unpublished."
   }
 ]

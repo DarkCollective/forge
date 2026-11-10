@@ -20,7 +20,9 @@ import { loadBundleNode } from "./sources-node.js";
 
 // typex is FL (vocab/typex.fth); these tests drive typex:encrypt through the runtime. Typex rotor
 // wirings are unpublished, so the vectors in vocab/typex.test.json are self-derived with an
-// independent simulator, and the tests here are round trips and structural properties.
+// independent simulator, and the tests here are round trips and structural properties. The
+// conventions (rotor order, notch timing, reversed rotors, entry plugboard, stepping) follow
+// CyberChef's for compatibility, so the vectors are of a CyberChef-compatible machine.
 const { str, bytes } = valueHelpers;
 const runtime = assembleRuntime(await loadBundleNode(["typex"]));
 
@@ -36,7 +38,7 @@ const PARAM_NAMES = [
   "rotor-5",
   "reflector",
   "notches-3",
-  "notches-4",
+  "notches-2",
   "reversed",
   "rings",
   "positions",
@@ -118,10 +120,6 @@ function randomNotches(next: () => number): string {
 
 function randomMachine(next: () => number): Partial<Settings> {
   const reversed = [1, 2, 3, 4, 5].filter(() => next() < 0.3).join(" ");
-  const pairs = shuffled(next);
-  const plug: string[] = [];
-  for (let i = 0; i < Math.floor(next() * 10); i++)
-    plug.push((pairs[2 * i] as string) + (pairs[2 * i + 1] as string));
   return {
     "rotor-1": shuffled(next).join(""),
     "rotor-2": shuffled(next).join(""),
@@ -130,11 +128,11 @@ function randomMachine(next: () => number): Partial<Settings> {
     "rotor-5": shuffled(next).join(""),
     reflector: randomReflector(next),
     "notches-3": randomNotches(next),
-    "notches-4": randomNotches(next),
+    "notches-2": randomNotches(next),
     reversed,
     rings: randomLetters(next, 5),
     positions: randomLetters(next, 5),
-    plugboard: plug.join(" "),
+    plugboard: next() < 0.5 ? "" : shuffled(next).join(""),
   };
 }
 
@@ -173,22 +171,22 @@ describe("typex round trip and structure", () => {
   });
 
   test("with no notches only rotor 3 moves, so the text has the fast rotor's period of 26", async () => {
-    const s = { "notches-3": "", "notches-4": "" };
+    const s = { "notches-3": "", "notches-2": "" };
     const cipher = await enc("A".repeat(78), s);
     expect(cipher.slice(0, 26)).toBe(cipher.slice(26, 52));
     expect(cipher.slice(0, 26)).toBe(cipher.slice(52, 78));
   });
 
-  test("a notch on rotor 3 moves rotor 4 and breaks that period", async () => {
+  test("a notch on rotor 3 moves rotor 2 and breaks that period", async () => {
     const cipher = await enc("A".repeat(78));
     expect(cipher.slice(0, 26)).not.toBe(cipher.slice(26, 52));
   });
 
-  test("a notch at every window letter makes rotor 4 step at every press", async () => {
-    // Rotor 4 stepping at every press, with rotor 5 held still, is a machine whose rotors 3 and 4
+  test("a notch at every window letter makes rotor 2 step at every press", async () => {
+    // Rotor 2 stepping at every press, with rotor 1 held still, is a machine whose rotors 3 and 2
     // both advance each press; it differs from the same machine with no notches.
-    const all = await enc("A".repeat(40), { "notches-3": LETTERS, "notches-4": "" });
-    const none = await enc("A".repeat(40), { "notches-3": "", "notches-4": "" });
+    const all = await enc("A".repeat(40), { "notches-3": LETTERS, "notches-2": "" });
+    const none = await enc("A".repeat(40), { "notches-3": "", "notches-2": "" });
     expect(all).not.toBe(none);
   });
 
@@ -200,8 +198,48 @@ describe("typex round trip and structure", () => {
     expect(await enc(plain, { reversed: "2,4" })).toBe(await enc(plain, { reversed: "4 2" }));
   });
 
+  test("an empty entry plugboard is the identity wiring, which is not the same as no mirroring", async () => {
+    expect(await enc("PLUGS", { plugboard: LETTERS })).toBe(await enc("PLUGS"));
+    expect(
+      await enc("PLUGS", { plugboard: "a b c d e f g h i j k l m n o p q r s t u v w x y z" }),
+    ).toBe(await enc("PLUGS"));
+    expect(await enc("PLUGS", { plugboard: "BADCFEHGJILKNMPORQTSVUXWZY" })).not.toBe(
+      await enc("PLUGS"),
+    );
+  });
+
+  test("the notch is tested after the step: the fast rotor steps onto it, then the middle one moves", async () => {
+    // Identity rotors and a reflector put the whole effect in the shifts. With the fast rotor
+    // standing one before its notch the middle rotor moves on the first press, so the text equals
+    // that of a machine started with the middle rotor already one on and no notch at all.
+    const base = { "notches-2": "", positions: "AAAAA" };
+    const carried = await enc("A".repeat(30), { ...base, "notches-3": "F", positions: "AAEAA" });
+    const preset = await enc("A".repeat(30), {
+      "notches-3": "",
+      "notches-2": "",
+      positions: "ABEAA",
+    });
+    expect(carried.slice(0, 1)).toBe(preset.slice(0, 1));
+    expect(carried.slice(0, 20)).toBe(preset.slice(0, 20));
+  });
+
+  test("the double step: the middle rotor steps on the press before its own notch, the slow one with it", async () => {
+    // Middle rotor at C, notch D, no fast notches: the first press steps middle and slow together.
+    const stepped = await enc("A".repeat(8), {
+      "notches-3": "",
+      "notches-2": "D",
+      positions: "ACAAA",
+    });
+    const preset = await enc("A".repeat(8), {
+      "notches-3": "",
+      "notches-2": "",
+      positions: "BDAAA",
+    });
+    expect(stepped).toBe(preset);
+  });
+
   test("stator ring and position only matter by their difference", async () => {
-    expect(await enc("STATORS", { rings: "CDAAA", positions: "CDAAA" })).toBe(await enc("STATORS"));
+    expect(await enc("STATORS", { rings: "AAABC", positions: "AAABC" })).toBe(await enc("STATORS"));
   });
 });
 
@@ -254,6 +292,8 @@ describe("typex argument validation", () => {
     expect((await errorOf({ positions: "1 2 3 4 0" })).code).toBe("E_RANGE");
     expect((await errorOf({ plugboard: "AB AC" })).code).toBe("E_RANGE");
     expect((await errorOf({ plugboard: "A" })).code).toBe("E_RANGE");
+    expect((await errorOf({ plugboard: `A${LETTERS.slice(0, 25)}` })).code).toBe("E_RANGE");
+    expect((await errorOf({ "notches-2": "A1" })).code).toBe("E_RANGE");
   });
 });
 
