@@ -1,0 +1,18 @@
+[
+ { "cyberchef": "ROT13", "status": "redesigned", "forge": ["classical:rot13"], "note": "One parameterised word, classical:rot (amount, default 13), replaces ROT13 and Caesar-style shifts; rot13 is an alias." },
+ { "cyberchef": "ROT47", "status": "covered", "forge": ["classical:rot47"] },
+ { "cyberchef": "Vigenère Encode", "status": "covered", "forge": ["classical:vigenere-encrypt"] },
+ { "cyberchef": "Vigenère Decode", "status": "covered", "forge": ["classical:vigenere-decrypt"] },
+ { "cyberchef": "Bacon Cipher Encode", "status": "covered", "forge": ["classical:bacon-encode"] },
+ { "cyberchef": "Bacon Cipher Decode", "status": "covered", "forge": ["classical:bacon-decode"] },
+ { "cyberchef": "Bifid Cipher Encode", "status": "covered", "forge": ["classical:bifid-encrypt"] },
+ { "cyberchef": "Bifid Cipher Decode", "status": "covered", "forge": ["classical:bifid-decrypt"] },
+ { "cyberchef": "Affine Cipher Encode", "status": "covered", "forge": ["classical:affine-encrypt"] },
+ { "cyberchef": "Affine Cipher Decode", "status": "covered", "forge": ["classical:affine-decrypt"] },
+ { "cyberchef": "A1Z26 Cipher Encode", "status": "covered", "forge": ["classical:a1z26-encode"] },
+ { "cyberchef": "A1Z26 Cipher Decode", "status": "covered", "forge": ["classical:a1z26-decode"] },
+ { "cyberchef": "Rail Fence Cipher Encode", "status": "covered", "forge": ["classical:rail-fence-encrypt"] },
+ { "cyberchef": "Rail Fence Cipher Decode", "status": "covered", "forge": ["classical:rail-fence-decrypt"] },
+ { "cyberchef": "Atbash Cipher", "status": "covered", "forge": ["classical:atbash"] },
+ { "cyberchef": "Substitute", "status": "covered", "forge": ["classical:substitute"] }
+]

@@ -21,6 +21,8 @@ jobs:
       - run: npm run size
       - run: npx playwright install --with-deps chromium
       - run: npm run e2e
+      - run: npm run gate2:browser -w @forge/worker
+      - run: npm run gate4:browser -w @forge/worker
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

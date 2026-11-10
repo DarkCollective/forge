@@ -50,10 +50,6 @@ IN: base85
 : _table ( alpha:str -- bytes )
   alpha 255 255 util:decode-table ;
 
-: _symbols ( b:bytes table:bytes -- bytes )
-  b table translate
-  dup [ 255 = ] filter len 0 <> [ "a character is not in the alphabet" raise:coerce ] when ;
-
 \ Removes a leading <~ and a trailing ~> (neither can be data: ~ is outside the alphabet).
 : _strip-delims ( b:bytes -- bytes )
   b len 2 >= [ b 0 2 slice "<~" str>bytes = ] [ false ] if
@@ -70,19 +66,13 @@ IN: base85
 : _expand-z ( b:bytes -- bytes )
   b bytes>latin1 "z" split _expand-z2 ;
 
-: _val85 ( b:bytes -- int )
-  b 0 [ swap 85 * + ] reduce ;
-
 : _ugroup ( p:bytes g:int -- int )
-  p g 5 * g 5 * 5 + slice _val85 ;
-
-: _bytes4 ( v:int -- bytes )
-  0 4 range [ 3 swap - 8 * v swap shr 255 band ] map list>bytes ;
+  p g 5 * g 5 * 5 + slice 85 util:digits>int ;
 
 : _ugroups ( p:bytes -- bytes )
   0 p len 5 div range [ p swap _ugroup ] map
   dup [ 4294967295 > ] filter len 0 <> [ "a group is larger than 32 bits" raise:coerce ] when
-  [ _bytes4 ] map #[ ] bjoin ;
+  [ 4 util:int>be-bytes ] map #[ ] bjoin ;
 
 \ padn digits of u (84) complete the last group; as many bytes are then dropped.
 : _finish2 ( s:bytes padn:int -- bytes )
@@ -100,8 +90,8 @@ IN: base85
   "Encodings" category
   [ util:space? not ] filter
   variant "z85" =
-  [ _z85-str _table _symbols false _finish ]
-  [ _strip-delims _expand-z _a85-str _table _symbols true _finish ] if ;
+  [ _z85-str _table util:check-symbols false _finish ]
+  [ _strip-delims _expand-z _a85-str _table util:check-symbols true _finish ] if ;
 
 META: encode
   param variant "ascii85 (Adobe, digits ! to u) or z85 (ZeroMQ RFC 32)." ;

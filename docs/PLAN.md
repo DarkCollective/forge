@@ -250,14 +250,13 @@ CyberChef has **506 operations** in 16 categories (see research §5 and the appe
 6. Compression (CompressionStream; WASM zstd/brotli, which CyberChef users have asked for)
 7. Public key, networking parsers, forensics, multimedia, code tidy (lowest priority)
 
-Each WP also updates `docs/COVERAGE.md`, a generated table of CyberChef capability → the Forge word(s) that cover it (or "dropped" / "redesigned", with a reason).
+Each WP also updates its `docs/coverage/<area>.json` mapping, from which `npm run coverage` generates `docs/COVERAGE.md`, a table of CyberChef capability → the Forge word(s) that cover it (or "dropped" / "redesigned", with a reason).
 
 Phase 5 notes (follow-ups from Phase 4):
 
 - `html:decode` needs the full HTML named-entity table, and the windows-1252 remap of `&#128;`–`&#159;`.
 - `bits:xor-brute` with 2-byte keys hits the total-allocation limit on inputs over a few KiB without a crib.
 - `url:encode` and `morse:encode` use about half the 10M default step budget at 64 KiB.
-- `gate2:browser` and `gate4:browser` are not in CI yet.
 
 ### Phase 6 — Beyond CyberChef
 Magic auto-detection (declarative `checks` in META, depth-limited search). An optional recipe store backend behind `RecipeStore`. A PWA/offline mode. The `@forge/cli`. Recipe diff/swap. **Relix vocabulary** integration as an `relix:` vocab of primitives.
@@ -268,6 +267,7 @@ Magic auto-detection (declarative `checks` in META, depth-limited search). An op
 - **Isolation**: parallel WPs run in separate git worktrees on `wp/<id>` branches. The orchestrator merges after review.
 - **Verification per WP**: read the diff, then re-run `npm run lint && npm run typecheck && npm test && npm run build` (+e2e from Phase 3) on the merged result, then spot-check behaviour by hand.
 - **Shared utilities**: op agents check `packages/ops/vocab/util.fth` (§3.5) before writing a helper. In their report they list **utility candidates**: helpers they wrote that look generally useful, each with its name, stack effect and why. The orchestrator reviews these, and `npm run dupes -w @forge/ops`, on every WP, and promotes accepted ones into `util` through a small follow-up WP. The dupes test blocks exact copies across vocabularies.
+- **Coverage table**: every op WP adds or updates its own `docs/coverage/<area>.json` (never another WP's) and runs `npm run coverage`, committing the regenerated `docs/COVERAGE.md`. A test fails when it is out of date.
 - **Order**: Phase 1 is mostly sequential (1.1 → 1.2/1.3 in parallel → 1.4 → 1.5 → 1.6/1.7/1.8 in parallel). Phase 3.1–3.2 can start once Gate 1 passes, against a mocked catalogue. Phases 4 and 5 are highly parallel.
 
 ## 9. Decisions

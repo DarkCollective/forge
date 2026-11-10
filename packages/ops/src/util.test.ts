@@ -95,6 +95,95 @@ describe("util:decode-table", () => {
   });
 });
 
+describe("util:check-symbols", () => {
+  const table = async (alpha: string, ws: number, pad: number) =>
+    (await value("util:decode-table", [str(alpha), int(ws), int(pad)])) as Uint8Array;
+  const check = (data: number[], t: Uint8Array) =>
+    runtime.call("util:check-symbols", [
+      valueHelpers.bytes(Uint8Array.from(data)),
+      valueHelpers.bytes(t),
+    ]);
+
+  test("translates every byte through the table", async () => {
+    const t = await table("abc", 255, 255);
+    const r = await check([99, 97, 98, 98], t);
+    expect(r.ok).toBe(true);
+    expect((top(r) as { v: Uint8Array }).v).toEqual(Uint8Array.of(2, 0, 1, 1));
+  });
+
+  test("empty data gives empty bytes", async () => {
+    const r = await check([], await table("abc", 255, 255));
+    expect(r.ok).toBe(true);
+    expect((top(r) as { v: Uint8Array }).v).toEqual(new Uint8Array(0));
+  });
+
+  test("other markers (white space 254, padding 253) are left for the caller", async () => {
+    const r = await check([97, 32, 61], await table("abc", 254, 253));
+    expect(r.ok).toBe(true);
+    expect((top(r) as { v: Uint8Array }).v).toEqual(Uint8Array.of(0, 254, 253));
+  });
+
+  test("a byte outside the alphabet is E_COERCE", async () => {
+    const r = await check([97, 122, 98], await table("abc", 254, 253));
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.error.code).toBe("E_COERCE");
+  });
+
+  test("white space is an error when the table maps it to 255", async () => {
+    const r = await check([97, 32], await table("abc", 255, 255));
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.error.code).toBe("E_COERCE");
+  });
+});
+
+describe("util:int>be-bytes", () => {
+  const be = async (v: number | bigint, n: number) =>
+    (await value("util:int>be-bytes", [int(v), int(n)])) as Uint8Array;
+
+  test("the low n bytes, most significant first", async () => {
+    expect(await be(0x01020304, 4)).toEqual(Uint8Array.of(1, 2, 3, 4));
+    expect(await be(0x0102030405, 5)).toEqual(Uint8Array.of(1, 2, 3, 4, 5));
+  });
+
+  test("pads with zeros and truncates high bytes", async () => {
+    expect(await be(0x0102, 4)).toEqual(Uint8Array.of(0, 0, 1, 2));
+    expect(await be(0x01020304, 2)).toEqual(Uint8Array.of(3, 4));
+    expect(await be(0, 3)).toEqual(Uint8Array.of(0, 0, 0));
+  });
+
+  test("n of 0 gives no bytes; a single byte masks to 255", async () => {
+    expect(await be(0x1234, 0)).toEqual(new Uint8Array(0));
+    expect(await be(0x1ff, 1)).toEqual(Uint8Array.of(255));
+  });
+
+  test("beyond 32 bits (a 64-bit value)", async () => {
+    expect(await be(0x0102030405060708n, 8)).toEqual(Uint8Array.of(1, 2, 3, 4, 5, 6, 7, 8));
+  });
+});
+
+describe("util:digits>int", () => {
+  const fold = async (digits: number[], radix: number) =>
+    await value("util:digits>int", [valueHelpers.bytes(Uint8Array.from(digits)), int(radix)]);
+
+  test("no digits is 0", async () => {
+    expect(Number(await fold([], 58))).toBe(0);
+  });
+
+  test("most significant digit first", async () => {
+    expect(Number(await fold([1, 2, 3], 10))).toBe(123);
+    expect(Number(await fold([1, 0, 1], 2))).toBe(5);
+    expect(Number(await fold([84, 84, 84, 84, 84], 85))).toBe(4437053124);
+  });
+
+  test("leading zero digits do not change the value", async () => {
+    expect(Number(await fold([0, 0, 7], 58))).toBe(7);
+  });
+
+  test("grows past 64 bits", async () => {
+    expect(BigInt((await fold(Array(12).fill(57), 58)) as bigint | number)).toBe(58n ** 12n - 1n);
+  });
+});
+
 describe("util is internal", () => {
   test("is listed in INTERNAL_VOCABS", () => {
     expect(INTERNAL_VOCABS).toContain("util");

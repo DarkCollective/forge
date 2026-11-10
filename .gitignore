@@ -2,6 +2,7 @@ node_modules
 dist
 dist-scripts
 coverage
+!/docs/coverage
 .DS_Store
 *.log
 .claude/worktrees/

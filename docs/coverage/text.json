@@ -1,0 +1,7 @@
+[
+ { "cyberchef": "To Upper case", "status": "covered", "forge": ["text:upper"] },
+ { "cyberchef": "To Lower case", "status": "covered", "forge": ["text:lower"] },
+ { "cyberchef": "Reverse", "status": "covered", "forge": ["text:reverse"] },
+ { "cyberchef": "Split", "status": "covered", "forge": ["text:split"] },
+ { "cyberchef": "Find / Replace", "status": "covered", "forge": ["text:replace", "regex:replace"], "note": "Literal replacement in text:replace, pattern replacement in regex:replace." }
+]

@@ -1,0 +1,9 @@
+[
+ { "cyberchef": "Fork", "status": "redesigned", "forge": ["step:fork"], "note": "A structural fork step (RECIPES section 3.2) holds its child steps; split and join are part of the step." },
+ { "cyberchef": "Merge", "status": "redesigned", "forge": ["step:fork"], "note": "No separate step: a fork step joins its pieces when its children end." },
+ { "cyberchef": "Subsection", "status": "redesigned", "forge": ["step:subsection"], "note": "A structural step that runs its children on each regex match and leaves the rest of the data alone." },
+ { "cyberchef": "Conditional Jump", "status": "redesigned", "forge": ["step:if"], "note": "Branching is a tree: an if step holds then and else steps, so there are no labels or jumps." },
+ { "cyberchef": "Label", "status": "redesigned", "forge": ["step:repeat"], "note": "Loops are structural repeat steps (a count or until stable), not labels." },
+ { "cyberchef": "Jump", "status": "redesigned", "forge": ["step:repeat"], "note": "Loops are structural repeat steps (a count or until stable), not jumps." },
+ { "cyberchef": "Comment", "status": "redesigned", "forge": ["step:comment"], "note": "A structural comment step with no effect on the data." }
+]

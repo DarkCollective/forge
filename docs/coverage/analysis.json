@@ -1,0 +1,4 @@
+[
+ { "cyberchef": "Entropy", "status": "covered", "forge": ["analysis:entropy"] },
+ { "cyberchef": "Frequency distribution", "status": "covered", "forge": ["analysis:frequency"] }
+]
