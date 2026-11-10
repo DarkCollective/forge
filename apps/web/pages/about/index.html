@@ -1,0 +1,124 @@
+<!doctype html>
+<!--
+ Copyright 2026 Darkcollective, LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="description"
+      content="About Forge, a browser-only toolkit for codes, ciphers and data encodings. Open source under Apache-2.0."
+    />
+    <link rel="canonical" href="https://forge.darkcollective.com/about/" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>About | Forge</title>
+    <link rel="stylesheet" href="/src/styles/tokens.css" />
+    <link rel="stylesheet" href="/src/styles/global.css" />
+    <link rel="stylesheet" href="/src/styles/pages.css" />
+    <script type="module" src="/pages/shared/theme.ts"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="brand" href="/">Forge</a>
+        <nav class="site-nav" aria-label="Site">
+          <ul>
+            <li><a href="/about/" aria-current="page">About</a></li>
+            <li><a href="/privacy/">Privacy</a></li>
+            <li><a href="/terms/">Terms</a></li>
+            <li><a href="/security/">Security</a></li>
+            <li><a href="/accessibility/">Accessibility</a></li>
+          </ul>
+        </nav>
+        <a class="button" href="/">Open Forge</a>
+      </div>
+    </header>
+
+    <main id="main" class="page">
+      <h1>About Forge</h1>
+      <p class="lead">
+        Forge is a browser-only toolkit for codes, ciphers and data encodings. You build a recipe
+        from operations, give it an input, and read the output. Everything runs in your browser.
+      </p>
+
+      <h2>What it does</h2>
+      <ul>
+        <li>
+          Search or browse a catalogue of operations, grouped by category, with favourites for the
+          ones you use most.
+        </li>
+        <li>
+          Drag operations into a recipe, or add them from the keyboard, set their parameters, and
+          watch the output change as you edit.
+        </li>
+        <li>
+          Save recipes and share them as a link. A share link can also carry the input, so read the
+          <a href="/privacy/">privacy page</a> before sending one.
+        </li>
+      </ul>
+
+      <h2>How it is built</h2>
+      <p>
+        Each operation is a word in FL, a small Forth-like language. Operations are written in FL or
+        backed by small TypeScript primitives. A recipe is also a word, so a recipe can be named,
+        saved and reused as an operation of its own. You can see the FL behind any recipe, and
+        define new words in the console.
+      </p>
+
+      <h2>Where it comes from</h2>
+      <p>
+        Forge is inspired by CyberChef, the tool published by GCHQ, and uses its range of
+        capabilities as a reference. Forge is an independent implementation. Its code, operation
+        names, parameters and recipe format are its own. Forge is not affiliated with, endorsed by
+        or sponsored by GCHQ or the CyberChef project.
+      </p>
+
+      <h2>Open source</h2>
+      <p>
+        Forge is free software, released under the
+        <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License 2.0</a>. The source,
+        the issue tracker and the full history are on
+        <a href="https://github.com/DarkCollective/forge">GitHub</a>.
+      </p>
+
+      <h2>Who makes it</h2>
+      <p>
+        Forge is written by David Tooke and published by Darkcollective, LLC. To get in touch, write
+        to <a href="mailto:david@darkcollective.com">david@darkcollective.com</a>. Security reports
+        have their own route, described on the <a href="/security/">security page</a>.
+      </p>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <nav aria-label="Footer">
+          <ul>
+            <li><a href="/">Open Forge</a></li>
+            <li><a href="/about/">About</a></li>
+            <li><a href="/privacy/">Privacy</a></li>
+            <li><a href="/terms/">Terms</a></li>
+            <li><a href="/security/">Security</a></li>
+            <li><a href="/accessibility/">Accessibility</a></li>
+            <li><a href="https://github.com/DarkCollective/forge">GitHub repository</a></li>
+          </ul>
+        </nav>
+        <p>© 2026 Darkcollective, LLC. Forge is licensed under Apache-2.0.</p>
+      </div>
+    </footer>
+  </body>
+</html>

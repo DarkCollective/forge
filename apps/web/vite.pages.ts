@@ -16,4 +16,11 @@
 // Extra HTML entry points of the build (UI.md section 2.3). Owned by the "site pages" work package:
 // it adds one line per page, key = output name, value = path of the page's index.html relative to
 // apps/web. The shell's vite.config.ts feeds this to rollup.
-export const pageInputs: Record<string, string> = {};
+export const pageInputs: Record<string, string> = {
+  about: "./pages/about/index.html",
+  privacy: "./pages/privacy/index.html",
+  terms: "./pages/terms/index.html",
+  security: "./pages/security/index.html",
+  accessibility: "./pages/accessibility/index.html",
+  notFound: "./pages/404/index.html",
+};

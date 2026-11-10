@@ -1,0 +1,147 @@
+<!doctype html>
+<!--
+ Copyright 2026 Darkcollective, LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="description"
+      content="How to report a security vulnerability in Forge: scope, the security model in brief, and where to send a report."
+    />
+    <link rel="canonical" href="https://forge.darkcollective.com/security/" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>Security | Forge</title>
+    <link rel="stylesheet" href="/src/styles/tokens.css" />
+    <link rel="stylesheet" href="/src/styles/global.css" />
+    <link rel="stylesheet" href="/src/styles/pages.css" />
+    <script type="module" src="/pages/shared/theme.ts"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="brand" href="/">Forge</a>
+        <nav class="site-nav" aria-label="Site">
+          <ul>
+            <li><a href="/about/">About</a></li>
+            <li><a href="/privacy/">Privacy</a></li>
+            <li><a href="/terms/">Terms</a></li>
+            <li><a href="/security/" aria-current="page">Security</a></li>
+            <li><a href="/accessibility/">Accessibility</a></li>
+          </ul>
+        </nav>
+        <a class="button" href="/">Open Forge</a>
+      </div>
+    </header>
+
+    <main id="main" class="page">
+      <h1>Security</h1>
+      <p class="lead">
+        If you have found a security problem in Forge or this website, please tell us privately
+        first, so that a fix can be prepared before the problem is described in public.
+      </p>
+
+      <h2>How to report</h2>
+      <ul>
+        <li>
+          Preferred: use GitHub's private vulnerability reporting for the repository:
+          <a href="https://github.com/DarkCollective/forge/security/advisories/new"
+            >open a private advisory</a
+          >.
+        </li>
+        <li>Or email <a href="mailto:david@darkcollective.com">david@darkcollective.com</a>.</li>
+      </ul>
+      <p>
+        Include what you found, the steps to reproduce it, the page or version you tested, and what
+        an attacker could do with it. Please do not open a public issue for a vulnerability until a
+        fix is available. We read every report. We cannot promise a response time.
+      </p>
+      <p>
+        Our contact details for automated tools are published at
+        <a href="/.well-known/security.txt"><code>/.well-known/security.txt</code></a
+        >.
+      </p>
+
+      <h2>What is in scope</h2>
+      <ul>
+        <li>The website at <code>forge.darkcollective.com</code>.</li>
+        <li>
+          The Forge application, including the FL runtime sandbox that runs operations and recipes.
+        </li>
+        <li>Decoding of share links, which is treated as untrusted input.</li>
+        <li>The content security policy and the other response headers.</li>
+      </ul>
+
+      <h2>What is out of scope</h2>
+      <ul>
+        <li>Denial-of-service testing against the live site.</li>
+        <li>Social engineering of maintainers or users.</li>
+        <li>Problems that need a compromised browser, device or account.</li>
+        <li>Reports about third-party software that have no specific effect on Forge.</li>
+      </ul>
+
+      <h2>The security model in brief</h2>
+      <ul>
+        <li>
+          <strong>No ambient authority.</strong> FL has no words for the page, the network, storage
+          or evaluation of code. An operation sees only the values it is given.
+        </li>
+        <li>
+          <strong>Sandboxed execution.</strong> Recipes run in a web worker, separate from the page,
+          with limits on steps, stack depth, value size and wall-clock time.
+        </li>
+        <li>
+          <strong>Strict content security policy.</strong> Scripts, styles, workers and connections
+          may come only from this site. There are no inline scripts or styles, and the site cannot
+          be framed.
+        </li>
+        <li>
+          <strong>Cross-origin isolation.</strong> The site is served with the COOP and COEP
+          headers.
+        </li>
+        <li>
+          <strong>Local processing.</strong> Your data is processed in your browser. No server
+          receives it. See the <a href="/privacy/">privacy page</a>.
+        </li>
+      </ul>
+
+      <h2>Research and recognition</h2>
+      <p>
+        Good-faith security research that follows this page is welcome. We do not offer a bounty or
+        any other payment.
+      </p>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <nav aria-label="Footer">
+          <ul>
+            <li><a href="/">Open Forge</a></li>
+            <li><a href="/about/">About</a></li>
+            <li><a href="/privacy/">Privacy</a></li>
+            <li><a href="/terms/">Terms</a></li>
+            <li><a href="/security/">Security</a></li>
+            <li><a href="/accessibility/">Accessibility</a></li>
+            <li><a href="https://github.com/DarkCollective/forge">GitHub repository</a></li>
+          </ul>
+        </nav>
+        <p>© 2026 Darkcollective, LLC. Forge is licensed under Apache-2.0.</p>
+      </div>
+    </footer>
+  </body>
+</html>

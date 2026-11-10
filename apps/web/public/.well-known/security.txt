@@ -1,0 +1,7 @@
+# Vulnerability reports for Forge (https://forge.darkcollective.com)
+Contact: mailto:david@darkcollective.com
+Contact: https://github.com/DarkCollective/forge/security/advisories/new
+Expires: 2027-11-10T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://forge.darkcollective.com/.well-known/security.txt
+Policy: https://forge.darkcollective.com/security/
