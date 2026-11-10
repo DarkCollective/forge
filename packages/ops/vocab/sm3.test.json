@@ -1,0 +1,44 @@
+[
+  {
+    "name": "digest: abc",
+    "ref": "draft-sca-cfrg-sm3 Appendix A.1 (GB/T 32905-2016 example 1)",
+    "op": "sm3:digest",
+    "params": {},
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "66c7f0f462eeedd9d1f2d46bdc10e4e24167c4875cf2f7a2297da02b8f4ba8e0",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: abcd x16 (512 bits)",
+    "ref": "draft-sca-cfrg-sm3 Appendix A.2 (GB/T 32905-2016 example 2)",
+    "op": "sm3:digest",
+    "params": {},
+    "input": {
+      "value": "abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "debe9ff92275b8a138604889c18e5a4d6fdb70e5387e5765293dcba39c0c5732",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: empty string",
+    "ref": "Not in GB/T 32905-2016's examples; the value is from OpenSSL 3 (an independent implementation of the same standard)",
+    "op": "sm3:digest",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1ab21d8355cfa17f8e61194831e81a8f22bec8c728fefb747ed035eb5082aa2b",
+      "enc": "hex"
+    }
+  }
+]

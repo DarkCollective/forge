@@ -3,7 +3,9 @@
     "name": "digest 128: empty string",
     "ref": "RIPEMD page, Bosselaers (homes.esat.kuleuven.be/~bosselae/ripemd160.html) test values",
     "op": "ripemd:digest",
-    "params": {},
+    "params": {
+      "size": "128"
+    },
     "input": {
       "value": "",
       "enc": "utf8"
@@ -282,6 +284,132 @@
     },
     "expect": {
       "value": "cabdb1810b92470a2093aa6bce05952c28348cf43ff60841975166bb40ed234004b8824463e6b009",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest 160: empty",
+    "ref": "RIPEMD-160 paper test vectors (Dobbertin, Bosselaers, Preneel), bosselae/ripemd160.html",
+    "op": "ripemd:digest",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "9c1185a5c5e9fc54612808977ee8f548b2258d31",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest 160: a",
+    "ref": "RIPEMD-160 paper test vectors (Dobbertin, Bosselaers, Preneel), bosselae/ripemd160.html",
+    "op": "ripemd:digest",
+    "params": {
+      "size": "160"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0bdc9d2d256b3ee9daae347be6f4dc835a467ffe",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest 160: abc",
+    "ref": "RIPEMD-160 paper test vectors (Dobbertin, Bosselaers, Preneel), bosselae/ripemd160.html",
+    "op": "ripemd:digest",
+    "params": {
+      "size": "160"
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "8eb208f7e05d987a9b044a8e98c6b087f15a0bfc",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest 160: message digest",
+    "ref": "RIPEMD-160 paper test vectors (Dobbertin, Bosselaers, Preneel), bosselae/ripemd160.html",
+    "op": "ripemd:digest",
+    "params": {
+      "size": "160"
+    },
+    "input": {
+      "value": "message digest",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "5d0689ef49d2fae572b881b123a85ffa21595f36",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest 160: a..z",
+    "ref": "RIPEMD-160 paper test vectors (Dobbertin, Bosselaers, Preneel), bosselae/ripemd160.html",
+    "op": "ripemd:digest",
+    "params": {
+      "size": "160"
+    },
+    "input": {
+      "value": "abcdefghijklmnopqrstuvwxyz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f71c27109c692c1b56bbdceb5b9d2865b3708dbc",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest 160: A..Za..z0..9",
+    "ref": "RIPEMD-160 paper test vectors (Dobbertin, Bosselaers, Preneel), bosselae/ripemd160.html",
+    "op": "ripemd:digest",
+    "params": {
+      "size": "160"
+    },
+    "input": {
+      "value": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "b0e20b6e3116640286ed3a87a5713079b21f5189",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest 160: 8 x \"1234567890",
+    "ref": "RIPEMD-160 paper test vectors (Dobbertin, Bosselaers, Preneel), bosselae/ripemd160.html",
+    "op": "ripemd:digest",
+    "params": {
+      "size": "160"
+    },
+    "input": {
+      "value": "12345678901234567890123456789012345678901234567890123456789012345678901234567890",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "9b752e45573d4b39f4dbd3323cab82bf63326bfb",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest 160: abcdbcde..nopq",
+    "ref": "RIPEMD-160 paper test vectors (Dobbertin, Bosselaers, Preneel), bosselae/ripemd160.html",
+    "op": "ripemd:digest",
+    "params": {
+      "size": "160"
+    },
+    "input": {
+      "value": "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "12a053384a9c0c88e405a06c27dcf49ada62eb2b",
       "enc": "hex"
     }
   }

@@ -20,7 +20,7 @@
  * has four rounds of 16 steps in two parallel lines; RIPEMD-160 has five. RIPEMD-256 and -320 are the
  * 128 and 160 compression functions with the two lines kept separate (no combination), exchanging
  * one chaining variable between the lines after each round. RIPEMD-160 itself is the vocabulary
- * ripemd160 and is not offered here.
+ * ripemd160, which the word ripemd:digest calls for size 160; this primitive has no 160.
  */
 import { definePrimitive } from "@forge/lang";
 import type { PrimitiveDef } from "@forge/lang";

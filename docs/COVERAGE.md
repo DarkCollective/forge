@@ -21,13 +21,13 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Date / Time | 0 | 0 | 0 | 9 | 9 |
 | Extractors | 0 | 0 | 0 | 18 | 18 |
 | Compression | 0 | 0 | 0 | 21 | 21 |
-| Hashing | 25 | 7 | 0 | 16 | 48 |
+| Hashing | 32 | 6 | 0 | 10 | 48 |
 | Code tidy | 0 | 0 | 0 | 24 | 24 |
 | Forensics | 0 | 0 | 0 | 9 | 9 |
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 4 | 0 | 3 | 14 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **126** | **29** | **3** | **348** | **506** |
+| **Total** | **133** | **28** | **3** | **342** | **506** |
 
 ## Data format (80)
 
@@ -461,20 +461,20 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | SHA1 | covered | `sha1:digest` | No parameters. Returns raw bytes (chain hex:encode). |
 | SHA2 | covered | `sha2:digest` | One word with a size parameter: 224, 256, 384, 512, 512/224, 512/256. Returns raw bytes (chain hex:encode). CyberChef's Rounds parameter is not supported: only the FIPS 180-4 round counts exist. |
 | SHA3 | covered | `sha3:digest` | One word with a size parameter in bits: 224, 256, 384, 512. Returns raw bytes (chain hex:encode). |
-| SM3 | not yet |  |  |
+| SM3 | covered | `sm3:digest` | Returns raw bytes (chain hex:encode). CyberChef's Length and Rounds parameters are not supported: the standard GB/T 32905-2016 has one 256-bit output and 64 rounds. |
 | Keccak | covered | `keccak:digest` | One word with a size parameter in bits: 224, 256, 384, 512, with the original Keccak padding (not SHA-3). |
 | Shake | redesigned | `shake:digest` | The output length is in bytes (1 to 65536, default 64), where CyberChef's Size is in bits (default 512, passed unchanged to the SHAKE function). The variant is 128 or 256 bytes of security strength, as in CyberChef's Capacity. |
-| RIPEMD | redesigned | `ripemd:digest` | One word with a size choice of 128, 256 or 320. RIPEMD-160 is its own vocabulary, ripemd160:digest. Returns raw bytes (chain hex:encode). |
-| HAS-160 | not yet |  |  |
-| Whirlpool | not yet |  |  |
-| Snefru | not yet |  |  |
+| RIPEMD | covered | `ripemd:digest` | One word with a size choice of 128, 160, 256 or 320 (default 160). Returns raw bytes (chain hex:encode). ripemd160:digest also exists, for HMAC. |
+| HAS-160 | covered | `has160:digest` | Returns raw bytes (chain hex:encode). CyberChef's Rounds parameter is not supported: only the standard 80 steps exist. |
+| Whirlpool | covered | `whirlpool:digest` | The final ISO/IEC 10118-3 version, raw bytes (chain hex:encode). The Whirlpool-0 and Whirlpool-T variants and the Rounds parameter are not offered: the variants have no citable vectors in the original papers, and Whirlpool-0 has a different, random S-box. Only the standard 10 rounds exist. |
+| Snefru | covered | `snefru:digest` | Size 128 or 256 and Rounds 2, 4 or 8, as in CyberChef. Raw bytes (chain hex:encode). Implemented from Merkle's Xerox reference distribution 2.5a, whose S-boxes it uses. |
 | BLAKE2b | redesigned | `blake2b:digest` | The output size is in bytes (16, 20, 32, 48 or 64), where CyberChef's Size is in bits (128, 160, 256, 384, 512). The key is an optional key of up to 64 bytes in any of the key encodings. |
 | BLAKE2s | redesigned | `blake2s:digest` | The output size is in bytes (16, 20 or 32), where CyberChef's Size is in bits (128, 160, 256). The key is an optional key of up to 32 bytes in any of the key encodings. |
 | BLAKE3 | covered | `blake3:digest` | The output length is in bytes (1 to 65536, default 32; CyberChef's default is 16). The key is an optional 32-byte key, as in CyberChef. |
 | Ascon Hash | not yet |  |  |
 | Ascon MAC | not yet |  |  |
-| GOST Hash | not yet |  |  |
-| Streebog | not yet |  |  |
+| GOST Hash | covered | `gost:digest`, `streebog:digest` | GOST R 34.11-94 is gost:digest with an sbox parameter: test (RFC 5831) or cryptopro (RFC 4357). GOST R 34.11-2012 is the separate streebog:digest. Only the test and CryptoPro S-box sets are offered. Raw bytes (chain hex:encode). |
+| Streebog | covered | `streebog:digest` | Size 256 or 512, as in CyberChef. Raw bytes (chain hex:encode), in the byte order of the RFC 6986 examples reversed (little-endian), which is the conventional digest string. |
 | SSDEEP | covered | `ssdeep:digest` | Context triggered piecewise hashing (Kornblum 2006). The result is text, blocksize:hash1:hash2, not bytes: it is a structured string that the compare word reads piece by piece. |
 | CTPH | redesigned | `ssdeep:ctph` | CTPH is the algorithm that ssdeep implements, and CyberChef offers it as a second name for the same computation, so one word covers both (ctph is an alias of ssdeep:digest). |
 | Compare SSDEEP hashes | covered | `ssdeep:compare` | The 0 to 100 score of the reference algorithm: block size check, runs of more than three equal characters cut to three, a common substring of 7 characters, a weighted edit distance (insert and remove 1, replace 2) and the cap for small block sizes. The first hash is the data input and the second is the other parameter. |
