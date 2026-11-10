@@ -157,7 +157,7 @@ It uses Lit web components and plain CSS grid with custom properties for themes 
 ## 6. Testing and quality
 
 - **Unit tests** cover the reader, compiler, VM, coercion and every primitive (Vitest, run in Node).
-- **Operation conformance tests**: each word has a test vectors table (`vocab/<name>.test.json`). A generic runner executes all of them through the VM. Vectors come from RFCs and standards, and published known-answer tests are preferred. The same vectors run in Chromium Web Workers with `npm run gate4:browser -w @forge/worker`, and a data-driven UI smoke test (`apps/web/e2e/ops-smoke.spec.ts`) exercises every op through the UI. Multi-step recipes across vocabularies are covered by `packages/worker/test/phase4-recipes.test.ts`.
+- **Operation conformance tests**: each word has a test vectors table (`vocab/<name>.test.json`). A generic runner executes all of them through the VM. Vectors come from RFCs and standards, and published known-answer tests are preferred. The same vectors run in Chromium Web Workers with `npm run gate4:browser -w @forge/worker`, which covers every op in the browser. A data-driven UI smoke test (`apps/web/e2e/ops-smoke.spec.ts`) bakes up to two vectors per vocabulary through the UI. Multi-step recipes across vocabularies are covered by `packages/worker/test/phase4-recipes.test.ts`.
 - **Golden recipe tests** check the JSON ⇄ FL ⇄ URL round-trip, and that compiled output is identical.
 - **Property tests** (fast-check) check `decode(encode(x)) == x` for every codec pair.
 - **Browser end-to-end** (Playwright; used by `@forge/worker` for the Gate 2 harness from Phase 2, full UI suite from Phase 3) covers drag-and-drop, param validation, bake, share URL and keyboard-only use.
@@ -219,7 +219,7 @@ Each work package (WP) is sized for one sub-agent and has a verifiable "done". T
 **Gate 3:** End to end in the browser, a user can search, drag, configure, bake, share a URL, reload it and get the same result, using the keyboard only.
 
 ### Phase 4 — Starter operation set (proves the model) ✅
-*Done 2026-11-10. 61 ops in 16 vocabularies, 49 of them new in Phase 4 and all written in FL. Gate 4 passes in Node and in Chromium Web Workers, with and without cross-origin isolation (`npm run gate4:browser -w @forge/worker`): all 759 op vectors in 16 files, plus the data-driven UI smoke test `apps/web/e2e/ops-smoke.spec.ts`. 2,765 unit tests and 86 e2e tests; core + UI shell is 96.7 kB gzip.*
+*Done 2026-11-10. 61 ops in 16 vocabularies, 49 of them new in Phase 4 and all written in FL. Gate 4 passes in Node and in Chromium Web Workers, with and without cross-origin isolation (`npm run gate4:browser -w @forge/worker`): all 759 op vectors in 16 files, plus the data-driven UI smoke test `apps/web/e2e/ops-smoke.spec.ts`. 2,793 unit tests and 86 e2e tests; core + UI shell is 96.7 kB gzip.*
 
 Names are Forge-native (`base64:decode`, not CyberChef names). The catalogue covers hex, Base32, Base64, Base58 and Base85, Binary, Decimal, Charcode, URL encoding and HTML entities, ROT13/ROT47, Caesar/rot, Atbash, Affine, Vigenère, Bacon, Bifid, Rail Fence, A1Z26, Morse, Substitute, XOR (+brute force), AND/OR/NOT/ADD/SUB, bit shift and rotate, Reverse, Upper/Lower case, Find/Replace, Split/Join, Entropy and Frequency distribution, and the regex ops. Every op ships with test vectors. Fork/Merge is covered by the structural `fork` step from Phase 2 (§3.6), so it needs no op.
 
