@@ -1,0 +1,3 @@
+[
+ { "cyberchef": "SHA2", "status": "covered", "forge": ["sha2:digest"], "note": "One word with a size parameter: 224, 256, 384, 512, 512/224, 512/256. Returns raw bytes (chain hex:encode). CyberChef's Rounds parameter is not supported: only the FIPS 180-4 round counts exist." }
+]

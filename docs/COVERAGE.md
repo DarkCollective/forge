@@ -21,13 +21,13 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Date / Time | 0 | 0 | 0 | 9 | 9 |
 | Extractors | 0 | 0 | 0 | 18 | 18 |
 | Compression | 0 | 0 | 0 | 21 | 21 |
-| Hashing | 0 | 0 | 0 | 48 | 48 |
+| Hashing | 1 | 0 | 0 | 47 | 48 |
 | Code tidy | 0 | 0 | 0 | 24 | 24 |
 | Forensics | 0 | 0 | 0 | 9 | 9 |
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 4 | 0 | 3 | 14 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **101** | **22** | **3** | **380** | **506** |
+| **Total** | **102** | **22** | **3** | **379** | **506** |
 
 ## Data format (80)
 
@@ -459,7 +459,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | MD6 | not yet |  |  |
 | SHA0 | not yet |  |  |
 | SHA1 | not yet |  |  |
-| SHA2 | not yet |  |  |
+| SHA2 | covered | `sha2:digest` | One word with a size parameter: 224, 256, 384, 512, 512/224, 512/256. Returns raw bytes (chain hex:encode). CyberChef's Rounds parameter is not supported: only the FIPS 180-4 round counts exist. |
 | SHA3 | not yet |  |  |
 | SM3 | not yet |  |  |
 | Keccak | not yet |  |  |
