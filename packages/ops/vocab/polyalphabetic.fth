@@ -6,10 +6,6 @@ IN: polyalphabetic
 \ Letters (private helpers)
 \ ---------------------------------------------------------------------------------------------
 
-\ util-candidate: is-letter
-: _pa-letter ( c:int -- bool )
-  c 32 bor 97 122 util:between? ;
-
 \ The index 0 to 25 of an ASCII letter (either case).
 : _pa-index ( c:int -- int )
   c 31 band 1 - ;
@@ -20,11 +16,11 @@ IN: polyalphabetic
 
 \ c shifted by k letters (k may be negative), keeping its case.
 : _pa-shift ( c:int k:int -- int )
-  c _pa-letter [ c _pa-index k + 26 mod c _pa-letter-of ] [ c ] if ;
+  c util:letter? [ c _pa-index k + 26 mod c _pa-letter-of ] [ c ] if ;
 
 \ k minus c, as a letter, keeping the case of c (Beaufort).
 : _pa-reflect ( c:int k:int -- int )
-  c _pa-letter [ k c _pa-index - 26 mod c _pa-letter-of ] [ c ] if ;
+  c util:letter? [ k c _pa-index - 26 mod c _pa-letter-of ] [ c ] if ;
 
 \ ---------------------------------------------------------------------------------------------
 \ Key streams: the key values repeat over the letters of the data (a VARIABLE counts them)
@@ -35,7 +31,7 @@ IN: polyalphabetic
 \ f ( c:int k:int -- int ) combines each letter with the key value of its position.
 : _pa-stream ( data:bytes ks:bytes f:quot -- bytes )
   0 _pa-pos!
-  data [ dup _pa-letter
+  data [ dup util:letter?
     [ _pa-pos ks len mod ks swap nth f call _pa-pos 1 + _pa-pos! ]
     [ ]
     if ] map ;
@@ -59,7 +55,7 @@ IN: polyalphabetic
 
 : _pa-autokey ( data:bytes kv:bytes dec:bool -- bytes )
   kv _pa-win!
-  data [ dup _pa-letter
+  data [ dup util:letter?
     [ dec [ _pa-auto-dec ] [ _pa-auto-enc ] if ]
     [ ]
     if ] map ;
@@ -116,4 +112,26 @@ META: gronsfeld-encrypt
 META: gronsfeld-decrypt
   param key "Key digits used to encrypt, 0 to 9, 1 to 256 of them." ;
   see-also polyalphabetic:gronsfeld-encrypt ;
+;
+
+\ ---------------------------------------------------------------------------------------------
+\ Porta: thirteen paired alphabets, one per key letter pair AB, CD, ... YZ.
+\ ---------------------------------------------------------------------------------------------
+
+\ The index (0 to 25) that letter index i (0 to 25) becomes under the pair index t (0 to 12): A to M
+\ go to the N to Z half by (i + t) mod 13, and N to Z go to the A to M half by (i - 13 - t) mod 13.
+: _porta-index ( i:int t:int -- int )
+  i 13 < [ i t + 13 mod 13 + ] [ i 13 - t - 13 mod ] if ;
+
+\ The Porta letter of the letter c under the key letter index k: the pair index is k div 2.
+: _porta-letter ( c:int k:int -- int )
+  c _pa-index k 2 div _porta-index c _pa-letter-of ;
+
+: porta ( data:bytes key:str[1..256,/[A-Za-z]+/] -- bytes )
+  "Porta cipher (della Porta, 1563): thirteen paired alphabets, one per key letter pair AB, CD, ..., YZ (the pair index is the key letter div 2). A letter in A to M is replaced by a letter of the N to Z half, and a letter in N to Z by a letter of the A to M half, by the rule of the pair. It is reciprocal, so the same word decrypts. Case is kept; other bytes pass through and use up no key letter." doc
+  "Classical ciphers" category
+  data key str>bytes [ 31 band 1 - ] map [ _porta-letter ] _pa-stream ;
+
+META: porta
+  param key "Key letters A to Z (either case), 1 to 256 of them; each pair AB, CD, ... selects one alphabet." ;
 ;

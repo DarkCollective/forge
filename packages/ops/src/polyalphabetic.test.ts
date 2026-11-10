@@ -136,3 +136,62 @@ describe("polyalphabetic: size", () => {
     expect(top(autoBack).v).toEqual(text);
   }, 60_000);
 });
+
+describe("polyalphabetic: porta", () => {
+  test("published example, key FORTIFICATION (both directions)", async () => {
+    expect(outText(await run("porta", "DEFENDTHEEASTWALLOFTHECASTLE", "FORTIFICATION"))).toBe(
+      "SYNNJSCVRNRLAHUTUKUCVRYRLANY",
+    );
+    expect(outText(await run("porta", "SYNNJSCVRNRLAHUTUKUCVRYRLANY", "FORTIFICATION"))).toBe(
+      "DEFENDTHEEASTWALLOFTHECASTLE",
+    );
+  });
+
+  test("the AB and CD rows of the tableau", async () => {
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    expect(outText(await run("porta", alphabet, "AB"))).toBe("NOPQRSTUVWXYZABCDEFGHIJKLM");
+    expect(outText(await run("porta", alphabet, "C"))).toBe("OPQRSTUVWXYZNMABCDEFGHIJKL");
+  });
+
+  test("keeps case, passes other bytes through and uses no key letter for them", async () => {
+    expect(outText(await run("porta", "Hello, World!", "A"))).toBe("Uryyb, Jbeyq!");
+    expect(outText(await run("porta", "hello, world!", "ab"))).toBe("uryyb, jbeyq!");
+    expect(outText(await run("porta", "a1 A", "B"))).toBe("n1 N");
+    expect(outText(await run("porta", "AA", "AC"))).toBe("NO");
+  });
+
+  test("round trip: porta(porta(x)) == x for random letters and keys", async () => {
+    const next = rng(41);
+    for (let trial = 0; trial < 40; trial++) {
+      const key = letters(next, 1 + Math.floor(next() * 12));
+      const text = letters(next, Math.floor(next() * 60));
+      const ct = outText(await run("porta", text, key));
+      expect(outText(await run("porta", ct, key))).toBe(text);
+    }
+  });
+
+  test("an empty key is rejected", async () => {
+    const r = await run("porta", "ABC", "");
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.error.code).toBe("E_PARAM_INVALID");
+  });
+
+  test("a key with a digit is rejected", async () => {
+    const r = await run("porta", "ABC", "A1");
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.error.code).toBe("E_PARAM_INVALID");
+  });
+
+  test("64 KiB of bytes round trips inside the default limits", async () => {
+    const next = rng(9);
+    const text = Uint8Array.from({ length: 65536 }, () => Math.floor(next() * 256));
+    const ct = await runtime.call("polyalphabetic:porta", [bytes(text), str("FORTIFICATION")]);
+    expect(ct.ok).toBe(true);
+    const back = await runtime.call("polyalphabetic:porta", [
+      top(ct) as never,
+      str("FORTIFICATION"),
+    ]);
+    expect(back.ok).toBe(true);
+    expect(top(back).v).toEqual(text);
+  }, 60_000);
+});

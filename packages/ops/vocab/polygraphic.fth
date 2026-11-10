@@ -7,10 +7,6 @@ IN: polygraphic
 \ Letters and grids (private helpers)
 \ ---------------------------------------------------------------------------------------------
 
-\ util-candidate: is-letter
-: _pl-letter ( c:int -- bool )
-  c 32 bor 97 122 util:between? ;
-
 \ The upper-case code of a letter, with J merged into I (omit j) or I into J (omit i).
 : _pl-norm ( c:int omit:str -- int )
   c 223 band
@@ -107,7 +103,7 @@ IN: polygraphic
 : playfair-encrypt ( data:bytes key:str[0..25,/[A-Za-z]*/]="" omit:choice{j|i}="j" filler:str[1..1,/[A-Za-z]/]="X" -- bytes )
   "Playfair cipher on a 5x5 square built from the keyword (without repeats) and then the rest of the alphabet, with one letter omitted (j: J is merged into I; i: I is merged into J). Only letters take part, taken as upper case with the merge applied; other bytes are dropped. Doubled letters get the filler between them (a pair of the filler itself stays as it is), and an odd last letter gets the filler. Pairs in the same row or column move one step along it; other pairs swap columns. The output is upper-case letters." doc
   "Classical ciphers" category
-  data [ _pl-letter ] filter [ omit _pl-norm ] map filler str>bytes 0 nth 223 band _pl-digraphs
+  data [ util:letter? ] filter [ omit _pl-norm ] map filler str>bytes 0 nth 223 band _pl-digraphs
   key str>bytes [ omit _pl-norm ] map omit _pl-alpha _keyed-alphabet 1 _pl-pairs ;
 
 META: playfair-encrypt
@@ -120,7 +116,7 @@ META: playfair-encrypt
 : playfair-decrypt ( data:bytes key:str[0..25,/[A-Za-z]*/]="" omit:choice{j|i}="j" -- bytes )
   "Undo Playfair with the same key and omit choice. The input is read as digraphs of letters (other bytes are dropped; an odd count of letters is E_COERCE). No filler is removed: the output is the digraphs' letters as they were encrypted, filler letters included." doc
   "Classical ciphers" category
-  data [ _pl-letter ] filter [ omit _pl-norm ] map dup len 2 mod 0 =
+  data [ util:letter? ] filter [ omit _pl-norm ] map dup len 2 mod 0 =
   [ ] [ drop "playfair-decrypt: the letters must come in pairs" raise:coerce ] if
   key str>bytes [ omit _pl-norm ] map omit _pl-alpha _keyed-alphabet -1 _pl-pairs ;
 
@@ -151,7 +147,7 @@ META: playfair-decrypt
 : four-square-encrypt ( data:bytes key1:str[0..25,/[A-Za-z]*/]="" key2:str[0..25,/[A-Za-z]*/]="" filler:str[1..1,/[A-Za-z]/]="X" -- bytes )
   "Four-square cipher: two 5x5 squares are used with the plain alphabet (I and J share a cell). The top left and bottom right squares are plain; the top right square is keyed by key1 and the bottom left by key2 (keyword letters first, repeats dropped). A pair (a, b) becomes the letter of the top right square in a's row and b's column, then the letter of the bottom left square in b's row and a's column. Only letters take part (J is read as I); doubled letters and an odd last letter take the filler as in Playfair." doc
   "Classical ciphers" category
-  data [ _pl-letter ] filter [ "j" _pl-norm ] map filler str>bytes 0 nth 223 band _pl-digraphs
+  data [ util:letter? ] filter [ "j" _pl-norm ] map filler str>bytes 0 nth 223 band _pl-digraphs
   "j" _pl-alpha _pl-pos dup
   key1 str>bytes [ "j" _pl-norm ] map "j" _pl-alpha _keyed-alphabet
   key2 str>bytes [ "j" _pl-norm ] map "j" _pl-alpha _keyed-alphabet
@@ -167,7 +163,7 @@ META: four-square-encrypt
 : four-square-decrypt ( data:bytes key1:str[0..25,/[A-Za-z]*/]="" key2:str[0..25,/[A-Za-z]*/]="" -- bytes )
   "Undo four-square with the same keys: each pair (a', b') is read back through the top right and bottom left squares to the plain letters. The input is read as letters in pairs (other bytes dropped; an odd count is E_COERCE). No filler is removed." doc
   "Classical ciphers" category
-  data [ _pl-letter ] filter [ "j" _pl-norm ] map dup len 2 mod 0 =
+  data [ util:letter? ] filter [ "j" _pl-norm ] map dup len 2 mod 0 =
   [ ] [ drop "four-square-decrypt: the letters must come in pairs" raise:coerce ] if
   key1 str>bytes [ "j" _pl-norm ] map "j" _pl-alpha _keyed-alphabet _pl-pos
   key2 str>bytes [ "j" _pl-norm ] map "j" _pl-alpha _keyed-alphabet _pl-pos
@@ -277,7 +273,7 @@ META: four-square-decrypt
 : hill-encrypt ( data:bytes key:str[1..200] format:choice{letters|numbers}="letters" pad:str[1..1,/[A-Za-z]/]="X" -- bytes )
   "Hill cipher: the key is a 2x2 (4 values) or 3x3 (9 values) matrix mod 26, given as letters (A = 0 to Z = 25) or as numbers 0 to 25 separated by white space or commas. The key must be invertible mod 26 (E_RANGE otherwise). The letters of the data (other bytes dropped, taken as upper case) are cut into blocks of 2 or 3 and multiplied by the matrix; the last block is padded with the pad letter. The output is upper-case letters." doc
   "Classical ciphers" category
-  data [ _pl-letter ] filter [ 223 band 65 - ] map
+  data [ util:letter? ] filter [ 223 band 65 - ] map
   key format _hill-key dup _hill-size
   pad str>bytes 0 nth 223 band 65 -
   _hill-encrypt-with ;
@@ -292,7 +288,7 @@ META: hill-encrypt
 : hill-decrypt ( data:bytes key:str[1..200] format:choice{letters|numbers}="letters" -- bytes )
   "Undo the Hill cipher with the same matrix: the letters are cut into blocks and multiplied by the inverse matrix mod 26. The letters must make whole blocks (E_COERCE otherwise). No padding is removed." doc
   "Classical ciphers" category
-  data [ _pl-letter ] filter [ 223 band 65 - ] map
+  data [ util:letter? ] filter [ 223 band 65 - ] map
   key format _hill-key dup _hill-size
   _hill-decrypt-with ;
 

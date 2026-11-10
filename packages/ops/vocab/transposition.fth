@@ -14,17 +14,13 @@ IN: transposition
 : _rank-of ( vs:list v:int -- int )
   vs [ v < ] filter len ;
 
-\ The rank (0 = first column read) of every column.
-: _column-ranks ( vs:list -- list )
-  vs [ vs swap _rank-of ] map ;
+\ The rank (0 = first column read) of every column, as bytes (a key has at most 256 letters).
+: _column-ranks ( vs:list -- bytes )
+  vs [ vs swap _rank-of ] map list>bytes ;
 
-\ The column that has rank r.
-: _pick-column ( ranks:list r:int -- int )
-  0 ranks len range [ ranks swap nth r = ] filter 0 nth ;
-
-\ The column read at each step: order[r] is the column with rank r.
-: _column-order ( ranks:list -- list )
-  0 ranks len range [ ranks swap _pick-column ] map ;
+\ The column read at each step: order[r] is the column with rank r (the inverse of the ranks).
+: _column-order ( ranks:bytes -- list )
+  ranks util:perm-invert bytes>list ;
 
 \ How many of the l positions lie in column c (positions c, c + w, c + 2w, ... below l).
 : _column-count ( l:int c:int w:int -- int )
@@ -39,7 +35,7 @@ IN: transposition
   order [ t swap w _column-bytes ] map #[ ] bjoin ;
 
 \ The start, in the cipher text, of column c: the columns read before it come first.
-: _column-start ( c:int ranks:list l:int w:int -- int )
+: _column-start ( c:int ranks:bytes l:int w:int -- int )
   0 w range 0
   [ dup ranks swap nth ranks c nth <
     [ l swap w _column-count ] [ drop 0 ] if
@@ -53,7 +49,7 @@ IN: transposition
 : _decrypt-with ( ct:bytes starts:list w:int -- bytes )
   0 ct len range [ ct starts w _decrypt-at ] map list>bytes ;
 
-: _decrypt-bytes ( ct:bytes ranks:list w:int l:int -- bytes )
+: _decrypt-bytes ( ct:bytes ranks:bytes w:int l:int -- bytes )
   ct 0 w range [ ranks l w _column-start ] map w _decrypt-with ;
 
 \ data padded with pad bytes to a multiple of w.
@@ -67,7 +63,7 @@ IN: transposition
 \ Encrypt and decrypt
 \ ---------------------------------------------------------------------------------------------
 
-: transposition-encrypt ( data:bytes key:str[1..256,/[A-Za-z]+/] pad:str[0..1,/[A-Za-z]?/]="" -- bytes )
+: columnar-encrypt ( data:bytes key:str[1..256,/[A-Za-z]+/] pad:str[0..1,/[A-Za-z]?/]="" -- bytes )
   "Columnar transposition: the bytes are written in rows under the key (one column per key letter) and the columns are read out in alphabetical order of their key letters (a repeated letter keeps left-to-right order). With pad empty, the last row may be short and is not padded. With a pad letter, the last row is filled with that letter first; decryption does not remove it. Every byte takes part; nothing is dropped." doc
   "Classical ciphers" category
   pad len 0 =
@@ -77,18 +73,18 @@ IN: transposition
   key upper str>codes _key-values _column-ranks _column-order
   key len _columns ;
 
-META: transposition-encrypt
+META: columnar-encrypt
   param key "Keyword of letters (either case); its letters give the column order." ;
   param pad "A pad letter to fill the last row, or empty for none." ;
-  see-also transposition:transposition-decrypt ;
+  see-also transposition:columnar-decrypt ;
 ;
 
-: transposition-decrypt ( data:bytes key:str[1..256,/[A-Za-z]+/] -- bytes )
+: columnar-decrypt ( data:bytes key:str[1..256,/[A-Za-z]+/] -- bytes )
   "Undo the columnar transposition with the same key (no pad is removed: a padded cipher text decrypts to the padded text)." doc
   "Classical ciphers" category
   data key upper str>codes _key-values _column-ranks key len data len _decrypt-bytes ;
 
-META: transposition-decrypt
+META: columnar-decrypt
   param key "Keyword used to encrypt (either case)." ;
-  see-also transposition:transposition-encrypt ;
+  see-also transposition:columnar-encrypt ;
 ;

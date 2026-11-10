@@ -44,7 +44,7 @@ function letters(next: () => number, n: number): string {
 }
 
 async function encrypt(text: string, key: string, pad = "") {
-  return runtime.call("transposition:transposition-encrypt", [
+  return runtime.call("transposition:columnar-encrypt", [
     bytes(asciiBytes(text)),
     str(key),
     str(pad),
@@ -52,7 +52,7 @@ async function encrypt(text: string, key: string, pad = "") {
 }
 
 async function decrypt(text: string, key: string) {
-  return runtime.call("transposition:transposition-decrypt", [bytes(asciiBytes(text)), str(key)]);
+  return runtime.call("transposition:columnar-decrypt", [bytes(asciiBytes(text)), str(key)]);
 }
 
 function outText(r: Awaited<ReturnType<typeof encrypt>>): string {
@@ -108,7 +108,7 @@ describe("transposition: round trip", () => {
   test("bytes that are not letters take part unchanged", async () => {
     const r = await encrypt("a b,cé", "KEY");
     expect(r.ok).toBe(true);
-    const back = await runtime.call("transposition:transposition-decrypt", [
+    const back = await runtime.call("transposition:columnar-decrypt", [
       top(r) as never,
       str("KEY"),
     ]);
@@ -153,16 +153,13 @@ describe("transposition: size", () => {
     const next = rng(9);
     const text = Uint8Array.from({ length: 65536 }, () => Math.floor(next() * 256));
     const key = "ZEBRASQUARTZ";
-    const ct = await runtime.call("transposition:transposition-encrypt", [
+    const ct = await runtime.call("transposition:columnar-encrypt", [
       bytes(text),
       str(key),
       str(""),
     ]);
     expect(ct.ok).toBe(true);
-    const back = await runtime.call("transposition:transposition-decrypt", [
-      top(ct) as never,
-      str(key),
-    ]);
+    const back = await runtime.call("transposition:columnar-decrypt", [top(ct) as never, str(key)]);
     expect(back.ok).toBe(true);
     expect(top(back).v).toEqual(text);
   }, 60_000);
