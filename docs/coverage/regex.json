@@ -1,0 +1,3 @@
+[
+ { "cyberchef": "Regular expression", "status": "covered", "forge": ["regex:find-all", "regex:test"], "note": "Matches come back as records (start, end, text); regex:test is the yes/no form." }
+]

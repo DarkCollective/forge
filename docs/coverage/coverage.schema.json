@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge.darkcollective.com/schemas/coverage.schema.json",
+  "title": "Forge coverage mapping file",
+  "description": "docs/coverage/<area>.json: an array of entries, each mapping one CyberChef operation name (from docs/coverage/cyberchef.json) to the Forge words that cover it, or recording that it was redesigned or dropped. 'forge' items are either a catalogue word, written vocab:word, using the canonical name or an alias of that vocabulary (base64:decode, classical:rot13), or a structural recipe step written step:<kind>, where <kind> is one of fork, subsection, if, repeat or comment (RECIPES section 3.2). Structural steps are not catalogue ops, so a CyberChef operation that Forge replaced with one is 'redesigned' and names the step here. Names that are not mapped anywhere are shown as 'not yet' in docs/COVERAGE.md; do not list future work.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["cyberchef", "status"],
+    "properties": {
+      "cyberchef": {
+        "description": "The exact CyberChef operation name, as in docs/coverage/cyberchef.json.",
+        "type": "string",
+        "minLength": 1
+      },
+      "status": { "enum": ["covered", "redesigned", "dropped"] },
+      "forge": {
+        "description": "The Forge words that cover the operation. Required and non-empty for covered and redesigned; absent or empty for dropped.",
+        "type": "array",
+        "uniqueItems": true,
+        "items": {
+          "type": "string",
+          "pattern": "^(step:(fork|subsection|if|repeat|comment)|[a-z][a-z0-9]*:[^\\s:]+)$"
+        }
+      },
+      "note": {
+        "description": "Why: required for redesigned and dropped, optional for covered.",
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "allOf": [
+      {
+        "if": { "properties": { "status": { "enum": ["covered", "redesigned"] } }, "required": ["status"] },
+        "then": { "required": ["forge"], "properties": { "forge": { "type": "array", "minItems": 1 } } }
+      },
+      {
+        "if": { "properties": { "status": { "enum": ["redesigned", "dropped"] } }, "required": ["status"] },
+        "then": { "required": ["note"], "properties": { "note": true } }
+      },
+      {
+        "if": { "properties": { "status": { "const": "dropped" } }, "required": ["status"] },
+        "then": { "properties": { "forge": { "type": "array", "maxItems": 0 } } }
+      }
+    ]
+  }
+}

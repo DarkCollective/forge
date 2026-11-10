@@ -1,0 +1,13 @@
+[
+ { "cyberchef": "XOR", "status": "covered", "forge": ["bits:xor"] },
+ { "cyberchef": "XOR Brute Force", "status": "covered", "forge": ["bits:xor-brute"], "note": "Keys of 1 or 2 bytes." },
+ { "cyberchef": "OR", "status": "covered", "forge": ["bits:or"] },
+ { "cyberchef": "NOT", "status": "covered", "forge": ["bits:not"] },
+ { "cyberchef": "AND", "status": "covered", "forge": ["bits:and"] },
+ { "cyberchef": "ADD", "status": "covered", "forge": ["bits:add"] },
+ { "cyberchef": "SUB", "status": "covered", "forge": ["bits:sub"] },
+ { "cyberchef": "Bit shift left", "status": "covered", "forge": ["bits:shift-left"] },
+ { "cyberchef": "Bit shift right", "status": "covered", "forge": ["bits:shift-right"] },
+ { "cyberchef": "Rotate left", "status": "covered", "forge": ["bits:rotate-left"] },
+ { "cyberchef": "Rotate right", "status": "covered", "forge": ["bits:rotate-right"] }
+]

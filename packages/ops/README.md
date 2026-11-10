@@ -60,12 +60,15 @@ Three internal vocabularies are not part of the catalogue as ops: `recipe` (the 
 
 `vocab/util.fth` holds FL helpers that more than one op vocabulary needs. A private (`_`) word cannot be called from another vocabulary, so without `util` each author copies the helper. `util` is in `INTERNAL_VOCABS`: its public words are callable from every vocabulary (`util:space?`, or `USING: util`), are never listed in the catalogue, have a doc string and no category, and user units cannot define into it.
 
-| Word                                                 | Meaning                                                                                                                                                  |
-| ---------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `space? ( b:int -- bool )`                           | ASCII white space: 9 to 13 and 32                                                                                                                        |
-| `space-or-comma? ( b:int -- bool )`                  | white space or a comma, the separators of numeric text                                                                                                   |
-| `separator ( choice:str -- str )`                    | none, space, comma, newline to the delimiter text                                                                                                        |
-| `decode-table ( alpha:str ws:int pad:int -- bytes )` | 256-byte lookup table for `translate`: index in the alphabet, else `ws` for white space, `pad` for `=`, else 255 (pass 255 for a marker you do not need) |
+| Word                                                 | Meaning                                                                                                                                                                      |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `space? ( b:int -- bool )`                           | ASCII white space: 9 to 13 and 32                                                                                                                                            |
+| `space-or-comma? ( b:int -- bool )`                  | white space or a comma, the separators of numeric text                                                                                                                       |
+| `separator ( choice:str -- str )`                    | none, space, comma, newline to the delimiter text                                                                                                                            |
+| `decode-table ( alpha:str ws:int pad:int -- bytes )` | 256-byte lookup table for `translate`: index in the alphabet, else `ws` for white space, `pad` for `=`, else 255 (pass 255 for a marker you do not need)                     |
+| `check-symbols ( data:bytes table:bytes -- bytes )`  | translate data through a decode table; E_COERCE ("a character is not in the alphabet") if any byte maps to 255; other markers (white space, padding) are left for the caller |
+| `int>be-bytes ( v:int n:int -- bytes )`              | the low n bytes of v, big-endian                                                                                                                                             |
+| `digits>int ( vals:bytes radix:int -- int )`         | positional fold of digit values, most significant first                                                                                                                      |
 
 **Rule: check `util` before writing a helper. Anything more than one vocabulary needs goes in `util`.** If you wrote a helper that looks generally useful, say so in your report as a **utility candidate** (name, stack effect, why); the orchestrator promotes accepted candidates into `util` in a small follow-up work package. Do not copy a helper into a second vocabulary.
 
@@ -94,3 +97,13 @@ npm run gate4:browser -w @forge/worker
 ```
 
 Multi-step recipes that cross vocabularies (for example `text:split` into `text:join`) are tested in `packages/worker/test/phase4-recipes.test.ts`, because a single-op vector cannot feed a list into another op.
+
+## The CyberChef coverage table
+
+`docs/COVERAGE.md` is generated: it lists each of CyberChef's 506 operations (names only, in `docs/coverage/cyberchef.json`, grouped by CyberChef category) against the Forge words that cover it, or `redesigned` / `dropped` with a reason, or `not yet`. The data is one JSON file per area, `docs/coverage/<area>.json` (`encodings`, `classical`, `bits`, `text`, `regex`, `analysis`, `flow`, ...), an array of `{ "cyberchef", "status": "covered" | "redesigned" | "dropped", "forge": [...], "note" }` checked by `docs/coverage/coverage.schema.json`. `forge` lists catalogue words (`base64:decode`; an alias is written `classical:rot13`) and, for a structural recipe step that replaces an operation, `step:fork`, `step:subsection`, `step:if`, `step:repeat` or `step:comment`. `forge` is required for covered and redesigned, `note` for redesigned and dropped. Map only what exists; unmapped names show as `not yet`.
+
+```sh
+npm run coverage    # validate docs/coverage/*.json, then rewrite docs/COVERAGE.md (do not edit it by hand)
+```
+
+It fails if a `cyberchef` name is not in `cyberchef.json`, a name is mapped twice, or a `forge` word is not in the built catalogue. `src/coverage.test.ts` runs the same checks and **fails when `docs/COVERAGE.md` is out of date**. Every op WP adds or updates its own `docs/coverage/<area>.json`, so parallel WPs never edit the same file, and commits the regenerated `docs/COVERAGE.md`. A merge conflict in `docs/COVERAGE.md` is resolved by running `npm run coverage` again.

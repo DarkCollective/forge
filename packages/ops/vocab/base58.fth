@@ -43,9 +43,6 @@ IN: base58
 : _lead0 ( b:bytes -- int )
   0 [ dup b len < [ dup b swap nth 0 = ] [ false ] if ] [ 1 + ] while ;
 
-: _value ( vals:bytes -- int )
-  vals 0 [ swap 58 * + ] reduce ;
-
 : _out ( z:int n:int -- bytes )
   0 z range [ drop 0 ] map list>bytes
   n 0 =
@@ -54,9 +51,8 @@ IN: base58
   cat ;
 
 : _decode ( data:bytes table:bytes -- bytes )
-  data table translate [ 254 <> ] filter
-  dup [ 255 = ] filter len 0 <> [ "a character is not in the alphabet" raise:coerce ] when
-  dup _lead0 swap _value _out ;
+  data table util:check-symbols [ 254 <> ] filter
+  dup _lead0 swap 58 util:digits>int _out ;
 
 : decode ( bytes alphabet:choice{bitcoin|flickr|ripple}=bitcoin -- bytes )
   "Decode Base58 text. White space is ignored; each leading first-alphabet character becomes a zero byte. Text over about 11 000 characters is E_LIMIT_VALUE." doc

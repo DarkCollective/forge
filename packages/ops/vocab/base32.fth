@@ -50,11 +50,8 @@ IN: base32
 : _rest-ok ( r:int -- bool )
   r 1 <> r 3 <> and r 6 <> and ;
 
-: _bytes5 ( v:int -- bytes )
-  0 5 range [ 4 swap - 8 * v swap shr 255 band ] map list>bytes ;
-
 : _ungroup ( p:bytes g:int -- bytes )
-  p g 8 * g 8 * 8 + slice 5 _pack _bytes5 ;
+  p g 8 * g 8 * 8 + slice 5 _pack 5 util:int>be-bytes ;
 
 : _ungroups ( p:bytes ng:int -- bytes )
   0 ng range [ p swap _ungroup ] map #[ ] bjoin ;
@@ -70,8 +67,7 @@ IN: base32
   0 core len 5 * 8 div slice ;
 
 : _decode ( data:bytes table:bytes -- bytes )
-  data table translate [ 254 <> ] filter
-  dup [ 255 = ] filter len 0 <> [ "a character is not in the alphabet" raise:coerce ] when
+  data table util:check-symbols [ 254 <> ] filter
   dup [ 253 < ] filter _check-pad _finish ;
 
 : decode ( bytes alphabet:choice{standard|hex}=standard -- bytes )
