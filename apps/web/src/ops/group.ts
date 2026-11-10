@@ -1,0 +1,163 @@
+/*
+ * Copyright 2026 Darkcollective, LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+// The operations list as data (UI.md section 2.3, WP 3.2). Pure: the component renders this model,
+// and the keyboard cursor indexes into `visible`, so the order here is the order on screen.
+import type { CatalogueOp } from "@forge/ops";
+import { searchOps } from "./search.js";
+
+/** The vocabulary of user words (WP 3.7 promotes recipes into it). Shown in their own group. */
+export const USER_VOCAB = "user";
+
+export type SectionKind = "favourites" | "user" | "category" | "results";
+
+export interface ListSection {
+  /** Stable key, used for collapse state and element ids: `favourites`, `user`, `category:<name>`, `other`, `results`. */
+  readonly id: string;
+  readonly kind: SectionKind;
+  readonly title: string;
+  /** Every operation of the section, collapsed or not. */
+  readonly ops: readonly CatalogueOp[];
+  /** Index in `ListModel.visible` of the section's first row (only meaningful when not collapsed). */
+  readonly start: number;
+  readonly collapsed: boolean;
+  /** Sections the user can fold (browse view). Search results always show. */
+  readonly collapsible: boolean;
+}
+
+export interface ListModel {
+  readonly mode: "browse" | "search";
+  readonly sections: readonly ListSection[];
+  /** Rows on screen, in order: the sections' operations, skipping collapsed sections. */
+  readonly visible: readonly CatalogueOp[];
+  /** Number of operations matching the query (search mode) or in the catalogue (browse mode). */
+  readonly total: number;
+}
+
+export const OTHER_TITLE = "Other";
+export const USER_TITLE = "User words";
+export const FAVOURITES_TITLE = "Favourites";
+
+/** The operations named in `favourites`, in favourite order. Unknown names are skipped. */
+export function favouriteOps(
+  ops: readonly CatalogueOp[],
+  favourites: readonly string[],
+): CatalogueOp[] {
+  const byName = new Map<string, CatalogueOp>();
+  for (const op of ops) byName.set(op.qname, op);
+  const out: CatalogueOp[] = [];
+  for (const qname of favourites) {
+    const op = byName.get(qname);
+    if (op !== undefined) out.push(op);
+  }
+  return out;
+}
+
+/**
+ * Operations grouped for browsing: user words first, then one group per category in code-point order,
+ * with operations that have no category under "Other" last. Order inside a group is the catalogue's.
+ */
+export function groupByCategory(
+  ops: readonly CatalogueOp[],
+): { title: string; id: string; ops: CatalogueOp[] }[] {
+  const user: CatalogueOp[] = [];
+  const byCategory = new Map<string, CatalogueOp[]>();
+  const other: CatalogueOp[] = [];
+  for (const op of ops) {
+    if (op.vocab === USER_VOCAB) {
+      user.push(op);
+      continue;
+    }
+    const category = op.category === null || op.category.trim() === "" ? null : op.category;
+    if (category === null) {
+      other.push(op);
+      continue;
+    }
+    const list = byCategory.get(category);
+    if (list === undefined) byCategory.set(category, [op]);
+    else list.push(op);
+  }
+  const groups: { title: string; id: string; ops: CatalogueOp[] }[] = [];
+  if (user.length > 0) groups.push({ title: USER_TITLE, id: "user", ops: user });
+  const names = [...byCategory.keys()].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+  for (const name of names) {
+    groups.push({ title: name, id: `category:${name}`, ops: byCategory.get(name) ?? [] });
+  }
+  if (other.length > 0) groups.push({ title: OTHER_TITLE, id: "other", ops: other });
+  return groups;
+}
+
+/**
+ * The whole list for the current query and fold state. With a query: the ranked matches in one
+ * section. Without: favourites, then the category groups. `collapsed` holds section ids.
+ */
+export function buildListModel(
+  ops: readonly CatalogueOp[],
+  favourites: readonly string[],
+  query: string,
+  collapsed: ReadonlySet<string> = new Set(),
+): ListModel {
+  const raw: {
+    id: string;
+    kind: SectionKind;
+    title: string;
+    ops: CatalogueOp[];
+    collapsible: boolean;
+  }[] = [];
+  let mode: "browse" | "search" = "browse";
+  let total = ops.length;
+
+  if (query.trim() !== "") {
+    mode = "search";
+    const matches = searchOps(ops, query);
+    total = matches.length;
+    raw.push({
+      id: "results",
+      kind: "results",
+      title: "Results",
+      ops: matches,
+      collapsible: false,
+    });
+  } else {
+    raw.push({
+      id: "favourites",
+      kind: "favourites",
+      title: FAVOURITES_TITLE,
+      ops: favouriteOps(ops, favourites),
+      collapsible: true,
+    });
+    for (const group of groupByCategory(ops)) {
+      const kind: SectionKind = group.id === "user" ? "user" : "category";
+      raw.push({ id: group.id, kind, title: group.title, ops: group.ops, collapsible: true });
+    }
+  }
+
+  const sections: ListSection[] = [];
+  const visible: CatalogueOp[] = [];
+  for (const section of raw) {
+    const isCollapsed = section.collapsible && collapsed.has(section.id);
+    sections.push({
+      id: section.id,
+      kind: section.kind,
+      title: section.title,
+      ops: section.ops,
+      start: visible.length,
+      collapsed: isCollapsed,
+      collapsible: section.collapsible,
+    });
+    if (!isCollapsed) visible.push(...section.ops);
+  }
+  return { mode, sections, visible, total };
+}
