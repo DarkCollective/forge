@@ -1,0 +1,3004 @@
+[
+  {
+    "name": "decode ibm037, all 256 bytes",
+    "ref": "Unicode Consortium mapping file MICSFT/EBCDIC/CP037.TXT",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm037"
+    },
+    "input": {
+      "value": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00010203c29c09c2867fc297c28dc28e0b0c0d0e0f10111213c29dc28508c2871819c292c28f1c1d1e1fc280c281c282c283c2840a171bc288c289c28ac28bc28c050607c290c29116c293c294c295c29604c298c299c29ac29b1415c29e1a20c2a0c3a2c3a4c3a0c3a1c3a3c3a5c3a7c3b1c2a22e3c282b7c26c3a9c3aac3abc3a8c3adc3aec3afc3acc39f21242a293bc2ac2d2fc382c384c380c381c383c385c387c391c2a62c255f3e3fc3b8c389c38ac38bc388c38dc38ec38fc38c603a2340273d22c398616263646566676869c2abc2bbc3b0c3bdc3bec2b1c2b06a6b6c6d6e6f707172c2aac2bac3a6c2b8c386c2a4c2b57e737475767778797ac2a1c2bfc390c39dc39ec2ae5ec2a3c2a5c2b7c2a9c2a7c2b6c2bcc2bdc2be5b5dc2afc2a8c2b4c3977b414243444546474849c2adc3b4c3b6c3b2c3b3c3b57d4a4b4c4d4e4f505152c2b9c3bbc3bcc3b9c3bac3bf5cc3b7535455565758595ac2b2c394c396c392c393c39530313233343536373839c2b3c39bc39cc399c39ac29f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode ibm500, all 256 bytes",
+    "ref": "Unicode Consortium mapping file MICSFT/EBCDIC/CP500.TXT",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm500"
+    },
+    "input": {
+      "value": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00010203c29c09c2867fc297c28dc28e0b0c0d0e0f10111213c29dc28508c2871819c292c28f1c1d1e1fc280c281c282c283c2840a171bc288c289c28ac28bc28c050607c290c29116c293c294c295c29604c298c299c29ac29b1415c29e1a20c2a0c3a2c3a4c3a0c3a1c3a3c3a5c3a7c3b15b2e3c282b2126c3a9c3aac3abc3a8c3adc3aec3afc3acc39f5d242a293b5e2d2fc382c384c380c381c383c385c387c391c2a62c255f3e3fc3b8c389c38ac38bc388c38dc38ec38fc38c603a2340273d22c398616263646566676869c2abc2bbc3b0c3bdc3bec2b1c2b06a6b6c6d6e6f707172c2aac2bac3a6c2b8c386c2a4c2b57e737475767778797ac2a1c2bfc390c39dc39ec2aec2a2c2a3c2a5c2b7c2a9c2a7c2b6c2bcc2bdc2bec2ac7cc2afc2a8c2b4c3977b414243444546474849c2adc3b4c3b6c3b2c3b3c3b57d4a4b4c4d4e4f505152c2b9c3bbc3bcc3b9c3bac3bf5cc3b7535455565758595ac2b2c394c396c392c393c39530313233343536373839c2b3c39bc39cc399c39ac29f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode ibm875, all 256 bytes",
+    "ref": "Unicode Consortium mapping file MICSFT/EBCDIC/CP875.TXT",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm875"
+    },
+    "input": {
+      "value": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00010203c29c09c2867fc297c28dc28e0b0c0d0e0f10111213c29dc28508c2871819c292c28f1c1d1e1fc280c281c282c283c2840a171bc288c289c28ac28bc28c050607c290c29116c293c294c295c29604c298c299c29ac29b1415c29e1a20ce91ce92ce93ce94ce95ce96ce97ce98ce995b2e3c282b2126ce9ace9bce9cce9dce9ece9fcea0cea1cea35d242a293b5e2d2fcea4cea5cea6cea7cea8cea9ceaaceab7c2c255f3e3fc2a8ce86ce88ce89c2a0ce8ace8cce8ece8f603a2340273d22ce85616263646566676869ceb1ceb2ceb3ceb4ceb5ceb6c2b06a6b6c6d6e6f707172ceb7ceb8ceb9cebacebbcebcc2b47e737475767778797acebdcebecebfcf80cf81cf83c2a3ceacceadceaecf8aceafcf8ccf8dcf8bcf8ecf82cf84cf85cf86cf87cf887b414243444546474849c2adcf89ce90ceb0e28098e280957d4a4b4c4d4e4f505152c2b1c2bd1ace87e28099c2a65c1a535455565758595ac2b2c2a71a1ac2abc2ac30313233343536373839c2b3c2a91a1ac2bbc29f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode ibm1026, all 256 bytes",
+    "ref": "Unicode Consortium mapping file MICSFT/EBCDIC/CP1026.TXT",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm1026"
+    },
+    "input": {
+      "value": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00010203c29c09c2867fc297c28dc28e0b0c0d0e0f10111213c29dc28508c2871819c292c28f1c1d1e1fc280c281c282c283c2840a171bc288c289c28ac28bc28c050607c290c29116c293c294c295c29604c298c299c29ac29b1415c29e1a20c2a0c3a2c3a4c3a0c3a1c3a3c3a57bc3b1c3872e3c282b2126c3a9c3aac3abc3a8c3adc3aec3afc3acc39fc49ec4b02a293b5e2d2fc382c384c380c381c383c3855bc391c59f2c255f3e3fc3b8c389c38ac38bc388c38dc38ec38fc38cc4b13ac396c59e273dc39cc398616263646566676869c2abc2bb7d60c2a6c2b1c2b06a6b6c6d6e6f707172c2aac2bac3a6c2b8c386c2a4c2b5c3b6737475767778797ac2a1c2bf5d2440c2aec2a2c2a3c2a5c2b7c2a9c2a7c2b6c2bcc2bdc2bec2ac7cc2afc2a8c2b4c397c3a7414243444546474849c2adc3b47ec3b2c3b3c3b5c49f4a4b4c4d4e4f505152c2b9c3bb5cc3b9c3bac3bfc3bcc3b7535455565758595ac2b2c39423c392c393c39530313233343536373839c2b3c39b22c399c39ac29f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode ibm037 letters, digit and space",
+    "ref": "IBM CCSID 37 chart: A=C1 a=81 0=F0 space=40; CP037.TXT",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm037"
+    },
+    "input": {
+      "value": "c181f040",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Aa0 ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm037 Hello, World!",
+    "ref": "IBM CCSID 37 chart (H=C8 e=85 l=93 o=96 ,=6B W=E6 r=99 d=84 !=5A); CP037.TXT",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm037"
+    },
+    "input": {
+      "value": "c8859393966b40e6969993845a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Hello, World!",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm037 brackets and punctuation",
+    "ref": "CP037.TXT: [ BA, ] BB, ! 5A, ^ B0, | 4F",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm037"
+    },
+    "input": {
+      "value": "babb5ab04f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[]!^|",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm500 brackets and punctuation",
+    "ref": "CP500.TXT: [ 4A, ] 5A, ! 4F, ^ 5F, | BB",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm500"
+    },
+    "input": {
+      "value": "4a5a4f5fbb",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[]!^|",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm1047 brackets and punctuation",
+    "ref": "IBM CCSID 1047 chart: [ AD, ] BD, ! 5A, ^ 5F, | 4F (ICU ibm-1047_P100-1995.ucm)",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm1047"
+    },
+    "input": {
+      "value": "adbd5a5f4f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[]!^|",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode the same bytes in ibm037 differ from ibm500",
+    "ref": "CP037.TXT: 4A cent, 5A !, 4F |, 5F not, BB ]",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm037"
+    },
+    "input": {
+      "value": "4a5a4f5fbb",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "¢!|¬]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode the same bytes in ibm500 differ from ibm037",
+    "ref": "CP500.TXT: BA not, BB |, B0 cent",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm500"
+    },
+    "input": {
+      "value": "babbb0",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "¬|¢",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm1047 differs from ibm037 at six bytes",
+    "ref": "ICU ibm-1047_P100-1995.ucm (5F ^, AD [, B0 not, BA Y-acute, BB diaeresis, BD ])",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm1047"
+    },
+    "input": {
+      "value": "5fadb0babbbd",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "^[¬Ý¨]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm037 9F is the currency sign",
+    "ref": "CP037.TXT: 9F = U+00A4",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm037"
+    },
+    "input": {
+      "value": "9f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "¤",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm1140 9F is the euro sign",
+    "ref": "IBM CCSID 1140 (037 with the euro at 9F); ICU ibm-1140_P100-1997.ucm; Python cp1140",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm1140"
+    },
+    "input": {
+      "value": "9f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "€",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm1148 9F is the euro sign",
+    "ref": "IBM CCSID 1148 (500 with the euro at 9F); ICU ibm-1148_P100-1997.ucm",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm1148"
+    },
+    "input": {
+      "value": "9f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "€",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm1142 5A is the euro sign",
+    "ref": "IBM CCSID 1142 (277 with the euro at 5A); ICU ibm-1142_P100-1997.ucm",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm1142"
+    },
+    "input": {
+      "value": "5a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "€",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm1140 text with euro",
+    "ref": "CP037 letters + 9F euro",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm1140"
+    },
+    "input": {
+      "value": "c5e4d9409f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "EUR €",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm273 at the bytes where it differs from ibm037",
+    "ref": "ICU ibm-273_P100-199x.ucm (IBM conversion table), parsed independently of the FL table",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm273"
+    },
+    "input": {
+      "value": "434a4f595a5f636a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{Ä!~Ü^[ö",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm277 at the bytes where it differs from ibm037",
+    "ref": "ICU ibm-277_P100-199x.ucm (IBM conversion table), parsed independently of the FL table",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm277"
+    },
+    "input": {
+      "value": "474a4f5a5b5f676a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "}#!¤Å^$ø",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm278 at the bytes where it differs from ibm037",
+    "ref": "ICU ibm-278_P100-199x.ucm (IBM conversion table), parsed independently of the FL table",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm278"
+    },
+    "input": {
+      "value": "43474a4f515a5b5f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{}§!`¤Å^",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm280 at the bytes where it differs from ibm037",
+    "ref": "ICU ibm-280_P100-199x.ucm (IBM conversion table), parsed independently of the FL table",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm280"
+    },
+    "input": {
+      "value": "44484a4f5154585a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\\°!]}~é",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm284 at the bytes where it differs from ibm037",
+    "ref": "ICU ibm-284_P100-199x.ucm (IBM conversion table), parsed independently of the FL table",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm284"
+    },
+    "input": {
+      "value": "494a5a696a7ba1b0",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "¦[]#ñÑ¨¢",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm285 at the bytes where it differs from ibm037",
+    "ref": "ICU ibm-285_P100-199x.ucm (IBM conversion table), parsed independently of the FL table",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm285"
+    },
+    "input": {
+      "value": "4a5ba1b0b1babc",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "$£¯¢[^~",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm297 at the bytes where it differs from ibm037",
+    "ref": "ICU ibm-297_P100-199x.ucm (IBM conversion table), parsed independently of the FL table",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm297"
+    },
+    "input": {
+      "value": "44484a4f51545a5f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "@\\°!{}§^",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm1141 at the bytes where it differs from ibm037",
+    "ref": "ICU ibm-1141_P100-199x.ucm (IBM conversion table), parsed independently of the FL table",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm1141"
+    },
+    "input": {
+      "value": "434a4f595a5f636a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{Ä!~Ü^[ö",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm1143 at the bytes where it differs from ibm037",
+    "ref": "ICU ibm-1143_P100-199x.ucm (IBM conversion table), parsed independently of the FL table",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm1143"
+    },
+    "input": {
+      "value": "43474a4f515a5b5f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{}§!`€Å^",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm1144 at the bytes where it differs from ibm037",
+    "ref": "ICU ibm-1144_P100-199x.ucm (IBM conversion table), parsed independently of the FL table",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm1144"
+    },
+    "input": {
+      "value": "44484a4f5154585a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\\°!]}~é",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm1145 at the bytes where it differs from ibm037",
+    "ref": "ICU ibm-1145_P100-199x.ucm (IBM conversion table), parsed independently of the FL table",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm1145"
+    },
+    "input": {
+      "value": "494a5a696a7b9fa1",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "¦[]#ñÑ€¨",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm1146 at the bytes where it differs from ibm037",
+    "ref": "ICU ibm-1146_P100-199x.ucm (IBM conversion table), parsed independently of the FL table",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm1146"
+    },
+    "input": {
+      "value": "4a5b9fa1b0b1babc",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "$£€¯¢[^~",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm1147 at the bytes where it differs from ibm037",
+    "ref": "ICU ibm-1147_P100-199x.ucm (IBM conversion table), parsed independently of the FL table",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm1147"
+    },
+    "input": {
+      "value": "44484a4f51545a5f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "@\\°!{}§^",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm1149 at the bytes where it differs from ibm037",
+    "ref": "ICU ibm-1149_P100-199x.ucm (IBM conversion table), parsed independently of the FL table",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm1149"
+    },
+    "input": {
+      "value": "4a4f5a5f797c8c8e",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Þ!ÆÖðÐ`{",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm273 German umlauts",
+    "ref": "ICU ibm-273_P100-1995.ucm; Python cp273 codec agrees",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm273"
+    },
+    "input": {
+      "value": "4a5a6ac0d0e0a159",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ÄÜöäüÖß~",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm875 Greek letters",
+    "ref": "Unicode Consortium mapping file MICSFT/EBCDIC/CP875.TXT",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm875"
+    },
+    "input": {
+      "value": "41424344",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ΑΒΓΔ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm875 unassigned byte is U+001A",
+    "ref": "CP875.TXT: DC = U+001A (SUBSTITUTE)",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm875"
+    },
+    "input": {
+      "value": "dc",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\u001a",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm1026 Turkish letters",
+    "ref": "Unicode Consortium mapping file MICSFT/EBCDIC/CP1026.TXT",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm1026"
+    },
+    "input": {
+      "value": "4a5a7c9aa1",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ÇĞŞªö",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm037 empty input",
+    "ref": "hand-computed (no bytes)",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm037"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode utf-8",
+    "ref": "Python utf_8 codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "utf-8"
+    },
+    "input": {
+      "value": "e282ac",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "€",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode utf-16le",
+    "ref": "Python utf_16_le codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "utf-16le"
+    },
+    "input": {
+      "value": "41003dd800de",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "A😀",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode utf-16be",
+    "ref": "Python utf_16_be codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "utf-16be"
+    },
+    "input": {
+      "value": "0041d83dde00",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "A😀",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode iso-8859-1",
+    "ref": "Python latin_1 codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "iso-8859-1"
+    },
+    "input": {
+      "value": "80e9",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "é",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode windows-1252",
+    "ref": "Python cp1252 codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "windows-1252"
+    },
+    "input": {
+      "value": "80e9",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "€é",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode windows-1250",
+    "ref": "Python cp1250 codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "windows-1250"
+    },
+    "input": {
+      "value": "8a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Š",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode windows-1251",
+    "ref": "Python cp1251 codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "windows-1251"
+    },
+    "input": {
+      "value": "eff0e8e2e5f2",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "привет",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode windows-1253",
+    "ref": "Python cp1253 codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "windows-1253"
+    },
+    "input": {
+      "value": "c1",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Α",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode windows-1254",
+    "ref": "Python cp1254 codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "windows-1254"
+    },
+    "input": {
+      "value": "dd",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "İ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode windows-1255",
+    "ref": "Python cp1255 codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "windows-1255"
+    },
+    "input": {
+      "value": "e0",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "א",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode windows-1256",
+    "ref": "Python cp1256 codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "windows-1256"
+    },
+    "input": {
+      "value": "c7",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ا",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode windows-1257",
+    "ref": "Python cp1257 codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "windows-1257"
+    },
+    "input": {
+      "value": "e0",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ą",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode windows-1258",
+    "ref": "Python cp1258 codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "windows-1258"
+    },
+    "input": {
+      "value": "c0",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "À",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode windows-874",
+    "ref": "Python cp874 codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "windows-874"
+    },
+    "input": {
+      "value": "a1",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ก",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm866",
+    "ref": "Python cp866 codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm866"
+    },
+    "input": {
+      "value": "80",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "А",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode iso-8859-2",
+    "ref": "Python iso8859_2 codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "iso-8859-2"
+    },
+    "input": {
+      "value": "a1",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Ą",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode iso-8859-3",
+    "ref": "Python iso8859_3 codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "iso-8859-3"
+    },
+    "input": {
+      "value": "a1",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Ħ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode iso-8859-4",
+    "ref": "Python iso8859_4 codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "iso-8859-4"
+    },
+    "input": {
+      "value": "a1",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Ą",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode iso-8859-5",
+    "ref": "Python iso8859_5 codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "iso-8859-5"
+    },
+    "input": {
+      "value": "b0",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "А",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode iso-8859-6",
+    "ref": "Python iso8859_6 codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "iso-8859-6"
+    },
+    "input": {
+      "value": "c7",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ا",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode iso-8859-7",
+    "ref": "Python iso8859_7 codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "iso-8859-7"
+    },
+    "input": {
+      "value": "c1",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Α",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode iso-8859-8",
+    "ref": "Python iso8859_8 codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "iso-8859-8"
+    },
+    "input": {
+      "value": "e0",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "א",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode iso-8859-10",
+    "ref": "Python iso8859_10 codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "iso-8859-10"
+    },
+    "input": {
+      "value": "a1",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Ą",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode iso-8859-13",
+    "ref": "Python iso8859_13 codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "iso-8859-13"
+    },
+    "input": {
+      "value": "a1",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "”",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode iso-8859-14",
+    "ref": "Python iso8859_14 codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "iso-8859-14"
+    },
+    "input": {
+      "value": "a1",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Ḃ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode iso-8859-15",
+    "ref": "Python iso8859_15 codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "iso-8859-15"
+    },
+    "input": {
+      "value": "a4",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "€",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode koi8-r",
+    "ref": "Python koi8_r codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "koi8-r"
+    },
+    "input": {
+      "value": "d0d2c9d7c5d4",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "привет",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode koi8-u",
+    "ref": "Python koi8_u codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "koi8-u"
+    },
+    "input": {
+      "value": "a4",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "є",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode macintosh",
+    "ref": "Python mac_roman codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "macintosh"
+    },
+    "input": {
+      "value": "8e",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "é",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode x-mac-cyrillic",
+    "ref": "Python mac_cyrillic codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "x-mac-cyrillic"
+    },
+    "input": {
+      "value": "80",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "А",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode gbk",
+    "ref": "Python gbk codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "gbk"
+    },
+    "input": {
+      "value": "c4e3",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "你",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode gb18030",
+    "ref": "Python gb18030 codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "gb18030"
+    },
+    "input": {
+      "value": "81308130",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode big5",
+    "ref": "Python big5 codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "big5"
+    },
+    "input": {
+      "value": "a741",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "你",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode euc-jp",
+    "ref": "Python euc_jp codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "euc-jp"
+    },
+    "input": {
+      "value": "a4a2",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "あ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode iso-2022-jp",
+    "ref": "Python iso2022_jp codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "iso-2022-jp"
+    },
+    "input": {
+      "value": "1b244224221b2842",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "あ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode shift_jis",
+    "ref": "Python shift_jis codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "shift_jis"
+    },
+    "input": {
+      "value": "82a0",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "あ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode euc-kr",
+    "ref": "Python euc_kr codec (independent implementation); the code chart of the encoding",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "euc-kr"
+    },
+    "input": {
+      "value": "b0a1",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "가",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode windows-1252 differs from iso-8859-1",
+    "ref": "WHATWG index windows-1252; Python cp1252",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "windows-1252"
+    },
+    "input": {
+      "value": "9394",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "“”",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode koi8-u differs from koi8-r at AE and BE",
+    "ref": "WHATWG index-koi8-u.txt (RFC 2319 KOI8-U; Python koi8_u still has box-drawing characters there); Chromium TextDecoder",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "koi8-u"
+    },
+    "input": {
+      "value": "aebe",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ўЎ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode windows-1255 CA is U+05BA",
+    "ref": "WHATWG index-windows-1255.txt (CA = U+05BA; older codec tables such as Python cp1255 leave it unassigned); Chromium TextDecoder",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "windows-1255"
+    },
+    "input": {
+      "value": "ca",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ֺ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ibm866 control characters are ASCII",
+    "ref": "WHATWG index-ibm866.txt: bytes 00 to 7F are ASCII; Python cp866 codec",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ibm866"
+    },
+    "input": {
+      "value": "1a1c7f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\u001a\u001c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode utf-8 non-ASCII text",
+    "ref": "hand-computed (UTF-8)",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "utf-8"
+    },
+    "input": {
+      "value": "68c3a96c6c6f20e697a5e69cac20f09f9880",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "héllo 日本 😀",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode utf-8 keeps a byte order mark",
+    "ref": "WHATWG ignoreBOM: the mark stays as U+FEFF",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "utf-8"
+    },
+    "input": {
+      "value": "efbbbf41",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "﻿A",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode utf-16le empty input",
+    "ref": "hand-computed (no bytes)",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "utf-16le"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode windows-1251 empty input",
+    "ref": "hand-computed (no bytes)",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "windows-1251"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode shift_jis half-width katakana",
+    "ref": "Python shift_jis codec; JIS X 0201 0xB1 = U+FF71",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "shift_jis"
+    },
+    "input": {
+      "value": "b1",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ｱ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode non-strict gives U+FFFD for an invalid sequence",
+    "ref": "WHATWG Shift_JIS decoder: 0xFF is an error",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "shift_jis",
+      "strict": false
+    },
+    "input": {
+      "value": "41ff42",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "A�B",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode non-strict utf-8 replaces binary bytes",
+    "ref": "WHATWG UTF-8 decoder: each stray byte is one error",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "utf-8",
+      "strict": false
+    },
+    "input": {
+      "value": "00ff80",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\u0000��",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode non-strict windows-1253 unassigned byte",
+    "ref": "WHATWG index windows-1253: 0xAA is unassigned",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "windows-1253",
+      "strict": false
+    },
+    "input": {
+      "value": "aa",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "�",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode strict rejects invalid utf-8",
+    "ref": "hand-computed (0xC3 needs a continuation byte)",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "utf-8"
+    },
+    "input": {
+      "value": "c328",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode strict rejects binary as utf-8",
+    "ref": "hand-computed (0xFF never occurs in UTF-8)",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "utf-8"
+    },
+    "input": {
+      "value": "00ff80",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode strict rejects an invalid shift_jis byte",
+    "ref": "WHATWG Shift_JIS decoder: 0xFF is an error",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "shift_jis"
+    },
+    "input": {
+      "value": "ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode strict rejects an unassigned windows-1253 byte",
+    "ref": "WHATWG index windows-1253: 0xAA is unassigned",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "windows-1253"
+    },
+    "input": {
+      "value": "aa",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode strict rejects an unassigned windows-874 byte",
+    "ref": "WHATWG index-windows-874.txt: DB is unassigned",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "windows-874"
+    },
+    "input": {
+      "value": "db",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode strict rejects an unassigned iso-8859-6 byte",
+    "ref": "WHATWG index-iso-8859-6.txt: A1 is unassigned",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "iso-8859-6"
+    },
+    "input": {
+      "value": "a1",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode strict rejects an odd utf-16le length",
+    "ref": "hand-computed (a lone trailing byte)",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "utf-16le"
+    },
+    "input": {
+      "value": "410042",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode rejects an unknown encoding",
+    "ref": "choice option check (static)",
+    "op": "charset:decode",
+    "params": {
+      "encoding": "ebcdic"
+    },
+    "input": {
+      "value": "41",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "decode default is utf-8",
+    "ref": "hand-computed (UTF-8)",
+    "op": "charset:decode",
+    "params": {},
+    "input": {
+      "value": "c3a9",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "é",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode ibm037 letters, digit and space",
+    "ref": "IBM CCSID 37 chart: A=C1 a=81 0=F0 space=40; CP037.TXT",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "ibm037"
+    },
+    "input": {
+      "value": "Aa0 ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c181f040",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode ibm037 Hello, World!",
+    "ref": "IBM CCSID 37 chart; CP037.TXT",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "ibm037"
+    },
+    "input": {
+      "value": "Hello, World!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c8859393966b40e6969993845a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode ibm037 accented letter",
+    "ref": "CP037.TXT: 51 = U+00E9",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "ibm037"
+    },
+    "input": {
+      "value": "é",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "51",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode ibm037 brackets and punctuation",
+    "ref": "CP037.TXT: [ BA, ] BB, ! 5A, ^ B0, | 4F",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "ibm037"
+    },
+    "input": {
+      "value": "[]!^|",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "babb5ab04f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode ibm500 brackets and punctuation",
+    "ref": "CP500.TXT: [ 4A, ] 5A, ! 4F, ^ 5F, | BB",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "ibm500"
+    },
+    "input": {
+      "value": "[]!^|",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4a5a4f5fbb",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode ibm1047 brackets and punctuation",
+    "ref": "IBM CCSID 1047 chart: [ AD, ] BD, ! 5A, ^ 5F, | 4F",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "ibm1047"
+    },
+    "input": {
+      "value": "[]!^|",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "adbd5a5f4f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode ibm1140 euro sign",
+    "ref": "IBM CCSID 1140: euro at 9F; ICU ibm-1140_P100-1997.ucm",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "ibm1140"
+    },
+    "input": {
+      "value": "€",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "9f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode ibm037 currency sign",
+    "ref": "CP037.TXT: 9F = U+00A4",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "ibm037"
+    },
+    "input": {
+      "value": "¤",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "9f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode ibm037 line feed is 25",
+    "ref": "CP037.TXT: 25 = U+000A",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "ibm037"
+    },
+    "input": {
+      "value": "\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "25",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode ibm1047 line feed is 25",
+    "ref": "ICU ibm-1047_P100-1995.ucm: 25 = U+000A",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "ibm1047"
+    },
+    "input": {
+      "value": "\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "25",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode ibm875 Greek letters",
+    "ref": "Unicode Consortium mapping file MICSFT/EBCDIC/CP875.TXT",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "ibm875"
+    },
+    "input": {
+      "value": "ΑΒΓΔ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "41424344",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode ibm875 substitute picks the lowest byte",
+    "ref": "CP875.TXT: U+001A is both 3F and DC; the lowest byte wins",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "ibm875"
+    },
+    "input": {
+      "value": "\u001a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode ibm1026 Turkish letters",
+    "ref": "Unicode Consortium mapping file MICSFT/EBCDIC/CP1026.TXT",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "ibm1026"
+    },
+    "input": {
+      "value": "ÇĞŞªö",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4a5a7c9aa1",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode ibm273 German umlauts",
+    "ref": "Python cp273 codec; ICU ibm-273_P100-1995.ucm",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "ibm273"
+    },
+    "input": {
+      "value": "ÄÜöäüÖß~",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4a5a6ac0d0e0a159",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode ibm037 empty input",
+    "ref": "hand-computed (no characters)",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "ibm037"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode windows-1252 euro and e-acute",
+    "ref": "Python cp1252 codec",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "windows-1252"
+    },
+    "input": {
+      "value": "é€",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "e980",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode iso-8859-1 e-acute",
+    "ref": "ISO 8859-1 maps byte n to U+00n",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "iso-8859-1"
+    },
+    "input": {
+      "value": "é",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "e980",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode iso-8859-15 euro",
+    "ref": "Python iso8859_15 codec",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "iso-8859-15"
+    },
+    "input": {
+      "value": "€",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a4",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode windows-1251 Cyrillic",
+    "ref": "Python cp1251 codec",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "windows-1251"
+    },
+    "input": {
+      "value": "привет",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "eff0e8e2e5f2",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode koi8-r Cyrillic",
+    "ref": "Python koi8_r codec",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "koi8-r"
+    },
+    "input": {
+      "value": "привет",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d0d2c9d7c5d4",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode ibm866 capital A",
+    "ref": "Python cp866 codec",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "ibm866"
+    },
+    "input": {
+      "value": "А",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "80",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode macintosh e-acute",
+    "ref": "Python mac_roman codec",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "macintosh"
+    },
+    "input": {
+      "value": "é",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "8e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode windows-874 Thai ko kai",
+    "ref": "Python cp874 codec",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "windows-874"
+    },
+    "input": {
+      "value": "ก",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a1",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode windows-1252 empty input",
+    "ref": "hand-computed (no characters)",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "windows-1252"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode utf-8 non-ASCII",
+    "ref": "hand-computed (UTF-8)",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "utf-8"
+    },
+    "input": {
+      "value": "hé € 😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "68c3a920e282ac20f09f9880",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode utf-16le with a surrogate pair",
+    "ref": "Python utf_16_le codec",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "utf-16le"
+    },
+    "input": {
+      "value": "A€😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4100ac203dd800de",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode utf-16be with a surrogate pair",
+    "ref": "Python utf_16_be codec",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "utf-16be"
+    },
+    "input": {
+      "value": "A€😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "004120acd83dde00",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode utf-16le empty input",
+    "ref": "hand-computed (no characters)",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "utf-16le"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode rejects a character the code page lacks",
+    "ref": "CP037.TXT has no U+20AC (it is in 1140)",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "ibm037"
+    },
+    "input": {
+      "value": "€",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "encode rejects a character outside windows-1252",
+    "ref": "Python cp1252 codec has no U+65E5",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "windows-1252"
+    },
+    "input": {
+      "value": "café 日",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "encode rejects Latin letters in koi8-r",
+    "ref": "Python koi8_r codec has no U+00E9",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "koi8-r"
+    },
+    "input": {
+      "value": "é",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "encode rejects a code point above U+00FF in iso-8859-1",
+    "ref": "ISO 8859-1 stops at U+00FF",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "iso-8859-1"
+    },
+    "input": {
+      "value": "€",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "encode rejects an unassigned windows-1253 character",
+    "ref": "U+FFFD is not in the windows-1253 index",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "windows-1253"
+    },
+    "input": {
+      "value": "�",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "encode offers no multi-byte encoding",
+    "ref": "choice option check (static): shift_jis is decode only",
+    "op": "charset:encode",
+    "params": {
+      "encoding": "shift_jis"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "encode default is utf-8",
+    "ref": "hand-computed (UTF-8)",
+    "op": "charset:encode",
+    "params": {},
+    "input": {
+      "value": "é",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c3a9",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "brute force of one byte",
+    "ref": "decoded one by one with Python codecs and the IBM tables of ICU (independent of the FL words), in the order of the decode choice list",
+    "op": "charset:brute",
+    "params": {},
+    "input": {
+      "value": "e9",
+      "enc": "hex"
+    },
+    "expect": {
+      "json": [
+        {
+          "encoding": "iso-8859-1",
+          "text": "é"
+        },
+        {
+          "encoding": "ibm866",
+          "text": "щ"
+        },
+        {
+          "encoding": "iso-8859-2",
+          "text": "é"
+        },
+        {
+          "encoding": "iso-8859-3",
+          "text": "é"
+        },
+        {
+          "encoding": "iso-8859-4",
+          "text": "é"
+        },
+        {
+          "encoding": "iso-8859-5",
+          "text": "щ"
+        },
+        {
+          "encoding": "iso-8859-6",
+          "text": "ى"
+        },
+        {
+          "encoding": "iso-8859-7",
+          "text": "ι"
+        },
+        {
+          "encoding": "iso-8859-8",
+          "text": "י"
+        },
+        {
+          "encoding": "iso-8859-10",
+          "text": "é"
+        },
+        {
+          "encoding": "iso-8859-13",
+          "text": "é"
+        },
+        {
+          "encoding": "iso-8859-14",
+          "text": "é"
+        },
+        {
+          "encoding": "iso-8859-15",
+          "text": "é"
+        },
+        {
+          "encoding": "iso-8859-16",
+          "text": "é"
+        },
+        {
+          "encoding": "koi8-r",
+          "text": "И"
+        },
+        {
+          "encoding": "koi8-u",
+          "text": "И"
+        },
+        {
+          "encoding": "macintosh",
+          "text": "È"
+        },
+        {
+          "encoding": "windows-874",
+          "text": "้"
+        },
+        {
+          "encoding": "windows-1250",
+          "text": "é"
+        },
+        {
+          "encoding": "windows-1251",
+          "text": "й"
+        },
+        {
+          "encoding": "windows-1252",
+          "text": "é"
+        },
+        {
+          "encoding": "windows-1253",
+          "text": "ι"
+        },
+        {
+          "encoding": "windows-1254",
+          "text": "é"
+        },
+        {
+          "encoding": "windows-1255",
+          "text": "י"
+        },
+        {
+          "encoding": "windows-1256",
+          "text": "é"
+        },
+        {
+          "encoding": "windows-1257",
+          "text": "é"
+        },
+        {
+          "encoding": "windows-1258",
+          "text": "é"
+        },
+        {
+          "encoding": "x-mac-cyrillic",
+          "text": "й"
+        },
+        {
+          "encoding": "ibm037",
+          "text": "Z"
+        },
+        {
+          "encoding": "ibm273",
+          "text": "Z"
+        },
+        {
+          "encoding": "ibm277",
+          "text": "Z"
+        },
+        {
+          "encoding": "ibm278",
+          "text": "Z"
+        },
+        {
+          "encoding": "ibm280",
+          "text": "Z"
+        },
+        {
+          "encoding": "ibm284",
+          "text": "Z"
+        },
+        {
+          "encoding": "ibm285",
+          "text": "Z"
+        },
+        {
+          "encoding": "ibm297",
+          "text": "Z"
+        },
+        {
+          "encoding": "ibm500",
+          "text": "Z"
+        },
+        {
+          "encoding": "ibm875",
+          "text": "Z"
+        },
+        {
+          "encoding": "ibm1026",
+          "text": "Z"
+        },
+        {
+          "encoding": "ibm1047",
+          "text": "Z"
+        },
+        {
+          "encoding": "ibm1140",
+          "text": "Z"
+        },
+        {
+          "encoding": "ibm1141",
+          "text": "Z"
+        },
+        {
+          "encoding": "ibm1142",
+          "text": "Z"
+        },
+        {
+          "encoding": "ibm1143",
+          "text": "Z"
+        },
+        {
+          "encoding": "ibm1144",
+          "text": "Z"
+        },
+        {
+          "encoding": "ibm1145",
+          "text": "Z"
+        },
+        {
+          "encoding": "ibm1146",
+          "text": "Z"
+        },
+        {
+          "encoding": "ibm1147",
+          "text": "Z"
+        },
+        {
+          "encoding": "ibm1148",
+          "text": "Z"
+        },
+        {
+          "encoding": "ibm1149",
+          "text": "Z"
+        }
+      ]
+    }
+  },
+  {
+    "name": "brute force of empty input",
+    "ref": "decoded one by one with Python codecs and the IBM tables of ICU (independent of the FL words), in the order of the decode choice list",
+    "op": "charset:brute",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "json": [
+        {
+          "encoding": "utf-8",
+          "text": ""
+        },
+        {
+          "encoding": "utf-16le",
+          "text": ""
+        },
+        {
+          "encoding": "utf-16be",
+          "text": ""
+        },
+        {
+          "encoding": "iso-8859-1",
+          "text": ""
+        },
+        {
+          "encoding": "ibm866",
+          "text": ""
+        },
+        {
+          "encoding": "iso-8859-2",
+          "text": ""
+        },
+        {
+          "encoding": "iso-8859-3",
+          "text": ""
+        },
+        {
+          "encoding": "iso-8859-4",
+          "text": ""
+        },
+        {
+          "encoding": "iso-8859-5",
+          "text": ""
+        },
+        {
+          "encoding": "iso-8859-6",
+          "text": ""
+        },
+        {
+          "encoding": "iso-8859-7",
+          "text": ""
+        },
+        {
+          "encoding": "iso-8859-8",
+          "text": ""
+        },
+        {
+          "encoding": "iso-8859-10",
+          "text": ""
+        },
+        {
+          "encoding": "iso-8859-13",
+          "text": ""
+        },
+        {
+          "encoding": "iso-8859-14",
+          "text": ""
+        },
+        {
+          "encoding": "iso-8859-15",
+          "text": ""
+        },
+        {
+          "encoding": "iso-8859-16",
+          "text": ""
+        },
+        {
+          "encoding": "koi8-r",
+          "text": ""
+        },
+        {
+          "encoding": "koi8-u",
+          "text": ""
+        },
+        {
+          "encoding": "macintosh",
+          "text": ""
+        },
+        {
+          "encoding": "windows-874",
+          "text": ""
+        },
+        {
+          "encoding": "windows-1250",
+          "text": ""
+        },
+        {
+          "encoding": "windows-1251",
+          "text": ""
+        },
+        {
+          "encoding": "windows-1252",
+          "text": ""
+        },
+        {
+          "encoding": "windows-1253",
+          "text": ""
+        },
+        {
+          "encoding": "windows-1254",
+          "text": ""
+        },
+        {
+          "encoding": "windows-1255",
+          "text": ""
+        },
+        {
+          "encoding": "windows-1256",
+          "text": ""
+        },
+        {
+          "encoding": "windows-1257",
+          "text": ""
+        },
+        {
+          "encoding": "windows-1258",
+          "text": ""
+        },
+        {
+          "encoding": "x-mac-cyrillic",
+          "text": ""
+        },
+        {
+          "encoding": "ibm037",
+          "text": ""
+        },
+        {
+          "encoding": "ibm273",
+          "text": ""
+        },
+        {
+          "encoding": "ibm277",
+          "text": ""
+        },
+        {
+          "encoding": "ibm278",
+          "text": ""
+        },
+        {
+          "encoding": "ibm280",
+          "text": ""
+        },
+        {
+          "encoding": "ibm284",
+          "text": ""
+        },
+        {
+          "encoding": "ibm285",
+          "text": ""
+        },
+        {
+          "encoding": "ibm297",
+          "text": ""
+        },
+        {
+          "encoding": "ibm500",
+          "text": ""
+        },
+        {
+          "encoding": "ibm875",
+          "text": ""
+        },
+        {
+          "encoding": "ibm1026",
+          "text": ""
+        },
+        {
+          "encoding": "ibm1047",
+          "text": ""
+        },
+        {
+          "encoding": "ibm1140",
+          "text": ""
+        },
+        {
+          "encoding": "ibm1141",
+          "text": ""
+        },
+        {
+          "encoding": "ibm1142",
+          "text": ""
+        },
+        {
+          "encoding": "ibm1143",
+          "text": ""
+        },
+        {
+          "encoding": "ibm1144",
+          "text": ""
+        },
+        {
+          "encoding": "ibm1145",
+          "text": ""
+        },
+        {
+          "encoding": "ibm1146",
+          "text": ""
+        },
+        {
+          "encoding": "ibm1147",
+          "text": ""
+        },
+        {
+          "encoding": "ibm1148",
+          "text": ""
+        },
+        {
+          "encoding": "ibm1149",
+          "text": ""
+        },
+        {
+          "encoding": "gbk",
+          "text": ""
+        },
+        {
+          "encoding": "gb18030",
+          "text": ""
+        },
+        {
+          "encoding": "big5",
+          "text": ""
+        },
+        {
+          "encoding": "euc-jp",
+          "text": ""
+        },
+        {
+          "encoding": "iso-2022-jp",
+          "text": ""
+        },
+        {
+          "encoding": "shift_jis",
+          "text": ""
+        },
+        {
+          "encoding": "euc-kr",
+          "text": ""
+        }
+      ]
+    }
+  },
+  {
+    "name": "brute force of ASCII text",
+    "ref": "decoded one by one with Python codecs and the IBM tables of ICU (independent of the FL words), in the order of the decode choice list",
+    "op": "charset:brute",
+    "params": {},
+    "input": {
+      "value": "4869",
+      "enc": "hex"
+    },
+    "expect": {
+      "json": [
+        {
+          "encoding": "utf-8",
+          "text": "Hi"
+        },
+        {
+          "encoding": "utf-16le",
+          "text": "楈"
+        },
+        {
+          "encoding": "utf-16be",
+          "text": "䡩"
+        },
+        {
+          "encoding": "iso-8859-1",
+          "text": "Hi"
+        },
+        {
+          "encoding": "ibm866",
+          "text": "Hi"
+        },
+        {
+          "encoding": "iso-8859-2",
+          "text": "Hi"
+        },
+        {
+          "encoding": "iso-8859-3",
+          "text": "Hi"
+        },
+        {
+          "encoding": "iso-8859-4",
+          "text": "Hi"
+        },
+        {
+          "encoding": "iso-8859-5",
+          "text": "Hi"
+        },
+        {
+          "encoding": "iso-8859-6",
+          "text": "Hi"
+        },
+        {
+          "encoding": "iso-8859-7",
+          "text": "Hi"
+        },
+        {
+          "encoding": "iso-8859-8",
+          "text": "Hi"
+        },
+        {
+          "encoding": "iso-8859-10",
+          "text": "Hi"
+        },
+        {
+          "encoding": "iso-8859-13",
+          "text": "Hi"
+        },
+        {
+          "encoding": "iso-8859-14",
+          "text": "Hi"
+        },
+        {
+          "encoding": "iso-8859-15",
+          "text": "Hi"
+        },
+        {
+          "encoding": "iso-8859-16",
+          "text": "Hi"
+        },
+        {
+          "encoding": "koi8-r",
+          "text": "Hi"
+        },
+        {
+          "encoding": "koi8-u",
+          "text": "Hi"
+        },
+        {
+          "encoding": "macintosh",
+          "text": "Hi"
+        },
+        {
+          "encoding": "windows-874",
+          "text": "Hi"
+        },
+        {
+          "encoding": "windows-1250",
+          "text": "Hi"
+        },
+        {
+          "encoding": "windows-1251",
+          "text": "Hi"
+        },
+        {
+          "encoding": "windows-1252",
+          "text": "Hi"
+        },
+        {
+          "encoding": "windows-1253",
+          "text": "Hi"
+        },
+        {
+          "encoding": "windows-1254",
+          "text": "Hi"
+        },
+        {
+          "encoding": "windows-1255",
+          "text": "Hi"
+        },
+        {
+          "encoding": "windows-1256",
+          "text": "Hi"
+        },
+        {
+          "encoding": "windows-1257",
+          "text": "Hi"
+        },
+        {
+          "encoding": "windows-1258",
+          "text": "Hi"
+        },
+        {
+          "encoding": "x-mac-cyrillic",
+          "text": "Hi"
+        },
+        {
+          "encoding": "ibm037",
+          "text": "çÑ"
+        },
+        {
+          "encoding": "ibm273",
+          "text": "çÑ"
+        },
+        {
+          "encoding": "ibm277",
+          "text": "çÑ"
+        },
+        {
+          "encoding": "ibm278",
+          "text": "çÑ"
+        },
+        {
+          "encoding": "ibm280",
+          "text": "\\Ñ"
+        },
+        {
+          "encoding": "ibm284",
+          "text": "ç#"
+        },
+        {
+          "encoding": "ibm285",
+          "text": "çÑ"
+        },
+        {
+          "encoding": "ibm297",
+          "text": "\\Ñ"
+        },
+        {
+          "encoding": "ibm500",
+          "text": "çÑ"
+        },
+        {
+          "encoding": "ibm875",
+          "text": "ΘΫ"
+        },
+        {
+          "encoding": "ibm1026",
+          "text": "{Ñ"
+        },
+        {
+          "encoding": "ibm1047",
+          "text": "çÑ"
+        },
+        {
+          "encoding": "ibm1140",
+          "text": "çÑ"
+        },
+        {
+          "encoding": "ibm1141",
+          "text": "çÑ"
+        },
+        {
+          "encoding": "ibm1142",
+          "text": "çÑ"
+        },
+        {
+          "encoding": "ibm1143",
+          "text": "çÑ"
+        },
+        {
+          "encoding": "ibm1144",
+          "text": "\\Ñ"
+        },
+        {
+          "encoding": "ibm1145",
+          "text": "ç#"
+        },
+        {
+          "encoding": "ibm1146",
+          "text": "çÑ"
+        },
+        {
+          "encoding": "ibm1147",
+          "text": "\\Ñ"
+        },
+        {
+          "encoding": "ibm1148",
+          "text": "çÑ"
+        },
+        {
+          "encoding": "ibm1149",
+          "text": "çÑ"
+        },
+        {
+          "encoding": "gbk",
+          "text": "Hi"
+        },
+        {
+          "encoding": "gb18030",
+          "text": "Hi"
+        },
+        {
+          "encoding": "big5",
+          "text": "Hi"
+        },
+        {
+          "encoding": "euc-jp",
+          "text": "Hi"
+        },
+        {
+          "encoding": "iso-2022-jp",
+          "text": "Hi"
+        },
+        {
+          "encoding": "shift_jis",
+          "text": "Hi"
+        },
+        {
+          "encoding": "euc-kr",
+          "text": "Hi"
+        }
+      ]
+    }
+  },
+  {
+    "name": "brute force with a sample of one byte",
+    "ref": "decoded one by one with Python codecs and the IBM tables of ICU (independent of the FL words), in the order of the decode choice list",
+    "op": "charset:brute",
+    "params": {
+      "sample": 1
+    },
+    "input": {
+      "value": "c1e9f0",
+      "enc": "hex"
+    },
+    "expect": {
+      "json": [
+        {
+          "encoding": "iso-8859-1",
+          "text": "Á"
+        },
+        {
+          "encoding": "ibm866",
+          "text": "┴"
+        },
+        {
+          "encoding": "iso-8859-2",
+          "text": "Á"
+        },
+        {
+          "encoding": "iso-8859-3",
+          "text": "Á"
+        },
+        {
+          "encoding": "iso-8859-4",
+          "text": "Á"
+        },
+        {
+          "encoding": "iso-8859-5",
+          "text": "С"
+        },
+        {
+          "encoding": "iso-8859-6",
+          "text": "ء"
+        },
+        {
+          "encoding": "iso-8859-7",
+          "text": "Α"
+        },
+        {
+          "encoding": "iso-8859-10",
+          "text": "Á"
+        },
+        {
+          "encoding": "iso-8859-13",
+          "text": "Į"
+        },
+        {
+          "encoding": "iso-8859-14",
+          "text": "Á"
+        },
+        {
+          "encoding": "iso-8859-15",
+          "text": "Á"
+        },
+        {
+          "encoding": "iso-8859-16",
+          "text": "Á"
+        },
+        {
+          "encoding": "koi8-r",
+          "text": "а"
+        },
+        {
+          "encoding": "koi8-u",
+          "text": "а"
+        },
+        {
+          "encoding": "macintosh",
+          "text": "¡"
+        },
+        {
+          "encoding": "windows-874",
+          "text": "ม"
+        },
+        {
+          "encoding": "windows-1250",
+          "text": "Á"
+        },
+        {
+          "encoding": "windows-1251",
+          "text": "Б"
+        },
+        {
+          "encoding": "windows-1252",
+          "text": "Á"
+        },
+        {
+          "encoding": "windows-1253",
+          "text": "Α"
+        },
+        {
+          "encoding": "windows-1254",
+          "text": "Á"
+        },
+        {
+          "encoding": "windows-1255",
+          "text": "ֱ"
+        },
+        {
+          "encoding": "windows-1256",
+          "text": "ء"
+        },
+        {
+          "encoding": "windows-1257",
+          "text": "Į"
+        },
+        {
+          "encoding": "windows-1258",
+          "text": "Á"
+        },
+        {
+          "encoding": "x-mac-cyrillic",
+          "text": "Ѕ"
+        },
+        {
+          "encoding": "ibm037",
+          "text": "A"
+        },
+        {
+          "encoding": "ibm273",
+          "text": "A"
+        },
+        {
+          "encoding": "ibm277",
+          "text": "A"
+        },
+        {
+          "encoding": "ibm278",
+          "text": "A"
+        },
+        {
+          "encoding": "ibm280",
+          "text": "A"
+        },
+        {
+          "encoding": "ibm284",
+          "text": "A"
+        },
+        {
+          "encoding": "ibm285",
+          "text": "A"
+        },
+        {
+          "encoding": "ibm297",
+          "text": "A"
+        },
+        {
+          "encoding": "ibm500",
+          "text": "A"
+        },
+        {
+          "encoding": "ibm875",
+          "text": "A"
+        },
+        {
+          "encoding": "ibm1026",
+          "text": "A"
+        },
+        {
+          "encoding": "ibm1047",
+          "text": "A"
+        },
+        {
+          "encoding": "ibm1140",
+          "text": "A"
+        },
+        {
+          "encoding": "ibm1141",
+          "text": "A"
+        },
+        {
+          "encoding": "ibm1142",
+          "text": "A"
+        },
+        {
+          "encoding": "ibm1143",
+          "text": "A"
+        },
+        {
+          "encoding": "ibm1144",
+          "text": "A"
+        },
+        {
+          "encoding": "ibm1145",
+          "text": "A"
+        },
+        {
+          "encoding": "ibm1146",
+          "text": "A"
+        },
+        {
+          "encoding": "ibm1147",
+          "text": "A"
+        },
+        {
+          "encoding": "ibm1148",
+          "text": "A"
+        },
+        {
+          "encoding": "ibm1149",
+          "text": "A"
+        },
+        {
+          "encoding": "shift_jis",
+          "text": "ﾁ"
+        }
+      ]
+    }
+  },
+  {
+    "name": "brute force sample below the minimum",
+    "ref": "parameter constraint 1..65536 (static)",
+    "op": "charset:brute",
+    "params": {
+      "sample": 0
+    },
+    "input": {
+      "value": "41",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  }
+]

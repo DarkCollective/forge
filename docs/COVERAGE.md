@@ -11,7 +11,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 
 | Category | Covered | Redesigned | Dropped | Not yet | Total |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Data format | 41 | 3 | 0 | 36 | 80 |
+| Data format | 44 | 3 | 0 | 33 | 80 |
 | Encryption / Encoding | 19 | 1 | 0 | 75 | 95 |
 | Public Key | 0 | 0 | 0 | 30 | 30 |
 | Arithmetic / Logic | 9 | 0 | 0 | 17 | 26 |
@@ -27,7 +27,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 2 | 0 | 0 | 19 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **77** | **11** | **0** | **418** | **506** |
+| **Total** | **80** | **11** | **0** | **415** | **506** |
 
 ## Data format (80)
 
@@ -70,7 +70,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | From BCD | covered | `bcd:decode` | 8421, 7421, 4221 and excess-3; packed or unpacked; optional sign. |
 | Text-Integer Conversion | redesigned | `bigint:from-bytes`, `bigint:to-bytes` | Two ops: unsigned big-endian bytes to decimal text and back. |
 | To HTML Entity | covered | `html:encode` |  |
-| From HTML Entity | covered | `html:decode` |  |
+| From HTML Entity | covered | `html:decode` | All 2,231 named references of the HTML Living Standard, with the semicolon optional for the 106 legacy names, and decimal and hex numeric references (semicolon optional; 128 to 159 read as windows-1252). Text-context rules; the attribute-value exception is not applied. |
 | URL Encode | covered | `url:encode` |  |
 | URL Decode | covered | `url:decode` |  |
 | Escape Unicode Characters | not yet |  |  |
@@ -89,9 +89,9 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Hex to PEM | not yet |  |  |
 | Parse ASN.1 hex string | not yet |  |  |
 | Change IP format | not yet |  |  |
-| Encode text | not yet |  |  |
-| Decode text | not yet |  |  |
-| Text Encoding Brute Force | not yet |  |  |
+| Encode text | covered | `charset:encode` | Single-byte WHATWG sets, ISO 8859-1, 22 EBCDIC code pages (IBM 037 to 1149), UTF-8 and UTF-16. The multi-byte legacy sets (Shift_JIS, GBK, Big5, EUC-JP/KR, ISO-2022-JP) are decode only, because the host has no encoder for them; UTF-7 and UTF-32 are not offered. |
+| Decode text | covered | `charset:decode` | All WHATWG encodings of the browser (single-byte, CJK, UTF-16), ISO 8859-1 and 22 EBCDIC code pages; strict or lenient. UTF-7 and UTF-32 are not offered. |
+| Text Encoding Brute Force | covered | `charset:brute` | Returns a list of { encoding, text } records for every encoding in which the bytes decode strictly; only the first sample bytes (default 4096, at most 16384) are decoded. Brute-forcing the encode direction is not offered. |
 | Swap endianness | covered | `endian:swap` | Words of 2, 4 or 8 bytes. |
 | To MessagePack | not yet |  |  |
 | From MessagePack | not yet |  |  |

@@ -16,7 +16,7 @@
  { "cyberchef": "To Base85", "status": "covered", "forge": ["base85:encode"], "note": "Ascii85 and Z85 through the variant parameter." },
  { "cyberchef": "From Base85", "status": "covered", "forge": ["base85:decode"], "note": "Ascii85 and Z85 through the variant parameter." },
  { "cyberchef": "To HTML Entity", "status": "covered", "forge": ["html:encode"] },
- { "cyberchef": "From HTML Entity", "status": "covered", "forge": ["html:decode"] },
+ { "cyberchef": "From HTML Entity", "status": "covered", "forge": ["html:decode"], "note": "All 2,231 named references of the HTML Living Standard, with the semicolon optional for the 106 legacy names, and decimal and hex numeric references (semicolon optional; 128 to 159 read as windows-1252). Text-context rules; the attribute-value exception is not applied." },
  { "cyberchef": "URL Encode", "status": "covered", "forge": ["url:encode"] },
  { "cyberchef": "URL Decode", "status": "covered", "forge": ["url:decode"] },
  { "cyberchef": "To Morse Code", "status": "covered", "forge": ["morse:encode"] },
