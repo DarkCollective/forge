@@ -1,0 +1,241 @@
+[
+  {
+    "name": "encode A, default space",
+    "ref": "hand-computed (0x41 = 65 = 0o101)",
+    "op": "octal:encode",
+    "params": {},
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "101",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode AB",
+    "ref": "hand-computed (101 and 102)",
+    "op": "octal:encode",
+    "params": {},
+    "input": {
+      "value": "AB",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "101 102",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode empty",
+    "ref": "hand-computed (no bytes)",
+    "op": "octal:encode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode binary 00 ff 08 with comma",
+    "ref": "hand-computed (0, 377, 10)",
+    "op": "octal:encode",
+    "params": {
+      "delimiter": "comma"
+    },
+    "input": {
+      "value": "00ff08",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0,377,10",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode with newline",
+    "ref": "hand-computed (0x0a = 12, 0x0d = 15)",
+    "op": "octal:encode",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "0a0d",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "12\n15",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode non-ASCII UTF-8 é",
+    "ref": "hand-computed (c3 a9 = 303 251)",
+    "op": "octal:encode",
+    "params": {},
+    "input": {
+      "value": "é",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "303 251",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 101 102",
+    "ref": "hand-computed (octal of the byte value)",
+    "op": "octal:decode",
+    "params": {},
+    "input": {
+      "value": "101 102",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "AB",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode comma and mixed white space",
+    "ref": "hand-computed (octal of the byte value)",
+    "op": "octal:decode",
+    "params": {},
+    "input": {
+      "value": "101,102 ,\n 103",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ABC",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode empty",
+    "ref": "hand-computed (octal of the byte value)",
+    "op": "octal:decode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 0 and 377 to binary",
+    "ref": "hand-computed (octal of the byte value)",
+    "op": "octal:decode",
+    "params": {},
+    "input": {
+      "value": "0 377 10",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00ff08",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode leading zeros",
+    "ref": "hand-computed (octal of the byte value)",
+    "op": "octal:decode",
+    "params": {},
+    "input": {
+      "value": "0101 007",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4107",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode non-ASCII UTF-8 é",
+    "ref": "hand-computed (octal of the byte value)",
+    "op": "octal:decode",
+    "params": {},
+    "input": {
+      "value": "303 251",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "é",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode error: over 377",
+    "ref": "spec (E_COERCE)",
+    "op": "octal:decode",
+    "params": {},
+    "input": {
+      "value": "400",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: digit 8",
+    "ref": "spec (E_COERCE)",
+    "op": "octal:decode",
+    "params": {},
+    "input": {
+      "value": "18",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: negative",
+    "ref": "spec (E_COERCE)",
+    "op": "octal:decode",
+    "params": {},
+    "input": {
+      "value": "-1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: not a number",
+    "ref": "spec (E_COERCE)",
+    "op": "octal:decode",
+    "params": {},
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "encode error: unknown delimiter",
+    "ref": "spec (static choice)",
+    "op": "octal:encode",
+    "params": {
+      "delimiter": "tab"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  }
+]

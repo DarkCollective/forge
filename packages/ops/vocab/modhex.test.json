@@ -1,0 +1,199 @@
+[
+  {
+    "name": "encode all sixteen digits",
+    "ref": "Yubico ModHex table (0123456789abcdef = cbdefghijklnrtuv), hand-computed",
+    "op": "modhex:encode",
+    "params": {},
+    "input": {
+      "value": "0123456789abcdef",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "cbdefghijklnrtuv",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode all sixteen digits",
+    "ref": "Yubico ModHex table (0123456789abcdef = cbdefghijklnrtuv), hand-computed",
+    "op": "modhex:decode",
+    "params": {},
+    "input": {
+      "value": "cbdefghijklnrtuv",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0123456789abcdef",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode ff",
+    "ref": "Yubico ModHex table (0123456789abcdef = cbdefghijklnrtuv), hand-computed",
+    "op": "modhex:encode",
+    "params": {},
+    "input": {
+      "value": "ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "vv",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode empty",
+    "ref": "Yubico ModHex table (0123456789abcdef = cbdefghijklnrtuv), hand-computed",
+    "op": "modhex:encode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode empty",
+    "ref": "Yubico ModHex table (0123456789abcdef = cbdefghijklnrtuv), hand-computed",
+    "op": "modhex:decode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode AB",
+    "ref": "Yubico ModHex table (0123456789abcdef = cbdefghijklnrtuv), hand-computed (0x41 -> fb... 4=h 1=b)",
+    "op": "modhex:encode",
+    "params": {},
+    "input": {
+      "value": "AB",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fbfd",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode with space delimiter",
+    "ref": "Yubico ModHex table (0123456789abcdef = cbdefghijklnrtuv), hand-computed",
+    "op": "modhex:encode",
+    "params": {
+      "delimiter": "space"
+    },
+    "input": {
+      "value": "AB",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fb fd",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode with spaces",
+    "ref": "Yubico ModHex table (0123456789abcdef = cbdefghijklnrtuv), hand-computed",
+    "op": "modhex:decode",
+    "params": {},
+    "input": {
+      "value": "fb fd",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "AB",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode upper case",
+    "ref": "Yubico ModHex table (0123456789abcdef = cbdefghijklnrtuv), hand-computed",
+    "op": "modhex:decode",
+    "params": {},
+    "input": {
+      "value": "FBFD",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "AB",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode non-ASCII UTF-8 é",
+    "ref": "Yubico ModHex table (0123456789abcdef = cbdefghijklnrtuv), hand-computed",
+    "op": "modhex:encode",
+    "params": {},
+    "input": {
+      "value": "é",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "relk",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode non-ASCII UTF-8 é",
+    "ref": "Yubico ModHex table (0123456789abcdef = cbdefghijklnrtuv), hand-computed",
+    "op": "modhex:decode",
+    "params": {},
+    "input": {
+      "value": "relk",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "é",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode error: letter outside the alphabet",
+    "ref": "spec (E_COERCE)",
+    "op": "modhex:decode",
+    "params": {},
+    "input": {
+      "value": "ca",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: odd number of letters",
+    "ref": "spec (E_COERCE)",
+    "op": "modhex:decode",
+    "params": {},
+    "input": {
+      "value": "cbd",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "encode error: unknown delimiter",
+    "ref": "spec (static choice)",
+    "op": "modhex:encode",
+    "params": {
+      "delimiter": "comma"
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  }
+]

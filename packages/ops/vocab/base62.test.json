@@ -1,0 +1,377 @@
+[
+  {
+    "name": "encode empty (standard)",
+    "ref": "independent big-integer computation (Python int, no library); no formal standard exists",
+    "op": "base62:encode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode empty (standard)",
+    "ref": "independent big-integer computation (Python int, no library); no formal standard exists",
+    "op": "base62:decode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode a (standard)",
+    "ref": "independent big-integer computation (Python int, no library); no formal standard exists",
+    "op": "base62:encode",
+    "params": {},
+    "input": {
+      "value": "61",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1Z",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode a (standard)",
+    "ref": "independent big-integer computation (Python int, no library); no formal standard exists",
+    "op": "base62:decode",
+    "params": {},
+    "input": {
+      "value": "1Z",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "61",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode Hello World (standard)",
+    "ref": "independent big-integer computation (Python int, no library); no formal standard exists",
+    "op": "base62:encode",
+    "params": {},
+    "input": {
+      "value": "48656c6c6f20576f726c64",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "73XpUgyMwkGr29M",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode Hello World (standard)",
+    "ref": "independent big-integer computation (Python int, no library); no formal standard exists",
+    "op": "base62:decode",
+    "params": {},
+    "input": {
+      "value": "73XpUgyMwkGr29M",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "48656c6c6f20576f726c64",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode Hello World (inverted)",
+    "ref": "independent big-integer computation (Python int, no library); no formal standard exists",
+    "op": "base62:encode",
+    "params": {
+      "alphabet": "inverted"
+    },
+    "input": {
+      "value": "48656c6c6f20576f726c64",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "73xPuGYmWKgR29m",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode Hello World (inverted)",
+    "ref": "independent big-integer computation (Python int, no library); no formal standard exists",
+    "op": "base62:decode",
+    "params": {
+      "alphabet": "inverted"
+    },
+    "input": {
+      "value": "73xPuGYmWKgR29m",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "48656c6c6f20576f726c64",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode two leading zeros (standard)",
+    "ref": "independent big-integer computation (Python int, no library); no formal standard exists",
+    "op": "base62:encode",
+    "params": {},
+    "input": {
+      "value": "000061",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "001Z",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode two leading zeros (standard)",
+    "ref": "independent big-integer computation (Python int, no library); no formal standard exists",
+    "op": "base62:decode",
+    "params": {},
+    "input": {
+      "value": "001Z",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "000061",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode two leading zeros (inverted)",
+    "ref": "independent big-integer computation (Python int, no library); no formal standard exists",
+    "op": "base62:encode",
+    "params": {
+      "alphabet": "inverted"
+    },
+    "input": {
+      "value": "000061",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "001z",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode two leading zeros (inverted)",
+    "ref": "independent big-integer computation (Python int, no library); no formal standard exists",
+    "op": "base62:decode",
+    "params": {
+      "alphabet": "inverted"
+    },
+    "input": {
+      "value": "001z",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "000061",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode all zeros (standard)",
+    "ref": "independent big-integer computation (Python int, no library); no formal standard exists",
+    "op": "base62:encode",
+    "params": {},
+    "input": {
+      "value": "000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode all zeros (standard)",
+    "ref": "independent big-integer computation (Python int, no library); no formal standard exists",
+    "op": "base62:decode",
+    "params": {},
+    "input": {
+      "value": "000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode binary ff ff (standard)",
+    "ref": "independent big-integer computation (Python int, no library); no formal standard exists",
+    "op": "base62:encode",
+    "params": {},
+    "input": {
+      "value": "ffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "H31",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode binary ff ff (standard)",
+    "ref": "independent big-integer computation (Python int, no library); no formal standard exists",
+    "op": "base62:decode",
+    "params": {},
+    "input": {
+      "value": "H31",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ffff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode binary ff ff (inverted)",
+    "ref": "independent big-integer computation (Python int, no library); no formal standard exists",
+    "op": "base62:encode",
+    "params": {
+      "alphabet": "inverted"
+    },
+    "input": {
+      "value": "ffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "h31",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode binary ff ff (inverted)",
+    "ref": "independent big-integer computation (Python int, no library); no formal standard exists",
+    "op": "base62:decode",
+    "params": {
+      "alphabet": "inverted"
+    },
+    "input": {
+      "value": "h31",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ffff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode non-ASCII UTF-8 (standard)",
+    "ref": "independent big-integer computation (Python int, no library); no formal standard exists",
+    "op": "base62:encode",
+    "params": {},
+    "input": {
+      "value": "68c3a96c6c6f20e282ac",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "2TLSQCoEhawgpQ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode non-ASCII UTF-8 (standard)",
+    "ref": "independent big-integer computation (Python int, no library); no formal standard exists",
+    "op": "base62:decode",
+    "params": {},
+    "input": {
+      "value": "2TLSQCoEhawgpQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "68c3a96c6c6f20e282ac",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 00 01 02 03 04 05 (standard)",
+    "ref": "independent big-integer computation (Python int, no library); no formal standard exists",
+    "op": "base62:encode",
+    "params": {},
+    "input": {
+      "value": "000102030405",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "04iwreH",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 00 01 02 03 04 05 (standard)",
+    "ref": "independent big-integer computation (Python int, no library); no formal standard exists",
+    "op": "base62:decode",
+    "params": {},
+    "input": {
+      "value": "04iwreH",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "000102030405",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode ignores white space",
+    "ref": "independent big-integer computation (Python int, no library); no formal standard exists",
+    "op": "base62:decode",
+    "params": {},
+    "input": {
+      "value": " 73Xp\nUgyMwkGr29M ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Hello World",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode error: character outside the alphabet",
+    "ref": "spec (E_COERCE)",
+    "op": "base62:decode",
+    "params": {},
+    "input": {
+      "value": "73Xp-",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: = is not a symbol",
+    "ref": "spec (E_COERCE)",
+    "op": "base62:decode",
+    "params": {},
+    "input": {
+      "value": "ab=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: unknown alphabet name",
+    "ref": "spec (static choice)",
+    "op": "base62:decode",
+    "params": {
+      "alphabet": "base64"
+    },
+    "input": {
+      "value": "ab",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  }
+]

@@ -1,0 +1,857 @@
+[
+  {
+    "name": "encode a data 0 bytes",
+    "ref": "BIP-173 test vectors (valid Bech32 strings)",
+    "op": "bech32:encode",
+    "params": {
+      "hrp": "a"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "a12uel5l",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode a data 0 bytes",
+    "ref": "BIP-173 test vectors (valid Bech32 strings)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "a12uel5l",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode an83characte data 0 bytes",
+    "ref": "BIP-173 test vectors (valid Bech32 strings)",
+    "op": "bech32:encode",
+    "params": {
+      "hrp": "an83characterlonghumanreadablepartthatcontainsthenumber1andtheexcludedcharactersbio"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "an83characterlonghumanreadablepartthatcontainsthenumber1andtheexcludedcharactersbio1tt5tgs",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode an83characte data 0 bytes",
+    "ref": "BIP-173 test vectors (valid Bech32 strings)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "an83characterlonghumanreadablepartthatcontainsthenumber1andtheexcludedcharactersbio1tt5tgs",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode abcdef data 20 bytes",
+    "ref": "BIP-173 test vectors (valid Bech32 strings)",
+    "op": "bech32:encode",
+    "params": {
+      "hrp": "abcdef"
+    },
+    "input": {
+      "value": "00443214c74254b635cf84653a56d7c675be77df",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "abcdef1qpzry9x8gf2tvdw0s3jn54khce6mua7lmqqqxw",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode abcdef data 20 bytes",
+    "ref": "BIP-173 test vectors (valid Bech32 strings)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "abcdef1qpzry9x8gf2tvdw0s3jn54khce6mua7lmqqqxw",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00443214c74254b635cf84653a56d7c675be77df",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode split data 30 bytes",
+    "ref": "BIP-173 test vectors (valid Bech32 strings)",
+    "op": "bech32:encode",
+    "params": {
+      "hrp": "split"
+    },
+    "input": {
+      "value": "c5f38b70305f519bf66d85fb6cf03058f3dde463ecd7918f2dc743918f2d",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "split1checkupstagehandshakeupstreamerranterredcaperred2y9e3w",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode split data 30 bytes",
+    "ref": "BIP-173 test vectors (valid Bech32 strings)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "split1checkupstagehandshakeupstreamerranterredcaperred2y9e3w",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c5f38b70305f519bf66d85fb6cf03058f3dde463ecd7918f2dc743918f2d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode ? data 0 bytes",
+    "ref": "BIP-173 test vectors (valid Bech32 strings)",
+    "op": "bech32:encode",
+    "params": {
+      "hrp": "?"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "?1ezyfcl",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ? data 0 bytes",
+    "ref": "BIP-173 test vectors (valid Bech32 strings)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "?1ezyfcl",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode bech32m a data 0 bytes",
+    "ref": "BIP-350 test vectors (valid Bech32m strings)",
+    "op": "bech32:encode",
+    "params": {
+      "hrp": "a",
+      "variant": "bech32m"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "a1lqfn3a",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode bech32m a data 0 bytes",
+    "ref": "BIP-350 test vectors (valid Bech32m strings)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "a1lqfn3a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode bech32m abcdef data 20 bytes",
+    "ref": "BIP-350 test vectors (valid Bech32m strings)",
+    "op": "bech32:encode",
+    "params": {
+      "hrp": "abcdef",
+      "variant": "bech32m"
+    },
+    "input": {
+      "value": "ffbbcdeb38bdab49ca307b9ac5a928398a418820",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "abcdef1l7aum6echk45nj3s0wdvt2fg8x9yrzpqzd3ryx",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode bech32m abcdef data 20 bytes",
+    "ref": "BIP-350 test vectors (valid Bech32m strings)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "abcdef1l7aum6echk45nj3s0wdvt2fg8x9yrzpqzd3ryx",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ffbbcdeb38bdab49ca307b9ac5a928398a418820",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode bech32m split data 30 bytes",
+    "ref": "BIP-350 test vectors (valid Bech32m strings)",
+    "op": "bech32:encode",
+    "params": {
+      "hrp": "split",
+      "variant": "bech32m"
+    },
+    "input": {
+      "value": "c5f38b70305f519bf66d85fb6cf03058f3dde463ecd7918f2dc743918f2d",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "split1checkupstagehandshakeupstreamerranterredcaperredlc445v",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode bech32m split data 30 bytes",
+    "ref": "BIP-350 test vectors (valid Bech32m strings)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "split1checkupstagehandshakeupstreamerranterredcaperredlc445v",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c5f38b70305f519bf66d85fb6cf03058f3dde463ecd7918f2dc743918f2d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode bech32m ? data 0 bytes",
+    "ref": "BIP-350 test vectors (valid Bech32m strings)",
+    "op": "bech32:encode",
+    "params": {
+      "hrp": "?",
+      "variant": "bech32m"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "?1v759aa",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode bech32m ? data 0 bytes",
+    "ref": "BIP-350 test vectors (valid Bech32m strings)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "?1v759aa",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode upper case",
+    "ref": "BIP-173 test vectors (valid Bech32 strings) (A12UEL5L)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "A12UEL5L",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode upper case bech32m",
+    "ref": "BIP-350 test vectors (valid Bech32m strings) (A1LQFN3A)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "A1LQFN3A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode upper-case hrp is written lower case",
+    "ref": "BIP-173: encoders output lower case",
+    "op": "bech32:encode",
+    "params": {
+      "hrp": "A"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "a12uel5l",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode binary 00 ff 00 (bech32)",
+    "ref": "independent port of the BIP-173 reference code (convertbits, polymod)",
+    "op": "bech32:encode",
+    "params": {
+      "hrp": "bc"
+    },
+    "input": {
+      "value": "00ff00",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "bc1qrlsq6npjyd",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode binary 00 ff 00 (bech32)",
+    "ref": "independent port of the BIP-173 reference code (convertbits, polymod)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "bc1qrlsq6npjyd",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00ff00",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode binary 00 ff 00 (bech32m)",
+    "ref": "independent port of the BIP-173 reference code (convertbits, polymod)",
+    "op": "bech32:encode",
+    "params": {
+      "hrp": "bc",
+      "variant": "bech32m"
+    },
+    "input": {
+      "value": "00ff00",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "bc1qrlsq0037p0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode binary 00 ff 00 (bech32m)",
+    "ref": "independent port of the BIP-173 reference code (convertbits, polymod)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "bc1qrlsq0037p0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00ff00",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode one byte 01 (bech32)",
+    "ref": "independent port of the BIP-173 reference code (convertbits, polymod)",
+    "op": "bech32:encode",
+    "params": {
+      "hrp": "x"
+    },
+    "input": {
+      "value": "01",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "x1qy5utz72",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode one byte 01 (bech32)",
+    "ref": "independent port of the BIP-173 reference code (convertbits, polymod)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "x1qy5utz72",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "01",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode one byte 01 (bech32m)",
+    "ref": "independent port of the BIP-173 reference code (convertbits, polymod)",
+    "op": "bech32:encode",
+    "params": {
+      "hrp": "x",
+      "variant": "bech32m"
+    },
+    "input": {
+      "value": "01",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "x1qypqmwmg",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode one byte 01 (bech32m)",
+    "ref": "independent port of the BIP-173 reference code (convertbits, polymod)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "x1qypqmwmg",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "01",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode non-ASCII UTF-8 (bech32)",
+    "ref": "independent port of the BIP-173 reference code (convertbits, polymod)",
+    "op": "bech32:encode",
+    "params": {
+      "hrp": "test"
+    },
+    "input": {
+      "value": "c3a9e282ac",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "test1cw579q4v6ufkw3",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode non-ASCII UTF-8 (bech32)",
+    "ref": "independent port of the BIP-173 reference code (convertbits, polymod)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "test1cw579q4v6ufkw3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c3a9e282ac",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode non-ASCII UTF-8 (bech32m)",
+    "ref": "independent port of the BIP-173 reference code (convertbits, polymod)",
+    "op": "bech32:encode",
+    "params": {
+      "hrp": "test",
+      "variant": "bech32m"
+    },
+    "input": {
+      "value": "c3a9e282ac",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "test1cw579q4v0qe6tn",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode non-ASCII UTF-8 (bech32m)",
+    "ref": "independent port of the BIP-173 reference code (convertbits, polymod)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "test1cw579q4v0qe6tn",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c3a9e282ac",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 20 bytes (bech32)",
+    "ref": "independent port of the BIP-173 reference code (convertbits, polymod)",
+    "op": "bech32:encode",
+    "params": {
+      "hrp": "bc"
+    },
+    "input": {
+      "value": "000102030405060708090a0b0c0d0e0f10111213",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "bc1qqqsyqcyq5rqwzqfpg9scrgwpugpzysnt4wzqr",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 20 bytes (bech32)",
+    "ref": "independent port of the BIP-173 reference code (convertbits, polymod)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "bc1qqqsyqcyq5rqwzqfpg9scrgwpugpzysnt4wzqr",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "000102030405060708090a0b0c0d0e0f10111213",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 20 bytes (bech32m)",
+    "ref": "independent port of the BIP-173 reference code (convertbits, polymod)",
+    "op": "bech32:encode",
+    "params": {
+      "hrp": "bc",
+      "variant": "bech32m"
+    },
+    "input": {
+      "value": "000102030405060708090a0b0c0d0e0f10111213",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "bc1qqqsyqcyq5rqwzqfpg9scrgwpugpzysn7f7w9p",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 20 bytes (bech32m)",
+    "ref": "independent port of the BIP-173 reference code (convertbits, polymod)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "bc1qqqsyqcyq5rqwzqfpg9scrgwpugpzysn7f7w9p",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "000102030405060708090a0b0c0d0e0f10111213",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode part hrp",
+    "ref": "BIP-173 test vectors (valid Bech32 strings)",
+    "op": "bech32:decode",
+    "params": {
+      "part": "hrp"
+    },
+    "input": {
+      "value": "abcdef1qpzry9x8gf2tvdw0s3jn54khce6mua7lmqqqxw",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "abcdef",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode part hrp (BIP-173 83-character hrp)",
+    "ref": "BIP-173 test vectors (valid Bech32 strings)",
+    "op": "bech32:decode",
+    "params": {
+      "part": "hrp"
+    },
+    "input": {
+      "value": "an83characterlonghumanreadablepartthatcontainsthenumber1andtheexcludedcharactersbio1tt5tgs",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "an83characterlonghumanreadablepartthatcontainsthenumber1andtheexcludedcharactersbio",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode 83-character hrp with empty data is 90 characters",
+    "ref": "BIP-173 test vectors (valid Bech32 strings)",
+    "op": "bech32:encode",
+    "params": {
+      "hrp": "an83characterlonghumanreadablepartthatcontainsthenumber1andtheexcludedcharactersbio"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "an83characterlonghumanreadablepartthatcontainsthenumber1andtheexcludedcharactersbio1tt5tgs",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode error: wrong checksum",
+    "ref": "BIP-173 invalid string vectors (one changed character)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "a12uel5m",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: bech32 checksum is wrong for the data",
+    "ref": "BIP-173 invalid string vectors",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "split1checkupstagehandshakeupstreamerranterredcaperred2y9e3x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: mixed case",
+    "ref": "BIP-173 invalid string vectors (A12uEL5L)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "A12uEL5L",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: no separator",
+    "ref": "BIP-173 invalid string vectors (pzry9x0s0muk)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "pzry9x0s0muk",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: empty human-readable part",
+    "ref": "BIP-173 invalid string vectors (1pzry9x0s0muk)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "1pzry9x0s0muk",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: invalid data character b",
+    "ref": "BIP-173 invalid string vectors (x1b4n0q5v)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "x1b4n0q5v",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: checksum too short",
+    "ref": "BIP-173 invalid string vectors (li1dgmt3)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "li1dgmt3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: space in the string",
+    "ref": "BIP-173 invalid string vectors (0x20 in hrp)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": " 1nwldj5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: DEL character",
+    "ref": "BIP-173 invalid string vectors (0x7f in hrp)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "1axkwrx",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: over 90 characters",
+    "ref": "BIP-173 invalid string vectors (91 characters)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "an84characterslonghumanreadablepartthatcontainsthenumber1andtheexcludedcharactersbio1569pvx",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: too short",
+    "ref": "BIP-173 invalid string vectors (shorter than 8)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "a1qqqq",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: non-zero padding bits",
+    "ref": "BIP-173 convertbits strict mode: values 0 1 leave bits 01",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "a1qpamnt9j",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: five padding bits",
+    "ref": "BIP-173 convertbits strict mode: one value leaves 5 bits",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "a1q3g6mn3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "encode error: result over 90 characters",
+    "ref": "BIP-173 (90 character limit)",
+    "op": "bech32:encode",
+    "params": {
+      "hrp": "an83characterlonghumanreadablepartthatcontainsthenumber1andtheexcludedcharactersbio"
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "encode error: hrp over 83 characters",
+    "ref": "BIP-173 (hrp 1 to 83)",
+    "op": "bech32:encode",
+    "params": {
+      "hrp": "an83characterlonghumanreadablepartthatcontainsthenumber1andtheexcludedcharactersbiox"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "encode error: empty hrp",
+    "ref": "BIP-173 (hrp 1 to 83)",
+    "op": "bech32:encode",
+    "params": {
+      "hrp": ""
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "encode error: hrp with a space",
+    "ref": "BIP-173 (hrp characters 33 to 126)",
+    "op": "bech32:encode",
+    "params": {
+      "hrp": "a b"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_PARAM_INVALID"
+    }
+  },
+  {
+    "name": "encode error: unknown variant",
+    "ref": "spec (static choice)",
+    "op": "bech32:encode",
+    "params": {
+      "hrp": "a",
+      "variant": "bech64"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  }
+]

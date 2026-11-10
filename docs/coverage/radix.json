@@ -1,0 +1,16 @@
+[
+ { "cyberchef": "To Base45", "status": "covered", "forge": ["base45:encode"] },
+ { "cyberchef": "From Base45", "status": "covered", "forge": ["base45:decode"] },
+ { "cyberchef": "To Base62", "status": "covered", "forge": ["base62:encode"] },
+ { "cyberchef": "From Base62", "status": "covered", "forge": ["base62:decode"] },
+ { "cyberchef": "To Base92", "status": "covered", "forge": ["base92:encode"] },
+ { "cyberchef": "From Base92", "status": "covered", "forge": ["base92:decode"] },
+ { "cyberchef": "To Octal", "status": "covered", "forge": ["octal:encode"] },
+ { "cyberchef": "From Octal", "status": "covered", "forge": ["octal:decode"] },
+ { "cyberchef": "To Modhex", "status": "covered", "forge": ["modhex:encode"] },
+ { "cyberchef": "From Modhex", "status": "covered", "forge": ["modhex:decode"] },
+ { "cyberchef": "To Bech32", "status": "covered", "forge": ["bech32:encode"], "note": "Bech32 and Bech32m through the variant parameter." },
+ { "cyberchef": "From Bech32", "status": "covered", "forge": ["bech32:decode"], "note": "Both checksum variants are accepted; the part parameter returns the data or the human-readable part." },
+ { "cyberchef": "To Base", "status": "redesigned", "forge": ["radix:convert"], "note": "To Base and From Base are one word: an integer written in any base from 2 to 36 is rewritten in another, whatever its size." },
+ { "cyberchef": "From Base", "status": "redesigned", "forge": ["radix:convert"], "note": "To Base and From Base are one word: an integer written in any base from 2 to 36 is rewritten in another, whatever its size." }
+]
