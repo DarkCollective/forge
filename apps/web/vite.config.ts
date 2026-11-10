@@ -13,11 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { existsSync, mkdirSync, renameSync, rmSync } from "node:fs";
+import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin } from "vite";
 import { pageInputs } from "./vite.pages.js";
 
 const here = (p: string): string => fileURLToPath(new URL(p, import.meta.url));
+
+// Vite writes an HTML entry at its path relative to the root, so the static pages land in
+// dist/pages/<name>/index.html. CloudFront needs them at the root: dist/<name>/index.html, and
+// dist/404.html for the error response. This moves them after the bundle is written. Their asset
+// URLs are already absolute (/assets/...), so they keep working from any depth.
+// Dev: the pages are at /pages/<name>/ (e.g. http://localhost:5173/pages/about/); /404.html is
+// only served by CloudFront and by `vite preview` of the built dist.
+function flattenPages(outDir: string): Plugin {
+  return {
+    name: "forge-flatten-pages",
+    apply: "build",
+    closeBundle() {
+      const pagesDir = join(outDir, "pages");
+      if (!existsSync(pagesDir)) return;
+      for (const name of Object.keys(pageInputs)) {
+        const from = join(pagesDir, name === "notFound" ? "404" : name, "index.html");
+        const to =
+          name === "notFound" ? join(outDir, "404.html") : join(outDir, name, "index.html");
+        mkdirSync(dirname(to), { recursive: true });
+        renameSync(from, to);
+      }
+      rmSync(pagesDir, { recursive: true, force: true });
+    },
+  };
+}
 
 const ISOLATION_HEADERS = {
   "Cross-Origin-Opener-Policy": "same-origin",
@@ -41,6 +68,7 @@ export default defineConfig({
   },
   // Primitive modules are lazy chunks, which a module worker can only load as ES modules.
   worker: { format: "es" },
+  plugins: [flattenPages(here("./dist"))],
   // The same isolation headers as production, so SharedArrayBuffer cancellation works in `npm run dev`.
   server: { headers: ISOLATION_HEADERS },
   preview: { headers: ISOLATION_HEADERS },
