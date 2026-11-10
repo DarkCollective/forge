@@ -7,3 +7,4 @@ docs
 package-lock.json
 .claude
 packages/recipe/test/goldens
+infra/.terraform
