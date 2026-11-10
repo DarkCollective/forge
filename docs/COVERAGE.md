@@ -25,9 +25,9 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Code tidy | 0 | 0 | 0 | 24 | 24 |
 | Forensics | 0 | 0 | 0 | 9 | 9 |
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
-| Other | 4 | 0 | 0 | 17 | 21 |
+| Other | 4 | 0 | 3 | 14 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **101** | **22** | **0** | **383** | **506** |
+| **Total** | **101** | **22** | **3** | **380** | **506** |
 
 ## Data format (80)
 
@@ -596,9 +596,9 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Haversine distance | not yet |  |  |
 | HTML To Text | not yet |  |  |
 | Generate Lorem Ipsum | not yet |  |  |
-| Numberwang | not yet |  |  |
-| XKCD Random Number | not yet |  |  |
-| Automated Validation Test Op | not yet |  |  |
+| Numberwang | dropped |  | A joke based on a comedy sketch; it has no data-processing use. |
+| XKCD Random Number | dropped |  | A joke: it always returns 4 (the xkcd 'random number'). |
+| Automated Validation Test Op | dropped |  | CyberChef's internal fixture for testing parameter validation; it is not a user operation. |
 
 ## Flow control (10)
 
