@@ -59,7 +59,11 @@ async function nodeReference() {
   const decoded = await decodeShare(GOLDEN, { catalogue });
   if (!decoded.ok) throw new Error(`cannot decode the golden fragment: ${decoded.error.message}`);
   const result = await baker.bake(decoded.recipe, decoded.input, { trust: "untrusted" });
-  return { json: JSON.stringify(stripTimings(result)), catalogueVersion: info.catalogueVersion };
+  return {
+    json: JSON.stringify(stripTimings(result)),
+    catalogueVersion: info.catalogueVersion,
+    buildVersion: catalogue.version,
+  };
 }
 
 function headersFor(isolated) {
@@ -135,6 +139,11 @@ async function runCombination(browser, reference, kind, isolated) {
     check(
       g.result?.ok === true && g.result.output?.text === EXPECTED_TEXT,
       `the output is ${g.result?.output?.text}`,
+    );
+    check(
+      g.catalogueVersion === reference.catalogueVersion &&
+        g.catalogueVersion === reference.buildVersion,
+      `the browser catalogue version ${g.catalogueVersion} equals the Node (${reference.catalogueVersion}) and build-time (${reference.buildVersion}) versions`,
     );
     check(
       JSON.stringify(g.result) === reference.json,
