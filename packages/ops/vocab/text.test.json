@@ -233,5 +233,384 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "replace every b, all defaults to true",
+    "ref": "hand-computed: abcabc with b replaced by X is aXcaXc",
+    "op": "text:replace",
+    "params": {
+      "find": "b",
+      "replacement": "X"
+    },
+    "input": {
+      "value": "abcabc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "aXcaXc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "replace first occurrence only with all false",
+    "ref": "hand-computed: abcabc with the first b replaced by X is aXcabc",
+    "op": "text:replace",
+    "params": {
+      "find": "b",
+      "replacement": "X",
+      "all": false
+    },
+    "input": {
+      "value": "abcabc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "aXcabc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "replace with no match leaves the text unchanged",
+    "ref": "hand-computed: no z in abc",
+    "op": "text:replace",
+    "params": {
+      "find": "z",
+      "replacement": "Q"
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "abc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "replacement is literal, not an ECMAScript substitution",
+    "ref": "hand-computed: bab with a replaced by the literal $&$$ is b$&$$b",
+    "op": "text:replace",
+    "params": {
+      "find": "a",
+      "replacement": "$&$$"
+    },
+    "input": {
+      "value": "bab",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "b$&$$b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "find is literal, a dot is not a wildcard",
+    "ref": "hand-computed: only the one literal dot in a.bxc is replaced",
+    "op": "text:replace",
+    "params": {
+      "find": ".",
+      "replacement": "-"
+    },
+    "input": {
+      "value": "a.bxc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a-bxc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "empty find is a static recipe error",
+    "ref": "static check: find is str[1..]",
+    "op": "text:replace",
+    "params": {
+      "find": "",
+      "replacement": "b"
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "replace of empty input is empty",
+    "ref": "hand-computed: empty text has no match",
+    "op": "text:replace",
+    "params": {
+      "find": "a",
+      "replacement": "b"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "non-ASCII find and replacement",
+    "ref": "hand-computed: naïve café with é replaced by e",
+    "op": "text:replace",
+    "params": {
+      "find": "é",
+      "replacement": "e"
+    },
+    "input": {
+      "value": "naïve café",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "naïve cafe",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "astral code point as find",
+    "ref": "hand-computed: a😀b😀 with 😀 replaced by * is a*b*",
+    "op": "text:replace",
+    "params": {
+      "find": "😀",
+      "replacement": "*"
+    },
+    "input": {
+      "value": "a😀b😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a*b*",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "empty replacement deletes the matches",
+    "ref": "hand-computed: a-b-c with - removed is abc",
+    "op": "text:replace",
+    "params": {
+      "find": "-",
+      "replacement": ""
+    },
+    "input": {
+      "value": "a-b-c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "abc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "multi-character find, first occurrence only",
+    "ref": "hand-computed: one two one, first one replaced by 1 is 1 two one",
+    "op": "text:replace",
+    "params": {
+      "find": "one",
+      "replacement": "1",
+      "all": false
+    },
+    "input": {
+      "value": "one two one",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1 two one",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "first occurrence at the start, all false",
+    "ref": "hand-computed: xxx with the first x replaced by y is yxx",
+    "op": "text:replace",
+    "params": {
+      "find": "x",
+      "replacement": "y",
+      "all": false
+    },
+    "input": {
+      "value": "xxx",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "yxx",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "match at the end is removed",
+    "ref": "hand-computed: xa with a removed is x",
+    "op": "text:replace",
+    "params": {
+      "find": "a",
+      "replacement": ""
+    },
+    "input": {
+      "value": "xa",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "x",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "replace rejects invalid UTF-8 (E_COERCE)",
+    "ref": "spec 4.2 (strict UTF-8)",
+    "op": "text:replace",
+    "params": {
+      "find": "a",
+      "replacement": "b"
+    },
+    "input": {
+      "value": "ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "split on the default line feed",
+    "ref": "hand-computed: a LF b LF c gives a, b, c",
+    "op": "text:split",
+    "params": {},
+    "input": {
+      "value": "a\nb\nc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": ["a", "b", "c"]
+    }
+  },
+  {
+    "name": "split keeps empty pieces",
+    "ref": "hand-computed: a,b,,c split by comma",
+    "op": "text:split",
+    "params": {
+      "separator": ","
+    },
+    "input": {
+      "value": "a,b,,c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": ["a", "b", "", "c"]
+    }
+  },
+  {
+    "name": "split of empty input is one empty piece",
+    "ref": "hand-computed: the empty text has one piece, as core split",
+    "op": "text:split",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": [""]
+    }
+  },
+  {
+    "name": "split non-ASCII pieces",
+    "ref": "hand-computed: é;ü;😀 split by semicolon",
+    "op": "text:split",
+    "params": {
+      "separator": ";"
+    },
+    "input": {
+      "value": "é;ü;😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": ["é", "ü", "😀"]
+    }
+  },
+  {
+    "name": "trailing line feed gives a trailing empty piece",
+    "ref": "hand-computed: a LF split gives a and an empty piece",
+    "op": "text:split",
+    "params": {},
+    "input": {
+      "value": "a\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": ["a", ""]
+    }
+  },
+  {
+    "name": "multi-character separator",
+    "ref": "hand-computed: a::b::::c split by ::",
+    "op": "text:split",
+    "params": {
+      "separator": "::"
+    },
+    "input": {
+      "value": "a::b::::c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": ["a", "b", "", "c"]
+    }
+  },
+  {
+    "name": "separator is literal, not a pattern",
+    "ref": "hand-computed: the two-character text \\d is not a digit class here",
+    "op": "text:split",
+    "params": {
+      "separator": "\\d"
+    },
+    "input": {
+      "value": "a1b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": ["a1b"]
+    }
+  },
+  {
+    "name": "empty separator is a static recipe error",
+    "ref": "static check: separator is str[1..]",
+    "op": "text:split",
+    "params": {
+      "separator": ""
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "split rejects invalid UTF-8 (E_COERCE)",
+    "ref": "spec 4.2 (strict UTF-8)",
+    "op": "text:split",
+    "params": {},
+    "input": {
+      "value": "c3",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "join needs a list, bytes give E_TYPE",
+    "ref": "spec 4.2 (no bytes to list coercion, so a bytes input is E_TYPE)",
+    "op": "text:join",
+    "params": {},
+    "input": {
+      "value": "61",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_TYPE"
+    }
   }
 ]

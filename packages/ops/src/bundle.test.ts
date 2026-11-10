@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { readdirSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { definePrimitive, isForgeError } from "@forge/lang";
 import type { PrimitiveDef } from "@forge/lang";
 import { describe, expect, test } from "vitest";
@@ -165,16 +167,18 @@ describe("createBundleLoader", () => {
   });
 
   test("the real package: all is every bundled vocabulary", async () => {
+    const onDisk = readdirSync(`${fileURLToPath(import.meta.url).replace(/\/[^/]*$/, "")}/../vocab`)
+      .filter((n) => n.endsWith(".fth"))
+      .map((n) => n.slice(0, -4))
+      .sort();
     const bundle = await loadBundleNode("all");
-    expect(bundle.vocabs).toEqual(["base64", "classical", "hex", "recipe", "regex", "text"]);
-    expect(bundle.units.map((u) => u.vocab)).toEqual([
-      "base64",
-      "classical",
-      "hex",
-      "regex",
-      "recipe",
-      "text",
-    ]);
+    expect(bundle.vocabs).toEqual(onDisk);
+    const units = bundle.units.map((u) => u.vocab);
+    expect([...units].sort()).toEqual(bundle.vocabs.filter((v) => units.includes(v)));
+    expect(units).toHaveLength(onDisk.length);
+    // dependency order: recipe uses regex and base64, so they come first
+    expect(units.indexOf("regex")).toBeLessThan(units.indexOf("recipe"));
+    expect(units.indexOf("base64")).toBeLessThan(units.indexOf("recipe"));
   });
 });
 
@@ -261,7 +265,10 @@ describe("assembleRuntime", () => {
   });
 
   test("an IN: with a vocabulary that is not in this bundle is allowed", async () => {
-    const rt = assembleRuntime(await bundle(), {
+    // A dependency-free bundle (hex mentions no other vocabulary), so `regex` is outside it for sure.
+    const hexOnly = await loadBundleNode(["hex"]);
+    expect(hexOnly.vocabs).not.toContain("regex");
+    const rt = assembleRuntime(hexOnly, {
       units: [{ name: "w.fth", source: "IN: regex\n: x ( -- int ) 1 ;\n" }],
     });
     expect(rt.meta("regex:x").qname).toBe("regex:x");
