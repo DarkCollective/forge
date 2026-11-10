@@ -1,0 +1,162 @@
+[
+  {
+    "name": "encode A, default space",
+    "ref": "hand-computed (0x41 = 0100 0001)",
+    "op": "binary:encode",
+    "params": {},
+    "input": { "value": "A", "enc": "utf8" },
+    "expect": { "value": "01000001", "enc": "utf8" }
+  },
+  {
+    "name": "encode AB, default space",
+    "ref": "hand-computed (0x41 = 0100 0001, 0x42 = 0100 0010)",
+    "op": "binary:encode",
+    "params": {},
+    "input": { "value": "AB", "enc": "utf8" },
+    "expect": { "value": "01000001 01000010", "enc": "utf8" }
+  },
+  {
+    "name": "encode empty input",
+    "ref": "hand-computed (no bytes, no digits)",
+    "op": "binary:encode",
+    "params": {},
+    "input": { "value": "", "enc": "utf8" },
+    "expect": { "value": "", "enc": "utf8" }
+  },
+  {
+    "name": "encode AB with comma delimiter",
+    "ref": "hand-computed (0x41 = 0100 0001, 0x42 = 0100 0010)",
+    "op": "binary:encode",
+    "params": { "delimiter": "comma" },
+    "input": { "value": "AB", "enc": "utf8" },
+    "expect": { "value": "01000001,01000010", "enc": "utf8" }
+  },
+  {
+    "name": "encode AB with newline delimiter",
+    "ref": "hand-computed (0x41 = 0100 0001, 0x42 = 0100 0010)",
+    "op": "binary:encode",
+    "params": { "delimiter": "newline" },
+    "input": { "value": "AB", "enc": "utf8" },
+    "expect": { "value": "01000001\n01000010", "enc": "utf8" }
+  },
+  {
+    "name": "encode AB with no delimiter",
+    "ref": "hand-computed (0x41 = 0100 0001, 0x42 = 0100 0010)",
+    "op": "binary:encode",
+    "params": { "delimiter": "none" },
+    "input": { "value": "AB", "enc": "utf8" },
+    "expect": { "value": "0100000101000010", "enc": "utf8" }
+  },
+  {
+    "name": "encode binary bytes 00 ff, no delimiter",
+    "ref": "hand-computed (0x00 = 0000 0000, 0xff = 1111 1111)",
+    "op": "binary:encode",
+    "params": { "delimiter": "none" },
+    "input": { "value": "00ff", "enc": "hex" },
+    "expect": { "value": "0000000011111111", "enc": "utf8" }
+  },
+  {
+    "name": "encode non-ASCII UTF-8 bytes with comma",
+    "ref": "hand-computed (U+00E9 is C3 A9; 0xc3 = 1100 0011, 0xa9 = 1010 1001)",
+    "op": "binary:encode",
+    "params": { "delimiter": "comma" },
+    "input": { "value": "é", "enc": "utf8" },
+    "expect": { "value": "11000011,10101001", "enc": "utf8" }
+  },
+  {
+    "name": "decode one byte",
+    "ref": "hand-computed (0100 0001 = 0x41 = A)",
+    "op": "binary:decode",
+    "params": {},
+    "input": { "value": "01000001", "enc": "utf8" },
+    "expect": { "value": "A", "enc": "utf8" }
+  },
+  {
+    "name": "decode two bytes, space separated",
+    "ref": "hand-computed (0100 0001 = A, 0100 0010 = B)",
+    "op": "binary:decode",
+    "params": {},
+    "input": { "value": "01000001 01000010", "enc": "utf8" },
+    "expect": { "value": "AB", "enc": "utf8" }
+  },
+  {
+    "name": "decode comma separated",
+    "ref": "hand-computed (0100 0001 = A, 0100 0010 = B)",
+    "op": "binary:decode",
+    "params": {},
+    "input": { "value": "01000001,01000010", "enc": "utf8" },
+    "expect": { "value": "AB", "enc": "utf8" }
+  },
+  {
+    "name": "decode with white space inside bytes, tab and newline",
+    "ref": "hand-computed (spec: ASCII white space ignored; 0100 0001 = A, 0100 0010 = B)",
+    "op": "binary:decode",
+    "params": {},
+    "input": { "value": "0100 0001\n0100\t0010", "enc": "utf8" },
+    "expect": { "value": "AB", "enc": "utf8" }
+  },
+  {
+    "name": "decode empty input",
+    "ref": "hand-computed (zero digits is a multiple of eight)",
+    "op": "binary:decode",
+    "params": {},
+    "input": { "value": "", "enc": "utf8" },
+    "expect": { "value": "", "enc": "utf8" }
+  },
+  {
+    "name": "decode 11111111 to 0xff (not UTF-8)",
+    "ref": "hand-computed (1111 1111 = 0xff)",
+    "op": "binary:decode",
+    "params": {},
+    "input": { "value": "11111111", "enc": "utf8" },
+    "expect": { "value": "ff", "enc": "hex" }
+  },
+  {
+    "name": "decode 11000011 10101001 to UTF-8 e-acute",
+    "ref": "hand-computed (1100 0011 = 0xc3, 1010 1001 = 0xa9, U+00E9)",
+    "op": "binary:decode",
+    "params": {},
+    "input": { "value": "11000011 10101001", "enc": "utf8" },
+    "expect": { "value": "é", "enc": "utf8" }
+  },
+  {
+    "name": "decode 00000000 to 0x00",
+    "ref": "hand-computed (0000 0000 = 0x00)",
+    "op": "binary:decode",
+    "params": {},
+    "input": { "value": "00000000", "enc": "utf8" },
+    "expect": { "value": "00", "enc": "hex" }
+  },
+  {
+    "name": "decode error: seven digits, not a multiple of eight",
+    "ref": "spec (E_COERCE: digit count must be a multiple of 8)",
+    "op": "binary:decode",
+    "params": {},
+    "input": { "value": "0100000", "enc": "utf8" },
+    "expect": { "error": "E_COERCE" }
+  },
+  {
+    "name": "decode error: fifteen digits across two bytes",
+    "ref": "spec (E_COERCE: digit count must be a multiple of 8)",
+    "op": "binary:decode",
+    "params": {},
+    "input": { "value": "01000001 0100001", "enc": "utf8" },
+    "expect": { "error": "E_COERCE" }
+  },
+  {
+    "name": "decode error: digit 2 is not binary",
+    "ref": "spec (E_COERCE: only 0 and 1 are digits)",
+    "op": "binary:decode",
+    "params": {},
+    "input": { "value": "01000012", "enc": "utf8" },
+    "expect": { "error": "E_COERCE" }
+  },
+  {
+    "name": "decode error: non-ASCII input",
+    "ref": "spec (E_COERCE: non-digit)",
+    "op": "binary:decode",
+    "params": {},
+    "input": { "value": "é", "enc": "utf8" },
+    "expect": { "error": "E_COERCE" }
+  }
+]

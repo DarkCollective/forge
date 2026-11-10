@@ -1,0 +1,162 @@
+[
+  {
+    "name": "encode Hi, default base 16 and space",
+    "ref": "hand-computed (H = U+0048, i = U+0069)",
+    "op": "charcode:encode",
+    "params": {},
+    "input": { "value": "Hi", "enc": "utf8" },
+    "expect": { "value": "48 69", "enc": "utf8" }
+  },
+  {
+    "name": "encode empty input",
+    "ref": "hand-computed (no code points)",
+    "op": "charcode:encode",
+    "params": {},
+    "input": { "value": "", "enc": "utf8" },
+    "expect": { "value": "", "enc": "utf8" }
+  },
+  {
+    "name": "encode e-acute, two UTF-8 bytes, one code point",
+    "ref": "hand-computed (U+00E9 = e9)",
+    "op": "charcode:encode",
+    "params": {},
+    "input": { "value": "é", "enc": "utf8" },
+    "expect": { "value": "e9", "enc": "utf8" }
+  },
+  {
+    "name": "encode euro sign, three UTF-8 bytes",
+    "ref": "hand-computed (U+20AC = 20ac)",
+    "op": "charcode:encode",
+    "params": {},
+    "input": { "value": "€", "enc": "utf8" },
+    "expect": { "value": "20ac", "enc": "utf8" }
+  },
+  {
+    "name": "encode astral code point, one number not two UTF-16 units",
+    "ref": "hand-computed (U+1F600 = 1f600)",
+    "op": "charcode:encode",
+    "params": {},
+    "input": { "value": "😀", "enc": "utf8" },
+    "expect": { "value": "1f600", "enc": "utf8" }
+  },
+  {
+    "name": "encode base 2",
+    "ref": "hand-computed (0x41 = 65 = 1000001 in binary)",
+    "op": "charcode:encode",
+    "params": { "base": 2 },
+    "input": { "value": "A", "enc": "utf8" },
+    "expect": { "value": "1000001", "enc": "utf8" }
+  },
+  {
+    "name": "encode base 10 with newline",
+    "ref": "hand-computed (A = 65, B = 66)",
+    "op": "charcode:encode",
+    "params": { "base": 10, "delimiter": "newline" },
+    "input": { "value": "AB", "enc": "utf8" },
+    "expect": { "value": "65\n66", "enc": "utf8" }
+  },
+  {
+    "name": "encode base 36 with comma, lower-case digits",
+    "ref": "hand-computed (Z = 90 = 2*36 + 18, digit 18 is i; comma = 44 = 1*36 + 8)",
+    "op": "charcode:encode",
+    "params": { "base": 36, "delimiter": "comma" },
+    "input": { "value": "Z,", "enc": "utf8" },
+    "expect": { "value": "2i,18", "enc": "utf8" }
+  },
+  {
+    "name": "decode hex numbers",
+    "ref": "hand-computed (0x48 = H, 0x69 = i)",
+    "op": "charcode:decode",
+    "params": {},
+    "input": { "value": "48 69", "enc": "utf8" },
+    "expect": { "value": "Hi", "enc": "utf8" }
+  },
+  {
+    "name": "decode empty input",
+    "ref": "hand-computed (no numbers)",
+    "op": "charcode:decode",
+    "params": {},
+    "input": { "value": "", "enc": "utf8" },
+    "expect": { "value": "", "enc": "utf8" }
+  },
+  {
+    "name": "decode upper-case hex to an astral code point",
+    "ref": "hand-computed (0x1F600 = U+1F600, grinning face)",
+    "op": "charcode:decode",
+    "params": {},
+    "input": { "value": "1F600", "enc": "utf8" },
+    "expect": { "value": "😀", "enc": "utf8" }
+  },
+  {
+    "name": "decode decimal numbers with comma",
+    "ref": "hand-computed (65 = A, 66 = B)",
+    "op": "charcode:decode",
+    "params": { "base": 10 },
+    "input": { "value": "65,66", "enc": "utf8" },
+    "expect": { "value": "AB", "enc": "utf8" }
+  },
+  {
+    "name": "decode leading zeros",
+    "ref": "hand-computed (0041 = 0x41 = A)",
+    "op": "charcode:decode",
+    "params": {},
+    "input": { "value": "0041", "enc": "utf8" },
+    "expect": { "value": "A", "enc": "utf8" }
+  },
+  {
+    "name": "decode binary digits",
+    "ref": "hand-computed (1000001 = 65 = A)",
+    "op": "charcode:decode",
+    "params": { "base": 2 },
+    "input": { "value": "1000001", "enc": "utf8" },
+    "expect": { "value": "A", "enc": "utf8" }
+  },
+  {
+    "name": "decode base 36 digits",
+    "ref": "hand-computed (2i = 2*36 + 18 = 90 = Z)",
+    "op": "charcode:decode",
+    "params": { "base": 36 },
+    "input": { "value": "2i", "enc": "utf8" },
+    "expect": { "value": "Z", "enc": "utf8" }
+  },
+  {
+    "name": "decode mixed separators to non-ASCII text",
+    "ref": "hand-computed (e9 = U+00E9, 20ac = U+20AC)",
+    "op": "charcode:decode",
+    "params": {},
+    "input": { "value": "e9,\n20ac", "enc": "utf8" },
+    "expect": { "value": "é€", "enc": "utf8" }
+  },
+  {
+    "name": "decode error: z is not a hex digit",
+    "ref": "spec (E_COERCE: invalid digit)",
+    "op": "charcode:decode",
+    "params": {},
+    "input": { "value": "zz", "enc": "utf8" },
+    "expect": { "error": "E_COERCE" }
+  },
+  {
+    "name": "decode error: above 0x10FFFF",
+    "ref": "spec (E_COERCE: value over 0x10FFFF; 0x110000 is one past the last code point)",
+    "op": "charcode:decode",
+    "params": {},
+    "input": { "value": "110000", "enc": "utf8" },
+    "expect": { "error": "E_COERCE" }
+  },
+  {
+    "name": "decode error: surrogate code point",
+    "ref": "spec (E_COERCE: surrogate; 0xD800 is the first high surrogate)",
+    "op": "charcode:decode",
+    "params": {},
+    "input": { "value": "d800", "enc": "utf8" },
+    "expect": { "error": "E_COERCE" }
+  },
+  {
+    "name": "decode error: negative number",
+    "ref": "spec (E_COERCE: not a code point)",
+    "op": "charcode:decode",
+    "params": {},
+    "input": { "value": "-41", "enc": "utf8" },
+    "expect": { "error": "E_COERCE" }
+  }
+]

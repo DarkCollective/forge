@@ -1,0 +1,178 @@
+[
+  {
+    "name": "encode unreserved characters unchanged (component)",
+    "ref": "RFC 3986 section 2.3 (unreserved characters)",
+    "op": "url:encode",
+    "params": {},
+    "input": { "value": "foobar-_.~09", "enc": "utf8" },
+    "expect": { "value": "foobar-_.~09", "enc": "utf8" }
+  },
+  {
+    "name": "encode space as %20 (component)",
+    "ref": "RFC 3986 section 2.1 (percent-encoding; space is not unreserved)",
+    "op": "url:encode",
+    "params": {},
+    "input": { "value": "a b", "enc": "utf8" },
+    "expect": { "value": "a%20b", "enc": "utf8" }
+  },
+  {
+    "name": "encode slash as %2F (component)",
+    "ref": "RFC 3986 section 2.2 (reserved '/' is encoded by component mode)",
+    "op": "url:encode",
+    "params": {},
+    "input": { "value": "/", "enc": "utf8" },
+    "expect": { "value": "%2F", "enc": "utf8" }
+  },
+  {
+    "name": "encode empty input",
+    "ref": "hand-computed (no bytes)",
+    "op": "url:encode",
+    "params": {},
+    "input": { "value": "", "enc": "utf8" },
+    "expect": { "value": "", "enc": "utf8" }
+  },
+  {
+    "name": "encode non-ASCII UTF-8 (component), upper-case hex",
+    "ref": "hand-computed (U+00E9 is C3 A9)",
+    "op": "url:encode",
+    "params": { "mode": "component" },
+    "input": { "value": "é", "enc": "utf8" },
+    "expect": { "value": "%C3%A9", "enc": "utf8" }
+  },
+  {
+    "name": "encode A-umlaut and slash (component)",
+    "ref": "hand-computed (U+00C4 is C3 84)",
+    "op": "url:encode",
+    "params": {},
+    "input": { "value": "Ä/", "enc": "utf8" },
+    "expect": { "value": "%C3%84%2F", "enc": "utf8" }
+  },
+  {
+    "name": "encode binary byte ff (component), not UTF-8",
+    "ref": "hand-computed (0xff)",
+    "op": "url:encode",
+    "params": {},
+    "input": { "value": "ff", "enc": "hex" },
+    "expect": { "value": "%FF", "enc": "utf8" }
+  },
+  {
+    "name": "encode all mode encodes every byte",
+    "ref": "hand-computed (A = 41, space = 20, b = 62)",
+    "op": "url:encode",
+    "params": { "mode": "all" },
+    "input": { "value": "A b", "enc": "utf8" },
+    "expect": { "value": "%41%20%62", "enc": "utf8" }
+  },
+  {
+    "name": "encode all mode, tilde and hyphen also encoded",
+    "ref": "hand-computed (~ = 7E, - = 2D)",
+    "op": "url:encode",
+    "params": { "mode": "all" },
+    "input": { "value": "~-", "enc": "utf8" },
+    "expect": { "value": "%7E%2D", "enc": "utf8" }
+  },
+  {
+    "name": "encode all mode, empty input",
+    "ref": "hand-computed (no bytes)",
+    "op": "url:encode",
+    "params": { "mode": "all" },
+    "input": { "value": "", "enc": "utf8" },
+    "expect": { "value": "", "enc": "utf8" }
+  },
+  {
+    "name": "decode percent-encoded space",
+    "ref": "RFC 3986 section 2.1 (%20 is a space)",
+    "op": "url:decode",
+    "params": {},
+    "input": { "value": "a%20b", "enc": "utf8" },
+    "expect": { "value": "a b", "enc": "utf8" }
+  },
+  {
+    "name": "decode plus as space when asked",
+    "ref": "hand-computed (form encoding: + is a space when plus-as-space is true)",
+    "op": "url:decode",
+    "params": { "plus-as-space": true },
+    "input": { "value": "a+b", "enc": "utf8" },
+    "expect": { "value": "a b", "enc": "utf8" }
+  },
+  {
+    "name": "decode keeps plus by default",
+    "ref": "hand-computed (default plus-as-space is false, + stays +)",
+    "op": "url:decode",
+    "params": {},
+    "input": { "value": "a+b", "enc": "utf8" },
+    "expect": { "value": "a+b", "enc": "utf8" }
+  },
+  {
+    "name": "decode lower and upper case hex digits",
+    "ref": "hand-computed (2f = 2F = /)",
+    "op": "url:decode",
+    "params": {},
+    "input": { "value": "%2f%2F", "enc": "utf8" },
+    "expect": { "value": "//", "enc": "utf8" }
+  },
+  {
+    "name": "decode UTF-8 percent sequence to e-acute",
+    "ref": "RFC 3986 section 2.1 (C3 A9 is U+00E9 in UTF-8)",
+    "op": "url:decode",
+    "params": {},
+    "input": { "value": "%C3%A9", "enc": "utf8" },
+    "expect": { "value": "é", "enc": "utf8" }
+  },
+  {
+    "name": "decode tilde written as %7E",
+    "ref": "RFC 3986 section 2.3 (%7E is equivalent to ~)",
+    "op": "url:decode",
+    "params": {},
+    "input": { "value": "/foo?x=%7e", "enc": "utf8" },
+    "expect": { "value": "/foo?x=~", "enc": "utf8" }
+  },
+  {
+    "name": "decode to non-UTF-8 bytes",
+    "ref": "hand-computed (%ff = 0xff, %00 = 0x00)",
+    "op": "url:decode",
+    "params": {},
+    "input": { "value": "%ff%00", "enc": "utf8" },
+    "expect": { "value": "ff00", "enc": "hex" }
+  },
+  {
+    "name": "decode empty input",
+    "ref": "hand-computed (no bytes)",
+    "op": "url:decode",
+    "params": {},
+    "input": { "value": "", "enc": "utf8" },
+    "expect": { "value": "", "enc": "utf8" }
+  },
+  {
+    "name": "decode error: lone percent sign",
+    "ref": "spec (E_COERCE: % not followed by two hex digits)",
+    "op": "url:decode",
+    "params": {},
+    "input": { "value": "%", "enc": "utf8" },
+    "expect": { "error": "E_COERCE" }
+  },
+  {
+    "name": "decode error: one hex digit after percent",
+    "ref": "spec (E_COERCE: % not followed by two hex digits)",
+    "op": "url:decode",
+    "params": {},
+    "input": { "value": "100%2", "enc": "utf8" },
+    "expect": { "error": "E_COERCE" }
+  },
+  {
+    "name": "decode error: non-hex digits after percent",
+    "ref": "spec (E_COERCE: % not followed by two hex digits)",
+    "op": "url:decode",
+    "params": {},
+    "input": { "value": "%zz", "enc": "utf8" },
+    "expect": { "error": "E_COERCE" }
+  },
+  {
+    "name": "decode error: percent sign at end",
+    "ref": "spec (E_COERCE: % not followed by two hex digits)",
+    "op": "url:decode",
+    "params": {},
+    "input": { "value": "a%", "enc": "utf8" },
+    "expect": { "error": "E_COERCE" }
+  }
+]

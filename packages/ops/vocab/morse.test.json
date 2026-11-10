@@ -1,0 +1,176 @@
+[
+  {
+    "name": "encode SOS",
+    "ref": "ITU-R M.1677-1 Table 1 (S = ..., O = ---)",
+    "op": "morse:encode",
+    "params": {},
+    "input": { "value": "SOS", "enc": "utf8" },
+    "expect": { "value": "... --- ...", "enc": "utf8" }
+  },
+  {
+    "name": "encode is case-insensitive",
+    "ref": "ITU-R M.1677-1 Table 1 (lower-case input gives the same code)",
+    "op": "morse:encode",
+    "params": {},
+    "input": { "value": "sos", "enc": "utf8" },
+    "expect": { "value": "... --- ...", "enc": "utf8" }
+  },
+  {
+    "name": "encode two words with slash separator",
+    "ref": "ITU-R M.1677-1 Table 1 (H ...., E ., L .-.., O ---, W .--, R .-., D -..)",
+    "op": "morse:encode",
+    "params": { "word-separator": "slash" },
+    "input": { "value": "HELLO WORLD", "enc": "utf8" },
+    "expect": { "value": ".... . .-.. .-.. --- / .-- --- .-. .-.. -..", "enc": "utf8" }
+  },
+  {
+    "name": "encode two words with newline separator",
+    "ref": "ITU-R M.1677-1 Table 1 (A .-, B -...)",
+    "op": "morse:encode",
+    "params": { "word-separator": "newline" },
+    "input": { "value": "A B", "enc": "utf8" },
+    "expect": { "value": ".-\n-...", "enc": "utf8" }
+  },
+  {
+    "name": "encode a run of spaces is one word break",
+    "ref": "hand-computed (input white space separates words; runs collapse)",
+    "op": "morse:encode",
+    "params": {},
+    "input": { "value": "A  B", "enc": "utf8" },
+    "expect": { "value": ".- / -...", "enc": "utf8" }
+  },
+  {
+    "name": "encode empty input",
+    "ref": "hand-computed (no characters)",
+    "op": "morse:encode",
+    "params": {},
+    "input": { "value": "", "enc": "utf8" },
+    "expect": { "value": "", "enc": "utf8" }
+  },
+  {
+    "name": "encode the digits 0 to 9",
+    "ref": "ITU-R M.1677-1 Table 1 (digits)",
+    "op": "morse:encode",
+    "params": {},
+    "input": { "value": "0123456789", "enc": "utf8" },
+    "expect": {
+      "value": "----- .---- ..--- ...-- ....- ..... -.... --... ---.. ----.",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode the punctuation ITU-R M.1677-1 defines",
+    "ref": "ITU-R M.1677-1 Table 1 (punctuation codes, in the order . , ? ' ! / ( ) & : ; = + - _ \" $ @)",
+    "op": "morse:encode",
+    "params": {},
+    "input": { "value": ".,?'!/()&:;=+-_\"$@", "enc": "utf8" },
+    "expect": {
+      "value": ".-.-.- --..-- ..--.. .----. -.-.-- -..-. -.--. -.--.- .-... ---... -.-.-. -...- .-.-. -....- ..--.- .-..-. ...-..- .--.-.",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode error: non-ASCII letter has no code",
+    "ref": "spec (a character with no Morse code is E_COERCE)",
+    "op": "morse:encode",
+    "params": {},
+    "input": { "value": "é", "enc": "utf8" },
+    "expect": { "error": "E_COERCE" }
+  },
+  {
+    "name": "encode error: tilde has no code",
+    "ref": "spec (a character with no Morse code is E_COERCE)",
+    "op": "morse:encode",
+    "params": {},
+    "input": { "value": "a~", "enc": "utf8" },
+    "expect": { "error": "E_COERCE" }
+  },
+  {
+    "name": "decode SOS",
+    "ref": "ITU-R M.1677-1 Table 1 (... = S, --- = O)",
+    "op": "morse:decode",
+    "params": {},
+    "input": { "value": "... --- ...", "enc": "utf8" },
+    "expect": { "value": "SOS", "enc": "utf8" }
+  },
+  {
+    "name": "decode slash-separated words",
+    "ref": "ITU-R M.1677-1 Table 1 (H, E, L, L, O, W, O, R, L, D)",
+    "op": "morse:decode",
+    "params": {},
+    "input": { "value": ".... . .-.. .-.. --- / .-- --- .-. .-.. -..", "enc": "utf8" },
+    "expect": { "value": "HELLO WORLD", "enc": "utf8" }
+  },
+  {
+    "name": "decode newline separates words",
+    "ref": "ITU-R M.1677-1 Table 1 (... --- = SO, .- = A)",
+    "op": "morse:decode",
+    "params": {},
+    "input": { "value": "... ---\n.-", "enc": "utf8" },
+    "expect": { "value": "SO A", "enc": "utf8" }
+  },
+  {
+    "name": "decode CRLF line break separates words",
+    "ref": "hand-computed (.. = I, .- = A)",
+    "op": "morse:decode",
+    "params": {},
+    "input": { "value": "..\r\n.-", "enc": "utf8" },
+    "expect": { "value": "I A", "enc": "utf8" }
+  },
+  {
+    "name": "decode runs of spaces and leading slash",
+    "ref": "hand-computed (leading break ignored; .- = A, -... = B)",
+    "op": "morse:decode",
+    "params": {},
+    "input": { "value": "/.-  -...", "enc": "utf8" },
+    "expect": { "value": "A B", "enc": "utf8" }
+  },
+  {
+    "name": "decode punctuation codes",
+    "ref": "ITU-R M.1677-1 Table 1 (-.-.-- = !, ..- = U)",
+    "op": "morse:decode",
+    "params": {},
+    "input": { "value": "-.-.-- / ..-", "enc": "utf8" },
+    "expect": { "value": "! U", "enc": "utf8" }
+  },
+  {
+    "name": "decode slash as a character, two letters in one word",
+    "ref": "ITU-R M.1677-1 Table 1 (-..-. is the slash character; two codes with one space between them are one word)",
+    "op": "morse:decode",
+    "params": {},
+    "input": { "value": "-..-. -..-.", "enc": "utf8" },
+    "expect": { "value": "//", "enc": "utf8" }
+  },
+  {
+    "name": "decode empty input",
+    "ref": "hand-computed (no characters)",
+    "op": "morse:decode",
+    "params": {},
+    "input": { "value": "", "enc": "utf8" },
+    "expect": { "value": "", "enc": "utf8" }
+  },
+  {
+    "name": "decode error: seven dots is no code",
+    "ref": "spec (unknown code is E_COERCE; ITU-R M.1677-1 has no seven-dot code)",
+    "op": "morse:decode",
+    "params": {},
+    "input": { "value": ".......", "enc": "utf8" },
+    "expect": { "error": "E_COERCE" }
+  },
+  {
+    "name": "decode error: letter in the code",
+    "ref": "spec (unknown code is E_COERCE)",
+    "op": "morse:decode",
+    "params": {},
+    "input": { "value": ".-x", "enc": "utf8" },
+    "expect": { "error": "E_COERCE" }
+  },
+  {
+    "name": "decode error: non-ASCII input",
+    "ref": "spec (unknown code is E_COERCE)",
+    "op": "morse:decode",
+    "params": {},
+    "input": { "value": "é", "enc": "utf8" },
+    "expect": { "error": "E_COERCE" }
+  }
+]
