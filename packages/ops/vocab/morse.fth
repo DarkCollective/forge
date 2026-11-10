@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ morse: International Morse code as in ITU-R M.1677-1 (letters, digits and the punctuation it
 \ defines). The words are FL and need no primitive; a character or code with no meaning is
 \ E_COERCE, raised by raise:coerce.

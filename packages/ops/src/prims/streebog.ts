@@ -26,7 +26,7 @@
  */
 import { definePrimitive } from "@forge/lang";
 import type { PrimitiveDef } from "@forge/lang";
-import { fromHex } from "../hash-util-b.js";
+import { fromHex } from "../hash-util.js";
 import { rangeFailure } from "../prim-util.js";
 
 // 6.2 Pi' (Pi'(0) .. Pi'(255)).

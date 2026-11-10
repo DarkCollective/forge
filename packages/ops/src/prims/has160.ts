@@ -22,7 +22,7 @@
  */
 import { definePrimitive } from "@forge/lang";
 import type { PrimitiveDef } from "@forge/lang";
-import { mdPad, rotl32 } from "../hash-util-b.js";
+import { mdPad, rotl32 } from "../hash-util.js";
 
 // Initial chaining value (the SHA-1 constants, TTAS.KO-12.0011/R2).
 const IV = [0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, 0xc3d2e1f0];

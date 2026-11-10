@@ -291,13 +291,29 @@
     "name": "digest 160: empty",
     "ref": "RIPEMD-160 paper test vectors (Dobbertin, Bosselaers, Preneel), bosselae/ripemd160.html",
     "op": "ripemd:digest",
-    "params": {},
+    "params": {
+      "size": "160"
+    },
     "input": {
       "value": "",
       "enc": "utf8"
     },
     "expect": {
       "value": "9c1185a5c5e9fc54612808977ee8f548b2258d31",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest default size 320: empty",
+    "ref": "RIPEMD-160 paper test vectors (Dobbertin, Bosselaers, Preneel), bosselae/ripemd160.html",
+    "op": "ripemd:digest",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "22d65d5661536cdc75c1fdf5c6de7b41b9f27325ebc61e8557177d705a0ec880151c3a32a00899b8",
       "enc": "hex"
     }
   },

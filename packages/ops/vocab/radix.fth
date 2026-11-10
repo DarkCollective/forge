@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ radix: rewrite an integer of any size from one base to another. Written in FL on top of its big
 \ integers (str>int-radix, int>str-radix); the integer limit (maxIntBits, 65 536 bits) caps the size
 \ of the number with E_LIMIT_VALUE. E_COERCE comes from the core words on a bad digit.

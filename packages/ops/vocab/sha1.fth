@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ sha1: SHA-1, FIPS 180-4. One word, no parameter. The digest is raw bytes; chain hex:encode for text.
 \ SHA-1 is broken for collisions and is here for formats that still use it. The hash itself is _hash,
 \ a private primitive (src/prims/sha1.ts) over the audited @noble/hashes library.

@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ unicode: escaping and unescaping code points (\uXXXX, U+XXXX, %uXXXX, \x{...}, &#x...;), Unicode
 \ normalisation (UAX #15) and the replacement of typographic ("smart") characters by ASCII. All
 \ the words are FL; the one primitive is the private _normalize (src/prims/unicode.ts), because the

@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ endian: byte-order swapping of whole words. Written in FL; there are no primitives. The op is
 \ named swap, which shadows the core swap inside this file, so no word below uses the core swap.
 IN: endian

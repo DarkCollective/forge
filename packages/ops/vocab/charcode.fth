@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ charcode: Unicode code points as numbers in a chosen base. The words are FL and need no
 \ primitive; E_COERCE comes from the raise vocabulary (raise:coerce).
 IN: charcode

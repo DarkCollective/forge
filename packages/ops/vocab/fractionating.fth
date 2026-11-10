@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ fractionating: ciphers that first turn each letter into digits (a Polybius square) and then combine them.
 \ Only ASCII letters take part: other bytes are dropped, and letters are upper case with J merged into I.
 IN: fractionating

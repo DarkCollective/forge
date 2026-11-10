@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ polygraphic: ciphers that work on letter pairs (Playfair, four-square) and on letter blocks (Hill).
 \ Only ASCII letters take part: other bytes are dropped, and letters come out upper case (J is merged
 \ into I, or I into J, as the omit choice says).

@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ murmur3: MurmurHash3 x86_32 (Austin Appleby, SMHasher, public domain). Written in FL; there are no
 \ primitives. All arithmetic is on 32-bit values held in ints: a product of two 32-bit values can
 \ exceed 2^53, which ints promote to bigints exactly, and band 0xffffffff brings it back.

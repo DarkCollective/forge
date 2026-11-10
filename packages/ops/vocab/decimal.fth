@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ decimal: byte values as decimal numbers 0..255. The words are FL and need no primitive;
 \ E_COERCE comes from the raise vocabulary (raise:coerce).
 IN: decimal

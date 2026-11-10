@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ bigint: unsigned big-endian integers as bytes, and as decimal text. Written in FL over the core
 \ words and util. The integer limit of the language (limits.maxIntBits, default 65 536 bits, so 8192
 \ bytes of significant data) applies: a larger value raises E_LIMIT_VALUE.

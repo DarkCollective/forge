@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ charset: text in legacy character sets, decoded to Unicode text and (where it is a single-byte set or a
 \ Unicode encoding) encoded back. Three kinds of encoding:
 \

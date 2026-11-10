@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ hex: hexadecimal text. The words are TypeScript primitives (src/prims/hex.ts);
 \ this unit only adds the parameter help.
 IN: hex

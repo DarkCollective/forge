@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ md5: MD5, RFC 1321. One word, no parameter. The digest is raw bytes; chain hex:encode for text.
 \ MD5 is broken for collisions and is here for formats that still use it. The hash itself is _hash,
 \ a private primitive (src/prims/md5.ts) over the audited @noble/hashes library.

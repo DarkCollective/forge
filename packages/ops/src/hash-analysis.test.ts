@@ -52,6 +52,43 @@ describe("hash-analysis:analyse", () => {
     }
   });
 
+  test("the table names the checksums and the less common functions of each size", async () => {
+    const names: Record<number, string[]> = {
+      1: ["Fletcher-8", "CRC-8"],
+      2: ["BSD checksum", "SYSV checksum", "Fletcher-16"],
+      4: ["Adler-32", "Fletcher-32"],
+      8: ["RIPEMD-64", "SipHash-2-4"],
+      16: ["MD6-128", "Tiger-128", "Snefru-128"],
+      20: ["FSB-160", "HAVAL-160"],
+      24: ["Tiger-192", "HAVAL-192"],
+      28: ["ECOH-224", "FSB-224", "HAVAL-224"],
+      32: ["BLAKE-256", "Groestl-256", "PANAMA", "GOST R 34.11-94", "Snefru-256", "RIPEMD-256"],
+      40: ["RIPEMD-320"],
+      48: ["ECOH-384", "FSB-384"],
+      64: ["JH", "MD6-512", "Spectral Hash", "SWIFFT", "Whirlpool", "Groestl-512", "BLAKE-512"],
+      128: ["FNV-1024"],
+    };
+    for (const [n, list] of Object.entries(names)) {
+      const out = (await analyse("ab".repeat(Number(n)))).out!;
+      for (const name of list) expect(out.split("\n"), `${n} bytes: ${name}`).toContain(name);
+    }
+  });
+
+  test("an odd number of digits is a size in half bytes", async () => {
+    expect((await analyse("f")).out).toMatch(
+      /^Hash length: 1\nByte length: 0.5\nBit length: 4\n\n.*\nFletcher-4\nLuhn algorithm\nVerhoeff algorithm$/s,
+    );
+    expect((await analyse("fff")).out).toMatch(
+      /^Hash length: 3\nByte length: 1.5\nBit length: 12\n/,
+    );
+  });
+
+  test("whitespace inside the digits is ignored and a letter that is not hex is an error", async () => {
+    expect((await analyse("a b\n")).out).toMatch(/^Hash length: 2\nByte length: 1\n/);
+    expect(await analyse("ab g")).toEqual({ code: "E_COERCE" });
+    expect(await analyse(" \n")).toEqual({ code: "E_COERCE" });
+  });
+
   test("the lengths are in hex characters, bytes and bits", async () => {
     expect((await analyse("00".repeat(100))).out).toMatch(
       /^Hash length: 200\nByte length: 100\nBit length: 800\n\nNo common hashing function/,

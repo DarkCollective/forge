@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ hmac: HMAC, RFC 2104, written in FL over the digest words of the other hash vocabularies (md5, sha1,
 \ sha2, sha3 and ripemd160). Blake2 and BLAKE3 have keyed modes of their own and SHAKE has no fixed
 \ output length, so they are not offered. The key is hashed when it is longer than the block size of

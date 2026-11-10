@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ md4: MD4, RFC 1320. The digest is raw bytes; chain hex:encode for text. The hash itself is _hash, a
 \ private primitive (src/prims/md4.ts) written from the RFC; the metadata is FL.
 IN: md4

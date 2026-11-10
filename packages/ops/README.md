@@ -1,6 +1,6 @@
 # @forge/ops
 
-The operation vocabularies of Forge: 143 ops in 46 vocabularies, written in FL (the Forth-like Forge language), plus the build-time catalogue and the loaders that make them available in Node and in the browser.
+The operation vocabularies of Forge: 182 ops in 80 vocabularies, written in FL (the Forth-like Forge language), plus the build-time catalogue and the loaders that make them available in Node and in the browser.
 
 The package holds:
 
@@ -20,6 +20,8 @@ For a vocabulary `<v>`:
 | `src/prims/<v>.ts`    | optional: primitives, only when FL cannot do the job (see below)               |
 | `src/<v>.test.ts`     | tests of the FL vocabulary                                                     |
 
+Every `.fth` file starts with the one-line licence comment `\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.` (a comment, so nothing reads it, and no check enforces it).
+
 `src/prims/` holds only primitive modules and their tests (`src/prims/<v>.test.ts`). Tests of FL vocabularies go in `src/<v>.test.ts`. The package tests derive the vocabulary list from disk, so a new vocabulary is picked up without registering it. A qualified `see-also` counts as a load dependency, as does `USING:`.
 
 ## FL first
@@ -35,7 +37,8 @@ The private primitives, each in `src/prims/<v>.ts`:
 - `unicode:_normalize`: Unicode normalisation (NFC, NFD, NFKC, NFKD);
 - `sigaba:_run`: the SIGABA rotor stack over letters 0 to 25 (the loop needs a fast mutable array, which FL lacks);
 - `classical:_ls47`: the LS47 letter-by-letter cipher on a given board, for the same reason;
-- `bombe:_search`: the Bombe test over the 17,576 start positions of one rotor order.
+- `bombe:_search`: the Bombe test over the 17,576 start positions of one rotor order;
+- the hashing primitives, one per digest vocabulary and always `_hash` (`sha2:_hash`, `md6:_hash`, `snefru:_hash`, and so on; BLAKE2, BLAKE3, Keccak, SHA-3, SHAKE, SHA-1, MD5, RIPEMD-160 over `@noble/hashes`, the others written from their specifications), plus `ssdeep:_pieces` (one pass of the rolling hash) and `generate-all:_crcs` (many CRC presets at once, for speed only; see "Justified exceptions").
 
 The public primitives are the `hex`, `base64` and `regex` words and `raise:coerce` and `raise:range`.
 
@@ -48,10 +51,11 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 
 ## Vocabularies
 
-46 vocabularies, 143 ops (two ops each unless noted). Vocabulary names are lower-kebab-case.
+80 vocabularies, 182 ops (two ops each unless noted). Vocabulary names are lower-kebab-case.
 
 | Vocabulary         | Ops                                                                                                                                                                    |
 | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `adler32`          | Adler-32 checksum (RFC 1950) (1 op)                                                                                                                                    |
 | `analysis`         | entropy (bits per byte), byte-frequency distribution, index of coincidence and chi-squared against English (4 ops)                                                     |
 | `base32`           | encode and decode, standard and hex alphabets (RFC 4648)                                                                                                               |
 | `base45`           | encode and decode (RFC 9285)                                                                                                                                           |
@@ -65,6 +69,9 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `bigint`           | big-endian bytes to and from decimal text of an unsigned integer                                                                                                       |
 | `binary`           | bytes to and from 8-bit binary text                                                                                                                                    |
 | `bits`             | XOR (and brute force), AND, OR, NOT, ADD, SUB, bit shifts and rotates (11 ops)                                                                                         |
+| `blake2b`          | BLAKE2b (RFC 7693), sizes 16 to 64 bytes, optional key (1 op)                                                                                                          |
+| `blake2s`          | BLAKE2s (RFC 7693), sizes 16 to 32 bytes, optional key (1 op)                                                                                                          |
+| `blake3`           | BLAKE3 with a length from 1 to 65536 bytes and an optional 32-byte key (1 op)                                                                                          |
 | `bombe`            | Turing-Welchman Bombe for the Enigma I and M3: a crib search for stops, one word for one or many rotor orders (1 op)                                                   |
 | `braille`          | bytes as 8-dot Unicode Braille patterns and back                                                                                                                       |
 | `caret`            | caret and M- notation as printed by `cat -v`                                                                                                                           |
@@ -73,31 +80,61 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `classical`        | rot (Caesar, ROT13), rot47, rot8000, rot brute force, Atbash, Affine, Vigenère, Bacon, Bifid, Rail Fence, Caesar box, A1Z26, Cetacean, CTX1, LS47, Substitute (26 ops) |
 | `cobs`             | Consistent Overhead Byte Stuffing encode and decode                                                                                                                    |
 | `colossus`         | Colossus-style counting: how often a Boolean condition holds over every start position of two chi wheels, for the Lorenz break-in (1 op)                               |
+| `crc`              | CRC checksums: the 171 CyberChef presets and any width from 1 to 82 bits from the Rocksoft model (2 ops)                                                               |
 | `decimal`          | bytes to and from decimal numbers                                                                                                                                      |
 | `endian`           | swap the byte order of 2, 4 or 8 byte words                                                                                                                            |
 | `enigma`           | Enigma I, M3 and M4 rotor machines, one reciprocal word; also the shared historical rotor, turnover and reflector data (1 op)                                          |
+| `fletcher`         | Fletcher-8, -16, -32 and -64 (1 op)                                                                                                                                    |
 | `float`            | IEEE 754 binary32 and binary64 numbers to and from bytes                                                                                                               |
 | `fractionating`    | ADFGX and ADFGVX, Polybius, Nihilist and Trifid (8 ops)                                                                                                                |
+| `generate-all`     | a text report of many hashes or many checksums of the same input, one per line (2 ops)                                                                                 |
+| `gost`             | GOST R 34.11-94 with the test or the CryptoPro S-box (1 op)                                                                                                            |
+| `has160`           | HAS-160 (1 op)                                                                                                                                                         |
+| `hash-analysis`    | guess the hash functions from the length of a digest in hex (1 op)                                                                                                     |
 | `hex`              | encode and decode                                                                                                                                                      |
 | `hex-content`      | Snort and Suricata rule `content` text, with `                                                                                                                         | 41 42 | ` hex sections |
 | `hexdump`          | xxd-style hex dump, encode and decode                                                                                                                                  |
+| `hmac`             | HMAC (RFC 2104) over MD5, SHA-1, SHA-2, SHA-3 and RIPEMD-160 (1 op)                                                                                                    |
 | `html`             | encode and decode character references (full named-entity table)                                                                                                       |
+| `keccak`           | Keccak with the original padding, 224 to 512 bits (1 op)                                                                                                               |
 | `lorenz`           | Lorenz SZ40/42a/42b with the KH, ZMUG and BREAM patterns and the P5 mode, and a pattern merge helper (2 ops)                                                           |
+| `luhn`             | Luhn check digit and validity, any even radix (2 ops)                                                                                                                  |
+| `md2`              | MD2 (RFC 1319) (1 op)                                                                                                                                                  |
+| `md4`              | MD4 (RFC 1320) (1 op)                                                                                                                                                  |
+| `md5`              | MD5 (RFC 1321) (1 op)                                                                                                                                                  |
+| `md6`              | MD6, sizes 8 to 512 bits, levels and key (1 op)                                                                                                                        |
 | `modhex`           | Yubico ModHex encode and decode                                                                                                                                        |
 | `morse`            | encode and decode (ITU-R M.1677-1)                                                                                                                                     |
+| `murmur3`          | MurmurHash3 x86_32 with a seed (1 op)                                                                                                                                  |
+| `nthash`           | NT hash, the MD4 of UTF-16LE text (1 op)                                                                                                                               |
 | `octal`            | bytes to and from octal numbers                                                                                                                                        |
+| `parity`           | add or check a parity bit on a string of binary digits (2 ops)                                                                                                         |
 | `polyalphabetic`   | Beaufort, Gronsfeld, Porta and autokey Vigenere (6 ops)                                                                                                                |
 | `polygraphic`      | Playfair, four-square and Hill (6 ops)                                                                                                                                 |
 | `punycode`         | Punycode (RFC 3492), as a label or per domain label with `xn--`                                                                                                        |
 | `quoted-printable` | Quoted-Printable (RFC 2045 section 6.7) encode and decode                                                                                                              |
 | `radix`            | convert an integer of any size from one base to another                                                                                                                |
 | `regex`            | test, find-all, replace, split                                                                                                                                         |
+| `ripemd`           | RIPEMD-128, -160, -256 and -320 (1 op)                                                                                                                                 |
+| `ripemd160`        | RIPEMD-160 alone, for HMAC (1 op)                                                                                                                                      |
+| `sha0`             | SHA-0 (1 op)                                                                                                                                                           |
+| `sha1`             | SHA-1 (1 op)                                                                                                                                                           |
+| `sha2`             | SHA-224, -256, -384, -512, -512/224 and -512/256 (1 op)                                                                                                                |
+| `sha3`             | SHA3-224 to SHA3-512 (1 op)                                                                                                                                            |
+| `shake`            | SHAKE128 and SHAKE256 with a length in bytes (1 op)                                                                                                                    |
 | `sigaba`           | SIGABA (ECM Mark II) rotor machine, one reciprocal word (1 op)                                                                                                         |
+| `sm3`              | SM3 (GB/T 32905-2016) (1 op)                                                                                                                                           |
+| `snefru`           | Snefru, 128 or 256 bits, 2, 4 or 8 passes (1 op)                                                                                                                       |
+| `ssdeep`           | ssdeep context triggered piecewise hash (also ctph) and its comparison (2 ops)                                                                                         |
+| `streebog`         | GOST R 34.11-2012, 256 or 512 bits (1 op)                                                                                                                              |
+| `tcpip`            | Internet checksum (RFC 1071) (1 op)                                                                                                                                    |
 | `text`             | split, join, replace, reverse, upper, lower                                                                                                                            |
 | `transposition`    | columnar transposition, encrypt and decrypt                                                                                                                            |
 | `typex`            | Typex-style five-rotor machine with the wirings as parameters (1 op)                                                                                                   |
 | `unicode`          | escape and unescape code points (`\u`, `U+`, `%u`, `\x{}`, `&#x;`), normalisation, smart quotes to ASCII (4 ops)                                                       |
 | `url`              | percent-encode and decode (RFC 3986)                                                                                                                                   |
+| `whirlpool`        | Whirlpool (ISO/IEC 10118-3) (1 op)                                                                                                                                     |
+| `xor-checksum`     | column-wise XOR of the blocks of the input (1 op)                                                                                                                      |
 
 Three internal vocabularies are not part of the catalogue as ops: `recipe` (the words recipes compile to), `raise` (typed errors, above) and `util` (shared helpers, below).
 
@@ -198,6 +235,10 @@ The sweep reports copies that a promotion would remove. A pair it reports and th
 - `classical:_text-printable?` and `url:_unreserved?` test two different byte sets.
 - `base32:_ungroups` and `classical:_cb-enc` map a helper over an index range and join, over different per-group words.
 - `fractionating:_adf-labels` and `polygraphic:_pl-alpha` each pick one of two unrelated literals by a name.
+- `luhn:_value` turns the code of a digit or letter into its value in a radix (0 to 9, then a to z, either case), like `classical:_atbash-code` and `morse:_upper-cp` it maps a code through two or three range tests, and only looks alike.
+- `blake2b:digest` and `blake2s:digest` (and the other thin hash words, such as `sha3:digest` and `keccak:digest`) have bodies of one call, `size key _hash`, which is under the sweep's four-token threshold, so the sweep never compares them. Judged here: not a duplication worth sharing. The call is to the vocabulary's own private `_hash`, which a private word cannot share across vocabularies; the two primitives (`src/prims/blake2b.ts` and `blake2s.ts`) differ in the library function, the size and key limits (64 and 32 bytes) and the messages, and sharing them would only turn those four things into parameters of a factory. CyberChef also has two operations. The pattern is the `sha2` template of "Hashing conventions".
+- `generate-all:_crcs` is a second implementation of the CRC model, in TypeScript, next to the FL `crc` vocabulary. It is there only for speed: 171 presets over 64 KiB in FL would be about 200 million VM steps against a limit of 10 million (each call rebuilds its table and costs about a million steps), and the primitive does the same work in about 50 ms. `src/generate-all.test.ts` holds it equal to `crc:checksum` for every preset on random inputs, so the two cannot drift. The preset table is shared as `util:crc-presets`.
+- Helpers kept private on purpose after the wave 3 review (one user each): `crc:_reflect` (reverse the low bits of a value), `fletcher:_weighted` and the inline weighted sum of `adler32:checksum` (they weigh by `n - i` and by `n - i div s`, so one word would need both forms), and `hmac:_pad`.
 
 ## Hashing conventions
 
@@ -209,11 +250,13 @@ The hashing vocabularies (wave 3) follow the `sha2` vocabulary, which is the tem
 - **Wrapping a noble function.** Follow `src/prims/sha2.ts`: one private primitive `_hash ( data:bytes <variant>:str -- bytes )` that looks the variant up in a table (with `Object.hasOwn`, so `toString` is not a variant) and raises `E_RANGE` through `rangeFailure` for an unknown one. The primitive does nothing else. The public word, its doc string, category, `choice{}` parameter, defaults and `META:` stay in `vocab/<v>.fth`. Own the tests: `src/prims/<v>.test.ts` for the primitive and `src/<v>.test.ts` for the word through the runtime.
 - **Vectors.** `vocab/<v>.test.json` takes its vectors from the official specification or an RFC (FIPS 180-4, FIPS 202, RFC 1321, RFC 7693, RFC 2104, ...), and `ref` cites it. CyberChef is only a throwaway cross-check oracle: never copy its tables or outputs into the repository. Include the empty input, the standard short and long messages, and a 64 KiB test inside the default limits (against `node:crypto` where it has the algorithm).
 - **HMAC** is its own vocabulary (`hmac`), taking the hash name and the key as parameters, not a parameter of each hash.
+- **Defaults follow CyberChef's** where the choice is arbitrary (SHA-2, SHA-3 and Keccak 512, SHAKE256 with 64 bytes, RIPEMD 320, MD6 256 bits with 64 levels, Snefru 128 bits with 8 passes, BLAKE2b 64 and BLAKE2s 32 bytes), so a recipe moved from CyberChef gives the same digest. A default stays Forge's own where the standard names one (BLAKE3 gives 32 bytes, its specification's output size; GOST uses the CryptoPro S-box of the standard, not CyberChef's E-TEST cipher set). Sizes are in bytes (SHAKE length, BLAKE2 size) where CyberChef counts bits; the coverage rows say so.
+- **Reports.** `generate-all` builds a text report from the digest and checksum words, one algorithm per line with its hex. It is its own vocabulary because it depends on thirty hash vocabularies and `hash-analysis` must stay light. Its `length` and `names` parameters are CyberChef's.
 - **Not here.** CMAC, LM hash, bcrypt, Argon2 and Ascon need AES or DES, or are key derivation functions, and are wave 4.
 
 ## Running the vectors
 
-Every op has vectors in `vocab/<v>.test.json`, and the catalogue test fails if an op has none. All 1,865 vectors (46 files) run through the in-process baker in Node as part of the worker package's tests:
+Every op has vectors in `vocab/<v>.test.json`, and the catalogue test fails if an op has none. All 2,407 vectors (80 files) run through the in-process baker in Node as part of the worker package's tests:
 
 ```sh
 npm test -w @forge/worker                              # includes test/vectors.test.ts

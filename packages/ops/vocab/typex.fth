@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ typex: a Typex-style five-rotor machine. One word, typex:encrypt (alias decrypt), because the
 \ machine is reciprocal. Written for Forge from the public descriptions of the architecture
 \ (Wikipedia, "Typex"; Crypto Museum's Typex pages), then aligned for compatibility with the

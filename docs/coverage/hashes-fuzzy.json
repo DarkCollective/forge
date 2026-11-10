@@ -3,36 +3,48 @@
     "cyberchef": "MurmurHash3",
     "status": "covered",
     "forge": ["murmur3:digest"],
-    "note": "MurmurHash3 x86_32 with a 32-bit seed (default 0), written in FL. Returns the 32-bit value as 4 raw bytes in big-endian order, the usual hex form (chain hex:encode); CyberChef shows the same value as an unsigned decimal. The x86_128 and x64_128 variants are not implemented."
+    "note": "MurmurHash3 x86_32 with a 32-bit seed (default 0), written in FL; CyberChef offers only this 32-bit variant too, and the x86_128 and x64_128 variants are not implemented here either. Returns the 32-bit value as 4 raw bytes in big-endian order, the usual hex form (chain hex:encode); CyberChef shows the same value as an unsigned decimal (or signed, with its option). Forge hashes the bytes of the input; CyberChef hashes the low 8 bits of each character, so the two agree for byte-valued text and differ for text beyond Latin-1."
   },
   {
     "cyberchef": "SSDEEP",
     "status": "covered",
     "forge": ["ssdeep:digest"],
-    "note": "Context triggered piecewise hashing (Kornblum 2006). The result is text, blocksize:hash1:hash2, not bytes: it is a structured string that the compare word reads piece by piece."
+    "note": "Context triggered piecewise hashing (Kornblum 2006) as the reference ssdeep program computes it. The result is text, blocksize:hash1:hash2, not bytes: it is a structured string that the compare word reads piece by piece."
   },
   {
     "cyberchef": "CTPH",
     "status": "redesigned",
     "forge": ["ssdeep:ctph"],
-    "note": "CTPH is the algorithm that ssdeep implements, and CyberChef offers it as a second name for the same computation, so one word covers both (ctph is an alias of ssdeep:digest)."
+    "note": "CyberChef's CTPH is a second implementation of the same idea whose text differs from its own SSDEEP (the block size is written in another form and the pieces differ), and its algorithm is not documented beyond that library. Forge has one fuzzy hash, the reference ssdeep one, and ctph is an alias of ssdeep:digest under the name of the 2006 paper; the text is not CyberChef's CTPH text."
   },
   {
     "cyberchef": "Compare SSDEEP hashes",
     "status": "covered",
     "forge": ["ssdeep:compare"],
-    "note": "The 0 to 100 score of the reference algorithm: block size check, runs of more than three equal characters cut to three, a common substring of 7 characters, a weighted edit distance (insert and remove 1, replace 2) and the cap for small block sizes. The first hash is the data input and the second is the other parameter."
+    "note": "The 0 to 100 score of the reference algorithm: block size check, runs of more than three equal characters cut to three, a common substring of 7 characters, a weighted edit distance (insert and remove 1, replace 2) and the cap for small block sizes. The first hash is the data input and the second is the other parameter. Text that is not an ssdeep hash is an error here, where CyberChef scores it 0."
   },
   {
     "cyberchef": "Compare CTPH hashes",
     "status": "redesigned",
     "forge": ["ssdeep:compare-ctph"],
-    "note": "The same comparison as Compare SSDEEP hashes under the algorithm's other name, so one word covers both (compare-ctph is an alias of ssdeep:compare)."
+    "note": "CyberChef's Compare CTPH hashes reads its own CTPH text, which Forge does not produce (see CTPH). compare-ctph is an alias of ssdeep:compare and scores ssdeep text."
   },
   {
     "cyberchef": "Analyse hash",
     "status": "covered",
     "forge": ["hash-analysis:analyse"],
-    "note": "Takes hex text and returns a text report: length in hex characters, bytes and bits, and the hashing functions whose digest has that size. The table is Forge's own and lists some functions that Forge has not implemented. Text that is not hex (or has an odd digit count) is an error."
+    "note": "Takes hex text and returns a text report: length in hex characters, bytes and bits, and the hashing functions whose digest has that size (every size CyberChef names, down to the 4-bit checksums, so an odd number of hex digits is accepted). The table is Forge's own and lists some functions that Forge has not implemented. Text that is not hex is an error."
+  },
+  {
+    "cyberchef": "Generate all hashes",
+    "status": "redesigned",
+    "forge": ["generate-all:hashes"],
+    "note": "A text report, one hash per line with its hex, built from the digest words: MD2 to MD6, SHA-0 to SHA-3, Keccak, SHAKE, RIPEMD, HAS-160, Whirlpool, BLAKE2, BLAKE3, Streebog, GOST, Snefru, SM3, the NT hash and SSDEEP, with the same Length and Include names parameters. Not included: the LM hash (wave 4), Whirlpool-0 and Whirlpool-T, and the CTPH line (see CTPH). Lines CyberChef does not have: SHA-512/224 and /256, BLAKE3 and Snefru."
+  },
+  {
+    "cyberchef": "Generate all checksums",
+    "status": "redesigned",
+    "forge": ["generate-all:checksums"],
+    "note": "A text report, one checksum per line with its hex: the 171 CRC presets, Adler-32 and Fletcher-8, -16, -32 and -64, with the same Length and Include names parameters. The CRCs are computed by one private primitive (171 CRCs of 64 KiB in FL would be about 200 million steps) that the tests hold equal to crc:checksum; the order of the lines is the CRC table first, then the other checksums."
   }
 ]

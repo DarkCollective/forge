@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ base85: Ascii85 (Adobe) and Z85 (ZeroMQ RFC 32). Written in FL: four data bytes are one 32-bit
 \ integer and five base-85 digits. Errors come from the raise
 \ vocabulary (raise:coerce, raise:range).

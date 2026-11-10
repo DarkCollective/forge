@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ base58: Base58 (Bitcoin, Flickr and Ripple alphabets). Written in FL on top of its big integers:
 \ the data is one integer, repeatedly divided by 58. A leading zero byte is a leading first-alphabet
 \ character. The integer limit (maxIntBits, 65 536 bits) caps the data at about 8 KiB, which also

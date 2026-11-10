@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ streebog: the GOST R 34.11-2012 hash "Streebog" (RFC 6986), with 256- or 512-bit output. The digest
 \ is raw bytes: the little-endian byte string of the number the RFC prints (the reverse of the RFC's
 \ printed hex); chain hex:encode for text. The hash itself is _hash, a private primitive

@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ octal: byte values as octal numbers 0..377 (no leading zeros are written). The words are FL and need
 \ no primitive; E_COERCE comes from the raise vocabulary (raise:coerce).
 IN: octal

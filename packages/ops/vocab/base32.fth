@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ base32: Base32 as in RFC 4648 section 6 (standard) and section 7 (extended hex). Written in FL:
 \ five data bytes are one 40-bit integer and eight 5-bit symbols. Errors come from the
 \ raise vocabulary (raise:coerce).

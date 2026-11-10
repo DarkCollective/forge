@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ modhex: Yubico ModHex, a hexadecimal whose digits 0 to f are the keyboard-layout-independent
 \ letters cbdefghijklnrtuv (Yubico "Modhex" documentation). The words are FL; E_COERCE comes from
 \ the raise vocabulary (raise:coerce).

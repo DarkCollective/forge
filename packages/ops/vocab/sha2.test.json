@@ -67,13 +67,29 @@
     "name": "digest 256: empty string",
     "ref": "FIPS 180-4 / NIST SHA examples (csrc.nist.gov, Cryptographic Standards and Guidelines, example values)",
     "op": "sha2:digest",
-    "params": {},
+    "params": {
+      "size": "256"
+    },
     "input": {
       "value": "",
       "enc": "utf8"
     },
     "expect": {
       "value": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest default size 512: empty string",
+    "ref": "FIPS 180-4 / NIST SHA examples (csrc.nist.gov, Cryptographic Standards and Guidelines, example values)",
+    "op": "sha2:digest",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e",
       "enc": "hex"
     }
   },

@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ url: percent-encoding (RFC 3986 section 2.1). The words are FL and need no primitive;
 \ E_COERCE comes from the raise vocabulary (raise:coerce).
 IN: url

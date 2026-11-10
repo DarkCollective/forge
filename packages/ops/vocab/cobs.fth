@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ cobs: Consistent Overhead Byte Stuffing, Cheshire and Baker, "Consistent Overhead Byte Stuffing",
 \ IEEE/ACM Transactions on Networking 7(2), 1999. Encoded data has no zero byte. The frame delimiter
 \ (a zero byte after the encoded data) is not added or expected. Written in FL, except _starts, a

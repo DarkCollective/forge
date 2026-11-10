@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ base45: Base45 as in RFC 9285. Two bytes are one 16-bit number written as three base-45 digits, least
 \ significant first (c + d*45 + e*45^2); a final single byte is two digits. The alphabet includes the
 \ space, so unlike the other encodings white space is not ignored. Errors come from the raise

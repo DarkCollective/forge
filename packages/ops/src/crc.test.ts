@@ -42,8 +42,8 @@ interface Preset {
 
 // The preset lines are read from the vocabulary source, so the reference tests the shipped table.
 const here = fileURLToPath(import.meta.url).replace(/[^/\\]*$/, "");
-const source = readFileSync(`${here}../vocab/crc.fth`, "utf8");
-const literal = /: _presets \( -- str \)\s+"([^"]*)"/.exec(source);
+const source = readFileSync(`${here}../vocab/util.fth`, "utf8");
+const literal = /: crc-presets \( -- str \)\s+"[^"]*" doc\s+"([^"]*)"/.exec(source);
 const presets: Preset[] = (literal?.[1] ?? "")
   .split("\\n")
   .filter((l) => l !== "")

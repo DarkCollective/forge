@@ -17,3 +17,10 @@ The sha2 vocabulary (and the other hash vocabularies built on it) uses the
 audited @noble/hashes library, Copyright (c) 2022 Paul Miller
 (https://paulmillr.com), licensed under the MIT License
 (https://github.com/paulmillr/noble-hashes).
+
+The snefru vocabulary (snefru:digest) is derived from the Xerox Secure Hash
+Function, Ralph C. Merkle's Snefru, reference distribution version 2.5a. Its
+S-boxes are the table of that distribution, Copyright (c) Xerox Corporation
+1989, all rights reserved, used under the licence of that distribution: licence
+to copy and use is granted provided the software is identified as the "Xerox
+Secure Hash Function", and it is provided "as is" without warranty of any kind.

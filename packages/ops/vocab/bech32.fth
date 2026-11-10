@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ bech32: Bech32 (BIP-173) and Bech32m (BIP-350). The result is hrp, the separator 1, the data in 5-bit
 \ symbols of the charset qpzry9x8gf2tvdw0s3jn54khce6mua7l, and a six-symbol BCH checksum. The data
 \ bytes are regrouped from 8 to 5 bits (zero padded), as the BIPs' convertbits does. encode writes

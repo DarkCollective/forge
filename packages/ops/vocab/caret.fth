@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ caret: caret and M- notation as printed by `cat -v` (POSIX/GNU cat). A control byte c (0 to 31)
 \ is ^ and the character c + 64, DEL (127) is ^?, and a byte of 128 or more is M- followed by the
 \ notation of the byte minus 128. Tab (9) and line feed (10) are left as they are, as cat -v does,

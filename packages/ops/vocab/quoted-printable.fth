@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ quoted-printable: the Quoted-Printable content transfer encoding, RFC 2045 section 6.7.
 \
 \ Encoding rules (the encoder emits this subset, all of which any RFC 2045 decoder reads):

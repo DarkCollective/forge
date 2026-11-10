@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ bcd: binary-coded decimal. Written in FL; there are no primitives. Each decimal digit is a 4-bit
 \ code (a nibble) in one of four schemes; the digits are packed two to a byte, most significant first,
 \ or kept one per byte.

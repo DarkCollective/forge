@@ -24,7 +24,7 @@
  */
 import { definePrimitive } from "@forge/lang";
 import type { PrimitiveDef } from "@forge/lang";
-import { mdPad } from "../hash-util-b.js";
+import { mdPad } from "../hash-util.js";
 
 // Section 7.1: the S-box is built from three 4-bit mini-boxes: E (and its inverse) and R.
 const E = [0x1, 0xb, 0x9, 0xc, 0xd, 0x6, 0xf, 0x3, 0xe, 0x8, 0x7, 0x4, 0xa, 0x2, 0x5, 0x0];
