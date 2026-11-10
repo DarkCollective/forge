@@ -21,13 +21,13 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Date / Time | 0 | 0 | 0 | 9 | 9 |
 | Extractors | 0 | 0 | 0 | 18 | 18 |
 | Compression | 0 | 0 | 0 | 21 | 21 |
-| Hashing | 0 | 0 | 0 | 48 | 48 |
+| Hashing | 9 | 1 | 0 | 38 | 48 |
 | Code tidy | 0 | 0 | 0 | 24 | 24 |
 | Forensics | 0 | 0 | 0 | 9 | 9 |
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 4 | 0 | 3 | 14 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **101** | **22** | **3** | **380** | **506** |
+| **Total** | **110** | **23** | **3** | **370** | **506** |
 
 ## Data format (80)
 
@@ -488,16 +488,16 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | NT Hash | not yet |  |  |
 | LM Hash | not yet |  |  |
 | MurmurHash3 | not yet |  |  |
-| Fletcher-8 Checksum | not yet |  |  |
-| Fletcher-16 Checksum | not yet |  |  |
-| Fletcher-32 Checksum | not yet |  |  |
-| Fletcher-64 Checksum | not yet |  |  |
-| Adler-32 Checksum | not yet |  |  |
-| Luhn Checksum | not yet |  |  |
-| CRC Checksum | not yet |  |  |
-| TCP/IP Checksum | not yet |  |  |
-| XOR Checksum | not yet |  |  |
-| Parity Bit | not yet |  |  |
+| Fletcher-8 Checksum | covered | `fletcher:checksum` | size 8. |
+| Fletcher-16 Checksum | covered | `fletcher:checksum` | size 16. |
+| Fletcher-32 Checksum | covered | `fletcher:checksum` | size 32. |
+| Fletcher-64 Checksum | covered | `fletcher:checksum` | size 64. |
+| Adler-32 Checksum | covered | `adler32:checksum` |  |
+| Luhn Checksum | redesigned | `luhn:check-digit`, `luhn:validate` | Two words, the check digit and a validity flag, instead of a three-line report whose "validated string" is not a validation. |
+| CRC Checksum | covered | `crc:checksum`, `crc:custom` | Presets by CyberChef's names; custom parameters in crc:custom. The output is bytes, not hex text. |
+| TCP/IP Checksum | covered | `tcpip:checksum` | Folds the carry until it is gone (RFC 1071); CyberChef folds once. |
+| XOR Checksum | covered | `xor-checksum:checksum` |  |
+| Parity Bit | covered | `parity:encode`, `parity:decode` | Decode can also verify the parity. |
 
 ## Code tidy (24)
 

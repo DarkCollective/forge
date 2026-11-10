@@ -1,0 +1,98 @@
+[
+  {
+    "name": "abcdefgh in blocks of 4",
+    "ref": "hand-computed: 61^65=04, 62^66=04, 63^67=04, 64^68=0c",
+    "op": "xor-checksum:checksum",
+    "params": {
+      "blocksize": 4
+    },
+    "input": {
+      "value": "abcdefgh",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0404040c",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "blocksize 3 of abcdefgh",
+    "ref": "hand-computed columns: 61^64^67, 62^65^68, 63^66 (last block zero-padded); re-run with a plain loop",
+    "op": "xor-checksum:checksum",
+    "params": {
+      "blocksize": 3
+    },
+    "input": {
+      "value": "abcdefgh",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "626f05",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "blocksize 1 of abcdefgh",
+    "ref": "a block size of 1 xors every byte",
+    "op": "xor-checksum:checksum",
+    "params": {
+      "blocksize": 1
+    },
+    "input": {
+      "value": "abcdefgh",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "08",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "blocksize 16 of abcdefgh",
+    "ref": "a block longer than the data: the data padded with zeros",
+    "op": "xor-checksum:checksum",
+    "params": {
+      "blocksize": 16
+    },
+    "input": {
+      "value": "abcdefgh",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "61626364656667680000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "blocksize 4 of Hello, world!",
+    "ref": "CyberChef XORChecksum.mjs column-wise xor, re-run with a plain loop",
+    "op": "xor-checksum:checksum",
+    "params": {
+      "blocksize": 4
+    },
+    "input": {
+      "value": "Hello, world!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "693b207f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "empty input gives blocksize zero bytes",
+    "ref": "CyberChef XORChecksum.mjs: no chunks",
+    "op": "xor-checksum:checksum",
+    "params": {
+      "blocksize": 4
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00000000",
+      "enc": "hex"
+    }
+  }
+]

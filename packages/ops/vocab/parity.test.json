@@ -1,0 +1,294 @@
+[
+  {
+    "name": "even parity at the end",
+    "ref": "definition: 1011 has three 1 bits, so the parity bit is 1",
+    "op": "parity:encode",
+    "params": {
+      "mode": "even",
+      "position": "end",
+      "delimiter": ""
+    },
+    "input": {
+      "value": "1011",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "10111",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "even parity at the start",
+    "ref": "definition",
+    "op": "parity:encode",
+    "params": {
+      "mode": "even",
+      "position": "start",
+      "delimiter": ""
+    },
+    "input": {
+      "value": "1011",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "11011",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "odd parity at the end",
+    "ref": "definition: three 1 bits is already odd, so the bit is 0",
+    "op": "parity:encode",
+    "params": {
+      "mode": "odd",
+      "position": "end",
+      "delimiter": ""
+    },
+    "input": {
+      "value": "1011",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "10110",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "odd parity at the start",
+    "ref": "definition",
+    "op": "parity:encode",
+    "params": {
+      "mode": "odd",
+      "position": "start",
+      "delimiter": ""
+    },
+    "input": {
+      "value": "1011",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "01011",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "even number of 1 bits gets 0",
+    "ref": "definition",
+    "op": "parity:encode",
+    "params": {
+      "mode": "even",
+      "position": "end",
+      "delimiter": ""
+    },
+    "input": {
+      "value": "1001",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "10010",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "no 1 bits, odd parity",
+    "ref": "definition",
+    "op": "parity:encode",
+    "params": {
+      "mode": "odd",
+      "position": "end",
+      "delimiter": ""
+    },
+    "input": {
+      "value": "0000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00001",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "blocks with a delimiter",
+    "ref": "CyberChef ParityBit.mjs: each block gets its own bit",
+    "op": "parity:encode",
+    "params": {
+      "mode": "even",
+      "position": "end",
+      "delimiter": ","
+    },
+    "input": {
+      "value": "1011,0000,1111",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "10111,00000,11110",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "spaces are kept and not counted",
+    "ref": "CyberChef lib/ParityBit.mjs",
+    "op": "parity:encode",
+    "params": {
+      "mode": "even",
+      "position": "end",
+      "delimiter": ""
+    },
+    "input": {
+      "value": "1011 0001",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1011 00010",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "the empty input stays empty",
+    "ref": "CyberChef ParityBit.mjs returns empty input unchanged",
+    "op": "parity:encode",
+    "params": {
+      "mode": "even",
+      "position": "end",
+      "delimiter": ""
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a character other than 0 and 1 is an error",
+    "ref": "CyberChef lib/ParityBit.mjs: unexpected character",
+    "op": "parity:encode",
+    "params": {
+      "mode": "even",
+      "position": "end",
+      "delimiter": ""
+    },
+    "input": {
+      "value": "10a1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode even parity at the end",
+    "ref": "inverse of encode",
+    "op": "parity:decode",
+    "params": {
+      "mode": "even",
+      "position": "end",
+      "delimiter": "",
+      "verify": true
+    },
+    "input": {
+      "value": "10111",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1011",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode odd parity at the start",
+    "ref": "inverse of encode",
+    "op": "parity:decode",
+    "params": {
+      "mode": "odd",
+      "position": "start",
+      "delimiter": "",
+      "verify": true
+    },
+    "input": {
+      "value": "01011",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1011",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode blocks",
+    "ref": "inverse of encode",
+    "op": "parity:decode",
+    "params": {
+      "mode": "even",
+      "position": "end",
+      "delimiter": ",",
+      "verify": true
+    },
+    "input": {
+      "value": "10111,00000,11110",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1011,0000,1111",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode fails on wrong parity",
+    "ref": "design: verify rejects a block whose parity is wrong",
+    "op": "parity:decode",
+    "params": {
+      "mode": "even",
+      "position": "end",
+      "delimiter": "",
+      "verify": true
+    },
+    "input": {
+      "value": "10110",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode without verification strips the bit",
+    "ref": "CyberChef lib/ParityBit.mjs decodeParityBit removes one character unchecked",
+    "op": "parity:decode",
+    "params": {
+      "mode": "even",
+      "position": "end",
+      "delimiter": "",
+      "verify": false
+    },
+    "input": {
+      "value": "10110",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1011",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode of the empty input stays empty",
+    "ref": "CyberChef ParityBit.mjs",
+    "op": "parity:decode",
+    "params": {
+      "mode": "even",
+      "position": "end",
+      "delimiter": "",
+      "verify": true
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  }
+]
