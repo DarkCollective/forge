@@ -21,13 +21,13 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Date / Time | 0 | 0 | 0 | 9 | 9 |
 | Extractors | 0 | 0 | 0 | 18 | 18 |
 | Compression | 0 | 0 | 0 | 21 | 21 |
-| Hashing | 23 | 5 | 0 | 20 | 48 |
+| Hashing | 32 | 6 | 0 | 10 | 48 |
 | Code tidy | 0 | 0 | 0 | 24 | 24 |
 | Forensics | 0 | 0 | 0 | 9 | 9 |
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 4 | 0 | 3 | 14 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **124** | **27** | **3** | **352** | **506** |
+| **Total** | **133** | **28** | **3** | **342** | **506** |
 
 ## Data format (80)
 
@@ -488,16 +488,16 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | NT Hash | covered | `nthash:digest` | MD4 of the UTF-16LE text (MS-NLMP NTOWFv1), 16 raw bytes. Takes text, not bytes. |
 | LM Hash | not yet |  |  |
 | MurmurHash3 | covered | `murmur3:digest` | MurmurHash3 x86_32 with a 32-bit seed (default 0), written in FL. Returns the 32-bit value as 4 raw bytes in big-endian order, the usual hex form (chain hex:encode); CyberChef shows the same value as an unsigned decimal. The x86_128 and x64_128 variants are not implemented. |
-| Fletcher-8 Checksum | not yet |  |  |
-| Fletcher-16 Checksum | not yet |  |  |
-| Fletcher-32 Checksum | not yet |  |  |
-| Fletcher-64 Checksum | not yet |  |  |
-| Adler-32 Checksum | not yet |  |  |
-| Luhn Checksum | not yet |  |  |
-| CRC Checksum | not yet |  |  |
-| TCP/IP Checksum | not yet |  |  |
-| XOR Checksum | not yet |  |  |
-| Parity Bit | not yet |  |  |
+| Fletcher-8 Checksum | covered | `fletcher:checksum` | size 8. |
+| Fletcher-16 Checksum | covered | `fletcher:checksum` | size 16. |
+| Fletcher-32 Checksum | covered | `fletcher:checksum` | size 32. |
+| Fletcher-64 Checksum | covered | `fletcher:checksum` | size 64. |
+| Adler-32 Checksum | covered | `adler32:checksum` |  |
+| Luhn Checksum | redesigned | `luhn:check-digit`, `luhn:validate` | Two words, the check digit and a validity flag, instead of a three-line report whose "validated string" is not a validation. |
+| CRC Checksum | covered | `crc:checksum`, `crc:custom` | Presets by CyberChef's names; custom parameters in crc:custom. The output is bytes, not hex text. |
+| TCP/IP Checksum | covered | `tcpip:checksum` | Folds the carry until it is gone (RFC 1071); CyberChef folds once. |
+| XOR Checksum | covered | `xor-checksum:checksum` |  |
+| Parity Bit | covered | `parity:encode`, `parity:decode` | Decode can also verify the parity. |
 
 ## Code tidy (24)
 

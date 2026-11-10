@@ -1,0 +1,281 @@
+[
+  {
+    "name": "check digit of 7992739871",
+    "ref": "Wikipedia, Luhn algorithm worked example (check digit 3)",
+    "op": "luhn:check-digit",
+    "params": {
+      "radix": 10
+    },
+    "input": {
+      "value": "7992739871",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "check digit of 411111111111111",
+    "ref": "test card number 4111111111111111 (Visa test number), last digit is the check digit",
+    "op": "luhn:check-digit",
+    "params": {
+      "radix": 10
+    },
+    "input": {
+      "value": "411111111111111",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "check digit of 1",
+    "ref": "hand-computed: 1 doubled is 2, check digit is 8",
+    "op": "luhn:check-digit",
+    "params": {
+      "radix": 10
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "8",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "check digit of 0",
+    "ref": "hand-computed: sum 0, check digit 0",
+    "op": "luhn:check-digit",
+    "params": {
+      "radix": 10
+    },
+    "input": {
+      "value": "0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "check digit of the empty input",
+    "ref": "CyberChef LuhnChecksum.mjs returns an empty string for empty input",
+    "op": "luhn:check-digit",
+    "params": {
+      "radix": 10
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hexadecimal check digit",
+    "ref": "Wikipedia, Luhn mod N algorithm, re-run independently",
+    "op": "luhn:check-digit",
+    "params": {
+      "radix": 16
+    },
+    "input": {
+      "value": "abcdef",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hexadecimal digits are case-insensitive",
+    "ref": "Wikipedia, Luhn mod N algorithm",
+    "op": "luhn:check-digit",
+    "params": {
+      "radix": 16
+    },
+    "input": {
+      "value": "ABCDEF",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "base 36 check digit",
+    "ref": "Wikipedia, Luhn mod N algorithm, re-run independently",
+    "op": "luhn:check-digit",
+    "params": {
+      "radix": 36
+    },
+    "input": {
+      "value": "hello0world",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "8",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "binary check digit",
+    "ref": "Wikipedia, Luhn mod N algorithm, re-run independently",
+    "op": "luhn:check-digit",
+    "params": {
+      "radix": 2
+    },
+    "input": {
+      "value": "1011001",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "odd radix is an error",
+    "ref": "CyberChef LuhnChecksum.mjs: the radix must be divisible by 2",
+    "op": "luhn:check-digit",
+    "params": {
+      "radix": 7
+    },
+    "input": {
+      "value": "123",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "a letter is not a decimal digit",
+    "ref": "CyberChef LuhnChecksum.mjs: character is not valid in radix",
+    "op": "luhn:check-digit",
+    "params": {
+      "radix": 10
+    },
+    "input": {
+      "value": "12a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "79927398713 is valid",
+    "ref": "Wikipedia, Luhn algorithm worked example",
+    "op": "luhn:validate",
+    "params": {
+      "radix": 10
+    },
+    "input": {
+      "value": "79927398713",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": true
+    }
+  },
+  {
+    "name": "79927398710 is not valid",
+    "ref": "Wikipedia, Luhn algorithm worked example (wrong check digit)",
+    "op": "luhn:validate",
+    "params": {
+      "radix": 10
+    },
+    "input": {
+      "value": "79927398710",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": false
+    }
+  },
+  {
+    "name": "4111111111111111 is valid",
+    "ref": "Visa test card number",
+    "op": "luhn:validate",
+    "params": {
+      "radix": 10
+    },
+    "input": {
+      "value": "4111111111111111",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": true
+    }
+  },
+  {
+    "name": "0 is valid",
+    "ref": "hand-computed: sum 0",
+    "op": "luhn:validate",
+    "params": {
+      "radix": 10
+    },
+    "input": {
+      "value": "0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": true
+    }
+  },
+  {
+    "name": "the empty input is not valid",
+    "ref": "design: nothing to validate",
+    "op": "luhn:validate",
+    "params": {
+      "radix": 10
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": false
+    }
+  },
+  {
+    "name": "hexadecimal validity",
+    "ref": "Wikipedia, Luhn mod N algorithm",
+    "op": "luhn:validate",
+    "params": {
+      "radix": 16
+    },
+    "input": {
+      "value": "abcdefb",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": true
+    }
+  },
+  {
+    "name": "a digit above the radix is an error",
+    "ref": "design: E_COERCE for a character that is not a digit of the radix",
+    "op": "luhn:validate",
+    "params": {
+      "radix": 10
+    },
+    "input": {
+      "value": "12 3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

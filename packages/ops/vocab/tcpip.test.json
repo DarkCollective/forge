@@ -1,0 +1,86 @@
+[
+  {
+    "name": "RFC 1071 section 3 example",
+    "ref": "RFC 1071 section 3: words 0001 f203 f4f5 f6f7 sum to ddf2 after folding; complement 220d",
+    "op": "tcpip:checksum",
+    "params": {},
+    "input": {
+      "value": "0001f203f4f5f6f7",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "220d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "IPv4 header, checksum field zero",
+    "ref": "Wikipedia, IPv4 header checksum worked example",
+    "op": "tcpip:checksum",
+    "params": {},
+    "input": {
+      "value": "450000730000400040110000c0a80001c0a800c7",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "b861",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "IPv4 header with its checksum verifies to zero",
+    "ref": "Wikipedia, IPv4 header checksum worked example",
+    "op": "tcpip:checksum",
+    "params": {},
+    "input": {
+      "value": "45000073000040004011b861c0a80001c0a800c7",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "empty input",
+    "ref": "RFC 1071: an empty sum is zero, complement ffff",
+    "op": "tcpip:checksum",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ffff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "odd length pads a zero byte on the right",
+    "ref": "hand-computed: ff00 -> complement 00ff",
+    "op": "tcpip:checksum",
+    "params": {},
+    "input": {
+      "value": "ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00ff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "carry folded twice",
+    "ref": "hand-computed: every ffff word is zero in ones complement, so the sum folds to ffff and its complement is 0000",
+    "op": "tcpip:checksum",
+    "params": {},
+    "input": {
+      "value": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0000",
+      "enc": "hex"
+    }
+  }
+]

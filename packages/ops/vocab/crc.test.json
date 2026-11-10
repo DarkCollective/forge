@@ -1,0 +1,2936 @@
+[
+  {
+    "name": "CRC-3/GSM check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-3/GSM"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "04",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-3/ROHC check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-3/ROHC"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "06",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-4/G-704 check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-4/G-704"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "07",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-4/INTERLAKEN check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-4/INTERLAKEN"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0b",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-4/ITU check value",
+    "ref": "alias of CRC-4/G-704 in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-4/ITU"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "07",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-5/EPC check value",
+    "ref": "alias of CRC-5/EPC-C1G2 in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-5/EPC"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-5/EPC-C1G2 check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-5/EPC-C1G2"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-5/G-704 check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-5/G-704"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "07",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-5/ITU check value",
+    "ref": "alias of CRC-5/G-704 in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-5/ITU"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "07",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-5/USB check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-5/USB"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "19",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-6/CDMA2000-A check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-6/CDMA2000-A"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-6/CDMA2000-B check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-6/CDMA2000-B"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3b",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-6/DARC check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-6/DARC"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "26",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-6/G-704 check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-6/G-704"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "06",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-6/GSM check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-6/GSM"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "13",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-6/ITU check value",
+    "ref": "alias of CRC-6/G-704 in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-6/ITU"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "06",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-7/MMC check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-7/MMC"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "75",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-7/ROHC check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-7/ROHC"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "53",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-7/UMTS check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-7/UMTS"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "61",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-8 check value",
+    "ref": "alias of CRC-8/SMBUS in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-8"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f4",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-8/8H2F check value",
+    "ref": "alias of CRC-8/AUTOSAR in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-8/8H2F"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "df",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-8/AES check value",
+    "ref": "alias of CRC-8/TECH-3250 in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-8/AES"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "97",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-8/AUTOSAR check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-8/AUTOSAR"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "df",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-8/BLUETOOTH check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-8/BLUETOOTH"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "26",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-8/CDMA2000 check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-8/CDMA2000"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "da",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-8/DARC check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-8/DARC"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "15",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-8/DVB-S2 check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-8/DVB-S2"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "bc",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-8/EBU check value",
+    "ref": "alias of CRC-8/TECH-3250 in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-8/EBU"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "97",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-8/GSM-A check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-8/GSM-A"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "37",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-8/GSM-B check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-8/GSM-B"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "94",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-8/HITAG check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-8/HITAG"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "b4",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-8/I-432-1 check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-8/I-432-1"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a1",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-8/I-CODE check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-8/I-CODE"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "7e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-8/ITU check value",
+    "ref": "alias of CRC-8/I-432-1 in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-8/ITU"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a1",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-8/LTE check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-8/LTE"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ea",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-8/MAXIM check value",
+    "ref": "alias of CRC-8/MAXIM-DOW in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-8/MAXIM"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a1",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-8/MAXIM-DOW check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-8/MAXIM-DOW"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a1",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-8/MIFARE-MAD check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-8/MIFARE-MAD"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "99",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-8/NRSC-5 check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-8/NRSC-5"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f7",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-8/OPENSAFETY check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-8/OPENSAFETY"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-8/ROHC check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-8/ROHC"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d0",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-8/SAE-J1850 check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-8/SAE-J1850"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4b",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-8/SAE-J1850-ZERO check value",
+    "ref": "alias of CRC-8/GSM-A in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-8/SAE-J1850-ZERO"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "37",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-8/SMBUS check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-8/SMBUS"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f4",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-8/TECH-3250 check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-8/TECH-3250"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "97",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-8/WCDMA check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-8/WCDMA"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "25",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-10/ATM check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-10/ATM"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0199",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-10/CDMA2000 check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-10/CDMA2000"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0233",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-10/GSM check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-10/GSM"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "012a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-10/I-610 check value",
+    "ref": "alias of CRC-10/ATM in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-10/I-610"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0199",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-11/FLEXRAY check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-11/FLEXRAY"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "05a3",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-11/UMTS check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-11/UMTS"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0061",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-12/3GPP check value",
+    "ref": "alias of CRC-12/UMTS in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-12/3GPP"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0daf",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-12/CDMA2000 check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-12/CDMA2000"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0d4d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-12/DECT check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-12/DECT"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0f5b",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-12/GSM check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-12/GSM"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0b34",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-12/UMTS check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-12/UMTS"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0daf",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-13/BBC check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-13/BBC"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "04fa",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-14/DARC check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-14/DARC"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "082d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-14/GSM check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-14/GSM"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "30ae",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-15/CAN check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-15/CAN"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "059e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-15/MPT1327 check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-15/MPT1327"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2566",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16 check value",
+    "ref": "alias of CRC-16/ARC in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "bb3d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/A check value",
+    "ref": "alias of CRC-16/ISO-IEC-14443-3-A in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/A"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "bf05",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/ACORN check value",
+    "ref": "alias of CRC-16/XMODEM in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/ACORN"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "31c3",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/ARC check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/ARC"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "bb3d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/AUG-CCITT check value",
+    "ref": "alias of CRC-16/SPI-FUJITSU in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/AUG-CCITT"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "e5cc",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/AUTOSAR check value",
+    "ref": "alias of CRC-16/IBM-3740 in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/AUTOSAR"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "29b1",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/B check value",
+    "ref": "alias of CRC-16/IBM-SDLC in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/B"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "906e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/BLUETOOTH check value",
+    "ref": "alias of CRC-16/KERMIT in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/BLUETOOTH"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2189",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/BUYPASS check value",
+    "ref": "alias of CRC-16/UMTS in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/BUYPASS"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fee8",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/CCITT check value",
+    "ref": "alias of CRC-16/KERMIT in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/CCITT"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2189",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/CCITT-FALSE check value",
+    "ref": "alias of CRC-16/IBM-3740 in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/CCITT-FALSE"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "29b1",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/CCITT-TRUE check value",
+    "ref": "alias of CRC-16/KERMIT in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/CCITT-TRUE"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2189",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/CCITT-ZERO check value",
+    "ref": "alias of CRC-16/XMODEM in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/CCITT-ZERO"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "31c3",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/CDMA2000 check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/CDMA2000"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4c06",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/CMS check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/CMS"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "aee7",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/DARC check value",
+    "ref": "alias of CRC-16/GENIBUS in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/DARC"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d64e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/DDS-110 check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/DDS-110"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "9ecf",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/DECT-R check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/DECT-R"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "007e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/DECT-X check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/DECT-X"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "007f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/DNP check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/DNP"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ea82",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/EN-13757 check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/EN-13757"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c2b7",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/EPC check value",
+    "ref": "alias of CRC-16/GENIBUS in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/EPC"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d64e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/EPC-C1G2 check value",
+    "ref": "alias of CRC-16/GENIBUS in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/EPC-C1G2"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d64e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/GENIBUS check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/GENIBUS"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d64e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/GSM check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/GSM"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ce3c",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/I-CODE check value",
+    "ref": "alias of CRC-16/GENIBUS in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/I-CODE"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d64e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/IBM check value",
+    "ref": "alias of CRC-16/ARC in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/IBM"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "bb3d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/IBM-3740 check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/IBM-3740"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "29b1",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/IBM-SDLC check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/IBM-SDLC"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "906e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/IEC-61158-2 check value",
+    "ref": "alias of CRC-16/PROFIBUS in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/IEC-61158-2"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a819",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/ISO-HDLC check value",
+    "ref": "alias of CRC-16/IBM-SDLC in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/ISO-HDLC"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "906e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/ISO-IEC-14443-3-A check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/ISO-IEC-14443-3-A"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "bf05",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/ISO-IEC-14443-3-B check value",
+    "ref": "alias of CRC-16/IBM-SDLC in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/ISO-IEC-14443-3-B"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "906e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/KERMIT check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/KERMIT"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2189",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/LHA check value",
+    "ref": "alias of CRC-16/ARC in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/LHA"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "bb3d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/LJ1200 check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/LJ1200"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "bdf4",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/LTE check value",
+    "ref": "alias of CRC-16/XMODEM in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/LTE"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "31c3",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/M17 check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/M17"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "772b",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/MAXIM check value",
+    "ref": "alias of CRC-16/MAXIM-DOW in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/MAXIM"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "44c2",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/MAXIM-DOW check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/MAXIM-DOW"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "44c2",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/MCRF4XX check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/MCRF4XX"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "6f91",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/MODBUS check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/MODBUS"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4b37",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/NRSC-5 check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/NRSC-5"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a066",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/OPENSAFETY-A check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/OPENSAFETY-A"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "5d38",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/OPENSAFETY-B check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/OPENSAFETY-B"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "20fe",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/PROFIBUS check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/PROFIBUS"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a819",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/RIELLO check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/RIELLO"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "63d0",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/SPI-FUJITSU check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/SPI-FUJITSU"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "e5cc",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/T10-DIF check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/T10-DIF"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d0db",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/TELEDISK check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/TELEDISK"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0fb3",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/TMS37157 check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/TMS37157"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "26b1",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/UMTS check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/UMTS"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fee8",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/USB check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/USB"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "b4c8",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/V-41-LSB check value",
+    "ref": "alias of CRC-16/KERMIT in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/V-41-LSB"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2189",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/V-41-MSB check value",
+    "ref": "alias of CRC-16/XMODEM in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/V-41-MSB"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "31c3",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/VERIFONE check value",
+    "ref": "alias of CRC-16/UMTS in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/VERIFONE"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fee8",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/X-25 check value",
+    "ref": "alias of CRC-16/IBM-SDLC in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/X-25"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "906e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/XMODEM check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/XMODEM"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "31c3",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/ZMODEM check value",
+    "ref": "alias of CRC-16/XMODEM in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/ZMODEM"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "31c3",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-17/CAN-FD check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-17/CAN-FD"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "004f03",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-21/CAN-FD check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-21/CAN-FD"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0ed841",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-24/BLE check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-24/BLE"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c25a56",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-24/FLEXRAY-A check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-24/FLEXRAY-A"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "7979bd",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-24/FLEXRAY-B check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-24/FLEXRAY-B"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1f23b8",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-24/INTERLAKEN check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-24/INTERLAKEN"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "b4f3e6",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-24/LTE-A check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-24/LTE-A"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "cde703",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-24/LTE-B check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-24/LTE-B"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "23ef52",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-24/OPENPGP check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-24/OPENPGP"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "21cf02",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-24/OS-9 check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-24/OS-9"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "200fa5",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-30/CDMA check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-30/CDMA"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "04c34abf",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-31/PHILIPS check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-31/PHILIPS"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0ce9e46c",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-32 check value",
+    "ref": "alias of CRC-32/ISO-HDLC in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-32"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "cbf43926",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-32/AAL5 check value",
+    "ref": "alias of CRC-32/BZIP2 in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-32/AAL5"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fc891918",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-32/ADCCP check value",
+    "ref": "alias of CRC-32/ISO-HDLC in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-32/ADCCP"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "cbf43926",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-32/AIXM check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-32/AIXM"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3010bf7f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-32/AUTOSAR check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-32/AUTOSAR"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1697d06a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-32/BASE91-C check value",
+    "ref": "alias of CRC-32/ISCSI in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-32/BASE91-C"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "e3069283",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-32/BASE91-D check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-32/BASE91-D"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "87315576",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-32/BZIP2 check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-32/BZIP2"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fc891918",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-32/C check value",
+    "ref": "alias of CRC-32/ISCSI in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-32/C"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "e3069283",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-32/CASTAGNOLI check value",
+    "ref": "alias of CRC-32/ISCSI in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-32/CASTAGNOLI"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "e3069283",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-32/CD-ROM-EDC check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-32/CD-ROM-EDC"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "6ec2edc4",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-32/CKSUM check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-32/CKSUM"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "765e7680",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-32/D check value",
+    "ref": "alias of CRC-32/BASE91-D in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-32/D"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "87315576",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-32/DECT-B check value",
+    "ref": "alias of CRC-32/BZIP2 in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-32/DECT-B"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fc891918",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-32/INTERLAKEN check value",
+    "ref": "alias of CRC-32/ISCSI in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-32/INTERLAKEN"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "e3069283",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-32/ISCSI check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-32/ISCSI"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "e3069283",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-32/ISO-HDLC check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-32/ISO-HDLC"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "cbf43926",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-32/JAMCRC check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-32/JAMCRC"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "340bc6d9",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-32/MEF check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-32/MEF"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d2c22f51",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-32/MPEG-2 check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-32/MPEG-2"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0376e6e7",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-32/NVME check value",
+    "ref": "alias of CRC-32/ISCSI in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-32/NVME"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "e3069283",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-32/PKZIP check value",
+    "ref": "alias of CRC-32/ISO-HDLC in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-32/PKZIP"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "cbf43926",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-32/POSIX check value",
+    "ref": "alias of CRC-32/CKSUM in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-32/POSIX"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "765e7680",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-32/Q check value",
+    "ref": "alias of CRC-32/AIXM in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-32/Q"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3010bf7f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-32/V-42 check value",
+    "ref": "alias of CRC-32/ISO-HDLC in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-32/V-42"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "cbf43926",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-32/XFER check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-32/XFER"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "bd0be338",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-32/XZ check value",
+    "ref": "alias of CRC-32/ISO-HDLC in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-32/XZ"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "cbf43926",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-40/GSM check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-40/GSM"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d4164fc646",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-64/ECMA-182 check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-64/ECMA-182"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "6c40df5f0b497347",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-64/GO-ECMA check value",
+    "ref": "alias of CRC-64/XZ in the reveng CRC catalogue (same parameters), check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-64/GO-ECMA"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "995dc9bbdf1939fa",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-64/GO-ISO check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-64/GO-ISO"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "b90956c775a41001",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-64/MS check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-64/MS"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "75d4b74f024eceea",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-64/NVME check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-64/NVME"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ae8b14860a799888",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-64/REDIS check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-64/REDIS"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "e9c6d914c4b8d9ca",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-64/WE check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-64/WE"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "62ec59e3f1a4f00a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-64/XZ check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-64/XZ"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "995dc9bbdf1939fa",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-82/DARC check value",
+    "ref": "reveng CRC catalogue, check value of 123456789",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-82/DARC"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "009ea83f625023801fd612",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-32 of the empty input",
+    "ref": "hand-computed (init ffffffff xor xorout ffffffff)",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-32"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-16/MODBUS of the empty input",
+    "ref": "hand-computed (init ffff, no xorout)",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-16/MODBUS"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ffff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-64/XZ of the empty input",
+    "ref": "hand-computed (init and xorout both all ones)",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-64/XZ"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CRC-8/GSM-B of the empty input",
+    "ref": "hand-computed (init 00, xorout ff)",
+    "op": "crc:checksum",
+    "params": {
+      "algorithm": "CRC-8/GSM-B"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "custom is CRC-32/ISO-HDLC",
+    "ref": "reveng CRC-32/ISO-HDLC",
+    "op": "crc:custom",
+    "params": {
+      "width": 32,
+      "poly": {
+        "value": "04c11db7",
+        "enc": "hex"
+      },
+      "init": {
+        "value": "ffffffff",
+        "enc": "hex"
+      },
+      "refin": true,
+      "refout": true,
+      "xorout": {
+        "value": "ffffffff",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "cbf43926",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "custom is CRC-16/XMODEM",
+    "ref": "reveng CRC-16/XMODEM",
+    "op": "crc:custom",
+    "params": {
+      "width": 16,
+      "poly": {
+        "value": "1021",
+        "enc": "hex"
+      },
+      "init": {
+        "value": "0000",
+        "enc": "hex"
+      },
+      "refin": false,
+      "refout": false,
+      "xorout": {
+        "value": "0000",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "31c3",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "custom is CRC-64/XZ",
+    "ref": "reveng CRC-64/XZ",
+    "op": "crc:custom",
+    "params": {
+      "width": 64,
+      "poly": {
+        "value": "42f0e1eba9ea3693",
+        "enc": "hex"
+      },
+      "init": {
+        "value": "ffffffffffffffff",
+        "enc": "hex"
+      },
+      "refin": true,
+      "refout": true,
+      "xorout": {
+        "value": "ffffffffffffffff",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "995dc9bbdf1939fa",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "custom 3-bit CRC-3/ROHC",
+    "ref": "reveng CRC-3/ROHC",
+    "op": "crc:custom",
+    "params": {
+      "width": 3,
+      "poly": {
+        "value": "03",
+        "enc": "hex"
+      },
+      "init": {
+        "value": "07",
+        "enc": "hex"
+      },
+      "refin": true,
+      "refout": true,
+      "xorout": {
+        "value": "00",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "06",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "custom mixed reflection is CRC-12/UMTS",
+    "ref": "reveng CRC-12/UMTS",
+    "op": "crc:custom",
+    "params": {
+      "width": 12,
+      "poly": {
+        "value": "080f",
+        "enc": "hex"
+      },
+      "init": {
+        "value": "0000",
+        "enc": "hex"
+      },
+      "refin": false,
+      "refout": true,
+      "xorout": {
+        "value": "0000",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0daf",
+      "enc": "hex"
+    }
+  }
+]

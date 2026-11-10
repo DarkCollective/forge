@@ -965,3 +965,22 @@ describe("util:str-chunks", () => {
     expect(await fl('"abc" 1 util:str-chunks " " join')).toBe("a b c");
   });
 });
+
+describe("util:ceil-div", () => {
+  test("rounds up, and gives 0 for 0", async () => {
+    expect(await value("util:ceil-div", [int(0), int(4)])).toBe(0);
+    expect(await value("util:ceil-div", [int(1), int(4)])).toBe(1);
+    expect(await value("util:ceil-div", [int(4), int(4)])).toBe(1);
+    expect(await value("util:ceil-div", [int(5), int(4)])).toBe(2);
+    expect(await value("util:ceil-div", [int(7), int(1)])).toBe(7);
+  });
+});
+
+describe("util:sum", () => {
+  test("the sum of a list of integers, 0 when empty, exact beyond 2^53", async () => {
+    expect(await value("util:sum", [listV()])).toBe(0);
+    expect(await value("util:sum", [listV(1, 2, 3, 4)])).toBe(10);
+    expect(await value("util:sum", [listV(-5, 5, 7)])).toBe(7);
+    expect(await fl("{ 9007199254740991 9007199254740991 } util:sum")).toBe(18014398509481982n);
+  });
+});

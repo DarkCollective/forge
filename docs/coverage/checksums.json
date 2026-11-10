@@ -1,0 +1,12 @@
+[
+ { "cyberchef": "Fletcher-8 Checksum", "status": "covered", "forge": ["fletcher:checksum"], "note": "size 8." },
+ { "cyberchef": "Fletcher-16 Checksum", "status": "covered", "forge": ["fletcher:checksum"], "note": "size 16." },
+ { "cyberchef": "Fletcher-32 Checksum", "status": "covered", "forge": ["fletcher:checksum"], "note": "size 32." },
+ { "cyberchef": "Fletcher-64 Checksum", "status": "covered", "forge": ["fletcher:checksum"], "note": "size 64." },
+ { "cyberchef": "Adler-32 Checksum", "status": "covered", "forge": ["adler32:checksum"] },
+ { "cyberchef": "Luhn Checksum", "status": "redesigned", "forge": ["luhn:check-digit", "luhn:validate"], "note": "Two words, the check digit and a validity flag, instead of a three-line report whose \"validated string\" is not a validation." },
+ { "cyberchef": "CRC Checksum", "status": "covered", "forge": ["crc:checksum", "crc:custom"], "note": "Presets by CyberChef's names; custom parameters in crc:custom. The output is bytes, not hex text." },
+ { "cyberchef": "TCP/IP Checksum", "status": "covered", "forge": ["tcpip:checksum"], "note": "Folds the carry until it is gone (RFC 1071); CyberChef folds once." },
+ { "cyberchef": "XOR Checksum", "status": "covered", "forge": ["xor-checksum:checksum"] },
+ { "cyberchef": "Parity Bit", "status": "covered", "forge": ["parity:encode", "parity:decode"], "note": "Decode can also verify the parity." }
+]

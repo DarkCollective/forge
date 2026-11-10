@@ -1,0 +1,306 @@
+[
+  {
+    "name": "Fletcher-16 of abcde",
+    "ref": "Wikipedia, Fletcher's checksum",
+    "op": "fletcher:checksum",
+    "params": {
+      "size": "16"
+    },
+    "input": {
+      "value": "abcde",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c8f0",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Fletcher-16 of abcdef",
+    "ref": "Wikipedia, Fletcher's checksum",
+    "op": "fletcher:checksum",
+    "params": {
+      "size": "16"
+    },
+    "input": {
+      "value": "abcdef",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2057",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Fletcher-16 of abcdefgh",
+    "ref": "Wikipedia, Fletcher's checksum",
+    "op": "fletcher:checksum",
+    "params": {
+      "size": "16"
+    },
+    "input": {
+      "value": "abcdefgh",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0627",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Fletcher-32 of abcde",
+    "ref": "Wikipedia, Fletcher's checksum",
+    "op": "fletcher:checksum",
+    "params": {
+      "size": "32"
+    },
+    "input": {
+      "value": "abcde",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f04fc729",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Fletcher-32 of abcdef",
+    "ref": "Wikipedia, Fletcher's checksum",
+    "op": "fletcher:checksum",
+    "params": {
+      "size": "32"
+    },
+    "input": {
+      "value": "abcdef",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "56502d2a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Fletcher-32 of abcdefgh",
+    "ref": "Wikipedia, Fletcher's checksum",
+    "op": "fletcher:checksum",
+    "params": {
+      "size": "32"
+    },
+    "input": {
+      "value": "abcdefgh",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ebe19591",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Fletcher-64 of abcde",
+    "ref": "Wikipedia, Fletcher's checksum",
+    "op": "fletcher:checksum",
+    "params": {
+      "size": "64"
+    },
+    "input": {
+      "value": "abcde",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c8c6c527646362c6",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Fletcher-64 of abcdef",
+    "ref": "Wikipedia, Fletcher's checksum",
+    "op": "fletcher:checksum",
+    "params": {
+      "size": "64"
+    },
+    "input": {
+      "value": "abcdef",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c8c72b276463c8c6",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Fletcher-64 of abcdefgh",
+    "ref": "Wikipedia, Fletcher's checksum",
+    "op": "fletcher:checksum",
+    "params": {
+      "size": "64"
+    },
+    "input": {
+      "value": "abcdefgh",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "312e2b28cccac8c6",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Fletcher-8 of abcde",
+    "ref": "CyberChef Fletcher8Checksum.mjs loop (mod 15), re-run independently",
+    "op": "fletcher:checksum",
+    "params": {
+      "size": "8"
+    },
+    "input": {
+      "value": "abcde",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "50",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Fletcher-8 of abcdef",
+    "ref": "CyberChef Fletcher8Checksum.mjs loop (mod 15), re-run independently",
+    "op": "fletcher:checksum",
+    "params": {
+      "size": "8"
+    },
+    "input": {
+      "value": "abcdef",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2c",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Fletcher-8 of Hello, world!",
+    "ref": "CyberChef Fletcher8Checksum.mjs loop (mod 15), re-run independently",
+    "op": "fletcher:checksum",
+    "params": {
+      "size": "8"
+    },
+    "input": {
+      "value": "Hello, world!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "86",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Fletcher-8 of the empty input",
+    "ref": "hand-computed: both sums stay 0",
+    "op": "fletcher:checksum",
+    "params": {
+      "size": "8"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Fletcher-16 of the empty input",
+    "ref": "hand-computed: both sums stay 0",
+    "op": "fletcher:checksum",
+    "params": {
+      "size": "16"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Fletcher-32 of the empty input",
+    "ref": "hand-computed: both sums stay 0",
+    "op": "fletcher:checksum",
+    "params": {
+      "size": "32"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Fletcher-64 of the empty input",
+    "ref": "hand-computed: both sums stay 0",
+    "op": "fletcher:checksum",
+    "params": {
+      "size": "64"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Fletcher-32 of an odd-length input",
+    "ref": "CyberChef Fletcher32Checksum.mjs: a lone last byte is added as a word",
+    "op": "fletcher:checksum",
+    "params": {
+      "size": "32"
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c52562c4",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Fletcher-64 with a 3-byte tail",
+    "ref": "CyberChef Fletcher64Checksum.mjs: the tail is a little-endian word",
+    "op": "fletcher:checksum",
+    "params": {
+      "size": "64"
+    },
+    "input": {
+      "value": "abcdefg",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c92e2b2764cac8c6",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Fletcher-16 wraps modulo 255",
+    "ref": "hand-computed loop over 1000 bytes of 0xff (255 mod 255 = 0)",
+    "op": "fletcher:checksum",
+    "params": {
+      "size": "16"
+    },
+    "input": {
+      "value": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0000",
+      "enc": "hex"
+    }
+  }
+]

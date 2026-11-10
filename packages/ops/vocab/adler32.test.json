@@ -1,0 +1,72 @@
+[
+  {
+    "name": "123456789",
+    "ref": "zlib test value (RFC 1950 algorithm); matches Python zlib.adler32",
+    "op": "adler32:checksum",
+    "params": {},
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "091e01de",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Wikipedia",
+    "ref": "Wikipedia, Adler-32 worked example",
+    "op": "adler32:checksum",
+    "params": {},
+    "input": {
+      "value": "Wikipedia",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "11e60398",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "empty input",
+    "ref": "RFC 1950: a = 1, b = 0",
+    "op": "adler32:checksum",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00000001",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "one byte",
+    "ref": "hand-computed: a = 1 + 0x61 = 0x62, b = 0x62",
+    "op": "adler32:checksum",
+    "params": {},
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00620062",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "a and b both wrap modulo 65521",
+    "ref": "hand-computed with 300 bytes of 0xff (a = 1 + 76500 mod 65521 = 10980)",
+    "op": "adler32:checksum",
+    "params": {},
+    "input": {
+      "value": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "b90f2ae4",
+      "enc": "hex"
+    }
+  }
+]
