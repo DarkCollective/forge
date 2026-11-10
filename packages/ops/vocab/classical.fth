@@ -2,9 +2,9 @@
 IN: classical
 
 : _rot-code ( code:int amount:int -- int )
-  code 65 >= code 90 <= and
+  code 65 90 util:between?
   [ code 65 - amount + 26 mod 65 + ]
-  [ code 97 >= code 122 <= and
+  [ code 97 122 util:between?
     [ code 97 - amount + 26 mod 97 + ]
     [ code ]
     if ]
@@ -42,9 +42,9 @@ META: rot47
 ;
 
 : _atbash-code ( code:int -- int )
-  code 65 >= code 90 <= and
+  code 65 90 util:between?
   [ 155 code - ]
-  [ code 97 >= code 122 <= and
+  [ code 97 122 util:between?
     [ 219 code - ]
     [ code ]
     if ]
@@ -64,9 +64,9 @@ META: atbash
 \ ---------------------------------------------------------------------------------------------
 
 : _affine-code ( code:int a:int b:int -- int )
-  code 65 >= code 90 <= and
+  code 65 90 util:between?
   [ code 65 - a * b + 26 mod 65 + ]
-  [ code 97 >= code 122 <= and
+  [ code 97 122 util:between?
     [ code 97 - a * b + 26 mod 97 + ]
     [ code ]
     if ]
@@ -386,7 +386,7 @@ META: a1z26-decode
 \ ---------------------------------------------------------------------------------------------
 
 : _printable ( code:int -- bool )
-  code 32 >= code 126 <= and ;
+  code 32 126 util:between? ;
 
 : _sub-byte ( v:int pb:bytes cb:bytes -- int )
   0 pb len range v

@@ -10,8 +10,7 @@ IN: float
 : encode ( str size:choice{32|64}=64 endian:choice{big|little}=big -- bytes )
   "Convert decimal numbers to IEEE 754 bytes (binary32 or binary64). The text is numbers separated by white space and/or commas, with an optional sign, a decimal point and a power-of-ten exponent (1.5, -2e-3, .5), or NaN, Infinity and -Infinity (any case, inf also accepted); the result is the numbers one after another, 4 or 8 bytes each in the chosen byte order. Negative zero (-0) is kept. A finite number too large for the format, or any other text, raises E_COERCE. Empty text gives empty bytes. Binary32 values are rounded to nearest (through binary64 first)." doc
   "Encodings" category
-  str>codes [ dup util:space-or-comma? [ drop 32 ] when ] map codes>str
-  " " split [ len 0 > ] filter
+  util:number-tokens
   [ size str>int endian "little" = _pack ] map
   #[ ] bjoin ;
 

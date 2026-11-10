@@ -33,17 +33,8 @@ IN: bech32
 
 \ ---- encode ----
 
-\ The byte j of d, or 0 past the end.
-: _at ( d:bytes j:int -- int )
-  j d len >= [ 0 ] [ d j nth ] if ;
-
-\ The n bits (n up to 13) of d from bit p, zero padded past the end.
-: _bits ( d:bytes p:int n:int -- int )
-  d p 8 div _at 16 shl d p 8 div 1 + _at 8 shl bor d p 8 div 2 + _at bor
-  24 p 8 mod - n - shr 1 n shl 1 - band ;
-
 : _five ( d:bytes -- bytes )
-  0 d len 8 * 4 + 5 div range [ 5 * d swap 5 _bits ] map list>bytes ;
+  0 d len 8 * 4 + 5 div range [ 5 * d swap 5 util:bit-field ] map list>bytes ;
 
 \ The checksum value of hrp and the 5-bit data: the polymod with the variant's constant removed.
 : _pm ( hrp:bytes five:bytes variant:str -- int )
@@ -67,7 +58,7 @@ IN: bech32
 
 \ The byte j of the 5-bit values regrouped to 8 bits (zero past the end).
 : _byte ( v:bytes j:int -- int )
-  v j 8 * 5 div _at 10 shl v j 8 * 5 div 1 + _at 5 shl bor v j 8 * 5 div 2 + _at bor
+  v j 8 * 5 div util:byte-at 10 shl v j 8 * 5 div 1 + util:byte-at 5 shl bor v j 8 * 5 div 2 + util:byte-at bor
   7 j 8 * 5 mod - shr 255 band ;
 
 \ The 8-bit data of the 5-bit values; the padding must be under 5 bits, all zero.

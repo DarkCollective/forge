@@ -14,24 +14,10 @@ IN: base58
 
 \ ---- encode ----
 
-: _step ( acc:bytes n:int alpha:bytes -- bytes int )
-  acc { alpha n 58 mod nth } list>bytes cat n 58 div ;
-
-\ The digits of n, most significant first (none for 0).
-: _digits ( n:int alpha:bytes -- bytes )
-  #[ ] n [ dup 0 > ] [ alpha _step ] while drop rev ;
-
-: _byte-count ( n:int -- int )
-  n 0 = [ 0 ] [ n 16 int>str-radix len 1 + 2 div ] if ;
-
-: _enc3 ( len:int n:int alpha:bytes -- str )
-  0 len n _byte-count - range [ drop alpha 0 nth ] map list>bytes
-  n alpha _digits cat bytes>latin1 ;
-
 : encode ( bytes alphabet:choice{bitcoin|flickr|ripple}=bitcoin -- str )
   "Encode bytes as Base58 text; each leading zero byte becomes a leading first-alphabet character. Data over about 8 KiB is E_LIMIT_VALUE." doc
   "Encodings" category
-  dup len swap bytes>hex "0" swap cat 16 str>int-radix alphabet _alphabet str>bytes _enc3 ;
+  alphabet _alphabet str>bytes util:bytes>symbols bytes>latin1 ;
 
 \ ---- decode ----
 
@@ -39,25 +25,10 @@ IN: base58
 : _table ( alpha:str -- bytes )
   alpha 254 255 util:decode-table ;
 
-\ The number of leading zero digits.
-: _lead0 ( b:bytes -- int )
-  0 [ dup b len < [ dup b swap nth 0 = ] [ false ] if ] [ 1 + ] while ;
-
-: _out ( z:int n:int -- bytes )
-  0 z range [ drop 0 ] map list>bytes
-  n 0 =
-  [ #[ ] ]
-  [ n 16 int>str-radix dup len 2 mod 1 = [ "0" swap cat ] when hex>bytes ] if
-  cat ;
-
-: _decode ( data:bytes table:bytes -- bytes )
-  data table util:check-symbols [ 254 <> ] filter
-  dup _lead0 swap 58 util:digits>int _out ;
-
 : decode ( bytes alphabet:choice{bitcoin|flickr|ripple}=bitcoin -- bytes )
   "Decode Base58 text. White space is ignored; each leading first-alphabet character becomes a zero byte. Text over about 11 000 characters is E_LIMIT_VALUE." doc
   "Encodings" category
-  alphabet _alphabet _table _decode ;
+  alphabet _alphabet _table 58 util:symbols>bytes ;
 
 META: encode
   param alphabet "The alphabet: bitcoin, flickr or ripple." ;

@@ -1,10 +1,7 @@
-\ hexcontent: the Snort and Suricata rule "content" form, where bytes are written as literal
+\ hex-content: the Snort and Suricata rule "content" form, where bytes are written as literal
 \ text with |41 42| sections of hex digits. The words are FL and need no primitive; E_COERCE comes
 \ from the raise vocabulary (raise:coerce).
-IN: hexcontent
-
-: _char ( b:int -- str )
-  { b } list>bytes bytes>latin1 ;
+IN: hex-content
 
 \ The characters a rule must escape or write in hex: | (toggles hex), " and ; (end the option), \.
 : _special? ( b:int -- bool )
@@ -13,11 +10,8 @@ IN: hexcontent
 : _hex? ( b:int scope:str -- bool )
   scope "all" = b 32 < or b 126 > or b _special? or ;
 
-: _hex-byte ( b:int -- str )
-  "|" b 256 + 16 int>str-radix 1 3 slice upper cat "|" cat ;
-
 : _piece ( b:int scope:str -- str )
-  b scope _hex? [ b _hex-byte ] [ b _char ] if ;
+  b scope _hex? [ "|" b util:byte>hex cat "|" cat ] [ b util:cp>str ] if ;
 
 : encode ( bytes scope:choice{non-printable|all}=non-printable -- str )
   "Snort/Suricata content text. non-printable writes bytes outside 0x20 to 0x7E, and the characters | \" ; \\, as upper-case hex in |41 42| sections and everything else as literal text. all writes every byte in hex. Empty input gives empty text." doc

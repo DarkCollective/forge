@@ -29,10 +29,10 @@ IN: morse
   [ table key get ] [ drop "no Morse code for this character" raise:coerce ] try ;
 
 : _upper-cp ( cp:int -- int )
-  cp 97 >= cp 122 <= and [ cp 32 - ] [ cp ] if ;
+  cp 97 122 util:between? [ cp 32 - ] [ cp ] if ;
 
 : _letter-code ( cp:int table:record -- str )
-  table cp _upper-cp { } swap append codes>str _lookup ;
+  table cp _upper-cp util:cp>str _lookup ;
 
 : _word-code ( word:str table:record -- str )
   word str>codes [ table _letter-code ] map " " join ;

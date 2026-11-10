@@ -41,6 +41,9 @@ interface Tiers {
 const NAME: Tiers = { exact: 1000, prefix: 900, word: 800, substring: 600 };
 const ALIAS: Tiers = { exact: 900, prefix: 700, word: 650, substring: 400 };
 const QNAME: Tiers = { exact: 950, prefix: 850, word: 700, substring: 400 };
+// A token that is exactly the vocabulary part of the qualified name (`hex` of `hex:decode`) beats a
+// prefix match on the name or the qualified name (`hex-content:decode`), and ranks below an exact name.
+const VOCAB_EXACT = 940;
 const CATEGORY: Tiers = { exact: 150, prefix: 150, word: 150, substring: 120 };
 const DOC: Tiers = { exact: 120, prefix: 120, word: 120, substring: 80 };
 
@@ -117,6 +120,7 @@ export function scoreToken(op: SearchableOp, token: string): number {
     tieredScore(name, token, NAME),
     fuzzyScore(name, token),
     tieredScore(normaliseText(op.qname), token, QNAME),
+    normaliseText(op.qname.split(":", 1)[0] ?? "") === token ? VOCAB_EXACT : 0,
     tieredScore(normaliseText(op.category ?? ""), token, CATEGORY),
     tieredScore(normaliseText(op.doc ?? ""), token, DOC),
   );

@@ -318,6 +318,327 @@
     }
   },
   {
+    "name": "encode hrp 1 data 51 bytes",
+    "ref": "BIP-173 test vectors (valid Bech32 strings)",
+    "op": "bech32:encode",
+    "params": {
+      "hrp": "1"
+    },
+    "input": {
+      "value": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "11qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqc8247j",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode hrp 1 data 51 bytes",
+    "ref": "BIP-173 test vectors (valid Bech32 strings)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "11qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqc8247j",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode error: checksum from the upper-case hrp",
+    "ref": "BIP-173 invalid string vectors (A1G7SGD8)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "A1G7SGD8",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: empty hrp, 10a06t8",
+    "ref": "BIP-173 invalid string vectors (10a06t8)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "10a06t8",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: empty hrp, 1qzzfhee",
+    "ref": "BIP-173 invalid string vectors (1qzzfhee)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "1qzzfhee",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: byte 0x80 in hrp",
+    "ref": "BIP-173 invalid string vectors (0x80 in hrp)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "803165796d353568",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error: byte 0xFF in checksum",
+    "ref": "BIP-173 invalid string vectors (de1lg7wt + 0xFF)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "6465316c67377774ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "encode bech32m an83 hrp, no data",
+    "ref": "BIP-350 test vectors (valid Bech32m strings)",
+    "op": "bech32:encode",
+    "params": {
+      "hrp": "an83characterlonghumanreadablepartthatcontainsthetheexcludedcharactersbioandnumber1",
+      "variant": "bech32m"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "an83characterlonghumanreadablepartthatcontainsthetheexcludedcharactersbioandnumber11sg7hg6",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode bech32m an83 hrp, no data",
+    "ref": "BIP-350 test vectors (valid Bech32m strings)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "an83characterlonghumanreadablepartthatcontainsthetheexcludedcharactersbioandnumber11sg7hg6",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decode error: 82 symbols of l leave non-zero padding bits",
+    "ref": "BIP-350 test vectors (valid Bech32m strings) (11llll...ludsr8)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "11llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllludsr8",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error bech32m: 0x20 in hrp",
+    "ref": "BIP-350 invalid string vectors (Bech32m) (0x20 in hrp)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "2031786a3070686b",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error bech32m: 0x7F in hrp",
+    "ref": "BIP-350 invalid string vectors (Bech32m) (0x7f in hrp)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "7f316736787a7879",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error bech32m: 0x80 in hrp",
+    "ref": "BIP-350 invalid string vectors (Bech32m) (0x80 in hrp)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "8031766374633334",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error bech32m: over 90 characters",
+    "ref": "BIP-350 invalid string vectors (Bech32m) (91 characters)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "an84characterslonghumanreadablepartthatcontainsthetheexcludedcharactersbioandnumber11d6pts4",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error bech32m: no separator",
+    "ref": "BIP-350 invalid string vectors (Bech32m) (qyrz8wqd2c9m)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "qyrz8wqd2c9m",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error bech32m: empty hrp",
+    "ref": "BIP-350 invalid string vectors (Bech32m) (1qyrz8wqd2c9m)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "1qyrz8wqd2c9m",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error bech32m: invalid data character b",
+    "ref": "BIP-350 invalid string vectors (Bech32m) (y1b0jsk6g)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "y1b0jsk6g",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error bech32m: invalid data character i",
+    "ref": "BIP-350 invalid string vectors (Bech32m) (lt1igcx5c0)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "lt1igcx5c0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error bech32m: too short checksum",
+    "ref": "BIP-350 invalid string vectors (Bech32m) (in1muywd)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "in1muywd",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error bech32m: invalid character in checksum",
+    "ref": "BIP-350 invalid string vectors (Bech32m) (mm1crxm3i)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "mm1crxm3i",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error bech32m: invalid character in checksum o",
+    "ref": "BIP-350 invalid string vectors (Bech32m) (au1s5cgom)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "au1s5cgom",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error bech32m: checksum from the upper-case hrp",
+    "ref": "BIP-350 invalid string vectors (Bech32m) (M1VUXWEZ)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "M1VUXWEZ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error bech32m: empty hrp 16plkw9",
+    "ref": "BIP-350 invalid string vectors (Bech32m) (16plkw9)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "16plkw9",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode error bech32m: empty hrp 1p2gdwpf",
+    "ref": "BIP-350 invalid string vectors (Bech32m) (1p2gdwpf)",
+    "op": "bech32:decode",
+    "params": {},
+    "input": {
+      "value": "1p2gdwpf",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
     "name": "encode binary 00 ff 00 (bech32)",
     "ref": "independent port of the BIP-173 reference code (convertbits, polymod)",
     "op": "bech32:encode",
@@ -624,7 +945,7 @@
   },
   {
     "name": "decode error: bech32 checksum is wrong for the data",
-    "ref": "BIP-173 invalid string vectors",
+    "ref": "derived from BIP-173 split1check... (last character changed)",
     "op": "bech32:decode",
     "params": {},
     "input": {
@@ -637,7 +958,7 @@
   },
   {
     "name": "decode error: mixed case",
-    "ref": "BIP-173 invalid string vectors (A12uEL5L)",
+    "ref": "derived from BIP-173 A12UEL5L (mixed case)",
     "op": "bech32:decode",
     "params": {},
     "input": {

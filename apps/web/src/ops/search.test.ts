@@ -151,6 +151,50 @@ describe("searchOps ranking", () => {
   });
 });
 
+describe("vocabulary names in the ranking", () => {
+  const VOCABS = [
+    "hex-content:decode",
+    "hex-content:encode",
+    "hexdump:decode",
+    "hexdump:encode",
+    "hex:decode",
+    "hex:encode",
+    "base32:decode",
+    "base32:encode",
+    "base64:decode",
+    "base64:encode",
+    "modhex:decode",
+    "quoted-printable:decode",
+    "quoted-printable:encode",
+  ].map((qname) => op({ qname }));
+  const first = (q: string) => searchOps(VOCABS, q)[0]?.qname;
+
+  it("puts the vocabulary that equals the token first", () => {
+    expect(first("hex decode")).toBe("hex:decode");
+    expect(first("hex encode")).toBe("hex:encode");
+    expect(first("decode hex")).toBe("hex:decode");
+  });
+
+  it("ranks exact word matches above prefix matches of a vocabulary", () => {
+    const names = searchOps(VOCABS, "hex decode").map((o) => o.qname);
+    expect(names.slice(0, 3)).toEqual(["hex:decode", "hex-content:decode", "hexdump:decode"]);
+  });
+
+  it("falls back to the qualified-name order when no vocabulary equals the token", () => {
+    expect(searchOps(VOCABS, "base decode").map((o) => o.qname)).toEqual([
+      "base32:decode",
+      "base64:decode",
+    ]);
+  });
+
+  it("still finds a vocabulary by a prefix", () => {
+    expect(searchOps(VOCABS, "quot").map((o) => o.qname)).toEqual([
+      "quoted-printable:decode",
+      "quoted-printable:encode",
+    ]);
+  });
+});
+
 describe("subsequenceSpan", () => {
   it("returns the span of the greedy match, or -1 when a letter is missing", () => {
     expect(subsequenceSpan("base64", "b64")).toBe(6);

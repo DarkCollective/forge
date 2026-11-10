@@ -2,9 +2,6 @@
 \ named swap, which shadows the core swap inside this file, so no word below uses the core swap.
 IN: endian
 
-: _zeros ( n:int -- bytes )
-  0 n range [ drop 0 ] map list>bytes ;
-
 \ Word i of the data, reversed.
 : _word ( data:bytes i:int width:int -- bytes )
   data i width * i 1 + width * slice rev ;
@@ -17,7 +14,7 @@ IN: endian
   data len width mod 0 =
   [ data ]
   [ pad
-    [ data width data len width mod - _zeros cat ]
+    [ data width data len width mod - util:zero-bytes cat ]
     [ "the length is not a multiple of the word width" raise:range data ]
     if ]
   if ;

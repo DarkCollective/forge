@@ -10,16 +10,12 @@ IN: base32
 
 \ ---- encode ----
 
-\ The big-endian integer of the elements of b, each taken as k bits.
-: _pack ( b:bytes k:int -- int )
-  b 0 [ swap k shl bor ] reduce ;
-
 \ The eight alphabet bytes of a 40-bit group.
 : _chars ( v:int alpha:bytes -- bytes )
   0 8 range [ 7 swap - 5 * v swap shr 31 band alpha swap nth ] map list>bytes ;
 
 : _group ( p:bytes g:int alpha:bytes -- bytes )
-  p g 5 * g 5 * 5 + slice 8 _pack alpha _chars ;
+  p g 5 * g 5 * 5 + slice 256 util:digits>int alpha _chars ;
 
 : _groups ( p:bytes alpha:bytes ng:int -- bytes )
   0 ng range [ p swap alpha _group ] map #[ ] bjoin ;
@@ -51,7 +47,7 @@ IN: base32
   r 1 <> r 3 <> and r 6 <> and ;
 
 : _ungroup ( p:bytes g:int -- bytes )
-  p g 8 * g 8 * 8 + slice 5 _pack 5 util:int>be-bytes ;
+  p g 8 * g 8 * 8 + slice 32 util:digits>int 5 util:int>be-bytes ;
 
 : _ungroups ( p:bytes ng:int -- bytes )
   0 ng range [ p swap _ungroup ] map #[ ] bjoin ;

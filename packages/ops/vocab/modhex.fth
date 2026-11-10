@@ -16,12 +16,9 @@ IN: modhex
 : _table ( -- bytes )
   _alpha 254 255 util:decode-table ;
 
-: _byte ( nib:bytes i:int -- int )
-  nib i 2 * nth 4 shl nib i 2 * 1 + nth bor ;
-
 : _pack ( nib:bytes -- bytes )
   nib len 2 mod 1 = [ "an odd number of ModHex letters" raise:coerce ] when
-  0 nib len 2 div range [ nib swap _byte ] map list>bytes ;
+  0 nib len 2 div range [ nib swap util:nibbles>byte ] map list>bytes ;
 
 : decode ( bytes -- bytes )
   "Decode ModHex text to bytes. White space is ignored and upper case is accepted; an odd number of letters is E_COERCE." doc

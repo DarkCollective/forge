@@ -1,8 +1,8 @@
 [
  { "cyberchef": "To Punycode", "status": "covered", "forge": ["punycode:encode"], "note": "Label mode (raw RFC 3492) or domain mode (per dotted label, xn-- prefix)." },
  { "cyberchef": "From Punycode", "status": "covered", "forge": ["punycode:decode"], "note": "Label mode (raw RFC 3492) or domain mode (per dotted label, xn-- prefix)." },
- { "cyberchef": "To Quoted Printable", "status": "covered", "forge": ["quotedprintable:encode"] },
- { "cyberchef": "From Quoted Printable", "status": "covered", "forge": ["quotedprintable:decode"] },
+ { "cyberchef": "To Quoted Printable", "status": "covered", "forge": ["quoted-printable:encode"] },
+ { "cyberchef": "From Quoted Printable", "status": "covered", "forge": ["quoted-printable:decode"] },
  { "cyberchef": "Escape Unicode Characters", "status": "covered", "forge": ["unicode:escape"], "note": "Formats u, U+, %u, x{} and html; hex case and scope are parameters." },
  { "cyberchef": "Unescape Unicode Characters", "status": "covered", "forge": ["unicode:unescape"], "note": "Reads all the escape formats at once and leaves other text alone." },
  { "cyberchef": "Normalise Unicode", "status": "covered", "forge": ["unicode:normalize"], "note": "NFC, NFD, NFKC and NFKD." },
@@ -10,6 +10,6 @@
  { "cyberchef": "To Braille", "status": "redesigned", "forge": ["braille:encode"], "note": "Forge maps each byte to the 8-dot pattern U+2800 plus the byte, which is lossless; CyberChef maps letters to the 6-dot Braille alphabet." },
  { "cyberchef": "From Braille", "status": "redesigned", "forge": ["braille:decode"], "note": "Forge reads U+2800 to U+28FF back as bytes, which is the inverse of braille:encode; it does not read the 6-dot letter alphabet." },
  { "cyberchef": "Caret/M-decode", "status": "covered", "forge": ["caret:decode"], "note": "The inverse of cat -v; caret:encode is the matching encoder." },
- { "cyberchef": "To Hex Content", "status": "covered", "forge": ["hexcontent:encode"] },
- { "cyberchef": "From Hex Content", "status": "covered", "forge": ["hexcontent:decode"] }
+ { "cyberchef": "To Hex Content", "status": "covered", "forge": ["hex-content:encode"] },
+ { "cyberchef": "From Hex Content", "status": "covered", "forge": ["hex-content:decode"] }
 ]

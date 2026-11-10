@@ -23,8 +23,7 @@ IN: charcode
 : decode ( str base:int[2..36]=16 -- str )
   "Decode numbers in the base separated by white space and/or commas, one code point each." doc
   "Encodings" category
-  str>codes [ dup util:space-or-comma? [ drop 32 ] when ] map codes>str " " split
-  [ len 0 > ] filter [ base _cp-value ] map codes>str ;
+  util:number-tokens [ base _cp-value ] map codes>str ;
 
 META: encode
   param base "The number base, 2 to 36." ;

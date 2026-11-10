@@ -252,11 +252,31 @@ CyberChef has **506 operations** in 16 categories (see research §5 and the appe
 
 Each WP also updates its `docs/coverage/<area>.json` mapping, from which `npm run coverage` generates `docs/COVERAGE.md`, a table of CyberChef capability → the Forge word(s) that cover it (or "dropped" / "redesigned", with a reason).
 
-Phase 5 notes (follow-ups from Phase 4):
+**Wave 1 ✅** *Done 2026-11-10 (wave 1: remaining encodings). 102 ops in 36 vocabularies; CyberChef coverage 90 covered, 14 redesigned, 402 not yet of 506. 1,472 op vectors in 36 files and 3,373 unit tests; `npm run gate4:browser -w @forge/worker` passes in Node and in Chromium Web Workers, with and without cross-origin isolation.*
+
+| WP | Scope |
+|---|---|
+| 5.0 | Setup: util promotions, the CyberChef coverage table (`docs/coverage`, `docs/COVERAGE.md`), the browser gates in CI |
+| 5.1 | radix encodings: base45, base62, base92, octal, modhex, bech32, `radix:convert` |
+| 5.2 | text-level encodings: punycode, quoted-printable, unicode, braille, caret, hex-content |
+| 5.3 | binary and number formats: hexdump, float, endian, bigint, bcd, cobs |
+| 5.4 | charset (WHATWG labels, EBCDIC, brute force) and the full HTML named-entity decoding |
+| 5.5 | Close-out: promoted every private copy into `util` (the `util-candidate` marker and the structural sweep in `dupes`), hyphenated vocabulary names (`quoted-printable`, `hex-content`), bech32 and base45 vectors checked against BIP-173, BIP-350 and RFC 9285, docs |
+
+The structured data formats (CSV, JSON, YAML, CBOR, MessagePack, Avro, AMF, ASN.1, TLV, PEM, MIME, Rison, the IP formats, and Show Base64 offsets) are deferred to **wave 1b**.
+
+Phase 5 notes (follow-ups from Phase 4 and wave 1):
 
 - `html:decode` needs the full HTML named-entity table, and the windows-1252 remap of `&#128;`–`&#159;`.
 - `bits:xor-brute` with 2-byte keys hits the total-allocation limit on inputs over a few KiB without a crib.
 - `url:encode` and `morse:encode` use about half the 10M default step budget at 64 KiB.
+
+Language gaps found in wave 1 (candidates for the core, or for a primitive):
+
+- There is no efficient list builder or append. Growing a list or a string one element at a time is quadratic and hits `E_LIMIT_TOTAL` on large input (`cobs` needed a primitive for that reason). Words such as `cat` and `append` copy; `map` and `reduce` are the linear idioms, and `bjoin` and `join` collect.
+- There is no way to memoise a computed constant per vocabulary. `html:decode` rebuilds its 2,231-entry named-entity record on every call, about 5 ms per call. A load-time `CONSTANT`, or a cached zero-input word, would remove it.
+- The `charset` TextDecoder labels are tested in Chromium and Node only. Firefox and Safari are untested: their label lists and their handling of the legacy sets can differ.
+- There is no early-exit loop over a list or a string. Scanning for a prefix (`util:count-leading`) is a fold over everything, or a `while` that is slower per element.
 
 ### Phase 6 — Beyond CyberChef
 Magic auto-detection (declarative `checks` in META, depth-limited search). An optional recipe store backend behind `RecipeStore`. A PWA/offline mode. The `@forge/cli`. Recipe diff/swap. **Relix vocabulary** integration as an `relix:` vocab of primitives.
@@ -266,7 +286,7 @@ Magic auto-detection (declarative `checks` in META, depth-limited search). An op
 - **Agent mix**: Sonnet-class agents for spec-critical work (1.1, 1.5, 1.6, 2.2, 3.3). Haiku-class agents for well-specified, repetitive WPs (ops with test vectors, coverage-table generation, docs). Each agent gets the spec, the WP's "done" line, and the rule *no commits with attribution, no pushes*.
 - **Isolation**: parallel WPs run in separate git worktrees on `wp/<id>` branches. The orchestrator merges after review.
 - **Verification per WP**: read the diff, then re-run `npm run lint && npm run typecheck && npm test && npm run build` (+e2e from Phase 3) on the merged result, then spot-check behaviour by hand.
-- **Shared utilities**: op agents check `packages/ops/vocab/util.fth` (§3.5) before writing a helper. In their report they list **utility candidates**: helpers they wrote that look generally useful, each with its name, stack effect and why. The orchestrator reviews these, and `npm run dupes -w @forge/ops`, on every WP, and promotes accepted ones into `util` through a small follow-up WP. The dupes test blocks exact copies across vocabularies.
+- **Shared utilities**: op agents check `packages/ops/vocab/util.fth` (§3.5) before writing a helper. In their report they list **utility candidates**: helpers they wrote that look generally useful, each with its name, stack effect and why. The orchestrator reviews these, and `npm run dupes -w @forge/ops`, on every WP, and promotes accepted ones into `util` through a small follow-up WP. The dupes test blocks exact copies across vocabularies. **Parallel agents cannot edit `util.fth`**, so an agent that needs a helper keeps a **straight private copy** with the comment line `\ util-candidate: <proposed util name>` right before it, and lists it in the report. It must never vary the body to avoid the sweep (a reordered or re-spelled copy is a defect; `npm run dupes` also reports "likely re-implementations": private helpers with the same effect signature and the same set of core words). Exact copies that all carry the marker are reported as "pending util promotion" and do not fail the test; the orchestrator promotes them into `util` at the wave close-out, removes the copies and the markers, and the dupes test fails if any marker is left. Near duplicates and likely re-implementations are resolved or justified at the close-out.
 - **Coverage table**: every op WP adds or updates its own `docs/coverage/<area>.json` (never another WP's) and runs `npm run coverage`, committing the regenerated `docs/COVERAGE.md`. A test fails when it is out of date.
 - **Order**: Phase 1 is mostly sequential (1.1 → 1.2/1.3 in parallel → 1.4 → 1.5 → 1.6/1.7/1.8 in parallel). Phase 3.1–3.2 can start once Gate 1 passes, against a mocked catalogue. Phases 4 and 5 are highly parallel.
 

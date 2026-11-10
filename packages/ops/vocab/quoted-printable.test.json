@@ -2,7 +2,7 @@
   {
     "name": "encode equals sign",
     "ref": "RFC 2045 section 6.7 rule 1 (= is =3D)",
-    "op": "quotedprintable:encode",
+    "op": "quoted-printable:encode",
     "params": {},
     "input": {
       "value": "hello=world",
@@ -16,7 +16,7 @@
   {
     "name": "encode UTF-8 e-acute",
     "ref": "RFC 2045 section 6.7 rule 1; hand-computed (c3 a9)",
-    "op": "quotedprintable:encode",
+    "op": "quoted-printable:encode",
     "params": {},
     "input": {
       "value": "café",
@@ -30,7 +30,7 @@
   {
     "name": "encode trailing white space",
     "ref": "RFC 2045 section 6.7 rule 3 (space and tab at line end)",
-    "op": "quotedprintable:encode",
+    "op": "quoted-printable:encode",
     "params": {},
     "input": {
       "value": "a \r\nb\t",
@@ -44,7 +44,7 @@
   {
     "name": "encode inner white space unchanged",
     "ref": "RFC 2045 section 6.7 rule 3",
-    "op": "quotedprintable:encode",
+    "op": "quoted-printable:encode",
     "params": {},
     "input": {
       "value": "a b\tc",
@@ -58,7 +58,7 @@
   {
     "name": "encode empty input",
     "ref": "hand-computed (no bytes)",
-    "op": "quotedprintable:encode",
+    "op": "quoted-printable:encode",
     "params": {},
     "input": {
       "value": "",
@@ -72,7 +72,7 @@
   {
     "name": "encode binary 00 ff 0d",
     "ref": "RFC 2045 section 6.7 rule 1; lone CR is =0D",
-    "op": "quotedprintable:encode",
+    "op": "quoted-printable:encode",
     "params": {},
     "input": {
       "value": "00ff0d",
@@ -86,7 +86,7 @@
   {
     "name": "encode CRLF and lone LF kept",
     "ref": "RFC 2045 section 6.7 rule 4 (hard line breaks)",
-    "op": "quotedprintable:encode",
+    "op": "quoted-printable:encode",
     "params": {},
     "input": {
       "value": "a\r\nb\nc",
@@ -100,7 +100,7 @@
   {
     "name": "encode 76 characters, no soft break",
     "ref": "RFC 2045 section 6.7 rule 5 (76 characters per line)",
-    "op": "quotedprintable:encode",
+    "op": "quoted-printable:encode",
     "params": {},
     "input": {
       "value": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
@@ -114,7 +114,7 @@
   {
     "name": "encode 77 characters, soft break after 75",
     "ref": "RFC 2045 section 6.7 rule 5; cross-checked with Python binascii.b2a_qp",
-    "op": "quotedprintable:encode",
+    "op": "quoted-printable:encode",
     "params": {},
     "input": {
       "value": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
@@ -128,7 +128,7 @@
   {
     "name": "encode soft break before an =XX that would not fit",
     "ref": "RFC 2045 section 6.7 rule 5; cross-checked with Python binascii.b2a_qp",
-    "op": "quotedprintable:encode",
+    "op": "quoted-printable:encode",
     "params": {},
     "input": {
       "value": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
@@ -142,7 +142,7 @@
   {
     "name": "encode =XX ending exactly at 75 characters",
     "ref": "RFC 2045 section 6.7 rule 5; cross-checked with Python binascii.b2a_qp",
-    "op": "quotedprintable:encode",
+    "op": "quoted-printable:encode",
     "params": {},
     "input": {
       "value": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
@@ -156,7 +156,7 @@
   {
     "name": "encode 150 characters in two lines",
     "ref": "RFC 2045 section 6.7 rule 5; cross-checked with Python binascii.b2a_qp",
-    "op": "quotedprintable:encode",
+    "op": "quoted-printable:encode",
     "params": {},
     "input": {
       "value": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
@@ -170,7 +170,7 @@
   {
     "name": "encode long line ending in white space",
     "ref": "RFC 2045 section 6.7 rules 3 and 5; cross-checked with Python binascii.b2a_qp",
-    "op": "quotedprintable:encode",
+    "op": "quoted-printable:encode",
     "params": {},
     "input": {
       "value": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx          y",
@@ -184,7 +184,7 @@
   {
     "name": "decode =3D and lower-case hex",
     "ref": "RFC 2045 section 6.7 (hex digits in either case are read)",
-    "op": "quotedprintable:decode",
+    "op": "quoted-printable:decode",
     "params": {},
     "input": {
       "value": "hello=3Dworld=3d",
@@ -198,7 +198,7 @@
   {
     "name": "decode soft line breaks",
     "ref": "RFC 2045 section 6.7 rule 5 (= at line end)",
-    "op": "quotedprintable:decode",
+    "op": "quoted-printable:decode",
     "params": {},
     "input": {
       "value": "foo=\r\nbar=\nbaz",
@@ -212,7 +212,7 @@
   {
     "name": "decode strips trailing white space",
     "ref": "RFC 2045 section 6.7 section 6.7 (trailing white space is transport padding)",
-    "op": "quotedprintable:decode",
+    "op": "quoted-printable:decode",
     "params": {},
     "input": {
       "value": "a  \r\nb\t\nc ",
@@ -226,7 +226,7 @@
   {
     "name": "decode UTF-8 bytes",
     "ref": "RFC 2045 section 6.7; hand-computed (c3 a9)",
-    "op": "quotedprintable:decode",
+    "op": "quoted-printable:decode",
     "params": {},
     "input": {
       "value": "caf=C3=A9",
@@ -240,7 +240,7 @@
   {
     "name": "decode empty input",
     "ref": "hand-computed",
-    "op": "quotedprintable:decode",
+    "op": "quoted-printable:decode",
     "params": {},
     "input": {
       "value": "",
@@ -254,7 +254,7 @@
   {
     "name": "decode binary bytes",
     "ref": "RFC 2045 section 6.7",
-    "op": "quotedprintable:decode",
+    "op": "quoted-printable:decode",
     "params": {},
     "input": {
       "value": "=00=FF",
@@ -268,7 +268,7 @@
   {
     "name": "decode soft break after kept white space",
     "ref": "RFC 2045 section 6.7 (white space before = is not trailing)",
-    "op": "quotedprintable:decode",
+    "op": "quoted-printable:decode",
     "params": {},
     "input": {
       "value": "a =\r\nb",
@@ -282,7 +282,7 @@
   {
     "name": "decode 8-bit bytes literally",
     "ref": "Forge rule: other bytes stand for themselves",
-    "op": "quotedprintable:decode",
+    "op": "quoted-printable:decode",
     "params": {},
     "input": {
       "value": "e9",
@@ -296,7 +296,7 @@
   {
     "name": "decode = at the very end",
     "ref": "Forge rule: a final = is a soft break",
-    "op": "quotedprintable:decode",
+    "op": "quoted-printable:decode",
     "params": {},
     "input": {
       "value": "a=",
@@ -310,7 +310,7 @@
   {
     "name": "error: = and one digit",
     "ref": "Forge rule: = needs two hex digits",
-    "op": "quotedprintable:decode",
+    "op": "quoted-printable:decode",
     "params": {},
     "input": {
       "value": "a=4",
@@ -323,7 +323,7 @@
   {
     "name": "error: = and non-hex",
     "ref": "Forge rule: = needs two hex digits",
-    "op": "quotedprintable:decode",
+    "op": "quoted-printable:decode",
     "params": {},
     "input": {
       "value": "a=zz",
@@ -336,7 +336,7 @@
   {
     "name": "error: = then space",
     "ref": "Forge rule: = needs two hex digits",
-    "op": "quotedprintable:decode",
+    "op": "quoted-printable:decode",
     "params": {},
     "input": {
       "value": "a= b",
@@ -349,7 +349,7 @@
   {
     "name": "error: == before a soft break",
     "ref": "Forge rule: the first = is malformed",
-    "op": "quotedprintable:decode",
+    "op": "quoted-printable:decode",
     "params": {},
     "input": {
       "value": "a==\r\n41",
