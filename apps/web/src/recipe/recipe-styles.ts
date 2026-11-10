@@ -207,7 +207,7 @@ export const recipeStyles = css`
     padding: var(--space-1) var(--space-2);
   }
   .toolbar button {
-    min-width: 2.25rem;
+    min-width: 2rem;
     padding: 0;
   }
   .toolbar button[aria-disabled="true"] {

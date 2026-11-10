@@ -99,6 +99,11 @@ body.forge-dragging {
   color: var(--link);
 }
 
+/* A link styled as a button keeps the button's text colour (.page a would otherwise win on specificity). */
+.page a.button {
+  color: var(--accent-fg);
+}
+
 .sr-only {
   position: absolute;
   width: 1px;

@@ -8,3 +8,5 @@ coverage
 
 .terraform/
 *.tfstate*
+test-results
+playwright-report

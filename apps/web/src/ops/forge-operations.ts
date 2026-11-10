@@ -327,7 +327,7 @@ export class ForgeOperations extends LitElement {
     if (model.mode === "browse" && model.total === 0) {
       return html`<p class="empty">The catalogue has no operations.</p>`;
     }
-    return html`<div id=${LIST_ID} role="listbox" aria-label="Operations">
+    return html`<div id=${LIST_ID} role="group" aria-label="Operations">
       ${model.sections.map((section, index) => this.renderSection(section, index, cursor))}
     </div>`;
   }
@@ -343,14 +343,16 @@ export class ForgeOperations extends LitElement {
         section.kind === "favourites" && section.ops.length === 0
           ? html`<p class="hint">Star an operation, or press F on it, to keep it here.</p>`
           : nothing;
-      body = html`<div id=${bodyId} class="group-body">${empty}${rows}</div>`;
+      // One listbox per category: a listbox may own only options, so the category buttons stay outside it.
+      body = html`<div id=${bodyId} class="group-body">
+        ${empty}${
+          rows.length === 0
+            ? nothing
+            : html`<div role="listbox" aria-labelledby=${headId}>${rows}</div>`
+        }
+      </div>`;
     }
-    return html`<div
-      class="section"
-      role="group"
-      aria-labelledby=${headId}
-      data-kind=${section.kind}
-    >
+    return html`<div class="section" data-kind=${section.kind}>
       <div class="group-head" role="presentation">
         ${
           section.collapsible
@@ -393,6 +395,10 @@ export class ForgeOperations extends LitElement {
         @focus=${() => this.onRowFocus(index)}
         @keydown=${(e: KeyboardEvent) => this.onRowKey(e, index, op)}
         @dblclick=${() => this.add(op)}
+        @click=${(e: MouseEvent) => {
+          // A click with no pointer position is a screen reader or voice activation of the option.
+          if (e.detail === 0) this.add(op);
+        }}
         @pointerdown=${(e: PointerEvent) => beginPointerDrag(e, { type: "op", op: op.qname }, op.name)}
       >
         <span class="name">${op.name}</span>
@@ -403,6 +409,7 @@ export class ForgeOperations extends LitElement {
         type="button"
         class="icon"
         tabindex="-1"
+        aria-hidden="true"
         aria-pressed=${favourite ? "true" : "false"}
         aria-label=${`${favourite ? "Remove" : "Add"} ${op.qname} ${favourite ? "from" : "to"} favourites`}
         @click=${() => this.toggleFavourite(op)}
@@ -413,6 +420,7 @@ export class ForgeOperations extends LitElement {
         type="button"
         class="icon"
         tabindex="-1"
+        aria-hidden="true"
         aria-expanded=${showingHelp ? "true" : "false"}
         aria-controls=${HELP_ID}
         aria-label=${`Help for ${op.qname}`}
@@ -424,6 +432,7 @@ export class ForgeOperations extends LitElement {
         type="button"
         class="icon"
         tabindex="-1"
+        aria-hidden="true"
         aria-label=${`Add ${op.qname} to the recipe`}
         @click=${() => this.add(op)}
       >
@@ -620,9 +629,19 @@ export class ForgeOperations extends LitElement {
     const rect = row.getBoundingClientRect();
     const height = el.offsetHeight;
     const width = el.offsetWidth;
-    let top = rect.bottom + 4;
-    if (top + height > window.innerHeight - 8) top = Math.max(8, rect.top - height - 4);
-    const left = Math.min(Math.max(8, rect.left), Math.max(8, window.innerWidth - width - 8));
+    const pane = this.getBoundingClientRect();
+    let top: number;
+    let left: number;
+    if (pane.right + 4 + width <= window.innerWidth - 8) {
+      // Beside the pane, level with the row, so the list stays readable and the help covers no row.
+      top = Math.min(Math.max(8, rect.top), Math.max(8, window.innerHeight - height - 8));
+      left = pane.right + 4;
+    } else {
+      // No room beside the pane (narrow or compact layout): below the row, or above it near the bottom.
+      top = rect.bottom + 4;
+      if (top + height > window.innerHeight - 8) top = Math.max(8, rect.top - height - 4);
+      left = Math.min(Math.max(8, rect.left), Math.max(8, window.innerWidth - width - 8));
+    }
     el.style.setProperty("top", `${top}px`);
     el.style.setProperty("left", `${left}px`);
   }
