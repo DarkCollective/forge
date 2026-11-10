@@ -12,7 +12,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Category | Covered | Redesigned | Dropped | Not yet | Total |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Data format | 54 | 6 | 0 | 20 | 80 |
-| Encryption / Encoding | 21 | 2 | 0 | 72 | 95 |
+| Encryption / Encoding | 21 | 4 | 0 | 70 | 95 |
 | Public Key | 0 | 0 | 0 | 30 | 30 |
 | Arithmetic / Logic | 9 | 0 | 0 | 17 | 26 |
 | Networking | 0 | 0 | 0 | 34 | 34 |
@@ -27,7 +27,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 2 | 0 | 0 | 19 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **92** | **15** | **0** | **399** | **506** |
+| **Total** | **92** | **17** | **0** | **397** | **506** |
 
 ## Data format (80)
 
@@ -204,8 +204,8 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Pseudo-Random Number Generator | not yet |  |  |
 | Pseudo-Random Prime Generator | not yet |  |  |
 | Enigma | covered | `enigma:encrypt` | Enigma I, M3 and M4 with the historical rotors, reflectors and plugboard; one reciprocal word (alias decrypt). |
-| Bombe | not yet |  |  |
-| Multiple Bombe | not yet |  |  |
+| Bombe | redesigned | `bombe:search` | One Forge-native word covers both Bombe operations: give three rotors for a single rotor order. It searches all 17,576 start positions with a crib at an offset, using the menu, the diagonal board and the test register, and lists the stops with the steckers deduced and a decryption preview made with enigma:encrypt. Enigma I and M3 only (no M4); stops are window letters at the start of the message. |
+| Multiple Bombe | redesigned | `bombe:search` | The same word: give more than three rotors (up to five, 60 orders) and every order of three of them is searched, left rotor first; the output names the rotor order of each stop. Capped by rotor orders times menu edges so that a run finishes inside a bake. |
 | Typex | redesigned | `typex:encrypt` | Real Typex rotor wirings were never published, so there is no built-in rotor set: the five rotor wirings, reflector, notches and reversed rotors are parameters (validated permutations of A-Z), with clearly labelled non-historical example defaults. |
 | Lorenz | not yet |  |  |
 | Colossus | not yet |  |  |
