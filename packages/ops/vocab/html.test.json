@@ -1,0 +1,226 @@
+[
+  {
+    "name": "encode tag and quotes, minimal, named",
+    "ref": "hand-computed (WHATWG HTML named character references: &lt; &gt; &quot;)",
+    "op": "html:encode",
+    "params": {},
+    "input": { "value": "<a href=\"x\">", "enc": "utf8" },
+    "expect": { "value": "&lt;a href=&quot;x&quot;&gt;", "enc": "utf8" }
+  },
+  {
+    "name": "encode ampersand and apostrophe, minimal, named",
+    "ref": "hand-computed (WHATWG HTML named character references: &amp; &apos;)",
+    "op": "html:encode",
+    "params": {},
+    "input": { "value": "Tom & Jerry's", "enc": "utf8" },
+    "expect": { "value": "Tom &amp; Jerry&apos;s", "enc": "utf8" }
+  },
+  {
+    "name": "encode minimal leaves non-ASCII unchanged",
+    "ref": "hand-computed (minimal escapes only & < > \" ')",
+    "op": "html:encode",
+    "params": {},
+    "input": { "value": "é", "enc": "utf8" },
+    "expect": { "value": "é", "enc": "utf8" }
+  },
+  {
+    "name": "encode empty input",
+    "ref": "hand-computed (no characters)",
+    "op": "html:encode",
+    "params": {},
+    "input": { "value": "", "enc": "utf8" },
+    "expect": { "value": "", "enc": "utf8" }
+  },
+  {
+    "name": "encode greater-than, minimal, named",
+    "ref": "hand-computed (&gt;)",
+    "op": "html:encode",
+    "params": {},
+    "input": { "value": ">", "enc": "utf8" },
+    "expect": { "value": "&gt;", "enc": "utf8" }
+  },
+  {
+    "name": "encode apostrophe, minimal, decimal",
+    "ref": "hand-computed (' is 39)",
+    "op": "html:encode",
+    "params": { "format": "decimal" },
+    "input": { "value": "a'b", "enc": "utf8" },
+    "expect": { "value": "a&#39;b", "enc": "utf8" }
+  },
+  {
+    "name": "encode double quote, minimal, hex",
+    "ref": "hand-computed (\" is 0x22)",
+    "op": "html:encode",
+    "params": { "format": "hex" },
+    "input": { "value": "\"", "enc": "utf8" },
+    "expect": { "value": "&#x22;", "enc": "utf8" }
+  },
+  {
+    "name": "encode non-ASCII, named format uses decimal references",
+    "ref": "hand-computed (U+00E9 = 233; < is named)",
+    "op": "html:encode",
+    "params": { "scope": "non-ascii" },
+    "input": { "value": "é<", "enc": "utf8" },
+    "expect": { "value": "&#233;&lt;", "enc": "utf8" }
+  },
+  {
+    "name": "encode non-ASCII with hex format",
+    "ref": "hand-computed (U+00E9 = 0xe9)",
+    "op": "html:encode",
+    "params": { "scope": "non-ascii", "format": "hex" },
+    "input": { "value": "é", "enc": "utf8" },
+    "expect": { "value": "&#xe9;", "enc": "utf8" }
+  },
+  {
+    "name": "encode euro sign, non-ASCII, decimal",
+    "ref": "hand-computed (U+20AC = 8364)",
+    "op": "html:encode",
+    "params": { "scope": "non-ascii", "format": "decimal" },
+    "input": { "value": "€", "enc": "utf8" },
+    "expect": { "value": "&#8364;", "enc": "utf8" }
+  },
+  {
+    "name": "encode astral code point, non-ASCII, hex",
+    "ref": "hand-computed (U+1F600 = 0x1f600)",
+    "op": "html:encode",
+    "params": { "scope": "non-ascii", "format": "hex" },
+    "input": { "value": "😀", "enc": "utf8" },
+    "expect": { "value": "&#x1f600;", "enc": "utf8" }
+  },
+  {
+    "name": "encode all, named: letters become decimal references",
+    "ref": "hand-computed (A = 65)",
+    "op": "html:encode",
+    "params": { "scope": "all" },
+    "input": { "value": "A", "enc": "utf8" },
+    "expect": { "value": "&#65;", "enc": "utf8" }
+  },
+  {
+    "name": "encode all, hex: ampersand and letter",
+    "ref": "hand-computed (A = 0x41, & = 0x26)",
+    "op": "html:encode",
+    "params": { "scope": "all", "format": "hex" },
+    "input": { "value": "A&", "enc": "utf8" },
+    "expect": { "value": "&#x41;&#x26;", "enc": "utf8" }
+  },
+  {
+    "name": "decode named entities",
+    "ref": "WHATWG HTML section 13.2.5 (named character references lt, amp)",
+    "op": "html:decode",
+    "params": {},
+    "input": { "value": "&lt;a&gt; &amp;", "enc": "utf8" },
+    "expect": { "value": "<a> &", "enc": "utf8" }
+  },
+  {
+    "name": "decode quot, apos and nbsp",
+    "ref": "WHATWG HTML section 13.2.5 (quot, apos, nbsp = U+00A0)",
+    "op": "html:decode",
+    "params": {},
+    "input": { "value": "&quot;&apos;&nbsp;", "enc": "utf8" },
+    "expect": { "value": "\"' ", "enc": "utf8" }
+  },
+  {
+    "name": "decode decimal and hex numeric references",
+    "ref": "WHATWG HTML section 13.2.5 (numeric character references; 65 = A, 0x42 = B, 0x43 = C)",
+    "op": "html:decode",
+    "params": {},
+    "input": { "value": "&#65;&#x42;&#X43;", "enc": "utf8" },
+    "expect": { "value": "ABC", "enc": "utf8" }
+  },
+  {
+    "name": "decode decimal reference to e-acute",
+    "ref": "WHATWG HTML section 13.2.5 (233 = U+00E9)",
+    "op": "html:decode",
+    "params": {},
+    "input": { "value": "&#233;", "enc": "utf8" },
+    "expect": { "value": "é", "enc": "utf8" }
+  },
+  {
+    "name": "decode hex reference to astral code point",
+    "ref": "WHATWG HTML section 13.2.5 (0x1F600 = U+1F600)",
+    "op": "html:decode",
+    "params": {},
+    "input": { "value": "&#x1F600;", "enc": "utf8" },
+    "expect": { "value": "😀", "enc": "utf8" }
+  },
+  {
+    "name": "decode non-ASCII text around references",
+    "ref": "hand-computed (é is literal text; &lt; is <)",
+    "op": "html:decode",
+    "params": {},
+    "input": { "value": "é&lt;", "enc": "utf8" },
+    "expect": { "value": "é<", "enc": "utf8" }
+  },
+  {
+    "name": "decode empty input",
+    "ref": "hand-computed (no characters)",
+    "op": "html:decode",
+    "params": {},
+    "input": { "value": "", "enc": "utf8" },
+    "expect": { "value": "", "enc": "utf8" }
+  },
+  {
+    "name": "decode zero reference to U+FFFD",
+    "ref": "WHATWG HTML section 13.2.5.80 (null character reference becomes U+FFFD)",
+    "op": "html:decode",
+    "params": {},
+    "input": { "value": "&#0;", "enc": "utf8" },
+    "expect": { "value": "�", "enc": "utf8" }
+  },
+  {
+    "name": "decode surrogate reference to U+FFFD",
+    "ref": "WHATWG HTML section 13.2.5.80 (surrogate becomes U+FFFD)",
+    "op": "html:decode",
+    "params": {},
+    "input": { "value": "&#xD800;", "enc": "utf8" },
+    "expect": { "value": "�", "enc": "utf8" }
+  },
+  {
+    "name": "decode reference above 0x10FFFF to U+FFFD",
+    "ref": "WHATWG HTML section 13.2.5.80 (0x110000 is out of range, becomes U+FFFD)",
+    "op": "html:decode",
+    "params": {},
+    "input": { "value": "&#x110000;", "enc": "utf8" },
+    "expect": { "value": "�", "enc": "utf8" }
+  },
+  {
+    "name": "decode unknown named entity passes through",
+    "ref": "spec (unknown references pass through unchanged; full table is Phase 5)",
+    "op": "html:decode",
+    "params": {},
+    "input": { "value": "&bogus; &amp", "enc": "utf8" },
+    "expect": { "value": "&bogus; &amp", "enc": "utf8" }
+  },
+  {
+    "name": "decode empty numeric references pass through",
+    "ref": "spec (malformed references pass through unchanged)",
+    "op": "html:decode",
+    "params": {},
+    "input": { "value": "&#;&#x;", "enc": "utf8" },
+    "expect": { "value": "&#;&#x;", "enc": "utf8" }
+  },
+  {
+    "name": "decode bare ampersand passes through",
+    "ref": "spec (an & with no reference is kept)",
+    "op": "html:decode",
+    "params": {},
+    "input": { "value": "AT&T", "enc": "utf8" },
+    "expect": { "value": "AT&T", "enc": "utf8" }
+  },
+  {
+    "name": "decode double ampersand before a reference",
+    "ref": "hand-computed (&& then &amp; gives &&)",
+    "op": "html:decode",
+    "params": {},
+    "input": { "value": "&&amp;", "enc": "utf8" },
+    "expect": { "value": "&&", "enc": "utf8" }
+  },
+  {
+    "name": "decode numeric reference without semicolon passes through",
+    "ref": "spec (a reference needs its semicolon here)",
+    "op": "html:decode",
+    "params": {},
+    "input": { "value": "&#x110000", "enc": "utf8" },
+    "expect": { "value": "&#x110000", "enc": "utf8" }
+  }
+]

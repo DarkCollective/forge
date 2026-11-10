@@ -1,0 +1,146 @@
+[
+  {
+    "name": "encode A, default space",
+    "ref": "hand-computed (0x41 = 65)",
+    "op": "decimal:encode",
+    "params": {},
+    "input": { "value": "A", "enc": "utf8" },
+    "expect": { "value": "65", "enc": "utf8" }
+  },
+  {
+    "name": "encode AB, default space",
+    "ref": "hand-computed (0x41 = 65, 0x42 = 66)",
+    "op": "decimal:encode",
+    "params": {},
+    "input": { "value": "AB", "enc": "utf8" },
+    "expect": { "value": "65 66", "enc": "utf8" }
+  },
+  {
+    "name": "encode empty input",
+    "ref": "hand-computed (no bytes)",
+    "op": "decimal:encode",
+    "params": {},
+    "input": { "value": "", "enc": "utf8" },
+    "expect": { "value": "", "enc": "utf8" }
+  },
+  {
+    "name": "encode binary bytes 00 ff 0a with comma",
+    "ref": "hand-computed (0x00 = 0, 0xff = 255, 0x0a = 10)",
+    "op": "decimal:encode",
+    "params": { "delimiter": "comma" },
+    "input": { "value": "00ff0a", "enc": "hex" },
+    "expect": { "value": "0,255,10", "enc": "utf8" }
+  },
+  {
+    "name": "encode bytes 0a 0d with newline",
+    "ref": "hand-computed (0x0a = 10, 0x0d = 13)",
+    "op": "decimal:encode",
+    "params": { "delimiter": "newline" },
+    "input": { "value": "0a0d", "enc": "hex" },
+    "expect": { "value": "10\n13", "enc": "utf8" }
+  },
+  {
+    "name": "encode non-ASCII UTF-8 bytes with comma",
+    "ref": "hand-computed (U+00E9 is C3 A9; 0xc3 = 195, 0xa9 = 169)",
+    "op": "decimal:encode",
+    "params": { "delimiter": "comma" },
+    "input": { "value": "é", "enc": "utf8" },
+    "expect": { "value": "195,169", "enc": "utf8" }
+  },
+  {
+    "name": "encode non-UTF-8 bytes ff 00 with space",
+    "ref": "hand-computed (0xff = 255, 0x00 = 0)",
+    "op": "decimal:encode",
+    "params": {},
+    "input": { "value": "ff00", "enc": "hex" },
+    "expect": { "value": "255 0", "enc": "utf8" }
+  },
+  {
+    "name": "decode space separated numbers",
+    "ref": "hand-computed (1 = 0x01, 2 = 0x02, 3 = 0x03, 255 = 0xff)",
+    "op": "decimal:decode",
+    "params": {},
+    "input": { "value": "1 2, 03 255", "enc": "utf8" },
+    "expect": { "value": "010203ff", "enc": "hex" }
+  },
+  {
+    "name": "decode comma separated numbers to text",
+    "ref": "hand-computed (65 = A, 66 = B)",
+    "op": "decimal:decode",
+    "params": {},
+    "input": { "value": "65,66", "enc": "utf8" },
+    "expect": { "value": "AB", "enc": "utf8" }
+  },
+  {
+    "name": "decode newline separated numbers",
+    "ref": "hand-computed (10 = 0x0a, 13 = 0x0d)",
+    "op": "decimal:decode",
+    "params": {},
+    "input": { "value": "10\n13", "enc": "utf8" },
+    "expect": { "value": "0a0d", "enc": "hex" }
+  },
+  {
+    "name": "decode leading zeros and surrounding separators",
+    "ref": "hand-computed (007 = 7, 0 = 0)",
+    "op": "decimal:decode",
+    "params": {},
+    "input": { "value": " 0 ,\n007 ", "enc": "utf8" },
+    "expect": { "value": "0007", "enc": "hex" }
+  },
+  {
+    "name": "decode empty input",
+    "ref": "hand-computed (no numbers)",
+    "op": "decimal:decode",
+    "params": {},
+    "input": { "value": "", "enc": "utf8" },
+    "expect": { "value": "", "enc": "utf8" }
+  },
+  {
+    "name": "decode error: 256 is out of byte range",
+    "ref": "spec (E_COERCE: value over 255)",
+    "op": "decimal:decode",
+    "params": {},
+    "input": { "value": "256", "enc": "utf8" },
+    "expect": { "error": "E_COERCE" }
+  },
+  {
+    "name": "decode error: a very large number",
+    "ref": "spec (E_COERCE: value over 255)",
+    "op": "decimal:decode",
+    "params": {},
+    "input": { "value": "99999999999999999999", "enc": "utf8" },
+    "expect": { "error": "E_COERCE" }
+  },
+  {
+    "name": "decode error: negative number",
+    "ref": "spec (E_COERCE: not a byte value)",
+    "op": "decimal:decode",
+    "params": {},
+    "input": { "value": "-1", "enc": "utf8" },
+    "expect": { "error": "E_COERCE" }
+  },
+  {
+    "name": "decode error: letters after digits",
+    "ref": "spec (E_COERCE: non-digit)",
+    "op": "decimal:decode",
+    "params": {},
+    "input": { "value": "1a", "enc": "utf8" },
+    "expect": { "error": "E_COERCE" }
+  },
+  {
+    "name": "decode error: decimal point",
+    "ref": "spec (E_COERCE: non-digit)",
+    "op": "decimal:decode",
+    "params": {},
+    "input": { "value": "1.5", "enc": "utf8" },
+    "expect": { "error": "E_COERCE" }
+  },
+  {
+    "name": "decode error: non-ASCII input",
+    "ref": "spec (E_COERCE: non-digit)",
+    "op": "decimal:decode",
+    "params": {},
+    "input": { "value": "é", "enc": "utf8" },
+    "expect": { "error": "E_COERCE" }
+  }
+]
