@@ -6,7 +6,7 @@ IN: transposition
 \ ---------------------------------------------------------------------------------------------
 
 \ A unique sort value per key position: letter code * 256 + position.
-\ util-candidate: key-values
+\ Used by this vocabulary only (the other column ciphers rank keys differently), so it stays private.
 : _key-values ( codes:list -- list )
   0 codes len range [ dup codes swap nth 256 * + ] map ;
 

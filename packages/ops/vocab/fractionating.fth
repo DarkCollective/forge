@@ -114,6 +114,7 @@ META: nihilist-decrypt
 \ ---------------------------------------------------------------------------------------------
 
 \ The row and column labels: ADFGX (5 by 5) or ADFGVX (6 by 6).
+\ Not polygraphic:_pl-alpha: both pick one of two literals by a name, but the two literals are unrelated data.
 : _adf-labels ( variant:str -- bytes )
   variant "adfgx" = [ "ADFGX" ] [ "ADFGVX" ] if str>bytes ;
 

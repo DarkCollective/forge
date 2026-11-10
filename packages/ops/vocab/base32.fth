@@ -49,6 +49,7 @@ IN: base32
 : _ungroup ( p:bytes g:int -- bytes )
   p g 8 * g 8 * 8 + slice 32 util:digits>int 5 util:int>be-bytes ;
 
+\ Not classical:_cb-enc: both map a helper over an index range and join, but over different per-group words, so there is no shared body.
 : _ungroups ( p:bytes ng:int -- bytes )
   0 ng range [ p swap _ungroup ] map #[ ] bjoin ;
 

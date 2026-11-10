@@ -44,6 +44,7 @@ META: rot47
   see-also classical:rot ;
 ;
 
+\ Not morse:_upper-cp: this reflects a letter within its case, it does not change the case.
 : _atbash-code ( code:int -- int )
   code 65 90 util:between?
   [ 155 code - ]
@@ -419,17 +420,9 @@ META: substitute
 \ ---------------------------------------------------------------------------------------------
 
 \ Printable ASCII, plus tab, line feed and carriage return.
+\ Not url:_unreserved?: a different set of bytes (printable text, with tab, line feed and carriage return).
 : _text-printable? ( code:int -- bool )
   code 32 126 util:between? code 9 = or code 10 = or code 13 = or ;
-
-\ True when the needle is empty or the data contains the UTF-8 bytes of the needle. Both are
-\ viewed as Latin-1 text so that the search is a byte search.
-\ util-candidate: contains-bytes?
-: _contains ( data:bytes needle:str -- bool )
-  needle len 0 =
-  [ true ]
-  [ data bytes>latin1 needle str>bytes bytes>latin1 split len 1 > ]
-  if ;
 
 \ A 256-byte table for translate that applies rot (or rot47) with the shift to every byte.
 : _rot-table ( shift:int v47:bool -- bytes )
@@ -443,7 +436,7 @@ META: substitute
 : _rot-brute ( d:bytes v47:bool crib:str -- list )
   1 v47 [ 94 ] [ 26 ] if range
   [ dup d swap v47 _rot-table translate _brute-record ] map
-  [ "output" get crib _contains ] filter ;
+  [ "output" get crib str>bytes util:contains-bytes? ] filter ;
 
 : rot-brute ( data:bytes variant:choice{rot|rot47}=rot crib:str="" printable-only:bool=false -- list )
   "Try every shift of rot (shifts 1 to 25) or of rot47 (shifts 1 to 93) and list the candidates as records with shift (int) and output (bytes), in order of shift. With a crib, keep only candidates whose output contains the crib's UTF-8 bytes. With printable-only, first drop every byte that is not printable ASCII (32 to 126, tab, line feed, carriage return): rot and rot47 pass such bytes through unchanged, so every shift would otherwise carry them." doc
@@ -531,6 +524,7 @@ META: rot8000
 : _cb-width ( n:int height:int -- int )
   n height + 1 - height div ;
 
+\ Not base32:_ungroups: both map a helper over an index range and join, but over different per-group words, so there is no shared body.
 : _cb-enc ( data:bytes w:int -- bytes )
   0 w range [ data swap w _cb-col ] map #[ ] bjoin ;
 
@@ -650,28 +644,13 @@ META: cetacean-encode
   see-also classical:cetacean-decode ;
 ;
 
-\ Like util:check-symbols (translate through a decode table; E_COERCE if a byte maps to 255) but
-\ it looks for the 255 marker in the text view of the bytes instead of visiting every byte, which
-\ takes a few interpreter steps for any length instead of three per byte.
-: _check-symbols ( data:bytes table:bytes -- bytes )
-  data table translate
-  dup bytes>latin1 255 util:cp>str split len 1 >
-  [ "a character is not in the alphabet" raise:coerce ] when ;
-
-\ The bytes without the marker byte 254 (white space after check-symbols), without visiting each
-\ byte: the bytes are split at the marker as Latin-1 text and joined again.
-\ util-candidate: drop-marker
-: _drop-marker ( data:bytes -- bytes )
-  data bytes>latin1 254 util:cp>str split "" join latin1>bytes ;
-
 \ The 0 and 1 characters of a chunk of bits as hex digits.
 : _cet-chunk ( s:str -- str )
   s 2 str>int-radix s len 4 div util:pad-hex ;
 
 \ Text of 0 and 1 characters as hex, 4096 bits at a time.
 : _cet-hex ( s:str -- str )
-  0 s len 4095 + 4096 div range
-  [ 4096 * dup 4096 + s len min s -rot slice _cet-chunk ] map "" join ;
+  s 4096 util:str-chunks [ _cet-chunk ] map "" join ;
 
 \ The bits (a byte each, 0 or 1) as big-endian bytes; their number must be a multiple of 16.
 : _cet-pack ( bits:bytes -- bytes )
@@ -683,8 +662,8 @@ META: cetacean-encode
 : cetacean-decode ( str -- str )
   "Undo the Cetacean cipher: read the symbols E (0) and e (1) in groups of 16 as UTF-16 code units. White space is ignored; any other character, a symbol count that is not a multiple of 16, or a lone surrogate is an error (E_COERCE)." doc
   "Classical ciphers" category
-  str>bytes "Ee" 254 255 util:decode-table _check-symbols
-  _drop-marker
+  str>bytes "Ee" 254 255 util:decode-table util:check-symbols
+  254 util:drop-byte
   _cet-pack false _utf16>str ;
 
 META: cetacean-decode
@@ -741,8 +720,8 @@ META: ctx1-encode
 : ctx1-decode ( str -- str )
   "Undo the Citrix CTX1 obfuscation. The letters A to P (upper case; white space ignored) give the cipher bytes, two letters per byte; undoing the chain gives UTF-16 little-endian text. Any other character, a letter count that is not a multiple of four, or a lone surrogate is an error (E_COERCE)." doc
   "Classical ciphers" category
-  str>bytes "ABCDEFGHIJKLMNOP" 254 255 util:decode-table _check-symbols
-  _drop-marker
+  str>bytes "ABCDEFGHIJKLMNOP" 254 255 util:decode-table util:check-symbols
+  254 util:drop-byte
   _ctx-unpair _ctx-unchain true _utf16>str ;
 
 META: ctx1-decode

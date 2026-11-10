@@ -849,3 +849,119 @@ describe("util:upper-merge-i", () => {
     expect(await value("util:upper-merge-i", [int(73)])).toBe(73);
   });
 });
+
+describe("util:check-symbols steps", () => {
+  test("a constant number of VM steps for any length, and the same error message", async () => {
+    const t = new Uint8Array(256).fill(255);
+    t[97] = 0;
+    const table = valueHelpers.bytes(t);
+    const steps = async (n: number): Promise<number> => {
+      const r = await runtime.call("util:check-symbols", [
+        valueHelpers.bytes(new Uint8Array(n).fill(97)),
+        table,
+      ]);
+      expect(r.ok).toBe(true);
+      return (r as { steps: number }).steps;
+    };
+    const small = await steps(10);
+    expect(await steps(100000)).toBe(small);
+    expect(small).toBeLessThan(50);
+    const f = await failure("util:check-symbols", [
+      valueHelpers.bytes(Uint8Array.of(97, 98)),
+      table,
+    ]);
+    expect(f.code).toBe("E_COERCE");
+    expect(f.message).toContain("a character is not in the alphabet");
+  });
+});
+
+describe("util:count-of on lists and bytes", () => {
+  test("counts equal elements of a list of strings or of any values", async () => {
+    expect(await fl('{ "a" "b" "a" } "a" util:count-of')).toBe(2);
+    expect(await fl('{ "a" "b" } "c" util:count-of')).toBe(0);
+    expect(await fl("{ 1 2 1 } 1 util:count-of")).toBe(2);
+  });
+});
+
+describe("util:list-flatten", () => {
+  test("joins a list of lists one level", async () => {
+    expect(await fl("{ { 1 2 } { } { 3 } } util:list-flatten len")).toBe(3);
+    expect(await fl("{ { 1 2 } { } { 3 } } util:list-flatten 2 nth")).toBe(3);
+    expect(await fl("{ } util:list-flatten len")).toBe(0);
+  });
+});
+
+describe("util:contains-bytes?", () => {
+  const has = (d: number[], n: number[]) =>
+    value("util:contains-bytes?", [
+      valueHelpers.bytes(Uint8Array.from(d)),
+      valueHelpers.bytes(Uint8Array.from(n)),
+    ]);
+  test("finds a run of bytes anywhere, including high bytes", async () => {
+    expect(await has([1, 2, 3, 4], [2, 3])).toBe(true);
+    expect(await has([1, 2, 3, 4], [1, 2, 3, 4])).toBe(true);
+    expect(await has([1, 2, 3, 4], [3, 2])).toBe(false);
+    expect(await has([1, 200, 255, 4], [200, 255])).toBe(true);
+    expect(await has([], [1])).toBe(false);
+  });
+  test("an empty needle is always found", async () => {
+    expect(await has([], [])).toBe(true);
+    expect(await has([1], [])).toBe(true);
+  });
+});
+
+describe("util:drop-byte", () => {
+  const drop = async (d: number[], x: number) =>
+    u8(await value("util:drop-byte", [valueHelpers.bytes(Uint8Array.from(d)), int(x)]));
+  test("removes every copy of the byte and keeps the order of the rest", async () => {
+    expect(await drop([1, 254, 2, 254, 254, 3], 254)).toEqual([1, 2, 3]);
+    expect(await drop([0, 1, 0], 0)).toEqual([1]);
+    expect(await drop([1, 2], 9)).toEqual([1, 2]);
+    expect(await drop([], 9)).toEqual([]);
+    expect(await drop([255, 128, 255], 255)).toEqual([128]);
+  });
+});
+
+describe("util:popcount-26", () => {
+  test.each([
+    [0, 0],
+    [1, 1],
+    [0b1011, 3],
+    [(1 << 26) - 1, 26],
+    [1 << 25, 1],
+  ])("%i has %i bits", async (m, n) => {
+    expect(await value("util:popcount-26", [int(m)])).toBe(n);
+  });
+});
+
+describe("util:letter-numbers", () => {
+  test("the letters of any text as 0 to 25, everything else dropped", async () => {
+    expect(u8(await value("util:letter-numbers", [str("Ab, Z-y 9!")]))).toEqual([0, 1, 25, 24]);
+    expect(u8(await value("util:letter-numbers", [str("")]))).toEqual([]);
+    expect(u8(await value("util:letter-numbers", [str("é1")]))).toEqual([]);
+  });
+});
+
+describe("util:surrogate?", () => {
+  test.each([
+    [0xd7ff, false],
+    [0xd800, true],
+    [0xdbff, true],
+    [0xdc00, true],
+    [0xdfff, true],
+    [0xe000, false],
+    [65, false],
+  ])("%i", async (cp, expected) => {
+    expect(await value("util:surrogate?", [int(cp)])).toBe(expected);
+  });
+});
+
+describe("util:str-chunks", () => {
+  test("pieces of n characters, the last one shorter", async () => {
+    expect(await fl('"abcdefg" 3 util:str-chunks " " join')).toBe("abc def g");
+    expect(await fl('"abcdef" 3 util:str-chunks " " join')).toBe("abc def");
+    expect(await fl('"ab" 5 util:str-chunks " " join')).toBe("ab");
+    expect(await fl('"" 4 util:str-chunks len')).toBe(0);
+    expect(await fl('"abc" 1 util:str-chunks " " join')).toBe("a b c");
+  });
+});

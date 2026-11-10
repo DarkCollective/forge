@@ -2,18 +2,15 @@
 \ primitive; E_COERCE comes from the raise vocabulary (raise:coerce).
 IN: charcode
 
-: _surrogate? ( cp:int -- bool )
-  cp 55296 >= cp 57343 <= and ;
-
 : _cp-text ( cp:int base:int -- str )
-  cp _surrogate? [ "a lone surrogate is not a code point" raise:coerce ] when
+  cp util:surrogate? [ "a lone surrogate is not a code point" raise:coerce ] when
   cp base int>str-radix ;
 
 : _cp-value ( t:str base:int -- int )
   t 0 1 slice "-" = [ "a code point is not negative" raise:coerce ] when
   t base str>int-radix
   dup 1114111 > [ "a code point is at most 0x10FFFF" raise:coerce ] when
-  dup _surrogate? [ "a surrogate is not a code point" raise:coerce ] when ;
+  dup util:surrogate? [ "a surrogate is not a code point" raise:coerce ] when ;
 
 : encode ( str base:int[2..36]=16 delimiter:choice{space|comma|newline}=space -- str )
   "One number per code point (not UTF-16 unit), in the base, lower-case digits, separated by the delimiter." doc

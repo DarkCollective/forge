@@ -1,6 +1,6 @@
 # @forge/ops
 
-The operation vocabularies of Forge: 102 ops in 36 vocabularies, written in FL (the Forth-like Forge language), plus the build-time catalogue and the loaders that make them available in Node and in the browser.
+The operation vocabularies of Forge: 143 ops in 46 vocabularies, written in FL (the Forth-like Forge language), plus the build-time catalogue and the loaders that make them available in Node and in the browser.
 
 The package holds:
 
@@ -26,6 +26,19 @@ For a vocabulary `<v>`:
 
 Ops are written in FL wherever feasible. A TypeScript primitive is allowed only when the core cannot express something (the core has no logarithm, so `analysis:_log2` is a primitive) or when FL is too slow on realistic input, measured at 64 KiB. Then the primitive is a minimal private `_helper`, and the op logic and metadata stay in FL.
 
+The private primitives, each in `src/prims/<v>.ts`:
+
+- `analysis:_log2`: the logarithm the core lacks;
+- `charset:_decode`: the WHATWG decoder for an encoding label;
+- `cobs:_starts`: the offsets of the blocks of COBS data;
+- `float:_pack` and `float:_unpack`: decimal text to and from IEEE 754 bytes;
+- `unicode:_normalize`: Unicode normalisation (NFC, NFD, NFKC, NFKD);
+- `sigaba:_run`: the SIGABA rotor stack over letters 0 to 25 (the loop needs a fast mutable array, which FL lacks);
+- `classical:_ls47`: the LS47 letter-by-letter cipher on a given board, for the same reason;
+- `bombe:_search`: the Bombe test over the 17,576 start positions of one rotor order.
+
+The public primitives are the `hex`, `base64` and `regex` words and `raise:coerce` and `raise:range`.
+
 FL's own `fail` raises only `E_USER`. Typed errors come from the internal `raise` vocabulary:
 
 - `raise:coerce ( reason:str -- )` raises `E_COERCE`, for data that cannot be decoded;
@@ -35,46 +48,56 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 
 ## Vocabularies
 
-36 vocabularies, 102 ops (two ops each unless noted). Vocabulary names are lower-kebab-case.
+46 vocabularies, 143 ops (two ops each unless noted). Vocabulary names are lower-kebab-case.
 
-| Vocabulary         | Ops                                                                                                              |
-| ------------------ | ---------------------------------------------------------------------------------------------------------------- |
-| `analysis`         | entropy (bits per byte) and byte-frequency distribution                                                          |
-| `base32`           | encode and decode, standard and hex alphabets (RFC 4648)                                                         |
-| `base45`           | encode and decode (RFC 9285)                                                                                     |
-| `base58`           | encode and decode, bitcoin, flickr and ripple alphabets                                                          |
-| `base62`           | encode and decode, standard and inverted alphabets                                                               |
-| `base64`           | encode and decode, standard and URL-safe alphabets                                                               |
-| `base85`           | encode and decode, Ascii85 and Z85                                                                               |
-| `base92`           | encode and decode (thenoviceoof)                                                                                 |
-| `bcd`              | binary-coded decimal: 8421, 7421, 4221 and excess-3, packed or unpacked, signed or not                           |
-| `bech32`           | Bech32 and Bech32m (BIP-173, BIP-350) encode and decode                                                          |
-| `bigint`           | big-endian bytes to and from decimal text of an unsigned integer                                                 |
-| `binary`           | bytes to and from 8-bit binary text                                                                              |
-| `bits`             | XOR (and brute force), AND, OR, NOT, ADD, SUB, bit shifts and rotates (11 ops)                                   |
-| `braille`          | bytes as 8-dot Unicode Braille patterns and back                                                                 |
-| `caret`            | caret and M- notation as printed by `cat -v`                                                                     |
-| `charcode`         | text to and from character codes in a chosen base                                                                |
-| `charset`          | legacy character sets (single-byte, EBCDIC, UTF-16/32, CJK), with brute force (3 ops)                            |
-| `classical`        | rot (Caesar, ROT13), rot47, Atbash, Affine, Vigenère, Bacon, Bifid, Rail Fence, A1Z26, Substitute (16 ops)       |
-| `cobs`             | Consistent Overhead Byte Stuffing encode and decode                                                              |
-| `decimal`          | bytes to and from decimal numbers                                                                                |
-| `endian`           | swap the byte order of 2, 4 or 8 byte words                                                                      |
-| `float`            | IEEE 754 binary32 and binary64 numbers to and from bytes                                                         |
-| `hex`              | encode and decode                                                                                                |
-| `hex-content`      | Snort and Suricata rule `content` text, with `                                                                   | 41 42 | ` hex sections |
-| `hexdump`          | xxd-style hex dump, encode and decode                                                                            |
-| `html`             | encode and decode character references (full named-entity table)                                                 |
-| `modhex`           | Yubico ModHex encode and decode                                                                                  |
-| `morse`            | encode and decode (ITU-R M.1677-1)                                                                               |
-| `octal`            | bytes to and from octal numbers                                                                                  |
-| `punycode`         | Punycode (RFC 3492), as a label or per domain label with `xn--`                                                  |
-| `quoted-printable` | Quoted-Printable (RFC 2045 section 6.7) encode and decode                                                        |
-| `radix`            | convert an integer of any size from one base to another                                                          |
-| `regex`            | test, find-all, replace, split                                                                                   |
-| `text`             | split, join, replace, reverse, upper, lower                                                                      |
-| `unicode`          | escape and unescape code points (`\u`, `U+`, `%u`, `\x{}`, `&#x;`), normalisation, smart quotes to ASCII (4 ops) |
-| `url`              | percent-encode and decode (RFC 3986)                                                                             |
+| Vocabulary         | Ops                                                                                                                                                                    |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `analysis`         | entropy (bits per byte), byte-frequency distribution, index of coincidence and chi-squared against English (4 ops)                                                     |
+| `base32`           | encode and decode, standard and hex alphabets (RFC 4648)                                                                                                               |
+| `base45`           | encode and decode (RFC 9285)                                                                                                                                           |
+| `base58`           | encode and decode, bitcoin, flickr and ripple alphabets                                                                                                                |
+| `base62`           | encode and decode, standard and inverted alphabets                                                                                                                     |
+| `base64`           | encode and decode, standard and URL-safe alphabets                                                                                                                     |
+| `base85`           | encode and decode, Ascii85 and Z85                                                                                                                                     |
+| `base92`           | encode and decode (thenoviceoof)                                                                                                                                       |
+| `bcd`              | binary-coded decimal: 8421, 7421, 4221 and excess-3, packed or unpacked, signed or not                                                                                 |
+| `bech32`           | Bech32 and Bech32m (BIP-173, BIP-350) encode and decode                                                                                                                |
+| `bigint`           | big-endian bytes to and from decimal text of an unsigned integer                                                                                                       |
+| `binary`           | bytes to and from 8-bit binary text                                                                                                                                    |
+| `bits`             | XOR (and brute force), AND, OR, NOT, ADD, SUB, bit shifts and rotates (11 ops)                                                                                         |
+| `bombe`            | Turing-Welchman Bombe for the Enigma I and M3: a crib search for stops, one word for one or many rotor orders (1 op)                                                   |
+| `braille`          | bytes as 8-dot Unicode Braille patterns and back                                                                                                                       |
+| `caret`            | caret and M- notation as printed by `cat -v`                                                                                                                           |
+| `charcode`         | text to and from character codes in a chosen base                                                                                                                      |
+| `charset`          | legacy character sets (single-byte, EBCDIC, UTF-16/32, CJK), with brute force (3 ops)                                                                                  |
+| `classical`        | rot (Caesar, ROT13), rot47, rot8000, rot brute force, Atbash, Affine, Vigenère, Bacon, Bifid, Rail Fence, Caesar box, A1Z26, Cetacean, CTX1, LS47, Substitute (26 ops) |
+| `cobs`             | Consistent Overhead Byte Stuffing encode and decode                                                                                                                    |
+| `colossus`         | Colossus-style counting: how often a Boolean condition holds over every start position of two chi wheels, for the Lorenz break-in (1 op)                               |
+| `decimal`          | bytes to and from decimal numbers                                                                                                                                      |
+| `endian`           | swap the byte order of 2, 4 or 8 byte words                                                                                                                            |
+| `enigma`           | Enigma I, M3 and M4 rotor machines, one reciprocal word; also the shared historical rotor, turnover and reflector data (1 op)                                          |
+| `float`            | IEEE 754 binary32 and binary64 numbers to and from bytes                                                                                                               |
+| `fractionating`    | ADFGX and ADFGVX, Polybius, Nihilist and Trifid (8 ops)                                                                                                                |
+| `hex`              | encode and decode                                                                                                                                                      |
+| `hex-content`      | Snort and Suricata rule `content` text, with `                                                                                                                         | 41 42 | ` hex sections |
+| `hexdump`          | xxd-style hex dump, encode and decode                                                                                                                                  |
+| `html`             | encode and decode character references (full named-entity table)                                                                                                       |
+| `lorenz`           | Lorenz SZ40/42a/42b with the KH, ZMUG and BREAM patterns and the P5 mode, and a pattern merge helper (2 ops)                                                           |
+| `modhex`           | Yubico ModHex encode and decode                                                                                                                                        |
+| `morse`            | encode and decode (ITU-R M.1677-1)                                                                                                                                     |
+| `octal`            | bytes to and from octal numbers                                                                                                                                        |
+| `polyalphabetic`   | Beaufort, Gronsfeld, Porta and autokey Vigenere (6 ops)                                                                                                                |
+| `polygraphic`      | Playfair, four-square and Hill (6 ops)                                                                                                                                 |
+| `punycode`         | Punycode (RFC 3492), as a label or per domain label with `xn--`                                                                                                        |
+| `quoted-printable` | Quoted-Printable (RFC 2045 section 6.7) encode and decode                                                                                                              |
+| `radix`            | convert an integer of any size from one base to another                                                                                                                |
+| `regex`            | test, find-all, replace, split                                                                                                                                         |
+| `sigaba`           | SIGABA (ECM Mark II) rotor machine, one reciprocal word (1 op)                                                                                                         |
+| `text`             | split, join, replace, reverse, upper, lower                                                                                                                            |
+| `transposition`    | columnar transposition, encrypt and decrypt                                                                                                                            |
+| `typex`            | Typex-style five-rotor machine with the wirings as parameters (1 op)                                                                                                   |
+| `unicode`          | escape and unescape code points (`\u`, `U+`, `%u`, `\x{}`, `&#x;`), normalisation, smart quotes to ASCII (4 ops)                                                       |
+| `url`              | percent-encode and decode (RFC 3986)                                                                                                                                   |
 
 Three internal vocabularies are not part of the catalogue as ops: `recipe` (the words recipes compile to), `raise` (typed errors, above) and `util` (shared helpers, below).
 
@@ -82,39 +105,60 @@ Three internal vocabularies are not part of the catalogue as ops: `recipe` (the 
 
 `vocab/util.fth` holds FL helpers that more than one op vocabulary needs. A private (`_`) word cannot be called from another vocabulary, so without `util` each author copies the helper. `util` is in `INTERNAL_VOCABS`: its public words are callable from every vocabulary (`util:space?`, or `USING: util`), are never listed in the catalogue, have a doc string and no category, and user units cannot define into it.
 
-| Word                                                          | Meaning                                                                                                                                                  |
-| ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `space? ( b:int -- bool )`                                    | ASCII white space: 9 to 13 and 32                                                                                                                        |
-| `space-or-comma? ( b:int -- bool )`                           | white space or a comma, the separators of numeric text                                                                                                   |
-| `between? ( n:int lo:int hi:int -- bool )`                    | lo <= n <= hi                                                                                                                                            |
-| `cp>str ( cp:int -- str )`                                    | the one-character string of a code point                                                                                                                 |
-| `separator ( choice:str -- str )`                             | none, space, comma, newline to the delimiter text                                                                                                        |
-| `decode-table ( alpha:str ws:int pad:int -- bytes )`          | 256-byte lookup table for `translate`: index in the alphabet, else `ws` for white space, `pad` for `=`, else 255 (pass 255 for a marker you do not need) |
-| `check-symbols ( data:bytes table:bytes -- bytes )`           | translate data through a decode table; E_COERCE if any byte maps to 255; other markers (white space, padding) are left for the caller                    |
-| `int>be-bytes ( v:int n:int -- bytes )`                       | the low n bytes of v, big-endian                                                                                                                         |
-| `digits>int ( vals:bytes radix:int -- int )`                  | positional fold of digit values, most significant first                                                                                                  |
-| `dec-digit? ( c:int -- bool )`                                | ASCII 0 to 9                                                                                                                                             |
-| `hex-digit? ( c:int -- bool )`                                | ASCII 0 to 9, A to F, a to f                                                                                                                             |
-| `byte>hex ( b:int -- str )`                                   | two upper-case hex digits of a byte                                                                                                                      |
-| `pad-hex ( v:int n:int -- str )`                              | lower-case hex of v, zero-padded to at least n digits                                                                                                    |
-| `repeat-str ( s:str n:int -- str )`                           | s repeated n times                                                                                                                                       |
-| `starts-with? ( s:str prefix:str -- bool )`                   | length-guarded: false, not an error, when s is shorter                                                                                                   |
-| `ends-with? ( s:str suffix:str -- bool )`                     | length-guarded                                                                                                                                           |
-| `strip-space ( s:str -- str )`                                | remove every ASCII white space character                                                                                                                 |
-| `count-leading ( items pred:quot -- int )`                    | how many elements at the start (list or bytes) satisfy pred                                                                                              |
-| `trim-start ( s:str pred:quot -- str )`                       | drop leading characters whose code satisfies pred                                                                                                        |
-| `trim-end ( s:str pred:quot -- str )`                         | drop trailing characters whose code satisfies pred                                                                                                       |
-| `number-tokens ( s:str -- list )`                             | split numeric text at white space and commas, empty pieces dropped                                                                                       |
-| `numbers>bytes ( data:bytes radix:int msg:str -- bytes )`     | decode byte values written in a radix (0 to 255, no sign); E_COERCE with msg if out of range                                                             |
-| `hex-unescape ( s:str marker:str msg:str -- bytes )`          | text where marker (`%`, `=`) introduces two hex digits for a byte; E_COERCE with msg otherwise                                                           |
-| `zero-bytes ( n:int -- bytes )`                               | n zero bytes                                                                                                                                             |
-| `byte-at ( d j:int -- int )`                                  | element j of bytes or a list, 0 past the end                                                                                                             |
-| `bit-field ( d:bytes p:int n:int -- int )`                    | n bits (up to 13) from bit p, zero padded past the end                                                                                                   |
-| `nibbles>byte ( nibs i:int -- int )`                          | byte i from nibbles 2i (high) and 2i + 1 (low)                                                                                                           |
-| `int>bytes ( n:int -- bytes )`                                | big-endian bytes of a non-negative integer, none for 0, linear time                                                                                      |
-| `int>symbols ( n:int alpha:bytes -- bytes )`                  | digits of n written with the bytes of alpha (radix = its length)                                                                                         |
-| `bytes>symbols ( data:bytes alpha:bytes -- bytes )`           | Base58/Base62 style big-integer conversion; each leading zero byte is one first symbol                                                                   |
-| `symbols>bytes ( data:bytes table:bytes radix:int -- bytes )` | the inverse, through a decode table with 254 for white space                                                                                             |
+| Word                                                          | Meaning                                                                                                                                                                       |
+| ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `space? ( b:int -- bool )`                                    | ASCII white space: 9 to 13 and 32                                                                                                                                             |
+| `space-or-comma? ( b:int -- bool )`                           | white space or a comma, the separators of numeric text                                                                                                                        |
+| `between? ( n:int lo:int hi:int -- bool )`                    | lo <= n <= hi                                                                                                                                                                 |
+| `cp>str ( cp:int -- str )`                                    | the one-character string of a code point                                                                                                                                      |
+| `separator ( choice:str -- str )`                             | none, space, comma, newline to the delimiter text                                                                                                                             |
+| `decode-table ( alpha:str ws:int pad:int -- bytes )`          | 256-byte lookup table for `translate`: index in the alphabet, else `ws` for white space, `pad` for `=`, else 255 (pass 255 for a marker you do not need)                      |
+| `check-symbols ( data:bytes table:bytes -- bytes )`           | translate data through a decode table; E_COERCE if any byte maps to 255, found in a constant number of VM steps; other markers (white space, padding) are left for the caller |
+| `int>be-bytes ( v:int n:int -- bytes )`                       | the low n bytes of v, big-endian                                                                                                                                              |
+| `digits>int ( vals:bytes radix:int -- int )`                  | positional fold of digit values, most significant first                                                                                                                       |
+| `dec-digit? ( c:int -- bool )`                                | ASCII 0 to 9                                                                                                                                                                  |
+| `hex-digit? ( c:int -- bool )`                                | ASCII 0 to 9, A to F, a to f                                                                                                                                                  |
+| `byte>hex ( b:int -- str )`                                   | two upper-case hex digits of a byte                                                                                                                                           |
+| `pad-hex ( v:int n:int -- str )`                              | lower-case hex of v, zero-padded to at least n digits                                                                                                                         |
+| `repeat-str ( s:str n:int -- str )`                           | s repeated n times                                                                                                                                                            |
+| `starts-with? ( s:str prefix:str -- bool )`                   | length-guarded: false, not an error, when s is shorter                                                                                                                        |
+| `ends-with? ( s:str suffix:str -- bool )`                     | length-guarded                                                                                                                                                                |
+| `strip-space ( s:str -- str )`                                | remove every ASCII white space character                                                                                                                                      |
+| `count-leading ( items pred:quot -- int )`                    | how many elements at the start (list or bytes) satisfy pred                                                                                                                   |
+| `trim-start ( s:str pred:quot -- str )`                       | drop leading characters whose code satisfies pred                                                                                                                             |
+| `trim-end ( s:str pred:quot -- str )`                         | drop trailing characters whose code satisfies pred                                                                                                                            |
+| `number-tokens ( s:str -- list )`                             | split numeric text at white space and commas, empty pieces dropped                                                                                                            |
+| `numbers>bytes ( data:bytes radix:int msg:str -- bytes )`     | decode byte values written in a radix (0 to 255, no sign); E_COERCE with msg if out of range                                                                                  |
+| `hex-unescape ( s:str marker:str msg:str -- bytes )`          | text where marker (`%`, `=`) introduces two hex digits for a byte; E_COERCE with msg otherwise                                                                                |
+| `zero-bytes ( n:int -- bytes )`                               | n zero bytes                                                                                                                                                                  |
+| `byte-at ( d j:int -- int )`                                  | element j of bytes or a list, 0 past the end                                                                                                                                  |
+| `bit-field ( d:bytes p:int n:int -- int )`                    | n bits (up to 13) from bit p, zero padded past the end                                                                                                                        |
+| `nibbles>byte ( nibs i:int -- int )`                          | byte i from nibbles 2i (high) and 2i + 1 (low)                                                                                                                                |
+| `int>bytes ( n:int -- bytes )`                                | big-endian bytes of a non-negative integer, none for 0, linear time                                                                                                           |
+| `int>symbols ( n:int alpha:bytes -- bytes )`                  | digits of n written with the bytes of alpha (radix = its length)                                                                                                              |
+| `bytes>symbols ( data:bytes alpha:bytes -- bytes )`           | Base58/Base62 style big-integer conversion; each leading zero byte is one first symbol                                                                                        |
+| `symbols>bytes ( data:bytes table:bytes radix:int -- bytes )` | the inverse, through a decode table with 254 for white space                                                                                                                  |
+| `surrogate? ( cp:int -- bool )`                               | a UTF-16 surrogate, U+D800 to U+DFFF                                                                                                                                          |
+| `str-chunks ( s:str n:int -- list )`                          | the pieces of s of n characters, the last one shorter                                                                                                                         |
+| `list-flatten ( ll:list -- list )`                            | a list of lists joined one level                                                                                                                                              |
+| `contains-bytes? ( data:bytes needle:bytes -- bool )`         | a byte search done on the Latin-1 text, a few steps for any length                                                                                                            |
+| `drop-byte ( data:bytes b:int -- bytes )`                     | the bytes without any byte equal to b, a few steps for any length                                                                                                             |
+| `popcount-26 ( m:int -- int )`                                | the set bits among the low 26 of a letter-set mask                                                                                                                            |
+| `letter-numbers ( s:str -- bytes )`                           | the letters of any text as 0 to 25, other characters dropped                                                                                                                  |
+
+The words from the cipher-machine and classical waves, also in `util` (see their doc strings in `vocab/util.fth`):
+
+| Word                                                                                                                                 | Meaning                                                                           |
+| ------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------- |
+| `letter? letters? digits?`                                                                                                           | ASCII letter, text of only letters, text of only digits                           |
+| `letter-indices ( s:str -- bytes )`, `digit-values ( s:str -- bytes )`, `letter-table ( -- bytes )`                                  | letters as 0 to 25, digits as 0 to 9, and the 256-byte translate table of letters |
+| `count-of ( items x -- int )`                                                                                                        | how many elements of a list or bytes equal x                                      |
+| `index-of`, `perm-invert`, `perm?`, `table-compose3`                                                                                 | positions and permutations of 0 to 25                                             |
+| `rotor-shifted`, `rotor-shift-table`, `rotor-notch-flags`, `rotor-reflect-table`                                                     | rotor tables for every shift, notch flags and the rotor next to the reflector     |
+| `letter-settings ( s:str n:int what:str -- bytes )`, `plugboard-table ( s:str -- bytes )`                                            | ring settings and start positions, and a plugboard as a permutation               |
+| `cycle-bytes ( pat:bytes start:int n:int -- bytes )`                                                                                 | n bytes of the endless repetition of a pattern, in linear time                    |
+| `ita2-alphabet`, `ita2-table`, `ita2-table2`, `ita2-code`, `ita2-entry`, `from-bp`                                                   | teleprinter (ITA2) text in Bletchley Park notation                                |
+| `keyed-alphabet ( key:bytes alpha:bytes -- bytes )`, `square-positions ( grid:bytes -- bytes )`, `upper-merge-i ( code:int -- int )` | keyed squares and letter folding                                                  |
 
 **Rule: check `util` before writing a helper. Anything more than one vocabulary needs goes in `util`.**
 
@@ -144,9 +188,20 @@ Example:
 
 `npm run dupes -w @forge/ops` builds the package and prints all four reports (always exits 0). Run it when reviewing a work package. At a wave close-out the target is 0 exact duplicates, 0 pending promotions, and every remaining near duplicate or likely re-implementation resolved or justified.
 
+### Justified exceptions
+
+The sweep reports copies that a promotion would remove. A pair it reports and that stays is written down here, and the private helper carries a one-line comment saying why. Pairs the sweep never sees (an exact copy whose body calls a private helper of its own vocabulary, so the normalised bodies differ) are listed as well.
+
+- `enigma:_step` and `typex:_step` implement the same Enigma-style stepping with the double step, and `typex:_turn` only names the row-offset update. They stay separate: the rotor state is in each vocabulary's `VARIABLE`s (`_b1`, `_b2`, `_b3`, `_NR`, `_NM`), so a shared util word would have to take five values and give back three on every key press. That costs more VM steps on the per-letter path than the inline test and update. The sweep does not report the pair for the reason above.
+- `enigma:_byte` and `typex:_byte` have the same core words. Each reads its own `_LT` table and its own `_press` on the per-letter path, so the call cannot be shared.
+- `classical:_atbash-code` and `morse:_upper-cp` reflect a letter within its case and fold a lower-case letter to upper case. They only look alike.
+- `classical:_text-printable?` and `url:_unreserved?` test two different byte sets.
+- `base32:_ungroups` and `classical:_cb-enc` map a helper over an index range and join, over different per-group words.
+- `fractionating:_adf-labels` and `polygraphic:_pl-alpha` each pick one of two unrelated literals by a name.
+
 ## Running the vectors
 
-Every op has vectors in `vocab/<v>.test.json`, and the catalogue test fails if an op has none. All 1,472 vectors (36 files) run through the in-process baker in Node as part of the worker package's tests:
+Every op has vectors in `vocab/<v>.test.json`, and the catalogue test fails if an op has none. All 1,865 vectors (46 files) run through the in-process baker in Node as part of the worker package's tests:
 
 ```sh
 npm test -w @forge/worker                              # includes test/vectors.test.ts
