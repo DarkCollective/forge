@@ -75,7 +75,7 @@ export class ForgeStatusbar extends LitElement {
     if (c.status === "loading") info = html`<span>Loading operations…</span>`;
     else if (c.status === "error") {
       info = html`<span class="err">Could not load operations (${c.message}).</span>
-        <button type="button" @click=${() => void loadCatalogue(actions)}>Retry</button>`;
+        <button type="button" @click=${() => void loadCatalogue(actions, store)}>Retry</button>`;
     } else {
       info = html`<span
         >${c.catalogue.ops.length} operations<span class="detail">
