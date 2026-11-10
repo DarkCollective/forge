@@ -201,13 +201,8 @@ META: bacon-decode
 \ Bifid
 \ ---------------------------------------------------------------------------------------------
 
-\ Upper-case a letter and merge J into I.
-\ util-candidate: upper-merge-i
-: _bifid-norm ( code:int -- int )
-  code 223 band dup 74 = [ drop 73 ] when ;
-
 : _bifid-letters ( data:bytes -- bytes )
-  data [ _is-letter ] filter [ _bifid-norm ] map ;
+  data [ _is-letter ] filter [ util:upper-merge-i ] map ;
 
 : _add-unique ( acc:bytes c:int -- bytes )
   acc [ c = ] filter len 0 >
@@ -217,7 +212,7 @@ META: bacon-decode
 
 \ The 25 letters of the square in reading order: the key first, then the rest of the alphabet.
 : _bifid-grid ( key:str -- bytes )
-  key str>bytes [ _bifid-norm ] map
+  key str>bytes [ util:upper-merge-i ] map
   "ABCDEFGHIKLMNOPQRSTUVWXYZ" str>bytes cat
   #[ ] [ _add-unique ] reduce ;
 

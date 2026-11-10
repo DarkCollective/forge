@@ -1,0 +1,410 @@
+[
+  {
+    "name": "Polybius, plain square, HELLO",
+    "ref": "standard Polybius square (A = 11 ... Z = 55 without J), the classic HELLO example",
+    "op": "fractionating:polybius-encrypt",
+    "params": {
+      "key": ""
+    },
+    "input": {
+      "value": "HELLO",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2315313134",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Polybius decrypt, plain square",
+    "ref": "standard Polybius square, the classic HELLO example",
+    "op": "fractionating:polybius-decrypt",
+    "params": {
+      "key": ""
+    },
+    "input": {
+      "value": "2315313134",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "HELLO",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Polybius with the keyed square, POLYBIUS CIPHER",
+    "ref": "Polybius square of Wikipedia \"Polybius square\" (keyword POLYBIUS CIPHER gives its grid, checked against the article table)",
+    "op": "fractionating:polybius-encrypt",
+    "params": {
+      "key": "POLYBIUSCIPHER"
+    },
+    "input": {
+      "value": "SOMETEXT",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2312433151315451",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Polybius keyed square decrypt",
+    "ref": "Polybius square of Wikipedia \"Polybius square\" (keyword POLYBIUS CIPHER gives its grid, checked against the article table)",
+    "op": "fractionating:polybius-decrypt",
+    "params": {
+      "key": "POLYBIUSCIPHER"
+    },
+    "input": {
+      "value": "2312433151315451",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "SOMETEXT",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Polybius merges J into I",
+    "ref": "standard Polybius square",
+    "op": "fractionating:polybius-encrypt",
+    "params": {
+      "key": ""
+    },
+    "input": {
+      "value": "JAM",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "241132",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Polybius decrypt of an odd digit count is E_COERCE",
+    "ref": "hand-computed",
+    "op": "fractionating:polybius-decrypt",
+    "params": {
+      "key": ""
+    },
+    "input": {
+      "value": "231",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "Polybius decrypt of a digit 6 is E_COERCE",
+    "ref": "hand-computed",
+    "op": "fractionating:polybius-decrypt",
+    "params": {
+      "key": ""
+    },
+    "input": {
+      "value": "26",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "Nihilist, published example ZEBRAS / RUSSIAN",
+    "ref": "Nihilist cipher, worked example on Wikipedia (ZEBRAS square, RUSSIAN key, DYNAMITE WINTER PALACE): the article's number list",
+    "op": "fractionating:nihilist-encrypt",
+    "params": {
+      "key": "RUSSIAN",
+      "square": "ZEBRAS"
+    },
+    "input": {
+      "value": "DYNAMITE WINTER PALACE",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "37 106 62 36 67 47 86 26 104 53 62 77 27 55 57 66 55 36 54 27",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Nihilist decrypt, published example",
+    "ref": "Nihilist cipher, worked example on Wikipedia (ZEBRAS square, RUSSIAN key, DYNAMITE WINTER PALACE): the article's number list",
+    "op": "fractionating:nihilist-decrypt",
+    "params": {
+      "key": "RUSSIAN",
+      "square": "ZEBRAS"
+    },
+    "input": {
+      "value": "37 106 62 36 67 47 86 26 104 53 62 77 27 55 57 66 55 36 54 27",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "DYNAMITEWINTERPALACE",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Nihilist, plain square, key A",
+    "ref": "hand-computed: H = 23, E = 15, L = 31, O = 34 in the plain square (J omitted), A = 11",
+    "op": "fractionating:nihilist-encrypt",
+    "params": {
+      "key": "A"
+    },
+    "input": {
+      "value": "HELLO",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "34 26 42 42 45",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Nihilist decrypt rejects a number that is no sum of two cells",
+    "ref": "hand-computed: 99 less key coordinate 14 is 85, not a cell",
+    "op": "fractionating:nihilist-decrypt",
+    "params": {
+      "key": "R",
+      "square": "ZEBRAS"
+    },
+    "input": {
+      "value": "99",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "Nihilist rejects a key with a digit",
+    "ref": "parameter check (key letters only)",
+    "op": "fractionating:nihilist-encrypt",
+    "params": {
+      "key": "R1"
+    },
+    "input": {
+      "value": "ABC",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_PARAM_INVALID"
+    }
+  },
+  {
+    "name": "ADFGX, published example ATTACKATONCE",
+    "ref": "ADFGX cipher, worked example on Wikipedia (square BTALPDHOZKQFVSNGICUXMREWY, transposition CARGO, plaintext ATTACKATONCE)",
+    "op": "fractionating:adfgx-encrypt",
+    "params": {
+      "key": "BTALPDHOZKQFVSNGICUXMREWY",
+      "trkey": "CARGO",
+      "variant": "adfgx"
+    },
+    "input": {
+      "value": "ATTACKATONCE",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "FAXDFADDDGDGFFFAFAXAFAFX",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ADFGX decrypt, published example",
+    "ref": "ADFGX cipher, worked example on Wikipedia (square BTALPDHOZKQFVSNGICUXMREWY, transposition CARGO, plaintext ATTACKATONCE)",
+    "op": "fractionating:adfgx-decrypt",
+    "params": {
+      "key": "BTALPDHOZKQFVSNGICUXMREWY",
+      "trkey": "CARGO",
+      "variant": "adfgx"
+    },
+    "input": {
+      "value": "FAXDFADDDGDGFFFAFAXAFAFX",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ATTACKATONCE",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ADFGX, variant omitted takes adfgx",
+    "ref": "ADFGX cipher, worked example on Wikipedia (square BTALPDHOZKQFVSNGICUXMREWY, transposition CARGO, plaintext ATTACKATONCE)",
+    "op": "fractionating:adfgx-encrypt",
+    "params": {
+      "key": "BTALPDHOZKQFVSNGICUXMREWY",
+      "trkey": "CARGO"
+    },
+    "input": {
+      "value": "ATTACKATONCE",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "FAXDFADDDGDGFFFAFAXAFAFX",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ADFGVX, published example attack at 1200am",
+    "ref": "ADFGVX cipher, worked example on Wikipedia (6 by 6 square NA1C3H8TB2OME5WRPD4F6G7I9J0KLQSUVXYZ as the article's grid, transposition PRIVACY, plaintext attack at 1200am)",
+    "op": "fractionating:adfgx-encrypt",
+    "params": {
+      "key": "NA1C3H8TB2OME5WRPD4F6G7I9J0KLQSUVXYZ",
+      "trkey": "PRIVACY",
+      "variant": "adfgvx"
+    },
+    "input": {
+      "value": "attack at 1200am",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "DGDDDAGDDGAFADDFDADVDVFAADVX",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ADFGVX decrypt, published example",
+    "ref": "ADFGVX cipher, worked example on Wikipedia (6 by 6 square NA1C3H8TB2OME5WRPD4F6G7I9J0KLQSUVXYZ as the article's grid, transposition PRIVACY, plaintext attack at 1200am)",
+    "op": "fractionating:adfgx-decrypt",
+    "params": {
+      "key": "NA1C3H8TB2OME5WRPD4F6G7I9J0KLQSUVXYZ",
+      "trkey": "PRIVACY",
+      "variant": "adfgvx"
+    },
+    "input": {
+      "value": "DGDDDAGDDGAFADDFDADVDVFAADVX",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ATTACKAT1200AM",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ADFGX decrypt rejects an odd number of labels",
+    "ref": "hand-computed: 25 labels, one more than the 24 of the published text",
+    "op": "fractionating:adfgx-decrypt",
+    "params": {
+      "key": "BTALPDHOZKQFVSNGICUXMREWY",
+      "trkey": "CARGO",
+      "variant": "adfgx"
+    },
+    "input": {
+      "value": "FAXDFADDDGDGFFFAFAXAFAFXA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "ADFGX decrypt rejects a letter that is no label",
+    "ref": "hand-computed: Z is not a row or column label of ADFGX",
+    "op": "fractionating:adfgx-decrypt",
+    "params": {
+      "key": "BTALPDHOZKQFVSNGICUXMREWY",
+      "trkey": "CARGO",
+      "variant": "adfgx"
+    },
+    "input": {
+      "value": "ZZAA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "ADFGX rejects an unknown variant",
+    "ref": "static check: the variant is a choice of adfgx or adfgvx",
+    "op": "fractionating:adfgx-encrypt",
+    "params": {
+      "key": "BTALPDHOZKQFVSNGICUXMREWY",
+      "trkey": "CARGO",
+      "variant": "xxx"
+    },
+    "input": {
+      "value": "ATTACK",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "Trifid, published example aide-toi, period 5",
+    "ref": "Trifid cipher, worked example on Wikipedia (key FELIXMARDELASTELLE, period 5, aide-toi, le ciel t'aidera)",
+    "op": "fractionating:trifid-encrypt",
+    "params": {
+      "key": "FELIXMARDELASTELLE",
+      "period": 5
+    },
+    "input": {
+      "value": "aide-toi, le ciel t'aidera",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "FMJFVOISSUFTFPUFEQQC",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Trifid decrypt, published example",
+    "ref": "Trifid cipher, worked example on Wikipedia (key FELIXMARDELASTELLE, period 5, aide-toi, le ciel t'aidera)",
+    "op": "fractionating:trifid-decrypt",
+    "params": {
+      "key": "FELIXMARDELASTELLE",
+      "period": 5
+    },
+    "input": {
+      "value": "FMJFVOISSUFTFPUFEQQC",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "AIDETOILECIELTAIDERA",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Trifid, plain cube and default period 5",
+    "ref": "hand-computed: plain cube A to Z then +, layers, rows and columns of the first nine letters, period 5",
+    "op": "fractionating:trifid-encrypt",
+    "params": {},
+    "input": {
+      "value": "ABCDEFGHI",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "AABKTAF+F",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Trifid decrypt reads the 27th symbol +",
+    "ref": "round trip of the plain-cube vector above",
+    "op": "fractionating:trifid-decrypt",
+    "params": {},
+    "input": {
+      "value": "AABKTAF+F",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ABCDEFGHI",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Trifid rejects period 0",
+    "ref": "static check: period is 1 to 1000",
+    "op": "fractionating:trifid-encrypt",
+    "params": {
+      "period": 0
+    },
+    "input": {
+      "value": "ABC",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  }
+]

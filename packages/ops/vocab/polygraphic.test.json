@@ -1,0 +1,256 @@
+[
+  {
+    "name": "Playfair encrypt, key playfairexample",
+    "ref": "Wikipedia \"Playfair cipher\" worked example (key playfair example, hide the gold in the tree stump)",
+    "op": "polygraphic:playfair-encrypt",
+    "params": {
+      "key": "playfairexample"
+    },
+    "input": {
+      "value": "Hide the gold in the tree stump",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "BMODZBXDNABEKUDMUIXMMOUVIF",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Playfair decrypt, key playfairexample",
+    "ref": "Wikipedia \"Playfair cipher\" worked example (key playfair example, hide the gold in the tree stump)",
+    "op": "polygraphic:playfair-decrypt",
+    "params": {
+      "key": "playfairexample"
+    },
+    "input": {
+      "value": "BMODZBXDNABEKUDMUIXMMOUVIF",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "HIDETHEGOLDINTHETREXESTUMP",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Playfair doubled letters get the filler, odd length too",
+    "ref": "hand-computed and checked by a Python script",
+    "op": "polygraphic:playfair-encrypt",
+    "params": {
+      "key": "monarchy"
+    },
+    "input": {
+      "value": "balloon",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "IBSUPMNA",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Playfair with J merged into I (default)",
+    "ref": "hand-computed and checked by a Python script",
+    "op": "polygraphic:playfair-encrypt",
+    "params": {
+      "key": "monarchy"
+    },
+    "input": {
+      "value": "jump",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "EXOL",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Playfair decrypt with an odd count is E_COERCE",
+    "ref": "hand-computed and checked by a Python script",
+    "op": "polygraphic:playfair-decrypt",
+    "params": {
+      "key": "monarchy"
+    },
+    "input": {
+      "value": "ABC",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "Four-square, key1 example, key2 keyword",
+    "ref": "hand-computed from the standard four-square rule; the first digraph HE -> FY agrees with Wikipedia \"Four-square cipher\"",
+    "op": "polygraphic:four-square-encrypt",
+    "params": {
+      "key1": "example",
+      "key2": "keyword"
+    },
+    "input": {
+      "value": "HELP ME OBIWAN KENOBI",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "FYNFNEHWBXAFFOKHMD",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Four-square decrypt is the inverse",
+    "ref": "hand-computed from the standard four-square rule; the first digraph HE -> FY agrees with Wikipedia \"Four-square cipher\"",
+    "op": "polygraphic:four-square-decrypt",
+    "params": {
+      "key1": "example",
+      "key2": "keyword"
+    },
+    "input": {
+      "value": "FYNFNEHWBXAFFOKHMD",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "HELPMEOBIWANKENOBI",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Hill 3x3, letters key GYBNQKURP, ACT",
+    "ref": "Wikipedia \"Hill cipher\" worked example (3x3 key GYB/NQK/URP)",
+    "op": "polygraphic:hill-encrypt",
+    "params": {
+      "key": "GYBNQKURP",
+      "format": "letters",
+      "pad": "X"
+    },
+    "input": {
+      "value": "ACT",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "POH",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Hill 3x3, letters key, CAT",
+    "ref": "Wikipedia \"Hill cipher\" worked example (3x3 key GYB/NQK/URP)",
+    "op": "polygraphic:hill-encrypt",
+    "params": {
+      "key": "GYBNQKURP",
+      "format": "letters",
+      "pad": "X"
+    },
+    "input": {
+      "value": "CAT",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "FIN",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Hill 3x3 decrypt, POH",
+    "ref": "Wikipedia \"Hill cipher\" worked example (3x3 key GYB/NQK/URP)",
+    "op": "polygraphic:hill-decrypt",
+    "params": {
+      "key": "GYBNQKURP",
+      "format": "letters"
+    },
+    "input": {
+      "value": "POH",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ACT",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Hill 3x3, numbers key 6 24 1 13 16 10 20 17 15, ACT",
+    "ref": "Wikipedia \"Hill cipher\" worked example (3x3 key GYB/NQK/URP)",
+    "op": "polygraphic:hill-encrypt",
+    "params": {
+      "key": "6 24 1 13 16 10 20 17 15",
+      "format": "numbers",
+      "pad": "X"
+    },
+    "input": {
+      "value": "ACT",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "POH",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Hill 2x2, numbers key 3 3 2 5, HELP",
+    "ref": "Wikipedia \"Hill cipher\" worked example (2x2 key 3 3 2 5, HELP -> HIAT)",
+    "op": "polygraphic:hill-encrypt",
+    "params": {
+      "key": "3 3 2 5",
+      "format": "numbers",
+      "pad": "X"
+    },
+    "input": {
+      "value": "HELP",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "HIAT",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Hill 2x2 decrypt, HIAT",
+    "ref": "Wikipedia \"Hill cipher\" worked example (2x2 key 3 3 2 5, HELP -> HIAT)",
+    "op": "polygraphic:hill-decrypt",
+    "params": {
+      "key": "3 3 2 5",
+      "format": "numbers"
+    },
+    "input": {
+      "value": "HIAT",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "HELP",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Hill pads the last block",
+    "ref": "hand-computed and checked by a Python script",
+    "op": "polygraphic:hill-encrypt",
+    "params": {
+      "key": "3 3 2 5",
+      "format": "numbers",
+      "pad": "Q"
+    },
+    "input": {
+      "value": "HEL",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "HIDY",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Hill with a non-invertible key is E_RANGE",
+    "ref": "hand-computed and checked by a Python script",
+    "op": "polygraphic:hill-encrypt",
+    "params": {
+      "key": "2244",
+      "format": "numbers",
+      "pad": "X"
+    },
+    "input": {
+      "value": "HELP",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  }
+]
