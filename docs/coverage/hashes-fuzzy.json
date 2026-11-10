@@ -1,0 +1,38 @@
+[
+  {
+    "cyberchef": "MurmurHash3",
+    "status": "covered",
+    "forge": ["murmur3:digest"],
+    "note": "MurmurHash3 x86_32 with a 32-bit seed (default 0), written in FL. Returns the 32-bit value as 4 raw bytes in big-endian order, the usual hex form (chain hex:encode); CyberChef shows the same value as an unsigned decimal. The x86_128 and x64_128 variants are not implemented."
+  },
+  {
+    "cyberchef": "SSDEEP",
+    "status": "covered",
+    "forge": ["ssdeep:digest"],
+    "note": "Context triggered piecewise hashing (Kornblum 2006). The result is text, blocksize:hash1:hash2, not bytes: it is a structured string that the compare word reads piece by piece."
+  },
+  {
+    "cyberchef": "CTPH",
+    "status": "redesigned",
+    "forge": ["ssdeep:ctph"],
+    "note": "CTPH is the algorithm that ssdeep implements, and CyberChef offers it as a second name for the same computation, so one word covers both (ctph is an alias of ssdeep:digest)."
+  },
+  {
+    "cyberchef": "Compare SSDEEP hashes",
+    "status": "covered",
+    "forge": ["ssdeep:compare"],
+    "note": "The 0 to 100 score of the reference algorithm: block size check, runs of more than three equal characters cut to three, a common substring of 7 characters, a weighted edit distance (insert and remove 1, replace 2) and the cap for small block sizes. The first hash is the data input and the second is the other parameter."
+  },
+  {
+    "cyberchef": "Compare CTPH hashes",
+    "status": "redesigned",
+    "forge": ["ssdeep:compare-ctph"],
+    "note": "The same comparison as Compare SSDEEP hashes under the algorithm's other name, so one word covers both (compare-ctph is an alias of ssdeep:compare)."
+  },
+  {
+    "cyberchef": "Analyse hash",
+    "status": "covered",
+    "forge": ["hash-analysis:analyse"],
+    "note": "Takes hex text and returns a text report: length in hex characters, bytes and bits, and the hashing functions whose digest has that size. The table is Forge's own and lists some functions that Forge has not implemented. Text that is not hex (or has an odd digit count) is an error."
+  }
+]

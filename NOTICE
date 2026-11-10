@@ -12,3 +12,8 @@ https://html.spec.whatwg.org/entities.json. The tables of the single-byte
 encodings in the charset vocabulary (charset:decode, charset:encode) come from
 the indexes of the WHATWG Encoding Standard (https://encoding.spec.whatwg.org/),
 under the same licence.
+
+The sha2 vocabulary (and the other hash vocabularies built on it) uses the
+audited @noble/hashes library, Copyright (c) 2022 Paul Miller
+(https://paulmillr.com), licensed under the MIT License
+(https://github.com/paulmillr/noble-hashes).

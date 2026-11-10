@@ -1,0 +1,100 @@
+[
+  {
+    "name": "digest: empty string",
+    "ref": "RFC 1320 (MD4) appendix A.5 test suite",
+    "op": "md4:digest",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "31d6cfe0d16ae931b73c59d7e0c089c0",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: a",
+    "ref": "RFC 1320 (MD4) appendix A.5 test suite",
+    "op": "md4:digest",
+    "params": {},
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "bde52cb31de33e46245e05fbdbd6fb24",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: abc",
+    "ref": "RFC 1320 (MD4) appendix A.5 test suite",
+    "op": "md4:digest",
+    "params": {},
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a448017aaf21d8525fc10ae87aa6729d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: message digest",
+    "ref": "RFC 1320 (MD4) appendix A.5 test suite",
+    "op": "md4:digest",
+    "params": {},
+    "input": {
+      "value": "message digest",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d9130a8164549fe818874806e1c7014b",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: a to z",
+    "ref": "RFC 1320 (MD4) appendix A.5 test suite",
+    "op": "md4:digest",
+    "params": {},
+    "input": {
+      "value": "abcdefghijklmnopqrstuvwxyz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d79e1c308aa5bbcdeea8ed63df412da9",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: A-Z a-z 0-9",
+    "ref": "RFC 1320 (MD4) appendix A.5 test suite",
+    "op": "md4:digest",
+    "params": {},
+    "input": {
+      "value": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "043f8582f241db351ce627e153e7f0e4",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest: eight times 1234567890",
+    "ref": "RFC 1320 (MD4) appendix A.5 test suite",
+    "op": "md4:digest",
+    "params": {},
+    "input": {
+      "value": "12345678901234567890123456789012345678901234567890123456789012345678901234567890",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "e33b4ddc9c38f2199c3e7b164fcc0536",
+      "enc": "hex"
+    }
+  }
+]

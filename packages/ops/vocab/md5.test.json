@@ -1,0 +1,114 @@
+[
+  {
+    "name": "md5 empty",
+    "ref": "RFC 1321 appendix A.5 test suite",
+    "op": "md5:digest",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d41d8cd98f00b204e9800998ecf8427e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "md5 a",
+    "ref": "RFC 1321 appendix A.5 test suite",
+    "op": "md5:digest",
+    "params": {},
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0cc175b9c0f1b6a831c399e269772661",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "md5 abc",
+    "ref": "RFC 1321 appendix A.5 test suite",
+    "op": "md5:digest",
+    "params": {},
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "900150983cd24fb0d6963f7d28e17f72",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "md5 message digest",
+    "ref": "RFC 1321 appendix A.5 test suite",
+    "op": "md5:digest",
+    "params": {},
+    "input": {
+      "value": "message digest",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f96b697d7cb7938d525a2f31aaf161d0",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "md5 a..z",
+    "ref": "RFC 1321 appendix A.5 test suite",
+    "op": "md5:digest",
+    "params": {},
+    "input": {
+      "value": "abcdefghijklmnopqrstuvwxyz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c3fcd3d76192e4007dfb496cca67e13b",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "md5 A..Za..z0..9",
+    "ref": "RFC 1321 appendix A.5 test suite",
+    "op": "md5:digest",
+    "params": {},
+    "input": {
+      "value": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d174ab98d277d9f5a5611c2c9f419d9f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "md5 8 x \"1234567890",
+    "ref": "RFC 1321 appendix A.5 test suite",
+    "op": "md5:digest",
+    "params": {},
+    "input": {
+      "value": "12345678901234567890123456789012345678901234567890123456789012345678901234567890",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "57edf4a22be3c955ac49da2e2107b67a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "md5 abcdbcde..nopq",
+    "ref": "hashlib md5 (the 448-bit message is not in the RFC 1321 suite)",
+    "op": "md5:digest",
+    "params": {},
+    "input": {
+      "value": "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "8215ef0796a20bcaaae116d3876c664a",
+      "enc": "hex"
+    }
+  }
+]

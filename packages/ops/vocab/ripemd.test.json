@@ -1,0 +1,288 @@
+[
+  {
+    "name": "digest 128: empty string",
+    "ref": "RIPEMD page, Bosselaers (homes.esat.kuleuven.be/~bosselae/ripemd160.html) test values",
+    "op": "ripemd:digest",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "cdf26213a150dc3ecb610f18f6b38b46",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest 128: a",
+    "ref": "RIPEMD page, Bosselaers (homes.esat.kuleuven.be/~bosselae/ripemd160.html) test values",
+    "op": "ripemd:digest",
+    "params": {
+      "size": "128"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "86be7afa339d0fc7cfc785e72f578d33",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest 128: abc",
+    "ref": "RIPEMD page, Bosselaers (homes.esat.kuleuven.be/~bosselae/ripemd160.html) test values",
+    "op": "ripemd:digest",
+    "params": {
+      "size": "128"
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c14a12199c66e4ba84636b0f69144c77",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest 128: message digest",
+    "ref": "RIPEMD page, Bosselaers (homes.esat.kuleuven.be/~bosselae/ripemd160.html) test values",
+    "op": "ripemd:digest",
+    "params": {
+      "size": "128"
+    },
+    "input": {
+      "value": "message digest",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "9e327b3d6e523062afc1132d7df9d1b8",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest 128: abcdefghijklmnopqrstuvwxyz",
+    "ref": "RIPEMD page, Bosselaers (homes.esat.kuleuven.be/~bosselae/ripemd160.html) test values",
+    "op": "ripemd:digest",
+    "params": {
+      "size": "128"
+    },
+    "input": {
+      "value": "abcdefghijklmnopqrstuvwxyz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fd2aa607f71dc8f510714922b371834e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest 128: abcdbcdecdef...",
+    "ref": "RIPEMD page, Bosselaers (homes.esat.kuleuven.be/~bosselae/ripemd160.html) test values",
+    "op": "ripemd:digest",
+    "params": {
+      "size": "128"
+    },
+    "input": {
+      "value": "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a1aa0689d0fafa2ddc22e88b49133a06",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest 128: ABCDEFGHIJKL...",
+    "ref": "RIPEMD page, Bosselaers (homes.esat.kuleuven.be/~bosselae/ripemd160.html) test values",
+    "op": "ripemd:digest",
+    "params": {
+      "size": "128"
+    },
+    "input": {
+      "value": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d1e959eb179c911faea4624c60c5c702",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest 128: 123456789012...",
+    "ref": "RIPEMD page, Bosselaers (homes.esat.kuleuven.be/~bosselae/ripemd160.html) test values",
+    "op": "ripemd:digest",
+    "params": {
+      "size": "128"
+    },
+    "input": {
+      "value": "12345678901234567890123456789012345678901234567890123456789012345678901234567890",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3f45ef194732c2dbb2c4a2c769795fa3",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest 256: empty string",
+    "ref": "RIPEMD page, Bosselaers (homes.esat.kuleuven.be/~bosselae/ripemd160.html) test values",
+    "op": "ripemd:digest",
+    "params": {
+      "size": "256"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "02ba4c4e5f8ecd1877fc52d64d30e37a2d9774fb1e5d026380ae0168e3c5522d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest 256: a",
+    "ref": "RIPEMD page, Bosselaers (homes.esat.kuleuven.be/~bosselae/ripemd160.html) test values",
+    "op": "ripemd:digest",
+    "params": {
+      "size": "256"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f9333e45d857f5d90a91bab70a1eba0cfb1be4b0783c9acfcd883a9134692925",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest 256: abc",
+    "ref": "RIPEMD page, Bosselaers (homes.esat.kuleuven.be/~bosselae/ripemd160.html) test values",
+    "op": "ripemd:digest",
+    "params": {
+      "size": "256"
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "afbd6e228b9d8cbbcef5ca2d03e6dba10ac0bc7dcbe4680e1e42d2e975459b65",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest 256: message digest",
+    "ref": "RIPEMD page, Bosselaers (homes.esat.kuleuven.be/~bosselae/ripemd160.html) test values",
+    "op": "ripemd:digest",
+    "params": {
+      "size": "256"
+    },
+    "input": {
+      "value": "message digest",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "87e971759a1ce47a514d5c914c392c9018c7c46bc14465554afcdf54a5070c0e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest 256: abcdefghijklmnopqrstuvwxyz",
+    "ref": "RIPEMD page, Bosselaers (homes.esat.kuleuven.be/~bosselae/ripemd160.html) test values",
+    "op": "ripemd:digest",
+    "params": {
+      "size": "256"
+    },
+    "input": {
+      "value": "abcdefghijklmnopqrstuvwxyz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "649d3034751ea216776bf9a18acc81bc7896118a5197968782dd1fd97d8d5133",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest 320: empty string",
+    "ref": "RIPEMD page, Bosselaers (homes.esat.kuleuven.be/~bosselae/ripemd160.html) test values",
+    "op": "ripemd:digest",
+    "params": {
+      "size": "320"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "22d65d5661536cdc75c1fdf5c6de7b41b9f27325ebc61e8557177d705a0ec880151c3a32a00899b8",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest 320: a",
+    "ref": "RIPEMD page, Bosselaers (homes.esat.kuleuven.be/~bosselae/ripemd160.html) test values",
+    "op": "ripemd:digest",
+    "params": {
+      "size": "320"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ce78850638f92658a5a585097579926dda667a5716562cfcf6fbe77f63542f99b04705d6970dff5d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest 320: abc",
+    "ref": "RIPEMD page, Bosselaers (homes.esat.kuleuven.be/~bosselae/ripemd160.html) test values",
+    "op": "ripemd:digest",
+    "params": {
+      "size": "320"
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "de4c01b3054f8930a79d09ae738e92301e5a17085beffdc1b8d116713e74f82fa942d64cdbc4682d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest 320: message digest",
+    "ref": "RIPEMD page, Bosselaers (homes.esat.kuleuven.be/~bosselae/ripemd160.html) test values",
+    "op": "ripemd:digest",
+    "params": {
+      "size": "320"
+    },
+    "input": {
+      "value": "message digest",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3a8e28502ed45d422f68844f9dd316e7b98533fa3f2a91d29f84d425c88d6b4eff727df66a7c0197",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "digest 320: abcdefghijklmnopqrstuvwxyz",
+    "ref": "RIPEMD page, Bosselaers (homes.esat.kuleuven.be/~bosselae/ripemd160.html) test values",
+    "op": "ripemd:digest",
+    "params": {
+      "size": "320"
+    },
+    "input": {
+      "value": "abcdefghijklmnopqrstuvwxyz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "cabdb1810b92470a2093aa6bce05952c28348cf43ff60841975166bb40ed234004b8824463e6b009",
+      "enc": "hex"
+    }
+  }
+]

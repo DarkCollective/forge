@@ -1,0 +1,58 @@
+[
+  {
+    "name": "sha1 empty string",
+    "ref": "FIPS 180-4 examples (csrc.nist.gov SHA examples); digests from hashlib",
+    "op": "sha1:digest",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sha1 abc",
+    "ref": "FIPS 180-4 examples (csrc.nist.gov SHA examples); digests from hashlib",
+    "op": "sha1:digest",
+    "params": {},
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a9993e364706816aba3e25717850c26c9cd0d89d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sha1 448-bit message",
+    "ref": "FIPS 180-4 examples (csrc.nist.gov SHA examples); digests from hashlib",
+    "op": "sha1:digest",
+    "params": {},
+    "input": {
+      "value": "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "84983e441c3bd26ebaae4aa1f95129e5e54670f1",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sha1 \"message digest\"",
+    "ref": "FIPS 180-4 examples (csrc.nist.gov SHA examples); digests from hashlib",
+    "op": "sha1:digest",
+    "params": {},
+    "input": {
+      "value": "message digest",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c12252ceda8be8994d5fa0290a47231c1d16aae3",
+      "enc": "hex"
+    }
+  }
+]

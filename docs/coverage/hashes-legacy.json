@@ -1,0 +1,8 @@
+[
+ { "cyberchef": "MD2", "status": "covered", "forge": ["md2:digest"], "note": "Returns raw bytes (chain hex:encode). Only the standard 18 rounds of RFC 1319 exist; CyberChef's Rounds parameter is not supported." },
+ { "cyberchef": "MD4", "status": "covered", "forge": ["md4:digest"], "note": "RFC 1320. Returns raw bytes (chain hex:encode)." },
+ { "cyberchef": "MD6", "status": "covered", "forge": ["md6:digest"], "note": "Parameters size (bits, a multiple of 8, 8 to 512), levels (L, 0 to 64) and key (up to 64 bytes). Sizes that are not a multiple of 8 bits are not supported. The round count is the report's default (40 + size/4, at least 80 with a key)." },
+ { "cyberchef": "SHA0", "status": "covered", "forge": ["sha0:digest"], "note": "FIPS 180 (1993). Returns raw bytes (chain hex:encode). Only the standard 80 rounds exist; a Rounds parameter is not supported." },
+ { "cyberchef": "RIPEMD", "status": "redesigned", "forge": ["ripemd:digest"], "note": "One word with a size choice of 128, 256 or 320. RIPEMD-160 is its own vocabulary, ripemd160:digest. Returns raw bytes (chain hex:encode)." },
+ { "cyberchef": "NT Hash", "status": "covered", "forge": ["nthash:digest"], "note": "MD4 of the UTF-16LE text (MS-NLMP NTOWFv1), 16 raw bytes. Takes text, not bytes." }
+]
