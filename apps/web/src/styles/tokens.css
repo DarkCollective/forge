@@ -1,0 +1,195 @@
+/*
+ * Copyright 2026 Darkcollective, LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/*
+ * Forge design tokens (UI.md section 1.2). The only place where raw colours, sizes and fonts are
+ * written down; components use the custom properties. Themes are selected by data-theme on <html>
+ * ("light", "dark", "contrast"). With no attribute (before the script runs, or with scripting off)
+ * the media queries below pick light, dark or contrast from the system.
+ */
+
+:root {
+  /* Type */
+  --font-ui: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono:
+    ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-md: 0.9375rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.5rem;
+  --leading-tight: 1.25;
+  --leading-body: 1.5;
+  --weight-normal: 400;
+  --weight-medium: 550;
+  --weight-bold: 700;
+
+  /* Space */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+
+  /* Shape */
+  --radius-s: 4px;
+  --radius-m: 8px;
+  --radius-l: 14px;
+  --border-width: 1px;
+  --shadow-pop: 0 8px 28px rgb(0 0 0 / 0.22);
+
+  /* Focus ring: always an outline, so it follows forced-colours mode and never shifts layout */
+  --focus-width: 3px;
+  --focus-offset: 2px;
+
+  /* Chrome sizes */
+  --topbar-h: 3.25rem;
+  --statusbar-h: 2rem;
+  --splitter-size: 6px;
+  --hit-min: 2.25rem;
+
+  /* Motion */
+  --motion: 140ms;
+
+  /* Light is the base theme */
+  --bg: #f4f1ea;
+  --surface: #fffdf8;
+  --surface-2: #ebe7dc;
+  --surface-3: #ded9ca;
+  --border: #c9c2ae;
+  --border-strong: #8d8571;
+  --text: #1c1a15;
+  --text-muted: #5a5446;
+  --accent: #a9420a;
+  --accent-hover: #8c3607;
+  --accent-fg: #ffffff;
+  --accent-soft: #f6e1d3;
+  --focus: #0a58ca;
+  --danger: #b0231b;
+  --danger-soft: #fbe3e0;
+  --warn: #7d5200;
+  --warn-soft: #f8ecc9;
+  --ok: #1b6b3f;
+  --ok-soft: #dcf0e3;
+  --link: #0a58ca;
+  --selection: #f3c9a8;
+  --drop: #0a58ca;
+  color-scheme: light;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --bg: #121417;
+  --surface: #1a1d21;
+  --surface-2: #23272d;
+  --surface-3: #2e333b;
+  --border: #373d46;
+  --border-strong: #6a7380;
+  --text: #ecebe6;
+  --text-muted: #a8a69d;
+  --accent: #ff9b55;
+  --accent-hover: #ffb27d;
+  --accent-fg: #1b0f05;
+  --accent-soft: #3b2515;
+  --focus: #7ab4ff;
+  --danger: #ff8f86;
+  --danger-soft: #3d1f1d;
+  --warn: #f0c35e;
+  --warn-soft: #3a2f12;
+  --ok: #72d79d;
+  --ok-soft: #173225;
+  --link: #8dbdff;
+  --selection: #5a3a22;
+  --drop: #7ab4ff;
+  --shadow-pop: 0 8px 28px rgb(0 0 0 / 0.6);
+  color-scheme: dark;
+}
+
+:root[data-theme="contrast"] {
+  --bg: #000000;
+  --surface: #000000;
+  --surface-2: #14141a;
+  --surface-3: #26262e;
+  --border: #ffffff;
+  --border-strong: #ffffff;
+  --text: #ffffff;
+  --text-muted: #e6e6e6;
+  --accent: #ffd400;
+  --accent-hover: #ffe55c;
+  --accent-fg: #000000;
+  --accent-soft: #332b00;
+  --focus: #00e5ff;
+  --danger: #ff7b7b;
+  --danger-soft: #3a0000;
+  --warn: #ffd400;
+  --warn-soft: #332b00;
+  --ok: #5cff9d;
+  --ok-soft: #003a1c;
+  --link: #6fd0ff;
+  --selection: #004a99;
+  --drop: #00e5ff;
+  --border-width: 2px;
+  --focus-width: 4px;
+  --shadow-pop: none;
+  color-scheme: dark;
+}
+
+/* Before data-theme is set: follow the system. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --bg: #121417;
+    --surface: #1a1d21;
+    --surface-2: #23272d;
+    --surface-3: #2e333b;
+    --border: #373d46;
+    --border-strong: #6a7380;
+    --text: #ecebe6;
+    --text-muted: #a8a69d;
+    --accent: #ff9b55;
+    --accent-hover: #ffb27d;
+    --accent-fg: #1b0f05;
+    --accent-soft: #3b2515;
+    --focus: #7ab4ff;
+    --danger: #ff8f86;
+    --danger-soft: #3d1f1d;
+    --warn: #f0c35e;
+    --warn-soft: #3a2f12;
+    --ok: #72d79d;
+    --ok-soft: #173225;
+    --link: #8dbdff;
+    --selection: #5a3a22;
+    --drop: #7ab4ff;
+    color-scheme: dark;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion: 0ms;
+  }
+}
+
+/* Forced colours (Windows high contrast): let the system palette win, keep the focus ring visible. */
+@media (forced-colors: active) {
+  :root {
+    --focus: Highlight;
+    --border: CanvasText;
+    --border-strong: CanvasText;
+  }
+}

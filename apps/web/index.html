@@ -3,10 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Forge is a browser-only toolkit for codes, ciphers and data encodings. Nothing leaves your browser."
+    />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>Forge</title>
   </head>
   <body>
     <forge-app></forge-app>
-    <script type="module" src="./src/main.ts"></script>
+    <noscript
+      >Forge needs JavaScript. Everything runs in your browser and nothing is sent
+      anywhere.</noscript
+    >
+    <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

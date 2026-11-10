@@ -12,6 +12,9 @@
   },
   "dependencies": {
     "@forge/lang": "*",
+    "@forge/ops": "*",
+    "@forge/recipe": "*",
+    "@forge/worker": "*",
     "lit": "^3.3.3"
   }
 }
