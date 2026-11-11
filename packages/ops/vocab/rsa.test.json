@@ -1,0 +1,1868 @@
+[
+  {
+    "name": "sign v1.5 SHA-256 with a 4096-bit key",
+    "ref": "openssl dgst -sha256 -sign (deterministic), openssl genrsa 4096",
+    "op": "rsa:sign",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIIJKAIBAAKCAgEAxfh3Zbo0kOxJ0yzPorciHMmzcBKbNkvuIhl65bEmwRpXJ6Qq\nP2e8lXEYSiMBC0vq90VsUJM/7sysO9MurilwA/uEUNLpbbLG3LVJCDwckow4aLAF\nIuvILfxJal6yfMDSiC6iG2vMcxOx9iXS2aZik65gmxUMBiSoFQ50fFIgQ0Ijj7HM\nMkMaNcFWBFyON86Up0o2h9pBrKKYC5KhaGGSDOmfIrkEuaAdKH2tem4QqyzfsneM\ndpSY8xcwHD59X51kDhCaNsmtmiPRgg4SG/zJB+kjwKakG157FBvqNPoZScoBEuUt\nl6GLjtAWg9jtM5wu1NIuF9FGQkmwikPQBq3uKIm6LYLuDyBCIkpMFk/Gqe9ZvcUP\n5YFHwejLAm4uB9/H5X6WsqL1VjztUajktb0pGmh9Mm69xKVL1v8jooN2LICze/ji\nYt5aYAx3rSonUcJ5qPsb8zo8YnuSsNVe04MzGkQKoQEBcKenfYZZIVVpA3HRYIW1\nvWBqZSIlUuCy2xWEqxviY2PpBIg6aQelxv8jarbCAHm7ykjbH+Yq5ol7YOV1C/oi\nGQe5hBEjsyDZ023aySIsm91UUz8z20tgsTJq2LrNgFXqglGbEqRyTeNL5QqxWEQR\nYa5AEpOzODNaRieDd0SJBnu6lZQtT2NcRTw+4E2BqEfeIyoaaPAsBY7pjGkCAwEA\nAQKCAgA/zkGZMWcQ0H9IxzgSvwiJE784H18UJGvXZLP2BN8zPKybc69EKUigN8e2\n2UpUXD8aPC9ZVuQzsJbQX1O7wVI/jliKfjfK6eRrLSihNVKWLwhdQWIea7TkkVwO\nIwBO8gzI5JLN2LQX4OCqL22iRZye8YRkZ2etMTJVOwfzK7sHQnFYtlrUVklDyxDQ\nrg4OUZAazPH/XiptnCf6DuPj0xKyA7gNBmnN9BuBuePoQkIwEXH1wM8uRt129+HD\nMKbS4tTlLZeukdjYhbPYQXW3vIUEfjFOPcdFpPFxPUACnBr7a9ZlwySrKt9ig5HG\nI+vrhuqXIDjH52TIJ5z1Kz8IcBWCPSesEEYjY3Hk5DENcUTYs3n4+79Or9SMiHd4\n465B2kMVvdGeSFTRzErpKV168XVIPFS+ca/iX9KBz4wF4Mnp4n4Z+c7FEXHPuzAm\nPXrjDucTSmTZOpL8wYw9n7nNhMmhGZ4VLQyA+MGSfa6k+plhTJ+EEGNQEpeiV2BV\n6my3jH/IT/YoyZLk7n7MYlfDU9cIIJ4fQtm0WtGOHMbyEpI4TRs2z8VFz6hEC8vP\nxrxKcQsR+p2ZuT3mpRXSE+0yOF8+B/qeGHmWRTloXrYIiPvidkmFkqNHKy96s8U5\n5QXWjs+QwAWDDhJYM0/hrbi4+MBPkB27JCfGwQQYEl9Q2V/yUwKCAQEA4d6uK0Xg\nqL4GX63fmfqd6A44VSz6tVcwofNIa8QtkuV3JtlcyinyWi2h3QWgJJ7kSblQYAIh\nXPO5+ro1gAgcBcmtqYH4P3VZ1nFl/fQ5CbUf+ccFkLulzP3sKpT9fliV721sznZw\nmZVr4lWrkf4RRVHqpoPGz34NKU55B4vdsSgxeWMiPI5xmJje87nK0vIUd5NwahL+\norUufkMbQAxau6Rf9LwpQx2M7cCC1+BC6dCfZAdiYntxnqGrQD3PgO+MGz3fFw88\nDkRp8lYJRqs6kY2109ZRL2MZp58etGMlMCpuQqJgI9bEaGq8MzNoyUfEhf4jY98K\n8ohgkmjf402Q7wKCAQEA4GEK6IpXNNwjEOxats/GML+kLRvknrSyi5qrPVgYy7Tk\nE06VZcOy2EAh9hnfqFRIOD2+exRtM57tdvIbh0JgZJzy3tdtmwkzHWR8ZSSQgpc3\njG3Co0nzntf4ZpwIS/h8A2vlp1O0F1LQ2fBW0AMM6PZxr4YFNTwOZIod+4Qt2bBT\n/mt9fT0ILZWjowAEWJ6VwKwxF0btAigWypcMQsIZw1xDMoNWkyppqEIf/tl4HVe2\nEDOO4LNGalwVP+7IcN8edNS62PH3PQKEKlDHr9/xpP6rwCHVWfscCtI6AqNKC1yz\nX8P2SMvDF4f512VDhaT8thBS1MycWv+WndKfFX8IJwKCAQBRo7NAYNl7JHQZUTdo\n6HT602j5IHDd6s3hO5YJnbb7SYVvvVEUoWS/w46l3MqtceEB5MFwclSszEuEnJmJ\n1WSLkwH6KsgX58q4//Plfsi/AYC1P4J7ddfP6FfcbE3TxSEskViqp5S7bo64GE8T\nTcngTGOMHEVX6i/Hpl2IpL1Uszpura5KRRI6Hcc4QQdWh7luHxSawpLXLLXJXWgU\nFmMVP6yPQROI9r1hkhu4+440BPwXo7Oj9Qp0U+saJT1DVVJG5m4kX5VNctz4grCH\nooxg39/A2c4uWpuDQrhOayed6ThBTX+CdLY5J5suxn4xgoc+B0Wza4MBdtmxEcca\n2YZxAoIBAHmRmotriNxG+WjN5khuQn9fFeCq4C9sz9/7qRPPi3+zPm+HgEJmyZuJ\nA92HHzrgj1CJg47D/nadgSOVAX1DZV6d+qjqJ6R8U4l1TECwkutuatZXEcHO64QA\nl8FggM5Ij0h7SS5jl4ubfzTVlvOU84W1INtszZ2OMG4gtyXy87SiaJ/MNW2Jh8jK\n7qH9/FzXb2O459AoyXkFp3OUazwwVi0W7AGOT3Xk4OIdEaDOytl7EFWu2Za9C0XN\nJmZBRbCB8spyB9pLHx2bI2iZ49dSimZO5Vdv/VyHRSZHyM5tEk0dqMIWNnYykD1L\nmv4tC2x5e8JZDcfmJEDZgg14dGD9NrkCggEBAMdEEvnJEuPTjLfkQDPSj3qirL/g\nQ1jK+t8skYB2FKKtjBEDImScri2QxzDIaXi6fC4DbjgmGlspjpZvN5EAwnVdO+ZS\nhDZGxcDKFiM1ZlExWXWVDP9/KTXqzYNvKn5NydCKeXk1joRVdGTIglj7UGIWRBUT\nev4FziyhEw+SBf3LFihQ59dk51SSKTvmY6A1rEQjIfINkDDyDXIkXRRqFn5lak71\n5kQxMJvpSudQE+ieQY1+xJ06qESK9vXyS7VrecAYeFXofdbr1zoJddIINNcdWrJ5\nyyfa/v/QyaMvQBPasZ4TKGXTqcAbgFvYKRXlnA1hhYhn/4C9aV5Ysej+ts0=\n-----END RSA PRIVATE KEY-----\n",
+      "digest": "SHA-256"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "9121823c19cb7e9d27d72449d4722773fbda8fb62b09adc4b1e34d8f863cf7a563b09445821423b8bc4ce1fda2053fad124eb9d0408f9f24eaea047684b18397fdb4b4e5f090d1cfe872dcce5b61dbef4b55019a1bb33f1d2c8db88fc2b8a55f55ff435cff8e61530941ab67fd9cc839f4b7c750340ca891ac721c0045e8172b60c5efd3905743a13e1a8fd96ff4c009feb433ae4e06afaddcb967a6ec73cb4fde9b306ea7f654fabe669c305e638daa8c8b8589d3428afddb4be4f713962cc16a2747eb65fb18d7bd47f58068756d27b124e5d89adedf0d6fefba783ab7be7ee45fc1129b1e19ec27e17faa933cc8b8bb1b8dc4862f3aed6b1d06585fee432c38eab417d856ab019591793a0d543b4ac06e1c400f66d110fcf2296603f0bd4ea8ed2038d45cfc638bac1eea007f81e55ea58bfe03750fb5bfa91a2b1f7a418cd198f62ed831b9ee697e6459d3fb5b8b832364c5f1b65e684b5ec3b958625753d2b5032786f31f26c40f5dcb88a7860f726784f04b9340df9cae06d542b806fbb8eef7c9ecebbf2b70c367ab42fc8afd6c590c5780e5b00ba56835d4084fdff01754bb982d518e1a2de771443d601adde7adcc54be257d5108826d487cdbd3b88887ce31b75c0d36c1ae14e2acdfabd7dc747c1f65186f5f5923a5d5c1ada9b3d47ae9518b1ebe59650ea945b4f8ae8b01f4c45b3333bad229f74e0cd2ae41ad",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign v1.5 SHA-1 1024-bit key",
+    "ref": "openssl dgst -sha1 -sign (deterministic)",
+    "op": "rsa:sign",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgQC9JaaVS4wTGJqEKtdqPA5eshzjgZz0LH/MtGlTogD9gt6IzFk4\npGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5HmvdpzTy8Us+IIQOMzoAZIAwr7\nsdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPUVabywyBg3oeKr4fLHwIDAQAB\nAoGAUWxHzbT706yft42Jtd2sge9CqF0/Z41QZpqzTKFMs9UGXvU44z0/g/nLwNXF\nUOlQKTdLDPIX33gGMfu29M9BEVtxC5WQ3tqJl8E7+X3yZKM1VyuQ4tUjAXIsRnn3\n7zbLr/TIw4X+Djkx91OTp2ohG3S0yADI3NZ82SITAkw66cECQQDuegecw5yWu/C1\nQ8yd2wX9afGm5kQyw8BMaN1Uor0VPaf8k3tZazFtoUoQf9IqcBWTD687k3MfkzTF\n4WkqVe9nAkEAywuvTYxmULXCqGE623Abufe/Nm5Eq/1ZP7mprRiJ7evcRNKHbS7B\n2Kuzln9aSgrs9CWxQ+HLNt01sDjpOyzLiQJAbQapOEhN7LPbpmNqxrh9ko+/BPi9\nMSBBaC2BEtKb83wOsvCSMh1Jqb9VZxmo8fHwSx2elXQh68uXEuis9cf3/QJAF0FF\nWKpl5YSLwOEx7oQOiOQZIFDMyK4BlMzc5BhVY8yJs9Aw9o5OYVR5Axme67AIp4XR\noaawsZ3wUjiSbdaZkQJADZ8CCFrFf8gv4OrBMUtiax3CUCwmr6rA4c57XLDDzxZl\n55jlFrqNbhlndAot21WKgcKOiJFqXP3mK6mOWXo5Zw==\n-----END RSA PRIVATE KEY-----\n",
+      "digest": "SHA-1"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1bdeec82cc3001106518962bc37b3836d7595caf40691870578b89b563402612608b9b1bf167a052adeda59c2e607c3cd97aba9e55e2ee9c513c217f2ee2840171aaa7bae664265ac5f82805ee6c39c36de76b1e57d4170c95583f7b12df863d6e96e1ec170600b9a17673dc4ed52aedbeb6eb176db61b33264e74ab2b29f49f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign v1.5 MD5 1024-bit key",
+    "ref": "openssl dgst -md5 -sign (deterministic)",
+    "op": "rsa:sign",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgQC9JaaVS4wTGJqEKtdqPA5eshzjgZz0LH/MtGlTogD9gt6IzFk4\npGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5HmvdpzTy8Us+IIQOMzoAZIAwr7\nsdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPUVabywyBg3oeKr4fLHwIDAQAB\nAoGAUWxHzbT706yft42Jtd2sge9CqF0/Z41QZpqzTKFMs9UGXvU44z0/g/nLwNXF\nUOlQKTdLDPIX33gGMfu29M9BEVtxC5WQ3tqJl8E7+X3yZKM1VyuQ4tUjAXIsRnn3\n7zbLr/TIw4X+Djkx91OTp2ohG3S0yADI3NZ82SITAkw66cECQQDuegecw5yWu/C1\nQ8yd2wX9afGm5kQyw8BMaN1Uor0VPaf8k3tZazFtoUoQf9IqcBWTD687k3MfkzTF\n4WkqVe9nAkEAywuvTYxmULXCqGE623Abufe/Nm5Eq/1ZP7mprRiJ7evcRNKHbS7B\n2Kuzln9aSgrs9CWxQ+HLNt01sDjpOyzLiQJAbQapOEhN7LPbpmNqxrh9ko+/BPi9\nMSBBaC2BEtKb83wOsvCSMh1Jqb9VZxmo8fHwSx2elXQh68uXEuis9cf3/QJAF0FF\nWKpl5YSLwOEx7oQOiOQZIFDMyK4BlMzc5BhVY8yJs9Aw9o5OYVR5Axme67AIp4XR\noaawsZ3wUjiSbdaZkQJADZ8CCFrFf8gv4OrBMUtiax3CUCwmr6rA4c57XLDDzxZl\n55jlFrqNbhlndAot21WKgcKOiJFqXP3mK6mOWXo5Zw==\n-----END RSA PRIVATE KEY-----\n",
+      "digest": "MD5"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "912179f1a780a615d45816e5ec2da0b208e0417f2b1343b33bbd05a709cfc66529f0db8f79a6c617fbdf00b532a031d63b9992d577dac13a77db2d83b77448bda7764b1b8dd602758029decbc32460a4a9ab0fd3836d0ca970e2fb6c6c938a88e12fc847f07e6a8fb10fba65a78c15785fa31b2ce62de7563f4f3a8275a08f93",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign v1.5 SHA-256 1024-bit key",
+    "ref": "openssl dgst -sha256 -sign (deterministic)",
+    "op": "rsa:sign",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgQC9JaaVS4wTGJqEKtdqPA5eshzjgZz0LH/MtGlTogD9gt6IzFk4\npGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5HmvdpzTy8Us+IIQOMzoAZIAwr7\nsdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPUVabywyBg3oeKr4fLHwIDAQAB\nAoGAUWxHzbT706yft42Jtd2sge9CqF0/Z41QZpqzTKFMs9UGXvU44z0/g/nLwNXF\nUOlQKTdLDPIX33gGMfu29M9BEVtxC5WQ3tqJl8E7+X3yZKM1VyuQ4tUjAXIsRnn3\n7zbLr/TIw4X+Djkx91OTp2ohG3S0yADI3NZ82SITAkw66cECQQDuegecw5yWu/C1\nQ8yd2wX9afGm5kQyw8BMaN1Uor0VPaf8k3tZazFtoUoQf9IqcBWTD687k3MfkzTF\n4WkqVe9nAkEAywuvTYxmULXCqGE623Abufe/Nm5Eq/1ZP7mprRiJ7evcRNKHbS7B\n2Kuzln9aSgrs9CWxQ+HLNt01sDjpOyzLiQJAbQapOEhN7LPbpmNqxrh9ko+/BPi9\nMSBBaC2BEtKb83wOsvCSMh1Jqb9VZxmo8fHwSx2elXQh68uXEuis9cf3/QJAF0FF\nWKpl5YSLwOEx7oQOiOQZIFDMyK4BlMzc5BhVY8yJs9Aw9o5OYVR5Axme67AIp4XR\noaawsZ3wUjiSbdaZkQJADZ8CCFrFf8gv4OrBMUtiax3CUCwmr6rA4c57XLDDzxZl\n55jlFrqNbhlndAot21WKgcKOiJFqXP3mK6mOWXo5Zw==\n-----END RSA PRIVATE KEY-----\n",
+      "digest": "SHA-256"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "246ea87c4f982ee3a1ddb84d3f08e72113db50ba42c2bec533af3734b0ebc0db796115c1b3878661d9cb21b8831c907b11ca4cd1c07f8716a1fd5b03617cc00edb661a05d9e5e2b0659d14d991748e8f9fb92e8b0b1fcc90a940c884eb62b2faafa53ec824a48abd84c2877da6f3e90dd7e7ac268bb42f465588080c28e31744",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign v1.5 SHA-384 1024-bit key",
+    "ref": "openssl dgst -sha384 -sign (deterministic)",
+    "op": "rsa:sign",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgQC9JaaVS4wTGJqEKtdqPA5eshzjgZz0LH/MtGlTogD9gt6IzFk4\npGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5HmvdpzTy8Us+IIQOMzoAZIAwr7\nsdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPUVabywyBg3oeKr4fLHwIDAQAB\nAoGAUWxHzbT706yft42Jtd2sge9CqF0/Z41QZpqzTKFMs9UGXvU44z0/g/nLwNXF\nUOlQKTdLDPIX33gGMfu29M9BEVtxC5WQ3tqJl8E7+X3yZKM1VyuQ4tUjAXIsRnn3\n7zbLr/TIw4X+Djkx91OTp2ohG3S0yADI3NZ82SITAkw66cECQQDuegecw5yWu/C1\nQ8yd2wX9afGm5kQyw8BMaN1Uor0VPaf8k3tZazFtoUoQf9IqcBWTD687k3MfkzTF\n4WkqVe9nAkEAywuvTYxmULXCqGE623Abufe/Nm5Eq/1ZP7mprRiJ7evcRNKHbS7B\n2Kuzln9aSgrs9CWxQ+HLNt01sDjpOyzLiQJAbQapOEhN7LPbpmNqxrh9ko+/BPi9\nMSBBaC2BEtKb83wOsvCSMh1Jqb9VZxmo8fHwSx2elXQh68uXEuis9cf3/QJAF0FF\nWKpl5YSLwOEx7oQOiOQZIFDMyK4BlMzc5BhVY8yJs9Aw9o5OYVR5Axme67AIp4XR\noaawsZ3wUjiSbdaZkQJADZ8CCFrFf8gv4OrBMUtiax3CUCwmr6rA4c57XLDDzxZl\n55jlFrqNbhlndAot21WKgcKOiJFqXP3mK6mOWXo5Zw==\n-----END RSA PRIVATE KEY-----\n",
+      "digest": "SHA-384"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1e6b67a209b166c9dd857af91fed2af10584ec87cbd542034cb69ee319971ab01c380e594335f0a36ed905f38f20875bcf70ba83206e7e6720de82f5634c9a1059c47111b61fbfd29f7d7b2d11c3c68a8687a0c1b33917c5a641a2a65aa1e4af32948fa19056aad5fccad243ffc34e2a7892700115a7a5259ee524d4754e831f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign v1.5 SHA-512 1024-bit key",
+    "ref": "openssl dgst -sha512 -sign (deterministic)",
+    "op": "rsa:sign",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgQC9JaaVS4wTGJqEKtdqPA5eshzjgZz0LH/MtGlTogD9gt6IzFk4\npGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5HmvdpzTy8Us+IIQOMzoAZIAwr7\nsdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPUVabywyBg3oeKr4fLHwIDAQAB\nAoGAUWxHzbT706yft42Jtd2sge9CqF0/Z41QZpqzTKFMs9UGXvU44z0/g/nLwNXF\nUOlQKTdLDPIX33gGMfu29M9BEVtxC5WQ3tqJl8E7+X3yZKM1VyuQ4tUjAXIsRnn3\n7zbLr/TIw4X+Djkx91OTp2ohG3S0yADI3NZ82SITAkw66cECQQDuegecw5yWu/C1\nQ8yd2wX9afGm5kQyw8BMaN1Uor0VPaf8k3tZazFtoUoQf9IqcBWTD687k3MfkzTF\n4WkqVe9nAkEAywuvTYxmULXCqGE623Abufe/Nm5Eq/1ZP7mprRiJ7evcRNKHbS7B\n2Kuzln9aSgrs9CWxQ+HLNt01sDjpOyzLiQJAbQapOEhN7LPbpmNqxrh9ko+/BPi9\nMSBBaC2BEtKb83wOsvCSMh1Jqb9VZxmo8fHwSx2elXQh68uXEuis9cf3/QJAF0FF\nWKpl5YSLwOEx7oQOiOQZIFDMyK4BlMzc5BhVY8yJs9Aw9o5OYVR5Axme67AIp4XR\noaawsZ3wUjiSbdaZkQJADZ8CCFrFf8gv4OrBMUtiax3CUCwmr6rA4c57XLDDzxZl\n55jlFrqNbhlndAot21WKgcKOiJFqXP3mK6mOWXo5Zw==\n-----END RSA PRIVATE KEY-----\n",
+      "digest": "SHA-512"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "8169dd44be37ec9b378851b53d37bb844243868a128e697160920c0baf2ba9adf2b319b8a30c9010c5e3db8973e2499f11c8f7dc3b09d0bc83f2277376974dc58917d09911025c7aaa7ce1b8306f9c6cbf171ea9cf87c8a331839ce1a5b59ae266b045760ae30d67b93bcb946cc6c5507b38f3fc7f1b18199eaa20a87703b852",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign v1.5 SHA-256 2048-bit key, PKCS#8",
+    "ref": "openssl dgst -sha256 -sign (deterministic), key from openssl pkcs8 -topk8 -nocrypt",
+    "op": "rsa:sign",
+    "params": {
+      "key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDTMSV2v60nocrU\nVZDj1BMqDu4dQJzshVKx/SF4qS/AiydQK79QXO1BhRK/F84IW/bHpKafeDbuTwe1\nuU6moimWEoMAW54JVzJZDB7zNdXDJFqg4gXdsL0ghNhWhhi+mQJ1TWTT2VEyDmDH\nVvU+/0PwWjdFkggiK9OcU8NQIoSgDoCp6OddSC2NXPPQ/sOA1SOs4IP3fpjVB0xN\no/5jY+l10Ec3F1Vu+aoJ0zREfJxoH9fh7lOKBCpX2hagxG4ZYRRUoBhSa8uj9kMe\nJzZfQmokqBWOyoiZFmBlamj7Mbgkdr/UlQqiysCQstIwspaQszRSl1qBspjD4Dyi\nYdFYVN/nAgMBAAECggEAB0PH7iKZ0KTLVvjtvjVe+ctme+S4Tf3Br0dUQQcdq80d\nnq+Vw5K7kDPSEt2J9zxynyhJMwmHmjSajbDzxURx+cX/pTuBkppIeRezP0DsblIJ\n0nVaWxq0gGUReNutoW2e0Ab7H1TfN8GW3ESTGx+pm2yYo72dc5xEvNPrNagT6w2E\np7CAWjI+h43FXdYJf8fl0YGRyd0OkRK21oETREba+05vsq+efo5RXa0+NHlwGR3L\nS8Ts14N/NT+bC+9HLKernP02Ulz/xvv1CmgXI52eLH0PtbdXx7KmoVrvf11SntGM\nCQ7dOHqyczsuv1yHD8lk3GQNv73/gnZhW3ZuLYwpgQKBgQDwQX3umCoTlmgWj++c\n+rfWJm8BpptOi7uc7dPngkbCUVQjVpfCzLqN0wtPjLuL9TzdDusO6Nco22Cal4+z\n1a2qP62pqs1D8RR88ygb3JwqlbQLu5TlR/ufG7RGvUQkbjomnPfzU9+/AyRXRZo/\nAm+11ow1RaZaZFA55nVR8D38LwKBgQDhCBUHLjPSW0493dVy5kBHMDXnfYhlkgHt\n6y2jzrQ4hViNIRNVbhmw7VrNcsC6Cb8MokuCzuxJtr/yRuXihCZkpajV5wPZ6jyG\nZjCHd2O6gSQSmBYgbYkMamtc2RaYVDJIEds+FSZy+wVDCFaopOxM9AlEatyLW3EN\nm5t1sFFRyQKBgQC8nf364dUuuYcQJ4IrEJ5g7p15g04sVQE+i2wwNZPNnEHc2G+e\njFHtZAFeO5NFpotY1QxvERdRySDHXTOBMMD9hq6VJDWwIEVAbzlO3lxwBkVqbKLR\nejityfc3DgHARBU9GUCD9JYVBKd0KH2W+BexfzVl4T9feZ+ORUJXyK8xGwKBgA6t\ny0lbny/Cmvj4JntHP7wlDe8axjHx80REygZcbm8da6hRFwTEmNJsuTabnKzGA/tb\n/tb6jnlEfYLdUxOSkTqRf9DsL9kgKXCO6+16QTwiPmskFpVo776qlnRJCOtI2rrO\nx2FmWcq4SyCTQ6vejjd617vpyJcikN5VXy+vH67ZAoGAG9b/jvrbKszy5II0MCqZ\nWkwX8/RauI9/IkJcGgoVMR/r938aENj3jbJj9YrN0xep/A/1PfN2qxChmJ97eBj4\np/tJYf8XeNpCGu71k7vYWjTctX44mpcOb8sSAukTgmgez5qg+fHwNJSZMRD5MSGF\nerbhEbhWL+KiNCufNk/e5Wg=\n-----END PRIVATE KEY-----\n",
+      "digest": "SHA-256"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "9447f86c944808ed866755375a40003f9379127c63e80f21c994da0a95a92f2bc8b30fe811a484ca7f908245dcbbdcc4aa747362e787aa7d140b2c6fa5c1cec663e7ad472b3f06a279e02ac83c047f2cf7e401b0356c2756077f4d5e93c37d07ce81320b5f3697e877ede6e10ec787161a88f8581a3eb3ef10dd4f09da246fec4648642d4062db133c6f49993906c3360b3587e79bd9c92433d3e170475f2199463fc1ebee795cb32837f4bfc52b867de7bee350b32b7faa5e6b2f8f80231ee106c9f66f751897ee4c225c08c173847effdbd856d6ecec629a1746c583edc3a3fa8c556a52dba2a5b6634ceb8a66aa520c5dc5e24a97210f15bfce79d9bf6cfe",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign default digest is SHA-1",
+    "ref": "openssl dgst -sha1 -sign",
+    "op": "rsa:sign",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgQC9JaaVS4wTGJqEKtdqPA5eshzjgZz0LH/MtGlTogD9gt6IzFk4\npGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5HmvdpzTy8Us+IIQOMzoAZIAwr7\nsdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPUVabywyBg3oeKr4fLHwIDAQAB\nAoGAUWxHzbT706yft42Jtd2sge9CqF0/Z41QZpqzTKFMs9UGXvU44z0/g/nLwNXF\nUOlQKTdLDPIX33gGMfu29M9BEVtxC5WQ3tqJl8E7+X3yZKM1VyuQ4tUjAXIsRnn3\n7zbLr/TIw4X+Djkx91OTp2ohG3S0yADI3NZ82SITAkw66cECQQDuegecw5yWu/C1\nQ8yd2wX9afGm5kQyw8BMaN1Uor0VPaf8k3tZazFtoUoQf9IqcBWTD687k3MfkzTF\n4WkqVe9nAkEAywuvTYxmULXCqGE623Abufe/Nm5Eq/1ZP7mprRiJ7evcRNKHbS7B\n2Kuzln9aSgrs9CWxQ+HLNt01sDjpOyzLiQJAbQapOEhN7LPbpmNqxrh9ko+/BPi9\nMSBBaC2BEtKb83wOsvCSMh1Jqb9VZxmo8fHwSx2elXQh68uXEuis9cf3/QJAF0FF\nWKpl5YSLwOEx7oQOiOQZIFDMyK4BlMzc5BhVY8yJs9Aw9o5OYVR5Axme67AIp4XR\noaawsZ3wUjiSbdaZkQJADZ8CCFrFf8gv4OrBMUtiax3CUCwmr6rA4c57XLDDzxZl\n55jlFrqNbhlndAot21WKgcKOiJFqXP3mK6mOWXo5Zw==\n-----END RSA PRIVATE KEY-----\n"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1bdeec82cc3001106518962bc37b3836d7595caf40691870578b89b563402612608b9b1bf167a052adeda59c2e607c3cd97aba9e55e2ee9c513c217f2ee2840171aaa7bae664265ac5f82805ee6c39c36de76b1e57d4170c95583f7b12df863d6e96e1ec170600b9a17673dc4ed52aedbeb6eb176db61b33264e74ab2b29f49f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign v1.5 of the empty message",
+    "ref": "openssl dgst -sha256 -sign of an empty file",
+    "op": "rsa:sign",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgQC9JaaVS4wTGJqEKtdqPA5eshzjgZz0LH/MtGlTogD9gt6IzFk4\npGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5HmvdpzTy8Us+IIQOMzoAZIAwr7\nsdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPUVabywyBg3oeKr4fLHwIDAQAB\nAoGAUWxHzbT706yft42Jtd2sge9CqF0/Z41QZpqzTKFMs9UGXvU44z0/g/nLwNXF\nUOlQKTdLDPIX33gGMfu29M9BEVtxC5WQ3tqJl8E7+X3yZKM1VyuQ4tUjAXIsRnn3\n7zbLr/TIw4X+Djkx91OTp2ohG3S0yADI3NZ82SITAkw66cECQQDuegecw5yWu/C1\nQ8yd2wX9afGm5kQyw8BMaN1Uor0VPaf8k3tZazFtoUoQf9IqcBWTD687k3MfkzTF\n4WkqVe9nAkEAywuvTYxmULXCqGE623Abufe/Nm5Eq/1ZP7mprRiJ7evcRNKHbS7B\n2Kuzln9aSgrs9CWxQ+HLNt01sDjpOyzLiQJAbQapOEhN7LPbpmNqxrh9ko+/BPi9\nMSBBaC2BEtKb83wOsvCSMh1Jqb9VZxmo8fHwSx2elXQh68uXEuis9cf3/QJAF0FF\nWKpl5YSLwOEx7oQOiOQZIFDMyK4BlMzc5BhVY8yJs9Aw9o5OYVR5Axme67AIp4XR\noaawsZ3wUjiSbdaZkQJADZ8CCFrFf8gv4OrBMUtiax3CUCwmr6rA4c57XLDDzxZl\n55jlFrqNbhlndAot21WKgcKOiJFqXP3mK6mOWXo5Zw==\n-----END RSA PRIVATE KEY-----\n",
+      "digest": "SHA-256"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00660268a7024497eef40ee178efa2d4cb28a34c87defed989f5799a67bf2e4bc273f807beadd11305f708f0c6622b93d524cef893e307d33b7d4c1916b517b476fbd90ac2ca27d495c3969bb96fdea7972a50e82db74265a5fd8627761568b9ea533a5149341395f7e8fa89ad2635548cb52a5a7641520c436ba9f7bdf7625a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign with an encrypted PKCS#8 AES-256-CBC PBKDF2-SHA256 key",
+    "ref": "openssl pkcs8 -topk8 -v2 aes-256-cbc (password secret); the signature equals the one of the plain key",
+    "op": "rsa:sign",
+    "params": {
+      "key": "-----BEGIN ENCRYPTED PRIVATE KEY-----\nMIIC3TBXBgkqhkiG9w0BBQ0wSjApBgkqhkiG9w0BBQwwHAQIUJNvRU4C/joCAggA\nMAwGCCqGSIb3DQIJBQAwHQYJYIZIAWUDBAEqBBBe35SOKhB5Z0psijmVF1V2BIIC\ngMAsPgWmFtu7LF0w6G5iJy7iJqlLyQ7b9wveDajvC/qla5dMe0ArZjHeVuYmSBPk\naVBaRBS9rHNUAA7tugglAapBbi0kITNGKI8/ht8H1fAtwsAWYU/i5IYKPQtU7dnN\ncXEnoOgzrDcEemKJDd3+R/9k3qDFgG0HQEItcs1bTwwyIPOlcmyLniseFoLkNOWY\nXt3O4N+s9qyg3uG27zh8TPpMZ0cNs6XZ7YTUt9JTdoUQE9JRUFhXeI2yQ86EWahS\npmdmsmM8VBlM3C+66JpbkUQGg4t4lsrp/R4m8tBVGpQShREXPhWpKwNzuOkpm+Ex\n6IIgZ+HjCCOgskYm8cJ3EKlUskVkfIr103LUKPu1tnvSUDGwo3PTuRDza/iswPWT\n4qa0OEFZ+UYD3EnwWphzpg6lfPEHm8UCbbfgdTKkMRIx2z432tkVoZ898eo84h44\nHS6fdoFXAbfMTTfvwZqOzzYkHxJZZEuQCg/SXZANNLDC6oOl4GsRgW7wHvhMSIvm\nB8YuzRYYeZsC8878kEXf/nG1PM4564jS/r4uy5fgvSW/Q6xKsRLJNAksdllcN6Ec\nW5gS6IiYdB3P5iolrrHP+1WD412eDcaWXwKhAcbXt6bmfdO3pxWvCIH4s5RSqF/z\n5s17jYTUv6rIZzLiwDzIx1xi9RF+vd/ZzP3WpoVP24odzsSzvb6EyHlrDME2OX9k\nmHw7RiOZ+LBLFq9khpqGK9HmbT4gKIigwCLwys/ATZ0ktFhe5za0PqG2LxGTZMyR\nOLBqE7/+ouEJB8kzGfF0a2vV4pPye/tIxNFFOzc02P4W5M+bF9I/o471srgyw00O\nNg0hkHuxG96FgKr44QfIP9I=\n-----END ENCRYPTED PRIVATE KEY-----\n",
+      "password": "secret",
+      "digest": "SHA-256"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "246ea87c4f982ee3a1ddb84d3f08e72113db50ba42c2bec533af3734b0ebc0db796115c1b3878661d9cb21b8831c907b11ca4cd1c07f8716a1fd5b03617cc00edb661a05d9e5e2b0659d14d991748e8f9fb92e8b0b1fcc90a940c884eb62b2faafa53ec824a48abd84c2877da6f3e90dd7e7ac268bb42f465588080c28e31744",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign with an encrypted PKCS#8 3DES PBKDF2-SHA1 key",
+    "ref": "openssl pkcs8 -topk8 -v2 des3 -v2prf hmacWithSHA1 (password secret); the signature equals the one of the plain key",
+    "op": "rsa:sign",
+    "params": {
+      "key": "-----BEGIN ENCRYPTED PRIVATE KEY-----\nMIICxjBABgkqhkiG9w0BBQ0wMzAbBgkqhkiG9w0BBQwwDgQImU7Y+aDDyrUCAggA\nMBQGCCqGSIb3DQMHBAgI4JVxP7uKNQSCAoDzMcaQdFzha15htli7fv5Sxen5iO3i\nGTFxYIwNB/+oGxrP1BqOXmqE2b0BxXyxqLo2RtlmqdbJ4lfvvSDIb/iM5dhZfCjJ\nFoJcPpJfyfdS4wF8QFtwUNfKjPN/ueUQYpcQNykJ7vTmbP4Xq+zBKlvIgLLzZBL+\nGKKU2VgU6ZbwJHOWPC3A/BKWEpbEgm/KeXA8P3d7DepDtMEk+um1sTPHeOleBxG1\n8MxP92ixx+6FUPIjwM1yFpHwKJ6ppHTLWhVe18Sdt7ejeZcpN96I1ZCjEWEHetgm\n7K0z4PMHeb/PQr3kUj1eagbCUYWRUD/2TMZKqX8k3O92Lg6oXzRekKieUymthXzj\nWRrhsSeYqnLrwVxedTmTGgDG9aJXG+/Wqm84heDevE96aQtZxLLZzBltWkpCw/ri\nny4WJ43m6tD8f87RJGSGJKflnKqRCV0Yezkyc0YpMM4uG7rLZm5hWqDmZhGfF4hP\nmB9PWDw4AIUeWDWDsxVtEUN24a5/w/K2aDfp5tWw5EtLucfX1iTw5VXEdgkfuROE\nyNfDinS9kckjSwexLQcpaY1X806zaZzE5rAFZnp4Ctthn1LQkB4Gy1jctzbIilrR\nFyb7AtbMMeAN8wTk6nIeuL/KIi9etSVnAYqxEXXqJwdUR6a80Y5rU2rYoH7kviUE\nCgUYmnlkfqsA4gihovTV13qItfcsce+AhIJ4h7IcQx+c8DX7m3cJoPCkhdNgt0IK\nr4PiLu8ds+2lWiIuPjghwwIH+YTTKX2s6ziNPLMzHQyQOim6nPQYeNbN5TX+iaif\nz1SNOqLK0iJldvHH97PHa3rzkI3af0U/HhqmaeMPlLCNNj8YXu5LnoI6\n-----END ENCRYPTED PRIVATE KEY-----\n",
+      "password": "secret",
+      "digest": "SHA-256"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "246ea87c4f982ee3a1ddb84d3f08e72113db50ba42c2bec533af3734b0ebc0db796115c1b3878661d9cb21b8831c907b11ca4cd1c07f8716a1fd5b03617cc00edb661a05d9e5e2b0659d14d991748e8f9fb92e8b0b1fcc90a940c884eb62b2faafa53ec824a48abd84c2877da6f3e90dd7e7ac268bb42f465588080c28e31744",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign with an encrypted PKCS#8 AES-128-CBC PBKDF2-SHA512 key",
+    "ref": "openssl pkcs8 -topk8 -v2 aes-128-cbc -v2prf hmacWithSHA512 (password secret); the signature equals the one of the plain key",
+    "op": "rsa:sign",
+    "params": {
+      "key": "-----BEGIN ENCRYPTED PRIVATE KEY-----\nMIIC3TBXBgkqhkiG9w0BBQ0wSjApBgkqhkiG9w0BBQwwHAQIyk0XFQRGnvgCAggA\nMAwGCCqGSIb3DQILBQAwHQYJYIZIAWUDBAECBBCogXC8X2pfe4cEKExBKVGWBIIC\ngGRDOtifvSV5Im2+xpenATg8o+/wtxD+oTF6NPzkNwovfD2PYqcDda5GvAPT7CnU\nhfjvNJeYL/pqjnACEPjPKJ/oC2LYzKtWK+ZjU45rsX+crblE3IhzCwM/yYuUQElu\nckKN4Uzq8l+sGL5BYOhjDcknsYDc0XGYpZVT0N4C0mEWO0pflbe3ZVYOZUg/9HSy\no1G9P0VRwWBL0p6bJPaPYhssgc8auQm4F46h8UhzPW9UrsI2PmtwczTlaBeqjvr1\nr6MuxdjwkNlnLpE7L6VD4GxZUfpK92l9g8glRXvjSQslZRLPhjLZmnc+AdkgN0tl\nFrqdh/1TJOu47R+I/NyTmSTcHu9dwgMUH7oLf7TTZorD667i+gkSxK5LH6SAM8ev\nPDo4Re4p62We55wvSAI1M2TaYJiC84m0QcRPyUGTqjBBBXMozM4vCQiKqqJnrG83\nXjLY+Aea1A/iH4scjWSU+M1J+5yuFDYc9Uk4wbHjs+0dFaQTirKqTmFJAaC2I91c\no8jGRC+yUsinvm+ZNLdDY/0DcF72dAEZwYM7kEI13oJ4ZeLP/rCUBiwnblbLQZNn\n7l+eeOACUAbQ4kO0/LJr1PhMrl3Q2ZPWE79/dvB/E+DDozE+ye+r00oAG7QtOsYs\ne86xRhd4l6k1W5VfZgdXPBqI7TbpVPka/UkG9rajphaMNd7+OS4pGUE3NPJ1Z/Tf\n6LM8ectxT+c+JUPkOFG+s7DIsSZdLWE6ICesWFpvD1I8ahSx6YysLPLVTyGjCTjT\ntMOAev3KcTWWlpAGvhv2AOWCErBzHVe11Th/EBA+K8v2JYLv+odhpWsD6/MgEU0+\nOFBvWui32bpVErxoTTGEE1s=\n-----END ENCRYPTED PRIVATE KEY-----\n",
+      "password": "secret",
+      "digest": "SHA-256"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "246ea87c4f982ee3a1ddb84d3f08e72113db50ba42c2bec533af3734b0ebc0db796115c1b3878661d9cb21b8831c907b11ca4cd1c07f8716a1fd5b03617cc00edb661a05d9e5e2b0659d14d991748e8f9fb92e8b0b1fcc90a940c884eb62b2faafa53ec824a48abd84c2877da6f3e90dd7e7ac268bb42f465588080c28e31744",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign with a legacy PEM AES-128-CBC key",
+    "ref": "openssl rsa -traditional -aes128 (password secret); the signature equals the one of the plain key",
+    "op": "rsa:sign",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nProc-Type: 4,ENCRYPTED\nDEK-Info: AES-128-CBC,9306BB60D2CC34E8156AA485E314992A\n\nuCabI6icv+vS4MLJT3HULkhep5a5J9h9wTsRyTvfKdIzWLRHmtVfcjhsLjbpagnq\nGbLMFzUQP7oqCXbyD13vyrQc/4jQIB6UtVqdfPbqFTxrTU1iyl+uMPdBfofz6wix\n/DlKfXWHZviVNRrShv+fehz6zRblrir+5Igtpn/KU0gIyLNLok/0WcvhF4qBtBgY\nbaTpEAIztY9hriPDFyC8iMe6tomDC4X0MUJkVqPxyt/xjvcxW6jSyP/20tmaACVL\n0aqtLy/lj1+5BXmFeUPQmOUiK2O+ZznLqI4vT61vdlMrYD5DBxG4Wply29XbahLQ\nkTEgtPBMoHiqZw+Id3ZVneE27416cwOoz/W5fXaNkSx+IdvXNCSTKixjlkEaKNt6\n4jVs131xqabsVzIGRXhoQ13FgddJiOWoqBxd/W5eo1KD5jKPlZKXeKVXV0hGAr0e\nQf/w0VWXQpLImfZaMw9Nw5A6jc0n8OIcgN3n9KwSf0tgEjMMGch9L1ACg9oetmHN\nkygpigx72AJ+TeQnyuks8q8QYcIeA1wkd/Oasf2dNwXOhfyv+NbrqcgIwEdTIvKy\ngt9UXWQ5qNlBnoSdJrXE+H0g6eXy9Cw9Z7FXKT2eJJu4NEPtIsmG7z0d9mW4Kvu3\nS6S8LrbJGmO9k+9+J9GNUfl5nvxt8M3VpOLWC9/Df+iLzLJYEY5i3AvMwhWuFx2j\nxO8qy3lERdDeweK/xC6Glr53vgz+suT9TTVL7Hl0p0UWWJ48I8HuZx115oBu17PJ\n6FFQKZvUpxsTZyvq5ZZTQ8aYOpAVUL+RHVtqAIZDEYs=\n-----END RSA PRIVATE KEY-----\n",
+      "password": "secret",
+      "digest": "SHA-256"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "246ea87c4f982ee3a1ddb84d3f08e72113db50ba42c2bec533af3734b0ebc0db796115c1b3878661d9cb21b8831c907b11ca4cd1c07f8716a1fd5b03617cc00edb661a05d9e5e2b0659d14d991748e8f9fb92e8b0b1fcc90a940c884eb62b2faafa53ec824a48abd84c2877da6f3e90dd7e7ac268bb42f465588080c28e31744",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign with a legacy PEM AES-192-CBC key",
+    "ref": "openssl rsa -traditional -aes192 (password secret); the signature equals the one of the plain key",
+    "op": "rsa:sign",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nProc-Type: 4,ENCRYPTED\nDEK-Info: AES-192-CBC,68D2755547C1B7DBD8170BB83925F1AB\n\nN5bxVW4Sx9Oapd9XQYgdJzfbQedxYKQjWem8BbZQZbj6tlukeF+pxN6q6zeDMNvj\nJNU/3lmT7TFczo0g3M0Lk0AqG5P3kN8sdv4g4QB6aNgWRnICqwNXD7rr39f5TA6L\nJ8Pn4mWCWvgkT8uAtw710UqfbAwtCseCPtgCvEkFg+rlFO41BuhioeShIE0RKzuq\nd1HpJV7V+RusoZfdfDLjwtrM1kqhFAryuUVEXzpfVpmRAVq/OiiW07ouEjbp0O+I\ncdzENnHt27i7NyLc5l3Yqn/pQcjzaqJYdStmeAvvKQiOpmXDKxmL9kVm1BNfHDfo\nbemOXk+OuWutI2RSvBIR9Sy28KoazeXYSmrjucng+lzaNuCWmaIGFHAz7VOUprIO\nZ1WnwfhqTCFfQyopDcDzi7hIPIUzydmfyHnrGjHdVI411leahVss6v4FRXg9MUsr\nynpXOWIvyfrNbAk7plXYVCs7bxrmftiEL0wqfe5c7NNg2nM8DXd6f1gLyJSZHqZV\n1Np3E9bE9pywe8ckhfV1jAxjrRQJc+lo9KtXZwthv5GsnhjFbOQAr9MasN+ghwG+\n3d64vaNjmbIWtR359tsqEzgyf6ODeKIh1/smPujtvNItp097AcO6nvCrnTH3nrV2\ncSPCBM4Bmlkyk8pct5pwjmgU1jTtWYUqRGRHHQojDo0xkhoRTEOVBONT9Jnd7Z81\nFBuqpGluf6sWPaWKDqiUrpVHepPRynPIK0HobG+XlScdrG/LUuJheakFVQwIilsu\nWl49U63ynJf3oTIFM9VauAUtrxUekUcAM9c0QC+dH2I=\n-----END RSA PRIVATE KEY-----\n",
+      "password": "secret",
+      "digest": "SHA-256"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "246ea87c4f982ee3a1ddb84d3f08e72113db50ba42c2bec533af3734b0ebc0db796115c1b3878661d9cb21b8831c907b11ca4cd1c07f8716a1fd5b03617cc00edb661a05d9e5e2b0659d14d991748e8f9fb92e8b0b1fcc90a940c884eb62b2faafa53ec824a48abd84c2877da6f3e90dd7e7ac268bb42f465588080c28e31744",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign with a legacy PEM AES-256-CBC key",
+    "ref": "openssl rsa -traditional -aes256 (password secret); the signature equals the one of the plain key",
+    "op": "rsa:sign",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nProc-Type: 4,ENCRYPTED\nDEK-Info: AES-256-CBC,D4E952FFBC2C0698C21371BA984F96E0\n\nInhjLr1UlsC0zL8dwDgc+9eCkYiYQ2Rfe7WO8I0USpc5950kzhASoD2c5UvoNDTp\nB2I7isRCdd3QaKexk5DkL3t4V0/gmcBgJdSUFl9bHSt6fojAiEqT5Bhf1lyeUq8S\nYYP0HgqQe82C09StjaDYNxPJ1Hu3s20uMr+AOme8oeMOVKE3+JUMDy6BZY0gYBGR\n2eTqGq0/atlpJwwIICWWQ049KkIn0FLnUcbQ47UQJ4pwB4h2o9fma0uMR2aFMoUO\nzCclb0lVOjxn0La1ONrg6Y9Utz2LZcBE/Jj69/ENd6kvpCGgOTzW0r02CWZH+iyp\nvYxA/1RMS8ob2aJBh0wWRCcyOiGhXIJiOlcdr5zRbhEIYf9nbxiW13m3Zv+eZSd4\nvndBza3GKnFG1i7Q/aeqDb9SAHWFIrzf8Vu7DiTUCmIsFdTxGIK6NSMQJCZXq52E\n+NdUvNv3t4KgIQhgzNY/qi1qhRhQyVB7BEc0GTCrQiZgFSd3TM/86Ov1mpgIEdnD\ncTrRk5VWA3N2R0V0SYcc1FtwHHVwv0EHTRBep/gbAnmCm0XfSxnybDMpuXSlXU1G\n9ijlTFPeqq7/nWRQbD5vk/JoHIJXTjsEy9LdppwKRgb6ShokZ7wVr/z1u1NuwZsY\nNHdFbyRtqr5bH/GjVabShfGnM9Tp6FolzQgDZuJY+g5PGJNTt22xl7icfSycP4ky\nKjghXrjw2mMMNrCYKJWCMveYk1zxkDmUrgfmANZRhh6hPzy0UlRzll7OhLppMSPX\nYr6MSVZX3i+ymuY8a/0RzVEKHza3Aikg5cOanjLanZM=\n-----END RSA PRIVATE KEY-----\n",
+      "password": "secret",
+      "digest": "SHA-256"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "246ea87c4f982ee3a1ddb84d3f08e72113db50ba42c2bec533af3734b0ebc0db796115c1b3878661d9cb21b8831c907b11ca4cd1c07f8716a1fd5b03617cc00edb661a05d9e5e2b0659d14d991748e8f9fb92e8b0b1fcc90a940c884eb62b2faafa53ec824a48abd84c2877da6f3e90dd7e7ac268bb42f465588080c28e31744",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign with a legacy PEM DES-EDE3-CBC key",
+    "ref": "openssl rsa -traditional -des3 (password secret); the signature equals the one of the plain key",
+    "op": "rsa:sign",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nProc-Type: 4,ENCRYPTED\nDEK-Info: DES-EDE3-CBC,03263A5AC1546DC8\n\nZxhPwBpwHfAu6XTNFnbX+T1QjFnh4vI08IVAVhZK9pUv0Q2pI8uSw3/JkqNl4/Oa\n4dAynnyCWqAxmlkVfB4nE6wTyV87wmm2ce9zCF2seWcrsz8aFMrkOZut0oKNfYYl\nLdjpPYWxIx6Jw+wCZlWiwczF3yzUai7mT1IqvOUgDT/51X5ui9JNMSISMPqgsY/C\nzGFEO6gHgsAbEcne04+m7Q1VdwWBo+MG49lBm/PWtqAOHLkCwHJWj6kYBkVhYtls\n0Abpu+rZjyi01nATcmUqupNiHNP7t2ET8WY6KfGild+dgOicYgvPo9Deg2vJ58MH\niVK/otJH9DFRGcuuP4u1Aks3c/D/IRD3oRjZ1AUmC4vkaPR5h9+PGcqELbV4WzyC\nwTDbIlBrRi3QtpA4Ot7i03aVVqkxmctYlRtbZYBB7bb5EtneqjdEQ/gaOqQeUaUf\ntyT3f6iBBjdidAapV1LrrzNijttzJM/WGzqlb7LZSZjTW1ZESFr7XvRPgmAUSRec\n+8BZauVJdWYHN2ogaGZ7bkVIx9SiDp9DUlq7aC4YGDVnfN20zIIhjmpDzv5TV/EQ\nkD6XPhu4O+M3TujFcdgkjJLp1sb+nA0j1S5Q1K86P2/PWQ3rS01ey+3uCo1Sw/zW\nGSfj/8ysvtdpo5r29gLElxjAlXqdnFOe3TezGALp8saco4dPLSvxJS+0XJCdcsg9\nIzLjWlpcy+yIGBuq1KQgZYLrbs6pCmz9OxzmAopdlDg24GupvlozMOEuX1tl7SBA\nkYYPkErcPXdfa2++SfzPrjNpuJ/1SNd5fYrMW0KfIE8=\n-----END RSA PRIVATE KEY-----\n",
+      "password": "secret",
+      "digest": "SHA-256"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "246ea87c4f982ee3a1ddb84d3f08e72113db50ba42c2bec533af3734b0ebc0db796115c1b3878661d9cb21b8831c907b11ca4cd1c07f8716a1fd5b03617cc00edb661a05d9e5e2b0659d14d991748e8f9fb92e8b0b1fcc90a940c884eb62b2faafa53ec824a48abd84c2877da6f3e90dd7e7ac268bb42f465588080c28e31744",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign with a legacy PEM DES-CBC key",
+    "ref": "openssl rsa -traditional -des -provider legacy -provider default (password secret); the signature equals the one of the plain key",
+    "op": "rsa:sign",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nProc-Type: 4,ENCRYPTED\nDEK-Info: DES-CBC,49F9B8B606CBB845\n\nJ7stPCJJPCzwuT8uZfiAyMM7DrvrpLPeMKHhDOjitLt6LTqPyYvEhvZIMNf0eQdA\n7y3XYWrZtpgiceYh597IcASJoIqMGNnP4bFePdMMe82dTRlDpoTESnch2IxSdG74\n+udSbiAnTe9AmOQjD7u/zcb5HdSd4wLvl7vsI/B44QGYcsy8x3KieTUVNX3ex/QQ\nN7TNwnYjQ84tJHSICP7UrBEfbFADcqs0L9JZ9TmMwbZFlVt8H2bo7yTkbeFU/7fx\nF/EZljX2r7ETny5UtnN9tpNvh3SmxZhBBlLgu3LdcNByIt8/gy++p0fH2byKjXVr\nhx2tJHZwWPF+vTiSyav51p+iHw4sdIBbaNluoC0jzZner6XZ6JgaqiJ78l2384U/\njyky8r92hpDvjty3lc3qO3C0xsNzz1PUJATy1aNrpttMFtkLq3EYOxpvWdDx6Cd6\nkgt3KXm6rVjB9vQq5Dt1EZ0tjDzDCQK4kZhiO9lYHwntl0CFJy3VdgonIzqeFwz3\nJ9O01yha1Ehwg1Gz2v/tpq/c91vEcN3HpfqdXV6hxrtaUcl95HL0N3WemKnqEXN6\nLfWrrlq6EAp+ZBuEMoQiUt9I1t9NvbG9ndJUPKU8CiGAPpjS4Mv6Oqs/uYLTKE9N\ngaoFztWlW33pkoFAmOVpr1uzJyM0N9eCfUKXoGirGpYCE1oPo58l4PJ0purj6g75\nm0az5TuPrDzQBgwlLH7gu073yMQAUOCO2/WD4SLuauijouxsZlZ262gcTIwQA72Q\nziiPZ/kkGNklnShITFXkAB5aYzJ1o5m1p/UJ21UdjAg=\n-----END RSA PRIVATE KEY-----\n",
+      "password": "secret",
+      "digest": "SHA-256"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "246ea87c4f982ee3a1ddb84d3f08e72113db50ba42c2bec533af3734b0ebc0db796115c1b3878661d9cb21b8831c907b11ca4cd1c07f8716a1fd5b03617cc00edb661a05d9e5e2b0659d14d991748e8f9fb92e8b0b1fcc90a940c884eb62b2faafa53ec824a48abd84c2877da6f3e90dd7e7ac268bb42f465588080c28e31744",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign with an encrypted PKCS#8 DES-CBC PBKDF2-SHA256 key",
+    "ref": "openssl pkcs8 -topk8 -v2 des-cbc -provider legacy -provider default (password secret); the signature equals the one of the plain key",
+    "op": "rsa:sign",
+    "params": {
+      "key": "-----BEGIN ENCRYPTED PRIVATE KEY-----\nMIIC0TBLBgkqhkiG9w0BBQ0wPjApBgkqhkiG9w0BBQwwHAQIKmnV6vwfMNgCAggA\nMAwGCCqGSIb3DQIJBQAwEQYFKw4DAgcECLohdqKyLTGBBIICgKcl/6+BNKeVHrLU\nJ09rkqNblKOhnB+yF84t1cRJOkIaqy5hVEk/VJnJLxYwHKn0Kq6zNpZKGcTI9+ca\nEZdJm8nhUSN8KIUXy+FG4igVTWl/5lATTTMH+SPWRr4+C8gXNAJtEGDA/CCCppsB\nebVFcMEoqVvy8BbJPUXD+qLVQFtjIShyhH7eURP/DeaWoZeb8OTpZ034AJ/pCybv\nJhskIEPoM2OJTdCsl/p5yy9x+7JMdOAVR2JVOfNdXRc9FcDzCY7UbIMM6IJLYkjg\nom3Gd7lnL6pFBle+wsmLEqDg1CQC/C3zTlt8eC5b8dSiMJYYs8nTyxJRTc5u6Ech\nkSJp7VGHWRZQtf9Ckp+wtVO2KhmnpNlmaC+vCsKe+OE6/jViqdiXG5Yc5RelmRI+\nSEcIaR9ywvoFM4fqZpFvOi+JiKokOq8DUmPPLOcQHX0rBrnXBgRxA0DJ/cZIddPW\netPt4eWkBP9T3ZH3qfg8C58jPL6fAKgvhvwtvT4GQpodxKQH+oMluOmxLKluMx4A\n4OIhYrp2Ked86MMdjH1iG8K025m5v2yLP1cQhbpa+4YKItIUPjUcSwrKE0mXlosx\nDYwoBOCIu0DpJAzCsuTj31FCi6lX1eNTCsI/aQfmVK3RFT8FtTdPnhUmFrCdA0pa\nRWEdze0tGGtC3io27077Yo4mtYoAIbRhOh1YV3kdj+qJbQiyup0CSUQlzhZYxXjP\n4J0PmTM4ezHuGE9aDvfM8ELhMg7VjYr6b7Upt4fX8hT/FfVQrM0D7/beeweZXATK\nIycc0CCmKddM8M5xpWAbLiHByW/shVGXORjNKGQLYVE6ffglDGzpk67NwVkt67Hj\nufIST+Q=\n-----END ENCRYPTED PRIVATE KEY-----\n",
+      "password": "secret",
+      "digest": "SHA-256"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "246ea87c4f982ee3a1ddb84d3f08e72113db50ba42c2bec533af3734b0ebc0db796115c1b3878661d9cb21b8831c907b11ca4cd1c07f8716a1fd5b03617cc00edb661a05d9e5e2b0659d14d991748e8f9fb92e8b0b1fcc90a940c884eb62b2faafa53ec824a48abd84c2877da6f3e90dd7e7ac268bb42f465588080c28e31744",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign with an encrypted PKCS#8 AES-192-CBC PBKDF2-SHA384 key",
+    "ref": "openssl pkcs8 -topk8 -v2 aes-192-cbc -v2prf hmacWithSHA384 (password secret); the signature equals the one of the plain key",
+    "op": "rsa:sign",
+    "params": {
+      "key": "-----BEGIN ENCRYPTED PRIVATE KEY-----\nMIIC3TBXBgkqhkiG9w0BBQ0wSjApBgkqhkiG9w0BBQwwHAQIhugnwBnCV94CAggA\nMAwGCCqGSIb3DQIKBQAwHQYJYIZIAWUDBAEWBBAspexOJVSYJJZiYTj4h66nBIIC\ngB2rCgKoZrAvvvcTISN6nNwzUAeEbUsA4ZVTT5MxZVJKYIpeXsUt68UmLdNy73ql\nNLqCkhButDNoUw7cbvHSfF4X8aE9u9EU60XlptGk7vw/d/1UVngXPdM5r8MPyhPS\n6FjEog3FHwgjqDjtkg1NSLZ2DN77xWAYo2I8n6A/EAqubqNIaVEGXiekGG4J4plZ\nK7d/aeJ1ztoJF7qi4s6uEVA8S6e08NQe7cB+u9OUP43zezagI9+HFyfhGfirQaeO\ndli84tXkFrbliy7/5vU3GC+YeFBUcPmrOJAbp5gdnk0xLVJjJmmA/kmiV51aNezm\nHDw7ioQBs8ldnNkvPMfphHR/Jg7Qd+wRiEg2Q9EjbFJKZCTsuducCFOYY3aREWNY\nRTiQ5tkWbOv1DiFH2l1XStfrZDP5OQe99DBYwISL6Z3YpNdkHfvIhMgmezvNocHn\nxIV9wUo2wC1XNgeaqx6EMlmfrbnnE7WoqtgI2UcifHFbGjPxP7ccBddD3ye+cCBO\nOPPICQc1H3WaQ1gyv13jfIK5OzYve08s7TincqkpX46OZkhyiS30XUTpDPS65+pC\nHyam06Mu+7hyOgzwwZQXwtfJ+6PYxhj214LiQdsUxzQLcAGBGclbq5PZVW6iRRxt\nBJtDnT8LopVZXynoZozrEKUj3xFB+x4fhweqAmdtEw31emskHYMLKNhjbJfhgc2d\nZJDrHKIaB+UN5LNh0aLZhRkdLCCa9zi97hZ54HQ7f3VxBAa4JkHmngGhww7EGru1\nTGO3zvQ1kNZmdTJfXTS+R40eAvAFXnLVoH+FbqvuJb09cAPMvMdsJHsEQJpn8hWD\nUfXfWYvvuKHZ0OR3cgyfjZk=\n-----END ENCRYPTED PRIVATE KEY-----\n",
+      "password": "secret",
+      "digest": "SHA-256"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "246ea87c4f982ee3a1ddb84d3f08e72113db50ba42c2bec533af3734b0ebc0db796115c1b3878661d9cb21b8831c907b11ca4cd1c07f8716a1fd5b03617cc00edb661a05d9e5e2b0659d14d991748e8f9fb92e8b0b1fcc90a940c884eb62b2faafa53ec824a48abd84c2877da6f3e90dd7e7ac268bb42f465588080c28e31744",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypted key without a password",
+    "ref": "openssl pkcs8 -topk8 -v2 aes-256-cbc",
+    "op": "rsa:sign",
+    "params": {
+      "key": "-----BEGIN ENCRYPTED PRIVATE KEY-----\nMIIC3TBXBgkqhkiG9w0BBQ0wSjApBgkqhkiG9w0BBQwwHAQIUJNvRU4C/joCAggA\nMAwGCCqGSIb3DQIJBQAwHQYJYIZIAWUDBAEqBBBe35SOKhB5Z0psijmVF1V2BIIC\ngMAsPgWmFtu7LF0w6G5iJy7iJqlLyQ7b9wveDajvC/qla5dMe0ArZjHeVuYmSBPk\naVBaRBS9rHNUAA7tugglAapBbi0kITNGKI8/ht8H1fAtwsAWYU/i5IYKPQtU7dnN\ncXEnoOgzrDcEemKJDd3+R/9k3qDFgG0HQEItcs1bTwwyIPOlcmyLniseFoLkNOWY\nXt3O4N+s9qyg3uG27zh8TPpMZ0cNs6XZ7YTUt9JTdoUQE9JRUFhXeI2yQ86EWahS\npmdmsmM8VBlM3C+66JpbkUQGg4t4lsrp/R4m8tBVGpQShREXPhWpKwNzuOkpm+Ex\n6IIgZ+HjCCOgskYm8cJ3EKlUskVkfIr103LUKPu1tnvSUDGwo3PTuRDza/iswPWT\n4qa0OEFZ+UYD3EnwWphzpg6lfPEHm8UCbbfgdTKkMRIx2z432tkVoZ898eo84h44\nHS6fdoFXAbfMTTfvwZqOzzYkHxJZZEuQCg/SXZANNLDC6oOl4GsRgW7wHvhMSIvm\nB8YuzRYYeZsC8878kEXf/nG1PM4564jS/r4uy5fgvSW/Q6xKsRLJNAksdllcN6Ec\nW5gS6IiYdB3P5iolrrHP+1WD412eDcaWXwKhAcbXt6bmfdO3pxWvCIH4s5RSqF/z\n5s17jYTUv6rIZzLiwDzIx1xi9RF+vd/ZzP3WpoVP24odzsSzvb6EyHlrDME2OX9k\nmHw7RiOZ+LBLFq9khpqGK9HmbT4gKIigwCLwys/ATZ0ktFhe5za0PqG2LxGTZMyR\nOLBqE7/+ouEJB8kzGfF0a2vV4pPye/tIxNFFOzc02P4W5M+bF9I/o471srgyw00O\nNg0hkHuxG96FgKr44QfIP9I=\n-----END ENCRYPTED PRIVATE KEY-----\n"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "encrypted key with a wrong password",
+    "ref": "openssl pkcs8 -topk8 -v2 aes-256-cbc",
+    "op": "rsa:sign",
+    "params": {
+      "key": "-----BEGIN ENCRYPTED PRIVATE KEY-----\nMIIC3TBXBgkqhkiG9w0BBQ0wSjApBgkqhkiG9w0BBQwwHAQIUJNvRU4C/joCAggA\nMAwGCCqGSIb3DQIJBQAwHQYJYIZIAWUDBAEqBBBe35SOKhB5Z0psijmVF1V2BIIC\ngMAsPgWmFtu7LF0w6G5iJy7iJqlLyQ7b9wveDajvC/qla5dMe0ArZjHeVuYmSBPk\naVBaRBS9rHNUAA7tugglAapBbi0kITNGKI8/ht8H1fAtwsAWYU/i5IYKPQtU7dnN\ncXEnoOgzrDcEemKJDd3+R/9k3qDFgG0HQEItcs1bTwwyIPOlcmyLniseFoLkNOWY\nXt3O4N+s9qyg3uG27zh8TPpMZ0cNs6XZ7YTUt9JTdoUQE9JRUFhXeI2yQ86EWahS\npmdmsmM8VBlM3C+66JpbkUQGg4t4lsrp/R4m8tBVGpQShREXPhWpKwNzuOkpm+Ex\n6IIgZ+HjCCOgskYm8cJ3EKlUskVkfIr103LUKPu1tnvSUDGwo3PTuRDza/iswPWT\n4qa0OEFZ+UYD3EnwWphzpg6lfPEHm8UCbbfgdTKkMRIx2z432tkVoZ898eo84h44\nHS6fdoFXAbfMTTfvwZqOzzYkHxJZZEuQCg/SXZANNLDC6oOl4GsRgW7wHvhMSIvm\nB8YuzRYYeZsC8878kEXf/nG1PM4564jS/r4uy5fgvSW/Q6xKsRLJNAksdllcN6Ec\nW5gS6IiYdB3P5iolrrHP+1WD412eDcaWXwKhAcbXt6bmfdO3pxWvCIH4s5RSqF/z\n5s17jYTUv6rIZzLiwDzIx1xi9RF+vd/ZzP3WpoVP24odzsSzvb6EyHlrDME2OX9k\nmHw7RiOZ+LBLFq9khpqGK9HmbT4gKIigwCLwys/ATZ0ktFhe5za0PqG2LxGTZMyR\nOLBqE7/+ouEJB8kzGfF0a2vV4pPye/tIxNFFOzc02P4W5M+bF9I/o471srgyw00O\nNg0hkHuxG96FgKr44QfIP9I=\n-----END ENCRYPTED PRIVATE KEY-----\n",
+      "password": "wrong"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "legacy encrypted key with a wrong password",
+    "ref": "openssl rsa -traditional -aes128",
+    "op": "rsa:sign",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nProc-Type: 4,ENCRYPTED\nDEK-Info: AES-128-CBC,9306BB60D2CC34E8156AA485E314992A\n\nuCabI6icv+vS4MLJT3HULkhep5a5J9h9wTsRyTvfKdIzWLRHmtVfcjhsLjbpagnq\nGbLMFzUQP7oqCXbyD13vyrQc/4jQIB6UtVqdfPbqFTxrTU1iyl+uMPdBfofz6wix\n/DlKfXWHZviVNRrShv+fehz6zRblrir+5Igtpn/KU0gIyLNLok/0WcvhF4qBtBgY\nbaTpEAIztY9hriPDFyC8iMe6tomDC4X0MUJkVqPxyt/xjvcxW6jSyP/20tmaACVL\n0aqtLy/lj1+5BXmFeUPQmOUiK2O+ZznLqI4vT61vdlMrYD5DBxG4Wply29XbahLQ\nkTEgtPBMoHiqZw+Id3ZVneE27416cwOoz/W5fXaNkSx+IdvXNCSTKixjlkEaKNt6\n4jVs131xqabsVzIGRXhoQ13FgddJiOWoqBxd/W5eo1KD5jKPlZKXeKVXV0hGAr0e\nQf/w0VWXQpLImfZaMw9Nw5A6jc0n8OIcgN3n9KwSf0tgEjMMGch9L1ACg9oetmHN\nkygpigx72AJ+TeQnyuks8q8QYcIeA1wkd/Oasf2dNwXOhfyv+NbrqcgIwEdTIvKy\ngt9UXWQ5qNlBnoSdJrXE+H0g6eXy9Cw9Z7FXKT2eJJu4NEPtIsmG7z0d9mW4Kvu3\nS6S8LrbJGmO9k+9+J9GNUfl5nvxt8M3VpOLWC9/Df+iLzLJYEY5i3AvMwhWuFx2j\nxO8qy3lERdDeweK/xC6Glr53vgz+suT9TTVL7Hl0p0UWWJ48I8HuZx115oBu17PJ\n6FFQKZvUpxsTZyvq5ZZTQ8aYOpAVUL+RHVtqAIZDEYs=\n-----END RSA PRIVATE KEY-----\n",
+      "password": "wrong"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "verify v1.5 SHA-1",
+    "ref": "signature from openssl dgst -sha1 -sign",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9JaaVS4wTGJqEKtdqPA5eshzj\ngZz0LH/MtGlTogD9gt6IzFk4pGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5Hm\nvdpzTy8Us+IIQOMzoAZIAwr7sdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPU\nVabywyBg3oeKr4fLHwIDAQAB\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      },
+      "digest": "SHA-1"
+    },
+    "input": {
+      "value": "1bdeec82cc3001106518962bc37b3836d7595caf40691870578b89b563402612608b9b1bf167a052adeda59c2e607c3cd97aba9e55e2ee9c513c217f2ee2840171aaa7bae664265ac5f82805ee6c39c36de76b1e57d4170c95583f7b12df863d6e96e1ec170600b9a17673dc4ed52aedbeb6eb176db61b33264e74ab2b29f49f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify v1.5 MD5",
+    "ref": "signature from openssl dgst -md5 -sign",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9JaaVS4wTGJqEKtdqPA5eshzj\ngZz0LH/MtGlTogD9gt6IzFk4pGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5Hm\nvdpzTy8Us+IIQOMzoAZIAwr7sdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPU\nVabywyBg3oeKr4fLHwIDAQAB\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      },
+      "digest": "MD5"
+    },
+    "input": {
+      "value": "912179f1a780a615d45816e5ec2da0b208e0417f2b1343b33bbd05a709cfc66529f0db8f79a6c617fbdf00b532a031d63b9992d577dac13a77db2d83b77448bda7764b1b8dd602758029decbc32460a4a9ab0fd3836d0ca970e2fb6c6c938a88e12fc847f07e6a8fb10fba65a78c15785fa31b2ce62de7563f4f3a8275a08f93",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify v1.5 SHA-256",
+    "ref": "signature from openssl dgst -sha256 -sign",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9JaaVS4wTGJqEKtdqPA5eshzj\ngZz0LH/MtGlTogD9gt6IzFk4pGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5Hm\nvdpzTy8Us+IIQOMzoAZIAwr7sdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPU\nVabywyBg3oeKr4fLHwIDAQAB\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      },
+      "digest": "SHA-256"
+    },
+    "input": {
+      "value": "246ea87c4f982ee3a1ddb84d3f08e72113db50ba42c2bec533af3734b0ebc0db796115c1b3878661d9cb21b8831c907b11ca4cd1c07f8716a1fd5b03617cc00edb661a05d9e5e2b0659d14d991748e8f9fb92e8b0b1fcc90a940c884eb62b2faafa53ec824a48abd84c2877da6f3e90dd7e7ac268bb42f465588080c28e31744",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify v1.5 SHA-384",
+    "ref": "signature from openssl dgst -sha384 -sign",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9JaaVS4wTGJqEKtdqPA5eshzj\ngZz0LH/MtGlTogD9gt6IzFk4pGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5Hm\nvdpzTy8Us+IIQOMzoAZIAwr7sdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPU\nVabywyBg3oeKr4fLHwIDAQAB\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      },
+      "digest": "SHA-384"
+    },
+    "input": {
+      "value": "1e6b67a209b166c9dd857af91fed2af10584ec87cbd542034cb69ee319971ab01c380e594335f0a36ed905f38f20875bcf70ba83206e7e6720de82f5634c9a1059c47111b61fbfd29f7d7b2d11c3c68a8687a0c1b33917c5a641a2a65aa1e4af32948fa19056aad5fccad243ffc34e2a7892700115a7a5259ee524d4754e831f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify v1.5 SHA-512",
+    "ref": "signature from openssl dgst -sha512 -sign",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9JaaVS4wTGJqEKtdqPA5eshzj\ngZz0LH/MtGlTogD9gt6IzFk4pGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5Hm\nvdpzTy8Us+IIQOMzoAZIAwr7sdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPU\nVabywyBg3oeKr4fLHwIDAQAB\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      },
+      "digest": "SHA-512"
+    },
+    "input": {
+      "value": "8169dd44be37ec9b378851b53d37bb844243868a128e697160920c0baf2ba9adf2b319b8a30c9010c5e3db8973e2499f11c8f7dc3b09d0bc83f2277376974dc58917d09911025c7aaa7ce1b8306f9c6cbf171ea9cf87c8a331839ce1a5b59ae266b045760ae30d67b93bcb946cc6c5507b38f3fc7f1b18199eaa20a87703b852",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify with an RSA PUBLIC KEY block",
+    "ref": "openssl rsa -RSAPublicKey_out",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN RSA PUBLIC KEY-----\nMIGJAoGBAL0lppVLjBMYmoQq12o8Dl6yHOOBnPQsf8y0aVOiAP2C3ojMWTikYEUM\nTVXti2dAXRZj2rm9ecoP8wYmxfdq8markea92nNPLxSz4ghA4zOgBkgDCvux1fUd\nxcJV9ilGHpR7/NzDDwJCINvfyq36PP5MQ9RVpvLDIGDeh4qvh8sfAgMBAAE=\n-----END RSA PUBLIC KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      },
+      "digest": "SHA-256"
+    },
+    "input": {
+      "value": "246ea87c4f982ee3a1ddb84d3f08e72113db50ba42c2bec533af3734b0ebc0db796115c1b3878661d9cb21b8831c907b11ca4cd1c07f8716a1fd5b03617cc00edb661a05d9e5e2b0659d14d991748e8f9fb92e8b0b1fcc90a940c884eb62b2faafa53ec824a48abd84c2877da6f3e90dd7e7ac268bb42f465588080c28e31744",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify with the key pair block text (public key first)",
+    "ref": "the public block followed by the private block, as Generate RSA Key Pair writes them",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9JaaVS4wTGJqEKtdqPA5eshzj\ngZz0LH/MtGlTogD9gt6IzFk4pGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5Hm\nvdpzTy8Us+IIQOMzoAZIAwr7sdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPU\nVabywyBg3oeKr4fLHwIDAQAB\n-----END PUBLIC KEY-----\n\n-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgQC9JaaVS4wTGJqEKtdqPA5eshzjgZz0LH/MtGlTogD9gt6IzFk4\npGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5HmvdpzTy8Us+IIQOMzoAZIAwr7\nsdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPUVabywyBg3oeKr4fLHwIDAQAB\nAoGAUWxHzbT706yft42Jtd2sge9CqF0/Z41QZpqzTKFMs9UGXvU44z0/g/nLwNXF\nUOlQKTdLDPIX33gGMfu29M9BEVtxC5WQ3tqJl8E7+X3yZKM1VyuQ4tUjAXIsRnn3\n7zbLr/TIw4X+Djkx91OTp2ohG3S0yADI3NZ82SITAkw66cECQQDuegecw5yWu/C1\nQ8yd2wX9afGm5kQyw8BMaN1Uor0VPaf8k3tZazFtoUoQf9IqcBWTD687k3MfkzTF\n4WkqVe9nAkEAywuvTYxmULXCqGE623Abufe/Nm5Eq/1ZP7mprRiJ7evcRNKHbS7B\n2Kuzln9aSgrs9CWxQ+HLNt01sDjpOyzLiQJAbQapOEhN7LPbpmNqxrh9ko+/BPi9\nMSBBaC2BEtKb83wOsvCSMh1Jqb9VZxmo8fHwSx2elXQh68uXEuis9cf3/QJAF0FF\nWKpl5YSLwOEx7oQOiOQZIFDMyK4BlMzc5BhVY8yJs9Aw9o5OYVR5Axme67AIp4XR\noaawsZ3wUjiSbdaZkQJADZ8CCFrFf8gv4OrBMUtiax3CUCwmr6rA4c57XLDDzxZl\n55jlFrqNbhlndAot21WKgcKOiJFqXP3mK6mOWXo5Zw==\n-----END RSA PRIVATE KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      },
+      "digest": "SHA-256"
+    },
+    "input": {
+      "value": "246ea87c4f982ee3a1ddb84d3f08e72113db50ba42c2bec533af3734b0ebc0db796115c1b3878661d9cb21b8831c907b11ca4cd1c07f8716a1fd5b03617cc00edb661a05d9e5e2b0659d14d991748e8f9fb92e8b0b1fcc90a940c884eb62b2faafa53ec824a48abd84c2877da6f3e90dd7e7ac268bb42f465588080c28e31744",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a changed message",
+    "ref": "signature from openssl dgst -sha256 -sign",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9JaaVS4wTGJqEKtdqPA5eshzj\ngZz0LH/MtGlTogD9gt6IzFk4pGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5Hm\nvdpzTy8Us+IIQOMzoAZIAwr7sdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPU\nVabywyBg3oeKr4fLHwIDAQAB\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog!",
+        "enc": "utf8"
+      },
+      "digest": "SHA-256"
+    },
+    "input": {
+      "value": "246ea87c4f982ee3a1ddb84d3f08e72113db50ba42c2bec533af3734b0ebc0db796115c1b3878661d9cb21b8831c907b11ca4cd1c07f8716a1fd5b03617cc00edb661a05d9e5e2b0659d14d991748e8f9fb92e8b0b1fcc90a940c884eb62b2faafa53ec824a48abd84c2877da6f3e90dd7e7ac268bb42f465588080c28e31744",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Verification failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify with the wrong digest",
+    "ref": "SHA-256 signature checked as SHA-1",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9JaaVS4wTGJqEKtdqPA5eshzj\ngZz0LH/MtGlTogD9gt6IzFk4pGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5Hm\nvdpzTy8Us+IIQOMzoAZIAwr7sdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPU\nVabywyBg3oeKr4fLHwIDAQAB\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      },
+      "digest": "SHA-1"
+    },
+    "input": {
+      "value": "246ea87c4f982ee3a1ddb84d3f08e72113db50ba42c2bec533af3734b0ebc0db796115c1b3878661d9cb21b8831c907b11ca4cd1c07f8716a1fd5b03617cc00edb661a05d9e5e2b0659d14d991748e8f9fb92e8b0b1fcc90a940c884eb62b2faafa53ec824a48abd84c2877da6f3e90dd7e7ac268bb42f465588080c28e31744",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Verification failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a damaged signature",
+    "ref": "one bit of an openssl signature flipped",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9JaaVS4wTGJqEKtdqPA5eshzj\ngZz0LH/MtGlTogD9gt6IzFk4pGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5Hm\nvdpzTy8Us+IIQOMzoAZIAwr7sdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPU\nVabywyBg3oeKr4fLHwIDAQAB\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      },
+      "digest": "SHA-256"
+    },
+    "input": {
+      "value": "246ea87c4f992ee3a1ddb84d3f08e72113db50ba42c2bec533af3734b0ebc0db796115c1b3878661d9cb21b8831c907b11ca4cd1c07f8716a1fd5b03617cc00edb661a05d9e5e2b0659d14d991748e8f9fb92e8b0b1fcc90a940c884eb62b2faafa53ec824a48abd84c2877da6f3e90dd7e7ac268bb42f465588080c28e31744",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Verification failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a short signature",
+    "ref": "signature cut to 127 bytes",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9JaaVS4wTGJqEKtdqPA5eshzj\ngZz0LH/MtGlTogD9gt6IzFk4pGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5Hm\nvdpzTy8Us+IIQOMzoAZIAwr7sdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPU\nVabywyBg3oeKr4fLHwIDAQAB\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      },
+      "digest": "SHA-256"
+    },
+    "input": {
+      "value": "246ea87c4f982ee3a1ddb84d3f08e72113db50ba42c2bec533af3734b0ebc0db796115c1b3878661d9cb21b8831c907b11ca4cd1c07f8716a1fd5b03617cc00edb661a05d9e5e2b0659d14d991748e8f9fb92e8b0b1fcc90a940c884eb62b2faafa53ec824a48abd84c2877da6f3e90dd7e7ac268bb42f465588080c28e317",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Verification failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify an empty signature",
+    "ref": "no bytes",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9JaaVS4wTGJqEKtdqPA5eshzj\ngZz0LH/MtGlTogD9gt6IzFk4pGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5Hm\nvdpzTy8Us+IIQOMzoAZIAwr7sdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPU\nVabywyBg3oeKr4fLHwIDAQAB\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      },
+      "digest": "SHA-256"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verification failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify with a hex message",
+    "ref": "same message as hex",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9JaaVS4wTGJqEKtdqPA5eshzj\ngZz0LH/MtGlTogD9gt6IzFk4pGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5Hm\nvdpzTy8Us+IIQOMzoAZIAwr7sdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPU\nVabywyBg3oeKr4fLHwIDAQAB\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "54686520717569636b2062726f776e20666f78206a756d7073206f76657220746865206c617a7920646f67",
+        "enc": "hex"
+      },
+      "digest": "SHA-256"
+    },
+    "input": {
+      "value": "246ea87c4f982ee3a1ddb84d3f08e72113db50ba42c2bec533af3734b0ebc0db796115c1b3878661d9cb21b8831c907b11ca4cd1c07f8716a1fd5b03617cc00edb661a05d9e5e2b0659d14d991748e8f9fb92e8b0b1fcc90a940c884eb62b2faafa53ec824a48abd84c2877da6f3e90dd7e7ac268bb42f465588080c28e31744",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify with a private key is refused",
+    "ref": "a private key block is not a public key",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgQC9JaaVS4wTGJqEKtdqPA5eshzjgZz0LH/MtGlTogD9gt6IzFk4\npGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5HmvdpzTy8Us+IIQOMzoAZIAwr7\nsdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPUVabywyBg3oeKr4fLHwIDAQAB\nAoGAUWxHzbT706yft42Jtd2sge9CqF0/Z41QZpqzTKFMs9UGXvU44z0/g/nLwNXF\nUOlQKTdLDPIX33gGMfu29M9BEVtxC5WQ3tqJl8E7+X3yZKM1VyuQ4tUjAXIsRnn3\n7zbLr/TIw4X+Djkx91OTp2ohG3S0yADI3NZ82SITAkw66cECQQDuegecw5yWu/C1\nQ8yd2wX9afGm5kQyw8BMaN1Uor0VPaf8k3tZazFtoUoQf9IqcBWTD687k3MfkzTF\n4WkqVe9nAkEAywuvTYxmULXCqGE623Abufe/Nm5Eq/1ZP7mprRiJ7evcRNKHbS7B\n2Kuzln9aSgrs9CWxQ+HLNt01sDjpOyzLiQJAbQapOEhN7LPbpmNqxrh9ko+/BPi9\nMSBBaC2BEtKb83wOsvCSMh1Jqb9VZxmo8fHwSx2elXQh68uXEuis9cf3/QJAF0FF\nWKpl5YSLwOEx7oQOiOQZIFDMyK4BlMzc5BhVY8yJs9Aw9o5OYVR5Axme67AIp4XR\noaawsZ3wUjiSbdaZkQJADZ8CCFrFf8gv4OrBMUtiax3CUCwmr6rA4c57XLDDzxZl\n55jlFrqNbhlndAot21WKgcKOiJFqXP3mK6mOWXo5Zw==\n-----END RSA PRIVATE KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "1bdeec82cc3001106518962bc37b3836d7595caf40691870578b89b563402612608b9b1bf167a052adeda59c2e607c3cd97aba9e55e2ee9c513c217f2ee2840171aaa7bae664265ac5f82805ee6c39c36de76b1e57d4170c95583f7b12df863d6e96e1ec170600b9a17673dc4ed52aedbeb6eb176db61b33264e74ab2b29f49f",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "verify without a key",
+    "ref": "no PEM block",
+    "op": "rsa:verify",
+    "params": {
+      "key": "not a key",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "1bdeec82cc3001106518962bc37b3836d7595caf40691870578b89b563402612608b9b1bf167a052adeda59c2e607c3cd97aba9e55e2ee9c513c217f2ee2840171aaa7bae664265ac5f82805ee6c39c36de76b1e57d4170c95583f7b12df863d6e96e1ec170600b9a17673dc4ed52aedbeb6eb176db61b33264e74ab2b29f49f",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "verify PSS SHA-256 salt 32 (fixed length)",
+    "ref": "openssl dgst -sha256 -sign -sigopt rsa_padding_mode:pss -sigopt rsa_pss_saltlen:32",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0zEldr+tJ6HK1FWQ49QT\nKg7uHUCc7IVSsf0heKkvwIsnUCu/UFztQYUSvxfOCFv2x6Smn3g27k8HtblOpqIp\nlhKDAFueCVcyWQwe8zXVwyRaoOIF3bC9IITYVoYYvpkCdU1k09lRMg5gx1b1Pv9D\n8Fo3RZIIIivTnFPDUCKEoA6AqejnXUgtjVzz0P7DgNUjrOCD936Y1QdMTaP+Y2Pp\nddBHNxdVbvmqCdM0RHycaB/X4e5TigQqV9oWoMRuGWEUVKAYUmvLo/ZDHic2X0Jq\nJKgVjsqImRZgZWpo+zG4JHa/1JUKosrAkLLSMLKWkLM0UpdagbKYw+A8omHRWFTf\n5wIDAQAB\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      },
+      "digest": "SHA-256",
+      "scheme": "RSASSA-PSS",
+      "salt-length": 32
+    },
+    "input": {
+      "value": "a6115ea7ab9dbbfc28df05edb2435e5b4d1972dfed2b8f72eab23a4dbc26f92c844b4bf2b9e6cd58d4ee8fd8192699fcfae1dfee0fb5eacb29e1281fa06f2b1f3f51addf767ae900619c413d88e5fe2ea253a7bff9ca95390fd53d36806d3323405064de6341ad82946d062b1e2e133c89742775d8083a0e5675edeb42a0ce57d910d6859d22975f43edbe8b074e9bed7bebd891f8577d605c64c98a9df41713180c8142b2c12f096194b8c6e4392afa4facb2f928ab0d711031bb50391931096eb447be68f597d05198bcbfa8eb33884b7b1491c75ff70be15f22917ebaf2de95d6d86341fce065f9a060c721992745f17ad411522d0db480952f359177e982",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify PSS SHA-256 salt 32 (any length)",
+    "ref": "same signature, salt-length -1",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0zEldr+tJ6HK1FWQ49QT\nKg7uHUCc7IVSsf0heKkvwIsnUCu/UFztQYUSvxfOCFv2x6Smn3g27k8HtblOpqIp\nlhKDAFueCVcyWQwe8zXVwyRaoOIF3bC9IITYVoYYvpkCdU1k09lRMg5gx1b1Pv9D\n8Fo3RZIIIivTnFPDUCKEoA6AqejnXUgtjVzz0P7DgNUjrOCD936Y1QdMTaP+Y2Pp\nddBHNxdVbvmqCdM0RHycaB/X4e5TigQqV9oWoMRuGWEUVKAYUmvLo/ZDHic2X0Jq\nJKgVjsqImRZgZWpo+zG4JHa/1JUKosrAkLLSMLKWkLM0UpdagbKYw+A8omHRWFTf\n5wIDAQAB\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      },
+      "digest": "SHA-256",
+      "scheme": "RSASSA-PSS"
+    },
+    "input": {
+      "value": "a6115ea7ab9dbbfc28df05edb2435e5b4d1972dfed2b8f72eab23a4dbc26f92c844b4bf2b9e6cd58d4ee8fd8192699fcfae1dfee0fb5eacb29e1281fa06f2b1f3f51addf767ae900619c413d88e5fe2ea253a7bff9ca95390fd53d36806d3323405064de6341ad82946d062b1e2e133c89742775d8083a0e5675edeb42a0ce57d910d6859d22975f43edbe8b074e9bed7bebd891f8577d605c64c98a9df41713180c8142b2c12f096194b8c6e4392afa4facb2f928ab0d711031bb50391931096eb447be68f597d05198bcbfa8eb33884b7b1491c75ff70be15f22917ebaf2de95d6d86341fce065f9a060c721992745f17ad411522d0db480952f359177e982",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify PSS SHA-256 salt 32 with the wrong salt length",
+    "ref": "same signature, salt-length 33",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0zEldr+tJ6HK1FWQ49QT\nKg7uHUCc7IVSsf0heKkvwIsnUCu/UFztQYUSvxfOCFv2x6Smn3g27k8HtblOpqIp\nlhKDAFueCVcyWQwe8zXVwyRaoOIF3bC9IITYVoYYvpkCdU1k09lRMg5gx1b1Pv9D\n8Fo3RZIIIivTnFPDUCKEoA6AqejnXUgtjVzz0P7DgNUjrOCD936Y1QdMTaP+Y2Pp\nddBHNxdVbvmqCdM0RHycaB/X4e5TigQqV9oWoMRuGWEUVKAYUmvLo/ZDHic2X0Jq\nJKgVjsqImRZgZWpo+zG4JHa/1JUKosrAkLLSMLKWkLM0UpdagbKYw+A8omHRWFTf\n5wIDAQAB\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      },
+      "digest": "SHA-256",
+      "scheme": "RSASSA-PSS",
+      "salt-length": 33
+    },
+    "input": {
+      "value": "a6115ea7ab9dbbfc28df05edb2435e5b4d1972dfed2b8f72eab23a4dbc26f92c844b4bf2b9e6cd58d4ee8fd8192699fcfae1dfee0fb5eacb29e1281fa06f2b1f3f51addf767ae900619c413d88e5fe2ea253a7bff9ca95390fd53d36806d3323405064de6341ad82946d062b1e2e133c89742775d8083a0e5675edeb42a0ce57d910d6859d22975f43edbe8b074e9bed7bebd891f8577d605c64c98a9df41713180c8142b2c12f096194b8c6e4392afa4facb2f928ab0d711031bb50391931096eb447be68f597d05198bcbfa8eb33884b7b1491c75ff70be15f22917ebaf2de95d6d86341fce065f9a060c721992745f17ad411522d0db480952f359177e982",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Verification failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify PSS: a v1.5 verification of a PSS signature fails",
+    "ref": "PSS signature checked as v1.5",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0zEldr+tJ6HK1FWQ49QT\nKg7uHUCc7IVSsf0heKkvwIsnUCu/UFztQYUSvxfOCFv2x6Smn3g27k8HtblOpqIp\nlhKDAFueCVcyWQwe8zXVwyRaoOIF3bC9IITYVoYYvpkCdU1k09lRMg5gx1b1Pv9D\n8Fo3RZIIIivTnFPDUCKEoA6AqejnXUgtjVzz0P7DgNUjrOCD936Y1QdMTaP+Y2Pp\nddBHNxdVbvmqCdM0RHycaB/X4e5TigQqV9oWoMRuGWEUVKAYUmvLo/ZDHic2X0Jq\nJKgVjsqImRZgZWpo+zG4JHa/1JUKosrAkLLSMLKWkLM0UpdagbKYw+A8omHRWFTf\n5wIDAQAB\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      },
+      "digest": "SHA-256"
+    },
+    "input": {
+      "value": "a6115ea7ab9dbbfc28df05edb2435e5b4d1972dfed2b8f72eab23a4dbc26f92c844b4bf2b9e6cd58d4ee8fd8192699fcfae1dfee0fb5eacb29e1281fa06f2b1f3f51addf767ae900619c413d88e5fe2ea253a7bff9ca95390fd53d36806d3323405064de6341ad82946d062b1e2e133c89742775d8083a0e5675edeb42a0ce57d910d6859d22975f43edbe8b074e9bed7bebd891f8577d605c64c98a9df41713180c8142b2c12f096194b8c6e4392afa4facb2f928ab0d711031bb50391931096eb447be68f597d05198bcbfa8eb33884b7b1491c75ff70be15f22917ebaf2de95d6d86341fce065f9a060c721992745f17ad411522d0db480952f359177e982",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Verification failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify PSS: a changed message",
+    "ref": "PSS signature checked against another message",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0zEldr+tJ6HK1FWQ49QT\nKg7uHUCc7IVSsf0heKkvwIsnUCu/UFztQYUSvxfOCFv2x6Smn3g27k8HtblOpqIp\nlhKDAFueCVcyWQwe8zXVwyRaoOIF3bC9IITYVoYYvpkCdU1k09lRMg5gx1b1Pv9D\n8Fo3RZIIIivTnFPDUCKEoA6AqejnXUgtjVzz0P7DgNUjrOCD936Y1QdMTaP+Y2Pp\nddBHNxdVbvmqCdM0RHycaB/X4e5TigQqV9oWoMRuGWEUVKAYUmvLo/ZDHic2X0Jq\nJKgVjsqImRZgZWpo+zG4JHa/1JUKosrAkLLSMLKWkLM0UpdagbKYw+A8omHRWFTf\n5wIDAQAB\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dogx",
+        "enc": "utf8"
+      },
+      "digest": "SHA-256",
+      "scheme": "RSASSA-PSS"
+    },
+    "input": {
+      "value": "a6115ea7ab9dbbfc28df05edb2435e5b4d1972dfed2b8f72eab23a4dbc26f92c844b4bf2b9e6cd58d4ee8fd8192699fcfae1dfee0fb5eacb29e1281fa06f2b1f3f51addf767ae900619c413d88e5fe2ea253a7bff9ca95390fd53d36806d3323405064de6341ad82946d062b1e2e133c89742775d8083a0e5675edeb42a0ce57d910d6859d22975f43edbe8b074e9bed7bebd891f8577d605c64c98a9df41713180c8142b2c12f096194b8c6e4392afa4facb2f928ab0d711031bb50391931096eb447be68f597d05198bcbfa8eb33884b7b1491c75ff70be15f22917ebaf2de95d6d86341fce065f9a060c721992745f17ad411522d0db480952f359177e982",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Verification failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify PSS SHA-1 salt 20 (fixed length)",
+    "ref": "openssl dgst -sha1 -sign -sigopt rsa_padding_mode:pss -sigopt rsa_pss_saltlen:20",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0zEldr+tJ6HK1FWQ49QT\nKg7uHUCc7IVSsf0heKkvwIsnUCu/UFztQYUSvxfOCFv2x6Smn3g27k8HtblOpqIp\nlhKDAFueCVcyWQwe8zXVwyRaoOIF3bC9IITYVoYYvpkCdU1k09lRMg5gx1b1Pv9D\n8Fo3RZIIIivTnFPDUCKEoA6AqejnXUgtjVzz0P7DgNUjrOCD936Y1QdMTaP+Y2Pp\nddBHNxdVbvmqCdM0RHycaB/X4e5TigQqV9oWoMRuGWEUVKAYUmvLo/ZDHic2X0Jq\nJKgVjsqImRZgZWpo+zG4JHa/1JUKosrAkLLSMLKWkLM0UpdagbKYw+A8omHRWFTf\n5wIDAQAB\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      },
+      "digest": "SHA-1",
+      "scheme": "RSASSA-PSS",
+      "salt-length": 20
+    },
+    "input": {
+      "value": "0579b10e39f6f07f077722aab551c27abf96d90c5cb48b7a531fb2cd1b2ab2f331fbab4639f18c058c30600c4a03eb48e1f444fd09e45b93c0a9b2666efbc07b8f1b92334aedd55be785c368d28794f79cab77d1f3c5101842c00355a17982dd96e34504da94a61cab720437d7a06047d402f926215870e274f4a1f9325d46a68c2732fc1bd9bb9a9287dc3ddd0c90adc06c0dae2ec838cca0104fed774fbab82187a5b8ab092c747abffb8d043ed98b929fcab0f19f9aa6067e58cb2f0d961ec9f3c9f8070941a16fd1fe91eaa5ac1a16a09de273ee37161ba67adbb3871b3c6947a7783ceb8c08af0d12b70326280fc9f9a2dce50cfcac29f27999e57554ce",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify PSS SHA-1 salt 20 (any length)",
+    "ref": "same signature, salt-length -1",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0zEldr+tJ6HK1FWQ49QT\nKg7uHUCc7IVSsf0heKkvwIsnUCu/UFztQYUSvxfOCFv2x6Smn3g27k8HtblOpqIp\nlhKDAFueCVcyWQwe8zXVwyRaoOIF3bC9IITYVoYYvpkCdU1k09lRMg5gx1b1Pv9D\n8Fo3RZIIIivTnFPDUCKEoA6AqejnXUgtjVzz0P7DgNUjrOCD936Y1QdMTaP+Y2Pp\nddBHNxdVbvmqCdM0RHycaB/X4e5TigQqV9oWoMRuGWEUVKAYUmvLo/ZDHic2X0Jq\nJKgVjsqImRZgZWpo+zG4JHa/1JUKosrAkLLSMLKWkLM0UpdagbKYw+A8omHRWFTf\n5wIDAQAB\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      },
+      "digest": "SHA-1",
+      "scheme": "RSASSA-PSS"
+    },
+    "input": {
+      "value": "0579b10e39f6f07f077722aab551c27abf96d90c5cb48b7a531fb2cd1b2ab2f331fbab4639f18c058c30600c4a03eb48e1f444fd09e45b93c0a9b2666efbc07b8f1b92334aedd55be785c368d28794f79cab77d1f3c5101842c00355a17982dd96e34504da94a61cab720437d7a06047d402f926215870e274f4a1f9325d46a68c2732fc1bd9bb9a9287dc3ddd0c90adc06c0dae2ec838cca0104fed774fbab82187a5b8ab092c747abffb8d043ed98b929fcab0f19f9aa6067e58cb2f0d961ec9f3c9f8070941a16fd1fe91eaa5ac1a16a09de273ee37161ba67adbb3871b3c6947a7783ceb8c08af0d12b70326280fc9f9a2dce50cfcac29f27999e57554ce",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify PSS SHA-1 salt 20 with the wrong salt length",
+    "ref": "same signature, salt-length 21",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0zEldr+tJ6HK1FWQ49QT\nKg7uHUCc7IVSsf0heKkvwIsnUCu/UFztQYUSvxfOCFv2x6Smn3g27k8HtblOpqIp\nlhKDAFueCVcyWQwe8zXVwyRaoOIF3bC9IITYVoYYvpkCdU1k09lRMg5gx1b1Pv9D\n8Fo3RZIIIivTnFPDUCKEoA6AqejnXUgtjVzz0P7DgNUjrOCD936Y1QdMTaP+Y2Pp\nddBHNxdVbvmqCdM0RHycaB/X4e5TigQqV9oWoMRuGWEUVKAYUmvLo/ZDHic2X0Jq\nJKgVjsqImRZgZWpo+zG4JHa/1JUKosrAkLLSMLKWkLM0UpdagbKYw+A8omHRWFTf\n5wIDAQAB\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      },
+      "digest": "SHA-1",
+      "scheme": "RSASSA-PSS",
+      "salt-length": 21
+    },
+    "input": {
+      "value": "0579b10e39f6f07f077722aab551c27abf96d90c5cb48b7a531fb2cd1b2ab2f331fbab4639f18c058c30600c4a03eb48e1f444fd09e45b93c0a9b2666efbc07b8f1b92334aedd55be785c368d28794f79cab77d1f3c5101842c00355a17982dd96e34504da94a61cab720437d7a06047d402f926215870e274f4a1f9325d46a68c2732fc1bd9bb9a9287dc3ddd0c90adc06c0dae2ec838cca0104fed774fbab82187a5b8ab092c747abffb8d043ed98b929fcab0f19f9aa6067e58cb2f0d961ec9f3c9f8070941a16fd1fe91eaa5ac1a16a09de273ee37161ba67adbb3871b3c6947a7783ceb8c08af0d12b70326280fc9f9a2dce50cfcac29f27999e57554ce",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Verification failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify PSS SHA-512 salt 64 (fixed length)",
+    "ref": "openssl dgst -sha512 -sign -sigopt rsa_padding_mode:pss -sigopt rsa_pss_saltlen:64",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0zEldr+tJ6HK1FWQ49QT\nKg7uHUCc7IVSsf0heKkvwIsnUCu/UFztQYUSvxfOCFv2x6Smn3g27k8HtblOpqIp\nlhKDAFueCVcyWQwe8zXVwyRaoOIF3bC9IITYVoYYvpkCdU1k09lRMg5gx1b1Pv9D\n8Fo3RZIIIivTnFPDUCKEoA6AqejnXUgtjVzz0P7DgNUjrOCD936Y1QdMTaP+Y2Pp\nddBHNxdVbvmqCdM0RHycaB/X4e5TigQqV9oWoMRuGWEUVKAYUmvLo/ZDHic2X0Jq\nJKgVjsqImRZgZWpo+zG4JHa/1JUKosrAkLLSMLKWkLM0UpdagbKYw+A8omHRWFTf\n5wIDAQAB\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      },
+      "digest": "SHA-512",
+      "scheme": "RSASSA-PSS",
+      "salt-length": 64
+    },
+    "input": {
+      "value": "35b4f54651e0379e39baf305ece18f8efd5d3756bcf871ac3bbbf86e400ecc21e8e6c10fa1474613c53304acebe7a719dce0c0abca444f3baf213ab58dc1ea7f27f397994ce36588d216c0a6a59b6a1d6f38d65e5f916aff9fcc348202c4fdacf27e4066e997e97172053dfcc11004fdd404e4d65933cac8fedc24827fde7ef50dc39b9f79384f971e03b40196a7400a58ad628fffd259ab909884767ebc4802e101d18ac46440b96b3b95fe2900342db9a327b5d393e62a60da0191aeda82e5a844a20e4cc2408977dd84beb40d075953dd97e1b0dd6e3c4c563bc64244e78d1778518c4f9106ea5f6a109a5c52b6b1aad46367853e192b2d790994615d90e8",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify PSS SHA-512 salt 64 (any length)",
+    "ref": "same signature, salt-length -1",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0zEldr+tJ6HK1FWQ49QT\nKg7uHUCc7IVSsf0heKkvwIsnUCu/UFztQYUSvxfOCFv2x6Smn3g27k8HtblOpqIp\nlhKDAFueCVcyWQwe8zXVwyRaoOIF3bC9IITYVoYYvpkCdU1k09lRMg5gx1b1Pv9D\n8Fo3RZIIIivTnFPDUCKEoA6AqejnXUgtjVzz0P7DgNUjrOCD936Y1QdMTaP+Y2Pp\nddBHNxdVbvmqCdM0RHycaB/X4e5TigQqV9oWoMRuGWEUVKAYUmvLo/ZDHic2X0Jq\nJKgVjsqImRZgZWpo+zG4JHa/1JUKosrAkLLSMLKWkLM0UpdagbKYw+A8omHRWFTf\n5wIDAQAB\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      },
+      "digest": "SHA-512",
+      "scheme": "RSASSA-PSS"
+    },
+    "input": {
+      "value": "35b4f54651e0379e39baf305ece18f8efd5d3756bcf871ac3bbbf86e400ecc21e8e6c10fa1474613c53304acebe7a719dce0c0abca444f3baf213ab58dc1ea7f27f397994ce36588d216c0a6a59b6a1d6f38d65e5f916aff9fcc348202c4fdacf27e4066e997e97172053dfcc11004fdd404e4d65933cac8fedc24827fde7ef50dc39b9f79384f971e03b40196a7400a58ad628fffd259ab909884767ebc4802e101d18ac46440b96b3b95fe2900342db9a327b5d393e62a60da0191aeda82e5a844a20e4cc2408977dd84beb40d075953dd97e1b0dd6e3c4c563bc64244e78d1778518c4f9106ea5f6a109a5c52b6b1aad46367853e192b2d790994615d90e8",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify PSS SHA-512 salt 64 with the wrong salt length",
+    "ref": "same signature, salt-length 65",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0zEldr+tJ6HK1FWQ49QT\nKg7uHUCc7IVSsf0heKkvwIsnUCu/UFztQYUSvxfOCFv2x6Smn3g27k8HtblOpqIp\nlhKDAFueCVcyWQwe8zXVwyRaoOIF3bC9IITYVoYYvpkCdU1k09lRMg5gx1b1Pv9D\n8Fo3RZIIIivTnFPDUCKEoA6AqejnXUgtjVzz0P7DgNUjrOCD936Y1QdMTaP+Y2Pp\nddBHNxdVbvmqCdM0RHycaB/X4e5TigQqV9oWoMRuGWEUVKAYUmvLo/ZDHic2X0Jq\nJKgVjsqImRZgZWpo+zG4JHa/1JUKosrAkLLSMLKWkLM0UpdagbKYw+A8omHRWFTf\n5wIDAQAB\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      },
+      "digest": "SHA-512",
+      "scheme": "RSASSA-PSS",
+      "salt-length": 65
+    },
+    "input": {
+      "value": "35b4f54651e0379e39baf305ece18f8efd5d3756bcf871ac3bbbf86e400ecc21e8e6c10fa1474613c53304acebe7a719dce0c0abca444f3baf213ab58dc1ea7f27f397994ce36588d216c0a6a59b6a1d6f38d65e5f916aff9fcc348202c4fdacf27e4066e997e97172053dfcc11004fdd404e4d65933cac8fedc24827fde7ef50dc39b9f79384f971e03b40196a7400a58ad628fffd259ab909884767ebc4802e101d18ac46440b96b3b95fe2900342db9a327b5d393e62a60da0191aeda82e5a844a20e4cc2408977dd84beb40d075953dd97e1b0dd6e3c4c563bc64244e78d1778518c4f9106ea5f6a109a5c52b6b1aad46367853e192b2d790994615d90e8",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Verification failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify PSS SHA-384 salt 10 (fixed length)",
+    "ref": "openssl dgst -sha384 -sign -sigopt rsa_padding_mode:pss -sigopt rsa_pss_saltlen:10",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0zEldr+tJ6HK1FWQ49QT\nKg7uHUCc7IVSsf0heKkvwIsnUCu/UFztQYUSvxfOCFv2x6Smn3g27k8HtblOpqIp\nlhKDAFueCVcyWQwe8zXVwyRaoOIF3bC9IITYVoYYvpkCdU1k09lRMg5gx1b1Pv9D\n8Fo3RZIIIivTnFPDUCKEoA6AqejnXUgtjVzz0P7DgNUjrOCD936Y1QdMTaP+Y2Pp\nddBHNxdVbvmqCdM0RHycaB/X4e5TigQqV9oWoMRuGWEUVKAYUmvLo/ZDHic2X0Jq\nJKgVjsqImRZgZWpo+zG4JHa/1JUKosrAkLLSMLKWkLM0UpdagbKYw+A8omHRWFTf\n5wIDAQAB\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      },
+      "digest": "SHA-384",
+      "scheme": "RSASSA-PSS",
+      "salt-length": 10
+    },
+    "input": {
+      "value": "1d0a4f88994cdd09ed294171fe732b8aadb341eec4cc139dbc824da02d99043ff37d1da9c64840b17292cac0aa958e1e96ab1d1732108222e809684ddf0c092282b0fad0085f7ead8a9f349bd2a4cbcab4d452ca5c9316eab4193f6e493f9ea3b8bdf070467baf1e5ed85446054855e61d02a5e2c283cc01fc4215652b664098942b6be781a2b79b2331c94bbf2521402dd648afac1d22973fc102d2263d4f97fe787c6f7edc86abb98b9bae956be05080eb3163282a17a7b8e9f4ca8ea34bb3e489b9bf8dd33147c353f1a795cc685704dd94cf54146f5477270c0934fc0cea3bc1365ea2eb75d716124de65a20da8e9b819a86ad42004186ab9718decb0d93",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify PSS SHA-384 salt 10 (any length)",
+    "ref": "same signature, salt-length -1",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0zEldr+tJ6HK1FWQ49QT\nKg7uHUCc7IVSsf0heKkvwIsnUCu/UFztQYUSvxfOCFv2x6Smn3g27k8HtblOpqIp\nlhKDAFueCVcyWQwe8zXVwyRaoOIF3bC9IITYVoYYvpkCdU1k09lRMg5gx1b1Pv9D\n8Fo3RZIIIivTnFPDUCKEoA6AqejnXUgtjVzz0P7DgNUjrOCD936Y1QdMTaP+Y2Pp\nddBHNxdVbvmqCdM0RHycaB/X4e5TigQqV9oWoMRuGWEUVKAYUmvLo/ZDHic2X0Jq\nJKgVjsqImRZgZWpo+zG4JHa/1JUKosrAkLLSMLKWkLM0UpdagbKYw+A8omHRWFTf\n5wIDAQAB\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      },
+      "digest": "SHA-384",
+      "scheme": "RSASSA-PSS"
+    },
+    "input": {
+      "value": "1d0a4f88994cdd09ed294171fe732b8aadb341eec4cc139dbc824da02d99043ff37d1da9c64840b17292cac0aa958e1e96ab1d1732108222e809684ddf0c092282b0fad0085f7ead8a9f349bd2a4cbcab4d452ca5c9316eab4193f6e493f9ea3b8bdf070467baf1e5ed85446054855e61d02a5e2c283cc01fc4215652b664098942b6be781a2b79b2331c94bbf2521402dd648afac1d22973fc102d2263d4f97fe787c6f7edc86abb98b9bae956be05080eb3163282a17a7b8e9f4ca8ea34bb3e489b9bf8dd33147c353f1a795cc685704dd94cf54146f5477270c0934fc0cea3bc1365ea2eb75d716124de65a20da8e9b819a86ad42004186ab9718decb0d93",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify PSS SHA-384 salt 10 with the wrong salt length",
+    "ref": "same signature, salt-length 11",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0zEldr+tJ6HK1FWQ49QT\nKg7uHUCc7IVSsf0heKkvwIsnUCu/UFztQYUSvxfOCFv2x6Smn3g27k8HtblOpqIp\nlhKDAFueCVcyWQwe8zXVwyRaoOIF3bC9IITYVoYYvpkCdU1k09lRMg5gx1b1Pv9D\n8Fo3RZIIIivTnFPDUCKEoA6AqejnXUgtjVzz0P7DgNUjrOCD936Y1QdMTaP+Y2Pp\nddBHNxdVbvmqCdM0RHycaB/X4e5TigQqV9oWoMRuGWEUVKAYUmvLo/ZDHic2X0Jq\nJKgVjsqImRZgZWpo+zG4JHa/1JUKosrAkLLSMLKWkLM0UpdagbKYw+A8omHRWFTf\n5wIDAQAB\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      },
+      "digest": "SHA-384",
+      "scheme": "RSASSA-PSS",
+      "salt-length": 11
+    },
+    "input": {
+      "value": "1d0a4f88994cdd09ed294171fe732b8aadb341eec4cc139dbc824da02d99043ff37d1da9c64840b17292cac0aa958e1e96ab1d1732108222e809684ddf0c092282b0fad0085f7ead8a9f349bd2a4cbcab4d452ca5c9316eab4193f6e493f9ea3b8bdf070467baf1e5ed85446054855e61d02a5e2c283cc01fc4215652b664098942b6be781a2b79b2331c94bbf2521402dd648afac1d22973fc102d2263d4f97fe787c6f7edc86abb98b9bae956be05080eb3163282a17a7b8e9f4ca8ea34bb3e489b9bf8dd33147c353f1a795cc685704dd94cf54146f5477270c0934fc0cea3bc1365ea2eb75d716124de65a20da8e9b819a86ad42004186ab9718decb0d93",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Verification failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify PSS SHA-256 salt 0 (fixed length)",
+    "ref": "openssl dgst -sha256 -sign -sigopt rsa_padding_mode:pss -sigopt rsa_pss_saltlen:0",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0zEldr+tJ6HK1FWQ49QT\nKg7uHUCc7IVSsf0heKkvwIsnUCu/UFztQYUSvxfOCFv2x6Smn3g27k8HtblOpqIp\nlhKDAFueCVcyWQwe8zXVwyRaoOIF3bC9IITYVoYYvpkCdU1k09lRMg5gx1b1Pv9D\n8Fo3RZIIIivTnFPDUCKEoA6AqejnXUgtjVzz0P7DgNUjrOCD936Y1QdMTaP+Y2Pp\nddBHNxdVbvmqCdM0RHycaB/X4e5TigQqV9oWoMRuGWEUVKAYUmvLo/ZDHic2X0Jq\nJKgVjsqImRZgZWpo+zG4JHa/1JUKosrAkLLSMLKWkLM0UpdagbKYw+A8omHRWFTf\n5wIDAQAB\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      },
+      "digest": "SHA-256",
+      "scheme": "RSASSA-PSS",
+      "salt-length": 0
+    },
+    "input": {
+      "value": "69601326491905ab971fc6e1e844fcb0292ee76a947cf09581d07cb509795c3f7c2f47538bc39129faf5884a570a7e0c79b3d70cd7f9cde54245ce2724f8971985d4da199c17b588a625d82bb8628215048469675c52a03ab3565a60ee81c0d017f0978875d39c640d93f1e0c198ab529647dffae7c0a588bcd57c7af1d1fecc3424c1db1153208a5a464220ba5d1f6b2b460cf0b8d8596b219580678bfa9b1b6eee21ce3ba249936944ced0c82737171ee09423eb4d5c70edb645829200464364ce60ad42a8b850df12beab4af9f0b5974f1d41e9e630d7c243a890f865e0b48e4ad6a866a9732ee05b0ec8471c11b00e2605a537228fbb561d929651cb5532",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify PSS SHA-256 salt 0 (any length)",
+    "ref": "same signature, salt-length -1",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0zEldr+tJ6HK1FWQ49QT\nKg7uHUCc7IVSsf0heKkvwIsnUCu/UFztQYUSvxfOCFv2x6Smn3g27k8HtblOpqIp\nlhKDAFueCVcyWQwe8zXVwyRaoOIF3bC9IITYVoYYvpkCdU1k09lRMg5gx1b1Pv9D\n8Fo3RZIIIivTnFPDUCKEoA6AqejnXUgtjVzz0P7DgNUjrOCD936Y1QdMTaP+Y2Pp\nddBHNxdVbvmqCdM0RHycaB/X4e5TigQqV9oWoMRuGWEUVKAYUmvLo/ZDHic2X0Jq\nJKgVjsqImRZgZWpo+zG4JHa/1JUKosrAkLLSMLKWkLM0UpdagbKYw+A8omHRWFTf\n5wIDAQAB\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      },
+      "digest": "SHA-256",
+      "scheme": "RSASSA-PSS"
+    },
+    "input": {
+      "value": "69601326491905ab971fc6e1e844fcb0292ee76a947cf09581d07cb509795c3f7c2f47538bc39129faf5884a570a7e0c79b3d70cd7f9cde54245ce2724f8971985d4da199c17b588a625d82bb8628215048469675c52a03ab3565a60ee81c0d017f0978875d39c640d93f1e0c198ab529647dffae7c0a588bcd57c7af1d1fecc3424c1db1153208a5a464220ba5d1f6b2b460cf0b8d8596b219580678bfa9b1b6eee21ce3ba249936944ced0c82737171ee09423eb4d5c70edb645829200464364ce60ad42a8b850df12beab4af9f0b5974f1d41e9e630d7c243a890f865e0b48e4ad6a866a9732ee05b0ec8471c11b00e2605a537228fbb561d929651cb5532",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify PSS SHA-256 salt 0 with the wrong salt length",
+    "ref": "same signature, salt-length 1",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0zEldr+tJ6HK1FWQ49QT\nKg7uHUCc7IVSsf0heKkvwIsnUCu/UFztQYUSvxfOCFv2x6Smn3g27k8HtblOpqIp\nlhKDAFueCVcyWQwe8zXVwyRaoOIF3bC9IITYVoYYvpkCdU1k09lRMg5gx1b1Pv9D\n8Fo3RZIIIivTnFPDUCKEoA6AqejnXUgtjVzz0P7DgNUjrOCD936Y1QdMTaP+Y2Pp\nddBHNxdVbvmqCdM0RHycaB/X4e5TigQqV9oWoMRuGWEUVKAYUmvLo/ZDHic2X0Jq\nJKgVjsqImRZgZWpo+zG4JHa/1JUKosrAkLLSMLKWkLM0UpdagbKYw+A8omHRWFTf\n5wIDAQAB\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      },
+      "digest": "SHA-256",
+      "scheme": "RSASSA-PSS",
+      "salt-length": 1
+    },
+    "input": {
+      "value": "69601326491905ab971fc6e1e844fcb0292ee76a947cf09581d07cb509795c3f7c2f47538bc39129faf5884a570a7e0c79b3d70cd7f9cde54245ce2724f8971985d4da199c17b588a625d82bb8628215048469675c52a03ab3565a60ee81c0d017f0978875d39c640d93f1e0c198ab529647dffae7c0a588bcd57c7af1d1fecc3424c1db1153208a5a464220ba5d1f6b2b460cf0b8d8596b219580678bfa9b1b6eee21ce3ba249936944ced0c82737171ee09423eb4d5c70edb645829200464364ce60ad42a8b850df12beab4af9f0b5974f1d41e9e630d7c243a890f865e0b48e4ad6a866a9732ee05b0ec8471c11b00e2605a537228fbb561d929651cb5532",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Verification failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign: the key is too small for SHA-512",
+    "ref": "512-bit key, DigestInfo of SHA-512 needs 94 bytes of 64",
+    "op": "rsa:sign",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIIBOQIBAAJBAK0zx3RiAEgUCtfazqLB7JpvRF5Qsv+LKXeY1AOGrb1XPWx+hxqg\nnpIPZ4/i/ifZIZyoADJf4XWTd48M1Q6NGlUCAwEAAQJAbdHQ+7hP2WPr5CW2s3gm\nX12BihO9C07fgheDBqFUdCJbnAQzbnUB8fXQw1QPLAnBsqdUqolV1466QHAvz8Sl\nAQIhANZDraM8gsC8JoqzEEVePEKvzrEYxmhRpeFB7H6yWN21AiEAzvCIivDOLp7Y\n3X8KX8cbF40q4VrXQySQtc/gn016LiECIBFewTfnku4PEszRwXLuNdJuMEJ5MLSK\nUflV/9cxnDS1AiBBQUQtXAYIWXrVTcw9q5F1ecR9z6F1wMAJNQYF9e6DQQIgRxv0\nr1KQyLhTzYqWiTzYkIWoTlQ1S5YUPiQOw9BIzbo=\n-----END RSA PRIVATE KEY-----\n",
+      "digest": "SHA-512"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "sign v1.5 SHA-1 with a 512-bit key",
+    "ref": "openssl dgst -sha1 -sign (512-bit key)",
+    "op": "rsa:sign",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIIBOQIBAAJBAK0zx3RiAEgUCtfazqLB7JpvRF5Qsv+LKXeY1AOGrb1XPWx+hxqg\nnpIPZ4/i/ifZIZyoADJf4XWTd48M1Q6NGlUCAwEAAQJAbdHQ+7hP2WPr5CW2s3gm\nX12BihO9C07fgheDBqFUdCJbnAQzbnUB8fXQw1QPLAnBsqdUqolV1466QHAvz8Sl\nAQIhANZDraM8gsC8JoqzEEVePEKvzrEYxmhRpeFB7H6yWN21AiEAzvCIivDOLp7Y\n3X8KX8cbF40q4VrXQySQtc/gn016LiECIBFewTfnku4PEszRwXLuNdJuMEJ5MLSK\nUflV/9cxnDS1AiBBQUQtXAYIWXrVTcw9q5F1ecR9z6F1wMAJNQYF9e6DQQIgRxv0\nr1KQyLhTzYqWiTzYkIWoTlQ1S5YUPiQOw9BIzbo=\n-----END RSA PRIVATE KEY-----\n"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a8301d36536d911f5e30e871cf185a2c40dbaed42917e4e73c155600ef06c41d4f0b9fa2fd50582ad0056dd79168462bd9d59ad21a0ca6aedb878136ea4fffff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "verify: a key too small for the digest is a failed verification",
+    "ref": "512-bit key, SHA-512",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK0zx3RiAEgUCtfazqLB7JpvRF5Qsv+L\nKXeY1AOGrb1XPWx+hxqgnpIPZ4/i/ifZIZyoADJf4XWTd48M1Q6NGlUCAwEAAQ==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      },
+      "digest": "SHA-512"
+    },
+    "input": {
+      "value": "a8301d36536d911f5e30e871cf185a2c40dbaed42917e4e73c155600ef06c41d4f0b9fa2fd50582ad0056dd79168462bd9d59ad21a0ca6aedb878136ea4fffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Verification failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decrypt RSA-OAEP SHA-1",
+    "ref": "openssl pkeyutl -encrypt -pubin -pkeyopt rsa_padding_mode:oaep -pkeyopt rsa_oaep_md:sha1 -pkeyopt rsa_mgf1_md:sha1",
+    "op": "rsa:decrypt",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA0zEldr+tJ6HK1FWQ49QTKg7uHUCc7IVSsf0heKkvwIsnUCu/\nUFztQYUSvxfOCFv2x6Smn3g27k8HtblOpqIplhKDAFueCVcyWQwe8zXVwyRaoOIF\n3bC9IITYVoYYvpkCdU1k09lRMg5gx1b1Pv9D8Fo3RZIIIivTnFPDUCKEoA6Aqejn\nXUgtjVzz0P7DgNUjrOCD936Y1QdMTaP+Y2PpddBHNxdVbvmqCdM0RHycaB/X4e5T\nigQqV9oWoMRuGWEUVKAYUmvLo/ZDHic2X0JqJKgVjsqImRZgZWpo+zG4JHa/1JUK\nosrAkLLSMLKWkLM0UpdagbKYw+A8omHRWFTf5wIDAQABAoIBAAdDx+4imdCky1b4\n7b41XvnLZnvkuE39wa9HVEEHHavNHZ6vlcOSu5Az0hLdifc8cp8oSTMJh5o0mo2w\n88VEcfnF/6U7gZKaSHkXsz9A7G5SCdJ1WlsatIBlEXjbraFtntAG+x9U3zfBltxE\nkxsfqZtsmKO9nXOcRLzT6zWoE+sNhKewgFoyPoeNxV3WCX/H5dGBkcndDpESttaB\nE0RG2vtOb7Kvnn6OUV2tPjR5cBkdy0vE7NeDfzU/mwvvRyynq5z9NlJc/8b79Qpo\nFyOdnix9D7W3V8eypqFa739dUp7RjAkO3Th6snM7Lr9chw/JZNxkDb+9/4J2YVt2\nbi2MKYECgYEA8EF97pgqE5ZoFo/vnPq31iZvAaabTou7nO3T54JGwlFUI1aXwsy6\njdMLT4y7i/U83Q7rDujXKNtgmpePs9Wtqj+tqarNQ/EUfPMoG9ycKpW0C7uU5Uf7\nnxu0Rr1EJG46Jpz381PfvwMkV0WaPwJvtdaMNUWmWmRQOeZ1UfA9/C8CgYEA4QgV\nBy4z0ltOPd3VcuZARzA1532IZZIB7esto860OIVYjSETVW4ZsO1azXLAugm/DKJL\ngs7sSba/8kbl4oQmZKWo1ecD2eo8hmYwh3djuoEkEpgWIG2JDGprXNkWmFQySBHb\nPhUmcvsFQwhWqKTsTPQJRGrci1txDZubdbBRUckCgYEAvJ39+uHVLrmHECeCKxCe\nYO6deYNOLFUBPotsMDWTzZxB3NhvnoxR7WQBXjuTRaaLWNUMbxEXUckgx10zgTDA\n/YaulSQ1sCBFQG85Tt5ccAZFamyi0Xo4rcn3Nw4BwEQVPRlAg/SWFQSndCh9lvgX\nsX81ZeE/X3mfjkVCV8ivMRsCgYAOrctJW58vwpr4+CZ7Rz+8JQ3vGsYx8fNERMoG\nXG5vHWuoURcExJjSbLk2m5ysxgP7W/7W+o55RH2C3VMTkpE6kX/Q7C/ZIClwjuvt\nekE8Ij5rJBaVaO++qpZ0SQjrSNq6zsdhZlnKuEsgk0Or3o43ete76ciXIpDeVV8v\nrx+u2QKBgBvW/4762yrM8uSCNDAqmVpMF/P0WriPfyJCXBoKFTEf6/d/GhDY942y\nY/WKzdMXqfwP9T3zdqsQoZife3gY+Kf7SWH/F3jaQhru9ZO72Fo03LV+OJqXDm/L\nEgLpE4JoHs+aoPnx8DSUmTEQ+TEhhXq24RG4Vi/iojQrnzZP3uVo\n-----END RSA PRIVATE KEY-----\n",
+      "scheme": "RSA-OAEP",
+      "digest": "SHA-1"
+    },
+    "input": {
+      "value": "8bb411a0ee0e583a66cc55f235a06dbcd8eb486d430234c39d8be661be80ed8f5e39434f250f280912bde99273b37497a2ac0ed7264e0b0d61b2609db1045a7f96ea787424b59ce160d8385d11d7c450c5f45baf9974a42bf079691554805b16c2014fd73f6e6a24063c202fd6eb408e76ce198b53be3970ec22f674a8cfd5194e8f758ec1a98c5bcacb53b47e77c0acf6f88007264509cdea9ab8a5fb495baf8c6646159d87eed382b2b88c4dbf1257663dcbb8fffe4dea2169c3867cc9adc4c89e25e32b349e0004f06f45b896a56a4573f7c29d5379d60b778926af368385623f5d769b6653ddbedc0bd71fd225f2e5e9ddc878438eb481ae3cfc84fc8bd3",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "attack at dawn",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decrypt RSA-OAEP MD5",
+    "ref": "openssl pkeyutl -encrypt -pubin -pkeyopt rsa_padding_mode:oaep -pkeyopt rsa_oaep_md:md5 -pkeyopt rsa_mgf1_md:md5",
+    "op": "rsa:decrypt",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA0zEldr+tJ6HK1FWQ49QTKg7uHUCc7IVSsf0heKkvwIsnUCu/\nUFztQYUSvxfOCFv2x6Smn3g27k8HtblOpqIplhKDAFueCVcyWQwe8zXVwyRaoOIF\n3bC9IITYVoYYvpkCdU1k09lRMg5gx1b1Pv9D8Fo3RZIIIivTnFPDUCKEoA6Aqejn\nXUgtjVzz0P7DgNUjrOCD936Y1QdMTaP+Y2PpddBHNxdVbvmqCdM0RHycaB/X4e5T\nigQqV9oWoMRuGWEUVKAYUmvLo/ZDHic2X0JqJKgVjsqImRZgZWpo+zG4JHa/1JUK\nosrAkLLSMLKWkLM0UpdagbKYw+A8omHRWFTf5wIDAQABAoIBAAdDx+4imdCky1b4\n7b41XvnLZnvkuE39wa9HVEEHHavNHZ6vlcOSu5Az0hLdifc8cp8oSTMJh5o0mo2w\n88VEcfnF/6U7gZKaSHkXsz9A7G5SCdJ1WlsatIBlEXjbraFtntAG+x9U3zfBltxE\nkxsfqZtsmKO9nXOcRLzT6zWoE+sNhKewgFoyPoeNxV3WCX/H5dGBkcndDpESttaB\nE0RG2vtOb7Kvnn6OUV2tPjR5cBkdy0vE7NeDfzU/mwvvRyynq5z9NlJc/8b79Qpo\nFyOdnix9D7W3V8eypqFa739dUp7RjAkO3Th6snM7Lr9chw/JZNxkDb+9/4J2YVt2\nbi2MKYECgYEA8EF97pgqE5ZoFo/vnPq31iZvAaabTou7nO3T54JGwlFUI1aXwsy6\njdMLT4y7i/U83Q7rDujXKNtgmpePs9Wtqj+tqarNQ/EUfPMoG9ycKpW0C7uU5Uf7\nnxu0Rr1EJG46Jpz381PfvwMkV0WaPwJvtdaMNUWmWmRQOeZ1UfA9/C8CgYEA4QgV\nBy4z0ltOPd3VcuZARzA1532IZZIB7esto860OIVYjSETVW4ZsO1azXLAugm/DKJL\ngs7sSba/8kbl4oQmZKWo1ecD2eo8hmYwh3djuoEkEpgWIG2JDGprXNkWmFQySBHb\nPhUmcvsFQwhWqKTsTPQJRGrci1txDZubdbBRUckCgYEAvJ39+uHVLrmHECeCKxCe\nYO6deYNOLFUBPotsMDWTzZxB3NhvnoxR7WQBXjuTRaaLWNUMbxEXUckgx10zgTDA\n/YaulSQ1sCBFQG85Tt5ccAZFamyi0Xo4rcn3Nw4BwEQVPRlAg/SWFQSndCh9lvgX\nsX81ZeE/X3mfjkVCV8ivMRsCgYAOrctJW58vwpr4+CZ7Rz+8JQ3vGsYx8fNERMoG\nXG5vHWuoURcExJjSbLk2m5ysxgP7W/7W+o55RH2C3VMTkpE6kX/Q7C/ZIClwjuvt\nekE8Ij5rJBaVaO++qpZ0SQjrSNq6zsdhZlnKuEsgk0Or3o43ete76ciXIpDeVV8v\nrx+u2QKBgBvW/4762yrM8uSCNDAqmVpMF/P0WriPfyJCXBoKFTEf6/d/GhDY942y\nY/WKzdMXqfwP9T3zdqsQoZife3gY+Kf7SWH/F3jaQhru9ZO72Fo03LV+OJqXDm/L\nEgLpE4JoHs+aoPnx8DSUmTEQ+TEhhXq24RG4Vi/iojQrnzZP3uVo\n-----END RSA PRIVATE KEY-----\n",
+      "scheme": "RSA-OAEP",
+      "digest": "MD5"
+    },
+    "input": {
+      "value": "6105675fd9b085ab38f6a35523b890ff78069fc02608c88288685e9b4b9fae71f13c4d74a9f9f8a0b502e32a0202a5286b9af0bc67d55e92dd924e7cda06212fd8531244d816532b1a8bc302b1ca0169bf6bbd27d4162c37e045c971128430f59b30765d3b63ef206874b96f522f5e3020862b98abed0c9a6992315bfe23289e344f6c104e12b41157ee99ca6e91f3e51d32c249abb37e611a1830df84fe6970924e92fd834e6409931dfcd19edb77f298712cdfac1ebd0b51802339c49b0e5655dfc64109f3f8d099fce92beeb6b33a02146bc58e571aec23f6f964822e3139eb5eb86c2ed6ec3dc6a3864187dc4875322f22e8d50a719d55a8d4fafcc3f4a4",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "attack at dawn",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decrypt RSA-OAEP SHA-256",
+    "ref": "openssl pkeyutl -encrypt -pubin -pkeyopt rsa_padding_mode:oaep -pkeyopt rsa_oaep_md:sha256 -pkeyopt rsa_mgf1_md:sha256",
+    "op": "rsa:decrypt",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA0zEldr+tJ6HK1FWQ49QTKg7uHUCc7IVSsf0heKkvwIsnUCu/\nUFztQYUSvxfOCFv2x6Smn3g27k8HtblOpqIplhKDAFueCVcyWQwe8zXVwyRaoOIF\n3bC9IITYVoYYvpkCdU1k09lRMg5gx1b1Pv9D8Fo3RZIIIivTnFPDUCKEoA6Aqejn\nXUgtjVzz0P7DgNUjrOCD936Y1QdMTaP+Y2PpddBHNxdVbvmqCdM0RHycaB/X4e5T\nigQqV9oWoMRuGWEUVKAYUmvLo/ZDHic2X0JqJKgVjsqImRZgZWpo+zG4JHa/1JUK\nosrAkLLSMLKWkLM0UpdagbKYw+A8omHRWFTf5wIDAQABAoIBAAdDx+4imdCky1b4\n7b41XvnLZnvkuE39wa9HVEEHHavNHZ6vlcOSu5Az0hLdifc8cp8oSTMJh5o0mo2w\n88VEcfnF/6U7gZKaSHkXsz9A7G5SCdJ1WlsatIBlEXjbraFtntAG+x9U3zfBltxE\nkxsfqZtsmKO9nXOcRLzT6zWoE+sNhKewgFoyPoeNxV3WCX/H5dGBkcndDpESttaB\nE0RG2vtOb7Kvnn6OUV2tPjR5cBkdy0vE7NeDfzU/mwvvRyynq5z9NlJc/8b79Qpo\nFyOdnix9D7W3V8eypqFa739dUp7RjAkO3Th6snM7Lr9chw/JZNxkDb+9/4J2YVt2\nbi2MKYECgYEA8EF97pgqE5ZoFo/vnPq31iZvAaabTou7nO3T54JGwlFUI1aXwsy6\njdMLT4y7i/U83Q7rDujXKNtgmpePs9Wtqj+tqarNQ/EUfPMoG9ycKpW0C7uU5Uf7\nnxu0Rr1EJG46Jpz381PfvwMkV0WaPwJvtdaMNUWmWmRQOeZ1UfA9/C8CgYEA4QgV\nBy4z0ltOPd3VcuZARzA1532IZZIB7esto860OIVYjSETVW4ZsO1azXLAugm/DKJL\ngs7sSba/8kbl4oQmZKWo1ecD2eo8hmYwh3djuoEkEpgWIG2JDGprXNkWmFQySBHb\nPhUmcvsFQwhWqKTsTPQJRGrci1txDZubdbBRUckCgYEAvJ39+uHVLrmHECeCKxCe\nYO6deYNOLFUBPotsMDWTzZxB3NhvnoxR7WQBXjuTRaaLWNUMbxEXUckgx10zgTDA\n/YaulSQ1sCBFQG85Tt5ccAZFamyi0Xo4rcn3Nw4BwEQVPRlAg/SWFQSndCh9lvgX\nsX81ZeE/X3mfjkVCV8ivMRsCgYAOrctJW58vwpr4+CZ7Rz+8JQ3vGsYx8fNERMoG\nXG5vHWuoURcExJjSbLk2m5ysxgP7W/7W+o55RH2C3VMTkpE6kX/Q7C/ZIClwjuvt\nekE8Ij5rJBaVaO++qpZ0SQjrSNq6zsdhZlnKuEsgk0Or3o43ete76ciXIpDeVV8v\nrx+u2QKBgBvW/4762yrM8uSCNDAqmVpMF/P0WriPfyJCXBoKFTEf6/d/GhDY942y\nY/WKzdMXqfwP9T3zdqsQoZife3gY+Kf7SWH/F3jaQhru9ZO72Fo03LV+OJqXDm/L\nEgLpE4JoHs+aoPnx8DSUmTEQ+TEhhXq24RG4Vi/iojQrnzZP3uVo\n-----END RSA PRIVATE KEY-----\n",
+      "scheme": "RSA-OAEP",
+      "digest": "SHA-256"
+    },
+    "input": {
+      "value": "ad5d984bfbf903ecf439fd72510dea32f5b8aafb224932965a09bd19b0430cbc095ab0d7e83eb8381929a5050f570206df27cdee3abff3f6a21178ca8ebe482f27f382ba26b22e0dc098fd3a6e82b5ba1230d2f8de18a2ef064301541ef8f26179d051b347d4aba654778a137ec1a83e1f5bfb0c7fcbc2a0608c7b12c910bd30d7aa6981d8e956a5dafd697f6b3e3759f3d5a01f4985f8ebfcd271df4fa656909f91cf4c085f07c0e54bde919ed88e8adcba40e58ce1833d0f54cc05d6c8a63d6596d0a97260cb4d05fe17462decd8f50b112687da3ce294b9daf348f1caf047e31708ccc5918918cd3a130f900874c5c776b8e998ace9c9915084f27eb1084b",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "attack at dawn",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decrypt RSA-OAEP SHA-384",
+    "ref": "openssl pkeyutl -encrypt -pubin -pkeyopt rsa_padding_mode:oaep -pkeyopt rsa_oaep_md:sha384 -pkeyopt rsa_mgf1_md:sha384",
+    "op": "rsa:decrypt",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA0zEldr+tJ6HK1FWQ49QTKg7uHUCc7IVSsf0heKkvwIsnUCu/\nUFztQYUSvxfOCFv2x6Smn3g27k8HtblOpqIplhKDAFueCVcyWQwe8zXVwyRaoOIF\n3bC9IITYVoYYvpkCdU1k09lRMg5gx1b1Pv9D8Fo3RZIIIivTnFPDUCKEoA6Aqejn\nXUgtjVzz0P7DgNUjrOCD936Y1QdMTaP+Y2PpddBHNxdVbvmqCdM0RHycaB/X4e5T\nigQqV9oWoMRuGWEUVKAYUmvLo/ZDHic2X0JqJKgVjsqImRZgZWpo+zG4JHa/1JUK\nosrAkLLSMLKWkLM0UpdagbKYw+A8omHRWFTf5wIDAQABAoIBAAdDx+4imdCky1b4\n7b41XvnLZnvkuE39wa9HVEEHHavNHZ6vlcOSu5Az0hLdifc8cp8oSTMJh5o0mo2w\n88VEcfnF/6U7gZKaSHkXsz9A7G5SCdJ1WlsatIBlEXjbraFtntAG+x9U3zfBltxE\nkxsfqZtsmKO9nXOcRLzT6zWoE+sNhKewgFoyPoeNxV3WCX/H5dGBkcndDpESttaB\nE0RG2vtOb7Kvnn6OUV2tPjR5cBkdy0vE7NeDfzU/mwvvRyynq5z9NlJc/8b79Qpo\nFyOdnix9D7W3V8eypqFa739dUp7RjAkO3Th6snM7Lr9chw/JZNxkDb+9/4J2YVt2\nbi2MKYECgYEA8EF97pgqE5ZoFo/vnPq31iZvAaabTou7nO3T54JGwlFUI1aXwsy6\njdMLT4y7i/U83Q7rDujXKNtgmpePs9Wtqj+tqarNQ/EUfPMoG9ycKpW0C7uU5Uf7\nnxu0Rr1EJG46Jpz381PfvwMkV0WaPwJvtdaMNUWmWmRQOeZ1UfA9/C8CgYEA4QgV\nBy4z0ltOPd3VcuZARzA1532IZZIB7esto860OIVYjSETVW4ZsO1azXLAugm/DKJL\ngs7sSba/8kbl4oQmZKWo1ecD2eo8hmYwh3djuoEkEpgWIG2JDGprXNkWmFQySBHb\nPhUmcvsFQwhWqKTsTPQJRGrci1txDZubdbBRUckCgYEAvJ39+uHVLrmHECeCKxCe\nYO6deYNOLFUBPotsMDWTzZxB3NhvnoxR7WQBXjuTRaaLWNUMbxEXUckgx10zgTDA\n/YaulSQ1sCBFQG85Tt5ccAZFamyi0Xo4rcn3Nw4BwEQVPRlAg/SWFQSndCh9lvgX\nsX81ZeE/X3mfjkVCV8ivMRsCgYAOrctJW58vwpr4+CZ7Rz+8JQ3vGsYx8fNERMoG\nXG5vHWuoURcExJjSbLk2m5ysxgP7W/7W+o55RH2C3VMTkpE6kX/Q7C/ZIClwjuvt\nekE8Ij5rJBaVaO++qpZ0SQjrSNq6zsdhZlnKuEsgk0Or3o43ete76ciXIpDeVV8v\nrx+u2QKBgBvW/4762yrM8uSCNDAqmVpMF/P0WriPfyJCXBoKFTEf6/d/GhDY942y\nY/WKzdMXqfwP9T3zdqsQoZife3gY+Kf7SWH/F3jaQhru9ZO72Fo03LV+OJqXDm/L\nEgLpE4JoHs+aoPnx8DSUmTEQ+TEhhXq24RG4Vi/iojQrnzZP3uVo\n-----END RSA PRIVATE KEY-----\n",
+      "scheme": "RSA-OAEP",
+      "digest": "SHA-384"
+    },
+    "input": {
+      "value": "5c41e24cb7396fedf3e23e3d25c31b285d832cc2c9e95cee0b10a7212ec6c24df4ccb6eeb3283c4912957d22f2e2813969e6acf7577b58c24f1af226dd6300cb8c7d4f2461f1fd3d9c0a97f1145c85e767d8875b587ecd6e652240eef5bcadaca86c20b96958f77edcb6b0e925d6688941d8c317cc98c3f4960d33ebca5283a1efb4aad494065208edc4360f961e98f19c370c5935e2cd832d787e92c7de3578e7a3f851835443efdec682f95298f5f35b16b9b29ddcb9430abc528b80087cbdc05a987cf24a60213158d163846dac521c1cd1bab16033447c1ad7ad7345774c1e467e3e04a43076d72b5d57081e145a3f1c6d080af44f3bcf7e88231eb10ff7",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "attack at dawn",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decrypt RSA-OAEP SHA-512",
+    "ref": "openssl pkeyutl -encrypt -pubin -pkeyopt rsa_padding_mode:oaep -pkeyopt rsa_oaep_md:sha512 -pkeyopt rsa_mgf1_md:sha512",
+    "op": "rsa:decrypt",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA0zEldr+tJ6HK1FWQ49QTKg7uHUCc7IVSsf0heKkvwIsnUCu/\nUFztQYUSvxfOCFv2x6Smn3g27k8HtblOpqIplhKDAFueCVcyWQwe8zXVwyRaoOIF\n3bC9IITYVoYYvpkCdU1k09lRMg5gx1b1Pv9D8Fo3RZIIIivTnFPDUCKEoA6Aqejn\nXUgtjVzz0P7DgNUjrOCD936Y1QdMTaP+Y2PpddBHNxdVbvmqCdM0RHycaB/X4e5T\nigQqV9oWoMRuGWEUVKAYUmvLo/ZDHic2X0JqJKgVjsqImRZgZWpo+zG4JHa/1JUK\nosrAkLLSMLKWkLM0UpdagbKYw+A8omHRWFTf5wIDAQABAoIBAAdDx+4imdCky1b4\n7b41XvnLZnvkuE39wa9HVEEHHavNHZ6vlcOSu5Az0hLdifc8cp8oSTMJh5o0mo2w\n88VEcfnF/6U7gZKaSHkXsz9A7G5SCdJ1WlsatIBlEXjbraFtntAG+x9U3zfBltxE\nkxsfqZtsmKO9nXOcRLzT6zWoE+sNhKewgFoyPoeNxV3WCX/H5dGBkcndDpESttaB\nE0RG2vtOb7Kvnn6OUV2tPjR5cBkdy0vE7NeDfzU/mwvvRyynq5z9NlJc/8b79Qpo\nFyOdnix9D7W3V8eypqFa739dUp7RjAkO3Th6snM7Lr9chw/JZNxkDb+9/4J2YVt2\nbi2MKYECgYEA8EF97pgqE5ZoFo/vnPq31iZvAaabTou7nO3T54JGwlFUI1aXwsy6\njdMLT4y7i/U83Q7rDujXKNtgmpePs9Wtqj+tqarNQ/EUfPMoG9ycKpW0C7uU5Uf7\nnxu0Rr1EJG46Jpz381PfvwMkV0WaPwJvtdaMNUWmWmRQOeZ1UfA9/C8CgYEA4QgV\nBy4z0ltOPd3VcuZARzA1532IZZIB7esto860OIVYjSETVW4ZsO1azXLAugm/DKJL\ngs7sSba/8kbl4oQmZKWo1ecD2eo8hmYwh3djuoEkEpgWIG2JDGprXNkWmFQySBHb\nPhUmcvsFQwhWqKTsTPQJRGrci1txDZubdbBRUckCgYEAvJ39+uHVLrmHECeCKxCe\nYO6deYNOLFUBPotsMDWTzZxB3NhvnoxR7WQBXjuTRaaLWNUMbxEXUckgx10zgTDA\n/YaulSQ1sCBFQG85Tt5ccAZFamyi0Xo4rcn3Nw4BwEQVPRlAg/SWFQSndCh9lvgX\nsX81ZeE/X3mfjkVCV8ivMRsCgYAOrctJW58vwpr4+CZ7Rz+8JQ3vGsYx8fNERMoG\nXG5vHWuoURcExJjSbLk2m5ysxgP7W/7W+o55RH2C3VMTkpE6kX/Q7C/ZIClwjuvt\nekE8Ij5rJBaVaO++qpZ0SQjrSNq6zsdhZlnKuEsgk0Or3o43ete76ciXIpDeVV8v\nrx+u2QKBgBvW/4762yrM8uSCNDAqmVpMF/P0WriPfyJCXBoKFTEf6/d/GhDY942y\nY/WKzdMXqfwP9T3zdqsQoZife3gY+Kf7SWH/F3jaQhru9ZO72Fo03LV+OJqXDm/L\nEgLpE4JoHs+aoPnx8DSUmTEQ+TEhhXq24RG4Vi/iojQrnzZP3uVo\n-----END RSA PRIVATE KEY-----\n",
+      "scheme": "RSA-OAEP",
+      "digest": "SHA-512"
+    },
+    "input": {
+      "value": "2b6aa73dc41172814c3b99b13fb48e07a6cfa7d445a16e275c9af150d714450fe69e62bf77ef8356aa216209b84ab66e2486985ca79d5197de2e958236021fbca53752ce20fb81a10dff6d757dabe933aea3ce3b6a9916868849a70d737183aefccce9cd72b7f1dc660d46b10caf2c9049af30ffdcca0bd5583287a5ede5b913b61ea37d834b95a33a9f1dfc7b4c10c133fa4ceb680446b625824530d7839f17dc6043f1a4a6afc9532a649e33965392362dd933929f0d149eb9e584ac00b036f9d3863b3eeac4c0f5970c149228bf382bdbf7e0ce0b102b7851def6c0d290fece22b197a862ada5a8ec1912de15735cae21e51989d963bb8a5ec1e775b6aeaf",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "attack at dawn",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decrypt RSA-OAEP default digest (SHA-1)",
+    "ref": "openssl pkeyutl -encrypt -pkeyopt rsa_padding_mode:oaep (SHA-1 and MGF1 SHA-1)",
+    "op": "rsa:decrypt",
+    "params": {
+      "key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDTMSV2v60nocrU\nVZDj1BMqDu4dQJzshVKx/SF4qS/AiydQK79QXO1BhRK/F84IW/bHpKafeDbuTwe1\nuU6moimWEoMAW54JVzJZDB7zNdXDJFqg4gXdsL0ghNhWhhi+mQJ1TWTT2VEyDmDH\nVvU+/0PwWjdFkggiK9OcU8NQIoSgDoCp6OddSC2NXPPQ/sOA1SOs4IP3fpjVB0xN\no/5jY+l10Ec3F1Vu+aoJ0zREfJxoH9fh7lOKBCpX2hagxG4ZYRRUoBhSa8uj9kMe\nJzZfQmokqBWOyoiZFmBlamj7Mbgkdr/UlQqiysCQstIwspaQszRSl1qBspjD4Dyi\nYdFYVN/nAgMBAAECggEAB0PH7iKZ0KTLVvjtvjVe+ctme+S4Tf3Br0dUQQcdq80d\nnq+Vw5K7kDPSEt2J9zxynyhJMwmHmjSajbDzxURx+cX/pTuBkppIeRezP0DsblIJ\n0nVaWxq0gGUReNutoW2e0Ab7H1TfN8GW3ESTGx+pm2yYo72dc5xEvNPrNagT6w2E\np7CAWjI+h43FXdYJf8fl0YGRyd0OkRK21oETREba+05vsq+efo5RXa0+NHlwGR3L\nS8Ts14N/NT+bC+9HLKernP02Ulz/xvv1CmgXI52eLH0PtbdXx7KmoVrvf11SntGM\nCQ7dOHqyczsuv1yHD8lk3GQNv73/gnZhW3ZuLYwpgQKBgQDwQX3umCoTlmgWj++c\n+rfWJm8BpptOi7uc7dPngkbCUVQjVpfCzLqN0wtPjLuL9TzdDusO6Nco22Cal4+z\n1a2qP62pqs1D8RR88ygb3JwqlbQLu5TlR/ufG7RGvUQkbjomnPfzU9+/AyRXRZo/\nAm+11ow1RaZaZFA55nVR8D38LwKBgQDhCBUHLjPSW0493dVy5kBHMDXnfYhlkgHt\n6y2jzrQ4hViNIRNVbhmw7VrNcsC6Cb8MokuCzuxJtr/yRuXihCZkpajV5wPZ6jyG\nZjCHd2O6gSQSmBYgbYkMamtc2RaYVDJIEds+FSZy+wVDCFaopOxM9AlEatyLW3EN\nm5t1sFFRyQKBgQC8nf364dUuuYcQJ4IrEJ5g7p15g04sVQE+i2wwNZPNnEHc2G+e\njFHtZAFeO5NFpotY1QxvERdRySDHXTOBMMD9hq6VJDWwIEVAbzlO3lxwBkVqbKLR\nejityfc3DgHARBU9GUCD9JYVBKd0KH2W+BexfzVl4T9feZ+ORUJXyK8xGwKBgA6t\ny0lbny/Cmvj4JntHP7wlDe8axjHx80REygZcbm8da6hRFwTEmNJsuTabnKzGA/tb\n/tb6jnlEfYLdUxOSkTqRf9DsL9kgKXCO6+16QTwiPmskFpVo776qlnRJCOtI2rrO\nx2FmWcq4SyCTQ6vejjd617vpyJcikN5VXy+vH67ZAoGAG9b/jvrbKszy5II0MCqZ\nWkwX8/RauI9/IkJcGgoVMR/r938aENj3jbJj9YrN0xep/A/1PfN2qxChmJ97eBj4\np/tJYf8XeNpCGu71k7vYWjTctX44mpcOb8sSAukTgmgez5qg+fHwNJSZMRD5MSGF\nerbhEbhWL+KiNCufNk/e5Wg=\n-----END PRIVATE KEY-----\n"
+    },
+    "input": {
+      "value": "2601c994be798eca49c0fe60ddf86cae5eee451afbdec30ae4320617ac996138607907c7435f4567eb7674cae7bc7d0ce684f101d955d236c5cf78d2fa8e14bcba8e2bd970db4690af71c4d7e454db90e10af282fc051a197627b68930b6f59127851cc800fccb059910d36f988c37dec88c45a71d20b84a85dba7e320c737b76a4a1141fa5f3e82914a9d52578fae5a32e87ab1a3d531ce38acd5a900329b5a92d3405794498cf48e66b64007c18724a6ad15af9054ebde5bd8d04e25b5d4488197f4e01e5e5ee20289b04c123e47eda94a020edfffd85c06682edbe7d8b3a57dc55ae8072b5ed17e3735290855ae1840c65e32a262654962af6ebbbee1d1dd",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "attack at dawn",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decrypt RSA-OAEP with the wrong digest is a decryption error",
+    "ref": "SHA-1 OAEP ciphertext read as SHA-256",
+    "op": "rsa:decrypt",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA0zEldr+tJ6HK1FWQ49QTKg7uHUCc7IVSsf0heKkvwIsnUCu/\nUFztQYUSvxfOCFv2x6Smn3g27k8HtblOpqIplhKDAFueCVcyWQwe8zXVwyRaoOIF\n3bC9IITYVoYYvpkCdU1k09lRMg5gx1b1Pv9D8Fo3RZIIIivTnFPDUCKEoA6Aqejn\nXUgtjVzz0P7DgNUjrOCD936Y1QdMTaP+Y2PpddBHNxdVbvmqCdM0RHycaB/X4e5T\nigQqV9oWoMRuGWEUVKAYUmvLo/ZDHic2X0JqJKgVjsqImRZgZWpo+zG4JHa/1JUK\nosrAkLLSMLKWkLM0UpdagbKYw+A8omHRWFTf5wIDAQABAoIBAAdDx+4imdCky1b4\n7b41XvnLZnvkuE39wa9HVEEHHavNHZ6vlcOSu5Az0hLdifc8cp8oSTMJh5o0mo2w\n88VEcfnF/6U7gZKaSHkXsz9A7G5SCdJ1WlsatIBlEXjbraFtntAG+x9U3zfBltxE\nkxsfqZtsmKO9nXOcRLzT6zWoE+sNhKewgFoyPoeNxV3WCX/H5dGBkcndDpESttaB\nE0RG2vtOb7Kvnn6OUV2tPjR5cBkdy0vE7NeDfzU/mwvvRyynq5z9NlJc/8b79Qpo\nFyOdnix9D7W3V8eypqFa739dUp7RjAkO3Th6snM7Lr9chw/JZNxkDb+9/4J2YVt2\nbi2MKYECgYEA8EF97pgqE5ZoFo/vnPq31iZvAaabTou7nO3T54JGwlFUI1aXwsy6\njdMLT4y7i/U83Q7rDujXKNtgmpePs9Wtqj+tqarNQ/EUfPMoG9ycKpW0C7uU5Uf7\nnxu0Rr1EJG46Jpz381PfvwMkV0WaPwJvtdaMNUWmWmRQOeZ1UfA9/C8CgYEA4QgV\nBy4z0ltOPd3VcuZARzA1532IZZIB7esto860OIVYjSETVW4ZsO1azXLAugm/DKJL\ngs7sSba/8kbl4oQmZKWo1ecD2eo8hmYwh3djuoEkEpgWIG2JDGprXNkWmFQySBHb\nPhUmcvsFQwhWqKTsTPQJRGrci1txDZubdbBRUckCgYEAvJ39+uHVLrmHECeCKxCe\nYO6deYNOLFUBPotsMDWTzZxB3NhvnoxR7WQBXjuTRaaLWNUMbxEXUckgx10zgTDA\n/YaulSQ1sCBFQG85Tt5ccAZFamyi0Xo4rcn3Nw4BwEQVPRlAg/SWFQSndCh9lvgX\nsX81ZeE/X3mfjkVCV8ivMRsCgYAOrctJW58vwpr4+CZ7Rz+8JQ3vGsYx8fNERMoG\nXG5vHWuoURcExJjSbLk2m5ysxgP7W/7W+o55RH2C3VMTkpE6kX/Q7C/ZIClwjuvt\nekE8Ij5rJBaVaO++qpZ0SQjrSNq6zsdhZlnKuEsgk0Or3o43ete76ciXIpDeVV8v\nrx+u2QKBgBvW/4762yrM8uSCNDAqmVpMF/P0WriPfyJCXBoKFTEf6/d/GhDY942y\nY/WKzdMXqfwP9T3zdqsQoZife3gY+Kf7SWH/F3jaQhru9ZO72Fo03LV+OJqXDm/L\nEgLpE4JoHs+aoPnx8DSUmTEQ+TEhhXq24RG4Vi/iojQrnzZP3uVo\n-----END RSA PRIVATE KEY-----\n",
+      "digest": "SHA-256"
+    },
+    "input": {
+      "value": "2601c994be798eca49c0fe60ddf86cae5eee451afbdec30ae4320617ac996138607907c7435f4567eb7674cae7bc7d0ce684f101d955d236c5cf78d2fa8e14bcba8e2bd970db4690af71c4d7e454db90e10af282fc051a197627b68930b6f59127851cc800fccb059910d36f988c37dec88c45a71d20b84a85dba7e320c737b76a4a1141fa5f3e82914a9d52578fae5a32e87ab1a3d531ce38acd5a900329b5a92d3405794498cf48e66b64007c18724a6ad15af9054ebde5bd8d04e25b5d4488197f4e01e5e5ee20289b04c123e47eda94a020edfffd85c06682edbe7d8b3a57dc55ae8072b5ed17e3735290855ae1840c65e32a262654962af6ebbbee1d1dd",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decrypt RSA-OAEP SHA-256 with the default MGF1 of openssl",
+    "ref": "openssl pkeyutl -pkeyopt rsa_oaep_md:sha256 (MGF1 defaults to the same hash)",
+    "op": "rsa:decrypt",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA0zEldr+tJ6HK1FWQ49QTKg7uHUCc7IVSsf0heKkvwIsnUCu/\nUFztQYUSvxfOCFv2x6Smn3g27k8HtblOpqIplhKDAFueCVcyWQwe8zXVwyRaoOIF\n3bC9IITYVoYYvpkCdU1k09lRMg5gx1b1Pv9D8Fo3RZIIIivTnFPDUCKEoA6Aqejn\nXUgtjVzz0P7DgNUjrOCD936Y1QdMTaP+Y2PpddBHNxdVbvmqCdM0RHycaB/X4e5T\nigQqV9oWoMRuGWEUVKAYUmvLo/ZDHic2X0JqJKgVjsqImRZgZWpo+zG4JHa/1JUK\nosrAkLLSMLKWkLM0UpdagbKYw+A8omHRWFTf5wIDAQABAoIBAAdDx+4imdCky1b4\n7b41XvnLZnvkuE39wa9HVEEHHavNHZ6vlcOSu5Az0hLdifc8cp8oSTMJh5o0mo2w\n88VEcfnF/6U7gZKaSHkXsz9A7G5SCdJ1WlsatIBlEXjbraFtntAG+x9U3zfBltxE\nkxsfqZtsmKO9nXOcRLzT6zWoE+sNhKewgFoyPoeNxV3WCX/H5dGBkcndDpESttaB\nE0RG2vtOb7Kvnn6OUV2tPjR5cBkdy0vE7NeDfzU/mwvvRyynq5z9NlJc/8b79Qpo\nFyOdnix9D7W3V8eypqFa739dUp7RjAkO3Th6snM7Lr9chw/JZNxkDb+9/4J2YVt2\nbi2MKYECgYEA8EF97pgqE5ZoFo/vnPq31iZvAaabTou7nO3T54JGwlFUI1aXwsy6\njdMLT4y7i/U83Q7rDujXKNtgmpePs9Wtqj+tqarNQ/EUfPMoG9ycKpW0C7uU5Uf7\nnxu0Rr1EJG46Jpz381PfvwMkV0WaPwJvtdaMNUWmWmRQOeZ1UfA9/C8CgYEA4QgV\nBy4z0ltOPd3VcuZARzA1532IZZIB7esto860OIVYjSETVW4ZsO1azXLAugm/DKJL\ngs7sSba/8kbl4oQmZKWo1ecD2eo8hmYwh3djuoEkEpgWIG2JDGprXNkWmFQySBHb\nPhUmcvsFQwhWqKTsTPQJRGrci1txDZubdbBRUckCgYEAvJ39+uHVLrmHECeCKxCe\nYO6deYNOLFUBPotsMDWTzZxB3NhvnoxR7WQBXjuTRaaLWNUMbxEXUckgx10zgTDA\n/YaulSQ1sCBFQG85Tt5ccAZFamyi0Xo4rcn3Nw4BwEQVPRlAg/SWFQSndCh9lvgX\nsX81ZeE/X3mfjkVCV8ivMRsCgYAOrctJW58vwpr4+CZ7Rz+8JQ3vGsYx8fNERMoG\nXG5vHWuoURcExJjSbLk2m5ysxgP7W/7W+o55RH2C3VMTkpE6kX/Q7C/ZIClwjuvt\nekE8Ij5rJBaVaO++qpZ0SQjrSNq6zsdhZlnKuEsgk0Or3o43ete76ciXIpDeVV8v\nrx+u2QKBgBvW/4762yrM8uSCNDAqmVpMF/P0WriPfyJCXBoKFTEf6/d/GhDY942y\nY/WKzdMXqfwP9T3zdqsQoZife3gY+Kf7SWH/F3jaQhru9ZO72Fo03LV+OJqXDm/L\nEgLpE4JoHs+aoPnx8DSUmTEQ+TEhhXq24RG4Vi/iojQrnzZP3uVo\n-----END RSA PRIVATE KEY-----\n",
+      "digest": "SHA-256"
+    },
+    "input": {
+      "value": "514f099195df1cf8a054d1e64bc61e8f0d84732e94403c54ae3a1e8571e2477e480c95d07ad0a797e82b19c8dfddff607c85b49b6f93b582bbdaec58c4200ffdc34a4131f98e149f329014b89c81084a99d935e2394995e0f13a67cd4ae7d272232c54a39ab08e6822c20fbb100814a41bfb03d1574168ab174603621739d9973b8162081687b7d226ceaceea7a7a2b77b107f5e0614d3e9d94535735b3389547b6878df4f798a485c3a884e7d2023e61a711e2ff8fde5080fcc00e33cef945ccc65e2d7c45c94c64963d4684020d215ed3421885a5f3686cc0f95245e2c062ba31458993e547a53fa09f049f44b26257c487c70474b1587c7d1cd416d77fb46",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "attack at dawn",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decrypt RSA-OAEP SHA-256 with MGF1 SHA-1 is a decryption error",
+    "ref": "openssl OAEP md sha256, mgf1 md sha1: Forge's MGF1 uses the OAEP hash",
+    "op": "rsa:decrypt",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA0zEldr+tJ6HK1FWQ49QTKg7uHUCc7IVSsf0heKkvwIsnUCu/\nUFztQYUSvxfOCFv2x6Smn3g27k8HtblOpqIplhKDAFueCVcyWQwe8zXVwyRaoOIF\n3bC9IITYVoYYvpkCdU1k09lRMg5gx1b1Pv9D8Fo3RZIIIivTnFPDUCKEoA6Aqejn\nXUgtjVzz0P7DgNUjrOCD936Y1QdMTaP+Y2PpddBHNxdVbvmqCdM0RHycaB/X4e5T\nigQqV9oWoMRuGWEUVKAYUmvLo/ZDHic2X0JqJKgVjsqImRZgZWpo+zG4JHa/1JUK\nosrAkLLSMLKWkLM0UpdagbKYw+A8omHRWFTf5wIDAQABAoIBAAdDx+4imdCky1b4\n7b41XvnLZnvkuE39wa9HVEEHHavNHZ6vlcOSu5Az0hLdifc8cp8oSTMJh5o0mo2w\n88VEcfnF/6U7gZKaSHkXsz9A7G5SCdJ1WlsatIBlEXjbraFtntAG+x9U3zfBltxE\nkxsfqZtsmKO9nXOcRLzT6zWoE+sNhKewgFoyPoeNxV3WCX/H5dGBkcndDpESttaB\nE0RG2vtOb7Kvnn6OUV2tPjR5cBkdy0vE7NeDfzU/mwvvRyynq5z9NlJc/8b79Qpo\nFyOdnix9D7W3V8eypqFa739dUp7RjAkO3Th6snM7Lr9chw/JZNxkDb+9/4J2YVt2\nbi2MKYECgYEA8EF97pgqE5ZoFo/vnPq31iZvAaabTou7nO3T54JGwlFUI1aXwsy6\njdMLT4y7i/U83Q7rDujXKNtgmpePs9Wtqj+tqarNQ/EUfPMoG9ycKpW0C7uU5Uf7\nnxu0Rr1EJG46Jpz381PfvwMkV0WaPwJvtdaMNUWmWmRQOeZ1UfA9/C8CgYEA4QgV\nBy4z0ltOPd3VcuZARzA1532IZZIB7esto860OIVYjSETVW4ZsO1azXLAugm/DKJL\ngs7sSba/8kbl4oQmZKWo1ecD2eo8hmYwh3djuoEkEpgWIG2JDGprXNkWmFQySBHb\nPhUmcvsFQwhWqKTsTPQJRGrci1txDZubdbBRUckCgYEAvJ39+uHVLrmHECeCKxCe\nYO6deYNOLFUBPotsMDWTzZxB3NhvnoxR7WQBXjuTRaaLWNUMbxEXUckgx10zgTDA\n/YaulSQ1sCBFQG85Tt5ccAZFamyi0Xo4rcn3Nw4BwEQVPRlAg/SWFQSndCh9lvgX\nsX81ZeE/X3mfjkVCV8ivMRsCgYAOrctJW58vwpr4+CZ7Rz+8JQ3vGsYx8fNERMoG\nXG5vHWuoURcExJjSbLk2m5ysxgP7W/7W+o55RH2C3VMTkpE6kX/Q7C/ZIClwjuvt\nekE8Ij5rJBaVaO++qpZ0SQjrSNq6zsdhZlnKuEsgk0Or3o43ete76ciXIpDeVV8v\nrx+u2QKBgBvW/4762yrM8uSCNDAqmVpMF/P0WriPfyJCXBoKFTEf6/d/GhDY942y\nY/WKzdMXqfwP9T3zdqsQoZife3gY+Kf7SWH/F3jaQhru9ZO72Fo03LV+OJqXDm/L\nEgLpE4JoHs+aoPnx8DSUmTEQ+TEhhXq24RG4Vi/iojQrnzZP3uVo\n-----END RSA PRIVATE KEY-----\n",
+      "digest": "SHA-256"
+    },
+    "input": {
+      "value": "bc107e446dc0740724e18515c64cd41296ddf10be371e96ee54c19918c6ff64a63c845e0b6b85a8dba710681405b4597ab274fe56f46d3ea66c8f7419517b94dac6c83e15181445651ea715a8fb2acaa50ee2d8680e731222346963ca3517ebc3fc098f5ee1660a33fe058fec4c6c5c3463a7c5ea794f07fdb721592a7df38e7c2c69ec28c9267c64b4106387b75252082f2c3764d490df59a01f35e18b58cf59f2c2bbb95189d04863e33483050cc2762153a181be3afaa07297f98722542e7cd06ce1e12f7f4ea57fb534ad48becd5eb5c98183df8537ceec0782c93deb092fbc6df15cc5e3300c3d658068be30b2dee807dae7b4c44d069762757a7e286fe",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decrypt RSAES-PKCS1-V1_5",
+    "ref": "openssl pkeyutl -encrypt -pkeyopt rsa_padding_mode:pkcs1",
+    "op": "rsa:decrypt",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgQC9JaaVS4wTGJqEKtdqPA5eshzjgZz0LH/MtGlTogD9gt6IzFk4\npGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5HmvdpzTy8Us+IIQOMzoAZIAwr7\nsdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPUVabywyBg3oeKr4fLHwIDAQAB\nAoGAUWxHzbT706yft42Jtd2sge9CqF0/Z41QZpqzTKFMs9UGXvU44z0/g/nLwNXF\nUOlQKTdLDPIX33gGMfu29M9BEVtxC5WQ3tqJl8E7+X3yZKM1VyuQ4tUjAXIsRnn3\n7zbLr/TIw4X+Djkx91OTp2ohG3S0yADI3NZ82SITAkw66cECQQDuegecw5yWu/C1\nQ8yd2wX9afGm5kQyw8BMaN1Uor0VPaf8k3tZazFtoUoQf9IqcBWTD687k3MfkzTF\n4WkqVe9nAkEAywuvTYxmULXCqGE623Abufe/Nm5Eq/1ZP7mprRiJ7evcRNKHbS7B\n2Kuzln9aSgrs9CWxQ+HLNt01sDjpOyzLiQJAbQapOEhN7LPbpmNqxrh9ko+/BPi9\nMSBBaC2BEtKb83wOsvCSMh1Jqb9VZxmo8fHwSx2elXQh68uXEuis9cf3/QJAF0FF\nWKpl5YSLwOEx7oQOiOQZIFDMyK4BlMzc5BhVY8yJs9Aw9o5OYVR5Axme67AIp4XR\noaawsZ3wUjiSbdaZkQJADZ8CCFrFf8gv4OrBMUtiax3CUCwmr6rA4c57XLDDzxZl\n55jlFrqNbhlndAot21WKgcKOiJFqXP3mK6mOWXo5Zw==\n-----END RSA PRIVATE KEY-----\n",
+      "scheme": "RSAES-PKCS1-V1_5"
+    },
+    "input": {
+      "value": "b3f20681cff415a3c2c7699dc2d1a28c6f153175f657fc63174fbeba387da94b25d2bf1dc0032fafdb766ad56e7d66c22667caa93ce2977cb186d9b9af79dc1910e3087373bb21415c3eb6e00a0a1858b19b6ea866259737c86002f86c89d296c37a2dc648c36ed276ef5295e7a25d0ddcf63785aeff8a6eb26083f636726778",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "attack at dawn",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decrypt a v1.5 ciphertext as OAEP is a decryption error",
+    "ref": "same ciphertext",
+    "op": "rsa:decrypt",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgQC9JaaVS4wTGJqEKtdqPA5eshzjgZz0LH/MtGlTogD9gt6IzFk4\npGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5HmvdpzTy8Us+IIQOMzoAZIAwr7\nsdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPUVabywyBg3oeKr4fLHwIDAQAB\nAoGAUWxHzbT706yft42Jtd2sge9CqF0/Z41QZpqzTKFMs9UGXvU44z0/g/nLwNXF\nUOlQKTdLDPIX33gGMfu29M9BEVtxC5WQ3tqJl8E7+X3yZKM1VyuQ4tUjAXIsRnn3\n7zbLr/TIw4X+Djkx91OTp2ohG3S0yADI3NZ82SITAkw66cECQQDuegecw5yWu/C1\nQ8yd2wX9afGm5kQyw8BMaN1Uor0VPaf8k3tZazFtoUoQf9IqcBWTD687k3MfkzTF\n4WkqVe9nAkEAywuvTYxmULXCqGE623Abufe/Nm5Eq/1ZP7mprRiJ7evcRNKHbS7B\n2Kuzln9aSgrs9CWxQ+HLNt01sDjpOyzLiQJAbQapOEhN7LPbpmNqxrh9ko+/BPi9\nMSBBaC2BEtKb83wOsvCSMh1Jqb9VZxmo8fHwSx2elXQh68uXEuis9cf3/QJAF0FF\nWKpl5YSLwOEx7oQOiOQZIFDMyK4BlMzc5BhVY8yJs9Aw9o5OYVR5Axme67AIp4XR\noaawsZ3wUjiSbdaZkQJADZ8CCFrFf8gv4OrBMUtiax3CUCwmr6rA4c57XLDDzxZl\n55jlFrqNbhlndAot21WKgcKOiJFqXP3mK6mOWXo5Zw==\n-----END RSA PRIVATE KEY-----\n"
+    },
+    "input": {
+      "value": "b3f20681cff415a3c2c7699dc2d1a28c6f153175f657fc63174fbeba387da94b25d2bf1dc0032fafdb766ad56e7d66c22667caa93ce2977cb186d9b9af79dc1910e3087373bb21415c3eb6e00a0a1858b19b6ea866259737c86002f86c89d296c37a2dc648c36ed276ef5295e7a25d0ddcf63785aeff8a6eb26083f636726778",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "encrypt RAW",
+    "ref": "openssl pkeyutl -encrypt -pkeyopt rsa_padding_mode:none (128-byte block)",
+    "op": "rsa:encrypt",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9JaaVS4wTGJqEKtdqPA5eshzj\ngZz0LH/MtGlTogD9gt6IzFk4pGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5Hm\nvdpzTy8Us+IIQOMzoAZIAwr7sdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPU\nVabywyBg3oeKr4fLHwIDAQAB\n-----END PUBLIC KEY-----\n",
+      "scheme": "RAW"
+    },
+    "input": {
+      "value": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000161747461636b206174206461776e",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "8d8168cfb495b0a3f4bc18998b01fedb4a0827246ff7420e05be7845c47aabe7fbdc53c27dc7c06fca9c7dfefbfc5311771d264c1a90e714c5659309d2dc742ee408e72f0cc88a9d6a4489bca50f05bfcd0f99c8c7829f10f5fe6e4c6cfb8ec15398a59fc8a5b300daf4008a100f3b8c5d86d46e94866d639ec28f4fbfb797fd",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt RAW of a short message equals the padded block",
+    "ref": "the message as a number is the same with leading zeros",
+    "op": "rsa:encrypt",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9JaaVS4wTGJqEKtdqPA5eshzj\ngZz0LH/MtGlTogD9gt6IzFk4pGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5Hm\nvdpzTy8Us+IIQOMzoAZIAwr7sdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPU\nVabywyBg3oeKr4fLHwIDAQAB\n-----END PUBLIC KEY-----\n",
+      "scheme": "RAW"
+    },
+    "input": {
+      "value": "0161747461636b206174206461776e",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "8d8168cfb495b0a3f4bc18998b01fedb4a0827246ff7420e05be7845c47aabe7fbdc53c27dc7c06fca9c7dfefbfc5311771d264c1a90e714c5659309d2dc742ee408e72f0cc88a9d6a4489bca50f05bfcd0f99c8c7829f10f5fe6e4c6cfb8ec15398a59fc8a5b300daf4008a100f3b8c5d86d46e94866d639ec28f4fbfb797fd",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt RAW",
+    "ref": "openssl pkeyutl -decrypt -pkeyopt rsa_padding_mode:none",
+    "op": "rsa:decrypt",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgQC9JaaVS4wTGJqEKtdqPA5eshzjgZz0LH/MtGlTogD9gt6IzFk4\npGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5HmvdpzTy8Us+IIQOMzoAZIAwr7\nsdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPUVabywyBg3oeKr4fLHwIDAQAB\nAoGAUWxHzbT706yft42Jtd2sge9CqF0/Z41QZpqzTKFMs9UGXvU44z0/g/nLwNXF\nUOlQKTdLDPIX33gGMfu29M9BEVtxC5WQ3tqJl8E7+X3yZKM1VyuQ4tUjAXIsRnn3\n7zbLr/TIw4X+Djkx91OTp2ohG3S0yADI3NZ82SITAkw66cECQQDuegecw5yWu/C1\nQ8yd2wX9afGm5kQyw8BMaN1Uor0VPaf8k3tZazFtoUoQf9IqcBWTD687k3MfkzTF\n4WkqVe9nAkEAywuvTYxmULXCqGE623Abufe/Nm5Eq/1ZP7mprRiJ7evcRNKHbS7B\n2Kuzln9aSgrs9CWxQ+HLNt01sDjpOyzLiQJAbQapOEhN7LPbpmNqxrh9ko+/BPi9\nMSBBaC2BEtKb83wOsvCSMh1Jqb9VZxmo8fHwSx2elXQh68uXEuis9cf3/QJAF0FF\nWKpl5YSLwOEx7oQOiOQZIFDMyK4BlMzc5BhVY8yJs9Aw9o5OYVR5Axme67AIp4XR\noaawsZ3wUjiSbdaZkQJADZ8CCFrFf8gv4OrBMUtiax3CUCwmr6rA4c57XLDDzxZl\n55jlFrqNbhlndAot21WKgcKOiJFqXP3mK6mOWXo5Zw==\n-----END RSA PRIVATE KEY-----\n",
+      "scheme": "RAW"
+    },
+    "input": {
+      "value": "8d8168cfb495b0a3f4bc18998b01fedb4a0827246ff7420e05be7845c47aabe7fbdc53c27dc7c06fca9c7dfefbfc5311771d264c1a90e714c5659309d2dc742ee408e72f0cc88a9d6a4489bca50f05bfcd0f99c8c7829f10f5fe6e4c6cfb8ec15398a59fc8a5b300daf4008a100f3b8c5d86d46e94866d639ec28f4fbfb797fd",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000161747461636b206174206461776e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt RAW: a message above the modulus",
+    "ref": "all 0xff bytes of the key length",
+    "op": "rsa:encrypt",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9JaaVS4wTGJqEKtdqPA5eshzj\ngZz0LH/MtGlTogD9gt6IzFk4pGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5Hm\nvdpzTy8Us+IIQOMzoAZIAwr7sdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPU\nVabywyBg3oeKr4fLHwIDAQAB\n-----END PUBLIC KEY-----\n",
+      "scheme": "RAW"
+    },
+    "input": {
+      "value": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "encrypt RAW: a message longer than the key",
+    "ref": "129 bytes",
+    "op": "rsa:encrypt",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9JaaVS4wTGJqEKtdqPA5eshzj\ngZz0LH/MtGlTogD9gt6IzFk4pGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5Hm\nvdpzTy8Us+IIQOMzoAZIAwr7sdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPU\nVabywyBg3oeKr4fLHwIDAQAB\n-----END PUBLIC KEY-----\n",
+      "scheme": "RAW"
+    },
+    "input": {
+      "value": "010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "encrypt RAW of the empty message is zero",
+    "ref": "0^e = 0",
+    "op": "rsa:encrypt",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9JaaVS4wTGJqEKtdqPA5eshzj\ngZz0LH/MtGlTogD9gt6IzFk4pGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5Hm\nvdpzTy8Us+IIQOMzoAZIAwr7sdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPU\nVabywyBg3oeKr4fLHwIDAQAB\n-----END PUBLIC KEY-----\n",
+      "scheme": "RAW"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt RAW of the wrong length",
+    "ref": "127 bytes",
+    "op": "rsa:decrypt",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgQC9JaaVS4wTGJqEKtdqPA5eshzjgZz0LH/MtGlTogD9gt6IzFk4\npGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5HmvdpzTy8Us+IIQOMzoAZIAwr7\nsdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPUVabywyBg3oeKr4fLHwIDAQAB\nAoGAUWxHzbT706yft42Jtd2sge9CqF0/Z41QZpqzTKFMs9UGXvU44z0/g/nLwNXF\nUOlQKTdLDPIX33gGMfu29M9BEVtxC5WQ3tqJl8E7+X3yZKM1VyuQ4tUjAXIsRnn3\n7zbLr/TIw4X+Djkx91OTp2ohG3S0yADI3NZ82SITAkw66cECQQDuegecw5yWu/C1\nQ8yd2wX9afGm5kQyw8BMaN1Uor0VPaf8k3tZazFtoUoQf9IqcBWTD687k3MfkzTF\n4WkqVe9nAkEAywuvTYxmULXCqGE623Abufe/Nm5Eq/1ZP7mprRiJ7evcRNKHbS7B\n2Kuzln9aSgrs9CWxQ+HLNt01sDjpOyzLiQJAbQapOEhN7LPbpmNqxrh9ko+/BPi9\nMSBBaC2BEtKb83wOsvCSMh1Jqb9VZxmo8fHwSx2elXQh68uXEuis9cf3/QJAF0FF\nWKpl5YSLwOEx7oQOiOQZIFDMyK4BlMzc5BhVY8yJs9Aw9o5OYVR5Axme67AIp4XR\noaawsZ3wUjiSbdaZkQJADZ8CCFrFf8gv4OrBMUtiax3CUCwmr6rA4c57XLDDzxZl\n55jlFrqNbhlndAot21WKgcKOiJFqXP3mK6mOWXo5Zw==\n-----END RSA PRIVATE KEY-----\n",
+      "scheme": "RAW"
+    },
+    "input": {
+      "value": "01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decrypt RAW of a value above the modulus",
+    "ref": "0xff bytes",
+    "op": "rsa:decrypt",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgQC9JaaVS4wTGJqEKtdqPA5eshzjgZz0LH/MtGlTogD9gt6IzFk4\npGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5HmvdpzTy8Us+IIQOMzoAZIAwr7\nsdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPUVabywyBg3oeKr4fLHwIDAQAB\nAoGAUWxHzbT706yft42Jtd2sge9CqF0/Z41QZpqzTKFMs9UGXvU44z0/g/nLwNXF\nUOlQKTdLDPIX33gGMfu29M9BEVtxC5WQ3tqJl8E7+X3yZKM1VyuQ4tUjAXIsRnn3\n7zbLr/TIw4X+Djkx91OTp2ohG3S0yADI3NZ82SITAkw66cECQQDuegecw5yWu/C1\nQ8yd2wX9afGm5kQyw8BMaN1Uor0VPaf8k3tZazFtoUoQf9IqcBWTD687k3MfkzTF\n4WkqVe9nAkEAywuvTYxmULXCqGE623Abufe/Nm5Eq/1ZP7mprRiJ7evcRNKHbS7B\n2Kuzln9aSgrs9CWxQ+HLNt01sDjpOyzLiQJAbQapOEhN7LPbpmNqxrh9ko+/BPi9\nMSBBaC2BEtKb83wOsvCSMh1Jqb9VZxmo8fHwSx2elXQh68uXEuis9cf3/QJAF0FF\nWKpl5YSLwOEx7oQOiOQZIFDMyK4BlMzc5BhVY8yJs9Aw9o5OYVR5Axme67AIp4XR\noaawsZ3wUjiSbdaZkQJADZ8CCFrFf8gv4OrBMUtiax3CUCwmr6rA4c57XLDDzxZl\n55jlFrqNbhlndAot21WKgcKOiJFqXP3mK6mOWXo5Zw==\n-----END RSA PRIVATE KEY-----\n",
+      "scheme": "RAW"
+    },
+    "input": {
+      "value": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decrypt of the empty input",
+    "ref": "no bytes",
+    "op": "rsa:decrypt",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgQC9JaaVS4wTGJqEKtdqPA5eshzjgZz0LH/MtGlTogD9gt6IzFk4\npGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5HmvdpzTy8Us+IIQOMzoAZIAwr7\nsdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPUVabywyBg3oeKr4fLHwIDAQAB\nAoGAUWxHzbT706yft42Jtd2sge9CqF0/Z41QZpqzTKFMs9UGXvU44z0/g/nLwNXF\nUOlQKTdLDPIX33gGMfu29M9BEVtxC5WQ3tqJl8E7+X3yZKM1VyuQ4tUjAXIsRnn3\n7zbLr/TIw4X+Djkx91OTp2ohG3S0yADI3NZ82SITAkw66cECQQDuegecw5yWu/C1\nQ8yd2wX9afGm5kQyw8BMaN1Uor0VPaf8k3tZazFtoUoQf9IqcBWTD687k3MfkzTF\n4WkqVe9nAkEAywuvTYxmULXCqGE623Abufe/Nm5Eq/1ZP7mprRiJ7evcRNKHbS7B\n2Kuzln9aSgrs9CWxQ+HLNt01sDjpOyzLiQJAbQapOEhN7LPbpmNqxrh9ko+/BPi9\nMSBBaC2BEtKb83wOsvCSMh1Jqb9VZxmo8fHwSx2elXQh68uXEuis9cf3/QJAF0FF\nWKpl5YSLwOEx7oQOiOQZIFDMyK4BlMzc5BhVY8yJs9Aw9o5OYVR5Axme67AIp4XR\noaawsZ3wUjiSbdaZkQJADZ8CCFrFf8gv4OrBMUtiax3CUCwmr6rA4c57XLDDzxZl\n55jlFrqNbhlndAot21WKgcKOiJFqXP3mK6mOWXo5Zw==\n-----END RSA PRIVATE KEY-----\n"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decrypt of garbage",
+    "ref": "128 bytes that are no ciphertext",
+    "op": "rsa:decrypt",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgQC9JaaVS4wTGJqEKtdqPA5eshzjgZz0LH/MtGlTogD9gt6IzFk4\npGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5HmvdpzTy8Us+IIQOMzoAZIAwr7\nsdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPUVabywyBg3oeKr4fLHwIDAQAB\nAoGAUWxHzbT706yft42Jtd2sge9CqF0/Z41QZpqzTKFMs9UGXvU44z0/g/nLwNXF\nUOlQKTdLDPIX33gGMfu29M9BEVtxC5WQ3tqJl8E7+X3yZKM1VyuQ4tUjAXIsRnn3\n7zbLr/TIw4X+Djkx91OTp2ohG3S0yADI3NZ82SITAkw66cECQQDuegecw5yWu/C1\nQ8yd2wX9afGm5kQyw8BMaN1Uor0VPaf8k3tZazFtoUoQf9IqcBWTD687k3MfkzTF\n4WkqVe9nAkEAywuvTYxmULXCqGE623Abufe/Nm5Eq/1ZP7mprRiJ7evcRNKHbS7B\n2Kuzln9aSgrs9CWxQ+HLNt01sDjpOyzLiQJAbQapOEhN7LPbpmNqxrh9ko+/BPi9\nMSBBaC2BEtKb83wOsvCSMh1Jqb9VZxmo8fHwSx2elXQh68uXEuis9cf3/QJAF0FF\nWKpl5YSLwOEx7oQOiOQZIFDMyK4BlMzc5BhVY8yJs9Aw9o5OYVR5Axme67AIp4XR\noaawsZ3wUjiSbdaZkQJADZ8CCFrFf8gv4OrBMUtiax3CUCwmr6rA4c57XLDDzxZl\n55jlFrqNbhlndAot21WKgcKOiJFqXP3mK6mOWXo5Zw==\n-----END RSA PRIVATE KEY-----\n"
+    },
+    "input": {
+      "value": "5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "encrypt OAEP: a message too long",
+    "ref": "1024-bit key, SHA-1: at most 86 bytes",
+    "op": "rsa:encrypt",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9JaaVS4wTGJqEKtdqPA5eshzj\ngZz0LH/MtGlTogD9gt6IzFk4pGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5Hm\nvdpzTy8Us+IIQOMzoAZIAwr7sdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPU\nVabywyBg3oeKr4fLHwIDAQAB\n-----END PUBLIC KEY-----\n"
+    },
+    "input": {
+      "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "encrypt v1.5: a message too long",
+    "ref": "1024-bit key: at most 117 bytes",
+    "op": "rsa:encrypt",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9JaaVS4wTGJqEKtdqPA5eshzj\ngZz0LH/MtGlTogD9gt6IzFk4pGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5Hm\nvdpzTy8Us+IIQOMzoAZIAwr7sdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPU\nVabywyBg3oeKr4fLHwIDAQAB\n-----END PUBLIC KEY-----\n",
+      "scheme": "RSAES-PKCS1-V1_5"
+    },
+    "input": {
+      "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "encrypt OAEP SHA-512 with a 512-bit key: the key is too small",
+    "ref": "64 - 2*64 - 2 is negative",
+    "op": "rsa:encrypt",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK0zx3RiAEgUCtfazqLB7JpvRF5Qsv+L\nKXeY1AOGrb1XPWx+hxqgnpIPZ4/i/ifZIZyoADJf4XWTd48M1Q6NGlUCAwEAAQ==\n-----END PUBLIC KEY-----\n",
+      "digest": "SHA-512"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "public key from a PKCS#1 private key (PEM)",
+    "ref": "openssl rsa -pubout",
+    "op": "rsa:public-key",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgQC9JaaVS4wTGJqEKtdqPA5eshzjgZz0LH/MtGlTogD9gt6IzFk4\npGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5HmvdpzTy8Us+IIQOMzoAZIAwr7\nsdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPUVabywyBg3oeKr4fLHwIDAQAB\nAoGAUWxHzbT706yft42Jtd2sge9CqF0/Z41QZpqzTKFMs9UGXvU44z0/g/nLwNXF\nUOlQKTdLDPIX33gGMfu29M9BEVtxC5WQ3tqJl8E7+X3yZKM1VyuQ4tUjAXIsRnn3\n7zbLr/TIw4X+Djkx91OTp2ohG3S0yADI3NZ82SITAkw66cECQQDuegecw5yWu/C1\nQ8yd2wX9afGm5kQyw8BMaN1Uor0VPaf8k3tZazFtoUoQf9IqcBWTD687k3MfkzTF\n4WkqVe9nAkEAywuvTYxmULXCqGE623Abufe/Nm5Eq/1ZP7mprRiJ7evcRNKHbS7B\n2Kuzln9aSgrs9CWxQ+HLNt01sDjpOyzLiQJAbQapOEhN7LPbpmNqxrh9ko+/BPi9\nMSBBaC2BEtKb83wOsvCSMh1Jqb9VZxmo8fHwSx2elXQh68uXEuis9cf3/QJAF0FF\nWKpl5YSLwOEx7oQOiOQZIFDMyK4BlMzc5BhVY8yJs9Aw9o5OYVR5Axme67AIp4XR\noaawsZ3wUjiSbdaZkQJADZ8CCFrFf8gv4OrBMUtiax3CUCwmr6rA4c57XLDDzxZl\n55jlFrqNbhlndAot21WKgcKOiJFqXP3mK6mOWXo5Zw==\n-----END RSA PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9JaaVS4wTGJqEKtdqPA5eshzj\ngZz0LH/MtGlTogD9gt6IzFk4pGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5Hm\nvdpzTy8Us+IIQOMzoAZIAwr7sdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPU\nVabywyBg3oeKr4fLHwIDAQAB\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "public key from a PKCS#8 private key (PEM)",
+    "ref": "openssl rsa -pubout",
+    "op": "rsa:public-key",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAL0lppVLjBMYmoQq\n12o8Dl6yHOOBnPQsf8y0aVOiAP2C3ojMWTikYEUMTVXti2dAXRZj2rm9ecoP8wYm\nxfdq8markea92nNPLxSz4ghA4zOgBkgDCvux1fUdxcJV9ilGHpR7/NzDDwJCINvf\nyq36PP5MQ9RVpvLDIGDeh4qvh8sfAgMBAAECgYBRbEfNtPvTrJ+3jYm13ayB70Ko\nXT9njVBmmrNMoUyz1QZe9TjjPT+D+cvA1cVQ6VApN0sM8hffeAYx+7b0z0ERW3EL\nlZDe2omXwTv5ffJkozVXK5Di1SMBcixGeffvNsuv9MjDhf4OOTH3U5OnaiEbdLTI\nAMjc1nzZIhMCTDrpwQJBAO56B5zDnJa78LVDzJ3bBf1p8abmRDLDwExo3VSivRU9\np/yTe1lrMW2hShB/0ipwFZMPrzuTcx+TNMXhaSpV72cCQQDLC69NjGZQtcKoYTrb\ncBu59782bkSr/Vk/uamtGInt69xE0odtLsHYq7OWf1pKCuz0JbFD4cs23TWwOOk7\nLMuJAkBtBqk4SE3ss9umY2rGuH2Sj78E+L0xIEFoLYES0pvzfA6y8JIyHUmpv1Vn\nGajx8fBLHZ6VdCHry5cS6Kz1x/f9AkAXQUVYqmXlhIvA4THuhA6I5BkgUMzIrgGU\nzNzkGFVjzImz0DD2jk5hVHkDGZ7rsAinhdGhprCxnfBSOJJt1pmRAkANnwIIWsV/\nyC/g6sExS2JrHcJQLCavqsDhzntcsMPPFmXnmOUWuo1uGWd0Ci3bVYqBwo6IkWpc\n/eYrqY5Zejln\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9JaaVS4wTGJqEKtdqPA5eshzj\ngZz0LH/MtGlTogD9gt6IzFk4pGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5Hm\nvdpzTy8Us+IIQOMzoAZIAwr7sdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPU\nVabywyBg3oeKr4fLHwIDAQAB\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "public key as DER",
+    "ref": "openssl rsa -pubout -outform DER",
+    "op": "rsa:public-key",
+    "params": {
+      "format": "DER"
+    },
+    "input": {
+      "value": "-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgQC9JaaVS4wTGJqEKtdqPA5eshzjgZz0LH/MtGlTogD9gt6IzFk4\npGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5HmvdpzTy8Us+IIQOMzoAZIAwr7\nsdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPUVabywyBg3oeKr4fLHwIDAQAB\nAoGAUWxHzbT706yft42Jtd2sge9CqF0/Z41QZpqzTKFMs9UGXvU44z0/g/nLwNXF\nUOlQKTdLDPIX33gGMfu29M9BEVtxC5WQ3tqJl8E7+X3yZKM1VyuQ4tUjAXIsRnn3\n7zbLr/TIw4X+Djkx91OTp2ohG3S0yADI3NZ82SITAkw66cECQQDuegecw5yWu/C1\nQ8yd2wX9afGm5kQyw8BMaN1Uor0VPaf8k3tZazFtoUoQf9IqcBWTD687k3MfkzTF\n4WkqVe9nAkEAywuvTYxmULXCqGE623Abufe/Nm5Eq/1ZP7mprRiJ7evcRNKHbS7B\n2Kuzln9aSgrs9CWxQ+HLNt01sDjpOyzLiQJAbQapOEhN7LPbpmNqxrh9ko+/BPi9\nMSBBaC2BEtKb83wOsvCSMh1Jqb9VZxmo8fHwSx2elXQh68uXEuis9cf3/QJAF0FF\nWKpl5YSLwOEx7oQOiOQZIFDMyK4BlMzc5BhVY8yJs9Aw9o5OYVR5Axme67AIp4XR\noaawsZ3wUjiSbdaZkQJADZ8CCFrFf8gv4OrBMUtiax3CUCwmr6rA4c57XLDDzxZl\n55jlFrqNbhlndAot21WKgcKOiJFqXP3mK6mOWXo5Zw==\n-----END RSA PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "30819f300d06092a864886f70d010101050003818d0030818902818100bd25a6954b8c13189a842ad76a3c0e5eb21ce3819cf42c7fccb46953a200fd82de88cc5938a460450c4d55ed8b67405d1663dab9bd79ca0ff30626c5f76af266ab91e6bdda734f2f14b3e20840e333a00648030afbb1d5f51dc5c255f629461e947bfcdcc30f024220dbdfcaadfa3cfe4c43d455a6f2c32060de878aaf87cb1f0203010001",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "public key as JWK",
+    "ref": "Python cryptography public_numbers, Base64url (RFC 7518 section 6.3.1)",
+    "op": "rsa:public-key",
+    "params": {
+      "format": "JWK"
+    },
+    "input": {
+      "value": "-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgQC9JaaVS4wTGJqEKtdqPA5eshzjgZz0LH/MtGlTogD9gt6IzFk4\npGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5HmvdpzTy8Us+IIQOMzoAZIAwr7\nsdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPUVabywyBg3oeKr4fLHwIDAQAB\nAoGAUWxHzbT706yft42Jtd2sge9CqF0/Z41QZpqzTKFMs9UGXvU44z0/g/nLwNXF\nUOlQKTdLDPIX33gGMfu29M9BEVtxC5WQ3tqJl8E7+X3yZKM1VyuQ4tUjAXIsRnn3\n7zbLr/TIw4X+Djkx91OTp2ohG3S0yADI3NZ82SITAkw66cECQQDuegecw5yWu/C1\nQ8yd2wX9afGm5kQyw8BMaN1Uor0VPaf8k3tZazFtoUoQf9IqcBWTD687k3MfkzTF\n4WkqVe9nAkEAywuvTYxmULXCqGE623Abufe/Nm5Eq/1ZP7mprRiJ7evcRNKHbS7B\n2Kuzln9aSgrs9CWxQ+HLNt01sDjpOyzLiQJAbQapOEhN7LPbpmNqxrh9ko+/BPi9\nMSBBaC2BEtKb83wOsvCSMh1Jqb9VZxmo8fHwSx2elXQh68uXEuis9cf3/QJAF0FF\nWKpl5YSLwOEx7oQOiOQZIFDMyK4BlMzc5BhVY8yJs9Aw9o5OYVR5Axme67AIp4XR\noaawsZ3wUjiSbdaZkQJADZ8CCFrFf8gv4OrBMUtiax3CUCwmr6rA4c57XLDDzxZl\n55jlFrqNbhlndAot21WKgcKOiJFqXP3mK6mOWXo5Zw==\n-----END RSA PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"kty\":\"RSA\",\"n\":\"vSWmlUuMExiahCrXajwOXrIc44Gc9Cx_zLRpU6IA_YLeiMxZOKRgRQxNVe2LZ0BdFmPaub15yg_zBibF92ryZquR5r3ac08vFLPiCEDjM6AGSAMK-7HV9R3FwlX2KUYelHv83MMPAkIg29_Krfo8_kxD1FWm8sMgYN6Hiq-Hyx8\",\"e\":\"AQAB\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "public key from an encrypted PKCS#8 key",
+    "ref": "openssl pkcs8 -topk8 -v2 aes-256-cbc",
+    "op": "rsa:public-key",
+    "params": {
+      "password": "secret"
+    },
+    "input": {
+      "value": "-----BEGIN ENCRYPTED PRIVATE KEY-----\nMIIC3TBXBgkqhkiG9w0BBQ0wSjApBgkqhkiG9w0BBQwwHAQIUJNvRU4C/joCAggA\nMAwGCCqGSIb3DQIJBQAwHQYJYIZIAWUDBAEqBBBe35SOKhB5Z0psijmVF1V2BIIC\ngMAsPgWmFtu7LF0w6G5iJy7iJqlLyQ7b9wveDajvC/qla5dMe0ArZjHeVuYmSBPk\naVBaRBS9rHNUAA7tugglAapBbi0kITNGKI8/ht8H1fAtwsAWYU/i5IYKPQtU7dnN\ncXEnoOgzrDcEemKJDd3+R/9k3qDFgG0HQEItcs1bTwwyIPOlcmyLniseFoLkNOWY\nXt3O4N+s9qyg3uG27zh8TPpMZ0cNs6XZ7YTUt9JTdoUQE9JRUFhXeI2yQ86EWahS\npmdmsmM8VBlM3C+66JpbkUQGg4t4lsrp/R4m8tBVGpQShREXPhWpKwNzuOkpm+Ex\n6IIgZ+HjCCOgskYm8cJ3EKlUskVkfIr103LUKPu1tnvSUDGwo3PTuRDza/iswPWT\n4qa0OEFZ+UYD3EnwWphzpg6lfPEHm8UCbbfgdTKkMRIx2z432tkVoZ898eo84h44\nHS6fdoFXAbfMTTfvwZqOzzYkHxJZZEuQCg/SXZANNLDC6oOl4GsRgW7wHvhMSIvm\nB8YuzRYYeZsC8878kEXf/nG1PM4564jS/r4uy5fgvSW/Q6xKsRLJNAksdllcN6Ec\nW5gS6IiYdB3P5iolrrHP+1WD412eDcaWXwKhAcbXt6bmfdO3pxWvCIH4s5RSqF/z\n5s17jYTUv6rIZzLiwDzIx1xi9RF+vd/ZzP3WpoVP24odzsSzvb6EyHlrDME2OX9k\nmHw7RiOZ+LBLFq9khpqGK9HmbT4gKIigwCLwys/ATZ0ktFhe5za0PqG2LxGTZMyR\nOLBqE7/+ouEJB8kzGfF0a2vV4pPye/tIxNFFOzc02P4W5M+bF9I/o471srgyw00O\nNg0hkHuxG96FgKr44QfIP9I=\n-----END ENCRYPTED PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9JaaVS4wTGJqEKtdqPA5eshzj\ngZz0LH/MtGlTogD9gt6IzFk4pGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5Hm\nvdpzTy8Us+IIQOMzoAZIAwr7sdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPU\nVabywyBg3oeKr4fLHwIDAQAB\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "public key from a legacy encrypted key",
+    "ref": "openssl rsa -traditional -aes256",
+    "op": "rsa:public-key",
+    "params": {
+      "password": "secret"
+    },
+    "input": {
+      "value": "-----BEGIN RSA PRIVATE KEY-----\nProc-Type: 4,ENCRYPTED\nDEK-Info: AES-256-CBC,D4E952FFBC2C0698C21371BA984F96E0\n\nInhjLr1UlsC0zL8dwDgc+9eCkYiYQ2Rfe7WO8I0USpc5950kzhASoD2c5UvoNDTp\nB2I7isRCdd3QaKexk5DkL3t4V0/gmcBgJdSUFl9bHSt6fojAiEqT5Bhf1lyeUq8S\nYYP0HgqQe82C09StjaDYNxPJ1Hu3s20uMr+AOme8oeMOVKE3+JUMDy6BZY0gYBGR\n2eTqGq0/atlpJwwIICWWQ049KkIn0FLnUcbQ47UQJ4pwB4h2o9fma0uMR2aFMoUO\nzCclb0lVOjxn0La1ONrg6Y9Utz2LZcBE/Jj69/ENd6kvpCGgOTzW0r02CWZH+iyp\nvYxA/1RMS8ob2aJBh0wWRCcyOiGhXIJiOlcdr5zRbhEIYf9nbxiW13m3Zv+eZSd4\nvndBza3GKnFG1i7Q/aeqDb9SAHWFIrzf8Vu7DiTUCmIsFdTxGIK6NSMQJCZXq52E\n+NdUvNv3t4KgIQhgzNY/qi1qhRhQyVB7BEc0GTCrQiZgFSd3TM/86Ov1mpgIEdnD\ncTrRk5VWA3N2R0V0SYcc1FtwHHVwv0EHTRBep/gbAnmCm0XfSxnybDMpuXSlXU1G\n9ijlTFPeqq7/nWRQbD5vk/JoHIJXTjsEy9LdppwKRgb6ShokZ7wVr/z1u1NuwZsY\nNHdFbyRtqr5bH/GjVabShfGnM9Tp6FolzQgDZuJY+g5PGJNTt22xl7icfSycP4ky\nKjghXrjw2mMMNrCYKJWCMveYk1zxkDmUrgfmANZRhh6hPzy0UlRzll7OhLppMSPX\nYr6MSVZX3i+ymuY8a/0RzVEKHza3Aikg5cOanjLanZM=\n-----END RSA PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9JaaVS4wTGJqEKtdqPA5eshzj\ngZz0LH/MtGlTogD9gt6IzFk4pGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5Hm\nvdpzTy8Us+IIQOMzoAZIAwr7sdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPU\nVabywyBg3oeKr4fLHwIDAQAB\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "public key from the key pair text",
+    "ref": "the output of Generate RSA Key Pair holds the public block first",
+    "op": "rsa:public-key",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9JaaVS4wTGJqEKtdqPA5eshzj\ngZz0LH/MtGlTogD9gt6IzFk4pGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5Hm\nvdpzTy8Us+IIQOMzoAZIAwr7sdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPU\nVabywyBg3oeKr4fLHwIDAQAB\n-----END PUBLIC KEY-----\n\n-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgQC9JaaVS4wTGJqEKtdqPA5eshzjgZz0LH/MtGlTogD9gt6IzFk4\npGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5HmvdpzTy8Us+IIQOMzoAZIAwr7\nsdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPUVabywyBg3oeKr4fLHwIDAQAB\nAoGAUWxHzbT706yft42Jtd2sge9CqF0/Z41QZpqzTKFMs9UGXvU44z0/g/nLwNXF\nUOlQKTdLDPIX33gGMfu29M9BEVtxC5WQ3tqJl8E7+X3yZKM1VyuQ4tUjAXIsRnn3\n7zbLr/TIw4X+Djkx91OTp2ohG3S0yADI3NZ82SITAkw66cECQQDuegecw5yWu/C1\nQ8yd2wX9afGm5kQyw8BMaN1Uor0VPaf8k3tZazFtoUoQf9IqcBWTD687k3MfkzTF\n4WkqVe9nAkEAywuvTYxmULXCqGE623Abufe/Nm5Eq/1ZP7mprRiJ7evcRNKHbS7B\n2Kuzln9aSgrs9CWxQ+HLNt01sDjpOyzLiQJAbQapOEhN7LPbpmNqxrh9ko+/BPi9\nMSBBaC2BEtKb83wOsvCSMh1Jqb9VZxmo8fHwSx2elXQh68uXEuis9cf3/QJAF0FF\nWKpl5YSLwOEx7oQOiOQZIFDMyK4BlMzc5BhVY8yJs9Aw9o5OYVR5Axme67AIp4XR\noaawsZ3wUjiSbdaZkQJADZ8CCFrFf8gv4OrBMUtiax3CUCwmr6rA4c57XLDDzxZl\n55jlFrqNbhlndAot21WKgcKOiJFqXP3mK6mOWXo5Zw==\n-----END RSA PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9JaaVS4wTGJqEKtdqPA5eshzj\ngZz0LH/MtGlTogD9gt6IzFk4pGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5Hm\nvdpzTy8Us+IIQOMzoAZIAwr7sdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPU\nVabywyBg3oeKr4fLHwIDAQAB\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "public key from a public key is refused",
+    "ref": "no private key block",
+    "op": "rsa:public-key",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9JaaVS4wTGJqEKtdqPA5eshzj\ngZz0LH/MtGlTogD9gt6IzFk4pGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5Hm\nvdpzTy8Us+IIQOMzoAZIAwr7sdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPU\nVabywyBg3oeKr4fLHwIDAQAB\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "public key from nothing",
+    "ref": "no PEM block",
+    "op": "rsa:public-key",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "public key from an EC private key (SEC1) is refused until WP 5.51",
+    "ref": "openssl ecparam -genkey",
+    "op": "rsa:public-key",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIKlCa7GfW9qrBgYT+xX5Ko5zazLJdqwPGk9yVUd2r6IWoAoGCCqGSM49\nAwEHoUQDQgAEVFHVfKafyK4NZ1enOoD0QvBUAQY528J4B2/8GqjaeRvgpBIq0XEH\nZwZZZ+HjbrFx8pRt3nDiMECYzpUiqgpdNg==\n-----END EC PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "public key from an EC private key (PKCS#8) is refused until WP 5.51",
+    "ref": "openssl pkcs8 -topk8 of an EC key",
+    "op": "rsa:public-key",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgqUJrsZ9b2qsGBhP7\nFfkqjnNrMsl2rA8aT3JVR3avohahRANCAARUUdV8pp/Irg1nV6c6gPRC8FQBBjnb\nwngHb/waqNp5G+CkEirRcQdnBlln4eNusXHylG3ecOIwQJjOlSKqCl02\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "sign with an EC key is refused",
+    "ref": "EC key",
+    "op": "rsa:sign",
+    "params": {
+      "key": "-----BEGIN PRIVATE KEY-----\nMIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgqUJrsZ9b2qsGBhP7\nFfkqjnNrMsl2rA8aT3JVR3avohahRANCAARUUdV8pp/Irg1nV6c6gPRC8FQBBjnb\nwngHb/waqNp5G+CkEirRcQdnBlln4eNusXHylG3ecOIwQJjOlSKqCl02\n-----END PRIVATE KEY-----\n"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "a damaged private key (a changed character in the primes)",
+    "ref": "base64 of the key with one character of p or q changed",
+    "op": "rsa:sign",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgQC9JaaVS4wTGJqEKtdqPA5eshzjgZz0LH/MtGlTogD9gt6IzFk4\npGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5HmvdpzTy8Us+IIQOMzoAZIAwr7\nsdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPUVabywyBg3oeKr4fLHwIDAQAB\nAoGAUWxHzbT706yft42Jtd2sge9CqF0/Z41QZpqzTKFMs9UGXvU44z0/g/nLwNXF\nUOlQKTdLDPIX33gGMfu29M9BEVtxC5WQ3tqJl8E7+X3yZKM1VyuQ4tUjAXIsRnn3\n7zbLr/TIw4X+Djkx91OTp2ohG3S0yADI3NZ82SITAkw66cECQQDuegecw5yWu/C1\nQ8yd2wX9afGm5kQyw8BMaN1Uor0VPaf8k3tZazFtoUoQf9IqcBWTD687k3MfkzTF\n4WkqVe9nAkAAywuvTYxmULXCqGE623Abufe/Nm5Eq/1ZP7mprRiJ7evcRNKHbS7B\n2Kuzln9aSgrs9CWxQ+HLNt01sDjpOyzLiQJAbQapOEhN7LPbpmNqxrh9ko+/BPi9\nMSBBaC2BEtKb83wOsvCSMh1Jqb9VZxmo8fHwSx2elXQh68uXEuis9cf3/QJAF0FF\nWKpl5YSLwOEx7oQOiOQZIFDMyK4BlMzc5BhVY8yJs9Aw9o5OYVR5Axme67AIp4XR\noaawsZ3wUjiSbdaZkQJADZ8CCFrFf8gv4OrBMUtiax3CUCwmr6rA4c57XLDDzxZl\n55jlFrqNbhlndAot21WKgcKOiJFqXP3mK6mOWXo5Zw==\n-----END RSA PRIVATE KEY-----\n"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a damaged private key (a changed character in dp)",
+    "ref": "base64 of the key with one character of dp changed: the private operation is checked",
+    "op": "rsa:sign",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgQC9JaaVS4wTGJqEKtdqPA5eshzjgZz0LH/MtGlTogD9gt6IzFk4\npGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5HmvdpzTy8Us+IIQOMzoAZIAwr7\nsdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPUVabywyBg3oeKr4fLHwIDAQAB\nAoGAUWxHzbT706yft42Jtd2sge9CqF0/Z41QZpqzTKFMs9UGXvU44z0/g/nLwNXF\nUOlQKTdLDPIX33gGMfu29M9BEVtxC5WQ3tqJl8E7+X3yZKM1VyuQ4tUjAXIsRnn3\n7zbLr/TIw4X+Djkx91OTp2ohG3S0yADI3NZ82SITAkw66cECQQDuegecw5yWu/C1\nQ8yd2wX9afGm5kQyw8BMaN1Uor0VPaf8k3tZazFtoUoQf9IqcBWTD687k3MfkzTF\n4WkqVe9nAkEAywuvTYxmULXCqGE623Abufe/Nm5Eq/1ZP7mprRiJ7evcRNKHbS7B\n2Kuzln9aSgrs9CWxQ+HLNt01sDjpOyzLiQJAbQapOEhN7LPbpmNqxrh9ko+/BPi9\nMSBBaC2BEtKb83wOsvCSMh1Jqb9VZxmo8fHwSx2elXQh68uXEuis9cf3/QJAF0FF\nWKpl5YSLwOAx7oQOiOQZIFDMyK4BlMzc5BhVY8yJs9Aw9o5OYVR5Axme67AIp4XR\noaawsZ3wUjiSbdaZkQJADZ8CCFrFf8gv4OrBMUtiax3CUCwmr6rA4c57XLDDzxZl\n55jlFrqNbhlndAot21WKgcKOiJFqXP3mK6mOWXo5Zw==\n-----END RSA PRIVATE KEY-----\n"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a damaged private key (a changed character in the modulus)",
+    "ref": "base64 of the key with one character of n changed",
+    "op": "rsa:sign",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgQC9JaaVS4wTGJqEKtdqPA5eshzjgZz0LH/MtGlTogD9gt6IzFk4\npGBFDE1V7YAnQF0WY9q5vXnKD/MGJsX3avJmq5HmvdpzTy8Us+IIQOMzoAZIAwr7\nsdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPUVabywyBg3oeKr4fLHwIDAQAB\nAoGAUWxHzbT706yft42Jtd2sge9CqF0/Z41QZpqzTKFMs9UGXvU44z0/g/nLwNXF\nUOlQKTdLDPIX33gGMfu29M9BEVtxC5WQ3tqJl8E7+X3yZKM1VyuQ4tUjAXIsRnn3\n7zbLr/TIw4X+Djkx91OTp2ohG3S0yADI3NZ82SITAkw66cECQQDuegecw5yWu/C1\nQ8yd2wX9afGm5kQyw8BMaN1Uor0VPaf8k3tZazFtoUoQf9IqcBWTD687k3MfkzTF\n4WkqVe9nAkEAywuvTYxmULXCqGE623Abufe/Nm5Eq/1ZP7mprRiJ7evcRNKHbS7B\n2Kuzln9aSgrs9CWxQ+HLNt01sDjpOyzLiQJAbQapOEhN7LPbpmNqxrh9ko+/BPi9\nMSBBaC2BEtKb83wOsvCSMh1Jqb9VZxmo8fHwSx2elXQh68uXEuis9cf3/QJAF0FF\nWKpl5YSLwOEx7oQOiOQZIFDMyK4BlMzc5BhVY8yJs9Aw9o5OYVR5Axme67AIp4XR\noaawsZ3wUjiSbdaZkQJADZ8CCFrFf8gv4OrBMUtiax3CUCwmr6rA4c57XLDDzxZl\n55jlFrqNbhlndAot21WKgcKOiJFqXP3mK6mOWXo5Zw==\n-----END RSA PRIVATE KEY-----\n"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a key block that is not closed",
+    "ref": "PEM without END",
+    "op": "rsa:sign",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgQC9JaaVS4wTGJqEKtdqPA5eshzjgZz0LH/MtGlTogD9gt6IzFk4\npGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5HmvdpzTy8Us+IIQOMzoAZIAwr7\nsdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPUVabywyBg3oeKr4fLHwIDAQAB"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a PEM block that is not an RSA key",
+    "ref": "an EC key's SubjectPublicKeyInfo as the public key",
+    "op": "rsa:verify",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEVFHVfKafyK4NZ1enOoD0QvBUAQY5\n28J4B2/8GqjaeRvgpBIq0XEHZwZZZ+HjbrFx8pRt3nDiMECYzpUiqgpdNg==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "The quick brown fox jumps over the lazy dog",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "generate: a size that is not offered",
+    "ref": "the choice is 1024, 2048 or 4096 (the output is random, so only errors have fixed vectors; see src/rsa.test.ts)",
+    "op": "rsa:generate-key-pair",
+    "params": {
+      "size": "3072"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "generate: an unknown format",
+    "ref": "the choice is PEM or JWK",
+    "op": "rsa:generate-key-pair",
+    "params": {
+      "format": "DER"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "encrypt without a key",
+    "ref": "no PEM block",
+    "op": "rsa:encrypt",
+    "params": {
+      "key": ""
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "decrypt without a key",
+    "ref": "no PEM block",
+    "op": "rsa:decrypt",
+    "params": {
+      "key": ""
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "encrypt: an unknown scheme",
+    "ref": "the choice is RSA-OAEP, RSAES-PKCS1-V1_5 or RAW",
+    "op": "rsa:encrypt",
+    "params": {
+      "key": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9JaaVS4wTGJqEKtdqPA5eshzj\ngZz0LH/MtGlTogD9gt6IzFk4pGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5Hm\nvdpzTy8Us+IIQOMzoAZIAwr7sdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPU\nVabywyBg3oeKr4fLHwIDAQAB\n-----END PUBLIC KEY-----\n",
+      "scheme": "PKCS1"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "sign: an unknown digest",
+    "ref": "the choice list",
+    "op": "rsa:sign",
+    "params": {
+      "key": "-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgQC9JaaVS4wTGJqEKtdqPA5eshzjgZz0LH/MtGlTogD9gt6IzFk4\npGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5HmvdpzTy8Us+IIQOMzoAZIAwr7\nsdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPUVabywyBg3oeKr4fLHwIDAQAB\nAoGAUWxHzbT706yft42Jtd2sge9CqF0/Z41QZpqzTKFMs9UGXvU44z0/g/nLwNXF\nUOlQKTdLDPIX33gGMfu29M9BEVtxC5WQ3tqJl8E7+X3yZKM1VyuQ4tUjAXIsRnn3\n7zbLr/TIw4X+Djkx91OTp2ohG3S0yADI3NZ82SITAkw66cECQQDuegecw5yWu/C1\nQ8yd2wX9afGm5kQyw8BMaN1Uor0VPaf8k3tZazFtoUoQf9IqcBWTD687k3MfkzTF\n4WkqVe9nAkEAywuvTYxmULXCqGE623Abufe/Nm5Eq/1ZP7mprRiJ7evcRNKHbS7B\n2Kuzln9aSgrs9CWxQ+HLNt01sDjpOyzLiQJAbQapOEhN7LPbpmNqxrh9ko+/BPi9\nMSBBaC2BEtKb83wOsvCSMh1Jqb9VZxmo8fHwSx2elXQh68uXEuis9cf3/QJAF0FF\nWKpl5YSLwOEx7oQOiOQZIFDMyK4BlMzc5BhVY8yJs9Aw9o5OYVR5Axme67AIp4XR\noaawsZ3wUjiSbdaZkQJADZ8CCFrFf8gv4OrBMUtiax3CUCwmr6rA4c57XLDDzxZl\n55jlFrqNbhlndAot21WKgcKOiJFqXP3mK6mOWXo5Zw==\n-----END RSA PRIVATE KEY-----\n",
+      "digest": "SHA-224"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  }
+]

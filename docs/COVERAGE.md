@@ -13,7 +13,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Data format | 56 | 9 | 0 | 15 | 80 |
 | Encryption / Encoding | 29 | 64 | 0 | 2 | 95 |
-| Public Key | 2 | 0 | 0 | 28 | 30 |
+| Public Key | 8 | 0 | 0 | 22 | 30 |
 | Arithmetic / Logic | 24 | 2 | 0 | 0 | 26 |
 | Networking | 0 | 0 | 2 | 32 | 34 |
 | Language | 3 | 1 | 0 | 0 | 4 |
@@ -27,7 +27,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 9 | 4 | 3 | 5 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **202** | **143** | **7** | **154** | **506** |
+| **Total** | **208** | **143** | **7** | **148** | **506** |
 
 ## Data format (80)
 
@@ -233,11 +233,11 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | PGP Encrypt and Sign | not yet |  |  |
 | PGP Decrypt and Verify | not yet |  |  |
 | Parse PGP Key | not yet |  |  |
-| Generate RSA Key Pair | not yet |  |  |
-| RSA Sign | not yet |  |  |
-| RSA Verify | not yet |  |  |
-| RSA Encrypt | not yet |  |  |
-| RSA Decrypt | not yet |  |  |
+| Generate RSA Key Pair | covered | `rsa:generate-key-pair` | Key sizes 1024, 2048 (default) and 4096, public exponent 65537, output PEM (the public key as PUBLIC KEY, then the private key as RSA PRIVATE KEY, the order and formats of CyberChef) or JWK (public key, private key, one line of JSON each; the JWK layout is from memory of CyberChef, not checked). The primes come from random:bytes-of only (the op carries +random) through a private prime-search primitive: trial division by the primes below 65536, then 13 Miller-Rabin rounds (base 2 and 12 random bases); a 4096-bit pair takes 1.8 s on average (slowest of twelve runs 3.4 s). Differences: PEM has line feeds where CyberChef (node-forge) writes CRLF, and there is no DER output format. The key text can be pasted whole into the other RSA ops. |
+| RSA Sign | covered | `rsa:sign` | Signs the input with a PEM private key (RSA PRIVATE KEY, PRIVATE KEY, ENCRYPTED PRIVATE KEY or an old-style encrypted PEM; the password parameter is CyberChef's Key Password) and a digest from CyberChef's list (SHA-1 by default, MD5, SHA-256, SHA-384, SHA-512), RSASSA-PKCS1-v1_5, as raw bytes. Addition: a scheme parameter with RSASSA-PSS (random salt, salt-length parameter) which CyberChef does not offer; the default is unchanged. Encrypted keys: AES-128/192/256-CBC, Triple DES and DES, in the legacy DEK-Info form and in PKCS#8 PBES2 with PBKDF2 (SHA-1, -256, -384, -512); other schemes are E_RANGE. A key that is not RSA is E_RANGE and a damaged key E_COERCE. Parameter order and defaults are from memory of CyberChef 11.5.0, not verified. |
+| RSA Verify | covered | `rsa:verify` | The input is the signature; the message is a parameter (UTF-8 text by default, hex, Latin-1 or Base64 for bytes), with the public key (PUBLIC KEY or RSA PUBLIC KEY) and the digest. The result is the text Verified OK or Verification failure; any fault in the signature is a failed verification, not an error. RSASSA-PKCS1-v1_5 as in CyberChef, and RSASSA-PSS behind the scheme parameter (salt-length -1 accepts any salt size). Parameter order and the result texts are from memory of CyberChef 11.5.0, not verified. |
+| RSA Encrypt | covered | `rsa:encrypt` | Encrypts the input with a PEM public key under RSA-OAEP (default; the digest is the label hash and the MGF1 hash, with an empty label, as in OpenSSL and node-forge), RSAES-PKCS1-V1_5 or RAW (textbook RSA, no padding), digests SHA-1 (default), MD5, SHA-256, SHA-384, SHA-512. A message that is too long, or for RAW not below the modulus, is E_RANGE. The output has the length of the modulus; OAEP and v1.5 use random bytes (+random). The scheme names and their order are from memory of CyberChef 11.5.0, not verified. |
+| RSA Decrypt | covered | `rsa:decrypt` | Decrypts with a PEM private key (as RSA Sign, with the Key Password), RSA-OAEP, RSAES-PKCS1-V1_5 or RAW and the digest. Every failure of the decryption (length, range, padding, hash, separator, wrong digest) is the one error E_COERCE with the message decryption error, so the error tells nothing about the padding. RAW returns the full modulus-length block with its leading zero bytes. The private operation uses the Chinese remainder theorem and is checked with the public exponent. |
 | Generate ECDSA Key Pair | not yet |  |  |
 | ECDSA Signature Conversion | not yet |  |  |
 | ECDSA Sign | not yet |  |  |
@@ -245,7 +245,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Parse SSH Host Key | not yet |  |  |
 | Parse CSR | not yet |  |  |
 | Public Key from Certificate | not yet |  |  |
-| Public Key from Private Key | not yet |  |  |
+| Public Key from Private Key | covered | `rsa:public-key` | RSA keys only: the SubjectPublicKeyInfo public key of an RSA PRIVATE KEY or PRIVATE KEY (or encrypted) PEM as PEM, DER bytes or a JWK (kty, n, e). Adds a password parameter for encrypted keys. An elliptic curve private key (EC PRIVATE KEY, or PKCS#8 with the id-ecPublicKey algorithm), which CyberChef also reads, is E_RANGE with a message that says EC keys are not supported yet; WP 5.51 adds them (see the RSA section of packages/ops/README.md for where). The output formats are from memory of CyberChef 11.5.0, not verified. |
 | SM2 Encrypt | not yet |  |  |
 | SM2 Decrypt | not yet |  |  |
 
