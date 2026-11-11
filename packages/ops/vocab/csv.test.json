@@ -1,0 +1,785 @@
+[
+  {
+    "name": "two columns, CRLF rows",
+    "ref": "Python csv.DictReader/csv.reader and json.dumps",
+    "op": "csv:to-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "format": "array-of-dictionaries",
+      "indent": 2
+    },
+    "input": {
+      "value": "name,age\r\nAda,36\r\nAlan,41\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[\n  {\n    \"name\": \"Ada\",\n    \"age\": \"36\"\n  },\n  {\n    \"name\": \"Alan\",\n    \"age\": \"41\"\n  }\n]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 4180: quoted cells hold commas, doubled quotes and line breaks",
+    "ref": "Python csv.DictReader/csv.reader and json.dumps",
+    "op": "csv:to-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "format": "array-of-dictionaries",
+      "indent": 2
+    },
+    "input": {
+      "value": "a,b,c\r\n\"x,1\",\"he said \"\"hi\"\"\",\"line1\r\nline2\"\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[\n  {\n    \"a\": \"x,1\",\n    \"b\": \"he said \\\"hi\\\"\",\n    \"c\": \"line1\\r\\nline2\"\n  }\n]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "arrays format keeps ragged rows",
+    "ref": "Python csv.DictReader/csv.reader and json.dumps",
+    "op": "csv:to-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "format": "array-of-arrays",
+      "indent": 2
+    },
+    "input": {
+      "value": "a,b\r\n1\r\n2,3,4\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[\n  [\n    \"a\",\n    \"b\"\n  ],\n  [\n    \"1\"\n  ],\n  [\n    \"2\",\n    \"3\",\n    \"4\"\n  ]\n]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "LF rows are accepted by the default row delimiter",
+    "ref": "Python csv.DictReader/csv.reader and json.dumps",
+    "op": "csv:to-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "format": "array-of-dictionaries",
+      "indent": 2
+    },
+    "input": {
+      "value": "k,v\nx,1\ny,2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[\n  {\n    \"k\": \"x\",\n    \"v\": \"1\"\n  },\n  {\n    \"k\": \"y\",\n    \"v\": \"2\"\n  }\n]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a lone CR ends a row too",
+    "ref": "Python csv.DictReader/csv.reader and json.dumps",
+    "op": "csv:to-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "format": "array-of-dictionaries",
+      "indent": 2
+    },
+    "input": {
+      "value": "k,v\rx,1\ry,2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[\n  {\n    \"k\": \"x\",\n    \"v\": \"1\"\n  },\n  {\n    \"k\": \"y\",\n    \"v\": \"2\"\n  }\n]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "blank lines are skipped",
+    "ref": "Python csv.DictReader/csv.reader and json.dumps",
+    "op": "csv:to-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "format": "array-of-dictionaries",
+      "indent": 2
+    },
+    "input": {
+      "value": "k,v\r\n\r\nx,1\r\n\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[\n  {\n    \"k\": \"x\",\n    \"v\": \"1\"\n  }\n]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "empty cells and a quoted empty cell",
+    "ref": "Python csv.DictReader/csv.reader and json.dumps",
+    "op": "csv:to-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "format": "array-of-dictionaries",
+      "indent": 2
+    },
+    "input": {
+      "value": "a,b,c\r\n,\"\",x\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[\n  {\n    \"a\": \"\",\n    \"b\": \"\",\n    \"c\": \"x\"\n  }\n]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unicode text, an emoji and non-ASCII are kept",
+    "ref": "Python csv.DictReader/csv.reader and json.dumps",
+    "op": "csv:to-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "format": "array-of-dictionaries",
+      "indent": 2
+    },
+    "input": {
+      "value": "名前,emoji\r\n田中,😀\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[\n  {\n    \"名前\": \"田中\",\n    \"emoji\": \"😀\"\n  }\n]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a quote inside an unquoted cell is kept",
+    "ref": "Python csv.DictReader/csv.reader and json.dumps",
+    "op": "csv:to-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "format": "array-of-dictionaries",
+      "indent": 2
+    },
+    "input": {
+      "value": "a,b\r\nsay \"hi\",2\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[\n  {\n    \"a\": \"say \\\"hi\\\"\",\n    \"b\": \"2\"\n  }\n]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "compact output with indent 0",
+    "ref": "Python csv.DictReader/csv.reader and json.dumps",
+    "op": "csv:to-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "format": "array-of-dictionaries",
+      "indent": 0
+    },
+    "input": {
+      "value": "a,b\r\n1,2\r\n3,4\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[{\"a\":\"1\",\"b\":\"2\"},{\"a\":\"3\",\"b\":\"4\"}]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "semicolon cell delimiter",
+    "ref": "Python csv.DictReader/csv.reader and json.dumps",
+    "op": "csv:to-json",
+    "params": {
+      "cell-delimiter": ";",
+      "row-delimiter": "\\r\\n",
+      "format": "array-of-dictionaries",
+      "indent": 2
+    },
+    "input": {
+      "value": "a;b\r\n1,5;2\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[\n  {\n    \"a\": \"1,5\",\n    \"b\": \"2\"\n  }\n]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "tab cell delimiter typed as an escape",
+    "ref": "Python csv.reader(delimiter='\\t')",
+    "op": "csv:to-json",
+    "params": {
+      "cell-delimiter": "\\t",
+      "row-delimiter": "\\r\\n",
+      "format": "array-of-dictionaries",
+      "indent": 2
+    },
+    "input": {
+      "value": "a\tb\r\n1\t2\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[\n  {\n    \"a\": \"1\",\n    \"b\": \"2\"\n  }\n]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "empty input gives an empty array",
+    "ref": "Python csv.DictReader/csv.reader and json.dumps",
+    "op": "csv:to-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "format": "array-of-dictionaries",
+      "indent": 2
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a header with no rows gives an empty array",
+    "ref": "Python csv.DictReader/csv.reader and json.dumps",
+    "op": "csv:to-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "format": "array-of-dictionaries",
+      "indent": 2
+    },
+    "input": {
+      "value": "a,b\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "empty input as arrays",
+    "ref": "Python csv.DictReader/csv.reader and json.dumps",
+    "op": "csv:to-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "format": "array-of-arrays",
+      "indent": 2
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "row delimiter given as the escape \\n",
+    "ref": "Python csv.reader",
+    "op": "csv:to-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\n",
+      "format": "array-of-dictionaries",
+      "indent": 2
+    },
+    "input": {
+      "value": "a,b\n1,2\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[\n  {\n    \"a\": \"1\",\n    \"b\": \"2\"\n  }\n]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "every character of the cell delimiter ends a cell",
+    "ref": "hand-computed: csv.reader on the text with ; replaced by ,",
+    "op": "csv:to-json",
+    "params": {
+      "cell-delimiter": ",;",
+      "row-delimiter": "\\r\\n",
+      "format": "array-of-arrays",
+      "indent": 2
+    },
+    "input": {
+      "value": "a,b;c\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[\n  [\n    \"a\",\n    \"b\",\n    \"c\"\n  ]\n]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unterminated quote",
+    "ref": "Python csv.reader(strict=True) raises Error: unexpected end of data",
+    "op": "csv:to-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "format": "array-of-dictionaries",
+      "indent": 2
+    },
+    "input": {
+      "value": "a,b\r\n\"x,y\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "text after the closing quote",
+    "ref": "Python csv.reader(strict=True) raises Error: ',' expected after '\"'",
+    "op": "csv:to-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "format": "array-of-dictionaries",
+      "indent": 2
+    },
+    "input": {
+      "value": "a,b\r\n\"x\"y,2\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a row longer than the header",
+    "ref": "csv.DictReader puts the extra cell under the key None; Forge refuses it",
+    "op": "csv:to-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "format": "array-of-dictionaries",
+      "indent": 2
+    },
+    "input": {
+      "value": "a,b\r\n1,2,3\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a row shorter than the header",
+    "ref": "csv.DictReader fills the missing cell with None; Forge refuses it",
+    "op": "csv:to-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "format": "array-of-dictionaries",
+      "indent": 2
+    },
+    "input": {
+      "value": "a,b\r\n1\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a repeated header name",
+    "ref": "a dict from the header would lose a column (Python dict(zip) keeps the last)",
+    "op": "csv:to-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "format": "array-of-dictionaries",
+      "indent": 2
+    },
+    "input": {
+      "value": "a,a\r\n1,2\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "an empty cell delimiter",
+    "ref": "a CSV needs a delimiter",
+    "op": "csv:to-json",
+    "params": {
+      "cell-delimiter": "",
+      "row-delimiter": "\\r\\n",
+      "format": "array-of-dictionaries",
+      "indent": 2
+    },
+    "input": {
+      "value": "a,b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "a quote as the delimiter",
+    "ref": "RFC 4180: the quote cannot separate cells",
+    "op": "csv:to-json",
+    "params": {
+      "cell-delimiter": "\"",
+      "row-delimiter": "\\r\\n",
+      "format": "array-of-dictionaries",
+      "indent": 2
+    },
+    "input": {
+      "value": "a,b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "a character that is both delimiters",
+    "ref": "a character cannot end both a cell and a row",
+    "op": "csv:to-json",
+    "params": {
+      "cell-delimiter": ",\\n",
+      "row-delimiter": "\\r\\n",
+      "format": "array-of-dictionaries",
+      "indent": 2
+    },
+    "input": {
+      "value": "a,b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "array of objects",
+    "ref": "Python csv.writer (QUOTE_MINIMAL) over json.loads",
+    "op": "csv:from-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n"
+    },
+    "input": {
+      "value": "[{\"name\":\"Ada\",\"age\":36},{\"name\":\"Alan\",\"age\":41}]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "name,age\r\nAda,36\r\nAlan,41",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "array of arrays has no header",
+    "ref": "Python csv.writer (QUOTE_MINIMAL) over json.loads",
+    "op": "csv:from-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n"
+    },
+    "input": {
+      "value": "[[\"a\",\"b\"],[\"c\",\"d\"]]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a,b\r\nc,d",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "one object is one row",
+    "ref": "Python csv.writer (QUOTE_MINIMAL) over json.loads",
+    "op": "csv:from-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n"
+    },
+    "input": {
+      "value": "{\"x\":1,\"y\":\"two\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "x,y\r\n1,two",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "cells with commas, quotes and line breaks are quoted",
+    "ref": "Python csv.writer (QUOTE_MINIMAL) over json.loads",
+    "op": "csv:from-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n"
+    },
+    "input": {
+      "value": "[{\"a\":\"x,y\",\"b\":\"say \\\"hi\\\"\",\"c\":\"l1\\nl2\"}]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a,b,c\r\n\"x,y\",\"say \"\"hi\"\"\",\"l1\nl2\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "objects with different keys: union header, empty cells",
+    "ref": "Python csv.writer (QUOTE_MINIMAL) over json.loads",
+    "op": "csv:from-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n"
+    },
+    "input": {
+      "value": "[{\"a\":1},{\"b\":2},{\"a\":3,\"c\":4}]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a,b,c\r\n1,,\r\n,2,\r\n3,,4",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "null, booleans, floats and nested values",
+    "ref": "Python csv.writer (QUOTE_MINIMAL) over json.loads",
+    "op": "csv:from-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n"
+    },
+    "input": {
+      "value": "[{\"n\":null,\"t\":true,\"f\":false,\"x\":1.5,\"l\":[1,\"a\"],\"o\":{\"k\":null}}]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "n,t,f,x,l,o\r\n,true,false,1.5,\"[1,\"\"a\"\"]\",\"{\"\"k\"\":null}\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unicode text",
+    "ref": "Python csv.writer (QUOTE_MINIMAL) over json.loads",
+    "op": "csv:from-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n"
+    },
+    "input": {
+      "value": "[{\"名前\":\"田中\",\"e\":\"😀\"}]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "名前,e\r\n田中,😀",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a big integer is written exactly",
+    "ref": "Python csv.writer (QUOTE_MINIMAL) over json.loads",
+    "op": "csv:from-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n"
+    },
+    "input": {
+      "value": "[{\"n\":123456789012345678901234567890}]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "n\r\n123456789012345678901234567890",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "empty array gives empty text",
+    "ref": "Python csv.writer (QUOTE_MINIMAL) over json.loads",
+    "op": "csv:from-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n"
+    },
+    "input": {
+      "value": "[]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "semicolon delimiter and LF rows",
+    "ref": "Python csv.writer (QUOTE_MINIMAL) over json.loads",
+    "op": "csv:from-json",
+    "params": {
+      "cell-delimiter": ";",
+      "row-delimiter": "\\n"
+    },
+    "input": {
+      "value": "[[\"a;b\",\"c\"],[\"d\",\"e\"]]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"a;b\";c\nd;e",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a row of one empty string is quoted",
+    "ref": "Python csv.writer (QUOTE_MINIMAL) over json.loads",
+    "op": "csv:from-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n"
+    },
+    "input": {
+      "value": "[[\"\"],[\"x\"]]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"\"\r\nx",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "empty strings and empty key",
+    "ref": "Python csv.writer (QUOTE_MINIMAL) over json.loads",
+    "op": "csv:from-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n"
+    },
+    "input": {
+      "value": "[{\"\":\"v\",\"k\":\"\"}]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": ",k\r\nv,",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "not convertible: scalar",
+    "ref": "RFC 8259 / the input is not an array of objects or arrays",
+    "op": "csv:from-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n"
+    },
+    "input": {
+      "value": "42",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "not convertible: string",
+    "ref": "RFC 8259 / the input is not an array of objects or arrays",
+    "op": "csv:from-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n"
+    },
+    "input": {
+      "value": "\"abc\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "not convertible: mixed objects and arrays",
+    "ref": "RFC 8259 / the input is not an array of objects or arrays",
+    "op": "csv:from-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n"
+    },
+    "input": {
+      "value": "[{\"a\":1},[1]]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "not convertible: array of scalars",
+    "ref": "RFC 8259 / the input is not an array of objects or arrays",
+    "op": "csv:from-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n"
+    },
+    "input": {
+      "value": "[1,2]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "not convertible: malformed JSON",
+    "ref": "RFC 8259 / the input is not an array of objects or arrays",
+    "op": "csv:from-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n"
+    },
+    "input": {
+      "value": "[{\"a\":1,}]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "not convertible: empty input",
+    "ref": "RFC 8259 / the input is not an array of objects or arrays",
+    "op": "csv:from-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "not convertible: null",
+    "ref": "RFC 8259 / the input is not an array of objects or arrays",
+    "op": "csv:from-json",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n"
+    },
+    "input": {
+      "value": "null",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

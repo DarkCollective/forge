@@ -50,7 +50,7 @@ export const CATALOGUE_FORMAT = 1 as const;
 /**
  * Internal vocabularies: `recipe` (the words compiled recipes call), `bake` (where the baker loads the
  * compiled recipe word), `util` (shared FL helpers for the op vocabularies) and `blockmode` (the shared
- * block cipher modes and PKCS#7 padding, driven by a block function quotation), `random` (the shared host CSPRNG words) and `list` (the shared sort and shuffle words;
+ * block cipher modes and PKCS#7 padding, driven by a block function quotation), `random` (the shared host CSPRNG words) and `list` (the shared sort and shuffle words), `json` (the shared JSON reader and writer;
  * `clock` is not internal because its one word with no input is never an op). Their words are never
  * listed in the catalogue, whatever their metadata says, and a user unit cannot define into them.
  */
@@ -61,6 +61,7 @@ export const INTERNAL_VOCABS: readonly string[] = Object.freeze([
   "blockmode",
   "random",
   "list",
+  "json",
 ]);
 
 /**

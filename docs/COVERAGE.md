@@ -11,7 +11,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 
 | Category | Covered | Redesigned | Dropped | Not yet | Total |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Data format | 54 | 6 | 0 | 20 | 80 |
+| Data format | 54 | 8 | 0 | 18 | 80 |
 | Encryption / Encoding | 29 | 64 | 0 | 2 | 95 |
 | Public Key | 0 | 0 | 0 | 30 | 30 |
 | Arithmetic / Logic | 24 | 2 | 0 | 0 | 26 |
@@ -27,7 +27,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 9 | 4 | 3 | 5 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **198** | **140** | **5** | **163** | **506** |
+| **Total** | **198** | **142** | **5** | **161** | **506** |
 
 ## Data format (80)
 
@@ -98,8 +98,8 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | To Braille | redesigned | `braille:encode` | Forge maps each byte to the 8-dot pattern U+2800 plus the byte, which is lossless; CyberChef maps letters to the 6-dot Braille alphabet. |
 | From Braille | redesigned | `braille:decode` | Forge reads U+2800 to U+28FF back as bytes, which is the inverse of braille:encode; it does not read the 6-dot letter alphabet. |
 | Parse TLV | not yet |  |  |
-| CSV to JSON | not yet |  |  |
-| JSON to CSV | not yet |  |  |
+| CSV to JSON | redesigned | `csv:to-json` | RFC 4180 reading by a private scanner primitive; the rows-to-JSON mapping is FL over the shared json words. Parameters as CyberChef: cell delimiter (default ","), row delimiter (default \r\n) and format (array of dictionaries, the default, or array of arrays). Each delimiter is a set of characters, any one of which ends a cell or a row, so the default row delimiter reads CRLF, LF and CR; both are read for the escapes \r \n \t \\ and \xHH so they can be typed in a text box. Every value is a JSON string. A cell that starts with a double quote runs to the closing quote and may hold delimiters and line breaks, a doubled quote is one quote, and a quote inside an unquoted cell is kept. Deliberate strictness, each an error rather than a silent repair: an unterminated quote or text after a closing quote is E_COERCE with the offset, line and column; in the dictionaries format a row whose cell count differs from the header, or a repeated header name, is E_COERCE (nothing is dropped or overwritten); the delimiters must be non-empty, must not be the double quote and must not share a character (E_RANGE). Empty lines are skipped. An added indent parameter (default 2 spaces, 0 for compact text) saves a chain step. |
+| JSON to CSV | redesigned | `csv:from-json` | JSON text parsed strictly by the shared json:parse and written as RFC 4180 CSV by a private writer primitive. Parameters as CyberChef: cell delimiter (default ",") and row delimiter (default \r\n; the escapes \r \n \t \\ and \xHH are read). The input is an array of objects (a header row of the keys, then a row each), an array of arrays (rows only) or one object (a header and one row); the rows are joined with the row delimiter and none follows the last. The header holds the keys of all the objects in order of first appearance, with an empty cell where an object has no key. Strings are written as they are, null as an empty cell, and numbers, true, false, arrays and objects as their JSON text (big integers exact). A cell is quoted when it holds the cell delimiter, the row delimiter, a double quote, a CR or an LF, and a row of one empty cell is written "" so it is not a blank line. Deliberate strictness: an array that mixes objects and arrays or holds other values, a repeated key (JSON text is parsed, so the duplicate is E_COERCE), malformed JSON and a top-level scalar are E_COERCE. |
 | Avro to JSON | not yet |  |  |
 | CBOR Encode | not yet |  |  |
 | CBOR Decode | not yet |  |  |
