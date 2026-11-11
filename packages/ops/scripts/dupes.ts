@@ -21,7 +21,8 @@
  */
 import { readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { extractDefinitions, findDuplicates, formatReport } from "../dist/dupes.js";
+import { extractDefinitions, findDuplicates, formatReport, primitiveSet } from "../dist/dupes.js";
+import { createNodeProvider } from "../dist/sources-node.js";
 
 const here = fileURLToPath(import.meta.url).replaceAll("\\", "/");
 const root = here.slice(0, here.lastIndexOf("/", here.lastIndexOf("/") - 1));
@@ -30,6 +31,8 @@ const files = readdirSync(`${root}/vocab`)
   .filter((name) => name.endsWith(".fth"))
   .sort()
   .map((name) => ({ name, text: readFileSync(`${root}/vocab/${name}`, "utf8") }));
-const defs = extractDefinitions(files);
+// The primitives (TypeScript, in dist/prims), so that calls to them keep their vocabulary.
+const prims = await primitiveSet(createNodeProvider(root).primitiveLoaders());
+const defs = extractDefinitions(files, prims);
 process.stdout.write(`${defs.length} definitions in ${files.length} vocabularies\n\n`);
 process.stdout.write(`${formatReport(findDuplicates(defs))}\n`);

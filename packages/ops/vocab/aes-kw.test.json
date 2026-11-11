@@ -1,0 +1,338 @@
+[
+  {
+    "name": "wrap RFC 3394 4.1 128-bit key data, 128-bit KEK",
+    "ref": "RFC 3394 section 4.1",
+    "op": "aes-kw:wrap",
+    "params": {
+      "kek": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "00112233445566778899aabbccddeeff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1fa68b0a8112b447aef34bd8fb5a7b829d3e862371d2cfe5",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "wrap RFC 3394 4.2 128-bit key data, 192-bit KEK",
+    "ref": "RFC 3394 section 4.2",
+    "op": "aes-kw:wrap",
+    "params": {
+      "kek": {
+        "value": "000102030405060708090a0b0c0d0e0f1011121314151617",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "00112233445566778899aabbccddeeff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "96778b25ae6ca435f92b5b97c050aed2468ab8a17ad84e5d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "wrap RFC 3394 4.3 128-bit key data, 256-bit KEK",
+    "ref": "RFC 3394 section 4.3",
+    "op": "aes-kw:wrap",
+    "params": {
+      "kek": {
+        "value": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "00112233445566778899aabbccddeeff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "64e8c3f9ce0f5ba263e9777905818a2a93c8191e7d6e8ae7",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "wrap RFC 3394 4.4 192-bit key data, 192-bit KEK",
+    "ref": "RFC 3394 section 4.4",
+    "op": "aes-kw:wrap",
+    "params": {
+      "kek": {
+        "value": "000102030405060708090a0b0c0d0e0f1011121314151617",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "00112233445566778899aabbccddeeff0001020304050607",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "031d33264e15d33268f24ec260743edce1c6c7ddee725a936ba814915c6762d2",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "wrap RFC 3394 4.5 192-bit key data, 256-bit KEK",
+    "ref": "RFC 3394 section 4.5",
+    "op": "aes-kw:wrap",
+    "params": {
+      "kek": {
+        "value": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "00112233445566778899aabbccddeeff0001020304050607",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "a8f9bc1612c68b3ff6e6f4fbe30e71e4769c8b80a32cb8958cd5d17d6b254da1",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "wrap RFC 3394 4.6 256-bit key data, 256-bit KEK",
+    "ref": "RFC 3394 section 4.6",
+    "op": "aes-kw:wrap",
+    "params": {
+      "kek": {
+        "value": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "00112233445566778899aabbccddeeff000102030405060708090a0b0c0d0e0f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "28c9f404c4b810f4cbccb35cfb87f8263f5786e2d80ed326cbc7f0e71a99f43bfb988b9b7a02dd21",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "unwrap RFC 3394 4.1 128-bit key data, 128-bit KEK",
+    "ref": "RFC 3394 section 4.1",
+    "op": "aes-kw:unwrap",
+    "params": {
+      "kek": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "1fa68b0a8112b447aef34bd8fb5a7b829d3e862371d2cfe5",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00112233445566778899aabbccddeeff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "unwrap RFC 3394 4.2 128-bit key data, 192-bit KEK",
+    "ref": "RFC 3394 section 4.2",
+    "op": "aes-kw:unwrap",
+    "params": {
+      "kek": {
+        "value": "000102030405060708090a0b0c0d0e0f1011121314151617",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "96778b25ae6ca435f92b5b97c050aed2468ab8a17ad84e5d",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00112233445566778899aabbccddeeff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "unwrap RFC 3394 4.3 128-bit key data, 256-bit KEK",
+    "ref": "RFC 3394 section 4.3",
+    "op": "aes-kw:unwrap",
+    "params": {
+      "kek": {
+        "value": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "64e8c3f9ce0f5ba263e9777905818a2a93c8191e7d6e8ae7",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00112233445566778899aabbccddeeff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "unwrap RFC 3394 4.4 192-bit key data, 192-bit KEK",
+    "ref": "RFC 3394 section 4.4",
+    "op": "aes-kw:unwrap",
+    "params": {
+      "kek": {
+        "value": "000102030405060708090a0b0c0d0e0f1011121314151617",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "031d33264e15d33268f24ec260743edce1c6c7ddee725a936ba814915c6762d2",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00112233445566778899aabbccddeeff0001020304050607",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "unwrap RFC 3394 4.5 192-bit key data, 256-bit KEK",
+    "ref": "RFC 3394 section 4.5",
+    "op": "aes-kw:unwrap",
+    "params": {
+      "kek": {
+        "value": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "a8f9bc1612c68b3ff6e6f4fbe30e71e4769c8b80a32cb8958cd5d17d6b254da1",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00112233445566778899aabbccddeeff0001020304050607",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "unwrap RFC 3394 4.6 256-bit key data, 256-bit KEK",
+    "ref": "RFC 3394 section 4.6",
+    "op": "aes-kw:unwrap",
+    "params": {
+      "kek": {
+        "value": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "28c9f404c4b810f4cbccb35cfb87f8263f5786e2d80ed326cbc7f0e71a99f43bfb988b9b7a02dd21",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00112233445566778899aabbccddeeff000102030405060708090a0b0c0d0e0f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "wrap of 8 bytes is E_COERCE (RFC 3394 needs at least two blocks; RFC 5649 would pad it)",
+    "ref": "RFC 3394 section 2.2.1 (n >= 2)",
+    "op": "aes-kw:wrap",
+    "params": {
+      "kek": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0011223344556677",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "wrap of a length that is not a multiple of 8 is E_COERCE",
+    "ref": "RFC 3394 section 2.2.1",
+    "op": "aes-kw:wrap",
+    "params": {
+      "kek": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "00112233445566778899aabbccddeeff00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "unwrap of 16 bytes is E_COERCE (at least three blocks)",
+    "ref": "RFC 3394 section 2.2.2 (n >= 3)",
+    "op": "aes-kw:unwrap",
+    "params": {
+      "kek": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "00112233445566778899aabbccddeeff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "unwrap with one byte changed fails the integrity check",
+    "ref": "RFC 3394 section 2.2.3 (integrity check)",
+    "op": "aes-kw:unwrap",
+    "params": {
+      "kek": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "1fa68b0a8112b447aef34bd8fb5a7b829d3e862371d2cf00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "unwrap under the wrong KEK fails the integrity check",
+    "ref": "RFC 3394 section 2.2.3 (integrity check)",
+    "op": "aes-kw:unwrap",
+    "params": {
+      "kek": {
+        "value": "000102030405060708090a0b0c0d0e0f1011121314151617",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "1fa68b0a8112b447aef34bd8fb5a7b829d3e862371d2cfe5",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a KEK of 15 bytes is E_RANGE",
+    "ref": "RFC 3394 section 2.2.1 (KEK 128, 192 or 256 bits)",
+    "op": "aes-kw:wrap",
+    "params": {
+      "kek": {
+        "value": "000000000000000000000000000000",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "00112233445566778899aabbccddeeff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  }
+]

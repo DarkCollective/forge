@@ -1,0 +1,371 @@
+[
+  {
+    "name": "rfc6070 1 iteration",
+    "ref": "RFC 6070 section 2, PBKDF2 HMAC-SHA1 test vector 1",
+    "op": "pbkdf2:derive",
+    "params": {
+      "size": 20,
+      "iterations": 1,
+      "hash": "sha1",
+      "salt": {
+        "value": "salt",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "password",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0c60c80f961f0e71f3a9b524af6012062fe037a6",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "rfc6070 2 iterations",
+    "ref": "RFC 6070 section 2, PBKDF2 HMAC-SHA1 test vector 2",
+    "op": "pbkdf2:derive",
+    "params": {
+      "size": 20,
+      "iterations": 2,
+      "hash": "sha1",
+      "salt": {
+        "value": "salt",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "password",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ea6c014dc72d6f8ccd1ed92ace1d41f0d8de8957",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "rfc6070 4096 iterations",
+    "ref": "RFC 6070 section 2, PBKDF2 HMAC-SHA1 test vector 3",
+    "op": "pbkdf2:derive",
+    "params": {
+      "size": 20,
+      "iterations": 4096,
+      "hash": "sha1",
+      "salt": {
+        "value": "salt",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "password",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4b007901b765489abead49d926f721d065a429c1",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "rfc6070 long password and salt, 25 bytes",
+    "ref": "RFC 6070 section 2, PBKDF2 HMAC-SHA1 test vector 5",
+    "op": "pbkdf2:derive",
+    "params": {
+      "size": 25,
+      "iterations": 4096,
+      "hash": "sha1",
+      "salt": {
+        "value": "saltSALTsaltSALTsaltSALTsaltSALTsalt",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "passwordPASSWORDpassword",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3d2eec4fe41c849b80c8d83662c0e44a8b291a964cf2f07038",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "rfc6070 embedded NULs",
+    "ref": "RFC 6070 section 2, PBKDF2 HMAC-SHA1 test vector 6",
+    "op": "pbkdf2:derive",
+    "params": {
+      "size": 16,
+      "iterations": 4096,
+      "hash": "sha1",
+      "salt": {
+        "value": "7361006c74",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "7061737300776f7264",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "56fa6aa75548099dcc37d7f03425e0c3",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "rfc7914 PBKDF2-HMAC-SHA-256 passwd/salt, 1 iteration",
+    "ref": "RFC 7914 section 11, PBKDF2-HMAC-SHA-256 first test vector",
+    "op": "pbkdf2:derive",
+    "params": {
+      "size": 64,
+      "iterations": 1,
+      "hash": "sha256",
+      "salt": {
+        "value": "salt",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "passwd",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "55ac046e56e3089fec1691c22544b605f94185216dde0465e68b9d57c20dacbc49ca9cccf179b645991664b39d77ef317c71b845b1e30bd509112041d3a19783",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "rfc7914 PBKDF2-HMAC-SHA-256 Password/NaCl, 80000 iterations",
+    "ref": "RFC 7914 section 11, PBKDF2-HMAC-SHA-256 second test vector",
+    "op": "pbkdf2:derive",
+    "params": {
+      "size": 64,
+      "iterations": 80000,
+      "hash": "sha256",
+      "salt": {
+        "value": "NaCl",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "Password",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4ddcd8f60b98be21830cee5ef22701f9641a4418d04c0414aeff08876b34ab56a1d425a1225833549adb841b51c9b3176a272bdebba1d078478f62b397f33c8d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sha384 1000 iterations, 32 bytes",
+    "ref": "node:crypto pbkdf2Sync (OpenSSL) for sha384, fixed here",
+    "op": "pbkdf2:derive",
+    "params": {
+      "size": 32,
+      "iterations": 1000,
+      "hash": "sha384",
+      "salt": {
+        "value": "salt",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "password",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3bd37e2236941d4a77b1b5b714c6f913fabb6b0841a6d7d8656b99d611e900fe",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sha512 1000 iterations, 32 bytes",
+    "ref": "node:crypto pbkdf2Sync (OpenSSL) for sha512, fixed here",
+    "op": "pbkdf2:derive",
+    "params": {
+      "size": 32,
+      "iterations": 1000,
+      "hash": "sha512",
+      "salt": {
+        "value": "salt",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "password",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "afe6c5530785b6cc6b1c6453384731bd5ee432ee549fd42fb6695779ad8a1c5b",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "md5 1000 iterations, 16 bytes",
+    "ref": "node:crypto pbkdf2Sync (OpenSSL) for md5, fixed here",
+    "op": "pbkdf2:derive",
+    "params": {
+      "size": 16,
+      "iterations": 1000,
+      "hash": "md5",
+      "salt": {
+        "value": "salt",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "password",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "8d189946a32d883622a16ae18af0632f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "empty password and empty salt, the defaults",
+    "ref": "node:crypto pbkdf2Sync (OpenSSL), sha1, 1 iteration, 16 bytes, fixed here",
+    "op": "pbkdf2:derive",
+    "params": {
+      "size": 16,
+      "iterations": 1,
+      "hash": "sha1",
+      "salt": {
+        "value": "",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1e437a1c79d75be61e91141dae20affc",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "salt in hex and a 100 byte key (several blocks)",
+    "ref": "node:crypto pbkdf2Sync (OpenSSL), sha256, 10 iterations, 100 bytes, fixed here",
+    "op": "pbkdf2:derive",
+    "params": {
+      "size": 100,
+      "iterations": 10,
+      "hash": "sha256",
+      "salt": {
+        "value": "00ff10ee",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "correct horse",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d40a228b8e1ac4a56584081bec6aca548949295fc853fdf498e8cd3cbe46f6376efac8f0d72da16d5868079e931a3acb745e5c1720f69420dcb8b6dcfcd0785c0abfb4c564203d7f684183c367f0dcf79900b77edb9c1cf15541773b913f1c55dc2b3206",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "size 0 is E_RANGE",
+    "ref": "WP 5.25 caps: key 1 to 1024 bytes, iterations times blocks at most 2,000,000",
+    "op": "pbkdf2:derive",
+    "params": {
+      "size": 0,
+      "iterations": 1,
+      "hash": "sha1",
+      "salt": {
+        "value": "",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "password",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "size over 1024 is E_RANGE",
+    "ref": "WP 5.25 caps: key 1 to 1024 bytes, iterations times blocks at most 2,000,000",
+    "op": "pbkdf2:derive",
+    "params": {
+      "size": 1025,
+      "iterations": 1,
+      "hash": "sha1",
+      "salt": {
+        "value": "",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "password",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "0 iterations is E_RANGE",
+    "ref": "WP 5.25 caps: key 1 to 1024 bytes, iterations times blocks at most 2,000,000",
+    "op": "pbkdf2:derive",
+    "params": {
+      "size": 16,
+      "iterations": 0,
+      "hash": "sha1",
+      "salt": {
+        "value": "",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "password",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "RFC 6070 16777216 iterations is over the cap (E_RANGE)",
+    "ref": "WP 5.25 caps: key 1 to 1024 bytes, iterations times blocks at most 2,000,000",
+    "op": "pbkdf2:derive",
+    "params": {
+      "size": 20,
+      "iterations": 16777216,
+      "hash": "sha1",
+      "salt": {
+        "value": "salt",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "password",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "work over the cap with a long key is E_RANGE",
+    "ref": "WP 5.25 caps: key 1 to 1024 bytes, iterations times blocks at most 2,000,000",
+    "op": "pbkdf2:derive",
+    "params": {
+      "size": 1024,
+      "iterations": 100000,
+      "hash": "sha1",
+      "salt": {
+        "value": "",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "password",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  }
+]
