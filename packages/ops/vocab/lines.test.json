@@ -1,0 +1,2001 @@
+[
+  {
+    "name": "sort: code point order, upper case before lower",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:sort",
+    "params": {
+      "delimiter": "newline",
+      "reverse": false,
+      "order": "alphabetical"
+    },
+    "input": {
+      "value": "b\nA\nc\na\nB\n10\n9",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "10\n9\nA\nB\na\nb\nc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sort: defaults are lines, ascending, alphabetical",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:sort",
+    "params": {},
+    "input": {
+      "value": "pear\napple\nfig",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "apple\nfig\npear",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sort: case-insensitive keeps the order of equal pieces",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:sort",
+    "params": {
+      "delimiter": "newline",
+      "reverse": false,
+      "order": "case-insensitive"
+    },
+    "input": {
+      "value": "b\nA\nc\na\nB",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "A\na\nb\nB\nc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sort: reverse",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:sort",
+    "params": {
+      "delimiter": "newline",
+      "reverse": true,
+      "order": "alphabetical"
+    },
+    "input": {
+      "value": "a\nc\nb",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c\nb\na",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sort: comma delimiter",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:sort",
+    "params": {
+      "delimiter": "comma",
+      "reverse": false,
+      "order": "alphabetical"
+    },
+    "input": {
+      "value": "b,a,c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a,b,c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sort: empty input is one empty piece",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:sort",
+    "params": {
+      "delimiter": "newline",
+      "reverse": false,
+      "order": "alphabetical"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sort: numeric, text without a number first, sign, fraction, leading space",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:sort",
+    "params": {
+      "delimiter": "newline",
+      "reverse": false,
+      "order": "numeric"
+    },
+    "input": {
+      "value": "10\n9\nx\n-3.5\n2.25abc\n  7\n.5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "x\n-3.5\n.5\n2.25abc\n  7\n9\n10",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sort: numeric compares 1.10 as 1.1",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:sort",
+    "params": {
+      "delimiter": "newline",
+      "reverse": false,
+      "order": "numeric"
+    },
+    "input": {
+      "value": "1.10\n1.9\n1.05",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1.05\n1.10\n1.9",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sort: numeric, equal values keep their order",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:sort",
+    "params": {
+      "delimiter": "newline",
+      "reverse": false,
+      "order": "numeric"
+    },
+    "input": {
+      "value": "2.0\n2\n02\n1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1\n2.0\n2\n02",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sort: numeric, text with no number keeps its order and comes first",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:sort",
+    "params": {
+      "delimiter": "newline",
+      "reverse": false,
+      "order": "numeric"
+    },
+    "input": {
+      "value": "5\nb\n-\na\n.\n1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "b\n-\na\n.\n1\n5",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sort: numeric, big integers are exact",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:sort",
+    "params": {
+      "delimiter": "newline",
+      "reverse": false,
+      "order": "numeric"
+    },
+    "input": {
+      "value": "123456789012345678901234567891\n123456789012345678901234567890\n9",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "9\n123456789012345678901234567890\n123456789012345678901234567891",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sort: numeric, negative zero fraction",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:sort",
+    "params": {
+      "delimiter": "newline",
+      "reverse": false,
+      "order": "numeric"
+    },
+    "input": {
+      "value": "-0.5\n0\n-1\n0.5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-1\n-0.5\n0\n0.5",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sort: hexadecimal, 0x prefix, sign, text with no number first",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:sort",
+    "params": {
+      "delimiter": "newline",
+      "reverse": false,
+      "order": "hexadecimal"
+    },
+    "input": {
+      "value": "ff\n0x1F\n-a\nzz\n10",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "zz\n-a\n10\n0x1F\nff",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sort: hexadecimal reads the digits at the start",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:sort",
+    "params": {
+      "delimiter": "newline",
+      "reverse": false,
+      "order": "hexadecimal"
+    },
+    "input": {
+      "value": "1g\nF\n0Xa",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1g\n0Xa\nF",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sort: IP addresses by value, other text after in code point order",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:sort",
+    "params": {
+      "delimiter": "newline",
+      "reverse": false,
+      "order": "ip-address"
+    },
+    "input": {
+      "value": "10.0.0.2\n9.1.1.1\nfoo\n10.0.0.10\n1.2.3\n256.1.1.1\n10.0.0.1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "9.1.1.1\n10.0.0.1\n10.0.0.2\n10.0.0.10\n1.2.3\n256.1.1.1\nfoo",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sort: IP addresses reversed",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:sort",
+    "params": {
+      "delimiter": "newline",
+      "reverse": true,
+      "order": "ip-address"
+    },
+    "input": {
+      "value": "1.1.1.1\n1.1.1.10\n1.1.1.2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1.1.1.10\n1.1.1.2\n1.1.1.1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sort: length, equal lengths keep their order",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:sort",
+    "params": {
+      "delimiter": "newline",
+      "reverse": false,
+      "order": "length"
+    },
+    "input": {
+      "value": "ccc\na\nbb\nd",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a\nd\nbb\nccc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sort: length counts code points",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:sort",
+    "params": {
+      "delimiter": "newline",
+      "reverse": false,
+      "order": "length"
+    },
+    "input": {
+      "value": "😀😀\nabc\n😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "😀\n😀😀\nabc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sort: a delimiter of none is refused",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:sort",
+    "params": {
+      "delimiter": "none",
+      "reverse": false,
+      "order": "alphabetical"
+    },
+    "input": {
+      "value": "a\nb",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "sort: an unknown order is refused",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:sort",
+    "params": {
+      "delimiter": "newline",
+      "reverse": false,
+      "order": "random"
+    },
+    "input": {
+      "value": "a\nb",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "shuffle: one piece stays",
+    "ref": "a permutation of one element is that element; the distribution is tested in src/lines.test.ts",
+    "op": "lines:shuffle",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "abc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "shuffle: empty input",
+    "ref": "a permutation of one empty piece; the distribution is tested in src/lines.test.ts",
+    "op": "lines:shuffle",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "shuffle: identical pieces give the same text",
+    "ref": "every permutation of equal pieces is the same text; the distribution is tested in src/lines.test.ts",
+    "op": "lines:shuffle",
+    "params": {
+      "delimiter": "comma"
+    },
+    "input": {
+      "value": "x,x,x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "x,x,x",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "shuffle: a delimiter of none is refused",
+    "ref": "a parameter error has a fixed result",
+    "op": "lines:shuffle",
+    "params": {
+      "delimiter": "none"
+    },
+    "input": {
+      "value": "a\nb",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "unique: keeps the first of each in place",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:unique",
+    "params": {
+      "delimiter": "newline",
+      "show-count": false
+    },
+    "input": {
+      "value": "a\nb\na\nc\nb\na",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a\nb\nc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unique: defaults",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:unique",
+    "params": {},
+    "input": {
+      "value": "x\nx\ny",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "x\ny",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unique: counts, in the order of first appearance",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:unique",
+    "params": {
+      "delimiter": "newline",
+      "show-count": true
+    },
+    "input": {
+      "value": "a\nb\na\nc\nb\na",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3 a\n2 b\n1 c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unique: comparison is case-sensitive",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:unique",
+    "params": {
+      "delimiter": "newline",
+      "show-count": false
+    },
+    "input": {
+      "value": "A\na\nA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "A\na",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unique: empty input",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:unique",
+    "params": {
+      "delimiter": "newline",
+      "show-count": false
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unique: comma delimiter",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:unique",
+    "params": {
+      "delimiter": "comma",
+      "show-count": false
+    },
+    "input": {
+      "value": "x,y,x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "x,y",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unique: empty pieces count too",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:unique",
+    "params": {
+      "delimiter": "newline",
+      "show-count": true
+    },
+    "input": {
+      "value": "\n\na",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2 \n1 a",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unique: all different keeps everything",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:unique",
+    "params": {
+      "delimiter": "space",
+      "show-count": true
+    },
+    "input": {
+      "value": "c b a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1 c 1 b 1 a",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unique: a delimiter of none is refused",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:unique",
+    "params": {
+      "delimiter": "none",
+      "show-count": false
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "head: the first two",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:head",
+    "params": {
+      "delimiter": "newline",
+      "number": 2
+    },
+    "input": {
+      "value": "1\n2\n3\n4",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1\n2",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "head: negative drops from the end",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:head",
+    "params": {
+      "delimiter": "newline",
+      "number": -1
+    },
+    "input": {
+      "value": "1\n2\n3\n4",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1\n2\n3",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "head: zero keeps none",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:head",
+    "params": {
+      "delimiter": "newline",
+      "number": 0
+    },
+    "input": {
+      "value": "1\n2\n3\n4",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "head: more than there are keeps all",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:head",
+    "params": {
+      "delimiter": "newline",
+      "number": 10
+    },
+    "input": {
+      "value": "1\n2\n3\n4",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1\n2\n3\n4",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "head: dropping more than there are keeps none",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:head",
+    "params": {
+      "delimiter": "newline",
+      "number": -10
+    },
+    "input": {
+      "value": "1\n2\n3\n4",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "head: defaults to 10 lines",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:head",
+    "params": {},
+    "input": {
+      "value": "1\n2\n3\n4",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1\n2\n3\n4",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "head: comma delimiter",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:head",
+    "params": {
+      "delimiter": "comma",
+      "number": 2
+    },
+    "input": {
+      "value": "a,b,c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a,b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "tail: the last two",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:tail",
+    "params": {
+      "delimiter": "newline",
+      "number": 2
+    },
+    "input": {
+      "value": "1\n2\n3\n4",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3\n4",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "tail: negative drops from the start",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:tail",
+    "params": {
+      "delimiter": "newline",
+      "number": -1
+    },
+    "input": {
+      "value": "1\n2\n3\n4",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2\n3\n4",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "tail: zero keeps none",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:tail",
+    "params": {
+      "delimiter": "newline",
+      "number": 0
+    },
+    "input": {
+      "value": "1\n2\n3\n4",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "tail: more than there are keeps all",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:tail",
+    "params": {
+      "delimiter": "newline",
+      "number": 10
+    },
+    "input": {
+      "value": "1\n2\n3\n4",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1\n2\n3\n4",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "tail: dropping more than there are keeps none",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:tail",
+    "params": {
+      "delimiter": "newline",
+      "number": -10
+    },
+    "input": {
+      "value": "1\n2\n3\n4",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "tail: CRLF lines",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:tail",
+    "params": {
+      "delimiter": "crlf",
+      "number": 2
+    },
+    "input": {
+      "value": "a\r\nb\r\nc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "b\r\nc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "tail: a delimiter of none is refused",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:tail",
+    "params": {
+      "delimiter": "none",
+      "number": 2
+    },
+    "input": {
+      "value": "1\n2\n3\n4",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "add-numbers: from 1",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:add-numbers",
+    "params": {
+      "delimiter": "newline",
+      "offset": 0
+    },
+    "input": {
+      "value": "a\nb\nc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1 a\n2 b\n3 c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "add-numbers: right-aligned to the longest number",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:add-numbers",
+    "params": {
+      "delimiter": "newline",
+      "offset": 0
+    },
+    "input": {
+      "value": "a\nb\nc\nd\ne\nf\ng\nh\ni\nj",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": " 1 a\n 2 b\n 3 c\n 4 d\n 5 e\n 6 f\n 7 g\n 8 h\n 9 i\n10 j",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "add-numbers: offset",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:add-numbers",
+    "params": {
+      "delimiter": "newline",
+      "offset": 9
+    },
+    "input": {
+      "value": "a\nb\nc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "10 a\n11 b\n12 c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "add-numbers: offset -1 starts at 0",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:add-numbers",
+    "params": {
+      "delimiter": "newline",
+      "offset": -1
+    },
+    "input": {
+      "value": "a\nb\nc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0 a\n1 b\n2 c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "add-numbers: negative numbers count their sign in the width",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:add-numbers",
+    "params": {
+      "delimiter": "newline",
+      "offset": -2
+    },
+    "input": {
+      "value": "a\nb\nc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-1 a\n 0 b\n 1 c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "add-numbers: empty input is one empty line",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:add-numbers",
+    "params": {
+      "delimiter": "newline",
+      "offset": 0
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1 ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "add-numbers: comma delimiter",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:add-numbers",
+    "params": {
+      "delimiter": "comma",
+      "offset": 0
+    },
+    "input": {
+      "value": "x,y",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1 x,2 y",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "add-numbers: a delimiter of none is refused",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:add-numbers",
+    "params": {
+      "delimiter": "none",
+      "offset": 0
+    },
+    "input": {
+      "value": "x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "remove-numbers: the usual separators",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:remove-numbers",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "  1 a\n 2: b\n10) c\n3 | d\n4-e\n5.f\n6]g\n7,h",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a\nb\nc\nd\ne\nf\ng\nh",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "remove-numbers: tabs",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:remove-numbers",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "\t12\tx",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "x",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "remove-numbers: lines without a separator after the digits stay",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:remove-numbers",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "7\n12abc\nx 1 y",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "7\n12abc\nx 1 y",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "remove-numbers: more than 5 spaces in front stay",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:remove-numbers",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "      1 a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "      1 a",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "remove-numbers: only the first number goes",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:remove-numbers",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "1 2 3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2 3",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "remove-numbers: undoes add-numbers",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:remove-numbers",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": " 1 a\n 2 b\n10 j",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a\nb\nj",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "remove-numbers: semicolon delimiter",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:remove-numbers",
+    "params": {
+      "delimiter": "semicolon"
+    },
+    "input": {
+      "value": "1 a;2 b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a;b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "pad: at the start with spaces",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:pad",
+    "params": {
+      "delimiter": "newline",
+      "position": "start",
+      "length": 5,
+      "character": " "
+    },
+    "input": {
+      "value": "a\nbbb\nccccccc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "    a\n  bbb\nccccccc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "pad: defaults are start, 5, space",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:pad",
+    "params": {},
+    "input": {
+      "value": "ab",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "   ab",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "pad: at the end with a repeated two-character pad cut to fit",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:pad",
+    "params": {
+      "delimiter": "newline",
+      "position": "end",
+      "length": 5,
+      "character": "ab"
+    },
+    "input": {
+      "value": "a\nbbb\nccccccc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "aabab\nbbbab\nccccccc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "pad: zeros",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:pad",
+    "params": {
+      "delimiter": "newline",
+      "position": "start",
+      "length": 3,
+      "character": "0"
+    },
+    "input": {
+      "value": "7\n42",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "007\n042",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "pad: length 0 changes nothing",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:pad",
+    "params": {
+      "delimiter": "newline",
+      "position": "start",
+      "length": 0,
+      "character": "x"
+    },
+    "input": {
+      "value": "a\nb",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a\nb",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "pad: counts code points",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:pad",
+    "params": {
+      "delimiter": "newline",
+      "position": "start",
+      "length": 3,
+      "character": "x"
+    },
+    "input": {
+      "value": "😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "xx😀",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "pad: empty pieces are padded",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:pad",
+    "params": {
+      "delimiter": "newline",
+      "position": "end",
+      "length": 2,
+      "character": "."
+    },
+    "input": {
+      "value": "\na",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "..\na.",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "pad: an empty character is refused",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:pad",
+    "params": {
+      "delimiter": "newline",
+      "position": "start",
+      "length": 3,
+      "character": ""
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "pad: a length above 65536 is refused",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:pad",
+    "params": {
+      "delimiter": "newline",
+      "position": "start",
+      "length": 70000,
+      "character": "x"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "wrap: cuts at the width",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:wrap",
+    "params": {
+      "delimiter": "newline",
+      "width": 4
+    },
+    "input": {
+      "value": "abcdefghij",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "abcd\nefgh\nij",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "wrap: each line on its own, empty lines stay",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:wrap",
+    "params": {
+      "delimiter": "newline",
+      "width": 4
+    },
+    "input": {
+      "value": "abcdefghij\n\nxy",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "abcd\nefgh\nij\n\nxy",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "wrap: short lines stay",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:wrap",
+    "params": {
+      "delimiter": "newline",
+      "width": 80
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "abc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "wrap: an exact multiple has no empty piece at the end",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:wrap",
+    "params": {
+      "delimiter": "newline",
+      "width": 3
+    },
+    "input": {
+      "value": "abcdef",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "abc\ndef",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "wrap: CRLF",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:wrap",
+    "params": {
+      "delimiter": "crlf",
+      "width": 2
+    },
+    "input": {
+      "value": "abcde",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ab\r\ncd\r\ne",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "wrap: counts code points",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:wrap",
+    "params": {
+      "delimiter": "newline",
+      "width": 2
+    },
+    "input": {
+      "value": "😀😀😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "😀😀\n😀",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "wrap: width 1",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:wrap",
+    "params": {
+      "delimiter": "newline",
+      "width": 1
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a\nb\nc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "wrap: a width of 0 is refused",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:wrap",
+    "params": {
+      "delimiter": "newline",
+      "width": 0
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "filter: keeps the matching lines",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:filter",
+    "params": {
+      "delimiter": "newline",
+      "pattern": "an",
+      "flags": "",
+      "invert": false
+    },
+    "input": {
+      "value": "apple\nbanana\ncherry",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "banana",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "filter: invert keeps the others",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:filter",
+    "params": {
+      "delimiter": "newline",
+      "pattern": "an",
+      "flags": "",
+      "invert": true
+    },
+    "input": {
+      "value": "apple\nbanana\ncherry",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "apple\ncherry",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "filter: the i flag",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:filter",
+    "params": {
+      "delimiter": "newline",
+      "pattern": "^a",
+      "flags": "i",
+      "invert": false
+    },
+    "input": {
+      "value": "Apple\nabc\ncherry",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Apple\nabc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "filter: case-sensitive without the flag",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:filter",
+    "params": {
+      "delimiter": "newline",
+      "pattern": "^a",
+      "flags": "",
+      "invert": false
+    },
+    "input": {
+      "value": "Apple\nabc\ncherry",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "abc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "filter: an empty pattern matches every line",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:filter",
+    "params": {
+      "delimiter": "newline",
+      "pattern": "",
+      "flags": "",
+      "invert": false
+    },
+    "input": {
+      "value": "apple\nbanana\ncherry",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "apple\nbanana\ncherry",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "filter: a pattern for empty lines, inverted",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:filter",
+    "params": {
+      "delimiter": "newline",
+      "pattern": "^$",
+      "flags": "",
+      "invert": true
+    },
+    "input": {
+      "value": "a\n\nb",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a\nb",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "filter: digits",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:filter",
+    "params": {
+      "delimiter": "newline",
+      "pattern": "\\d+",
+      "flags": "",
+      "invert": false
+    },
+    "input": {
+      "value": "a1\nb\n22",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a1\n22",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "filter: comma delimiter",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:filter",
+    "params": {
+      "delimiter": "comma",
+      "pattern": "[0-9]",
+      "flags": "",
+      "invert": false
+    },
+    "input": {
+      "value": "a1,b,c2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a1,c2",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "filter: a pattern that is not a regular expression is refused",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:filter",
+    "params": {
+      "delimiter": "newline",
+      "pattern": "(",
+      "flags": "",
+      "invert": false
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "to-table: ASCII box",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:to-table",
+    "params": {
+      "cell-delimiter": "comma",
+      "row-delimiter": "newline",
+      "first-row-header": false,
+      "format": "ascii"
+    },
+    "input": {
+      "value": "a,b\n1,22",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "+---+----+\n| a | b  |\n+---+----+\n| 1 | 22 |\n+---+----+",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-table: ASCII with a header row",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:to-table",
+    "params": {
+      "cell-delimiter": "comma",
+      "row-delimiter": "newline",
+      "first-row-header": true,
+      "format": "ascii"
+    },
+    "input": {
+      "value": "a,b\n1,22",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "+---+----+\n| a | b  |\n+===+====+\n| 1 | 22 |\n+---+----+",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-table: defaults",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:to-table",
+    "params": {},
+    "input": {
+      "value": "a,b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "+---+---+\n| a | b |\n+---+---+",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-table: Markdown with a header row",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:to-table",
+    "params": {
+      "cell-delimiter": "comma",
+      "row-delimiter": "newline",
+      "first-row-header": true,
+      "format": "markdown"
+    },
+    "input": {
+      "value": "a,b\n1,22",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "| a   | b   |\n| --- | --- |\n| 1   | 22  |",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-table: Markdown without a header row has an empty header",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:to-table",
+    "params": {
+      "cell-delimiter": "comma",
+      "row-delimiter": "newline",
+      "first-row-header": false,
+      "format": "markdown"
+    },
+    "input": {
+      "value": "a,b\n1,22",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "|     |     |\n| --- | --- |\n| a   | b   |\n| 1   | 22  |",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-table: Markdown wide cells",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:to-table",
+    "params": {
+      "cell-delimiter": "comma",
+      "row-delimiter": "newline",
+      "first-row-header": true,
+      "format": "markdown"
+    },
+    "input": {
+      "value": "name,value\nx,1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "| name | value |\n| ---- | ----- |\n| x    | 1     |",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-table: a quoted cell may hold the delimiter and a doubled quote",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:to-table",
+    "params": {
+      "cell-delimiter": "comma",
+      "row-delimiter": "newline",
+      "first-row-header": false,
+      "format": "ascii"
+    },
+    "input": {
+      "value": "\"a \"\"q\"\" b\",c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "+---------+---+\n| a \"q\" b | c |\n+---------+---+",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-table: a quoted cell with a comma",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:to-table",
+    "params": {
+      "cell-delimiter": "comma",
+      "row-delimiter": "newline",
+      "first-row-header": false,
+      "format": "ascii"
+    },
+    "input": {
+      "value": "x,\"y,z\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "+---+-----+\n| x | y,z |\n+---+-----+",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-table: semicolons",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:to-table",
+    "params": {
+      "cell-delimiter": "semicolon",
+      "row-delimiter": "newline",
+      "first-row-header": false,
+      "format": "ascii"
+    },
+    "input": {
+      "value": "a;b\nc;d",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "+---+---+\n| a | b |\n+---+---+\n| c | d |\n+---+---+",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-table: CRLF rows",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:to-table",
+    "params": {
+      "cell-delimiter": "comma",
+      "row-delimiter": "crlf",
+      "first-row-header": false,
+      "format": "ascii"
+    },
+    "input": {
+      "value": "a,b\r\nc,d",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "+---+---+\n| a | b |\n+---+---+\n| c | d |\n+---+---+",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-table: newline also accepts CRLF, and a trailing line end adds no row",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:to-table",
+    "params": {
+      "cell-delimiter": "comma",
+      "row-delimiter": "newline",
+      "first-row-header": false,
+      "format": "ascii"
+    },
+    "input": {
+      "value": "a,b\r\nc,d\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "+---+---+\n| a | b |\n+---+---+\n| c | d |\n+---+---+",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-table: short rows are filled",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:to-table",
+    "params": {
+      "cell-delimiter": "comma",
+      "row-delimiter": "newline",
+      "first-row-header": false,
+      "format": "ascii"
+    },
+    "input": {
+      "value": "a,b,c\n1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "+---+---+---+\n| a | b | c |\n+---+---+---+\n| 1 |   |   |\n+---+---+---+",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-table: a pipe in a Markdown cell is escaped",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:to-table",
+    "params": {
+      "cell-delimiter": "comma",
+      "row-delimiter": "newline",
+      "first-row-header": true,
+      "format": "markdown"
+    },
+    "input": {
+      "value": "a|b,c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "| a\\|b | c   |\n| ---- | --- |",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-table: empty input is one empty cell",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:to-table",
+    "params": {
+      "cell-delimiter": "comma",
+      "row-delimiter": "newline",
+      "first-row-header": false,
+      "format": "ascii"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "+--+\n|  |\n+--+",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-table: an unterminated quote keeps the rest as text",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:to-table",
+    "params": {
+      "cell-delimiter": "comma",
+      "row-delimiter": "newline",
+      "first-row-header": false,
+      "format": "ascii"
+    },
+    "input": {
+      "value": "\"a,b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "+------+\n| \"a,b |\n+------+",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-table: widths count code points",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:to-table",
+    "params": {
+      "cell-delimiter": "comma",
+      "row-delimiter": "newline",
+      "first-row-header": false,
+      "format": "ascii"
+    },
+    "input": {
+      "value": "😀,x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "+---+---+\n| 😀 | x |\n+---+---+",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-table: a cell delimiter that is a row delimiter is not offered",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:to-table",
+    "params": {
+      "cell-delimiter": "newline",
+      "row-delimiter": "newline",
+      "first-row-header": false,
+      "format": "ascii"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "file-tree: nested paths",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:file-tree",
+    "params": {
+      "delimiter": "newline",
+      "separator": "/"
+    },
+    "input": {
+      "value": "a/b\na/c\nd",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": ".\n|-- a\n|   |-- b\n|   `-- c\n`-- d",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "file-tree: defaults, a leading slash, a path that is a prefix of another",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:file-tree",
+    "params": {},
+    "input": {
+      "value": "/usr/bin\n/etc\n/usr",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": ".\n|-- etc\n`-- usr\n    `-- bin",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "file-tree: repeats and empty parts are ignored",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:file-tree",
+    "params": {
+      "delimiter": "newline",
+      "separator": "/"
+    },
+    "input": {
+      "value": "a//b/\na/b\n\n/a/b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": ".\n`-- a\n    `-- b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "file-tree: another separator and delimiter",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:file-tree",
+    "params": {
+      "delimiter": "semicolon",
+      "separator": "\\"
+    },
+    "input": {
+      "value": "a\\b;a\\d",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": ".\n`-- a\n    |-- b\n    `-- d",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "file-tree: no paths",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:file-tree",
+    "params": {
+      "delimiter": "newline",
+      "separator": "/"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": ".",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "file-tree: names in code point order",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:file-tree",
+    "params": {
+      "delimiter": "newline",
+      "separator": "/"
+    },
+    "input": {
+      "value": "b\nB\na",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": ".\n|-- B\n|-- a\n`-- b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "file-tree: a name that sorts before the separator stays with its own children",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:file-tree",
+    "params": {
+      "delimiter": "newline",
+      "separator": "/"
+    },
+    "input": {
+      "value": "a-b/c\na/b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": ".\n|-- a\n|   `-- b\n`-- a-b\n    `-- c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "file-tree: bars continue down for directories with more to come",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:file-tree",
+    "params": {
+      "delimiter": "newline",
+      "separator": "/"
+    },
+    "input": {
+      "value": "a/b/c\na/d\ne",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": ".\n|-- a\n|   |-- b\n|   |   `-- c\n|   `-- d\n`-- e",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "file-tree: a separator of several characters",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:file-tree",
+    "params": {
+      "delimiter": "newline",
+      "separator": "::"
+    },
+    "input": {
+      "value": "a::b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": ".\n`-- a\n    `-- b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "file-tree: an empty separator is refused",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "lines:file-tree",
+    "params": {
+      "delimiter": "newline",
+      "separator": ""
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  }
+]
