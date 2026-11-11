@@ -75,7 +75,7 @@ function reference(text: string, stops: Set<string>, maxWords: number): string[]
     );
   }
   const rows = [...scores].sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1));
-  return rows.map(([p, sc]) => `${(Math.round(sc * 100) / 100).toFixed(2)}\t${p}`);
+  return rows.map(([p, sc]) => `${(Math.round(sc * 100) / 100).toFixed(2)}: ${p}`);
 }
 
 describe("rake:keywords against the definition", () => {
@@ -104,8 +104,8 @@ describe("rake:keywords against the definition", () => {
       const g = got
         .split("\n")
         .filter(Boolean)
-        .map((l) => l.split("\t"));
-      const w = want.map((l) => l.split("\t"));
+        .map((l) => l.split(": "));
+      const w = want.map((l) => l.split(": "));
       for (let i = 0; i < w.length; i++) {
         expect(Math.abs(Number(g[i]?.[0]) - Number(w[i]?.[0]))).toBeLessThanOrEqual(0.011);
       }
@@ -131,7 +131,7 @@ describe("rake:keywords, other points", () => {
     expect(
       r
         .split("\n")
-        .map((l) => l.split("\t")[1])
+        .map((l) => l.split(": ")[1])
         .sort(),
     ).toEqual(["analysis", "data", "deep learning", "neural networks"]);
   });
@@ -141,13 +141,13 @@ describe("rake:keywords, other points", () => {
     expect(
       r
         .split("\n")
-        .map((l) => l.split("\t")[1])
+        .map((l) => l.split(": ")[1])
         .sort(),
     ).toEqual(["alpha", "beta well-known gamma"]);
   });
 
   test("upper case is folded and the same phrase is output once", async () => {
-    expect(out(await keywords("Fast cars. FAST CARS. fast cars!"))).toBe("4.00\tfast cars");
+    expect(out(await keywords("Fast cars. FAST CARS. fast cars!"))).toBe("4.00: fast cars");
   });
 
   test("white space only in stop-words falls back to the built-in list", async () => {
@@ -157,11 +157,11 @@ describe("rake:keywords, other points", () => {
   });
 
   test("limit larger than the number of phrases gives all of them", async () => {
-    expect(out(await keywords("rain and snow", 3, "", 50))).toBe("1.00\train\n1.00\tsnow");
+    expect(out(await keywords("rain and snow", 3, "", 50))).toBe("1.00: rain\n1.00: snow");
   });
 
   test("a line break inside a phrase is one space", async () => {
-    expect(out(await keywords("machine\n\nlearning"))).toBe("4.00\tmachine learning");
+    expect(out(await keywords("machine\n\nlearning"))).toBe("4.00: machine learning");
   });
 
   test("a text without a candidate gives an empty output", async () => {

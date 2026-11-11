@@ -108,7 +108,7 @@ IN: rake
   dup 100 div int>str "." cat swap 100 mod _pad2 cat ;
 
 : _line ( pair:list -- str )
-  pair 1 nth _fmt "\t" cat pair 0 nth cat ;
+  pair 1 nth _fmt ": " cat pair 0 nth cat ;
 
 : _ranked ( phrases:list -- list )
   phrases list:sort
@@ -125,7 +125,7 @@ IN: rake
   if ;
 
 : keywords ( data:str max-words:int[1..30]=3 stop-words:str="" limit:int[0..]=0 -- str )
-  "The key phrases of a text by RAKE (Rapid Automatic Keyword Extraction, Rose et al. 2010), one per line as the score, a tab and the phrase in lower case, the highest score first (equal scores in alphabetical order). The text is cut into candidate phrases at punctuation and at stop words; the words of a candidate are those with letters, digits and marks, with an apostrophe or hyphen inside (don't, state-of-the-art). A word scores its degree divided by its frequency, the degree being the sum of the lengths of the candidates it occurs in; a phrase scores the sum of its words, shown with two decimals. Candidates of more than max-words words are dropped before the counting (3 is the usual value). stop-words is a list of words separated by white space or commas that replaces the built-in list of English function words; leave it empty for the built-in list. limit keeps only that many phrases, 0 keeps them all. A text with no candidate gives an empty output. The text is read as UTF-8." doc
+  "The key phrases of a text by RAKE (Rapid Automatic Keyword Extraction, Rose et al. 2010), one per line as the score, a colon, a space and the phrase in lower case, the highest score first (equal scores in alphabetical order). The text is cut into candidate phrases at punctuation and at stop words; the words of a candidate are those with letters, digits and marks, with an apostrophe or hyphen inside (don't, state-of-the-art). A word scores its degree divided by its frequency, the degree being the sum of the lengths of the candidates it occurs in; a phrase scores the sum of its words, shown with two decimals. Candidates of more than max-words words are dropped before the counting (3 is the usual value). stop-words is a list of words separated by white space or commas that replaces the built-in list of English function words; leave it empty for the built-in list. limit keeps only that many phrases, 0 keeps them all. A text with no candidate gives an empty output. The text is read as UTF-8." doc
   "Extractors" category
   data lower "\u{2019}" split "'" join _token-pattern _texts
   stop-words lower "[^\\s,]+" _texts

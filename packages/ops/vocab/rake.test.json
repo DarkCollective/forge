@@ -13,7 +13,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "8.67\tminimal generating sets\n8.50\tlinear diophantine equations\n7.67\tminimal supporting set\n4.67\tminimal set\n4.50\tlinear constraints\n4.00\tnatural numbers\n4.00\tnonstrict inequations\n4.00\tstrict inequations\n4.00\tupper bounds\n3.67\tmixed types\n3.50\tcorresponding algorithms\n3.17\tconsidered types\n2.00\tset\n1.67\ttypes\n1.50\talgorithms\n1.50\tconsidered\n1.00\tcompatibility\n1.00\tcomponents\n1.00\tconstructing\n1.00\tconstruction\n1.00\tcriteria\n1.00\tsolutions\n1.00\tsolving\n1.00\tsystem\n1.00\tsystems",
+      "value": "8.67: minimal generating sets\n8.50: linear diophantine equations\n7.67: minimal supporting set\n4.67: minimal set\n4.50: linear constraints\n4.00: natural numbers\n4.00: nonstrict inequations\n4.00: strict inequations\n4.00: upper bounds\n3.67: mixed types\n3.50: corresponding algorithms\n3.17: considered types\n2.00: set\n1.67: types\n1.50: algorithms\n1.50: considered\n1.00: compatibility\n1.00: components\n1.00: constructing\n1.00: construction\n1.00: criteria\n1.00: solutions\n1.00: solving\n1.00: system\n1.00: systems",
       "enc": "utf8"
     }
   },
@@ -31,7 +31,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "8.67\tminimal generating sets\n8.50\tlinear diophantine equations\n7.67\tminimal supporting set",
+      "value": "8.67: minimal generating sets\n8.50: linear diophantine equations\n7.67: minimal supporting set",
       "enc": "utf8"
     }
   },
@@ -49,7 +49,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "8.00\tlearning machine code\n5.00\tmachine learning\n4.00\tstate-of-the-art tools\n1.00\tfun\n1.00\thard\n1.00\thelp",
+      "value": "8.00: learning machine code\n5.00: machine learning\n4.00: state-of-the-art tools\n1.00: fun\n1.00: hard\n1.00: help",
       "enc": "utf8"
     }
   },
@@ -67,7 +67,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "1.00\tfun\n1.00\thard\n1.00\thelp",
+      "value": "1.00: fun\n1.00: hard\n1.00: help",
       "enc": "utf8"
     }
   },
@@ -85,7 +85,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "4.00\tmachine learning\n4.00\tstate-of-the-art tools\n1.00\tfun\n1.00\thard\n1.00\thelp",
+      "value": "4.00: machine learning\n4.00: state-of-the-art tools\n1.00: fun\n1.00: hard\n1.00: help",
       "enc": "utf8"
     }
   },
@@ -103,7 +103,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "4.00\tstop believing",
+      "value": "4.00: stop believing",
       "enc": "utf8"
     }
   },
@@ -121,7 +121,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "4.00\tcafé noir\n4.00\ttrès bon",
+      "value": "4.00: café noir\n4.00: très bon",
       "enc": "utf8"
     }
   },
@@ -139,7 +139,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "15.00\tover the lazy dog\n5.00\tthe quick",
+      "value": "15.00: over the lazy dog\n5.00: the quick",
       "enc": "utf8"
     }
   },
