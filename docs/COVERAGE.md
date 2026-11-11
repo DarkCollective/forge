@@ -17,7 +17,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Arithmetic / Logic | 9 | 17 | 0 | 0 | 26 |
 | Networking | 0 | 0 | 0 | 34 | 34 |
 | Language | 0 | 4 | 0 | 0 | 4 |
-| Utils | 27 | 12 | 2 | 9 | 50 |
+| Utils | 28 | 20 | 2 | 0 | 50 |
 | Date / Time | 0 | 1 | 0 | 8 | 9 |
 | Extractors | 1 | 8 | 0 | 9 | 18 |
 | Compression | 0 | 0 | 0 | 21 | 21 |
@@ -25,9 +25,9 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Code tidy | 0 | 0 | 0 | 24 | 24 |
 | Forensics | 0 | 0 | 0 | 9 | 9 |
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
-| Other | 4 | 8 | 3 | 6 | 21 |
+| Other | 4 | 9 | 3 | 5 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **158** | **141** | **5** | **202** | **506** |
+| **Total** | **159** | **150** | **5** | **192** | **506** |
 
 ## Data format (80)
 
@@ -365,16 +365,16 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Offset checker | redesigned | `search:offsets` | A text report instead of highlighting: one row per stretch of offsets where all samples share the same character (offset, length, text). |
 | Hamming Distance | covered | `distance:hamming` | Units byte and bit as CyberChef, plus char; input raw or hex. |
 | Levenshtein Distance | covered | `distance:levenshtein` | Over code points; the dynamic programme is a private primitive (limit 100 million cells). |
-| Convert distance | not yet |  |  |
-| Convert area | not yet |  |  |
-| Convert mass | not yet |  |  |
-| Convert speed | not yet |  |  |
-| Convert data units | not yet |  |  |
-| Convert co-ordinate format | not yet |  |  |
+| Convert distance | redesigned | `units:convert-distance` | Forge-native unit names (metre, kilometre, inch, nautical-mile, astronomical-unit, light-year, and so on) instead of CyberChef's menu, with a source and a target unit. The sum is exact: every unit is an exact ratio of the metre (international yard and pound of 1959, NIST SP 811), the value is decimal text with an optional sign and exponent, and the result is rounded half away from zero to a number of significant digits (20 by default) and written in plain decimal form. No parsec (it is not a rational number of metres). A value that is not a number is E_COERCE. |
+| Convert area | redesigned | `units:convert-area` | Same design as Convert distance: exact ratios of the square metre (the acre is 4046.8564224 m2), Forge-native unit names, significant digits for the rounding. |
+| Convert mass | redesigned | `units:convert-mass` | Same design as Convert distance: exact ratios of the kilogram (the international pound is 0.45359237 kg; the grain, carat and troy ounce are exact), Forge-native unit names, significant digits for the rounding. |
+| Convert speed | redesigned | `units:convert-speed` | Same design as Convert distance: exact ratios of the metre per second (the knot is 1852 m per hour, the mile per hour 0.44704 m/s). Mach is not offered, because it depends on the air. |
+| Convert data units | redesigned | `units:convert-data` | Same design as Convert distance: bits, nibbles, bytes, the decimal units (kilo to exa, powers of 1000) and the binary units (kibi to exbi, IEC 80000-13, powers of 1024), as bits and as bytes. Exact; the rounding is to significant digits. |
+| Convert co-ordinate format | redesigned | `coords:convert` | One op with a source format (auto detects it), a target format and a precision. Formats: decimal degrees, degrees and decimal minutes, degrees minutes and seconds, geohash, UTM and MGRS (WGS 84, 80 S to 84 N; Karney's series, sub-millimetre). Degrees convert exactly (whole numbers of 10^-12 degree). The Ordnance Survey National Grid is not offered: it needs the OSGB36 datum shift, which cannot be done exactly from a published formula. CyberChef's delimiter and direction menus are replaced by a reader that accepts any separator and the letters N S E W before or after the numbers; the output always writes the hemisphere letters (degrees notations) or a sign (decimal degrees). MGRS and geohash input is read as the middle of its cell. |
 | Show on map | dropped |  | It draws a map from tiles fetched from an external tile host. Forge's CSP allows only its own origin (connect-src 'self', no external img-src) and the app never talks to another host, so the operation cannot exist. The coordinates themselves are covered by the co-ordinate format and Haversine distance operations. |
-| Parse UNIX file permissions | not yet |  |  |
-| Parse ObjectID timestamp | not yet |  |  |
-| Parse colour code | not yet |  |  |
+| Parse UNIX file permissions | redesigned | `file-mode:parse`, `file-mode:convert` | file-mode:parse reads an octal mode (755, 4755) or symbolic text (rwxr-xr-x, with the ls -l file type character if you like) and writes the octal and symbolic forms, the type, a table of read, write and execute for user, group and other, and the set-user-ID, set-group-ID and sticky bits, as plain text. file-mode:convert only changes the notation (octal or symbolic). |
+| Parse ObjectID timestamp | covered | `objectid:timestamp` | The first 8 hex digits of the 24-digit ObjectID as seconds since the epoch, written as an ISO 8601 UTC time with a .000 fraction. |
+| Parse colour code | redesigned | `colour:parse` | Reads hex (3, 4, 6 or 8 digits, with or without #), rgb()/rgba(), hsl()/hsla() and cmyk() and writes a text report of hex, RGB, RGBA, HSL, HSLA and CMYK with whole-number channels; CyberChef also draws a colour swatch, and Forge's ops return text. Colour names are not read. |
 | Escape string | redesigned | `string-escape:escape` | Forge's own escaper, written in FL (CyberChef uses a library): levels special, everything and minimal; quote single, double or backtick; JSON, ES6 and upper-case hex options; no surrounding quotes; NUL is \x00; everything uses numeric escapes only. |
 | Unescape string | covered | `string-escape:unescape` | Reads the single-letter escapes, \xHH, \uHHHH (and surrogate pairs), \u{H} and octal; an unknown escape is kept as written. |
 | Sleep | dropped |  | A bake has no use for waiting: recipes are pure transformations under a step and time budget, and a pause only spends that budget. |
@@ -593,7 +593,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Generate HOTP | redesigned | `otp:hotp` | RFC 4226 over hmac:digest, with the same input, output and options as otp:totp except that the counter replaces the time (counter 0 by default, up to 2^64 - 1). Matches the values of RFC 4226 appendix D. |
 | Generate QR Code | not yet |  |  |
 | Parse QR Code | not yet |  |  |
-| Haversine distance | not yet |  |  |
+| Haversine distance | redesigned | `coords:haversine` | The two positions are on two lines, each in any format that Convert co-ordinate format reads; the radius is a number in kilometres (6371 by default); the result is in metres to the millimetre, as decimal text. |
 | HTML To Text | redesigned | `html-text:to-text` | CyberChef's operation only turns an HTML-typed output into text. Forge has no typed outputs, so the word reads HTML source instead: comments, script and style elements, the DOCTYPE and all tags are dropped (br and block-level tags become line feeds), character references are decoded with html:decode, runs of line feeds are cut to two and the text is trimmed. It is a pattern-based stripper, not a parser, and not a sanitiser. |
 | Generate Lorem Ipsum | redesigned | `lorem:generate` | Paragraphs (up to 500), sentences (up to 5,000), words or bytes (up to 65,536), chosen at random from Forge's own list of the 182 distinct words of two passages of Cicero's De finibus (public domain), starting with the traditional Lorem ipsum dolor sit amet, consectetur adipiscing elit. unless opening is off. The sentence and paragraph shapes are Forge's own. The input is ignored. |
 | Numberwang | dropped |  | A joke based on a comedy sketch; it has no data-processing use. |

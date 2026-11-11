@@ -1,0 +1,250 @@
+[
+  {
+    "name": "parse 755",
+    "ref": "POSIX: 0755 is rwxr-xr-x: owner all, group and other read and execute",
+    "op": "file-mode:parse",
+    "params": {},
+    "input": {
+      "value": "755",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Octal:    0755\nSymbolic: rwxr-xr-x\n\n          User   Group  Other\nRead      yes    yes    yes\nWrite     yes    no     no\nExecute   yes    yes    yes\n\nSet user ID:  no\nSet group ID: no\nSticky bit:   no",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "parse a symbolic mode with setuid and sticky",
+    "ref": "POSIX: s in the owner execute place is setuid with execute, t in the other execute place is sticky with execute; 5755 = 4000 + 1000 + 0755",
+    "op": "file-mode:parse",
+    "params": {},
+    "input": {
+      "value": "-rwsr-xr-t",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Octal:    5755\nSymbolic: -rwsr-xr-t\nType:     regular file\n\n          User   Group  Other\nRead      yes    yes    yes\nWrite     yes    no     no\nExecute   yes    yes    yes\n\nSet user ID:  yes\nSet group ID: no\nSticky bit:   yes",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "parse a directory with the sticky bit",
+    "ref": "/tmp is drwxrwxrwt = 1777",
+    "op": "file-mode:parse",
+    "params": {},
+    "input": {
+      "value": "drwxrwxrwt",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Octal:    1777\nSymbolic: drwxrwxrwt\nType:     directory\n\n          User   Group  Other\nRead      yes    yes    yes\nWrite     yes    yes    yes\nExecute   yes    yes    yes\n\nSet user ID:  no\nSet group ID: no\nSticky bit:   yes",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "parse 0644 with surrounding space",
+    "ref": "a leading 0 and white space around are fine",
+    "op": "file-mode:parse",
+    "params": {},
+    "input": {
+      "value": "  0644\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Octal:    0644\nSymbolic: rw-r--r--\n\n          User   Group  Other\nRead      yes    yes    yes\nWrite     yes    no     no\nExecute   no     no     no\n\nSet user ID:  no\nSet group ID: no\nSticky bit:   no",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "octal to symbolic with setuid",
+    "ref": "chmod 4755: rwsr-xr-x (the mode of passwd)",
+    "op": "file-mode:convert",
+    "params": {
+      "to": "symbolic"
+    },
+    "input": {
+      "value": "4755",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "rwsr-xr-x",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "octal to symbolic with sticky",
+    "ref": "chmod 1777: rwxrwxrwt",
+    "op": "file-mode:convert",
+    "params": {
+      "to": "symbolic"
+    },
+    "input": {
+      "value": "1777",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "rwxrwxrwt",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "octal to symbolic with setgid",
+    "ref": "chmod 2755: rwxr-sr-x",
+    "op": "file-mode:convert",
+    "params": {
+      "to": "symbolic"
+    },
+    "input": {
+      "value": "2755",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "rwxr-sr-x",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "symbolic to octal keeps the zero",
+    "ref": "rwxr-xr-x is 755, written with four digits",
+    "op": "file-mode:convert",
+    "params": {
+      "to": "octal"
+    },
+    "input": {
+      "value": "-rwxr-xr-x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0755",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "capital S and T mean no execute bit",
+    "ref": "S, S, T: 4000 + 2000 + 1000 + 600 + 40 + 4 = 7644",
+    "op": "file-mode:convert",
+    "params": {
+      "to": "octal"
+    },
+    "input": {
+      "value": "rwSr-Sr-T",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "7644",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "symbolic with a file type kept",
+    "ref": "the type character of ls -l is kept when writing symbolic",
+    "op": "file-mode:convert",
+    "params": {
+      "to": "symbolic"
+    },
+    "input": {
+      "value": "drwxr-x---",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "drwxr-x---",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "octal to symbolic zero",
+    "ref": "no permissions at all",
+    "op": "file-mode:convert",
+    "params": {
+      "to": "symbolic"
+    },
+    "input": {
+      "value": "000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "---------",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "octal 8 is not a digit",
+    "ref": "octal digits are 0 to 7",
+    "op": "file-mode:parse",
+    "params": {},
+    "input": {
+      "value": "789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "too short",
+    "ref": "3 or 4 octal digits",
+    "op": "file-mode:parse",
+    "params": {},
+    "input": {
+      "value": "75",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "eight symbolic characters",
+    "ref": "9 symbolic characters",
+    "op": "file-mode:parse",
+    "params": {},
+    "input": {
+      "value": "rwxrwxrw",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "bad symbolic character",
+    "ref": "only r w x s S t T and - are permission characters",
+    "op": "file-mode:convert",
+    "params": {
+      "to": "octal"
+    },
+    "input": {
+      "value": "rwxrwxrwz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "bad file type character",
+    "ref": "the type is one of - d l b c p s",
+    "op": "file-mode:parse",
+    "params": {},
+    "input": {
+      "value": "xrwxr-xr-x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "empty",
+    "ref": "nothing to read",
+    "op": "file-mode:parse",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]
