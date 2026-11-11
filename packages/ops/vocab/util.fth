@@ -24,6 +24,10 @@ IN: util
   "The one-character string of a code point (0 to 0x10FFFF, not a surrogate: anything else is the error codes>str raises)." doc
   { cp } codes>str ;
 
+: u16 ( b:bytes i:int big-endian:bool -- int )
+  "The i-th 16-bit unit of the bytes (the bytes at 2 i and 2 i + 1), big-endian when big-endian is true, else little-endian. Raises the error of nth when the unit is not in the bytes." doc
+  big-endian [ b 2 i * nth 256 * b 2 i * 1 + nth + ] [ b 2 i * nth b 2 i * 1 + nth 256 * + ] if ;
+
 \ The table entry of byte b: its index in alpha, else ws or pad, else 255.
 : _code-of ( b:int alpha:str ws:int pad:int -- int )
   alpha b cp>str split dup len 2 = [ 0 nth len ]

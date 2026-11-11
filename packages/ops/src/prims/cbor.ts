@@ -30,12 +30,12 @@
  *    keys sorted bytewise by their encoding.
  *
  * How the JSON side looks (CyberChef shows the result of the `cbor` npm package through JSON.stringify):
- * a byte string is {"type":"Buffer","data":[...]}; a tag is {"tag":N,"value":V}, except tags 0 and 1 (dates, shown
+ * a byte string is {"type":"Buffer","data":[...]}; a tag is {"tag":N,"contents":V}, except tags 0 and 1 (dates, shown
  * as the ISO 8601 text JavaScript's Date.toJSON writes) and 2 and 3 (big integers, shown as exact integers);
  * `undefined` and the non-finite floats (NaN, the infinities) are null, as JSON.stringify writes them; a simple
  * value other than false, true, null and undefined is {"simple":N}; a map key that is not text is written as the
  * text of an integer, boolean, null or float, any other key is E_COERCE. With `typed` set the encoder reads these
- * shapes back (Buffer to byte string, {"tag":N,"value":V} to a tag, {"simple":N} to a simple value).
+ * shapes back (Buffer to byte string, {"tag":N,"contents":V} to a tag, {"simple":N} to a simple value).
  */
 import { ForgeError, definePrimitive, valueHelpers } from "@forge/lang";
 import type { PrimitiveContext, PrimitiveDef, Value } from "@forge/lang";
@@ -316,7 +316,7 @@ function decode(data: Uint8Array, ctx: PrimitiveContext): Value {
         meter.add(48);
         return record([
           ["tag", intValue(a, maxIntBits)],
-          ["value", inner],
+          ["contents", inner],
         ]);
       }
       default: {
@@ -468,11 +468,11 @@ function encode(value: Value, typed: boolean, ctx: PrimitiveContext): Uint8Array
             out.bytes(buf);
             return;
           }
-          if (m.size === 2 && m.has("tag") && m.has("value")) {
+          if (m.size === 2 && m.has("tag") && m.has("contents")) {
             const t = intKey(m.get("tag"), 0n, TWO64 - 1n);
             if (t !== undefined) {
               head(out, 6, t);
-              write(out, m.get("value") as Value, depth + 1);
+              write(out, m.get("contents") as Value, depth + 1);
               return;
             }
           }

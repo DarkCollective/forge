@@ -46,24 +46,23 @@ function b64(d: Uint8Array, alpha = STD): string {
 function expected(d: Uint8Array, alpha: string, pad: string, variable: boolean): string {
   const lines: string[] = [];
   for (let k = 0; k < 3; k++) {
-    if (d.length === 0) {
-      lines.push("");
-      continue;
-    }
     const z = new Uint8Array(k + d.length);
     z.set(d, k);
     const t = b64(z, alpha);
-    const start = variable ? k : k > 0 ? k + 1 : 0;
+    const start = variable ? 0 : k > 0 ? k + 1 : 0;
     const end = t.length - (variable ? 0 : z.length % 3 ? 1 : 0);
     lines.push(t.slice(start, end) + (variable ? pad.repeat((3 - (z.length % 3)) % 3) : ""));
   }
-  return `Offset 0 (aligned): ${lines[0]}\nOffset 1: ${lines[1]}\nOffset 2: ${lines[2]}`;
+  return variable
+    ? `Offset 0: ${lines[0]}\nOffset 1: ${lines[1]}\nOffset 2: ${lines[2]}`
+    : lines.join("\n");
 }
 
 describe("show", () => {
   test("every length from 0 to 40 bytes, with and without the variable characters", async () => {
     const rand = rng(60);
-    for (let n = 0; n <= 40; n++) {
+    expect(code(await show(new Uint8Array(0)))).toBe("E_COERCE");
+    for (let n = 1; n <= 40; n++) {
       const d = Uint8Array.from({ length: n }, () => Math.floor(rand() * 256));
       expect(text(await show(d, "A-Za-z0-9+/=", true))).toBe(expected(d, STD, "=", true));
       expect(text(await show(d, "A-Za-z0-9+/=", false))).toBe(expected(d, STD, "=", false));
@@ -72,6 +71,7 @@ describe("show", () => {
   test("the offsets are windows into the encoding of the data behind one and two other bytes", async () => {
     const d = new TextEncoder().encode("The quick brown fox jumps over the lazy dog");
     const lines = text(await show(d, "A-Za-z0-9+/=", false)).split("\n");
+    expect(lines).toHaveLength(3);
     for (const k of [1, 2]) {
       const z = new Uint8Array(k + d.length);
       z.set(d, k);

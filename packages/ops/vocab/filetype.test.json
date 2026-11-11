@@ -151,7 +151,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Scanning data for 'magic bytes' which may indicate embedded files. The following results may be false positives and should not be treated as reliable. Any sufficiently long data is likely to contain these magic bytes coincidentally.\n\nOffset 4 (0x4):\n  File type:   Portable Network Graphics image\n  Extension:   png\n  MIME type:   image/png\n  Description: PNG image\n\nOffset 83 (0x53):\n  File type:   GZIP compressed file\n  Extension:   gz,tgz\n  MIME type:   application/gzip\n  Description: gzip stream (deflate)\n\nTotal found: 2",
+      "value": "Scanning data for 'magic bytes' which may indicate embedded files. The following results may be false positives and should not be treated as reliable. Any sufficiently long file is likely to contain these magic bytes coincidentally.\n\nOffset 4 (0x4):\n  File type:   Portable Network Graphics image\n  Extension:   png\n  MIME type:   image/png\n  Description: PNG image\n\nOffset 83 (0x53):\n  File type:   GZIP compressed file\n  Extension:   gz,tgz\n  MIME type:   application/gzip\n  Description: gzip stream (deflate)\n",
       "enc": "utf8"
     }
   },
@@ -165,7 +165,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Scanning data for 'magic bytes' which may indicate embedded files. The following results may be false positives and should not be treated as reliable. Any sufficiently long data is likely to contain these magic bytes coincidentally.\n\nNo embedded files were found.",
+      "value": "Scanning data for 'magic bytes' which may indicate embedded files. The following results may be false positives and should not be treated as reliable. Any sufficiently long file is likely to contain these magic bytes coincidentally.\n\nNo embedded files were found.",
       "enc": "utf8"
     }
   },
@@ -181,7 +181,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Scanning data for 'magic bytes' which may indicate embedded files. The following results may be false positives and should not be treated as reliable. Any sufficiently long data is likely to contain these magic bytes coincidentally.\n\nOffset 0 (0x0):\n  File type:   Script with a shebang\n  Extension:   sh\n  MIME type:   text/x-shellscript\n  Description: Interpreter line (#!/...)\n\nTotal found: 1",
+      "value": "Scanning data for 'magic bytes' which may indicate embedded files. The following results may be false positives and should not be treated as reliable. Any sufficiently long file is likely to contain these magic bytes coincidentally.\n\nOffset 0 (0x0):\n  File type:   Script with a shebang\n  Extension:   sh\n  MIME type:   text/x-shellscript\n  Description: Interpreter line (#!/...)\n",
       "enc": "utf8"
     }
   },
@@ -189,7 +189,9 @@
     "name": "extract: PNG and gzip cut out of junk",
     "ref": "samples cut out by length",
     "op": "filetype:extract",
-    "params": {},
+    "params": {
+      "minimum-size": 0
+    },
     "input": {
       "value": "6a756e6b89504e470d0a1a0a0000000d49484452000000040000000308020000003b9639910000001449444154789c633c2167c300034c0c48008503002b1201282be191a80000000049454e44ae4260822d2d1f8b08000000000002ff2bc94855282ccd4cce56482aca2fcf5348cbaf5028a1b21800c685af2a64000000656e64",
       "enc": "hex"
@@ -221,7 +223,9 @@
     "name": "extract: nothing",
     "ref": "text",
     "op": "filetype:extract",
-    "params": {},
+    "params": {
+      "minimum-size": 0
+    },
     "input": {
       "value": "no files here",
       "enc": "utf8"
@@ -235,7 +239,8 @@
     "ref": "Pillow TIFF",
     "op": "filetype:extract",
     "params": {
-      "ignore-failed": false
+      "ignore-failed": false,
+      "minimum-size": 0
     },
     "input": {
       "value": "49492a00080000000a0000010400010000000400000001010400010000000300000002010300030000008600000003010300010000000100000006010300010000000200000011010400010000008c0000001501030001000000030000001601040001000000030000001701040001000000240000001c010300010000000100000000000000080008000800c81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3c",
@@ -249,7 +254,9 @@
     "name": "extract: a type without an end finder is left out",
     "ref": "Pillow TIFF",
     "op": "filetype:extract",
-    "params": {},
+    "params": {
+      "minimum-size": 0
+    },
     "input": {
       "value": "49492a00080000000a0000010400010000000400000001010400010000000300000002010300030000008600000003010300010000000100000006010300010000000200000011010400010000008c0000001501030001000000030000001601040001000000030000001701040001000000240000001c010300010000000100000000000000080008000800c81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3c",
       "enc": "hex"
@@ -263,7 +270,8 @@
     "ref": "same as extract",
     "op": "filetype:entry",
     "params": {
-      "index": 1
+      "index": 1,
+      "minimum-size": 0
     },
     "input": {
       "value": "6a756e6b89504e470d0a1a0a0000000d49484452000000040000000308020000003b9639910000001449444154789c633c2167c300034c0c48008503002b1201282be191a80000000049454e44ae4260822d2d1f8b08000000000002ff2bc94855282ccd4cce56482aca2fcf5348cbaf5028a1b21800c685af2a64000000656e64",
@@ -279,7 +287,8 @@
     "ref": "range",
     "op": "filetype:entry",
     "params": {
-      "index": 2
+      "index": 2,
+      "minimum-size": 0
     },
     "input": {
       "value": "6a756e6b89504e470d0a1a0a0000000d49484452000000040000000308020000003b9639910000001449444154789c633c2167c300034c0c48008503002b1201282be191a80000000049454e44ae4260822d2d1f8b08000000000002ff2bc94855282ccd4cce56482aca2fcf5348cbaf5028a1b21800c685af2a64000000656e64",
@@ -293,7 +302,9 @@
     "name": "entry: empty input",
     "ref": "empty",
     "op": "filetype:entry",
-    "params": {},
+    "params": {
+      "minimum-size": 0
+    },
     "input": {
       "value": "",
       "enc": "utf8"

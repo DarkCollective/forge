@@ -157,9 +157,9 @@ describe("encode", () => {
     expect(await enc("128")).toBe("cc80");
     expect(await enc("-32")).toBe("e0");
     expect(await enc("-33")).toBe("d0df");
-    expect(await enc("1.5")).toBe("ca3fc00000");
+    expect(await enc("1.5")).toBe("cb3ff8000000000000");
     expect(await enc("0.1")).toBe("cb3fb999999999999a");
-    expect(await enc("-0.0")).toBe("ca80000000");
+    expect(await enc("-0.0")).toBe("cb8000000000000000");
     expect(await enc("[" + "0,".repeat(15) + "0]")).toBe("dc0010" + "00".repeat(16));
     expect(await enc('"' + "a".repeat(31) + '"')).toBe("bf" + "61".repeat(31));
     expect(await enc('"' + "a".repeat(32) + '"')).toBe("d920" + "61".repeat(32));

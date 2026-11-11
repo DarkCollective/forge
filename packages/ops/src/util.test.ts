@@ -1349,3 +1349,18 @@ describe("asn1:tlv-ec-private", () => {
     ]);
   });
 });
+
+describe("util:u16", () => {
+  test("reads the i-th 16-bit unit in either byte order", async () => {
+    const b = valueHelpers.bytes(Uint8Array.of(0x12, 0x34, 0xab, 0xcd));
+    expect(await value("util:u16", [b, int(0), valueHelpers.bool(true)])).toBe(0x1234);
+    expect(await value("util:u16", [b, int(0), valueHelpers.bool(false)])).toBe(0x3412);
+    expect(await value("util:u16", [b, int(1), valueHelpers.bool(true)])).toBe(0xabcd);
+    expect(await value("util:u16", [b, int(1), valueHelpers.bool(false)])).toBe(0xcdab);
+  });
+  test("a unit past the bytes is an error", async () => {
+    const b = valueHelpers.bytes(Uint8Array.of(1, 2, 3));
+    const r = await runtime.call("util:u16", [b, int(1), valueHelpers.bool(true)]);
+    expect(r.ok).toBe(false);
+  });
+});

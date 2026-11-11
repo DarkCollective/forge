@@ -479,7 +479,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "name,age\r\nAda,36\r\nAlan,41",
+      "value": "name,age\r\nAda,36\r\nAlan,41\r\n",
       "enc": "utf8"
     }
   },
@@ -496,7 +496,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "a,b\r\nc,d",
+      "value": "a,b\r\nc,d\r\n",
       "enc": "utf8"
     }
   },
@@ -513,7 +513,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "x,y\r\n1,two",
+      "value": "x,y\r\n1,two\r\n",
       "enc": "utf8"
     }
   },
@@ -530,7 +530,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "a,b,c\r\n\"x,y\",\"say \"\"hi\"\"\",\"l1\nl2\"",
+      "value": "a,b,c\r\n\"x,y\",\"say \"\"hi\"\"\",\"l1\nl2\"\r\n",
       "enc": "utf8"
     }
   },
@@ -547,7 +547,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "a,b,c\r\n1,,\r\n,2,\r\n3,,4",
+      "value": "a,b,c\r\n1,,\r\n,2,\r\n3,,4\r\n",
       "enc": "utf8"
     }
   },
@@ -564,7 +564,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "n,t,f,x,l,o\r\n,true,false,1.5,\"[1,\"\"a\"\"]\",\"{\"\"k\"\":null}\"",
+      "value": "n,t,f,x,l,o\r\n,true,false,1.5,\"[1,\"\"a\"\"]\",\"{\"\"k\"\":null}\"\r\n",
       "enc": "utf8"
     }
   },
@@ -581,7 +581,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "名前,e\r\n田中,😀",
+      "value": "名前,e\r\n田中,😀\r\n",
       "enc": "utf8"
     }
   },
@@ -598,7 +598,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "n\r\n123456789012345678901234567890",
+      "value": "n\r\n123456789012345678901234567890\r\n",
       "enc": "utf8"
     }
   },
@@ -632,7 +632,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "\"a;b\";c\nd;e",
+      "value": "\"a;b\";c\nd;e\n",
       "enc": "utf8"
     }
   },
@@ -649,7 +649,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "\"\"\r\nx",
+      "value": "\"\"\r\nx\r\n",
       "enc": "utf8"
     }
   },
@@ -666,7 +666,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": ",k\r\nv,",
+      "value": ",k\r\nv,\r\n",
       "enc": "utf8"
     }
   },

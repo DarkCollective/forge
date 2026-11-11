@@ -13,8 +13,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Offset 0 (aligned): \nOffset 1: \nOffset 2: ",
-      "enc": "utf8"
+      "error": "E_COERCE"
     }
   },
   {
@@ -31,8 +30,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Offset 0 (aligned): \nOffset 1: \nOffset 2: ",
-      "enc": "utf8"
+      "error": "E_COERCE"
     }
   },
   {
@@ -49,7 +47,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Offset 0 (aligned): YQ==\nOffset 1: GE=\nOffset 2: Bh",
+      "value": "Offset 0: YQ==\nOffset 1: AGE=\nOffset 2: AABh",
       "enc": "utf8"
     }
   },
@@ -67,7 +65,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Offset 0 (aligned): Y\nOffset 1: \nOffset 2: h",
+      "value": "Y\n\nh",
       "enc": "utf8"
     }
   },
@@ -85,7 +83,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Offset 0 (aligned): YWI=\nOffset 1: GFi\nOffset 2: BhYg==",
+      "value": "Offset 0: YWI=\nOffset 1: AGFi\nOffset 2: AABhYg==",
       "enc": "utf8"
     }
   },
@@ -103,7 +101,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Offset 0 (aligned): YW\nOffset 1: Fi\nOffset 2: hY",
+      "value": "YW\nFi\nhY",
       "enc": "utf8"
     }
   },
@@ -121,7 +119,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Offset 0 (aligned): YWJj\nOffset 1: GFiYw==\nOffset 2: BhYmM=",
+      "value": "Offset 0: YWJj\nOffset 1: AGFiYw==\nOffset 2: AABhYmM=",
       "enc": "utf8"
     }
   },
@@ -139,7 +137,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Offset 0 (aligned): YWJj\nOffset 1: FiY\nOffset 2: hYm",
+      "value": "YWJj\nFiY\nhYm",
       "enc": "utf8"
     }
   },
@@ -157,7 +155,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Offset 0 (aligned): YWJjZA==\nOffset 1: GFiY2Q=\nOffset 2: BhYmNk",
+      "value": "Offset 0: YWJjZA==\nOffset 1: AGFiY2Q=\nOffset 2: AABhYmNk",
       "enc": "utf8"
     }
   },
@@ -175,7 +173,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Offset 0 (aligned): YWJjZ\nOffset 1: FiY2\nOffset 2: hYmNk",
+      "value": "YWJjZ\nFiY2\nhYmNk",
       "enc": "utf8"
     }
   },
@@ -193,7 +191,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Offset 0 (aligned): SGVsbG8sIFdvcmxkIQ==\nOffset 1: EhlbGxvLCBXb3JsZCE=\nOffset 2: BIZWxsbywgV29ybGQh",
+      "value": "Offset 0: SGVsbG8sIFdvcmxkIQ==\nOffset 1: AEhlbGxvLCBXb3JsZCE=\nOffset 2: AABIZWxsbywgV29ybGQh",
       "enc": "utf8"
     }
   },
@@ -211,7 +209,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Offset 0 (aligned): SGVsbG8sIFdvcmxkI\nOffset 1: hlbGxvLCBXb3JsZC\nOffset 2: IZWxsbywgV29ybGQh",
+      "value": "SGVsbG8sIFdvcmxkI\nhlbGxvLCBXb3JsZC\nIZWxsbywgV29ybGQh",
       "enc": "utf8"
     }
   },
@@ -229,7 +227,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Offset 0 (aligned): VGhlIHF1aWNrIGJyb3duIGZveA==\nOffset 1: FRoZSBxdWljayBicm93biBmb3g=\nOffset 2: BUaGUgcXVpY2sgYnJvd24gZm94",
+      "value": "Offset 0: VGhlIHF1aWNrIGJyb3duIGZveA==\nOffset 1: AFRoZSBxdWljayBicm93biBmb3g=\nOffset 2: AABUaGUgcXVpY2sgYnJvd24gZm94",
       "enc": "utf8"
     }
   },
@@ -247,7 +245,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Offset 0 (aligned): VGhlIHF1aWNrIGJyb3duIGZve\nOffset 1: RoZSBxdWljayBicm93biBmb3\nOffset 2: UaGUgcXVpY2sgYnJvd24gZm94",
+      "value": "VGhlIHF1aWNrIGJyb3duIGZve\nRoZSBxdWljayBicm93biBmb3\nUaGUgcXVpY2sgYnJvd24gZm94",
       "enc": "utf8"
     }
   },
@@ -265,7 +263,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Offset 0 (aligned): AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJw==\nOffset 1: AABAgMEBQYHCAkKCwwNDg8QERITFBUWFxgZGhscHR4fICEiIyQlJic=\nOffset 2: AAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAhIiMkJSYn",
+      "value": "Offset 0: AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJw==\nOffset 1: AAABAgMEBQYHCAkKCwwNDg8QERITFBUWFxgZGhscHR4fICEiIyQlJic=\nOffset 2: AAAAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAhIiMkJSYn",
       "enc": "utf8"
     }
   },
@@ -283,7 +281,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Offset 0 (aligned): AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJ\nOffset 1: ABAgMEBQYHCAkKCwwNDg8QERITFBUWFxgZGhscHR4fICEiIyQlJi\nOffset 2: AAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAhIiMkJSYn",
+      "value": "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJ\nABAgMEBQYHCAkKCwwNDg8QERITFBUWFxgZGhscHR4fICEiIyQlJi\nAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAhIiMkJSYn",
       "enc": "utf8"
     }
   },
@@ -301,7 +299,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Offset 0 (aligned): /////////w==\nOffset 1: P////////8=\nOffset 2: D/////////",
+      "value": "Offset 0: /////////w==\nOffset 1: AP////////8=\nOffset 2: AAD/////////",
       "enc": "utf8"
     }
   },
@@ -319,7 +317,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Offset 0 (aligned): /////////\nOffset 1: ////////\nOffset 2: /////////",
+      "value": "/////////\n////////\n/////////",
       "enc": "utf8"
     }
   },
@@ -337,13 +335,13 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Offset 0 (aligned): SGVsbG8sIFdvcmxkIQ\nOffset 1: EhlbGxvLCBXb3JsZCE\nOffset 2: BIZWxsbywgV29ybGQh",
+      "value": "Offset 0: SGVsbG8sIFdvcmxkIQ\nOffset 1: AEhlbGxvLCBXb3JsZCE\nOffset 2: AABIZWxsbywgV29ybGQh",
       "enc": "utf8"
     }
   },
   {
     "name": "URL-safe alphabet, without variable characters",
-    "ref": "Python base64.b64encode of the data behind 0, 1 and 2 zero bytes; the trimming rule of the op doc applied by an independent function",
+    "ref": "Python base64; with no padding character the last character, which depends on later bytes, is left out",
     "op": "base64-offsets:show",
     "params": {
       "alphabet": "A-Za-z0-9-_",
@@ -355,7 +353,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Offset 0 (aligned): SGVsbG8sIFdvcmxkfj\nOffset 1: hlbGxvLCBXb3JsZH4_\nOffset 2: IZWxsbywgV29ybGR-P",
+      "value": "SGVsbG8sIFdvcmxkfj\nhlbGxvLCBXb3JsZH4_\nIZWxsbywgV29ybGR-P",
       "enc": "utf8"
     }
   },
@@ -373,7 +371,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Offset 0 (aligned): SGVsbG8sIFdvcmxkIQ==\nOffset 1: EhlbGxvLCBXb3JsZCE=\nOffset 2: BIZWxsbywgV29ybGQh",
+      "value": "Offset 0: SGVsbG8sIFdvcmxkIQ==\nOffset 1: AEhlbGxvLCBXb3JsZCE=\nOffset 2: AABIZWxsbywgV29ybGQh",
       "enc": "utf8"
     }
   },
@@ -391,7 +389,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Offset 0 (aligned): SGVsbG8sIFdvcmxkIQ..\nOffset 1: EhlbGxvLCBXb3JsZCE.\nOffset 2: BIZWxsbywgV29ybGQh",
+      "value": "Offset 0: SGVsbG8sIFdvcmxkIQ..\nOffset 1: AEhlbGxvLCBXb3JsZCE.\nOffset 2: AABIZWxsbywgV29ybGQh",
       "enc": "utf8"
     }
   },
@@ -409,7 +407,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Offset 0 (aligned): G4JgP4wg63RjQalY6E==\nOffset 1: 2VZP4lj90/LPr7gN02=\nOffset 2: /6NKlgPmkUJqxmP4EV",
+      "value": "Offset 0: G4JgP4wg63RjQalY6E==\nOffset 1: .2VZP4lj90/LPr7gN02=\nOffset 2: ../6NKlgPmkUJqxmP4EV",
       "enc": "utf8"
     }
   },
@@ -427,7 +425,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Offset 0 (aligned): G4Y=\nOffset 1: 2Vd\nOffset 2: /6OE==",
+      "value": "Offset 0: G4Y=\nOffset 1: .2Vd\nOffset 2: ../6OE==",
       "enc": "utf8"
     }
   },
@@ -445,7 +443,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Offset 0 (aligned): SGVsbG8=\nOffset 1: EhlbGxv\nOffset 2: BIZWxsbw==",
+      "value": "Offset 0: SGVsbG8=\nOffset 1: AEhlbGxv\nOffset 2: AABIZWxsbw==",
       "enc": "utf8"
     }
   },
@@ -463,7 +461,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Offset 0 (aligned): SGVsbG8=\nOffset 1: EhlbGxv\nOffset 2: BIZWxsbw==",
+      "value": "Offset 0: SGVsbG8=\nOffset 1: AEhlbGxv\nOffset 2: AABIZWxsbw==",
       "enc": "utf8"
     }
   },
@@ -481,7 +479,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Offset 0 (aligned): SGVsbG\nOffset 1: hlbGxv\nOffset 2: IZWxsb",
+      "value": "SGVsbG\nhlbGxv\nIZWxsb",
       "enc": "utf8"
     }
   },
@@ -499,8 +497,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Offset 0 (aligned): \nOffset 1: \nOffset 2: ",
-      "enc": "utf8"
+      "error": "E_COERCE"
     }
   },
   {

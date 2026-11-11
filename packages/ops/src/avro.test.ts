@@ -105,8 +105,10 @@ describe("to-json", () => {
   test("lines, a forced array and indentation", async () => {
     const c = container(REC, "null", [[2, recBlock(2)]]);
     expect(text(await toJson(c))).toBe(
-      '{"id":0,"s":"row 0","u":null}\n{"id":1,"s":"row 1","u":1.5}',
+      '{"id":0,"s":"row 0","u":null}\n{"id":1,"s":"row 1","u":1.5}\n',
     );
+    // indent is not used for lines
+    expect(text(await toJson(c, false, 4))).toBe(text(await toJson(c)));
     expect(text(await toJson(c, true))).toBe(
       '[{"id":0,"s":"row 0","u":null},{"id":1,"s":"row 1","u":1.5}]',
     );
@@ -114,6 +116,8 @@ describe("to-json", () => {
       '[\n {\n  "id": 0,\n  "s": "row 0",\n  "u": null\n },\n {\n  "id": 1,\n  "s": "row 1",\n  "u": 1.5\n }\n]',
     );
     expect(code(await toJson(c, true, 33))).toBe("E_RANGE");
+    // (the defaults, a valid JSON array and 4 spaces, are in the vectors that name no parameters)
+    expect(text(await toJson(c, true, 4)).startsWith('[\n    {\n        "id": 0,')).toBe(true);
   });
   test("the deflate codec (raw DEFLATE, checked with the host's zlib) and several blocks", async () => {
     const c = container(REC, "deflate", [
@@ -121,7 +125,8 @@ describe("to-json", () => {
       [2, deflateRawSync(recBlock(2, 3))],
     ]);
     const rows = text(await toJson(c)).split("\n");
-    expect(rows).toHaveLength(5);
+    expect(rows).toHaveLength(6);
+    expect(rows[5]).toBe("");
     expect(JSON.parse(rows[4] as string).s).toBe("row 4");
   });
   test("a codec that is not read is named in the error", async () => {
@@ -230,7 +235,7 @@ describe("cost at 64 KiB", () => {
         const t0 = Date.now();
         const r = await toJson(c);
         const ms = Date.now() - t0;
-        expect(text(r).split("\n")).toHaveLength(4500);
+        expect(text(r).split("\n")).toHaveLength(4501);
         expect(steps(r)).toBeLessThan(120_000);
         process.stderr.write(
           `\navro ${codec}: ${c.length} bytes, 4500 records: ${steps(r)} steps ${ms} ms\n`,

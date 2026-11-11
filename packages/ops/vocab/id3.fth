@@ -49,9 +49,6 @@ IN: id3
 
 \ ---- text ----
 
-: _unit ( b:bytes i:int be:bool -- int )
-  be [ b 2 i * nth 256 * b 2 i * 1 + nth + ] [ b 2 i * nth b 2 i * 1 + nth 256 * + ] if ;
-
 : _hi? ( u:int -- bool )
   u 55296 >= u 56319 <= and ;
 
@@ -70,7 +67,7 @@ IN: id3
   units [ units _fix ] mapi [ dup 0 >= swap 65279 <> and ] filter ;
 
 : _utf16-text ( b:bytes be:bool -- str )
-  0 b len 2 div range [ b swap be _unit ] map _utf16-codes codes>str ;
+  0 b len 2 div range [ b swap be util:u16 ] map _utf16-codes codes>str ;
 
 \ UTF-16 with a byte order mark (FF FE little, FE FF big; none: little endian).
 : _utf16-bom ( b:bytes -- str )

@@ -77,14 +77,15 @@ const extract = (
   ignoreFailed = true,
   flags: Value[] = FLAGS_EXTRACT,
   limits?: { maxValueBytes: number },
+  minSize = 0,
 ) =>
   runtime.call(
     "filetype:extract",
-    [bytes(d), ...flags, bool(ignoreFailed)],
+    [bytes(d), ...flags, bool(ignoreFailed), int(minSize)],
     limits ? { limits } : undefined,
   );
 const entry = (d: Uint8Array, index: number) =>
-  runtime.call("filetype:entry", [bytes(d), int(index), ...FLAGS_EXTRACT, bool(true)]);
+  runtime.call("filetype:entry", [bytes(d), int(index), ...FLAGS_EXTRACT, bool(true), int(0)]);
 
 interface Carved {
   name: string;
@@ -280,7 +281,8 @@ describe("Scan for Embedded Files", () => {
     expect(out).toContain(
       `Offset ${gzAt} (0x${gzAt.toString(16)}):\n  File type:   GZIP compressed file`,
     );
-    expect(out.endsWith("\nTotal found: 2")).toBe(true);
+    expect(out.match(/\nOffset /g)).toHaveLength(2);
+    expect(out).not.toContain("Total found");
     expect(
       out.startsWith("Scanning data for 'magic bytes' which may indicate embedded files."),
     ).toBe(true);
@@ -320,7 +322,7 @@ describe("Scan for Embedded Files", () => {
 
   test("overlapping and repeated matches", async () => {
     const data = cat(sample("png"), sample("png"), sample("png"));
-    expect(textOf(await scan(data))).toMatch(/Total found: 3$/);
+    expect(textOf(await scan(data)).match(/\nOffset /g)).toHaveLength(3);
   });
 
   test("a file that holds another (a stored zip in a zip)", async () => {
@@ -442,13 +444,21 @@ describe("Extract Files", () => {
     expect(r.map((f) => f.size)).toEqual(parts.map((p) => p.length));
   });
 
-  test("types without an end finder are left out, or E_COERCE when failures are not ignored", async () => {
+  test("types without an end finder are always left out, as in CyberChef; a damaged file is E_COERCE unless ignored", async () => {
     const tiff = sample("tiff");
     expect(files(await extract(tiff)).length).toBe(0);
-    const r = await extract(tiff, false);
-    expect(code(r)).toBe("E_COERCE");
-    expect(msg(r)).toContain("no extraction algorithm");
-    expect(msg(r)).toContain("image/tiff");
+    const png = sample("png");
+    const cut = png.subarray(0, png.length - 5);
+    expect(files(await extract(cut)).length).toBe(0);
+    expect(code(await extract(cut, false))).toBe("E_COERCE");
+  });
+
+  test("minimum-size leaves out small files (CyberChef's default is 100)", async () => {
+    const png = sample("png");
+    expect(files(await extract(png, true, FLAGS_EXTRACT, undefined, png.length)).length).toBe(1);
+    expect(files(await extract(png, true, FLAGS_EXTRACT, undefined, png.length + 1)).length).toBe(
+      0,
+    );
   });
 
   test("Miscellaneous is off by default in the op's switches, on when asked", async () => {
@@ -721,7 +731,7 @@ describe("64 KiB", () => {
     const ms = Date.now() - t0;
     expect(r.ok && r.steps).toBeLessThan(1000);
     expect(ms).toBeLessThan(1000);
-    expect(textOf(r)).toContain("Total found: 3");
+    expect(textOf(r).match(/\nOffset /g)).toHaveLength(3);
     const e = await extract(data);
     expect(files(e).map((f) => f.offset)).toEqual([1000, 30_000, 50_000]);
     expect(e.ok && e.steps).toBeLessThan(1000);

@@ -25,10 +25,10 @@ IN: filetype
   indent "File type:   " cat m "name" get cat "\n" cat
   indent cat "Extension:   " cat m "extensions" get cat "\n" cat
   indent cat "MIME type:   " cat m "mime" get cat "\n" cat
-  indent cat "Description: " cat m "description" get cat "\n" cat ;
+  m "description" get len 0 > [ indent cat "Description: " cat m "description" get cat "\n" cat ] when ;
 
 : detect ( data:bytes images:bool=true video:bool=true audio:bool=true documents:bool=true applications:bool=true archives:bool=true miscellaneous:bool=true -- str )
-  "Detect File Type: find the file formats whose signature (magic bytes) the data starts with, from a table of about 150 image, video, audio, document, application, archive and miscellaneous formats; the switches choose the categories searched. Each match is shown as File type, Extension, MIME type and Description, with a blank line between matches; no match gives a line saying the type is unknown. Signatures are checked at offset 0 only (use Scan for Embedded Files for the rest of the data). Some formats share a signature (a ZIP is also a JAR, an OOXML or an ODF file) and all of them are listed." doc
+  "Detect File Type: find the file formats whose signature (magic bytes) the data starts with, from a table of about 150 image, video, audio, document, application, archive and miscellaneous formats; the switches choose the categories searched. Each match is shown as File type, Extension, MIME type and Description (the line is left out when the description is empty), with a blank line between matches; no match gives a line saying the type is unknown. Signatures are checked at offset 0 only (use Scan for Embedded Files for the rest of the data). Some formats share a signature (a ZIP is also a JAR, an OOXML or an ODF file) and all of them are listed." doc
   "Forensics" category
   data images video audio documents applications archives miscellaneous _cats detect-list
   dup len 0 = [ drop
@@ -37,7 +37,7 @@ IN: filetype
 
 \ The text that opens the report of scan.
 : _scan-intro ( -- str )
-  "Scanning data for 'magic bytes' which may indicate embedded files. The following results may be false positives and should not be treated as reliable. Any sufficiently long data is likely to contain these magic bytes coincidentally.\n" ;
+  "Scanning data for 'magic bytes' which may indicate embedded files. The following results may be false positives and should not be treated as reliable. Any sufficiently long file is likely to contain these magic bytes coincidentally.\n" ;
 
 \ One match of the scan: its offset in decimal and hex, then the lines indented.
 : _found ( m:record -- str )
@@ -45,24 +45,23 @@ IN: filetype
   m "  " _lines cat ;
 
 : scan ( data:bytes images:bool=true video:bool=true audio:bool=true documents:bool=true applications:bool=true archives:bool=true miscellaneous:bool=true ignore-common:bool=true -- str )
-  "Scan for Embedded Files: every offset of the data where the signature (magic bytes) of a known file format matches, with its name, extension, MIME type and description, in order of offset. The result is a guide only: any long data contains the short signatures by chance. With ignore-common (the default) the short, ambiguous signatures (MZ, ICO, MP3 and AAC frame sync, a shebang, zlib headers, ...) are left out. The switches choose the categories. Extract Files cuts the files out." doc
+  "Scan for Embedded Files: every offset of the data where the signature (magic bytes) of a known file format matches, with its name, extension, MIME type and description, in order of offset. The result is a guide only: any long data contains the short signatures by chance. With ignore-common (the default; CyberChef 11.5.0 has no such option and reports every match)  the short, ambiguous signatures (MZ, ICO, MP3 and AAC frame sync, a shebang, zlib headers, ...) are left out. The switches choose the categories. Extract Files cuts the files out." doc
   "Forensics" category
   data images video audio documents applications archives miscellaneous _cats ignore-common scan-list
   dup len 0 = [ drop "\nNo embedded files were found." ] [
-    dup len int>str swap [ _found ] map "" join
-    swap "\nTotal found: " swap cat cat
+    [ _found ] map ""  join
   ] if
   _scan-intro swap cat ;
 
-: extract ( data:bytes images:bool=true video:bool=true audio:bool=true documents:bool=true applications:bool=true archives:bool=true miscellaneous:bool=false ignore-failed:bool=true -- list )
-  "Extract Files: cut out the files whose signature is found in the data, using the end finder of each type (PNG up to IEND, JPEG to the EOI marker, GIF to its trailer, ZIP and JAR to the end record, PDF to the last %%EOF, ELF and PE from their headers, gzip and Zstandard by walking the stream, tar, 7z, SQLite, pcap, PEM, MP4 boxes, Ogg pages, RIFF, BMP, ICO, CAB, DEX, ...). The result is a list of records with name (extracted_at_0x<offset>.<extension>), offset, size, type (the MIME type) and data, in order of offset; files inside other files are extracted as well. A type that has no end finder, and a file that is damaged or cut short, is left out (ignore-failed, the default) or is E_COERCE. The total size is bounded by the value limit. Use filetype:entry to continue a recipe with one of the files." doc
+: extract ( data:bytes images:bool=true video:bool=true audio:bool=true documents:bool=true applications:bool=true archives:bool=true miscellaneous:bool=false ignore-failed:bool=true minimum-size:int=100 -- list )
+  "Extract Files: cut out the files whose signature is found in the data, using the end finder of each type (PNG up to IEND, JPEG to the EOI marker, GIF to its trailer, ZIP and JAR to the end record, PDF to the last %%EOF, ELF and PE from their headers, gzip and Zstandard by walking the stream, tar, 7z, SQLite, pcap, PEM, MP4 boxes, Ogg pages, RIFF, BMP, ICO, CAB, DEX, ...). The result is a list of records with name (extracted_at_0x<offset>.<extension>), offset, size, type (the MIME type) and data, in order of offset; files inside other files are extracted as well. A type that has no end finder is always left out (CyberChef: No extraction algorithm available is never an error), and a file that is damaged or cut short is left out (ignore-failed, the default) or is E_COERCE; a file smaller than minimum-size bytes (default 100, as CyberChef) is left out to prune false positives. The total size is bounded by the value limit. Use filetype:entry to continue a recipe with one of the files." doc
   "Forensics" category
-  data images video audio documents applications archives miscellaneous _cats ignore-failed carve ;
+  data images video audio documents applications archives miscellaneous _cats ignore-failed minimum-size carve ;
 
-: entry ( data:bytes index:int=0 images:bool=true video:bool=true audio:bool=true documents:bool=true applications:bool=true archives:bool=true miscellaneous:bool=false ignore-failed:bool=true -- bytes )
+: entry ( data:bytes index:int=0 images:bool=true video:bool=true audio:bool=true documents:bool=true applications:bool=true archives:bool=true miscellaneous:bool=false ignore-failed:bool=true minimum-size:int=100 -- bytes )
   "The bytes of one file found by Extract Files, by its position in the list (0 is the first, the lowest offset). An index past the last file is E_RANGE and the message lists the first names. The other parameters are those of filetype:extract." doc
   "Forensics" category
-  data images video audio documents applications archives miscellaneous _cats ignore-failed carve
+  data images video audio documents applications archives miscellaneous _cats ignore-failed minimum-size carve
   dup len index <= index 0 < or [
     "the file index must be 0 to " over len 1 - int>str cat ", not " cat index int>str cat
     over len 0 = [ drop "there are no files to extract" ] when

@@ -18,7 +18,7 @@ META: decode
 ;
 
 : encode ( data:str typed-objects:bool=false -- bytes )
-  "Write JSON text as MessagePack, as CyberChef's To MessagePack does, each value in the shortest format that holds it: positive integers as uint, negative as int (from -2^63 to 2^64-1, else E_COERCE), numbers with a fraction or exponent as float 32 when that is exact, else float 64, text as fixstr, str 8, 16 or 32, arrays and maps in the order given, null as nil. With typed-objects on, the shapes the decoder writes are read back: {\"type\":\"Buffer\",\"data\":[...]} is a bin value, {\"ext\":N,\"data\":{\"type\":\"Buffer\",...}} an extension of type N, and {\"timestamp\":\"2020-01-02T03:04:05.678Z\"} the shortest timestamp extension (32, 64 or 96 bits). Text that is not JSON, or nesting deeper than 64 levels, is E_COERCE." doc
+  "Write JSON text as MessagePack, as CyberChef's To MessagePack does, each value in the shortest format that holds it: positive integers as uint, negative as int (from -2^63 to 2^64-1, else E_COERCE), numbers with a fraction or exponent as float 64 (as CyberChef and Python write them), text as fixstr, str 8, 16 or 32, arrays and maps in the order given, null as nil. With typed-objects on, the shapes the decoder writes are read back: {\"type\":\"Buffer\",\"data\":[...]} is a bin value, {\"ext\":N,\"data\":{\"type\":\"Buffer\",...}} an extension of type N, and {\"timestamp\":\"2020-01-02T03:04:05.678Z\"} the shortest timestamp extension (32, 64 or 96 bits). Text that is not JSON, or nesting deeper than 64 levels, is E_COERCE." doc
   "Data format" category
   data json:parse typed-objects msgpack:_encode ;
 

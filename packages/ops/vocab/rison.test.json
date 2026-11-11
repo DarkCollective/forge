@@ -2245,5 +2245,69 @@
       "value": "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]",
       "enc": "utf8"
     }
+  },
+  {
+    "name": "uri mode: {\"any\":\"json\",\"yes\":true}",
+    "ref": "the Rison text per rison.js rules; the URI quoting with Python urllib.parse.quote_plus(safe=\"~!*()-_.',:@$/\")",
+    "op": "rison:encode",
+    "params": {
+      "mode": "uri"
+    },
+    "input": {
+      "value": "{\"any\":\"json\",\"yes\":true}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "(any:json,yes:!t)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "uri mode: \"a b/c?d=e&f+g%\"",
+    "ref": "the Rison text per rison.js rules; the URI quoting with Python urllib.parse.quote_plus(safe=\"~!*()-_.',:@$/\")",
+    "op": "rison:encode",
+    "params": {
+      "mode": "uri"
+    },
+    "input": {
+      "value": "\"a b/c?d=e&f+g%\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "'a+b/c%3Fd%3De%26f%2Bg%25'",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "uri mode: {\"é\":\"日本 x\"}",
+    "ref": "the Rison text per rison.js rules; the URI quoting with Python urllib.parse.quote_plus(safe=\"~!*()-_.',:@$/\")",
+    "op": "rison:encode",
+    "params": {
+      "mode": "uri"
+    },
+    "input": {
+      "value": "{\"é\":\"日本 x\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "(%C3%A9:'%E6%97%A5%E6%9C%AC+x')",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "uri mode: [null,\"x:y\"]",
+    "ref": "the Rison text per rison.js rules; the URI quoting with Python urllib.parse.quote_plus(safe=\"~!*()-_.',:@$/\")",
+    "op": "rison:encode",
+    "params": {
+      "mode": "uri"
+    },
+    "input": {
+      "value": "[null,\"x:y\"]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "!(!n,'x:y')",
+      "enc": "utf8"
+    }
   }
 ]

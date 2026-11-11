@@ -25,9 +25,10 @@
  *    that starts with a double quote runs to the closing quote and may hold delimiters and line breaks, and a
  *    doubled quote in it is one quote; a quote inside an unquoted cell is kept as it is. A quoted cell followed
  *    by anything but a delimiter or the end, and an unterminated quote, are E_COERCE naming the offset, line and
- *    column. An empty line is skipped, and the last row needs no row end.
+ *    column. An empty line is skipped, and the last row needs no row end. A byte order mark at the start is dropped
+ *    (as CyberChef does).
  *  - `_write ( rows:list cell:str row:str -- str )`: rows (lists of str) joined with `cell` between cells and
- *    `row` between rows (no row end after the last). A cell is quoted when it holds the cell or row delimiter,
+ *    `row` after every row (CyberChef ends the text with a row delimiter; no rows give empty text). A cell is quoted when it holds the cell or row delimiter,
  *    a double quote, a CR or an LF; a row of one empty cell is written `""` so it is not an empty line.
  *
  * Both delimiter strings are read for the escapes `\r \n \t \\` and `\xHH` (so a user can type `\r\n`
@@ -70,7 +71,9 @@ function coercion(s: string, at: number, reason: string, row: number): ForgeErro
   });
 }
 
-function parse(data: string, cellsArg: string, rowsArg: string, ctx: PrimitiveContext): Value[] {
+function parse(dataArg: string, cellsArg: string, rowsArg: string, ctx: PrimitiveContext): Value[] {
+  // CyberChef removes a byte order mark, which Excel writes at the start of a CSV file
+  const data = dataArg.charCodeAt(0) === 0xfeff ? dataArg.slice(1) : dataArg;
   const cells = new Set(Array.from(unescapeDelimiter(cellsArg)));
   const rowEnds = new Set(Array.from(unescapeDelimiter(rowsArg)));
   if (cells.size === 0) throw rangeFailure("the cell delimiter must not be empty");
@@ -193,6 +196,8 @@ function write(
     });
     if (out.length * 2 > max) throw limitFailure("maxValueBytes", max, out.length * 2, "CSV text");
   });
+  // CyberChef ends the text with a row delimiter after the last row
+  if (rows.length > 0) out += rowEnd;
   return out;
 }
 
