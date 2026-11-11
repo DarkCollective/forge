@@ -21,8 +21,9 @@ export default defineConfig({
   test: {
     name: "worker",
     include: ["src/**/*.test.ts", "test/**/*.test.ts"],
+    // The GitHub runner is about 3x slower than a dev machine under full-suite load; the 5 s default caused CI run 42931777004 to fail.
     // Tests that start worker threads or wait for the watchdog set their own, larger timeouts.
-    testTimeout: 20_000,
+    testTimeout: 30_000,
     hookTimeout: 20_000,
     coverage: {
       provider: "v8",

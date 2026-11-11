@@ -22,6 +22,8 @@ export default defineConfig({
   },
   test: {
     name: "recipe",
+    // The GitHub runner is about 3x slower than a dev machine under full-suite load; the 5 s default caused CI run 42931777004 to fail.
+    testTimeout: 30_000,
     include: ["src/**/*.test.ts", "test/**/*.test.ts"],
     coverage: {
       provider: "v8",
