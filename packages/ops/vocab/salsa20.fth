@@ -4,7 +4,6 @@
 \ no rounds parameter (CyberChef's 12 and 8 are not offered; see docs/coverage/stream-ciphers.json).
 IN: salsa20
 
-\ util-candidate: xor-stream
 : encrypt ( bytes key:key{hex|utf8|latin1|base64} nonce:key{hex|utf8|latin1|base64}="" counter:int[0..]=0 -- bytes )
   "Salsa20/20 stream cipher (Bernstein, eSTREAM). Encryption and decryption are the same operation: the keystream is XORed over the bytes. The key is 16 or 32 bytes (E_RANGE otherwise); the nonce is 8 bytes (E_RANGE otherwise, so an empty nonce is an error); the counter is the 64-bit block counter of the first block, from 0. Only 20 rounds exist here. Chain hex:encode for text." doc
   "Encryption" category
