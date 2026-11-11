@@ -338,6 +338,10 @@ function readBinary(d: Uint8Array, ctx: PrimitiveContext): Node {
       meter.add(2 * s.length);
       return { k: "text", text: s };
     };
+    const quoted = (s: string): Node => {
+      meter.add(2 * s.length);
+      return { k: "text", text: s, q: true };
+    };
     switch (hi) {
       case 0:
         if (b === 0x08) return text("false");
@@ -378,7 +382,7 @@ function readBinary(d: Uint8Array, ctx: PrimitiveContext): Node {
         for (let i = 0; i < len; i++)
           if ((d[p + i] as number) > 0x7f)
             throw fail("an ASCII string holds a byte above 127", p + i);
-        return { ...text(String.fromCharCode(...d.subarray(p, p + len))), q: true };
+        return quoted(String.fromCharCode(...d.subarray(p, p + len)));
       }
       case 6: {
         const { len, p } = lengthAt(at + 1, lo);
@@ -393,7 +397,7 @@ function readBinary(d: Uint8Array, ctx: PrimitiveContext): Node {
           le[i] = be[i + 1] as number;
           le[i + 1] = be[i] as number;
         }
-        return { ...text(strictUtf8Utf16(le, p)), q: true };
+        return quoted(strictUtf8Utf16(le, p));
       }
       case 8:
         return text(`UID(${uint(at + 1, lo + 1)})`);

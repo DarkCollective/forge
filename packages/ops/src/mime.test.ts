@@ -132,6 +132,32 @@ describe("cost at 64 KiB", () => {
   });
 
   test(
+    "thousands of words in other character sets: one decoder call a set (was E_LIMIT_TOTAL after about 1,800)",
+    { timeout: 60_000 },
+    async () => {
+      const n = 2800;
+      const words = Array.from({ length: n }, (_, i) =>
+        i % 3 === 0
+          ? `=?iso-8859-2?Q?=B1=E6${i}?=`
+          : i % 3 === 1
+            ? `=?windows-1251?B?${Buffer.from([0xcf, 0xf0, 0xe8]).toString("base64")}?=`
+            : `=?utf-16le?B?${Buffer.from("a" + i, "utf16le").toString("base64")}?=`,
+      );
+      const r = await decode(words.join(" "));
+      expect(r.ok).toBe(true);
+      const want = Array.from({ length: n }, (_, i) =>
+        i % 3 === 0 ? `ąć${i}` : i % 3 === 1 ? "При" : "a" + i,
+      ).join("");
+      expect(out(r)).toBe(want);
+    },
+  );
+
+  test("a NUL in a word of a joined set still decodes word by word", async () => {
+    const r = await decode("=?iso-8859-2?Q?a=00b?= =?iso-8859-2?Q?=B1?=");
+    expect(out(r)).toBe("a\u0000bą");
+  });
+
+  test(
     "words in other character sets cost a table lookup each: a few hundred are fine",
     { timeout: 60_000 },
     async () => {

@@ -1,44 +1,59 @@
 [
-  {
-    "cyberchef": "Detect File Type",
-    "status": "redesigned",
-    "forge": ["filetype:detect"],
-    "note": "A table of about 150 signatures (name, extensions, MIME type, description, magic bytes with offsets and masks) in src/filetype-sigs.ts, written from the format documents and file(1)'s magic list, not copied from CyberChef: images, video, audio, documents (PDF, RTF, OLE2, OOXML and ODF by their first ZIP entry, EPUB), applications (ELF, PE and DOS MZ told apart by the PE header, Mach-O, Java class, DEX, WebAssembly), archives (ZIP, JAR, RAR 4 and 5, 7z, gzip, bzip2, xz, Zstandard, tar, cab, cpio, ar, RPM, ISO, ...) and miscellaneous (SQLite, pcap and pcapng, bplist, DER certificates, PEM, LNK, fonts, registry hives). The seven category switches are CyberChef's. Output is File type, Extension, MIME type and Description for every match at offset 0, a blank line between matches, and CyberChef's text for no match; the names and extensions are Forge's own table, so they differ from CyberChef's in places (an APK or a JAR is a ZIP whose first entry says so, or just a ZIP). The layout is from memory of CyberChef 11.5.0 and not checked against it."
-  },
-  {
-    "cyberchef": "Scan for Embedded Files",
-    "status": "redesigned",
-    "forge": ["filetype:scan"],
-    "note": "Every offset of the data where a signature of the same table matches (the file would start there; a signature at an offset such as tar's ustar at 257 is reported at the start of the file), ordered by offset, as text: Offset N (0xN):, then the four lines of Detect File Type, and Total found: N. The category switches are CyberChef's; Ignore common byte sequences (the default) leaves out the short signatures that occur by chance in any data (MZ, ICO and CUR, MPEG audio and AAC frame sync, a shebang, zlib headers, ...), which CyberChef's version of the option does with its own list. The scan is one primitive (filetype:scan-list, public so that the YARA ops reuse it): 5 ms for 64 KiB and one VM step; the report is FL, about 250 steps a match. More matches than the value limit allows is E_LIMIT_VALUE. The introductory sentence and the layout are from memory of CyberChef and not checked against it."
-  },
-  {
-    "cyberchef": "Extract Files",
-    "status": "redesigned",
-    "forge": ["filetype:extract", "filetype:entry"],
-    "note": "The files found by signature, cut out with an end finder per type where the format allows one: PNG (to IEND), JPEG (segments to EOI), GIF (blocks to the trailer), BMP and RIFF (WAV, AVI, WebP) by the size field, ICO, PDF (the last %%EOF before the next %PDF-), RTF (balanced braces), ZIP and its relatives (the end record whose directory closes exactly at that record, so a stored zip inside a zip is told from its container), 7z, gzip (the existing inflate, then the trailer), Zstandard (block walk), tar (header checksums), cab, DEX, SQLite, pcap and pcapng, DER certificates, PEM, MP4 boxes, Ogg pages, EBML segments, ELF and PE (sizes from the headers; a PE overlay is not included). A type with no end finder (TIFF, FLAC, MP3, RAR, bzip2, xz, Mach-O, OLE2, ...) or a damaged or cut-short file is left out with Ignore failed extractions (the default, as CyberChef) and is E_COERCE otherwise; nothing falls back to 'to the next signature'. The result is a list of records (name extracted_at_0x<offset>.<ext>, offset, size, type = the MIME type, data) in the Wave 7 archive convention, and filetype:entry returns one by index as bytes so that a recipe can go on. Miscellaneous is off by default as in CyberChef. Nested files are extracted as well; the total is bounded by the value limit (E_LIMIT_VALUE) and the work of the end finders by 2^28 bytes examined. Category Forensics (CyberChef files it under Extractors)."
-  },
-  {
-    "cyberchef": "ELF Info",
-    "status": "redesigned",
-    "forge": ["elf:info"],
-    "note": "The layout and the values of `readelf -W -h -l -S -s` for ELF32 and ELF64, little and big endian, checked block for block against GNU readelf 2.42 on real and hand-built files (executables, shared objects, ELF32 BE MIPS, ARM, PowerPC64, RISC-V, GNU and FreeBSD OS/ABIs): the header, the program headers (with the interpreter line and DYN (Position-Independent Executable file) from DT_FLAGS_1), the section headers with their names, and .symtab and .dynsym with value, size, type, bind, visibility, section index and name. At most 2,000 rows a table, then a line with the number of the others. The names of the 213 machines, the OS/ABIs, section types and segment types are readelf's. Not shown: machine-specific flag words in the header Flags field, machine-specific section and segment type names (ARM EXIDX, MIPS RTPROC), the 'Section to Segment mapping', symbol versions and the dynamic section. Data that is not ELF, a table that runs past the data, or counts and offsets that lie are E_COERCE with the offset. CyberChef's own report layout is from memory (it follows readelf) and was not compared."
-  },
-  {
-    "cyberchef": "Extract EXIF",
-    "status": "redesigned",
-    "forge": ["exif:extract"],
-    "note": "Found N tags. and a blank line, then Name: value for the tags of IFD0, the Exif IFD with the Interoperability IFD, the GPS IFD and the thumbnail IFD (names start with Thumbnail:), read without decoding the image, from a JPEG (the APP1 Exif segment), a PNG (eXIf), a WebP (EXIF) or a bare TIFF, in either byte order. The tag names are Pillow's ExifTags (TIFF 6, Exif 2.32, GPS). Values are the numbers stored, not translated words (Orientation: 1); rationals are decimals with up to six places, arrays show their first 16 values, the maker note is named by its size and not decoded, user comments are decoded by their character prefix, Windows XP tags are UTF-16, FLOAT and DOUBLE values are shown as hex. A JPEG without Exif gives Found 0 tags.; other data, a damaged TIFF structure or a value that runs past the data is E_COERCE. CyberChef's library (exif-parser) names tags and formats values differently in places (and gives GPS as decimal degrees); its layout is from memory and was not compared. Verified against Pillow's Image.Exif reader on files from an independent TIFF writer."
-  },
-  {
-    "cyberchef": "Extract ID3",
-    "status": "redesigned",
-    "forge": ["id3:extract"],
-    "note": "ID3v2.2, 2.3 and 2.4 at the start of the data and ID3v1 and v1.1 in the last 128 bytes, as text in Forge's own layout (one line per frame: Identifier (name): value; the flags unsynchronisation, extended header and footer in the heading). Text frames by their encoding byte (ISO-8859-1, UTF-16 with or without a mark, UTF-8, surrogate pairs), TXXX, WXXX, comments, lyrics, APIC and PIC (MIME type, picture type, size, description), PRIV, UFID, POPM, PCNT, GEOB; genres by number get the ID3v1 name (0 to 147). The whole-tag unsynchronisation of v2.3, the extended header and padding are handled; a frame with compression or encryption is named and not decoded; other frames show their size. No tag gives 'No ID3 tag found.'; a tag or frame that runs past the data is E_COERCE with the offset; at most 1,000 frames. ffprobe reads the same text fields (it cannot read the v2.3 whole-tag unsynchronisation). CyberChef's layout is not known to the author and was not compared."
-  },
-  {
-    "cyberchef": "Extract Audio Metadata",
-    "status": "redesigned",
-    "forge": ["audio-meta:extract"],
-    "note": "Container metadata without decoding audio, as lines of Name: value and a Tags: block: MP3 (MPEG version and layer, bit rate, sample rate, channels, duration from the Xing, Info or VBRI frame count or else from the bit rate, and the ID3 tags as Extract ID3 shows them), FLAC (STREAMINFO, Vorbis comments, pictures), Ogg (Vorbis, Opus, Speex: identification packet, comment packet over several pages, duration from the last granule position), WAV (fmt, data size, LIST INFO) and MP4 or M4A (ftyp, mvhd, the audio sample entry, ilst tags and cover art size). Sample rate, channels and duration were compared with ffprobe on files from ffmpeg (Opus: the pre-skip is subtracted, as the specification says). Not read: APE, WavPack, AIFF, ASF, tags inside Ogg FLAC streams, chapter and cue data, Matroska. CyberChef 11's op uses a library (music-metadata) and its output layout is not known to the author; this is the reading of its purpose. The container walks are a TypeScript primitive (see the package README)."
-  }
+ {
+  "cyberchef": "Detect File Type",
+  "status": "redesigned",
+  "forge": [
+   "filetype:detect"
+  ],
+  "note": "A table of about 150 signatures (name, extensions, MIME type, description, magic bytes with offsets and masks) in src/filetype-sigs.ts, written from the format documents and file(1)'s magic list, not copied from CyberChef: images, video, audio, documents (PDF, RTF, OLE2, OOXML and ODF by their first ZIP entry, EPUB), applications (ELF, PE and DOS MZ told apart by the PE header, Mach-O, Java class, DEX, WebAssembly), archives (ZIP, JAR, RAR 4 and 5, 7z, gzip, bzip2, xz, Zstandard, tar, cab, cpio, ar, RPM, ISO, ...) and miscellaneous (SQLite, pcap and pcapng, bplist, DER certificates, PEM, LNK, fonts, registry hives). The seven category switches are CyberChef's. Output is File type, Extension, MIME type and Description for every match at offset 0, a blank line between matches, and CyberChef's text for no match, and a blank line between matches; the names and extensions are Forge's own table, so they differ from CyberChef's in places (an APK or a JAR is a ZIP whose first entry says so, or just a ZIP). Checked against CyberChef 11.5.0 (WP 5.59c): the source read: the four lines (File type:, Extension:, MIME type: with three spaces and Description:, the last only when the description is not empty), the blank line between matches and the text for no match are CyberChef's."
+ },
+ {
+  "cyberchef": "Scan for Embedded Files",
+  "status": "redesigned",
+  "forge": [
+   "filetype:scan"
+  ],
+  "note": "Every offset of the data where a signature of the same table matches (the file would start there; a signature at an offset such as tar's ustar at 257 is reported at the start of the file), ordered by offset, as text in CyberChef's layout: its introductory sentence, then Offset N (0xN): and the four indented lines of Detect File Type for each match, or No embedded files were found. (no total line). The category switches are CyberChef's (Miscellaneous off by default). Added parameter ignore-common (default on; CyberChef 11.5.0 has no such option and reports every match): it leaves out the short signatures that occur by chance in any data (MZ, ICO and CUR, MPEG audio and AAC frame sync, a shebang, zlib headers, ...). The scan is one primitive (filetype:scan-list, public so that the YARA ops reuse it): 5 ms for 64 KiB and one VM step; the report is FL. More matches than the value limit allows is E_LIMIT_VALUE. Checked against CyberChef 11.5.0 (WP 5.59c): the source read; the signature table is Forge's own, so the matches differ in places."
+ },
+ {
+  "cyberchef": "Extract Files",
+  "status": "redesigned",
+  "forge": [
+   "filetype:extract",
+   "filetype:entry"
+  ],
+  "note": "The files found by signature, cut out with an end finder per type where the format allows one: PNG (to IEND), JPEG (segments to EOI), GIF (blocks to the trailer), BMP and RIFF (WAV, AVI, WebP) by the size field, ICO, PDF (the last %%EOF before the next %PDF-), RTF (balanced braces), ZIP and its relatives (the end record whose directory closes exactly at that record, so a stored zip inside a zip is told from its container), 7z, gzip (the existing inflate, then the trailer), Zstandard (block walk), tar (header checksums), cab, DEX, SQLite, pcap and pcapng, DER certificates, PEM, MP4 boxes, Ogg pages, EBML segments, ELF and PE (sizes from the headers; a PE overlay is not included). A type with no end finder (TIFF, FLAC, MP3, RAR, bzip2, xz, Mach-O, OLE2, ...) or a damaged or cut-short file has no end finder and is always left out, as CyberChef does (No extraction algorithm available is never an error); a damaged or cut-short file is left out with Ignore failed extractions (the default, as CyberChef) and is E_COERCE otherwise; nothing falls back to 'to the next signature'. Added: Minimum File Size (default 100, as CyberChef's) leaves out smaller files. The result is a list of records (name extracted_at_0x<offset>.<ext>, offset, size, type = the MIME type, data) in the Wave 7 archive convention, and filetype:entry returns one by index as bytes so that a recipe can go on. Miscellaneous is off by default as in CyberChef. Nested files are extracted as well; the total is bounded by the value limit (E_LIMIT_VALUE) and the work of the end finders by 2^28 bytes examined. Category Forensics (CyberChef files it under both Extractors and Forensics). Checked against CyberChef 11.5.0 (WP 5.59c): the source read; the file names (extracted_at_0x<offset>.<ext>), the order, the options and their defaults are CyberChef's; the result is a list of records instead of a list of File objects with an HTML preview."
+ },
+ {
+  "cyberchef": "ELF Info",
+  "status": "redesigned",
+  "forge": [
+   "elf:info"
+  ],
+  "note": "The layout and the values of `readelf -W -h -l -S -s` for ELF32 and ELF64, little and big endian, checked block for block against GNU readelf 2.42 on real and hand-built files (executables, shared objects, ELF32 BE MIPS, ARM, PowerPC64, RISC-V, GNU and FreeBSD OS/ABIs): the header, the program headers (with the interpreter line and DYN (Position-Independent Executable file) from DT_FLAGS_1), the section headers with their names, and .symtab and .dynsym with value, size, type, bind, visibility, section index and name. At most 2,000 rows a table, then a line with the number of the others. The names of the 213 machines, the OS/ABIs, section types and segment types are readelf's. Not shown: machine-specific flag words in the header Flags field, machine-specific section and segment type names (ARM EXIDX, MIPS RTPROC), the 'Section to Segment mapping', symbol versions and the dynamic section. Data that is not ELF, a table that runs past the data, or counts and offsets that lie are E_COERCE with the offset. CyberChef's own report is not readelf's: Checked against CyberChef 11.5.0 (WP 5.59c): the source and its tests read; it prints '= ELF Header =' blocks of 'Label:' lines padded to 30 characters (decimal addresses, binary flags, a section name per section, the names of the symbols only) and has defects (the .strtab case falls through to .symtab, so symbol names are read from the wrong table; no symbol values, types or bindings; the program header flags are in a different position for 32 and 64 bits). Forge keeps the readelf layout, which carries all of that information, as a deliberate difference; it is a layout the owner may still want changed."
+ },
+ {
+  "cyberchef": "Extract EXIF",
+  "status": "redesigned",
+  "forge": [
+   "exif:extract"
+  ],
+  "note": "Found N tags. and a blank line, then Name: value for the tags of IFD0, the Exif IFD with the Interoperability IFD, the GPS IFD and the thumbnail IFD (names start with Thumbnail:), read without decoding the image, from a JPEG (the APP1 Exif segment), a PNG (eXIf), a WebP (EXIF) or a bare TIFF, in either byte order. The tag names are Pillow's ExifTags (TIFF 6, Exif 2.32, GPS). Values are the numbers stored, not translated words (Orientation: 1); rationals are decimals with up to six places, arrays show their first 16 values, the maker note is named by its size and not decoded, user comments are decoded by their character prefix, Windows XP tags are UTF-16, FLOAT and DOUBLE values are shown as hex. A JPEG without Exif gives Found 0 tags.; other data, a damaged TIFF structure or a value that runs past the data is E_COERCE. CyberChef's library (exif-parser) names tags and formats values differently in places (and gives GPS as decimal degrees). Checked against CyberChef 11.5.0 (WP 5.59c): the layout (Found N tags. and a blank line, then Name: value per tag) is CyberChef's; the tag names and value formats are not. Verified against Pillow's Image.Exif reader on files from an independent TIFF writer."
+ },
+ {
+  "cyberchef": "Extract ID3",
+  "status": "redesigned",
+  "forge": [
+   "id3:extract"
+  ],
+  "note": "ID3v2.2, 2.3 and 2.4 at the start of the data and ID3v1 and v1.1 in the last 128 bytes, as text in Forge's own layout (one line per frame: Identifier (name): value; the flags unsynchronisation, extended header and footer in the heading). Text frames by their encoding byte (ISO-8859-1, UTF-16 with or without a mark, UTF-8, surrogate pairs), TXXX, WXXX, comments, lyrics, APIC and PIC (MIME type, picture type, size, description), PRIV, UFID, POPM, PCNT, GEOB; genres by number get the ID3v1 name (0 to 147). The whole-tag unsynchronisation of v2.3, the extended header and padding are handled; a frame with compression or encryption is named and not decoded; other frames show their size. No tag gives 'No ID3 tag found.'; a tag or frame that runs past the data is E_COERCE with the offset; at most 1,000 frames. ffprobe reads the same text fields (it cannot read the v2.3 whole-tag unsynchronisation). Checked against CyberChef 11.5.0 (WP 5.59c): CyberChef's op reads only an ID3v2 tag at the start, with its own crude parser (the frame data as Latin-1 after skipping one byte, v2.2 frames mishandled, an unknown frame is an error), returns JSON ({Type, Version, Flags, Size, Tags: {id: {Size, Description, Data}}}) and shows it as an HTML table of Tag, Description and Data. Forge keeps its text, one line per frame, which carries the same fields (the identifier, a description and the decoded value) for more versions and encodings; the outputs are not the same shape, as a deliberate difference."
+ },
+ {
+  "cyberchef": "Extract Audio Metadata",
+  "status": "redesigned",
+  "forge": [
+   "audio-meta:extract"
+  ],
+  "note": "Container metadata without decoding audio, as lines of Name: value and a Tags: block: MP3 (MPEG version and layer, bit rate, sample rate, channels, duration from the Xing, Info or VBRI frame count or else from the bit rate, and the ID3 tags as Extract ID3 shows them), FLAC (STREAMINFO, Vorbis comments, pictures), Ogg (Vorbis, Opus, Speex: identification packet, comment packet over several pages, duration from the last granule position), WAV (fmt, data size, LIST INFO) and MP4 or M4A (ftyp, mvhd, the audio sample entry, ilst tags and cover art size). Sample rate, channels and duration were compared with ffprobe on files from ffmpeg (Opus: the pre-skip is subtracted, as the specification says). Not read: APE, WavPack, AIFF, ASF, tags inside Ogg FLAC streams, chapter and cue data, Matroska. Checked against CyberChef 11.5.0 (WP 5.59c): CyberChef's op has its own parsers for MP3, WAV and BW64, FLAC, Ogg, MP4, AIFF, AAC, AC3 and WMA, takes a file name and a maximum size of embedded text as parameters and returns a normalised JSON report (container, tags, technical, embedded objects, errors) shown as an HTML table. Forge keeps its text report and has no parameters; AIFF, AAC, AC3 and ASF/WMA are not read here (see above), and the JSON shape is not reproduced."
+ }
 ]

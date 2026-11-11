@@ -4,7 +4,8 @@
     "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
     "op": "yara:scan",
     "params": {
-      "rules": "rule demo : t1 t2 { meta: author = \"me\" n = 3 ok = true strings: $a = \"abc\" $b = { 61 ?? 63 } condition: all of them }"
+      "rules": "rule demo : t1 t2 { meta: author = \"me\" n = 3 ok = true strings: $a = \"abc\" $b = { 61 ?? 63 } condition: all of them }",
+      "show-counts": false
     },
     "input": {
       "value": "78782061626320616263",
@@ -21,7 +22,8 @@
     "op": "yara:scan",
     "params": {
       "rules": "rule demo : t1 t2 { meta: author = \"me\" n = 3 ok = true strings: $a = \"abc\" $b = { 61 ?? 63 } condition: all of them }",
-      "show-metadata": true
+      "show-metadata": true,
+      "show-counts": false
     },
     "input": {
       "value": "78782061626320616263",
@@ -45,7 +47,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Input matches rule \"demo\".\n  Pattern $a, count: 2\n  Pattern $b, count: 2\n",
+      "value": "Input matches rule \"demo\" (4 times).\n",
       "enc": "utf8"
     }
   },
@@ -55,14 +57,15 @@
     "op": "yara:scan",
     "params": {
       "rules": "rule demo : t1 t2 { meta: author = \"me\" n = 3 ok = true strings: $a = \"abc\" $b = { 61 ?? 63 } condition: all of them }",
-      "show-strings": true
+      "show-strings": true,
+      "show-counts": false
     },
     "input": {
       "value": "78782061626320616263",
       "enc": "hex"
     },
     "expect": {
-      "value": "Input matches rule \"demo\".\n  Pattern $a\n    Pos 3, data: \"abc\"\n    Pos 7, data: \"abc\"\n  Pattern $b\n    Pos 3, data: \"abc\"\n    Pos 7, data: \"abc\"\n",
+      "value": "Rule \"demo\" matches:\nPos 3, identifier $a, data: \"abc\"\nPos 7, identifier $a, data: \"abc\"\nPos 3, identifier $b, data: \"abc\"\nPos 7, identifier $b, data: \"abc\"\n",
       "enc": "utf8"
     }
   },
@@ -72,14 +75,15 @@
     "op": "yara:scan",
     "params": {
       "rules": "rule demo : t1 t2 { meta: author = \"me\" n = 3 ok = true strings: $a = \"abc\" $b = { 61 ?? 63 } condition: all of them }",
-      "show-string-lengths": true
+      "show-string-lengths": true,
+      "show-counts": false
     },
     "input": {
       "value": "78782061626320616263",
       "enc": "hex"
     },
     "expect": {
-      "value": "Input matches rule \"demo\".\n  Pattern $a\n    Pos 3, length 3\n    Pos 7, length 3\n  Pattern $b\n    Pos 3, length 3\n    Pos 7, length 3\n",
+      "value": "Rule \"demo\" matches:\nPos 3, length 3, identifier $a\nPos 7, length 3, identifier $a\nPos 3, length 3, identifier $b\nPos 7, length 3, identifier $b\n",
       "enc": "utf8"
     }
   },
@@ -99,7 +103,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Input matches rule \"demo\" [author: me, n: 3, ok: true].\n  Pattern $a, count: 2\n    Pos 3, length 3, data: \"abc\"\n    Pos 7, length 3, data: \"abc\"\n  Pattern $b, count: 2\n    Pos 3, length 3, data: \"abc\"\n    Pos 7, length 3, data: \"abc\"\n",
+      "value": "Rule \"demo\" [author: me, n: 3, ok: true] matches (4 times):\nPos 3, length 3, identifier $a, data: \"abc\"\nPos 7, length 3, identifier $a, data: \"abc\"\nPos 3, length 3, identifier $b, data: \"abc\"\nPos 7, length 3, identifier $b, data: \"abc\"\n",
       "enc": "utf8"
     }
   },
@@ -119,7 +123,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "No rules matched.",
+      "value": "",
       "enc": "utf8"
     }
   },
@@ -128,14 +132,15 @@
     "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
     "op": "yara:scan",
     "params": {
-      "rules": ""
+      "rules": "",
+      "show-counts": false
     },
     "input": {
       "value": "78782061626320616263",
       "enc": "hex"
     },
     "expect": {
-      "value": "No rules matched.",
+      "value": "",
       "enc": "utf8"
     }
   },
@@ -144,7 +149,8 @@
     "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
     "op": "yara:scan",
     "params": {
-      "rules": "rule a { strings: $a = \"x\" condition: not $a }"
+      "rules": "rule a { strings: $a = \"x\" condition: not $a }",
+      "show-counts": false
     },
     "input": {
       "value": "",
@@ -168,7 +174,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Input matches rule \"a\".\n  Pattern $x, count: 2\nInput matches rule \"b\".\n",
+      "value": "Input matches rule \"a\" (2 times).\nInput matches rule \"b\".\n",
       "enc": "utf8"
     }
   },
@@ -177,7 +183,8 @@
     "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
     "op": "yara:scan",
     "params": {
-      "rules": "private rule p { condition: true } rule b { condition: p }"
+      "rules": "private rule p { condition: true } rule b { condition: p }",
+      "show-counts": false
     },
     "input": {
       "value": "",
@@ -193,14 +200,15 @@
     "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
     "op": "yara:scan",
     "params": {
-      "rules": "global rule g { condition: filesize > 100 } rule b { condition: true }"
+      "rules": "global rule g { condition: filesize > 100 } rule b { condition: true }",
+      "show-counts": false
     },
     "input": {
       "value": "616263",
       "enc": "hex"
     },
     "expect": {
-      "value": "No rules matched.",
+      "value": "",
       "enc": "utf8"
     }
   },
@@ -219,7 +227,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Input matches rule \"a\".\n  Pattern $a, count: 3\n    Pos 0, length 2, data: \"hi\"\n    Pos 3, length 4, data: \"H\\x00I\\x00\"\n    Pos 8, length 2, data: \"HI\"\n",
+      "value": "Rule \"a\" matches (3 times):\nPos 0, length 2, identifier $a, data: \"hi\"\nPos 3, length 4, identifier $a, data: \"H\\x00I\\x00\"\nPos 8, length 2, identifier $a, data: \"HI\"\n",
       "enc": "utf8"
     }
   },
@@ -238,7 +246,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Input matches rule \"a\".\n  Pattern $a, count: 1\n    Pos 0, length 2, data: \"gp\"\n",
+      "value": "Rule \"a\" matches (1 time):\nPos 0, length 2, identifier $a, data: \"gp\"\n",
       "enc": "utf8"
     }
   },
@@ -257,7 +265,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Input matches rule \"a\".\n  Pattern $a, count: 1\n    Pos 6, length 6, data: \"SGVsbG\"\n",
+      "value": "Rule \"a\" matches (1 time):\nPos 6, length 6, identifier $a, data: \"SGVsbG\"\n",
       "enc": "utf8"
     }
   },
@@ -276,7 +284,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Input matches rule \"a\".\n  Pattern $a, count: 2\n    Pos 0, length 3, data: \"cat\"\n    Pos 11, length 3, data: \"cat\"\n",
+      "value": "Rule \"a\" matches (2 times):\nPos 0, length 3, identifier $a, data: \"cat\"\nPos 11, length 3, identifier $a, data: \"cat\"\n",
       "enc": "utf8"
     }
   },
@@ -295,7 +303,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Input matches rule \"a\".\n  Pattern $a, count: 2\n    Pos 1, length 6, data: \"MZ\\x90\\x00PE\"\n    Pos 10, length 8, data: \"MZ....LE\"\n",
+      "value": "Rule \"a\" matches (2 times):\nPos 1, length 6, identifier $a, data: \"MZ\\x90\\x00PE\"\nPos 10, length 8, identifier $a, data: \"MZ....LE\"\n",
       "enc": "utf8"
     }
   },
@@ -314,7 +322,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Input matches rule \"a\".\n  Pattern $a, count: 2\n    Pos 5, length 8, data: \"555-0199\"\n    Pos 17, length 8, data: \"555-0100\"\n",
+      "value": "Rule \"a\" matches (2 times):\nPos 5, length 8, identifier $a, data: \"555-0199\"\nPos 17, length 8, identifier $a, data: \"555-0100\"\n",
       "enc": "utf8"
     }
   },
@@ -333,7 +341,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Input matches rule \"a\".\n  Pattern $a, count: 4\n    Pos 1, length 4, data: \"\\\"\\\\\\n\\x01\"\n    Pos 2, length 3, data: \"\\\\\\n\\x01\"\n    Pos 3, length 2, data: \"\\n\\x01\"\n    Pos 4, length 1, data: \"\\x01\"\n",
+      "value": "Rule \"a\" matches (4 times):\nPos 1, length 4, identifier $a, data: \"\\\"\\\\\\n\\x01\"\nPos 2, length 3, identifier $a, data: \"\\\\\\n\\x01\"\nPos 3, length 2, identifier $a, data: \"\\n\\x01\"\nPos 4, length 1, identifier $a, data: \"\\x01\"\n",
       "enc": "utf8"
     }
   },
@@ -352,7 +360,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Input matches rule \"a\".\n  Pattern $a, count: 40\n    Pos 0, length 40, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...\"\n    Pos 1, length 39, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...\"\n    Pos 2, length 38, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...\"\n    Pos 3, length 37, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...\"\n    Pos 4, length 36, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...\"\n    Pos 5, length 35, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...\"\n    Pos 6, length 34, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...\"\n    Pos 7, length 33, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...\"\n    Pos 8, length 32, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\n    Pos 9, length 31, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\n    Pos 10, length 30, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\n    Pos 11, length 29, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\n    Pos 12, length 28, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\n    Pos 13, length 27, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxx\"\n    Pos 14, length 26, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxx\"\n    Pos 15, length 25, data: \"xxxxxxxxxxxxxxxxxxxxxxxxx\"\n    Pos 16, length 24, data: \"xxxxxxxxxxxxxxxxxxxxxxxx\"\n    Pos 17, length 23, data: \"xxxxxxxxxxxxxxxxxxxxxxx\"\n    Pos 18, length 22, data: \"xxxxxxxxxxxxxxxxxxxxxx\"\n    Pos 19, length 21, data: \"xxxxxxxxxxxxxxxxxxxxx\"\n    Pos 20, length 20, data: \"xxxxxxxxxxxxxxxxxxxx\"\n    Pos 21, length 19, data: \"xxxxxxxxxxxxxxxxxxx\"\n    Pos 22, length 18, data: \"xxxxxxxxxxxxxxxxxx\"\n    Pos 23, length 17, data: \"xxxxxxxxxxxxxxxxx\"\n    Pos 24, length 16, data: \"xxxxxxxxxxxxxxxx\"\n    Pos 25, length 15, data: \"xxxxxxxxxxxxxxx\"\n    Pos 26, length 14, data: \"xxxxxxxxxxxxxx\"\n    Pos 27, length 13, data: \"xxxxxxxxxxxxx\"\n    Pos 28, length 12, data: \"xxxxxxxxxxxx\"\n    Pos 29, length 11, data: \"xxxxxxxxxxx\"\n    Pos 30, length 10, data: \"xxxxxxxxxx\"\n    Pos 31, length 9, data: \"xxxxxxxxx\"\n    Pos 32, length 8, data: \"xxxxxxxx\"\n    Pos 33, length 7, data: \"xxxxxxx\"\n    Pos 34, length 6, data: \"xxxxxx\"\n    Pos 35, length 5, data: \"xxxxx\"\n    Pos 36, length 4, data: \"xxxx\"\n    Pos 37, length 3, data: \"xxx\"\n    Pos 38, length 2, data: \"xx\"\n    Pos 39, length 1, data: \"x\"\n",
+      "value": "Rule \"a\" matches (40 times):\nPos 0, length 40, identifier $a, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...\"\nPos 1, length 39, identifier $a, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...\"\nPos 2, length 38, identifier $a, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...\"\nPos 3, length 37, identifier $a, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...\"\nPos 4, length 36, identifier $a, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...\"\nPos 5, length 35, identifier $a, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...\"\nPos 6, length 34, identifier $a, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...\"\nPos 7, length 33, identifier $a, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...\"\nPos 8, length 32, identifier $a, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\nPos 9, length 31, identifier $a, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\nPos 10, length 30, identifier $a, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\nPos 11, length 29, identifier $a, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\nPos 12, length 28, identifier $a, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\nPos 13, length 27, identifier $a, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxx\"\nPos 14, length 26, identifier $a, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxx\"\nPos 15, length 25, identifier $a, data: \"xxxxxxxxxxxxxxxxxxxxxxxxx\"\nPos 16, length 24, identifier $a, data: \"xxxxxxxxxxxxxxxxxxxxxxxx\"\nPos 17, length 23, identifier $a, data: \"xxxxxxxxxxxxxxxxxxxxxxx\"\nPos 18, length 22, identifier $a, data: \"xxxxxxxxxxxxxxxxxxxxxx\"\nPos 19, length 21, identifier $a, data: \"xxxxxxxxxxxxxxxxxxxxx\"\nPos 20, length 20, identifier $a, data: \"xxxxxxxxxxxxxxxxxxxx\"\nPos 21, length 19, identifier $a, data: \"xxxxxxxxxxxxxxxxxxx\"\nPos 22, length 18, identifier $a, data: \"xxxxxxxxxxxxxxxxxx\"\nPos 23, length 17, identifier $a, data: \"xxxxxxxxxxxxxxxxx\"\nPos 24, length 16, identifier $a, data: \"xxxxxxxxxxxxxxxx\"\nPos 25, length 15, identifier $a, data: \"xxxxxxxxxxxxxxx\"\nPos 26, length 14, identifier $a, data: \"xxxxxxxxxxxxxx\"\nPos 27, length 13, identifier $a, data: \"xxxxxxxxxxxxx\"\nPos 28, length 12, identifier $a, data: \"xxxxxxxxxxxx\"\nPos 29, length 11, identifier $a, data: \"xxxxxxxxxxx\"\nPos 30, length 10, identifier $a, data: \"xxxxxxxxxx\"\nPos 31, length 9, identifier $a, data: \"xxxxxxxxx\"\nPos 32, length 8, identifier $a, data: \"xxxxxxxx\"\nPos 33, length 7, identifier $a, data: \"xxxxxxx\"\nPos 34, length 6, identifier $a, data: \"xxxxxx\"\nPos 35, length 5, identifier $a, data: \"xxxxx\"\nPos 36, length 4, identifier $a, data: \"xxxx\"\nPos 37, length 3, identifier $a, data: \"xxx\"\nPos 38, length 2, identifier $a, data: \"xx\"\nPos 39, length 1, identifier $a, data: \"x\"\n",
       "enc": "utf8"
     }
   },
@@ -369,7 +377,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Input matches rule \"a\".\n  Pattern $a, count: 2\n  Pattern $b, count: 1\n",
+      "value": "Input matches rule \"a\" (3 times).\n",
       "enc": "utf8"
     }
   },
@@ -379,7 +387,8 @@
     "op": "yara:scan",
     "params": {
       "rules": "rule a { strings: $a = \"ab\" condition: $a and uint16(0) == 0x6261 and uint16be(0) == 0x6162 and filesize == 2 }",
-      "show-metadata": true
+      "show-metadata": true,
+      "show-counts": false
     },
     "input": {
       "value": "6162",
@@ -403,7 +412,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Input matches rule \"a\".\n  Pattern $a1, count: 1\n  Pattern $a2, count: 1\n",
+      "value": "Input matches rule \"a\" (2 times).\n",
       "enc": "utf8"
     }
   },
@@ -420,7 +429,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Input matches rule \"a\".\n  Pattern $a, count: 2\n",
+      "value": "Input matches rule \"a\" (2 times).\n",
       "enc": "utf8"
     }
   },
@@ -429,7 +438,8 @@
     "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
     "op": "yara:scan",
     "params": {
-      "rules": "rule a { condition: true } rule b { condition: a and filesize == 0 }"
+      "rules": "rule a { condition: true } rule b { condition: a and filesize == 0 }",
+      "show-counts": false
     },
     "input": {
       "value": "",
@@ -446,7 +456,8 @@
     "op": "yara:scan",
     "params": {
       "rules": "rule a { meta: s = \"x\\ty\" i = -5 h = 0x10 f = false condition: true }",
-      "show-metadata": true
+      "show-metadata": true,
+      "show-counts": false
     },
     "input": {
       "value": "",
@@ -463,7 +474,8 @@
     "op": "yara:scan",
     "params": {
       "rules": "rule a { meta: d = \"say \\\"hi\\\"\" condition: true }",
-      "show-metadata": true
+      "show-metadata": true,
+      "show-counts": false
     },
     "input": {
       "value": "",
@@ -479,14 +491,15 @@
     "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
     "op": "yara:scan",
     "params": {
-      "rules": "rule a { strings: $a = \"ab\" condition: @a[5] == 1 or uint32(100) == 1 }"
+      "rules": "rule a { strings: $a = \"ab\" condition: @a[5] == 1 or uint32(100) == 1 }",
+      "show-counts": false
     },
     "input": {
       "value": "6162",
       "enc": "hex"
     },
     "expect": {
-      "value": "No rules matched.",
+      "value": "",
       "enc": "utf8"
     }
   },
@@ -495,7 +508,8 @@
     "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
     "op": "yara:scan",
     "params": {
-      "rules": "rule a { condition: 1 + 2 * 3 == 7 and 1 << 2 + 1 == 8 }"
+      "rules": "rule a { condition: 1 + 2 * 3 == 7 and 1 << 2 + 1 == 8 }",
+      "show-counts": false
     },
     "input": {
       "value": "",
@@ -511,7 +525,7 @@
     "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
     "op": "yara:scan",
     "params": {
-      "rules": "rule a { meta: d = \"caf\u00e9\" strings: $a = \"\u00e9\" condition: $a }",
+      "rules": "rule a { meta: d = \"café\" strings: $a = \"é\" condition: $a }",
       "show-strings": true,
       "show-string-lengths": true,
       "show-metadata": true,
@@ -522,7 +536,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Input matches rule \"a\" [d: caf\u00e9].\n  Pattern $a, count: 1\n    Pos 3, length 2, data: \"\\xc3\\xa9\"\n",
+      "value": "Rule \"a\" [d: café] matches (1 time):\nPos 3, length 2, identifier $a, data: \"\\xc3\\xa9\"\n",
       "enc": "utf8"
     }
   },
@@ -794,6 +808,22 @@
     },
     "expect": {
       "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "the defaults: Show counts is on, as in CyberChef",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule demo : t1 t2 { meta: author = \"me\" n = 3 ok = true strings: $a = \"abc\" $b = { 61 ?? 63 } condition: all of them }"
+    },
+    "input": {
+      "value": "78782061626320616263",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Input matches rule \"demo\" (4 times).\n",
+      "enc": "utf8"
     }
   }
 ]

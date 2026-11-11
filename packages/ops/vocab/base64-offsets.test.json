@@ -341,7 +341,7 @@
   },
   {
     "name": "URL-safe alphabet, without variable characters",
-    "ref": "Python base64.b64encode of the data behind 0, 1 and 2 zero bytes; the trimming rule of the op doc applied by an independent function",
+    "ref": "Python base64; with no padding character the last character, which depends on later bytes, is left out",
     "op": "base64-offsets:show",
     "params": {
       "alphabet": "A-Za-z0-9-_",
@@ -353,7 +353,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "SGVsbG8sIFdvcmxkfj8\nhlbGxvLCBXb3JsZH4_\nIZWxsbywgV29ybGR-Pw",
+      "value": "SGVsbG8sIFdvcmxkfj\nhlbGxvLCBXb3JsZH4_\nIZWxsbywgV29ybGR-P",
       "enc": "utf8"
     }
   },

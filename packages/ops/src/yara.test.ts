@@ -501,30 +501,40 @@ describe("yara:scan (the op)", () => {
       'Input matches rule "demo" [author: me, n: 3, ok: true].\n',
     );
   });
-  test("counts", async () => {
+  test("counts: the matches of all the strings of the rule", async () => {
     expect(textOf(await op(RULES, DATA, [false, false, false, true]))).toBe(
-      'Input matches rule "demo".\n  Pattern $a, count: 2\n  Pattern $b, count: 2\n',
+      'Input matches rule "demo" (4 times).\n',
     );
+    expect(
+      textOf(
+        await op('rule a { strings: $a = "x" condition: $a }', "x", [false, false, false, true]),
+      ),
+    ).toBe('Input matches rule "a" (1 time).\n');
   });
-  test("strings and lengths", async () => {
+  test("strings and lengths: the layout of CyberChef", async () => {
     expect(textOf(await op(RULES, DATA, [true, false, false, false]))).toBe(
-      'Input matches rule "demo".\n  Pattern $a\n    Pos 3, data: "abc"\n    Pos 7, data: "abc"\n  Pattern $b\n    Pos 3, data: "abc"\n    Pos 7, data: "abc"\n',
+      'Rule "demo" matches:\nPos 3, identifier $a, data: "abc"\nPos 7, identifier $a, data: "abc"\nPos 3, identifier $b, data: "abc"\nPos 7, identifier $b, data: "abc"\n',
     );
     expect(textOf(await op(RULES, DATA, [false, true, false, false]))).toBe(
-      'Input matches rule "demo".\n  Pattern $a\n    Pos 3, length 3\n    Pos 7, length 3\n  Pattern $b\n    Pos 3, length 3\n    Pos 7, length 3\n',
+      'Rule "demo" matches:\nPos 3, length 3, identifier $a\nPos 7, length 3, identifier $a\nPos 3, length 3, identifier $b\nPos 7, length 3, identifier $b\n',
     );
   });
   test("everything on", async () => {
     expect(textOf(await op(RULES, DATA, [true, true, true, true]))).toBe(
-      'Input matches rule "demo" [author: me, n: 3, ok: true].\n  Pattern $a, count: 2\n    Pos 3, length 3, data: "abc"\n    Pos 7, length 3, data: "abc"\n  Pattern $b, count: 2\n    Pos 3, length 3, data: "abc"\n    Pos 7, length 3, data: "abc"\n',
+      'Rule "demo" [author: me, n: 3, ok: true] matches (4 times):\nPos 3, length 3, identifier $a, data: "abc"\nPos 7, length 3, identifier $a, data: "abc"\nPos 3, length 3, identifier $b, data: "abc"\nPos 7, length 3, identifier $b, data: "abc"\n',
     );
   });
-  test("two rules in source order, no match, private rules hidden", async () => {
+  test("a rule with no string match is the short form even with strings on", async () => {
+    expect(
+      textOf(await op("rule a { condition: filesize > 1 }", "xy", [true, true, true, true])),
+    ).toBe('Input matches rule "a".\n');
+  });
+  test("two rules in source order, no match gives empty text, private rules hidden", async () => {
     const two =
       "rule a { condition: true } private rule p { condition: true } rule b { condition: p }";
     expect(textOf(await op(two, ""))).toBe('Input matches rule "a".\nInput matches rule "b".\n');
-    expect(textOf(await op("rule a { condition: false }", ""))).toBe("No rules matched.");
-    expect(textOf(await op("", "abc"))).toBe("No rules matched.");
+    expect(textOf(await op("rule a { condition: false }", ""))).toBe("");
+    expect(textOf(await op("", "abc"))).toBe("");
   });
   test("data is escaped and cut at 32 bytes", async () => {
     const r = await op(
@@ -546,7 +556,7 @@ describe("yara:scan (the op)", () => {
           true,
         ]),
       ),
-    ).toBe('Input matches rule "a".\n  Pattern $b, count: 1\n    Pos 1, length 1, data: "y"\n');
+    ).toBe('Rule "a" matches (1 time):\nPos 1, length 1, identifier $b, data: "y"\n');
   });
   test("empty input", async () => {
     expect(textOf(await op('rule a { strings: $a = "x" condition: not $a }', ""))).toBe(

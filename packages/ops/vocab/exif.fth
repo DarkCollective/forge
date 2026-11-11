@@ -214,11 +214,8 @@ IN: exif
   t vstart vstart count 1024 min + slice bytes>latin1 "\x00" split 0 nth latin1>bytes util:text-lossless ;
 
 \ UTF-16 text (BMP only; a surrogate is U+FFFD), up to the first NUL.
-: _unit ( b:bytes i:int le:bool -- int )
-  le [ b 2 i * nth b 2 i * 1 + nth 256 * + ] [ b 2 i * nth 256 * b 2 i * 1 + nth + ] if ;
-
 : _utf16 ( b:bytes le:bool -- str )
-  0 b len 2 div range [ b swap le _unit dup util:surrogate? [ drop 65533 ] when ] map
+  0 b len 2 div range [ b swap le not util:u16 dup util:surrogate? [ drop 65533 ] when ] map
   codes>str "\x00" split 0 nth ;
 
 : _hex-bytes ( t:bytes count:int vstart:int -- str )

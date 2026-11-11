@@ -907,14 +907,15 @@ export const primitives: readonly PrimitiveDef[] = [
       minSize: number | bigint,
       ctx: PrimitiveContext,
     ) =>
-      carve(d, categoriesOf(cats), ignoreFailed, ctx.limits.maxValueBytes, Number(minSize)).map((f) =>
-        record([
-          ["name", str(f.name)],
-          ["offset", int(f.offset)],
-          ["size", int(f.size)],
-          ["type", str(f.mime)],
-          ["data", bytes(f.data)],
-        ]),
+      carve(d, categoriesOf(cats), ignoreFailed, ctx.limits.maxValueBytes, Number(minSize)).map(
+        (f) =>
+          record([
+            ["name", str(f.name)],
+            ["offset", int(f.offset)],
+            ["size", int(f.size)],
+            ["type", str(f.mime)],
+            ["data", bytes(f.data)],
+          ]),
       ),
     {
       doc: "The files found by file signature, cut out with the end finder of their type, as records of name (extracted_at_0x<offset>.<extension>), offset, size, type (MIME) and data, in order of offset. A type with no end finder is always left out; a file that is damaged or cut short is left out with ignore-failed and E_COERCE otherwise; a file smaller than min-size bytes is left out. The sum of the sizes is bounded by the value limit (E_LIMIT_VALUE). Shared word of the filetype vocabulary.",

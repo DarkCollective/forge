@@ -47,12 +47,59 @@ USING: charset base64 util raise ;
   name "ascii" = [ b _ascii-text ] [
   b name true charset:decode ] if ] if ] if ;
 
-\ One encoded word: charset, encoding letter and text to the characters.
-: _word ( cs:str enc:str text:str -- str )
-  enc text _word-bytes cs _bare _lookup _decode-bytes ;
+\ The charset name (as charset:decode knows it) and the bytes of one encoded word, from its regex groups.
+: _name-of ( g:list -- str )
+  g 0 nth _bare _lookup ;
 
-: _match-word ( g:list -- str )
-  g 0 nth g 1 nth g 2 nth _word ;
+: _bytes-of ( g:list -- bytes )
+  g 1 nth g 2 nth _word-bytes ;
+
+\ Words of these sets are decoded here, one at a time (see _decode-bytes).
+: _fast? ( name:str -- bool )
+  name "utf-8" = name "iso-8859-1" = or name "ascii" = or ;
+
+\ A set whose words can be decoded together, joined with a NUL: not UTF-16 (a NUL is half a unit) and not the
+\ stateful ISO-2022-JP.
+: _joinable? ( name:str -- bool )
+  name _fast? not name "utf-16le" = not and name "utf-16be" = not and name "iso-2022-jp" = not and ;
+
+\ True when none of the byte strings holds a NUL.
+: _no-nul? ( bs:list -- bool )
+  bs [ bytes>latin1 "\x00" split len 1 = ] filter len bs len = ;
+
+: _per-word ( bs:list name:str -- list )
+  bs [ name _decode-bytes ] map ;
+
+\ charset:decode builds its tables on every call (about 0.5 MB of the total allocation limit, so about 1,800 words
+\ in one header stopped it): all the words of a set are decoded in one call, joined with a NUL that every joinable
+\ set reads as itself, and split again. Another number of pieces falls back to one call a word.
+: _joined ( bs:list name:str -- list )
+  bs [ bytes>latin1 ] map "\x00" join latin1>bytes name true charset:decode "\x00" split ;
+
+: _group-texts ( bs:list name:str -- list )
+  name _joinable? bs len 1 > and bs _no-nul? and
+  [ bs name _joined dup len bs len = [ ] [ drop bs name _per-word ] if ]
+  [ bs name _per-word ] if ;
+
+\ The pairs (index as text, decoded text) of the words in the set called name; idxs are their positions.
+: _pairs-of ( idxs:list bss:list name:str -- list )
+  idxs [ bss swap nth ] map name _group-texts
+  idxs [ int>str ] map swap zip ;
+
+: _acc ( acc:list name:str names:list bss:list -- list )
+  acc 0 names len core:range [ names swap nth name = ] filter bss name _pairs-of cat ;
+
+\ The texts of a record of pairs from index 0 to n - 1.
+: _ordered ( recs:record n:int -- list )
+  0 n core:range [ int>str recs swap get ] map ;
+
+\ The decoded text of every word, in order; names and bss hold the set name and the bytes of each word.
+: _texts ( names:list bss:list -- list )
+  names list:unique { } [ names bss _acc ] reduce >record names len _ordered ;
+
+\ The decoded text of every encoded word of the matches, in order.
+: _decoded ( ms:list -- list )
+  ms [ "groups" get ] map dup [ _name-of ] map swap [ _bytes-of ] map _texts ;
 
 \ The text between match i-1 (or the start) and match i.
 : _gap ( i:int ms:list s:str -- str )
@@ -61,19 +108,20 @@ USING: charset base64 util raise ;
   [ s ms i 1 - nth "end" get ms i nth "start" get slice ] if ;
 
 \ Blank text between two encoded words is dropped (RFC 2047 section 6.2); other text stays.
-: _piece ( i:int ms:list s:str -- str )
+: _piece ( i:int ms:list s:str texts:list -- str )
   i ms s _gap
   i 0 > over "\\S" "" regex:test not and [ drop "" ] when
-  ms i nth "groups" get _match-word cat ;
+  texts i nth cat ;
+
+: _assemble-with ( s:str ms:list texts:list -- str )
+  0 ms len core:range [ ms s texts _piece ] map "" join
+  s ms ms len 1 - nth "end" get s len slice cat ;
 
 : _assemble ( s:str ms:list -- str )
-  ms len 0 = [ s ] [
-    0 ms len core:range [ ms s _piece ] map "" join
-    s ms ms len 1 - nth "end" get s len slice cat
-  ] if ;
+  ms len 0 = [ s ] [ s ms ms _decoded _assemble-with ] if ;
 
 : decode ( data:str -- str )
-  "Decode the encoded-words of RFC 2047 in header text, as CyberChef's MIME Decoding does: =?charset?B?base64?= and =?charset?Q?quoted-printable?= (in Q, _ is a space and =XX a byte) become the text they stand for, the text around them is kept, and white space between two encoded words is dropped. A line break written CR LF is read as LF first (CyberChef does that to the whole text). The character set is any that Decode text knows by its MIME name (utf-8, us-ascii, iso-8859-1 and the other ISO 8859 parts that exist there but 9, the windows-125x pages, koi8-r, gb2312, big5, shift_jis, euc-jp, euc-kr, utf-16le and utf-16be; CyberChef knows utf-8, us-ascii and iso-8859-1 to 16), a language part (utf-8*en, RFC 2231) is ignored. A word must be well formed to be decoded: no white space or ? inside it, the encoding letter B or Q (any case); anything else stays as text. An unknown character set, bytes that are not valid in their character set, bad base64, a bad =XX or a character that is not printable ASCII in a Q word is E_COERCE (CyberChef: Unhandled Charset, Incorrectly Encoded Word). Each word is decoded on its own, as the RFC says a character must not be split between words." doc
+  "Decode the encoded-words of RFC 2047 in header text, as CyberChef's MIME Decoding does: =?charset?B?base64?= and =?charset?Q?quoted-printable?= (in Q, _ is a space and =XX a byte) become the text they stand for, the text around them is kept, and white space between two encoded words is dropped. A line break written CR LF is read as LF first (CyberChef does that to the whole text). The character set is any that Decode text knows by its MIME name (utf-8, us-ascii, iso-8859-1 and the other ISO 8859 parts that exist there but 9, the windows-125x pages, koi8-r, gb2312, big5, shift_jis, euc-jp, euc-kr, utf-16le and utf-16be; CyberChef knows utf-8, us-ascii and iso-8859-1 to 16), a language part (utf-8*en, RFC 2231) is ignored. A word must be well formed to be decoded: no white space or ? inside it, the encoding letter B or Q (any case); anything else stays as text. An unknown character set, bytes that are not valid in their character set, bad base64, a bad =XX or a character that is not printable ASCII in a Q word is E_COERCE (CyberChef: Unhandled Charset, Incorrectly Encoded Word). Each word is decoded on its own, as the RFC says a character must not be split between words (the words of one character set are handed to the decoder together, joined with a NUL, to save its set-up cost)." doc
   "Data format" category
   data "\r\n" split "\n" join
   dup "=\\?([^?\\s]+)\\?([BbQq])\\?([^?\\s]*)\\?=" "" regex:find-all _assemble ;
