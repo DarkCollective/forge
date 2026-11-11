@@ -11,8 +11,8 @@ USING: md5 hex base64 ;
 
 \ The bytes of an op's input: hex text (any white space ignored), Base64 text or the raw bytes.
 : _input ( data:bytes format:str -- bytes )
-  format "hex" = [ data hex:decode ] [
-    format "base64" = [ data "standard" base64:decode ] [ data ] if ] if ;
+  format "raw" = [ data ] [
+    format "hex" = [ data hex:decode ] [ data "standard" base64:decode ] if ] if ;
 
 \ Four bytes at p as a big-endian unsigned integer (the caller has checked that they are there).
 : _u32 ( d:bytes p:int -- int )
@@ -77,7 +77,7 @@ USING: md5 hex base64 ;
 \ ---- the outputs ----
 
 : _md5hex ( s:str -- str )
-  s str>bytes md5:digest bytes>hex ;
+  s str>bytes md5:digest bytes>hex lower ;
 
 \ The four fields of the HASSH string: the key exchange list and the three lists of one direction (c2s: 2, 4, 6; s2c: 3, 5, 7).
 : _fields ( names:list a:int b:int c:int -- list )

@@ -78,6 +78,7 @@ function decode(data: Uint8Array, types: boolean, ctx: PrimitiveContext): Value 
     for (let i = 0; i < 10; i++) {
       if (p + i >= end) throw new Bad("a varint is cut short (truncated)", p);
       const b = data[p + i] as number;
+      if (i === 9 && b > 127) throw new Bad("a varint is longer than 10 bytes", p);
       if (i === 9 && b > 1) throw new Bad("a varint is more than 64 bits", p);
       if (i < 7) lo += (b & 127) * 2 ** (7 * i);
       else big += BigInt(b & 127) << BigInt(7 * i);
@@ -86,13 +87,13 @@ function decode(data: Uint8Array, types: boolean, ctx: PrimitiveContext): Value 
         const v = BigInt(lo) + big;
         return [v <= BigInt(Number.MAX_SAFE_INTEGER) ? Number(v) : v, p + i + 1];
       }
-      if (i === 9) throw new Bad("a varint is longer than 10 bytes", p);
     }
     throw new Bad("a varint is longer than 10 bytes", p);
   }
 
   /** A fixed-width unsigned integer, exact. */
-  const fixed = (v: bigint): number | bigint => (v <= BigInt(Number.MAX_SAFE_INTEGER) ? Number(v) : v);
+  const fixed = (v: bigint): number | bigint =>
+    v <= BigInt(Number.MAX_SAFE_INTEGER) ? Number(v) : v;
 
   /** The bytes [p, p+len) as text if valid UTF-8, else as hex digits. */
   function textOrHex(p: number, len: number): Value {
@@ -134,7 +135,8 @@ function decode(data: Uint8Array, types: boolean, ctx: PrimitiveContext): Value 
       const at = p;
       const [tag, afterTag] = varint(p, end);
       p = afterTag;
-      if (typeof tag === "bigint" || tag >= 2 ** 32) throw new Bad("a field number is too large", at);
+      if (typeof tag === "bigint" || tag >= 2 ** 32)
+        throw new Bad("a field number is too large", at);
       const wire = tag % 8;
       const field = Math.floor(tag / 8);
       if (field === 0) throw new Bad("field number 0 is not a field", at);
@@ -145,18 +147,29 @@ function decode(data: Uint8Array, types: boolean, ctx: PrimitiveContext): Value 
         p = next;
         value = int(v);
       } else if (wire === 1) {
-        if (end - p < 8) throw new Bad(`a 64-bit field is cut short: ${end - p} of 8 bytes are left (truncated)`, p);
+        if (end - p < 8)
+          throw new Bad(
+            `a 64-bit field is cut short: ${end - p} of 8 bytes are left (truncated)`,
+            p,
+          );
         value = int(fixed(dv.getBigUint64(p, true)));
         p += 8;
       } else if (wire === 5) {
-        if (end - p < 4) throw new Bad(`a 32-bit field is cut short: ${end - p} of 4 bytes are left (truncated)`, p);
+        if (end - p < 4)
+          throw new Bad(
+            `a 32-bit field is cut short: ${end - p} of 4 bytes are left (truncated)`,
+            p,
+          );
         value = int(dv.getUint32(p, true));
         p += 4;
       } else if (wire === 2) {
         const [len, next] = varint(p, end);
         p = next;
         if (typeof len === "bigint" || len > end - p)
-          throw new Bad(`a length-delimited field declares ${String(len)} bytes but only ${end - p} are left (truncated)`, at);
+          throw new Bad(
+            `a length-delimited field declares ${String(len)} bytes but only ${end - p} are left (truncated)`,
+            at,
+          );
         value = delimited(p, len, depth);
         p += len;
       } else {
