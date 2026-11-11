@@ -686,8 +686,8 @@
     }
   },
   {
-    "name": "encrypt CTR across the counter wrap",
-    "ref": "key stream = DES-ECB of the counters fffffffffffffffe, ffffffffffffffff, 0000000000000000 (openssl enc -des-ecb -K ...)",
+    "name": "encrypt CTR across the 32-bit counter wrap",
+    "ref": "key stream = DES-ECB of fffffffffffffffe, ffffffffffffffff, ffffffff00000000 (openssl enc -des-ecb -K ...): the counter is the last 4 bytes, wrapping with no carry (node-forge inc32)",
     "op": "des:encrypt",
     "params": {
       "key": {
@@ -706,13 +706,13 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "bc5e4b7801835324d1ea89ed3fb230f9d4d64cf325",
+      "value": "bc5e4b7801835324d1ea89ed3fb230f9130cb25c51",
       "enc": "hex"
     }
   },
   {
-    "name": "decrypt CTR across the counter wrap",
-    "ref": "key stream = DES-ECB of the counters fffffffffffffffe, ffffffffffffffff, 0000000000000000 (openssl enc -des-ecb -K ...)",
+    "name": "decrypt CTR across the 32-bit counter wrap",
+    "ref": "key stream = DES-ECB of fffffffffffffffe, ffffffffffffffff, ffffffff00000000 (openssl enc -des-ecb -K ...): the counter is the last 4 bytes, wrapping with no carry (node-forge inc32)",
     "op": "des:decrypt",
     "params": {
       "key": {
@@ -727,7 +727,7 @@
       "padding": "none"
     },
     "input": {
-      "value": "bc5e4b7801835324d1ea89ed3fb230f9d4d64cf325",
+      "value": "bc5e4b7801835324d1ea89ed3fb230f9130cb25c51",
       "enc": "hex"
     },
     "expect": {

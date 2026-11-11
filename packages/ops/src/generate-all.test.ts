@@ -121,12 +121,31 @@ describe("generate-all:hashes", () => {
       const want = hexOf((r.stack[r.stack.length - 1] as { v: Uint8Array }).v);
       expect(got[name], name).toBe(want);
     }
-    expect(Object.keys(got)).toHaveLength(45);
+    expect(Object.keys(got)).toHaveLength(46);
     expect(got["SSDEEP"]).toMatch(/^3:/);
     expect(got["NT Hash"]).toBe(
       await digestHex("nthash:digest", [str("The quick brown fox jumps over the lazy dog")]),
     );
+    expect(got["LM Hash"]).toBe(
+      await digestHex("lmhash:digest", [str("The quick brown fox jumps over the lazy dog")]),
+    );
   }, 60_000);
+
+  test("the LM hash line sits just before the NT hash line, where CyberChef has it (after the GOST hash)", async () => {
+    const out = (await report("generate-all:hashes", enc("password"))).out!;
+    const names = lines(out).map(([n]) => n);
+    expect(names.indexOf("LM Hash")).toBeGreaterThan(names.indexOf("GOST"));
+    expect(names.slice(names.indexOf("LM Hash"))).toEqual(["LM Hash", "NT Hash", "SSDEEP"]);
+    // the well-known LM hash of password (the lmhash vectors cite it)
+    expect(out).toContain("LM Hash:      e52cac67419a9a224a3b108f3fa6cb6d\n");
+  });
+
+  test("input the LM hash cannot take (a character beyond Latin-1) gets a note on its line only", async () => {
+    const out = (await report("generate-all:hashes", enc("a\u20ac"))).out!;
+    expect(out).toContain("LM Hash:      (the input is not UTF-8 text of Latin-1 characters)\n");
+    expect(out).toMatch(/NT Hash: {6}[0-9a-f]{32}\n/);
+    expect(lines(out)).toHaveLength(46);
+  });
 
   test("the length filter keeps the digests of that many bits (ssdeep only for all)", async () => {
     const data = enc("abc");
@@ -153,19 +172,21 @@ describe("generate-all:hashes", () => {
       out.split("\n")[5],
       out.split("\n")[6],
       out.split("\n")[7],
+      out.split("\n")[8],
       "",
     ]);
   });
 
-  test("binary input that is not UTF-8 still gives a report, with a note for the NT hash", async () => {
+  test("binary input that is not UTF-8 still gives a report, with a note for the LM and NT hashes", async () => {
     const out = (await report("generate-all:hashes", Uint8Array.from([0xff, 0xfe, 0, 1]))).out!;
-    expect(lines(out)).toHaveLength(45);
+    expect(lines(out)).toHaveLength(46);
+    expect(out).toContain("LM Hash:      (the input is not UTF-8 text of Latin-1 characters)");
     expect(out).toContain("NT Hash:      (the input is not valid UTF-8 text)");
   });
 
   test("64 KiB takes a few thousand steps", async () => {
     const r = await report("generate-all:hashes", randBytes(65536));
-    expect(lines(r.out!)).toHaveLength(45);
+    expect(lines(r.out!)).toHaveLength(46);
     expect(r.steps).toBeLessThan(100_000);
   }, 60_000);
 });

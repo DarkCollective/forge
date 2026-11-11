@@ -29,7 +29,7 @@
  */
 import { definePrimitive } from "@forge/lang";
 import type { PrimitiveDef } from "@forge/lang";
-import { le32, putLe32 } from "../cipher-util-b.js";
+import { getLE32, putLE32 } from "../cipher-util.js";
 import { coerceFailure, rangeFailure } from "../prim-util.js";
 
 const DELTA = 0x9e3779b9;
@@ -42,7 +42,7 @@ function keyWords(key: Uint8Array): Uint32Array {
   const padded = new Uint8Array(16);
   padded.set(key);
   const k = new Uint32Array(4);
-  for (let i = 0; i < 4; i++) k[i] = le32(padded, 4 * i);
+  for (let i = 0; i < 4; i++) k[i] = getLE32(padded, 4 * i);
   return k;
 }
 
@@ -99,12 +99,12 @@ export function encrypt(data: Uint8Array, key: Uint8Array): Uint8Array {
   const n = Math.ceil(data.length / 4);
   const padded = new Uint8Array(4 * (n + 1));
   padded.set(data);
-  putLe32(padded, 4 * n, data.length);
+  putLE32(padded, 4 * n, data.length);
   const v = new Uint32Array(n + 1);
-  for (let i = 0; i <= n; i++) v[i] = le32(padded, 4 * i);
+  for (let i = 0; i <= n; i++) v[i] = getLE32(padded, 4 * i);
   encryptWords(v, k);
   const out = new Uint8Array(4 * (n + 1));
-  for (let i = 0; i <= n; i++) putLe32(out, 4 * i, v[i]!);
+  for (let i = 0; i <= n; i++) putLE32(out, 4 * i, v[i]!);
   return out;
 }
 
@@ -120,7 +120,7 @@ export function decrypt(data: Uint8Array, key: Uint8Array): Uint8Array {
     );
   const w = data.length / 4;
   const v = new Uint32Array(w);
-  for (let i = 0; i < w; i++) v[i] = le32(data, 4 * i);
+  for (let i = 0; i < w; i++) v[i] = getLE32(data, 4 * i);
   decryptWords(v, k);
   const m = v[w - 1]!;
   const max = 4 * (w - 1);
@@ -131,7 +131,7 @@ export function decrypt(data: Uint8Array, key: Uint8Array): Uint8Array {
       "unable to decrypt using this key (the length word is wrong)",
     );
   const out = new Uint8Array(4 * (w - 1));
-  for (let i = 0; i < w - 1; i++) putLe32(out, 4 * i, v[i]!);
+  for (let i = 0; i < w - 1; i++) putLE32(out, 4 * i, v[i]!);
   return out.slice(0, m);
 }
 

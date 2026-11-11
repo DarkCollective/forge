@@ -28,7 +28,7 @@
  */
 import { definePrimitive } from "@forge/lang";
 import type { PrimitiveDef } from "@forge/lang";
-import { be32, checkBlock, KeyCache, putBe32 } from "../cipher-util-b.js";
+import { getBE32, checkBlock, keyCache, putBE32 } from "../cipher-util.js";
 import { rangeFailure } from "../prim-util.js";
 
 const SBOX = [0xc, 0x5, 0x6, 0xb, 0x9, 0x0, 0xa, 0xd, 0x3, 0xe, 0xf, 0x8, 0x4, 0x7, 0x1, 0x2];
@@ -110,28 +110,28 @@ function roundKeys(key: Uint8Array): Uint32Array {
   return out;
 }
 
-const cache = new KeyCache<Uint32Array>();
+const cachedRoundKeys = keyCache(roundKeys);
 
 function schedule(key: Uint8Array): Uint32Array {
   if (key.length !== 10 && key.length !== 16)
     throw rangeFailure(`the PRESENT key must be 10 or 16 bytes, not ${key.length}`, {
       length: key.length,
     });
-  return cache.get(key, "p", () => roundKeys(key));
+  return cachedRoundKeys(key);
 }
 
 /** One 8-byte block encrypted. */
 export function encryptBlock(block: Uint8Array, key: Uint8Array): Uint8Array {
   const rk = schedule(key);
   checkBlock(block, 8, "PRESENT");
-  let hi = be32(block, 0);
-  let lo = be32(block, 4);
+  let hi = getBE32(block, 0);
+  let lo = getBE32(block, 4);
   for (let r = 0; r < 31; r++) {
     [hi, lo] = apply(SP, (hi ^ rk[2 * r]!) >>> 0, (lo ^ rk[2 * r + 1]!) >>> 0);
   }
   const out = new Uint8Array(8);
-  putBe32(out, 0, (hi ^ rk[62]!) >>> 0);
-  putBe32(out, 4, (lo ^ rk[63]!) >>> 0);
+  putBE32(out, 0, (hi ^ rk[62]!) >>> 0);
+  putBE32(out, 4, (lo ^ rk[63]!) >>> 0);
   return out;
 }
 
@@ -139,8 +139,8 @@ export function encryptBlock(block: Uint8Array, key: Uint8Array): Uint8Array {
 export function decryptBlock(block: Uint8Array, key: Uint8Array): Uint8Array {
   const rk = schedule(key);
   checkBlock(block, 8, "PRESENT");
-  let hi = (be32(block, 0) ^ rk[62]!) >>> 0;
-  let lo = (be32(block, 4) ^ rk[63]!) >>> 0;
+  let hi = (getBE32(block, 0) ^ rk[62]!) >>> 0;
+  let lo = (getBE32(block, 4) ^ rk[63]!) >>> 0;
   for (let r = 30; r >= 0; r--) {
     [hi, lo] = apply(PINV, hi, lo);
     [hi, lo] = apply(SINV, hi, lo);
@@ -148,8 +148,8 @@ export function decryptBlock(block: Uint8Array, key: Uint8Array): Uint8Array {
     lo = (lo ^ rk[2 * r + 1]!) >>> 0;
   }
   const out = new Uint8Array(8);
-  putBe32(out, 0, hi);
-  putBe32(out, 4, lo);
+  putBE32(out, 0, hi);
+  putBE32(out, 4, lo);
   return out;
 }
 

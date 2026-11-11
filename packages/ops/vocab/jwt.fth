@@ -40,7 +40,7 @@ USING: hmac base64 ;
 
 \ Part i of the token decoded from url-safe base64 to text, which must be a JSON object.
 : _part ( parts:list i:int what:str -- str )
-  parts i nth str>bytes "url" base64:decode bytes>str
+  parts i nth str>bytes util:b64url-decode bytes>str
   dup what _check-object ;
 
 \ The alg of a header: the value of the one "alg" key.
@@ -61,7 +61,7 @@ USING: hmac base64 ;
 \ E_COERCE unless the signature (part 3) is the HMAC of the first two parts.
 : _check-sig ( parts:list key:bytes alg:str -- )
   parts 0 nth "." cat parts 1 nth cat str>bytes alg _hash key hmac:digest
-  parts 2 nth str>bytes "url" base64:decode <>
+  parts 2 nth str>bytes util:b64url-decode <>
   [ "the JWT signature does not verify (wrong key, or the token was altered)" raise:coerce ] when ;
 
 \ The payload of a token whose signature checks out.
@@ -69,10 +69,6 @@ USING: hmac base64 ;
   key _need-key
   parts key parts 0 "header" _part _alg want _pick _check-sig
   parts 1 "payload" _part str>bytes ;
-
-\ url-safe base64 text without padding, as bytes.
-: _b64u ( b:bytes -- bytes )
-  b "url" false base64:encode str>bytes ;
 
 \ The extra header members: the text between the braces of a JSON object, or empty.
 : _extra ( extra:str -- str )
@@ -92,8 +88,8 @@ USING: hmac base64 ;
 : _sign ( payload:bytes key:bytes alg:str header:str -- bytes )
   key _need-key
   payload bytes>str "payload" _check-object
-  header str>bytes _b64u "." str>bytes cat payload _b64u cat
-  dup alg _hash key hmac:digest _b64u
+  header str>bytes false util:b64url-encode "." str>bytes cat payload false util:b64url-encode cat
+  dup alg _hash key hmac:digest false util:b64url-encode
   "." str>bytes swap cat cat ;
 
 : decode ( bytes part:choice{payload|header}="payload" -- bytes )

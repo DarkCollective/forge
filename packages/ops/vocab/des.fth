@@ -9,16 +9,16 @@ IN: des
 USING: blockmode ;
 
 : encrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice{CBC|CFB|OFB|CTR|ECB}="CBC" padding:choice{pkcs7|none}="pkcs7" -- bytes )
-  "DES encryption (FIPS 46-3) of the input bytes, 64-bit blocks. The key is 8 bytes (56 bits plus parity, which is not checked); another length is E_RANGE. The IV is 8 bytes for CBC, CFB, OFB and CTR (E_RANGE otherwise) and unused for ECB. padding (PKCS#7 or none) applies to CBC and ECB only: with none the input must be whole 8-byte blocks (E_COERCE); CFB (full-block CFB-64), OFB and CTR keep the length. CTR increments the whole 8-byte counter block. DES is broken by exhaustive search; use it only for compatibility. Chain hex:encode for text." doc
+  "DES encryption (FIPS 46-3) of the input bytes, 64-bit blocks. The key is 8 bytes (56 bits plus parity, which is not checked); another length is E_RANGE. The IV is 8 bytes for CBC, CFB, OFB and CTR (E_RANGE otherwise) and unused for ECB. padding (PKCS#7 or none) applies to CBC and ECB only: with none the input must be whole 8-byte blocks (E_COERCE); CFB (full-block CFB-64), OFB and CTR keep the length. CTR increments only the last four bytes of the 8-byte counter block, modulo 2^32 with no carry into the rest, as CyberChef's does (node-forge's inc32); it differs from a whole-block counter only after 2^32 blocks. DES is broken by exhaustive search; use it only for compatibility. Chain hex:encode for text." doc
   "Encryption" category
   key _check-key
-  mode iv 8 padding "pkcs7" = [ key _encrypt-block ] blockmode:encrypt ;
+  mode "CTR32" blockmode:ctr-as iv 8 padding "pkcs7" = [ key _encrypt-block ] blockmode:encrypt ;
 
 : decrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice{CBC|CFB|OFB|CTR|ECB}="CBC" padding:choice{pkcs7|none}="pkcs7" -- bytes )
   "DES decryption, the inverse of des:encrypt with the same key, IV, mode and padding. PKCS#7 padding that does not check (usually a wrong key or IV) is E_COERCE, and so is ciphertext that is not whole 8-byte blocks in CBC or ECB. A key or IV of the wrong length is E_RANGE." doc
   "Encryption" category
   key _check-key
-  mode iv 8 padding "pkcs7" = [ key _encrypt-block ] [ key _decrypt-block ] blockmode:decrypt ;
+  mode "CTR32" blockmode:ctr-as iv 8 padding "pkcs7" = [ key _encrypt-block ] [ key _decrypt-block ] blockmode:decrypt ;
 
 META: encrypt
   param key "The DES key: 8 bytes (the least significant bit of each byte is a parity bit and is ignored)." ;

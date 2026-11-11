@@ -3,7 +3,7 @@
     "cyberchef": "DES Encrypt",
     "status": "redesigned",
     "forge": ["des:encrypt"],
-    "note": "Bytes in and bytes out (CyberChef's Input and Output menus are chain steps such as hex:decode and hex:encode). Key and IV are key params in any key encoding; the key is 8 bytes. Modes CBC (default), CFB, OFB, CTR and ECB as in CyberChef, with the shared blockmode layer; padding is its own choice (pkcs7 or none). A wrong key or IV length is E_RANGE."
+    "note": "Bytes in and bytes out (CyberChef's Input and Output menus are chain steps such as hex:decode and hex:encode). Key and IV are key params in any key encoding; the key is 8 bytes. Modes CBC (default), CFB, OFB, CTR and ECB as in CyberChef, with the shared blockmode layer; padding is its own choice (pkcs7 or none). A wrong key or IV length is E_RANGE. CTR adds one to the last four bytes of the counter block only, modulo 2^32 with no carry into the rest, as CyberChef does (node-forge's inc32); a whole-block counter (the usual reading of SP 800-38A) gives the same key stream until the low word wraps, after 2^32 blocks."
   },
   {
     "cyberchef": "DES Decrypt",
@@ -15,7 +15,7 @@
     "cyberchef": "Triple DES Encrypt",
     "status": "redesigned",
     "forge": ["triple-des:encrypt"],
-    "note": "As DES with a 24-byte key, or a 16-byte key (two-key: K3 = K1, as CyberChef does); modes CBC, CFB, OFB, CTR and ECB; padding is its own choice. EDE form (SP 800-67)."
+    "note": "As DES with a 24-byte key, or a 16-byte key (two-key: K3 = K1, as CyberChef does); modes CBC, CFB, OFB, CTR and ECB; padding is its own choice. EDE form (SP 800-67). CTR adds one to the last four bytes of the counter block only, modulo 2^32 with no carry into the rest, as CyberChef does (node-forge's inc32); a whole-block counter (the usual reading of SP 800-38A) gives the same key stream until the low word wraps, after 2^32 blocks."
   },
   {
     "cyberchef": "Triple DES Decrypt",
@@ -27,7 +27,7 @@
     "cyberchef": "Blowfish Encrypt",
     "status": "redesigned",
     "forge": ["blowfish:encrypt"],
-    "note": "Key of 4 to 56 bytes (CyberChef's range), modes CBC, CFB, OFB, CTR and ECB, padding as a separate choice (pkcs7 or none). Big-endian words as in Schneier's paper."
+    "note": "Key of 4 to 56 bytes (CyberChef's range), modes CBC, CFB, OFB, CTR and ECB, padding as a separate choice (pkcs7 or none). Big-endian words as in Schneier's paper. CTR adds one to the last four bytes of the counter block only, modulo 2^32 with no carry into the rest, as CyberChef does (node-forge's inc32); a whole-block counter (the usual reading of SP 800-38A) gives the same key stream until the low word wraps, after 2^32 blocks."
   },
   {
     "cyberchef": "Blowfish Decrypt",
@@ -39,7 +39,7 @@
     "cyberchef": "RC2 Encrypt",
     "status": "redesigned",
     "forge": ["rc2:encrypt"],
-    "note": "RFC 2268. CyberChef runs CBC when an IV is given and ECB when it is blank, with no other setting; here mode (CBC, the default, or ECB) is explicit, so a blank IV in CBC is E_RANGE. The RFC's effective key bits are the effective-bits param (1 to 1024), whose default 128 is what CyberChef's library uses for any key length. Key 1 to 128 bytes; padding is its own choice."
+    "note": "RFC 2268. CyberChef runs CBC when an IV is given and ECB when it is blank, with no other setting; here mode (CBC, the default, or ECB) is explicit, so a blank IV in CBC is E_RANGE. The RFC's effective key bits are the effective-bits param (1 to 1024), whose default 128 is what CyberChef's library uses for any key length. Key 1 to 128 bytes; padding is its own choice. Effective bits that are not a multiple of 8 follow RFC 2268 (the vectors cover 63 and 129); the library behind CyberChef masks those wrongly, but CyberChef never sets them."
   },
   {
     "cyberchef": "RC2 Decrypt",
@@ -51,7 +51,7 @@
     "cyberchef": "RC6 Encrypt",
     "status": "redesigned",
     "forge": ["rc6:encrypt"],
-    "note": "RC6-w/r with CyberChef's parameters: word-size (a multiple of 8, 8 to 256, default 32) and rounds (1 to 255, default 20); an empty IV is zero bytes as in CyberChef; modes CBC, CFB, OFB, CTR and ECB. Padding is pkcs7 or none: CyberChef's ZERO, RANDOM and BIT paddings are not offered (the shared padding is PKCS#7), and empty input encrypts to one padding block where CyberChef returns nothing. Word sizes other than 32 use BigInt arithmetic and are slow."
+    "note": "RC6-w/r with CyberChef's parameters: word-size (a multiple of 8, 8 to 256, default 32) and rounds (1 to 255, default 20); an empty IV is zero bytes as in CyberChef; modes CBC, CFB, OFB, CTR and ECB. Padding is pkcs7 or none: CyberChef's ZERO, RANDOM and BIT paddings are not offered (the shared padding is PKCS#7), and empty input encrypts to one padding block where CyberChef returns nothing. Word sizes other than 32 use BigInt arithmetic and are slow. CTR reads the counter block as a little-endian integer (the first byte is the least significant) and adds one per block, as CyberChef's RC6 does, so it differs from the big-endian counter of the other ciphers after the first block. The block is w / 2 bytes, so word-size 8 has 4-byte blocks (the modes work for any block size)."
   },
   {
     "cyberchef": "RC6 Decrypt",
@@ -63,7 +63,7 @@
     "cyberchef": "Twofish Encrypt",
     "status": "redesigned",
     "forge": ["twofish:encrypt"],
-    "note": "Keys of 16, 24 or 32 bytes, 16-byte IV, modes CBC, CFB, OFB, CTR and ECB. Padding is pkcs7 or none: CyberChef's ZERO, RANDOM and BIT paddings are not offered."
+    "note": "Keys of 16, 24 or 32 bytes, 16-byte IV, modes CBC, CFB, OFB, CTR and ECB. Padding is pkcs7 or none: CyberChef's ZERO, RANDOM and BIT paddings are not offered. CTR reads the counter block as a little-endian integer (the first byte is the least significant) and adds one per block, as CyberChef's Twofish does, so it differs from the big-endian counter of the other ciphers after the first block. An empty input encrypts to one block of padding in CBC and ECB where CyberChef returns nothing."
   },
   {
     "cyberchef": "Twofish Decrypt",
@@ -75,7 +75,7 @@
     "cyberchef": "SM4 Encrypt",
     "status": "redesigned",
     "forge": ["sm4:encrypt"],
-    "note": "GB/T 32907-2016, 16-byte key and IV, modes CBC, CFB, OFB, CTR and ECB. CyberChef's CBC/NoPadding and ECB/NoPadding modes are padding none."
+    "note": "GB/T 32907-2016, 16-byte key and IV, modes CBC, CFB, OFB, CTR and ECB. CyberChef's CBC/NoPadding and ECB/NoPadding modes are padding none. CTR adds one to the last four bytes of the counter block only, modulo 2^32 with no carry into the rest, as CyberChef does (node-forge's inc32); a whole-block counter (the usual reading of SP 800-38A) gives the same key stream until the low word wraps, after 2^32 blocks. An empty input encrypts to one block of padding in CBC and ECB where CyberChef returns nothing."
   },
   {
     "cyberchef": "SM4 Decrypt",

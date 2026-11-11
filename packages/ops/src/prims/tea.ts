@@ -24,7 +24,7 @@
  */
 import { definePrimitive } from "@forge/lang";
 import type { PrimitiveDef } from "@forge/lang";
-import { be32, checkBlock, putBe32 } from "../cipher-util-b.js";
+import { getBE32, checkBlock, putBE32 } from "../cipher-util.js";
 import { rangeFailure } from "../prim-util.js";
 
 const DELTA = 0x9e3779b9;
@@ -33,15 +33,15 @@ const CYCLES = 32;
 function words(key: Uint8Array): number[] {
   if (key.length !== 16)
     throw rangeFailure(`the TEA key must be 16 bytes, not ${key.length}`, { length: key.length });
-  return [be32(key, 0), be32(key, 4), be32(key, 8), be32(key, 12)];
+  return [getBE32(key, 0), getBE32(key, 4), getBE32(key, 8), getBE32(key, 12)];
 }
 
 /** One 8-byte block encrypted (32 cycles). */
 export function encryptBlock(block: Uint8Array, key: Uint8Array): Uint8Array {
   const k = words(key);
   checkBlock(block, 8, "TEA");
-  let v0 = be32(block, 0);
-  let v1 = be32(block, 4);
+  let v0 = getBE32(block, 0);
+  let v1 = getBE32(block, 4);
   let sum = 0;
   for (let i = 0; i < CYCLES; i++) {
     sum = (sum + DELTA) >>> 0;
@@ -49,8 +49,8 @@ export function encryptBlock(block: Uint8Array, key: Uint8Array): Uint8Array {
     v1 = (v1 + ((((v0 << 4) + k[2]!) ^ (v0 + sum) ^ ((v0 >>> 5) + k[3]!)) >>> 0)) >>> 0;
   }
   const out = new Uint8Array(8);
-  putBe32(out, 0, v0);
-  putBe32(out, 4, v1);
+  putBE32(out, 0, v0);
+  putBE32(out, 4, v1);
   return out;
 }
 
@@ -58,8 +58,8 @@ export function encryptBlock(block: Uint8Array, key: Uint8Array): Uint8Array {
 export function decryptBlock(block: Uint8Array, key: Uint8Array): Uint8Array {
   const k = words(key);
   checkBlock(block, 8, "TEA");
-  let v0 = be32(block, 0);
-  let v1 = be32(block, 4);
+  let v0 = getBE32(block, 0);
+  let v1 = getBE32(block, 4);
   let sum = Math.imul(DELTA, CYCLES) >>> 0;
   for (let i = 0; i < CYCLES; i++) {
     v1 = (v1 - ((((v0 << 4) + k[2]!) ^ (v0 + sum) ^ ((v0 >>> 5) + k[3]!)) >>> 0)) >>> 0;
@@ -67,8 +67,8 @@ export function decryptBlock(block: Uint8Array, key: Uint8Array): Uint8Array {
     sum = (sum - DELTA) >>> 0;
   }
   const out = new Uint8Array(8);
-  putBe32(out, 0, v0);
-  putBe32(out, 4, v1);
+  putBE32(out, 0, v0);
+  putBE32(out, 4, v1);
   return out;
 }
 

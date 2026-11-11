@@ -27,7 +27,7 @@
  */
 import { definePrimitive } from "@forge/lang";
 import type { PrimitiveDef } from "@forge/lang";
-import { be32 } from "../cipher-util-b.js";
+import { getBE32 } from "../cipher-util.js";
 import { rangeFailure } from "../prim-util.js";
 
 /** Section 2.2: the counter constants A0..A7. */
@@ -101,8 +101,8 @@ class Rabbit {
     for (let i = 0; i < 4; i++) this.iterate();
     for (let j = 0; j < 8; j++) this.c[j] = (this.c[j]! ^ this.x[(j + 4) % 8]!) >>> 0;
     if (iv !== undefined) {
-      const hi = be32(iv, 0); // IV[63..32]
-      const lo = be32(iv, 4); // IV[31..0]
+      const hi = getBE32(iv, 0); // IV[63..32]
+      const lo = getBE32(iv, 4); // IV[31..0]
       const mixA = ((hi & 0xffff0000) | (lo >>> 16)) >>> 0; // IV[63..48] || IV[31..16]
       const mixB = (((hi & 0xffff) << 16) | (lo & 0xffff)) >>> 0; // IV[47..32] || IV[15..0]
       const iv32 = [lo, mixA, hi, mixB, lo, mixA, hi, mixB];

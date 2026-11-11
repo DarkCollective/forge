@@ -55,13 +55,28 @@ interface Cipher {
   extra: ReturnType<typeof int>[];
   enc: (block: Uint8Array, key: Uint8Array) => Uint8Array;
   modes: string[];
+  /**
+   * The counter convention of CTR, which SP 800-38A leaves to the application: "be32" adds one to the last four
+   * bytes, big-endian modulo 2^32, with no carry into the rest (node-forge's inc32, which CyberChef's DES,
+   * Triple DES, Blowfish, SM4 and AES use); "le" reads the whole block as a little-endian integer (CyberChef's
+   * Twofish and RC6).
+   */
+  ctr: "be32" | "le";
 }
 
 const ALL = ["ECB", "CBC", "CFB", "OFB", "CTR"];
 const bfCache = new Map<string, ReturnType<typeof bfInit>>();
 const CIPHERS: Cipher[] = [
-  { vocab: "des", bs: 8, klen: 8, extra: [], enc: desEncryptBlock, modes: ALL },
-  { vocab: "triple-des", bs: 8, klen: 24, extra: [], enc: tdesEncryptBlock, modes: ALL },
+  { vocab: "des", bs: 8, klen: 8, extra: [], enc: desEncryptBlock, modes: ALL, ctr: "be32" },
+  {
+    vocab: "triple-des",
+    bs: 8,
+    klen: 24,
+    extra: [],
+    enc: tdesEncryptBlock,
+    modes: ALL,
+    ctr: "be32",
+  },
   {
     vocab: "blowfish",
     bs: 8,
@@ -78,6 +93,7 @@ const CIPHERS: Cipher[] = [
       return bfEncryptBlock(st, b);
     },
     modes: ALL,
+    ctr: "be32",
   },
   {
     vocab: "rc2",
@@ -86,6 +102,7 @@ const CIPHERS: Cipher[] = [
     extra: [int(128)],
     enc: (b, k) => rc2EncryptBlock(b, k, 128),
     modes: ["ECB", "CBC"],
+    ctr: "be32",
   },
   {
     vocab: "rc6",
@@ -94,9 +111,18 @@ const CIPHERS: Cipher[] = [
     extra: [int(32), int(20)],
     enc: (b, k) => rc6EncryptBlock(b, k, 32, 20),
     modes: ALL,
+    ctr: "le",
   },
-  { vocab: "twofish", bs: 16, klen: 32, extra: [], enc: twofishEncryptBlock, modes: ALL },
-  { vocab: "sm4", bs: 16, klen: 16, extra: [], enc: sm4EncryptBlock, modes: ALL },
+  {
+    vocab: "twofish",
+    bs: 16,
+    klen: 32,
+    extra: [],
+    enc: twofishEncryptBlock,
+    modes: ALL,
+    ctr: "le",
+  },
+  { vocab: "sm4", bs: 16, klen: 16, extra: [], enc: sm4EncryptBlock, modes: ALL, ctr: "be32" },
 ];
 
 async function run(
@@ -146,9 +172,17 @@ function reference(
       ct = xorBytes(blk, prev);
     } else {
       ct = xorBytes(blk, c.enc(ctr, key));
-      for (let j = bs - 1; j >= 0; j--) {
-        ctr[j] = (ctr[j]! + 1) & 255;
-        if (ctr[j] !== 0) break;
+      if (c.ctr === "le") {
+        for (let j = 0; j < bs; j++) {
+          ctr[j] = (ctr[j]! + 1) & 255;
+          if (ctr[j] !== 0) break;
+        }
+      } else {
+        // the last four bytes only, wrapping without a carry
+        for (let j = bs - 1; j >= bs - 4; j--) {
+          ctr[j] = (ctr[j]! + 1) & 255;
+          if (ctr[j] !== 0) break;
+        }
       }
     }
     out.set(ct, i);
@@ -242,6 +276,31 @@ describe.each(CIPHERS)("$vocab", (c) => {
       }
     }
   });
+
+  if (c.modes.includes("CTR"))
+    test("CTR follows the cipher's counter convention across a counter that wraps", async () => {
+      const d = pattern(7 * c.bs + 3);
+      const ivs =
+        c.ctr === "be32"
+          ? [
+              // the last word one before its wrap, and at its wrap, with non-zero bytes above it
+              Uint8Array.from({ length: c.bs }, (_, i) =>
+                i < c.bs - 4 ? 0x55 + i : i === c.bs - 1 ? 0xfe : 0xff,
+              ),
+              Uint8Array.from({ length: c.bs }, (_, i) => (i < c.bs - 4 ? 0x55 + i : 0xff)),
+            ]
+          : [
+              // the first byte at its wrap, and every byte set (the carry runs the whole block)
+              Uint8Array.from({ length: c.bs }, (_, i) => (i === 0 ? 0xff : 0x10 + i)),
+              new Uint8Array(c.bs).fill(0xff),
+            ];
+      for (const wrapIv of ivs) {
+        const enc = await run(c, "encrypt", d, "CTR", { iv: wrapIv });
+        expect(hex(enc.out!)).toBe(hex(reference(c, "CTR", d, key, wrapIv)));
+        const dec = await run(c, "decrypt", enc.out!, "CTR", { iv: wrapIv });
+        expect(hex(dec.out!)).toBe(hex(d));
+      }
+    });
 
   test("a wrong key length is E_RANGE, even for an empty input", async () => {
     for (const bad of [0, c.klen + 1, c.klen - 1].filter((n) => n !== c.klen)) {

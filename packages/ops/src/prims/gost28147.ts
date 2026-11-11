@@ -38,7 +38,7 @@
 import { definePrimitive } from "@forge/lang";
 import type { PrimitiveDef } from "@forge/lang";
 import { fromHex } from "../hash-util.js";
-import { checkBlock, KeyCache, le32, putLe32 } from "../cipher-util-b.js";
+import { checkBlock, keyCache, getLE32, putLE32 } from "../cipher-util.js";
 import { coerceFailure, rangeFailure } from "../prim-util.js";
 import { SBOXES as DIGEST_SBOXES } from "./gost.js";
 
@@ -129,7 +129,7 @@ function keyWords(key: Uint8Array): Uint32Array {
       length: key.length,
     });
   const k = new Uint32Array(8);
-  for (let i = 0; i < 8; i++) k[i] = le32(key, 4 * i);
+  for (let i = 0; i < 8; i++) k[i] = getLE32(key, 4 * i);
   return k;
 }
 
@@ -172,37 +172,37 @@ class Gost {
   /** Encrypts or decrypts the 8 bytes at `o` of `buf` in place. */
   block(buf: Uint8Array, o: number, decrypt: boolean): void {
     const [a, b] = this.rounds(
-      le32(buf, o),
-      le32(buf, o + 4),
+      getLE32(buf, o),
+      getLE32(buf, o + 4),
       decrypt ? DEC_ORDER : ENC_ORDER,
       false,
     );
-    putLe32(buf, o, a);
-    putLe32(buf, o + 4, b);
+    putLE32(buf, o, a);
+    putLE32(buf, o + 4, b);
   }
 
   /** The 4-byte IMIT of RFC 5830 section 8 over `data` (zero-padded to blocks) from the register `iv`. */
   imit(data: Uint8Array, iv: Uint8Array): Uint8Array {
-    let n1 = le32(iv, 0);
-    let n2 = le32(iv, 4);
+    let n1 = getLE32(iv, 0);
+    let n2 = getLE32(iv, 4);
     const blocks = Math.ceil(data.length / 8);
     const padded = new Uint8Array(blocks * 8);
     padded.set(data);
     for (let i = 0; i < blocks; i++) {
-      n1 = (n1 ^ le32(padded, 8 * i)) >>> 0;
-      n2 = (n2 ^ le32(padded, 8 * i + 4)) >>> 0;
+      n1 = (n1 ^ getLE32(padded, 8 * i)) >>> 0;
+      n2 = (n2 ^ getLE32(padded, 8 * i + 4)) >>> 0;
       [n1, n2] = this.rounds(n1, n2, MAC_ORDER, true);
     }
     const out = new Uint8Array(4);
-    putLe32(out, 0, n1);
+    putLE32(out, 0, n1);
     return out;
   }
 }
 
-const cache = new KeyCache<Gost>();
+const cachedCipher = keyCache((key: Uint8Array, sbox: string) => new Gost(key, sbox));
 
 function cipher(key: Uint8Array, sbox: string): Gost {
-  return cache.get(key, sbox, () => new Gost(key, sbox));
+  return cachedCipher(key, sbox);
 }
 
 /** One 8-byte block encrypted. */
@@ -237,11 +237,11 @@ function ecb(g: Gost, data: Uint8Array, decrypt: boolean): Uint8Array {
 
 /** The counter of RFC 5830 section 6.2: N3 += C2 mod 2^32 and N4 += C1 mod 2^32-1 (end-around carry). */
 function bumpCounter(s: Uint8Array): void {
-  const n3 = (le32(s, 0) + 0x01010101) >>> 0;
-  let n4 = le32(s, 4) + 0x01010104;
+  const n3 = (getLE32(s, 0) + 0x01010101) >>> 0;
+  let n4 = getLE32(s, 4) + 0x01010104;
   if (n4 >= 4294967296) n4 -= 4294967295;
-  putLe32(s, 0, n3);
-  putLe32(s, 4, n4 >>> 0);
+  putLE32(s, 0, n3);
+  putLE32(s, 4, n4 >>> 0);
 }
 
 /**
@@ -328,13 +328,13 @@ function diversify(kek: Uint8Array, ukm: Uint8Array, sbox: string): Uint8Array {
     let s0 = 0;
     let s1 = 0;
     for (let j = 0; j < 8; j++) {
-      const w = le32(k, 4 * j);
+      const w = getLE32(k, 4 * j);
       if ((ukm[i]! >> j) & 1) s0 = (s0 + w) >>> 0;
       else s1 = (s1 + w) >>> 0;
     }
     const iv = new Uint8Array(8);
-    putLe32(iv, 0, s0);
-    putLe32(iv, 4, s1);
+    putLE32(iv, 0, s0);
+    putLE32(iv, 4, s1);
     k = cryptExt(k, k, iv, "CFB", sbox, false, false);
   }
   return k;

@@ -69,7 +69,7 @@
     "cyberchef": "PRESENT Encrypt",
     "status": "redesigned",
     "forge": ["present:encrypt"],
-    "note": "Bytes in and bytes out. Key 10 or 16 bytes, IV 8 bytes, mode CBC (the default) or ECB as in CyberChef (CFB, OFB and CTR are also offered), pkcs7 or none padding. CyberChef's ZERO, RANDOM and BIT paddings are not offered."
+    "note": "Bytes in and bytes out. Key 10 or 16 bytes, IV 8 bytes, mode CBC (the default) or ECB as in CyberChef (CFB, OFB and CTR are also offered), pkcs7 or none padding. CyberChef's ZERO, RANDOM and BIT paddings are not offered. An empty input encrypts to one block of padding where CyberChef returns nothing. PRESENT-128 (the 16-byte key) matches CyberChef's."
   },
   {
     "cyberchef": "PRESENT Decrypt",
@@ -81,7 +81,7 @@
     "cyberchef": "GOST Encrypt",
     "status": "redesigned",
     "forge": ["gost28147:encrypt"],
-    "note": "GOST 28147-89 only, in the new gost28147 vocabulary (the existing gost vocabulary is the hash). Modes ECB, CBC, CFB, OFB and CTR (the GOST gamma mode), pkcs7 or none padding, optional CryptoPro key meshing, and the S-boxes E-TEST, E-A to E-D, E-Z, D-TEST and D-A. Not offered: the Magma and Kuznyechik (2015) ciphers, the E-SC and D-SC S-boxes, and the ZERO, RANDOM and BIT paddings."
+    "note": "GOST 28147-89 only, in the new gost28147 vocabulary (the existing gost vocabulary is the hash). Modes ECB, CBC, CFB, OFB and CTR (the GOST gamma mode), pkcs7 or none padding, optional CryptoPro key meshing, and the S-boxes E-TEST, E-A to E-D, E-Z, D-TEST and D-A. CyberChef's Padding setting has no effect on its output (it zero-pads a short last block in ECB and CBC and never removes padding when decrypting), so there is nothing to match: here the padding is pkcs7 or none as for the other ciphers. Output equals CyberChef's for whole blocks in every mode, S-box and meshing choice. Not offered: the Magma and Kuznyechik (2015) ciphers, the E-SC and D-SC S-boxes, and the ZERO, RANDOM and BIT paddings."
   },
   {
     "cyberchef": "GOST Decrypt",
@@ -93,7 +93,7 @@
     "cyberchef": "GOST Key Wrap",
     "status": "redesigned",
     "forge": ["gost28147:wrap-key"],
-    "note": "GOST 28147-89 key wrap of RFC 4357 section 6.1 (wrapping NO) and the CryptoPro wrap of section 6.3 (CP). The output is CEK_ENC and CEK_MAC without the UKM, 36 bytes, as in CyberChef. Not offered: the Signal-COM wrapping and the 2015 ciphers."
+    "note": "GOST 28147-89 key wrap of RFC 4357 section 6.1 (wrapping NO) and the CryptoPro wrap of section 6.3 (CP). The output is CEK_ENC and CEK_MAC without the UKM, 36 bytes, as in CyberChef. Not offered: the Signal-COM wrapping and the 2015 ciphers. Wrapped keys equal CyberChef's for every S-box with and without CP."
   },
   {
     "cyberchef": "GOST Key Unwrap",
