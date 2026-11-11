@@ -18,6 +18,10 @@ audited @noble/hashes library, Copyright (c) 2022 Paul Miller
 (https://paulmillr.com), licensed under the MIT License
 (https://github.com/paulmillr/noble-hashes).
 
+The aes vocabulary (aes:encrypt, aes:decrypt) uses the audited @noble/ciphers
+library, Copyright (c) 2022 Paul Miller (https://paulmillr.com), licensed under
+the MIT License (https://github.com/paulmillr/noble-ciphers).
+
 The snefru vocabulary (snefru:digest) is derived from the Xerox Secure Hash
 Function, Ralph C. Merkle's Snefru, reference distribution version 2.5a. Its
 S-boxes are the table of that distribution, Copyright (c) Xerox Corporation
