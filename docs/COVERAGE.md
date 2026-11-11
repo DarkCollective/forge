@@ -17,7 +17,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Arithmetic / Logic | 9 | 17 | 0 | 0 | 26 |
 | Networking | 0 | 0 | 0 | 34 | 34 |
 | Language | 0 | 4 | 0 | 0 | 4 |
-| Utils | 18 | 8 | 2 | 22 | 50 |
+| Utils | 27 | 12 | 2 | 9 | 50 |
 | Date / Time | 0 | 1 | 0 | 8 | 9 |
 | Extractors | 1 | 8 | 0 | 9 | 18 |
 | Compression | 0 | 0 | 0 | 21 | 21 |
@@ -27,7 +27,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 4 | 8 | 3 | 6 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **149** | **137** | **5** | **215** | **506** |
+| **Total** | **158** | **141** | **5** | **202** | **506** |
 
 ## Data format (80)
 
@@ -332,7 +332,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 
 | CyberChef | Status | Forge | Note |
 | --- | --- | --- | --- |
-| Diff | not yet |  |  |
+| Diff | redesigned | `diff:compare` | Plain text instead of HTML: a unified-style diff by line (headers, hunks, context lines), and by word or character the second sample's text with [-deleted-] and {+inserted+} marks. Myers' shortest difference; ignore whitespace; the sentence, CSS and JSON modes, and the show added, removed and subtraction switches, are dropped. |
 | Remove whitespace | covered | `clean:remove-whitespace` | The same six options and defaults, as booleans. |
 | Remove null bytes | covered | `clean:remove-null-bytes` |  |
 | Remove ANSI Escape Codes | covered | `clean:remove-ansi` | Forge's own ECMA-48 pattern: CSI, OSC/DCS/SOS/PM/APC strings and two-byte ESC sequences. |
@@ -342,23 +342,23 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Alternating Caps | covered | `case:alternating` | Starts with a lower case letter and counts letters only, as CyberChef does; adds a first parameter to start upper. |
 | To Case Insensitive Regex | redesigned | `case:to-insensitive-regex` | Forge's own pattern tokenizer: letters become [xX] (the letter as written first), classes and ASCII letter ranges gain the other case, escapes, group names and quantifiers are copied. |
 | From Case Insensitive Regex | redesigned | `case:from-insensitive-regex` | The exact inverse of case:to-insensitive-regex (a class with both cases of a letter becomes the first one); CyberChef's own pattern shapes are not reproduced. |
-| Add line numbers | not yet |  |  |
-| Remove line numbers | not yet |  |  |
+| Add line numbers | covered | `lines:add-numbers` | The number right-aligned to the width of the longest number (CyberChef sizes it by the line count, which is the same with offset 0), a space, the line. The delimiter is a choice. |
+| Remove line numbers | covered | `lines:remove-numbers` | Works line by line with the same pattern (up to 5 spaces or tabs, digits, separators). CyberChef lets the separator class match line feeds, so a line holding only a number swallows the line break; Forge never joins lines. |
 | Get All Casings | redesigned | `case:all-casings` | Only letters with a case are varied (at most 12, so at most 4,096 lines) instead of every character; the first letter varies fastest, all lower case first; the delimiter is a choice. |
-| To Table | not yet |  |  |
+| To Table | redesigned | `lines:to-table` | ASCII box and Markdown pipe table; the HTML format is dropped (Forge shows text only). The cell and row delimiters are choices from the shared list rather than free text, and a double-quoted cell may hold the cell delimiter (not a row delimiter). The ASCII box has a rule after every row, with = under the header row. |
 | Reverse | covered | `text:reverse` |  |
-| Sort | not yet |  |  |
-| Shuffle | not yet |  |  |
-| Unique | not yet |  |  |
+| Sort | redesigned | `lines:sort` | One word with the delimiter, reverse and the six orders. Strings are compared by code point (not by locale), numeric reads a decimal at the start of the line without an exponent, IP address puts text that is not four decimal fields of 0 to 255 after the addresses in code point order, and the sort is stable. |
+| Shuffle | covered | `lines:shuffle` | A uniform Fisher-Yates shuffle on the host's cryptographic random generator (+random); the delimiter is a choice from the shared list. |
+| Unique | covered | `lines:unique` | Keeps the first of each in place. With show-count each line is written as its count, a space and the line, in the order of first appearance. |
 | Split | covered | `text:split` |  |
-| Filter | not yet |  |  |
-| Head | not yet |  |  |
-| Tail | not yet |  |  |
+| Filter | covered | `lines:filter` | Keeps the lines where the regular expression matches, or with invert the others. Regex flags i, m and s can be given; the pattern is a Forge regex parameter (always the u flag). |
+| Head | covered | `lines:head` | A negative number keeps all but the last \|number\| lines, as in CyberChef. |
+| Tail | covered | `lines:tail` | A negative number keeps all but the first \|number\| lines. A number of 0 keeps none (CyberChef returns everything for 0). |
 | Count occurrences | redesigned | `search:count` | Modes string and regex plus an ignore-case flag; CyberChef's extended-string mode (\n, \x escapes in the search text) is not offered, use string-escape:unescape on the pattern. |
 | Expand alphabet range | redesigned | `alphabet:expand` | The delimiter is the shared choice list (a space by default), a backwards range is E_RANGE, ranges may not exceed 65,536 code points, and \- and \\ are the only escapes. |
 | Drop bytes | covered | `bytes-slice:remove` | Named remove (drop is a core word). |
 | Take bytes | covered | `bytes-slice:take` |  |
-| Pad lines | not yet |  |  |
+| Pad lines | covered | `lines:pad` | Start or end, length and padding text, counted in code points; a padding of several characters is repeated and cut like padStart. |
 | Find / Replace | covered | `text:replace`, `regex:replace` | Literal replacement in text:replace, pattern replacement in regex:replace. |
 | Regular expression | covered | `regex:find-all`, `regex:test` | Matches come back as records (start, end, text); regex:test is the yes/no form. |
 | Fuzzy Match | redesigned | `search:fuzzy` | A text report instead of highlighted HTML: one row per matching line with a score, the matched positions and the line, scored by a documented greedy rule rather than CyberChef's Sublime-style matcher. |
@@ -378,8 +378,8 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Escape string | redesigned | `string-escape:escape` | Forge's own escaper, written in FL (CyberChef uses a library): levels special, everything and minimal; quote single, double or backtick; JSON, ES6 and upper-case hex options; no surrounding quotes; NUL is \x00; everything uses numeric escapes only. |
 | Unescape string | covered | `string-escape:unescape` | Reads the single-letter escapes, \xHH, \uHHHH (and surrogate pairs), \u{H} and octal; an unknown escape is kept as written. |
 | Sleep | dropped |  | A bake has no use for waiting: recipes are pure transformations under a step and time budget, and a pause only spends that budget. |
-| File Tree | not yet |  |  |
-| Wrap | not yet |  |  |
+| File Tree | redesigned | `lines:file-tree` | A tree in the style of the tree command with plain characters (\|-- and `--), a root line of a dot, siblings in code point order. The path separator and the delimiter between paths are parameters. |
+| Wrap | covered | `lines:wrap` | Cuts each line into pieces of at most the width in characters (code points), counting characters and not words; empty lines stay. |
 | Take nth bytes | covered | `bytes-slice:take-nth` |  |
 | Drop nth bytes | covered | `bytes-slice:remove-nth` |  |
 
