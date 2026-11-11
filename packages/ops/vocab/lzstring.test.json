@@ -1,0 +1,591 @@
+[
+  {
+    "name": "compress: hello, default",
+    "ref": "lz-string 1.5.0 LZString.compressToUint8Array (the library defines the format)",
+    "op": "lzstring:compress",
+    "params": {
+      "format": "default"
+    },
+    "input": {
+      "value": "hello hello hello hello world, hello lzstring",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0585303660f6004a1372adc483ba404e600980699f346005e033802e1809601d80e64000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decompress: hello, default",
+    "ref": "lz-string 1.5.0 LZString.compressToUint8Array (the library defines the format) (the compressed bytes), round trip",
+    "op": "lzstring:decompress",
+    "params": {
+      "format": "default"
+    },
+    "input": {
+      "value": "0585303660f6004a1372adc483ba404e600980699f346005e033802e1809601d80e64000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "hello hello hello hello world, hello lzstring",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "compress: hello, utf16",
+    "ref": "lz-string 1.5.0 LZString.compressToUTF16 (the library defines the format)",
+    "op": "lzstring:compress",
+    "params": {
+      "format": "utf16"
+    },
+    "input": {
+      "value": "hello hello hello hello world, hello lzstring",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "cba2e4b0ade4b0bee680a4e582bbe4ab97e0a4a7e3a9a0e29d90ca80e0b593e78da64fc3ae7ce1a0a9e380aee68199e4a0a020",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decompress: hello, utf16",
+    "ref": "lz-string 1.5.0 LZString.compressToUTF16 (the library defines the format) (the compressed bytes), round trip",
+    "op": "lzstring:decompress",
+    "params": {
+      "format": "utf16"
+    },
+    "input": {
+      "value": "cba2e4b0ade4b0bee680a4e582bbe4ab97e0a4a7e3a9a0e29d90ca80e0b593e78da64fc3ae7ce1a0a9e380aee68199e4a0a020",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "hello hello hello hello world, hello lzstring",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "compress: hello, base64",
+    "ref": "lz-string 1.5.0 LZString.compressToBase64 (the library defines the format)",
+    "op": "lzstring:compress",
+    "params": {
+      "format": "base64"
+    },
+    "input": {
+      "value": "hello hello hello hello world, hello lzstring",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "425955774e6d443241456f546371334567377041546d414a67476d664e47414634444f414c68674a59423241356b413d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decompress: hello, base64",
+    "ref": "lz-string 1.5.0 LZString.compressToBase64 (the library defines the format) (the compressed bytes), round trip",
+    "op": "lzstring:decompress",
+    "params": {
+      "format": "base64"
+    },
+    "input": {
+      "value": "425955774e6d443241456f546371334567377041546d414a67476d664e47414634444f414c68674a59423241356b413d",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "hello hello hello hello world, hello lzstring",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "compress: hello, uri",
+    "ref": "lz-string 1.5.0 LZString.compressToEncodedURIComponent (the library defines the format)",
+    "op": "lzstring:compress",
+    "params": {
+      "format": "uri"
+    },
+    "input": {
+      "value": "hello hello hello hello world, hello lzstring",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "425955774e6d443241456f546371334567377041546d414a67476d664e47414634444f414c68674a59423241356b41",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decompress: hello, uri",
+    "ref": "lz-string 1.5.0 LZString.compressToEncodedURIComponent (the library defines the format) (the compressed bytes), round trip",
+    "op": "lzstring:decompress",
+    "params": {
+      "format": "uri"
+    },
+    "input": {
+      "value": "425955774e6d443241456f546371334567377041546d414a67476d664e47414634444f414c68674a59423241356b41",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "hello hello hello hello world, hello lzstring",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "compress: unicode, default",
+    "ref": "lz-string 1.5.0 LZString.compressToUint8Array (the library defines the format)",
+    "op": "lzstring:compress",
+    "params": {
+      "format": "default"
+    },
+    "input": {
+      "value": "café über 中文 😀 end",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3184306609700403f046053013950b472870d32a178370007b50407600990000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decompress: unicode, default",
+    "ref": "lz-string 1.5.0 LZString.compressToUint8Array (the library defines the format) (the compressed bytes), round trip",
+    "op": "lzstring:decompress",
+    "params": {
+      "format": "default"
+    },
+    "input": {
+      "value": "3184306609700403f046053013950b472870d32a178370007b50407600990000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "café über 中文 😀 end",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "compress: unicode, utf16",
+    "ref": "lz-string 1.5.0 LZString.compressToUTF16 (the library defines the format)",
+    "op": "lzstring:compress",
+    "params": {
+      "format": "utf16"
+    },
+    "input": {
+      "value": "café über 中文 😀 end",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "e1a3a2e0b0b9e4858e60e1bea2e1a0b4e68187e194abe28eb4e1b194e695a2e7a19723e6b5a1c48cc2b92020",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decompress: unicode, utf16",
+    "ref": "lz-string 1.5.0 LZString.compressToUTF16 (the library defines the format) (the compressed bytes), round trip",
+    "op": "lzstring:decompress",
+    "params": {
+      "format": "utf16"
+    },
+    "input": {
+      "value": "e1a3a2e0b0b9e4858e60e1bea2e1a0b4e68187e194abe28eb4e1b194e695a2e7a19723e6b5a1c48cc2b92020",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "café über 中文 😀 end",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "compress: unicode, base64",
+    "ref": "lz-string 1.5.0 LZString.compressToBase64 (the library defines the format)",
+    "op": "lzstring:compress",
+    "params": {
+      "format": "base64"
+    },
+    "input": {
+      "value": "café über 中文 😀 end",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4d5951775a676c7742415077526755774535554c5279687730796f5867334141653142416467435a413d3d3d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decompress: unicode, base64",
+    "ref": "lz-string 1.5.0 LZString.compressToBase64 (the library defines the format) (the compressed bytes), round trip",
+    "op": "lzstring:decompress",
+    "params": {
+      "format": "base64"
+    },
+    "input": {
+      "value": "4d5951775a676c7742415077526755774535554c5279687730796f5867334141653142416467435a413d3d3d",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "café über 中文 😀 end",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "compress: unicode, uri",
+    "ref": "lz-string 1.5.0 LZString.compressToEncodedURIComponent (the library defines the format)",
+    "op": "lzstring:compress",
+    "params": {
+      "format": "uri"
+    },
+    "input": {
+      "value": "café über 中文 😀 end",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4d5951775a676c7742415077526755774535554c5279687730796f5867334141653142416467435a41",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decompress: unicode, uri",
+    "ref": "lz-string 1.5.0 LZString.compressToEncodedURIComponent (the library defines the format) (the compressed bytes), round trip",
+    "op": "lzstring:decompress",
+    "params": {
+      "format": "uri"
+    },
+    "input": {
+      "value": "4d5951775a676c7742415077526755774535554c5279687730796f5867334141653142416467435a41",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "café über 中文 😀 end",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "compress: pangram, default",
+    "ref": "lz-string 1.5.0 LZString.compressToUint8Array (the library defines the format)",
+    "op": "lzstring:compress",
+    "params": {
+      "format": "default"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0a80b0a600408e0ae0960630358404602703d81dc076100cd3003c200ac6016c007019c24c03731d08017702006c04300bc02784002698039803a08a122c442830e7c454851af498b769d7a091e2a4ce8f191a2c790897254e8366ac3a45d43464e99ce69c516575f576b51db9f85c0c2080",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decompress: pangram, default",
+    "ref": "lz-string 1.5.0 LZString.compressToUint8Array (the library defines the format) (the compressed bytes), round trip",
+    "op": "lzstring:decompress",
+    "params": {
+      "format": "default"
+    },
+    "input": {
+      "value": "0a80b0a600408e0ae0960630358404602703d81dc076100cd3003c200ac6016c007019c24c03731d08017702006c04300bc02784002698039803a08a122c442830e7c454851af498b769d7a091e2a4ce8f191a2c790897254e8366ac3a45d43464e99ce69c516575f576b51db9f85c0c2080",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "compress: pangram, utf16",
+    "ref": "lz-string 1.5.0 LZString.compressToUTF16 (the library defines the format)",
+    "op": "lzstring:compress",
+    "params": {
+      "format": "utf16"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d5a0e2b189e480a8e0a480e59ca4e5a0b8e6828bd0a4e380b3e48496cf98de81c286e4b0a0e7a1a0e0aba6c3963ccd98e293a0e1aeb8e79180cc8ec8a0e398a2e0b0a2e7a0a4e7a1a0c594e680aee380a7e282aae0a4b6e184aad8bce7b1a5e29188e6afb2e3868ee6a7b7e581a8e7a389e1a7b1e786b1e58683e69182e2b9aae4baa3e38db6e0bab1e3aaa6e499aee4b487e1aa91e28baae79895e3adbae49e8ee3bcabe483a2d0a020",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decompress: pangram, utf16",
+    "ref": "lz-string 1.5.0 LZString.compressToUTF16 (the library defines the format) (the compressed bytes), round trip",
+    "op": "lzstring:decompress",
+    "params": {
+      "format": "utf16"
+    },
+    "input": {
+      "value": "d5a0e2b189e480a8e0a480e59ca4e5a0b8e6828bd0a4e380b3e48496cf98de81c286e4b0a0e7a1a0e0aba6c3963ccd98e293a0e1aeb8e79180cc8ec8a0e398a2e0b0a2e7a0a4e7a1a0c594e680aee380a7e282aae0a4b6e184aad8bce7b1a5e29188e6afb2e3868ee6a7b7e581a8e7a389e1a7b1e786b1e58683e69182e2b9aae4baa3e38db6e0bab1e3aaa6e499aee4b487e1aa91e28baae79895e3adbae49e8ee3bcabe483a2d0a020",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "compress: pangram, base64",
+    "ref": "lz-string 1.5.0 LZString.compressToBase64 (the library defines the format)",
+    "op": "lzstring:compress",
+    "params": {
+      "format": "base64"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "436f4377706742416a6772676c6759774e59514559436344324233416468414d30774138494172474157774163426e4354414e7a4851674264774941624151774338416e6841416d6d414f594136434b456978454b44446e784653464776535974326e586f4a4869704d365047526f73655169584a5536445a717736526451305a4f6d63357078525a585831647255647566686344434341",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decompress: pangram, base64",
+    "ref": "lz-string 1.5.0 LZString.compressToBase64 (the library defines the format) (the compressed bytes), round trip",
+    "op": "lzstring:decompress",
+    "params": {
+      "format": "base64"
+    },
+    "input": {
+      "value": "436f4377706742416a6772676c6759774e59514559436344324233416468414d30774138494172474157774163426e4354414e7a4851674264774941624151774338416e6841416d6d414f594136434b456978454b44446e784653464776535974326e586f4a4869704d365047526f73655169584a5536445a717736526451305a4f6d63357078525a585831647255647566686344434341",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "compress: pangram, uri",
+    "ref": "lz-string 1.5.0 LZString.compressToEncodedURIComponent (the library defines the format)",
+    "op": "lzstring:compress",
+    "params": {
+      "format": "uri"
+    },
+    "input": {
+      "value": "The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "436f4377706742416a6772676c6759774e59514559436344324233416468414d30774138494172474157774163426e4354414e7a4851674264774941624151774338416e6841416d6d414f594136434b456978454b44446e784653464776535974326e586f4a4869704d365047526f73655169584a5536445a717736526451305a4f6d63357078525a585831647255647566686344434341",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decompress: pangram, uri",
+    "ref": "lz-string 1.5.0 LZString.compressToEncodedURIComponent (the library defines the format) (the compressed bytes), round trip",
+    "op": "lzstring:decompress",
+    "params": {
+      "format": "uri"
+    },
+    "input": {
+      "value": "436f4377706742416a6772676c6759774e59514559436344324233416468414d30774138494172474157774163426e4354414e7a4851674264774941624151774338416e6841416d6d414f594136434b456978454b44446e784653464776535974326e586f4a4869704d365047526f73655169584a5536445a717736526451305a4f6d63357078525a585831647255647566686344434341",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "compress: run, default",
+    "ref": "lz-string 1.5.0 LZString.compressToUint8Array (the library defines the format)",
+    "op": "lzstring:compress",
+    "params": {
+      "format": "default"
+    },
+    "input": {
+      "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "218d7c6574edfc314e4b5320",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decompress: run, default",
+    "ref": "lz-string 1.5.0 LZString.compressToUint8Array (the library defines the format) (the compressed bytes), round trip",
+    "op": "lzstring:decompress",
+    "params": {
+      "format": "default"
+    },
+    "input": {
+      "value": "218d7c6574edfc314e4b5320",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "compress: run, utf16",
+    "ref": "lz-string 1.5.0 LZString.compressToUTF16 (the library defines the format)",
+    "op": "lzstring:compress",
+    "params": {
+      "format": "utf16"
+    },
+    "input": {
+      "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "e183a6e5bcb9e2babde5bfa3e0aa92e2b5ace480a020",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decompress: run, utf16",
+    "ref": "lz-string 1.5.0 LZString.compressToUTF16 (the library defines the format) (the compressed bytes), round trip",
+    "op": "lzstring:decompress",
+    "params": {
+      "format": "utf16"
+    },
+    "input": {
+      "value": "e183a6e5bcb9e2babde5bfa3e0aa92e2b5ace480a020",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "compress: run, base64",
+    "ref": "lz-string 1.5.0 LZString.compressToBase64 (the library defines the format)",
+    "op": "lzstring:compress",
+    "params": {
+      "format": "base64"
+    },
+    "input": {
+      "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "495931385a5854742f44464f53314d67",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decompress: run, base64",
+    "ref": "lz-string 1.5.0 LZString.compressToBase64 (the library defines the format) (the compressed bytes), round trip",
+    "op": "lzstring:decompress",
+    "params": {
+      "format": "base64"
+    },
+    "input": {
+      "value": "495931385a5854742f44464f53314d67",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "compress: run, uri",
+    "ref": "lz-string 1.5.0 LZString.compressToEncodedURIComponent (the library defines the format)",
+    "op": "lzstring:compress",
+    "params": {
+      "format": "uri"
+    },
+    "input": {
+      "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "495931385a5854742d44464f53314d67",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decompress: run, uri",
+    "ref": "lz-string 1.5.0 LZString.compressToEncodedURIComponent (the library defines the format) (the compressed bytes), round trip",
+    "op": "lzstring:decompress",
+    "params": {
+      "format": "uri"
+    },
+    "input": {
+      "value": "495931385a5854742d44464f53314d67",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "compress: empty, default",
+    "ref": "lz-string 1.5.0 LZString.compressToUint8Array (the library defines the format)",
+    "op": "lzstring:compress",
+    "params": {
+      "format": "default"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decompress: empty text, base64",
+    "ref": "lz-string 1.5.0 LZString.compressToBase64 (the library defines the format) of the empty string",
+    "op": "lzstring:decompress",
+    "params": {
+      "format": "base64"
+    },
+    "input": {
+      "value": "Q===",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decompress: empty input",
+    "ref": "lz-string returns null for the empty string",
+    "op": "lzstring:decompress",
+    "params": {
+      "format": "default"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decompress: odd length in default",
+    "ref": "UCS-2 units are byte pairs",
+    "op": "lzstring:decompress",
+    "params": {
+      "format": "default"
+    },
+    "input": {
+      "value": "010203",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decompress: truncated stream",
+    "ref": "lz-string 1.5.0 compressToBase64 cut before its end marker (the library returns an empty string)",
+    "op": "lzstring:decompress",
+    "params": {
+      "format": "base64"
+    },
+    "input": {
+      "value": "BYUwNmD2AEoTcq3Eg7pA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]
