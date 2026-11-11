@@ -1,0 +1,980 @@
+[
+  {
+    "name": "INTEGER 0",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "020100",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "INTEGER 00",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "INTEGER 127 is one byte",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "02017f",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "INTEGER 7f",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "INTEGER 128 needs a leading zero byte",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "02020080",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "INTEGER 0080",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "INTEGER -1",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "0201ff",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "INTEGER ff",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "INTEGER -129 (X.690 8.3.3 two's complement)",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "0202ff7f",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "INTEGER ff7f",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a 2048-bit INTEGER is shown in full",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "0282010100abababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababab",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "INTEGER 00abababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababab",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "BOOLEAN true and false",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "0101ff010100",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "BOOLEAN TRUE\nBOOLEAN FALSE",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "BOOLEAN with a wrong length falls back to hex",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "01020001",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "BOOLEAN 0001",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ENUMERATED",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "0a0102",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ENUMERATED 02",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "NULL",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "0500",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "NULL",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "OBJECT IDENTIFIER with a name",
+    "ref": "openssl asn1parse -genstr OID:rsaEncryption gives these content bytes; layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "06092a864886f70d010101",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ObjectIdentifier rsaEncryption (1 2 840 113549 1 1 1)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "OBJECT IDENTIFIER that is not in the table",
+    "ref": "openssl asn1parse -genstr OID:1.2.3.4",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "06032a0304",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ObjectIdentifier (1 2 3 4)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "OBJECT IDENTIFIER with a 128-bit arc",
+    "ref": "openssl asn1parse -genstr OID:2.25.329800735698586629295641978511506172918",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "06146983f09da7ebcfdee0c7a1a7b2c0948cc8f9d776",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ObjectIdentifier (2 25 329800735698586629295641978511506172918)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "malformed OBJECT IDENTIFIER falls back to hex",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "06022a86",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ObjectIdentifier 2a86",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "UTF8String with a non-ASCII letter",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "0c0668c3a96c6c6f",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "UTF8String 'héllo'",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "UTF8String that is not valid UTF-8 shows hex",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "0c02fffe",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "UTF8String fffe",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a string with a control character shows hex (no forged lines)",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "0c03410a42",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "UTF8String 410a42",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "PrintableString",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "13024142",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "PrintableString 'AB'",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "IA5String",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "16046140622e",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "IA5String 'a@b.'",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "NumericString and VisibleString",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "12033132331a024142",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "NumericString '123'\nVisibleString 'AB'",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "BMPString is UTF-16BE",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "1e0400480069",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "BMPString 'Hi'",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "UniversalString is UTF-32BE",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "1c080000004800000069",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "UniversalString 'Hi'",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "UTCTime and GeneralizedTime",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "170d3236313131313139353433395a180f32303236313131313030303030305a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "UTCTime '261111195439Z'\nGeneralizedTime '20261111000000Z'",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "SEQUENCE with three children",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "300b0201010404aabbccdd0500",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "SEQUENCE\n  INTEGER 01\n  OCTETSTRING aabbccdd\n  NULL",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "an empty SEQUENCE and an empty SET",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "30003100",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "SEQUENCE\nSET",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "OCTET STRING that holds DER is opened",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "04053003020105",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "OCTETSTRING\n  SEQUENCE\n    INTEGER 05",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "OCTET STRING that is not DER shows hex",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "0404deadbeef",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "OCTETSTRING deadbeef",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "an empty OCTET STRING",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "0400",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "OCTETSTRING",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "BIT STRING with unused bits",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "030205a0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "BITSTRING a0 (5 unused)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "BIT STRING with no unused bits",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "030200ff",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "BITSTRING ff",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "BIT STRING that holds DER is opened",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "0306003003020107",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "BITSTRING\n  SEQUENCE\n    INTEGER 07",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "explicit context tag [0]",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "a003020102",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[0]\n  INTEGER 02",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "implicit context tag with text (dNSName)",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "820b6578616d706c652e636f6d",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[2] 'example.com'",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "implicit context tag with bytes (iPAddress)",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "87040a000001",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[7] 0a000001",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "application and private classes",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "6103020105e500",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[APPLICATION 1]\n  INTEGER 05\n[PRIVATE 5]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "high tag number form: context [31] and application [128]",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "9f1f01aa5f810001bb",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[31] aa\n[APPLICATION 128] bb",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "universal tag 31 and over shows [UNIVERSAL n]",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "1f1f01aa",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[UNIVERSAL 31] aa",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "long-form length in a SEQUENCE (minimal 81)",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "308180047e111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "SEQUENCE\n  OCTETSTRING 1111111111111111111111111111111111111111111111111111111111111111...",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "long-form length 82 (2 length bytes)",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "3082010404820100abababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababab",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "SEQUENCE\n  OCTETSTRING abababababababababababababababababababababababababababababababab...",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "non-minimal long-form length is accepted (BER-tolerant)",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "308103020105",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "SEQUENCE\n  INTEGER 05",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "several top-level elements",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "0201010500",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "INTEGER 01\nNULL",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "white space in the hex",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "30 03\n02 01 05",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "SEQUENCE\n  INTEGER 05",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "empty input has no elements",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "start skips leading bytes",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {
+      "start": 2
+    },
+    "input": {
+      "value": "aabb020107",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "INTEGER 07",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "start at the end of the data shows nothing",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {
+      "start": 3
+    },
+    "input": {
+      "value": "020107",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "truncate cuts a long value (4 bytes)",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {
+      "truncate": 4
+    },
+    "input": {
+      "value": "04080001020304050607",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "OCTETSTRING 00010203...",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "truncate 0 shows everything",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {
+      "truncate": 0
+    },
+    "input": {
+      "value": "0428000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "OCTETSTRING 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "the default truncation is 32 bytes",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "0428000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "OCTETSTRING 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f...",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "exactly the truncation length is not cut",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {
+      "truncate": 4
+    },
+    "input": {
+      "value": "040400010203",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "OCTETSTRING 00010203",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "64 levels of nesting are read",
+    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "307e307c307a30783076307430723070306e306c306a30683066306430623060305e305c305a30583056305430523050304e304c304a30483046304430423040303e303c303a30383036303430323030302e302c302a30283026302430223020301e301c301a30183016301430123010300e300c300a30083006300430023000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "SEQUENCE\n  SEQUENCE\n    SEQUENCE\n      SEQUENCE\n        SEQUENCE\n          SEQUENCE\n            SEQUENCE\n              SEQUENCE\n                SEQUENCE\n                  SEQUENCE\n                    SEQUENCE\n                      SEQUENCE\n                        SEQUENCE\n                          SEQUENCE\n                            SEQUENCE\n                              SEQUENCE\n                                SEQUENCE\n                                  SEQUENCE\n                                    SEQUENCE\n                                      SEQUENCE\n                                        SEQUENCE\n                                          SEQUENCE\n                                            SEQUENCE\n                                              SEQUENCE\n                                                SEQUENCE\n                                                  SEQUENCE\n                                                    SEQUENCE\n                                                      SEQUENCE\n                                                        SEQUENCE\n                                                          SEQUENCE\n                                                            SEQUENCE\n                                                              SEQUENCE\n                                                                SEQUENCE\n                                                                  SEQUENCE\n                                                                    SEQUENCE\n                                                                      SEQUENCE\n                                                                        SEQUENCE\n                                                                          SEQUENCE\n                                                                            SEQUENCE\n                                                                              SEQUENCE\n                                                                                SEQUENCE\n                                                                                  SEQUENCE\n                                                                                    SEQUENCE\n                                                                                      SEQUENCE\n                                                                                        SEQUENCE\n                                                                                          SEQUENCE\n                                                                                            SEQUENCE\n                                                                                              SEQUENCE\n                                                                                                SEQUENCE\n                                                                                                  SEQUENCE\n                                                                                                    SEQUENCE\n                                                                                                      SEQUENCE\n                                                                                                        SEQUENCE\n                                                                                                          SEQUENCE\n                                                                                                            SEQUENCE\n                                                                                                              SEQUENCE\n                                                                                                                SEQUENCE\n                                                                                                                  SEQUENCE\n                                                                                                                    SEQUENCE\n                                                                                                                      SEQUENCE\n                                                                                                                        SEQUENCE\n                                                                                                                          SEQUENCE\n                                                                                                                            SEQUENCE\n                                                                                                                              SEQUENCE",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a real certificate (openssl req -x509, EC P-256)",
+    "ref": "openssl req -x509; every name, value and string was compared with openssl asn1parse; the layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "308201de30820185a0030201020214600a0f7db714787bff29ec0cfb252e92f7b2b694300a06082a8648ce3d0403023036310b30090603550406130255533111300f060355040a0c0854657374204f72673114301206035504030c0b6578616d706c652e636f6d301e170d3236313131313139353433395a170d3236313231313139353433395a3036310b30090603550406130255533111300f060355040a0c0854657374204f72673114301206035504030c0b6578616d706c652e636f6d3059301306072a8648ce3d020106082a8648ce3d03010703420004527e03e94eca5485402b679af1ee88c0096d513392cc7440dca423a41d3bff1da57e5de45633af68c8c4d2172fbe87e0588747c8cc80950dff46cb925f7a5df0a371306f301d0603551d0e04160414d6a11fb6ae8c4f20bf454efc16ad1c36425b52f7301f0603551d23041830168014d6a11fb6ae8c4f20bf454efc16ad1c36425b52f7300f0603551d130101ff040530030101ff301c0603551d1104153013820b6578616d706c652e636f6d87040a000001300a06082a8648ce3d040302034700304402203549949f1c1cc9579794f33487bcad31bf426c896f6a8e437c4351342f33eccc022044a6c1f6eb9541875d8a77b8e856cac6fbf9c6b3a5195ff1fc1a337fdac3bd42",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "SEQUENCE\n  SEQUENCE\n    [0]\n      INTEGER 02\n    INTEGER 600a0f7db714787bff29ec0cfb252e92f7b2b694\n    SEQUENCE\n      ObjectIdentifier ecdsa-with-SHA256 (1 2 840 10045 4 3 2)\n    SEQUENCE\n      SET\n        SEQUENCE\n          ObjectIdentifier countryName (2 5 4 6)\n          PrintableString 'US'\n      SET\n        SEQUENCE\n          ObjectIdentifier organizationName (2 5 4 10)\n          UTF8String 'Test Org'\n      SET\n        SEQUENCE\n          ObjectIdentifier commonName (2 5 4 3)\n          UTF8String 'example.com'\n    SEQUENCE\n      UTCTime '261111195439Z'\n      UTCTime '261211195439Z'\n    SEQUENCE\n      SET\n        SEQUENCE\n          ObjectIdentifier countryName (2 5 4 6)\n          PrintableString 'US'\n      SET\n        SEQUENCE\n          ObjectIdentifier organizationName (2 5 4 10)\n          UTF8String 'Test Org'\n      SET\n        SEQUENCE\n          ObjectIdentifier commonName (2 5 4 3)\n          UTF8String 'example.com'\n    SEQUENCE\n      SEQUENCE\n        ObjectIdentifier id-ecPublicKey (1 2 840 10045 2 1)\n        ObjectIdentifier prime256v1 (1 2 840 10045 3 1 7)\n      BITSTRING 04527e03e94eca5485402b679af1ee88c0096d513392cc7440dca423a41d3bff...\n    [3]\n      SEQUENCE\n        SEQUENCE\n          ObjectIdentifier subjectKeyIdentifier (2 5 29 14)\n          OCTETSTRING\n            OCTETSTRING d6a11fb6ae8c4f20bf454efc16ad1c36425b52f7\n        SEQUENCE\n          ObjectIdentifier authorityKeyIdentifier (2 5 29 35)\n          OCTETSTRING\n            SEQUENCE\n              [0] d6a11fb6ae8c4f20bf454efc16ad1c36425b52f7\n        SEQUENCE\n          ObjectIdentifier basicConstraints (2 5 29 19)\n          BOOLEAN TRUE\n          OCTETSTRING\n            SEQUENCE\n              BOOLEAN TRUE\n        SEQUENCE\n          ObjectIdentifier subjectAltName (2 5 29 17)\n          OCTETSTRING\n            SEQUENCE\n              [2] 'example.com'\n              [7] 0a000001\n  SEQUENCE\n    ObjectIdentifier ecdsa-with-SHA256 (1 2 840 10045 4 3 2)\n  BITSTRING\n    SEQUENCE\n      INTEGER 3549949f1c1cc9579794f33487bcad31bf426c896f6a8e437c4351342f33eccc\n      INTEGER 44a6c1f6eb9541875d8a77b8e856cac6fbf9c6b3a5195ff1fc1a337fdac3bd42",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a real certificate request (openssl req -new)",
+    "ref": "openssl req -new; compared with openssl asn1parse; the layout is Forge's own",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "3081df30818602010030243114301206035504030c0b6373722e6578616d706c65310c300a060355040a0c034f72673059301306072a8648ce3d020106082a8648ce3d03010703420004527e03e94eca5485402b679af1ee88c0096d513392cc7440dca423a41d3bff1da57e5de45633af68c8c4d2172fbe87e0588747c8cc80950dff46cb925f7a5df0a000300a06082a8648ce3d0403020348003045022047ca83b401da41c8432b4cbe1b900c8fe1c28660d7b0a0ac135e507e3e1cad6b022100aafab194b31e9348296e59787b1243134af5fae993bbbb7823a0c89b368af11c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "SEQUENCE\n  SEQUENCE\n    INTEGER 00\n    SEQUENCE\n      SET\n        SEQUENCE\n          ObjectIdentifier commonName (2 5 4 3)\n          UTF8String 'csr.example'\n      SET\n        SEQUENCE\n          ObjectIdentifier organizationName (2 5 4 10)\n          UTF8String 'Org'\n    SEQUENCE\n      SEQUENCE\n        ObjectIdentifier id-ecPublicKey (1 2 840 10045 2 1)\n        ObjectIdentifier prime256v1 (1 2 840 10045 3 1 7)\n      BITSTRING 04527e03e94eca5485402b679af1ee88c0096d513392cc7440dca423a41d3bff...\n    [0]\n  SEQUENCE\n    ObjectIdentifier ecdsa-with-SHA256 (1 2 840 10045 4 3 2)\n  BITSTRING\n    SEQUENCE\n      INTEGER 47ca83b401da41c8432b4cbe1b900c8fe1c28660d7b0a0ac135e507e3e1cad6b\n      INTEGER 00aafab194b31e9348296e59787b1243134af5fae993bbbb7823a0c89b368af11c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "error: 65 levels of nesting",
+    "ref": "X.690 8.1.3 (length forms), 8.1.3.6 (indefinite length is BER only), 8.1.5 (end-of-contents)",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "308180307e307c307a30783076307430723070306e306c306a30683066306430623060305e305c305a30583056305430523050304e304c304a30483046304430423040303e303c303a30383036303430323030302e302c302a30283026302430223020301e301c301a30183016301430123010300e300c300a30083006300430023000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: truncated content",
+    "ref": "X.690 8.1.3 (length forms), 8.1.3.6 (indefinite length is BER only), 8.1.5 (end-of-contents)",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "30050201",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: the content is missing",
+    "ref": "X.690 8.1.3 (length forms), 8.1.3.6 (indefinite length is BER only), 8.1.5 (end-of-contents)",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "0201",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: the length is missing",
+    "ref": "X.690 8.1.3 (length forms), 8.1.3.6 (indefinite length is BER only), 8.1.5 (end-of-contents)",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "02",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: the tag is missing: high-tag form cut short",
+    "ref": "X.690 8.1.3 (length forms), 8.1.3.6 (indefinite length is BER only), 8.1.5 (end-of-contents)",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "1f",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: indefinite length (BER)",
+    "ref": "X.690 8.1.3 (length forms), 8.1.3.6 (indefinite length is BER only), 8.1.5 (end-of-contents)",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "308005000000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: end-of-contents marker 0000",
+    "ref": "X.690 8.1.3 (length forms), 8.1.3.6 (indefinite length is BER only), 8.1.5 (end-of-contents)",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "0000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: reserved length byte ff",
+    "ref": "X.690 8.1.3 (length forms), 8.1.3.6 (indefinite length is BER only), 8.1.5 (end-of-contents)",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "04ff",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: a 4 GiB length with no data",
+    "ref": "X.690 8.1.3 (length forms), 8.1.3.6 (indefinite length is BER only), 8.1.5 (end-of-contents)",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "0484ffffffff00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: an 8-byte length with no data",
+    "ref": "X.690 8.1.3 (length forms), 8.1.3.6 (indefinite length is BER only), 8.1.5 (end-of-contents)",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "048800000000ffffffff00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: a child that runs past its parent",
+    "ref": "X.690 8.1.3 (length forms), 8.1.3.6 (indefinite length is BER only), 8.1.5 (end-of-contents)",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "3003040aaa",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: bytes after a complete element that are not an element",
+    "ref": "X.690 8.1.3 (length forms), 8.1.3.6 (indefinite length is BER only), 8.1.5 (end-of-contents)",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "0500ff",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: odd number of hex digits",
+    "ref": "X.690 8.1.3 (length forms), 8.1.3.6 (indefinite length is BER only), 8.1.5 (end-of-contents)",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "0201 0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: not hex",
+    "ref": "X.690 8.1.3 (length forms), 8.1.3.6 (indefinite length is BER only), 8.1.5 (end-of-contents)",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "zz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: a high tag number that is too long",
+    "ref": "X.690 8.1.3 (length forms), 8.1.3.6 (indefinite length is BER only), 8.1.5 (end-of-contents)",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "1f818181818181",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: start beyond the data",
+    "ref": "parameter check",
+    "op": "asn1-dump:parse",
+    "params": {
+      "start": 4
+    },
+    "input": {
+      "value": "020107",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "error: negative start",
+    "ref": "parameter check",
+    "op": "asn1-dump:parse",
+    "params": {
+      "start": -1
+    },
+    "input": {
+      "value": "020107",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "error: negative truncate",
+    "ref": "parameter check",
+    "op": "asn1-dump:parse",
+    "params": {
+      "truncate": -1
+    },
+    "input": {
+      "value": "020107",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  }
+]

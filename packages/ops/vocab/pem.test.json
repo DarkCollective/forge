@@ -1,0 +1,538 @@
+[
+  {
+    "name": "to-hex: a public key (Ed25519)",
+    "ref": "openssl pkey -pubout (PEM) and -outform DER (the hex)",
+    "op": "pem:to-hex",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAzWoAM2jJW81RvPv97zModKyWy688Stb8EByUS28dSJM=\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "302a300506032b6570032100cd6a003368c95bcd51bcfbfdef332874ac96cbaf3c4ad6fc101c944b6f1d4893",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-hex: a certificate",
+    "ref": "openssl req -x509 and x509 -outform DER",
+    "op": "pem:to-hex",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN CERTIFICATE-----\nMIIB3jCCAYWgAwIBAgIUYAoPfbcUeHv/KewM+yUukveytpQwCgYIKoZIzj0EAwIw\nNjELMAkGA1UEBhMCVVMxETAPBgNVBAoMCFRlc3QgT3JnMRQwEgYDVQQDDAtleGFt\ncGxlLmNvbTAeFw0yNjExMTExOTU0MzlaFw0yNjEyMTExOTU0MzlaMDYxCzAJBgNV\nBAYTAlVTMREwDwYDVQQKDAhUZXN0IE9yZzEUMBIGA1UEAwwLZXhhbXBsZS5jb20w\nWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARSfgPpTspUhUArZ5rx7ojACW1RM5LM\ndEDcpCOkHTv/HaV+XeRWM69oyMTSFy++h+BYh0fIzICVDf9Gy5Jfel3wo3EwbzAd\nBgNVHQ4EFgQU1qEftq6MTyC/RU78Fq0cNkJbUvcwHwYDVR0jBBgwFoAU1qEftq6M\nTyC/RU78Fq0cNkJbUvcwDwYDVR0TAQH/BAUwAwEB/zAcBgNVHREEFTATggtleGFt\ncGxlLmNvbYcECgAAATAKBggqhkjOPQQDAgNHADBEAiA1SZSfHBzJV5eU8zSHvK0x\nv0JsiW9qjkN8Q1E0LzPszAIgRKbB9uuVQYddine46FbKxvv5xrOlGV/x/Bozf9rD\nvUI=\n-----END CERTIFICATE-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "308201de30820185a0030201020214600a0f7db714787bff29ec0cfb252e92f7b2b694300a06082a8648ce3d0403023036310b30090603550406130255533111300f060355040a0c0854657374204f72673114301206035504030c0b6578616d706c652e636f6d301e170d3236313131313139353433395a170d3236313231313139353433395a3036310b30090603550406130255533111300f060355040a0c0854657374204f72673114301206035504030c0b6578616d706c652e636f6d3059301306072a8648ce3d020106082a8648ce3d03010703420004527e03e94eca5485402b679af1ee88c0096d513392cc7440dca423a41d3bff1da57e5de45633af68c8c4d2172fbe87e0588747c8cc80950dff46cb925f7a5df0a371306f301d0603551d0e04160414d6a11fb6ae8c4f20bf454efc16ad1c36425b52f7301f0603551d23041830168014d6a11fb6ae8c4f20bf454efc16ad1c36425b52f7300f0603551d130101ff040530030101ff301c0603551d1104153013820b6578616d706c652e636f6d87040a000001300a06082a8648ce3d040302034700304402203549949f1c1cc9579794f33487bcad31bf426c896f6a8e437c4351342f33eccc022044a6c1f6eb9541875d8a77b8e856cac6fbf9c6b3a5195ff1fc1a337fdac3bd42",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-hex: a certificate request (label with a space)",
+    "ref": "openssl req -new and req -outform DER",
+    "op": "pem:to-hex",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN CERTIFICATE REQUEST-----\nMIHfMIGGAgEAMCQxFDASBgNVBAMMC2Nzci5leGFtcGxlMQwwCgYDVQQKDANPcmcw\nWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARSfgPpTspUhUArZ5rx7ojACW1RM5LM\ndEDcpCOkHTv/HaV+XeRWM69oyMTSFy++h+BYh0fIzICVDf9Gy5Jfel3woAAwCgYI\nKoZIzj0EAwIDSAAwRQIgR8qDtAHaQchDK0y+G5AMj+HChmDXsKCsE15Qfj4crWsC\nIQCq+rGUsx6TSCluWXh7EkMTSvX66ZO7u3gjoMibNorxHA==\n-----END CERTIFICATE REQUEST-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3081df30818602010030243114301206035504030c0b6373722e6578616d706c65310c300a060355040a0c034f72673059301306072a8648ce3d020106082a8648ce3d03010703420004527e03e94eca5485402b679af1ee88c0096d513392cc7440dca423a41d3bff1da57e5de45633af68c8c4d2172fbe87e0588747c8cc80950dff46cb925f7a5df0a000300a06082a8648ce3d0403020348003045022047ca83b401da41c8432b4cbe1b900c8fe1c28660d7b0a0ac135e507e3e1cad6b022100aafab194b31e9348296e59787b1243134af5fae993bbbb7823a0c89b368af11c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-hex: two blocks, one hex line each",
+    "ref": "openssl x509 and pkey -outform DER",
+    "op": "pem:to-hex",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN CERTIFICATE-----\nMIIB3jCCAYWgAwIBAgIUYAoPfbcUeHv/KewM+yUukveytpQwCgYIKoZIzj0EAwIw\nNjELMAkGA1UEBhMCVVMxETAPBgNVBAoMCFRlc3QgT3JnMRQwEgYDVQQDDAtleGFt\ncGxlLmNvbTAeFw0yNjExMTExOTU0MzlaFw0yNjEyMTExOTU0MzlaMDYxCzAJBgNV\nBAYTAlVTMREwDwYDVQQKDAhUZXN0IE9yZzEUMBIGA1UEAwwLZXhhbXBsZS5jb20w\nWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARSfgPpTspUhUArZ5rx7ojACW1RM5LM\ndEDcpCOkHTv/HaV+XeRWM69oyMTSFy++h+BYh0fIzICVDf9Gy5Jfel3wo3EwbzAd\nBgNVHQ4EFgQU1qEftq6MTyC/RU78Fq0cNkJbUvcwHwYDVR0jBBgwFoAU1qEftq6M\nTyC/RU78Fq0cNkJbUvcwDwYDVR0TAQH/BAUwAwEB/zAcBgNVHREEFTATggtleGFt\ncGxlLmNvbYcECgAAATAKBggqhkjOPQQDAgNHADBEAiA1SZSfHBzJV5eU8zSHvK0x\nv0JsiW9qjkN8Q1E0LzPszAIgRKbB9uuVQYddine46FbKxvv5xrOlGV/x/Bozf9rD\nvUI=\n-----END CERTIFICATE-----\n-----BEGIN PRIVATE KEY-----\nMIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgpLIZ0x7fcCP+NOG0\nGsD6lMk68Njb2r71sXuW6Q3gi0qhRANCAARSfgPpTspUhUArZ5rx7ojACW1RM5LM\ndEDcpCOkHTv/HaV+XeRWM69oyMTSFy++h+BYh0fIzICVDf9Gy5Jfel3w\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "308201de30820185a0030201020214600a0f7db714787bff29ec0cfb252e92f7b2b694300a06082a8648ce3d0403023036310b30090603550406130255533111300f060355040a0c0854657374204f72673114301206035504030c0b6578616d706c652e636f6d301e170d3236313131313139353433395a170d3236313231313139353433395a3036310b30090603550406130255533111300f060355040a0c0854657374204f72673114301206035504030c0b6578616d706c652e636f6d3059301306072a8648ce3d020106082a8648ce3d03010703420004527e03e94eca5485402b679af1ee88c0096d513392cc7440dca423a41d3bff1da57e5de45633af68c8c4d2172fbe87e0588747c8cc80950dff46cb925f7a5df0a371306f301d0603551d0e04160414d6a11fb6ae8c4f20bf454efc16ad1c36425b52f7301f0603551d23041830168014d6a11fb6ae8c4f20bf454efc16ad1c36425b52f7300f0603551d130101ff040530030101ff301c0603551d1104153013820b6578616d706c652e636f6d87040a000001300a06082a8648ce3d040302034700304402203549949f1c1cc9579794f33487bcad31bf426c896f6a8e437c4351342f33eccc022044a6c1f6eb9541875d8a77b8e856cac6fbf9c6b3a5195ff1fc1a337fdac3bd42\n308187020100301306072a8648ce3d020106082a8648ce3d030107046d306b0201010420a4b219d31edf7023fe34e1b41ac0fa94c93af0d8dbdabef5b17b96e90de08b4aa14403420004527e03e94eca5485402b679af1ee88c0096d513392cc7440dca423a41d3bff1da57e5de45633af68c8c4d2172fbe87e0588747c8cc80950dff46cb925f7a5df0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-hex: text around the block is ignored (x509 -text output)",
+    "ref": "openssl x509 -text -in cert.pem; the DER from -outform DER",
+    "op": "pem:to-hex",
+    "params": {},
+    "input": {
+      "value": "Certificate:\nCertificate:\n    Data:\n        Version: 3 (0x2)\n        Serial Number:\n            60:0a:0f:7d:b7:14:78:7b:ff:29:ec:0c:fb:25:2e:92:f7:b2:b6:94\n        Signature Algorithm: ecdsa-with-SHA256\n        Issuer: C = US, O = Test Org, CN = example.com\n        Validity\n            Not Before: Nov 11 19:54:39 2026 GMT\n            Not After : Dec 11 19:54:39 2026 GMT\n        Subject: C = US, O = Test Org, C\n-----BEGIN CERTIFICATE-----\nMIIB3jCCAYWgAwIBAgIUYAoPfbcUeHv/KewM+yUukveytpQwCgYIKoZIzj0EAwIw\nNjELMAkGA1UEBhMCVVMxETAPBgNVBAoMCFRlc3QgT3JnMRQwEgYDVQQDDAtleGFt\ncGxlLmNvbTAeFw0yNjExMTExOTU0MzlaFw0yNjEyMTExOTU0MzlaMDYxCzAJBgNV\nBAYTAlVTMREwDwYDVQQKDAhUZXN0IE9yZzEUMBIGA1UEAwwLZXhhbXBsZS5jb20w\nWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARSfgPpTspUhUArZ5rx7ojACW1RM5LM\ndEDcpCOkHTv/HaV+XeRWM69oyMTSFy++h+BYh0fIzICVDf9Gy5Jfel3wo3EwbzAd\nBgNVHQ4EFgQU1qEftq6MTyC/RU78Fq0cNkJbUvcwHwYDVR0jBBgwFoAU1qEftq6M\nTyC/RU78Fq0cNkJbUvcwDwYDVR0TAQH/BAUwAwEB/zAcBgNVHREEFTATggtleGFt\ncGxlLmNvbYcECgAAATAKBggqhkjOPQQDAgNHADBEAiA1SZSfHBzJV5eU8zSHvK0x\nv0JsiW9qjkN8Q1E0LzPszAIgRKbB9uuVQYddine46FbKxvv5xrOlGV/x/Bozf9rD\nvUI=\n-----END CERTIFICATE-----\ntrailing words\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "308201de30820185a0030201020214600a0f7db714787bff29ec0cfb252e92f7b2b694300a06082a8648ce3d0403023036310b30090603550406130255533111300f060355040a0c0854657374204f72673114301206035504030c0b6578616d706c652e636f6d301e170d3236313131313139353433395a170d3236313231313139353433395a3036310b30090603550406130255533111300f060355040a0c0854657374204f72673114301206035504030c0b6578616d706c652e636f6d3059301306072a8648ce3d020106082a8648ce3d03010703420004527e03e94eca5485402b679af1ee88c0096d513392cc7440dca423a41d3bff1da57e5de45633af68c8c4d2172fbe87e0588747c8cc80950dff46cb925f7a5df0a371306f301d0603551d0e04160414d6a11fb6ae8c4f20bf454efc16ad1c36425b52f7301f0603551d23041830168014d6a11fb6ae8c4f20bf454efc16ad1c36425b52f7300f0603551d130101ff040530030101ff301c0603551d1104153013820b6578616d706c652e636f6d87040a000001300a06082a8648ce3d040302034700304402203549949f1c1cc9579794f33487bcad31bf426c896f6a8e437c4351342f33eccc022044a6c1f6eb9541875d8a77b8e856cac6fbf9c6b3a5195ff1fc1a337fdac3bd42",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-hex: CRLF line endings",
+    "ref": "the same PEM with CRLF",
+    "op": "pem:to-hex",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN CERTIFICATE-----\r\nMIIB3jCCAYWgAwIBAgIUYAoPfbcUeHv/KewM+yUukveytpQwCgYIKoZIzj0EAwIw\r\nNjELMAkGA1UEBhMCVVMxETAPBgNVBAoMCFRlc3QgT3JnMRQwEgYDVQQDDAtleGFt\r\ncGxlLmNvbTAeFw0yNjExMTExOTU0MzlaFw0yNjEyMTExOTU0MzlaMDYxCzAJBgNV\r\nBAYTAlVTMREwDwYDVQQKDAhUZXN0IE9yZzEUMBIGA1UEAwwLZXhhbXBsZS5jb20w\r\nWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARSfgPpTspUhUArZ5rx7ojACW1RM5LM\r\ndEDcpCOkHTv/HaV+XeRWM69oyMTSFy++h+BYh0fIzICVDf9Gy5Jfel3wo3EwbzAd\r\nBgNVHQ4EFgQU1qEftq6MTyC/RU78Fq0cNkJbUvcwHwYDVR0jBBgwFoAU1qEftq6M\r\nTyC/RU78Fq0cNkJbUvcwDwYDVR0TAQH/BAUwAwEB/zAcBgNVHREEFTATggtleGFt\r\ncGxlLmNvbYcECgAAATAKBggqhkjOPQQDAgNHADBEAiA1SZSfHBzJV5eU8zSHvK0x\r\nv0JsiW9qjkN8Q1E0LzPszAIgRKbB9uuVQYddine46FbKxvv5xrOlGV/x/Bozf9rD\r\nvUI=\r\n-----END CERTIFICATE-----\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "308201de30820185a0030201020214600a0f7db714787bff29ec0cfb252e92f7b2b694300a06082a8648ce3d0403023036310b30090603550406130255533111300f060355040a0c0854657374204f72673114301206035504030c0b6578616d706c652e636f6d301e170d3236313131313139353433395a170d3236313231313139353433395a3036310b30090603550406130255533111300f060355040a0c0854657374204f72673114301206035504030c0b6578616d706c652e636f6d3059301306072a8648ce3d020106082a8648ce3d03010703420004527e03e94eca5485402b679af1ee88c0096d513392cc7440dca423a41d3bff1da57e5de45633af68c8c4d2172fbe87e0588747c8cc80950dff46cb925f7a5df0a371306f301d0603551d0e04160414d6a11fb6ae8c4f20bf454efc16ad1c36425b52f7301f0603551d23041830168014d6a11fb6ae8c4f20bf454efc16ad1c36425b52f7300f0603551d130101ff040530030101ff301c0603551d1104153013820b6578616d706c652e636f6d87040a000001300a06082a8648ce3d040302034700304402203549949f1c1cc9579794f33487bcad31bf426c896f6a8e437c4351342f33eccc022044a6c1f6eb9541875d8a77b8e856cac6fbf9c6b3a5195ff1fc1a337fdac3bd42",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-hex: no line breaks in the Base64 and padding",
+    "ref": "openssl enc -base64 -A of the DER",
+    "op": "pem:to-hex",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAzWoAM2jJW81RvPv97zModKyWy688Stb8EByUS28dSJM=\n-----END PUBLIC KEY-----",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "302a300506032b6570032100cd6a003368c95bcd51bcfbfdef332874ac96cbaf3c4ad6fc101c944b6f1d4893",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-hex: an empty block",
+    "ref": "RFC 7468 section 3 allows an empty body",
+    "op": "pem:to-hex",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN EMPTY-----\n-----END EMPTY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-hex: a legacy encrypted RSA key (Proc-Type and DEK-Info headers)",
+    "ref": "openssl genrsa -traditional -aes128; the body decoded with Python base64",
+    "op": "pem:to-hex",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN RSA PRIVATE KEY-----\nProc-Type: 4,ENCRYPTED\nDEK-Info: AES-128-CBC,30E20C09D15B68BCD76D4F118B31995C\n\nuINX1KuUZ8dBYUOfZa1AicmMSp0yg63xj1k6DZh9NkWqNpDcjTsfWT10ODs4w+Lq\ncPVd97LHSjyEW+bQTXM74oQSIL8BxXoeSjv3xeRlh8VshsWGXLz3f7mwbDmtvk3x\nijH4+/lgxxE/2sHmK7AHwD2Qg/+ZsHc+16FnVTJR8YvQcxtzrFJwD5C+HWMlWrsr\nLOU3bq+Zrx/eMz2cNzVVQfXOqE2aGVzvCmft47lPIv+PP4wx5+6IFxOG+HBOLygh\nFn3k7o/FgkgrQvbXYt+wDv7T7xTkkyKf90YF+fHoZlWWzxrMfQjvGtys0BA3r+9k\njvnTy/qVmPwP5kpFBr1XOR2AV8yR0Zmzo+32+khrUxmX5HzlWXOuncvueYftwo7L\nw3NzgHWKMU5R+lODDVWGazXsLlIDCTPgvPPwz5+La0QxHhjiQKBPB0zIDMh17IL7\nzMRe2KHwfuX1Iqg8FRbwC+LnbBvS/bQBKNP+QIRzxdlXbWcntBA16la6F6iTRCPL\naUHW1KW9wWSs7hGqcxWWkkBLEZYbG51KxlUr6JYSobAVI5+rzil6yDz7UQbVS460\nbFVhA2sjOYRqpsbFESXmPNnpRY6o3TmqxcHyvT0rnHlrNhGftUZYwyMZVTD2K+Jb\nFtWoticd5AnVTh83oIPm29ld8PJhzanS7rlvm2g9QzMccYMYfwJttrxVZUVmzsuT\nfEuapYcVcm6d2/ap7UnFeB7i1FFKpcFad5X8bJIZKFNoZiF6CfcSV5nnc+zySzg/\njelUjKdLzYXrgAWsSb4Ksy6ETGuNEdJQ5FoJB/Marv73w+Xr+B3zU4qZFiTljLyD\n-----END RSA PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "b88357d4ab9467c74161439f65ad4089c98c4a9d3283adf18f593a0d987d3645aa3690dc8d3b1f593d74383b38c3e2ea70f55df7b2c74a3c845be6d04d733be2841220bf01c57a1e4a3bf7c5e46587c56c86c5865cbcf77fb9b06c39adbe4df18a31f8fbf960c7113fdac1e62bb007c03d9083ff99b0773ed7a167553251f18bd0731b73ac52700f90be1d63255abb2b2ce5376eaf99af1fde333d9c37355541f5cea84d9a195cef0a67ede3b94f22ff8f3f8c31e7ee88171386f8704e2f2821167de4ee8fc582482b42f6d762dfb00efed3ef14e493229ff74605f9f1e8665596cf1acc7d08ef1adcacd01037afef648ef9d3cbfa9598fc0fe64a4506bd57391d8057cc91d199b3a3edf6fa486b531997e47ce55973ae9dcbee7987edc28ecbc3737380758a314e51fa53830d55866b35ec2e52030933e0bcf3f0cf9f8b6b44311e18e240a04f074cc80cc875ec82fbccc45ed8a1f07ee5f522a83c1516f00be2e76c1bd2fdb40128d3fe408473c5d9576d6727b41035ea56ba17a8934423cb6941d6d4a5bdc164acee11aa73159692404b11961b1b9d4ac6552be89612a1b015239fabce297ac83cfb5106d54b8eb46c5561036b2339846aa6c6c51125e63cd9e9458ea8dd39aac5c1f2bd3d2b9c796b36119fb54658c323195530f62be25b16d5a8b6271de409d54e1f37a083e6dbd95df0f261cda9d2eeb96f9b683d43331c7183187f026db6bc55654566cecb937c4b9aa58715726e9ddbf6a9ed49c5781ee2d4514aa5c15a7795fc6c921928536866217a09f7125799e773ecf24b383f8de9548ca74bcd85eb8005ac49be0ab32e844c6b8d11d250e45a0907f31aaefef7c3e5ebf81df3538a991624e58cbc83",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-hex: no block",
+    "ref": "RFC 7468",
+    "op": "pem:to-hex",
+    "params": {},
+    "input": {
+      "value": "just some text\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-hex: empty input",
+    "ref": "RFC 7468",
+    "op": "pem:to-hex",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-hex: no END line",
+    "ref": "RFC 7468",
+    "op": "pem:to-hex",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN CERTIFICATE-----\nAAAA\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-hex: END label differs",
+    "ref": "RFC 7468",
+    "op": "pem:to-hex",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN CERTIFICATE-----\nAAAA\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-hex: nested BEGIN",
+    "ref": "RFC 7468",
+    "op": "pem:to-hex",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN A-----\nAAAA\n-----BEGIN B-----\nAAAA\n-----END B-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-hex: bad Base64 character",
+    "ref": "RFC 7468",
+    "op": "pem:to-hex",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN A-----\nAA*A\n-----END A-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-hex: bad Base64 padding",
+    "ref": "RFC 7468",
+    "op": "pem:to-hex",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN A-----\nAAA=A\n-----END A-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-hex: a single Base64 character",
+    "ref": "RFC 7468",
+    "op": "pem:to-hex",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN A-----\nA\n-----END A-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "from-hex: a certificate (default header)",
+    "ref": "openssl x509 -outform PEM of the same DER",
+    "op": "pem:from-hex",
+    "params": {},
+    "input": {
+      "value": "308201de30820185a0030201020214600a0f7db714787bff29ec0cfb252e92f7b2b694300a06082a8648ce3d0403023036310b30090603550406130255533111300f060355040a0c0854657374204f72673114301206035504030c0b6578616d706c652e636f6d301e170d3236313131313139353433395a170d3236313231313139353433395a3036310b30090603550406130255533111300f060355040a0c0854657374204f72673114301206035504030c0b6578616d706c652e636f6d3059301306072a8648ce3d020106082a8648ce3d03010703420004527e03e94eca5485402b679af1ee88c0096d513392cc7440dca423a41d3bff1da57e5de45633af68c8c4d2172fbe87e0588747c8cc80950dff46cb925f7a5df0a371306f301d0603551d0e04160414d6a11fb6ae8c4f20bf454efc16ad1c36425b52f7301f0603551d23041830168014d6a11fb6ae8c4f20bf454efc16ad1c36425b52f7300f0603551d130101ff040530030101ff301c0603551d1104153013820b6578616d706c652e636f6d87040a000001300a06082a8648ce3d040302034700304402203549949f1c1cc9579794f33487bcad31bf426c896f6a8e437c4351342f33eccc022044a6c1f6eb9541875d8a77b8e856cac6fbf9c6b3a5195ff1fc1a337fdac3bd42",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN CERTIFICATE-----\nMIIB3jCCAYWgAwIBAgIUYAoPfbcUeHv/KewM+yUukveytpQwCgYIKoZIzj0EAwIw\nNjELMAkGA1UEBhMCVVMxETAPBgNVBAoMCFRlc3QgT3JnMRQwEgYDVQQDDAtleGFt\ncGxlLmNvbTAeFw0yNjExMTExOTU0MzlaFw0yNjEyMTExOTU0MzlaMDYxCzAJBgNV\nBAYTAlVTMREwDwYDVQQKDAhUZXN0IE9yZzEUMBIGA1UEAwwLZXhhbXBsZS5jb20w\nWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARSfgPpTspUhUArZ5rx7ojACW1RM5LM\ndEDcpCOkHTv/HaV+XeRWM69oyMTSFy++h+BYh0fIzICVDf9Gy5Jfel3wo3EwbzAd\nBgNVHQ4EFgQU1qEftq6MTyC/RU78Fq0cNkJbUvcwHwYDVR0jBBgwFoAU1qEftq6M\nTyC/RU78Fq0cNkJbUvcwDwYDVR0TAQH/BAUwAwEB/zAcBgNVHREEFTATggtleGFt\ncGxlLmNvbYcECgAAATAKBggqhkjOPQQDAgNHADBEAiA1SZSfHBzJV5eU8zSHvK0x\nv0JsiW9qjkN8Q1E0LzPszAIgRKbB9uuVQYddine46FbKxvv5xrOlGV/x/Bozf9rD\nvUI=\n-----END CERTIFICATE-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: a public key with the header PUBLIC KEY",
+    "ref": "openssl pkey -pubin -inform DER -outform PEM",
+    "op": "pem:from-hex",
+    "params": {
+      "header": "PUBLIC KEY"
+    },
+    "input": {
+      "value": "302a300506032b6570032100cd6a003368c95bcd51bcfbfdef332874ac96cbaf3c4ad6fc101c944b6f1d4893",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAzWoAM2jJW81RvPv97zModKyWy688Stb8EByUS28dSJM=\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: a certificate request",
+    "ref": "openssl req -in csr.der -inform DER -outform PEM",
+    "op": "pem:from-hex",
+    "params": {
+      "header": "CERTIFICATE REQUEST"
+    },
+    "input": {
+      "value": "3081df30818602010030243114301206035504030c0b6373722e6578616d706c65310c300a060355040a0c034f72673059301306072a8648ce3d020106082a8648ce3d03010703420004527e03e94eca5485402b679af1ee88c0096d513392cc7440dca423a41d3bff1da57e5de45633af68c8c4d2172fbe87e0588747c8cc80950dff46cb925f7a5df0a000300a06082a8648ce3d0403020348003045022047ca83b401da41c8432b4cbe1b900c8fe1c28660d7b0a0ac135e507e3e1cad6b022100aafab194b31e9348296e59787b1243134af5fae993bbbb7823a0c89b368af11c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN CERTIFICATE REQUEST-----\nMIHfMIGGAgEAMCQxFDASBgNVBAMMC2Nzci5leGFtcGxlMQwwCgYDVQQKDANPcmcw\nWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARSfgPpTspUhUArZ5rx7ojACW1RM5LM\ndEDcpCOkHTv/HaV+XeRWM69oyMTSFy++h+BYh0fIzICVDf9Gy5Jfel3woAAwCgYI\nKoZIzj0EAwIDSAAwRQIgR8qDtAHaQchDK0y+G5AMj+HChmDXsKCsE15Qfj4crWsC\nIQCq+rGUsx6TSCluWXh7EkMTSvX66ZO7u3gjoMibNorxHA==\n-----END CERTIFICATE REQUEST-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: 0 bytes (Base64 lines of 64 characters, openssl enc -base64)",
+    "ref": "openssl enc -base64",
+    "op": "pem:from-hex",
+    "params": {
+      "header": "DATA"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN DATA-----\n-----END DATA-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: 1 bytes (Base64 lines of 64 characters, openssl enc -base64)",
+    "ref": "openssl enc -base64",
+    "op": "pem:from-hex",
+    "params": {
+      "header": "DATA"
+    },
+    "input": {
+      "value": "03",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN DATA-----\nAw==\n-----END DATA-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: 2 bytes (Base64 lines of 64 characters, openssl enc -base64)",
+    "ref": "openssl enc -base64",
+    "op": "pem:from-hex",
+    "params": {
+      "header": "DATA"
+    },
+    "input": {
+      "value": "030a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN DATA-----\nAwo=\n-----END DATA-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: 3 bytes (Base64 lines of 64 characters, openssl enc -base64)",
+    "ref": "openssl enc -base64",
+    "op": "pem:from-hex",
+    "params": {
+      "header": "DATA"
+    },
+    "input": {
+      "value": "030a11",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN DATA-----\nAwoR\n-----END DATA-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: 47 bytes (Base64 lines of 64 characters, openssl enc -base64)",
+    "ref": "openssl enc -base64",
+    "op": "pem:from-hex",
+    "params": {
+      "header": "DATA"
+    },
+    "input": {
+      "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dce3eaf1f8ff060d141b222930373e45",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN DATA-----\nAwoRGB8mLTQ7QklQV15lbHN6gYiPlp2kq7K5wMfO1dzj6vH4/wYNFBsiKTA3PkU=\n-----END DATA-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: 48 bytes (Base64 lines of 64 characters, openssl enc -base64)",
+    "ref": "openssl enc -base64",
+    "op": "pem:from-hex",
+    "params": {
+      "header": "DATA"
+    },
+    "input": {
+      "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dce3eaf1f8ff060d141b222930373e454c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN DATA-----\nAwoRGB8mLTQ7QklQV15lbHN6gYiPlp2kq7K5wMfO1dzj6vH4/wYNFBsiKTA3PkVM\n-----END DATA-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: 49 bytes (Base64 lines of 64 characters, openssl enc -base64)",
+    "ref": "openssl enc -base64",
+    "op": "pem:from-hex",
+    "params": {
+      "header": "DATA"
+    },
+    "input": {
+      "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dce3eaf1f8ff060d141b222930373e454c53",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN DATA-----\nAwoRGB8mLTQ7QklQV15lbHN6gYiPlp2kq7K5wMfO1dzj6vH4/wYNFBsiKTA3PkVM\nUw==\n-----END DATA-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: 96 bytes (Base64 lines of 64 characters, openssl enc -base64)",
+    "ref": "openssl enc -base64",
+    "op": "pem:from-hex",
+    "params": {
+      "header": "DATA"
+    },
+    "input": {
+      "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dce3eaf1f8ff060d141b222930373e454c535a61686f767d848b9299a0a7aeb5bcc3cad1d8dfe6edf4fb020910171e252c333a41484f565d646b727980878e959c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN DATA-----\nAwoRGB8mLTQ7QklQV15lbHN6gYiPlp2kq7K5wMfO1dzj6vH4/wYNFBsiKTA3PkVM\nU1phaG92fYSLkpmgp661vMPK0djf5u30+wIJEBceJSwzOkFIT1ZdZGtyeYCHjpWc\n-----END DATA-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: 100 bytes (Base64 lines of 64 characters, openssl enc -base64)",
+    "ref": "openssl enc -base64",
+    "op": "pem:from-hex",
+    "params": {
+      "header": "DATA"
+    },
+    "input": {
+      "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dce3eaf1f8ff060d141b222930373e454c535a61686f767d848b9299a0a7aeb5bcc3cad1d8dfe6edf4fb020910171e252c333a41484f565d646b727980878e959ca3aab1b8",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN DATA-----\nAwoRGB8mLTQ7QklQV15lbHN6gYiPlp2kq7K5wMfO1dzj6vH4/wYNFBsiKTA3PkVM\nU1phaG92fYSLkpmgp661vMPK0djf5u30+wIJEBceJSwzOkFIT1ZdZGtyeYCHjpWc\no6qxuA==\n-----END DATA-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: hex with spaces and upper case",
+    "ref": "openssl enc -base64",
+    "op": "pem:from-hex",
+    "params": {
+      "header": "X"
+    },
+    "input": {
+      "value": "DE AD\nBE EF",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN X-----\n3q2+7w==\n-----END X-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: empty input gives a block with no body",
+    "ref": "RFC 7468 section 3",
+    "op": "pem:from-hex",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN CERTIFICATE-----\n-----END CERTIFICATE-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: odd number of digits",
+    "ref": "hex rule of From Hex",
+    "op": "pem:from-hex",
+    "params": {},
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "from-hex: not hex",
+    "ref": "hex rule of From Hex",
+    "op": "pem:from-hex",
+    "params": {},
+    "input": {
+      "value": "xyz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "from-hex: empty header",
+    "ref": "RFC 7468 label syntax",
+    "op": "pem:from-hex",
+    "params": {
+      "header": ""
+    },
+    "input": {
+      "value": "00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "from-hex: newline in the header",
+    "ref": "RFC 7468 label syntax",
+    "op": "pem:from-hex",
+    "params": {
+      "header": "A\nB"
+    },
+    "input": {
+      "value": "00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "from-hex: five hyphens in the header",
+    "ref": "RFC 7468 label syntax",
+    "op": "pem:from-hex",
+    "params": {
+      "header": "A-----B"
+    },
+    "input": {
+      "value": "00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "from-hex: non-ASCII header",
+    "ref": "RFC 7468 label syntax",
+    "op": "pem:from-hex",
+    "params": {
+      "header": "CERTIFICAT\u00c9"
+    },
+    "input": {
+      "value": "00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  }
+]

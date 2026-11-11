@@ -248,7 +248,7 @@ CyberChef has **506 operations** in 16 categories (see research §5 and the appe
 4. Modern symmetric crypto (AES/DES/Blowfish/ChaCha/…), KDFs
 5. Utils, extractors, regex, date/time, arithmetic
 6. Compression (done in wave 6 with pure-JavaScript codecs behind private primitives, not CompressionStream or WASM: fflate for DEFLATE, zlib, gzip and zip, lz-string, lzma1, and our own bzip2, LZ4, LZNT1 and XPRESS; Zstandard (fzstd) and Brotli (a vendored, output-capped copy of the pure decoder) are decompression only, which is what CyberChef users asked for)
-7. Public key, networking parsers, forensics, multimedia, code tidy (lowest priority)
+7. Public key, networking parsers, forensics, multimedia, code tidy (lowest priority; wave 7 in progress, below: everything except multimedia and code tidy)
 
 Each WP also updates its `docs/coverage/<area>.json` mapping, from which `npm run coverage` generates `docs/COVERAGE.md`, a table of CyberChef capability → the Forge word(s) that cover it (or "dropped" / "redesigned", with a reason).
 
@@ -444,6 +444,36 @@ Language gaps found in wave 6 (candidates for the core, or for a primitive):
 - Header constraints on parameters raise E_RECIPE_INVALID or E_PARAM_INVALID, not E_RANGE, so every range check of a compressor (levels, block sizes, work factors) is written in the word body to give the typed error.
 - A `choice{...}` list cannot be shared between headers (Zip's and Tar's operating system, LZ4's block sizes are written once each); JSON vectors cannot carry a binary input except as hex, which makes the 64 KiB cases tests, not vectors.
 - A library's behaviour is part of the contract: fflate wrote an extra final block at multiples of 65,535 bytes and lz4js does not read block checksums. A pinned version and a cross-check with an independent decoder (zlib, the lz4 command, libbzip2) are the only guard.
+
+**Wave 7 🚧** *In progress (started 2026-11-11; wave 7: public key, networking, forensics, binary and text data formats, and the stragglers of earlier waves). WP 5.47 done: 368 ops in 158 vocabularies; CyberChef coverage 202 covered, 141 redesigned, 7 dropped, 156 not yet of 506.*
+
+Scope agreed with the owner on 2026-11-11. **In:** Public Key without PGP, Networking, the four non-image Forensics ops, and the stragglers of earlier waves (the wave 1b data formats, Extractors, Other, GOST Sign/Verify). **Deferred (stay "not yet"):** Multimedia (27 ops) and Code tidy (24), which are the last piece of Phase 5; the five image-based Forensics ops (Extract LSB, View Bit Plane, Extract RGBA, Randomize Colour Palette, Remove EXIF, which need image decoding and go with Multimedia); Parse QR Code (image decoding); Disassemble x86 and Disassemble ARM (not wanted); the seven PGP ops (openpgp.js is large and asynchronous); Magic (Phase 6, already planned); Register and Return (they need recipe-engine changes and `packages/recipe` is frozen; Phase 6). **Dropped (in `dropped.json`, with the reason):** HTTP request and DNS over HTTPS: the bake Worker's CSP is `connect-src 'self'` and Forge never talks to another host, as for Show on map. **Libraries:** `@noble/curves` 2.4.0 for ECDSA, SM2 and GOST R 34.10 on custom curve parameters (WP 5.51); RSA is written on bigints in a small private primitive, with no RSA library; no openpgp.
+
+The shared ASN.1 layer comes first (WP 5.47), because X.509, CSR, CRL, SSH keys, RSA, ECDSA and JWK all read and write DER. It is the internal vocabulary `asn1`: one primitive reader that turns DER into a tree of records (class, constructed, tag, offset, header length, length, value, children), bounded by depth 64, by the input and by the value limit; FL words to walk it, to read INTEGER, OID, BIT STRING and the string types, and to write DER (lengths, TLV, INTEGER from a bigint, OID, SEQUENCE); an object identifier codec with arcs of any size and a table of about 250 OpenSSL names (a primitive, because FL has no per-vocabulary constants); and PEM decode and encode. Its first five users are the ops Parse ASN.1 hex string (text, an outline in the shape of the jsrsasign dump), Hex to Object Identifier, Object Identifier to Hex, PEM to Hex and Hex to PEM. The conventions (how a parser reports, errors and bounds, the shared-words table, the `@noble/curves` import rules, vector sources and cross-check expectations) are in the ops README ("Wave 7 conventions").
+
+| WP | Scope | Depends on |
+|---|---|---|
+| 5.47 ✅ | Setup A: `@noble/curves` pinned (and NOTICE), "Wave 7 conventions" in the ops README, this section, the dropped rows, the shared DER/ASN.1 reader, OIDs and PEM: Parse ASN.1 hex string, Hex to Object Identifier, Object Identifier to Hex, PEM to Hex, Hex to PEM | - |
+| 5.48 | Setup B: the shared `json` vocabulary (JSON text to and from FL values), CSV to JSON, JSON to CSV | - |
+| 5.49 | X.509 and friends: Parse X.509 certificate, bundles, CRL, CSR, Public Key from Certificate, Parse SSH Host Key, PEM to JWK, JWK to PEM | 5.47, 5.48 |
+| 5.50 | RSA: Generate RSA Key Pair, RSA Sign/Verify/Encrypt/Decrypt, Public Key from Private Key | 5.47 |
+| 5.51 | Elliptic curves: Generate ECDSA Key Pair, ECDSA Sign/Verify, ECDSA Signature Conversion, SM2 Encrypt/Decrypt, GOST Sign/Verify | 5.47 |
+| 5.52 | Packet layers: Ethernet, IPv4 (and strip), TCP (and strip), UDP (and strip), TLS record, Strip HTTP headers, Dechunk HTTP response | 5.47 conventions |
+| 5.53 | Addresses and names: Parse IP range, Parse IPv6, IPv6 Transition Addresses, Change IP format, Group IP addresses, Format MAC addresses, NetBIOS encode/decode, Defang/Fang URL, Defang IP, Parse URI, Parse User Agent | 5.47 conventions |
+| 5.54 | Fingerprints and wire formats: JA3, JA3S, JA4, JA4Server, HASSH client/server, Protobuf Decode/Encode, VarInt Encode/Decode | 5.48, 5.52 |
+| 5.55 | Binary data formats: CBOR, MessagePack, AMF, Avro, Parse TLV, Show Base64 offsets, Rison, P-list Viewer, Generate QR Code | 5.48 |
+| 5.56 | Text data formats and queries: YAML to and from JSON, MIME Decoding, JPath, Jsonata, XPath, CSS selector, Template | 5.48 |
+| 5.57 | Forensics and metadata: Detect File Type, Scan for Embedded Files, Extract Files, ELF Info, Extract EXIF, Extract ID3, Extract Audio Metadata | 5.47 conventions |
+| 5.58 | YARA Rules (a documented subset, its own engine over the regex seam) | 5.57 |
+| 5.59 | Close-out: the CyberChef cross-check, duplicates and `util` promotions, docs | all |
+
+What WP 5.47 found, for the WPs that follow:
+
+- `see-also` is a load dependency, so two vocabularies cannot see-also each other; the ops of a family point one way (`oid` and `pem` point to `asn1-dump`, never back).
+- Inside a `try` quotation the values under the snapshot are below the floor (`E_STACK_UNDERFLOW`), so a body that must read a stack value reads it from a local, and the handler leaves the stack as the body would.
+- A primitive returns a JS array for a `list` result and builds its records with `valueHelpers.record`; a `list(...)` value as the whole result is `E_TYPE`.
+- An FL table is rebuilt on every call (about 1,800 VM steps for 200 pairs), so a lookup table is a primitive that builds its maps once (2 steps a lookup).
+- A shared word with a `record` or `list` parameter or a UI-typed input cannot sit in a public vocabulary without becoming a catalogue op that needs a `doc` and a `category`; shared words go in an internal vocabulary (`INTERNAL_VOCABS`).
 
 ### Phase 6 — Beyond CyberChef
 Magic auto-detection (declarative `checks` in META, depth-limited search). An optional recipe store backend behind `RecipeStore`. A PWA/offline mode. The `@forge/cli`. Recipe diff/swap. **Relix vocabulary** integration as an `relix:` vocab of primitives.

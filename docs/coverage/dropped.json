@@ -3,5 +3,7 @@
  {"cyberchef": "Numberwang", "status": "dropped", "note": "A joke based on a comedy sketch; it has no data-processing use."},
  {"cyberchef": "Automated Validation Test Op", "status": "dropped", "note": "CyberChef's internal fixture for testing parameter validation; it is not a user operation."},
  {"cyberchef": "Show on map", "status": "dropped", "note": "It draws a map from tiles fetched from an external tile host. Forge's CSP allows only its own origin (connect-src 'self', no external img-src) and the app never talks to another host, so the operation cannot exist. The coordinates themselves are covered by the co-ordinate format and Haversine distance operations."},
- {"cyberchef": "Sleep", "status": "dropped", "note": "A bake has no use for waiting: recipes are pure transformations under a step and time budget, and a pause only spends that budget."}
+ {"cyberchef": "Sleep", "status": "dropped", "note": "A bake has no use for waiting: recipes are pure transformations under a step and time budget, and a pause only spends that budget."},
+ {"cyberchef": "HTTP request", "status": "dropped", "note": "It sends a request to another host. The bake Web Worker runs under a CSP of connect-src 'self' and Forge never talks to another host (as for Show on map), so the operation cannot exist; use curl or a browser, and paste the response into Forge."},
+ {"cyberchef": "DNS over HTTPS", "status": "dropped", "note": "It asks a DNS-over-HTTPS resolver (Cloudflare or Google) over the network. The bake Web Worker's CSP is connect-src 'self' and Forge never talks to another host (as for Show on map), so the operation cannot exist."}
 ]
