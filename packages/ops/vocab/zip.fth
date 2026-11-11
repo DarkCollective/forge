@@ -1,25 +1,27 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ zip: the ZIP container (PKWARE APPNOTE 6.3), one file in (zip:zip) or any number out (zip:unzip,
 \ zip:entry). Everything about the container is FL: the local file header, the central directory and
-\ the end-of-central-directory record, the DOS date and time, the flags, the checks. Four private
-\ primitives (src/prims/zip.ts): _crc32 (FL would cost 13 VM steps a byte), _deflate (the raw DEFLATE
-\ encoder; a vocabulary cannot call deflate's private word), _cd-offsets (the sequential walk of the
-\ directory, quadratic in FL) and _extract (inflate several entries under ONE output budget, the
-\ decompression bomb rule applied to the sum of all entries).
+\ the end-of-central-directory record, the DOS date and time, the flags, the checks. The CRC-32 is
+\ crc:checksum and the DEFLATE encoder is deflate:deflate. Two private primitives (src/prims/zip.ts):
+\ _cd-offsets (the sequential walk of the directory, quadratic in FL) and _extract (inflate several
+\ entries under ONE output budget, the decompression bomb rule applied to the sum of all entries).
 \ Reading follows the central directory, not the local headers (a zip written to a stream has zero
 \ sizes in the local header and a data descriptor after the data). Stored (0) and deflate (8) only;
 \ encryption, ZIP64 and multi-disk archives are E_COERCE.
 IN: zip
 
-\ ---- reading integers ----
+USING: crc deflate ;
 
-: _need ( data:bytes p:int n:int -- )
-  p n + data len > [ "zip data is cut short (truncated)" raise:coerce ] when ;
+\ The CRC-32 of the bytes as an integer, the form the headers hold (about 130 VM steps a call).
+: _crc32 ( data:bytes -- int )
+  data "CRC-32" crc:checksum 256 util:digits>int ;
+
+\ ---- reading integers ----
 
 \ n little-endian bytes of data at p as an integer; E_COERCE when the data ends first.
 : _rd ( data:bytes p:int n:int -- int )
-  data p n _need
-  data p p n + slice rev 256 util:digits>int ;
+  data p n "zip data" util:need-bytes
+  data p n util:le-int ;
 
 \ v as n little-endian bytes.
 : _le-bytes ( v:int n:int -- bytes )
@@ -87,18 +89,13 @@ IN: zip
 
 \ The offset of the data of the entry whose local header is at lo, past the name and extra field.
 : _local-start ( data:bytes lo:int -- int )
-  data lo 30 _need
+  data lo 30 "zip data" util:need-bytes
   data lo 4 _rd 67324752 <> [ "the zip local file header is damaged: bad signature" raise:coerce ] when
   lo 30 + data lo 26 + 2 _rd + data lo 28 + 2 _rd + ;
 
-\ A name as text: UTF-8 when it is, Latin-1 otherwise.
-\ util-candidate: bytes-text-lossless
-: _text ( b:bytes -- str )
-  [ b bytes>str ] [ drop b bytes>latin1 ] try ;
-
 : _slice-text ( data:bytes p:int n:int -- str )
-  data p n _need
-  data p p n + slice _text ;
+  data p n "zip data" util:need-bytes
+  data p p n + slice util:text-lossless ;
 
 \ The Unix permission bits when the entry was made on Unix (host 3), otherwise 0.
 : _mode ( madeby:int attr:int -- int )
@@ -121,7 +118,7 @@ IN: zip
   >record ;
 
 : _cd-entry ( data:bytes cd:int delta:int -- record )
-  data cd 46 _need
+  data cd 46 "zip data" util:need-bytes
   data cd 4 _rd 33639248 <> [ "the zip central directory is damaged: bad entry signature" raise:coerce ] when
   data cd delta data cd 46 + data cd 28 + 2 _rd _slice-text _entry-record ;
 
@@ -175,26 +172,10 @@ IN: zip
   dup [ _plan-item ] map data swap _extract
   verify _records ;
 
-\ util-candidate: record-by-name
-: _names ( metas:list -- list )
-  metas [ "name" get ] map ;
-
-\ util-candidate: record-by-name
-: _missing ( metas:list name:str -- )
-  metas len 0 = [ "the archive has no entries, so there is no entry named " name cat raise:range ] when
-  "no entry named " name cat ", the first entries are: " cat
-  metas _names 0 metas len 8 min slice ", " join cat raise:range ;
-
-\ util-candidate: record-by-name
-: _pick ( metas:list name:str -- record )
-  0 metas len range [ metas swap nth "name" get name = ] filter
-  dup len 0 = [ metas name _missing ] when
-  0 nth metas swap nth ;
-
 : entry ( data:bytes name:str verify:bool=true -- bytes )
   "The bytes of one entry of a zip archive, found by its name exactly as unzip lists it (the first, if the name is repeated). A name that is not there is E_RANGE and the message lists the first entries. Only that entry is inflated. verify, damaged or unsupported entries and the output limit are as for zip:unzip (the entry's own size is capped by the value limit)." doc
   "Compression" category
-  data _entries name _pick
+  data _entries name util:pick-named
   dup _check-entry
   dup _plan-item { } swap append data swap _extract 0 nth
   verify [ over over _verify ] when nip ;
@@ -266,7 +247,7 @@ IN: zip
   mode
   mtime _unix>dos
   data _crc32
-  method "store" = [ data ] [ data level _deflate ] if
+  method "store" = [ data ] [ data level deflate:deflate ] if
   data len
   _assemble ;
 

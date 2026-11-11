@@ -45,6 +45,6 @@
     "cyberchef": "Generate all checksums",
     "status": "redesigned",
     "forge": ["generate-all:checksums"],
-    "note": "A text report, one checksum per line with its hex: the 171 CRC presets, Adler-32 and Fletcher-8, -16, -32 and -64, with the same Length and Include names parameters. The CRCs are computed by one private primitive (171 CRCs of 64 KiB in FL would be about 200 million steps) that the tests hold equal to crc:checksum; the order of the lines is the CRC table first, then the other checksums."
+    "note": "A text report, one checksum per line with its hex: the 171 CRC presets, Adler-32 and Fletcher-8, -16, -32 and -64, with the same Length and Include names parameters. The CRCs are computed by one private primitive that shares the loop of crc:_crc and that the tests hold equal to crc:checksum; the order of the lines is the CRC table first, then the other checksums."
   }
 ]

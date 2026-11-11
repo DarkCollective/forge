@@ -28,8 +28,8 @@
  *  - `_decompress ( data verify -- bytes )`: one or more concatenated streams; stops at the value
  *    limit (the wave 6 output rule), never trusting the data beyond 100,000 * level per block.
  *
- * The randomised-block table (512 numbers) is a constant of the format; it was read from the
- * system's libbz2 and is used only to decode the deprecated randomised blocks.
+ * The randomised-block table (512 numbers) is a constant of the format; it comes from bzip2/libbzip2
+ * 1.0.8 (rNums in randtable.c; see NOTICE) and is used only to decode the deprecated randomised blocks.
  */
 import { definePrimitive } from "@forge/lang";
 import type { PrimitiveContext, PrimitiveDef } from "@forge/lang";
@@ -40,6 +40,7 @@ import {
   guardResult,
   rangeFailure,
 } from "../prim-util.js";
+import { msbTable } from "./crc.js";
 
 /** The numbers that say where a randomised block flips the low bit of a byte (a constant of the format). */
 const R_NUMS: readonly number[] = [
@@ -82,15 +83,7 @@ function corrupt(reason: string) {
 
 // ---- CRC-32, MSB first ----
 
-const CRC_TABLE = (() => {
-  const t = new Uint32Array(256);
-  for (let i = 0; i < 256; i++) {
-    let c = i << 24;
-    for (let k = 0; k < 8; k++) c = c & 0x80000000 ? (c << 1) ^ 0x04c11db7 : c << 1;
-    t[i] = c >>> 0;
-  }
-  return t;
-})();
+const CRC_TABLE = msbTable(32, 0x04c11db7);
 
 function crcByte(crc: number, b: number): number {
   return ((crc << 8) ^ (CRC_TABLE[((crc >>> 24) ^ b) & 0xff] as number)) >>> 0;

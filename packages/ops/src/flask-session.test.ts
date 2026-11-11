@@ -19,6 +19,7 @@
  * were computed with Python's hmac/hashlib following itsdangerous; these cover the clock (the +time effect, the
  * pinned timestamp and the fake clock), the shortest-big-endian timestamp, and a 64 KiB payload.
  */
+import { deflateSync } from "node:zlib";
 import { valueHelpers } from "@forge/lang";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { assembleRuntime } from "./bundle.js";
@@ -28,6 +29,18 @@ const { bool, bytes, int, str } = valueHelpers;
 const runtime = assembleRuntime(await loadBundleNode(["flask-session"]));
 
 const text = (s: string) => new TextEncoder().encode(s);
+const B64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+/** URL-safe base64 without padding. */
+function b64url(b: Uint8Array): string {
+  let out = "";
+  for (let i = 0; i < b.length; i += 3) {
+    const n = ((b[i] as number) << 16) | ((b[i + 1] ?? 0) << 8) | (b[i + 2] ?? 0);
+    out += B64.charAt((n >> 18) & 63) + B64.charAt((n >> 12) & 63);
+    if (i + 1 < b.length) out += B64.charAt((n >> 6) & 63);
+    if (i + 2 < b.length) out += B64.charAt(n & 63);
+  }
+  return out;
+}
 const ascii = (u: Uint8Array) => Array.from(u, (b) => String.fromCharCode(b)).join("");
 const out = (r: Awaited<ReturnType<typeof runtime.call>>) =>
   r.ok ? ascii((r.stack[r.stack.length - 1] as { v: Uint8Array }).v) : undefined;
@@ -103,12 +116,33 @@ describe("flask-session", () => {
     }
   });
 
-  test("a compressed cookie names the compression wave in its error", async () => {
-    const r = await runtime.call("flask-session:decode", [
-      bytes(text(".eJyrVkrNTVWyUsrNS8xNVapVqgUAKXoGyg.ZVPxAA.sig")),
+  test("a compressed cookie is inflated (the signature covers the dot)", async () => {
+    // Made by hand in Python (zlib.compress, base64url, HMAC-SHA1 over ".payload.ts"); see the vectors file.
+    const cookie =
+      ".eJyrVkpOLCpRsopWSiwoyElV0sFJJyXmASE-RqyOUmlxapGSlVJiSm5mHlCiKB-o1UopNSWzJL9IqRYAczwi1g.ZVPxAA.QCoe3AWEJ0L8fnMPo6y0fdPi3AI";
+    const json =
+      '{"cart":["apple","apple","apple","apple","banana","banana","banana","banana"],"user":"admin","role":"editor"}';
+    const d = await runtime.call("flask-session:decode", [bytes(text(cookie)), bool(false)]);
+    expect(out(d)).toBe(json);
+    const v = await runtime.call("flask-session:verify", [
+      bytes(text(cookie)),
+      bytes(KEY),
+      bytes(SALT),
+      str("sha1"),
       bool(false),
     ]);
-    expect(code(r)).toBe("E_COERCE");
-    if (!r.ok) expect(String(r.error.detail.reason)).toContain("compression");
+    expect(out(v)).toBe(`{"valid":true,"payload":${json}}`);
   });
+
+  test("a zlib bomb in a cookie payload stops at the value limit", async () => {
+    const bomb = deflateSync(new Uint8Array(20 * 1024 * 1024));
+    const small = assembleRuntime(await loadBundleNode(["flask-session"]), {
+      limits: { maxValueBytes: 16 * 1024 * 1024 },
+    });
+    const r = await small.call("flask-session:decode", [
+      bytes(text(`.${b64url(bomb)}.ZVPxAA.sig`)),
+      bool(false),
+    ]);
+    expect(code(r)).toBe("E_LIMIT_VALUE");
+  }, 60_000);
 });

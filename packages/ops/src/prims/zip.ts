@@ -17,13 +17,9 @@
 /*
  * zip primitives, over `fflate` (MIT, pinned) through the deflate primitives' bounded inflater. The
  * ZIP container itself (local headers, the central directory, the end record, DOS times, the
- * checks) is FL in vocab/zip.fth. Private helpers:
+ * checks) is FL in vocab/zip.fth, which takes its CRC-32 from `crc:checksum` and the DEFLATE encoder
+ * from `deflate:deflate`. Private helpers:
  *
- *  - `_crc32 ( data -- int )`: CRC-32 (the zip checksum). In FL it costs about 13 VM steps per
- *    byte, which would cap a zip at about 380,000 bytes in an untrusted recipe, well under the
- *    16 MiB value limit.
- *  - `_deflate ( data level -- bytes )`: a raw DEFLATE stream (the same encoder as `deflate:_deflate`;
- *    a vocabulary cannot call another vocabulary's private word).
  *  - `_cd-offsets ( data cdoff n -- list )`: where each central directory entry starts (a sequential walk, quadratic in FL).
  *  - `_extract ( data plan -- list )`: the contents of several entries under ONE budget. Each plan
  *    item is `{ start compressed-size method }` (method 0 stored, 8 deflate; FL has already refused
@@ -34,28 +30,10 @@
  */
 import { definePrimitive, valueHelpers } from "@forge/lang";
 import type { PrimitiveContext, PrimitiveDef, Value } from "@forge/lang";
-import { bombFailure, coerceFailure, rangeFailure } from "../prim-util.js";
-import { deflateRaw, inflateLimited } from "./deflate.js";
+import { bombFailure, coerceFailure, rangeFailure, readU16LE, readU32LE } from "../prim-util.js";
+import { inflateLimited } from "./deflate.js";
 
 const { bytes, int } = valueHelpers;
-
-let table: Uint32Array | undefined;
-
-/** CRC-32 (IEEE 802.3, reflected, init and xorout 0xffffffff) of the bytes, as an unsigned number. */
-export function crc32(data: Uint8Array): number {
-  if (!table) {
-    table = new Uint32Array(256);
-    for (let i = 0; i < 256; i++) {
-      let c = i;
-      for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
-      table[i] = c >>> 0;
-    }
-  }
-  let crc = 0xffffffff;
-  for (let i = 0; i < data.length; i++)
-    crc = (table[(crc ^ (data[i] as number)) & 0xff] as number) ^ (crc >>> 8);
-  return (crc ^ 0xffffffff) >>> 0;
-}
 
 /** One entry to read: where its data starts, how many bytes it occupies, and the zip method. */
 export interface ZipPlanItem {
@@ -121,17 +99,11 @@ export function cdOffsets(data: Uint8Array, cdoff: number, count: number): numbe
   let p = cdoff;
   for (let i = 0; i < count; i++) {
     if (p + 46 > data.length) throw corrupt("zip data is cut short (truncated)");
-    const sig =
-      ((data[p] as number) |
-        ((data[p + 1] as number) << 8) |
-        ((data[p + 2] as number) << 16) |
-        ((data[p + 3] as number) << 24)) >>>
-      0;
+    const sig = readU32LE(data, p);
     if (sig !== 0x02014b50)
       throw corrupt("the zip central directory is damaged: bad entry signature");
     out.push(p);
-    const at = (q: number) => (data[q] as number) | ((data[q + 1] as number) << 8);
-    p += 46 + at(p + 28) + at(p + 30) + at(p + 32);
+    p += 46 + readU16LE(data, p + 28) + readU16LE(data, p + 30) + readU16LE(data, p + 32);
   }
   return out;
 }
@@ -158,20 +130,6 @@ function planOf(items: readonly Value[]): ZipPlanItem[] {
 }
 
 export const primitives: readonly PrimitiveDef[] = [
-  definePrimitive("zip", "_crc32", "( data:bytes -- int )", (data: Uint8Array) => crc32(data), {
-    doc: "CRC-32 of the bytes as an unsigned integer (private helper of the zip words).",
-    category: "Compression",
-  }),
-  definePrimitive(
-    "zip",
-    "_deflate",
-    "( data:bytes level:int -- bytes )",
-    (data: Uint8Array, level: number | bigint) => deflateRaw(data, Number(level)),
-    {
-      doc: "A raw DEFLATE stream of the bytes at a level from 0 (stored blocks) to 9 (private helper of zip:zip).",
-      category: "Compression",
-    },
-  ),
   definePrimitive(
     "zip",
     "_cd-offsets",

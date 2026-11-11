@@ -155,8 +155,8 @@ describe("presets", () => {
 });
 
 describe("64 KiB", () => {
-  // Measured: about 0.88 million steps (0.3 s) for CRC-32, CRC-64 and CRC-82, 1.29 million for
-  // CRC-16/XMODEM (the MSB-first path); the default limit is 10 million. No primitive is needed.
+  // The loop is the primitive crc:_crc, so these cost a few hundred steps (0.88 million for CRC-32, 1.29 million
+  // for CRC-16/XMODEM when it was FL); the assertion is the old, looser bound. src/large-inputs.test.ts has 16 MiB.
   for (const name of ["CRC-32", "CRC-64/XZ", "CRC-16/XMODEM", "CRC-82/DARC", "CRC-5/USB"]) {
     test(`${name} over 65536 bytes stays inside the default limits`, async () => {
       const data = randBytes(65536);

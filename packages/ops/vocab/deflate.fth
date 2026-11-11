@@ -102,18 +102,11 @@ USING: adler32 crc ;
   header-crc _gz-header-crc
   data level _deflate cat data _gz-trailer cat ;
 
-\ n little-endian bytes of data at p as an integer.
-: _le ( data:bytes p:int n:int -- int )
-  data p p n + slice rev 256 util:digits>int ;
-
-: _gz-need ( data:bytes p:int n:int -- )
-  p n + data len > [ "gzip data is cut short" raise:coerce ] when ;
-
 \ The offset after the FEXTRA field when the flag is set (a 2-byte length, then the field).
 : _gz-extra-end ( p:int data:bytes flg:int -- int )
   flg 4 band 0 = [ p ] [
-    data p 2 _gz-need
-    data p 2 _le p + 2 +
+    data p 2 "gzip data" util:need-bytes
+    data p 2 util:le-int p + 2 +
     dup data len > [ "the gzip extra field runs past the end of the data" raise:coerce ] when ] if ;
 
 \ The index of the first zero byte at or after p, or the length when there is none; it looks at
@@ -134,7 +127,7 @@ USING: adler32 crc ;
 \ The offset after the header CRC-16 when the flag is set; with verify it must match the header.
 : _gz-hcrc ( p:int data:bytes m:int flg:int verify:bool -- int )
   flg 2 band 0 = [ p ] [
-    data p 2 _gz-need
+    data p 2 "gzip data" util:need-bytes
     verify [
       data m p slice _crc32 2 4 slice rev data p p 2 + slice <> [
         "gzip header checksum mismatch (corrupt header)" raise:coerce ] when ] when
@@ -148,7 +141,7 @@ USING: adler32 crc ;
 
 \ The offset of the deflate stream of the gzip member that starts at m.
 : _gz-header-end ( data:bytes m:int verify:bool -- int )
-  data m 10 _gz-need
+  data m 10 "gzip data" util:need-bytes
   data m nth 31 <> data m 1 + nth 139 <> or [ "not gzip data: the magic number 1f 8b is missing" raise:coerce ] when
   data m 2 + nth 8 <> [ "the gzip compression method is not deflate (8)" raise:coerce ] when
   data m 3 + nth 224 band 0 <> [ "the gzip header sets reserved flag bits" raise:coerce ] when
@@ -156,10 +149,10 @@ USING: adler32 crc ;
 
 \ Checks the CRC-32 and length trailer of a member whose deflate stream ended at e; the offset after it.
 : _gz-trailer-check ( out:bytes e:int data:bytes -- )
-  data e 8 _gz-need
+  data e 8 "gzip data" util:need-bytes
   data e e 4 + slice out _crc32 rev <> [
     "gzip checksum mismatch: the CRC-32 of the output differs from the trailer (corrupt data)" raise:coerce ] when
-  data e 4 + 4 _le out len 4294967296 mod <> [
+  data e 4 + 4 util:le-int out len 4294967296 mod <> [
     "gzip length mismatch: the size in the trailer differs from the output (corrupt data)" raise:coerce ] when ;
 
 : _gz-member ( data:bytes m:int verify:bool -- bytes int )

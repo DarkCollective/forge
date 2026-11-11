@@ -15,30 +15,19 @@
  */
 
 /*
- * Tests of the zip primitives themselves: the CRC-32 check values, the entry budget (exactly the
+ * Tests of the zip primitives themselves: the entry budget (exactly the
  * limit passes, one byte more does not, the sum of the entries counts), and the directory walk.
  */
 import { deflateRawSync } from "node:zlib";
 import { describe, expect, test } from "vitest";
-import { cdOffsets, crc32, extractEntries, primitives } from "./zip.js";
-
-const text = (s: string) => new TextEncoder().encode(s);
+import { cdOffsets, extractEntries, primitives } from "./zip.js";
 
 describe("zip primitives", () => {
   test("are exported as private helpers", () => {
     expect(primitives.map((p) => `${p.vocab}:${p.name}`)).toEqual([
-      "zip:_crc32",
-      "zip:_deflate",
       "zip:_cd-offsets",
       "zip:_extract",
     ]);
-  });
-
-  test("crc32 matches the published check values", () => {
-    expect(crc32(text("123456789"))).toBe(0xcbf43926);
-    expect(crc32(new Uint8Array(0))).toBe(0);
-    expect(crc32(text("a"))).toBe(0xe8b7be43);
-    expect(crc32(new Uint8Array(32))).toBe(0x190a55ad);
   });
 
   test("a stored entry is the slice; exactly the limit passes and one byte more does not", () => {

@@ -217,6 +217,34 @@ IN: util
 
 \ ---- bytes and integers ----
 
+: text-lossless ( b:bytes -- str )
+  "The bytes as text without ever failing: UTF-8 when they are valid UTF-8, otherwise Latin-1 (one character per byte). For names in container formats (zip, tar), which are UTF-8 in newer files and the local code page in older ones." doc
+  [ b bytes>str ] [ drop b bytes>latin1 ] try ;
+
+: le-int ( data:bytes p:int n:int -- int )
+  "The n bytes of data at p read as one little-endian unsigned integer (the first byte is the least significant; n of 0 gives 0). The caller has checked that the bytes are there: a read past the end is the slice error (use need-bytes first)." doc
+  data p p n + slice rev 256 digits>int ;
+
+: need-bytes ( data:bytes p:int n:int what:str -- )
+  "Raises E_COERCE with the message what then is cut short unless data holds n bytes from offset p (a truncated file). what names the data, for example gzip data." doc
+  p n + data len > [ what " is cut short" cat raise:coerce ] when ;
+
+: names-of ( records:list -- list )
+  "The name field of each record of a list, in order (the entries of an archive)." doc
+  records [ "name" get ] map ;
+
+\ E_RANGE for a name that is not there: it lists the first entries (the first eight) to help.
+: _no-entry-named ( records:list name:str -- )
+  records len 0 = [ "there are no entries, so there is no entry named " name cat raise:range ] when
+  "no entry named " name cat ", the first entries are: " cat
+  records names-of 0 records len 8 min slice ", " join cat raise:range ;
+
+: pick-named ( records:list name:str -- record )
+  "The first record of a list whose name field is exactly name. A name that is not there is E_RANGE, and the message lists the first eight names." doc
+  0 records len range [ records swap nth "name" get name = ] filter
+  dup len 0 = [ records name _no-entry-named ] when
+  0 nth records swap nth ;
+
 : zero-bytes ( n:int -- bytes )
   "n zero bytes (none for 0)." doc
   0 n range [ drop 0 ] map list>bytes ;

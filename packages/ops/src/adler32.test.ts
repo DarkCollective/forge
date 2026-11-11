@@ -65,7 +65,7 @@ describe("adler32:checksum", () => {
   }, 60_000);
 
   test("65536 bytes fit well inside the default limits", async () => {
-    // Measured: about 0.85 million steps; the default limit is 10 million. No primitive is needed.
+    // The loop is the primitive adler32:_adler (0.85 million steps when it was FL); the bound is the old, looser one.
     const data = randBytes(65536, 7);
     const { out, steps } = await run(data);
     expect(out).toEqual(reference(data));

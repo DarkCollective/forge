@@ -29,7 +29,7 @@
  */
 import { definePrimitive } from "@forge/lang";
 import type { PrimitiveContext, PrimitiveDef } from "@forge/lang";
-import { BoundedOutput, coerceFailure } from "../prim-util.js";
+import { BoundedOutput, coerceFailure, readU16LE } from "../prim-util.js";
 
 /** The most a chunk can expand to (the uncompressed size of the last chunk is at most this). */
 const CHUNK = 4096;
@@ -59,7 +59,7 @@ function decodeChunk(data: Uint8Array, from: number, end: number, buf: Uint8Arra
         continue;
       }
       if (q + 2 > end) throw corrupt("a compressed word is cut short by the end of its chunk");
-      const word = (data[q] as number) | ((data[q + 1] as number) << 8);
+      const word = readU16LE(data, q);
       q += 2;
       if (u === 0) throw corrupt("a match refers to bytes before the start of the chunk");
       // D displacement bits and L = 16 - D length bits; D grows with the output so far (4 to 12).
@@ -83,7 +83,7 @@ export function lznt1Decompress(data: Uint8Array, maxOut: number): Uint8Array {
   let p = 0;
   while (p < data.length) {
     if (p + 2 > data.length) throw corrupt("the data ends inside a chunk header (truncated)");
-    const header = (data[p] as number) | ((data[p + 1] as number) << 8);
+    const header = readU16LE(data, p);
     if (header === 0) break; // End_of_buffer; whatever follows is ignored
     const signature = (header >> 12) & 7;
     if (signature !== 3)

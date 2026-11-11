@@ -9,11 +9,6 @@
 \ the input, so the total of all entries can never pass the input length (the bomb rule needs no budget).
 IN: tar
 
-\ A name as text: UTF-8 when it is, Latin-1 otherwise.
-\ util-candidate: bytes-text-lossless
-: _text ( b:bytes -- str )
-  [ b bytes>str ] [ drop b bytes>latin1 ] try ;
-
 \ ---- fields ----
 
 \ The bytes of a field up to its first NUL.
@@ -25,9 +20,9 @@ IN: tar
   h _sum h 148 156 slice _sum - 256 + ;
 
 : _full-name ( h:bytes -- str )
-  h 0 100 slice _cstr _text
+  h 0 100 slice _cstr util:text-lossless
   h 257 262 slice #[ 75 73 74 61 72 ] = h 345 500 slice _cstr len 0 > and
-  [ h 345 500 slice _cstr _text "/" cat swap cat ] when ;
+  [ h 345 500 slice _cstr util:text-lossless "/" cat swap cat ] when ;
 
 \ ---- reading ----
 
@@ -45,7 +40,7 @@ IN: tar
 
 \ A long name (GNU type L): the data of the entry, up to its NUL.
 : _long-name ( data:bytes m:record -- str )
-  data m "start" get dup m "size" get + slice _cstr _text ;
+  data m "start" get dup m "size" get + slice _cstr util:text-lossless ;
 
 \ type 0, a NUL (v7) and 7 (contiguous) are files, 5 is a directory; links, devices and the extended
 \ headers (L, K, x, g) are not entries.
@@ -82,22 +77,6 @@ IN: tar
 : _entries ( data:bytes verify:bool -- list )
   data data verify _headers [ data swap _meta ] map _entries2 ;
 
-\ util-candidate: record-by-name
-: _names ( metas:list -- list )
-  metas [ "name" get ] map ;
-
-\ util-candidate: record-by-name
-: _missing ( metas:list name:str -- )
-  metas len 0 = [ "the archive has no entries, so there is no entry named " name cat raise:range ] when
-  "no entry named " name cat ", the first entries are: " cat
-  metas _names 0 metas len 8 min slice ", " join cat raise:range ;
-
-\ util-candidate: record-by-name
-: _pick ( metas:list name:str -- record )
-  0 metas len range [ metas swap nth "name" get name = ] filter
-  dup len 0 = [ metas name _missing ] when
-  0 nth metas swap nth ;
-
 : untar ( data:bytes verify:bool=true -- list )
   "List a tar archive: one record per file or directory in archive order, with name (a ustar prefix is joined with a slash; a GNU long name, type L, is used), size, dir, mtime (Unix seconds), mode (the permission bits, 0 to 4095) and data (empty for a directory). Read are ustar, the older v7 headers and the GNU long-name form; entries that are not files or directories (links, devices, FIFOs) and the extended headers (GNU K, PAX x and g) are skipped, and PAX path and size records are not applied. The archive ends at two zero blocks or at the end of the data. With verify (the default; CyberChef does not check) every header checksum must match (E_COERCE); off, a damaged header is read as it is. Empty input, a bad octal field or data that ends early is E_COERCE. An entry is a slice of the input, so the total is never above the input. Use tar:entry to go on with one file." doc
   "Compression" category
@@ -106,7 +85,7 @@ IN: tar
 : entry ( data:bytes name:str verify:bool=true -- bytes )
   "The bytes of one file of a tar archive, found by its name exactly as tar:untar lists it (the first, if the name is repeated). A name that is not there is E_RANGE and the message lists the first entries. verify and damaged data are as for tar:untar." doc
   "Compression" category
-  data verify _entries name _pick "data" get ;
+  data verify _entries name util:pick-named "data" get ;
 
 \ ---- writing ----
 

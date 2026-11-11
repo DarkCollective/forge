@@ -36,7 +36,14 @@
  */
 import { definePrimitive } from "@forge/lang";
 import type { PrimitiveContext, PrimitiveDef } from "@forge/lang";
-import { bombFailure, coerceFailure, guardResult, rangeFailure } from "../prim-util.js";
+import {
+  bombFailure,
+  coerceFailure,
+  guardResult,
+  rangeFailure,
+  readU16LE,
+  readU32LE,
+} from "../prim-util.js";
 
 // ---- XXH32 ----
 
@@ -48,16 +55,6 @@ const P5 = 374761393;
 
 function rotl(x: number, r: number): number {
   return ((x << r) | (x >>> (32 - r))) >>> 0;
-}
-
-function read32(d: Uint8Array, p: number): number {
-  return (
-    ((d[p] as number) |
-      ((d[p + 1] as number) << 8) |
-      ((d[p + 2] as number) << 16) |
-      ((d[p + 3] as number) << 24)) >>>
-    0
-  );
 }
 
 function round(acc: number, input: number): number {
@@ -75,10 +72,10 @@ export function xxh32(d: Uint8Array, seed: number, from = 0, to = d.length): num
     let v4 = (seed - P1) >>> 0;
     const limit = to - 16;
     while (p <= limit) {
-      v1 = round(v1, read32(d, p));
-      v2 = round(v2, read32(d, p + 4));
-      v3 = round(v3, read32(d, p + 8));
-      v4 = round(v4, read32(d, p + 12));
+      v1 = round(v1, readU32LE(d, p));
+      v2 = round(v2, readU32LE(d, p + 4));
+      v3 = round(v3, readU32LE(d, p + 8));
+      v4 = round(v4, readU32LE(d, p + 12));
       p += 16;
     }
     h = (rotl(v1, 1) + rotl(v2, 7) + rotl(v3, 12) + rotl(v4, 18)) >>> 0;
@@ -87,7 +84,7 @@ export function xxh32(d: Uint8Array, seed: number, from = 0, to = d.length): num
   }
   h = (h + (to - from)) >>> 0;
   while (p + 4 <= to) {
-    h = Math.imul(rotl((h + Math.imul(read32(d, p), P3)) >>> 0, 17), P4) >>> 0;
+    h = Math.imul(rotl((h + Math.imul(readU32LE(d, p), P3)) >>> 0, 17), P4) >>> 0;
     p += 4;
   }
   while (p < to) {
@@ -168,7 +165,7 @@ function decodeBlock(
     }
     if (pos === end) return;
     if (pos + 2 > end) throw corrupt("the block ends inside a match offset");
-    const offset = (src[pos] as number) | ((src[pos + 1] as number) << 8);
+    const offset = readU16LE(src, pos);
     pos += 2;
     if (offset === 0) throw corrupt("a match offset is zero");
     if (out.len - offset < floor)
@@ -205,10 +202,6 @@ function storeBlock(src: Uint8Array, start: number, size: number, out: Out): voi
   out.len += size;
 }
 
-function le32(d: Uint8Array, p: number): number {
-  return read32(d, p);
-}
-
 /**
  * Decodes the data blocks of the frame whose descriptor ended at `start`, up to the EndMark. Block
  * checksums are skipped when absent and checked when `verify`. Returns the output and the offset just
@@ -229,7 +222,7 @@ export function decodeFrameBlocks(
   let pos = start;
   for (;;) {
     if (pos + 4 > data.length) throw corrupt("the data ends before the end mark (truncated)");
-    const word = le32(data, pos);
+    const word = readU32LE(data, pos);
     pos += 4;
     if (word === 0) return { out: out.finish(), end: pos };
     const stored = word >= 0x80000000;
@@ -237,7 +230,7 @@ export function decodeFrameBlocks(
     if (size > blockMax) throw corrupt("a block is larger than the frame's block maximum");
     if (pos + size + (blockChecksum ? 4 : 0) > data.length)
       throw corrupt("the data ends inside a block (truncated)");
-    if (blockChecksum && verify && xxh32(data, 0, pos, pos + size) !== le32(data, pos + size))
+    if (blockChecksum && verify && xxh32(data, 0, pos, pos + size) !== readU32LE(data, pos + size))
       throw corrupt(
         "block checksum mismatch: the XXH32 of a block differs from the one stored (corrupt data)",
       );
@@ -273,7 +266,7 @@ export function decodeLegacyBlocks(
   while (pos < data.length) {
     if (pos + 4 > data.length)
       throw corrupt("the data ends inside a legacy block size (truncated)");
-    const size = le32(data, pos);
+    const size = readU32LE(data, pos);
     if (isMagic(size)) break;
     pos += 4;
     if (size > LEGACY_COMPRESSED_MAX)
@@ -326,7 +319,7 @@ function encodeBlock(
   const mfLimit = be - 12;
   const matchLimit = be - 5;
   const mask = prev.length - 1;
-  const hash = (p: number) => Math.imul(read32(data, p), 2654435761) >>> (32 - HASH_BITS);
+  const hash = (p: number) => Math.imul(readU32LE(data, p), 2654435761) >>> (32 - HASH_BITS);
   const insert = (p: number) => {
     const h = hash(p);
     prev[p & mask] = head[h] as number;
@@ -344,9 +337,12 @@ function encodeBlock(
     const minPos = Math.max(lo, pos - WINDOW);
     let best = 0;
     let bestAt = 0;
-    const word = read32(data, pos);
+    const word = readU32LE(data, pos);
     for (let steps = depth; cand >= minPos && steps > 0; steps--) {
-      if (read32(data, cand) === word && (best === 0 || data[cand + best] === data[pos + best])) {
+      if (
+        readU32LE(data, cand) === word &&
+        (best === 0 || data[cand + best] === data[pos + best])
+      ) {
         let len = 4;
         while (pos + len < matchLimit && data[cand + len] === data[pos + len]) len++;
         if (len > best) {

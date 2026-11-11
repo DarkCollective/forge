@@ -222,14 +222,14 @@ describe("zip:zip", () => {
   });
 
   test(
-    "64 KiB round trips with a small step count (the CRC-32 and DEFLATE are primitives)",
+    "64 KiB round trips with a small step count (the CRC-32 and DEFLATE loops are primitives)",
     {
       timeout: 60_000,
     },
     async () => {
       const data = prose(65_536);
       const z = await zip(data);
-      expect(z.ok && z.steps).toBeLessThan(2000);
+      expect(z.ok && z.steps).toBeLessThan(2500);
       const u = await unzip(out(z));
       expect(u.ok && u.steps).toBeLessThan(5000);
       expect(Array.from(entries(u)[0]?.data ?? [])).toEqual(Array.from(data));

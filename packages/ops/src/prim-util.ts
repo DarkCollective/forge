@@ -97,3 +97,19 @@ export class BoundedOutput {
 export function isAsciiSpace(byte: number): boolean {
   return byte === 0x20 || (byte >= 0x09 && byte <= 0x0d);
 }
+
+/** The little-endian unsigned 16-bit integer of `d` at `p` (the caller has checked that both bytes are there). */
+export function readU16LE(d: Uint8Array, p: number): number {
+  return (d[p] as number) | ((d[p + 1] as number) << 8);
+}
+
+/** The little-endian unsigned 32-bit integer of `d` at `p` (the caller has checked that the four bytes are there). */
+export function readU32LE(d: Uint8Array, p: number): number {
+  return (
+    ((d[p] as number) |
+      ((d[p + 1] as number) << 8) |
+      ((d[p + 2] as number) << 16) |
+      ((d[p + 3] as number) << 24)) >>>
+    0
+  );
+}

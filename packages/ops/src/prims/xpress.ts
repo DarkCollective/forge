@@ -33,7 +33,7 @@
  */
 import { definePrimitive } from "@forge/lang";
 import type { PrimitiveContext, PrimitiveDef } from "@forge/lang";
-import { bombFailure, coerceFailure } from "../prim-util.js";
+import { bombFailure, coerceFailure, readU16LE, readU32LE } from "../prim-util.js";
 
 function corrupt(format: string, reason: string) {
   return coerceFailure(format, "bytes", reason);
@@ -95,12 +95,7 @@ export function xpressDecompress(data: Uint8Array, maxOut: number): Uint8Array {
   for (;;) {
     if (flagCount === 0) {
       need(4, "a flag word");
-      flags =
-        ((data[p] as number) |
-          ((data[p + 1] as number) << 8) |
-          ((data[p + 2] as number) << 16) |
-          ((data[p + 3] as number) << 24)) >>>
-        0;
+      flags = readU32LE(data, p);
       p += 4;
       flagCount = 32;
     }
@@ -112,7 +107,7 @@ export function xpressDecompress(data: Uint8Array, maxOut: number): Uint8Array {
     }
     if (p === n) return out.finish(); // a match flag with no input left: the end of the data
     need(2, "a match word");
-    const word = (data[p] as number) | ((data[p + 1] as number) << 8);
+    const word = readU16LE(data, p);
     p += 2;
     let length = word & 7;
     const offset = (word >> 3) + 1;
@@ -131,16 +126,11 @@ export function xpressDecompress(data: Uint8Array, maxOut: number): Uint8Array {
         length = data[p++] as number;
         if (length === 255) {
           need(2, "a match length");
-          length = (data[p] as number) | ((data[p + 1] as number) << 8);
+          length = readU16LE(data, p);
           p += 2;
           if (length === 0) {
             need(4, "a match length");
-            length =
-              ((data[p] as number) |
-                ((data[p + 1] as number) << 8) |
-                ((data[p + 2] as number) << 16) |
-                ((data[p + 3] as number) << 24)) >>>
-              0;
+            length = readU32LE(data, p);
             p += 4;
           }
           if (length < 15 + 7)
@@ -220,7 +210,7 @@ export function xpressHuffmanDecompress(data: Uint8Array, maxOut: number): Uint8
     let pos = base + TABLE_BYTES;
     const read16 = (): number => {
       if (pos + 2 > n) throw corrupt(HUFF, "the data ends inside the bit stream (truncated)");
-      const w = (data[pos] as number) | ((data[pos + 1] as number) << 8);
+      const w = readU16LE(data, pos);
       pos += 2;
       return w;
     };
@@ -253,16 +243,11 @@ export function xpressHuffmanDecompress(data: Uint8Array, maxOut: number): Uint8
         length = data[pos++] as number;
         if (length === 255) {
           if (pos + 2 > n) throw corrupt(HUFF, "the data ends inside a match length (truncated)");
-          length = (data[pos] as number) | ((data[pos + 1] as number) << 8);
+          length = readU16LE(data, pos);
           pos += 2;
           if (length === 0) {
             if (pos + 4 > n) throw corrupt(HUFF, "the data ends inside a match length (truncated)");
-            length =
-              ((data[pos] as number) |
-                ((data[pos + 1] as number) << 8) |
-                ((data[pos + 2] as number) << 16) |
-                ((data[pos + 3] as number) << 24)) >>>
-              0;
+            length = readU32LE(data, pos);
             pos += 4;
           }
           if (length < 15) throw corrupt(HUFF, `a match length field of ${length} is too small`);
