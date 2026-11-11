@@ -64,6 +64,6 @@ describe("alphabet", () => {
     expect(Array.from(top(edge).v as string).length).toBe(65_536 - 2048);
     const over = await expand(range(0x4e00, 0x14e00), "none");
     expect(over.ok).toBe(false);
-    expect(over.error?.code).toBe("E_RANGE");
+    expect(over.ok ? "ok" : over.error.code).toBe("E_RANGE");
   });
 });
