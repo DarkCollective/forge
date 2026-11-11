@@ -22,9 +22,14 @@ import {
   formatReport,
   groupNames,
   pendingByName,
+  primitiveSet,
   similarity,
 } from "./dupes.js";
+import { createNodeProvider } from "./sources-node.js";
 import type { SourceFile } from "./types.js";
+
+/** The package's primitives as `vocab:name`, read from src/prims the way the bundle loader reads them. */
+const PRIMS = await primitiveSet(createNodeProvider().primitiveLoaders());
 
 const file = (vocab: string, body: string): SourceFile => ({
   name: `${vocab}.fth`,
@@ -133,6 +138,39 @@ describe("findDuplicates", () => {
     const r = findDuplicates(extractDefinitions(sources(["a", "f", "b 1 +"], ["b", "g", "b 1 +"])));
     expect(r.exact).toEqual([]);
     expect(r.near).toEqual([]);
+  });
+
+  test("two thin wrappers over their own distinct primitives are not exact duplicates", () => {
+    // `a b c _prim` in each vocabulary, where _prim is a TypeScript primitive of that vocabulary.
+    const src = [
+      file("a", ": encrypt ( data:bytes key:bytes -- bytes ) data key a b c _prim ;"),
+      file("b", ": encrypt ( data:bytes key:bytes -- bytes ) data key a b c _prim ;"),
+    ];
+    const prims = new Set(["a:_prim", "b:_prim"]);
+    expect(findDuplicates(extractDefinitions(src, prims)).exact).toEqual([]);
+    expect(findDuplicates(extractDefinitions(src, prims)).similar).toEqual([]);
+    // Without the primitives they are the same body, as before the fix.
+    expect(findDuplicates(extractDefinitions(src)).exact).toHaveLength(1);
+  });
+
+  test("two vocabularies with identical private FL helpers are still exact duplicates", () => {
+    const src = [
+      file("a", ": _h ( x:int -- int ) x 1 + 2 * 3 - ;\n: f ( x:int -- int ) x _h dup ;"),
+      file("b", ": _h ( x:int -- int ) x 1 + 2 * 3 - ;\n: g ( x:int -- int ) x _h dup ;"),
+    ];
+    const prims = new Set(["a:_prim", "b:_prim"]);
+    const { exact } = findDuplicates(extractDefinitions(src, prims));
+    expect(exact).toHaveLength(1);
+    expect(exact[0]?.members.map((m) => m.qname).sort()).toEqual(["a:_h", "b:_h"]);
+  });
+
+  test("a primitive of its own vocabulary is vocabulary-specific, so it is not a core word", () => {
+    const [d] = extractDefinitions(
+      [file("a", ": encrypt ( data:bytes key:bytes -- bytes ) data key _prim ;")],
+      new Set(["a:_prim"]),
+    );
+    expect(d?.core).toEqual([]);
+    expect(d?.tokens).toContain("w:a:_prim");
   });
 
   test("a call to a private word of its own vocabulary is not the same as in another vocabulary", () => {
@@ -294,12 +332,12 @@ describe("the real vocabularies", () => {
     .map((name) => ({ name, text: readFileSync(`${dir}/${name}`, "utf8") }));
 
   test("no util-candidate marker is left: every pending copy has been promoted", () => {
-    const result = findDuplicates(extractDefinitions(files));
+    const result = findDuplicates(extractDefinitions(files, PRIMS));
     expect(pendingByName(result).map(([name]) => name)).toEqual([]);
   });
 
   test("no helper is copied between vocabularies", () => {
-    const { exact } = findDuplicates(extractDefinitions(files));
+    const { exact } = findDuplicates(extractDefinitions(files, PRIMS));
     const message = exact
       .map(
         (g) =>

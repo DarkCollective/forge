@@ -1,0 +1,96 @@
+[
+  {
+    "name": "XSalsa20/20 keystream, libsodium stream test key and nonce (not checked against a published output)",
+    "ref": "key and nonce: libsodium test/default/stream_xsalsa20.c (verified in source); expected output produced by @noble/ciphers and not checked against a published keystream in this WP",
+    "op": "xsalsa20:encrypt",
+    "params": {
+      "key": {
+        "value": "1b27556473e985d462cd51197a9a46c76009549eac6474f206c4ee0844f68389",
+        "enc": "hex"
+      },
+      "nonce": {
+        "value": "69696ee955b62b73cd62bda875fc73d68219e0036b7a0b37",
+        "enc": "hex"
+      },
+      "counter": 0
+    },
+    "input": {
+      "value": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "eea6a7251c1e72916d11c2cb214d3c252539121d8e234e652d651fa4c8cff880309e645a74e9e0a60d8243acd9177ab51a1beb8d5a2f5d700c093c5e55855796",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "empty input",
+    "ref": "XSalsa20 keystream applied to no bytes",
+    "op": "xsalsa20:encrypt",
+    "params": {
+      "key": {
+        "value": "1b27556473e985d462cd51197a9a46c76009549eac6474f206c4ee0844f68389",
+        "enc": "hex"
+      },
+      "nonce": {
+        "value": "69696ee955b62b73cd62bda875fc73d68219e0036b7a0b37",
+        "enc": "hex"
+      },
+      "counter": 0
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "key of 16 bytes is E_RANGE",
+    "ref": "noble takes a 32-byte XSalsa20 key (see src/prims/xsalsa20.ts)",
+    "op": "xsalsa20:encrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "nonce": {
+        "value": "69696ee955b62b73cd62bda875fc73d68219e0036b7a0b37",
+        "enc": "hex"
+      },
+      "counter": 0
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "nonce of 8 bytes is E_RANGE",
+    "ref": "XSalsa20 takes a 24-byte nonce",
+    "op": "xsalsa20:encrypt",
+    "params": {
+      "key": {
+        "value": "1b27556473e985d462cd51197a9a46c76009549eac6474f206c4ee0844f68389",
+        "enc": "hex"
+      },
+      "nonce": {
+        "value": "0000000000000000",
+        "enc": "hex"
+      },
+      "counter": 0
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  }
+]
