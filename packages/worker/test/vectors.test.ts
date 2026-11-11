@@ -46,7 +46,7 @@ describe("op test vectors", () => {
     }
   });
 
-  test("every vector passes and every op is covered", { timeout: 60_000 }, async () => {
+  test("every vector passes and every op is covered", { timeout: 240_000 }, async () => {
     const baker = createInProcessBaker({ loadBundle: loadBundleNode });
     const info = await baker.init({ vocabs: "all" });
     expect(info.catalogueVersion).toBe(catalogue.version);

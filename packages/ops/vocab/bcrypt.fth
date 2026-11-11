@@ -3,15 +3,17 @@
 \ "Bcrypt" (hash with a random salt and a number of rounds), "Bcrypt compare" and "Bcrypt parse". The
 \ password is the input. The hash is the 60-character string $2b$10$<22 salt><31 hash> as ASCII bytes
 \ (bcrypt's own base64 alphabet). Three words build it: hash draws a random salt (so it has the +random
-\ effect, inferred from _random-salt) and hash-salted takes the salt, which makes it reproducible. The
-\ work is _hash, _verify, _parse and _random-salt, private primitives (src/prims/bcrypt.ts) over the
+\ effect, inferred from random:bytes-of) and hash-salted takes the salt, which makes it reproducible. The
+\ work is _hash, _verify and _parse, private primitives (src/prims/bcrypt.ts) over the
 \ Blowfish state of blowfish.ts: bcrypt is memory- and time-hard, far beyond the FL step budget.
 IN: bcrypt
+
+USING: random ;
 
 : hash ( password:bytes cost:int=10 version:choice{2b|2a|2y}="2b" -- bytes )
   "The bcrypt hash of the input password with a fresh random 16-byte salt: the string $2b$10$ + 22 characters of salt + 31 of hash, as ASCII bytes. cost is the log2 of the number of rounds, 4 to 16 (E_RANGE otherwise; CyberChef's default of 10 takes about a tenth of a second). The version prefix is 2b, 2a or 2y; the three give the same hash. Only the first 72 bytes of the password count. The word is not deterministic; use bcrypt:hash-salted to fix the salt, and bcrypt:compare to check a password." doc
   "Key derivation" category
-  password _random-salt cost version _hash ;
+  password 16 random:bytes-of cost version _hash ;
 
 : hash-salted ( password:bytes salt:key{hex|utf8|latin1|base64} cost:int=10 version:choice{2b|2a|2y}="2b" -- bytes )
   "The bcrypt hash of the input password with the given salt, which must be 16 bytes (E_RANGE otherwise). Deterministic; see bcrypt:hash for the string format, the cost (4 to 16) and the version. Reusing a salt defeats its purpose: use it to reproduce a known hash." doc

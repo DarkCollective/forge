@@ -150,6 +150,29 @@ describe("list:sort-by", () => {
   });
 });
 
+describe("list:unique", () => {
+  test("keeps the first of each string, in order", async () => {
+    const r = await runtime.call("list:unique", [strs("b", "a", "b", "c", "a", "", "")]);
+    expect(plain(top(r))).toEqual(["b", "a", "c", ""]);
+  });
+
+  test("an empty list, a list without repeats and the input left alone", async () => {
+    expect(plain(top(await runtime.call("list:unique", [list([])])))).toEqual([]);
+    const input = strs("x", "y");
+    expect(plain(top(await runtime.call("list:unique", [input])))).toEqual(["x", "y"]);
+    expect(plain(input.v)).toEqual(["x", "y"]);
+  });
+
+  test("65,536 strings with many repeats are well within the default limits", async () => {
+    const items = list(Array.from({ length: 65536 }, (_, i) => str(String((i * 7919) % 1000))));
+    const t0 = Date.now();
+    const out = plain(top(await runtime.call("list:unique", [items]))) as string[];
+    expect(Date.now() - t0).toBeLessThan(2000);
+    expect(out.length).toBe(1000);
+    expect(out.slice(0, 3)).toEqual(["0", "7919".slice(-3) === "919" ? "919" : "", "838"]);
+  });
+});
+
 describe("list:shuffle", () => {
   test("it is a permutation", async () => {
     const r = await runtime.call("list:shuffle", [

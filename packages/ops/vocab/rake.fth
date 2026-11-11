@@ -19,7 +19,7 @@ IN: rake
 
 \ The text of every match of the pattern, in order.
 : _texts ( text:str pattern:str -- list )
-  text pattern "" regex:find-all [ "text" get ] map ;
+  text pattern "" util:match-texts ;
 
 \ A word: letters, digits and marks, with ' or - between pieces. Every other character that is not white space is a
 \ token of its own (punctuation).

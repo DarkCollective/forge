@@ -1042,6 +1042,168 @@ describe("util:str-chunks", () => {
     expect(await fl('"" 4 util:str-chunks len')).toBe(0);
     expect(await fl('"abc" 1 util:str-chunks " " join')).toBe("a b c");
   });
+
+  test("counts code points, so a character outside the BMP is one piece", async () => {
+    const pieces = (await value("util:str-chunks", [
+      str("a\u{1F600}b\u{10FFFF}c\u00e9\u{1F680}"),
+      int(2),
+    ])) as {
+      v: string;
+    }[];
+    expect(pieces.map((p) => p.v)).toEqual(["a\u{1F600}", "b\u{10FFFF}", "c\u00e9", "\u{1F680}"]);
+  });
+
+  test("a 64 KiB string is cut in linear time, at any width, with the same pieces", async () => {
+    const text = "x\u{1F600}yz".repeat(16384);
+    for (const n of [1, 7, 80]) {
+      const t0 = Date.now();
+      const pieces = (await value("util:str-chunks", [str(text), int(n)])) as { v: string }[];
+      expect(Date.now() - t0).toBeLessThan(5000);
+      const cps = [...text];
+      expect(pieces.length).toBe(Math.ceil(cps.length / n));
+      expect(pieces.map((p) => p.v).join("")).toBe(text);
+      expect([...pieces[0]!.v].length).toBe(n);
+      expect([...pieces[pieces.length - 1]!.v].length).toBe(cps.length % n || n);
+    }
+  });
+});
+
+describe("util:zero-pad", () => {
+  test("pads on the left with zeros and never cuts", async () => {
+    expect(await fl("7 3 util:zero-pad")).toBe("007");
+    expect(await fl("0 2 util:zero-pad")).toBe("00");
+    expect(await fl("1234 2 util:zero-pad")).toBe("1234");
+    expect(await fl("5 0 util:zero-pad")).toBe("5");
+    expect(await fl("42 12 util:zero-pad")).toBe("000000000042");
+  });
+});
+
+describe("util:ordinal-suffix", () => {
+  test.each([
+    [1, "st"],
+    [2, "nd"],
+    [3, "rd"],
+    [4, "th"],
+    [10, "th"],
+    [11, "th"],
+    [12, "th"],
+    [13, "th"],
+    [21, "st"],
+    [22, "nd"],
+    [23, "rd"],
+    [100, "th"],
+    [101, "st"],
+    [111, "th"],
+    [112, "th"],
+    [113, "th"],
+    [1002, "nd"],
+  ])("%i", async (n, expected) => {
+    expect(await value("util:ordinal-suffix", [int(n)])).toBe(expected);
+  });
+});
+
+describe("util:tdiv", () => {
+  test("rounds towards zero where div rounds down", async () => {
+    expect(await fl("7 2 util:tdiv")).toBe(3);
+    expect(await fl("-7 2 util:tdiv")).toBe(-3);
+    expect(await fl("-7 2 div")).toBe(-4);
+    expect(await fl("-6 3 util:tdiv")).toBe(-2);
+    expect(await fl("0 5 util:tdiv")).toBe(0);
+  });
+});
+
+describe("util:round-div", () => {
+  test("rounds to the nearest, halves up", async () => {
+    expect(await fl("7 2 util:round-div")).toBe(4);
+    expect(await fl("5 3 util:round-div")).toBe(2);
+    expect(await fl("4 3 util:round-div")).toBe(1);
+    expect(await fl("6 4 util:round-div")).toBe(2);
+    expect(await fl("5 4 util:round-div")).toBe(1);
+    expect(await fl("0 7 util:round-div")).toBe(0);
+    expect(await fl("123456789012345678901234567890 10 util:round-div")).toBe(
+      12345678901234567890123456789n,
+    );
+  });
+});
+
+describe("util:contains?", () => {
+  test("finds an element equal to x", async () => {
+    expect(await fl('{ "a" "b" } "b" util:contains?')).toBe(true);
+    expect(await fl('{ "a" "b" } "c" util:contains?')).toBe(false);
+    expect(await fl('{ } "a" util:contains?')).toBe(false);
+    expect(await fl("{ 1 2 3 } 3 util:contains?")).toBe(true);
+  });
+});
+
+describe("util:match-texts", () => {
+  test("the text of every match, in order, and none when nothing matches", async () => {
+    expect(await fl('"a1 b22 c333" "\\\\d+" "" util:match-texts " " join')).toBe("1 22 333");
+    expect(await fl('"abc" "\\\\d" "" util:match-texts len')).toBe(0);
+    expect(await fl('"Ab aB" "ab" "i" util:match-texts " " join')).toBe("Ab aB");
+  });
+});
+
+describe("util:total-text", () => {
+  test("one item per line, with an optional total in front", async () => {
+    expect(await fl('{ "a" "b" } false util:total-text')).toBe("a\nb");
+    expect(await fl('{ "a" "b" } true util:total-text')).toBe("Total found: 2\n\na\nb");
+    expect(await fl("{ } true util:total-text")).toBe("Total found: 0\n\n");
+    expect(await fl("{ } false util:total-text")).toBe("");
+  });
+});
+
+describe("util calendar words", () => {
+  const civil = async (days: number) =>
+    ((await runtime.call("util:civil-from-days", [int(days)])) as { stack: Value[] }).stack
+      .slice(-3)
+      .map((v) => Number(v.v));
+
+  test.each([
+    [0, [1970, 1, 1]],
+    [-1, [1969, 12, 31]],
+    [59, [1970, 3, 1]],
+    [11016, [2000, 2, 29]],
+    [19782, [2024, 2, 29]],
+    [-719162, [1, 1, 1]],
+    [-719528, [0, 1, 1]],
+    [2932896, [9999, 12, 31]],
+  ])("civil-from-days %i", async (days, ymd) => {
+    expect(await civil(days)).toEqual(ymd);
+    expect(await value("util:days-from-civil", [int(ymd[0]!), int(ymd[1]!), int(ymd[2]!)])).toBe(
+      days,
+    );
+  });
+
+  test("the two agree with Date for a spread of days, and the day may run past the month", async () => {
+    for (let days = -800000; days < 3000000; days += 12345) {
+      const d = new Date(days * 86400000);
+      const y = d.getUTCFullYear();
+      if (y < 100 || y > 9999) continue;
+      expect(await civil(days)).toEqual([y, d.getUTCMonth() + 1, d.getUTCDate()]);
+    }
+    expect(await value("util:days-from-civil", [int(2024), int(2), int(30)])).toBe(19783);
+    expect(await value("util:days-from-civil", [int(2024), int(1), int(0)])).toBe(19722);
+  });
+
+  test("iso-from-ms writes the UTC date and time to the millisecond, without a zone letter", async () => {
+    const cases: [number, string][] = [
+      [0, "1970-01-01T00:00:00.000"],
+      [951782400000, "2000-02-29T00:00:00.000"],
+      [-1, "1969-12-31T23:59:59.999"],
+      [-12219292800000, "1582-10-15T00:00:00.000"],
+      [253402300799999, "9999-12-31T23:59:59.999"],
+      [1709210096789, "2024-02-29T12:34:56.789"],
+      [4102444800000, "2100-01-01T00:00:00.000"],
+    ];
+    for (const [ms, want] of cases) {
+      expect(await value("util:iso-from-ms", [int(ms)])).toBe(want);
+    }
+    for (const ms of [-62135596800000, -5e12, -86400001, 86399999, 1e12, 1.5e12, 2.5e12, 1.8e13]) {
+      expect(await value("util:iso-from-ms", [int(ms)])).toBe(
+        new Date(ms).toISOString().replace("Z", ""),
+      );
+    }
+  });
 });
 
 describe("util:ceil-div", () => {
