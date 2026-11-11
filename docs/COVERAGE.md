@@ -12,7 +12,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Category | Covered | Redesigned | Dropped | Not yet | Total |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Data format | 54 | 6 | 0 | 20 | 80 |
-| Encryption / Encoding | 29 | 51 | 0 | 15 | 95 |
+| Encryption / Encoding | 29 | 59 | 0 | 7 | 95 |
 | Public Key | 0 | 0 | 0 | 30 | 30 |
 | Arithmetic / Logic | 9 | 0 | 0 | 17 | 26 |
 | Networking | 0 | 0 | 0 | 34 | 34 |
@@ -27,7 +27,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 4 | 0 | 3 | 14 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **134** | **74** | **3** | **295** | **506** |
+| **Total** | **134** | **82** | **3** | **287** | **506** |
 
 ## Data format (80)
 
@@ -126,8 +126,8 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | DES Decrypt | redesigned | `des:decrypt` | The inverse of des:encrypt with the same parameters; bad PKCS#7 padding or ciphertext that is not whole 8-byte blocks is E_COERCE. |
 | Triple DES Encrypt | redesigned | `triple-des:encrypt` | As DES with a 24-byte key, or a 16-byte key (two-key: K3 = K1, as CyberChef does); modes CBC, CFB, OFB, CTR and ECB; padding is its own choice. EDE form (SP 800-67). |
 | Triple DES Decrypt | redesigned | `triple-des:decrypt` | The inverse of triple-des:encrypt with the same parameters. |
-| Fernet Encrypt | not yet |  |  |
-| Fernet Decrypt | not yet |  |  |
+| Fernet Encrypt | redesigned | `fernet:encrypt` | Fernet (github.com/fernet/spec) in FL over aes:encrypt, hmac:digest and base64: version 0x80, an 8-byte time, a 16-byte IV, AES-128-CBC with PKCS#7, HMAC-SHA256, url-safe base64 with padding. The input is bytes and the token is its text as bytes. The key is a key param: 32 bytes, or their url-safe base64 text (the form CyberChef takes; 43 or 44 characters), anything else E_RANGE. The IV comes from the host CSPRNG (the +random effect) and the time from the clock (+time), as in CyberChef, so the output differs on every call; nothing falls back to Math.random (a host with no crypto.getRandomValues is E_PRIMITIVE). Tests pin both through the private fernet:_seal. |
+| Fernet Decrypt | redesigned | `fernet:decrypt` | The inverse, with the HMAC checked before anything is decrypted (E_COERCE for a bad token, a wrong key, bad base64, a bad version byte or bad padding). The key is the same key param as in fernet:encrypt. CyberChef fixes the TTL at 0 (no time check); an added ttl param (seconds, default 0 = no check) applies the spec's age rules: older than the TTL, or more than 60 seconds in the future, is E_COERCE. The base64 padding is optional on input. |
 | LS47 Encrypt | covered | `classical:ls47-encrypt` |  |
 | LS47 Decrypt | covered | `classical:ls47-decrypt` |  |
 | RC2 Encrypt | redesigned | `rc2:encrypt` | RFC 2268. CyberChef runs CBC when an IV is given and ECB when it is blank, with no other setting; here mode (CBC, the default, or ECB) is explicit, so a blank IV in CBC is E_RANGE. The RFC's effective key bits are the effective-bits param (1 to 1024), whose default 128 is what CyberChef's library uses for any key length. Key 1 to 128 bytes; padding is its own choice. |
@@ -194,9 +194,9 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Derive HKDF key | redesigned | `hkdf:derive` | Written in FL over hmac:digest (RFC 5869). The input is the keying material. Salt and info are key params (hex, base64, utf8 or latin1; CyberChef also offers Decimal, a chain step here). The hash defaults to sha256 and offers every CyberChef choice except Whirlpool-0 and Whirlpool-T, which Forge does not implement; the extract mode (with salt, no salt, skip) and L in bytes (default 16) are CyberChef's, and L beyond 255 times the hash length is E_RANGE. Output is raw bytes (chain hex:encode). |
 | Bcrypt | not yet |  |  |
 | Scrypt | covered | `scrypt:derive` | The input is the password. Salt is a key param (hex, base64, utf8 or latin1), N (default 16384), r (8), p (1) and the key length (64 bytes) are CyberChef's. Output is raw key bytes (chain hex:encode). Limits (E_RANGE): N a power of two up to 2^20, memory 128 * N * r at most 256 MiB, N * r * p at most 2^23 (about 2 s), key 1 to 4096 bytes; the defaults take about 35 ms. |
-| JWT Sign | not yet |  |  |
-| JWT Verify | not yet |  |  |
-| JWT Decode | not yet |  |  |
+| JWT Sign | redesigned | `jwt:sign` | RFC 7519 over RFC 7515, in FL over hmac:digest. Only the HMAC algorithms HS256, HS384 and HS512 are offered; CyberChef's RS, ES and PS algorithms are public-key and belong to wave 7, and None (an unsigned token) is deliberately not offered. The key is a key param (not empty, else E_RANGE). The input is the payload JSON text and is signed exactly as given (it is not parsed or re-serialised, because FL has no JSON parser; it must be a JSON object by its first and last character, else E_COERCE). The header is {"alg":...,"typ":"JWT"} followed by the members of the header param (a JSON object text; typ there replaces the default, alg there is E_RANGE), where CyberChef merges a parsed object. |
+| JWT Verify | redesigned | `jwt:verify` | Verifies HS256, HS384 and HS512 under the key and returns the payload as the JSON text the token holds, as CyberChef returns the payload (a failure raises E_COERCE, there is no bool). The alg param is auto (the token's own header chooses among the three HMAC algorithms, which is safe because only a shared secret is accepted) or a pinned algorithm. alg none is never accepted, whatever the key or pin (E_RANGE), and neither is any algorithm that is not HS256/384/512 (RS, ES and PS are wave 7: E_RANGE). A header with the text "alg" twice is ambiguous (E_COERCE). Unlike CyberChef (jsonwebtoken) the exp and nbf claims are not checked: this is a signature check, because that needs a JSON parser and a clock. |
+| JWT Decode | redesigned | `jwt:decode` | Splits a compact token and decodes the payload (or, with the part param, the header), without a key, as the JSON text the token holds, exactly as written (CyberChef returns the parsed payload). Each decoded part must be a JSON object by its first and last character, and the token three parts (an encrypted five-part JWT is E_COERCE); the JSON is not parsed further because FL has no JSON parser. |
 | Citrix CTX1 Encode | covered | `classical:ctx1-encode` |  |
 | Citrix CTX1 Decode | covered | `classical:ctx1-decode` |  |
 | AES Key Wrap | redesigned | `aes-kw:wrap` | RFC 3394 over noble's aeskw, with the key-encryption key (16, 24 or 32 bytes, a key-type param) and the input as bytes. The IV is the RFC 3394 default, A6A6A6A6A6A6A6A6, fixed by noble, so CyberChef's IV parameter is not offered (a custom IV is not RFC 3394's algorithm as noble implements it). The input must be a multiple of 8 bytes and at least 16 (E_COERCE otherwise, as CyberChef). RFC 5649 padding is not offered, because CyberChef does not offer it. The output is raw bytes (chain hex:encode for CyberChef's Hex output). |
@@ -210,9 +210,9 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Lorenz | redesigned | `lorenz:encrypt`, `lorenz:decrypt` | Two words with one set of parameters (model SZ40, SZ42a or SZ42b, the P5 attachment, KH, ZMUG, BREAM or custom wheel patterns, twelve start positions, text or ITA2 in and out); decrypt exists because the P5 limitation makes the key depend on the plain text. |
 | Colossus | redesigned | `colossus:count` | A counting run over the start positions of two chi wheels with a Boolean condition on delta Z and delta chi (the 1+2 break-in by default), a set total and a table of the best settings; it does not model the plug panels and the tape reader of the machine, and it does not search three wheels at once. |
 | SIGABA | covered | `sigaba:crypt` | One word with a mode parameter (encrypt or decrypt), the rotor choice, orientation (R suffix) and start positions of the three banks, and optional rotor wirings; the default wirings are Forge's own, not the historical ones. The index rotor offset (+d for digit d) follows CyberChef's convention for compatibility; the sources do not fix it. |
-| Flask Session Decode | not yet |  |  |
-| Flask Session Sign | not yet |  |  |
-| Flask Session Verify | not yet |  |  |
+| Flask Session Decode | redesigned | `flask-session:decode` | itsdangerous's URLSafeTimedSerializer as Flask uses it, in FL over base64. Decodes the payload.timestamp.signature cookie to the session JSON text as written (not parsed). The View TimeStamp option is the timestamp param (default false); with it the result is {"payload":...,"timestamp":N}. The timestamp is read as itsdangerous writes it, the shortest big-endian integer, where CyberChef reads exactly 4 bytes. A cookie whose payload Flask compressed with zlib (it starts with a dot) is E_COERCE with a message saying decompression comes with the compression vocabulary, because the runtime has no inflate yet (CyberChef cannot read these either). |
+| Flask Session Sign | redesigned | `flask-session:sign` | Signs a session JSON as a Flask cookie: salt cookie-session by default, the 'hmac' key derivation HMAC(secret, salt), a SHA-1 (default) or SHA-256 signature over payload.timestamp, url-safe base64 without padding. The key and the salt are key params (CyberChef's toggle encodings, minus Decimal and Binary which are chain steps); an empty key is E_RANGE (Secret key required) and an empty salt means the default, as CyberChef. The input JSON text is used as given. The time is the clock (the +time effect) unless the added timestamp param pins it (Unix seconds above 0; 0 is now), which also makes the word reproducible. Never compresses. |
+| Flask Session Verify | redesigned | `flask-session:verify` | Checks the signature as flask-session:sign writes it (E_COERCE when it does not verify, as CyberChef's Invalid signature) and returns {"valid":true,"payload":...} with ,"timestamp":N when the timestamp param is set (default true), as text rather than a parsed object. Same key, salt and algorithm params as flask-session:sign. A compressed (leading dot) payload is E_COERCE until the compression vocabulary exists. The age of the cookie is not checked, as in CyberChef. |
 
 ## Public Key (30)
 

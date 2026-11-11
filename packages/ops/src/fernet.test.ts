@@ -26,7 +26,7 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import { assembleRuntime } from "./bundle.js";
 import { loadBundleNode } from "./sources-node.js";
 
-const { bytes, int, str } = valueHelpers;
+const { bytes, int } = valueHelpers;
 const runtime = assembleRuntime(await loadBundleNode(["fernet"]));
 
 // The private words are reachable only from a unit in their own vocabulary, so the test adds two probes to it.
