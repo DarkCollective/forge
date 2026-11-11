@@ -259,7 +259,6 @@ export function cryptExt(
   decrypt: boolean,
 ): Uint8Array {
   let g = cipher(key, sbox);
-  let kcur: Uint8Array = Uint8Array.from(key);
   if (mode !== "ECB" && iv.length !== 8)
     throw rangeFailure(`the IV must be 8 bytes, not ${iv.length}`, { length: iv.length });
   if ((mode === "ECB" || mode === "CBC") && data.length % 8 !== 0)
@@ -302,8 +301,8 @@ export function cryptExt(
       for (let j = 0; j < 8; j++) outBlock[j] = inBlock[j]! ^ ks[j]!;
     }
     if (mesh && ((i + 1) * 8) % 1024 === 0) {
-      kcur = ecb(g, MESH_C, true);
-      g = cipher(kcur, sbox);
+      const next = ecb(g, MESH_C, true);
+      g = cipher(next, sbox);
       s = ecb(g, s, false);
     }
   }
