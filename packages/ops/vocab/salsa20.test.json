@@ -1,0 +1,120 @@
+[
+  {
+    "name": "eSTREAM Salsa20/20 256-bit key, set 1 vector 0",
+    "ref": "eSTREAM Salsa20 test vectors (Bernstein, Salsa20 specification), 256-bit key, set 1, vector 0: key 80 00.., IV 0; first 64 bytes of keystream",
+    "op": "salsa20:encrypt",
+    "params": {
+      "key": {
+        "value": "8000000000000000000000000000000000000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "nonce": {
+        "value": "0000000000000000",
+        "enc": "hex"
+      },
+      "counter": 0
+    },
+    "input": {
+      "value": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "e3be8fdd8beca2e3ea8ef9475b29a6e7003951e1097a5c38d23b7a5fad9f6844b22c97559e2723c7cbbd3fe4fc8d9a0744652a83e72a9c461876af4d7ef1a117",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "eSTREAM Salsa20/20 128-bit key, set 1 vector 0",
+    "ref": "eSTREAM Salsa20 test vectors (Bernstein, Salsa20 specification), 128-bit key, set 1, vector 0: key 80 00.., IV 0; first 64 bytes of keystream",
+    "op": "salsa20:encrypt",
+    "params": {
+      "key": {
+        "value": "80000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "nonce": {
+        "value": "0000000000000000",
+        "enc": "hex"
+      },
+      "counter": 0
+    },
+    "input": {
+      "value": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "4dfa5e481da23ea09a31022050859936da52fcee218005164f267cb65f5cfd7f2b4f97e0ff16924a52df269515110a07f9e460bc65ef95da58f740b7d1dbb0aa",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "empty input",
+    "ref": "eSTREAM Salsa20 keystream applied to no bytes",
+    "op": "salsa20:encrypt",
+    "params": {
+      "key": {
+        "value": "8000000000000000000000000000000000000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "nonce": {
+        "value": "0000000000000000",
+        "enc": "hex"
+      },
+      "counter": 0
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "key of 15 bytes is E_RANGE",
+    "ref": "packages/ops README: Errors",
+    "op": "salsa20:encrypt",
+    "params": {
+      "key": {
+        "value": "000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "nonce": {
+        "value": "0000000000000000",
+        "enc": "hex"
+      },
+      "counter": 0
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "nonce of 12 bytes is E_RANGE",
+    "ref": "packages/ops README: Errors",
+    "op": "salsa20:encrypt",
+    "params": {
+      "key": {
+        "value": "8000000000000000000000000000000000000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "nonce": {
+        "value": "000000000000000000000000",
+        "enc": "hex"
+      },
+      "counter": 0
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  }
+]

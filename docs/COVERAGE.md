@@ -12,7 +12,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Category | Covered | Redesigned | Dropped | Not yet | Total |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Data format | 54 | 6 | 0 | 20 | 80 |
-| Encryption / Encoding | 28 | 11 | 0 | 56 | 95 |
+| Encryption / Encoding | 28 | 16 | 0 | 51 | 95 |
 | Public Key | 0 | 0 | 0 | 30 | 30 |
 | Arithmetic / Logic | 9 | 0 | 0 | 17 | 26 |
 | Networking | 0 | 0 | 0 | 34 | 34 |
@@ -27,7 +27,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 4 | 0 | 3 | 14 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **133** | **32** | **3** | **338** | **506** |
+| **Total** | **133** | **37** | **3** | **333** | **506** |
 
 ## Data format (80)
 
@@ -134,9 +134,9 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | RC2 Decrypt | not yet |  |  |
 | RC4 | not yet |  |  |
 | RC4 Drop | not yet |  |  |
-| ChaCha | not yet |  |  |
-| Salsa20 | not yet |  |  |
-| XSalsa20 | not yet |  |  |
+| ChaCha | redesigned | `chacha:encrypt` | One word, encrypt, for both directions (a stream cipher), with the key and the nonce as key params in any of the four encodings (the Integer nonce toggle is not offered), the block counter as a number from 0, and rounds as a choice of 20, 12 or 8. The layouts follow noble: a 12-byte nonce with a 4-byte counter (RFC 8439) takes a 32-byte key and 20, 12 or 8 rounds; an 8-byte nonce with an 8-byte counter takes a 16- or 32-byte key and 20 rounds only. A 16-byte key with a 12-byte nonce, which CyberChef accepts, is E_RANGE, because noble has no such core and none is written here. A counter that would overflow is E_RANGE (noble refuses it), where CyberChef truncates. Input and output are bytes (chain hex:decode and hex:encode for text). |
+| Salsa20 | redesigned | `salsa20:encrypt` | One word, encrypt, for both directions, with the key (16 or 32 bytes), the 8-byte nonce and the 64-bit block counter as CyberChef has them. There is no rounds parameter: noble runs Salsa20/20 only, so CyberChef's 12 and 8 rounds are not offered (no own core is written for them). The Integer nonce toggle is not offered. A counter that would overflow is E_RANGE. |
+| XSalsa20 | redesigned | `xsalsa20:encrypt` | One word, encrypt, for both directions, with the 24-byte nonce and the 64-bit block counter as CyberChef has them. The key is 32 bytes only: noble has no 16-byte XSalsa20, so CyberChef's 16-byte key is E_RANGE. There is no rounds parameter (20 rounds only, as for Salsa20), and no Integer nonce toggle (an 8-byte integer nonce is not a valid XSalsa20 nonce). |
 | Rabbit | not yet |  |  |
 | SM4 Encrypt | not yet |  |  |
 | SM4 Decrypt | not yet |  |  |
@@ -199,8 +199,8 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | JWT Decode | not yet |  |  |
 | Citrix CTX1 Encode | covered | `classical:ctx1-encode` |  |
 | Citrix CTX1 Decode | covered | `classical:ctx1-decode` |  |
-| AES Key Wrap | not yet |  |  |
-| AES Key Unwrap | not yet |  |  |
+| AES Key Wrap | redesigned | `aes-kw:wrap` | RFC 3394 over noble's aeskw, with the key-encryption key (16, 24 or 32 bytes, a key-type param) and the input as bytes. The IV is the RFC 3394 default, A6A6A6A6A6A6A6A6, fixed by noble, so CyberChef's IV parameter is not offered (a custom IV is not RFC 3394's algorithm as noble implements it). The input must be a multiple of 8 bytes and at least 16 (E_COERCE otherwise, as CyberChef). RFC 5649 padding is not offered, because CyberChef does not offer it. The output is raw bytes (chain hex:encode for CyberChef's Hex output). |
+| AES Key Unwrap | redesigned | `aes-kw:unwrap` | The inverse of aes-kw:wrap under the same key-encryption key, with the same IV and no IV or padding parameters for the reason given for AES Key Wrap. The wrapped key must be a multiple of 8 bytes and at least 24 (E_COERCE otherwise). A wrong key or corrupted data fails the RFC 3394 integrity check: E_COERCE, and no key data is returned (CyberChef reports an IV mismatch error). |
 | Pseudo-Random Number Generator | not yet |  |  |
 | Pseudo-Random Prime Generator | not yet |  |  |
 | Enigma | covered | `enigma:encrypt` | Enigma I, M3 and M4 with the historical rotors, reflectors and plugboard; one reciprocal word (alias decrypt). |

@@ -52,12 +52,13 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 
 ## Vocabularies
 
-81 vocabularies, 184 ops (two ops each unless noted). Vocabulary names are lower-kebab-case.
+85 vocabularies, 189 ops (two ops each unless noted). Vocabulary names are lower-kebab-case.
 
 | Vocabulary         | Ops                                                                                                                                                                    |
 | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `adler32`          | Adler-32 checksum (RFC 1950) (1 op)                                                                                                                                    |
 | `aes`              | AES encrypt and decrypt (FIPS 197): ECB, CBC, CFB, OFB, CTR and GCM, 128/192/256-bit keys, PKCS#7 or no padding, GCM additional data                                   |
+| `aes-kw`           | AES Key Wrap and Unwrap (RFC 3394), 16/24/32-byte key-encryption key, default IV (2 ops)                                                                               |
 | `analysis`         | entropy (bits per byte), byte-frequency distribution, index of coincidence and chi-squared against English (4 ops)                                                     |
 | `base32`           | encode and decode, standard and hex alphabets (RFC 4648)                                                                                                               |
 | `base45`           | encode and decode (RFC 9285)                                                                                                                                           |
@@ -77,6 +78,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `bombe`            | Turing-Welchman Bombe for the Enigma I and M3: a crib search for stops, one word for one or many rotor orders (1 op)                                                   |
 | `braille`          | bytes as 8-dot Unicode Braille patterns and back                                                                                                                       |
 | `caret`            | caret and M- notation as printed by `cat -v`                                                                                                                           |
+| `chacha`           | ChaCha stream cipher (RFC 8439 and the original 8-byte nonce), 20, 12 or 8 rounds (1 op)                                                                               |
 | `charcode`         | text to and from character codes in a chosen base                                                                                                                      |
 | `charset`          | legacy character sets (single-byte, EBCDIC, UTF-16/32, CJK), with brute force (3 ops)                                                                                  |
 | `classical`        | rot (Caesar, ROT13), rot47, rot8000, rot brute force, Atbash, Affine, Vigenère, Bacon, Bifid, Rail Fence, Caesar box, A1Z26, Cetacean, CTX1, LS47, Substitute (26 ops) |
@@ -119,6 +121,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `regex`            | test, find-all, replace, split                                                                                                                                         |
 | `ripemd`           | RIPEMD-128, -160, -256 and -320 (1 op)                                                                                                                                 |
 | `ripemd160`        | RIPEMD-160 alone, for HMAC (1 op)                                                                                                                                      |
+| `salsa20`          | Salsa20/20 stream cipher (eSTREAM), 16 or 32-byte keys, 8-byte nonce (1 op)                                                                                            |
 | `sha0`             | SHA-0 (1 op)                                                                                                                                                           |
 | `sha1`             | SHA-1 (1 op)                                                                                                                                                           |
 | `sha2`             | SHA-224, -256, -384, -512, -512/224 and -512/256 (1 op)                                                                                                                |
@@ -137,6 +140,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `url`              | percent-encode and decode (RFC 3986)                                                                                                                                   |
 | `whirlpool`        | Whirlpool (ISO/IEC 10118-3) (1 op)                                                                                                                                     |
 | `xor-checksum`     | column-wise XOR of the blocks of the input (1 op)                                                                                                                      |
+| `xsalsa20`         | XSalsa20/20 stream cipher, 32-byte key, 24-byte nonce (1 op)                                                                                                           |
 
 Four internal vocabularies are not part of the catalogue as ops: `recipe` (the words recipes compile to), `raise` (typed errors, above), `util` (shared helpers, below) and `blockmode` (the shared block cipher modes and PKCS#7 padding; see "Cipher conventions").
 
