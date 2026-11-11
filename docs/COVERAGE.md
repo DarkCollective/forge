@@ -20,14 +20,14 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Utils | 34 | 14 | 2 | 0 | 50 |
 | Date / Time | 5 | 4 | 0 | 0 | 9 |
 | Extractors | 1 | 8 | 0 | 9 | 18 |
-| Compression | 5 | 6 | 0 | 10 | 21 |
+| Compression | 5 | 8 | 0 | 8 | 21 |
 | Hashing | 34 | 14 | 0 | 0 | 48 |
 | Code tidy | 0 | 0 | 0 | 24 | 24 |
 | Forensics | 0 | 0 | 0 | 9 | 9 |
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 9 | 4 | 3 | 5 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **198** | **130** | **5** | **173** | **506** |
+| **Total** | **198** | **132** | **5** | **171** | **506** |
 
 ## Data format (80)
 
@@ -432,8 +432,8 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Gunzip | covered | `deflate:gunzip` | RFC 1952: the header (extra field, name, comment and header CRC-16 are read and skipped; a missing magic number, another method or reserved flags are E_COERCE), the stream, and the CRC-32 and size of the trailer, which are verified by default (the added parameter verify, on; off returns the data despite a bad trailer or header CRC). Members written one after the other are joined, as gzip does. Output past the value limit is E_LIMIT_VALUE; the size the trailer claims is never used to allocate. |
 | Zip | not yet |  |  |
 | Unzip | not yet |  |  |
-| Bzip2 Decompress | not yet |  |  |
-| Bzip2 Compress | not yet |  |  |
+| Bzip2 Decompress | redesigned | `bzip2:decompress` | The bzip2 format written from its specification (inverse BWT, MTF, Huffman, run-length step, randomised blocks, block and stream CRC-32). Several streams one after the other are joined, as bzip2 -d does; bytes after the last stream that do not start another are ignored. Added: verify, on by default, checks every CRC (E_COERCE otherwise); off, a bad checksum is ignored. CyberChef's low-memory option (use a slower algorithm in libbzip2) has no meaning here and is not offered. Corrupt or cut-short data is E_COERCE naming the fault; a block larger than its header's block size allows is E_COERCE; output past the value limit (16 MiB for shared recipes, 64 MiB otherwise) stops with E_LIMIT_VALUE while decoding. CyberChef also rejects an empty input; here an empty input is E_COERCE as not bzip2 data. |
+| Bzip2 Compress | redesigned | `bzip2:compress` | The bzip2 format written from its specification as Forge's own primitive (no library): Burrows-Wheeler transform by prefix doubling, move-to-front with zero runs, up to six Huffman tables with code lengths of at most 17, the bzip2 CRC-32. Block size (100s of kb) is block-size, 1 to 9, default 9 (else E_RANGE). Work factor is accepted (0 to 250, default 30, else E_RANGE) and ignored: it only tunes libbzip2's choice between two sorting algorithms, and Forge has one. The empty input gives the valid 14-byte empty stream instead of CyberChef's 'Please provide an input' error. The bytes can differ from libbzip2's (the Huffman refinement is not identical) except for tiny or very regular inputs, and bzip2, Python and libbzip2 read them. |
 | Tar | not yet |  |  |
 | Untar | not yet |  |  |
 | LZString Decompress | not yet |  |  |
