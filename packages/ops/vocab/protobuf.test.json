@@ -1,0 +1,608 @@
+[
+  {
+    "name": "the documentation example: field 1 is 150",
+    "ref": "Protocol Buffers encoding guide: 08 96 01 is a=150",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "089601",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\n    \"1\": 150\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "the documentation example: field 2 is the string \"testing\"",
+    "ref": "Protocol Buffers encoding guide: 12 07 \"testing\"",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "120774657374696e67",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\n    \"2\": \"testing\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "the documentation example: field 3 is a nested message with a=150",
+    "ref": "Protocol Buffers encoding guide: 1a 03 08 96 01",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "1a03089601",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\n    \"3\": {\n        \"1\": 150\n    }\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "empty input is an empty message",
+    "ref": "a zero-length message has no fields",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "empty input, compact",
+    "ref": "a zero-length message has no fields",
+    "op": "protobuf:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a message of every wire type: varint, fixed64, fixed32, nested, repeated, bytes, zigzag",
+    "ref": "Python google.protobuf 7.36.1 serialisation of a message built with the library; the expected JSON written from the values put in (json.dumps)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "089601120774657374696e671a0508071201782001200220ac0229ffffffffffffffff35efbeadde3a02fffe400348ffffffffffffffffff0150016202080162070802120374776f7a0261627a026364",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\n    \"1\": 150,\n    \"2\": \"testing\",\n    \"3\": {\n        \"1\": 7,\n        \"2\": \"x\"\n    },\n    \"4\": [\n        1,\n        2,\n        300\n    ],\n    \"5\": 18446744073709551615,\n    \"6\": 3735928559,\n    \"7\": \"fffe\",\n    \"8\": 3,\n    \"9\": 18446744073709551615,\n    \"10\": 1,\n    \"12\": [\n        {\n            \"1\": 1\n        },\n        {\n            \"1\": 2,\n            \"2\": \"two\"\n        }\n    ],\n    \"15\": [\n        \"ab\",\n        \"cd\"\n    ]\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "the same message, compact",
+    "ref": "Python google.protobuf 7.36.1 serialisation of a message built with the library; the expected JSON written from the values put in (json.dumps)",
+    "op": "protobuf:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "089601120774657374696e671a0508071201782001200220ac0229ffffffffffffffff35efbeadde3a02fffe400348ffffffffffffffffff0150016202080162070802120374776f7a0261627a026364",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"1\":150,\"2\":\"testing\",\"3\":{\"1\":7,\"2\":\"x\"},\"4\":[1,2,300],\"5\":18446744073709551615,\"6\":3735928559,\"7\":\"fffe\",\"8\":3,\"9\":18446744073709551615,\"10\":1,\"12\":[{\"1\":1},{\"1\":2,\"2\":\"two\"}],\"15\":[\"ab\",\"cd\"]}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "the same message, 2 spaces",
+    "ref": "Python google.protobuf 7.36.1 serialisation of a message built with the library; the expected JSON written from the values put in (json.dumps)",
+    "op": "protobuf:decode",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "089601120774657374696e671a0508071201782001200220ac0229ffffffffffffffff35efbeadde3a02fffe400348ffffffffffffffffff0150016202080162070802120374776f7a0261627a026364",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\n  \"1\": 150,\n  \"2\": \"testing\",\n  \"3\": {\n    \"1\": 7,\n    \"2\": \"x\"\n  },\n  \"4\": [\n    1,\n    2,\n    300\n  ],\n  \"5\": 18446744073709551615,\n  \"6\": 3735928559,\n  \"7\": \"fffe\",\n  \"8\": 3,\n  \"9\": 18446744073709551615,\n  \"10\": 1,\n  \"12\": [\n    {\n      \"1\": 1\n    },\n    {\n      \"1\": 2,\n      \"2\": \"two\"\n    }\n  ],\n  \"15\": [\n    \"ab\",\n    \"cd\"\n  ]\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "show types: the labels of the wire types",
+    "ref": "Python google.protobuf 7.36.1 serialisation of a message built with the library; the expected JSON written from the values put in (json.dumps)",
+    "op": "protobuf:decode",
+    "params": {
+      "show-types": true
+    },
+    "input": {
+      "value": "089601120774657374696e671a0508071201782001200220ac0229ffffffffffffffff35efbeadde3a02fffe400348ffffffffffffffffff0150016202080162070802120374776f7a0261627a026364",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\n    \"field #1: VarInt (e.g. int32, bool)\": 150,\n    \"field #2: L-delim (e.g. string, message)\": \"testing\",\n    \"field #3: L-delim (e.g. string, message)\": {\n        \"field #1: VarInt (e.g. int32, bool)\": 7,\n        \"field #2: L-delim (e.g. string, message)\": \"x\"\n    },\n    \"field #4: VarInt (e.g. int32, bool)\": [\n        1,\n        2,\n        300\n    ],\n    \"field #5: 64-Bit (e.g. fixed64, double)\": 18446744073709551615,\n    \"field #6: 32-Bit (e.g. fixed32, float)\": 3735928559,\n    \"field #7: L-delim (e.g. string, message)\": \"fffe\",\n    \"field #8: VarInt (e.g. int32, bool)\": 3,\n    \"field #9: VarInt (e.g. int32, bool)\": 18446744073709551615,\n    \"field #10: VarInt (e.g. int32, bool)\": 1,\n    \"field #12: L-delim (e.g. string, message)\": [\n        {\n            \"field #1: VarInt (e.g. int32, bool)\": 1\n        },\n        {\n            \"field #1: VarInt (e.g. int32, bool)\": 2,\n            \"field #2: L-delim (e.g. string, message)\": \"two\"\n        }\n    ],\n    \"field #15: L-delim (e.g. string, message)\": [\n        \"ab\",\n        \"cd\"\n    ]\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "fields out of order on the wire come out in field number order",
+    "ref": "hand-built wire bytes (varint 2 for field 2, then 1 for field 1)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "10020801",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\n    \"1\": 1,\n    \"2\": 2\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a field that repeats becomes an array in wire order",
+    "ref": "hand-built wire bytes: field 1 three times",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "080308010802",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\n    \"1\": [\n        3,\n        1,\n        2\n    ]\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a big field number (3000)",
+    "ref": "Python google.protobuf 7.36.1 serialisation of a message built with the library; the expected JSON written from the values put in (json.dumps)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "c0bb0107",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\n    \"3000\": 7\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "field number 2^29 - 1",
+    "ref": "hand-built: tag = (2^29-1)<<3 | 0",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "f8ffffff0f05",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\n    \"536870911\": 5\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "int32 -1 is a 10-byte varint of 2^64 - 1",
+    "ref": "Python google.protobuf 7.36.1 serialisation of a message built with the library; the expected JSON written from the values put in (json.dumps)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "58ffffffffffffffffff01",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\n    \"11\": 18446744073709551615\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a double is its 64-bit pattern",
+    "ref": "Python google.protobuf 7.36.1 serialisation of a message built with the library; the expected JSON written from the values put in (json.dumps)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "69000000000000f83f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\n    \"13\": 4609434218613702656\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a float is its 32-bit pattern",
+    "ref": "Python google.protobuf 7.36.1 serialisation of a message built with the library; the expected JSON written from the values put in (json.dumps)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "75000010c0",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\n    \"14\": 3222274048\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a varint over 2^53 stays exact",
+    "ref": "Python google.protobuf 7.36.1 serialisation of a message built with the library; the expected JSON written from the values put in (json.dumps)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "48b9e08080808080808001",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\n    \"9\": 9223372036854788153\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "text with non-ASCII characters is valid UTF-8",
+    "ref": "Python google.protobuf 7.36.1 serialisation of a message built with the library; the expected JSON written from the values put in (json.dumps)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "121168c3a96c6c6f2077c3b6726c6420e282ac",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\n    \"2\": \"héllo wörld €\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "text with a quote and a newline",
+    "ref": "Python google.protobuf 7.36.1 serialisation of a message built with the library; the expected JSON written from the values put in (json.dumps)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "12066122620a635c",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\n    \"2\": \"a\\\"b\\nc\\\\\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "bytes that are not UTF-8 are shown as hex",
+    "ref": "Python google.protobuf 7.36.1 serialisation of a message built with the library; the expected JSON written from the values put in (json.dumps)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "3a04ff00807f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\n    \"7\": \"ff00807f\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "an empty string field is an empty object (CyberChef's guess)",
+    "ref": "Python google.protobuf 7.36.1 serialisation of a message built with the library; the expected JSON written from the values put in (json.dumps)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "1200",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\n    \"2\": {}\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "an empty nested message is an empty object",
+    "ref": "Python google.protobuf 7.36.1 serialisation of a message built with the library; the expected JSON written from the values put in (json.dumps)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "1a00",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\n    \"3\": {}\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a string that parses as a message is shown as one (the guess)",
+    "ref": "hand-built: field 1 is the 2 bytes 08 05 which are a message",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "0a020805",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\n    \"1\": {\n        \"1\": 5\n    }\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a packed repeated field is a string of control characters",
+    "ref": "hand-built: packed [1,2,3] is field 4 with the 3 bytes 01 02 03",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "2203010203",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\n    \"4\": \"\\u0001\\u0002\\u0003\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "nested 5 levels deep",
+    "ref": "hand-built nested field 1",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "0a0a0a080a060a040a020801",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\n    \"1\": {\n        \"1\": {\n            \"1\": {\n                \"1\": {\n                    \"1\": {\n                        \"1\": 1\n                    }\n                }\n            }\n        }\n    }\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mixed: sub-message list with a different second field",
+    "ref": "Python google.protobuf 7.36.1 serialisation of a message built with the library; the expected JSON written from the values put in (json.dumps)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "6205080112016162020802",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\n    \"12\": [\n        {\n            \"1\": 1,\n            \"2\": \"a\"\n        },\n        {\n            \"1\": 2\n        }\n    ]\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "error: a varint cut short",
+    "ref": "must be rejected (Protocol Buffers encoding guide)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "0880",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: a tag cut short",
+    "ref": "must be rejected (Protocol Buffers encoding guide)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "80",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: a length-delimited field longer than the data",
+    "ref": "must be rejected (Protocol Buffers encoding guide)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "0a05616263",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: a 64-bit field cut short",
+    "ref": "must be rejected (Protocol Buffers encoding guide)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "090102030405",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: a 32-bit field cut short",
+    "ref": "must be rejected (Protocol Buffers encoding guide)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "0d010203",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: a start-group tag (wire type 3)",
+    "ref": "must be rejected (Protocol Buffers encoding guide)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "0b",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: an end-group tag (wire type 4)",
+    "ref": "must be rejected (Protocol Buffers encoding guide)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "0c",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: wire type 6",
+    "ref": "must be rejected (Protocol Buffers encoding guide)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "0e",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: wire type 7",
+    "ref": "must be rejected (Protocol Buffers encoding guide)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "0f",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: field number 0",
+    "ref": "must be rejected (Protocol Buffers encoding guide)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "0001",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: a varint of 11 bytes",
+    "ref": "must be rejected (Protocol Buffers encoding guide)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "08ffffffffffffffffffff01",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: a varint of 10 bytes with a last byte of 2",
+    "ref": "must be rejected (Protocol Buffers encoding guide)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "08ffffffffffffffffff02",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: a length of 4 GB",
+    "ref": "must be rejected (Protocol Buffers encoding guide)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "0affffffff0f",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: a length of 2^64",
+    "ref": "must be rejected (Protocol Buffers encoding guide)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "0affffffffffffffffff01",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: a tag of 2^32",
+    "ref": "must be rejected (Protocol Buffers encoding guide)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "808080801001",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: a tag of 2^34",
+    "ref": "must be rejected (Protocol Buffers encoding guide)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "808080804000",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: plain text",
+    "ref": "must be rejected (Protocol Buffers encoding guide)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "48656c6c6f",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: a nested message that is cut short at the top",
+    "ref": "must be rejected (Protocol Buffers encoding guide)",
+    "op": "protobuf:decode",
+    "params": {},
+    "input": {
+      "value": "0a0208",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]
