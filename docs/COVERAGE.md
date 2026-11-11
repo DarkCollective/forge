@@ -12,7 +12,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Category | Covered | Redesigned | Dropped | Not yet | Total |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Data format | 54 | 6 | 0 | 20 | 80 |
-| Encryption / Encoding | 28 | 9 | 0 | 58 | 95 |
+| Encryption / Encoding | 28 | 11 | 0 | 56 | 95 |
 | Public Key | 0 | 0 | 0 | 30 | 30 |
 | Arithmetic / Logic | 9 | 0 | 0 | 17 | 26 |
 | Networking | 0 | 0 | 0 | 34 | 34 |
@@ -27,7 +27,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 4 | 0 | 3 | 14 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **133** | **30** | **3** | **340** | **506** |
+| **Total** | **133** | **32** | **3** | **338** | **506** |
 
 ## Data format (80)
 
@@ -118,8 +118,8 @@ it and regenerate this file. An operation listed in several CyberChef categories
 
 | CyberChef | Status | Forge | Note |
 | --- | --- | --- | --- |
-| AES Encrypt | not yet |  |  |
-| AES Decrypt | not yet |  |  |
+| AES Encrypt | redesigned | `aes:encrypt` | Bytes in and bytes out (CyberChef's Input and Output encodings are chain steps such as hex:decode and hex:encode). The key and the IV are key params in any of the key encodings, the key 16, 24 or 32 bytes. The mode is CBC (the default), CFB, OFB, CTR, GCM or ECB, and padding is its own choice (pkcs7, the default, or none), where CyberChef has separate CBC/NoPadding and ECB/NoPadding modes. GCM takes the additional data as the aad param and appends the 16-byte tag to the ciphertext, where CyberChef returns the tag separately. A wrong key or IV length is E_RANGE. |
+| AES Decrypt | redesigned | `aes:decrypt` | The inverse of aes:encrypt with the same parameters. For GCM the last 16 bytes of the input are the tag (CyberChef takes a separate GCM Tag param), and a tag that does not verify is E_COERCE and returns no plaintext; bad PKCS#7 padding is E_COERCE too. The no-padding modes of CyberChef are padding none. |
 | Blowfish Encrypt | not yet |  |  |
 | Blowfish Decrypt | not yet |  |  |
 | DES Encrypt | not yet |  |  |

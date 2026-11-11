@@ -22,6 +22,17 @@ export { expect };
  * 404 page test: Chromium logs a console error for the failed document load itself.
  */
 
+/** True for a same-origin script chunk under /assets/ (the only request whose cancellation is benign). */
+function isAbortedAssetChunk(requestUrl: string, pageUrl: string): boolean {
+  try {
+    const u = new URL(requestUrl);
+    const p = new URL(pageUrl);
+    return u.origin === p.origin && /^\/assets\/[^/]+\.js$/.test(u.pathname);
+  } catch {
+    return false;
+  }
+}
+
 /**
  * The shared fixture: every test fails on any console error or warning, uncaught page error, failed request or
  * `securitypolicyviolation` event, and the page must be cross-origin isolated (the production headers).
@@ -38,9 +49,14 @@ export const test = base.extend<{ problems: string[]; ignoredProblems: RegExp[] 
           problems.push(`console.${m.type()}: ${text}`);
       });
       page.on("pageerror", (e) => problems.push(`pageerror: ${e.message}`));
-      page.on("requestfailed", (r) =>
-        problems.push(`requestfailed: ${r.url()} ${r.failure()?.errorText ?? ""}`),
-      );
+      page.on("requestfailed", (r) => {
+        const errorText = r.failure()?.errorText ?? "";
+        // A lazily loaded op chunk (same-origin script under /assets/) is cancelled with
+        // net::ERR_ABORTED when the page navigates or closes mid-load. That is a timing artefact, not
+        // a defect; every other failure (a 404, a CSP block, another origin or path) still counts.
+        if (errorText === "net::ERR_ABORTED" && isAbortedAssetChunk(r.url(), page.url())) return;
+        problems.push(`requestfailed: ${r.url()} ${errorText}`);
+      });
       await page.addInitScript(() => {
         document.addEventListener("securitypolicyviolation", (e) => {
           console.error(`securitypolicyviolation: ${e.violatedDirective} ${e.blockedURI}`);

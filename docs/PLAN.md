@@ -338,6 +338,26 @@ Language gaps found in wave 3 (candidates for the core, or for a primitive):
 - Arbitrary-precision integers made CRC-64 and CRC-82 easy (the whole Rocksoft model is a few dozen lines of FL with no special case for the width); worth keeping in the core.
 - A 64 KiB checksum in FL costs about a million VM steps, so any report over many of them needs a primitive.
 
+**Wave 4** (modern symmetric crypto and key derivation)
+
+Block ciphers that an audited library covers (AES) use `@noble/ciphers` behind minimal private primitives. The block ciphers that have no audited library (DES, Triple DES, Blowfish, RC2, RC6, Twofish, SM4, TEA, XTEA, PRESENT, GOST 28147-89) are Forge's own primitives, each a private single-block pair `_encrypt-block` and `_decrypt-block` with a key schedule; all of their modes (ECB, CBC, CFB, OFB, CTR) and PKCS#7 padding come from one shared FL vocabulary, `blockmode`, driven by a block-function quotation, so the modes are never written twice. The conventions (bytes in and out, `key` parameters for key and IV, a separate padding parameter, `E_RANGE` for a bad key or IV, `E_COERCE` for bad padding or a failed GCM tag, the GCM tag appended to the ciphertext) are in the ops README ("Cipher conventions").
+
+| WP | Scope |
+|---|---|
+| 5.23 | Setup: `@noble/ciphers`, cipher conventions, the shared block-mode layer, the `aes` exemplar, the e2e flake fix |
+| 5.24 | Stream ciphers and key wrap via noble: ChaCha, Salsa20, XSalsa20, AES Key Wrap/Unwrap |
+| 5.25 | KDFs: Derive PBKDF2 key, Derive HKDF key, Scrypt, Argon2 and Argon2 compare (via `@noble/hashes`), Derive EVP key (FL over md5/sha) |
+| 5.26 | Block ciphers as own primitives on the shared mode layer: DES, Triple DES, Blowfish, RC2, RC6, Twofish, SM4 |
+| 5.27 | Lightweight and legacy: RC4, RC4 Drop, CipherSaber2, Rabbit, TEA, XTEA, XXTEA, PRESENT, GOST Encrypt/Decrypt and GOST Key Wrap/Unwrap (28147-89), ROR13 |
+| 5.28 | Constructions: CMAC, LM Hash, Bcrypt, Bcrypt compare, Bcrypt parse, Ascon Hash, Ascon MAC, Ascon Encrypt/Decrypt, Fernet Encrypt/Decrypt, JWT Sign/Verify/Decode, Flask Session Decode/Sign/Verify |
+| 5.29 | Close-out, CyberChef cross-check |
+
+Each CyberChef row belongs to exactly one WP. GOST Sign/Verify (public key) belongs to wave 7, and the Pseudo-Random Number and Prime Generators move to wave 5 (utils, `+random`).
+
+Dependency order: 5.26 needs the 5.23 mode layer; 5.28 needs 5.26 (bcrypt needs Blowfish, LM hash needs DES) and the `aes` vocabulary (CMAC, Fernet); 5.24, 5.25 and 5.27 are independent of each other and of 5.26, and need only 5.23 (5.27's block ciphers, such as GOST 28147-89, TEA and PRESENT, call the same `blockmode` layer).
+
+WP 5.23 measured the mode layer in FL: a 64 KiB CBC encryption through `blockmode:encrypt`, driving a raw AES block function, takes about 98,500 VM steps (the default limit is 10,000,000), CBC decryption 103 thousand, ECB 70 thousand, CFB and OFB 98 thousand, and CTR 1.07 million (the counter is an integer sum per block). So the mode layer is FL, and only the block primitives are TypeScript. AES itself uses noble's own modes for speed (only OFB, which noble lacks, runs on the layer), and the tests hold the layer byte-identical to noble's modes and to `aes:encrypt`.
+
 ### Phase 6 — Beyond CyberChef
 Magic auto-detection (declarative `checks` in META, depth-limited search). An optional recipe store backend behind `RecipeStore`. A PWA/offline mode. The `@forge/cli`. Recipe diff/swap. **Relix vocabulary** integration as an `relix:` vocab of primitives.
 

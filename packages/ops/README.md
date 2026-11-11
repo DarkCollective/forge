@@ -1,6 +1,6 @@
 # @forge/ops
 
-The operation vocabularies of Forge: 182 ops in 80 vocabularies, written in FL (the Forth-like Forge language), plus the build-time catalogue and the loaders that make them available in Node and in the browser.
+The operation vocabularies of Forge: 184 ops in 81 vocabularies, written in FL (the Forth-like Forge language), plus the build-time catalogue and the loaders that make them available in Node and in the browser.
 
 The package holds:
 
@@ -35,6 +35,7 @@ The private primitives, each in `src/prims/<v>.ts`:
 - `cobs:_starts`: the offsets of the blocks of COBS data;
 - `float:_pack` and `float:_unpack`: decimal text to and from IEEE 754 bytes;
 - `unicode:_normalize`: Unicode normalisation (NFC, NFD, NFKC, NFKD);
+- `aes:_check-key`, `aes:_block-enc`, `aes:_block-dec`, `aes:_crypt` and `aes:_gcm`: AES over the audited `@noble/ciphers` (the block pair also drives `blockmode` for OFB);
 - `sigaba:_run`: the SIGABA rotor stack over letters 0 to 25 (the loop needs a fast mutable array, which FL lacks);
 - `classical:_ls47`: the LS47 letter-by-letter cipher on a given board, for the same reason;
 - `bombe:_search`: the Bombe test over the 17,576 start positions of one rotor order;
@@ -51,11 +52,12 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 
 ## Vocabularies
 
-80 vocabularies, 182 ops (two ops each unless noted). Vocabulary names are lower-kebab-case.
+81 vocabularies, 184 ops (two ops each unless noted). Vocabulary names are lower-kebab-case.
 
 | Vocabulary         | Ops                                                                                                                                                                    |
 | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `adler32`          | Adler-32 checksum (RFC 1950) (1 op)                                                                                                                                    |
+| `aes`              | AES encrypt and decrypt (FIPS 197): ECB, CBC, CFB, OFB, CTR and GCM, 128/192/256-bit keys, PKCS#7 or no padding, GCM additional data                                   |
 | `analysis`         | entropy (bits per byte), byte-frequency distribution, index of coincidence and chi-squared against English (4 ops)                                                     |
 | `base32`           | encode and decode, standard and hex alphabets (RFC 4648)                                                                                                               |
 | `base45`           | encode and decode (RFC 9285)                                                                                                                                           |
@@ -136,7 +138,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `whirlpool`        | Whirlpool (ISO/IEC 10118-3) (1 op)                                                                                                                                     |
 | `xor-checksum`     | column-wise XOR of the blocks of the input (1 op)                                                                                                                      |
 
-Three internal vocabularies are not part of the catalogue as ops: `recipe` (the words recipes compile to), `raise` (typed errors, above) and `util` (shared helpers, below).
+Four internal vocabularies are not part of the catalogue as ops: `recipe` (the words recipes compile to), `raise` (typed errors, above), `util` (shared helpers, below) and `blockmode` (the shared block cipher modes and PKCS#7 padding; see "Cipher conventions").
 
 ## The `util` vocabulary
 
@@ -254,9 +256,49 @@ The hashing vocabularies (wave 3) follow the `sha2` vocabulary, which is the tem
 - **Reports.** `generate-all` builds a text report from the digest and checksum words, one algorithm per line with its hex. It is its own vocabulary because it depends on thirty hash vocabularies and `hash-analysis` must stay light. Its `length` and `names` parameters are CyberChef's.
 - **Not here.** CMAC, LM hash, bcrypt, Argon2 and Ascon need AES or DES, or are key derivation functions, and are wave 4.
 
+## Cipher conventions
+
+The symmetric cipher vocabularies (wave 4) follow the `aes` vocabulary, which is the template, as the hashing vocabularies follow `sha2`.
+
+- **Data.** Bytes in, bytes out. The ciphertext is raw bytes (chain `hex:encode` or `base64:encode`), and the plaintext of a decryption is raw bytes. CyberChef's Input and Output encoding menus are chain steps here.
+- **Key and IV.** `key`-type parameters (`key:key{hex|utf8|latin1|base64}`), so a recipe or the UI gets all four encodings for free, and the word receives bytes. The key has no length constraint in its header, because a header constraint raises `E_PARAM_INVALID`; the word checks the length and raises `E_RANGE` (see "Errors"). The IV (or nonce) is a second `key` parameter, empty by default, which is right for ECB and for the ciphers that take none.
+- **Mode.** A `choice` parameter (`mode:choice{CBC|CFB|OFB|CTR|GCM|ECB}="CBC"`), with CyberChef's names and its default (CBC). A cipher offers the subset it has. A mode that does not use an IV ignores it.
+- **Padding is a separate parameter**, `padding:choice{pkcs7|none}="pkcs7"`, not a mode variant. CyberChef's NoPadding variants (CBC/NoPadding, ECB/NoPadding) are the same mode with padding switched off, and folding them into the mode would double the mode list for every cipher and make the shared layer match on mode names. A separate parameter keeps each mode word one thing. Padding is PKCS#7 (RFC 5652 section 6.3): `n` bytes of the value `n`, `n` from 1 to the block size, so whole input gets a full extra block. It applies to ECB and CBC only; CFB, OFB, CTR and GCM keep the length and ignore the parameter. With `none`, ECB and CBC need whole blocks.
+- **Errors.** `E_RANGE` is for an argument with a bad value: a key of a length the cipher does not take, an IV of the wrong length (for the modes that use one), an unknown mode. `E_COERCE` is for data that cannot be processed: bad PKCS#7 padding (usually a wrong key or IV), ciphertext that is not whole blocks where the mode needs them (and any input with padding off that is not), and a GCM tag that does not verify or an input shorter than the tag. A decryption that fails returns no plaintext. A key length is checked even for an empty input.
+- **GCM.** The 16-byte tag is **appended to the ciphertext** by encryption, and decryption takes the last 16 bytes as the tag and verifies it before it returns anything, raising `E_COERCE` otherwise. There is no tag-length parameter (the tag is the full 128 bits; truncated tags are a known weak spot, and `@noble/ciphers` does not offer them). The additional authenticated data is a `key` parameter `aad`, empty by default, and it must be the same on both sides. The IV is at least 8 bytes (the library's lower limit), 12 recommended. This differs from CyberChef, whose GCM tag is a separate output of encryption and a separate parameter of decryption: a single byte string is what a chain of words can carry, and it is what most libraries produce.
+- **CTR and CFB.** CTR increments the whole 16-byte counter block (NIST SP 800-38A appendix B.1), starting from the IV as given. CFB is full-block CFB (CFB-128 for AES). OFB is standard output feedback.
+- **Vectors.** From the standard: NIST SP 800-38A appendix F for the modes, FIPS 197 for the block, the GCM specification (McGrew and Viega) or NIST SP 800-38D for GCM, RFCs where there are some (RFC 3602), and `ref` cites the example. Include the empty input, a short input that is not a block multiple, errors for each case of "Errors", and a 64 KiB input in every mode against `node:crypto` (where it has the cipher).
+
+### The block-cipher architecture
+
+AES, ChaCha and the key wraps are covered by the audited `@noble/ciphers` and may use its own modes for speed. DES, Triple DES, Blowfish, RC2, RC6, Twofish, SM4, TEA, XTEA, PRESENT and GOST 28147-89 have no audited library, so they are Forge's own primitives, written from their specifications. Each such cipher is:
+
+- a **private single-block primitive pair**, `_encrypt-block` and `_decrypt-block`, each `( block:bytes key:bytes -- bytes )`, in `src/prims/<v>.ts`, with the key schedule inside (a cipher may cache the schedule of the last key it saw, since the key is the same for every block of a call);
+- **no modes of its own.** Every mode and PKCS#7 padding come from the one shared vocabulary `blockmode`, so the modes are written once and cannot drift apart.
+
+`blockmode` (`vocab/blockmode.fth`, internal, in `INTERNAL_VOCABS`) is written in FL and takes the block function as a **quotation** that closes over the key. Its two words:
+
+```
+blockmode:encrypt ( data:bytes mode:str iv:bytes bs:int padding:bool enc:quot -- bytes )
+blockmode:decrypt ( data:bytes mode:str iv:bytes bs:int padding:bool enc:quot dec:quot -- bytes )
+```
+
+`mode` is `ECB`, `CBC`, `CFB`, `OFB` or `CTR`; `bs` is the block size in bytes (8 or 16); `enc` and `dec` have the effect `( block:bytes -- bytes )` and handle one block. Decryption takes both quotations because ECB and CBC decrypt with `dec` while CFB, OFB and CTR run the cipher forwards with `enc`. `blockmode:pad` and `blockmode:unpad` (`( data:bytes bs:int -- bytes )`) are PKCS#7 on their own. A cipher word for an 8-byte block cipher looks like this (the cipher checks its key length in `_encrypt-block`, or in a `_check-key` of its own; `padding "pkcs7" =` turns the choice into the boolean):
+
+```
+: encrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice{CBC|ECB}="CBC" padding:choice{pkcs7|none}="pkcs7" -- bytes )
+  mode iv 8 padding "pkcs7" = [ key _encrypt-block ] blockmode:encrypt ;
+```
+
+The block function is a quotation, so the key schedule is whatever the primitive does per call; a primitive that expands the key on every call (as `aes:_block-enc` does) is fine for the sizes here, and one that caches the last key is faster. The block quotations are called once per block, and the layer checks the IV length (`E_RANGE`), the mode name (`E_RANGE`), whole blocks and padding (`E_COERCE`).
+
+**Why FL.** FL first applies (see above). The layer was measured driving a block primitive at 64 KiB: a CBC encryption through `blockmode:encrypt` takes about 98,500 VM steps (CBC decryption 103 thousand, ECB 70 thousand, CFB and OFB 98 thousand, CTR 1.07 million for its counter arithmetic), against the default limit of 10 million and the untrusted bake budget of 5 million. The loops use `map` over the list of blocks and one `VARIABLE` for the chaining value, so they are linear in the length. The layer is therefore FL, and only the block primitives are TypeScript. `src/blockmode.test.ts` drives it with a trivial XOR block cipher (known answers by hand) and with raw AES blocks, and holds the result byte-identical to noble's own ECB, CBC, CFB and CTR and to `aes:encrypt`; AES uses the layer itself for OFB, which noble lacks.
+
+A pitfall for FL authors: do not write `USING: raise` in a vocabulary that also uses the core word `range`, because `raise:range` would then hide it. Call the raise words qualified (`raise:range`, `raise:coerce`).
+
 ## Running the vectors
 
-Every op has vectors in `vocab/<v>.test.json`, and the catalogue test fails if an op has none. All 2,425 vectors (80 files) run through the in-process baker in Node as part of the worker package's tests:
+Every op has vectors in `vocab/<v>.test.json`, and the catalogue test fails if an op has none. All 2,504 vectors (81 files) run through the in-process baker in Node as part of the worker package's tests:
 
 ```sh
 npm test -w @forge/worker                              # includes test/vectors.test.ts

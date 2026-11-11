@@ -1,0 +1,1903 @@
+[
+  {
+    "name": "encrypt ECB-AES128 (F.1.1)",
+    "ref": "NIST SP 800-38A appendix F.1.1 (ECB-AES128 encrypt)",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "2b7e151628aed2a6abf7158809cf4f3c",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "3ad77bb40d7a3660a89ecaf32466ef97f5d3d58503b9699de785895a96fdbaaf43b1cd7f598ece23881b00e3ed0306887b0c785e27e8ad3f8223207104725dd4",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB-AES128 (F.1.2)",
+    "ref": "NIST SP 800-38A appendix F.1.2 (ECB-AES128 decrypt)",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "2b7e151628aed2a6abf7158809cf4f3c",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "3ad77bb40d7a3660a89ecaf32466ef97f5d3d58503b9699de785895a96fdbaaf43b1cd7f598ece23881b00e3ed0306887b0c785e27e8ad3f8223207104725dd4",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB-AES192 (F.1.3)",
+    "ref": "NIST SP 800-38A appendix F.1.3 (ECB-AES192 encrypt)",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "bd334f1d6e45f25ff712a214571fa5cc974104846d0ad3ad7734ecb3ecee4eefef7afd2270e2e60adce0ba2face6444e9a4b41ba738d6c72fb16691603c18e0e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB-AES192 (F.1.4)",
+    "ref": "NIST SP 800-38A appendix F.1.4 (ECB-AES192 decrypt)",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "bd334f1d6e45f25ff712a214571fa5cc974104846d0ad3ad7734ecb3ecee4eefef7afd2270e2e60adce0ba2face6444e9a4b41ba738d6c72fb16691603c18e0e",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB-AES256 (F.1.5)",
+    "ref": "NIST SP 800-38A appendix F.1.5 (ECB-AES256 encrypt)",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "f3eed1bdb5d2a03c064b5a7e3db181f8591ccb10d410ed26dc5ba74a31362870b6ed21b99ca6f4f9f153e7b1beafed1d23304b7a39f9f3ff067d8d8f9e24ecc7",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB-AES256 (F.1.6)",
+    "ref": "NIST SP 800-38A appendix F.1.6 (ECB-AES256 decrypt)",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "f3eed1bdb5d2a03c064b5a7e3db181f8591ccb10d410ed26dc5ba74a31362870b6ed21b99ca6f4f9f153e7b1beafed1d23304b7a39f9f3ff067d8d8f9e24ecc7",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt CBC-AES128 (F.2.1)",
+    "ref": "NIST SP 800-38A appendix F.2.1 (CBC-AES128 encrypt)",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "2b7e151628aed2a6abf7158809cf4f3c",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "none",
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "7649abac8119b246cee98e9b12e9197d5086cb9b507219ee95db113a917678b273bed6b8e3c1743b7116e69e222295163ff1caa1681fac09120eca307586e1a7",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt CBC-AES128 (F.2.2)",
+    "ref": "NIST SP 800-38A appendix F.2.2 (CBC-AES128 decrypt)",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "2b7e151628aed2a6abf7158809cf4f3c",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "none",
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "7649abac8119b246cee98e9b12e9197d5086cb9b507219ee95db113a917678b273bed6b8e3c1743b7116e69e222295163ff1caa1681fac09120eca307586e1a7",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt CBC-AES192 (F.2.3)",
+    "ref": "NIST SP 800-38A appendix F.2.3 (CBC-AES192 encrypt)",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "none",
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "4f021db243bc633d7178183a9fa071e8b4d9ada9ad7dedf4e5e738763f69145a571b242012fb7ae07fa9baac3df102e008b0e27988598881d920a9e64f5615cd",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt CBC-AES192 (F.2.4)",
+    "ref": "NIST SP 800-38A appendix F.2.4 (CBC-AES192 decrypt)",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "none",
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "4f021db243bc633d7178183a9fa071e8b4d9ada9ad7dedf4e5e738763f69145a571b242012fb7ae07fa9baac3df102e008b0e27988598881d920a9e64f5615cd",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt CBC-AES256 (F.2.5)",
+    "ref": "NIST SP 800-38A appendix F.2.5 (CBC-AES256 encrypt)",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "none",
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "f58c4c04d6e5f1ba779eabfb5f7bfbd69cfc4e967edb808d679f777bc6702c7d39f23369a9d9bacfa530e26304231461b2eb05e2c39be9fcda6c19078c6a9d1b",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt CBC-AES256 (F.2.6)",
+    "ref": "NIST SP 800-38A appendix F.2.6 (CBC-AES256 decrypt)",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "none",
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "f58c4c04d6e5f1ba779eabfb5f7bfbd69cfc4e967edb808d679f777bc6702c7d39f23369a9d9bacfa530e26304231461b2eb05e2c39be9fcda6c19078c6a9d1b",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt CFB-AES128 (F.3.13)",
+    "ref": "NIST SP 800-38A appendix F.3.13 (CFB-AES128 encrypt)",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "2b7e151628aed2a6abf7158809cf4f3c",
+        "enc": "hex"
+      },
+      "mode": "CFB",
+      "padding": "none",
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "3b3fd92eb72dad20333449f8e83cfb4ac8a64537a0b3a93fcde3cdad9f1ce58b26751f67a3cbb140b1808cf187a4f4dfc04b05357c5d1c0eeac4c66f9ff7f2e6",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt CFB-AES128 (F.3.14)",
+    "ref": "NIST SP 800-38A appendix F.3.14 (CFB-AES128 decrypt)",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "2b7e151628aed2a6abf7158809cf4f3c",
+        "enc": "hex"
+      },
+      "mode": "CFB",
+      "padding": "none",
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "3b3fd92eb72dad20333449f8e83cfb4ac8a64537a0b3a93fcde3cdad9f1ce58b26751f67a3cbb140b1808cf187a4f4dfc04b05357c5d1c0eeac4c66f9ff7f2e6",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt CFB-AES192 (F.3.15)",
+    "ref": "NIST SP 800-38A appendix F.3.15 (CFB-AES192 encrypt)",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b",
+        "enc": "hex"
+      },
+      "mode": "CFB",
+      "padding": "none",
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "cdc80d6fddf18cab34c25909c99a417467ce7f7f81173621961a2b70171d3d7a2e1e8a1dd59b88b1c8e60fed1efac4c9c05f9f9ca9834fa042ae8fba584b09ff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt CFB-AES192 (F.3.16)",
+    "ref": "NIST SP 800-38A appendix F.3.16 (CFB-AES192 decrypt)",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b",
+        "enc": "hex"
+      },
+      "mode": "CFB",
+      "padding": "none",
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "cdc80d6fddf18cab34c25909c99a417467ce7f7f81173621961a2b70171d3d7a2e1e8a1dd59b88b1c8e60fed1efac4c9c05f9f9ca9834fa042ae8fba584b09ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt CFB-AES256 (F.3.17)",
+    "ref": "NIST SP 800-38A appendix F.3.17 (CFB-AES256 encrypt)",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4",
+        "enc": "hex"
+      },
+      "mode": "CFB",
+      "padding": "none",
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "dc7e84bfda79164b7ecd8486985d386039ffed143b28b1c832113c6331e5407bdf10132415e54b92a13ed0a8267ae2f975a385741ab9cef82031623d55b1e471",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt CFB-AES256 (F.3.18)",
+    "ref": "NIST SP 800-38A appendix F.3.18 (CFB-AES256 decrypt)",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4",
+        "enc": "hex"
+      },
+      "mode": "CFB",
+      "padding": "none",
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "dc7e84bfda79164b7ecd8486985d386039ffed143b28b1c832113c6331e5407bdf10132415e54b92a13ed0a8267ae2f975a385741ab9cef82031623d55b1e471",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt OFB-AES128 (F.4.1)",
+    "ref": "NIST SP 800-38A appendix F.4.1 (OFB-AES128 encrypt)",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "2b7e151628aed2a6abf7158809cf4f3c",
+        "enc": "hex"
+      },
+      "mode": "OFB",
+      "padding": "none",
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "3b3fd92eb72dad20333449f8e83cfb4a7789508d16918f03f53c52dac54ed8259740051e9c5fecf64344f7a82260edcc304c6528f659c77866a510d9c1d6ae5e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt OFB-AES128 (F.4.2)",
+    "ref": "NIST SP 800-38A appendix F.4.2 (OFB-AES128 decrypt)",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "2b7e151628aed2a6abf7158809cf4f3c",
+        "enc": "hex"
+      },
+      "mode": "OFB",
+      "padding": "none",
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "3b3fd92eb72dad20333449f8e83cfb4a7789508d16918f03f53c52dac54ed8259740051e9c5fecf64344f7a82260edcc304c6528f659c77866a510d9c1d6ae5e",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt OFB-AES192 (F.4.3)",
+    "ref": "NIST SP 800-38A appendix F.4.3 (OFB-AES192 encrypt)",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b",
+        "enc": "hex"
+      },
+      "mode": "OFB",
+      "padding": "none",
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "cdc80d6fddf18cab34c25909c99a4174fcc28b8d4c63837c09e81700c11004018d9a9aeac0f6596f559c6d4daf59a5f26d9f200857ca6c3e9cac524bd9acc92a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt OFB-AES192 (F.4.4)",
+    "ref": "NIST SP 800-38A appendix F.4.4 (OFB-AES192 decrypt)",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b",
+        "enc": "hex"
+      },
+      "mode": "OFB",
+      "padding": "none",
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "cdc80d6fddf18cab34c25909c99a4174fcc28b8d4c63837c09e81700c11004018d9a9aeac0f6596f559c6d4daf59a5f26d9f200857ca6c3e9cac524bd9acc92a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt OFB-AES256 (F.4.5)",
+    "ref": "NIST SP 800-38A appendix F.4.5 (OFB-AES256 encrypt)",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4",
+        "enc": "hex"
+      },
+      "mode": "OFB",
+      "padding": "none",
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "dc7e84bfda79164b7ecd8486985d38604febdc6740d20b3ac88f6ad82a4fb08d71ab47a086e86eedf39d1c5bba97c4080126141d67f37be8538f5a8be740e484",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt OFB-AES256 (F.4.6)",
+    "ref": "NIST SP 800-38A appendix F.4.6 (OFB-AES256 decrypt)",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4",
+        "enc": "hex"
+      },
+      "mode": "OFB",
+      "padding": "none",
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "dc7e84bfda79164b7ecd8486985d38604febdc6740d20b3ac88f6ad82a4fb08d71ab47a086e86eedf39d1c5bba97c4080126141d67f37be8538f5a8be740e484",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt CTR-AES128 (F.5.1)",
+    "ref": "NIST SP 800-38A appendix F.5.1 (CTR-AES128 encrypt)",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "2b7e151628aed2a6abf7158809cf4f3c",
+        "enc": "hex"
+      },
+      "mode": "CTR",
+      "padding": "none",
+      "iv": {
+        "value": "f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "874d6191b620e3261bef6864990db6ce9806f66b7970fdff8617187bb9fffdff5ae4df3edbd5d35e5b4f09020db03eab1e031dda2fbe03d1792170a0f3009cee",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt CTR-AES128 (F.5.2)",
+    "ref": "NIST SP 800-38A appendix F.5.2 (CTR-AES128 decrypt)",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "2b7e151628aed2a6abf7158809cf4f3c",
+        "enc": "hex"
+      },
+      "mode": "CTR",
+      "padding": "none",
+      "iv": {
+        "value": "f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "874d6191b620e3261bef6864990db6ce9806f66b7970fdff8617187bb9fffdff5ae4df3edbd5d35e5b4f09020db03eab1e031dda2fbe03d1792170a0f3009cee",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt CTR-AES192 (F.5.3)",
+    "ref": "NIST SP 800-38A appendix F.5.3 (CTR-AES192 encrypt)",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b",
+        "enc": "hex"
+      },
+      "mode": "CTR",
+      "padding": "none",
+      "iv": {
+        "value": "f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1abc932417521ca24f2b0459fe7e6e0b090339ec0aa6faefd5ccc2c6f4ce8e941e36b26bd1ebc670d1bd1d665620abf74f78a7f6d29809585a97daec58c6b050",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt CTR-AES192 (F.5.4)",
+    "ref": "NIST SP 800-38A appendix F.5.4 (CTR-AES192 decrypt)",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b",
+        "enc": "hex"
+      },
+      "mode": "CTR",
+      "padding": "none",
+      "iv": {
+        "value": "f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "1abc932417521ca24f2b0459fe7e6e0b090339ec0aa6faefd5ccc2c6f4ce8e941e36b26bd1ebc670d1bd1d665620abf74f78a7f6d29809585a97daec58c6b050",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt CTR-AES256 (F.5.5)",
+    "ref": "NIST SP 800-38A appendix F.5.5 (CTR-AES256 encrypt)",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4",
+        "enc": "hex"
+      },
+      "mode": "CTR",
+      "padding": "none",
+      "iv": {
+        "value": "f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "601ec313775789a5b7a7f504bbf3d228f443e3ca4d62b59aca84e990cacaf5c52b0930daa23de94ce87017ba2d84988ddfc9c58db67aada613c2dd08457941a6",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt CTR-AES256 (F.5.6)",
+    "ref": "NIST SP 800-38A appendix F.5.6 (CTR-AES256 decrypt)",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4",
+        "enc": "hex"
+      },
+      "mode": "CTR",
+      "padding": "none",
+      "iv": {
+        "value": "f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "601ec313775789a5b7a7f504bbf3d228f443e3ca4d62b59aca84e990cacaf5c52b0930daa23de94ce87017ba2d84988ddfc9c58db67aada613c2dd08457941a6",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt CBC RFC 3602 case 1 (one block)",
+    "ref": "RFC 3602 section 4, case 1 (AES-CBC, 128-bit key)",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "06a9214036b8a15b512e03d534120006",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "3dafba429d9eb430b422da802c9fac41",
+        "enc": "hex"
+      },
+      "padding": "none"
+    },
+    "input": {
+      "value": "Single block msg",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "e353779c1079aeb82708942dbe77181a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt CBC RFC 3602 case 2 (two blocks)",
+    "ref": "RFC 3602 section 4, case 2 (AES-CBC, 128-bit key)",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "c286696d887c9aa0611bbb3e2025a45a",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "562e17996d093d28ddb3ba695a2e6f58",
+        "enc": "hex"
+      },
+      "padding": "none"
+    },
+    "input": {
+      "value": "d296cd94c2cccf8a3a863028b5e1dc0a7586602d253cfff91b8266bea6d61ab1",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB-AES128 PKCS#7 pads a whole input with a full block",
+    "ref": "NIST SP 800-38A F.1.1 (the first four blocks) and PKCS#7, RFC 5652 section 6.3 (the fifth)",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "2b7e151628aed2a6abf7158809cf4f3c",
+        "enc": "hex"
+      },
+      "mode": "ECB"
+    },
+    "input": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "3ad77bb40d7a3660a89ecaf32466ef97f5d3d58503b9699de785895a96fdbaaf43b1cd7f598ece23881b00e3ed0306887b0c785e27e8ad3f8223207104725dd4a254be88e037ddd9d79fb6411c3f9df8",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB-AES128 PKCS#7 removes the padding",
+    "ref": "NIST SP 800-38A F.1.2 and PKCS#7, RFC 5652 section 6.3",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "2b7e151628aed2a6abf7158809cf4f3c",
+        "enc": "hex"
+      },
+      "mode": "ECB"
+    },
+    "input": {
+      "value": "3ad77bb40d7a3660a89ecaf32466ef97f5d3d58503b9699de785895a96fdbaaf43b1cd7f598ece23881b00e3ed0306887b0c785e27e8ad3f8223207104725dd4a254be88e037ddd9d79fb6411c3f9df8",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt CBC-AES128 PKCS#7 pads a whole input with a full block",
+    "ref": "NIST SP 800-38A F.2.1 (the first four blocks) and PKCS#7, RFC 5652 section 6.3 (the fifth)",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "2b7e151628aed2a6abf7158809cf4f3c",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "7649abac8119b246cee98e9b12e9197d5086cb9b507219ee95db113a917678b273bed6b8e3c1743b7116e69e222295163ff1caa1681fac09120eca307586e1a78cb82807230e1321d3fae00d18cc2012",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt CBC-AES128 PKCS#7 removes the padding",
+    "ref": "NIST SP 800-38A F.2.2 and PKCS#7, RFC 5652 section 6.3",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "2b7e151628aed2a6abf7158809cf4f3c",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "7649abac8119b246cee98e9b12e9197d5086cb9b507219ee95db113a917678b273bed6b8e3c1743b7116e69e222295163ff1caa1681fac09120eca307586e1a78cb82807230e1321d3fae00d18cc2012",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt CBC-AES128 PKCS#7, 15 bytes (one pad byte), default parameters",
+    "ref": "NIST SP 800-38A F.2.1 key and IV with PKCS#7, RFC 5652 section 6.3",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "2b7e151628aed2a6abf7158809cf4f3c",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "6bc1bee22e409f96e93d7e11739317",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "9be1e579d107a136c031b645a88da750",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt CBC empty input is one block of padding",
+    "ref": "RFC 5652 section 6.3 (PKCS#7), NIST SP 800-38A F.2.1 key and IV",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "2b7e151628aed2a6abf7158809cf4f3c",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "c84af0b613435d5d9182801a9bd9320b",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt CBC one block of padding is the empty input",
+    "ref": "RFC 5652 section 6.3 (PKCS#7), NIST SP 800-38A F.2.1 key and IV",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "2b7e151628aed2a6abf7158809cf4f3c",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "c84af0b613435d5d9182801a9bd9320b",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt CFB-AES128 keeps the length of a 20-byte input",
+    "ref": "NIST SP 800-38A appendix F (the first 20 bytes of the key stream)",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "2b7e151628aed2a6abf7158809cf4f3c",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "mode": "CFB"
+    },
+    "input": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a57",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "3b3fd92eb72dad20333449f8e83cfb4ac8a64537",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt OFB-AES128 keeps the length of a 20-byte input",
+    "ref": "NIST SP 800-38A appendix F (the first 20 bytes of the key stream)",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "2b7e151628aed2a6abf7158809cf4f3c",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "mode": "OFB"
+    },
+    "input": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a57",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "3b3fd92eb72dad20333449f8e83cfb4a7789508d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt CTR-AES128 keeps the length of a 20-byte input",
+    "ref": "NIST SP 800-38A appendix F (the first 20 bytes of the key stream)",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "2b7e151628aed2a6abf7158809cf4f3c",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+        "enc": "hex"
+      },
+      "mode": "CTR"
+    },
+    "input": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a57",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "874d6191b620e3261bef6864990db6ce9806f66b",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt GCM-AES128 test case 1",
+    "ref": "McGrew and Viega, GCM specification, test case 1 (AES-128); ciphertext then tag",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "GCM"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "58e2fccefa7e3061367f1d57a4e7455a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt GCM-AES128 test case 1",
+    "ref": "McGrew and Viega, GCM specification, test case 1 (AES-128); ciphertext then tag",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "GCM"
+    },
+    "input": {
+      "value": "58e2fccefa7e3061367f1d57a4e7455a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt GCM-AES128 test case 2",
+    "ref": "McGrew and Viega, GCM specification, test case 2 (AES-128); ciphertext then tag",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "GCM"
+    },
+    "input": {
+      "value": "00000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0388dace60b6a392f328c2b971b2fe78ab6e47d42cec13bdf53a67b21257bddf",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt GCM-AES128 test case 2",
+    "ref": "McGrew and Viega, GCM specification, test case 2 (AES-128); ciphertext then tag",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "GCM"
+    },
+    "input": {
+      "value": "0388dace60b6a392f328c2b971b2fe78ab6e47d42cec13bdf53a67b21257bddf",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00000000000000000000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt GCM-AES128 test case 3",
+    "ref": "McGrew and Viega, GCM specification, test case 3 (AES-128); ciphertext then tag",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "feffe9928665731c6d6a8f9467308308",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "cafebabefacedbaddecaf888",
+        "enc": "hex"
+      },
+      "mode": "GCM"
+    },
+    "input": {
+      "value": "d9313225f88406e5a55909c5aff5269a86a7a9531534f7da2e4c303d8a318a721c3c0c95956809532fcf0e2449a6b525b16aedf5aa0de657ba637b391aafd255",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "42831ec2217774244b7221b784d0d49ce3aa212f2c02a4e035c17e2329aca12e21d514b25466931c7d8f6a5aac84aa051ba30b396a0aac973d58e091473f59854d5c2af327cd64a62cf35abd2ba6fab4",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt GCM-AES128 test case 3",
+    "ref": "McGrew and Viega, GCM specification, test case 3 (AES-128); ciphertext then tag",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "feffe9928665731c6d6a8f9467308308",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "cafebabefacedbaddecaf888",
+        "enc": "hex"
+      },
+      "mode": "GCM"
+    },
+    "input": {
+      "value": "42831ec2217774244b7221b784d0d49ce3aa212f2c02a4e035c17e2329aca12e21d514b25466931c7d8f6a5aac84aa051ba30b396a0aac973d58e091473f59854d5c2af327cd64a62cf35abd2ba6fab4",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "d9313225f88406e5a55909c5aff5269a86a7a9531534f7da2e4c303d8a318a721c3c0c95956809532fcf0e2449a6b525b16aedf5aa0de657ba637b391aafd255",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt GCM-AES128 test case 4",
+    "ref": "McGrew and Viega, GCM specification, test case 4 (AES-128); ciphertext then tag",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "feffe9928665731c6d6a8f9467308308",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "cafebabefacedbaddecaf888",
+        "enc": "hex"
+      },
+      "mode": "GCM",
+      "aad": {
+        "value": "feedfacedeadbeeffeedfacedeadbeefabaddad2",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "d9313225f88406e5a55909c5aff5269a86a7a9531534f7da2e4c303d8a318a721c3c0c95956809532fcf0e2449a6b525b16aedf5aa0de657ba637b39",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "42831ec2217774244b7221b784d0d49ce3aa212f2c02a4e035c17e2329aca12e21d514b25466931c7d8f6a5aac84aa051ba30b396a0aac973d58e0915bc94fbc3221a5db94fae95ae7121a47",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt GCM-AES128 test case 4",
+    "ref": "McGrew and Viega, GCM specification, test case 4 (AES-128); ciphertext then tag",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "feffe9928665731c6d6a8f9467308308",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "cafebabefacedbaddecaf888",
+        "enc": "hex"
+      },
+      "mode": "GCM",
+      "aad": {
+        "value": "feedfacedeadbeeffeedfacedeadbeefabaddad2",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "42831ec2217774244b7221b784d0d49ce3aa212f2c02a4e035c17e2329aca12e21d514b25466931c7d8f6a5aac84aa051ba30b396a0aac973d58e0915bc94fbc3221a5db94fae95ae7121a47",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "d9313225f88406e5a55909c5aff5269a86a7a9531534f7da2e4c303d8a318a721c3c0c95956809532fcf0e2449a6b525b16aedf5aa0de657ba637b39",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt GCM-AES128 test case 5",
+    "ref": "McGrew and Viega, GCM specification, test case 5 (AES-128); ciphertext then tag",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "feffe9928665731c6d6a8f9467308308",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "cafebabefacedbad",
+        "enc": "hex"
+      },
+      "mode": "GCM",
+      "aad": {
+        "value": "feedfacedeadbeeffeedfacedeadbeefabaddad2",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "d9313225f88406e5a55909c5aff5269a86a7a9531534f7da2e4c303d8a318a721c3c0c95956809532fcf0e2449a6b525b16aedf5aa0de657ba637b39",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "61353b4c2806934a777ff51fa22a4755699b2a714fcdc6f83766e5f97b6c742373806900e49f24b22b097544d4896b424989b5e1ebac0f07c23f45983612d2e79e3b0785561be14aaca2fccb",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt GCM-AES128 test case 5",
+    "ref": "McGrew and Viega, GCM specification, test case 5 (AES-128); ciphertext then tag",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "feffe9928665731c6d6a8f9467308308",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "cafebabefacedbad",
+        "enc": "hex"
+      },
+      "mode": "GCM",
+      "aad": {
+        "value": "feedfacedeadbeeffeedfacedeadbeefabaddad2",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "61353b4c2806934a777ff51fa22a4755699b2a714fcdc6f83766e5f97b6c742373806900e49f24b22b097544d4896b424989b5e1ebac0f07c23f45983612d2e79e3b0785561be14aaca2fccb",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "d9313225f88406e5a55909c5aff5269a86a7a9531534f7da2e4c303d8a318a721c3c0c95956809532fcf0e2449a6b525b16aedf5aa0de657ba637b39",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt GCM-AES128 test case 6",
+    "ref": "McGrew and Viega, GCM specification, test case 6 (AES-128); ciphertext then tag",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "feffe9928665731c6d6a8f9467308308",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "9313225df88406e555909c5aff5269aa6a7a9538534f7da1e4c303d2a318a728c3c0c95156809539fcf0e2429a6b525416aedbf5a0de6a57a637b39b",
+        "enc": "hex"
+      },
+      "mode": "GCM",
+      "aad": {
+        "value": "feedfacedeadbeeffeedfacedeadbeefabaddad2",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "d9313225f88406e5a55909c5aff5269a86a7a9531534f7da2e4c303d8a318a721c3c0c95956809532fcf0e2449a6b525b16aedf5aa0de657ba637b39",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "8ce24998625615b603a033aca13fb894be9112a5c3a211a8ba262a3cca7e2ca701e4a9a4fba43c90ccdcb281d48c7c6fd62875d2aca417034c34aee5619cc5aefffe0bfa462af43c1699d050",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt GCM-AES128 test case 6",
+    "ref": "McGrew and Viega, GCM specification, test case 6 (AES-128); ciphertext then tag",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "feffe9928665731c6d6a8f9467308308",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "9313225df88406e555909c5aff5269aa6a7a9538534f7da1e4c303d2a318a728c3c0c95156809539fcf0e2429a6b525416aedbf5a0de6a57a637b39b",
+        "enc": "hex"
+      },
+      "mode": "GCM",
+      "aad": {
+        "value": "feedfacedeadbeeffeedfacedeadbeefabaddad2",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "8ce24998625615b603a033aca13fb894be9112a5c3a211a8ba262a3cca7e2ca701e4a9a4fba43c90ccdcb281d48c7c6fd62875d2aca417034c34aee5619cc5aefffe0bfa462af43c1699d050",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "d9313225f88406e5a55909c5aff5269a86a7a9531534f7da2e4c303d8a318a721c3c0c95956809532fcf0e2449a6b525b16aedf5aa0de657ba637b39",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt GCM-AES192 test case 7",
+    "ref": "McGrew and Viega, GCM specification, test case 7 (AES-192); ciphertext then tag",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "000000000000000000000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "GCM"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "cd33b28ac773f74ba00ed1f312572435",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt GCM-AES192 test case 7",
+    "ref": "McGrew and Viega, GCM specification, test case 7 (AES-192); ciphertext then tag",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "000000000000000000000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "GCM"
+    },
+    "input": {
+      "value": "cd33b28ac773f74ba00ed1f312572435",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt GCM-AES192 test case 8",
+    "ref": "McGrew and Viega, GCM specification, test case 8 (AES-192); ciphertext then tag",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "000000000000000000000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "GCM"
+    },
+    "input": {
+      "value": "00000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "98e7247c07f0fe411c267e4384b0f6002ff58d80033927ab8ef4d4587514f0fb",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt GCM-AES192 test case 8",
+    "ref": "McGrew and Viega, GCM specification, test case 8 (AES-192); ciphertext then tag",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "000000000000000000000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "GCM"
+    },
+    "input": {
+      "value": "98e7247c07f0fe411c267e4384b0f6002ff58d80033927ab8ef4d4587514f0fb",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00000000000000000000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt GCM-AES256 test case 13",
+    "ref": "McGrew and Viega, GCM specification, test case 13 (AES-256); ciphertext then tag",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "0000000000000000000000000000000000000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "GCM"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "530f8afbc74536b9a963b4f1c4cb738b",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt GCM-AES256 test case 13",
+    "ref": "McGrew and Viega, GCM specification, test case 13 (AES-256); ciphertext then tag",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "0000000000000000000000000000000000000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "GCM"
+    },
+    "input": {
+      "value": "530f8afbc74536b9a963b4f1c4cb738b",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt GCM-AES256 test case 14",
+    "ref": "McGrew and Viega, GCM specification, test case 14 (AES-256); ciphertext then tag",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "0000000000000000000000000000000000000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "GCM"
+    },
+    "input": {
+      "value": "00000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "cea7403d4d606b6e074ec5d3baf39d18d0d1c8a799996bf0265b98b5d48ab919",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt GCM-AES256 test case 14",
+    "ref": "McGrew and Viega, GCM specification, test case 14 (AES-256); ciphertext then tag",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "0000000000000000000000000000000000000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "GCM"
+    },
+    "input": {
+      "value": "cea7403d4d606b6e074ec5d3baf39d18d0d1c8a799996bf0265b98b5d48ab919",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00000000000000000000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt GCM-AES256 test case 15",
+    "ref": "McGrew and Viega, GCM specification, test case 15 (AES-256); ciphertext then tag",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "feffe9928665731c6d6a8f9467308308feffe9928665731c6d6a8f9467308308",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "cafebabefacedbaddecaf888",
+        "enc": "hex"
+      },
+      "mode": "GCM"
+    },
+    "input": {
+      "value": "d9313225f88406e5a55909c5aff5269a86a7a9531534f7da2e4c303d8a318a721c3c0c95956809532fcf0e2449a6b525b16aedf5aa0de657ba637b391aafd255",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "522dc1f099567d07f47f37a32a84427d643a8cdcbfe5c0c97598a2bd2555d1aa8cb08e48590dbb3da7b08b1056828838c5f61e6393ba7a0abcc9f662898015adb094dac5d93471bdec1a502270e3cc6c",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt GCM-AES256 test case 15",
+    "ref": "McGrew and Viega, GCM specification, test case 15 (AES-256); ciphertext then tag",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "feffe9928665731c6d6a8f9467308308feffe9928665731c6d6a8f9467308308",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "cafebabefacedbaddecaf888",
+        "enc": "hex"
+      },
+      "mode": "GCM"
+    },
+    "input": {
+      "value": "522dc1f099567d07f47f37a32a84427d643a8cdcbfe5c0c97598a2bd2555d1aa8cb08e48590dbb3da7b08b1056828838c5f61e6393ba7a0abcc9f662898015adb094dac5d93471bdec1a502270e3cc6c",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "d9313225f88406e5a55909c5aff5269a86a7a9531534f7da2e4c303d8a318a721c3c0c95956809532fcf0e2449a6b525b16aedf5aa0de657ba637b391aafd255",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt GCM-AES256 test case 16",
+    "ref": "McGrew and Viega, GCM specification, test case 16 (AES-256); ciphertext then tag",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "feffe9928665731c6d6a8f9467308308feffe9928665731c6d6a8f9467308308",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "cafebabefacedbaddecaf888",
+        "enc": "hex"
+      },
+      "mode": "GCM",
+      "aad": {
+        "value": "feedfacedeadbeeffeedfacedeadbeefabaddad2",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "d9313225f88406e5a55909c5aff5269a86a7a9531534f7da2e4c303d8a318a721c3c0c95956809532fcf0e2449a6b525b16aedf5aa0de657ba637b39",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "522dc1f099567d07f47f37a32a84427d643a8cdcbfe5c0c97598a2bd2555d1aa8cb08e48590dbb3da7b08b1056828838c5f61e6393ba7a0abcc9f66276fc6ece0f4e1768cddf8853bb2d551b",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt GCM-AES256 test case 16",
+    "ref": "McGrew and Viega, GCM specification, test case 16 (AES-256); ciphertext then tag",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "feffe9928665731c6d6a8f9467308308feffe9928665731c6d6a8f9467308308",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "cafebabefacedbaddecaf888",
+        "enc": "hex"
+      },
+      "mode": "GCM",
+      "aad": {
+        "value": "feedfacedeadbeeffeedfacedeadbeefabaddad2",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "522dc1f099567d07f47f37a32a84427d643a8cdcbfe5c0c97598a2bd2555d1aa8cb08e48590dbb3da7b08b1056828838c5f61e6393ba7a0abcc9f66276fc6ece0f4e1768cddf8853bb2d551b",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "d9313225f88406e5a55909c5aff5269a86a7a9531534f7da2e4c303d8a318a721c3c0c95956809532fcf0e2449a6b525b16aedf5aa0de657ba637b39",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "a 15-byte key is E_RANGE",
+    "ref": "FIPS 197 section 5 (key sizes 128, 192, 256 bits)",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "a 17-byte key is E_RANGE",
+    "ref": "FIPS 197 section 5 (key sizes 128, 192, 256 bits)",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "0000000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "00000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "an empty input still checks the key",
+    "ref": "FIPS 197 section 5 (key sizes 128, 192, 256 bits)",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "0000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "mode": "OFB"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "an 8-byte CBC IV is E_RANGE",
+    "ref": "NIST SP 800-38A section 6.2 (the IV is one block)",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "2b7e151628aed2a6abf7158809cf4f3c",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "0000000000000000",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "a missing CTR IV is E_RANGE",
+    "ref": "NIST SP 800-38A section 6.5 (the counter block is one block)",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "2b7e151628aed2a6abf7158809cf4f3c",
+        "enc": "hex"
+      },
+      "mode": "CTR"
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "a 4-byte GCM IV is E_RANGE",
+    "ref": "NIST SP 800-38D (the library accepts IVs of at least 8 bytes)",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "2b7e151628aed2a6abf7158809cf4f3c",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "00000000",
+        "enc": "hex"
+      },
+      "mode": "GCM"
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "padding none with a non-block input is E_COERCE",
+    "ref": "NIST SP 800-38A section 6.2 (CBC works on whole blocks)",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "2b7e151628aed2a6abf7158809cf4f3c",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "padding": "none"
+    },
+    "input": {
+      "value": "000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "ECB ciphertext that is not whole blocks is E_COERCE",
+    "ref": "NIST SP 800-38A section 6.1 (ECB works on whole blocks)",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "2b7e151628aed2a6abf7158809cf4f3c",
+        "enc": "hex"
+      },
+      "mode": "ECB"
+    },
+    "input": {
+      "value": "0000000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "an empty ciphertext cannot hold PKCS#7 padding",
+    "ref": "RFC 5652 section 6.3 (PKCS#7 always adds a block)",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "2b7e151628aed2a6abf7158809cf4f3c",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "bad PKCS#7 padding is E_COERCE",
+    "ref": "RFC 5652 section 6.3 (the padding bytes are all the pad length)",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "2b7e151628aed2a6abf7158809cf4f3c",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "50fe67cc996d32b6da0937e99bafec60",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a corrupted GCM tag is E_COERCE",
+    "ref": "McGrew and Viega GCM specification test case 3, last tag byte changed",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "feffe9928665731c6d6a8f9467308308",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "cafebabefacedbaddecaf888",
+        "enc": "hex"
+      },
+      "mode": "GCM"
+    },
+    "input": {
+      "value": "42831ec2217774244b7221b784d0d49ce3aa212f2c02a4e035c17e2329aca12e21d514b25466931c7d8f6a5aac84aa051ba30b396a0aac973d58e091473f59854d5c2af327cd64a62cf35abd2ba6fa00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "wrong GCM additional data is E_COERCE",
+    "ref": "McGrew and Viega GCM specification test case 3, additional data added",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "feffe9928665731c6d6a8f9467308308",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "cafebabefacedbaddecaf888",
+        "enc": "hex"
+      },
+      "mode": "GCM",
+      "aad": {
+        "value": "00",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "42831ec2217774244b7221b784d0d49ce3aa212f2c02a4e035c17e2329aca12e21d514b25466931c7d8f6a5aac84aa051ba30b396a0aac973d58e091473f59854d5c2af327cd64a62cf35abd2ba6fab4",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "GCM input shorter than the tag is E_COERCE",
+    "ref": "NIST SP 800-38D (the tag is 128 bits)",
+    "op": "aes:decrypt",
+    "params": {
+      "key": {
+        "value": "feffe9928665731c6d6a8f9467308308",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "cafebabefacedbaddecaf888",
+        "enc": "hex"
+      },
+      "mode": "GCM"
+    },
+    "input": {
+      "value": "000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]
