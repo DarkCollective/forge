@@ -116,8 +116,8 @@ IN: diff
   _edits
   by "line" = [ context _unified ] [ _inline ] if ;
 
-: compare ( data:str sample-delimiter:str[1..]="\n\n" by:choice{line|word|character}="line" ignore-whitespace:bool=false context:int[0..1000]=3 -- str )
-  "Compare two samples of text, written one after the other in the input and cut apart at the sample delimiter (exactly two samples, else E_COERCE). by line gives a unified-style text: the header --- sample 1 and +++ sample 2, then hunks, each @@ -first,count +first,count @@ and its lines behind a space (kept), - (only in sample 1) or + (only in sample 2), with context lines around the changes; samples that do not differ give the empty text. A final line feed ends the last line. by word and by character give the second sample's text with the changes marked in line, [-deleted-] and {+inserted+}, with no context (words are runs of white space and runs of anything else, so the text reads as it was). With ignore-whitespace, lines are compared without their white space and for words and characters all white space is equal; the text shown for a kept part is the first sample's. The difference is a shortest one (Myers); on very different inputs the search stops after 60 million steps and the rest is reported as one deletion and one insertion." doc
+: compare ( data:str sample-delimiter:str[1..]="\n\n" by:choice{line|word|character}="character" ignore-whitespace:bool=false context:int[0..1000]=3 -- str )
+  "Compare two samples of text, written one after the other in the input and cut apart at the sample delimiter (exactly two samples, else E_COERCE). The default is by character, as in CyberChef. by line gives a unified-style text: the header --- sample 1 and +++ sample 2, then hunks, each @@ -first,count +first,count @@ and its lines behind a space (kept), - (only in sample 1) or + (only in sample 2), with context lines around the changes; samples that do not differ give the empty text. A final line feed ends the last line. by word and by character give the second sample's text with the changes marked in line, [-deleted-] and {+inserted+}, with no context (words are runs of white space and runs of anything else, so the text reads as it was). With ignore-whitespace, lines are compared without their white space and for words and characters all white space is equal; the text shown for a kept part is the first sample's. The difference is a shortest one (Myers); on very different inputs the search stops after 60 million steps and the rest is reported as one deletion and one insertion." doc
   "Utils" category
   data sample-delimiter split
   dup len 2 <> [ "the input must hold exactly two samples separated by the sample delimiter" raise:coerce ] when
@@ -126,7 +126,7 @@ IN: diff
 
 META: compare
   param sample-delimiter "The text that separates the two samples in the input." ;
-  param by "Compare lines, words or single characters." ;
+  param by "Compare lines, words or single characters (characters by default, as CyberChef does)." ;
   param ignore-whitespace "Treat differences in white space as no difference." ;
   param context "For lines: how many unchanged lines to show around each change." ;
   see-also lines:sort ;

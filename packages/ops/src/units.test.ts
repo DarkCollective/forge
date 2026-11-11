@@ -45,33 +45,16 @@ const mul = (a: Ratio, b: Ratio): Ratio => ({ n: a.n * b.n, d: a.d * b.d });
 const div = (a: Ratio, b: Ratio): Ratio => ({ n: a.n * b.d, d: a.d * b.n });
 const whole = (x: bigint | number): Ratio => ({ n: BigInt(x), d: 1n });
 
-/** r to `sig` significant digits, halves away from zero, plain decimal text (long division). */
-function show(r: Ratio, sig: number): string {
+/** r to `places` decimal places, halves away from zero, plain decimal text. */
+function show(r: Ratio, places: number): string {
   let { n } = r;
   const { d } = r;
   const neg = n < 0n;
   if (neg) n = -n;
-  if (n === 0n) return "0";
-  const ge = (x: number) => (x >= 0 ? n >= d * 10n ** BigInt(x) : n * 10n ** BigInt(-x) >= d);
-  let e = n.toString().length - d.toString().length;
-  while (ge(e + 1)) e++;
-  while (!ge(e)) e--;
-  const sn = e >= 0 ? n : n * 10n ** BigInt(-e);
-  const sd = e >= 0 ? d * 10n ** BigInt(e) : d;
-  let digits = "";
-  let rem = sn;
-  for (let i = 0; i < sig; i++) {
-    digits += (rem / sd).toString();
-    rem = (rem % sd) * 10n;
-  }
-  let num = BigInt(digits);
-  if (rem >= sd * 5n) num += 1n;
-  const s = num.toString();
-  const point = e + 1 + (s.length - sig);
-  let out: string;
-  if (point <= 0) out = "0." + "0".repeat(-point) + s;
-  else if (point >= s.length) out = s + "0".repeat(point - s.length);
-  else out = s.slice(0, point) + "." + s.slice(point);
+  const scaled = (n * 10n ** BigInt(places) * 2n + d) / (2n * d);
+  if (scaled === 0n) return "0";
+  const s = scaled.toString().padStart(places + 1, "0");
+  let out = places === 0 ? s : `${s.slice(0, s.length - places)}.${s.slice(s.length - places)}`;
   if (out.includes(".")) out = out.replace(/0+$/, "").replace(/\.$/, "");
   return (neg ? "-" : "") + out;
 }
@@ -163,7 +146,7 @@ describe("agrees with an independent exact reference", () => {
     ];
     for (let i = 0; i < 40; i++) {
       const value = `${next() % 100000}.${String(next() % 1000).padStart(3, "0")}`;
-      const sig = 1 + (next() % 25);
+      const sig = next() % 25;
       const [fa, fr] = dist[next() % dist.length] as [string, Ratio];
       const [ta, tr] = dist[next() % dist.length] as [string, Ratio];
       expect(
@@ -194,17 +177,20 @@ describe("agrees with an independent exact reference", () => {
 
 describe("rounding", () => {
   test("halves go away from zero", async () => {
-    expect(await conv("convert-distance", "2.5", "metre", "metre", 1)).toBe("3");
-    expect(await conv("convert-distance", "-2.5", "metre", "metre", 1)).toBe("-3");
+    expect(await conv("convert-distance", "2.5", "metre", "metre", 0)).toBe("3");
+    expect(await conv("convert-distance", "-2.5", "metre", "metre", 0)).toBe("-3");
     expect(await conv("convert-distance", "0.125", "metre", "metre", 2)).toBe("0.13");
-    expect(await conv("convert-distance", "1250", "metre", "metre", 2)).toBe("1300");
+    expect(await conv("convert-distance", "1250", "metre", "metre", 2)).toBe("1250");
+    expect(await conv("convert-distance", "-0.001", "metre", "metre", 2)).toBe("0");
   });
 
   test("never uses exponent form", async () => {
-    const small = await conv("convert-distance", "1", "angstrom", "light-year", 5);
-    expect(small).toBe(show(div(dec("0.0000000001"), whole(9460730472580800n)), 5));
+    const small = await conv("convert-distance", "1", "angstrom", "light-year", 40);
+    expect(small).toBe(show(div(dec("0.0000000001"), whole(9460730472580800n)), 40));
     expect(small).toMatch(/^0\.0{20,}[1-9]\d*$/);
     const big = await conv("convert-distance", "1", "light-year", "angstrom", 5);
-    expect(big).toBe("94607000000000000000000000");
+    expect(big).toBe("94607304725808000000000000");
+    // the default is 20 decimal places, as CyberChef's BigNumber rounds: a very small result is 0
+    expect(await conv("convert-distance", "1", "angstrom", "light-year")).toBe("0");
   });
 });

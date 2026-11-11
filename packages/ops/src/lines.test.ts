@@ -141,7 +141,7 @@ describe("sort", () => {
     }
   });
 
-  test("numeric agrees with parseFloat on plain decimals and puts the others first, in order", async () => {
+  test("numeric agrees with parseFloat on plain decimals and puts the others first, ties in code point order", async () => {
     const next = rng(3);
     const num = () => {
       const k = next();
@@ -157,10 +157,11 @@ describe("sort", () => {
       const expected = w.slice().sort((a, b) => {
         const x = val(a);
         const y = val(b);
-        if (Number.isNaN(x) && Number.isNaN(y)) return 0;
+        // ties, and the text with no number, are in code point order
+        if (Number.isNaN(x) && Number.isNaN(y)) return byCodePoint(a, b);
         if (Number.isNaN(x)) return -1;
         if (Number.isNaN(y)) return 1;
-        return x - y;
+        return x - y || byCodePoint(a, b);
       });
       expect(await sort(w.join("\n"), "numeric")).toBe(expected.join("\n"));
     }
@@ -180,10 +181,10 @@ describe("sort", () => {
       const expected = w.slice().sort((a, b) => {
         const x = parseInt(a, 16);
         const y = parseInt(b, 16);
-        if (Number.isNaN(x) && Number.isNaN(y)) return 0;
+        if (Number.isNaN(x) && Number.isNaN(y)) return byCodePoint(a, b);
         if (Number.isNaN(x)) return -1;
         if (Number.isNaN(y)) return 1;
-        return x - y;
+        return x - y || byCodePoint(a, b);
       });
       expect(await sort(w.join("\n"), "hexadecimal")).toBe(expected.join("\n"));
     }
@@ -259,14 +260,16 @@ describe("numbers, pad and wrap", () => {
       );
       const offset = Math.floor(next() * 2000) - 1000;
       const numbered = await add(w.join("\n"), offset);
-      expect(numbered.split("\n").length).toBe(w.length);
-      const widths = new Set(numbered.split("\n").map((l) => l.indexOf(" x")));
-      expect(widths.size).toBe(1);
+      // right-aligned to the width of the count of lines (not of the offset), then a space
+      const width = String(w.length).length;
+      expect(numbered).toBe(
+        w.map((line, k) => `${String(k + 1 + offset).padStart(width, " ")} ${line}`).join("\n"),
+      );
       if (offset >= 0) expect(await remove(numbered)).toBe(w.join("\n"));
     }
   });
 
-  test("pad gives every line at least the length, and leaves longer lines alone", async () => {
+  test("pad adds exactly length characters to every line", async () => {
     const next = rng(9);
     for (let i = 0; i < 20; i++) {
       const w = Array.from({ length: 20 }, () =>
@@ -287,11 +290,11 @@ describe("numbers, pad and wrap", () => {
       const end = (await pad("end", "xy")).split("\n");
       w.forEach((line, k) => {
         const n = [...line].length;
-        const want = Math.max(n, length);
-        expect([...(start[k] as string)].length).toBe(want);
-        expect([...(end[k] as string)].length).toBe(want);
-        expect((start[k] as string).endsWith(line)).toBe(true);
-        expect((end[k] as string).startsWith(line)).toBe(true);
+        const fill = "xy".repeat(length).slice(0, length);
+        expect([...(start[k] as string)].length).toBe(n + length);
+        expect([...(end[k] as string)].length).toBe(n + length);
+        expect(start[k]).toBe(fill + line);
+        expect(end[k]).toBe(line + fill);
       });
     }
   });
@@ -322,27 +325,20 @@ describe("numbers, pad and wrap", () => {
 });
 
 describe("file-tree", () => {
-  /** An independent drawing of the same tree. */
+  /** An independent model: the paths unique and sorted, a line for every part not written yet. */
   function draw(paths: string[], sep: string): string {
-    type Node = Map<string, Node>;
-    const root: Node = new Map();
-    for (const p of paths) {
-      let n = root;
-      for (const part of p.split(sep).filter((x) => x.length > 0)) {
-        if (!n.has(part)) n.set(part, new Map());
-        n = n.get(part) as Node;
-      }
-    }
-    const out = ["."];
-    const walk = (n: Node, prefix: string) => {
-      const names = [...n.keys()].sort(byCodePoint);
-      names.forEach((name, i) => {
-        const last = i === names.length - 1;
-        out.push(prefix + (last ? "`-- " : "|-- ") + name);
-        walk(n.get(name) as Node, prefix + (last ? "    " : "|   "));
+    const seen = new Set<string>();
+    const out: string[] = [];
+    for (const path of [...new Set(paths)].sort(byCodePoint)) {
+      let parts = path.split(sep);
+      if (parts[0] === "") parts = parts.slice(1);
+      parts.forEach((part, j) => {
+        const key = parts.slice(0, j + 1).join("/");
+        if (seen.has(key)) return;
+        seen.add(key);
+        out.push(j === 0 ? part : "|   ".repeat(j - 1) + "|---" + part);
       });
-    };
-    walk(root, "");
+    }
     return out.join("\n");
   }
 
@@ -374,7 +370,7 @@ describe("to-table", () => {
       .call("lines:to-table", [str(data), str("comma"), str("newline"), bool(header), str(format)])
       .then(text);
 
-  test("an ASCII table is a rectangle, and has one rule more than rows", async () => {
+  test("an ASCII table is a rectangle with a rule above, below and under the header, and ends with a line feed", async () => {
     const next = rng(12);
     for (let i = 0; i < 30; i++) {
       const rows = Array.from({ length: 1 + Math.floor(next() * 6) }, () =>
@@ -382,18 +378,21 @@ describe("to-table", () => {
           "x".repeat(Math.floor(next() * 8)),
         ),
       );
-      const out = (
-        await table(rows.map((r) => r.join(",")).join("\n"), next() < 0.5, "ascii")
-      ).split("\n");
+      const header = next() < 0.5;
+      const raw = await table(rows.map((r) => r.join(",")).join("\n"), header, "ascii");
+      expect(raw.endsWith("\n")).toBe(true);
+      const out = raw.slice(0, -1).split("\n");
       expect(new Set(out.map((l) => [...l].length)).size).toBe(1);
-      expect(out.length).toBe(2 * rows.length + 1);
-      expect(out.filter((l) => l.startsWith("+")).length).toBe(rows.length + 1);
+      expect(out.length).toBe(rows.length + (header ? 3 : 2));
+      expect(out.filter((l) => l.startsWith("+")).length).toBe(header ? 3 : 2);
     }
   });
 
   test("a Markdown table has a header, a separator and the rows", async () => {
-    const out = (await table("a,b\nc,d\ne,f", true, "markdown")).split("\n");
-    expect(out).toEqual(["| a   | b   |", "| --- | --- |", "| c   | d   |", "| e   | f   |"]);
+    const out = await table("a,b\nc,d\ne,f", true, "markdown");
+    expect(out).toBe("| a | b |\n| - | - |\n| c | d |\n| e | f |\n");
+    // the first row is the header whatever the switch says
+    expect(await table("a,b\nc,d\ne,f", false, "markdown")).toBe(out);
   });
 });
 

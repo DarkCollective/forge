@@ -62,11 +62,11 @@ USING: random ;
     10 size 1 - pow 10 size pow 1 - ] if ;
 
 : _batch ( lo:int hi:int count:int format:str delimiter:str -- str )
-  0 count range [ drop lo hi _draw format "hex" = [ 16 int>str-radix ] [ int>str ] if ] map
+  0 count range [ drop lo hi _draw format "hex" = [ 16 int>str-radix "0x" swap cat ] [ int>str ] if ] map
   delimiter util:delimiter join ;
 
-: generate ( bytes size:int[1..2048]=256 unit:choice{bits|digits}="bits" count:int[1..100]=1 format:choice{decimal|hex}="decimal" delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab|none}="newline" -- str )
-  "Random primes from the host's cryptographic random generator (never Math.random): count of them, each drawn uniformly from the primes that have exactly size bits (top bit set, 2 to 2048) or exactly size decimal digits (1 to 616), tested by trial division and Miller-Rabin with random bases (40 rounds below 256 bits, 8 above: a composite passes with probability below 4 to the power -8 in the worst case and far below that for a random candidate). A 2048-bit prime takes about 2 seconds, so a large count of large primes can reach the 30 second time limit (E_LIMIT_TIME). Written as decimal or lower-case hex text, joined by the delimiter. The input is ignored. A size out of range for its unit is E_RANGE. The output differs on every call (the word carries the +random effect)." doc
+: generate ( bytes size:int[1..2048]=512 unit:choice{bits|digits}="bits" count:int[1..100]=1 format:choice{decimal|hex}="decimal" delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab|none}="newline" -- str )
+  "Random primes from the host's cryptographic random generator (never Math.random): count of them, each drawn uniformly from the primes that have exactly size bits (top bit set, 2 to 2048) or exactly size decimal digits (1 to 616), tested by trial division and Miller-Rabin with random bases (40 rounds below 256 bits, 8 above: a composite passes with probability below 4 to the power -8 in the worst case and far below that for a random candidate). A 2048-bit prime takes about 2 seconds, so a large count of large primes can reach the 30 second time limit (E_LIMIT_TIME). Written as decimal text, or as lower-case hex text with a 0x in front (as CyberChef writes it), joined by the delimiter. The input is ignored. A size out of range for its unit is E_RANGE. The output differs on every call (the word carries the +random effect)." doc
   "Generators" category
   drop
   size unit _range count format delimiter _batch ;
@@ -75,7 +75,7 @@ META: generate
   param size "The size of each prime: a number of bits (2 to 2048) or of decimal digits (1 to 616), see unit." ;
   param unit "bits: the prime has exactly that many bits. digits: exactly that many decimal digits." ;
   param count "How many primes (1 to 100)." ;
-  param format "decimal or lower-case hex text." ;
+  param format "decimal, or lower-case hex with a 0x in front." ;
   param delimiter "The text between the primes." ;
   see-also prng:integers ;
 ;

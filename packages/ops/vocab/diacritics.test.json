@@ -42,10 +42,26 @@
     }
   },
   {
-    "name": "Polish and Czech",
-    "ref": "ó ł ś ź ą ę ć ń ž š ř č ů",
+    "name": "Polish and Czech: the default leaves the letters with a stroke",
+    "ref": "NFD decomposition removes the marks; the stroke l (U+0142) has no decomposition and stays",
     "op": "diacritics:remove",
     "params": {},
+    "input": {
+      "value": "Zażółć gęślą jaźń; Příliš žluťoučký kůň",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Zazołc gesla jazn; Prilis zlutoucky kun",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Polish and Czech, strokes on",
+    "ref": "ó ł ś ź ą ę ć ń ž š ř č ů",
+    "op": "diacritics:remove",
+    "params": {
+      "strokes": true
+    },
     "input": {
       "value": "Zażółć gęślą jaźń; Příliš žluťoučký kůň",
       "enc": "utf8"

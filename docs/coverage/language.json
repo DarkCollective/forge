@@ -1,7 +1,43 @@
 [
- {"cyberchef": "Remove Diacritics", "status": "redesigned", "forge": ["diacritics:remove"], "note": "Unicode normalisation rather than a table of letters: NFD, drop the combining marks of the diacritic blocks (U+0300 to U+036F, U+1AB0 to U+1AFF, U+1DC0 to U+1DFF, U+20D0 to U+20FF, U+FE20 to U+FE2F), NFC again, so any script that decomposes is handled and other characters keep their form. Letters with a stroke that do not decompose (o with stroke, d with stroke, eth, l with stroke, h with stroke, t with stroke, dotless i) are turned into their base letter by default, switchable with strokes. Ligatures such as ae, oe and ss are left alone."},
- {"cyberchef": "Convert to NATO alphabet", "status": "redesigned", "forge": ["nato:encode", "nato:decode"], "note": "The ICAO spelling alphabet (Alfa, Juliett, X-ray), letters in either case, digits plain (Zero, One, Two ...) or as ICAO pronounces them (Wun, Too, Tree, Fower, Fife, Ait, Niner), and the way back as nato:decode, which also reads Alpha, Juliet, Xray and Whisky. Forge adds a delimiter (one of the wave 5 list except none) and writes a space as a slash so that words stay apart; other characters are kept. CyberChef's exact spellings and its treatment of other characters are not copied."},
- {"cyberchef": "Convert Leet Speak", "status": "redesigned", "forge": ["leet:convert"], "note": "To and from leet in one word, with Forge's own table: basic (a4 b8 e3 g6 i1 o0 s5 t7 z2) or extended (adds c( d) h# l| q9 x%). Each letter has exactly one leet character, so from is a reading of the table, not a CyberChef-compatible inverse; it gives lower-case letters and cannot tell a leet 1 from a real 1. Non-ASCII text is left alone."},
- {"cyberchef": "Unicode Text Format", "status": "redesigned", "forge": ["unicode-format:decorate"], "note": "Underline (U+0332 COMBINING LOW LINE) and strikethrough (U+0336 COMBINING LONG STROKE OVERLAY), each switchable, put after every code point except the line breaks. Underline is on by default (with both off the text is unchanged)."},
- {"cyberchef": "HTML To Text", "status": "redesigned", "forge": ["html-text:to-text"], "note": "CyberChef's operation only turns an HTML-typed output into text. Forge has no typed outputs, so the word reads HTML source instead: comments, script and style elements, the DOCTYPE and all tags are dropped (br and block-level tags become line feeds), character references are decoded with html:decode, runs of line feeds are cut to two and the text is trimmed. It is a pattern-based stripper, not a parser, and not a sanitiser."}
+  {
+    "cyberchef": "Remove Diacritics",
+    "status": "covered",
+    "forge": [
+      "diacritics:remove"
+    ],
+    "note": "Unicode normalisation rather than a table of letters: NFD, drop the combining marks of the diacritic blocks (U+0300 to U+036F, U+1AB0 to U+1AFF, U+1DC0 to U+1DFF, U+20D0 to U+20FF, U+FE20 to U+FE2F), NFC again, so any script that decomposes is handled and other characters keep their form; the result equals CyberChef's. Letters with a stroke that do not decompose (o with stroke, d with stroke, eth, l with stroke, h with stroke, t with stroke, dotless i) are left alone by default, as CyberChef leaves them, and turned into their base letter with the strokes switch. Ligatures such as ae, oe and ss are left alone."
+  },
+  {
+    "cyberchef": "Convert to NATO alphabet",
+    "status": "redesigned",
+    "forge": [
+      "nato:encode",
+      "nato:decode"
+    ],
+    "note": "The ICAO spelling alphabet (Alfa, Juliett, X-ray), letters in either case, digits plain (Zero, One, Two ...) as CyberChef writes them or as ICAO pronounces them (Wun, Too, Tree, Fower, Fife, Ait, Niner), and the way back as nato:decode, which also reads Alpha, Juliet, Xray and Whisky. Forge adds a delimiter (one of the wave 5 list except none) and writes a space as a slash so that words stay apart, with no trailing delimiter; other characters are kept, with the delimiter around them. CyberChef puts a space after every word, writes a space as an extra blank, and joins other characters to the next word without a space."
+  },
+  {
+    "cyberchef": "Convert Leet Speak",
+    "status": "covered",
+    "forge": [
+      "leet:convert"
+    ],
+    "note": "To and from leet in one word. Basic is CyberChef's table: a4 e3 i1 o0 s5 t7, either case in, lower-case letters out of from. Extended is Forge's addition (b8 g6 z2 c( d) h# l| q9 x%). Each letter has exactly one leet character, so from is a reading of the table, not an inverse; it cannot tell a leet 1 from a real 1. Non-ASCII text is left alone."
+  },
+  {
+    "cyberchef": "Unicode Text Format",
+    "status": "covered",
+    "forge": [
+      "unicode-format:decorate"
+    ],
+    "note": "Underline (U+0332 COMBINING LOW LINE) and strikethrough (U+0336 COMBINING LONG STROKE OVERLAY), each switchable and off by default as in CyberChef (with both off the text is unchanged), put after every code point, the strikethrough mark first as CyberChef does. Line breaks get no marks. CyberChef adds the marks after every byte, so it breaks a character beyond ASCII; Forge adds them after every code point."
+  },
+  {
+    "cyberchef": "HTML To Text",
+    "status": "redesigned",
+    "forge": [
+      "html-text:to-text"
+    ],
+    "note": "CyberChef's operation only turns an HTML-typed output into text (on text it returns its input unchanged). Forge has no typed outputs, so the word reads HTML source instead: comments, script and style elements, the DOCTYPE and all tags are dropped (br and block-level tags become line feeds), character references are decoded with html:decode, runs of line feeds are cut to two and the text is trimmed. It is a pattern-based stripper, not a parser, and not a sanitiser."
+  }
 ]

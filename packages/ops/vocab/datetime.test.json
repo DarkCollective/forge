@@ -670,7 +670,7 @@
     }
   },
   {
-    "name": "from-unix: milliseconds",
+    "name": "from-unix: milliseconds show the milliseconds",
     "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
     "op": "datetime:from-unix",
     "params": {
@@ -681,12 +681,12 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Wed 11 November 2026 12:34:56 UTC",
+      "value": "Wed 11 November 2026 12:34:56.789 UTC",
       "enc": "utf8"
     }
   },
   {
-    "name": "from-unix: microseconds",
+    "name": "from-unix: microseconds show the milliseconds",
     "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
     "op": "datetime:from-unix",
     "params": {
@@ -697,7 +697,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Wed 11 November 2026 12:34:56 UTC",
+      "value": "Wed 11 November 2026 12:34:56.789 UTC",
       "enc": "utf8"
     }
   },
@@ -1143,7 +1143,7 @@
     }
   },
   {
-    "name": "filetime-to-unix: microseconds",
+    "name": "filetime-to-unix: microseconds, exact with one decimal",
     "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
     "op": "datetime:filetime-to-unix",
     "params": {
@@ -1154,7 +1154,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "1794400496789123",
+      "value": "1794400496789123.4",
       "enc": "utf8"
     }
   },
@@ -1223,7 +1223,7 @@
     }
   },
   {
-    "name": "filetime-to-unix: before 1970 rounds towards zero",
+    "name": "filetime-to-unix: before 1970 is exact, with a minus sign",
     "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
     "op": "datetime:filetime-to-unix",
     "params": {},
@@ -1232,7 +1232,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "-1",
+      "value": "-1.5",
       "enc": "utf8"
     }
   },
@@ -1381,7 +1381,7 @@
     }
   },
   {
-    "name": "unix-to-filetime: hex big endian",
+    "name": "unix-to-filetime: hex big endian has no leading zeros",
     "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
     "op": "datetime:unix-to-filetime",
     "params": {
@@ -1392,7 +1392,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "01dd71d90ebb9800",
+      "value": "1dd71d90ebb9800",
       "enc": "utf8"
     }
   },

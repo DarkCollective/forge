@@ -76,26 +76,26 @@ USING: random clock md5 sha1 ;
   [ ns _parse ] [ drop "the namespace must be dns, url, oid, x500 or a UUID" raise:range #[ ] ] try
   ] if ] if ] if ] if ;
 
-: _version-bytes ( version:str namespace:str name:str -- bytes )
+: _version-bytes ( nm:bytes version:str namespace:str -- bytes )
   version "nil" = [ 16 util:zero-bytes ] [
   version "max" = [ 16 util:zero-bytes #[ ff ] bxor ] [
   version "v4" = [ 16 random:bytes-of 4 _stamp ] [
   version "v1" = [ clock:now-ms _gregorian 8 random:bytes-of _v1 ] [
   version "v6" = [ clock:now-ms _gregorian 8 random:bytes-of _v6 ] [
   version "v7" = [ clock:now-ms 10 random:bytes-of _v7 ] [
-  namespace _namespace name str>bytes version "v3" = [ 3 ] [ 5 ] if _name-based
+  namespace _namespace nm version "v3" = [ 3 ] [ 5 ] if _name-based
   ] if ] if ] if ] if ] if ] if ;
 
-: generate ( bytes version:choice{v1|v3|v4|v5|v6|v7|nil|max}="v4" namespace:str="dns" name:str="" -- str )
-  "Generate a UUID (RFC 9562) as lower-case text in the form 8-4-4-4-12. v4: 122 random bits. v1: the time in 100 ns ticks since 1582-10-15 (the clock counts milliseconds, so the finer digits are zero), a random 14-bit clock sequence and a random node with the multicast bit set. v6: the same fields with the time most significant first, so UUIDs sort by time. v7: the Unix time in milliseconds and 74 random bits. v3 (MD5) and v5 (SHA-1): the namespace and the name, no randomness, the same UUID every time. nil is all zero bits and max all one bits. The random bits come from the host's cryptographic random generator (never Math.random) and the time from the host clock, so the output of v1, v4, v6 and v7 differs on every call (the word carries the +random and +time effects). The input is ignored; namespace and name are used only by v3 and v5. A namespace that is not dns, url, oid, x500 or a UUID is E_RANGE." doc
+: generate ( bytes version:choice{v1|v3|v4|v5|v6|v7|nil|max}="v4" namespace:str="1b671a64-40d5-491e-99b0-da01ff1f3341" name:str="" -- str )
+  "Generate a UUID (RFC 9562) as lower-case text in the form 8-4-4-4-12. v4: 122 random bits. v1: the time in 100 ns ticks since 1582-10-15 (the clock counts milliseconds, so the finer digits are zero), a random 14-bit clock sequence and a random node with the multicast bit set. v6: the same fields with the time most significant first, so UUIDs sort by time. v7: the Unix time in milliseconds and 74 random bits. v3 (MD5) and v5 (SHA-1): the namespace and the name, no randomness, the same UUID every time. nil is all zero bits and max all one bits. The random bits come from the host's cryptographic random generator (never Math.random) and the time from the host clock, so the output of v1, v4, v6 and v7 differs on every call (the word carries the +random and +time effects). The input is ignored except for v3 and v5, where it is the name when the name parameter is empty (as in CyberChef; a name parameter wins). The namespace and the name are used only by v3 and v5; the namespace is a UUID as text (CyberChef's default, 1b671a64-40d5-491e-99b0-da01ff1f3341, if you give none) or dns, url, oid or x500. A namespace that is not dns, url, oid, x500 or a UUID is E_RANGE." doc
   "Generators" category
-  drop
-  version namespace name _version-bytes _text ;
+  name len 0 > [ drop name str>bytes ] [ ] if
+  version namespace _version-bytes _text ;
 
 META: generate
   param version "v1: Gregorian time. v3: MD5 of a namespace and a name. v4: random. v5: SHA-1 of a namespace and a name. v6: Gregorian time, sortable. v7: Unix time, sortable. nil: all zeros. max: all ones." ;
-  param namespace "For v3 and v5: dns, url, oid, x500 (the namespaces of RFC 9562) or any UUID as text." ;
-  param name "For v3 and v5: the name to hash, as UTF-8 text." ;
+  param namespace "For v3 and v5: any UUID as text (the default is the one CyberChef has), or dns, url, oid, x500 (the namespaces of RFC 9562)." ;
+  param name "For v3 and v5: the name to hash, as UTF-8 text; empty uses the input." ;
   see-also uuid:analyse ;
 ;
 

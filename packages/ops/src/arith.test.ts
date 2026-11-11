@@ -115,12 +115,15 @@ describe("exact decimals against a BigInt model", () => {
     }
   });
 
-  test("mod keeps the sign of the dividend, like JavaScript's %", async () => {
+  test("mod keeps the sign of the dividend, like JavaScript's %, for every number of the list", async () => {
     for (let round = 0; round < 40; round++) {
       const a = BigInt(below(2_000_001) - 1_000_000) * BigInt(below(1000) + 1);
+      const c = BigInt(below(2_000_001) - 1_000_000);
       let b = BigInt(below(2001) - 1000);
       if (b === 0n) b = 7n;
-      expect(await call("arith:mod", `${a}\n${b}`, "newline")).toBe((a % b).toString());
+      expect(await call("arith:mod", `${a}\n${c}`, b.toString(), "newline")).toBe(
+        `${a % b} ${c % b}`,
+      );
     }
   });
 
@@ -157,9 +160,14 @@ describe("big integers", () => {
         `${below(10 ** 9) - 5 * 10 ** 8}${String(below(10 ** 9)).padStart(9, "0")}${below(10 ** 6)}`,
       );
       const b = BigInt(`${below(10 ** 9) - 5 * 10 ** 8}${String(below(10 ** 9)).padStart(9, "0")}`);
-      const [g, x, y] = (await call("arith:ext-gcd", a.toString(), b.toString(), "newline"))
-        .split("\n")
-        .map(BigInt) as [bigint, bigint, bigint];
+      const report = await call("arith:ext-gcd", a.toString(), b.toString());
+      const m = /^gcd: (-?\d+)\n\nBezout coefficients:\nx = (-?\d+)\ny = (-?\d+)\n\n$/.exec(report);
+      expect(m, report).not.toBeNull();
+      const [g, x, y] = [m?.[1], m?.[2], m?.[3]].map((t) => BigInt(t ?? "0")) as [
+        bigint,
+        bigint,
+        bigint,
+      ];
       expect(a * x + b * y).toBe(g);
       expect(g >= 0n).toBe(true);
       if (g !== 0n) {

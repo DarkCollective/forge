@@ -177,15 +177,15 @@ IN: colour
   "cmyk(" c int>str cat "%, " cat m int>str cat "%, " cat y int>str cat "%, " cat k int>str cat "%)" cat ;
 
 : _report ( r:int g:int b:int a:int -- str )
-  "Hex:   " r g b a _hex-text cat "\n" cat
-  "RGB:   " cat r g b _rgb-text cat "\n" cat
-  "RGBA:  " cat r g b a _rgba-text cat "\n" cat
-  "HSL:   " cat r g b _hsl _hsl-text cat "\n" cat
-  "HSLA:  " cat r g b _hsl a _hsla-text cat "\n" cat
-  "CMYK:  " cat r g b _cmyk _cmyk-text cat ;
+  "Hex:  " r g b a _hex-text cat "\n" cat
+  "RGB:  " cat r g b _rgb-text cat "\n" cat
+  "RGBA: " cat r g b a _rgba-text cat "\n" cat
+  "HSL:  " cat r g b _hsl _hsl-text cat "\n" cat
+  "HSLA: " cat r g b _hsl a _hsla-text cat "\n" cat
+  "CMYK: " cat r g b _cmyk _cmyk-text cat ;
 
 : parse ( data:str -- str )
-  "A colour code written in every notation. The input is a CSS-style colour: hex (#f80, #ff8800, #ff880080 or #f808, with or without the #), rgb(255, 136, 0) or rgba(...) with channels 0 to 255 or percentages, hsl(32, 100%, 50%) or hsla(...), or cmyk(0%, 47%, 100%, 0%) with percentages; spaces or commas separate, an alpha of 0 to 1 or a percentage may follow, and case does not matter. Numbers have up to three decimals. The output has one line each for hex, RGB, RGBA, HSL, HSLA and CMYK, with the channels rounded to whole numbers (hue in degrees, the rest in percent). Colour names are not read." doc
+  "A colour code written in every notation. The input is a CSS-style colour: hex (#f80, #ff8800, #ff880080 or #f808, with or without the #), rgb(255, 136, 0) or rgba(...) with channels 0 to 255 or percentages, hsl(32, 100%, 50%) or hsla(...), or cmyk(0%, 47%, 100%, 0%) with percentages; spaces or commas separate, an alpha of 0 to 1 or a percentage may follow, and case does not matter. Numbers have up to three decimals. The output has one line each for hex, RGB, RGBA, HSL, HSLA and CMYK (the labels are padded to six characters, as in CyberChef), with the channels rounded to whole numbers (hue in degrees, the rest in percent). Colour names are not read." doc
   "Conversions" category
   data [ util:space? ] util:trim-start [ util:space? ] util:trim-end lower _parse-colour _report ;
 

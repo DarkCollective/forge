@@ -11,7 +11,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://hotp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=0\n\nPassword: 755224",
+      "value": "URI: otpauth://hotp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=0\n\nPassword: 755224",
       "enc": "utf8"
     }
   },
@@ -27,7 +27,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://hotp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=1\n\nPassword: 287082",
+      "value": "URI: otpauth://hotp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=1\n\nPassword: 287082",
       "enc": "utf8"
     }
   },
@@ -43,7 +43,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://hotp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=2\n\nPassword: 359152",
+      "value": "URI: otpauth://hotp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=2\n\nPassword: 359152",
       "enc": "utf8"
     }
   },
@@ -59,7 +59,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://hotp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=3\n\nPassword: 969429",
+      "value": "URI: otpauth://hotp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=3\n\nPassword: 969429",
       "enc": "utf8"
     }
   },
@@ -75,7 +75,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://hotp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=4\n\nPassword: 338314",
+      "value": "URI: otpauth://hotp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=4\n\nPassword: 338314",
       "enc": "utf8"
     }
   },
@@ -91,7 +91,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://hotp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=5\n\nPassword: 254676",
+      "value": "URI: otpauth://hotp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=5\n\nPassword: 254676",
       "enc": "utf8"
     }
   },
@@ -107,7 +107,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://hotp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=6\n\nPassword: 287922",
+      "value": "URI: otpauth://hotp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=6\n\nPassword: 287922",
       "enc": "utf8"
     }
   },
@@ -123,7 +123,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://hotp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=7\n\nPassword: 162583",
+      "value": "URI: otpauth://hotp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=7\n\nPassword: 162583",
       "enc": "utf8"
     }
   },
@@ -139,7 +139,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://hotp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=8\n\nPassword: 399871",
+      "value": "URI: otpauth://hotp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=8\n\nPassword: 399871",
       "enc": "utf8"
     }
   },
@@ -155,7 +155,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://hotp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=9\n\nPassword: 520489",
+      "value": "URI: otpauth://hotp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=9\n\nPassword: 520489",
       "enc": "utf8"
     }
   },
@@ -171,7 +171,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://hotp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=1\n\nPassword: 287082",
+      "value": "URI: otpauth://hotp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=1\n\nPassword: 287082",
       "enc": "utf8"
     }
   },
@@ -206,7 +206,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://hotp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=10&counter=0\n\nPassword: 1284755224",
+      "value": "URI: otpauth://hotp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=10&counter=0\n\nPassword: 1284755224",
       "enc": "utf8"
     }
   },
@@ -223,7 +223,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://hotp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA&algorithm=SHA256&digits=6&counter=3\n\nPassword: 975832",
+      "value": "URI: otpauth://hotp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA&algorithm=SHA256&digits=6&counter=3\n\nPassword: 975832",
       "enc": "utf8"
     }
   },
@@ -240,7 +240,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://hotp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA&algorithm=SHA512&digits=6&counter=3\n\nPassword: 628588",
+      "value": "URI: otpauth://hotp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA&algorithm=SHA512&digits=6&counter=3\n\nPassword: 628588",
       "enc": "utf8"
     }
   },
@@ -301,7 +301,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=8&period=30\n\nPassword: 94287082",
+      "value": "URI: otpauth://totp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=8&period=30\n\nPassword: 94287082",
       "enc": "utf8"
     }
   },
@@ -319,7 +319,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA&algorithm=SHA256&digits=8&period=30\n\nPassword: 46119246",
+      "value": "URI: otpauth://totp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA&algorithm=SHA256&digits=8&period=30\n\nPassword: 46119246",
       "enc": "utf8"
     }
   },
@@ -337,7 +337,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA&algorithm=SHA512&digits=8&period=30\n\nPassword: 90693936",
+      "value": "URI: otpauth://totp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA&algorithm=SHA512&digits=8&period=30\n\nPassword: 90693936",
       "enc": "utf8"
     }
   },
@@ -355,7 +355,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=8&period=30\n\nPassword: 07081804",
+      "value": "URI: otpauth://totp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=8&period=30\n\nPassword: 07081804",
       "enc": "utf8"
     }
   },
@@ -373,7 +373,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA&algorithm=SHA256&digits=8&period=30\n\nPassword: 68084774",
+      "value": "URI: otpauth://totp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA&algorithm=SHA256&digits=8&period=30\n\nPassword: 68084774",
       "enc": "utf8"
     }
   },
@@ -391,7 +391,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA&algorithm=SHA512&digits=8&period=30\n\nPassword: 25091201",
+      "value": "URI: otpauth://totp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA&algorithm=SHA512&digits=8&period=30\n\nPassword: 25091201",
       "enc": "utf8"
     }
   },
@@ -409,7 +409,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=8&period=30\n\nPassword: 14050471",
+      "value": "URI: otpauth://totp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=8&period=30\n\nPassword: 14050471",
       "enc": "utf8"
     }
   },
@@ -427,7 +427,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA&algorithm=SHA256&digits=8&period=30\n\nPassword: 67062674",
+      "value": "URI: otpauth://totp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA&algorithm=SHA256&digits=8&period=30\n\nPassword: 67062674",
       "enc": "utf8"
     }
   },
@@ -445,7 +445,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA&algorithm=SHA512&digits=8&period=30\n\nPassword: 99943326",
+      "value": "URI: otpauth://totp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA&algorithm=SHA512&digits=8&period=30\n\nPassword: 99943326",
       "enc": "utf8"
     }
   },
@@ -463,7 +463,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=8&period=30\n\nPassword: 89005924",
+      "value": "URI: otpauth://totp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=8&period=30\n\nPassword: 89005924",
       "enc": "utf8"
     }
   },
@@ -481,7 +481,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA&algorithm=SHA256&digits=8&period=30\n\nPassword: 91819424",
+      "value": "URI: otpauth://totp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA&algorithm=SHA256&digits=8&period=30\n\nPassword: 91819424",
       "enc": "utf8"
     }
   },
@@ -499,7 +499,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA&algorithm=SHA512&digits=8&period=30\n\nPassword: 93441116",
+      "value": "URI: otpauth://totp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA&algorithm=SHA512&digits=8&period=30\n\nPassword: 93441116",
       "enc": "utf8"
     }
   },
@@ -517,7 +517,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=8&period=30\n\nPassword: 69279037",
+      "value": "URI: otpauth://totp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=8&period=30\n\nPassword: 69279037",
       "enc": "utf8"
     }
   },
@@ -535,7 +535,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA&algorithm=SHA256&digits=8&period=30\n\nPassword: 90698825",
+      "value": "URI: otpauth://totp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA&algorithm=SHA256&digits=8&period=30\n\nPassword: 90698825",
       "enc": "utf8"
     }
   },
@@ -553,7 +553,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA&algorithm=SHA512&digits=8&period=30\n\nPassword: 38618901",
+      "value": "URI: otpauth://totp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA&algorithm=SHA512&digits=8&period=30\n\nPassword: 38618901",
       "enc": "utf8"
     }
   },
@@ -571,7 +571,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=8&period=30\n\nPassword: 65353130",
+      "value": "URI: otpauth://totp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=8&period=30\n\nPassword: 65353130",
       "enc": "utf8"
     }
   },
@@ -589,7 +589,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA&algorithm=SHA256&digits=8&period=30\n\nPassword: 77737706",
+      "value": "URI: otpauth://totp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA&algorithm=SHA256&digits=8&period=30\n\nPassword: 77737706",
       "enc": "utf8"
     }
   },
@@ -607,7 +607,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA&algorithm=SHA512&digits=8&period=30\n\nPassword: 47863826",
+      "value": "URI: otpauth://totp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA&algorithm=SHA512&digits=8&period=30\n\nPassword: 47863826",
       "enc": "utf8"
     }
   },
@@ -624,7 +624,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&period=60\n\nPassword: 360094",
+      "value": "URI: otpauth://totp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&period=60\n\nPassword: 360094",
       "enc": "utf8"
     }
   },
@@ -641,7 +641,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&period=30\n\nPassword: 080717",
+      "value": "URI: otpauth://totp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&period=30\n\nPassword: 080717",
       "enc": "utf8"
     }
   },

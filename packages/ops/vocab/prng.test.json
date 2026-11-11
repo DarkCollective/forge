@@ -100,7 +100,7 @@
     }
   },
   {
-    "name": "integers: default delimiter is a line feed",
+    "name": "integers: default delimiter is a space",
     "ref": "deterministic case of a random op: a range of size one, or a parameter error (the random cases are in src/prng.test.ts)",
     "op": "prng:integers",
     "params": {
@@ -113,7 +113,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "0\n0\n0\n0",
+      "value": "0 0 0 0",
       "enc": "utf8"
     }
   },

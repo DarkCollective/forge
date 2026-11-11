@@ -128,7 +128,7 @@ describe("case", () => {
 
   test("from-insensitive-regex undoes to-insensitive-regex", async () => {
     for (const p of [
-      "hello World",
+      "hello world",
       "^a[b-d_]\\d+\\x41(?<n>x)\\k<n>$",
       "[^q]|\\p{Lu}+",
       "é[aeiou]",
@@ -137,6 +137,11 @@ describe("case", () => {
       const there = top(await toI(p)).v as string;
       expect(top(await fromI(there)).v).toBe(p);
     }
+  });
+
+  test("a plain letter becomes [lower upper] whatever case was written, so the written case is lost", async () => {
+    expect(top(await toI("Hh")).v).toBe("[hH][hH]");
+    expect(top(await fromI("[hH][hH]")).v).toBe("hh");
   });
 
   test("the pattern words run on 20 KiB of pattern text", async () => {

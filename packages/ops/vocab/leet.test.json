@@ -1,11 +1,28 @@
 [
   {
-    "name": "to leet, basic",
-    "ref": "a4 b8 e3 g6 i1 o0 s5 t7 z2",
+    "name": "to leet, basic: the six letters a e i o s t",
+    "ref": "a4 e3 i1 o0 s5 t7; b g z need the extended table",
     "op": "leet:convert",
     "params": {
       "direction": "to",
       "style": "basic"
+    },
+    "input": {
+      "value": "abegiostz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4b3g1057z",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to leet, extended also has b g z",
+    "ref": "a4 b8 e3 g6 i1 o0 s5 t7 z2",
+    "op": "leet:convert",
+    "params": {
+      "direction": "to",
+      "style": "extended"
     },
     "input": {
       "value": "abegiostz",
@@ -163,6 +180,23 @@
     },
     "expect": {
       "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "from leet, basic leaves 8 6 2",
+    "ref": "8 6 2 are only in the extended table",
+    "op": "leet:convert",
+    "params": {
+      "direction": "from",
+      "style": "basic"
+    },
+    "input": {
+      "value": "8 6 2 4",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "8 6 2 a",
+      "enc": "utf8"
     }
   }
 ]
