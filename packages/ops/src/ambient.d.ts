@@ -29,6 +29,18 @@ declare module "node:fs" {
 declare module "node:os" {
   export function tmpdir(): string;
 }
+/** Test-only: the deflate tests check against the host's zlib (an independent implementation). */
+declare module "node:zlib" {
+  interface ZlibOptions {
+    readonly level?: number;
+  }
+  export function inflateRawSync(data: Uint8Array): Uint8Array;
+  export function inflateSync(data: Uint8Array): Uint8Array;
+  export function gunzipSync(data: Uint8Array): Uint8Array;
+  export function deflateRawSync(data: Uint8Array, options?: ZlibOptions): Uint8Array;
+  export function deflateSync(data: Uint8Array, options?: ZlibOptions): Uint8Array;
+  export function gzipSync(data: Uint8Array, options?: ZlibOptions): Uint8Array;
+}
 declare module "node:url" {
   export function fileURLToPath(url: string): string;
   export function pathToFileURL(path: string): { readonly href: string };

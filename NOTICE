@@ -28,3 +28,21 @@ S-boxes are the table of that distribution, Copyright (c) Xerox Corporation
 1989, all rights reserved, used under the licence of that distribution: licence
 to copy and use is granted provided the software is identified as the "Xerox
 Secure Hash Function", and it is provided "as is" without warranty of any kind.
+
+The deflate vocabulary (deflate:deflate, deflate:inflate, deflate:zlib-deflate,
+deflate:zlib-inflate, deflate:gzip, deflate:gunzip) and the archive vocabularies
+that follow it use the fflate library, Copyright (c) 2026 Arjun Barrett
+(https://github.com/101arrowz/fflate), licensed under the MIT License.
+
+The compression vocabularies of wave 6 also use these libraries, each under its
+own licence: lz-string (LZString), Copyright (c) 2013 pieroxy
+(https://github.com/pieroxy/lz-string), MIT License; fzstd (Zstandard
+decompression), Copyright (c) 2020 Arjun Barrett
+(https://github.com/101arrowz/fzstd), MIT License; the pure JavaScript decoder of
+brotli (brotli/decompress), a port of the Brotli decoder, whose source files
+carry Copyright 2013 Google Inc. under the Apache License 2.0 and which is
+published as the npm package brotli (https://github.com/devongovett/brotli.js)
+under the MIT License, with its dependency base64-js, Copyright (c) 2014
+Jameson Little (https://github.com/beatgammit/base64-js), MIT License; and lzma1
+(LZMA), Copyright Filip Seman (https://github.com/xseman/lzma1), Apache License
+2.0, a port of XZ for Java by Lasse Collin and Igor Pavlov.

@@ -413,6 +413,21 @@ Language gaps found in wave 5 (candidates for the core, or for a primitive):
 - The web smoke test treats text containing a tab as non-showable (hex view), so several ops use spaces instead of tabs in reports.
 - The e2e port 4783 was fixed with `reuseExistingServer`, so parallel worktrees served each other's builds (fixed in 5.38a with `FORGE_E2E_PORT`); the worker vectors test needed a longer timeout (5.38a).
 
+**Wave 6** *In progress (started 2026-11-11): compression and archives.*
+
+The codecs are pure JavaScript libraries behind minimal private primitives, pinned to exact versions and attributed in `NOTICE`: `fflate` 0.8.3 (DEFLATE, zlib, gzip, zip), `lz-string` 1.5.0, `fzstd` 0.1.1 (Zstandard decompression), the pure-JS decoder of `brotli` 2.1.0 (`brotli/decompress`; its emscripten compressor is never imported) and `lzma1` 0.6.1 for LZMA. `lzma` 2.3.2 (lzma-js, the library CyberChef uses) was rejected: it installs a global `onmessage` handler in a worker scope, which would replace the bake worker's own handler, and it does not load as an ES module; `lzma1` is synchronous, imports cleanly and offers levels 1 to 9, at the price that its compressed bytes differ from CyberChef's (the decoders interoperate). The containers (headers, trailers, checksums) are FL; the entropy coders are primitives. **The output limit:** every decompressor stops at the run's `maxValueBytes` and raises `E_LIMIT_VALUE` while it decompresses, never trusting a size field (`BoundedOutput` in `prim-util.ts`; a 1 GiB bomb stops in under 0.2 s). **Archives:** Unzip and Untar return a `list` of `record`s (`name`, `size`, `dir`, `mtime`, `mode`, `data`), which the output pane renders as a tree, plus a bytes-returning entry op so a recipe can continue; Zip and Tar take one file and a `filename` parameter. The conventions (levels, errors, determinism, vectors, archives) are in the ops README ("Wave 6 conventions"). Shared dependencies were added once in 5.39, so the later WPs do not touch the lockfile.
+
+| WP | Scope |
+|---|---|
+| 5.39 | Setup: the wave 6 dependencies (fflate, lz-string, fzstd, brotli decoder, the LZMA library), the wave 6 conventions (errors, the output limit, levels, archives), the `deflate` exemplar (Raw Deflate/Inflate, Zlib Deflate/Inflate, Gzip, Gunzip) |
+| 5.40 | Archives: Zip, Unzip, Tar, Untar |
+| 5.41 | Bzip2 Compress and Decompress (own primitives from the format) |
+| 5.42 | LZString Compress/Decompress and LZ4 Compress/Decompress |
+| 5.43 | LZMA Compress and Decompress |
+| 5.44 | Windows formats: LZNT1 Decompress, XPRESS Decompress, XPRESS LZ77+Huffman Decompress |
+| 5.45 | Beyond CyberChef: Zstandard and Brotli decompression |
+| 5.46 | Close-out: the throwaway cross-check against CyberChef, zlib-compressed Flask cookies, util promotions, dupes, docs |
+
 ### Phase 6 — Beyond CyberChef
 Magic auto-detection (declarative `checks` in META, depth-limited search). An optional recipe store backend behind `RecipeStore`. A PWA/offline mode. The `@forge/cli`. Recipe diff/swap. **Relix vocabulary** integration as an `relix:` vocab of primitives.
 
