@@ -20,14 +20,14 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Utils | 34 | 14 | 2 | 0 | 50 |
 | Date / Time | 5 | 4 | 0 | 0 | 9 |
 | Extractors | 1 | 8 | 0 | 9 | 18 |
-| Compression | 0 | 0 | 0 | 21 | 21 |
+| Compression | 1 | 5 | 0 | 15 | 21 |
 | Hashing | 34 | 14 | 0 | 0 | 48 |
 | Code tidy | 0 | 0 | 0 | 24 | 24 |
 | Forensics | 0 | 0 | 0 | 9 | 9 |
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 9 | 4 | 3 | 5 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **193** | **124** | **5** | **184** | **506** |
+| **Total** | **194** | **129** | **5** | **178** | **506** |
 
 ## Data format (80)
 
@@ -424,12 +424,12 @@ it and regenerate this file. An operation listed in several CyberChef categories
 
 | CyberChef | Status | Forge | Note |
 | --- | --- | --- | --- |
-| Raw Deflate | not yet |  |  |
-| Raw Inflate | not yet |  |  |
-| Zlib Deflate | not yet |  |  |
-| Zlib Inflate | not yet |  |  |
-| Gzip | not yet |  |  |
-| Gunzip | not yet |  |  |
+| Raw Deflate | redesigned | `deflate:deflate` | RFC 1951 over fflate (a private primitive for the entropy coding). CyberChef's Compression type menu (Dynamic Huffman Coding, Fixed Huffman Coding, None) becomes the wave 6 level parameter, an int from 0 to 9 (else E_RANGE), default 6: None is level 0 (stored blocks, byte for byte what zlib writes), Dynamic Huffman Coding is any level from 1 (fflate chooses a stored, fixed or dynamic block for each block by size, so very short input comes out as a fixed block); a Fixed-only mode does not exist. Every inflater reads the output (checked against zlib), but the bytes differ from CyberChef's zlib.js encoder. |
+| Raw Inflate | redesigned | `deflate:inflate` | RFC 1951 over fflate. Start index is kept (start, from 0; beyond the input is E_RANGE); bytes after the end of the stream are ignored. Initial output buffer size, Buffer expansion type and Resize buffer after decompression tuned zlib.js's buffers and mean nothing here (the primitive manages its own), and Verify result has nothing to verify in a raw stream, so those four are not offered. Corrupt or cut-short data is E_COERCE naming the fault; output past the value limit (16 MiB for shared recipes, 64 MiB otherwise) stops with E_LIMIT_VALUE instead of allocating, the decompression bomb rule of the wave 6 conventions. |
+| Zlib Deflate | redesigned | `deflate:zlib-deflate` | RFC 1950: the two header bytes (78 01, 78 5e, 78 9c or 78 da as zlib writes them for the level), the raw stream and the big-endian Adler-32, the framing in FL over adler32:checksum. Compression type is the level parameter as in Raw Deflate (0 to 9, default 6; no Fixed-only mode). The output bytes differ from CyberChef's, and every zlib reads them. |
+| Zlib Inflate | redesigned | `deflate:zlib-inflate` | RFC 1950 in FL over the raw inflate: the header is checked (not zlib, another method, a window over 32 KiB, a preset dictionary: E_COERCE) and the Adler-32 trailer is verified. Start index is kept; Verify result is verify and is on by default (CyberChef's is off): a missing or wrong trailer is E_COERCE, and with verify off the trailer is not read. The buffer size, expansion and resize options are not offered (see Raw Inflate). Output past the value limit is E_LIMIT_VALUE. Inputs over about 750,000 bytes (380,000 for an untrusted recipe) exceed the VM step limit because the checksum runs in FL. |
+| Gzip | redesigned | `deflate:gzip` | RFC 1952 in FL over the raw deflate and crc:checksum: the header, the optional file name and comment (Latin-1; a NUL or a character above U+00FF is E_RANGE), the optional header CRC-16 (CyberChef's Include file checksum, parameter header-crc), the raw stream and the little-endian CRC-32 and size. Compression type is the level (0 to 9, default 6). Added: mtime, the modification time in Unix seconds, 0 by default so the output is the same on every run (CyberChef writes the current time); the OS byte is 255 (unknown) and XFL follows the level as gzip writes it. The bytes differ from CyberChef's; gzip, Python and zlib read them. |
+| Gunzip | covered | `deflate:gunzip` | RFC 1952: the header (extra field, name, comment and header CRC-16 are read and skipped; a missing magic number, another method or reserved flags are E_COERCE), the stream, and the CRC-32 and size of the trailer, which are verified by default (the added parameter verify, on; off returns the data despite a bad trailer or header CRC). Members written one after the other are joined, as gzip does. Output past the value limit is E_LIMIT_VALUE; the size the trailer claims is never used to allocate. |
 | Zip | not yet |  |  |
 | Unzip | not yet |  |  |
 | Bzip2 Decompress | not yet |  |  |

@@ -50,6 +50,49 @@ export function guardResult(ctx: PrimitiveContext, size: number, what: string): 
   if (size > max) throw limitFailure("maxValueBytes", max, size, what);
 }
 
+/**
+ * The decompression bomb rule of the wave 6 conventions (packages/ops/README.md): a decompressor stops at
+ * `ctx.limits.maxValueBytes` and raises this, `E_LIMIT_VALUE` naming `maxValueBytes`, while it decompresses.
+ * `produced` is the size the output had reached when the decoder stopped.
+ */
+export function bombFailure(max: number, produced: number): ForgeError {
+  return limitFailure("maxValueBytes", max, produced, "decompressed data");
+}
+
+/**
+ * The output of a streaming decompressor, capped at `max` bytes (pass `ctx.limits.maxValueBytes`).
+ * `push` a chunk as the decoder emits it; the chunk that would pass the cap raises `bombFailure` before it is kept.
+ */
+export class BoundedOutput {
+  private readonly pieces: Uint8Array[] = [];
+  private total = 0;
+
+  constructor(private readonly max: number) {}
+
+  /** Bytes kept so far. */
+  get length(): number {
+    return this.total;
+  }
+
+  push(chunk: Uint8Array): void {
+    if (this.total + chunk.length > this.max)
+      throw bombFailure(this.max, this.total + chunk.length);
+    this.total += chunk.length;
+    this.pieces.push(chunk);
+  }
+
+  /** One array of everything pushed. */
+  finish(): Uint8Array {
+    const out = new Uint8Array(this.total);
+    let at = 0;
+    for (const piece of this.pieces) {
+      out.set(piece, at);
+      at += piece.length;
+    }
+    return out;
+  }
+}
+
 /** ASCII whitespace as the text formats ignore it: space, tab, LF, VT, FF, CR. */
 export function isAsciiSpace(byte: number): boolean {
   return byte === 0x20 || (byte >= 0x09 && byte <= 0x0d);

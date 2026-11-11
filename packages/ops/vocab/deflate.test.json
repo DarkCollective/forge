@@ -1,0 +1,965 @@
+[
+  {
+    "name": "inflate: text, zlib level 0",
+    "ref": "Python zlib/gzip module: zlib.compressobj(0, DEFLATED, -15)",
+    "op": "deflate:inflate",
+    "params": {},
+    "input": {
+      "value": "012c00d3ff68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c617465",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c617465",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "inflate: text, zlib level 1",
+    "ref": "Python zlib/gzip module: zlib.compressobj(1, DEFLATED, -15)",
+    "op": "deflate:inflate",
+    "params": {},
+    "input": {
+      "value": "cb48cdc9c957c8c020cbf38b725274a01229a969398925a900",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c617465",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "inflate: text, zlib level 6",
+    "ref": "Python zlib/gzip module: zlib.compressobj(6, DEFLATED, -15)",
+    "op": "deflate:inflate",
+    "params": {},
+    "input": {
+      "value": "cb48cdc9c957c8c020cbf38b725274a09c94d4b49cc4925400",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c617465",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "inflate: text, zlib level 9",
+    "ref": "Python zlib/gzip module: zlib.compressobj(9, DEFLATED, -15)",
+    "op": "deflate:inflate",
+    "params": {},
+    "input": {
+      "value": "cb48cdc9c957c8c020cbf38b725274a09c94d4b49cc4925400",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c617465",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "inflate: repeated text, level 9",
+    "ref": "Python zlib/gzip module: wbits -15",
+    "op": "deflate:inflate",
+    "params": {},
+    "input": {
+      "value": "4b4c4a4e24050100",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "616263616263616263616263616263616263616263616263616263616263616263616263616263616263616263616263",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "inflate: empty input stream",
+    "ref": "Python zlib/gzip module: wbits -15 of the empty string",
+    "op": "deflate:inflate",
+    "params": {},
+    "input": {
+      "value": "0300",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "inflate: 1000 zero bytes (matches run past the window start)",
+    "ref": "Python zlib/gzip module: wbits -15",
+    "op": "deflate:inflate",
+    "params": {},
+    "input": {
+      "value": "63601805a360140c770000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "inflate: start index 3, bytes after the stream ignored",
+    "ref": "Python zlib/gzip module: wbits -15 with 3 bytes in front and 4 behind",
+    "op": "deflate:inflate",
+    "params": {
+      "start": 3
+    },
+    "input": {
+      "value": "deadbecb48cdc9c957c8c020cbf38b725274a09c94d4b49cc492540001020304",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c617465",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "inflate: start index past the end is E_RANGE",
+    "ref": "RFC 1951 (no stream starts past the data)",
+    "op": "deflate:inflate",
+    "params": {
+      "start": 99
+    },
+    "input": {
+      "value": "cb48cdc9c957c8c020cbf38b725274a09c94d4b49cc4925400",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "inflate: reserved block type 3 is E_COERCE",
+    "ref": "RFC 1951 section 3.2.3: BTYPE 11 is reserved",
+    "op": "deflate:inflate",
+    "params": {},
+    "input": {
+      "value": "07",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "inflate: cut-short stream is E_COERCE",
+    "ref": "Python zlib/gzip module: the first half of a level 9 stream",
+    "op": "deflate:inflate",
+    "params": {},
+    "input": {
+      "value": "cb48cdc9c957c8c020cb",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "inflate: empty input is E_COERCE",
+    "ref": "RFC 1951 (a stream has at least one block)",
+    "op": "deflate:inflate",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "deflate: level 0 is stored blocks",
+    "ref": "Python zlib/gzip module: zlib.compressobj(0, DEFLATED, -15), byte for byte",
+    "op": "deflate:deflate",
+    "params": {
+      "level": 0
+    },
+    "input": {
+      "value": "hello hello hello hello world, hello deflate",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "012c00d3ff68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c617465",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "deflate: empty input at level 0",
+    "ref": "Python zlib/gzip module: wbits -15 level 0, byte for byte",
+    "op": "deflate:deflate",
+    "params": {
+      "level": 0
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "010000ffff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "deflate: text at level 1",
+    "ref": "fflate 0.8.3 output, pinned; Python zlib/gzip module inflates it back to the input",
+    "op": "deflate:deflate",
+    "params": {
+      "level": 1
+    },
+    "input": {
+      "value": "hello hello hello hello world, hello deflate",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "cb48cdc9c957c024cbf38b725274a09c94d4b49cc4925400",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "deflate: text at level 6",
+    "ref": "fflate 0.8.3 output, pinned; Python zlib/gzip module inflates it back to the input",
+    "op": "deflate:deflate",
+    "params": {
+      "level": 6
+    },
+    "input": {
+      "value": "hello hello hello hello world, hello deflate",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "cb48cdc9c957c024cbf38b725274a09c94d4b49cc4925400",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "deflate: text at level 9",
+    "ref": "fflate 0.8.3 output, pinned; Python zlib/gzip module inflates it back to the input",
+    "op": "deflate:deflate",
+    "params": {
+      "level": 9
+    },
+    "input": {
+      "value": "hello hello hello hello world, hello deflate",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "cb48cdc9c957c024cbf38b725274a09c94d4b49cc4925400",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "deflate: level 10 is E_RANGE",
+    "ref": "the level is 0 to 9",
+    "op": "deflate:deflate",
+    "params": {
+      "level": 10
+    },
+    "input": {
+      "value": "x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "deflate: level -1 is E_RANGE",
+    "ref": "the level is 0 to 9",
+    "op": "deflate:deflate",
+    "params": {
+      "level": -1
+    },
+    "input": {
+      "value": "x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "zlib-inflate: text, zlib.compress level 0",
+    "ref": "Python zlib/gzip module: zlib.compress(data, 0)",
+    "op": "deflate:zlib-inflate",
+    "params": {},
+    "input": {
+      "value": "7801012c00d3ff68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c6174656f83104e",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c617465",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "zlib-inflate: text, zlib.compress level 1",
+    "ref": "Python zlib/gzip module: zlib.compress(data, 1)",
+    "op": "deflate:zlib-inflate",
+    "params": {},
+    "input": {
+      "value": "7801cb48cdc9c957c8c020cbf38b725274a01229a969398925a9006f83104e",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c617465",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "zlib-inflate: text, zlib.compress level 6",
+    "ref": "Python zlib/gzip module: zlib.compress(data, 6)",
+    "op": "deflate:zlib-inflate",
+    "params": {},
+    "input": {
+      "value": "789ccb48cdc9c957c8c020cbf38b725274a09c94d4b49cc49254006f83104e",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c617465",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "zlib-inflate: text, zlib.compress level 9",
+    "ref": "Python zlib/gzip module: zlib.compress(data, 9)",
+    "op": "deflate:zlib-inflate",
+    "params": {},
+    "input": {
+      "value": "78dacb48cdc9c957c8c020cbf38b725274a09c94d4b49cc49254006f83104e",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c617465",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "zlib-inflate: empty",
+    "ref": "Python zlib/gzip module: zlib.compress(b'')",
+    "op": "deflate:zlib-inflate",
+    "params": {},
+    "input": {
+      "value": "789c030000000001",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "zlib-inflate: repeated text",
+    "ref": "Python zlib/gzip module: zlib.compress(data, 9)",
+    "op": "deflate:zlib-inflate",
+    "params": {},
+    "input": {
+      "value": "78da4b4c4a4e24050100c24f1261",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "616263616263616263616263616263616263616263616263616263616263616263616263616263616263616263616263",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "zlib-inflate: wrong Adler-32 is E_COERCE",
+    "ref": "Python zlib/gzip module: last trailer byte flipped",
+    "op": "deflate:zlib-inflate",
+    "params": {},
+    "input": {
+      "value": "789ccb48cdc9c957c8c020cbf38b725274a09c94d4b49cc49254006f83104f",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "zlib-inflate: wrong Adler-32 with verify off",
+    "ref": "Python zlib/gzip module: last trailer byte flipped",
+    "op": "deflate:zlib-inflate",
+    "params": {
+      "verify": false
+    },
+    "input": {
+      "value": "789ccb48cdc9c957c8c020cbf38b725274a09c94d4b49cc49254006f83104f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c617465",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "zlib-inflate: missing trailer is E_COERCE",
+    "ref": "Python zlib/gzip module: trailer removed",
+    "op": "deflate:zlib-inflate",
+    "params": {},
+    "input": {
+      "value": "789ccb48cdc9c957c8c020cbf38b725274a09c94d4b49cc4925400",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "zlib-inflate: start index 2",
+    "ref": "Python zlib/gzip module: zlib.compress with two bytes in front",
+    "op": "deflate:zlib-inflate",
+    "params": {
+      "start": 2
+    },
+    "input": {
+      "value": "0000789ccb48cdc9c957c8c020cbf38b725274a09c94d4b49cc49254006f83104e",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c617465",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "zlib-inflate: raw deflate data is not zlib, E_COERCE",
+    "ref": "RFC 1950 section 2.2 (header check)",
+    "op": "deflate:zlib-inflate",
+    "params": {},
+    "input": {
+      "value": "cb48cdc9c957c8c020cbf38b725274a09c94d4b49cc4925400",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "zlib-inflate: preset dictionary is E_COERCE",
+    "ref": "RFC 1950: FDICT set (78 20 is a valid check value)",
+    "op": "deflate:zlib-inflate",
+    "params": {},
+    "input": {
+      "value": "782000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "zlib-inflate: cut-short is E_COERCE",
+    "ref": "Python zlib/gzip module: the first 12 bytes of zlib.compress",
+    "op": "deflate:zlib-inflate",
+    "params": {},
+    "input": {
+      "value": "789ccb48cdc9c957c8c020cb",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "zlib-deflate: level 0 is stored, header 78 01",
+    "ref": "Python zlib/gzip module: zlib.compress(data, 0), byte for byte",
+    "op": "deflate:zlib-deflate",
+    "params": {
+      "level": 0
+    },
+    "input": {
+      "value": "hello hello hello hello world, hello deflate",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "7801012c00d3ff68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c6174656f83104e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "zlib-deflate: empty input at level 0",
+    "ref": "Python zlib/gzip module: zlib.compress(b'', 0), byte for byte",
+    "op": "deflate:zlib-deflate",
+    "params": {
+      "level": 0
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "7801010000ffff00000001",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "zlib-deflate: text at level 1",
+    "ref": "fflate 0.8.3 output, pinned; Python zlib/gzip module decompresses it; the header equals zlib's for level 1",
+    "op": "deflate:zlib-deflate",
+    "params": {
+      "level": 1
+    },
+    "input": {
+      "value": "hello hello hello hello world, hello deflate",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "7801cb48cdc9c957c024cbf38b725274a09c94d4b49cc49254006f83104e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "zlib-deflate: text at level 6",
+    "ref": "fflate 0.8.3 output, pinned; Python zlib/gzip module decompresses it; the header equals zlib's for level 6",
+    "op": "deflate:zlib-deflate",
+    "params": {
+      "level": 6
+    },
+    "input": {
+      "value": "hello hello hello hello world, hello deflate",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "789ccb48cdc9c957c024cbf38b725274a09c94d4b49cc49254006f83104e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "zlib-deflate: text at level 9",
+    "ref": "fflate 0.8.3 output, pinned; Python zlib/gzip module decompresses it; the header equals zlib's for level 9",
+    "op": "deflate:zlib-deflate",
+    "params": {
+      "level": 9
+    },
+    "input": {
+      "value": "hello hello hello hello world, hello deflate",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "78dacb48cdc9c957c024cbf38b725274a09c94d4b49cc49254006f83104e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "zlib-deflate: level 11 is E_RANGE",
+    "ref": "the level is 0 to 9",
+    "op": "deflate:zlib-deflate",
+    "params": {
+      "level": 11
+    },
+    "input": {
+      "value": "x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "gunzip: text, gzip.compress level 1",
+    "ref": "Python zlib/gzip module: gzip.compress(data, 1, mtime=0)",
+    "op": "deflate:gunzip",
+    "params": {},
+    "input": {
+      "value": "1f8b08000000000004ffcb48cdc9c957c8c020cbf38b725274a01229a969398925a9001926a8a22c000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c617465",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "gunzip: text, gzip.compress level 6",
+    "ref": "Python zlib/gzip module: gzip.compress(data, 6, mtime=0)",
+    "op": "deflate:gunzip",
+    "params": {},
+    "input": {
+      "value": "1f8b08000000000000ffcb48cdc9c957c8c020cbf38b725274a09c94d4b49cc49254001926a8a22c000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c617465",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "gunzip: text, gzip.compress level 9",
+    "ref": "Python zlib/gzip module: gzip.compress(data, 9, mtime=0)",
+    "op": "deflate:gunzip",
+    "params": {},
+    "input": {
+      "value": "1f8b08000000000002ffcb48cdc9c957c8c020cbf38b725274a09c94d4b49cc49254001926a8a22c000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c617465",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "gunzip: empty",
+    "ref": "Python zlib/gzip module: gzip.compress(b'')",
+    "op": "deflate:gunzip",
+    "params": {},
+    "input": {
+      "value": "1f8b08000000000002ff03000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "gunzip: mtime set",
+    "ref": "Python zlib/gzip module: gzip.compress(data, 9, mtime=1700000000)",
+    "op": "deflate:gunzip",
+    "params": {},
+    "input": {
+      "value": "1f8b080000f1536502ffcb48cdc9c957c8c020cbf38b725274a09c94d4b49cc49254001926a8a22c000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c617465",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "gunzip: name, comment, extra field and header CRC-16",
+    "ref": "RFC 1952 section 2.3 built by hand in Python; python gzip and the gzip CLI both decompress it",
+    "op": "deflate:gunzip",
+    "params": {},
+    "input": {
+      "value": "1f8b081e00f153650003060041700200090968656c6c6f2e747874006120636f6d6d656e7400a896cb48cdc9c957c8c020cbf38b725274a09c94d4b49cc49254001926a8a22c000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c617465",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "gunzip: file name only",
+    "ref": "RFC 1952, FNAME; python gzip and the gzip CLI decompress it",
+    "op": "deflate:gunzip",
+    "params": {},
+    "input": {
+      "value": "1f8b08080000000000036f6e6c792d6e616d652e74787400cb48cdc9c957c8c020cbf38b725274a09c94d4b49cc49254001926a8a22c000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c617465",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "gunzip: output of the gzip command line tool (-N -9)",
+    "ref": "gzip CLI on this machine: gzip -c -N -9 file",
+    "op": "deflate:gunzip",
+    "params": {},
+    "input": {
+      "value": "1f8b080800f153650203636c692e74787400cb48cdc9c957c8c020cbf38b725274a09c94d4b49cc49254001926a8a22c000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c617465",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "gunzip: three members joined",
+    "ref": "gzip -dc on the concatenation of three files; python gzip agrees",
+    "op": "deflate:gunzip",
+    "params": {},
+    "input": {
+      "value": "1f8b08000000000002ff4bcb2c2a2ed10100d7364715060000001f8b08000000000002ff2b4e4dcecf4bd10100834502d4070000001f8b08000000000002ff2bc9c82c4a01006420322405000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "66697273742c7365636f6e642c7468697264",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "gunzip: wrong CRC-32 is E_COERCE",
+    "ref": "Python zlib/gzip module: CRC byte flipped",
+    "op": "deflate:gunzip",
+    "params": {},
+    "input": {
+      "value": "1f8b08000000000002ffcb48cdc9c957c8c020cbf38b725274a09c94d4b49cc49254001826a8a22c000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "gunzip: wrong CRC-32 with verify off",
+    "ref": "Python zlib/gzip module: CRC byte flipped",
+    "op": "deflate:gunzip",
+    "params": {
+      "verify": false
+    },
+    "input": {
+      "value": "1f8b08000000000002ffcb48cdc9c957c8c020cbf38b725274a09c94d4b49cc49254001826a8a22c000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c617465",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "gunzip: wrong length is E_COERCE",
+    "ref": "Python zlib/gzip module: ISIZE byte flipped",
+    "op": "deflate:gunzip",
+    "params": {},
+    "input": {
+      "value": "1f8b08000000000002ffcb48cdc9c957c8c020cbf38b725274a09c94d4b49cc49254001926a8a22c000001",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "gunzip: bad magic is E_COERCE",
+    "ref": "RFC 1952 section 2.3.1",
+    "op": "deflate:gunzip",
+    "params": {},
+    "input": {
+      "value": "1f8c08000000000002ffcb48cdc9c957c8c020cbf38b725274a09c94d4b49cc49254001926a8a22c000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "gunzip: zlib data is not gzip, E_COERCE",
+    "ref": "Python zlib/gzip module: zlib.compress",
+    "op": "deflate:gunzip",
+    "params": {},
+    "input": {
+      "value": "789ccb48cdc9c957c8c020cbf38b725274a09c94d4b49cc49254006f83104e",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "gunzip: cut-short is E_COERCE",
+    "ref": "Python zlib/gzip module: the first 15 bytes of a gzip file",
+    "op": "deflate:gunzip",
+    "params": {},
+    "input": {
+      "value": "1f8b08000000000002ffcb48cdc9c9",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "gunzip: trailer cut off is E_COERCE",
+    "ref": "Python zlib/gzip module: last 3 bytes removed",
+    "op": "deflate:gunzip",
+    "params": {},
+    "input": {
+      "value": "1f8b08000000000002ffcb48cdc9c957c8c020cbf38b725274a09c94d4b49cc49254001926a8a22c",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "gunzip: wrong header CRC-16 is E_COERCE",
+    "ref": "RFC 1952 FHCRC; mtime byte flipped after the CRC was computed",
+    "op": "deflate:gunzip",
+    "params": {},
+    "input": {
+      "value": "1f8b080a0100000000036e002334cb48cdc9c957c8c020cbf38b725274a09c94d4b49cc49254001926a8a22c000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "gunzip: wrong header CRC-16 with verify off",
+    "ref": "RFC 1952 FHCRC",
+    "op": "deflate:gunzip",
+    "params": {
+      "verify": false
+    },
+    "input": {
+      "value": "1f8b080a0100000000036e002334cb48cdc9c957c8c020cbf38b725274a09c94d4b49cc49254001926a8a22c000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c617465",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "gzip: name+comment+hcrc (stored)",
+    "ref": "level 0 stored blocks are fixed by RFC 1951; header and trailer by RFC 1952; python gzip and the gzip CLI decompress it",
+    "op": "deflate:gzip",
+    "params": {
+      "level": 0,
+      "filename": "a.txt",
+      "comment": "c",
+      "header-crc": true,
+      "mtime": 1700000000
+    },
+    "input": {
+      "value": "hello hello hello hello world, hello deflate",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1f8b081a00f1536504ff612e747874006300ea02012c00d3ff68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c6174651926a8a22c000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "gzip: plain (stored)",
+    "ref": "level 0 stored blocks are fixed by RFC 1951; header and trailer by RFC 1952; python gzip and the gzip CLI decompress it",
+    "op": "deflate:gzip",
+    "params": {
+      "level": 0
+    },
+    "input": {
+      "value": "hello hello hello hello world, hello deflate",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1f8b08000000000004ff012c00d3ff68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c6174651926a8a22c000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "gzip: text at level 1",
+    "ref": "fflate 0.8.3 output, pinned; python gzip and the gzip CLI decompress it; the CRC-32 and size equal Python's",
+    "op": "deflate:gzip",
+    "params": {
+      "level": 1
+    },
+    "input": {
+      "value": "hello hello hello hello world, hello deflate",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1f8b08000000000004ffcb48cdc9c957c024cbf38b725274a09c94d4b49cc49254001926a8a22c000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "gzip: text at level 6",
+    "ref": "fflate 0.8.3 output, pinned; python gzip and the gzip CLI decompress it; the CRC-32 and size equal Python's",
+    "op": "deflate:gzip",
+    "params": {
+      "level": 6
+    },
+    "input": {
+      "value": "hello hello hello hello world, hello deflate",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1f8b08000000000000ffcb48cdc9c957c024cbf38b725274a09c94d4b49cc49254001926a8a22c000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "gzip: text at level 9",
+    "ref": "fflate 0.8.3 output, pinned; python gzip and the gzip CLI decompress it; the CRC-32 and size equal Python's",
+    "op": "deflate:gzip",
+    "params": {
+      "level": 9
+    },
+    "input": {
+      "value": "hello hello hello hello world, hello deflate",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1f8b08000000000002ffcb48cdc9c957c024cbf38b725274a09c94d4b49cc49254001926a8a22c000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "gzip: empty input",
+    "ref": "Python zlib/gzip module: the CRC-32 of nothing is 0, size 0",
+    "op": "deflate:gzip",
+    "params": {
+      "level": 0
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1f8b08000000000004ff010000ffff0000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "gzip: level 10 is E_RANGE",
+    "ref": "the level is 0 to 9",
+    "op": "deflate:gzip",
+    "params": {
+      "level": 10
+    },
+    "input": {
+      "value": "x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "gzip: negative mtime is E_RANGE",
+    "ref": "RFC 1952 MTIME is 32 bits",
+    "op": "deflate:gzip",
+    "params": {
+      "mtime": -1
+    },
+    "input": {
+      "value": "x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "gzip: mtime over 32 bits is E_RANGE",
+    "ref": "RFC 1952 MTIME is 32 bits",
+    "op": "deflate:gzip",
+    "params": {
+      "mtime": 4294967296
+    },
+    "input": {
+      "value": "x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "gzip: file name outside Latin-1 is E_RANGE",
+    "ref": "RFC 1952 FNAME is ISO 8859-1",
+    "op": "deflate:gzip",
+    "params": {
+      "filename": "\u2603"
+    },
+    "input": {
+      "value": "x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  }
+]
