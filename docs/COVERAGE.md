@@ -20,14 +20,14 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Utils | 34 | 14 | 2 | 0 | 50 |
 | Date / Time | 5 | 4 | 0 | 0 | 9 |
 | Extractors | 1 | 8 | 0 | 9 | 18 |
-| Compression | 2 | 6 | 0 | 13 | 21 |
+| Compression | 5 | 6 | 0 | 10 | 21 |
 | Hashing | 34 | 14 | 0 | 0 | 48 |
 | Code tidy | 0 | 0 | 0 | 24 | 24 |
 | Forensics | 0 | 0 | 0 | 9 | 9 |
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 9 | 4 | 3 | 5 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **195** | **130** | **5** | **176** | **506** |
+| **Total** | **198** | **130** | **5** | **173** | **506** |
 
 ## Data format (80)
 
@@ -442,9 +442,9 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | LZMA Compress | redesigned | `lzma:compress` | The .lzma (LZMA alone) format over lzma1 0.6.1 (a port of XZ for Java), where CyberChef uses lzma-js. Compression Mode is the level parameter with the same 1 to 9 range and CyberChef's default of 7; there is no level 0, because the format has no store mode. The 13-byte header and the output are the same format, so xz --format=lzma, 7-Zip and Python's lzma module read the output, but the bytes differ from CyberChef's (a different encoder), and the outputs are pinned to lzma1 0.6.1. Out-of-range levels are E_RANGE. |
 | LZ4 Decompress | not yet |  |  |
 | LZ4 Compress | not yet |  |  |
-| LZNT1 Decompress | not yet |  |  |
-| XPRESS Decompress | not yet |  |  |
-| XPRESS LZ77+Huffman Decompress | not yet |  |  |
+| LZNT1 Decompress | covered | `lznt1:decompress` | [MS-XCA] 2.5 (the Windows NTFS compression format, RtlDecompressBuffer), written from the specification; no parameters, as in CyberChef. The chunk loop is a private primitive (an FL prototype cost 12 to 49 VM steps per output byte). Added: corrupt data is E_COERCE naming the fault (bad chunk signature, a chunk or word cut short, a match before the start of its chunk, a chunk that expands past 4096 bytes), and output past the value limit stops with E_LIMIT_VALUE. A zero header ends the data and bytes after it are ignored; empty input is empty output. Compression is not offered (CyberChef has none). |
+| XPRESS Decompress | covered | `xpress:decompress` | [MS-XCA] 2.3 and 2.4, Plain LZ77, written from the specification (the worked examples of section 3.1 are tests); no parameters. The decoder is a private primitive. Added: truncated data, a match before the start of the output and a bad long-length field are E_COERCE naming the fault, and output past the value limit stops with E_LIMIT_VALUE (a 32-bit match length allocates nothing). Empty input is E_COERCE because the stream starts with a flag word. Compression is not offered. |
+| XPRESS LZ77+Huffman Decompress | covered | `xpress:huffman-decompress` | [MS-XCA] 2.1 and 2.2, LZ77+Huffman, written from the specification (the worked example of section 3.2 is a test); no parameters. The bit-level decoder is a private primitive. Blocks of 64 KiB follow one another, each with its own 256-byte table; the end-of-data symbol (256 with all input read) or a final 64 KiB block ends the data. Added: an over-subscribed or incomplete Huffman table, truncated data, a match before the start of the output and a bad long-length field are E_COERCE naming the fault, and output past the value limit stops with E_LIMIT_VALUE. Empty input is E_COERCE. Compression is not offered. |
 
 ## Hashing (48)
 
