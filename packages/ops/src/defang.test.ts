@@ -153,5 +153,5 @@ describe("Defang URL and Fang URL", () => {
 });
 
 function process_write(mode: string, chars: number, steps: number, ms: number): void {
-  globalThis.process.stderr.write(`\ndefang-url ${mode} ${chars} chars: ${steps} steps ${ms} ms\n`);
+  process.stderr.write(`\ndefang-url ${mode} ${chars} chars: ${steps} steps ${ms} ms\n`);
 }
