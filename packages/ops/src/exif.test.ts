@@ -91,7 +91,12 @@ describe("no Exif, and not an image", () => {
   });
 
   test("other data, text and empty data are E_COERCE", async () => {
-    for (const d of [new Uint8Array(0), text("hello"), text("GIF89a......"), Uint8Array.from([0xff])]) {
+    for (const d of [
+      new Uint8Array(0),
+      text("hello"),
+      text("GIF89a......"),
+      Uint8Array.from([0xff]),
+    ]) {
       const r = await extract(d);
       expect(code(r)).toBe("E_COERCE");
       expect(msg(r)).toContain("not a JPEG, PNG, WebP or TIFF image");
@@ -100,7 +105,12 @@ describe("no Exif, and not an image", () => {
 
   test("a TIFF header with a wrong magic, a short header and an Exif block that is not TIFF", async () => {
     expect(code(await extract(text("II*\0")))).toBe("E_COERCE");
-    const noTiff = cat(Uint8Array.from([0xff, 0xd8, 0xff, 0xe1, 0, 0x12]), text("Exif\0\0"), text("garbage!"), Uint8Array.from([0xff, 0xd9]));
+    const noTiff = cat(
+      Uint8Array.from([0xff, 0xd8, 0xff, 0xe1, 0, 0x12]),
+      text("Exif\0\0"),
+      text("garbage!"),
+      Uint8Array.from([0xff, 0xd9]),
+    );
     const r = await extract(noTiff);
     expect(code(r)).toBe("E_COERCE");
     expect(msg(r)).toContain("not TIFF data");
@@ -108,22 +118,26 @@ describe("no Exif, and not an image", () => {
 });
 
 describe("cut-short and hostile Exif", () => {
-  test("every cut point is a result or E_COERCE; before the first IFD is complete it is E_COERCE", { timeout: 120_000 }, async () => {
-    const jpeg = sample("jpeg_le");
-    // 2 (SOI) + 18 (APP0) + 4 (APP1 marker and length) + 6 (Exif\0\0) = 30: the TIFF block starts there
-    for (let k = 0; k < jpeg.length; k++) {
-      const r = await extract(jpeg.subarray(0, k));
-      expect(["ok", "E_COERCE"], `cut at ${k}`).toContain(code(r));
-      if (k > 30 && k < 30 + 2 + 12 * 10) expect(code(r), `cut at ${k}`).toBe("E_COERCE");
-    }
-    const tiff = sample("tiff_be");
-    for (let k = 0; k < tiff.length; k++) {
-      const r = await extract(tiff.subarray(0, k));
-      expect(["ok", "E_COERCE"], `tiff cut at ${k}`).toContain(code(r));
-      // a TIFF is complete only when its last value is there: IFD1 and its data end the file
-      if (k < tiff.length - 40) expect(code(r), `tiff cut at ${k}`).toBe("E_COERCE");
-    }
-  });
+  test(
+    "every cut point is a result or E_COERCE; before the first IFD is complete it is E_COERCE",
+    { timeout: 120_000 },
+    async () => {
+      const jpeg = sample("jpeg_le");
+      // 2 (SOI) + 18 (APP0) + 4 (APP1 marker and length) + 6 (Exif\0\0) = 30: the TIFF block starts there
+      for (let k = 0; k < jpeg.length; k++) {
+        const r = await extract(jpeg.subarray(0, k));
+        expect(["ok", "E_COERCE"], `cut at ${k}`).toContain(code(r));
+        if (k > 30 && k < 30 + 2 + 12 * 10) expect(code(r), `cut at ${k}`).toBe("E_COERCE");
+      }
+      const tiff = sample("tiff_be");
+      for (let k = 0; k < tiff.length; k++) {
+        const r = await extract(tiff.subarray(0, k));
+        expect(["ok", "E_COERCE"], `tiff cut at ${k}`).toContain(code(r));
+        // a TIFF is complete only when its last value is there: IFD1 and its data end the file
+        if (k < tiff.length - 40) expect(code(r), `tiff cut at ${k}`).toBe("E_COERCE");
+      }
+    },
+  );
 
   test("counts, types and offsets that lie allocate nothing and fail with the offset", async () => {
     const base = sample("tiff_le");
@@ -149,7 +163,9 @@ describe("cut-short and hostile Exif", () => {
       expect(Date.now() - t0, name).toBeLessThan(2000);
     }
     expect(code(await extract(cases[0]?.[1] as Uint8Array))).toBe("E_COERCE");
-    expect(msg(await extract(cases[1]?.[1] as Uint8Array))).toContain("runs past the end of the data");
+    expect(msg(await extract(cases[1]?.[1] as Uint8Array))).toContain(
+      "runs past the end of the data",
+    );
     // an unknown value type is shown, not read
     const odd = base.slice();
     dv(odd).setUint16(10 + 2, 99, true);
