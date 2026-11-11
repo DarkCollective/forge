@@ -26,7 +26,10 @@ const hex = (u: Uint8Array) => Array.from(u, (b) => b.toString(16).padStart(2, "
 const unhex = (s: string) => Uint8Array.from(s.match(/../g) ?? [], (h) => parseInt(h, 16));
 const be = (v: bigint, n: number) => unhex(v.toString(16).padStart(2 * n, "0"));
 
-afterEach(() => vi.restoreAllMocks());
+afterEach(() => {
+  vi.restoreAllMocks();
+  vi.unstubAllGlobals();
+});
 
 // RFC 7091 section 7.1 (256 bits) and 7.2 (512 bits). e is the number of the RFC; the digest the primitive takes
 // is its little-endian bytes (what the streebog words give).
@@ -73,10 +76,10 @@ describe("gost3410 primitives", () => {
       expect(hex(sig)).toBe(v.r + v.s);
       expect(verify(curve, pub, digest, sig)).toBe(true);
       const bad = Uint8Array.from(sig);
-      bad[n + 3] ^= 1;
+      bad[n + 3] = (bad[n + 3] ?? 0) ^ 1;
       expect(verify(curve, pub, digest, bad)).toBe(false);
       const other = Uint8Array.from(digest);
-      other[0] ^= 1;
+      other[0] = (other[0] ?? 0) ^ 1;
       expect(verify(curve, pub, other, sig)).toBe(false);
     });
   }
@@ -122,7 +125,7 @@ describe("gost3410 primitives", () => {
     expect(verify("test-256", pub, digest, sig.subarray(1))).toBe(false);
     expect(verify("test-256", pub, digest, new Uint8Array(64))).toBe(false);
     const off = Uint8Array.from(pub);
-    off[63] ^= 1;
+    off[63] = (off[63] ?? 0) ^ 1;
     expect(() => verify("test-256", off, digest, sig)).toThrow(/not on the curve/);
     expect(() => verify("test-256", pub.subarray(1), digest, sig)).toThrow(/64 bytes/);
   });
@@ -140,12 +143,18 @@ describe("gost3410 primitives", () => {
   });
 
   test("it never reads the host's random generator", () => {
-    const spy = vi.spyOn(globalThis.crypto, "getRandomValues");
+    let reads = 0;
+    vi.stubGlobal("crypto", {
+      getRandomValues: (a: Uint8Array) => {
+        reads++;
+        return a;
+      },
+    });
     for (const [curve, v] of Object.entries(RFC)) {
       const pub = publicKey(curve, unhex(v.d));
       const sig = sign(curve, unhex(v.d), unhex(v.e).reverse(), unhex(v.k));
       verify(curve, pub, unhex(v.e).reverse(), sig);
     }
-    expect(spy).not.toHaveBeenCalled();
+    expect(reads).toBe(0);
   });
 });

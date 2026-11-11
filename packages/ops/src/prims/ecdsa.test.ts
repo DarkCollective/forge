@@ -49,7 +49,10 @@ const P521_D = unhex(
   "00fad06daa62ba3b25d2fb40133da757205de67f5bb0018fee8c86e1b68c7e75caa896eb32f1f47c70855836a6d16fcc1466f6d8fbec67db89ec0c08b0e996b83538",
 );
 
-afterEach(() => vi.restoreAllMocks());
+afterEach(() => {
+  vi.restoreAllMocks();
+  vi.unstubAllGlobals();
+});
 
 describe("ecdsa primitives", () => {
   test("they are the private helpers of the ecdsa words", () => {
@@ -108,7 +111,7 @@ describe("ecdsa primitives", () => {
     expect(verify("P-256", pub, digest, sig, "sha256")).toBe(true);
     expect(verify("P-256", pub, sha256(text("other")), sig, "sha256")).toBe(false);
     const bad = Uint8Array.from(sig);
-    bad[40] ^= 1;
+    bad[40] = (bad[40] ?? 0) ^ 1;
     expect(verify("P-256", pub, digest, bad, "sha256")).toBe(false);
     expect(verify("P-256", pub, digest, sig.subarray(0, 63), "sha256")).toBe(false);
     expect(verify("P-256", pub, digest, new Uint8Array(64), "sha256")).toBe(false);
@@ -175,7 +178,13 @@ describe("ecdsa primitives", () => {
   });
 
   test("it never reads the host's random generator", () => {
-    const spy = vi.spyOn(globalThis.crypto, "getRandomValues");
+    let reads = 0;
+    vi.stubGlobal("crypto", {
+      getRandomValues: (a: Uint8Array) => {
+        reads++;
+        return a;
+      },
+    });
     const mathSpy = vi.spyOn(Math, "random");
     for (const curve of Object.keys(CURVES)) {
       const d = new Uint8Array(size(curve)).fill(0x22);
@@ -186,7 +195,7 @@ describe("ecdsa primitives", () => {
       expect(verify(curve, pub, digest, sig, "sha256")).toBe(true);
       keygen(curve, new Uint8Array(seedLength(curve)).fill(3));
     }
-    expect(spy).not.toHaveBeenCalled();
+    expect(reads).toBe(0);
     expect(mathSpy).not.toHaveBeenCalled();
   });
 
@@ -219,7 +228,7 @@ describe("ecdsa primitives", () => {
   test("a public key off the curve is refused by verify and uncompressed", () => {
     const pub = Uint8Array.from(publicKey("P-256", P256_D));
     const off = Uint8Array.from(pub);
-    off[64] ^= 1;
+    off[64] = (off[64] ?? 0) ^ 1;
     expect(validPoint("P-256", pub)).toBe(true);
     expect(validPoint("P-256", off)).toBe(false);
     expect(validPoint("P-256", new Uint8Array(65))).toBe(false);
