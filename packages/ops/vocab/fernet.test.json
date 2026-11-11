@@ -1,0 +1,289 @@
+[
+  {
+    "name": "decrypt the spec token (utf8 key text)",
+    "ref": "github.com/fernet/spec generate.json / verify.json",
+    "op": "fernet:decrypt",
+    "params": {
+      "key": {
+        "value": "cw_0x689RpI-jtRR7oE8h_eQsKImvJapLeSbXpwF4e4=",
+        "enc": "utf8"
+      },
+      "ttl": 0
+    },
+    "input": {
+      "value": "gAAAAAAdwJ6wAAECAwQFBgcICQoLDA0ODy021cpGVWKZ_eEwCGM4BLLF_5CV9dOPmrhuVUPgJobwOz7JcbmrR64jVmpU4IwqDA==",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "hello",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decrypt, key as raw bytes (hex)",
+    "ref": "github.com/fernet/spec generate.json / verify.json (secret base64url-decoded to hex)",
+    "op": "fernet:decrypt",
+    "params": {
+      "key": {
+        "value": "730ff4c7af3d46923e8ed451ee813c87f790b0a226bc96a92de49b5e9c05e1ee",
+        "enc": "hex"
+      },
+      "ttl": 0
+    },
+    "input": {
+      "value": "gAAAAAAdwJ6wAAECAwQFBgcICQoLDA0ODy021cpGVWKZ_eEwCGM4BLLF_5CV9dOPmrhuVUPgJobwOz7JcbmrR64jVmpU4IwqDA==",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "hello",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decrypt without padding characters",
+    "ref": "github.com/fernet/spec generate.json / verify.json",
+    "op": "fernet:decrypt",
+    "params": {
+      "key": {
+        "value": "cw_0x689RpI-jtRR7oE8h_eQsKImvJapLeSbXpwF4e4=",
+        "enc": "utf8"
+      },
+      "ttl": 0
+    },
+    "input": {
+      "value": "gAAAAAAdwJ6wAAECAwQFBgcICQoLDA0ODy021cpGVWKZ_eEwCGM4BLLF_5CV9dOPmrhuVUPgJobwOz7JcbmrR64jVmpU4IwqDA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "hello",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "empty message (invalid.json mac-valid token)",
+    "ref": "github.com/fernet/spec invalid.json (\"expired TTL\" token, ttl 0: no time check)",
+    "op": "fernet:decrypt",
+    "params": {
+      "key": {
+        "value": "cw_0x689RpI-jtRR7oE8h_eQsKImvJapLeSbXpwF4e4=",
+        "enc": "utf8"
+      },
+      "ttl": 0
+    },
+    "input": {
+      "value": "gAAAAAAdwJ6xAAECAwQFBgcICQoLDA0OD3HkMATM5lFqGaerZ-fWPAl1-szkFVzXTuGb4hR8AKtwcaX1YdykRtfsH-p1YsUD2Q==",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "invalid: incorrect mac",
+    "ref": "github.com/fernet/spec invalid.json",
+    "op": "fernet:decrypt",
+    "params": {
+      "key": {
+        "value": "cw_0x689RpI-jtRR7oE8h_eQsKImvJapLeSbXpwF4e4=",
+        "enc": "utf8"
+      },
+      "ttl": 0
+    },
+    "input": {
+      "value": "gAAAAAAdwJ6xAAECAwQFBgcICQoLDA0OD3HkMATM5lFqGaerZ-fWPAl1-szkFVzXTuGb4hR8AKtwcaX1YdykQUFBQUFBQUFBQQ==",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "invalid: too short",
+    "ref": "github.com/fernet/spec invalid.json",
+    "op": "fernet:decrypt",
+    "params": {
+      "key": {
+        "value": "cw_0x689RpI-jtRR7oE8h_eQsKImvJapLeSbXpwF4e4=",
+        "enc": "utf8"
+      },
+      "ttl": 0
+    },
+    "input": {
+      "value": "gAAAAAAdwJ6xAAECAwQFBgcICQoLDA0OD3HkMATM5lFqGaerZ-fWPA==",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "invalid: invalid base64",
+    "ref": "github.com/fernet/spec invalid.json",
+    "op": "fernet:decrypt",
+    "params": {
+      "key": {
+        "value": "cw_0x689RpI-jtRR7oE8h_eQsKImvJapLeSbXpwF4e4=",
+        "enc": "utf8"
+      },
+      "ttl": 0
+    },
+    "input": {
+      "value": "%%%%%%%%%%%%%AECAwQFBgcICQoLDA0OD3HkMATM5lFqGaerZ-fWPAl1-szkFVzXTuGb4hR8AKtwcaX1YdykRtfsH-p1YsUD2Q==",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "invalid: payload size not multiple of block size",
+    "ref": "github.com/fernet/spec invalid.json",
+    "op": "fernet:decrypt",
+    "params": {
+      "key": {
+        "value": "cw_0x689RpI-jtRR7oE8h_eQsKImvJapLeSbXpwF4e4=",
+        "enc": "utf8"
+      },
+      "ttl": 0
+    },
+    "input": {
+      "value": "gAAAAAAdwJ6xAAECAwQFBgcICQoLDA0OD3HkMATM5lFqGaerZ-fWPOm73QeoCk9uGib28Xe5vz6oxq5nmxbx_v7mrfyudzUm",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "invalid: payload padding error",
+    "ref": "github.com/fernet/spec invalid.json",
+    "op": "fernet:decrypt",
+    "params": {
+      "key": {
+        "value": "cw_0x689RpI-jtRR7oE8h_eQsKImvJapLeSbXpwF4e4=",
+        "enc": "utf8"
+      },
+      "ttl": 0
+    },
+    "input": {
+      "value": "gAAAAAAdwJ6xAAECAwQFBgcICQoLDA0ODz4LEpdELGQAad7aNEHbf-JkLPIpuiYRLQ3RtXatOYREu2FWke6CnJNYIbkuKNqOhw==",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "invalid: incorrect IV",
+    "ref": "github.com/fernet/spec invalid.json",
+    "op": "fernet:decrypt",
+    "params": {
+      "key": {
+        "value": "cw_0x689RpI-jtRR7oE8h_eQsKImvJapLeSbXpwF4e4=",
+        "enc": "utf8"
+      },
+      "ttl": 0
+    },
+    "input": {
+      "value": "gAAAAAAdwJ6xBQECAwQFBgcICQoLDA0OD3HkMATM5lFqGaerZ-fWPAkLhFLHpGtDBRLRTZeUfWgHSv49TF2AUEZ1TIvcZjK1zQ==",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a key of the wrong size is E_RANGE",
+    "ref": "Fernet key is 32 bytes (spec: Key Format)",
+    "op": "fernet:decrypt",
+    "params": {
+      "key": {
+        "value": "00112233",
+        "enc": "hex"
+      },
+      "ttl": 0
+    },
+    "input": {
+      "value": "gAAAAAAdwJ6wAAECAwQFBgcICQoLDA0ODy021cpGVWKZ_eEwCGM4BLLF_5CV9dOPmrhuVUPgJobwOz7JcbmrR64jVmpU4IwqDA==",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "a wrong key fails the HMAC",
+    "ref": "spec: Token Verification step 4",
+    "op": "fernet:decrypt",
+    "params": {
+      "key": {
+        "value": "0000000000000000000000000000000000000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "ttl": 0
+    },
+    "input": {
+      "value": "gAAAAAAdwJ6wAAECAwQFBgcICQoLDA0ODy021cpGVWKZ_eEwCGM4BLLF_5CV9dOPmrhuVUPgJobwOz7JcbmrR64jVmpU4IwqDA==",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a negative ttl is E_RANGE",
+    "ref": "forge: ttl >= 0",
+    "op": "fernet:decrypt",
+    "params": {
+      "key": {
+        "value": "cw_0x689RpI-jtRR7oE8h_eQsKImvJapLeSbXpwF4e4=",
+        "enc": "utf8"
+      },
+      "ttl": -1
+    },
+    "input": {
+      "value": "gAAAAAAdwJ6wAAECAwQFBgcICQoLDA0ODy021cpGVWKZ_eEwCGM4BLLF_5CV9dOPmrhuVUPgJobwOz7JcbmrR64jVmpU4IwqDA==",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "encrypt: a key of the wrong size is E_RANGE (the output is random by design; see src/fernet.test.ts)",
+    "ref": "spec: Key Format (32 bytes)",
+    "op": "fernet:encrypt",
+    "params": {
+      "key": {
+        "value": "00112233",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "hello",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "encrypt: key text of the right length that is not base64 is E_COERCE",
+    "ref": "spec: Key Format (url-safe base64)",
+    "op": "fernet:encrypt",
+    "params": {
+      "key": {
+        "value": "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "hello",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]
