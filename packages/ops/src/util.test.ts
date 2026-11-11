@@ -1153,10 +1153,11 @@ describe("util:total-text", () => {
 });
 
 describe("util calendar words", () => {
-  const civil = async (days: number) =>
-    ((await runtime.call("util:civil-from-days", [int(days)])) as { stack: Value[] }).stack
-      .slice(-3)
-      .map((v) => Number(v.v));
+  const civil = async (days: number) => {
+    const r = await runtime.call("util:civil-from-days", [int(days)]);
+    if (!r.ok) throw new Error(r.error.message);
+    return r.stack.slice(-3).map((v) => Number(v.v));
+  };
 
   test.each([
     [0, [1970, 1, 1]],
