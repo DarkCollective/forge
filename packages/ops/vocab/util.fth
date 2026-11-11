@@ -27,9 +27,14 @@ IN: util
   "True for a UTF-16 surrogate code point, U+D800 to U+DFFF (55296 to 57343): not a character on its own." doc
   cp 55296 57343 between? ;
 
+: _code-chunks ( codes:list n:int -- list )
+  0 codes len n + 1 - n div range [ n * dup n + codes len min codes -rot slice codes>str ] map ;
+
+\ str-chunks slices the list of code points, not the string: slicing a string at a code point offset costs time in
+\ proportion to the offset, which made a 64 KiB string cut at 7 take seconds.
 : str-chunks ( s:str n:int -- list )
   "The pieces of s of n characters each, in order; the last one is shorter when n does not divide the length. The empty string gives no pieces. n must be at least 1." doc
-  0 s len n + 1 - n div range [ n * dup n + s len min s -rot slice ] map ;
+  s str>codes n _code-chunks ;
 
 : decode-table ( alpha:str ws:int pad:int -- bytes )
   "A 256-byte lookup table for translate: entry b is the index of byte b in alpha. A byte outside alpha gives ws for ASCII white space, pad for = and 255 otherwise; pass 255 for a marker you do not need." doc
@@ -103,6 +108,37 @@ IN: util
   v 16 int>str-radix dup len n <
   [ n over len - dup 16 <= [ "0000000000000000" swap 0 swap slice ] [ "0" swap repeat-str ] if swap cat ]
   when ;
+
+: zero-pad ( n:int w:int -- str )
+  "The decimal digits of a non-negative integer, left-padded with zeros to at least w digits (never cut): 7 and 3 give 007, 1234 and 2 give 1234." doc
+  "0" w n int>str len - 0 max repeat-str n int>str cat ;
+
+: ordinal-suffix ( n:int -- str )
+  "The English ordinal suffix of a non-negative integer: st, nd, rd or th (1 gives st, 2 nd, 3 rd, 11 to 13 th, 21 st, 111 th)." doc
+  n 100 mod dup 11 >= swap 13 <= and
+  [ "th" ]
+  [ n 10 mod dup 1 = [ drop "st" ] [ dup 2 = [ drop "nd" ] [ 3 = [ "rd" ] [ "th" ] if ] if ] if ] if ;
+
+: tdiv ( a:int b:int -- int )
+  "Integer division that rounds towards zero (div rounds down, so -7 2 div is -4 and -7 2 tdiv is -3). b must be positive." doc
+  a 0 < [ a neg b div neg ] [ a b div ] if ;
+
+: round-div ( n:int d:int -- int )
+  "n divided by d, rounded to the nearest integer, halves up. n must not be negative and d must be positive." doc
+  n 2 * d + d 2 * div ;
+
+: contains? ( items:list x:any -- bool )
+  "True when some element of the list equals x (a linear search; an empty list has nothing)." doc
+  items [ x = ] filter len 0 > ;
+
+: total-text ( items:list total:bool -- str )
+  "The items one per line; with total true, a line Total found: N (N is the number of items) and a blank line go in front. The output of the extractors and the date finder." doc
+  items "\n" join
+  total [ "Total found: " items len int>str cat "\n\n" cat swap cat ] when ;
+
+: match-texts ( s:str pattern:str flags:str -- list )
+  "The text of every match of a regular expression in s, in order, as a list of strings (regex:find-all keeps position and groups too; this keeps the text only). flags are the regex flags, empty for none." doc
+  s pattern flags regex:find-all [ "text" get ] map ;
 
 : starts-with? ( s:str prefix:str -- bool )
   "True when s begins with prefix; false (not an error) when s is shorter than prefix. Every string starts with the empty string." doc
@@ -423,3 +459,43 @@ IN: util
 : b64url-decode ( text:bytes -- bytes )
   "The bytes of URL-safe Base64 text (given as bytes), with or without padding; text that is not URL-safe Base64 is E_COERCE." doc
   text "url" base64:decode ;
+
+\ ---- calendar (days since 1970-01-01, proleptic Gregorian; Howard Hinnant's algorithms, public domain) ----
+
+: _days-adj ( y:int m:int d:int -- int )
+  y 400 div 146097 *
+  y 400 mod dup 365 * over 4 div + swap 100 div -
+  +
+  m 9 + 12 mod 153 * 2 + 5 div d + 1 - +
+  719468 - ;
+
+: days-from-civil ( y:int m:int d:int -- int )
+  "The number of days from 1970-01-01 to year y, month m (1 to 12) and day d (before 1970 negative). The day may run past the end of the month (31 February is early March), and the year may be zero or negative." doc
+  y m 2 <= [ 1 ] [ 0 ] if - m d _days-adj ;
+
+\ Step 4 of civil-from-days: mp counts months from March; the year ticks over in January and February.
+: _civil4 ( mp:int doy:int y0:int -- int int int )
+  y0 mp 2 + 12 div + mp 2 + 12 mod 1 + doy 153 mp * 2 + 5 div - 1 + ;
+
+: _civil3 ( doy:int y0:int -- int int int )
+  doy 5 * 2 + 153 div doy y0 _civil4 ;
+
+: _civil2 ( yoe:int era:int doe:int -- int int int )
+  doe 365 yoe * yoe 4 div + yoe 100 div - - yoe era 400 * + _civil3 ;
+
+: _civil1 ( era:int doe:int -- int int int )
+  doe doe 1460 div - doe 36524 div + doe 146096 div - 365 div era doe _civil2 ;
+
+: civil-from-days ( days:int -- int int int )
+  "The year, month (1 to 12) and day of the month of a day count from 1970-01-01, as three integers on the stack (year first). Floor division makes it right before 1970 too; the inverse of days-from-civil." doc
+  days 719468 + dup 146097 div swap 146097 mod _civil1 ;
+
+\ YYYY-MM-DDTHH:MM:SS.mmm from a year, month, day and the milliseconds into the day.
+: _stamp-text ( y:int m:int d:int tod:int -- str )
+  y 4 zero-pad "-" cat m 2 zero-pad cat "-" cat d 2 zero-pad cat "T" cat
+  tod 3600000 div 2 zero-pad cat ":" cat tod 60000 div 60 mod 2 zero-pad cat ":" cat
+  tod 1000 div 60 mod 2 zero-pad cat "." cat tod 1000 mod 3 zero-pad cat ;
+
+: iso-from-ms ( ms:int -- str )
+  "The UTC date and time of a Unix time in milliseconds as ISO 8601 text to the millisecond, without the zone letter: 1700000000123 gives 2023-11-14T22:13:20.123 (write Z after it). The year is at least four digits; times before the year 0 are not supported." doc
+  ms 86400000 div civil-from-days ms 86400000 mod _stamp-text ;

@@ -6,12 +6,8 @@
 \ items), so no operation is quadratic.
 IN: set
 
-\ The distinct items, in order of first appearance (a record keeps the first position of a key).
-: _unique ( items:list -- list )
-  items items zip >record keys ;
-
 : _parse-set ( text:str delim:str -- list )
-  text "" = [ { } ] [ text delim split _unique ] if ;
+  text "" = [ { } ] [ text delim split list:unique ] if ;
 
 \ The sets of the input, at least `least` of them (exactly that many when exact is true; the messages say 2, the only count used).
 : _sets ( data:str sample:str item:str least:int exact:bool -- list )
@@ -39,7 +35,7 @@ IN: set
   a b _minus b a _minus cat ;
 
 : _union-all ( sets:list -- list )
-  sets { } [ cat ] reduce _unique ;
+  sets util:list-flatten list:unique ;
 
 \ The first set and the union of all the others: ( sets -- first others ).
 : _rest-union ( sets:list -- list list )

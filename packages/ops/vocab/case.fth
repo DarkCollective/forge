@@ -36,7 +36,7 @@ USING: util ;
 
 \ The tokens of a text for all-casings: one cased letter, or a run of anything else.
 : _casing-tokens ( s:str -- list )
-  s "\\p{Lu}|\\p{Ll}|\\p{Lt}|[^\\p{Lu}\\p{Ll}\\p{Lt}]+" "" regex:find-all [ "text" get ] map ;
+  s "\\p{Lu}|\\p{Ll}|\\p{Lt}|[^\\p{Lu}\\p{Ll}\\p{Lt}]+" "" util:match-texts ;
 
 : _cased? ( tok:str -- bool )
   tok len 1 = tok upper tok lower <> and ;
@@ -84,27 +84,25 @@ USING: util ;
     [ t 0 1 slice t 2 3 slice _letter-range-other ] [ "" ] if ]
   if ;
 
-: _has ( xs:list x:str -- bool )
-  xs [ x = ] filter len 0 > ;
-
 : _add-new ( acc:list x:str -- list )
-  x "" = [ acc ] [ acc x _has [ acc ] [ acc x append ] if ] if ;
+  x "" = [ acc ] [ acc x util:contains? [ acc ] [ acc x append ] if ] if ;
 
 : _pieces ( pattern:str -- list )
   pattern
   "\\\\(?:x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4}|u\\{[0-9A-Fa-f]+\\}|[pP]\\{[^}]*\\}|k<[^>]*>|c[A-Za-z]|[\\s\\S])|\\(\\?<[A-Za-z_$][^>]*>|\\[(?:\\\\[\\s\\S]|[^\\]\\\\])*\\]|[\\s\\S]"
-  "" regex:find-all [ "text" get ] map ;
+  "" util:match-texts ;
 
 \ The pieces of the inside of a class: an escape, a range of two characters, or a character.
 : _class-tokens ( body:str -- list )
   body
   "(?:\\\\(?:x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4}|u\\{[0-9A-Fa-f]+\\}|[pP]\\{[^}]*\\}|c[A-Za-z]|[\\s\\S])|[^\\\\])-(?:\\\\(?:x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4}|u\\{[0-9A-Fa-f]+\\}|[pP]\\{[^}]*\\}|c[A-Za-z]|[\\s\\S])|[^\\\\])|\\\\(?:x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4}|u\\{[0-9A-Fa-f]+\\}|[pP]\\{[^}]*\\}|c[A-Za-z]|[\\s\\S])|[^\\\\]"
-  "" regex:find-all [ "text" get ] map ;
+  "" util:match-texts ;
 
 : _neg? ( cls:str -- bool )
   cls len 2 > [ cls 1 2 slice "^" = ] [ false ] if ;
 
 \ The inside of a class "[...]" or "[^...]".
+\ Kept private: it only resembles hexdump:_uncolon (see the ops README, Justified exceptions).
 : _body ( cls:str -- str )
   cls cls _neg? [ 2 ] [ 1 ] if cls len 1 - slice ;
 
@@ -131,7 +129,7 @@ USING: util ;
 : _keep ( acc:list x:str -- list )
   x _other-tok dup "" =
   [ drop acc x append ]
-  [ acc swap _has [ acc ] [ acc x append ] if ]
+  [ acc swap util:contains? [ acc ] [ acc x append ] if ]
   if ;
 
 \ A class that is left with one plain letter and is not negated needs no brackets.
