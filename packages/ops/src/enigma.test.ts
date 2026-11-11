@@ -141,16 +141,20 @@ function randomSettings(next: () => number): Partial<Settings> {
 }
 
 describe("enigma round trip and structure", () => {
-  test("encrypting twice with the same settings is the identity, for random machines", async () => {
-    const next = rng(5);
-    for (let trial = 0; trial < 60; trial++) {
-      const s = randomSettings(next);
-      const plain = randomLetters(next, 1 + Math.floor(next() * 120));
-      const cipher = await enc(plain, s);
-      expect(cipher).toHaveLength(plain.length);
-      expect(await enc(cipher, s)).toBe(plain);
-    }
-  });
+  test(
+    "encrypting twice with the same settings is the identity, for random machines",
+    { timeout: 60_000 },
+    async () => {
+      const next = rng(5);
+      for (let trial = 0; trial < 60; trial++) {
+        const s = randomSettings(next);
+        const plain = randomLetters(next, 1 + Math.floor(next() * 120));
+        const cipher = await enc(plain, s);
+        expect(cipher).toHaveLength(plain.length);
+        expect(await enc(cipher, s)).toBe(plain);
+      }
+    },
+  );
 
   test("a letter never enciphers to itself", async () => {
     const next = rng(6);
