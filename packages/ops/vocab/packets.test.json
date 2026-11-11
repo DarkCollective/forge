@@ -1,0 +1,1788 @@
+[
+  {
+    "name": "TCP: a SYN with MSS, SACK permitted, timestamps, NOP and window scale",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-tcp",
+    "params": {},
+    "input": {
+      "value": "c82201bbaabbccdd00000000a002faf012340000020405b40402080a1234abcd0000000001030307",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Source port: 51234\nDestination port: 443\nSequence number: 2864434397\nAcknowledgement number: 0\nData offset: 10 (40 bytes)\nReserved bits: 0\nFlags: 0x002 (SYN)\n  NS: 0 (Not set)\n  CWR: 0 (Not set)\n  ECE: 0 (Not set)\n  URG: 0 (Not set)\n  ACK: 0 (Not set)\n  PSH: 0 (Not set)\n  RST: 0 (Not set)\n  SYN: 1 (Set)\n  FIN: 0 (Not set)\nWindow size: 64240\nChecksum: 0x1234\nUrgent pointer: 0\nOptions:\n  Maximum Segment Size (2): 1460\n  SACK Permitted (4)\n  Timestamps (8): TSval 305441741, TSecr 0\n  No-Operation (1)\n  Window Scale (3): shift 7 (multiplier 128)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "TCP: a SYN-ACK with MSS, NOP, window scale, SACK permitted",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-tcp",
+    "params": {},
+    "input": {
+      "value": "01bbc822000003e8aabbccde8012fe8812340000020405640103030804020101",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Source port: 443\nDestination port: 51234\nSequence number: 1000\nAcknowledgement number: 2864434398\nData offset: 8 (32 bytes)\nReserved bits: 0\nFlags: 0x012 (ACK, SYN)\n  NS: 0 (Not set)\n  CWR: 0 (Not set)\n  ECE: 0 (Not set)\n  URG: 0 (Not set)\n  ACK: 1 (Set)\n  PSH: 0 (Not set)\n  RST: 0 (Not set)\n  SYN: 1 (Set)\n  FIN: 0 (Not set)\nWindow size: 65160\nChecksum: 0x1234\nUrgent pointer: 0\nOptions:\n  Maximum Segment Size (2): 1380\n  No-Operation (1)\n  Window Scale (3): shift 8 (multiplier 256)\n  SACK Permitted (4)\n  No-Operation (1)\n  No-Operation (1)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "TCP: a PSH-ACK with timestamps and an HTTP request",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-tcp",
+    "params": {},
+    "input": {
+      "value": "c82201bbaabbccde000003e9801801f6123400000101080a0000000700000009474554202f20485454502f312e310d0a486f73743a20610d0a0d0a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Source port: 51234\nDestination port: 443\nSequence number: 2864434398\nAcknowledgement number: 1001\nData offset: 8 (32 bytes)\nReserved bits: 0\nFlags: 0x018 (ACK, PSH)\n  NS: 0 (Not set)\n  CWR: 0 (Not set)\n  ECE: 0 (Not set)\n  URG: 0 (Not set)\n  ACK: 1 (Set)\n  PSH: 1 (Set)\n  RST: 0 (Not set)\n  SYN: 0 (Not set)\n  FIN: 0 (Not set)\nWindow size: 502\nChecksum: 0x1234\nUrgent pointer: 0\nOptions:\n  No-Operation (1)\n  No-Operation (1)\n  Timestamps (8): TSval 7, TSecr 9\nPayload (27 bytes): 474554202f20485454502f312e310d0a486f73743a20610d0a0d0a",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "TCP: two SACK blocks",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-tcp",
+    "params": {},
+    "input": {
+      "value": "005004d20000000100000002a0100064123400000101051200000064000000c80000012c00000190",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Source port: 80\nDestination port: 1234\nSequence number: 1\nAcknowledgement number: 2\nData offset: 10 (40 bytes)\nReserved bits: 0\nFlags: 0x010 (ACK)\n  NS: 0 (Not set)\n  CWR: 0 (Not set)\n  ECE: 0 (Not set)\n  URG: 0 (Not set)\n  ACK: 1 (Set)\n  PSH: 0 (Not set)\n  RST: 0 (Not set)\n  SYN: 0 (Not set)\n  FIN: 0 (Not set)\nWindow size: 100\nChecksum: 0x1234\nUrgent pointer: 0\nOptions:\n  No-Operation (1)\n  No-Operation (1)\n  SACK (5): 100-200, 300-400",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "TCP: the Fast Open Cookie and an unnamed kind (hex)",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-tcp",
+    "params": {},
+    "input": {
+      "value": "0001000200000003000000049004000012340000220adeadbeef010203046304abcd00000000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Source port: 1\nDestination port: 2\nSequence number: 3\nAcknowledgement number: 4\nData offset: 9 (36 bytes)\nReserved bits: 0\nFlags: 0x004 (RST)\n  NS: 0 (Not set)\n  CWR: 0 (Not set)\n  ECE: 0 (Not set)\n  URG: 0 (Not set)\n  ACK: 0 (Not set)\n  PSH: 0 (Not set)\n  RST: 1 (Set)\n  SYN: 0 (Not set)\n  FIN: 0 (Not set)\nWindow size: 0\nChecksum: 0x1234\nUrgent pointer: 0\nOptions:\n  Fast Open Cookie (34), length 10: deadbeef01020304\n  Unknown (99), length 4: abcd\n  End of Option List (0)\nPayload (2 bytes): 0000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "TCP: NOP then End of Option List and a data byte",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-tcp",
+    "params": {},
+    "input": {
+      "value": "00070008000000090000000a6001000b123400000100000078",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Source port: 7\nDestination port: 8\nSequence number: 9\nAcknowledgement number: 10\nData offset: 6 (24 bytes)\nReserved bits: 0\nFlags: 0x001 (FIN)\n  NS: 0 (Not set)\n  CWR: 0 (Not set)\n  ECE: 0 (Not set)\n  URG: 0 (Not set)\n  ACK: 0 (Not set)\n  PSH: 0 (Not set)\n  RST: 0 (Not set)\n  SYN: 0 (Not set)\n  FIN: 1 (Set)\nWindow size: 11\nChecksum: 0x1234\nUrgent pointer: 0\nOptions:\n  No-Operation (1)\n  End of Option List (0)\nPayload (1 bytes): 78",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "TCP: all nine flags set, reserved bits 5, urgent pointer",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-tcp",
+    "params": {},
+    "input": {
+      "value": "00070008000000090000000a5bff000b1234004d",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Source port: 7\nDestination port: 8\nSequence number: 9\nAcknowledgement number: 10\nData offset: 5 (20 bytes)\nReserved bits: 5\nFlags: 0x1ff (NS, CWR, ECE, URG, ACK, PSH, RST, SYN, FIN)\n  NS: 1 (Set)\n  CWR: 1 (Set)\n  ECE: 1 (Set)\n  URG: 1 (Set)\n  ACK: 1 (Set)\n  PSH: 1 (Set)\n  RST: 1 (Set)\n  SYN: 1 (Set)\n  FIN: 1 (Set)\nWindow size: 11\nChecksum: 0x1234\nUrgent pointer: 77",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "TCP: FIN, PSH, URG with no options and no data",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-tcp",
+    "params": {},
+    "input": {
+      "value": "1388001900000000000000005029000112340000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Source port: 5000\nDestination port: 25\nSequence number: 0\nAcknowledgement number: 0\nData offset: 5 (20 bytes)\nReserved bits: 0\nFlags: 0x029 (URG, PSH, FIN)\n  NS: 0 (Not set)\n  CWR: 0 (Not set)\n  ECE: 0 (Not set)\n  URG: 1 (Set)\n  ACK: 0 (Not set)\n  PSH: 1 (Set)\n  RST: 0 (Not set)\n  SYN: 0 (Not set)\n  FIN: 1 (Set)\nWindow size: 1\nChecksum: 0x1234\nUrgent pointer: 0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "TCP raw bytes input",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-tcp",
+    "params": {
+      "format": "raw"
+    },
+    "input": {
+      "value": "c82201bbaabbccdd00000000a002faf012340000020405b40402080a1234abcd0000000001030307",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Source port: 51234\nDestination port: 443\nSequence number: 2864434397\nAcknowledgement number: 0\nData offset: 10 (40 bytes)\nReserved bits: 0\nFlags: 0x002 (SYN)\n  NS: 0 (Not set)\n  CWR: 0 (Not set)\n  ECE: 0 (Not set)\n  URG: 0 (Not set)\n  ACK: 0 (Not set)\n  PSH: 0 (Not set)\n  RST: 0 (Not set)\n  SYN: 1 (Set)\n  FIN: 0 (Not set)\nWindow size: 64240\nChecksum: 0x1234\nUrgent pointer: 0\nOptions:\n  Maximum Segment Size (2): 1460\n  SACK Permitted (4)\n  Timestamps (8): TSval 305441741, TSecr 0\n  No-Operation (1)\n  Window Scale (3): shift 7 (multiplier 128)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "TCP hex with white space and new lines",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-tcp",
+    "params": {},
+    "input": {
+      "value": "13880019 00000000 00000000 50290001 12340000\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Source port: 5000\nDestination port: 25\nSequence number: 0\nAcknowledgement number: 0\nData offset: 5 (20 bytes)\nReserved bits: 0\nFlags: 0x029 (URG, PSH, FIN)\n  NS: 0 (Not set)\n  CWR: 0 (Not set)\n  ECE: 0 (Not set)\n  URG: 1 (Set)\n  ACK: 0 (Not set)\n  PSH: 1 (Set)\n  RST: 0 (Not set)\n  SYN: 0 (Not set)\n  FIN: 1 (Set)\nWindow size: 1\nChecksum: 0x1234\nUrgent pointer: 0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Strip TCP header: options and data",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:strip-tcp",
+    "params": {},
+    "input": {
+      "value": "c82201bbaabbccde000003e9801801f6123400000101080a0000000700000009474554202f20485454502f312e310d0a486f73743a20610d0a0d0a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "474554202f20485454502f312e310d0a486f73743a20610d0a0d0a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Strip TCP header: no data",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:strip-tcp",
+    "params": {},
+    "input": {
+      "value": "c82201bbaabbccdd00000000a002faf012340000020405b40402080a1234abcd0000000001030307",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Strip TCP header: raw input",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:strip-tcp",
+    "params": {
+      "format": "raw"
+    },
+    "input": {
+      "value": "00070008000000090000000a6001000b123400000100000078",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "78",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "TCP: empty input",
+    "ref": "cut short",
+    "op": "packets:parse-tcp",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "TCP: 19 bytes",
+    "ref": "cut short",
+    "op": "packets:parse-tcp",
+    "params": {},
+    "input": {
+      "value": "13880019000000000000000050290001123400",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "TCP: data offset 4",
+    "ref": "data offset below 5",
+    "op": "packets:parse-tcp",
+    "params": {},
+    "input": {
+      "value": "1388001900000000000000004029000112340000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "TCP: data offset 8 but only 28 bytes",
+    "ref": "header cut short",
+    "op": "packets:parse-tcp",
+    "params": {},
+    "input": {
+      "value": "00010002000000030000000480100005123400000101010101010101",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "TCP: MSS option with length 5",
+    "ref": "option length",
+    "op": "packets:parse-tcp",
+    "params": {},
+    "input": {
+      "value": "0001000200000003000000047002000512340000020505b400010101",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "TCP: option length 1",
+    "ref": "option length below 2",
+    "op": "packets:parse-tcp",
+    "params": {},
+    "input": {
+      "value": "000100020000000300000004600200051234000008010101",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "TCP: option length past the header",
+    "ref": "option overrun",
+    "op": "packets:parse-tcp",
+    "params": {},
+    "input": {
+      "value": "000100020000000300000004600200051234000003090101",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "TCP: kind without a length byte",
+    "ref": "option cut",
+    "op": "packets:parse-tcp",
+    "params": {},
+    "input": {
+      "value": "000100020000000300000004600200051234000001010108",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "TCP: bad hex",
+    "ref": "not hex",
+    "op": "packets:parse-tcp",
+    "params": {},
+    "input": {
+      "value": "zz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "Strip TCP header: 19 bytes",
+    "ref": "cut short",
+    "op": "packets:strip-tcp",
+    "params": {},
+    "input": {
+      "value": "13880019000000000000000050290001123400",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "UDP: a DNS query",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-udp",
+    "params": {},
+    "input": {
+      "value": "cf84003500259a3c1a2b01000001000000000000076578616d706c6503636f6d0000010001",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Source port: 53124\nDestination port: 53\nLength: 37 bytes\nChecksum: 0x9a3c\nPayload (29 bytes): 1a2b01000001000000000000076578616d706c6503636f6d0000010001",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "UDP: padding after the datagram is dropped",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-udp",
+    "params": {},
+    "input": {
+      "value": "cf84003500259a3c1a2b01000001000000000000076578616d706c6503636f6d0000010001000000000000000000000000000000000000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Source port: 53124\nDestination port: 53\nLength: 37 bytes\nChecksum: 0x9a3c\nPayload (29 bytes): 1a2b01000001000000000000076578616d706c6503636f6d0000010001",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "UDP: empty datagram",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-udp",
+    "params": {},
+    "input": {
+      "value": "0043004400080000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Source port: 67\nDestination port: 68\nLength: 8 bytes\nChecksum: 0x0000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "UDP: length beyond the data (a cut capture)",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-udp",
+    "params": {},
+    "input": {
+      "value": "cf84003500259a3c1a2b01000001000000000000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Source port: 53124\nDestination port: 53\nLength: 37 bytes (only 20 are present)\nChecksum: 0x9a3c\nPayload (12 bytes): 1a2b01000001000000000000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "UDP: length 0 means up to the end",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-udp",
+    "params": {},
+    "input": {
+      "value": "00010002000000036a756d626f",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Source port: 1\nDestination port: 2\nLength: 0 bytes\nChecksum: 0x0003\nPayload (5 bytes): 6a756d626f",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "UDP: raw input",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-udp",
+    "params": {
+      "format": "raw"
+    },
+    "input": {
+      "value": "cf84003500259a3c1a2b01000001000000000000076578616d706c6503636f6d0000010001",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Source port: 53124\nDestination port: 53\nLength: 37 bytes\nChecksum: 0x9a3c\nPayload (29 bytes): 1a2b01000001000000000000076578616d706c6503636f6d0000010001",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Strip UDP header",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:strip-udp",
+    "params": {},
+    "input": {
+      "value": "cf84003500259a3c1a2b01000001000000000000076578616d706c6503636f6d0000010001",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1a2b01000001000000000000076578616d706c6503636f6d0000010001",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Strip UDP header: link padding dropped",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:strip-udp",
+    "params": {},
+    "input": {
+      "value": "cf84003500259a3c1a2b01000001000000000000076578616d706c6503636f6d0000010001000000000000000000000000000000000000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1a2b01000001000000000000076578616d706c6503636f6d0000010001",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Strip UDP header: length beyond the data keeps all",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:strip-udp",
+    "params": {},
+    "input": {
+      "value": "cf84003500259a3c1a2b01000001000000000000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1a2b01000001000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Strip UDP header: length 0 keeps all",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:strip-udp",
+    "params": {
+      "format": "raw"
+    },
+    "input": {
+      "value": "00010002000000036a756d626f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6a756d626f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "UDP: empty input",
+    "ref": "cut short",
+    "op": "packets:parse-udp",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "UDP: 7 bytes",
+    "ref": "cut short",
+    "op": "packets:parse-udp",
+    "params": {},
+    "input": {
+      "value": "cf84003500259a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "UDP: length 7",
+    "ref": "length below the header",
+    "op": "packets:parse-udp",
+    "params": {},
+    "input": {
+      "value": "0001000200070000616263",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "Strip UDP header: length 3",
+    "ref": "length below the header",
+    "op": "packets:strip-udp",
+    "params": {},
+    "input": {
+      "value": "0001000200030000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "IPv4: a SYN header",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-ipv4",
+    "params": {},
+    "input": {
+      "value": "4500003c1c4640004006b262ac10fe01c0000201",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Version: 4\nInternet Header Length (IHL): 5 (20 bytes)\nDifferentiated Services Code Point (DSCP): 0\nExplicit Congestion Notification (ECN): 0\nTotal length: 60 bytes\nIdentification: 0x1c46 (7238)\nFlags: 0x2\n  Reserved bit: 0 (Not set)\n  Don't fragment: 1 (Set)\n  More fragments: 0 (Not set)\nFragment offset: 0 (0 bytes)\nTime-To-Live: 64\nProtocol: 6 (TCP)\nHeader checksum: 0xb262 (valid)\nSource IP address: 172.16.254.1\nDestination IP address: 192.0.2.1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "IPv4: DSCP 46 (EF) and DF clear",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-ipv4",
+    "params": {},
+    "input": {
+      "value": "45b80039beef0000801167050a0000070a000001",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Version: 4\nInternet Header Length (IHL): 5 (20 bytes)\nDifferentiated Services Code Point (DSCP): 46\nExplicit Congestion Notification (ECN): 0\nTotal length: 57 bytes\nIdentification: 0xbeef (48879)\nFlags: 0x0\n  Reserved bit: 0 (Not set)\n  Don't fragment: 0 (Not set)\n  More fragments: 0 (Not set)\nFragment offset: 0 (0 bytes)\nTime-To-Live: 128\nProtocol: 17 (UDP)\nHeader checksum: 0x6705 (valid)\nSource IP address: 10.0.0.7\nDestination IP address: 10.0.0.1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "IPv4: ICMP, TTL 255",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-ipv4",
+    "params": {},
+    "input": {
+      "value": "4500001c00004000ff016dd30808040401010101",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Version: 4\nInternet Header Length (IHL): 5 (20 bytes)\nDifferentiated Services Code Point (DSCP): 0\nExplicit Congestion Notification (ECN): 0\nTotal length: 28 bytes\nIdentification: 0x0000 (0)\nFlags: 0x2\n  Reserved bit: 0 (Not set)\n  Don't fragment: 1 (Set)\n  More fragments: 0 (Not set)\nFragment offset: 0 (0 bytes)\nTime-To-Live: 255\nProtocol: 1 (ICMP)\nHeader checksum: 0x6dd3 (valid)\nSource IP address: 8.8.4.4\nDestination IP address: 1.1.1.1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "IPv4: a fragment: more fragments set, offset 185",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-ipv4",
+    "params": {},
+    "input": {
+      "value": "45000078000120b901112ca8ac10fe01c0000201",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Version: 4\nInternet Header Length (IHL): 5 (20 bytes)\nDifferentiated Services Code Point (DSCP): 0\nExplicit Congestion Notification (ECN): 0\nTotal length: 120 bytes\nIdentification: 0x0001 (1)\nFlags: 0x1\n  Reserved bit: 0 (Not set)\n  Don't fragment: 0 (Not set)\n  More fragments: 1 (Set)\nFragment offset: 185 (1480 bytes)\nTime-To-Live: 1\nProtocol: 17 (UDP)\nHeader checksum: 0x2ca8 (valid)\nSource IP address: 172.16.254.1\nDestination IP address: 192.0.2.1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "IPv4: the reserved bit and ECN 3",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-ipv4",
+    "params": {},
+    "input": {
+      "value": "450300141c46800040067287ac10fe01c0000201",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Version: 4\nInternet Header Length (IHL): 5 (20 bytes)\nDifferentiated Services Code Point (DSCP): 0\nExplicit Congestion Notification (ECN): 3\nTotal length: 20 bytes\nIdentification: 0x1c46 (7238)\nFlags: 0x4\n  Reserved bit: 1 (Set)\n  Don't fragment: 0 (Not set)\n  More fragments: 0 (Not set)\nFragment offset: 0 (0 bytes)\nTime-To-Live: 64\nProtocol: 6 (TCP)\nHeader checksum: 0x7287 (valid)\nSource IP address: 172.16.254.1\nDestination IP address: 192.0.2.1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "IPv4: a wrong checksum",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-ipv4",
+    "params": {},
+    "input": {
+      "value": "450000141c46400040060000ac10fe01c0000201",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Version: 4\nInternet Header Length (IHL): 5 (20 bytes)\nDifferentiated Services Code Point (DSCP): 0\nExplicit Congestion Notification (ECN): 0\nTotal length: 20 bytes\nIdentification: 0x1c46 (7238)\nFlags: 0x2\n  Reserved bit: 0 (Not set)\n  Don't fragment: 1 (Set)\n  More fragments: 0 (Not set)\nFragment offset: 0 (0 bytes)\nTime-To-Live: 64\nProtocol: 6 (TCP)\nHeader checksum: 0x0000 (invalid, it should be 0xb28a)\nSource IP address: 172.16.254.1\nDestination IP address: 192.0.2.1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "IPv4: Router Alert, Record Route, NOP, End of Option List",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-ipv4",
+    "params": {},
+    "input": {
+      "value": "49b800241c4620b90101c7f80102030405060708940400000707040a0000010100000000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Version: 4\nInternet Header Length (IHL): 9 (36 bytes)\nDifferentiated Services Code Point (DSCP): 46\nExplicit Congestion Notification (ECN): 0\nTotal length: 36 bytes\nIdentification: 0x1c46 (7238)\nFlags: 0x1\n  Reserved bit: 0 (Not set)\n  Don't fragment: 0 (Not set)\n  More fragments: 1 (Set)\nFragment offset: 185 (1480 bytes)\nTime-To-Live: 1\nProtocol: 1 (ICMP)\nHeader checksum: 0xc7f8 (valid)\nSource IP address: 1.2.3.4\nDestination IP address: 5.6.7.8\nOptions:\n  Router Alert (148), length 4: 0000\n  Record Route (7), length 7: 040a000001\n  No Operation (1)\n  End of Option List (0)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "IPv4: Loose Source Route, Strict Source Route, Time Stamp",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-ipv4",
+    "params": {},
+    "input": {
+      "value": "4a0000281c4640004006d672ac10fe01c00002018307040a00000189036344040500010101010000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Version: 4\nInternet Header Length (IHL): 10 (40 bytes)\nDifferentiated Services Code Point (DSCP): 0\nExplicit Congestion Notification (ECN): 0\nTotal length: 40 bytes\nIdentification: 0x1c46 (7238)\nFlags: 0x2\n  Reserved bit: 0 (Not set)\n  Don't fragment: 1 (Set)\n  More fragments: 0 (Not set)\nFragment offset: 0 (0 bytes)\nTime-To-Live: 64\nProtocol: 6 (TCP)\nHeader checksum: 0xd672 (valid)\nSource IP address: 172.16.254.1\nDestination IP address: 192.0.2.1\nOptions:\n  Loose Source Route (131), length 7: 040a000001\n  Strict Source Route (137), length 3: 63\n  Time Stamp (68), length 4: 0500\n  No Operation (1)\n  No Operation (1)\n  No Operation (1)\n  No Operation (1)\n  End of Option List (0)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "IPv4: raw bytes, a whole datagram (only the header is read)",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-ipv4",
+    "params": {
+      "format": "raw"
+    },
+    "input": {
+      "value": "4500003c1c4640004006b262ac10fe01c0000201c82201bbaabbccdd00000000a002faf012340000020405b40402080a1234abcd0000000001030307",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Version: 4\nInternet Header Length (IHL): 5 (20 bytes)\nDifferentiated Services Code Point (DSCP): 0\nExplicit Congestion Notification (ECN): 0\nTotal length: 60 bytes\nIdentification: 0x1c46 (7238)\nFlags: 0x2\n  Reserved bit: 0 (Not set)\n  Don't fragment: 1 (Set)\n  More fragments: 0 (Not set)\nFragment offset: 0 (0 bytes)\nTime-To-Live: 64\nProtocol: 6 (TCP)\nHeader checksum: 0xb262 (valid)\nSource IP address: 172.16.254.1\nDestination IP address: 192.0.2.1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "IPv4: uppercase hex",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-ipv4",
+    "params": {},
+    "input": {
+      "value": "4500001C00004000FF016DD30808040401010101",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Version: 4\nInternet Header Length (IHL): 5 (20 bytes)\nDifferentiated Services Code Point (DSCP): 0\nExplicit Congestion Notification (ECN): 0\nTotal length: 28 bytes\nIdentification: 0x0000 (0)\nFlags: 0x2\n  Reserved bit: 0 (Not set)\n  Don't fragment: 1 (Set)\n  More fragments: 0 (Not set)\nFragment offset: 0 (0 bytes)\nTime-To-Live: 255\nProtocol: 1 (ICMP)\nHeader checksum: 0x6dd3 (valid)\nSource IP address: 8.8.4.4\nDestination IP address: 1.1.1.1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "IPv4: empty input",
+    "ref": "cut short",
+    "op": "packets:parse-ipv4",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "IPv4: 19 bytes",
+    "ref": "cut short",
+    "op": "packets:parse-ipv4",
+    "params": {},
+    "input": {
+      "value": "4500003c1c4640004006b262ac10fe01c00002",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "IPv4: version 6",
+    "ref": "wrong version",
+    "op": "packets:parse-ipv4",
+    "params": {},
+    "input": {
+      "value": "6000003c1c4640004006b262ac10fe01c0000201",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "IPv4: IHL 4",
+    "ref": "IHL below 5",
+    "op": "packets:parse-ipv4",
+    "params": {},
+    "input": {
+      "value": "4400003c1c4640004006b262ac10fe01c0000201",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "IPv4: IHL 6 but 20 bytes",
+    "ref": "header cut short",
+    "op": "packets:parse-ipv4",
+    "params": {},
+    "input": {
+      "value": "4600003c1c4640004006b262ac10fe01c0000201",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "IPv4: option with length 1",
+    "ref": "option length",
+    "op": "packets:parse-ipv4",
+    "params": {},
+    "input": {
+      "value": "460000181c4640004006aa85ac10fe01c000020107010000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "IPv4: option length past the header",
+    "ref": "option overrun",
+    "op": "packets:parse-ipv4",
+    "params": {},
+    "input": {
+      "value": "460000181c4640004006aa5eac10fe01c000020107280000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "IPv4: option without a length byte",
+    "ref": "option cut",
+    "op": "packets:parse-ipv4",
+    "params": {},
+    "input": {
+      "value": "460000181c4640004006af7eac10fe01c000020101010107",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "IPv4: bad hex digit",
+    "ref": "not hex",
+    "op": "packets:parse-ipv4",
+    "params": {},
+    "input": {
+      "value": "45zz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "IPv4: odd number of hex digits",
+    "ref": "not hex",
+    "op": "packets:parse-ipv4",
+    "params": {},
+    "input": {
+      "value": "450",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "Strip IPv4 header: TCP payload",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:strip-ipv4",
+    "params": {},
+    "input": {
+      "value": "4500003c1c4640004006b262ac10fe01c0000201c82201bbaabbccdd00000000a002faf012340000020405b40402080a1234abcd0000000001030307",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c82201bbaabbccdd00000000a002faf012340000020405b40402080a1234abcd0000000001030307",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Strip IPv4 header: Ethernet padding after the datagram is dropped",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:strip-ipv4",
+    "params": {},
+    "input": {
+      "value": "45b80039beef0000801167050a0000070a000001cf84003500259a3c1a2b01000001000000000000076578616d706c6503636f6d0000010001000000000000000000000000000000000000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "cf84003500259a3c1a2b01000001000000000000076578616d706c6503636f6d0000010001",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Strip IPv4 header: header with options",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:strip-ipv4",
+    "params": {},
+    "input": {
+      "value": "49b800281c4620b90101c7f40102030405060708940400000707040a000001010000000070696e67",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "70696e67",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Strip IPv4 header: total length 0 keeps all",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:strip-ipv4",
+    "params": {},
+    "input": {
+      "value": "450000001c4640004006b29eac10fe01c000020174736f2d7365676d656e74",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "74736f2d7365676d656e74",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Strip IPv4 header: total length beyond the data keeps all",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:strip-ipv4",
+    "params": {},
+    "input": {
+      "value": "4500001a1c4640004006b284ac10fe01c0000201616263",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "616263",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Strip IPv4 header: total length below the header keeps all",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:strip-ipv4",
+    "params": {},
+    "input": {
+      "value": "4500000a1c4640004006b294ac10fe01c000020164617461",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "64617461",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Strip IPv4 header: raw input",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:strip-ipv4",
+    "params": {
+      "format": "raw"
+    },
+    "input": {
+      "value": "4500001c00004000ff016dd308080404010101013132333435363738",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "3132333435363738",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Strip IPv4 header: header only",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:strip-ipv4",
+    "params": {},
+    "input": {
+      "value": "450000141c46400040060000ac10fe01c0000201",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Strip IPv4 header: empty",
+    "ref": "cut short",
+    "op": "packets:strip-ipv4",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "Strip IPv4 header: version 5",
+    "ref": "wrong version",
+    "op": "packets:strip-ipv4",
+    "params": {},
+    "input": {
+      "value": "5500003c1c4640004006b262ac10fe01c0000201",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "Strip IPv4 header: IHL 15 with a short input",
+    "ref": "header cut short",
+    "op": "packets:strip-ipv4",
+    "params": {},
+    "input": {
+      "value": "4f00003c1c4640004006b262ac10fe01c0000201",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "Ethernet: IPv4 over Ethernet II",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-ethernet",
+    "params": {},
+    "input": {
+      "value": "001a2b3c4d5edeadbeef000108004500003c1c4640004006b262ac10fe01c0000201c82201bbaabbccdd00000000a002faf012340000020405b40402080a1234abcd0000000001030307",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Destination MAC: 00:1a:2b:3c:4d:5e\nSource MAC: de:ad:be:ef:00:01\nEtherType: 0x0800 (IPv4)\nPayload (60 bytes): 4500003c1c4640004006b262ac10fe01c0000201c82201bbaabbccdd00000000a002faf012340000020405b40402080a1234abcd0000000001030307",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Ethernet: a broadcast ARP request",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-ethernet",
+    "params": {},
+    "input": {
+      "value": "ffffffffffffdeadbeef000108060001080006040001deadbeef0001c0a8010a000000000000c0a80101000000000000000000000000000000000000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Destination MAC: ff:ff:ff:ff:ff:ff\nSource MAC: de:ad:be:ef:00:01\nEtherType: 0x0806 (ARP)\nPayload (46 bytes): 0001080006040001deadbeef0001c0a8010a000000000000c0a80101000000000000000000000000000000000000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Ethernet: one 802.1Q tag (priority 3, VLAN 100) over IPv6",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-ethernet",
+    "params": {},
+    "input": {
+      "value": "001a2b3c4d5edeadbeef00018100606486dd60000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Destination MAC: 00:1a:2b:3c:4d:5e\nSource MAC: de:ad:be:ef:00:01\nVLAN tag 1:\n  TPID: 0x8100 (802.1Q)\n  Priority (PCP): 3\n  Drop eligible (DEI): 0\n  VLAN ID: 100\nEtherType: 0x86dd (IPv6)\nPayload (40 bytes): 60000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Ethernet: 802.1ad outer tag with DEI and 802.1Q inner tag over MPLS",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-ethernet",
+    "params": {},
+    "input": {
+      "value": "01005e0000fbdeadbeef000188a8babc810000078847000141ff",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Destination MAC: 01:00:5e:00:00:fb\nSource MAC: de:ad:be:ef:00:01\nVLAN tag 1:\n  TPID: 0x88a8 (802.1ad)\n  Priority (PCP): 5\n  Drop eligible (DEI): 1\n  VLAN ID: 2748\nVLAN tag 2:\n  TPID: 0x8100 (802.1Q)\n  Priority (PCP): 0\n  Drop eligible (DEI): 0\n  VLAN ID: 7\nEtherType: 0x8847 (MPLS unicast)\nPayload (4 bytes): 000141ff",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Ethernet: an IEEE 802.3 frame (length 3)",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-ethernet",
+    "params": {},
+    "input": {
+      "value": "0180c2000000deadbeef00010003424203",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Destination MAC: 01:80:c2:00:00:00\nSource MAC: de:ad:be:ef:00:01\nLength: 3 (IEEE 802.3 length field, no EtherType)\nPayload (3 bytes): 424203",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Ethernet: LLDP with no payload",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-ethernet",
+    "params": {},
+    "input": {
+      "value": "001a2b3c4d5edeadbeef000188cc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Destination MAC: 00:1a:2b:3c:4d:5e\nSource MAC: de:ad:be:ef:00:01\nEtherType: 0x88cc (LLDP)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Ethernet: an EtherType with no name",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-ethernet",
+    "params": {},
+    "input": {
+      "value": "001a2b3c4d5edeadbeef00011234ff",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Destination MAC: 00:1a:2b:3c:4d:5e\nSource MAC: de:ad:be:ef:00:01\nEtherType: 0x1234\nPayload (1 bytes): ff",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Ethernet: length 1500 is still a length",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-ethernet",
+    "params": {},
+    "input": {
+      "value": "001a2b3c4d5edeadbeef000105dc07070707",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Destination MAC: 00:1a:2b:3c:4d:5e\nSource MAC: de:ad:be:ef:00:01\nLength: 1500 (IEEE 802.3 length field, no EtherType)\nPayload (4 bytes): 07070707",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Ethernet: raw bytes",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-ethernet",
+    "params": {
+      "format": "raw"
+    },
+    "input": {
+      "value": "001a2b3c4d5edeadbeef000108004500003c1c4640004006b262ac10fe01c0000201c82201bbaabbccdd00000000a002faf012340000020405b40402080a1234abcd0000000001030307",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Destination MAC: 00:1a:2b:3c:4d:5e\nSource MAC: de:ad:be:ef:00:01\nEtherType: 0x0800 (IPv4)\nPayload (60 bytes): 4500003c1c4640004006b262ac10fe01c0000201c82201bbaabbccdd00000000a002faf012340000020405b40402080a1234abcd0000000001030307",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Ethernet: hex with spaces",
+    "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
+    "op": "packets:parse-ethernet",
+    "params": {},
+    "input": {
+      "value": "01 80 c2 00 00 00 de ad be ef 00 01 00 03 42 42 03",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Destination MAC: 01:80:c2:00:00:00\nSource MAC: de:ad:be:ef:00:01\nLength: 3 (IEEE 802.3 length field, no EtherType)\nPayload (3 bytes): 424203",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Ethernet: empty input",
+    "ref": "cut short",
+    "op": "packets:parse-ethernet",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "Ethernet: 13 bytes",
+    "ref": "cut short",
+    "op": "packets:parse-ethernet",
+    "params": {},
+    "input": {
+      "value": "001a2b3c4d5edeadbeef000108",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "Ethernet: VLAN tag cut after the TPID",
+    "ref": "tag cut short",
+    "op": "packets:parse-ethernet",
+    "params": {},
+    "input": {
+      "value": "001a2b3c4d5edeadbeef00018100",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "Ethernet: VLAN tag without the EtherType",
+    "ref": "type cut short",
+    "op": "packets:parse-ethernet",
+    "params": {},
+    "input": {
+      "value": "001a2b3c4d5edeadbeef000181006064",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "Ethernet: bad hex",
+    "ref": "not hex",
+    "op": "packets:parse-ethernet",
+    "params": {},
+    "input": {
+      "value": "not hex",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "TLS 1.3 handshake: ClientHello (openssl 3.0.13)",
+    "ref": "bytes captured between openssl 3.0.13 s_client and s_server on localhost; values checked against s_client -trace of the same run; layout by independent Python",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "16030101460100014203036a2cb016ac1931d5e07664ea1d1517a242c9118529c713af6996b05d0de39cc620efc721ada088783ef80b31ddf4797f6ecce7657c7c954699fb546b2d6bc6f2b9003e130213031301c02cc030009fcca9cca8ccaac02bc02f009ec024c028006bc023c0270067c00ac0140039c009c0130033009d009c003d003c0035002f00ff010000bb00000010000e00000b6578616d706c652e636f6d000b000403000102000a00160014001d0017001e0019001801000101010201030104002300000010000e000c02683208687474702f312e310016000000170000000d002a0028040305030603080708080809080a080b080408050806040105010601030303010302040205020602002b00050403040303002d00020101003300260024001d0020650469fce30f04194bc0afcb0201428d6ab2f17f9697b4356c2ac8116088da7c1403030001011703030045be9a11c4065b5a37d1b5e7abe659f878d4c02a452839cc32181bb016aaf038950597368813bd7bdf6c2c76904c55be1cf4d33ed4ad19841d295826f926bb484dc4c96808a41703030013296955dc2e5b0d97b25b0f79b94c0cef40283f",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Record 1\n  Content type: Handshake (22)\n  Version: TLS 1.0 (0x0301)\n  Length: 326\n  Handshake: client_hello (1), length 322\n    Version: TLS 1.2 (0x0303)\n    Random: 6a2cb016ac1931d5e07664ea1d1517a242c9118529c713af6996b05d0de39cc6\n    Session ID: efc721ada088783ef80b31ddf4797f6ecce7657c7c954699fb546b2d6bc6f2b9\n    Cipher suites (31):\n      TLS_AES_256_GCM_SHA384 (0x1302)\n      TLS_CHACHA20_POLY1305_SHA256 (0x1303)\n      TLS_AES_128_GCM_SHA256 (0x1301)\n      TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384 (0xc02c)\n      TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (0xc030)\n      TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (0x009f)\n      TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256 (0xcca9)\n      TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256 (0xcca8)\n      TLS_DHE_RSA_WITH_CHACHA20_POLY1305_SHA256 (0xccaa)\n      TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256 (0xc02b)\n      TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (0xc02f)\n      TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (0x009e)\n      TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384 (0xc024)\n      TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384 (0xc028)\n      TLS_DHE_RSA_WITH_AES_256_CBC_SHA256 (0x006b)\n      TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256 (0xc023)\n      TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256 (0xc027)\n      TLS_DHE_RSA_WITH_AES_128_CBC_SHA256 (0x0067)\n      TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA (0xc00a)\n      TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA (0xc014)\n      TLS_DHE_RSA_WITH_AES_256_CBC_SHA (0x0039)\n      TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA (0xc009)\n      TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA (0xc013)\n      TLS_DHE_RSA_WITH_AES_128_CBC_SHA (0x0033)\n      TLS_RSA_WITH_AES_256_GCM_SHA384 (0x009d)\n      TLS_RSA_WITH_AES_128_GCM_SHA256 (0x009c)\n      TLS_RSA_WITH_AES_256_CBC_SHA256 (0x003d)\n      TLS_RSA_WITH_AES_128_CBC_SHA256 (0x003c)\n      TLS_RSA_WITH_AES_256_CBC_SHA (0x0035)\n      TLS_RSA_WITH_AES_128_CBC_SHA (0x002f)\n      TLS_EMPTY_RENEGOTIATION_INFO_SCSV (0x00ff)\n    Compression methods (1): null (0)\n    Extensions (11):\n      server_name (0), length 16\n        Server name: example.com\n      ec_point_formats (11), length 4\n        EC point formats: uncompressed (0), ansiX962_compressed_prime (1), ansiX962_compressed_char2 (2)\n      supported_groups (10), length 22\n        Supported groups: x25519 (0x001d), secp256r1 (0x0017), x448 (0x001e), secp521r1 (0x0019), secp384r1 (0x0018), ffdhe2048 (0x0100), ffdhe3072 (0x0101), ffdhe4096 (0x0102), ffdhe6144 (0x0103), ffdhe8192 (0x0104)\n      session_ticket (35), length 0\n      application_layer_protocol_negotiation (16), length 14\n        Protocols: h2, http/1.1\n      encrypt_then_mac (22), length 0\n      extended_master_secret (23), length 0\n      signature_algorithms (13), length 42\n        Signature algorithms: ecdsa_secp256r1_sha256 (0x0403), ecdsa_secp384r1_sha384 (0x0503), ecdsa_secp521r1_sha512 (0x0603), ed25519 (0x0807), ed448 (0x0808), rsa_pss_pss_sha256 (0x0809), rsa_pss_pss_sha384 (0x080a), rsa_pss_pss_sha512 (0x080b), rsa_pss_rsae_sha256 (0x0804), rsa_pss_rsae_sha384 (0x0805), rsa_pss_rsae_sha512 (0x0806), rsa_pkcs1_sha256 (0x0401), rsa_pkcs1_sha384 (0x0501), rsa_pkcs1_sha512 (0x0601), ecdsa_sha224 (0x0303), rsa_sha224 (0x0301), dsa_sha224 (0x0302), dsa_sha256 (0x0402), dsa_sha384 (0x0502), dsa_sha512 (0x0602)\n      supported_versions (43), length 5\n        Supported versions: TLS 1.3 (0x0304), TLS 1.2 (0x0303)\n      psk_key_exchange_modes (45), length 2\n        PSK key exchange modes: psk_dhe_ke (1)\n      key_share (51), length 38\n        Key shares:\n          x25519 (0x001d), key exchange length 32\n\nRecord 2\n  Content type: ChangeCipherSpec (20)\n  Version: TLS 1.2 (0x0303)\n  Length: 1\n  Change cipher spec: 01\n\nRecord 3\n  Content type: ApplicationData (23)\n  Version: TLS 1.2 (0x0303)\n  Length: 69\n  Application data: 69 bytes (encrypted)\n\nRecord 4\n  Content type: ApplicationData (23)\n  Version: TLS 1.2 (0x0303)\n  Length: 19\n  Application data: 19 bytes (encrypted)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "TLS 1.3: ServerHello and encrypted records",
+    "ref": "bytes captured between openssl 3.0.13 s_client and s_server on localhost; values checked against s_client -trace of the same run; layout by independent Python",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "160303007a020000760303491670b36bb82374a86da2d668e2a20ac3d0c63485065751d49f7794840ccb5720efc721ada088783ef80b31ddf4797f6ecce7657c7c954699fb546b2d6bc6f2b9130200002e002b0002030400330024001d002011ff9bdabc7f35a8b1b106dd84ca20253116f219e8f8ed3a1a71c9b60c78337e1403030001011703030017b14c9632f66d22073321f5cba9156ed5bbc99d97c292bb17030301a29f8dcc88d448abcd42eb6be9aa3b713ea384d89d5225f03ee33c39c98af7c75de58d082367dae583686d0b536716c15e7cca17a8db96060f2456251f9dffb922e0c93ca073ea60c0d4f53eb8365e2b36da38c42d394ff0141309bca72b1fc0f66e013758f2cf0de9575959978d18617043733737c5a113cacfa5433e93f0a132de3d09aec68c8936a02e7841e8ba5048fe026de25eac3a662d7da5c2d16ad58882d874306c4a1ae7bcb025c5d9f243e88db0f742255666704385f0d69b63dec36e01cb69c2f0792733b61ed704a51d43adaa45b553043080aacc00c5bcf54567f2bbcf8e76b82a0bed5fabadf9c4604ddc209b300c379b7cdba023c50c7e9bad35f2bdbe155f0a1470e1c8478c366d89025976fa89b8fe2d11275c3d2b08f2443734617c5bf27c20e6400d3302f319fbf39e5b573f532c3d7c5034354832a501f28f34c6d4ec830b67940a5be4c4ae892421908ca78c9837880784ab646ef2bbb63ff9bc3f1048f45f4e04ac66c111feda558da2d565dba5f0949a60954108f9660ded6e1682ebd46c01eee310f4848d4b728d1a30e97f879024f0d6c8d7f89c9ac2170303006130af4bf7c4d807fa8db342680426320f19da929142f19513b1ea5e97607256785f280de8ceb2c7e51f36a45d22e5fff8ca9043fec6e8a9d85b43cca0e944d9d1454efaad9104778349125039f9ff1b07b58f62fc8aea6505cccd04cc3848c68f0417030300459073c02fcbb453ae04fb315fdc96734f9630e6d046fe5138cc890aa3e37e31e903bb15fb294ed632e54d13875b44bdadd5e32b0efa17bdaea0300166ed36d3534fad00435717030300fad94e7aa97911432196c07f1cb8d7aef68ebb66e29f9c4c32724a7951f8af37e2f49a202cddd66bba3eb71428938ac85f5462327326ff9592dee9693b35a87ce7b155641095a3a55ef0a3631ae0645ec9561d38029bedbb4cb25dfb04413c75fef7fc944efa15f755816ac4028e07d506851852287ab3321c8769e563e01e71343dd107fa6116cc00d667b3d6b8accb853cce274c5fc1f86ec24ff0a0fab823f05d3731b1a65eae3173eca2be5bcec512a76519844102d92cb8ad0c1fac88bdfb10dbdc8b2a318e0696e8050a050cffecf8bc6e269c4e07768324cb514108d5c9f508f4c11b5126e6f7f1280cf2e802ff052c9fe3a1f07650abd017030300fa9bee92d137f76e72236f858c249b6b3442fa7f2b036ca0d4a0fab37afb01bcc8c0f3e689a1c2db4c86b49934b25fa593bd1e72d2410234b17a4d24f21ec6528b4cb6623e31847584ac994b574ae0e783c05828ea9046601ae9bb936fd75ea5443e42bfc311bbfcdf71e940744892f91c09856afb815ac74376df3c042770b08873a08eebb630fc10749cc41ba889a490001cc6958a7c0f5dcb1f4582d298703cf6055372360336682e8329393113741ec29876ed81c64f5cc5497af275e6c81d40a7e8c3df2602eb2dc4d12641e9197942750aebd179a6f7368a721d2e261cccba25c03d7635f6cef0ceb39727f5819c248bca2405c6521822d617030300132c163f2ad5a8b37100d04ffa8a6551db62cc11",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Record 1\n  Content type: Handshake (22)\n  Version: TLS 1.2 (0x0303)\n  Length: 122\n  Handshake: server_hello (2), length 118\n    Version: TLS 1.2 (0x0303)\n    Random: 491670b36bb82374a86da2d668e2a20ac3d0c63485065751d49f7794840ccb57\n    Session ID: efc721ada088783ef80b31ddf4797f6ecce7657c7c954699fb546b2d6bc6f2b9\n    Cipher suite: TLS_AES_256_GCM_SHA384 (0x1302)\n    Compression method: null (0)\n    Extensions (2):\n      supported_versions (43), length 2\n        Selected version: TLS 1.3 (0x0304)\n      key_share (51), length 36\n        Key share: x25519 (0x001d), key exchange length 32\n\nRecord 2\n  Content type: ChangeCipherSpec (20)\n  Version: TLS 1.2 (0x0303)\n  Length: 1\n  Change cipher spec: 01\n\nRecord 3\n  Content type: ApplicationData (23)\n  Version: TLS 1.2 (0x0303)\n  Length: 23\n  Application data: 23 bytes (encrypted)\n\nRecord 4\n  Content type: ApplicationData (23)\n  Version: TLS 1.2 (0x0303)\n  Length: 418\n  Application data: 418 bytes (encrypted)\n\nRecord 5\n  Content type: ApplicationData (23)\n  Version: TLS 1.2 (0x0303)\n  Length: 97\n  Application data: 97 bytes (encrypted)\n\nRecord 6\n  Content type: ApplicationData (23)\n  Version: TLS 1.2 (0x0303)\n  Length: 69\n  Application data: 69 bytes (encrypted)\n\nRecord 7\n  Content type: ApplicationData (23)\n  Version: TLS 1.2 (0x0303)\n  Length: 250\n  Application data: 250 bytes (encrypted)\n\nRecord 8\n  Content type: ApplicationData (23)\n  Version: TLS 1.2 (0x0303)\n  Length: 250\n  Application data: 250 bytes (encrypted)\n\nRecord 9\n  Content type: ApplicationData (23)\n  Version: TLS 1.2 (0x0303)\n  Length: 19\n  Application data: 19 bytes (encrypted)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "TLS 1.2: ClientHello with SNI and ALPN",
+    "ref": "bytes captured between openssl 3.0.13 s_client and s_server on localhost; values checked against s_client -trace of the same run; layout by independent Python",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "16030100de010000da0303d893daca2259abff8b3221524a40fbfb580546868621e854acf27daef08a1200000038c02cc030009fcca9cca8ccaac02bc02f009ec024c028006bc023c0270067c00ac0140039c009c0130033009d009c003d003c0035002f00ff0100007900000014001200000f7777772e6578616d706c652e6f7267000b000403000102000a000c000a001d0017001e00190018002300000010000b000908687474702f312e310016000000170000000d002a0028040305030603080708080809080a080b0804080508060401050106010303030103020402050206021603030025100000212081d1ab0fdef16e0a07a2ab9ceeeb7df40ec15ffe8fb90b357f6f87639f267a7a1403030001011603030028828af376ea8f4a2d05c4a966a2741364a32963e776f6981902b39896c30410fcceacbf8e62d96625150303001a828af376ea8f4a2eaca3251f62e55ee552336d46c1f7ef9ad69f",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Record 1\n  Content type: Handshake (22)\n  Version: TLS 1.0 (0x0301)\n  Length: 222\n  Handshake: client_hello (1), length 218\n    Version: TLS 1.2 (0x0303)\n    Random: d893daca2259abff8b3221524a40fbfb580546868621e854acf27daef08a1200\n    Session ID: (empty)\n    Cipher suites (28):\n      TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384 (0xc02c)\n      TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (0xc030)\n      TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (0x009f)\n      TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256 (0xcca9)\n      TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256 (0xcca8)\n      TLS_DHE_RSA_WITH_CHACHA20_POLY1305_SHA256 (0xccaa)\n      TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256 (0xc02b)\n      TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (0xc02f)\n      TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (0x009e)\n      TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384 (0xc024)\n      TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384 (0xc028)\n      TLS_DHE_RSA_WITH_AES_256_CBC_SHA256 (0x006b)\n      TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256 (0xc023)\n      TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256 (0xc027)\n      TLS_DHE_RSA_WITH_AES_128_CBC_SHA256 (0x0067)\n      TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA (0xc00a)\n      TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA (0xc014)\n      TLS_DHE_RSA_WITH_AES_256_CBC_SHA (0x0039)\n      TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA (0xc009)\n      TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA (0xc013)\n      TLS_DHE_RSA_WITH_AES_128_CBC_SHA (0x0033)\n      TLS_RSA_WITH_AES_256_GCM_SHA384 (0x009d)\n      TLS_RSA_WITH_AES_128_GCM_SHA256 (0x009c)\n      TLS_RSA_WITH_AES_256_CBC_SHA256 (0x003d)\n      TLS_RSA_WITH_AES_128_CBC_SHA256 (0x003c)\n      TLS_RSA_WITH_AES_256_CBC_SHA (0x0035)\n      TLS_RSA_WITH_AES_128_CBC_SHA (0x002f)\n      TLS_EMPTY_RENEGOTIATION_INFO_SCSV (0x00ff)\n    Compression methods (1): null (0)\n    Extensions (8):\n      server_name (0), length 20\n        Server name: www.example.org\n      ec_point_formats (11), length 4\n        EC point formats: uncompressed (0), ansiX962_compressed_prime (1), ansiX962_compressed_char2 (2)\n      supported_groups (10), length 12\n        Supported groups: x25519 (0x001d), secp256r1 (0x0017), x448 (0x001e), secp521r1 (0x0019), secp384r1 (0x0018)\n      session_ticket (35), length 0\n      application_layer_protocol_negotiation (16), length 11\n        Protocols: http/1.1\n      encrypt_then_mac (22), length 0\n      extended_master_secret (23), length 0\n      signature_algorithms (13), length 42\n        Signature algorithms: ecdsa_secp256r1_sha256 (0x0403), ecdsa_secp384r1_sha384 (0x0503), ecdsa_secp521r1_sha512 (0x0603), ed25519 (0x0807), ed448 (0x0808), rsa_pss_pss_sha256 (0x0809), rsa_pss_pss_sha384 (0x080a), rsa_pss_pss_sha512 (0x080b), rsa_pss_rsae_sha256 (0x0804), rsa_pss_rsae_sha384 (0x0805), rsa_pss_rsae_sha512 (0x0806), rsa_pkcs1_sha256 (0x0401), rsa_pkcs1_sha384 (0x0501), rsa_pkcs1_sha512 (0x0601), ecdsa_sha224 (0x0303), rsa_sha224 (0x0301), dsa_sha224 (0x0302), dsa_sha256 (0x0402), dsa_sha384 (0x0502), dsa_sha512 (0x0602)\n\nRecord 2\n  Content type: Handshake (22)\n  Version: TLS 1.2 (0x0303)\n  Length: 37\n  Handshake: client_key_exchange (16), length 33\n\nRecord 3\n  Content type: ChangeCipherSpec (20)\n  Version: TLS 1.2 (0x0303)\n  Length: 1\n  Change cipher spec: 01\n\nRecord 4\n  Content type: Handshake (22)\n  Version: TLS 1.2 (0x0303)\n  Length: 40\n  Handshake: unknown (130), length 9106294 (only 36 bytes are in this record; the message goes on in the next one)\n\nRecord 5\n  Content type: Alert (21)\n  Version: TLS 1.2 (0x0303)\n  Length: 26\n  Alert: 26 bytes (encrypted, or not a valid alert)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "TLS 1.2: ServerHello, Certificate, ServerKeyExchange, ServerHelloDone",
+    "ref": "bytes captured between openssl 3.0.13 s_client and s_server on localhost; values checked against s_client -trace of the same run; layout by independent Python",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "16030300410200003d03038c7c4bbf29e7e5792b0c8d3b48db38cb9423dfd2e3eb908f5eb8bc9547aefdd000c02c000015ff01000100000b0004030001020023000000170000160303018e0b00018a0001870001843082018030820127a0030201020214052e0b44e1161fd68886c2ea8c268fe7e9c3d8f2300a06082a8648ce3d04030230163114301206035504030c0b6578616d706c652e636f6d301e170d3236313131313230343333335a170d3236313131333230343333335a30163114301206035504030c0b6578616d706c652e636f6d3059301306072a8648ce3d020106082a8648ce3d030107034200046b52b6dc56c3beea4760c9f4ea9eaef97a0a316ef61749aa67244dbdd6a91d681f2eed9153dc1a59c2604ae05435223b8852a7d8728b3753df809e7b9b6ca4eea3533051301d0603551d0e04160414319eb9bd6d9c8409dffdc054549a573a347db24a301f0603551d23041830168014319eb9bd6d9c8409dffdc054549a573a347db24a300f0603551d130101ff040530030101ff300a06082a8648ce3d0403020347003044022035f7ceb3e91aa69756e87dfe4727453479392241e21482fbf0283f6309bad6c7022075b95dbab5d937d55633951f3ff6182470721f613456f31ba08550cd2adbddbc16030300730c00006f03001d20570dbf0feb63575285c941eb06fec8ddb32772b71e48a0dfbc7fa3c0459cb735040300473045022100c867255ffa333c91e97459573a9554c89eafcf55ddc881bd06c052cfbd659f6f02207692e772d41e4eba22063b07a63c5ecfe7a84efcbb8098061897a29b298739af16030300040e00000016030300ba040000b600001c2000b074eea5485e6389e50258e9658b75dc1e09a0cb192bc812352f1b9550493c643d63536747cd0679e967b32c117769cdc6cdc18a404b21340f9a3a62f53cc0fb3930347bde9246e6285fef690113a1eacec7d973808c905b4e4daa902bd0bd4f7685badbe1cdeea2ffa41faf3d29c16c9e7a6812605d54c276ce9b6c155fd5f1f58c38dd3b9160f1dac4d75f9e08f12ccfe96a7d026603a00cf95d67657ecbe92c44fd5698b70214b928e940b30ba61c1b1403030001011603030028f8d3532b499f08db940d35b664c300f31dc9d2ac2e3c8125fca3d8f4f30cc5b9919ed8b096713051150303001af8d3532b499f08dc7ef015dd183ae27a44fc98263f61c2e3747c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Record 1\n  Content type: Handshake (22)\n  Version: TLS 1.2 (0x0303)\n  Length: 65\n  Handshake: server_hello (2), length 61\n    Version: TLS 1.2 (0x0303)\n    Random: 8c7c4bbf29e7e5792b0c8d3b48db38cb9423dfd2e3eb908f5eb8bc9547aefdd0\n    Session ID: (empty)\n    Cipher suite: TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384 (0xc02c)\n    Compression method: null (0)\n    Extensions (4):\n      renegotiation_info (65281), length 1\n        Data: 00\n      ec_point_formats (11), length 4\n        EC point formats: uncompressed (0), ansiX962_compressed_prime (1), ansiX962_compressed_char2 (2)\n      session_ticket (35), length 0\n      extended_master_secret (23), length 0\n\nRecord 2\n  Content type: Handshake (22)\n  Version: TLS 1.2 (0x0303)\n  Length: 398\n  Handshake: certificate (11), length 394\n\nRecord 3\n  Content type: Handshake (22)\n  Version: TLS 1.2 (0x0303)\n  Length: 115\n  Handshake: server_key_exchange (12), length 111\n\nRecord 4\n  Content type: Handshake (22)\n  Version: TLS 1.2 (0x0303)\n  Length: 4\n  Handshake: server_hello_done (14), length 0\n\nRecord 5\n  Content type: Handshake (22)\n  Version: TLS 1.2 (0x0303)\n  Length: 186\n  Handshake: new_session_ticket (4), length 182\n\nRecord 6\n  Content type: ChangeCipherSpec (20)\n  Version: TLS 1.2 (0x0303)\n  Length: 1\n  Change cipher spec: 01\n\nRecord 7\n  Content type: Handshake (22)\n  Version: TLS 1.2 (0x0303)\n  Length: 40\n  Handshake: unknown (248), length 13849387 (only 36 bytes are in this record; the message goes on in the next one)\n\nRecord 8\n  Content type: Alert (21)\n  Version: TLS 1.2 (0x0303)\n  Length: 26\n  Alert: 26 bytes (encrypted, or not a valid alert)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "TLS 1.0: ClientHello and ServerHello with older ciphers",
+    "ref": "bytes captured between openssl 3.0.13 s_client and s_server on localhost; values checked against s_client -trace of the same run; layout by independent Python",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "160301007f0100007b030171deb092ee42fa6cb147e04123b47bb5374acfafa100d46adcc13df83da24a0f00002ec00ac0140039003800880087c019003a0089c009c0130033003200450044c0180034004600350084002f004100ff01000024000b000403000102000a000c000a001d0017001e001900180023000000160000001700001603010025100000212063448c98b95a34adf842bc1a2ff5ffe7becef29c40676df21745b4b9f7ce231714030100010116030100348abe9d945acc040fd70db6cc4b88b48f974256416c160bffd47b0c428f712d35d8c10d89e731ac2c2b6af2b6bfbf5af29891aee915030100244013c1ecd7cf9c43e2de2c9f8411c2f37f670292ad102b94402b4cfd1e12a773be5ab77e",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Record 1\n  Content type: Handshake (22)\n  Version: TLS 1.0 (0x0301)\n  Length: 127\n  Handshake: client_hello (1), length 123\n    Version: TLS 1.0 (0x0301)\n    Random: 71deb092ee42fa6cb147e04123b47bb5374acfafa100d46adcc13df83da24a0f\n    Session ID: (empty)\n    Cipher suites (23):\n      TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA (0xc00a)\n      TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA (0xc014)\n      TLS_DHE_RSA_WITH_AES_256_CBC_SHA (0x0039)\n      TLS_DHE_DSS_WITH_AES_256_CBC_SHA (0x0038)\n      TLS_DHE_RSA_WITH_CAMELLIA_256_CBC_SHA (0x0088)\n      TLS_DHE_DSS_WITH_CAMELLIA_256_CBC_SHA (0x0087)\n      TLS_ECDH_anon_WITH_AES_256_CBC_SHA (0xc019)\n      TLS_DH_anon_WITH_AES_256_CBC_SHA (0x003a)\n      TLS_DH_anon_WITH_CAMELLIA_256_CBC_SHA (0x0089)\n      TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA (0xc009)\n      TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA (0xc013)\n      TLS_DHE_RSA_WITH_AES_128_CBC_SHA (0x0033)\n      TLS_DHE_DSS_WITH_AES_128_CBC_SHA (0x0032)\n      TLS_DHE_RSA_WITH_CAMELLIA_128_CBC_SHA (0x0045)\n      TLS_DHE_DSS_WITH_CAMELLIA_128_CBC_SHA (0x0044)\n      TLS_ECDH_anon_WITH_AES_128_CBC_SHA (0xc018)\n      TLS_DH_anon_WITH_AES_128_CBC_SHA (0x0034)\n      TLS_DH_anon_WITH_CAMELLIA_128_CBC_SHA (0x0046)\n      TLS_RSA_WITH_AES_256_CBC_SHA (0x0035)\n      TLS_RSA_WITH_CAMELLIA_256_CBC_SHA (0x0084)\n      TLS_RSA_WITH_AES_128_CBC_SHA (0x002f)\n      TLS_RSA_WITH_CAMELLIA_128_CBC_SHA (0x0041)\n      TLS_EMPTY_RENEGOTIATION_INFO_SCSV (0x00ff)\n    Compression methods (1): null (0)\n    Extensions (5):\n      ec_point_formats (11), length 4\n        EC point formats: uncompressed (0), ansiX962_compressed_prime (1), ansiX962_compressed_char2 (2)\n      supported_groups (10), length 12\n        Supported groups: x25519 (0x001d), secp256r1 (0x0017), x448 (0x001e), secp521r1 (0x0019), secp384r1 (0x0018)\n      session_ticket (35), length 0\n      encrypt_then_mac (22), length 0\n      extended_master_secret (23), length 0\n\nRecord 2\n  Content type: Handshake (22)\n  Version: TLS 1.0 (0x0301)\n  Length: 37\n  Handshake: client_key_exchange (16), length 33\n\nRecord 3\n  Content type: ChangeCipherSpec (20)\n  Version: TLS 1.0 (0x0301)\n  Length: 1\n  Change cipher spec: 01\n\nRecord 4\n  Content type: Handshake (22)\n  Version: TLS 1.0 (0x0301)\n  Length: 52\n  Handshake: unknown (138), length 12492180 (only 48 bytes are in this record; the message goes on in the next one)\n\nRecord 5\n  Content type: Alert (21)\n  Version: TLS 1.0 (0x0301)\n  Length: 36\n  Alert: 36 bytes (encrypted, or not a valid alert)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "TLS 1.0: server flight",
+    "ref": "bytes captured between openssl 3.0.13 s_client and s_server on localhost; values checked against s_client -trace of the same run; layout by independent Python",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "1603010045020000410301b3b61c0bae49dcd79264cd82051a69de02fe843823740e33bd8bdd421d5a228c00c00a000019ff01000100000b000403000102002300000016000000170000160301018e0b00018a0001870001843082018030820127a0030201020214052e0b44e1161fd68886c2ea8c268fe7e9c3d8f2300a06082a8648ce3d04030230163114301206035504030c0b6578616d706c652e636f6d301e170d3236313131313230343333335a170d3236313131333230343333335a30163114301206035504030c0b6578616d706c652e636f6d3059301306072a8648ce3d020106082a8648ce3d030107034200046b52b6dc56c3beea4760c9f4ea9eaef97a0a316ef61749aa67244dbdd6a91d681f2eed9153dc1a59c2604ae05435223b8852a7d8728b3753df809e7b9b6ca4eea3533051301d0603551d0e04160414319eb9bd6d9c8409dffdc054549a573a347db24a301f0603551d23041830168014319eb9bd6d9c8409dffdc054549a573a347db24a300f0603551d130101ff040530030101ff300a06082a8648ce3d0403020347003044022035f7ceb3e91aa69756e87dfe4727453479392241e21482fbf0283f6309bad6c7022075b95dbab5d937d55633951f3ff6182470721f613456f31ba08550cd2adbddbc16030100720c00006e03001d206a967de0763a0a6a4893feb5024dd64c711e705de921140928c411cfd6237f5100483046022100cdefedbb1189c70a5d4cba8a7c0df0acc46dcf9fcf515f7914b1ca5c3d55cb9b022100cc514b75cfd8f0cf6663af09db708b16e83b4908a4ec6d61c3c6546a482c2aa816030100040e00000016030100ba040000b600001c2000b012b7aebefd0f89fdb172eee76df0941d5557cd6754d5f4cd5307a28936efc28bfeda9ab3f96bddd3a8a5943842f473b1b885eedfa4512fb97e375080f2eb7fa1f38322524f5799bd82e70720bb1cd9de8f9f93e2c41642acad1bad0da228ec6a4340713a6af4c58dbbe94a8e25c8676d463528f0f4c919bd3f2478daff2bbabe7a6e205632d1c375c488b83559c4d3214e576fe6fdb35eee73b3d72e0f325855a87d1997b5b0d04e2fa04f6238ad824514030100010116030100348a5ed50c97ba5abb05a5e234d8a5fffb6846b5b8476e75daf845c33d74520824cbbc9eee0a6a8feca4f5848ffb45cf3cf66e4d4c15030100249a760d550b356721eba9d21284d745ec9c75afcc8419645f87d6cc25be5145c9050223e3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Record 1\n  Content type: Handshake (22)\n  Version: TLS 1.0 (0x0301)\n  Length: 69\n  Handshake: server_hello (2), length 65\n    Version: TLS 1.0 (0x0301)\n    Random: b3b61c0bae49dcd79264cd82051a69de02fe843823740e33bd8bdd421d5a228c\n    Session ID: (empty)\n    Cipher suite: TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA (0xc00a)\n    Compression method: null (0)\n    Extensions (5):\n      renegotiation_info (65281), length 1\n        Data: 00\n      ec_point_formats (11), length 4\n        EC point formats: uncompressed (0), ansiX962_compressed_prime (1), ansiX962_compressed_char2 (2)\n      session_ticket (35), length 0\n      encrypt_then_mac (22), length 0\n      extended_master_secret (23), length 0\n\nRecord 2\n  Content type: Handshake (22)\n  Version: TLS 1.0 (0x0301)\n  Length: 398\n  Handshake: certificate (11), length 394\n\nRecord 3\n  Content type: Handshake (22)\n  Version: TLS 1.0 (0x0301)\n  Length: 114\n  Handshake: server_key_exchange (12), length 110\n\nRecord 4\n  Content type: Handshake (22)\n  Version: TLS 1.0 (0x0301)\n  Length: 4\n  Handshake: server_hello_done (14), length 0\n\nRecord 5\n  Content type: Handshake (22)\n  Version: TLS 1.0 (0x0301)\n  Length: 186\n  Handshake: new_session_ticket (4), length 182\n\nRecord 6\n  Content type: ChangeCipherSpec (20)\n  Version: TLS 1.0 (0x0301)\n  Length: 1\n  Change cipher spec: 01\n\nRecord 7\n  Content type: Handshake (22)\n  Version: TLS 1.0 (0x0301)\n  Length: 52\n  Handshake: unknown (138), length 6214924 (only 48 bytes are in this record; the message goes on in the next one)\n\nRecord 8\n  Content type: Alert (21)\n  Version: TLS 1.0 (0x0301)\n  Length: 36\n  Alert: 36 bytes (encrypted, or not a valid alert)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "TLS 1.3: HelloRetryRequest flight",
+    "ref": "bytes captured between openssl 3.0.13 s_client and s_server on localhost; values checked against s_client -trace of the same run; layout by independent Python",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "1603030058020000540303cf21ad74e59a6111be1d8c021e65b891c2a211167abb8c5e079e09e2c8a8339c2048c5d5f6c626460406b8982d786ba94f34568ae0fed4a6adfc144fd300a0a504130200000c002b00020304003300020017140303000101160303009b020000970303944649132d25a70535333014c92aaec1a117edf03bf34ade105ef93f8b0d60ee2048c5d5f6c626460406b8982d786ba94f34568ae0fed4a6adfc144fd300a0a504130200004f002b0002030400330045001700410403047e01fb5c941ec59952b1859f5c790c2f2a3cce06c04714e9d3f2feb8d422453866b448caf3bf1537f6d635ebc8ade5b6d43e65a2c43ef53fabb6b000e0b11703030017e88bba0fa2789fa7d41720ab5680fa470e4e45eb4a093c17030301a23d20d1da71c3fa7932a47619fcbd8590575de806a3c4a45d7cfba22dd439042f57550b1418e0072d5f805bdd483d64b65e1d0a13a228015aa4ed0b79d0a0162365abf6df95aebce3abb4861619c00d79cd33ac902525dc94e57655d5b01ec54df45a7ecd2da81405301c61dd666f64570485d3eac2aecac04d815a84865a308f883c9e33bd80d165db55e8487e56d2196884de09b997f01782060de872db9795235b1ab69ba215717e1c201f92d22593ad4c663868f682545f02c38a3f91f734bc9ebd3ad3c8f77479f4b9b46de8a9d154d7cef82f49d24741a02d935521fb9a1c621f9d05e68a2b3532c7503997dabfc6c70c8c4e54bd1ff23bcbf153313f08cce58ada412b74c336e2a11c57c505a24cb730eb73be68a426037612cd69dd466699ce862e20a82d87afbed4f4292f9b585d009456ea01c840799de0966f7c2371688e381b913eac0f95593a20fa96146868d3680806bdc7607cf6eb2cb75f5e1ec3e81aac17e8972edd1ecd75223f9fcffdcb4270cb2e6e5f1a88c4b2f0e5af8fb8ebd7cae0423e68b0bc57fdda768264d34fa51f83c91891ff43ea668bc9d8a77c170303005f27d4599f244f871f3735cd557f4e555de0835beadc2e6c775e7eb3a5ecba234a3be14de9bf5a3427e317b460320596ffa5cd7374acde9bd0e805fed5007b91594a2f5ed0810bf2efba6744a6b05d7ae442be2e7ca379b9c639bd8308471226170303004541f61dbb572addff13193f3b6032f4f141dcf0f586ef37dc628b12305c669a30bcfe1fdbbc30e75d7381fa5cf93ebfe0bdda4ea6758772ca7e0ce8f202a673f5b5a523feb717030300faf8a65387e565a3baf31c900fe879087bf49bb7e94b49c148fecba5cc00769ea794a9586a4086aa3c6cbfd87ed1d76d9253c3f6cbb62b7297b9f6b4d6b133b1598a1dd0563e448bda651ba735aa003044b7853fd3150033c076fd0b7005495d865a6334ed93a20485eeda063bac47705f3ccea3dce1d80b0a285c6abd3fefb82775e859ad9fa57829019f66d594998cd390f8e0e5c1874cb5adccd226f4e8b5f7770276fbccfd7ac63cb00112490bb8f45780ba165b9adeafb5f69cc9b5af312d57ff624e7662d780a819e684191e29fe83d0892c8adcadbd89ffd1f4821ff1de0ec06f65f53b578349cb397e655d004b4d389843bc59153b56ff17030300faf80173f2c3af890f623d2e8ec9364c43e721b3643f8439a0798c5fb4ed4588463f5e3ca870c0e0d554e56212454d699ca7e1aae1b2dfee13fc1ec8cad4a26eb3077f2c02bc55fdda016514dc35b2e56494abd0ea45035f2fa05516c8d523e963333b9408764efd9856358cafba34f18f13cc7c00927d0e9f3e84d91a9bb4d882d40d713b1f8bbba74c8ddbc015831d156a276b4e086b980bf7ef99ca033da689e7251aed520e4032aace8233f06db009ea6b3e7d9ba66a8d8b3da404153f619323286984c1db5b9f0cee03119dca56da4d90225cab5ef28afc4676ac091e47dcb7919a051114465dd2a7a5fedfaa2f62ac146e601d6e45856b5f17030300137d02a7130cd3d61d90a990685b94a2d5d790f0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Record 1\n  Content type: Handshake (22)\n  Version: TLS 1.2 (0x0303)\n  Length: 88\n  Handshake: server_hello (2), length 84\n    Version: TLS 1.2 (0x0303)\n    Random: cf21ad74e59a6111be1d8c021e65b891c2a211167abb8c5e079e09e2c8a8339c (the HelloRetryRequest random: SHA-256 of HelloRetryRequest)\n    Session ID: 48c5d5f6c626460406b8982d786ba94f34568ae0fed4a6adfc144fd300a0a504\n    Cipher suite: TLS_AES_256_GCM_SHA384 (0x1302)\n    Compression method: null (0)\n    Extensions (2):\n      supported_versions (43), length 2\n        Selected version: TLS 1.3 (0x0304)\n      key_share (51), length 2\n        Key share: secp256r1 (0x0017), key exchange length 0\n\nRecord 2\n  Content type: ChangeCipherSpec (20)\n  Version: TLS 1.2 (0x0303)\n  Length: 1\n  Change cipher spec: 01\n\nRecord 3\n  Content type: Handshake (22)\n  Version: TLS 1.2 (0x0303)\n  Length: 155\n  Handshake: server_hello (2), length 151\n    Version: TLS 1.2 (0x0303)\n    Random: 944649132d25a70535333014c92aaec1a117edf03bf34ade105ef93f8b0d60ee\n    Session ID: 48c5d5f6c626460406b8982d786ba94f34568ae0fed4a6adfc144fd300a0a504\n    Cipher suite: TLS_AES_256_GCM_SHA384 (0x1302)\n    Compression method: null (0)\n    Extensions (2):\n      supported_versions (43), length 2\n        Selected version: TLS 1.3 (0x0304)\n      key_share (51), length 69\n        Key share: secp256r1 (0x0017), key exchange length 65\n\nRecord 4\n  Content type: ApplicationData (23)\n  Version: TLS 1.2 (0x0303)\n  Length: 23\n  Application data: 23 bytes (encrypted)\n\nRecord 5\n  Content type: ApplicationData (23)\n  Version: TLS 1.2 (0x0303)\n  Length: 418\n  Application data: 418 bytes (encrypted)\n\nRecord 6\n  Content type: ApplicationData (23)\n  Version: TLS 1.2 (0x0303)\n  Length: 95\n  Application data: 95 bytes (encrypted)\n\nRecord 7\n  Content type: ApplicationData (23)\n  Version: TLS 1.2 (0x0303)\n  Length: 69\n  Application data: 69 bytes (encrypted)\n\nRecord 8\n  Content type: ApplicationData (23)\n  Version: TLS 1.2 (0x0303)\n  Length: 250\n  Application data: 250 bytes (encrypted)\n\nRecord 9\n  Content type: ApplicationData (23)\n  Version: TLS 1.2 (0x0303)\n  Length: 250\n  Application data: 250 bytes (encrypted)\n\nRecord 10\n  Content type: ApplicationData (23)\n  Version: TLS 1.2 (0x0303)\n  Length: 19\n  Application data: 19 bytes (encrypted)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "TLS 1.3: second ClientHello after a HelloRetryRequest",
+    "ref": "bytes captured between openssl 3.0.13 s_client and s_server on localhost; values checked against s_client -trace of the same run; layout by independent Python",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "16030101210100011d0303c7c5b5e0dc6b8a48cc426b12e36a91db9190f2fbdd1107c81b7206d5c8c316812048c5d5f6c626460406b8982d786ba94f34568ae0fed4a6adfc144fd300a0a504003e130213031301c02cc030009fcca9cca8ccaac02bc02f009ec024c028006bc023c0270067c00ac0140039c009c0130033009d009c003d003c0035002f00ff010000960000000d000b0000086872722e74657374000b000403000102000a00060004001d0017002300000016000000170000000d002a0028040305030603080708080809080a080b080408050806040105010601030303010302040205020602002b00050403040303002d00020101003300260024001d0020b1436a6ede9001564aaf49291826ee387d03e8bab30af584d9ca9d9ac280df5114030300010116030301420100013e0303c7c5b5e0dc6b8a48cc426b12e36a91db9190f2fbdd1107c81b7206d5c8c316812048c5d5f6c626460406b8982d786ba94f34568ae0fed4a6adfc144fd300a0a504003e130213031301c02cc030009fcca9cca8ccaac02bc02f009ec024c028006bc023c0270067c00ac0140039c009c0130033009d009c003d003c0035002f00ff010000b70000000d000b0000086872722e74657374000b000403000102000a00060004001d0017002300000016000000170000000d002a0028040305030603080708080809080a080b080408050806040105010601030303010302040205020602002b00050403040303002d00020101003300470045001700410433753c058533a3aab4eab937d135bf83f0de827bdabe42cfeddff419e9efdccb4362cd2df9f26b45057d217de03c78ee840b556c4e79742e324a087019415b121703030045e7ccf3b0d4f62a2ac9c888b37bb8d40a987491361462f8a86bb5e983a8e5bbf21e17425a092c14c36703425f64ea8d34a20d16dcfbf019a704bf19adea055dda9900469d131703030013484fe84f1d28a0652d02bdf91894cc4db07e49",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Record 1\n  Content type: Handshake (22)\n  Version: TLS 1.0 (0x0301)\n  Length: 289\n  Handshake: client_hello (1), length 285\n    Version: TLS 1.2 (0x0303)\n    Random: c7c5b5e0dc6b8a48cc426b12e36a91db9190f2fbdd1107c81b7206d5c8c31681\n    Session ID: 48c5d5f6c626460406b8982d786ba94f34568ae0fed4a6adfc144fd300a0a504\n    Cipher suites (31):\n      TLS_AES_256_GCM_SHA384 (0x1302)\n      TLS_CHACHA20_POLY1305_SHA256 (0x1303)\n      TLS_AES_128_GCM_SHA256 (0x1301)\n      TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384 (0xc02c)\n      TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (0xc030)\n      TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (0x009f)\n      TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256 (0xcca9)\n      TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256 (0xcca8)\n      TLS_DHE_RSA_WITH_CHACHA20_POLY1305_SHA256 (0xccaa)\n      TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256 (0xc02b)\n      TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (0xc02f)\n      TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (0x009e)\n      TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384 (0xc024)\n      TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384 (0xc028)\n      TLS_DHE_RSA_WITH_AES_256_CBC_SHA256 (0x006b)\n      TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256 (0xc023)\n      TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256 (0xc027)\n      TLS_DHE_RSA_WITH_AES_128_CBC_SHA256 (0x0067)\n      TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA (0xc00a)\n      TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA (0xc014)\n      TLS_DHE_RSA_WITH_AES_256_CBC_SHA (0x0039)\n      TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA (0xc009)\n      TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA (0xc013)\n      TLS_DHE_RSA_WITH_AES_128_CBC_SHA (0x0033)\n      TLS_RSA_WITH_AES_256_GCM_SHA384 (0x009d)\n      TLS_RSA_WITH_AES_128_GCM_SHA256 (0x009c)\n      TLS_RSA_WITH_AES_256_CBC_SHA256 (0x003d)\n      TLS_RSA_WITH_AES_128_CBC_SHA256 (0x003c)\n      TLS_RSA_WITH_AES_256_CBC_SHA (0x0035)\n      TLS_RSA_WITH_AES_128_CBC_SHA (0x002f)\n      TLS_EMPTY_RENEGOTIATION_INFO_SCSV (0x00ff)\n    Compression methods (1): null (0)\n    Extensions (10):\n      server_name (0), length 13\n        Server name: hrr.test\n      ec_point_formats (11), length 4\n        EC point formats: uncompressed (0), ansiX962_compressed_prime (1), ansiX962_compressed_char2 (2)\n      supported_groups (10), length 6\n        Supported groups: x25519 (0x001d), secp256r1 (0x0017)\n      session_ticket (35), length 0\n      encrypt_then_mac (22), length 0\n      extended_master_secret (23), length 0\n      signature_algorithms (13), length 42\n        Signature algorithms: ecdsa_secp256r1_sha256 (0x0403), ecdsa_secp384r1_sha384 (0x0503), ecdsa_secp521r1_sha512 (0x0603), ed25519 (0x0807), ed448 (0x0808), rsa_pss_pss_sha256 (0x0809), rsa_pss_pss_sha384 (0x080a), rsa_pss_pss_sha512 (0x080b), rsa_pss_rsae_sha256 (0x0804), rsa_pss_rsae_sha384 (0x0805), rsa_pss_rsae_sha512 (0x0806), rsa_pkcs1_sha256 (0x0401), rsa_pkcs1_sha384 (0x0501), rsa_pkcs1_sha512 (0x0601), ecdsa_sha224 (0x0303), rsa_sha224 (0x0301), dsa_sha224 (0x0302), dsa_sha256 (0x0402), dsa_sha384 (0x0502), dsa_sha512 (0x0602)\n      supported_versions (43), length 5\n        Supported versions: TLS 1.3 (0x0304), TLS 1.2 (0x0303)\n      psk_key_exchange_modes (45), length 2\n        PSK key exchange modes: psk_dhe_ke (1)\n      key_share (51), length 38\n        Key shares:\n          x25519 (0x001d), key exchange length 32\n\nRecord 2\n  Content type: ChangeCipherSpec (20)\n  Version: TLS 1.2 (0x0303)\n  Length: 1\n  Change cipher spec: 01\n\nRecord 3\n  Content type: Handshake (22)\n  Version: TLS 1.2 (0x0303)\n  Length: 322\n  Handshake: client_hello (1), length 318\n    Version: TLS 1.2 (0x0303)\n    Random: c7c5b5e0dc6b8a48cc426b12e36a91db9190f2fbdd1107c81b7206d5c8c31681\n    Session ID: 48c5d5f6c626460406b8982d786ba94f34568ae0fed4a6adfc144fd300a0a504\n    Cipher suites (31):\n      TLS_AES_256_GCM_SHA384 (0x1302)\n      TLS_CHACHA20_POLY1305_SHA256 (0x1303)\n      TLS_AES_128_GCM_SHA256 (0x1301)\n      TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384 (0xc02c)\n      TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (0xc030)\n      TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (0x009f)\n      TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256 (0xcca9)\n      TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256 (0xcca8)\n      TLS_DHE_RSA_WITH_CHACHA20_POLY1305_SHA256 (0xccaa)\n      TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256 (0xc02b)\n      TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (0xc02f)\n      TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (0x009e)\n      TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384 (0xc024)\n      TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384 (0xc028)\n      TLS_DHE_RSA_WITH_AES_256_CBC_SHA256 (0x006b)\n      TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256 (0xc023)\n      TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256 (0xc027)\n      TLS_DHE_RSA_WITH_AES_128_CBC_SHA256 (0x0067)\n      TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA (0xc00a)\n      TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA (0xc014)\n      TLS_DHE_RSA_WITH_AES_256_CBC_SHA (0x0039)\n      TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA (0xc009)\n      TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA (0xc013)\n      TLS_DHE_RSA_WITH_AES_128_CBC_SHA (0x0033)\n      TLS_RSA_WITH_AES_256_GCM_SHA384 (0x009d)\n      TLS_RSA_WITH_AES_128_GCM_SHA256 (0x009c)\n      TLS_RSA_WITH_AES_256_CBC_SHA256 (0x003d)\n      TLS_RSA_WITH_AES_128_CBC_SHA256 (0x003c)\n      TLS_RSA_WITH_AES_256_CBC_SHA (0x0035)\n      TLS_RSA_WITH_AES_128_CBC_SHA (0x002f)\n      TLS_EMPTY_RENEGOTIATION_INFO_SCSV (0x00ff)\n    Compression methods (1): null (0)\n    Extensions (10):\n      server_name (0), length 13\n        Server name: hrr.test\n      ec_point_formats (11), length 4\n        EC point formats: uncompressed (0), ansiX962_compressed_prime (1), ansiX962_compressed_char2 (2)\n      supported_groups (10), length 6\n        Supported groups: x25519 (0x001d), secp256r1 (0x0017)\n      session_ticket (35), length 0\n      encrypt_then_mac (22), length 0\n      extended_master_secret (23), length 0\n      signature_algorithms (13), length 42\n        Signature algorithms: ecdsa_secp256r1_sha256 (0x0403), ecdsa_secp384r1_sha384 (0x0503), ecdsa_secp521r1_sha512 (0x0603), ed25519 (0x0807), ed448 (0x0808), rsa_pss_pss_sha256 (0x0809), rsa_pss_pss_sha384 (0x080a), rsa_pss_pss_sha512 (0x080b), rsa_pss_rsae_sha256 (0x0804), rsa_pss_rsae_sha384 (0x0805), rsa_pss_rsae_sha512 (0x0806), rsa_pkcs1_sha256 (0x0401), rsa_pkcs1_sha384 (0x0501), rsa_pkcs1_sha512 (0x0601), ecdsa_sha224 (0x0303), rsa_sha224 (0x0301), dsa_sha224 (0x0302), dsa_sha256 (0x0402), dsa_sha384 (0x0502), dsa_sha512 (0x0602)\n      supported_versions (43), length 5\n        Supported versions: TLS 1.3 (0x0304), TLS 1.2 (0x0303)\n      psk_key_exchange_modes (45), length 2\n        PSK key exchange modes: psk_dhe_ke (1)\n      key_share (51), length 71\n        Key shares:\n          secp256r1 (0x0017), key exchange length 65\n\nRecord 4\n  Content type: ApplicationData (23)\n  Version: TLS 1.2 (0x0303)\n  Length: 69\n  Application data: 69 bytes (encrypted)\n\nRecord 5\n  Content type: ApplicationData (23)\n  Version: TLS 1.2 (0x0303)\n  Length: 19\n  Application data: 19 bytes (encrypted)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "TLS 1.3: short extension lists",
+    "ref": "bytes captured between openssl 3.0.13 s_client and s_server on localhost; values checked against s_client -trace of the same run; layout by independent Python",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "16030100dc010000d80303f73e83d341beda6c06b32a6b60655f05c9f7ddfaadf79622f72093c12df82fe320835575b3b171793a50afd7fe47966c6b50334b0df2eb9da000577f27c2d463b30016130213031301c02ccca9c02bc024c023c00ac00900ff0100007900000012001000000d612e622e632e6578616d706c65000b000403000102000a00080006001d00170018002300000016000000170000000d0006000404030807002b00050403040303002d00020101003300260024001d002074308b7eac3e96c243ba37b254ac2d551ae92735dcd3cc9a3bcbfd476ea4e64814030300010117030300450678b9d679459ff514428bfc4bd846b71adbf21d8ff48f0cd861e114555cfdcd306348dcd1a20c9f7d93eca5264dba7d668bfaaff63a6ca54e6e4dfc3702a4fc9d222577c217030300132f036e752f91065aab8aac5c4f3e359b6d92a9",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Record 1\n  Content type: Handshake (22)\n  Version: TLS 1.0 (0x0301)\n  Length: 220\n  Handshake: client_hello (1), length 216\n    Version: TLS 1.2 (0x0303)\n    Random: f73e83d341beda6c06b32a6b60655f05c9f7ddfaadf79622f72093c12df82fe3\n    Session ID: 835575b3b171793a50afd7fe47966c6b50334b0df2eb9da000577f27c2d463b3\n    Cipher suites (11):\n      TLS_AES_256_GCM_SHA384 (0x1302)\n      TLS_CHACHA20_POLY1305_SHA256 (0x1303)\n      TLS_AES_128_GCM_SHA256 (0x1301)\n      TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384 (0xc02c)\n      TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256 (0xcca9)\n      TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256 (0xc02b)\n      TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384 (0xc024)\n      TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256 (0xc023)\n      TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA (0xc00a)\n      TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA (0xc009)\n      TLS_EMPTY_RENEGOTIATION_INFO_SCSV (0x00ff)\n    Compression methods (1): null (0)\n    Extensions (10):\n      server_name (0), length 18\n        Server name: a.b.c.example\n      ec_point_formats (11), length 4\n        EC point formats: uncompressed (0), ansiX962_compressed_prime (1), ansiX962_compressed_char2 (2)\n      supported_groups (10), length 8\n        Supported groups: x25519 (0x001d), secp256r1 (0x0017), secp384r1 (0x0018)\n      session_ticket (35), length 0\n      encrypt_then_mac (22), length 0\n      extended_master_secret (23), length 0\n      signature_algorithms (13), length 6\n        Signature algorithms: ecdsa_secp256r1_sha256 (0x0403), ed25519 (0x0807)\n      supported_versions (43), length 5\n        Supported versions: TLS 1.3 (0x0304), TLS 1.2 (0x0303)\n      psk_key_exchange_modes (45), length 2\n        PSK key exchange modes: psk_dhe_ke (1)\n      key_share (51), length 38\n        Key shares:\n          x25519 (0x001d), key exchange length 32\n\nRecord 2\n  Content type: ChangeCipherSpec (20)\n  Version: TLS 1.2 (0x0303)\n  Length: 1\n  Change cipher spec: 01\n\nRecord 3\n  Content type: ApplicationData (23)\n  Version: TLS 1.2 (0x0303)\n  Length: 69\n  Application data: 69 bytes (encrypted)\n\nRecord 4\n  Content type: ApplicationData (23)\n  Version: TLS 1.2 (0x0303)\n  Length: 19\n  Application data: 19 bytes (encrypted)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "TLS 1.3 ClientHello with GREASE values and many extensions",
+    "ref": "hello messages built with Python struct from RFC 8446 section 4.1.2 / RFC 5246 section 7.4.1.2 / RFC 8701 (GREASE) / RFC 8879; names from openssl ciphers -stdname; layout by independent Python",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "16030101300100012c0303000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f00102a2a130113021303c02bc02fcca900ff010000d30a0a000000000014001200000f7777772e6578616d706c652e6f7267000a000a00083a3a001d00170018000b000201000010000e000c02683208687474702f312e31000d0012001004030804040105030805050108060601002b0007064a4a030403030033002b00293a3a000100001d0020000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f002d0002010100230000ff01000100001b0003020002001c00024001fe0d000600000100010a99990002dead0015000c0000000000000000000000001a1a000100",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Record 1\n  Content type: Handshake (22)\n  Version: TLS 1.0 (0x0301)\n  Length: 304\n  Handshake: client_hello (1), length 300\n    Version: TLS 1.2 (0x0303)\n    Random: 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f\n    Session ID: 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f\n    Cipher suites (8):\n      unknown (0x2a2a)\n      TLS_AES_128_GCM_SHA256 (0x1301)\n      TLS_AES_256_GCM_SHA384 (0x1302)\n      TLS_CHACHA20_POLY1305_SHA256 (0x1303)\n      TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256 (0xc02b)\n      TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (0xc02f)\n      TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256 (0xcca9)\n      TLS_EMPTY_RENEGOTIATION_INFO_SCSV (0x00ff)\n    Compression methods (1): null (0)\n    Extensions (17):\n      GREASE (2570), length 0\n      server_name (0), length 20\n        Server name: www.example.org\n      supported_groups (10), length 10\n        Supported groups: GREASE (0x3a3a), x25519 (0x001d), secp256r1 (0x0017), secp384r1 (0x0018)\n      ec_point_formats (11), length 2\n        EC point formats: uncompressed (0)\n      application_layer_protocol_negotiation (16), length 14\n        Protocols: h2, http/1.1\n      signature_algorithms (13), length 18\n        Signature algorithms: ecdsa_secp256r1_sha256 (0x0403), rsa_pss_rsae_sha256 (0x0804), rsa_pkcs1_sha256 (0x0401), ecdsa_secp384r1_sha384 (0x0503), rsa_pss_rsae_sha384 (0x0805), rsa_pkcs1_sha384 (0x0501), rsa_pss_rsae_sha512 (0x0806), rsa_pkcs1_sha512 (0x0601)\n      supported_versions (43), length 7\n        Supported versions: GREASE (0x4a4a), TLS 1.3 (0x0304), TLS 1.2 (0x0303)\n      key_share (51), length 43\n        Key shares:\n          GREASE (0x3a3a), key exchange length 1\n          x25519 (0x001d), key exchange length 32\n      psk_key_exchange_modes (45), length 2\n        PSK key exchange modes: psk_dhe_ke (1)\n      session_ticket (35), length 0\n      renegotiation_info (65281), length 1\n        Data: 00\n      compress_certificate (27), length 3\n        Certificate compression algorithms: brotli (0x0002)\n      record_size_limit (28), length 2\n        Record size limit: 16385\n      encrypted_client_hello (65037), length 6\n        Data: 00000100010a\n      unknown (39321), length 2\n        Data: dead\n      padding (21), length 12\n        Padding: 12 bytes\n      GREASE (6682), length 1\n        Data: 00",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "SSL 3.0 ClientHello: no extensions, DEFLATE, an unassigned cipher suite",
+    "ref": "hello messages built with Python struct from RFC 8446 section 4.1.2 / RFC 5246 section 7.4.1.2 / RFC 8701 (GREASE) / RFC 8879; names from openssl ciphers -stdname; layout by independent Python",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "16030000340100003003006465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182830000080035002f0033fffe020100",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Record 1\n  Content type: Handshake (22)\n  Version: SSL 3.0 (0x0300)\n  Length: 52\n  Handshake: client_hello (1), length 48\n    Version: SSL 3.0 (0x0300)\n    Random: 6465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80818283\n    Session ID: (empty)\n    Cipher suites (4):\n      TLS_RSA_WITH_AES_256_CBC_SHA (0x0035)\n      TLS_RSA_WITH_AES_128_CBC_SHA (0x002f)\n      TLS_DHE_RSA_WITH_AES_128_CBC_SHA (0x0033)\n      unknown (0xfffe)\n    Compression methods (2): DEFLATE (1), null (0)\n    Extensions: none",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "TLS 1.0 ServerHello with no extensions and a session ID",
+    "ref": "hello messages built with Python struct from RFC 8446 section 4.1.2 / RFC 5246 section 7.4.1.2 / RFC 8701 (GREASE) / RFC 8879; names from openssl ciphers -stdname; layout by independent Python",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "160301004a020000460301000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f002f01",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Record 1\n  Content type: Handshake (22)\n  Version: TLS 1.0 (0x0301)\n  Length: 74\n  Handshake: server_hello (2), length 70\n    Version: TLS 1.0 (0x0301)\n    Random: 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f\n    Session ID: 202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f\n    Cipher suite: TLS_RSA_WITH_AES_128_CBC_SHA (0x002f)\n    Compression method: DEFLATE (1)\n    Extensions: none",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ServerHello and ServerHelloDone in one record; a Certificate that goes on",
+    "ref": "hello messages built with Python struct from RFC 8446 section 4.1.2 / RFC 5246 section 7.4.1.2 / RFC 8701 (GREASE) / RFC 8879; names from openssl ciphers -stdname; layout by independent Python",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "16030300620200004203036465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f8081828300c02f00001aff01000100000b000403000102002300000010000500030268320e0000000b0001f40000000000000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Record 1\n  Content type: Handshake (22)\n  Version: TLS 1.2 (0x0303)\n  Length: 98\n  Handshake: server_hello (2), length 66\n    Version: TLS 1.2 (0x0303)\n    Random: 6465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80818283\n    Session ID: (empty)\n    Cipher suite: TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (0xc02f)\n    Compression method: null (0)\n    Extensions (4):\n      renegotiation_info (65281), length 1\n        Data: 00\n      ec_point_formats (11), length 4\n        EC point formats: uncompressed (0), ansiX962_compressed_prime (1), ansiX962_compressed_char2 (2)\n      session_ticket (35), length 0\n      application_layer_protocol_negotiation (16), length 5\n        Protocols: h2\n  Handshake: server_hello_done (14), length 0\n  Handshake: certificate (11), length 500 (only 20 bytes are in this record; the message goes on in the next one)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Alerts, ChangeCipherSpec, Heartbeat, ApplicationData and an odd alert",
+    "ref": "hello messages built with Python struct from RFC 8446 section 4.1.2 / RFC 5246 section 7.4.1.2 / RFC 8701 (GREASE) / RFC 8879; names from openssl ciphers -stdname; layout by independent Python",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "1503030002022815030300020100150301000209461503030003022801140303000101180302001801000570696e672100000000000000000000000000000000170303001eaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Record 1\n  Content type: Alert (21)\n  Version: TLS 1.2 (0x0303)\n  Length: 2\n  Alert: fatal (2), handshake_failure (40)\n\nRecord 2\n  Content type: Alert (21)\n  Version: TLS 1.2 (0x0303)\n  Length: 2\n  Alert: warning (1), close_notify (0)\n\nRecord 3\n  Content type: Alert (21)\n  Version: TLS 1.0 (0x0301)\n  Length: 2\n  Alert: unknown (9), protocol_version (70)\n\nRecord 4\n  Content type: Alert (21)\n  Version: TLS 1.2 (0x0303)\n  Length: 3\n  Alert: 3 bytes (encrypted, or not a valid alert)\n\nRecord 5\n  Content type: ChangeCipherSpec (20)\n  Version: TLS 1.2 (0x0303)\n  Length: 1\n  Change cipher spec: 01\n\nRecord 6\n  Content type: Heartbeat (24)\n  Version: TLS 1.1 (0x0302)\n  Length: 24\n\nRecord 7\n  Content type: ApplicationData (23)\n  Version: TLS 1.2 (0x0303)\n  Length: 30\n  Application data: 30 bytes (encrypted)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "SNI with two host names and a foreign name type; post-quantum groups; two key shares",
+    "ref": "hello messages built with Python struct from RFC 8446 section 4.1.2 / RFC 5246 section 7.4.1.2 / RFC 8701 (GREASE) / RFC 8879; names from openssl ciphers -stdname; layout by independent Python",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "16030100b1010000ad0303000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f0000021301010000820000001e001c000009612e6578616d706c6507000178000009622e6578616d706c65000a000e000c001d11eb11ec0100639900630033004a0048001d00200101010101010101010101010101010101010101010101010101010101010101001700200202020202020202020202020202020202020202020202020202020202020202",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Record 1\n  Content type: Handshake (22)\n  Version: TLS 1.0 (0x0301)\n  Length: 177\n  Handshake: client_hello (1), length 173\n    Version: TLS 1.2 (0x0303)\n    Random: 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f\n    Session ID: (empty)\n    Cipher suites (1):\n      TLS_AES_128_GCM_SHA256 (0x1301)\n    Compression methods (1): null (0)\n    Extensions (3):\n      server_name (0), length 30\n        Server name: a.example, b.example\n      supported_groups (10), length 14\n        Supported groups: x25519 (0x001d), unknown (0x11eb), unknown (0x11ec), ffdhe2048 (0x0100), unknown (0x6399), unknown (0x0063)\n      key_share (51), length 74\n        Key shares:\n          x25519 (0x001d), key exchange length 32\n          secp256r1 (0x0017), key exchange length 32",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "two records, each with a ClientHello",
+    "ref": "hello messages built with Python struct from RFC 8446 section 4.1.2 / RFC 5246 section 7.4.1.2 / RFC 8701 (GREASE) / RFC 8879; names from openssl ciphers -stdname; layout by independent Python",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "160301002f0100002b0303000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f000002002f0100000016030300370100003303036465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80818283010100041301c030020001000400170000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Record 1\n  Content type: Handshake (22)\n  Version: TLS 1.0 (0x0301)\n  Length: 47\n  Handshake: client_hello (1), length 43\n    Version: TLS 1.2 (0x0303)\n    Random: 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f\n    Session ID: (empty)\n    Cipher suites (1):\n      TLS_RSA_WITH_AES_128_CBC_SHA (0x002f)\n    Compression methods (1): null (0)\n    Extensions (0):\n\nRecord 2\n  Content type: Handshake (22)\n  Version: TLS 1.2 (0x0303)\n  Length: 55\n  Handshake: client_hello (1), length 51\n    Version: TLS 1.2 (0x0303)\n    Random: 6465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80818283\n    Session ID: 01\n    Cipher suites (2):\n      TLS_AES_128_GCM_SHA256 (0x1301)\n      TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (0xc030)\n    Compression methods (2): null (0), DEFLATE (1)\n    Extensions (1):\n      extended_master_secret (23), length 0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "empty handshake record, and one with three bytes",
+    "ref": "hello messages built with Python struct from RFC 8446 section 4.1.2 / RFC 5246 section 7.4.1.2 / RFC 8701 (GREASE) / RFC 8879; names from openssl ciphers -stdname; layout by independent Python",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "16030300001603030003010000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Record 1\n  Content type: Handshake (22)\n  Version: TLS 1.2 (0x0303)\n  Length: 0\n  Handshake: an empty fragment\n\nRecord 2\n  Content type: Handshake (22)\n  Version: TLS 1.2 (0x0303)\n  Length: 3\n  Handshake: cut short (3 bytes of a header)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "HelloRetryRequest built by hand",
+    "ref": "hello messages built with Python struct from RFC 8446 section 4.1.2 / RFC 5246 section 7.4.1.2 / RFC 8701 (GREASE) / RFC 8879; names from openssl ciphers -stdname; layout by independent Python",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "1603030058020000540303cf21ad74e59a6111be1d8c021e65b891c2a211167abb8c5e079e09e2c8a8339c200707070707070707070707070707070707070707070707070707070707070707130100000c002b00020304003300020017",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Record 1\n  Content type: Handshake (22)\n  Version: TLS 1.2 (0x0303)\n  Length: 88\n  Handshake: server_hello (2), length 84\n    Version: TLS 1.2 (0x0303)\n    Random: cf21ad74e59a6111be1d8c021e65b891c2a211167abb8c5e079e09e2c8a8339c (the HelloRetryRequest random: SHA-256 of HelloRetryRequest)\n    Session ID: 0707070707070707070707070707070707070707070707070707070707070707\n    Cipher suite: TLS_AES_128_GCM_SHA256 (0x1301)\n    Compression method: null (0)\n    Extensions (2):\n      supported_versions (43), length 2\n        Selected version: TLS 1.3 (0x0304)\n      key_share (51), length 2\n        Key share: secp256r1 (0x0017), key exchange length 0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "empty input",
+    "ref": "no records",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "plain text",
+    "ref": "not a TLS record",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "474554202f20485454502f312e310d0a0d0a",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "content type 25",
+    "ref": "content type",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "190303000178",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "content type 0",
+    "ref": "content type",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "000303000178",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "major version 2",
+    "ref": "version",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "160200000178",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "DTLS version",
+    "ref": "version",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "16fefd000178",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "record length above 18432",
+    "ref": "length limit",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "170303480100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a record at the limit but cut short",
+    "ref": "truncated",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "170303480000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "4 bytes",
+    "ref": "header cut short",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "16030101",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "record header only",
+    "ref": "fragment cut short",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "1603010130",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "one byte short",
+    "ref": "fragment cut short",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "16030101300100012c0303000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f00102a2a130113021303c02bc02fcca900ff010000d30a0a000000000014001200000f7777772e6578616d706c652e6f7267000a000a00083a3a001d00170018000b000201000010000e000c02683208687474702f312e31000d0012001004030804040105030805050108060601002b0007064a4a030403030033002b00293a3a000100001d0020000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f002d0002010100230000ff01000100001b0003020002001c00024001fe0d000600000100010a99990002dead0015000c0000000000000000000000001a1a0001",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a good record then 3 stray bytes",
+    "ref": "header cut short",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "16030101300100012c0303000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f00102a2a130113021303c02bc02fcca900ff010000d30a0a000000000014001200000f7777772e6578616d706c652e6f7267000a000a00083a3a001d00170018000b000201000010000e000c02683208687474702f312e31000d0012001004030804040105030805050108060601002b0007064a4a030403030033002b00293a3a000100001d0020000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f002d0002010100230000ff01000100001b0003020002001c00024001fe0d000600000100010a99990002dead0015000c0000000000000000000000001a1a000100160303",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a good record then a bad one",
+    "ref": "content type",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "16030101300100012c0303000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f00102a2a130113021303c02bc02fcca900ff010000d30a0a000000000014001200000f7777772e6578616d706c652e6f7267000a000a00083a3a001d00170018000b000201000010000e000c02683208687474702f312e31000d0012001004030804040105030805050108060601002b0007064a4a030403030033002b00293a3a000100001d0020000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f002d0002010100230000ff01000100001b0003020002001c00024001fe0d000600000100010a99990002dead0015000c0000000000000000000000001a1a000100630303000178",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "hello: session ID of 33 bytes",
+    "ref": "session id length",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "160303004e0100004a0303000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f21000000000000000000000000000000000000000000000000000000000000000000000213010100",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "hello: odd cipher suite list",
+    "ref": "odd",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "160303002e0100002a0303000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f0000031301020100",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "hello: cipher list longer than the message",
+    "ref": "vector overrun",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "160303002d010000290303000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f00fff013010100",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "hello: compression list longer than the message",
+    "ref": "vector overrun",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "160303002d010000290303000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f00000213010900",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "hello: extension block longer than the message",
+    "ref": "extensions",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "16030300330100002f0303000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f00000213010100001000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "hello: extension block shorter than the message",
+    "ref": "trailing byte",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "1603030034010000300303000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f00000213010100000400170000aa",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "hello: one byte where the extension block length should be",
+    "ref": "cut",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "160303002e0100002a0303000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f0000021301010000",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "hello: extension longer than the block",
+    "ref": "extension overrun",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "1603030037010000330303000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f0000021301010000080017000961626364",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "hello: cut in the random",
+    "ref": "cut",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "16030300100100000c030300010203040506070809",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "hello: server_name longer than its list",
+    "ref": "sni overrun",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "160303003b010000370303000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f00000213010100000c000000080006000009616263",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "hello: odd supported_groups",
+    "ref": "odd",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "1603030038010000340303000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f000002130101000009000a00050003001d00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "hello: supported_groups length prefix does not match",
+    "ref": "prefix",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "1603030037010000330303000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f000002130101000008000a00040008001d",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "hello: ALPN with an empty name",
+    "ref": "empty name",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "1603030036010000320303000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f00000213010100000700100003000100",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "hello: key_share entry overruns",
+    "ref": "overrun",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "160303003b010000370303000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f00000213010100000c003300080006001d00286162",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "hello: supported_versions of one byte",
+    "ref": "cut",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "1603030034010000300303000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f000002130101000005002b000101",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "hello: signature_algorithms prefix 4 for 2 bytes",
+    "ref": "prefix",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "1603030037010000330303000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f000002130101000008000d000400040403",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "hello: record_size_limit of 3 bytes",
+    "ref": "length",
+    "op": "packets:parse-tls",
+    "params": {},
+    "input": {
+      "value": "1603030036010000320303000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f000002130101000007001c0003400100",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

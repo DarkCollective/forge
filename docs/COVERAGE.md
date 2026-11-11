@@ -15,7 +15,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Encryption / Encoding | 29 | 64 | 0 | 2 | 95 |
 | Public Key | 2 | 0 | 0 | 28 | 30 |
 | Arithmetic / Logic | 24 | 2 | 0 | 0 | 26 |
-| Networking | 0 | 0 | 2 | 32 | 34 |
+| Networking | 3 | 7 | 2 | 22 | 34 |
 | Language | 3 | 1 | 0 | 0 | 4 |
 | Utils | 34 | 14 | 2 | 0 | 50 |
 | Date / Time | 5 | 4 | 0 | 0 | 9 |
@@ -27,7 +27,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 9 | 4 | 3 | 5 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **202** | **143** | **7** | **154** | **506** |
+| **Total** | **205** | **150** | **7** | **144** | **506** |
 
 ## Data format (80)
 
@@ -286,20 +286,20 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | --- | --- | --- | --- |
 | HTTP request | dropped |  | It sends a request to another host. The bake Web Worker runs under a CSP of connect-src 'self' and Forge never talks to another host (as for Show on map), so the operation cannot exist; use curl or a browser, and paste the response into Forge. |
 | DNS over HTTPS | dropped |  | It asks a DNS-over-HTTPS resolver (Cloudflare or Google) over the network. The bake Web Worker's CSP is connect-src 'self' and Forge never talks to another host (as for Show on map), so the operation cannot exist. |
-| Strip HTTP headers | not yet |  |  |
-| Dechunk HTTP response | not yet |  |  |
-| Parse Ethernet frame | not yet |  |  |
+| Strip HTTP headers | redesigned | `http:strip-headers` | Bytes in, bytes out. Removes everything up to and including the first empty line (CRLF CRLF, LF LF or a mix of the two); a message that starts with an empty line has an empty header block. Differs from CyberChef, which returns the input unchanged when it finds no blank line: Forge raises E_COERCE (the header block is not closed), so a recipe notices a truncated message. The search is on the bytes as Latin-1, so any encoding and binary bodies work. |
+| Dechunk HTTP response | redesigned | `http:dechunk` | Bytes in, bytes out. Decodes the chunked transfer coding of RFC 9112 section 7.1: hexadecimal chunk sizes, chunk extensions (skipped), the trailer fields (skipped) and the empty line that ends the message; a bare LF is accepted for CRLF. Stricter than CyberChef: empty input, a size that is not hex or runs past the data, a missing line end after the data, a missing last chunk or trailer end (truncation) and bytes after the end of the message are E_COERCE with the offset, where CyberChef stops at what it can read. Linear and bounded: the output is never longer than the input and a size is only compared with the bytes that are left. Run Strip HTTP headers first on a whole response. |
+| Parse Ethernet frame | redesigned | `packets:parse-ethernet` | Input format hex (default) or raw bytes, as in CyberChef. The result is text, one 'Name: value' line per field, not CyberChef's HTML table: the destination and source MAC (lower case, colons), every VLAN tag (IEEE 802.1Q TPID 0x8100 and 802.1ad 0x88a8, any number, each with priority, drop-eligible bit and VLAN ID), the EtherType with its registry name, or the length of an IEEE 802.3 frame when the field is 1500 or less, and the payload as hex. A frame shorter than 14 bytes (or a VLAN tag cut short) is E_COERCE with the offset. The field order follows CyberChef; the exact wording and the VLAN tag handling are from memory of CyberChef 11.5.0 and not verified against its code (the WP 5.59 cross-check does that). |
 | Parse User Agent | not yet |  |  |
 | Parse IP range | not yet |  |  |
 | Parse IPv6 address | not yet |  |  |
 | IPv6 Transition Addresses | not yet |  |  |
-| Parse IPv4 header | not yet |  |  |
-| Strip IPv4 header | not yet |  |  |
-| Parse TCP | not yet |  |  |
-| Strip TCP header | not yet |  |  |
-| Parse TLS record | not yet |  |  |
-| Parse UDP | not yet |  |  |
-| Strip UDP header | not yet |  |  |
+| Parse IPv4 header | redesigned | `packets:parse-ipv4` | Input format hex (default) or raw bytes. Text with CyberChef's fields in its order (version, IHL with the byte length, DSCP, ECN, total length, identification in hex and decimal, the flags with each bit, fragment offset, TTL, protocol with its name, header checksum, source and destination address, options). Added: the header checksum is checked (valid, or invalid with the value it should have), the fragment offset also in bytes, and the options are decoded one per line (end of option list, no operation, others by name, kind, length and data in hex); an option with a missing, short or overlong length byte is E_COERCE. The header alone or a whole datagram is accepted and only the header is read. A header shorter than 20 bytes or than its IHL, a version other than 4 and an IHL below 5 are E_COERCE, where CyberChef prints what it can. The layout is from memory of CyberChef 11.5.0, not verified. |
+| Strip IPv4 header | covered | `packets:strip-ipv4` | Input format hex (default) or raw bytes; the output is the payload as bytes (use To Hex for hex text; CyberChef's own output type for this op was not verified). Drops IHL times 4 bytes, and also drops link padding after the datagram: the payload ends at the total length when that is set and the data holds that many bytes (a total length of 0, as with TCP segmentation offload, or one beyond the data keeps everything that is there). A header cut short, a version other than 4 and an IHL below 5 are E_COERCE. |
+| Parse TCP | redesigned | `packets:parse-tcp` | Input format hex (default) or raw bytes. Text: source and destination port, sequence and acknowledgement number, data offset (with the byte length), reserved bits, the nine flags (NS CWR ECE URG ACK PSH RST SYN FIN, summarised by name and one line each), window size, checksum as stored (not verified: that needs the IP addresses), urgent pointer, the options decoded (maximum segment size, window scale, SACK permitted, SACK blocks, timestamps, No-Operation, End of Option List; other kinds by name when known, with kind, length and data in hex) and the payload as hex. A header shorter than 20 bytes or than its data offset, a data offset below 5, an option with a missing, below-2 or overlong length byte, or a known kind with the wrong length, is E_COERCE with the offset. Field order and wording are from memory of CyberChef 11.5.0 (an HTML table) and not verified. |
+| Strip TCP header | covered | `packets:strip-tcp` | Input format hex (default) or raw bytes; the output is the payload as bytes: everything after the data offset times 4 bytes. A header cut short or a data offset below 5 is E_COERCE. |
+| Parse TLS record | redesigned | `packets:parse-tls` | Input format hex (default) or raw bytes; one or more records in a row. Text, a block per record separated by a blank line: content type, version, length; an alert with its level and description; handshake messages with their type and length and, for a ClientHello or ServerHello, the version, random, session ID, cipher suites with their IANA names (about 335 in the table), compression methods and extensions with their names, decoded for server_name, supported_groups, ec_point_formats, signature_algorithms, ALPN, supported_versions, psk_key_exchange_modes, key_share, compress_certificate, record_size_limit, padding and session_ticket (others as hex). GREASE values are named GREASE. SSL 3.0 and TLS 1.0 to 1.3 records are read; DTLS and SSL 2.0 are not TLS records. A message that goes on in the next record is shown with what is in the first record (messages are not joined across records). Anything that is not a TLS record, a record or hello cut short, lying lengths and damaged decoded extensions are E_COERCE with the offset. The hello reading is also shared words (packets:tls-records, tls-handshakes, tls-hellos) for the JA3 and JA4 ops of WP 5.54. The layout is Forge's own; CyberChef's was not verified. |
+| Parse UDP | redesigned | `packets:parse-udp` | Input format hex (default) or raw bytes. Text: source and destination port, length (a length beyond the data is shown with the number of bytes present; 0 means up to the end), checksum as stored (not verified) and the payload as hex, up to the length. A header shorter than 8 bytes or a length of 1 to 7 is E_COERCE. Field order from memory of CyberChef 11.5.0 (an HTML table), not verified. |
+| Strip UDP header | covered | `packets:strip-udp` | Input format hex (default) or raw bytes; the output is the payload as bytes. The 8-byte header is dropped, and so is anything after the length the header declares (link padding); a length of 0 or beyond the data keeps all that is there. A header shorter than 8 bytes or a length of 1 to 7 is E_COERCE. |
 | Parse URI | not yet |  |  |
 | Protobuf Decode | not yet |  |  |
 | Protobuf Encode | not yet |  |  |
