@@ -1,0 +1,233 @@
+[
+  {
+    "name": "RAKE: the example of Rose et al. 2010 with its stop words",
+    "ref": "Rose, Engel, Cramer, Cowley 2010 section 1.2.1; scores from the definition (the paper rounds minimal generating sets 8.67 to 8.7, linear Diophantine equations 8.5, minimal supporting set 7.67 to 7.7)",
+    "op": "rake:keywords",
+    "params": {
+      "max-words": 3,
+      "stop-words": "a an and are as at be by can for in into of on or over the these this to all given used",
+      "limit": 0
+    },
+    "input": {
+      "value": "Compatibility of systems of linear constraints over the set of natural numbers. Criteria of compatibility of a system of linear Diophantine equations, strict inequations, and nonstrict inequations are considered. Upper bounds for components of a minimal set of solutions and algorithms of construction of minimal generating sets of solutions for all types of systems are given. These criteria and the corresponding algorithms for constructing a minimal supporting set of solutions can be used in solving all the considered types of systems and systems of mixed types.",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "8.67\tminimal generating sets\n8.50\tlinear diophantine equations\n7.67\tminimal supporting set\n4.67\tminimal set\n4.50\tlinear constraints\n4.00\tnatural numbers\n4.00\tnonstrict inequations\n4.00\tstrict inequations\n4.00\tupper bounds\n3.67\tmixed types\n3.50\tcorresponding algorithms\n3.17\tconsidered types\n2.00\tset\n1.67\ttypes\n1.50\talgorithms\n1.50\tconsidered\n1.00\tcompatibility\n1.00\tcomponents\n1.00\tconstructing\n1.00\tconstruction\n1.00\tcriteria\n1.00\tsolutions\n1.00\tsolving\n1.00\tsystem\n1.00\tsystems",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RAKE: the same text, top 3 only",
+    "ref": "same as above with limit 3",
+    "op": "rake:keywords",
+    "params": {
+      "max-words": 3,
+      "stop-words": "a an and are as at be by can for in into of on or over the these this to all given used",
+      "limit": 3
+    },
+    "input": {
+      "value": "Compatibility of systems of linear constraints over the set of natural numbers. Criteria of compatibility of a system of linear Diophantine equations, strict inequations, and nonstrict inequations are considered. Upper bounds for components of a minimal set of solutions and algorithms of construction of minimal generating sets of solutions for all types of systems are given. These criteria and the corresponding algorithms for constructing a minimal supporting set of solutions can be used in solving all the considered types of systems and systems of mixed types.",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "8.67\tminimal generating sets\n8.50\tlinear diophantine equations\n7.67\tminimal supporting set",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RAKE: built-in stop words, hyphens and apostrophes inside words",
+    "ref": "hand-computed: machine and learning have degree 5 and frequency 2 (2.5 each), code 3, so learning machine code 8, machine learning 5, state-of-the-art tools 2 + 2",
+    "op": "rake:keywords",
+    "params": {
+      "max-words": 3,
+      "stop-words": "",
+      "limit": 0
+    },
+    "input": {
+      "value": "Machine learning is fun. Learning machine code is hard; state-of-the-art tools don't help!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "8.00\tlearning machine code\n5.00\tmachine learning\n4.00\tstate-of-the-art tools\n1.00\tfun\n1.00\thard\n1.00\thelp",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RAKE: max-words 1 keeps single words",
+    "ref": "hand-computed: the longer candidates are dropped before the counting",
+    "op": "rake:keywords",
+    "params": {
+      "max-words": 1,
+      "stop-words": "",
+      "limit": 0
+    },
+    "input": {
+      "value": "Machine learning is fun. Learning machine code is hard; state-of-the-art tools don't help!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1.00\tfun\n1.00\thard\n1.00\thelp",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RAKE: max-words 2 drops three-word candidates",
+    "ref": "hand-computed: learning machine code (3 words) is dropped before the counting, so every word has degree 2 or 1 and frequency 1",
+    "op": "rake:keywords",
+    "params": {
+      "max-words": 2,
+      "stop-words": "",
+      "limit": 0
+    },
+    "input": {
+      "value": "Machine learning is fun. Learning machine code is hard; state-of-the-art tools don't help!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4.00\tmachine learning\n4.00\tstate-of-the-art tools\n1.00\tfun\n1.00\thard\n1.00\thelp",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RAKE: a curly apostrophe is a stop word like the straight one",
+    "ref": "hand-computed: don't is a stop word",
+    "op": "rake:keywords",
+    "params": {
+      "max-words": 3,
+      "stop-words": "",
+      "limit": 0
+    },
+    "input": {
+      "value": "Don’t stop believing",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4.00\tstop believing",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RAKE: letters outside ASCII",
+    "ref": "hand-computed: two candidates of two words, each word degree 2 frequency 1",
+    "op": "rake:keywords",
+    "params": {
+      "max-words": 3,
+      "stop-words": "",
+      "limit": 0
+    },
+    "input": {
+      "value": "Café noir is très bon!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4.00\tcafé noir\n4.00\ttrès bon",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RAKE: custom stop words replace the built-in list",
+    "ref": "hand-computed: with fox and jumps as the only stop words, the is a word: the has frequency 2 and degree 2 + 4, quick 2, over lazy and dog 4",
+    "op": "rake:keywords",
+    "params": {
+      "max-words": 4,
+      "stop-words": "fox, jumps",
+      "limit": 0
+    },
+    "input": {
+      "value": "the quick fox jumps over the lazy dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "15.00\tover the lazy dog\n5.00\tthe quick",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RAKE: only stop words and punctuation",
+    "ref": "hand-computed: no candidate",
+    "op": "rake:keywords",
+    "params": {
+      "max-words": 3,
+      "stop-words": "",
+      "limit": 0
+    },
+    "input": {
+      "value": "the and of ... !",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RAKE: empty text",
+    "ref": "hand-computed",
+    "op": "rake:keywords",
+    "params": {
+      "max-words": 3,
+      "stop-words": "",
+      "limit": 0
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RAKE: max-words 0 is refused",
+    "ref": "the header limits max-words to 1 to 30",
+    "op": "rake:keywords",
+    "params": {
+      "max-words": 0,
+      "stop-words": "",
+      "limit": 0
+    },
+    "input": {
+      "value": "a b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "RAKE: max-words 31 is refused",
+    "ref": "the header limits max-words to 1 to 30",
+    "op": "rake:keywords",
+    "params": {
+      "max-words": 31,
+      "stop-words": "",
+      "limit": 0
+    },
+    "input": {
+      "value": "a b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "RAKE: negative limit is refused",
+    "ref": "the header limits limit to 0 or more",
+    "op": "rake:keywords",
+    "params": {
+      "max-words": 3,
+      "stop-words": "",
+      "limit": -1
+    },
+    "input": {
+      "value": "a b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  }
+]
