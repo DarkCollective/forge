@@ -783,5 +783,30 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "encrypt CTR across the 32-bit counter wrap",
+    "ref": "key stream = BF-ECB-ECB of a1b2c3d4fffffffe, a1b2c3d4ffffffff, a1b2c3d400000000 (openssl enc): the counter is the last 4 bytes, wrapping with no carry (node-forge inc32)",
+    "op": "blowfish:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeffedcba9876543210",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "a1b2c3d4fffffffe",
+        "enc": "hex"
+      },
+      "mode": "CTR",
+      "padding": "none"
+    },
+    "input": {
+      "value": "00112233445566778899aabbccddeeff0102030405",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "e3dda0a71801b49c644a4481bc318869787fede026",
+      "enc": "hex"
+    }
   }
 ]

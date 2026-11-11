@@ -1899,5 +1899,30 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "encrypt CTR across the 32-bit counter wrap",
+    "ref": "key stream = aes-128-ecb of 000102030405060708090a0bfffffffe, 000102030405060708090a0bffffffff, 000102030405060708090a0b00000000 (openssl enc -ECB): last 4 bytes count, no carry (inc32)",
+    "op": "aes:encrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000102030405060708090a0bfffffffe",
+        "enc": "hex"
+      },
+      "mode": "CTR",
+      "padding": "none"
+    },
+    "input": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "bed2cd809eb01b9d4332de897b95492dcb42ee6babc27467f2c22a1ad7e3da25c6af60d151dc21105a",
+      "enc": "hex"
+    }
   }
 ]

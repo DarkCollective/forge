@@ -538,5 +538,30 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "encrypt CTR across the 32-bit counter wrap",
+    "ref": "key stream = sm4-ecb of 000102030405060708090a0bfffffffe, 000102030405060708090a0bffffffff, 000102030405060708090a0b00000000 (openssl enc -ECB): last 4 bytes count, no carry (inc32)",
+    "op": "sm4:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeffedcba9876543210",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000102030405060708090a0bfffffffe",
+        "enc": "hex"
+      },
+      "mode": "CTR",
+      "padding": "none"
+    },
+    "input": {
+      "value": "00112233445566778899aabbccddeeff0102030405060708090a0b0c0d0e0f1011121314",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "e1a0678f40b23b46925b467475f2bc0482cb1c419d7b30eba886e78093de44a3bff07cfe",
+      "enc": "hex"
+    }
   }
 ]

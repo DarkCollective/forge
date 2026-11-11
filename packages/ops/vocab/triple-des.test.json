@@ -460,5 +460,30 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "encrypt CTR across the 32-bit counter wrap",
+    "ref": "key stream = DES-EDE3-ECB of a1b2c3d4fffffffe, a1b2c3d4ffffffff, a1b2c3d400000000 (openssl enc): the counter is the last 4 bytes, wrapping with no carry (node-forge inc32)",
+    "op": "triple-des:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef23456789abcdef01456789abcdef0123",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "a1b2c3d4fffffffe",
+        "enc": "hex"
+      },
+      "mode": "CTR",
+      "padding": "none"
+    },
+    "input": {
+      "value": "00112233445566778899aabbccddeeff0102030405",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "cbf3758e99efb3b5c7fab8bf7881864e25ecc1762a",
+      "enc": "hex"
+    }
   }
 ]
