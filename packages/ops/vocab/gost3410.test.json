@@ -1,0 +1,875 @@
+[
+  {
+    "name": "public key of a test-256 private key",
+    "ref": "independent Python (affine arithmetic on integers) over the published curve; RFC 7091 section 7 for the test curves",
+    "op": "gost3410:public-key",
+    "params": {
+      "curve": "test-256"
+    },
+    "input": {
+      "value": "1b2049c56f8fcec6ce00ee1eba62e1093fada9403a90b5ceeae822983632e9cb",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "6d789f4a41d6d8422fbba7f6cfd15d8cb9d41c2004f62729de6e9e498c8f11fe12ee8ebd17fc22c484e5bd8599c56f7ba82ecab8d1f2c1fb7b49b834aa582f05",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a test-256 signature of sample",
+    "ref": "signature made by an independent Python implementation of RFC 7091 (digest: the streebog words, RFC 6986)",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "6d789f4a41d6d8422fbba7f6cfd15d8cb9d41c2004f62729de6e9e498c8f11fe12ee8ebd17fc22c484e5bd8599c56f7ba82ecab8d1f2c1fb7b49b834aa582f05",
+      "curve": "test-256",
+      "message": {
+        "value": "73616d706c65",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "7b0fa47abd4e7688fa6bdd9853a95c8acf23cf8dacdd9d5a9a6914e23686e7d84e8ccfe1d2513d506352e90cb0a05dad3c5d34d0a22119d3293e8a6421c8f334",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a test-256 signature: other message",
+    "ref": "error case",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "6d789f4a41d6d8422fbba7f6cfd15d8cb9d41c2004f62729de6e9e498c8f11fe12ee8ebd17fc22c484e5bd8599c56f7ba82ecab8d1f2c1fb7b49b834aa582f05",
+      "curve": "test-256",
+      "message": {
+        "value": "other",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "7b0fa47abd4e7688fa6bdd9853a95c8acf23cf8dacdd9d5a9a6914e23686e7d84e8ccfe1d2513d506352e90cb0a05dad3c5d34d0a22119d3293e8a6421c8f334",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verification Failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a test-256 signature: s changed",
+    "ref": "error case",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "6d789f4a41d6d8422fbba7f6cfd15d8cb9d41c2004f62729de6e9e498c8f11fe12ee8ebd17fc22c484e5bd8599c56f7ba82ecab8d1f2c1fb7b49b834aa582f05",
+      "curve": "test-256",
+      "message": {
+        "value": "73616d706c65",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "7b0fa47abd4e7688fa6bdd9853a95c8acf23cf8dacdd9d5a9a6914e23686e7d84e8ccfe1d2513d506352e90cb0a05dad3c5d34d0a22119d3293e8a6421c8f335",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verification Failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "public key of a test-512 private key",
+    "ref": "independent Python (affine arithmetic on integers) over the published curve; RFC 7091 section 7 for the test curves",
+    "op": "gost3410:public-key",
+    "params": {
+      "curve": "test-512"
+    },
+    "input": {
+      "value": "090ab81caf39c34e7cce44f3fa8bd0f53259f1d3a71568af0e2e66daa4e67f0726c37fc7b3c10818884264fea556b5127b0e3eb27279fae56743100faae4bab9",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "06584ed93b4389fdf86879b614cb74f0d777bd0c30361dcc4908eb789df61885a7b135c63c279b5e65640d0f31bc91d4d4e1899a73b8b2271c11148cdd19875a130446e7f1ce7aea31a22a104d8e5e1b4257dcabd48b6f3c9e19f6143f96c7a4414b458861158c293d1fe9a4b3cf52fc1621493ed6dd011b988852af07c08441",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a test-512 signature of sample",
+    "ref": "signature made by an independent Python implementation of RFC 7091 (digest: the streebog words, RFC 6986)",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "06584ed93b4389fdf86879b614cb74f0d777bd0c30361dcc4908eb789df61885a7b135c63c279b5e65640d0f31bc91d4d4e1899a73b8b2271c11148cdd19875a130446e7f1ce7aea31a22a104d8e5e1b4257dcabd48b6f3c9e19f6143f96c7a4414b458861158c293d1fe9a4b3cf52fc1621493ed6dd011b988852af07c08441",
+      "curve": "test-512",
+      "message": {
+        "value": "73616d706c65",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "025d4777607a40c2c071bdc58cfe85998b8a4f15c2eb7c2793c270b109da1d89807a1d08fde5abcf9fe011142beb1572e0e0ec47a3ec6914ac90e12a231d96851810b9224260d0d98433341ca6659faa478ba4d566b27d397daf1e20197e5216c68c36e394fb7ad647fa292f42e3763899d356068b31f6144e744ba8a8fb9101",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a test-512 signature: other message",
+    "ref": "error case",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "06584ed93b4389fdf86879b614cb74f0d777bd0c30361dcc4908eb789df61885a7b135c63c279b5e65640d0f31bc91d4d4e1899a73b8b2271c11148cdd19875a130446e7f1ce7aea31a22a104d8e5e1b4257dcabd48b6f3c9e19f6143f96c7a4414b458861158c293d1fe9a4b3cf52fc1621493ed6dd011b988852af07c08441",
+      "curve": "test-512",
+      "message": {
+        "value": "other",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "025d4777607a40c2c071bdc58cfe85998b8a4f15c2eb7c2793c270b109da1d89807a1d08fde5abcf9fe011142beb1572e0e0ec47a3ec6914ac90e12a231d96851810b9224260d0d98433341ca6659faa478ba4d566b27d397daf1e20197e5216c68c36e394fb7ad647fa292f42e3763899d356068b31f6144e744ba8a8fb9101",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verification Failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a test-512 signature: s changed",
+    "ref": "error case",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "06584ed93b4389fdf86879b614cb74f0d777bd0c30361dcc4908eb789df61885a7b135c63c279b5e65640d0f31bc91d4d4e1899a73b8b2271c11148cdd19875a130446e7f1ce7aea31a22a104d8e5e1b4257dcabd48b6f3c9e19f6143f96c7a4414b458861158c293d1fe9a4b3cf52fc1621493ed6dd011b988852af07c08441",
+      "curve": "test-512",
+      "message": {
+        "value": "73616d706c65",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "025d4777607a40c2c071bdc58cfe85998b8a4f15c2eb7c2793c270b109da1d89807a1d08fde5abcf9fe011142beb1572e0e0ec47a3ec6914ac90e12a231d96851810b9224260d0d98433341ca6659faa478ba4d566b27d397daf1e20197e5216c68c36e394fb7ad647fa292f42e3763899d356068b31f6144e744ba8a8fb9100",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verification Failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a test-512 signature of empty",
+    "ref": "signature made by an independent Python implementation of RFC 7091 (digest: the streebog words, RFC 6986)",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "06584ed93b4389fdf86879b614cb74f0d777bd0c30361dcc4908eb789df61885a7b135c63c279b5e65640d0f31bc91d4d4e1899a73b8b2271c11148cdd19875a130446e7f1ce7aea31a22a104d8e5e1b4257dcabd48b6f3c9e19f6143f96c7a4414b458861158c293d1fe9a4b3cf52fc1621493ed6dd011b988852af07c08441",
+      "curve": "test-512",
+      "message": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "32a68ed227f85642274f69fa2549d9cd41a495f2a57d1ab45a6e09cd538f6c15d48c481bf1d2e1bd8abb03b4f19f087d710e2583bcb28e40ba5594f03c176bd123dda3cb5851ea76164948ce10ea4dd7aafe0b4af40a2a2de089cdda80baead386a727b21ae528ca442235fc0392b91cf93b3c5eed07e7122c8ea00f552f25f5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a test-512 signature of all",
+    "ref": "signature made by an independent Python implementation of RFC 7091 (digest: the streebog words, RFC 6986)",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "06584ed93b4389fdf86879b614cb74f0d777bd0c30361dcc4908eb789df61885a7b135c63c279b5e65640d0f31bc91d4d4e1899a73b8b2271c11148cdd19875a130446e7f1ce7aea31a22a104d8e5e1b4257dcabd48b6f3c9e19f6143f96c7a4414b458861158c293d1fe9a4b3cf52fc1621493ed6dd011b988852af07c08441",
+      "curve": "test-512",
+      "message": {
+        "value": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "20bc3030a204c190f84c338a42e39479c473074b2c1d46722f9b6d9bb33c2adb2198877f811efea5ea4a2c4a1050dca0685731c88e0a437d1627777996829c832c2f06265eb08e8e13cd6475fc6bbfbee8adff818ba66042432bb189f1ef59590c0b4dac63c255f9a3694148c872ffeb47b5438c99b18c01826f5118cf9be75a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "public key of a cryptopro-a private key",
+    "ref": "independent Python (affine arithmetic on integers) over the published curve; RFC 7091 section 7 for the test curves",
+    "op": "gost3410:public-key",
+    "params": {
+      "curve": "cryptopro-a"
+    },
+    "input": {
+      "value": "f59df467a0bd85e02c42835803544bfdae21be34ada4c03698ab404f31f19fa9",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ed213bd6be94d9ca2a8a9f627198991b23ef4bf116fb56daa08ba78d5faa0c1e41ea12b0cc09ce79a2ce9a60ea32a34cf94479b2de7ed9cebed2697fcf53d884",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a cryptopro-a signature of sample",
+    "ref": "signature made by an independent Python implementation of RFC 7091 (digest: the streebog words, RFC 6986)",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "ed213bd6be94d9ca2a8a9f627198991b23ef4bf116fb56daa08ba78d5faa0c1e41ea12b0cc09ce79a2ce9a60ea32a34cf94479b2de7ed9cebed2697fcf53d884",
+      "curve": "cryptopro-a",
+      "message": {
+        "value": "73616d706c65",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0d1eee5f3cb8afca1221b00654768ff0649a4e9edeb8b8f4a193bb99fd7a86458e22a7af7925f126c3cd9cdfe5f889af3b374e0ce32d328df99c065dd7c4e00b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a cryptopro-a signature: other message",
+    "ref": "error case",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "ed213bd6be94d9ca2a8a9f627198991b23ef4bf116fb56daa08ba78d5faa0c1e41ea12b0cc09ce79a2ce9a60ea32a34cf94479b2de7ed9cebed2697fcf53d884",
+      "curve": "cryptopro-a",
+      "message": {
+        "value": "other",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "0d1eee5f3cb8afca1221b00654768ff0649a4e9edeb8b8f4a193bb99fd7a86458e22a7af7925f126c3cd9cdfe5f889af3b374e0ce32d328df99c065dd7c4e00b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verification Failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a cryptopro-a signature: s changed",
+    "ref": "error case",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "ed213bd6be94d9ca2a8a9f627198991b23ef4bf116fb56daa08ba78d5faa0c1e41ea12b0cc09ce79a2ce9a60ea32a34cf94479b2de7ed9cebed2697fcf53d884",
+      "curve": "cryptopro-a",
+      "message": {
+        "value": "73616d706c65",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0d1eee5f3cb8afca1221b00654768ff0649a4e9edeb8b8f4a193bb99fd7a86458e22a7af7925f126c3cd9cdfe5f889af3b374e0ce32d328df99c065dd7c4e00a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verification Failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a cryptopro-a signature of empty",
+    "ref": "signature made by an independent Python implementation of RFC 7091 (digest: the streebog words, RFC 6986)",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "ed213bd6be94d9ca2a8a9f627198991b23ef4bf116fb56daa08ba78d5faa0c1e41ea12b0cc09ce79a2ce9a60ea32a34cf94479b2de7ed9cebed2697fcf53d884",
+      "curve": "cryptopro-a",
+      "message": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "1a7bea78a07b1f37399c2949b629185f5e339767af51ae2a1d5ec84992983f03f91d2cd48884d866edeab422a1c533b6d22e0b69b0e4972d524fc9f1c1e9c88d",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a cryptopro-a signature of all",
+    "ref": "signature made by an independent Python implementation of RFC 7091 (digest: the streebog words, RFC 6986)",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "ed213bd6be94d9ca2a8a9f627198991b23ef4bf116fb56daa08ba78d5faa0c1e41ea12b0cc09ce79a2ce9a60ea32a34cf94479b2de7ed9cebed2697fcf53d884",
+      "curve": "cryptopro-a",
+      "message": {
+        "value": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "2d8b438914589c8a0f71f0c66047f4d86da837062ca8577d91153adb6799fb13fea36d747cdf0b8858f8fceec0784830cd6c79ef0c0ba369622cb28c5e11e963",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "public key of a cryptopro-b private key",
+    "ref": "independent Python (affine arithmetic on integers) over the published curve; RFC 7091 section 7 for the test curves",
+    "op": "gost3410:public-key",
+    "params": {
+      "curve": "cryptopro-b"
+    },
+    "input": {
+      "value": "19d5dccabda3620ea54b936ccb2d0a280140040c9a49e80f74ce94ca8fbcfe88",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "7b2a697f48a1580c65221a38c67b7e44b2f4164b4470d03529a795f040ee91c077c10844344945aaa59c9cc078d749be7e14bd84283f7a2d4155cbfba247c784",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a cryptopro-b signature of sample",
+    "ref": "signature made by an independent Python implementation of RFC 7091 (digest: the streebog words, RFC 6986)",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "7b2a697f48a1580c65221a38c67b7e44b2f4164b4470d03529a795f040ee91c077c10844344945aaa59c9cc078d749be7e14bd84283f7a2d4155cbfba247c784",
+      "curve": "cryptopro-b",
+      "message": {
+        "value": "73616d706c65",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "11c225e3cd838b538d2c98f0fff3aed93935a615a0f5fec6e099ea4c804a76c32e401e27e43603ea2926f303856040351cc960a41b52763c2f182e568695f3a8",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a cryptopro-b signature: other message",
+    "ref": "error case",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "7b2a697f48a1580c65221a38c67b7e44b2f4164b4470d03529a795f040ee91c077c10844344945aaa59c9cc078d749be7e14bd84283f7a2d4155cbfba247c784",
+      "curve": "cryptopro-b",
+      "message": {
+        "value": "other",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "11c225e3cd838b538d2c98f0fff3aed93935a615a0f5fec6e099ea4c804a76c32e401e27e43603ea2926f303856040351cc960a41b52763c2f182e568695f3a8",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verification Failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a cryptopro-b signature: s changed",
+    "ref": "error case",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "7b2a697f48a1580c65221a38c67b7e44b2f4164b4470d03529a795f040ee91c077c10844344945aaa59c9cc078d749be7e14bd84283f7a2d4155cbfba247c784",
+      "curve": "cryptopro-b",
+      "message": {
+        "value": "73616d706c65",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "11c225e3cd838b538d2c98f0fff3aed93935a615a0f5fec6e099ea4c804a76c32e401e27e43603ea2926f303856040351cc960a41b52763c2f182e568695f3a9",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verification Failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "public key of a cryptopro-c private key",
+    "ref": "independent Python (affine arithmetic on integers) over the published curve; RFC 7091 section 7 for the test curves",
+    "op": "gost3410:public-key",
+    "params": {
+      "curve": "cryptopro-c"
+    },
+    "input": {
+      "value": "41070102e18af5f87a49c1dc20805dedbfed3a91ddd35f6c7c931f9f4edd0754",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "89f905b97ee924e4e2e6b534098a1b531b1b074fae339e7d685ce8ba97a58a51612364aab0d6b3fd7147670eca75c7d59aa967a3fdfa1aee343a31137328c8c9",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a cryptopro-c signature of sample",
+    "ref": "signature made by an independent Python implementation of RFC 7091 (digest: the streebog words, RFC 6986)",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "89f905b97ee924e4e2e6b534098a1b531b1b074fae339e7d685ce8ba97a58a51612364aab0d6b3fd7147670eca75c7d59aa967a3fdfa1aee343a31137328c8c9",
+      "curve": "cryptopro-c",
+      "message": {
+        "value": "73616d706c65",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "34292faf4bccecf91712abada8d82fa2d34ec580f05b015aae6fc433afacae3809547e17972c07c4a251d5c893de4f9d54abfa7c5c324fa7f85e9258d37a582e",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a cryptopro-c signature: other message",
+    "ref": "error case",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "89f905b97ee924e4e2e6b534098a1b531b1b074fae339e7d685ce8ba97a58a51612364aab0d6b3fd7147670eca75c7d59aa967a3fdfa1aee343a31137328c8c9",
+      "curve": "cryptopro-c",
+      "message": {
+        "value": "other",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "34292faf4bccecf91712abada8d82fa2d34ec580f05b015aae6fc433afacae3809547e17972c07c4a251d5c893de4f9d54abfa7c5c324fa7f85e9258d37a582e",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verification Failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a cryptopro-c signature: s changed",
+    "ref": "error case",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "89f905b97ee924e4e2e6b534098a1b531b1b074fae339e7d685ce8ba97a58a51612364aab0d6b3fd7147670eca75c7d59aa967a3fdfa1aee343a31137328c8c9",
+      "curve": "cryptopro-c",
+      "message": {
+        "value": "73616d706c65",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "34292faf4bccecf91712abada8d82fa2d34ec580f05b015aae6fc433afacae3809547e17972c07c4a251d5c893de4f9d54abfa7c5c324fa7f85e9258d37a582f",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verification Failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "public key of a tc26-512-a private key",
+    "ref": "independent Python (affine arithmetic on integers) over the published curve; RFC 7091 section 7 for the test curves",
+    "op": "gost3410:public-key",
+    "params": {
+      "curve": "tc26-512-a"
+    },
+    "input": {
+      "value": "c3b5747bf8f6d8f5c64c0b489ad134e8ae45f5fc0c753beee681da9c97e7b499fcc170568df0ad09aac1eb0e37fc31d4286062cba824c1745954c7c0fff4e6ea",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1a871a0a5e85345162e8e167790a5fc070a9f2b899934f6d1820c631efb392c01ce297153fff1d3232d78d5c34c28468422e6b6bf0df126af28181c827ec476855f7b851beff228c70dc53a1946309009ff621333dff566210c7bf67b373ebeeba73a191c2571b8230e335ec9cedb6f7eaeb1ae20948dbd805bd0497ce30f204",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a tc26-512-a signature of sample",
+    "ref": "signature made by an independent Python implementation of RFC 7091 (digest: the streebog words, RFC 6986)",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "1a871a0a5e85345162e8e167790a5fc070a9f2b899934f6d1820c631efb392c01ce297153fff1d3232d78d5c34c28468422e6b6bf0df126af28181c827ec476855f7b851beff228c70dc53a1946309009ff621333dff566210c7bf67b373ebeeba73a191c2571b8230e335ec9cedb6f7eaeb1ae20948dbd805bd0497ce30f204",
+      "curve": "tc26-512-a",
+      "message": {
+        "value": "73616d706c65",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "7b99aa69c371b21706619e2a95fc6f9d257d36d7b192d5b24c7a510ff0c0e1af83436e8cabc38ea359c081ada4c740bd4a1cd1a726c04c9d79c5cab8863788896c1fbea456c7897a51fd89a90d2d9a0add2a9a7611878ee70d1de1dfaa418e9bb9c16a921da90031ece2db25f81f5cc2aa7eb8c9518bcad79ce5c3d45431169a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a tc26-512-a signature: other message",
+    "ref": "error case",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "1a871a0a5e85345162e8e167790a5fc070a9f2b899934f6d1820c631efb392c01ce297153fff1d3232d78d5c34c28468422e6b6bf0df126af28181c827ec476855f7b851beff228c70dc53a1946309009ff621333dff566210c7bf67b373ebeeba73a191c2571b8230e335ec9cedb6f7eaeb1ae20948dbd805bd0497ce30f204",
+      "curve": "tc26-512-a",
+      "message": {
+        "value": "other",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "7b99aa69c371b21706619e2a95fc6f9d257d36d7b192d5b24c7a510ff0c0e1af83436e8cabc38ea359c081ada4c740bd4a1cd1a726c04c9d79c5cab8863788896c1fbea456c7897a51fd89a90d2d9a0add2a9a7611878ee70d1de1dfaa418e9bb9c16a921da90031ece2db25f81f5cc2aa7eb8c9518bcad79ce5c3d45431169a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verification Failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a tc26-512-a signature: s changed",
+    "ref": "error case",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "1a871a0a5e85345162e8e167790a5fc070a9f2b899934f6d1820c631efb392c01ce297153fff1d3232d78d5c34c28468422e6b6bf0df126af28181c827ec476855f7b851beff228c70dc53a1946309009ff621333dff566210c7bf67b373ebeeba73a191c2571b8230e335ec9cedb6f7eaeb1ae20948dbd805bd0497ce30f204",
+      "curve": "tc26-512-a",
+      "message": {
+        "value": "73616d706c65",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "7b99aa69c371b21706619e2a95fc6f9d257d36d7b192d5b24c7a510ff0c0e1af83436e8cabc38ea359c081ada4c740bd4a1cd1a726c04c9d79c5cab8863788896c1fbea456c7897a51fd89a90d2d9a0add2a9a7611878ee70d1de1dfaa418e9bb9c16a921da90031ece2db25f81f5cc2aa7eb8c9518bcad79ce5c3d45431169b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verification Failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify: r of zero is a failure",
+    "ref": "error case",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "ed213bd6be94d9ca2a8a9f627198991b23ef4bf116fb56daa08ba78d5faa0c1e41ea12b0cc09ce79a2ce9a60ea32a34cf94479b2de7ed9cebed2697fcf53d884",
+      "curve": "cryptopro-a",
+      "message": {
+        "value": "73616d706c65",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "00000000000000000000000000000000000000000000000000000000000000008e22a7af7925f126c3cd9cdfe5f889af3b374e0ce32d328df99c065dd7c4e00b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verification Failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify: s equal to the order is a failure",
+    "ref": "error case",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "ed213bd6be94d9ca2a8a9f627198991b23ef4bf116fb56daa08ba78d5faa0c1e41ea12b0cc09ce79a2ce9a60ea32a34cf94479b2de7ed9cebed2697fcf53d884",
+      "curve": "cryptopro-a",
+      "message": {
+        "value": "73616d706c65",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0d1eee5f3cb8afca1221b00654768ff0649a4e9edeb8b8f4a193bb99fd7a8645ffffffffffffffffffffffffffffffff6c611070995ad10045841b09b761b893",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verification Failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify: a signature of the wrong length is a failure",
+    "ref": "error case",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "ed213bd6be94d9ca2a8a9f627198991b23ef4bf116fb56daa08ba78d5faa0c1e41ea12b0cc09ce79a2ce9a60ea32a34cf94479b2de7ed9cebed2697fcf53d884",
+      "curve": "cryptopro-a",
+      "message": {
+        "value": "73616d706c65",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0d1eee5f3cb8afca1221b00654768ff0649a4e9edeb8b8f4a193bb99fd7a86458e22a7af7925f126c3cd9cdfe5f889af3b374e0ce32d328df99c065dd7c4e0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verification Failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify: empty signature is a failure",
+    "ref": "error case",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "ed213bd6be94d9ca2a8a9f627198991b23ef4bf116fb56daa08ba78d5faa0c1e41ea12b0cc09ce79a2ce9a60ea32a34cf94479b2de7ed9cebed2697fcf53d884",
+      "curve": "cryptopro-a",
+      "message": {
+        "value": "73616d706c65",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verification Failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify: white space in the signature is ignored",
+    "ref": "RFC 7091",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "ed213bd6be94d9ca2a8a9f627198991b23ef4bf116fb56daa08ba78d5faa0c1e41ea12b0cc09ce79a2ce9a60ea32a34cf94479b2de7ed9cebed2697fcf53d884",
+      "curve": "cryptopro-a",
+      "message": {
+        "value": "73616d706c65",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0d1eee5f3cb8afca1221b00654768ff0649a4e9edeb8b8f4a193bb99fd7a8645\n 8e22a7af7925f126c3cd9cdfe5f889af3b374e0ce32d328df99c065dd7c4e00b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify: bad hex",
+    "ref": "error case",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "ed213bd6be94d9ca2a8a9f627198991b23ef4bf116fb56daa08ba78d5faa0c1e41ea12b0cc09ce79a2ce9a60ea32a34cf94479b2de7ed9cebed2697fcf53d884",
+      "curve": "cryptopro-a",
+      "message": {
+        "value": "73616d706c65",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "zz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "verify: public key of the wrong size",
+    "ref": "error case",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "213bd6be94d9ca2a8a9f627198991b23ef4bf116fb56daa08ba78d5faa0c1e41ea12b0cc09ce79a2ce9a60ea32a34cf94479b2de7ed9cebed2697fcf53d884",
+      "curve": "cryptopro-a",
+      "message": {
+        "value": "73616d706c65",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0d1eee5f3cb8afca1221b00654768ff0649a4e9edeb8b8f4a193bb99fd7a86458e22a7af7925f126c3cd9cdfe5f889af3b374e0ce32d328df99c065dd7c4e00b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "verify: no public key",
+    "ref": "error case",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "",
+      "curve": "cryptopro-a",
+      "message": {
+        "value": "73616d706c65",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0d1eee5f3cb8afca1221b00654768ff0649a4e9edeb8b8f4a193bb99fd7a86458e22a7af7925f126c3cd9cdfe5f889af3b374e0ce32d328df99c065dd7c4e00b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "verify: a point not on the curve",
+    "ref": "error case",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "ed213bd6be94d9ca2a8a9f627198991b23ef4bf116fb56daa08ba78d5faa0c1e41ea12b0cc09ce79a2ce9a60ea32a34cf94479b2de7ed9cebed2697fcf53d800",
+      "curve": "cryptopro-a",
+      "message": {
+        "value": "73616d706c65",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0d1eee5f3cb8afca1221b00654768ff0649a4e9edeb8b8f4a193bb99fd7a86458e22a7af7925f126c3cd9cdfe5f889af3b374e0ce32d328df99c065dd7c4e00b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "verify: the key of another curve is a failure",
+    "ref": "error case",
+    "op": "gost3410:verify",
+    "params": {
+      "public-key": "ed213bd6be94d9ca2a8a9f627198991b23ef4bf116fb56daa08ba78d5faa0c1e41ea12b0cc09ce79a2ce9a60ea32a34cf94479b2de7ed9cebed2697fcf53d884",
+      "curve": "cryptopro-b",
+      "message": {
+        "value": "73616d706c65",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0d1eee5f3cb8afca1221b00654768ff0649a4e9edeb8b8f4a193bb99fd7a86458e22a7af7925f126c3cd9cdfe5f889af3b374e0ce32d328df99c065dd7c4e00b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "sign: a private key of the wrong size",
+    "ref": "error case",
+    "op": "gost3410:sign",
+    "params": {
+      "private-key": "ababababababababababababababababababababababababababababababab",
+      "curve": "cryptopro-a"
+    },
+    "input": {
+      "value": "m",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "sign: no private key",
+    "ref": "error case",
+    "op": "gost3410:sign",
+    "params": {
+      "private-key": "",
+      "curve": "cryptopro-a"
+    },
+    "input": {
+      "value": "m",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "sign: a 512-bit curve wants 64 bytes",
+    "ref": "error case",
+    "op": "gost3410:sign",
+    "params": {
+      "private-key": "abababababababababababababababababababababababababababababababab",
+      "curve": "tc26-512-a"
+    },
+    "input": {
+      "value": "m",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "sign: private key zero",
+    "ref": "error case",
+    "op": "gost3410:sign",
+    "params": {
+      "private-key": "0000000000000000000000000000000000000000000000000000000000000000",
+      "curve": "cryptopro-a"
+    },
+    "input": {
+      "value": "m",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "sign: private key equal to the order",
+    "ref": "error case",
+    "op": "gost3410:sign",
+    "params": {
+      "private-key": "ffffffffffffffffffffffffffffffff6c611070995ad10045841b09b761b893",
+      "curve": "cryptopro-a"
+    },
+    "input": {
+      "value": "m",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "public key: private key of the wrong size",
+    "ref": "error case",
+    "op": "gost3410:public-key",
+    "params": {
+      "curve": "cryptopro-a"
+    },
+    "input": {
+      "value": "ab",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "public key: not hex",
+    "ref": "error case",
+    "op": "gost3410:public-key",
+    "params": {
+      "curve": "cryptopro-a"
+    },
+    "input": {
+      "value": "xyz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]
