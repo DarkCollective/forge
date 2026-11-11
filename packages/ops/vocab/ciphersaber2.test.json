@@ -1,0 +1,97 @@
+[
+  {
+    "name": "rounds 20, the IV in front",
+    "ref": "throwaway independent reference of the CipherSaber-2 protocol (ciphersaber.gurus.org): RC4 over key||IV, N setup rounds; not a published vector",
+    "op": "ciphersaber2:decrypt",
+    "params": {
+      "key": {
+        "value": "asdfg",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "000102030405060708093f2e62724738e5b0ee5430979037f19e6fb68b",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "48656c6c6f2c20436970686572536162657221",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "rounds 1 (CipherSaber-1)",
+    "ref": "throwaway independent reference of the CipherSaber-2 protocol (ciphersaber.gurus.org): RC4 over key||IV, N setup rounds; not a published vector",
+    "op": "ciphersaber2:decrypt",
+    "params": {
+      "key": {
+        "value": "asdfg",
+        "enc": "utf8"
+      },
+      "rounds": 1
+    },
+    "input": {
+      "value": "0001020304050607080901caac5a13fe93d16d01d5227191145402eaca",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "48656c6c6f2c20436970686572536162657221",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "only the IV: empty plaintext",
+    "ref": "throwaway independent reference of the CipherSaber-2 protocol (ciphersaber.gurus.org): RC4 over key||IV, N setup rounds; not a published vector",
+    "op": "ciphersaber2:decrypt",
+    "params": {
+      "key": {
+        "value": "asdfg",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "00010203040506070809",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "input shorter than the IV is E_COERCE",
+    "ref": "CipherSaber messages start with a 10-byte IV",
+    "op": "ciphersaber2:decrypt",
+    "params": {
+      "key": {
+        "value": "asdfg",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "0102030405",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "rounds 0 is rejected (encryption itself is random, see src/ciphersaber2.test.ts)",
+    "ref": "CipherSaber-2 needs at least one key setup round",
+    "op": "ciphersaber2:encrypt",
+    "params": {
+      "key": {
+        "value": "asdfg",
+        "enc": "utf8"
+      },
+      "rounds": 0
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  }
+]

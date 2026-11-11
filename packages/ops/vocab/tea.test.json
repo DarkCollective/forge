@@ -1,0 +1,219 @@
+[
+  {
+    "name": "all-zero key and block, ECB",
+    "ref": "the all-zero known answer for TEA (key 0, block 0, 32 cycles) that is cited by the Crypto++ and Botan test suites; matches the 1994 reference code",
+    "op": "tea:encrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "41ea3a0a94baa940",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "all-zero key, ECB",
+    "ref": "the all-zero known answer for TEA (key 0, block 0, 32 cycles) that is cited by the Crypto++ and Botan test suites; matches the 1994 reference code",
+    "op": "tea:decrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "41ea3a0a94baa940",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CBC with PKCS#7, 21 bytes",
+    "ref": "throwaway independent reference (Wheeler and Needham reference round function, big-endian words, modes written separately); not a published vector",
+    "op": "tea:encrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "6465666768696a6b",
+        "enc": "hex"
+      },
+      "mode": "CBC"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "193ce7e8cfa4e73aa546a7b94f63a33c6eb06bb83c6aa513",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CBC with PKCS#7",
+    "ref": "throwaway independent reference (Wheeler and Needham reference round function, big-endian words, modes written separately); not a published vector",
+    "op": "tea:decrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "6465666768696a6b",
+        "enc": "hex"
+      },
+      "mode": "CBC"
+    },
+    "input": {
+      "value": "193ce7e8cfa4e73aa546a7b94f63a33c6eb06bb83c6aa513",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "ECB with PKCS#7",
+    "ref": "throwaway independent reference (Wheeler and Needham reference round function, big-endian words, modes written separately); not a published vector",
+    "op": "tea:encrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "mode": "ECB"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "f2830f775be39b35f3189bb9e3d5ef78aa045757c38cade6",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CTR keeps the length",
+    "ref": "throwaway independent reference (Wheeler and Needham reference round function, big-endian words, modes written separately); not a published vector",
+    "op": "tea:encrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "6465666768696a6b",
+        "enc": "hex"
+      },
+      "mode": "CTR"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "2be8d0557494202fe15070ad8d142e4181df72f1e0",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CTR",
+    "ref": "throwaway independent reference (Wheeler and Needham reference round function, big-endian words, modes written separately); not a published vector",
+    "op": "tea:decrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "6465666768696a6b",
+        "enc": "hex"
+      },
+      "mode": "CTR"
+    },
+    "input": {
+      "value": "2be8d0557494202fe15070ad8d142e4181df72f1e0",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "an empty input is an empty output",
+    "ref": "CyberChef returns an empty output for an empty input",
+    "op": "tea:encrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "a 15-byte key is E_RANGE",
+    "ref": "TEA takes a 128-bit key",
+    "op": "tea:encrypt",
+    "params": {
+      "key": {
+        "value": "000000000000000000000000000000",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "bad padding is E_COERCE",
+    "ref": "PKCS#7 (RFC 5652 section 6.3)",
+    "op": "tea:decrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "6465666768696a6b",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

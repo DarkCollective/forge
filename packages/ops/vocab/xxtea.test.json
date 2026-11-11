@@ -1,0 +1,170 @@
+[
+  {
+    "name": "8 zero bytes under a zero key",
+    "ref": "throwaway independent reference of btea from \"Correction to xtea\" (Needham and Wheeler, 1998) with the length-word convention of CyberChef; not a published vector",
+    "op": "xxtea:encrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "88b373981a7e8e565baf0c14",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "8 zero bytes under a zero key",
+    "ref": "throwaway independent reference of btea from \"Correction to xtea\" (Needham and Wheeler, 1998) with the length-word convention of CyberChef; not a published vector",
+    "op": "xxtea:decrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "88b373981a7e8e565baf0c14",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "21 bytes",
+    "ref": "throwaway independent reference of btea from \"Correction to xtea\" (Needham and Wheeler, 1998) with the length-word convention of CyberChef; not a published vector",
+    "op": "xxtea:encrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "431420e102850488bdaca43e9d120835e5dbe067977a1c488b5c4fc0",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "21 bytes",
+    "ref": "throwaway independent reference of btea from \"Correction to xtea\" (Needham and Wheeler, 1998) with the length-word convention of CyberChef; not a published vector",
+    "op": "xxtea:decrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "431420e102850488bdaca43e9d120835e5dbe067977a1c488b5c4fc0",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "one byte, a 1-byte key zero-padded",
+    "ref": "throwaway independent reference of btea from \"Correction to xtea\" (Needham and Wheeler, 1998) with the length-word convention of CyberChef; not a published vector",
+    "op": "xxtea:encrypt",
+    "params": {
+      "key": {
+        "value": "6b",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "41",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "453511d3e9fe1085",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "an empty input is an empty output",
+    "ref": "CyberChef returns the empty input",
+    "op": "xxtea:encrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "a 17-byte key is E_RANGE",
+    "ref": "XXTEA takes a 128-bit key",
+    "op": "xxtea:encrypt",
+    "params": {
+      "key": {
+        "value": "0000000000000000000000000000000000",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "a wrong key is E_COERCE",
+    "ref": "the stored length word does not fit",
+    "op": "xxtea:decrypt",
+    "params": {
+      "key": {
+        "value": "ffffffffffffffffffffffffffffffff",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "431420e102850488bdaca43e9d120835e5dbe067977a1c488b5c4fc0",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a ciphertext that is not whole words is E_COERCE",
+    "ref": "XXTEA works on 32-bit words",
+    "op": "xxtea:decrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0102030405",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]
