@@ -96,7 +96,7 @@ USING: tcpip hex ;
   d d _tag-count _ethernet2 "\n" join ;
 
 : parse-ethernet ( data:bytes format:choice{hex|raw}="hex" -- str )
-  "Parse an Ethernet frame (Parse Ethernet frame), given as hex text or raw bytes, without the preamble and the frame check sequence: the destination and source MAC addresses (lower case, colon separated), every VLAN tag (IEEE 802.1Q TPID 0x8100 or 802.1ad 0x88a8, with the priority, the drop eligible bit and the VLAN ID), the EtherType with its name (IPv4, ARP, IPv6, ...; a value up to 1500 is the length of an IEEE 802.3 frame instead), and the payload as hex. A frame shorter than its header, or a VLAN tag cut short, is E_COERCE with the offset; bad hex is E_COERCE. The layout is Forge's own, in CyberChef's field order." doc
+  "Parse an Ethernet frame (Parse Ethernet frame), given as hex text or raw bytes, without the preamble and the frame check sequence: the destination and sender MAC addresses (lower case, colon separated), every VLAN tag (IEEE 802.1Q TPID 0x8100 or 802.1ad 0x88a8, with the priority, the drop eligible bit and the VLAN ID), the EtherType with its name (IPv4, ARP, IPv6, ...; a value up to 1500 is the length of an IEEE 802.3 frame instead), and the payload as hex. A frame shorter than its header, or a VLAN tag cut short, is E_COERCE with the offset; bad hex is E_COERCE. The layout is Forge's own, in CyberChef's field order." doc
   "Networking" category
   data format _input _ethernet ;
 
@@ -278,7 +278,7 @@ USING: tcpip hex ;
   d hl d len _payload cat ;
 
 : parse-tcp ( data:bytes format:choice{hex|raw}="hex" -- str )
-  "Parse a TCP segment (Parse TCP), given as hex text or raw bytes: source and destination port, sequence and acknowledgement number, the data offset (the header length in 32-bit words), the reserved bits, the nine flags (NS, CWR, ECE, URG, ACK, PSH, RST, SYN, FIN, with their names in the summary), window size, checksum (as stored: it is not checked, which needs the IP addresses), urgent pointer, the options decoded (maximum segment size, window scale, SACK permitted, SACK blocks, timestamps, No-Operation, End of Option List; any other kind with its name when known, its kind, length and data in hex) and the payload as hex. A header shorter than 20 bytes or than its data offset, a data offset below 5 and an option with a missing, short or overlong length byte, or a known kind with the wrong length, are E_COERCE with the offset. The layout is Forge's own, in CyberChef's field order." doc
+  "Parse a TCP segment (Parse TCP), given as hex text or raw bytes: sender and receiver port, sequence and acknowledgement number, the data offset (the header length in 32-bit words), the reserved bits, the nine flags (NS, CWR, ECE, URG, ACK, PSH, RST, SYN, FIN, with their names in the summary), window size, checksum (as stored: it is not checked, which needs the IP addresses), urgent pointer, the options decoded (maximum segment size, window scale, SACK permitted, SACK blocks, timestamps, No-Operation, End of Option List; any other kind with its name when known, its kind, length and data in hex) and the payload as hex. A header shorter than 20 bytes or than its data offset, a data offset below 5 and an option with a missing, short or overlong length byte, or a known kind with the wrong length, are E_COERCE with the offset. The layout is Forge's own, in CyberChef's field order." doc
   "Networking" category
   data format _input dup _tcp-hl _tcp-lines "\n" join ;
 
@@ -307,7 +307,7 @@ USING: tcpip hex ;
   d 8 length 8 d len _end _payload cat ;
 
 : parse-udp ( data:bytes format:choice{hex|raw}="hex" -- str )
-  "Parse a UDP datagram (Parse UDP), given as hex text or raw bytes: source and destination port, the length (header and data; a length beyond the data is shown with the number of bytes that are present, and a length of 0 means up to the end), the checksum as stored (it is not checked, which needs the IP addresses) and the payload as hex, up to the length. A header shorter than 8 bytes or a length between 1 and 7 is E_COERCE. The layout is Forge's own, in CyberChef's field order." doc
+  "Parse a UDP datagram (Parse UDP), given as hex text or raw bytes: sender and receiver port, the length (header and data; a length beyond the data is shown with the number of bytes that are present, and a length of 0 means up to the end), the checksum as stored (it is not checked, which needs the IP addresses) and the payload as hex, up to the length. A header shorter than 8 bytes or a length between 1 and 7 is E_COERCE. The layout is Forge's own, in CyberChef's field order." doc
   "Networking" category
   data format _input dup _udp-length _udp-lines "\n" join ;
 
