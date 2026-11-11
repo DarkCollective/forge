@@ -1,0 +1,187 @@
+[
+  {
+    "name": "accents on Latin letters",
+    "ref": "NFD then dropping U+0300 to U+036F: the marks of Crème Brûlée",
+    "op": "diacritics:remove",
+    "params": {},
+    "input": {
+      "value": "Crème Brûlée",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Creme Brulee",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "many Latin accents",
+    "ref": "precomposed Latin-1 and Latin Extended letters",
+    "op": "diacritics:remove",
+    "params": {},
+    "input": {
+      "value": "ÀÉÎÕÜ àéîõü ñç ÿ Ångström",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "AEIOU aeiou nc y Angstrom",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Vietnamese",
+    "ref": "letters with two marks (circumflex and dot below) in NFD",
+    "op": "diacritics:remove",
+    "params": {},
+    "input": {
+      "value": "Việt Nam",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Viet Nam",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Polish and Czech",
+    "ref": "ó ł ś ź ą ę ć ń ž š ř č ů",
+    "op": "diacritics:remove",
+    "params": {},
+    "input": {
+      "value": "Zażółć gęślą jaźń; Příliš žluťoučký kůň",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Zazolc gesla jazn; Prilis zlutoucky kun",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Greek and Cyrillic",
+    "ref": "tonos and breve are combining marks after NFD",
+    "op": "diacritics:remove",
+    "params": {},
+    "input": {
+      "value": "ά ή ώ й ё",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "α η ω и е",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a separate combining mark",
+    "ref": "e followed by U+0301 COMBINING ACUTE ACCENT",
+    "op": "diacritics:remove",
+    "params": {},
+    "input": {
+      "value": "café",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "cafe",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "letters with a stroke",
+    "ref": "O/o with stroke, D/d with stroke, eth, L/l with stroke, H/h with stroke, T/t with stroke, dotless i",
+    "op": "diacritics:remove",
+    "params": {
+      "strokes": true
+    },
+    "input": {
+      "value": "Ørsted øre Đorđe Ð ð Łódź ħ Ŧ ŧ ı",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Orsted ore Dorde D d Lodz h T t i",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "strokes off",
+    "ref": "the letters with a stroke have no decomposition and stay",
+    "op": "diacritics:remove",
+    "params": {
+      "strokes": false
+    },
+    "input": {
+      "value": "Ørsted Łódź ı",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Ørsted Łodz ı",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "text without marks is unchanged",
+    "ref": "ASCII, sharp s, ligatures and CJK have no marks",
+    "op": "diacritics:remove",
+    "params": {},
+    "input": {
+      "value": "Plain ASCII; ß æ œ 日本語",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Plain ASCII; ß æ œ 日本語",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Hangul and kana are recomposed",
+    "ref": "NFD splits them into jamo and kana + voiced mark, NFC joins them again",
+    "op": "diacritics:remove",
+    "params": {},
+    "input": {
+      "value": "한국어 ガ ぱ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "한국어 ガ ぱ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "emoji and astral characters",
+    "ref": "code points above U+FFFF pass through",
+    "op": "diacritics:remove",
+    "params": {},
+    "input": {
+      "value": "😀 é 𝒜",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "😀 e 𝒜",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "the empty text",
+    "ref": "nothing to do",
+    "op": "diacritics:remove",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "input that is not UTF-8",
+    "ref": "the input is decoded as strict UTF-8",
+    "op": "diacritics:remove",
+    "params": {},
+    "input": {
+      "value": "ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]
