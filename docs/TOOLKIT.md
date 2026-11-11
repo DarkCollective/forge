@@ -49,7 +49,7 @@ Goals 3 and 6 pull against goal 1. A Relix engine in the browser is a second pla
 
 ### 2.1 Forge today
 
-From PLAN.md §7: **338 ops in 144 vocabularies**. CyberChef coverage: **193 covered, 124 redesigned, 5 dropped, 184 not yet, of 506**. 4,157 op vectors in 144 files. The tree has 150 `.fth` files in `packages/ops/vocab`: the 144 op vocabularies plus six internal ones.
+From PLAN.md §7: **363 ops in 155 vocabularies**. CyberChef coverage: **198 covered, 140 redesigned, 5 dropped, 163 not yet, of 506**. 4,488 op vectors in 155 files. The tree has 161 `.fth` files in `packages/ops/vocab`: the 155 op vocabularies plus six internal ones.
 
 **Triage of the 184 "not yet" ops** (the orchestrator's classification, not yet in the coverage JSON):
 
@@ -495,7 +495,7 @@ The `ext` tag, generic words, tagged literals, `charge` and new effect labels (�
 - Named inputs and their interplay with the stack, reviewed.
 - Core arithmetic made generic.
 
-**Migration.** A codemod work package rewrites all 150 `.fth` files in one sweep at a **wave boundary** (no op work packages in flight). All 4,157 vectors must pass unchanged. Word hashes all change, so the catalogue version bumps.
+**Migration.** A codemod work package rewrites all 161 `.fth` files in one sweep at a **wave boundary** (no op work packages in flight). All 4,488 vectors must pass unchanged. Word hashes all change, so the catalogue version bumps.
 
 **Share URLs.** RECIPES R8 and §3.10: a recipe step may carry an op `hash` pin. A mismatch is a warning by default (`pins: "warn"`) and an error under `"strict"`; a pin never selects an old implementation. `encodeShare` pins when it is given a catalogue. So after the sweep, unpinned URLs keep working; pinned URLs run the current op and show a `hash-mismatch` warning (or refuse, under `strict`). Whether the UI should say more than that is Q10.
 
@@ -590,7 +590,7 @@ Parallel, time-boxed, throwaway code. Each ends in a written result and an owner
 | L9 | Breaking fixes L-E (language part) | `packages/lang` | L2 | So | Each fix in §11.5 has a conformance block |
 | L10 | Generic arithmetic and generic words | `packages/lang/src/compiler.ts`, `dictionary.ts`, `vm.ts` | X1, L9 | So | Plain numbers bit-identical to v0.1; step overhead measured |
 | L11 | Kernel tier (only if L0 passes) | `packages/lang/src/kernel/*` | L7, L0 | So | Every kernel word equals the interpreted run |
-| L12 | Codemod over the 150 `.fth` files | `packages/ops/vocab/*.fth` | L2 to L10 | So | All 4,157 vectors pass unchanged; catalogue version bumped; run at a wave boundary |
+| L12 | Codemod over the 161 `.fth` files | `packages/ops/vocab/*.fth` | L2 to L10 | So | All 4,488 vectors pass unchanged; catalogue version bumped; run at a wave boundary |
 | L13 | Move primitives to FL (the 7 + 3 + 9 made possible by L2 and L7; the cipher and hash cores only if L11 passes) | `packages/ops/prims/*`, `vocab/*` | L12, L11 | Ha | Vectors unchanged; corpus-stats report shows the change in primitive count and lines |
 
 L10 needs the `ext` tag (X1), so X1 is built inside Phase T2 although it appears in the T3 table; the gate for T2 covers it.
