@@ -1,0 +1,236 @@
+[
+  {
+    "name": "key 00..0f, ABCDEFGH",
+    "ref": "XTEA known answer: key 000102030405060708090a0b0c0d0e0f, block \"ABCDEFGH\", 32 cycles, as in the Crypto++ test vectors; matches the Needham/Wheeler reference code",
+    "op": "xtea:encrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "4142434445464748",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "497df3d072612cb5",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "key 00..0f",
+    "ref": "XTEA known answer: key 000102030405060708090a0b0c0d0e0f, block \"ABCDEFGH\", 32 cycles, as in the Crypto++ test vectors; matches the Needham/Wheeler reference code",
+    "op": "xtea:decrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "497df3d072612cb5",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "4142434445464748",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "all-zero key and block",
+    "ref": "XTEA all-zero known answer dee9d4d8f7131ed9 (32 cycles); matches the reference code and the throwaway reference",
+    "op": "xtea:encrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "dee9d4d8f7131ed9",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CBC with PKCS#7, 21 bytes",
+    "ref": "throwaway independent reference (Wheeler and Needham reference round function, big-endian words, modes written separately); not a published vector",
+    "op": "xtea:encrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "6465666768696a6b",
+        "enc": "hex"
+      },
+      "mode": "CBC"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0ca2ae20fa9940037b79cf76cb9b1bbda7d8d5a933cd6f76",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CBC with PKCS#7",
+    "ref": "throwaway independent reference (Wheeler and Needham reference round function, big-endian words, modes written separately); not a published vector",
+    "op": "xtea:decrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "6465666768696a6b",
+        "enc": "hex"
+      },
+      "mode": "CBC"
+    },
+    "input": {
+      "value": "0ca2ae20fa9940037b79cf76cb9b1bbda7d8d5a933cd6f76",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "12 cycles, ECB",
+    "ref": "throwaway independent reference (Wheeler and Needham reference round function, big-endian words, modes written separately); not a published vector",
+    "op": "xtea:encrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "rounds": 12
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "b903de498947ced3e5d4ad636b859ba45ed0eb115a607bb6",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "12 cycles, ECB",
+    "ref": "throwaway independent reference (Wheeler and Needham reference round function, big-endian words, modes written separately); not a published vector",
+    "op": "xtea:decrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "rounds": 12
+    },
+    "input": {
+      "value": "b903de498947ced3e5d4ad636b859ba45ed0eb115a607bb6",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CTR keeps the length",
+    "ref": "throwaway independent reference (Wheeler and Needham reference round function, big-endian words, modes written separately); not a published vector",
+    "op": "xtea:encrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "6465666768696a6b",
+        "enc": "hex"
+      },
+      "mode": "CTR"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "acfe3c193e8f6352e6d80027be46e956d9e3569e8c",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "an empty input is an empty output",
+    "ref": "CyberChef returns an empty output for an empty input",
+    "op": "xtea:encrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "a 17-byte key is E_RANGE",
+    "ref": "XTEA takes a 128-bit key",
+    "op": "xtea:encrypt",
+    "params": {
+      "key": {
+        "value": "0000000000000000000000000000000000",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "ECB without padding needs whole blocks",
+    "ref": "block cipher modes (README, cipher conventions)",
+    "op": "xtea:decrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "0102030405",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

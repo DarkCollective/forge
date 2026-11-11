@@ -1,0 +1,216 @@
+[
+  {
+    "name": "A.1 key 00000000...",
+    "ref": "RFC 4503 appendix A.1 (key stream S[0], S[1], S[2] of the key, no IV), XORed into 48 zero bytes",
+    "op": "rabbit:crypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "endianness": "Big"
+    },
+    "input": {
+      "value": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "b15754f036a5d6ecf56b45261c4af70288e8d815c59c0c397b696c4789c68aa7f416a1c3700cd451da68d1881673d696",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "A.1 key 91281329...",
+    "ref": "RFC 4503 appendix A.1 (key stream S[0], S[1], S[2] of the key, no IV), XORed into 48 zero bytes",
+    "op": "rabbit:crypt",
+    "params": {
+      "key": {
+        "value": "912813292e3d36fe3bfc62f1dc51c3ac",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "endianness": "Big"
+    },
+    "input": {
+      "value": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "3d2df3c83ef627a1e97fc38487e2519cf576cd61f4405b8896bf53aa8554fc19e5547473fbdb43508ae53b20204d4c5e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "A.1 key 83957415...",
+    "ref": "RFC 4503 appendix A.1 (key stream S[0], S[1], S[2] of the key, no IV), XORed into 48 zero bytes",
+    "op": "rabbit:crypt",
+    "params": {
+      "key": {
+        "value": "8395741587e0c733e9e9ab01c09b0043",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "endianness": "Big"
+    },
+    "input": {
+      "value": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0cb10dcda041cdac32eb5cfd02d0609b95fc9fca0f17015a7b7092114cff3ead9649e5de8bfc7f3f924147ad3a947428",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "A.2 IV 0000000000000000",
+    "ref": "RFC 4503 appendix A.2 (key stream with IV setup), XORed into 48 zero bytes",
+    "op": "rabbit:crypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "0000000000000000",
+        "enc": "hex"
+      },
+      "endianness": "Big"
+    },
+    "input": {
+      "value": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "c6a7275ef85495d87ccd5d376705b7ed5f29a6ac04f5efd47b8f293270dc4a8d2ade822b29de6c1ee52bdb8a47bf8f66",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "A.2 IV c373f575c1267e59",
+    "ref": "RFC 4503 appendix A.2 (key stream with IV setup), XORed into 48 zero bytes",
+    "op": "rabbit:crypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "c373f575c1267e59",
+        "enc": "hex"
+      },
+      "endianness": "Big"
+    },
+    "input": {
+      "value": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1fcd4eb9580012e2e0dccc9222017d6da75f4e10d12125017b2499ffed936f2eebc112c393e738392356bdd012029ba7",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "A.2 IV a6eb561ad2f41727",
+    "ref": "RFC 4503 appendix A.2 (key stream with IV setup), XORed into 48 zero bytes",
+    "op": "rabbit:crypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "a6eb561ad2f41727",
+        "enc": "hex"
+      },
+      "endianness": "Big"
+    },
+    "input": {
+      "value": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "445ad8c805858dbf70b6af23a151104d96c8f27947f42c5baeae67c6acc35b039fcbfc895fa71c17313df034f01551cb",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "a short last block uses the rightmost key stream bytes (Big)",
+    "ref": "RFC 4503 A.1 key 0 block S[0]; short-block convention is CyberChef's (unverified against it)",
+    "op": "rabbit:crypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "endianness": "Big"
+    },
+    "input": {
+      "value": "0000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "261c4af702",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "a 15-byte key is E_RANGE",
+    "ref": "RFC 4503 section 2.4: a 128-bit key",
+    "op": "rabbit:crypt",
+    "params": {
+      "key": {
+        "value": "000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "endianness": "Big"
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "a 4-byte IV is E_RANGE",
+    "ref": "RFC 4503 section 2.5: a 64-bit IV",
+    "op": "rabbit:crypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "00000000",
+        "enc": "hex"
+      },
+      "endianness": "Big"
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  }
+]

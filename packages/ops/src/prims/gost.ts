@@ -33,7 +33,7 @@ import { rangeFailure } from "../prim-util.js";
  * S-boxes as RFC 4357 section 11.2 lists them: 64 bytes, four per index i = 0..15, byte 4i+p
  * holding the nibbles K(2p+1)[i] (high) and K(2p+2)[i] (low).
  */
-const SBOXES: Readonly<Record<string, string>> = {
+export const SBOXES: Readonly<Record<string, string>> = {
   // id-GostR3411-94-TestParamSet; the same table as RFC 5831 section 7.1.
   test:
     "4e5764d1ab8dcbbf941a7a4d2cd11010d6a057358d38f2f70f49d15aea2f8d9462ee4309b3f4a6a218c698e3c17ce57e" +

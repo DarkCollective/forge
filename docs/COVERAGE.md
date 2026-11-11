@@ -12,7 +12,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Category | Covered | Redesigned | Dropped | Not yet | Total |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Data format | 54 | 6 | 0 | 20 | 80 |
-| Encryption / Encoding | 28 | 11 | 0 | 56 | 95 |
+| Encryption / Encoding | 28 | 29 | 0 | 38 | 95 |
 | Public Key | 0 | 0 | 0 | 30 | 30 |
 | Arithmetic / Logic | 9 | 0 | 0 | 17 | 26 |
 | Networking | 0 | 0 | 0 | 34 | 34 |
@@ -27,7 +27,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 4 | 0 | 3 | 14 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **133** | **32** | **3** | **338** | **506** |
+| **Total** | **133** | **50** | **3** | **320** | **506** |
 
 ## Data format (80)
 
@@ -132,29 +132,29 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | LS47 Decrypt | covered | `classical:ls47-decrypt` |  |
 | RC2 Encrypt | not yet |  |  |
 | RC2 Decrypt | not yet |  |  |
-| RC4 | not yet |  |  |
-| RC4 Drop | not yet |  |  |
+| RC4 | redesigned | `rc4:crypt` | Bytes in and bytes out (CyberChef's Input and Output formats are chain steps such as hex:decode and hex:encode). The passphrase is a key param in any key encoding, used as the raw RC4 key of 1 to 256 bytes. The same word encrypts and decrypts. |
+| RC4 Drop | redesigned | `rc4:crypt` | The same word as RC4 with the drop param, counted in bytes where CyberChef counts dwords: CyberChef's default of 192 dwords is drop 768. One word covers both rows because RC4-drop is RC4 with the first n key stream bytes discarded. |
 | ChaCha | not yet |  |  |
 | Salsa20 | not yet |  |  |
 | XSalsa20 | not yet |  |  |
-| Rabbit | not yet |  |  |
+| Rabbit | redesigned | `rabbit:crypt` | Bytes in and bytes out (the Raw and Hex input and output choices are chain steps). Key 16 bytes, IV empty or 8 bytes, endianness Big (RFC 4503) or Little (Crypto++), with CyberChef's key stream cut for a short last block. A wrong key or IV length is E_RANGE. |
 | SM4 Encrypt | not yet |  |  |
 | SM4 Decrypt | not yet |  |  |
 | RC6 Encrypt | not yet |  |  |
 | RC6 Decrypt | not yet |  |  |
 | Ascon Encrypt | not yet |  |  |
 | Ascon Decrypt | not yet |  |  |
-| PRESENT Encrypt | not yet |  |  |
-| PRESENT Decrypt | not yet |  |  |
+| PRESENT Encrypt | redesigned | `present:encrypt` | Bytes in and bytes out. Key 10 or 16 bytes, IV 8 bytes, mode CBC (the default) or ECB as in CyberChef (CFB, OFB and CTR are also offered), pkcs7 or none padding. CyberChef's ZERO, RANDOM and BIT paddings are not offered. |
+| PRESENT Decrypt | redesigned | `present:decrypt` | The inverse of present:encrypt with the same params. |
 | Twofish Encrypt | not yet |  |  |
 | Twofish Decrypt | not yet |  |  |
-| GOST Encrypt | not yet |  |  |
-| GOST Decrypt | not yet |  |  |
+| GOST Encrypt | redesigned | `gost28147:encrypt` | GOST 28147-89 only, in the new gost28147 vocabulary (the existing gost vocabulary is the hash). Modes ECB, CBC, CFB, OFB and CTR (the GOST gamma mode), pkcs7 or none padding, optional CryptoPro key meshing, and the S-boxes E-TEST, E-A to E-D, E-Z, D-TEST and D-A. Not offered: the Magma and Kuznyechik (2015) ciphers, the E-SC and D-SC S-boxes, and the ZERO, RANDOM and BIT paddings. |
+| GOST Decrypt | redesigned | `gost28147:decrypt` | The inverse of gost28147:encrypt with the same params, for GOST 28147-89 only. |
 | GOST Sign | not yet |  |  |
 | GOST Verify | not yet |  |  |
-| GOST Key Wrap | not yet |  |  |
-| GOST Key Unwrap | not yet |  |  |
-| ROR13 | not yet |  |  |
+| GOST Key Wrap | redesigned | `gost28147:wrap-key` | GOST 28147-89 key wrap of RFC 4357 section 6.1 (wrapping NO) and the CryptoPro wrap of section 6.3 (CP). The output is CEK_ENC and CEK_MAC without the UKM, 36 bytes, as in CyberChef. Not offered: the Signal-COM wrapping and the 2015 ciphers. |
+| GOST Key Unwrap | redesigned | `gost28147:unwrap-key` | The inverse of gost28147:wrap-key; the MAC is checked and a mismatch is E_COERCE. |
+| ROR13 | redesigned | `ror13:hash` | The same loop (rotate the 32-bit accumulator right by 13 and add each byte). The result is four big-endian bytes, like the checksum words; chain hex:encode where CyberChef prints 0x and upper-case hex. |
 | ROT13 | redesigned | `classical:rot13` | One parameterised word, classical:rot (amount, default 13), replaces ROT13 and Caesar-style shifts; rot13 is an alias. |
 | ROT13 Brute Force | redesigned | `classical:rot-brute` | One word, classical:rot-brute, for both brute forces (variant rot or rot47); it lists records with the shift and the output, with an optional crib. |
 | ROT47 | covered | `classical:rot47` |  |
@@ -164,12 +164,12 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | XOR Brute Force | covered | `bits:xor-brute` | Keys of 1 or 2 bytes. |
 | Vigenère Encode | covered | `classical:vigenere-encrypt` |  |
 | Vigenère Decode | covered | `classical:vigenere-decrypt` |  |
-| TEA Encrypt | not yet |  |  |
-| TEA Decrypt | not yet |  |  |
-| XTEA Encrypt | not yet |  |  |
-| XTEA Decrypt | not yet |  |  |
-| XXTEA Encrypt | not yet |  |  |
-| XXTEA Decrypt | not yet |  |  |
+| TEA Encrypt | redesigned | `tea:encrypt` | Bytes in and bytes out (the Raw and Hex choices are chain steps). Key 16 bytes, IV 8 bytes (empty means zeros), mode CBC (the default), CFB, OFB, CTR or ECB, big-endian words, 32 cycles. Padding is the pkcs7 or none choice shared by the cipher words; CyberChef's ZERO, RANDOM and BIT paddings are not offered. |
+| TEA Decrypt | redesigned | `tea:decrypt` | The inverse of tea:encrypt with the same params. Bad PKCS#7 padding and input that is not whole blocks are E_COERCE. |
+| XTEA Encrypt | redesigned | `xtea:encrypt` | As TEA Encrypt with a rounds param (cycles, 1 to 255, default 32) as in CyberChef. CyberChef's ZERO, RANDOM and BIT paddings are not offered. |
+| XTEA Decrypt | redesigned | `xtea:decrypt` | The inverse of xtea:encrypt with the same params. |
+| XXTEA Encrypt | redesigned | `xxtea:encrypt` | Bytes in and bytes out. The key is up to 16 bytes zero-padded (a longer key is E_RANGE where CyberChef silently uses the first 16). The data is zero-padded to words with the length appended as a word, as in CyberChef. It is a variable-length block cipher and does not use the shared mode layer. |
+| XXTEA Decrypt | redesigned | `xxtea:decrypt` | The inverse of xxtea:encrypt. A wrong key, or a length that is not whole words, is E_COERCE. |
 | To Morse Code | covered | `morse:encode` |  |
 | From Morse Code | covered | `morse:decode` |  |
 | Bacon Cipher Encode | covered | `classical:bacon-encode` |  |
@@ -184,8 +184,8 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Rail Fence Cipher Encode | covered | `classical:rail-fence-encrypt` |  |
 | Rail Fence Cipher Decode | covered | `classical:rail-fence-decrypt` |  |
 | Atbash Cipher | covered | `classical:atbash` |  |
-| CipherSaber2 Encrypt | not yet |  |  |
-| CipherSaber2 Decrypt | not yet |  |  |
+| CipherSaber2 Encrypt | redesigned | `ciphersaber2:encrypt` | Bytes in and bytes out; the key is a key param and rounds defaults to 20. The 10-byte IV is drawn at random and put in front of the output, as in CyberChef, so the word carries the +random effect and its output differs on every call. |
+| CipherSaber2 Decrypt | redesigned | `ciphersaber2:decrypt` | Bytes in and bytes out; the first 10 bytes of the input are the IV. Input shorter than the IV is E_COERCE where CyberChef returns an empty output. |
 | Cetacean Cipher Encode | covered | `classical:cetacean-encode` |  |
 | Cetacean Cipher Decode | covered | `classical:cetacean-decode` |  |
 | Substitute | covered | `classical:substitute` |  |

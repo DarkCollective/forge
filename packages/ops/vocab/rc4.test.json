@@ -1,0 +1,154 @@
+[
+  {
+    "name": "Key / Plaintext",
+    "ref": "Wikipedia, RC4, test vectors",
+    "op": "rc4:crypt",
+    "params": {
+      "key": {
+        "value": "Key",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "Plaintext",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "bbf316e8d940af0ad3",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Wiki / pedia",
+    "ref": "Wikipedia, RC4, test vectors",
+    "op": "rc4:crypt",
+    "params": {
+      "key": {
+        "value": "Wiki",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "pedia",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1021bf0420",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Secret / Attack at dawn",
+    "ref": "Wikipedia, RC4, test vectors",
+    "op": "rc4:crypt",
+    "params": {
+      "key": {
+        "value": "Secret",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "Attack at dawn",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "45a01f645fc35b383552544b9bf5",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "RFC 6229 40-bit key, key stream offset 0",
+    "ref": "RFC 6229 section 2, key 0102030405 (the 16 key stream bytes at offset 0, here XORed into zeros)",
+    "op": "rc4:crypt",
+    "params": {
+      "key": {
+        "value": "0102030405",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "00000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "b2396305f03dc027ccc3524a0a1118a8",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypting is the same word",
+    "ref": "Wikipedia, RC4, test vectors",
+    "op": "rc4:crypt",
+    "params": {
+      "key": {
+        "value": "Key",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "bbf316e8d940af0ad3",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "506c61696e74657874",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "RC4 Drop: 768 bytes (192 dwords) dropped",
+    "ref": "throwaway independent reference (RC4 with the first 768 key stream bytes discarded; not a published vector)",
+    "op": "rc4:crypt",
+    "params": {
+      "key": {
+        "value": "Key",
+        "enc": "utf8"
+      },
+      "drop": 768
+    },
+    "input": {
+      "value": "Plaintext",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "857047028b192029fd",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "empty input",
+    "ref": "RC4: the key stream is XORed into nothing",
+    "op": "rc4:crypt",
+    "params": {
+      "key": {
+        "value": "Key",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "empty key is E_RANGE",
+    "ref": "RC4 keys are 1 to 256 bytes (README, cipher conventions)",
+    "op": "rc4:crypt",
+    "params": {
+      "key": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  }
+]

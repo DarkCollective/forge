@@ -1,0 +1,110 @@
+[
+  {
+    "cyberchef": "RC4",
+    "status": "redesigned",
+    "forge": ["rc4:crypt"],
+    "note": "Bytes in and bytes out (CyberChef's Input and Output formats are chain steps such as hex:decode and hex:encode). The passphrase is a key param in any key encoding, used as the raw RC4 key of 1 to 256 bytes. The same word encrypts and decrypts."
+  },
+  {
+    "cyberchef": "RC4 Drop",
+    "status": "redesigned",
+    "forge": ["rc4:crypt"],
+    "note": "The same word as RC4 with the drop param, counted in bytes where CyberChef counts dwords: CyberChef's default of 192 dwords is drop 768. One word covers both rows because RC4-drop is RC4 with the first n key stream bytes discarded."
+  },
+  {
+    "cyberchef": "CipherSaber2 Encrypt",
+    "status": "redesigned",
+    "forge": ["ciphersaber2:encrypt"],
+    "note": "Bytes in and bytes out; the key is a key param and rounds defaults to 20. The 10-byte IV is drawn at random and put in front of the output, as in CyberChef, so the word carries the +random effect and its output differs on every call."
+  },
+  {
+    "cyberchef": "CipherSaber2 Decrypt",
+    "status": "redesigned",
+    "forge": ["ciphersaber2:decrypt"],
+    "note": "Bytes in and bytes out; the first 10 bytes of the input are the IV. Input shorter than the IV is E_COERCE where CyberChef returns an empty output."
+  },
+  {
+    "cyberchef": "Rabbit",
+    "status": "redesigned",
+    "forge": ["rabbit:crypt"],
+    "note": "Bytes in and bytes out (the Raw and Hex input and output choices are chain steps). Key 16 bytes, IV empty or 8 bytes, endianness Big (RFC 4503) or Little (Crypto++), with CyberChef's key stream cut for a short last block. A wrong key or IV length is E_RANGE."
+  },
+  {
+    "cyberchef": "TEA Encrypt",
+    "status": "redesigned",
+    "forge": ["tea:encrypt"],
+    "note": "Bytes in and bytes out (the Raw and Hex choices are chain steps). Key 16 bytes, IV 8 bytes (empty means zeros), mode CBC (the default), CFB, OFB, CTR or ECB, big-endian words, 32 cycles. Padding is the pkcs7 or none choice shared by the cipher words; CyberChef's ZERO, RANDOM and BIT paddings are not offered."
+  },
+  {
+    "cyberchef": "TEA Decrypt",
+    "status": "redesigned",
+    "forge": ["tea:decrypt"],
+    "note": "The inverse of tea:encrypt with the same params. Bad PKCS#7 padding and input that is not whole blocks are E_COERCE."
+  },
+  {
+    "cyberchef": "XTEA Encrypt",
+    "status": "redesigned",
+    "forge": ["xtea:encrypt"],
+    "note": "As TEA Encrypt with a rounds param (cycles, 1 to 255, default 32) as in CyberChef. CyberChef's ZERO, RANDOM and BIT paddings are not offered."
+  },
+  {
+    "cyberchef": "XTEA Decrypt",
+    "status": "redesigned",
+    "forge": ["xtea:decrypt"],
+    "note": "The inverse of xtea:encrypt with the same params."
+  },
+  {
+    "cyberchef": "XXTEA Encrypt",
+    "status": "redesigned",
+    "forge": ["xxtea:encrypt"],
+    "note": "Bytes in and bytes out. The key is up to 16 bytes zero-padded (a longer key is E_RANGE where CyberChef silently uses the first 16). The data is zero-padded to words with the length appended as a word, as in CyberChef. It is a variable-length block cipher and does not use the shared mode layer."
+  },
+  {
+    "cyberchef": "XXTEA Decrypt",
+    "status": "redesigned",
+    "forge": ["xxtea:decrypt"],
+    "note": "The inverse of xxtea:encrypt. A wrong key, or a length that is not whole words, is E_COERCE."
+  },
+  {
+    "cyberchef": "PRESENT Encrypt",
+    "status": "redesigned",
+    "forge": ["present:encrypt"],
+    "note": "Bytes in and bytes out. Key 10 or 16 bytes, IV 8 bytes, mode CBC (the default) or ECB as in CyberChef (CFB, OFB and CTR are also offered), pkcs7 or none padding. CyberChef's ZERO, RANDOM and BIT paddings are not offered."
+  },
+  {
+    "cyberchef": "PRESENT Decrypt",
+    "status": "redesigned",
+    "forge": ["present:decrypt"],
+    "note": "The inverse of present:encrypt with the same params."
+  },
+  {
+    "cyberchef": "GOST Encrypt",
+    "status": "redesigned",
+    "forge": ["gost28147:encrypt"],
+    "note": "GOST 28147-89 only, in the new gost28147 vocabulary (the existing gost vocabulary is the hash). Modes ECB, CBC, CFB, OFB and CTR (the GOST gamma mode), pkcs7 or none padding, optional CryptoPro key meshing, and the S-boxes E-TEST, E-A to E-D, E-Z, D-TEST and D-A. Not offered: the Magma and Kuznyechik (2015) ciphers, the E-SC and D-SC S-boxes, and the ZERO, RANDOM and BIT paddings."
+  },
+  {
+    "cyberchef": "GOST Decrypt",
+    "status": "redesigned",
+    "forge": ["gost28147:decrypt"],
+    "note": "The inverse of gost28147:encrypt with the same params, for GOST 28147-89 only."
+  },
+  {
+    "cyberchef": "GOST Key Wrap",
+    "status": "redesigned",
+    "forge": ["gost28147:wrap-key"],
+    "note": "GOST 28147-89 key wrap of RFC 4357 section 6.1 (wrapping NO) and the CryptoPro wrap of section 6.3 (CP). The output is CEK_ENC and CEK_MAC without the UKM, 36 bytes, as in CyberChef. Not offered: the Signal-COM wrapping and the 2015 ciphers."
+  },
+  {
+    "cyberchef": "GOST Key Unwrap",
+    "status": "redesigned",
+    "forge": ["gost28147:unwrap-key"],
+    "note": "The inverse of gost28147:wrap-key; the MAC is checked and a mismatch is E_COERCE."
+  },
+  {
+    "cyberchef": "ROR13",
+    "status": "redesigned",
+    "forge": ["ror13:hash"],
+    "note": "The same loop (rotate the 32-bit accumulator right by 13 and add each byte). The result is four big-endian bytes, like the checksum words; chain hex:encode where CyberChef prints 0x and upper-case hex."
+  }
+]
