@@ -5,9 +5,6 @@
 \ execute bits and the set-user-ID, set-group-ID and sticky bits.
 IN: file-mode
 
-\ Pad s on the right with spaces to n characters.
-: _pad ( s:str n:int -- str ) s " " n s len - 0 max util:repeat-str cat ;
-
 \ ---- symbolic text out ----
 
 : _flag ( mode:int mask:int yes:str -- str )
@@ -57,14 +54,15 @@ IN: file-mode
   s 6 9 slice 4 512 "t" "T" _sym-triplet bor ;
 
 : _type-name ( c:str -- str )
-  c "-" = [ "regular file" ]
-  [ c "d" = [ "directory" ]
-    [ c "l" = [ "symbolic link" ]
-      [ c "b" = [ "block device" ]
-        [ c "c" = [ "character device" ]
-          [ c "p" = [ "named pipe" ]
-            [ c "s" = [ "socket" ]
-              [ "not a file type character (use - d l b c p or s)" raise:coerce "" ] if ] if ] if ] if ] if ] if ] if ;
+  c "-" = [ "Regular file" ]
+  [ c "d" = [ "Directory" ]
+    [ c "l" = [ "Symbolic link" ]
+      [ c "b" = [ "Block device" ]
+        [ c "c" = [ "Character device" ]
+          [ c "p" = [ "Named pipe" ]
+            [ c "s" = [ "Socket" ]
+              [ c "D" = [ "Door" ]
+                [ "not a file type character (use - d l b c p s or D)" raise:coerce "" ] if ] if ] if ] if ] if ] if ] if ] if ;
 
 : _octal-mode ( t:str -- int )
   t len 3 < t len 4 > or
@@ -82,33 +80,33 @@ IN: file-mode
       [ "a mode is 3 or 4 octal digits, or 9 symbolic characters (rwxr-xr-x) with an optional file type character before them" raise:coerce 0 "" ] if ] if ] if ;
 
 \ ---- the breakdown ----
+\ The layout is CyberChef's: the textual and octal forms, the file type and the special bits as lines of words, a
+\ blank line, and a box of the read, write and execute bits with an X for each one that is set.
 
-: _yes-no ( mode:int mask:int -- str ) mode mask band 0 <> [ "yes" ] [ "no" ] if ;
+: _padl ( s:str n:int -- str ) " " n s len - 0 max util:repeat-str s cat ;
+
+: _cell ( mode:int mask:int -- str ) mode mask band 0 <> [ "   X   " ] [ "       " ] if ;
 
 : _row ( label:str mode:int u:int g:int o:int -- str )
-  label 10 _pad
-  mode u _yes-no 7 _pad cat
-  mode g _yes-no 7 _pad cat
-  mode o _yes-no cat ;
+  " | " label 7 _padl cat " |" cat
+  mode u _cell cat "|" cat mode g _cell cat "|" cat mode o _cell cat "|" cat ;
 
-: _special ( label:str mode:int mask:int -- str )
-  label mode mask _yes-no cat ;
+: _rule ( -- str ) " +---------+-------+-------+-------+" ;
 
 : _report ( mode:int tc:str -- str )
-  "Octal:    " mode _octal cat "\n" cat
-  "Symbolic: " cat tc mode _symbolic cat cat "\n" cat
-  tc len 0 > [ "Type:     " tc _type-name cat "\n" cat cat ] when
-  "\n" cat "          User   Group  Other\n" cat
-  "Read" mode 256 32 4 _row "\n" cat cat
-  "Write" mode 128 16 2 _row "\n" cat cat
-  "Execute" mode 64 8 1 _row "\n" cat cat
-  "\n" cat
-  "Set user ID:  " mode 2048 _special "\n" cat cat
-  "Set group ID: " mode 1024 _special "\n" cat cat
-  "Sticky bit:   " mode 512 _special cat ;
+  "Textual representation: " tc len 0 > [ tc ] [ "-" ] if cat mode _symbolic cat
+  "\nOctal representation:   " cat mode _octal cat
+  tc len 0 > [ "\nFile type: " cat tc _type-name cat ] when
+  mode 2048 band 0 <> [ "\nThe setuid flag is set" cat ] when
+  mode 1024 band 0 <> [ "\nThe setgid flag is set" cat ] when
+  mode 512 band 0 <> [ "\nThe sticky bit is set" cat ] when
+  "\n\n" cat _rule cat "\n |         | User  | Group | Other |\n" cat _rule cat "\n" cat
+  "Read" mode 256 32 4 _row cat "\n" cat _rule cat "\n" cat
+  "Write" mode 128 16 2 _row cat "\n" cat _rule cat "\n" cat
+  "Execute" mode 64 8 1 _row cat "\n" cat _rule cat ;
 
 : parse ( data:str -- str )
-  "A UNIX file mode explained. The input is the mode in octal (755, 0644, 4755) or as symbolic text (rwxr-xr-x), with the file type character of ls -l in front if you like (drwxr-xr-x: - d l b c p s). The output lists the octal and symbolic forms, the file type if one was given, a table of who may read, write and execute (user, group, other) and the set-user-ID, set-group-ID and sticky bits. s, t and S, T show a special bit together with, or without, the execute bit." doc
+  "A UNIX file mode explained, in the layout of CyberChef's Parse UNIX file permissions. The input is the mode in octal (755, 0644, 4755) or as symbolic text (rwxr-xr-x), with the file type character of ls -l in front if you like (drwxr-xr-x: - d l b c p s D). The output has the lines Textual representation: (a - is written for the file type when none was given) and Octal representation:, then File type: when one was given, then The setuid flag is set, The setgid flag is set and The sticky bit is set for each of those bits that is on, a blank line, and a box that has an X under User, Group and Other for each read, write and execute bit that is set. s, t and S, T show a special bit together with, or without, the execute bit." doc
   "Conversions" category
   data _parse-mode _report ;
 

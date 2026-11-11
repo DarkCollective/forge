@@ -1,15 +1,106 @@
 [
- { "cyberchef": "Sort", "status": "redesigned", "forge": ["lines:sort"], "note": "One word with the delimiter, reverse and the six orders. Strings are compared by code point (not by locale), numeric reads a decimal at the start of the line without an exponent, IP address puts text that is not four decimal fields of 0 to 255 after the addresses in code point order, and the sort is stable." },
- { "cyberchef": "Shuffle", "status": "covered", "forge": ["lines:shuffle"], "note": "A uniform Fisher-Yates shuffle on the host's cryptographic random generator (+random); the delimiter is a choice from the shared list." },
- { "cyberchef": "Unique", "status": "covered", "forge": ["lines:unique"], "note": "Keeps the first of each in place. With show-count each line is written as its count, a space and the line, in the order of first appearance." },
- { "cyberchef": "Filter", "status": "covered", "forge": ["lines:filter"], "note": "Keeps the lines where the regular expression matches, or with invert the others. Regex flags i, m and s can be given; the pattern is a Forge regex parameter (always the u flag)." },
- { "cyberchef": "Head", "status": "covered", "forge": ["lines:head"], "note": "A negative number keeps all but the last |number| lines, as in CyberChef." },
- { "cyberchef": "Tail", "status": "covered", "forge": ["lines:tail"], "note": "A negative number keeps all but the first |number| lines. A number of 0 keeps none (CyberChef returns everything for 0)." },
- { "cyberchef": "Add line numbers", "status": "covered", "forge": ["lines:add-numbers"], "note": "The number right-aligned to the width of the longest number (CyberChef sizes it by the line count, which is the same with offset 0), a space, the line. The delimiter is a choice." },
- { "cyberchef": "Remove line numbers", "status": "covered", "forge": ["lines:remove-numbers"], "note": "Works line by line with the same pattern (up to 5 spaces or tabs, digits, separators). CyberChef lets the separator class match line feeds, so a line holding only a number swallows the line break; Forge never joins lines." },
- { "cyberchef": "Pad lines", "status": "covered", "forge": ["lines:pad"], "note": "Start or end, length and padding text, counted in code points; a padding of several characters is repeated and cut like padStart." },
- { "cyberchef": "Wrap", "status": "covered", "forge": ["lines:wrap"], "note": "Cuts each line into pieces of at most the width in characters (code points), counting characters and not words; empty lines stay." },
- { "cyberchef": "To Table", "status": "redesigned", "forge": ["lines:to-table"], "note": "ASCII box and Markdown pipe table; the HTML format is dropped (Forge shows text only). The cell and row delimiters are choices from the shared list rather than free text, and a double-quoted cell may hold the cell delimiter (not a row delimiter). The ASCII box has a rule after every row, with = under the header row." },
- { "cyberchef": "Diff", "status": "redesigned", "forge": ["diff:compare"], "note": "Plain text instead of HTML: a unified-style diff by line (headers, hunks, context lines), and by word or character the second sample's text with [-deleted-] and {+inserted+} marks. Myers' shortest difference; ignore whitespace; the sentence, CSS and JSON modes, and the show added, removed and subtraction switches, are dropped." },
- { "cyberchef": "File Tree", "status": "redesigned", "forge": ["lines:file-tree"], "note": "A tree in the style of the tree command with plain characters (|-- and `--), a root line of a dot, siblings in code point order. The path separator and the delimiter between paths are parameters." }
+  {
+    "cyberchef": "Sort",
+    "status": "redesigned",
+    "forge": [
+      "lines:sort"
+    ],
+    "note": "One word with the delimiter, reverse and the six orders. Strings are compared by code point where CyberChef uses the host's locale compare (so the case-insensitive and IP-address orders put e and z in a different order from CyberChef on non-ASCII text, and A, a and b are ordered by code point in the ties); numeric reads a decimal at the start of the line without an exponent (CyberChef compares chunks of digits and text, which orders a leading minus sign and mixed lines differently), hexadecimal a hex number at the start, IP address puts text that is not four decimal fields of 0 to 255 after the addresses in code point order; pieces with equal numbers, or no number, are in code point order. The alphabetical and length orders are stable."
+  },
+  {
+    "cyberchef": "Shuffle",
+    "status": "covered",
+    "forge": [
+      "lines:shuffle"
+    ],
+    "note": "A uniform Fisher-Yates shuffle on the host's cryptographic random generator (+random); the delimiter is a choice from the shared list."
+  },
+  {
+    "cyberchef": "Unique",
+    "status": "covered",
+    "forge": [
+      "lines:unique"
+    ],
+    "note": "Keeps the first of each in place. With show-count each line is written as its count, a space and the line, in the order of first appearance (CyberChef lists them in the order of a JavaScript object, which puts the lines that look like whole numbers first)."
+  },
+  {
+    "cyberchef": "Filter",
+    "status": "covered",
+    "forge": [
+      "lines:filter"
+    ],
+    "note": "Keeps the lines where the regular expression matches, or with invert the others. Regex flags i, m and s can be given; the pattern is a Forge regex parameter (always the u flag)."
+  },
+  {
+    "cyberchef": "Head",
+    "status": "covered",
+    "forge": [
+      "lines:head"
+    ],
+    "note": "A negative number keeps all but the last |number| lines, as in CyberChef."
+  },
+  {
+    "cyberchef": "Tail",
+    "status": "covered",
+    "forge": [
+      "lines:tail"
+    ],
+    "note": "A negative number keeps all but the first |number| lines. A number of 0 keeps none (CyberChef returns everything for 0)."
+  },
+  {
+    "cyberchef": "Add line numbers",
+    "status": "covered",
+    "forge": [
+      "lines:add-numbers"
+    ],
+    "note": "The number right-aligned to the width of the count of lines (so the width does not grow with the offset, as CyberChef's), a space, the line. The delimiter is a choice."
+  },
+  {
+    "cyberchef": "Remove line numbers",
+    "status": "covered",
+    "forge": [
+      "lines:remove-numbers"
+    ],
+    "note": "Works line by line with the same pattern (up to 5 spaces or tabs, digits, one separator character: white space or one of : | - , . ) ]). CyberChef lets the separator match a line feed, so a line holding only a number swallows the line break and joins the next line; Forge never joins lines, and a line of digits only is left as it is."
+  },
+  {
+    "cyberchef": "Pad lines",
+    "status": "covered",
+    "forge": [
+      "lines:pad"
+    ],
+    "note": "Start or end, the number of characters to add and the padding text, counted in code points: the length is how many characters are added to every line (CyberChef's padStart(line length + length)), not the length to pad to. A padding of several characters is repeated and cut like padStart."
+  },
+  {
+    "cyberchef": "Wrap",
+    "status": "covered",
+    "forge": [
+      "lines:wrap"
+    ],
+    "note": "Cuts each line into pieces of at most the width in characters (code points), 64 by default as in CyberChef, counting characters and not words. Forge keeps empty lines (CyberChef's pattern drops them) and cuts at the delimiter choice rather than only at line feeds."
+  },
+  {
+    "cyberchef": "To Table",
+    "status": "covered",
+    "forge": [
+      "lines:to-table"
+    ],
+    "note": "ASCII box and Markdown pipe table, in CyberChef's layouts (a rule above the rows, under the header row when the header switch is on and below the last row, no rule between rows; for Markdown the first row is always the header, dashes as wide as the column; every line ends with a line feed). The HTML format is dropped (Forge shows text only). The cell and row delimiters are choices from the shared list rather than free text, and a double-quoted cell may hold the cell delimiter (not a row delimiter). Short rows are filled with empty cells (CyberChef draws them short, or drops a one-cell last row), text is not HTML-escaped, and a | in a Markdown cell is escaped. An empty input is an empty output."
+  },
+  {
+    "cyberchef": "Diff",
+    "status": "redesigned",
+    "forge": [
+      "diff:compare"
+    ],
+    "note": "Plain text instead of HTML: a unified-style diff by line (headers, hunks, context lines), and by word or character (the default, as in CyberChef) the second sample's text with [-deleted-] and {+inserted+} marks. Myers' shortest difference; ignore whitespace; the sentence, CSS and JSON modes, and the show added, removed and subtraction switches, are dropped."
+  },
+  {
+    "cyberchef": "File Tree",
+    "status": "covered",
+    "forge": [
+      "lines:file-tree"
+    ],
+    "note": "CyberChef's layout: the paths made unique and sorted by code point, a line for every part not yet written, the first part as it is and deeper parts behind |   for every level above them minus one and |---, no root line. The path separator and the delimiter between paths are parameters (the output is always cut at line feeds)."
+  }
 ]

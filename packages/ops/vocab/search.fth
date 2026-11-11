@@ -7,12 +7,15 @@ USING: util list ;
 
 \ ---- count ----
 
-: count ( data:str pattern:str[1..] mode:choice{string|regex}="string" ignore-case:bool=false -- int )
-  "How many times the pattern occurs in the text. Mode string looks for the exact text, counting non-overlapping occurrences from the left (aa in aaaa is 2); mode regex takes an ECMAScript regular expression (the u flag) and counts its matches, empty ones included. With ignore-case, upper and lower case match each other (string mode folds both texts to lower case first). The pattern may not be empty." doc
+: _literal ( pattern:str mode:str -- str )
+  mode "extended" = [ pattern string-escape:unescape ] [ pattern ] if ;
+
+: count ( data:str pattern:str[1..] mode:choice{string|regex|extended}="string" ignore-case:bool=false -- int )
+  "How many times the pattern occurs in the text. Mode string looks for the exact text, counting non-overlapping occurrences from the left (aa in aaaa is 2); mode extended is the same after the escapes of the pattern are read (\\n, \\t, \\x41, \\u0041, as string-escape:unescape reads them, which is CyberChef's Extended mode); mode regex takes an ECMAScript regular expression (the u flag) and counts its matches, empty ones included. With ignore-case, upper and lower case match each other (string and extended mode fold both texts to lower case first). The pattern may not be empty." doc
   "Analysis" category
   mode "regex" =
   [ data pattern ignore-case [ "i" ] [ "" ] if regex:find-all len ]
-  [ ignore-case [ data lower pattern lower ] [ data pattern ] if split len 1 - ]
+  [ ignore-case [ data lower pattern mode _literal lower ] [ data pattern mode _literal ] if split len 1 - ]
   if ;
 
 \ ---- fuzzy match ----
@@ -136,7 +139,7 @@ USING: util list ;
 
 META: count
   param pattern "The text to count, or a regular expression in regex mode." ;
-  param mode "string counts exact text, regex counts matches of an ECMAScript regular expression." ;
+  param mode "string counts exact text, extended reads the escapes (\\n, \\t, \\x41) of the pattern first, regex counts matches of an ECMAScript regular expression." ;
   param ignore-case "Treat upper and lower case as the same." ;
   see-also regex:find-all text:split ;
 ;

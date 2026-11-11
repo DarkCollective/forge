@@ -42,7 +42,7 @@ USING: hmac base32 url random clock ;
   "hotp" name key alg digits "&counter=" counter int>str cat _uri
   key counter alg digits _hotp _report ;
 
-: hotp ( secret:str name:str="" algorithm:choice{sha1|sha256|sha512}="sha1" digits:int[1..10]=6 counter:int[0..]=0 key-size:int[1..256]=32 -- str )
+: hotp ( secret:str name:str="Account" algorithm:choice{sha1|sha256|sha512}="sha1" digits:int[1..10]=6 counter:int[0..]=0 key-size:int[1..256]=20 -- str )
   "HOTP (RFC 4226). The input is the secret as Base32 text, as authenticator apps show it (white space and lower case are ignored); an empty input makes a random secret of key-size bytes from the host's cryptographic random generator, so then the output differs on every call (the word carries the +random effect). The result is the otpauth:// URI of the secret and the password for the counter, in the form CyberChef prints: URI: <uri>, a blank line, Password: <digits>. The password has digits decimal digits (1 to 10) from the HMAC-SHA1 (the default, as in the RFC), HMAC-SHA256 or HMAC-SHA512 of the 8-byte counter. A secret that is not Base32 is E_COERCE; a counter of 2 to the power 64 or more is E_RANGE." doc
   "Generators" category
   secret key-size _secret name algorithm digits counter _hotp-report ;
@@ -69,7 +69,7 @@ META: hotp
   "totp" name key alg digits "&period=" period int>str cat _uri
   key time _when epoch period _counter alg digits _hotp _report ;
 
-: totp ( secret:str name:str="" algorithm:choice{sha1|sha256|sha512}="sha1" digits:int[1..10]=6 period:int[1..]=30 epoch:int[0..]=0 key-size:int[1..256]=32 time:int[-1..]=-1 -- str )
+: totp ( secret:str name:str="Account" algorithm:choice{sha1|sha256|sha512}="sha1" digits:int[1..10]=6 period:int[1..]=30 epoch:int[0..]=0 key-size:int[1..256]=20 time:int[-1..]=-1 -- str )
   "TOTP (RFC 6238). The input is the secret as Base32 text, as authenticator apps show it (white space and lower case are ignored); an empty input makes a random secret of key-size bytes from the host's cryptographic random generator. The password is the HOTP value of the time step number, the whole number of periods (seconds, 30 by default) since the epoch offset (0, the Unix epoch, by default). time is the Unix time in seconds to make the password for; -1 (the default) means now, from the host clock, so the output changes every period (the word carries the +time and +random effects). The result is the otpauth:// URI and the password, in the form CyberChef prints: URI: <uri>, a blank line, Password: <digits>. A secret that is not Base32 is E_COERCE; a time before the epoch offset is E_RANGE." doc
   "Generators" category
   secret key-size _secret name algorithm digits period epoch time _totp-report ;

@@ -1,7 +1,7 @@
 [
   {
     "name": "parse 755",
-    "ref": "POSIX: 0755 is rwxr-xr-x: owner all, group and other read and execute",
+    "ref": "POSIX.1 sys/stat.h bits; the layout is the one of the word doc, computed in Python",
     "op": "file-mode:parse",
     "params": {},
     "input": {
@@ -9,13 +9,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Octal:    0755\nSymbolic: rwxr-xr-x\n\n          User   Group  Other\nRead      yes    yes    yes\nWrite     yes    no     no\nExecute   yes    yes    yes\n\nSet user ID:  no\nSet group ID: no\nSticky bit:   no",
+      "value": "Textual representation: -rwxr-xr-x\nOctal representation:   0755\n\n +---------+-------+-------+-------+\n |         | User  | Group | Other |\n +---------+-------+-------+-------+\n |    Read |   X   |   X   |   X   |\n +---------+-------+-------+-------+\n |   Write |   X   |       |       |\n +---------+-------+-------+-------+\n | Execute |   X   |   X   |   X   |\n +---------+-------+-------+-------+",
       "enc": "utf8"
     }
   },
   {
     "name": "parse a symbolic mode with setuid and sticky",
-    "ref": "POSIX: s in the owner execute place is setuid with execute, t in the other execute place is sticky with execute; 5755 = 4000 + 1000 + 0755",
+    "ref": "POSIX.1 sys/stat.h bits; the layout is the one of the word doc, computed in Python",
     "op": "file-mode:parse",
     "params": {},
     "input": {
@@ -23,13 +23,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Octal:    5755\nSymbolic: -rwsr-xr-t\nType:     regular file\n\n          User   Group  Other\nRead      yes    yes    yes\nWrite     yes    no     no\nExecute   yes    yes    yes\n\nSet user ID:  yes\nSet group ID: no\nSticky bit:   yes",
+      "value": "Textual representation: -rwsr-xr-t\nOctal representation:   5755\nFile type: Regular file\nThe setuid flag is set\nThe sticky bit is set\n\n +---------+-------+-------+-------+\n |         | User  | Group | Other |\n +---------+-------+-------+-------+\n |    Read |   X   |   X   |   X   |\n +---------+-------+-------+-------+\n |   Write |   X   |       |       |\n +---------+-------+-------+-------+\n | Execute |   X   |   X   |   X   |\n +---------+-------+-------+-------+",
       "enc": "utf8"
     }
   },
   {
     "name": "parse a directory with the sticky bit",
-    "ref": "/tmp is drwxrwxrwt = 1777",
+    "ref": "POSIX.1 sys/stat.h bits; the layout is the one of the word doc, computed in Python",
     "op": "file-mode:parse",
     "params": {},
     "input": {
@@ -37,13 +37,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Octal:    1777\nSymbolic: drwxrwxrwt\nType:     directory\n\n          User   Group  Other\nRead      yes    yes    yes\nWrite     yes    yes    yes\nExecute   yes    yes    yes\n\nSet user ID:  no\nSet group ID: no\nSticky bit:   yes",
+      "value": "Textual representation: drwxrwxrwt\nOctal representation:   1777\nFile type: Directory\nThe sticky bit is set\n\n +---------+-------+-------+-------+\n |         | User  | Group | Other |\n +---------+-------+-------+-------+\n |    Read |   X   |   X   |   X   |\n +---------+-------+-------+-------+\n |   Write |   X   |   X   |   X   |\n +---------+-------+-------+-------+\n | Execute |   X   |   X   |   X   |\n +---------+-------+-------+-------+",
       "enc": "utf8"
     }
   },
   {
     "name": "parse 0644 with surrounding space",
-    "ref": "a leading 0 and white space around are fine",
+    "ref": "POSIX.1 sys/stat.h bits; the layout is the one of the word doc, computed in Python",
     "op": "file-mode:parse",
     "params": {},
     "input": {
@@ -51,7 +51,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Octal:    0644\nSymbolic: rw-r--r--\n\n          User   Group  Other\nRead      yes    yes    yes\nWrite     yes    no     no\nExecute   no     no     no\n\nSet user ID:  no\nSet group ID: no\nSticky bit:   no",
+      "value": "Textual representation: -rw-r--r--\nOctal representation:   0644\n\n +---------+-------+-------+-------+\n |         | User  | Group | Other |\n +---------+-------+-------+-------+\n |    Read |   X   |   X   |   X   |\n +---------+-------+-------+-------+\n |   Write |   X   |       |       |\n +---------+-------+-------+-------+\n | Execute |       |       |       |\n +---------+-------+-------+-------+",
       "enc": "utf8"
     }
   },

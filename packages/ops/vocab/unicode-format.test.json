@@ -35,7 +35,7 @@
   },
   {
     "name": "both",
-    "ref": "the underline mark, then the strikethrough mark",
+    "ref": "the strikethrough mark (U+0336), then the underline mark (U+0332), after each character",
     "op": "unicode-format:decorate",
     "params": {
       "underline": true,
@@ -46,7 +46,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "a̶̲b̶̲",
+      "value": "a̶̲b̶̲",
       "enc": "utf8"
     }
   },

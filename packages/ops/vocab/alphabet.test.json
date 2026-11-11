@@ -9,7 +9,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "a b c d e",
+      "value": "abcde",
       "enc": "utf8"
     }
   },

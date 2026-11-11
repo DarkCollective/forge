@@ -143,11 +143,11 @@ IN: lines
   order "case-insensitive" = [ items items [ lower ] map list:sort-by ] [
   order "length" = [ items items [ len ] map list:sort-by ] [
   order "ip-address" = [ items list:sort dup [ _ip-key ] map list:sort-by ] [
-  order "numeric" = [ items items [ _parse-decimal ] map 10 _scaled-keys list:sort-by ]
-                    [ items items [ _parse-hex ] map 16 _scaled-keys list:sort-by ] if ] if ] if ] if ] if ;
+  order "numeric" = [ items list:sort dup [ _parse-decimal ] map 10 _scaled-keys list:sort-by ]
+                    [ items list:sort dup [ _parse-hex ] map 16 _scaled-keys list:sort-by ] if ] if ] if ] if ] if ;
 
 : sort ( data:str delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab}="newline" reverse:bool=false order:choice{alphabetical|case-insensitive|ip-address|numeric|hexadecimal|length}="alphabetical" -- str )
-  "Sort the pieces of the text (lines by default). alphabetical compares by code point, case-insensitive by the lower-case text, ip-address by the IPv4 value (text that is not four decimal fields of 0 to 255 comes after the addresses, in code point order), numeric by the number at the start of the piece (white space, a sign, digits and a fraction; no exponent; pieces with no number come first), hexadecimal by the hex number at the start (an optional 0x; pieces with none come first), and length by the number of characters. The sort is stable; reverse reverses the sorted list. The pieces are joined with the same delimiter." doc
+  "Sort the pieces of the text (lines by default). alphabetical compares by code point, case-insensitive by the lower-case text, ip-address by the IPv4 value (text that is not four decimal fields of 0 to 255 comes after the addresses, in code point order), numeric by the number at the start of the piece (white space, a sign, digits and a fraction; no exponent; pieces with no number come first), hexadecimal by the hex number at the start (an optional 0x; pieces with none come first), and length by the number of characters. Pieces that tie on the number (or have none) are in code point order for numeric and hexadecimal, as in ip-address; for the other orders the sort is stable; reverse reverses the sorted list. The pieces are joined with the same delimiter." doc
   "Utils" category
   data delimiter util:delimiter split order _ordered
   reverse [ rev ] when
@@ -247,17 +247,17 @@ META: tail
 \ ---- line numbers ----
 
 : _join-numbered ( pairs:list sp:str width:int -- list )
-  pairs [ dup 0 nth swap 1 nth dup len width swap - sp swap 0 swap slice swap cat " " cat swap cat ] map ;
+  pairs [ dup 0 nth swap 1 nth dup len width swap - 0 max sp swap 0 swap slice swap cat " " cat swap cat ] map ;
 
 : _numbered ( items:list nums:list width:int -- list )
   items nums zip " " width util:repeat-str width _join-numbered ;
 
 : add-numbers ( data:str delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab}="newline" offset:int=0 -- str )
-  "Put a line number in front of every piece of the text (lines by default): the number, right-aligned with spaces to the width of the longest number, then a space. The first piece is number 1 plus the offset." doc
+  "Put a line number in front of every piece of the text (lines by default): the number, right-aligned with spaces to the width of the count of pieces (the width of 10 pieces is 2, so 1 is written ' 1'), then a space. The width does not grow with the offset, as in CyberChef: a number that is wider than that is written in full. The first piece is number 1 plus the offset." doc
   "Utils" category
   data delimiter util:delimiter split
   dup 0 swap len range [ offset + 1 + int>str ] map
-  dup [ len ] map 0 [ max ] reduce
+  over len int>str len
   _numbered
   delimiter util:delimiter join ;
 
@@ -268,10 +268,10 @@ META: add-numbers
 ;
 
 : remove-numbers ( data:str delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab}="newline" -- str )
-  "Remove a line number from the start of every piece of the text (lines by default): up to 5 spaces or tabs, one or more digits, then one or more spaces, tabs or any of : | - , . ) ] (the numbers add-numbers writes, and the usual ones of listings). A piece with nothing after its digits but no separator is left as it is." doc
+  "Remove a line number from the start of every piece of the text (lines by default): up to 5 spaces or tabs, one or more digits, then one white space character or one of : | - , . ) ] (the numbers add-numbers writes, and the usual ones of listings), as CyberChef does: only that one separator goes, so two spaces after the number leave one. A piece with digits but no separator after them is left as it is." doc
   "Utils" category
   data delimiter util:delimiter split
-  [ "^[ \t]{0,5}[0-9]+[ \t:|\\-,.)\\]]+" "" "" regex:replace ] map
+  [ "^[ \t]{0,5}[0-9]+[\\s:|\\-,.)\\]]" "" "" regex:replace ] map
   delimiter util:delimiter join ;
 
 META: remove-numbers
@@ -281,20 +281,14 @@ META: remove-numbers
 
 \ ---- pad ----
 
-\ items with the missing characters added at the start or the end; fill is the padding text for a piece of no characters.
-: _pad-items ( items:list length:int fill:str position:str -- list )
-  items
-  [ dup len length swap - dup 0 <=
-    [ drop ]
-    [ fill swap 0 swap slice position "start" = [ swap cat ] [ cat ] if ]
-    if ]
-  map ;
+\ items with the padding text added at the start or the end.
+: _pad-items ( items:list fill:str position:str -- list )
+  items [ position "start" = [ fill swap cat ] [ fill cat ] if ] map ;
 
 : pad ( data:str delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab}="newline" position:choice{start|end}="start" length:int[0..65536]=5 character:str[1..]=" " -- str )
-  "Pad every piece of the text (lines by default) with the character, at the start or at the end, until it is length characters long (code points). A piece that is long enough is left alone. A character of several code points is repeated and cut, as JavaScript's padStart does." doc
+  "Add length characters of padding to every piece of the text (lines by default), at the start or at the end, as CyberChef's Pad lines does: the length is how many characters are added, not the length to pad to, so every piece grows by length code points whatever its own length. A character of several code points is repeated and cut to length, as JavaScript's padStart does." doc
   "Utils" category
   data delimiter util:delimiter split
-  length
   character length character len div 1 + util:repeat-str 0 length slice
   position _pad-items
   delimiter util:delimiter join ;
@@ -302,13 +296,13 @@ META: remove-numbers
 META: pad
   param delimiter "What separates the pieces, and joins them again." ;
   param position "Add the padding in front of the piece (start) or behind it (end)." ;
-  param length "The length to pad to, in characters." ;
+  param length "How many characters of padding to add to every piece." ;
   param character "The padding. Several characters are repeated in order and cut to fit." ;
 ;
 
 \ ---- wrap ----
 
-: wrap ( data:str delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab}="newline" width:int[1..65536]=80 -- str )
+: wrap ( data:str delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab}="newline" width:int[1..65536]=64 -- str )
   "Cut every piece of the text (lines by default) into pieces of at most width characters (code points), counting characters, not words, and put the delimiter between them. Empty pieces stay empty." doc
   "Utils" category
   data delimiter util:delimiter split
@@ -363,38 +357,34 @@ META: wrap
 : _rule ( widths:list dash:str -- str )
   widths [ 2 + dash swap 0 swap slice ] map "+" join "+" swap cat "+" cat ;
 
-: _ascii-lines ( lines:list rule:str erule:str header:bool -- str )
-  lines [ 0 = header and [ erule ] [ rule ] if "\n" swap cat cat ] mapi
-  "\n" join rule "\n" cat swap cat ;
+: _ascii-out ( lines:list rule:str header:bool -- str )
+  header
+  [ { rule lines 0 nth rule } lines 1 lines len slice cat { rule } cat ]
+  [ { rule } lines cat { rule } cat ]
+  if
+  "\n" join "\n" cat ;
 
-: _ascii-table ( rows:list widths:list header:bool sp:str dash:str eqs:str -- str )
-  rows [ widths sp _line ] map
-  widths dash _rule widths eqs _rule
-  header _ascii-lines ;
-
-: _ascii-w ( rows:list widths:list header:bool w:int -- str )
-  rows widths header
-  " " w util:repeat-str "-" w 2 + util:repeat-str "=" w 2 + util:repeat-str
-  _ascii-table ;
-
+\ The box of CyberChef: a rule above, under the header row (when there is one) and below, no rule between the rows.
 : _ascii ( rows:list widths:list header:bool -- str )
-  rows widths header widths 0 [ max ] reduce _ascii-w ;
+  rows [ widths " " widths 0 [ max ] reduce util:repeat-str _line ] map
+  widths "-" widths 0 [ max ] reduce 2 + util:repeat-str _rule
+  header
+  _ascii-out ;
 
 : _markdown-table ( head:list body:list widths:list sp:str dash:str -- str )
   { head widths sp _line widths [ dash swap 0 swap slice ] map widths sp _line }
   body [ widths sp _line ] map cat "\n" join ;
 
-: _markdown ( rows:list widths:list header:bool -- str )
-  header [ rows 0 nth ] [ widths [ drop "" ] map ] if
-  header [ rows 1 rows len slice ] [ rows ] if
-  widths
+\ A pipe table: like CyberChef's, the first row is always the header (the dashes under it are as wide as the column).
+: _markdown ( rows:list widths:list -- str )
+  rows 0 nth rows 1 rows len slice widths
   " " widths 0 [ max ] reduce util:repeat-str
   "-" widths 0 [ max ] reduce util:repeat-str
-  _markdown-table ;
+  _markdown-table "\n" cat ;
 
 : _render ( rows:list header:bool format:str n:int -- str )
   format "markdown" =
-  [ rows rows n 3 _widths header _markdown ]
+  [ rows rows n 1 _widths _markdown ]
   [ rows rows n 0 _widths header _ascii ]
   if ;
 
@@ -413,72 +403,51 @@ META: wrap
   [ cell _parse-row ] map ;
 
 : to-table ( data:str cell-delimiter:choice{space|comma|semicolon|colon|tab}="comma" row-delimiter:choice{newline|crlf|cr}="newline" first-row-header:bool=false format:choice{ascii|markdown}="ascii" -- str )
-  "Lay delimited text out as a table. The text is cut into rows at the row delimiter (a trailing empty row is dropped; with newline a carriage return before the line feed is dropped too) and each row into cells at the cell delimiter. A cell that starts with a double quote runs to the closing quote and may hold the delimiter (a doubled quote is one quote); a quoted cell cannot hold a row delimiter. Short rows are filled with empty cells. ascii draws a box of +, - and | with a rule after every row (= under the header row); markdown writes a pipe table whose header is the first row, or an empty one when first-row-header is off, with | in cells escaped. Column widths are counted in characters." doc
+  "Lay delimited text out as a table, in the layouts of CyberChef's To Table. The text is cut into rows at the row delimiter (a trailing empty row is dropped; with newline a carriage return before the line feed is dropped too) and each row into cells at the cell delimiter. A cell that starts with a double quote runs to the closing quote and may hold the delimiter (a doubled quote is one quote); a quoted cell cannot hold a row delimiter. Short rows are filled with empty cells (CyberChef draws them short). ascii draws a box: a rule of + and - above the rows, one under the header row when first-row-header is on and one below the last row, with | between the cells and no rule between the rows; markdown writes a pipe table whose header is always the first row, as in CyberChef (first-row-header does not change it), with the dashes under the header as wide as the column and | in cells escaped. Every line ends with a line feed. Column widths are counted in characters. An empty input gives an empty output; CyberChef's HTML format is not offered." doc
   "Utils" category
-  data row-delimiter cell-delimiter util:delimiter _table-rows first-row-header format _table ;
+  data "" =
+  [ "" ]
+  [ data row-delimiter cell-delimiter util:delimiter _table-rows first-row-header format _table ]
+  if ;
 
 META: to-table
   param cell-delimiter "What separates the cells of a row." ;
   param row-delimiter "What separates the rows. newline also accepts a carriage return before the line feed." ;
-  param first-row-header "Treat the first row as the table's header." ;
+  param first-row-header "ascii: draw a rule under the first row. markdown always treats the first row as the header." ;
   param format "The drawing: an ASCII box or a Markdown pipe table." ;
 ;
 
 \ ---- file tree ----
 
-\ A path is cut into its parts (empty parts are dropped). Every prefix of a path is a node of the tree, written as its
-\ parts joined with U+0000; the nodes of all the paths, sorted and without repeats, are in the order the tree is
-\ drawn in (a node comes before its children, and the children are in code point order).
-: _prefixes ( parts:list -- str )
-  1 parts len 1 + range [ parts swap 0 swap slice "\0" join ] map "\x01" join ;
+\ The parts of a path: cut at the separator, and a first empty part (a leading separator) is dropped. Other empty
+\ parts stay, as in CyberChef's File Tree.
+: _tree-parts ( path:str separator:str -- list )
+  path separator split
+  dup len 0 > [ dup 0 nth "" = [ 1 over len slice ] when ] when ;
 
-: _path-nodes ( path:str separator:str -- str )
-  path separator split [ len 0 > ] core:filter
-  dup len 0 > [ _prefixes ] [ drop "" ] if ;
+\ The line of the part at index j: the first part as it is, the others behind a bar for every level above them
+\ minus one and the arrow |---.
+: _tree-line ( parts:list j:int -- str )
+  j 0 =
+  [ parts 0 nth ]
+  [ "|   " j 1 - util:repeat-str "|---" cat parts j nth cat ]
+  if ;
 
-: _uniq-sorted ( sorted:list -- list )
-  sorted _group-starts [ sorted swap nth ] map ;
-
-: _node-keys ( data:str delimiter:str separator:str -- list )
-  data delimiter split [ separator _path-nodes ] map
-  "\x01" join "\x01" split [ len 0 > ] core:filter list:sort
-  _uniq-sorted ;
-
-\ For each node: is it the last child of its parent? parents are the parent node of each node (the empty text for the
-\ top level). The nodes are grouped by parent with a stable sort, which keeps the drawing order inside a group.
-: _lasts-sorted ( sidx:list sp:list -- list )
-  0 sp len range
-  [ dup 1 + sp len = [ drop true ] [ dup sp swap nth swap 1 + sp swap nth <> ] if ] map
-  sidx list:sort-by ;
-
-: _lasts ( parents:list -- list )
-  0 parents len range parents list:sort-by
-  dup [ parents swap nth ] map
-  _lasts-sorted ;
-
-\ The columns in front of a node: for every ancestor, a bar when more children of it follow, else blanks.
-: _ancestors ( parts:list lastrec:record -- str )
-  1 parts len range
-  [ parts swap 0 swap slice "\0" join lastrec swap get [ "    " ] [ "|   " ] if ] map
-  "" join ;
-
-: _tree-line ( key:str lastrec:record -- str )
-  key "\0" split
-  dup lastrec _ancestors
-  key lastrec swap get [ "`-- " ] [ "|-- " ] if cat
-  swap dup len 1 - nth cat ;
-
-: _tree-lines ( keys:list lastrec:record -- str )
-  keys [ lastrec _tree-line ] map { "." } swap cat "\n" join ;
-
-: _render-tree ( keys:list -- str )
-  keys keys keys [ "\0" split dup len 1 - 0 swap slice "\0" join ] map _lasts zip >record
-  _tree-lines ;
+\ For every part of a path "key line": the key is the parts up to it joined with a slash (the node of the tree), the
+\ line is what is drawn for it.
+: _tree-entries ( parts:list -- list )
+  1 parts len 1 + range
+  [ dup parts swap 0 swap slice "/" join "\0" cat swap 1 - parts swap _tree-line cat ] map ;
 
 : file-tree ( data:str delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab}="newline" separator:str[1..]="/" -- str )
-  "Draw a list of paths (one per line by default) as a tree, in the style of the tree command with plain characters: a first line with a dot, then every directory and file once, indented by depth, with |-- in front of a name and `-- in front of the last name of a directory, and | down the left of the names that follow. The names of a directory are in code point order, a path that is a prefix of another is also a node of its own, repeats count once, and empty parts of a path (a leading, trailing or doubled separator) are ignored. The output is always cut at line feeds, whatever the delimiter." doc
+  "Draw a list of paths (one per line by default) as a tree, in CyberChef's style: the paths are made unique and sorted by code point, and each path writes a line for every part of it that has not been written yet. A first part is written as it is, a deeper part behind |   for every level above it minus one and the arrow |---, so a/b/c and a/d give a, |---b, |   |---c and |---d. A leading separator is ignored (one only); other empty parts are kept. There is no line for the root. The output is always cut at line feeds, whatever the delimiter. An empty input gives an empty output." doc
   "Utils" category
-  data delimiter util:delimiter separator _node-keys _render-tree ;
+  data delimiter util:delimiter split list:unique list:sort
+  [ separator _tree-parts _tree-entries ] map
+  { } [ cat ] reduce
+  list:unique
+  [ "\0" split dup 1 swap len slice "\0" join ] map
+  "\n" join ;
 
 META: file-tree
   param delimiter "What separates the paths in the input." ;

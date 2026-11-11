@@ -578,5 +578,73 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "count extended: a tab escape",
+    "ref": "hand-counted: the escapes of the pattern are read first, then the text is counted",
+    "op": "search:count",
+    "params": {
+      "mode": "extended",
+      "ignore-case": false,
+      "pattern": "\\t"
+    },
+    "input": {
+      "value": "tab\tx\ty",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 2
+    }
+  },
+  {
+    "name": "count extended: a line feed escape",
+    "ref": "hand-counted: the escapes of the pattern are read first, then the text is counted",
+    "op": "search:count",
+    "params": {
+      "mode": "extended",
+      "ignore-case": false,
+      "pattern": "\\n"
+    },
+    "input": {
+      "value": "line1\nline2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 1
+    }
+  },
+  {
+    "name": "count extended: a hex escape",
+    "ref": "hand-counted: the escapes of the pattern are read first, then the text is counted",
+    "op": "search:count",
+    "params": {
+      "mode": "extended",
+      "ignore-case": false,
+      "pattern": "\\x41"
+    },
+    "input": {
+      "value": "AxA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 2
+    }
+  },
+  {
+    "name": "count extended: a hex escape, ignoring case",
+    "ref": "hand-counted: the escapes of the pattern are read first, then the text is counted",
+    "op": "search:count",
+    "params": {
+      "mode": "extended",
+      "ignore-case": true,
+      "pattern": "\\x41"
+    },
+    "input": {
+      "value": "aXa",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 2
+    }
   }
 ]

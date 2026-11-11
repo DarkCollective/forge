@@ -71,6 +71,11 @@ describe("clock", () => {
     expect(top(r)).toBe(expected);
   });
 
+  test("the default unit is seconds, as CyberChef's Get Time", () => {
+    const p = runtime.meta("clock:get-time").params.find((x) => x.name === "unit");
+    expect(p?.default).toBe("seconds");
+  });
+
   test("get-time ignores its input", async () => {
     vi.useFakeTimers({ toFake: ["Date"] });
     vi.setSystemTime(T);

@@ -220,10 +220,14 @@ IN: arith
   "Arithmetic" category
   data delimiter _numbers [ _div ] _fold _fmt ;
 
-: mod ( data:str delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab}="newline" -- str )
-  "The remainder of the first number divided by the others, left to right ((a mod b) mod c). The remainder has the sign of the dividend, like the % operator of JavaScript and the BigNumber default (-7 mod 3 is -1); decimals are allowed and exact (5.5 mod 2 is 1.5). A zero divisor is E_DIV_ZERO. Same input rules as sum." doc
+: _mod-all ( ds:list m:list -- list )
+  m len 0 = [ "the modulus is not a number" raise:coerce ] when
+  ds [ m _rem ] map ;
+
+: mod ( data:str modulus:str="2" delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab}="newline" -- str )
+  "Every number of the input modulo the modulus, as in CyberChef's MOD: 15 4 7 with the modulus 3 gives 0 1 1. The modulus is text (2 by default), a decimal of any size; the numbers are cut at the delimiter. Each remainder has the sign of the dividend, like the % operator of JavaScript and the BigNumber default (-7 mod 3 is -1), and is exact for decimals (5.5 mod 2 is 1.5). The remainders are joined by a single space whatever the delimiter is, which is what CyberChef writes. A zero modulus is E_DIV_ZERO; a modulus that is not a number is E_COERCE. Same input rules as sum." doc
   "Arithmetic" category
-  data delimiter _numbers [ _rem ] _fold _fmt ;
+  data delimiter _numbers modulus _parse _mod-all [ _fmt ] map " " join ;
 
 : mean ( data:str delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab}="newline" -- str )
   "The arithmetic mean of the numbers of the input: their exact sum divided by how many there are, rounded half away from zero to 20 decimal places. Same input rules as sum." doc
@@ -265,6 +269,7 @@ META: divide
 ;
 
 META: mod
+  param modulus "The number every input number is divided by (2 by default); a decimal of any size." ;
   param delimiter "The text between the numbers." ;
   see-also arith:divide ;
 ;
@@ -309,10 +314,14 @@ META: standard-deviation
   { a abs b abs 1 0 0 1 } [ dup 1 nth 0 <> ] [ _egcd-step ] while
   a b _egcd-out ;
 
-: ext-gcd ( data:str b:str delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab}="newline" -- str )
-  "The extended Euclidean algorithm on two integers of any size: the input is a, the parameter is b, and the result is three integers g, x and y (in that order, joined by the delimiter) with a * x + b * y = g, where g is the greatest common divisor (never negative). The coefficients are the ones of the standard iterative algorithm on the absolute values, with the signs of a and b put back; they are not unique, but they are the same on every run. The gcd of 0 and 0 is 0. A value that is not an integer is E_COERCE." doc
+: _egcd-report ( r:list -- str )
+  "gcd: " r 0 nth int>str cat "\n\nBezout coefficients:\nx = " cat r 1 nth int>str cat
+  "\ny = " cat r 2 nth int>str cat "\n\n" cat ;
+
+: ext-gcd ( data:str b:str -- str )
+  "The extended Euclidean algorithm on two integers of any size: the input is a, the parameter is b. The output is CyberChef's report: gcd: g, a blank line, Bezout coefficients: and the lines x = and y = , each ending in a line feed, with a * x + b * y = g, where g is the greatest common divisor (never negative). The coefficients are the ones of the standard iterative algorithm on the absolute values, with the signs of a and b put back, so the identity holds for negative a or b too (CyberChef's coefficients are the same for a and b of 0 or more, but do not satisfy it when b is negative); they are not unique, but they are the same on every run. The gcd of 0 and 0 is 0. A value that is not an integer is E_COERCE." doc
   "Arithmetic" category
-  data "the input" _int b "b" _int _egcd [ int>str ] map delimiter util:delimiter join ;
+  data "the input" _int b "b" _int _egcd _egcd-report ;
 
 : mod-pow ( data:str exponent:str modulus:str -- str )
   "Modular exponentiation: the input (the base) raised to the exponent, modulo the modulus, as a number from 0 up to the modulus minus 1. All three are integers of any size; the base may be negative. A negative exponent or a modulus below 1 is E_RANGE, and a value that is not an integer is E_COERCE." doc
@@ -326,7 +335,6 @@ META: standard-deviation
 
 META: ext-gcd
   param b "The second integer (the input is the first)." ;
-  param delimiter "The text between g, x and y." ;
   see-also arith:mod-inverse ;
 ;
 
