@@ -1,0 +1,879 @@
+[
+  {
+    "name": "1 mile to metre",
+    "ref": "NIST SP 811 appendix B: 1 mile = 1609.344 m exactly (international yard of 1959 times 1760)",
+    "op": "units:convert-distance",
+    "params": {
+      "from": "mile",
+      "to": "metre",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1609.344",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 inch to centimetre",
+    "ref": "NIST SP 811 appendix B: 1 in = 2.54 cm exactly (international agreement of 1959)",
+    "op": "units:convert-distance",
+    "params": {
+      "from": "inch",
+      "to": "centimetre",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2.54",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 foot to inch",
+    "ref": "12 inches to the foot",
+    "op": "units:convert-distance",
+    "params": {
+      "from": "foot",
+      "to": "inch",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "12",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 yard to metre",
+    "ref": "NIST SP 811 appendix B: 1 yd = 0.9144 m exactly",
+    "op": "units:convert-distance",
+    "params": {
+      "from": "yard",
+      "to": "metre",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0.9144",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 nautical-mile to metre",
+    "ref": "NIST SP 811 appendix B: the international nautical mile is 1852 m exactly",
+    "op": "units:convert-distance",
+    "params": {
+      "from": "nautical-mile",
+      "to": "metre",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1852",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 astronomical-unit to kilometre",
+    "ref": "IAU 2012 resolution B2: 1 au = 149597870700 m exactly",
+    "op": "units:convert-distance",
+    "params": {
+      "from": "astronomical-unit",
+      "to": "kilometre",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "149597870.7",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 light-year to metre",
+    "ref": "IAU: the light year is c times a Julian year of 365.25 days, 9460730472580800 m",
+    "op": "units:convert-distance",
+    "params": {
+      "from": "light-year",
+      "to": "metre",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "9460730472580800",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 metre to foot",
+    "ref": "exact rational 10000/3048, rounded to 20 significant digits (computed independently with BigInt)",
+    "op": "units:convert-distance",
+    "params": {
+      "from": "metre",
+      "to": "foot",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3.2808398950131233596",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 metre to foot (3 digits)",
+    "ref": "10000/3048 = 3.2808...; 3 significant digits",
+    "op": "units:convert-distance",
+    "params": {
+      "from": "metre",
+      "to": "foot",
+      "digits": 3
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3.28",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "-2.5e3 metre to kilometre",
+    "ref": "exponent notation and a negative sign: -2500 m = -2.5 km",
+    "op": "units:convert-distance",
+    "params": {
+      "from": "metre",
+      "to": "kilometre",
+      "digits": 20
+    },
+    "input": {
+      "value": "-2.5e3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-2.5",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "+5 metre to metre",
+    "ref": "an explicit plus sign is read; same unit gives the same number",
+    "op": "units:convert-distance",
+    "params": {
+      "from": "metre",
+      "to": "metre",
+      "digits": 20
+    },
+    "input": {
+      "value": "+5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "5",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "0.1 metre to metre",
+    "ref": "no float noise: 0.1 stays 0.1",
+    "op": "units:convert-distance",
+    "params": {
+      "from": "metre",
+      "to": "metre",
+      "digits": 20
+    },
+    "input": {
+      "value": "0.1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0.1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 inch to light-year",
+    "ref": "a very small result is written in plain decimal form (computed independently with BigInt)",
+    "op": "units:convert-distance",
+    "params": {
+      "from": "inch",
+      "to": "light-year",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0.0000000000000000026847821184225232778",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 furlong to yard",
+    "ref": "a furlong is 220 yards",
+    "op": "units:convert-distance",
+    "params": {
+      "from": "furlong",
+      "to": "yard",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "220",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "0 metre to foot",
+    "ref": "zero stays zero",
+    "op": "units:convert-distance",
+    "params": {
+      "from": "metre",
+      "to": "foot",
+      "digits": 20
+    },
+    "input": {
+      "value": "0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "999999.999 metre to metre (3 digits)",
+    "ref": "rounding carries into a new digit: 999999.999 to 3 significant digits is 1000000",
+    "op": "units:convert-distance",
+    "params": {
+      "from": "metre",
+      "to": "metre",
+      "digits": 3
+    },
+    "input": {
+      "value": "999999.999",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1000000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 acre to square-metre",
+    "ref": "NIST SP 811 appendix B: 1 acre = 4046.8564224 m2 exactly (4840 square yards)",
+    "op": "units:convert-area",
+    "params": {
+      "from": "acre",
+      "to": "square-metre",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4046.8564224",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 hectare to acre",
+    "ref": "10000 m2 over 4046.8564224 m2 (computed independently with BigInt)",
+    "op": "units:convert-area",
+    "params": {
+      "from": "hectare",
+      "to": "acre",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2.4710538146716534225",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 square-mile to acre",
+    "ref": "a square mile is 640 acres",
+    "op": "units:convert-area",
+    "params": {
+      "from": "square-mile",
+      "to": "acre",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "640",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 square-foot to square-inch",
+    "ref": "144 square inches to the square foot",
+    "op": "units:convert-area",
+    "params": {
+      "from": "square-foot",
+      "to": "square-inch",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "144",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 square-kilometre to hectare",
+    "ref": "100 hectares to the square kilometre",
+    "op": "units:convert-area",
+    "params": {
+      "from": "square-kilometre",
+      "to": "hectare",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "100",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 pound to kilogram",
+    "ref": "NIST SP 811 appendix B: 1 lb = 0.45359237 kg exactly",
+    "op": "units:convert-mass",
+    "params": {
+      "from": "pound",
+      "to": "kilogram",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0.45359237",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 ounce to gram",
+    "ref": "an avoirdupois ounce is a sixteenth of the international pound: 28.349523125 g",
+    "op": "units:convert-mass",
+    "params": {
+      "from": "ounce",
+      "to": "gram",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "28.349523125",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 short-ton to pound",
+    "ref": "a short ton is 2000 pounds",
+    "op": "units:convert-mass",
+    "params": {
+      "from": "short-ton",
+      "to": "pound",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 long-ton to pound",
+    "ref": "a long ton is 2240 pounds",
+    "op": "units:convert-mass",
+    "params": {
+      "from": "long-ton",
+      "to": "pound",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2240",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 stone to pound",
+    "ref": "a stone is 14 pounds",
+    "op": "units:convert-mass",
+    "params": {
+      "from": "stone",
+      "to": "pound",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "14",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 troy-ounce to gram",
+    "ref": "the troy ounce is 31.1034768 g exactly (NIST SP 811)",
+    "op": "units:convert-mass",
+    "params": {
+      "from": "troy-ounce",
+      "to": "gram",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "31.1034768",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 carat to milligram",
+    "ref": "the metric carat is 200 mg",
+    "op": "units:convert-mass",
+    "params": {
+      "from": "carat",
+      "to": "milligram",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "200",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 grain to milligram",
+    "ref": "the grain is 64.79891 mg exactly (NIST SP 811)",
+    "op": "units:convert-mass",
+    "params": {
+      "from": "grain",
+      "to": "milligram",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "64.79891",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 kilogram to pound",
+    "ref": "10^8 / 45359237 rounded to 20 significant digits (computed independently with BigInt)",
+    "op": "units:convert-mass",
+    "params": {
+      "from": "kilogram",
+      "to": "pound",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2.2046226218487758072",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 knot to kilometre-per-hour",
+    "ref": "a knot is one nautical mile per hour: 1.852 km/h",
+    "op": "units:convert-speed",
+    "params": {
+      "from": "knot",
+      "to": "kilometre-per-hour",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1.852",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "60 mile-per-hour to kilometre-per-hour",
+    "ref": "60 mph = 60 x 1.609344 km/h = 96.56064 km/h",
+    "op": "units:convert-speed",
+    "params": {
+      "from": "mile-per-hour",
+      "to": "kilometre-per-hour",
+      "digits": 20
+    },
+    "input": {
+      "value": "60",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "96.56064",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 mile-per-hour to metre-per-second",
+    "ref": "0.44704 m/s exactly",
+    "op": "units:convert-speed",
+    "params": {
+      "from": "mile-per-hour",
+      "to": "metre-per-second",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0.44704",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 speed-of-light to kilometre-per-second",
+    "ref": "SI: c = 299792458 m/s exactly",
+    "op": "units:convert-speed",
+    "params": {
+      "from": "speed-of-light",
+      "to": "kilometre-per-second",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "299792.458",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "100 kilometre-per-hour to mile-per-hour (10 digits)",
+    "ref": "100 / 1.609344 = 62.13711922... (computed independently with BigInt)",
+    "op": "units:convert-speed",
+    "params": {
+      "from": "kilometre-per-hour",
+      "to": "mile-per-hour",
+      "digits": 10
+    },
+    "input": {
+      "value": "100",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "62.13711922",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 kibibyte to byte",
+    "ref": "IEC 80000-13: 1 KiB = 1024 bytes",
+    "op": "units:convert-data",
+    "params": {
+      "from": "kibibyte",
+      "to": "byte",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1024",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 megabyte to kilobyte",
+    "ref": "SI prefixes: 1 MB = 1000 kB",
+    "op": "units:convert-data",
+    "params": {
+      "from": "megabyte",
+      "to": "kilobyte",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 gibibyte to mebibyte",
+    "ref": "IEC 80000-13: 1 GiB = 1024 MiB",
+    "op": "units:convert-data",
+    "params": {
+      "from": "gibibyte",
+      "to": "mebibyte",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1024",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 byte to bit",
+    "ref": "8 bits to the byte",
+    "op": "units:convert-data",
+    "params": {
+      "from": "byte",
+      "to": "bit",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "8",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 nibble to bit",
+    "ref": "4 bits to the nibble",
+    "op": "units:convert-data",
+    "params": {
+      "from": "nibble",
+      "to": "bit",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 exbibyte to byte",
+    "ref": "IEC 80000-13: 1 EiB = 2^60 bytes = 1152921504606846976",
+    "op": "units:convert-data",
+    "params": {
+      "from": "exbibyte",
+      "to": "byte",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1152921504606846976",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 byte to kilobyte",
+    "ref": "1/1000 of a kilobyte",
+    "op": "units:convert-data",
+    "params": {
+      "from": "byte",
+      "to": "kilobyte",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0.001",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "3 bit to byte",
+    "ref": "3 bits are 0.375 bytes",
+    "op": "units:convert-data",
+    "params": {
+      "from": "bit",
+      "to": "byte",
+      "digits": 20
+    },
+    "input": {
+      "value": "3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0.375",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 terabyte to gibibyte",
+    "ref": "10^12 / 2^30 = 931.3225746154785... (computed independently with BigInt)",
+    "op": "units:convert-data",
+    "params": {
+      "from": "terabyte",
+      "to": "gibibyte",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "931.32257461547851563",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "not a number",
+    "ref": "an input that is not decimal text is E_COERCE",
+    "op": "units:convert-distance",
+    "params": {
+      "from": "metre",
+      "to": "foot",
+      "digits": 20
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "empty input",
+    "ref": "an empty input is not a number",
+    "op": "units:convert-distance",
+    "params": {
+      "from": "metre",
+      "to": "foot",
+      "digits": 20
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "two points",
+    "ref": "1.2.3 is not a number",
+    "op": "units:convert-distance",
+    "params": {
+      "from": "metre",
+      "to": "foot",
+      "digits": 20
+    },
+    "input": {
+      "value": "1.2.3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a bare sign",
+    "ref": "a sign alone is not a number",
+    "op": "units:convert-mass",
+    "params": {
+      "from": "gram",
+      "to": "ounce",
+      "digits": 20
+    },
+    "input": {
+      "value": "-",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "exponent out of range",
+    "ref": "an exponent beyond 400 is refused rather than computed",
+    "op": "units:convert-distance",
+    "params": {
+      "from": "metre",
+      "to": "foot",
+      "digits": 20
+    },
+    "input": {
+      "value": "1e999",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  }
+]

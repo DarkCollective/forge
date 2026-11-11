@@ -1,0 +1,832 @@
+[
+  {
+    "name": "geohash of the middle of ezs42",
+    "ref": "Wikipedia, Geohash: ezs42 is the cell around 42.605, -5.603; its exact middle (bisection in floating point, computed independently) encodes back to it",
+    "op": "coords:convert",
+    "params": {
+      "from": "auto",
+      "to": "geohash",
+      "precision": 5
+    },
+    "input": {
+      "value": "42.60498046875, -5.60302734375",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ezs42",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "geohash ezs42 to decimal degrees",
+    "ref": "Wikipedia, Geohash: ezs42 decodes to 42.605, -5.603; the exact middle of the cell is 42.60498046875, -5.60302734375",
+    "op": "coords:convert",
+    "params": {
+      "from": "auto",
+      "to": "decimal-degrees",
+      "precision": 6
+    },
+    "input": {
+      "value": "ezs42",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "42.604980, -5.603027",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "geohash of 57.64911, 10.40744",
+    "ref": "Wikipedia, Geohash: this point in Jutland is u4pruydqqvj",
+    "op": "coords:convert",
+    "params": {
+      "from": "auto",
+      "to": "geohash",
+      "precision": 11
+    },
+    "input": {
+      "value": "57.64911, 10.40744",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "u4pruydqqvj",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "geohash prefix",
+    "ref": "a shorter geohash is the prefix of a longer one: u4pru",
+    "op": "coords:convert",
+    "params": {
+      "from": "auto",
+      "to": "geohash",
+      "precision": 5
+    },
+    "input": {
+      "value": "57.64911, 10.40744",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "u4pru",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "geohash read with from set",
+    "ref": "the middle of the cell u4pruydqqvj is 57.64911063, 10.40743969 (bisection in floating point, computed independently)",
+    "op": "coords:convert",
+    "params": {
+      "from": "geohash",
+      "to": "decimal-degrees",
+      "precision": 6
+    },
+    "input": {
+      "value": "u4pruydqqvj",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "57.649111, 10.407440",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decimal degrees to degrees minutes seconds",
+    "ref": "48.8566 is 48 deg 51 min 23.76 s (0.8566 x 60 = 51.396; 0.396 x 60 = 23.76); 2.3522 is 2 deg 21 min 7.92 s",
+    "op": "coords:convert",
+    "params": {
+      "from": "auto",
+      "to": "degrees-minutes-seconds",
+      "precision": 3
+    },
+    "input": {
+      "value": "48.8566, 2.3522",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "48° 51' 23.760\" N, 2° 21' 7.920\" E",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decimal degrees to degrees decimal minutes",
+    "ref": "0.8566 x 60 = 51.396 minutes; 0.3522 x 60 = 21.132 minutes",
+    "op": "coords:convert",
+    "params": {
+      "from": "auto",
+      "to": "degrees-decimal-minutes",
+      "precision": 4
+    },
+    "input": {
+      "value": "48.8566, 2.3522",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "48° 51.3960' N, 2° 21.1320' E",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "degrees minutes seconds to decimal degrees",
+    "ref": "48 + 51/60 + 24/3600 = 48.8566667; 2 + 21/60 + 7/3600 = 2.3519444",
+    "op": "coords:convert",
+    "params": {
+      "from": "auto",
+      "to": "decimal-degrees",
+      "precision": 6
+    },
+    "input": {
+      "value": "48° 51' 24\" N, 2° 21' 7\" E",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "48.856667, 2.351944",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hemisphere letters after the numbers",
+    "ref": "W and S make the value negative",
+    "op": "coords:convert",
+    "params": {
+      "from": "auto",
+      "to": "decimal-degrees",
+      "precision": 6
+    },
+    "input": {
+      "value": "40.7128 N, 74.0060 W",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "40.712800, -74.006000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hemisphere letters before the numbers",
+    "ref": "letters may come first",
+    "op": "coords:convert",
+    "params": {
+      "from": "auto",
+      "to": "decimal-degrees",
+      "precision": 3
+    },
+    "input": {
+      "value": "S 33 51 24.5, E 151 12 54",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-33.857, 151.215",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a minus sign",
+    "ref": "a leading minus makes a value negative",
+    "op": "coords:convert",
+    "params": {
+      "from": "auto",
+      "to": "degrees-decimal-minutes",
+      "precision": 2
+    },
+    "input": {
+      "value": "-33.5, -70.25",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "33° 30.00' S, 70° 15.00' W",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "degrees decimal minutes in, explicit format",
+    "ref": "from degrees-decimal-minutes: 51.396 minutes is 0.8566 degrees",
+    "op": "coords:convert",
+    "params": {
+      "from": "degrees-decimal-minutes",
+      "to": "decimal-degrees",
+      "precision": 4
+    },
+    "input": {
+      "value": "48 51.396 N 2 21.132 E",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "48.8566, 2.3522",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "the origin",
+    "ref": "0, 0 is on the equator and the prime meridian: no minus sign, north and east",
+    "op": "coords:convert",
+    "params": {
+      "from": "auto",
+      "to": "degrees-minutes-seconds",
+      "precision": 1
+    },
+    "input": {
+      "value": "0, 0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0° 0' 0.0\" N, 0° 0' 0.0\" E",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a tiny negative value rounds to zero without a sign",
+    "ref": "no negative zero",
+    "op": "coords:convert",
+    "params": {
+      "from": "auto",
+      "to": "decimal-degrees",
+      "precision": 3
+    },
+    "input": {
+      "value": "-0.00001, 0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0.000, 0.000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "seconds rounding carries",
+    "ref": "59.9996 seconds to 3 places is 60.000, so it carries into the minute: 10 deg 29' 59.9996\" is 10 deg 30' 0.000\"",
+    "op": "coords:convert",
+    "params": {
+      "from": "auto",
+      "to": "degrees-minutes-seconds",
+      "precision": 3
+    },
+    "input": {
+      "value": "10 29 59.9996 N 0 0 0 E",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "10° 30' 0.000\" N, 0° 0' 0.000\" E",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "UTM on the central meridian",
+    "ref": "the meridian arc to 45 deg N on WGS 84 is 4984944.378 m; times k0 = 0.9996 is 4982950.400",
+    "op": "coords:convert",
+    "params": {
+      "from": "auto",
+      "to": "utm",
+      "precision": 6
+    },
+    "input": {
+      "value": "45, 3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "31T 500000 4982950",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "UTM on the equator",
+    "ref": "on the equator of the central meridian: easting 500000, northing 0; band N",
+    "op": "coords:convert",
+    "params": {
+      "from": "auto",
+      "to": "utm",
+      "precision": 6
+    },
+    "input": {
+      "value": "0, 3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "31N 500000 0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "UTM where the prime meridian meets the equator",
+    "ref": "166021.443 m east of the 3 deg E central meridian (Snyder 1987 series, computed independently)",
+    "op": "coords:convert",
+    "params": {
+      "from": "auto",
+      "to": "utm",
+      "precision": 6
+    },
+    "input": {
+      "value": "0, 0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "31N 166021 0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "southern hemisphere UTM (Sydney)",
+    "ref": "Snyder 1987 transverse Mercator series on WGS 84 with k0 = 0.9996, computed independently; zone 32 for 56-64 N and 3-12 E, zone 33 for 72-84 N and 9-21 E",
+    "op": "coords:convert",
+    "params": {
+      "from": "auto",
+      "to": "utm",
+      "precision": 6
+    },
+    "input": {
+      "value": "-33.8568, 151.2153",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "56H 334901 6252289",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "UTM in the Norway exception zone",
+    "ref": "Snyder 1987 transverse Mercator series on WGS 84 with k0 = 0.9996, computed independently; zone 32 for 56-64 N and 3-12 E, zone 33 for 72-84 N and 9-21 E",
+    "op": "coords:convert",
+    "params": {
+      "from": "auto",
+      "to": "utm",
+      "precision": 6
+    },
+    "input": {
+      "value": "60.5, 5.3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "32V 296817 6712810",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "UTM in the Svalbard exception zone",
+    "ref": "Snyder 1987 transverse Mercator series on WGS 84 with k0 = 0.9996, computed independently; zone 32 for 56-64 N and 3-12 E, zone 33 for 72-84 N and 9-21 E",
+    "op": "coords:convert",
+    "params": {
+      "from": "auto",
+      "to": "utm",
+      "precision": 6
+    },
+    "input": {
+      "value": "78.2, 15.6",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "33X 513697 8680760",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "UTM to decimal degrees",
+    "ref": "the inverse of 45 deg N on the central meridian: 4982950.4 m north of the equator",
+    "op": "coords:convert",
+    "params": {
+      "from": "auto",
+      "to": "decimal-degrees",
+      "precision": 6
+    },
+    "input": {
+      "value": "31T 500000 4982950.4",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "45.000000, 3.000000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "UTM with the band separate and a southern zone",
+    "ref": "56H: band H is south of the equator; 334900.57, 6252288.75 is the Sydney point above",
+    "op": "coords:convert",
+    "params": {
+      "from": "utm",
+      "to": "decimal-degrees",
+      "precision": 4
+    },
+    "input": {
+      "value": "56 H 334900.57 6252288.75",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-33.8568, 151.2153",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "MGRS of a point on the central meridian",
+    "ref": "zone 31, band T; easting 500000 is the 5th column of the set ABCDEFGH (E); northing 4982950 gives row K in an odd zone; digits 00000 82950",
+    "op": "coords:convert",
+    "params": {
+      "from": "auto",
+      "to": "mgrs",
+      "precision": 6
+    },
+    "input": {
+      "value": "45, 3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "31TEK0000082950",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "MGRS in a southern even zone",
+    "ref": "zone 56 uses the column set JKLMNPQR (L) and rows shifted by 5 letters (H)",
+    "op": "coords:convert",
+    "params": {
+      "from": "auto",
+      "to": "mgrs",
+      "precision": 6
+    },
+    "input": {
+      "value": "-33.8568, 151.2153",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "56HLH3490052288",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "MGRS to decimal degrees (cell middle)",
+    "ref": "the middle of the 1 m cell 31TEK0000082950 is 0.5 m north and east of the corner",
+    "op": "coords:convert",
+    "params": {
+      "from": "auto",
+      "to": "decimal-degrees",
+      "precision": 4
+    },
+    "input": {
+      "value": "31TEK0000082950",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "45.0000, 3.0000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "MGRS with spaces and lower case, forced format",
+    "ref": "spaces and case are ignored; 2 + 2 digits name a 1 km cell, read as its middle: 500500 E, 4982500 N",
+    "op": "coords:convert",
+    "params": {
+      "from": "mgrs",
+      "to": "utm",
+      "precision": 6
+    },
+    "input": {
+      "value": "31t ek 00 82",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "31T 500500 4982500",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "latitude beyond 90",
+    "ref": "latitude is limited to 90 degrees",
+    "op": "coords:convert",
+    "params": {
+      "from": "auto",
+      "to": "decimal-degrees",
+      "precision": 3
+    },
+    "input": {
+      "value": "91, 0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "longitude beyond 180",
+    "ref": "longitude is limited to 180 degrees",
+    "op": "coords:convert",
+    "params": {
+      "from": "auto",
+      "to": "decimal-degrees",
+      "precision": 3
+    },
+    "input": {
+      "value": "0, 181",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "UTM outside its latitudes",
+    "ref": "UTM covers 80 S to 84 N",
+    "op": "coords:convert",
+    "params": {
+      "from": "auto",
+      "to": "utm",
+      "precision": 3
+    },
+    "input": {
+      "value": "85, 0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "minutes of 60 or more",
+    "ref": "minutes and seconds are below 60",
+    "op": "coords:convert",
+    "params": {
+      "from": "auto",
+      "to": "decimal-degrees",
+      "precision": 3
+    },
+    "input": {
+      "value": "10 61 0 N 0 0 0 E",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "three numbers",
+    "ref": "2, 4 or 6 numbers only",
+    "op": "coords:convert",
+    "params": {
+      "from": "auto",
+      "to": "decimal-degrees",
+      "precision": 3
+    },
+    "input": {
+      "value": "1 2 3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "wrong number count for the chosen format",
+    "ref": "decimal degrees needs exactly two numbers",
+    "op": "coords:convert",
+    "params": {
+      "from": "decimal-degrees",
+      "to": "geohash",
+      "precision": 5
+    },
+    "input": {
+      "value": "1 2 3 4",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "empty input",
+    "ref": "nothing to read",
+    "op": "coords:convert",
+    "params": {
+      "from": "auto",
+      "to": "decimal-degrees",
+      "precision": 3
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a character that is not a geohash character",
+    "ref": "a, i, l and o are not geohash characters",
+    "op": "coords:convert",
+    "params": {
+      "from": "geohash",
+      "to": "decimal-degrees",
+      "precision": 3
+    },
+    "input": {
+      "value": "ezsa2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a geohash that is too long",
+    "ref": "at most 12 characters",
+    "op": "coords:convert",
+    "params": {
+      "from": "geohash",
+      "to": "decimal-degrees",
+      "precision": 3
+    },
+    "input": {
+      "value": "ezs42ezs42ezs",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "an MGRS square letter outside the set of the zone",
+    "ref": "zone 31 uses columns A to H: column Z is wrong",
+    "op": "coords:convert",
+    "params": {
+      "from": "mgrs",
+      "to": "decimal-degrees",
+      "precision": 3
+    },
+    "input": {
+      "value": "31TZK0000082950",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "an odd number of MGRS digits",
+    "ref": "digits come in pairs",
+    "op": "coords:convert",
+    "params": {
+      "from": "mgrs",
+      "to": "decimal-degrees",
+      "precision": 3
+    },
+    "input": {
+      "value": "31TEK123",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a quarter of the great circle",
+    "ref": "R x pi / 2 for R = 6371 km: 6371000 x 1.5707963267948966 = 10007543.398",
+    "op": "coords:haversine",
+    "params": {
+      "radius": 6371
+    },
+    "input": {
+      "value": "0,0\n90,0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "10007543.398",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "pole to pole",
+    "ref": "R x pi = 20015086.796 m",
+    "op": "coords:haversine",
+    "params": {
+      "radius": 6371
+    },
+    "input": {
+      "value": "90,0\n-90,0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "20015086.796",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "one degree of longitude on the equator",
+    "ref": "R x pi / 180 = 111194.927 m",
+    "op": "coords:haversine",
+    "params": {
+      "radius": 6371
+    },
+    "input": {
+      "value": "0,0\n0,1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "111194.927",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "one degree with the WGS 84 equatorial radius",
+    "ref": "6378.137 km x pi / 180 = 111319.491 m",
+    "op": "coords:haversine",
+    "params": {
+      "radius": 6378.137
+    },
+    "input": {
+      "value": "0,0\n0,1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "111319.491",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Paris to London",
+    "ref": "haversine formula, R = 6371 km, computed independently in floating point",
+    "op": "coords:haversine",
+    "params": {
+      "radius": 6371
+    },
+    "input": {
+      "value": "48.8566, 2.3522\n51.5074, -0.1278",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "343556.060",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "the same point twice",
+    "ref": "distance zero",
+    "op": "coords:haversine",
+    "params": {
+      "radius": 6371
+    },
+    "input": {
+      "value": "10, 20\n10, 20",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0.000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "positions in two formats and Windows line ends",
+    "ref": "a geohash and decimal degrees, on lines ended by CRLF: ezs42 to its own middle is zero",
+    "op": "coords:haversine",
+    "params": {
+      "radius": 6371
+    },
+    "input": {
+      "value": "ezs42\r\n42.60498046875, -5.60302734375",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0.000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "one position only",
+    "ref": "two positions are needed",
+    "op": "coords:haversine",
+    "params": {
+      "radius": 6371
+    },
+    "input": {
+      "value": "10, 20",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "three positions",
+    "ref": "exactly two",
+    "op": "coords:haversine",
+    "params": {
+      "radius": 6371
+    },
+    "input": {
+      "value": "1,1\n2,2\n3,3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "radius of zero",
+    "ref": "the radius must be above zero",
+    "op": "coords:haversine",
+    "params": {
+      "radius": 0
+    },
+    "input": {
+      "value": "1,1\n2,2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  }
+]

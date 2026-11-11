@@ -35,6 +35,7 @@ The private primitives, each in `src/prims/<v>.ts`:
 - `cobs:_starts`: the offsets of the blocks of COBS data;
 - `float:_pack` and `float:_unpack`: decimal text to and from IEEE 754 bytes;
 - `unicode:_normalize`: Unicode normalisation (NFC, NFD, NFKC, NFKD);
+- `coords:_math` and `coords:_atan2`: the trigonometric and hyperbolic functions (sin, cos, tan, asin, atan, sinh, cosh, asinh, atanh) and atan2 that the core lacks, for the UTM projection and the haversine distance; the series, the zones and the formats are FL;
 - `aes:_check-key`, `aes:_block-enc`, `aes:_block-dec`, `aes:_crypt` and `aes:_gcm`: AES over the audited `@noble/ciphers` (the block pair also drives `blockmode` for OFB); `aes-kw:_wrap` and `aes-kw:_unwrap`: RFC 3394 key wrap over noble's `aeskw`; `chacha:_crypt`, `salsa20:_crypt` and `xsalsa20:_crypt`: the stream ciphers over noble;
 - the block ciphers without an audited library, each a private single-block pair and a key check, written from the specification: `des`, `triple-des`, `blowfish`, `rc2`, `rc6`, `twofish`, `sm4`, `tea`, `xtea` and `present` have `_check-key`, `_encrypt-block` and `_decrypt-block`; `gost28147` has the same three plus `_crypt-ext` (the whole-message modes with CryptoPro key meshing, which cannot be a block quotation because the key changes between blocks), `_wrap` and `_unwrap` (RFC 4357 key wrap and its IMIT); every mode and the padding come from `blockmode`;
 - `rc4:_crypt`, `ciphersaber2:_crypt` and `rabbit:_crypt`: the stream ciphers, whose state loops need a fast mutable array that FL lacks (the same reason as `sigaba:_run`); `xxtea:_encrypt` and `xxtea:_decrypt`: XXTEA, a variable-length block cipher that does not use `blockmode`;
@@ -97,6 +98,8 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `cmac`             | CMAC (SP 800-38B, RFC 4493) over AES or Triple DES (1 op)                                                                                                              |
 | `cobs`             | Consistent Overhead Byte Stuffing encode and decode                                                                                                                    |
 | `colossus`         | Colossus-style counting: how often a Boolean condition holds over every start position of two chi wheels, for the Lorenz break-in (1 op)                               |
+| `colour`           | parse a colour code (hex, rgb, hsl, cmyk, with alpha) and write it in all of them (1 op)                                                                               |
+| `coords`           | co-ordinate formats (decimal, DMM, DMS, geohash, UTM, MGRS) and the haversine distance (2 ops)                                                                         |
 | `crc`              | CRC checksums: the 171 CyberChef presets and any width from 1 to 82 bits from the Rocksoft model (2 ops)                                                               |
 | `decimal`          | bytes to and from decimal numbers                                                                                                                                      |
 | `des`              | DES encrypt and decrypt (FIPS 46-3): ECB, CBC, CFB, OFB, CTR, 8-byte key, PKCS#7 or no padding                                                                         |
@@ -104,6 +107,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `enigma`           | Enigma I, M3 and M4 rotor machines, one reciprocal word; also the shared historical rotor, turnover and reflector data (1 op)                                          |
 | `evp`              | OpenSSL EVP_BytesToKey key derivation in FL over MD5, SHA-1 and SHA-2 (1 op)                                                                                           |
 | `fernet`           | Fernet encrypt and decrypt (github.com/fernet/spec) over aes and hmac, with the +random and +time effects (2 ops)                                                      |
+| `file-mode`        | UNIX file permissions, octal and symbolic, and a plain-text breakdown (2 ops)                                                                                          |
 | `flask-session`    | Flask session cookies (itsdangerous, HMAC-SHA1/256) decode, sign and verify (3 ops)                                                                                    |
 | `fletcher`         | Fletcher-8, -16, -32 and -64 (1 op)                                                                                                                                    |
 | `float`            | IEEE 754 binary32 and binary64 numbers to and from bytes                                                                                                               |
@@ -133,6 +137,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `morse`            | encode and decode (ITU-R M.1677-1)                                                                                                                                     |
 | `murmur3`          | MurmurHash3 x86_32 with a seed (1 op)                                                                                                                                  |
 | `nthash`           | NT hash, the MD4 of UTF-16LE text (1 op)                                                                                                                               |
+| `objectid`         | the creation time of a MongoDB ObjectID as ISO 8601 UTC (1 op)                                                                                                         |
 | `octal`            | bytes to and from octal numbers                                                                                                                                        |
 | `parity`           | add or check a parity bit on a string of binary digits (2 ops)                                                                                                         |
 | `pbkdf2`           | PBKDF2 with HMAC (RFC 8018) over SHA-1, SHA-2 and MD5 (1 op)                                                                                                           |
@@ -173,6 +178,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `twofish`          | Twofish encrypt and decrypt: ECB, CBC, CFB, OFB, CTR, 128/192/256-bit keys, PKCS#7 or no padding                                                                       |
 | `typex`            | Typex-style five-rotor machine with the wirings as parameters (1 op)                                                                                                   |
 | `unicode`          | escape and unescape code points (`\u`, `U+`, `%u`, `\x{}`, `&#x;`), normalisation, smart quotes to ASCII (4 ops)                                                       |
+| `units`            | exact unit conversion: distance, area, mass, speed and data units (5 ops)                                                                                              |
 | `url`              | percent-encode and decode (RFC 3986)                                                                                                                                   |
 | `whirlpool`        | Whirlpool (ISO/IEC 10118-3) (1 op)                                                                                                                                     |
 | `xor-checksum`     | column-wise XOR of the blocks of the input (1 op)                                                                                                                      |
