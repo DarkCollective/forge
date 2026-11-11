@@ -150,13 +150,9 @@ USING: asn1 json random md5 sha1 sha2 ;
 : _spki-der ( curve:str pub:bytes -- bytes )
   { curve _algid-der pub 0 asn1:tlv-bits } asn1:tlv-seq ;
 
-\ An ECPrivateKey that carries the public point (as OpenSSL writes it, without the curve, which PKCS #8 names).
-: _ec-private-der ( d:bytes pub:bytes -- bytes )
-  { 1 asn1:tlv-int d asn1:tlv-octets 1 pub 0 asn1:tlv-bits asn1:tlv-explicit } asn1:tlv-seq ;
-
 \ PKCS #8 PrivateKeyInfo around it.
 : _pkcs8-der ( curve:str d:bytes pub:bytes -- bytes )
-  { 0 asn1:tlv-int curve _algid-der d pub _ec-private-der asn1:tlv-octets } asn1:tlv-seq ;
+  { 0 asn1:tlv-int curve _algid-der d pub asn1:tlv-ec-private asn1:tlv-octets } asn1:tlv-seq ;
 
 : _public-pem ( curve:str pub:bytes -- str )
   "PUBLIC KEY" curve pub _spki-der asn1:pem-encode ;

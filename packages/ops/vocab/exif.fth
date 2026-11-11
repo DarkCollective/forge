@@ -16,17 +16,12 @@ IN: exif
 : _gps-names ( -- str )
   "|0:GPSVersionID|1:GPSLatitudeRef|2:GPSLatitude|3:GPSLongitudeRef|4:GPSLongitude|5:GPSAltitudeRef|6:GPSAltitude|7:GPSTimeStamp|8:GPSSatellites|9:GPSStatus|a:GPSMeasureMode|b:GPSDOP|c:GPSSpeedRef|d:GPSSpeed|e:GPSTrackRef|f:GPSTrack|10:GPSImgDirectionRef|11:GPSImgDirection|12:GPSMapDatum|13:GPSDestLatitudeRef|14:GPSDestLatitude|15:GPSDestLongitudeRef|16:GPSDestLongitude|17:GPSDestBearingRef|18:GPSDestBearing|19:GPSDestDistanceRef|1a:GPSDestDistance|1b:GPSProcessingMethod|1c:GPSAreaInformation|1d:GPSDateStamp|1e:GPSDifferential|1f:GPSHPositioningError|" ;
 
-\ util-candidate: name-in-table
-: _name-in ( table:str key:int -- str )
-  table "|" key 16 int>str-radix cat ":" cat split
-  dup len 2 < [ drop "" ] [ 1 nth "|" split 0 nth ] if ;
-
 \ ---- reading integers ----
 
 \ n bytes of d at p as a big-endian integer; E_COERCE when the data ends first.
 : _be ( d:bytes p:int n:int -- int )
   d p n "image data" util:need-bytes
-  d p p n + slice 256 util:digits>int ;
+  d p n util:be-int ;
 
 \ The same, little endian.
 : _le ( d:bytes p:int n:int -- int )
@@ -43,10 +38,6 @@ IN: exif
 \ The same as a signed integer.
 : _s ( t:bytes p:int n:int -- int )
   t p n _u dup 1 n 8 * 1 - shl >= [ 1 n 8 * shl - ] when ;
-
-\ util-candidate: starts-with-bytes?
-: _starts? ( d:bytes prefix:bytes -- bool )
-  d len prefix len >= [ d 0 prefix len slice prefix = ] [ false ] if ;
 
 \ The bytes of d from from up to to, cut at the end of the data; empty when from is past it.
 : _clip ( d:bytes from:int to:int -- bytes )
@@ -131,19 +122,19 @@ IN: exif
 
 \ A leading Exif header (PNG and WebP writers differ) is dropped.
 : _drop-header ( b:bytes -- bytes )
-  b #[ 45 78 69 66 00 00 ] _starts? [ b 6 b len slice ] [ b ] if ;
+  b #[ 45 78 69 66 00 00 ] util:starts-with-bytes? [ b 6 b len slice ] [ b ] if ;
 
 : _tiff? ( d:bytes -- bool )
-  d #[ 49 49 2a 00 ] _starts? d #[ 4d 4d 00 2a ] _starts? or ;
+  d #[ 49 49 2a 00 ] util:starts-with-bytes? d #[ 4d 4d 00 2a ] util:starts-with-bytes? or ;
 
 : _webp? ( d:bytes -- bool )
-  d #[ 52 49 46 46 ] _starts? d len 12 >= and
+  d #[ 52 49 46 46 ] util:starts-with-bytes? d len 12 >= and
   [ d 8 12 slice #[ 57 45 42 50 ] = ] [ false ] if ;
 
 \ The TIFF block of an image of any supported kind; empty when the image has no Exif block.
 : _locate ( d:bytes -- bytes )
-  d #[ ff d8 ] _starts? [ d _jpeg-tiff ] [
-  d #[ 89 50 4e 47 0d 0a 1a 0a ] _starts? [ d _png-tiff _drop-header ] [
+  d #[ ff d8 ] util:starts-with-bytes? [ d _jpeg-tiff ] [
+  d #[ 89 50 4e 47 0d 0a 1a 0a ] util:starts-with-bytes? [ d _png-tiff _drop-header ] [
   d _webp? [ d _webp-tiff _drop-header ] [
   d _tiff? [ d ] [
     "not a JPEG, PNG, WebP or TIFF image: no Exif block can be read from it" raise:coerce ] if ] if ] if ] if ;
@@ -222,10 +213,6 @@ IN: exif
 : _ascii ( t:bytes count:int vstart:int -- str )
   t vstart vstart count 1024 min + slice bytes>latin1 "\x00" split 0 nth latin1>bytes util:text-lossless ;
 
-\ util-candidate: printable-bytes?
-: _printable? ( b:bytes -- bool )
-  b len 0 > b [ dup 32 >= swap 126 <= and ] filter len b len = and ;
-
 \ UTF-16 text (BMP only; a surrogate is U+FFFD), up to the first NUL.
 : _unit ( b:bytes i:int le:bool -- int )
   le [ b 2 i * nth b 2 i * 1 + nth 256 * + ] [ b 2 i * nth 256 * b 2 i * 1 + nth + ] if ;
@@ -254,7 +241,7 @@ IN: exif
 : _undef ( t:bytes tag:int count:int vstart:int -- str )
   tag 37500 = [ "[" count int>str cat " bytes, not decoded]" cat ] [
   tag 37510 = [ t count vstart _comment ] [
-  t vstart vstart count 64 min + slice _printable? count 64 <= and
+  t vstart vstart count 64 min + slice util:printable-bytes? count 64 <= and
   [ t vstart vstart count + slice bytes>latin1 ] [ t count vstart _hex-bytes ] if ] if ] if ;
 
 \ The Windows XP tags (XPTitle ... XPSubject) are UTF-16LE text in BYTE values.
@@ -286,7 +273,7 @@ IN: exif
 \ ---- lines ----
 
 : _tag-name ( names:str tag:int -- str )
-  names tag _name-in dup len 0 = [ drop "Tag0x" tag 4 util:pad-hex cat ] when ;
+  names tag 16 int>str-radix util:name-in-table dup len 0 = [ drop "Tag0x" tag 4 util:pad-hex cat ] when ;
 
 : _line ( e:record t:bytes names:str prefix:str -- str )
   prefix names e "tag" get _tag-name cat ": " cat t e _value cat ;

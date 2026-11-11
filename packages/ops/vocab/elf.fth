@@ -29,21 +29,7 @@ IN: elf
 : _file-types ( -- str )
   "|0:NONE (None)|1:REL (Relocatable file)|2:EXEC (Executable file)|3:DYN (Shared object file)|4:CORE (Core file)|" ;
 
-\ The name of key in a "|hex:name|" table, or "" when it is not there.
-\ util-candidate: name-in-table
-: _name-in ( table:str key:int -- str )
-  table "|" key 16 int>str-radix cat ":" cat split
-  dup len 2 < [ drop "" ] [ 1 nth "|" split 0 nth ] if ;
-
 \ ---- text helpers ----
-
-\ util-candidate: pad-left
-: _lpad ( s:str w:int -- str )
-  s len w >= [ s ] [ " " w s len - util:repeat-str s cat ] if ;
-
-\ util-candidate: pad-right
-: _rpad ( s:str w:int -- str )
-  s " " w s len - 0 max util:repeat-str cat ;
 
 \ Lower-case hex of v, zero-padded to w digits.
 : _hex ( v:int w:int -- str )
@@ -104,22 +90,22 @@ IN: elf
   data _check-ident data ;
 
 : _file-type-name ( t:int -- str )
-  _file-types t _name-in dup len 0 = [ drop
+  _file-types t 16 int>str-radix util:name-in-table dup len 0 = [ drop
     t 65024 >= t 65279 <= and [ "OS Specific: (" t 16 int>str-radix cat ")" cat ] [
     t 65280 >= [ "Processor Specific: (" t 16 int>str-radix cat ")" cat ] [
     "<unknown>: " t 16 int>str-radix cat ] if ] if ] when ;
 
 : _machine-name ( m:int -- str )
-  _machines m _name-in dup len 0 = [ drop "<unknown>: 0x" m 16 int>str-radix cat ] when ;
+  _machines m 16 int>str-radix util:name-in-table dup len 0 = [ drop "<unknown>: 0x" m 16 int>str-radix cat ] when ;
 
 : _abi-name ( a:int -- str )
-  _abis a _name-in dup len 0 = [ drop "<unknown: " a 16 int>str-radix cat ">" cat ] when ;
+  _abis a 16 int>str-radix util:name-in-table dup len 0 = [ drop "<unknown: " a 16 int>str-radix cat ">" cat ] when ;
 
 : _version-text ( v:int -- str )
   v 1 = [ "1 (current)" ] [ v int>str ] if ;
 
 : _line ( label:str value:str -- str )
-  "  " label cat ":" cat 37 _rpad value cat "\n" cat ;
+  "  " label cat ":" cat 37 util:pad-right value cat "\n" cat ;
 
 : _magic-line ( data:bytes -- str )
   "  Magic:   " data 0 16 slice bytes>list [ 256 + 16 int>str-radix 1 3 slice " " cat ] map "" join cat "\n" cat ;
@@ -149,7 +135,7 @@ IN: elf
   f 1 band 0 <> [ "E" ] [ " " ] if cat ;
 
 : _segment-name ( t:int -- str )
-  _segment-types t _name-in dup len 0 = [ drop
+  _segment-types t 16 int>str-radix util:name-in-table dup len 0 = [ drop
     t 1610612736 >= t 1879048191 <= and [ "LOOS+0x" t 1610612736 - 16 int>str-radix cat ] [
     t 1879048192 >= [ "LOPROC+0x" t 1879048192 - 16 int>str-radix cat ] [
     "<unknown>: " t 16 int>str-radix cat ] if ] if ] when
@@ -208,7 +194,7 @@ IN: elf
 \ One row of the program header table; base is the offset of the entry.
 : _p-row ( e:bytes base:int -- str )
   e 4 nth 2 = [
-    "  " e base 4 _u _segment-name 14 _rpad cat
+    "  " e base 4 _u _segment-name 14 util:pad-right cat
     " 0x" cat e base 8 + _w 6 _hex cat
     " 0x" cat e base 16 + _w 16 _hex cat
     " 0x" cat e base 24 + _w 16 _hex cat
@@ -218,7 +204,7 @@ IN: elf
     " 0x" cat e base 48 + _w 16 int>str-radix cat
     "\n" cat e base _interp-line cat
   ] [
-    "  " e base 4 _u _segment-name 14 _rpad cat
+    "  " e base 4 _u _segment-name 14 util:pad-right cat
     " 0x" cat e base 4 + _w 6 _hex cat
     " 0x" cat e base 8 + _w 8 _hex cat
     " 0x" cat e base 12 + _w 8 _hex cat
@@ -319,7 +305,7 @@ IN: elf
   names "ok" get [ e names "off" get names "size" get off _str-at ] [ "<no-strings>" ] if ;
 
 : _sec-type-name ( t:int -- str )
-  _section-types t _name-in dup len 0 = [ drop
+  _section-types t 16 int>str-radix util:name-in-table dup len 0 = [ drop
     t 2147483648 >= [ "LOUSER+0x" t 2147483648 - 16 int>str-radix cat ] [
     t 1879048192 >= [ "LOPROC+0x" t 1879048192 - 16 int>str-radix cat ] [
     t 1610612736 >= [ "LOOS+0x" t 1610612736 - 16 int>str-radix cat ] [
@@ -342,17 +328,17 @@ IN: elf
   f 4087 2147483648 + band f = [ ] [ "x" cat ] if ;
 
 : _s-row ( e:bytes names:record i:int sec:record -- str )
-  "  [" i int>str 2 _lpad cat "] " cat
-  e names sec "name" get _name 17 _rpad cat " " cat
-  sec "type" get _sec-type-name 15 _rpad cat " " cat
+  "  [" i int>str 2 util:pad-left cat "] " cat
+  e names sec "name" get _name 17 util:pad-right cat " " cat
+  sec "type" get _sec-type-name 15 util:pad-right cat " " cat
   sec "addr" get e 4 nth 2 = [ 16 ] [ 8 ] if _hex cat " " cat
   sec "offset" get 6 _hex cat " " cat
   sec "size" get 6 _hex cat " " cat
   sec "entsize" get 2 _hex cat " " cat
-  sec "flags" get _flags-text 3 _lpad cat " " cat
-  sec "link" get int>str 2 _lpad cat " " cat
-  sec "info" get int>str 3 _lpad cat " " cat
-  sec "align" get int>str 2 _lpad cat "\n" cat ;
+  sec "flags" get _flags-text 3 util:pad-left cat " " cat
+  sec "link" get int>str 2 util:pad-left cat " " cat
+  sec "info" get int>str 3 util:pad-left cat " " cat
+  sec "align" get int>str 2 util:pad-left cat "\n" cat ;
 
 : _s-title ( e:bytes -- str )
   e 4 nth 2 =
@@ -368,7 +354,7 @@ IN: elf
 
 \ The name of v in a "|hex:name|" table, else the readelf wording for the ranges.
 : _sym-field ( table:str v:int -- str )
-  table v _name-in dup len 0 = [ drop
+  table v 16 int>str-radix util:name-in-table dup len 0 = [ drop
     v 13 >= [ "<processor specific>: " v int>str cat ] [
     v 10 >= [ "<OS specific>: " v int>str cat ] [
     "<unknown>: " v int>str cat ] if ] if ] when ;
@@ -385,7 +371,7 @@ IN: elf
   osabi _gnu? [ "|0:LOCAL|1:GLOBAL|2:WEAK|a:UNIQUE|" ] [ "|0:LOCAL|1:GLOBAL|2:WEAK|" ] if ;
 
 : _vis-name ( other:int -- str )
-  "|0:DEFAULT|1:INTERNAL|2:HIDDEN|3:PROTECTED|" other 3 band _name-in ;
+  "|0:DEFAULT|1:INTERNAL|2:HIDDEN|3:PROTECTED|" other 3 band 16 int>str-radix util:name-in-table ;
 
 : _ndx-text ( ndx:int shnum:int -- str )
   ndx 0 = [ "UND" ] [ ndx 65521 = [ "ABS" ] [ ndx 65522 = [ "COM" ] [
@@ -406,13 +392,13 @@ IN: elf
   ] if ;
 
 : _sym-row ( e:bytes sym:record i:int names:record -- str )
-  i int>str 6 _lpad ": " cat
+  i int>str 6 util:pad-left ": " cat
   sym "value" get e 4 nth 2 = [ 16 ] [ 8 ] if _hex cat " " cat
-  sym "size" get dup 99999 > [ 16 int>str-radix "0x" swap cat ] [ int>str 5 _lpad ] if cat " " cat
-  e 7 nth _type-table sym "info" get 15 band _sym-field 7 _rpad cat " " cat
-  e 7 nth _bind-table sym "info" get 4 shr _sym-field 6 _rpad cat " " cat
-  sym "other" get _vis-name 7 _rpad cat " " cat
-  sym "shndx" get e _shnum _ndx-text 4 _lpad cat " " cat
+  sym "size" get dup 99999 > [ 16 int>str-radix "0x" swap cat ] [ int>str 5 util:pad-left ] if cat " " cat
+  e 7 nth _type-table sym "info" get 15 band _sym-field 7 util:pad-right cat " " cat
+  e 7 nth _bind-table sym "info" get 4 shr _sym-field 6 util:pad-right cat " " cat
+  sym "other" get _vis-name 7 util:pad-right cat " " cat
+  sym "shndx" get e _shnum _ndx-text 4 util:pad-left cat " " cat
   e names sym "name" get _name cat
   "\n" cat ;
 

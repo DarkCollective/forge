@@ -83,12 +83,10 @@ IN: file-mode
 \ The layout is CyberChef's: the textual and octal forms, the file type and the special bits as lines of words, a
 \ blank line, and a box of the read, write and execute bits with an X for each one that is set.
 
-: _padl ( s:str n:int -- str ) " " n s len - 0 max util:repeat-str s cat ;
-
 : _cell ( mode:int mask:int -- str ) mode mask band 0 <> [ "   X   " ] [ "       " ] if ;
 
 : _row ( label:str mode:int u:int g:int o:int -- str )
-  " | " label 7 _padl cat " |" cat
+  " | " label 7 util:pad-left cat " |" cat
   mode u _cell cat "|" cat mode g _cell cat "|" cat mode o _cell cat "|" cat ;
 
 : _rule ( -- str ) " +---------+-------+-------+-------+" ;

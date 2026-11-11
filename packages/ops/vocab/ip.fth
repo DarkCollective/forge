@@ -186,10 +186,6 @@ USING: defang ;
   [ "" ] if
   lo hi enum allow _listing cat ;
 
-\ The number of bits in n (0 for 0).
-: _bit-length ( n:int -- int )
-  n 0 = [ 0 ] [ n 2 int>str-radix len ] if ;
-
 : _info4b ( ip1:int ip2:int cidr:int slo:int shi:int -- str )
   { "Minimum subnet required to hold this range:\n\tNetwork: " slo _v4>s "\n\tCIDR: " cidr int>str
     "\n\tMask: " cidr 32 _mask _v4>s "\n\tSubnet range: " slo _v4>s " - " shi _v4>s
@@ -202,7 +198,7 @@ USING: defang ;
 \ The hyphenated range of IPv4 addresses (and the list, reduced to its lowest and highest address).
 : _range4 ( ip1:int ip2:int info:bool enum:bool allow:bool -- str )
   ip2 ip1 < [ "the second address is below the first" raise:range ] when
-  info [ ip1 ip2 32 ip1 ip2 bxor _bit-length - _info4 ] [ "" ] if
+  info [ ip1 ip2 32 ip1 ip2 bxor util:bit-length - _info4 ] [ "" ] if
   ip1 ip2 enum allow _listing cat ;
 
 : _cidr6 ( lo:int hi:int cidr:int info:bool -- str )

@@ -20,10 +20,6 @@ USING: tcpip hex ;
 
 \ ---- bytes and text ----
 
-\ n bytes at p read as a big-endian unsigned integer (the caller has checked that they are there).
-: _be ( d:bytes p:int n:int -- int )
-  d p p n + slice 256 util:digits>int ;
-
 \ E_COERCE unless n bytes are there from offset p; what names the structure.
 : _need ( d:bytes p:int n:int what:str -- )
   p n + d len > [
@@ -61,7 +57,7 @@ USING: tcpip hex ;
 \ Is there a VLAN tag protocol identifier (0x8100 or 0x88a8) at offset q?
 : _tpid? ( d:bytes q:int -- bool )
   q 2 + d len <=
-  [ d q 2 _be dup 33024 = swap 34984 = or ] [ false ] if ;
+  [ d q 2 util:be-int dup 33024 = swap 34984 = or ] [ false ] if ;
 
 \ How many VLAN tags follow the two addresses (each is a TPID and a tag control field).
 : _tag-count ( d:bytes -- int )
@@ -76,7 +72,7 @@ USING: tcpip hex ;
 
 : _vlan ( d:bytes i:int -- str )
   d i 4 * 12 + 4 "Ethernet VLAN tag" _need
-  d i 4 * 12 + 2 _be  d i 4 * 14 + 2 _be  i _vlan2 ;
+  d i 4 * 12 + 2 util:be-int  d i 4 * 14 + 2 util:be-int  i _vlan2 ;
 
 \ The EtherType field, or the length of an IEEE 802.3 frame (up to 1500).
 : _type-line ( t:int -- str )
@@ -88,7 +84,7 @@ USING: tcpip hex ;
   d n 4 * 12 + 2 "Ethernet frame" _need
   { "Destination MAC: " d 0 _mac cat "Source MAC: " d 6 _mac cat }
   n 0 > [ { 0 n range [ d swap _vlan ] map "\n" join } cat ] when
-  { d n 4 * 12 + 2 _be _type-line } cat
+  { d n 4 * 12 + 2 util:be-int _type-line } cat
   d n 4 * 14 + d len _payload cat ;
 
 : _ethernet ( d:bytes -- str )
@@ -163,16 +159,16 @@ USING: tcpip hex ;
     "Internet Header Length (IHL): " hl 4 div int>str cat " (" cat hl int>str cat " bytes)" cat
     "Differentiated Services Code Point (DSCP): " d 1 nth 2 shr int>str cat
     "Explicit Congestion Notification (ECN): " d 1 nth 3 band int>str cat
-    "Total length: " d 2 2 _be int>str cat " bytes" cat
-    "Identification: " d 4 2 _be 4 _hex0x cat " (" cat d 4 2 _be int>str cat ")" cat
+    "Total length: " d 2 2 util:be-int int>str cat " bytes" cat
+    "Identification: " d 4 2 util:be-int 4 _hex0x cat " (" cat d 4 2 util:be-int int>str cat ")" cat
     "Flags: " d 6 nth 5 shr 1 _hex0x cat
     "Reserved bit" d 6 nth 7 shr 1 band _bit-line
     "Don't fragment" d 6 nth 6 shr 1 band _bit-line
     "More fragments" d 6 nth 5 shr 1 band _bit-line
-    "Fragment offset: " d 6 2 _be 8191 band _frag cat
+    "Fragment offset: " d 6 2 util:be-int 8191 band _frag cat
     "Time-To-Live: " d 8 nth int>str cat
     "Protocol: " d 9 nth int>str cat "ip-protocol" d 9 nth _paren cat
-    "Header checksum: " d 10 2 _be 4 _hex0x cat d hl _ipv4-checksum cat
+    "Header checksum: " d 10 2 util:be-int 4 _hex0x cat d hl _ipv4-checksum cat
     "Source IP address: " d 12 _ip cat
     "Destination IP address: " d 16 _ip cat }
   hl 20 > [ { "Options:" } cat d 20 hl _ip-opts cat ] when ;
@@ -183,7 +179,7 @@ USING: tcpip hex ;
   data format _input dup _ipv4-hl _ipv4-lines "\n" join ;
 
 : _strip-ipv4 ( d:bytes hl:int -- bytes )
-  d hl d 2 2 _be hl d len _end slice ;
+  d hl d 2 2 util:be-int hl d len _end slice ;
 
 : strip-ipv4 ( data:bytes format:choice{hex|raw}="hex" -- bytes )
   "Remove the IPv4 header (Strip IPv4 header) and give the payload as bytes: everything after the header, which is IHL times 4 bytes long, up to the total length when that is set and the data holds that many bytes (so link padding after the datagram is dropped; a total length of 0, as with TCP segmentation offload, or one beyond the data, keeps all that is there). The input is hex text or raw bytes. A header cut short, a version other than 4 or an IHL below 5 is E_COERCE." doc
@@ -212,7 +208,7 @@ USING: tcpip hex ;
   "shift " s int>str cat s 30 <= [ " (multiplier " cat 1 s shl int>str cat ")" cat ] when ;
 
 : _sack-block ( d:bytes q:int -- str )
-  d q 4 _be int>str "-" cat d q 4 + 4 _be int>str cat ;
+  d q 4 util:be-int int>str "-" cat d q 4 + 4 util:be-int int>str cat ;
 
 \ The SACK blocks: left and right edge, 8 bytes each, from p + 2.
 : _sack-blocks ( d:bytes p:int len:int -- str )
@@ -225,13 +221,13 @@ USING: tcpip hex ;
 : _tcp-opt-line ( d:bytes p:int len:int -- str )
   d p nth
   dup 2 = [ drop p len 4 "Maximum Segment Size" _tcp-fix
-    "  Maximum Segment Size (2): " d p 2 + 2 _be int>str cat ] [
+    "  Maximum Segment Size (2): " d p 2 + 2 util:be-int int>str cat ] [
   dup 3 = [ drop p len 3 "Window Scale" _tcp-fix
     "  Window Scale (3): " d p 2 + nth _ws-text cat ] [
   dup 4 = [ drop p len 2 "SACK Permitted" _tcp-fix "  SACK Permitted (4)" ] [
   dup 5 = [ drop "  SACK (5): " d p len _sack-blocks cat ] [
   dup 8 = [ drop p len 10 "Timestamps" _tcp-fix
-    "  Timestamps (8): TSval " d p 2 + 4 _be int>str cat ", TSecr " cat d p 6 + 4 _be int>str cat ] [
+    "  Timestamps (8): TSval " d p 2 + 4 util:be-int int>str cat ", TSecr " cat d p 6 + 4 util:be-int int>str cat ] [
   drop "tcp-option" d p len _opt-body ] if ] if ] if ] if ] if ;
 
 : _tcp-step2 ( lines:list p:int d:bytes len:int -- list int )
@@ -264,16 +260,16 @@ USING: tcpip hex ;
     "PSH" f 5 _tcp-bit "RST" f 6 _tcp-bit "SYN" f 7 _tcp-bit "FIN" f 8 _tcp-bit } ;
 
 : _tcp-lines ( d:bytes hl:int -- list )
-  { "Source port: " d 0 2 _be int>str cat
-    "Destination port: " d 2 2 _be int>str cat
-    "Sequence number: " d 4 4 _be int>str cat
-    "Acknowledgement number: " d 8 4 _be int>str cat
+  { "Source port: " d 0 2 util:be-int int>str cat
+    "Destination port: " d 2 2 util:be-int int>str cat
+    "Sequence number: " d 4 4 util:be-int int>str cat
+    "Acknowledgement number: " d 8 4 util:be-int int>str cat
     "Data offset: " hl 4 div int>str cat " (" cat hl int>str cat " bytes)" cat
     "Reserved bits: " d 12 nth 1 shr 7 band int>str cat }
   d 12 nth 1 band 256 * d 13 nth + _tcp-flag-lines cat
-  { "Window size: " d 14 2 _be int>str cat
-    "Checksum: " d 16 2 _be 4 _hex0x cat
-    "Urgent pointer: " d 18 2 _be int>str cat } cat
+  { "Window size: " d 14 2 util:be-int int>str cat
+    "Checksum: " d 16 2 util:be-int 4 _hex0x cat
+    "Urgent pointer: " d 18 2 util:be-int int>str cat } cat
   hl 20 > [ { "Options:" } cat d 20 hl _tcp-opts cat ] when
   d hl d len _payload cat ;
 
@@ -295,15 +291,15 @@ USING: tcpip hex ;
 \ The UDP length field, after the checks: 8 bytes there, and a length of 0 (a jumbogram) or at least 8.
 : _udp-length ( d:bytes -- int )
   d 0 8 "UDP header" _need
-  d 4 2 _be
+  d 4 2 util:be-int
   dup 0 <> over 8 < and [ "UDP length is " over int>str cat ", below the 8-byte header" cat raise:coerce ] when ;
 
 : _udp-lines ( d:bytes length:int -- list )
-  { "Source port: " d 0 2 _be int>str cat
-    "Destination port: " d 2 2 _be int>str cat
+  { "Source port: " d 0 2 util:be-int int>str cat
+    "Destination port: " d 2 2 util:be-int int>str cat
     "Length: " length int>str cat " bytes" cat
     length d len > [ " (only " cat d len int>str cat " are present)" cat ] when
-    "Checksum: " d 6 2 _be 4 _hex0x cat }
+    "Checksum: " d 6 2 util:be-int 4 _hex0x cat }
   d 8 length 8 d len _end _payload cat ;
 
 : parse-udp ( data:bytes format:choice{hex|raw}="hex" -- str )
@@ -333,25 +329,25 @@ USING: tcpip hex ;
     "not a TLS record: the content type is " data p nth int>str cat " at offset " cat p int>str cat
     " (expected 20 to 24)" cat raise:coerce ] when
   data p 1 + nth 3 <> [
-    "not a TLS record: the version at offset " p 1 + int>str cat " is " cat data p 1 + 2 _be 4 _hex0x cat
+    "not a TLS record: the version at offset " p 1 + int>str cat " is " cat data p 1 + 2 util:be-int 4 _hex0x cat
     " (expected 0x03xx)" cat raise:coerce ] when
   data p 3 + nth 72 > [
-    "the TLS record at offset " p int>str cat " declares " cat data p 3 + 2 _be int>str cat
+    "the TLS record at offset " p int>str cat " declares " cat data p 3 + 2 util:be-int int>str cat
     " bytes, above the limit of " cat _tls-max int>str cat raise:coerce ] when
   data p 3 + nth 72 = data p 4 + nth 0 > and [
-    "the TLS record at offset " p int>str cat " declares " cat data p 3 + 2 _be int>str cat
+    "the TLS record at offset " p int>str cat " declares " cat data p 3 + 2 util:be-int int>str cat
     " bytes, above the limit of " cat _tls-max int>str cat raise:coerce ] when ;
 
 : _tls-record3 ( data:bytes p:int n:int -- record )
   { { "type" data p nth }
-    { "version" data p 1 + 2 _be }
+    { "version" data p 1 + 2 util:be-int }
     { "length" n }
     { "offset" p }
     { "fragment" data p 5 + dup n + slice } } >record ;
 
 : _tls-record ( data:bytes p:int -- record )
   data p _tls-check
-  data p data p 3 + 2 _be _tls-record3 ;
+  data p data p 3 + 2 util:be-int _tls-record3 ;
 
 : _records ( data:bytes -- list )
   data len 0 =
@@ -380,7 +376,7 @@ USING: tcpip hex ;
 : _hs-record ( f:bytes p:int -- record )
   p 4 + f len >
   [ { { "type" -1 } { "length" 0 } { "offset" p } { "complete" false } { "body" f p f len slice } } >record ]
-  [ f p f p 1 + 3 _be _hs3 ] if ;
+  [ f p f p 1 + 3 util:be-int _hs3 ] if ;
 
 : _handshakes ( f:bytes -- list )
   f 0 f len 1 3 true "handshake message" _walk [ f swap _hs-record ] map ;
@@ -399,7 +395,7 @@ USING: tcpip hex ;
 
 : _vec ( b:bytes p:int w:int what:str -- bytes int )
   b p w what _need
-  b p w b p w _be what _vec3 ;
+  b p w b p w util:be-int what _vec3 ;
 
 : _put2 ( r:record key:str data:any q:int -- record int )
   r key data put q ;
@@ -411,7 +407,7 @@ USING: tcpip hex ;
 \ A vector of 16-bit numbers as a list (the length must be even).
 : _u16-list ( data:bytes what:str -- list )
   data len 2 mod 0 <> [ what ": a list of 16-bit numbers has the odd length " cat data len int>str cat raise:coerce ] when
-  0 data len 2 div range [ 2 * data swap 2 _be ] map ;
+  0 data len 2 div range [ 2 * data swap 2 util:be-int ] map ;
 
 : _step-u16s ( r:record p:int key:str b:bytes what:str -- record int )
   r key b p 2 what _vec swap what _u16-list swap _put2 ;
@@ -421,8 +417,8 @@ USING: tcpip hex ;
 
 \ One extension: { type data offset }.
 : _ext ( b:bytes p:int -- record )
-  { { "type" b p 2 _be }
-    { "data" b p 4 + dup b p 2 + 2 _be + slice }
+  { { "type" b p 2 util:be-int }
+    { "data" b p 4 + dup b p 2 + 2 util:be-int + slice }
     { "offset" p } } >record ;
 
 : _exts3 ( r:record b:bytes p:int el:int -- record )
@@ -437,7 +433,7 @@ USING: tcpip hex ;
   p b len =
   [ r "extensions" { } put "has-extensions" false put ]
   [ b p 2 "hello message" _need
-    r b p b p 2 _be _exts3 ] if ;
+    r b p b p 2 util:be-int _exts3 ] if ;
 
 : _hrr-random ( -- bytes )
   #[ cf 21 ad 74 e5 9a 61 11 be 1d 8c 02 1e 65 b8 91 c2 a2 11 16 7a bb 8c 5e 07 9e 09 e2 c8 a8 33 9c ] ;
@@ -446,7 +442,7 @@ USING: tcpip hex ;
 : _hello-head ( b:bytes kind:str -- record int )
   b 0 35 kind _need
   b 34 nth 32 > [ kind ": the session ID length is " cat b 34 nth int>str cat ", above 32" cat raise:coerce ] when
-  { { "kind" kind } { "version" b 0 2 _be } { "random" b 2 34 slice }
+  { { "kind" kind } { "version" b 0 2 util:be-int } { "random" b 2 34 slice }
     { "hrr" b 2 34 slice _hrr-random = kind "server_hello" = and } } >record
   34 "session-id" b 1 kind _step-vec ;
 
@@ -458,7 +454,7 @@ USING: tcpip hex ;
 
 : _step-cipher ( r:record p:int b:bytes -- record int )
   b p 3 "ServerHello" _need
-  r "ciphers" { b p 2 _be } put "compression" { b p 2 + nth } put p 3 + ;
+  r "ciphers" { b p 2 util:be-int } put "compression" { b p 2 + nth } put p 3 + ;
 
 : _server ( b:bytes -- record )
   b "server_hello" _hello-head b _step-cipher b _step-exts ;
@@ -482,7 +478,7 @@ USING: tcpip hex ;
 \ The vector in the data of an extension, after the length prefix of w bytes (w of 0: no prefix).
 : _ext-vec2 ( ext:record d:bytes w:int -- bytes )
   w 0 = [ d ] [
-    d 0 w _be d len w - <> [ ext _ext-what ": the length prefix does not match the data" cat raise:coerce ] when
+    d 0 w util:be-int d len w - <> [ ext _ext-what ": the length prefix does not match the data" cat raise:coerce ] when
     d w d len slice ] if ;
 
 : _ext-vec ( ext:record w:int -- bytes )
@@ -507,7 +503,7 @@ USING: tcpip hex ;
   ext 2 _ext-vec _alpn ;
 
 : _sni-name ( v:bytes p:int -- str )
-  v p 3 + dup v p 1 + 2 _be + slice bytes>latin1 ;
+  v p 3 + dup v p 1 + 2 util:be-int + slice bytes>latin1 ;
 
 : _sni ( v:bytes -- list )
   v 0 v len 1 2 false "server name" _walk [ v swap nth 0 = ] filter [ v swap _sni-name ] map ;
@@ -517,13 +513,13 @@ USING: tcpip hex ;
   ext "data" get len 0 = [ { } ] [ ext 2 _ext-vec _sni ] if ;
 
 : _ks-entry ( v:bytes p:int -- record )
-  { { "group" v p 2 _be } { "key" v p 4 + dup v p 2 + 2 _be + slice } } >record ;
+  { { "group" v p 2 util:be-int } { "key" v p 4 + dup v p 2 + 2 util:be-int + slice } } >record ;
 
 : _ks-list ( v:bytes -- list )
   v 0 v len 2 2 false "key share entry" _walk [ v swap _ks-entry ] map ;
 
 : _ks-server ( d:bytes -- list )
-  d len 2 = [ { { { "group" d 0 2 _be } { "key" #[ ] } } >record } ] [ d _ks-list ] if ;
+  d len 2 = [ { { { "group" d 0 2 util:be-int } { "key" #[ ] } } >record } ] [ d _ks-list ] if ;
 
 \ The key shares of a key_share extension: a ClientHello's list, or a ServerHello's single share (two bytes: the
 \ group of a HelloRetryRequest, with an empty key).

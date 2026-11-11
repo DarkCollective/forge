@@ -28,23 +28,10 @@ IN: id3
     "During performance" "Movie/video screen capture" "A bright coloured fish" "Illustration" "Band logotype"
     "Publisher logotype" } ;
 
-\ util-candidate: name-in-table
-: _name-in ( table:str key:str -- str )
-  table "|" key cat ":" cat split
-  dup len 2 < [ drop "" ] [ 1 nth "|" split 0 nth ] if ;
-
 \ ---- bytes ----
 
 : _tail ( b:bytes i:int -- bytes )
   b i b len min b len slice ;
-
-\ util-candidate: starts-with-bytes?
-: _starts? ( d:bytes prefix:bytes -- bool )
-  d len prefix len >= [ d 0 prefix len slice prefix = ] [ false ] if ;
-
-\ n bytes at p as a big-endian integer (the caller has checked that they are there).
-: _be ( d:bytes p:int n:int -- int )
-  d p p n + slice 256 util:digits>int ;
 
 \ A syncsafe integer of four bytes (7 bits each) at p, and whether the bytes are syncsafe.
 : _syncsafe ( d:bytes p:int -- int )
@@ -87,7 +74,7 @@ IN: id3
 
 \ UTF-16 with a byte order mark (FF FE little, FE FF big; none: little endian).
 : _utf16-bom ( b:bytes -- str )
-  b #[ fe ff ] _starts? [ b true _utf16-text ] [ b false _utf16-text ] if ;
+  b #[ fe ff ] util:starts-with-bytes? [ b true _utf16-text ] [ b false _utf16-text ] if ;
 
 : _text ( b:bytes enc:int -- str )
   enc 1 = [ b _utf16-bom ] [
@@ -127,10 +114,6 @@ IN: id3
 : _field-text ( b:bytes enc:int -- str )
   b enc _text _values ;
 
-\ util-candidate: printable-bytes?
-: _printable? ( b:bytes -- bool )
-  b len 0 > b [ dup 32 >= swap 126 <= and ] filter len b len = and ;
-
 : _hex-text ( b:bytes -- str )
   b 0 b len 24 min slice bytes>hex
   b len 24 > [ "..." cat ] when ;
@@ -141,7 +124,7 @@ IN: id3
 \ ---- genres ----
 
 : _genre-name ( n:int -- str )
-  _genres n 16 int>str-radix _name-in dup len 0 = [ drop "Unknown" ] when
+  _genres n 16 int>str-radix util:name-in-table dup len 0 = [ drop "Unknown" ] when
   " (" cat n int>str cat ")" cat ;
 
 : _digits? ( s:str -- bool )
@@ -188,9 +171,9 @@ IN: id3
 
 \ The size field of the frame header at pos.
 : _frame-size ( b:bytes v:int pos:int -- int )
-  v 2 = [ b pos 3 + 3 _be ] [
-    v 3 = [ b pos 4 + 4 _be ] [
-      b pos 4 + _syncsafe? [ b pos 4 + _syncsafe ] [ b pos 4 + 4 _be ] if ] if ] if ;
+  v 2 = [ b pos 3 + 3 util:be-int ] [
+    v 3 = [ b pos 4 + 4 util:be-int ] [
+      b pos 4 + _syncsafe? [ b pos 4 + _syncsafe ] [ b pos 4 + 4 util:be-int ] if ] if ] if ;
 
 \ The record of the frame at pos: id, at (where its data starts), size, flags and next (where the next frame starts).
 : _frame-rec ( b:bytes v:int pos:int size:int -- record )
@@ -199,7 +182,7 @@ IN: id3
     " declares " cat size int>str cat " bytes but only " cat b len pos v _hdrlen + - int>str cat
     " are left (truncated)" cat raise:coerce ] when
   { { "id" b pos pos v _idlen + slice bytes>latin1 } { "at" pos v _hdrlen + } { "size" size }
-    { "flags" v 2 = [ 0 ] [ b pos 8 + 2 _be ] if } { "next" pos v _hdrlen + size + } } >record ;
+    { "flags" v 2 = [ 0 ] [ b pos 8 + 2 util:be-int ] if } { "next" pos v _hdrlen + size + } } >record ;
 
 : _frame-at ( b:bytes v:int pos:int -- record )
   b v pos b v pos _frame-size _frame-rec ;
@@ -280,14 +263,14 @@ IN: id3
   data _split8 _priv2 ;
 
 : _ufid2 ( owner:bytes after:bytes -- str )
-  owner bytes>latin1 ": " cat after _printable? [ after bytes>latin1 ] [ after _hex-text ] if cat ;
+  owner bytes>latin1 ": " cat after util:printable-bytes? [ after bytes>latin1 ] [ after _hex-text ] if cat ;
 
 : _ufid ( data:bytes -- str )
   data _split8 _ufid2 ;
 
 \ A big-endian number of the bytes (0 when there are none).
 : _beall ( b:bytes -- int )
-  b len 0 = [ 0 ] [ b 0 b len _be ] if ;
+  b len 0 = [ 0 ] [ b 0 b len util:be-int ] if ;
 
 \ POPM: an e-mail address, a rating byte and a counter.
 : _popm2 ( email:bytes after:bytes -- str )
@@ -351,7 +334,7 @@ IN: id3
   _describe ] if ] if ;
 
 : _name-part ( nid:str -- str )
-  _frame-names nid _name-in dup len 0 = [ drop "" ] [ " (" swap cat ")" cat ] if ;
+  _frame-names nid util:name-in-table dup len 0 = [ drop "" ] [ " (" swap cat ")" cat ] if ;
 
 : _line3 ( rec:record b:bytes v:int tu:bool id:str nid:str -- str )
   "  " id cat nid _name-part cat ": " cat
@@ -360,7 +343,7 @@ IN: id3
 
 : _line2 ( rec:record b:bytes v:int tu:bool id:str -- str )
   rec b v tu id
-  v 2 = [ _v22-ids id _name-in dup len 0 = [ drop id ] when ] [ id ] if
+  v 2 = [ _v22-ids id util:name-in-table dup len 0 = [ drop id ] when ] [ id ] if
   _line3 ;
 
 : _frame-line ( rec:record b:bytes v:int tu:bool -- str )
@@ -389,7 +372,7 @@ IN: id3
 \ Where the frames start: after the extended header, which is skipped.
 : _ext-size ( v:int fl:int body:bytes -- int )
   v 2 > fl 64 band 0 <> and [
-    v 3 = [ body 0 4 _be 4 + ] [ body 0 4 _syncsafe? [ body 0 _syncsafe ] [ 0 ] if ] if
+    v 3 = [ body 0 4 util:be-int 4 + ] [ body 0 4 _syncsafe? [ body 0 _syncsafe ] [ 0 ] if ] if
   ] [ 0 ] if ;
 
 : _v2b ( d:bytes v:int fl:int size:int body:bytes -- str )
@@ -404,7 +387,7 @@ IN: id3
 
 : _v2? ( d:bytes -- bool )
   d len 10 < [ false ] [
-    d #[ 49 44 33 ] _starts? [ d 3 nth dup 2 >= swap 4 <= and [ d 6 _syncsafe? ] [ false ] if ] [ false ] if ] if ;
+    d #[ 49 44 33 ] util:starts-with-bytes? [ d 3 nth dup 2 >= swap 4 <= and [ d 6 _syncsafe? ] [ false ] if ] [ false ] if ] if ;
 
 : _report-v2 ( d:bytes -- str )
   d d 3 nth d 5 nth d 6 _syncsafe _v2 ;
