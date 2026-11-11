@@ -140,8 +140,8 @@ describe("cost at 64 KiB", () => {
         i % 3 === 0
           ? `=?iso-8859-2?Q?=B1=E6${i}?=`
           : i % 3 === 1
-            ? `=?windows-1251?B?${Buffer.from([0xcf, 0xf0, 0xe8]).toString("base64")}?=`
-            : `=?utf-16le?B?${Buffer.from("a" + i, "utf16le").toString("base64")}?=`,
+            ? `=?windows-1251?B?${btoa("\xcf\xf0\xe8")}?=`
+            : `=?utf-16le?B?${btoa(Array.from("a" + i, (c) => c + "\x00").join(""))}?=`,
       );
       const r = await decode(words.join(" "));
       expect(r.ok).toBe(true);
