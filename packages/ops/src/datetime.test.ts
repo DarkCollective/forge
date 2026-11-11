@@ -601,7 +601,7 @@ describe("extract-dates", () => {
   test("handles a 64 KiB text of dates within the default limits", async () => {
     const line = "log 2026-11-11 and 11/12/2026, 31.12.1999 end\n";
     const text = line.repeat(Math.floor(65_536 / line.length));
-    const t0 = performance.now();
+    const t0 = Date.now();
     const r = await extract(text, true, true, true);
     expect(code(r)).toBe("ok");
     expect(top(r)).toBe("Total found: 3\n\n11/12/2026\n2026-11-11\n31.12.1999");
@@ -609,7 +609,7 @@ describe("extract-dates", () => {
     expect(((top(r2) as string).match(/\n/g) ?? []).length).toBe(
       3 * Math.floor(65_536 / line.length) - 1,
     );
-    expect(performance.now() - t0).toBeLessThan(5000);
+    expect(Date.now() - t0).toBeLessThan(5000);
   });
 });
 
@@ -626,10 +626,10 @@ describe("limits", () => {
   });
 
   test("a 64 KiB text that holds no date fails quickly", async () => {
-    const t0 = performance.now();
+    const t0 = Date.now();
     const r = await parse("x".repeat(65_536), INTL, "", "UTC");
     expect(code(r)).toBe("E_COERCE");
-    expect(performance.now() - t0).toBeLessThan(3000);
+    expect(Date.now() - t0).toBeLessThan(3000);
   });
 
   test("a long text with a date in the middle is read from its first match", async () => {
