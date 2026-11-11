@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "forge-prod",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["apps/web/scripts/serve-prod.mjs"],
+      "port": 4783
+    }
+  ]
+}
