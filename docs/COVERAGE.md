@@ -11,11 +11,11 @@ it and regenerate this file. An operation listed in several CyberChef categories
 
 | Category | Covered | Redesigned | Dropped | Not yet | Total |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Data format | 56 | 9 | 0 | 15 | 80 |
+| Data format | 57 | 9 | 0 | 14 | 80 |
 | Encryption / Encoding | 29 | 64 | 0 | 2 | 95 |
 | Public Key | 2 | 0 | 0 | 28 | 30 |
 | Arithmetic / Logic | 24 | 2 | 0 | 0 | 26 |
-| Networking | 0 | 0 | 2 | 32 | 34 |
+| Networking | 11 | 1 | 2 | 20 | 34 |
 | Language | 3 | 1 | 0 | 0 | 4 |
 | Utils | 34 | 14 | 2 | 0 | 50 |
 | Date / Time | 5 | 4 | 0 | 0 | 9 |
@@ -27,7 +27,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 9 | 4 | 3 | 5 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **202** | **143** | **7** | **154** | **506** |
+| **Total** | **214** | **144** | **7** | **141** | **506** |
 
 ## Data format (80)
 
@@ -88,7 +88,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | PEM to Hex | covered | `pem:to-hex` | The decoded body of each PEM block (RFC 7468) as lower-case hex, one block per line; text outside the blocks is ignored, the label and the RFC 1421 header lines of old encrypted keys are read and dropped. No block, a block that is not closed or is closed by another label, a nested BEGIN or damaged Base64 is E_COERCE (CyberChef returns nothing for text without a block). |
 | Hex to PEM | covered | `pem:from-hex` | Hex to a PEM block with the header parameter (default CERTIFICATE): the BEGIN line, the Base64 in lines of 64 characters, the END line, each ended by a line feed. An empty header, a non-ASCII or multi-line header, or five hyphens in it is E_RANGE; bad hex is E_COERCE. |
 | Parse ASN.1 hex string | redesigned | `asn1-dump:parse` | The input is hex text, as in CyberChef, and the result is text: an indented outline, one element per line, two spaces per level, the type name and then the value (INTEGER in hex, ObjectIdentifier with its name from a table of about 250 common OIDs and its arcs in parentheses, strings in quotes, [0] and [2] for context tags, hex for anything else). An OCTET STRING or BIT STRING whose content is itself DER is opened like a constructed element, so certificate extensions are readable. The shape is that of the jsrsasign dump CyberChef prints, but the layout is Forge's own and not checked character for character against CyberChef. Text, not a record tree, because the output pane shows trees only 6 levels deep and a certificate nests deeper once its extension values are opened; the record tree is the shared word asn1:parse, for FL code. Parameters: start (a byte offset; CyberChef counts hex characters and then shows the first element only, here every element from there to the end is shown) and truncate (bytes of a value to show, default 32 as in CyberChef; 0 shows all). Malformed data (cut short, indefinite length, nesting over 64 levels, trailing bytes that are not an element) is E_COERCE, where CyberChef prints what it could read. Reads BER definite lengths too; DER is what other tools write. |
-| Change IP format | not yet |  |  |
+| Change IP format | covered | `ip:change-format` | IPv4 addresses, one per line, between dotted decimal, decimal, octal (one number written with a leading 0, as CyberChef does) and hex (eight digits); both formats default to dotted decimal, as in CyberChef. The octal and hex forms also read without the leading 0 and with 0x. Every line is validated (CyberChef computes with whatever parseInt makes of it and, for equal formats, copies the line), a number over 32 bits or an octet over 255 is E_COERCE, and empty lines are dropped as in CyberChef. |
 | Encode text | covered | `charset:encode` | Single-byte WHATWG sets, ISO 8859-1, 22 EBCDIC code pages (IBM 037 to 1149), UTF-8 and UTF-16. The multi-byte legacy sets (Shift_JIS, GBK, Big5, EUC-JP/KR, ISO-2022-JP) are decode only, because the host has no encoder for them; UTF-7 and UTF-32 are not offered. |
 | Decode text | covered | `charset:decode` | All WHATWG encodings of the browser (single-byte, CJK, UTF-16), ISO 8859-1 and 22 EBCDIC code pages; strict or lenient. UTF-7 and UTF-32 are not offered. |
 | Text Encoding Brute Force | covered | `charset:brute` | Returns a list of { encoding, text } records for every encoding in which the bytes decode strictly; only the first sample bytes (default 4096, at most 16384) are decoded. Brute-forcing the encode direction is not offered. |
@@ -289,10 +289,10 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Strip HTTP headers | not yet |  |  |
 | Dechunk HTTP response | not yet |  |  |
 | Parse Ethernet frame | not yet |  |  |
-| Parse User Agent | not yet |  |  |
-| Parse IP range | not yet |  |  |
-| Parse IPv6 address | not yet |  |  |
-| IPv6 Transition Addresses | not yet |  |  |
+| Parse User Agent | redesigned | `user-agent:parse` | CyberChef's report layout (Browser, Device, Engine, OS and CPU, with unknown for what is not found) from a table of about 70 rules written in FL over the regex words, not the ua-parser-js library: version 2 of that library is AGPL, and version 1.x would put a library full of its own regular expressions outside the regex seam and add its size to the bundle. The table covers the common browsers, engines, systems, Apple, Samsung and Google devices (and the model in Android build strings), consoles, smart TVs and CPU architectures, so a rare or new agent can come out differently from ua-parser-js (the names follow that library: Mobile Safari, Samsung Internet, Chromium OS, Mac OS, amd64, ia32, arm64). The first rule that matches wins; a leading User-Agent: label is ignored; a string of more than 4,096 characters is E_RANGE. |
+| Parse IP range | covered | `ip:parse-range` | A CIDR range, a hyphenated range or a list of addresses and CIDR ranges, IPv4 and IPv6, with CyberChef's three parameters (Include network info, Enumerate IP addresses, Allow large queries) and its report layout (Network, CIDR, Mask, Range, Total addresses; for a hyphenated range or a list the smallest holding subnet, tab-indented, then the range). The counts are exact (CyberChef adds IPv6 totals as floating point numbers) and IPv4 /32 is accepted (CyberChef stops at /31). Enumeration is IPv4 only, as in CyberChef. Where CyberChef puts a warning in the output for a range of more than 65,536 addresses, or prints that the second address is smaller, Forge raises E_RANGE; with Allow large queries the listing stops at 1,048,576 addresses (E_RANGE beyond), because the result must fit the value limit. Text that is not a range, a prefix length over 32 or 128, or a mix of IPv4 and IPv6 in a list is E_COERCE where CyberChef answers 'Invalid input'. |
+| Parse IPv6 address | covered | `ip:parse-ipv6` | Longhand and shorthand (RFC 5952: the first longest run of two or more zero groups) and what the range is: unspecified, loopback, IPv4-mapped, IPv4-translated, discard, NAT64 (well-known and the RFC 8215 local-use prefix), Teredo (server, client address and port with the inversion undone and the obfuscated values, the cone, R, Random1, UG and Random2 flags, checked against RFC 4380 and RFC 5991), benchmarking, ORCHID v1 and v2, documentation, 6to4 (IPv4 address, SLA ID, interface ID in hex and decimal), unique local, link-local, multicast with the scope of the address and the well-known groups, plus ISATAP (RFC 5214) and the modified EUI-64 with its MAC address. The text is CyberChef's, with the additions (ISATAP, the scope of any multicast address, the Teredo obfuscated line, the RFC 8215 prefix, a Zone ID line); CyberChef's 6to4 interface ID and Teredo client address have arithmetic slips that Forge does not copy. The input may carry [brackets] and a %zone. An address that does not parse is E_COERCE where CyberChef answers 'Invalid IPv6 address'. |
+| IPv6 Transition Addresses | covered | `ip:transition` | Per line: an IPv4 address to its 6to4 (2002:XXXX:XXXX::/48), IPv4-mapped, IPv4-translated and NAT64 forms; a 192.0.2.0/24 range with /40 and /120 (other prefix lengths are E_COERCE); a MAC address with colons to its modified EUI-64 interface identifier; and back from an IPv6 transition address (or an ISATAP address) to the IPv4 address, and from an EUI-64 address to the MAC. Both parameters, Ignore ranges (default on) and Remove headers (default off), are CyberChef's. CyberChef reads the IPv6 side with string slicing and glues the lines of a MAC address together; Forge parses the address and ends every line with a line feed. A line that is none of these is E_COERCE (CyberChef replaces the whole output with a message), and an IPv6 address with nothing embedded gets a line saying so. |
 | Parse IPv4 header | not yet |  |  |
 | Strip IPv4 header | not yet |  |  |
 | Parse TCP | not yet |  |  |
@@ -300,7 +300,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Parse TLS record | not yet |  |  |
 | Parse UDP | not yet |  |  |
 | Strip UDP header | not yet |  |  |
-| Parse URI | not yet |  |  |
+| Parse URI | covered | `uri:parse` | CyberChef's layout (Protocol, Auth, Hostname, Port, Path name, Arguments, Hash; tab separated; the arguments padded and decoded as URLSearchParams does, a repeated one joined by commas) on the RFC 3986 reading: the authority is read after // and a port that is not digits is E_COERCE. The protocol is lower case with its colon, the host lower case, and for http, https, ftp, gopher, file, ws and wss with a host the path is at least /. CyberChef uses Node's legacy url.parse, which also reads a host from mailto:a@b.example and escapes spaces in the path; Forge does neither. The arguments appear in the order in which each name first appears (CyberChef puts integer-like names first). |
 | Protobuf Decode | not yet |  |  |
 | Protobuf Encode | not yet |  |  |
 | VarInt Encode | not yet |  |  |
@@ -311,13 +311,13 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | JA4Server Fingerprint | not yet |  |  |
 | HASSH Client Fingerprint | not yet |  |  |
 | HASSH Server Fingerprint | not yet |  |  |
-| Format MAC addresses | not yet |  |  |
-| Group IP addresses | not yet |  |  |
-| Encode NetBIOS Name | not yet |  |  |
-| Decode NetBIOS Name | not yet |  |  |
-| Defang URL | not yet |  |  |
-| Fang URL | not yet |  |  |
-| Defang IP Addresses | not yet |  |  |
+| Format MAC addresses | covered | `mac:format` | CyberChef's parameters and layout: Output case (both, upper, lower), No delimiter, Dash delimiter, Colon delimiter, Cisco style and IPv6 interface ID, addresses cut at commas, white space and line feeds, a blank line after each address. The interface ID is the modified EUI-64 of RFC 4291 (ff fe inserted and the universal/local bit flipped), written as four groups. CyberChef has no validity check; Forge raises E_COERCE for anything that is not twelve hex digits (with or without : - . between them). |
+| Group IP addresses | covered | `ip:group` | The layout is CyberChef's (network/prefix, the addresses indented by two spaces, a blank line), with its delimiters (newline, CRLF, space, comma, semicolon), prefix length (default 24) and Only show the subnets. IPv4 first, then IPv6 in shorthand. Forge sorts the IPv4 addresses of a group by number (CyberChef sorts them as text), sorts the IPv6 networks and addresses (CyberChef does not), accepts a prefix length of 128, and refuses a piece that is not an address, and an IPv4 address with a prefix length over 32, with E_COERCE (CyberChef ignores the first and prints the second as /32 with the longer number). |
+| Encode NetBIOS Name | covered | `netbios:encode` | The first-level encoding of RFC 1001 section 14.1: the name padded with spaces to 16 bytes and every byte written as the two half bytes plus Offset (default 65). A name of more than 16 bytes is E_RANGE where CyberChef returns nothing; the offset must be 0 to 240 (E_RANGE). The result is bytes, as in CyberChef. The second level (the DNS label form) is not part of the operation, as in CyberChef. |
+| Decode NetBIOS Name | covered | `netbios:decode` | The inverse, with the same Offset (default 65): trailing spaces (the padding) are taken off, keeping the first byte. An odd length, more than 32 bytes or a byte outside offset to offset + 15 is E_COERCE where CyberChef returns nothing or a wrong byte. |
+| Defang URL | covered | `defang:defang-url` | CyberChef's four parameters and patterns: Escape dots, Escape http, Escape ://, and Process (valid domains and full URLs, only full URLs, everything), with its URL and domain regular expressions. The process choices are named valid-domains-and-full-urls, only-full-urls and everything. |
+| Fang URL | covered | `defang:fang-url` | Restore [.], restore hxxp (lower case only, as CyberChef) and restore [://], each switchable. |
+| Defang IP Addresses | covered | `ip:defang` | IPv4 addresses (and a /prefix) get [.], IPv6 addresses get [:] (and [.] in an IPv4 tail). Forge finds an IPv6 address as a run of hex digits, colons and dots that parses as an address (CyberChef uses one long regular expression), and an IPv4 address only when it is not part of a longer dotted or numeric run (CyberChef would defang the first four numbers of 1.2.3.4.5). The word is in the ip vocabulary, because it uses the address parser. |
 
 ## Language (4)
 

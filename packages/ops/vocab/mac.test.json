@@ -1,0 +1,178 @@
+[
+  {
+    "name": "format: defaults (plain, hyphens, colons; both cases)",
+    "ref": "Python str formatting; the interface identifier from RFC 4291 appendix A",
+    "op": "mac:format",
+    "params": {},
+    "input": {
+      "value": "00:1A:2B:3C:4D:5E",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "001a2b3c4d5e\n001A2B3C4D5E\n00-1a-2b-3c-4d-5e\n00-1A-2B-3C-4D-5E\n00:1a:2b:3c:4d:5e\n00:1A:2B:3C:4D:5E\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "format: every notation, both cases",
+    "ref": "Python str formatting; the interface identifier from RFC 4291 appendix A",
+    "op": "mac:format",
+    "params": {
+      "cisco-style": true,
+      "ipv6-interface-id": true
+    },
+    "input": {
+      "value": "001a2b3c4d5e",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "001a2b3c4d5e\n001A2B3C4D5E\n00-1a-2b-3c-4d-5e\n00-1A-2B-3C-4D-5E\n00:1a:2b:3c:4d:5e\n00:1A:2B:3C:4D:5E\n001a.2b3c.4d5e\n001A.2B3C.4D5E\n021a:2bff:fe3c:4d5e\n021A:2BFF:FE3C:4D5E\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "format: upper only",
+    "ref": "Python str formatting; the interface identifier from RFC 4291 appendix A",
+    "op": "mac:format",
+    "params": {
+      "output-case": "upper",
+      "cisco-style": true,
+      "ipv6-interface-id": true
+    },
+    "input": {
+      "value": "00-1a-2b-3c-4d-5e",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "001A2B3C4D5E\n00-1A-2B-3C-4D-5E\n00:1A:2B:3C:4D:5E\n001A.2B3C.4D5E\n021A:2BFF:FE3C:4D5E\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "format: lower only, colons only",
+    "ref": "Python str formatting; the interface identifier from RFC 4291 appendix A",
+    "op": "mac:format",
+    "params": {
+      "output-case": "lower",
+      "no-delimiter": false,
+      "dash-delimiter": false
+    },
+    "input": {
+      "value": "00:1A:2B:3C:4D:5E",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00:1a:2b:3c:4d:5e\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "format: RFC 4291 appendix A example gives 3656:78ff:fe9a:bcde",
+    "ref": "RFC 4291 appendix A",
+    "op": "mac:format",
+    "params": {
+      "output-case": "lower",
+      "no-delimiter": false,
+      "dash-delimiter": false,
+      "colon-delimiter": false,
+      "ipv6-interface-id": true
+    },
+    "input": {
+      "value": "34-56-78-9A-BC-DE",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3656:78ff:fe9a:bcde\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "format: several addresses cut at commas, spaces and line feeds",
+    "ref": "Python str formatting; the interface identifier from RFC 4291 appendix A",
+    "op": "mac:format",
+    "params": {
+      "output-case": "lower",
+      "dash-delimiter": false,
+      "cisco-style": true
+    },
+    "input": {
+      "value": "001a.2b3c.4d5e, 00-11-22-33-44-55\nAA:BB:CC:DD:EE:FF\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "001a2b3c4d5e\n00:1a:2b:3c:4d:5e\n001a.2b3c.4d5e\n\n001122334455\n00:11:22:33:44:55\n0011.2233.4455\n\naabbccddeeff\naa:bb:cc:dd:ee:ff\naabb.ccdd.eeff\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "format: empty input",
+    "ref": "doc string",
+    "op": "mac:format",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "format: all notations off",
+    "ref": "doc string",
+    "op": "mac:format",
+    "params": {
+      "no-delimiter": false,
+      "dash-delimiter": false,
+      "colon-delimiter": false
+    },
+    "input": {
+      "value": "00:11:22:33:44:55",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "format: too short",
+    "ref": "doc string",
+    "op": "mac:format",
+    "params": {},
+    "input": {
+      "value": "00:11:22:33:44",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "format: not hex",
+    "ref": "doc string",
+    "op": "mac:format",
+    "params": {},
+    "input": {
+      "value": "00:11:22:33:44:5g",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "format: too long",
+    "ref": "doc string",
+    "op": "mac:format",
+    "params": {},
+    "input": {
+      "value": "00:11:22:33:44:55:66",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

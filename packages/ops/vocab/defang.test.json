@@ -1,0 +1,254 @@
+[
+  {
+    "name": "defang-url: a URL and a domain",
+    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "op": "defang:defang-url",
+    "params": {},
+    "input": {
+      "value": "Visit http://example.com/a.b?x=1, or HTTPS://Evil.Example.org:8080/p. Also www.foo.co.uk and 1.2.3.4",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Visit hxxp[://]example[.]com/a[.]b?x=1, or hxxpS[://]Evil[.]Example[.]org:8080/p. Also www[.]foo[.]co[.]uk and 1.2.3.4",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "defang-url: only full URLs",
+    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "op": "defang:defang-url",
+    "params": {
+      "process": "only-full-urls"
+    },
+    "input": {
+      "value": "Visit http://example.com/a and example.org",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Visit hxxp[://]example[.]com/a and example.org",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "defang-url: everything",
+    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "op": "defang:defang-url",
+    "params": {
+      "process": "everything"
+    },
+    "input": {
+      "value": "http://example.com/a.b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "hxxp[://]example[.]com/a[.]b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "defang-url: dots only",
+    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "op": "defang:defang-url",
+    "params": {
+      "escape-http": false,
+      "escape-slashes": false
+    },
+    "input": {
+      "value": "http://example.com",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "http://example[.]com",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "defang-url: http only",
+    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "op": "defang:defang-url",
+    "params": {
+      "escape-dots": false,
+      "escape-slashes": false
+    },
+    "input": {
+      "value": "http://example.com",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "hxxp://example.com",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "defang-url: slashes only",
+    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "op": "defang:defang-url",
+    "params": {
+      "escape-dots": false,
+      "escape-http": false
+    },
+    "input": {
+      "value": "ftp://example.com/x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ftp[://]example.com/x",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "defang-url: all off changes nothing",
+    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "op": "defang:defang-url",
+    "params": {
+      "escape-dots": false,
+      "escape-http": false,
+      "escape-slashes": false
+    },
+    "input": {
+      "value": "http://example.com",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "http://example.com",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "defang-url: two URLs on two lines",
+    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "op": "defang:defang-url",
+    "params": {
+      "process": "only-full-urls"
+    },
+    "input": {
+      "value": "http://a.example.com\nhttps://b.example.org/c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "hxxp[://]a[.]example[.]com\nhxxps[://]b[.]example[.]org/c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "defang-url: text without a URL",
+    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "op": "defang:defang-url",
+    "params": {},
+    "input": {
+      "value": "no links here, just words.",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "no links here, just words.",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "defang-url: empty input",
+    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "op": "defang:defang-url",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "fang-url: restores all three",
+    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "op": "defang:fang-url",
+    "params": {},
+    "input": {
+      "value": "hxxps[://]example[.]com/a[.]b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "https://example.com/a.b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "fang-url: dots only",
+    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "op": "defang:fang-url",
+    "params": {
+      "restore-http": false,
+      "restore-slashes": false
+    },
+    "input": {
+      "value": "hxxp[://]example[.]com",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "hxxp[://]example.com",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "fang-url: http only",
+    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "op": "defang:fang-url",
+    "params": {
+      "restore-dots": false,
+      "restore-slashes": false
+    },
+    "input": {
+      "value": "hxxp[://]example[.]com",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "http[://]example[.]com",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "fang-url: slashes only",
+    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "op": "defang:fang-url",
+    "params": {
+      "restore-dots": false,
+      "restore-http": false
+    },
+    "input": {
+      "value": "hxxp[://]example[.]com",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "hxxp://example[.]com",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "fang-url: text that was not defanged is kept",
+    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "op": "defang:fang-url",
+    "params": {},
+    "input": {
+      "value": "http://example.com",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "http://example.com",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "fang-url: empty input",
+    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "op": "defang:fang-url",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  }
+]

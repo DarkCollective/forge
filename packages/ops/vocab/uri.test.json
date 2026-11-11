@@ -1,0 +1,211 @@
+[
+  {
+    "name": "parse: a full URL",
+    "ref": "Python urllib.parse urlsplit, parse_qsl and unquote",
+    "op": "uri:parse",
+    "params": {},
+    "input": {
+      "value": "https://user:p%40ss@Example.COM:8080/a/b%20c?x=1&y=two+words&x=2&flag&e=#frag",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Protocol:\thttps:\nAuth:\t\tuser:p@ss\nHostname:\texample.com\nPort:\t\t8080\nPath name:\t/a/b%20c\nArguments:\n\tx    = 1,2\n\ty    = two words\n\tflag\n\te   \nHash:\t\t#frag\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "parse: host only",
+    "ref": "Python urllib.parse urlsplit, parse_qsl and unquote",
+    "op": "uri:parse",
+    "params": {},
+    "input": {
+      "value": "http://example.com",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Protocol:\thttp:\nHostname:\texample.com\nPath name:\t/\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "parse: IPv6 host with a port",
+    "ref": "Python urllib.parse urlsplit, parse_qsl and unquote",
+    "op": "uri:parse",
+    "params": {},
+    "input": {
+      "value": "http://[2001:db8::1]:8080/index.html",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Protocol:\thttp:\nHostname:\t2001:db8::1\nPort:\t\t8080\nPath name:\t/index.html\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "parse: percent-encoded UTF-8 in the query",
+    "ref": "Python urllib.parse urlsplit, parse_qsl and unquote",
+    "op": "uri:parse",
+    "params": {},
+    "input": {
+      "value": "https://example.org/search?q=%E2%82%AC+100&lang=fr",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Protocol:\thttps:\nHostname:\texample.org\nPath name:\t/search\nArguments:\n\tq    = € 100\n\tlang = fr\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "parse: a fragment only",
+    "ref": "Python urllib.parse urlsplit, parse_qsl and unquote",
+    "op": "uri:parse",
+    "params": {},
+    "input": {
+      "value": "https://example.org/page#section-2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Protocol:\thttps:\nHostname:\texample.org\nPath name:\t/page\nHash:\t\t#section-2\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "parse: ftp with a user and no password",
+    "ref": "Python urllib.parse urlsplit, parse_qsl and unquote",
+    "op": "uri:parse",
+    "params": {},
+    "input": {
+      "value": "ftp://anonymous@ftp.example.net/pub/file.tar.gz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Protocol:\tftp:\nAuth:\t\tanonymous\nHostname:\tftp.example.net\nPath name:\t/pub/file.tar.gz\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "parse: a query with = inside a value",
+    "ref": "Python urllib.parse urlsplit, parse_qsl and unquote",
+    "op": "uri:parse",
+    "params": {},
+    "input": {
+      "value": "http://example.com/?a=b=c&d=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Protocol:\thttp:\nHostname:\texample.com\nPath name:\t/\nArguments:\n\ta = b=c\n\td\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "parse: long and short argument names are padded",
+    "ref": "Python urllib.parse urlsplit, parse_qsl and unquote",
+    "op": "uri:parse",
+    "params": {},
+    "input": {
+      "value": "http://example.com/p?id=7&verylongname=1&x=2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Protocol:\thttp:\nHostname:\texample.com\nPath name:\t/p\nArguments:\n\tid           = 7\n\tverylongname = 1\n\tx            = 2\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "parse: a relative path with a query",
+    "ref": "Python urllib.parse",
+    "op": "uri:parse",
+    "params": {},
+    "input": {
+      "value": "/just/a/path?q=1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Path name:\t/just/a/path\nArguments:\n\tq = 1\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "parse: mailto has no host",
+    "ref": "RFC 6068 and urllib.parse",
+    "op": "uri:parse",
+    "params": {},
+    "input": {
+      "value": "mailto:someone@example.com?subject=hi%20there",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Protocol:\tmailto:\nPath name:\tsomeone@example.com\nArguments:\n\tsubject = hi there\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "parse: file URL with an empty authority",
+    "ref": "Python urllib.parse",
+    "op": "uri:parse",
+    "params": {},
+    "input": {
+      "value": "file:///etc/passwd",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Protocol:\tfile:\nPath name:\t/etc/passwd\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "parse: a bare % in the query is kept",
+    "ref": "URLSearchParams keeps %ZZ as it is",
+    "op": "uri:parse",
+    "params": {},
+    "input": {
+      "value": "http://h/?bad=%ZZ&ok=%41",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Protocol:\thttp:\nHostname:\th\nPath name:\t/\nArguments:\n\tbad = %ZZ\n\tok  = A\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "parse: white space around the URI is dropped",
+    "ref": "doc string",
+    "op": "uri:parse",
+    "params": {},
+    "input": {
+      "value": "  http://example.com/x \n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Protocol:\thttp:\nHostname:\texample.com\nPath name:\t/x\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "parse: empty input",
+    "ref": "doc string",
+    "op": "uri:parse",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "parse: a port that is not digits",
+    "ref": "doc string",
+    "op": "uri:parse",
+    "params": {},
+    "input": {
+      "value": "http://host:port/",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

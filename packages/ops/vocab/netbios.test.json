@@ -1,0 +1,315 @@
+[
+  {
+    "name": "encode: a 16-byte name (the name used in the RFC 1001 examples)",
+    "ref": "Python: the nibbles of RFC 1001 section 14.1 plus 65",
+    "op": "netbios:encode",
+    "params": {
+      "offset": 65
+    },
+    "input": {
+      "value": "The NetBIOS name",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "FEGIGFCAEOGFHEECEJEPFDCAGOGBGNGF",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode: the same name",
+    "ref": "Python: the nibbles of RFC 1001 section 14.1 minus 65",
+    "op": "netbios:decode",
+    "params": {
+      "offset": 65
+    },
+    "input": {
+      "value": "FEGIGFCAEOGFHEECEJEPFDCAGOGBGNGF",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "The NetBIOS name",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode: 'FRED' is padded with spaces to 16 bytes",
+    "ref": "Python: nibble plus 65 on the name padded with spaces",
+    "op": "netbios:encode",
+    "params": {},
+    "input": {
+      "value": "FRED",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "EGFCEFEECACACACACACACACACACACACA",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode: 'WORKGROUP' is padded with spaces to 16 bytes",
+    "ref": "Python: nibble plus 65 on the name padded with spaces",
+    "op": "netbios:encode",
+    "params": {},
+    "input": {
+      "value": "WORKGROUP",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "FHEPFCELEHFCEPFFFACACACACACACACA",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode: 'A' is padded with spaces to 16 bytes",
+    "ref": "Python: nibble plus 65 on the name padded with spaces",
+    "op": "netbios:encode",
+    "params": {},
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "EBCACACACACACACACACACACACACACACA",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode: '' is padded with spaces to 16 bytes",
+    "ref": "Python: nibble plus 65 on the name padded with spaces",
+    "op": "netbios:encode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "CACACACACACACACACACACACACACACACA",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode: '0123456789abcdef' is padded with spaces to 16 bytes",
+    "ref": "Python: nibble plus 65 on the name padded with spaces",
+    "op": "netbios:encode",
+    "params": {},
+    "input": {
+      "value": "0123456789abcdef",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "DADBDCDDDEDFDGDHDIDJGBGCGDGEGFGG",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode: with offset 97 (lower case letters)",
+    "ref": "Python: nibble plus 97",
+    "op": "netbios:encode",
+    "params": {
+      "offset": 97
+    },
+    "input": {
+      "value": "FRED",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "egfcefeecacacacacacacacacacacaca",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode: with offset 97",
+    "ref": "Python",
+    "op": "netbios:decode",
+    "params": {
+      "offset": 97
+    },
+    "input": {
+      "value": "egfcefeecacacacacacacacacacacaca",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "FRED",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode: a name with a suffix byte keeps it (0x20 is dropped, 0x00 stays)",
+    "ref": "Python",
+    "op": "netbios:decode",
+    "params": {},
+    "input": {
+      "value": "FDFCFGCACACACACACACACACACACACAAA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "SRV            \u0000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode: only spaces keeps one",
+    "ref": "doc string",
+    "op": "netbios:decode",
+    "params": {},
+    "input": {
+      "value": "CACACACACACACACACACACACACACACACA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": " ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode: shorter than 32 bytes",
+    "ref": "Python",
+    "op": "netbios:decode",
+    "params": {},
+    "input": {
+      "value": "EGFCEFEE",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "FRED",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode: empty name is sixteen spaces",
+    "ref": "RFC 1001",
+    "op": "netbios:encode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "CACACACACACACACACACACACACACACACA",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode: empty input",
+    "ref": "doc string",
+    "op": "netbios:decode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode: over 16 bytes",
+    "ref": "doc string",
+    "op": "netbios:encode",
+    "params": {},
+    "input": {
+      "value": "0123456789abcdefg",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "encode: offset over 240",
+    "ref": "doc string",
+    "op": "netbios:encode",
+    "params": {
+      "offset": 241
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "encode: negative offset",
+    "ref": "doc string",
+    "op": "netbios:encode",
+    "params": {
+      "offset": -1
+    },
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "decode: odd length",
+    "ref": "doc string",
+    "op": "netbios:decode",
+    "params": {},
+    "input": {
+      "value": "EGF",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode: over 32 bytes",
+    "ref": "doc string",
+    "op": "netbios:decode",
+    "params": {},
+    "input": {
+      "value": "CACACACACACACACACACACACACACACACACA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode: a byte below the offset",
+    "ref": "doc string",
+    "op": "netbios:decode",
+    "params": {},
+    "input": {
+      "value": "@A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode: a byte over offset + 15",
+    "ref": "doc string",
+    "op": "netbios:decode",
+    "params": {},
+    "input": {
+      "value": "AQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "encode: bytes above ASCII (0xE9 0xFF)",
+    "ref": "Python: 0xE9 is E then J",
+    "op": "netbios:encode",
+    "params": {},
+    "input": {
+      "value": "e9ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "OJPPCACACACACACACACACACACACACACA",
+      "enc": "utf8"
+    }
+  }
+]
