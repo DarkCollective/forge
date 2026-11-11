@@ -154,8 +154,8 @@
     }
   },
   {
-    "name": "strings: alphanumeric class stops at ~ { and }",
-    "ref": "hand-computed: ab-cd is letters and a hyphen; x~yz{} is cut into pieces below 3",
+    "name": "strings: alphanumeric class stops at ~ and takes { and }",
+    "ref": "hand-computed: ab-cd is letters and a hyphen; x is one character; yz{} is four characters of the class (~ is not in it)",
     "op": "extract:strings",
     "params": {
       "encoding": "single",
@@ -171,7 +171,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "ab-cd",
+      "value": "ab-cd\nyz{}",
       "enc": "utf8"
     }
   },
@@ -479,8 +479,8 @@
     }
   },
   {
-    "name": "ip: remove-local drops private, loopback and link-local",
-    "ref": "RFC 1918, RFC 1122 and RFC 3927 ranges, hand-selected: 172.32.1.1 is outside 172.16/12",
+    "name": "ip: remove-local drops private and loopback, link-local stays",
+    "ref": "RFC 1918 and RFC 1122 ranges, hand-selected: 172.32.1.1 is outside 172.16/12, 169.254/16 is link-local and kept",
     "op": "extract:ip-addresses",
     "params": {
       "ipv4": true,
@@ -495,7 +495,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "8.8.8.8\n172.32.1.1\n172.15.0.1",
+      "value": "8.8.8.8\n172.32.1.1\n169.254.0.1\n172.15.0.1",
       "enc": "utf8"
     }
   },
@@ -1210,6 +1210,83 @@
     },
     "expect": {
       "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "hashes: all writes each length together, the shortest first",
+    "ref": "hand-computed: lengths 4, 8 and 16 in that order, each in the order of the text",
+    "op": "extract:hashes",
+    "params": {
+      "length": 40,
+      "all": true,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "deadbeef cafe 0123456789abcdef beef",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "cafe\nbeef\ndeadbeef\n0123456789abcdef",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hashes: all finds 80 digits (RIPEMD-320)",
+    "ref": "hand-computed: 80 hex digits",
+    "op": "extract:hashes",
+    "params": {
+      "length": 40,
+      "all": true,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "x aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa y",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "domains: underscore on keeps _dmarc",
+    "ref": "hand-computed: a label may start with _ when underscore is on",
+    "op": "extract:domains",
+    "params": {
+      "display-total": false,
+      "sort": false,
+      "unique": false,
+      "underscore": true
+    },
+    "input": {
+      "value": "_dmarc.example.com a.example.com",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "_dmarc.example.com\na.example.com",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "domains: underscore off is the default and rejects it",
+    "ref": "hand-computed: no label may hold _ when underscore is off",
+    "op": "extract:domains",
+    "params": {
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "_dmarc.example.com a.example.com a_b.example.org",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a.example.com",
+      "enc": "utf8"
     }
   }
 ]

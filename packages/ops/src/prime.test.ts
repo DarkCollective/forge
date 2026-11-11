@@ -173,10 +173,14 @@ describe("prime:generate", () => {
     }
   });
 
-  test("hex output is lower-case hex of the same kind of number", async () => {
+  test("the default size is 512 bits, as CyberChef's bit length", () => {
+    expect(runtime.meta("prime:generate").params.find((x) => x.name === "size")?.default).toBe(512);
+  });
+
+  test("hex output is lower-case hex with a 0x in front, of the same kind of number", async () => {
     const s = top(await gen(64, "bits", 1, "hex")) as string;
-    expect(s).toMatch(/^[0-9a-f]{16}$/);
-    expect(mr(BigInt("0x" + s))).toBe(true);
+    expect(s).toMatch(/^0x[0-9a-f]{16}$/);
+    expect(mr(BigInt(s))).toBe(true);
   });
 
   test("count and delimiter", async () => {

@@ -89,7 +89,12 @@ describe("string-escape", () => {
         for (const json of [false, true]) {
           for (const es6 of [false, true]) {
             for (const upper of [false, true]) {
-              const coded = top(await escape(text, level, quote, json, es6, upper)).v as string;
+              let coded = top(await escape(text, level, quote, json, es6, upper)).v as string;
+              // json puts the chosen quote around the text
+              if (json) {
+                expect(coded.at(0)).toBe(coded.at(-1));
+                coded = coded.slice(1, -1);
+              }
               expect(
                 top(await unescape(coded)).v,
                 `${level} ${quote} ${json} ${es6} ${upper}`,
@@ -107,10 +112,13 @@ describe("string-escape", () => {
       const coded = top(await escape(text, level)).v as string;
       expect(/^[\x20-\x7e]*$/.test(coded)).toBe(true);
     }
-    const jsonText = top(await escape(text, "special", "double", true)).v as string;
-    expect(JSON.parse(`"${jsonText}"`)).toBe(text);
-    const minimal = top(await escape(text, "minimal", "double", true)).v as string;
-    expect(JSON.parse(`"${minimal}"`)).toBe(text);
+    // json puts the chosen quote around the text: with the double quote it is a JSON string
+    // (es6 off: with it on, a character above U+FFFF is \u{H}, which JSON does not have; the everything level
+    // escapes the single quote and the backtick too, which JSON does not have either)
+    const jsonText = top(await escape(text, "special", "double", true, false)).v as string;
+    expect(JSON.parse(jsonText)).toBe(text);
+    // the minimal level leaves the other control characters as they are
+    expect(top(await escape("a\u0001b", "minimal")).v).toBe("a\u0001b");
   });
 
   test("a JavaScript string literal built from the output reads back the same text", async () => {
@@ -125,6 +133,13 @@ describe("string-escape", () => {
       const safe = quote === "backtick" ? coded.replaceAll("${", "\\${") : coded;
       expect(new Function(`return ${q}${safe}${q}`)()).toBe(text);
     }
+  });
+
+  test("the short escapes, the NUL rule and the vertical tab", async () => {
+    expect(top(await escape("\b\t\n\f\r")).v).toBe("\\b\\t\\n\\f\\r");
+    expect(top(await escape("\u000b")).v).toBe("\\x0b");
+    expect(top(await escape("\u0000a")).v).toBe("\\0a");
+    expect(top(await escape("\u00007")).v).toBe("\\x007");
   });
 
   test("a unescape of any text with no backslash is the identity", async () => {

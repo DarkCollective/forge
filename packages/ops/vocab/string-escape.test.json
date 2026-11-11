@@ -101,7 +101,7 @@
   },
   {
     "name": "escape in upper case hex",
-    "ref": "hand-computed from the ECMAScript string literal escapes (ECMA-262 12.9.4)",
+    "ref": "hand-computed from the rules in the word doc (short escapes, \\xHH, \\uHHHH, \\u{H}, quotes, levels)",
     "op": "string-escape:escape",
     "params": {
       "level": "special",
@@ -120,8 +120,8 @@
     }
   },
   {
-    "name": "escape for JSON",
-    "ref": "hand-computed from the ECMAScript string literal escapes (ECMA-262 12.9.4)",
+    "name": "escape with JSON puts the chosen quote around the text",
+    "ref": "hand-computed from the rules in the word doc (short escapes, \\xHH, \\uHHHH, \\u{H}, quotes, levels)",
     "op": "string-escape:escape",
     "params": {
       "level": "special",
@@ -135,13 +135,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "\\u00e9\\\"'\\u000b\\n\\ud83d\\ude00",
+      "value": "'\\u00e9\"\\'\\u000b\\n\\u{1f600}'",
       "enc": "utf8"
     }
   },
   {
-    "name": "escape the minimal level keeps non-ASCII",
-    "ref": "hand-computed from the ECMAScript string literal escapes (ECMA-262 12.9.4)",
+    "name": "escape the minimal level keeps non-ASCII and other control characters",
+    "ref": "hand-computed from the rules in the word doc (short escapes, \\xHH, \\uHHHH, \\u{H}, quotes, levels)",
     "op": "string-escape:escape",
     "params": {
       "level": "minimal",
@@ -155,13 +155,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "é€😀\\x01\\u2028",
+      "value": "é€😀\u0001\\u2028",
       "enc": "utf8"
     }
   },
   {
-    "name": "escape the everything level",
-    "ref": "hand-computed from the ECMAScript string literal escapes (ECMA-262 12.9.4)",
+    "name": "escape the everything level, with the short escapes",
+    "ref": "hand-computed from the rules in the word doc (short escapes, \\xHH, \\uHHHH, \\u{H}, quotes, levels)",
     "op": "string-escape:escape",
     "params": {
       "level": "everything",
@@ -175,13 +175,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "\\x61\\xe9\\x0a",
+      "value": "\\x61\\xe9\\n",
       "enc": "utf8"
     }
   },
   {
     "name": "escape everything for JSON",
-    "ref": "hand-computed from the ECMAScript string literal escapes (ECMA-262 12.9.4)",
+    "ref": "hand-computed from the rules in the word doc (short escapes, \\xHH, \\uHHHH, \\u{H}, quotes, levels)",
     "op": "string-escape:escape",
     "params": {
       "level": "everything",
@@ -195,13 +195,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "\\u0061\\u20ac",
+      "value": "'\\u0061\\u20ac'",
       "enc": "utf8"
     }
   },
   {
-    "name": "escape NUL and DEL",
-    "ref": "hand-computed from the ECMAScript string literal escapes (ECMA-262 12.9.4)",
+    "name": "escape NUL and DEL: NUL is \\0 when no digit follows",
+    "ref": "hand-computed from the rules in the word doc (short escapes, \\xHH, \\uHHHH, \\u{H}, quotes, levels)",
     "op": "string-escape:escape",
     "params": {
       "level": "special",
@@ -215,13 +215,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "\\x00\\x7f",
+      "value": "\\0\\x7f",
       "enc": "utf8"
     }
   },
   {
-    "name": "escape the named control characters",
-    "ref": "hand-computed from the ECMAScript string literal escapes (ECMA-262 12.9.4)",
+    "name": "escape the named control characters: the vertical tab has no letter",
+    "ref": "hand-computed from the rules in the word doc (short escapes, \\xHH, \\uHHHH, \\u{H}, quotes, levels)",
     "op": "string-escape:escape",
     "params": {
       "level": "special",
@@ -235,7 +235,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "\\b\\t\\n\\v\\f\\r",
+      "value": "\\b\\t\\n\\x0b\\f\\r",
       "enc": "utf8"
     }
   },
@@ -395,6 +395,200 @@
     },
     "expect": {
       "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "escape NUL before a digit is \\x00",
+    "ref": "hand-computed from the rules in the word doc (short escapes, \\xHH, \\uHHHH, \\u{H}, quotes, levels)",
+    "op": "string-escape:escape",
+    "params": {
+      "level": "special",
+      "quote": "single",
+      "json": false,
+      "es6": true,
+      "uppercase": false
+    },
+    "input": {
+      "value": "\u00001\u0000a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\\x001\\0a",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape the quote that is chosen, double",
+    "ref": "hand-computed from the rules in the word doc (short escapes, \\xHH, \\uHHHH, \\u{H}, quotes, levels)",
+    "op": "string-escape:escape",
+    "params": {
+      "level": "special",
+      "quote": "double",
+      "json": false,
+      "es6": true,
+      "uppercase": false
+    },
+    "input": {
+      "value": "a'b\"c`d",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a'b\\\"c`d",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape the quote that is chosen, backtick",
+    "ref": "hand-computed from the rules in the word doc (short escapes, \\xHH, \\uHHHH, \\u{H}, quotes, levels)",
+    "op": "string-escape:escape",
+    "params": {
+      "level": "special",
+      "quote": "backtick",
+      "json": false,
+      "es6": true,
+      "uppercase": false
+    },
+    "input": {
+      "value": "a'b\"c`d",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a'b\"c\\`d",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape the everything level escapes all three quotes",
+    "ref": "hand-computed from the rules in the word doc (short escapes, \\xHH, \\uHHHH, \\u{H}, quotes, levels)",
+    "op": "string-escape:escape",
+    "params": {
+      "level": "everything",
+      "quote": "single",
+      "json": false,
+      "es6": true,
+      "uppercase": false
+    },
+    "input": {
+      "value": "'\"`\\",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\\'\\\"\\`\\\\",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape JSON with the double quote",
+    "ref": "hand-computed from the rules in the word doc (short escapes, \\xHH, \\uHHHH, \\u{H}, quotes, levels)",
+    "op": "string-escape:escape",
+    "params": {
+      "level": "special",
+      "quote": "double",
+      "json": true,
+      "es6": true,
+      "uppercase": false
+    },
+    "input": {
+      "value": "a\"b\u0001é",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"a\\\"b\\u0001\\u00e9\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape JSON with es6 writes astral characters as \\u{H}",
+    "ref": "hand-computed from the rules in the word doc (short escapes, \\xHH, \\uHHHH, \\u{H}, quotes, levels)",
+    "op": "string-escape:escape",
+    "params": {
+      "level": "special",
+      "quote": "double",
+      "json": true,
+      "es6": true,
+      "uppercase": false
+    },
+    "input": {
+      "value": "😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"\\u{1f600}\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape JSON without es6 writes a surrogate pair",
+    "ref": "hand-computed from the rules in the word doc (short escapes, \\xHH, \\uHHHH, \\u{H}, quotes, levels)",
+    "op": "string-escape:escape",
+    "params": {
+      "level": "special",
+      "quote": "double",
+      "json": true,
+      "es6": false,
+      "uppercase": false
+    },
+    "input": {
+      "value": "😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"\\ud83d\\ude00\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape minimal escapes the Unicode spaces",
+    "ref": "hand-computed from the rules in the word doc (short escapes, \\xHH, \\uHHHH, \\u{H}, quotes, levels)",
+    "op": "string-escape:escape",
+    "params": {
+      "level": "minimal",
+      "quote": "single",
+      "json": false,
+      "es6": true,
+      "uppercase": false
+    },
+    "input": {
+      "value": "a b c　d ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a\\xa0b\\u2003c\\u3000d\\u2028",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape JSON of empty text is just the quotes",
+    "ref": "hand-computed from the rules in the word doc (short escapes, \\xHH, \\uHHHH, \\u{H}, quotes, levels)",
+    "op": "string-escape:escape",
+    "params": {
+      "level": "special",
+      "quote": "double",
+      "json": true,
+      "es6": true,
+      "uppercase": false
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unescape \\a is the bell",
+    "ref": "the C escape for the bell, U+0007, which CyberChef reads (hand-computed)",
+    "op": "string-escape:unescape",
+    "params": {},
+    "input": {
+      "value": "x\\ay",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "x\u0007y",
+      "enc": "utf8"
     }
   }
 ]

@@ -107,6 +107,16 @@ describe("totp reads the clock", () => {
   });
 });
 
+describe("the defaults follow CyberChef", () => {
+  test("the account name is Account and a random secret has 20 bytes", () => {
+    for (const w of ["otp:hotp", "otp:totp"]) {
+      const ps = runtime.meta(w).params;
+      expect(ps.find((x) => x.name === "name")?.default).toBe("Account");
+      expect(ps.find((x) => x.name === "key-size")?.default).toBe(20);
+    }
+  });
+});
+
 describe("the secret", () => {
   test("an empty input makes a random secret of key-size bytes from the host random source", async () => {
     vi.stubGlobal("crypto", {

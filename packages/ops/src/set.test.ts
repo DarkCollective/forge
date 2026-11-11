@@ -94,31 +94,39 @@ describe("set operations against a JavaScript model", () => {
 });
 
 describe("power set", () => {
-  test("2^n subsets, each distinct, the empty one first, in the documented order", async () => {
+  test("2^n subsets, each distinct, the empty one first, in CyberChef's order, each followed by the delimiter", async () => {
     for (const n of [0, 1, 2, 5, 8]) {
       const items = Array.from({ length: n }, (_, i) => `i${i}`);
-      const out = (await call("set:power-set", items.join(","), ",", "\n")).split("\n");
+      const raw = await call("set:power-set", items.join(","), ",", "\n");
+      if (n === 0) {
+        expect(raw).toBe("");
+        continue;
+      }
+      expect(raw.endsWith("\n")).toBe(true);
+      const out = raw.slice(0, -1).split("\n");
       expect(out.length).toBe(2 ** n);
       expect(out[0]).toBe("");
       expect(new Set(out).size).toBe(2 ** n);
-      // subset number k holds item i exactly when bit i of k is set
-      out.forEach((line, k) => {
-        const want = items.filter((_, i) => (k >> i) & 1).join(",");
-        expect(line).toBe(want);
-      });
+      // the binary counting order with the first item as the most significant bit, then a stable sort by length
+      const model = Array.from({ length: 2 ** n }, (_, k) =>
+        items.filter((_it, i) => (k >> (n - 1 - i)) & 1).join(","),
+      );
+      model.sort((a, b) => a.length - b.length);
+      expect(out).toEqual(model);
     }
   });
 
   test("16 items (65,536 subsets) work; 17 distinct items are E_RANGE; duplicates are removed first", async () => {
     const sixteen = Array.from({ length: 16 }, (_, i) => String(i));
     const out = (await call("set:power-set", sixteen.join(","), ",", "\n")).split("\n");
-    expect(out.length).toBe(65_536);
+    expect(out.length).toBe(65_537);
     expect(out[65_535]).toBe(sixteen.join(","));
+    expect(out[65_536]).toBe("");
     expect(await call("set:power-set", [...sixteen, "16"].join(","), ",", "\n")).toBe("E_RANGE");
     expect(
       (await call("set:power-set", [...sixteen, ...sixteen].join(","), ",", "\n")).split("\n")
         .length,
-    ).toBe(65_536);
+    ).toBe(65_537);
   });
 });
 

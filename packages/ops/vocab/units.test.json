@@ -127,7 +127,7 @@
   },
   {
     "name": "1 metre to foot",
-    "ref": "exact rational 10000/3048, rounded to 20 significant digits (computed independently with BigInt)",
+    "ref": "exact rational 10000/3048, rounded to 20 decimal places (computed independently with BigInt)",
     "op": "units:convert-distance",
     "params": {
       "from": "metre",
@@ -139,13 +139,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "3.2808398950131233596",
+      "value": "3.28083989501312335958",
       "enc": "utf8"
     }
   },
   {
-    "name": "1 metre to foot (3 digits)",
-    "ref": "10000/3048 = 3.2808...; 3 significant digits",
+    "name": "1 metre to foot (3 decimal places)",
+    "ref": "10000/3048 = 3.2808...; 3 decimal places",
     "op": "units:convert-distance",
     "params": {
       "from": "metre",
@@ -157,7 +157,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "3.28",
+      "value": "3.281",
       "enc": "utf8"
     }
   },
@@ -229,7 +229,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "0.0000000000000000026847821184225232778",
+      "value": "0.00000000000000000268",
       "enc": "utf8"
     }
   },
@@ -270,8 +270,8 @@
     }
   },
   {
-    "name": "999999.999 metre to metre (3 digits)",
-    "ref": "rounding carries into a new digit: 999999.999 to 3 significant digits is 1000000",
+    "name": "999.9999 metre to metre (3 decimal places)",
+    "ref": "rounding carries into a new digit: 999.9999 to 3 decimal places is 1000",
     "op": "units:convert-distance",
     "params": {
       "from": "metre",
@@ -279,11 +279,11 @@
       "digits": 3
     },
     "input": {
-      "value": "999999.999",
+      "value": "999.9999",
       "enc": "utf8"
     },
     "expect": {
-      "value": "1000000",
+      "value": "1000",
       "enc": "utf8"
     }
   },
@@ -319,7 +319,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "2.4710538146716534225",
+      "value": "2.47105381467165342248",
       "enc": "utf8"
     }
   },
@@ -523,7 +523,7 @@
   },
   {
     "name": "1 kilogram to pound",
-    "ref": "10^8 / 45359237 rounded to 20 significant digits (computed independently with BigInt)",
+    "ref": "10^8 / 45359237 rounded to 20 decimal places (computed independently with BigInt)",
     "op": "units:convert-mass",
     "params": {
       "from": "kilogram",
@@ -535,7 +535,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "2.2046226218487758072",
+      "value": "2.20462262184877580723",
       "enc": "utf8"
     }
   },
@@ -612,7 +612,7 @@
     }
   },
   {
-    "name": "100 kilometre-per-hour to mile-per-hour (10 digits)",
+    "name": "100 kilometre-per-hour to mile-per-hour (10 decimal places)",
     "ref": "100 / 1.609344 = 62.13711922... (computed independently with BigInt)",
     "op": "units:convert-speed",
     "params": {
@@ -625,7 +625,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "62.13711922",
+      "value": "62.1371192237",
       "enc": "utf8"
     }
   },
@@ -787,7 +787,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "931.32257461547851563",
+      "value": "931.322574615478515625",
       "enc": "utf8"
     }
   },
@@ -874,6 +874,78 @@
     },
     "expect": {
       "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "a result that rounds to zero has no sign",
+    "ref": "-0.0000001 rounded to 3 decimal places is 0 (no negative zero)",
+    "op": "units:convert-distance",
+    "params": {
+      "from": "metre",
+      "to": "metre",
+      "digits": 3
+    },
+    "input": {
+      "value": "-0.0000001",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "1 nanometre to light-year is 0 at 20 decimal places",
+    "ref": "1e-9 / 9460730472580800 = 1.06e-25, which is 0.00000000000000000000 to 20 places",
+    "op": "units:convert-distance",
+    "params": {
+      "from": "nanometre",
+      "to": "light-year",
+      "digits": 20
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "0 decimal places rounds to a whole number",
+    "ref": "2.5 rounded half away from zero is 3",
+    "op": "units:convert-distance",
+    "params": {
+      "from": "metre",
+      "to": "metre",
+      "digits": 0
+    },
+    "input": {
+      "value": "2.5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "0 decimal places, negative half",
+    "ref": "-2.5 rounded half away from zero is -3",
+    "op": "units:convert-distance",
+    "params": {
+      "from": "metre",
+      "to": "metre",
+      "digits": 0
+    },
+    "input": {
+      "value": "-2.5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-3",
+      "enc": "utf8"
     }
   }
 ]

@@ -33,8 +33,8 @@ USING: util ;
 : _join-all ( pieces:list d:str -- str )
   pieces [ d join ] map [ len 0 > ] filter d join ;
 
-: expand ( data:str delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab|none}="space" -- str )
-  "Write out the characters of the ranges in the text. A range is two characters with a minus between them, from the first to the second by code point: a-z gives a b c ... z, and a-cx0-2 gives a b c x 0 1 2. A character that is not part of a range stays as it is; to use a minus or a backslash as a plain character, or as an end of a range, write \\- or \\\\. The result is the list of characters joined by the delimiter (a space by default; none joins them without a gap). A range that runs backwards (z-a), or that holds more than 65,536 code points, is E_RANGE; the UTF-16 surrogates inside a range are skipped." doc
+: expand ( data:str delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab|none}="none" -- str )
+  "Write out the characters of the ranges in the text. A range is two characters with a minus between them, from the first to the second by code point: a-z gives a b c ... z, and a-cx0-2 gives a b c x 0 1 2. A character that is not part of a range stays as it is; to use a minus or a backslash as a plain character, or as an end of a range, write \\- or \\\\. The result is the list of characters joined by the delimiter (none by default, as CyberChef's empty delimiter: the characters are joined without a gap; space, comma and the others put that text between them). A range that runs backwards (z-a), or that holds more than 65,536 code points, is E_RANGE; the UTF-16 surrogates inside a range are skipped." doc
   "Text" category
   data _range-pattern "" regex:find-all [ "groups" get _item ] map
   delimiter util:delimiter _join-all ;

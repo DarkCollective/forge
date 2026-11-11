@@ -592,7 +592,7 @@ IN: datetime
   ft 0 < ft 18446744073709551615 > or
   [ "the file time is outside 1601-01-01 to 30828-09-14 (a 64-bit value)" raise:range ] when
   output "decimal" = [ ft int>str ] [
-  output "hex-be" = [ ft 16 util:pad-hex ] [ ft 8 util:int>be-bytes rev bytes>hex ] if ] if ;
+  output "hex-be" = [ ft 16 int>str-radix ] [ ft 8 util:int>be-bytes rev bytes>hex ] if ] if ;
 
 \ ---- the operations ----
 
@@ -612,27 +612,39 @@ IN: datetime
   data in-preset in-format _preset in-zone _parse
   out-zone _format ;
 
-: from-unix ( data:str unit:choice{seconds|milliseconds|microseconds|nanoseconds}="seconds" zone:str="UTC" format:str="ddd D MMMM YYYY HH:mm:ss z" -- str )
-  "Write a Unix timestamp (the time since 1970-01-01T00:00:00Z in the chosen unit, a whole or decimal number, negative for earlier times) as a date and time. The default format gives text like Wed 11 November 2026 12:34:56 UTC; the zone and the moment.js-style format string are yours to change (see the datetime vocabulary for the tokens). A fraction finer than a nanosecond is cut. Text that is not a number is E_COERCE; an unknown zone is E_RANGE." doc
+: from-unix ( data:str unit:choice{seconds|milliseconds|microseconds|nanoseconds}="seconds" zone:str="UTC" format:str="" -- str )
+  "Write a Unix timestamp (the time since 1970-01-01T00:00:00Z in the chosen unit, a whole or decimal number, negative for earlier times) as a date and time. The default (an empty format) gives text like Wed 11 November 2026 12:34:56 UTC for seconds and, as CyberChef does, like Wed 11 November 2026 12:34:56.789 UTC for the other units (milliseconds are shown, finer digits are not); the zone and the moment.js-style format string are yours to change (see the datetime vocabulary for the tokens). A fraction finer than a nanosecond is cut. Text that is not a number is E_COERCE; an unknown zone is E_RANGE." doc
   "Date/Time" category
-  format data unit _unit-scale _amount-ns zone _format ;
+  format "" =
+  [ unit "seconds" = [ "ddd D MMMM YYYY HH:mm:ss z" ] [ "ddd D MMMM YYYY HH:mm:ss.SSS z" ] if ]
+  [ format ] if
+  data unit _unit-scale _amount-ns zone _format ;
 
 : to-unix ( data:str unit:choice{seconds|milliseconds|microseconds|nanoseconds}="seconds" preset:choice{"Standard date and time"|"American-style date and time"|"International date and time"|"ISO 8601 date and time"|"Verbose date and time"|"Standard date"|"American-style date"|"International date"|"Verbose date"|"Time"|"Time (12-hour)"|"UNIX timestamp"|"UNIX timestamp (milliseconds)"|Custom}="International date and time" format:str="YYYY-MM-DD HH:mm:ss" zone:str="UTC" show-parsed:bool=true -- str )
   "Read a date and time and give its Unix timestamp: the time since 1970-01-01T00:00:00Z in the chosen unit, rounded down to a whole number. The date is read with a preset or a custom moment.js-style format (forgiving, as in datetime:parse, so an ISO 8601 text such as 2026-11-11T12:34:56Z is read by the default) in the given zone (an offset in the text wins). With show-parsed the instant is also written out in UTC after the number, like 1794400496 (Wed 11 November 2026 12:34:56 UTC); turn it off to chain the number into other operations. Text that does not fit the format is E_COERCE; an unknown zone is E_RANGE." doc
   "Date/Time" category
   data preset format _preset zone _parse unit show-parsed _unix-text ;
 
+: _frac-text ( f:int digits:int -- str )
+  f digits util:zero-pad [ 48 = ] util:trim-end ;
+
+\ v divided by 10^digits, exact, as decimal text with no trailing zeros.
+: _fixed ( v:int digits:int -- str )
+  v abs 10 digits pow div int>str
+  v abs 10 digits pow mod digits _frac-text
+  dup len 0 = [ drop ] [ "." swap cat cat ] if
+  v 0 < [ "-" swap cat ] when ;
+
 : filetime-to-unix ( data:str input:choice{decimal|hex-be|hex-le}="decimal" unit:choice{seconds|milliseconds|microseconds|nanoseconds}="seconds" -- str )
-  "Convert a Windows file time (100-nanosecond intervals since 1601-01-01T00:00:00Z) to a Unix timestamp in the chosen unit. The input is decimal digits, hex digits most significant first (hex-be, an optional 0x in front), or hex bytes in little-endian order (hex-le, as the 8 bytes sit in memory). Seconds, milliseconds and microseconds are rounded towards zero; nanoseconds are exact. Text that is not a number of that kind is E_COERCE." doc
+  "Convert a Windows file time (100-nanosecond intervals since 1601-01-01T00:00:00Z) to a Unix timestamp in the chosen unit. The input is decimal digits, hex digits most significant first (hex-be, an optional 0x in front), or hex bytes in little-endian order (hex-le, as the 8 bytes sit in memory). The result is exact, as CyberChef's: seconds have up to seven decimals (a tick is 100 ns), milliseconds up to four, microseconds up to one, and the trailing zeros are left off; nanoseconds are a whole number. Text that is not a number of that kind is E_COERCE." doc
   "Date/Time" category
   data input _filetime-read _filetime-epoch -
-  unit "nanoseconds" = [ 100 * ] [
-  unit "microseconds" = [ 10 util:tdiv ] [
-  unit "milliseconds" = [ 10000 util:tdiv ] [ 10000000 util:tdiv ] if ] if ] if
-  int>str ;
+  unit "nanoseconds" = [ 100 * int>str ] [
+  unit "microseconds" = [ 1 _fixed ] [
+  unit "milliseconds" = [ 4 _fixed ] [ 7 _fixed ] if ] if ] if ;
 
 : unix-to-filetime ( data:str unit:choice{seconds|milliseconds|microseconds|nanoseconds}="seconds" output:choice{decimal|hex-be|hex-le}="decimal" -- str )
-  "Convert a Unix timestamp (a whole or decimal number in the chosen unit) to a Windows file time, the number of 100-nanosecond intervals since 1601-01-01T00:00:00Z. The output is decimal digits, 16 hex digits (hex-be) or the 8 bytes in little-endian order as 16 hex digits (hex-le). A fraction finer than 100 nanoseconds is cut towards zero. Text that is not a number is E_COERCE; a time before 1601 or past the 64-bit range is E_RANGE." doc
+  "Convert a Unix timestamp (a whole or decimal number in the chosen unit) to a Windows file time, the number of 100-nanosecond intervals since 1601-01-01T00:00:00Z. The output is decimal digits, hex digits most significant first without leading zeros (hex-be, as CyberChef writes them) or the 8 bytes in little-endian order as 16 hex digits (hex-le). A fraction finer than 100 nanoseconds is cut towards zero. Text that is not a number is E_COERCE; a time before 1601 or past the 64-bit range is E_RANGE." doc
   "Date/Time" category
   data unit _unit-scale _amount-ns 100 util:tdiv _filetime-epoch + output _filetime-write ;
 
@@ -682,7 +694,7 @@ META: translate
 META: from-unix
   param unit "What the number counts: seconds, milliseconds, microseconds or nanoseconds since 1970-01-01T00:00:00Z." ;
   param zone "The time zone to write the time in: UTC, a fixed offset like +09:00, or an IANA time zone." ;
-  param format "The output format string, in moment.js-style tokens." ;
+  param format "The output format string, in moment.js-style tokens. Empty (the default) gives ddd D MMMM YYYY HH:mm:ss z for seconds and ddd D MMMM YYYY HH:mm:ss.SSS z for the finer units, as CyberChef does." ;
   see-also datetime:to-unix datetime:unix-to-filetime ;
 ;
 

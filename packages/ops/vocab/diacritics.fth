@@ -25,8 +25,8 @@ IN: diacritics
 : _replace ( acc:str pair:list -- str )
   acc pair 0 nth pair 1 nth true text:replace ;
 
-: remove ( str strokes:bool=true -- str )
-  "Remove diacritical marks (accents, cedillas, tildes, umlauts, combining marks of any kind in the blocks of the Unicode standard that hold them) from text: the text is decomposed, the marks are dropped and the rest is composed again, so \"Crème Brûlée\" becomes \"Creme Brulee\" and a letter that was written with a separate combining mark loses it too. With strokes true (the default) the letters with a stroke that cannot be decomposed are also turned into their base letter: O with stroke, D with stroke, eth, L with stroke, H with stroke, T with stroke and dotless i. Other letters (ss, ae, oe, thorn) are not changed." doc
+: remove ( str strokes:bool=false -- str )
+  "Remove diacritical marks (accents, cedillas, tildes, umlauts, combining marks of any kind in the blocks of the Unicode standard that hold them) from text: the text is decomposed, the marks are dropped and the rest is composed again, so \"Crème Brûlée\" becomes \"Creme Brulee\" and a letter that was written with a separate combining mark loses it too. With strokes true (off by default: CyberChef leaves these letters alone) the letters with a stroke that cannot be decomposed are also turned into their base letter: O with stroke, D with stroke, eth, L with stroke, H with stroke, T with stroke and dotless i. Other letters (ss, ae, oe, thorn) are not changed." doc
   "Language" category
   "nfd" unicode:normalize str>codes [ _mark? not ] filter codes>str "nfc" unicode:normalize
   strokes [ _strokes swap [ _replace ] reduce ] when ;

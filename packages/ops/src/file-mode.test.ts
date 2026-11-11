@@ -73,19 +73,22 @@ describe("file-mode:convert", () => {
 describe("file-mode:parse", () => {
   test("names the type", async () => {
     const names: Record<string, string> = {
-      "-": "regular file",
-      d: "directory",
-      l: "symbolic link",
-      b: "block device",
-      c: "character device",
-      p: "named pipe",
-      s: "socket",
+      "-": "Regular file",
+      d: "Directory",
+      l: "Symbolic link",
+      b: "Block device",
+      c: "Character device",
+      p: "Named pipe",
+      s: "Socket",
+      D: "Door",
     };
     for (const [t, name] of Object.entries(names)) {
       const r = await runtime.call("file-mode:parse", [str(`${t}rw-r--r--`)]);
       expect(r.ok).toBe(true);
       if (r.ok)
-        expect((r.stack[r.stack.length - 1] as { v: string }).v).toContain(`Type:     ${name}\n`);
+        expect((r.stack[r.stack.length - 1] as { v: string }).v).toContain(
+          `\nFile type: ${name}\n`,
+        );
     }
   });
 });

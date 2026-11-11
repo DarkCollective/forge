@@ -1,3 +1,10 @@
 [
- {"cyberchef": "Get Time", "status": "redesigned", "forge": ["clock:get-time"], "note": "The time since the Unix epoch in seconds, milliseconds (the default), microseconds or nanoseconds, as decimal text. The host clock counts milliseconds, so the finer units are that count times 1,000 and 1,000,000 and the extra digits are zero. The input is ignored."}
+  {
+    "cyberchef": "Get Time",
+    "status": "covered",
+    "forge": [
+      "clock:get-time"
+    ],
+    "note": "The time since the Unix epoch in seconds (the default, as in CyberChef), milliseconds, microseconds or nanoseconds, as decimal text. The host clock counts milliseconds, so the finer units are that count times 1,000 and 1,000,000 and the extra digits are zero. Seconds are rounded down (CyberChef rounds to the nearest second). The input is ignored."
+  }
 ]

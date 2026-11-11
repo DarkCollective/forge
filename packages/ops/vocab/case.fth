@@ -116,12 +116,15 @@ USING: util ;
 
 : _piece-to ( p:str -- str )
   p len 1 =
-  [ p _other dup "" = [ drop p ] [ "[" p cat swap cat "]" cat ] if ]
+  [ p _other dup "" = [ drop p ]
+    [ p upper p = p lower p <> and
+      [ "[" swap cat p cat "]" cat ]
+      [ "[" p cat swap cat "]" cat ] if ] if ]
   [ p 0 1 slice "[" = [ p _class-to ] [ p ] if ]
   if ;
 
 : to-insensitive-regex ( pattern:str -- str )
-  "Rewrite a regular expression (ECMAScript syntax) so that it matches without regard to case, whatever flags it runs with: every letter x becomes [xX] (the letter as written comes first), and in a character class the other case of each letter or range of ASCII letters is added, so [a-f] becomes [a-fA-F]. Escapes (\\d, \\x41, \\u00e9, \\p{Lu}, \\k<name>), group names and quantifiers are copied unchanged. Letters whose other case is not one code point (the German sharp s) are left as they are. The output is the pattern text only, no slashes." doc
+  "Rewrite a regular expression (ECMAScript syntax) so that it matches without regard to case, whatever flags it runs with: every letter outside a class becomes a class of both its cases, the lower case first as in CyberChef (h and H both become [hH]), and in a character class the other case of each letter or range of ASCII letters is added, so [a-f] becomes [a-fA-F]. Escapes (\\d, \\x41, \\u00e9, \\p{Lu}, \\k<name>), group names and quantifiers are copied unchanged. Letters whose other case is not one code point (the German sharp s) are left as they are. The output is the pattern text only, no slashes." doc
   "Text" category
   pattern _pieces [ _piece-to ] map "" join ;
 
