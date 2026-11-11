@@ -12,22 +12,22 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Category | Covered | Redesigned | Dropped | Not yet | Total |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Data format | 54 | 6 | 0 | 20 | 80 |
-| Encryption / Encoding | 29 | 62 | 0 | 4 | 95 |
+| Encryption / Encoding | 29 | 63 | 0 | 3 | 95 |
 | Public Key | 0 | 0 | 0 | 30 | 30 |
 | Arithmetic / Logic | 9 | 0 | 0 | 17 | 26 |
 | Networking | 0 | 0 | 0 | 34 | 34 |
 | Language | 0 | 0 | 0 | 4 | 4 |
-| Utils | 6 | 0 | 0 | 44 | 50 |
-| Date / Time | 0 | 0 | 0 | 9 | 9 |
+| Utils | 6 | 0 | 2 | 42 | 50 |
+| Date / Time | 0 | 1 | 0 | 8 | 9 |
 | Extractors | 0 | 0 | 0 | 18 | 18 |
 | Compression | 0 | 0 | 0 | 21 | 21 |
 | Hashing | 34 | 14 | 0 | 0 | 48 |
 | Code tidy | 0 | 0 | 0 | 24 | 24 |
 | Forensics | 0 | 0 | 0 | 9 | 9 |
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
-| Other | 4 | 0 | 3 | 14 | 21 |
+| Other | 4 | 1 | 3 | 13 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **136** | **89** | **3** | **278** | **506** |
+| **Total** | **136** | **92** | **5** | **273** | **506** |
 
 ## Data format (80)
 
@@ -201,7 +201,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Citrix CTX1 Decode | covered | `classical:ctx1-decode` |  |
 | AES Key Wrap | redesigned | `aes-kw:wrap` | RFC 3394 over noble's aeskw, with the key-encryption key (16, 24 or 32 bytes, a key-type param) and the input as bytes. The IV is the RFC 3394 default, A6A6A6A6A6A6A6A6, fixed by noble, so CyberChef's IV parameter is not offered (a custom IV is not RFC 3394's algorithm as noble implements it). The input must be a multiple of 8 bytes and at least 16 (E_COERCE otherwise, as CyberChef). RFC 5649 padding is not offered, because CyberChef does not offer it. The output is raw bytes (chain hex:encode for CyberChef's Hex output). |
 | AES Key Unwrap | redesigned | `aes-kw:unwrap` | The inverse of aes-kw:wrap under the same key-encryption key, with the same IV and no IV or padding parameters for the reason given for AES Key Wrap. The wrapped key must be a multiple of 8 bytes and at least 24 (E_COERCE otherwise). A wrong key or corrupted data fails the RFC 3394 integrity check: E_COERCE, and no key data is returned (CyberChef reports an IV mismatch error). |
-| Pseudo-Random Number Generator | not yet |  |  |
+| Pseudo-Random Number Generator | redesigned | `prng:bytes` | Bytes out: a number of random bytes (32 by default, 0 to 1 MiB) from the host CSPRNG (crypto.getRandomValues, never Math.random). CyberChef's Hex, Integer, Byte array and Raw output menu is a chain step (hex:encode, base64:encode, and so on). Like CyberChef the input is ignored. A host with no random source is E_PRIMITIVE. |
 | Pseudo-Random Prime Generator | not yet |  |  |
 | Enigma | covered | `enigma:encrypt` | Enigma I, M3 and M4 with the historical rotors, reflectors and plugboard; one reciprocal word (alias decrypt). |
 | Bombe | redesigned | `bombe:search` | One Forge-native word covers both Bombe operations: give three rotors for a single rotor order. It searches all 17,576 start positions with a crib at an offset, using the menu, the diagonal board and the test register, and lists the stops with the steckers deduced and a decryption preview made with enigma:encrypt. Enigma I and M3 only (no M4); stops are window letters at the start of the message. |
@@ -371,13 +371,13 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Convert speed | not yet |  |  |
 | Convert data units | not yet |  |  |
 | Convert co-ordinate format | not yet |  |  |
-| Show on map | not yet |  |  |
+| Show on map | dropped |  | It draws a map from tiles fetched from an external tile host. Forge's CSP allows only its own origin (connect-src 'self', no external img-src) and the app never talks to another host, so the operation cannot exist. The coordinates themselves are covered by the co-ordinate format and Haversine distance operations. |
 | Parse UNIX file permissions | not yet |  |  |
 | Parse ObjectID timestamp | not yet |  |  |
 | Parse colour code | not yet |  |  |
 | Escape string | not yet |  |  |
 | Unescape string | not yet |  |  |
-| Sleep | not yet |  |  |
+| Sleep | dropped |  | A bake has no use for waiting: recipes are pure transformations under a step and time budget, and a pause only spends that budget. |
 | File Tree | not yet |  |  |
 | Wrap | not yet |  |  |
 | Take nth bytes | not yet |  |  |
@@ -395,7 +395,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | UNIX Timestamp to Windows Filetime | not yet |  |  |
 | DateTime Delta | not yet |  |  |
 | Extract dates | not yet |  |  |
-| Get Time | not yet |  |  |
+| Get Time | redesigned | `clock:get-time` | The time since the Unix epoch in seconds, milliseconds (the default), microseconds or nanoseconds, as decimal text. The host clock counts milliseconds, so the finer units are that count times 1,000 and 1,000,000 and the extra digits are zero. The input is ignored. |
 
 ## Extractors (18)
 
@@ -585,7 +585,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | P-list Viewer | not yet |  |  |
 | Disassemble x86 | not yet |  |  |
 | Disassemble ARM | not yet |  |  |
-| Pseudo-Random Integer Generator | not yet |  |  |
+| Pseudo-Random Integer Generator | redesigned | `prng:integers` | Count integers, each uniform in [min, max] with both ends included (rejection sampling on the host CSPRNG, no modulo bias, big integers allowed), written as decimal text joined by a delimiter chosen from the wave 5 list (newline by default). Defaults min 0, max 99, count 1. The input is ignored; min above max is E_RANGE; count is limited to 65,536. |
 | Generate De Bruijn Sequence | not yet |  |  |
 | Generate UUID | not yet |  |  |
 | Analyse UUID | not yet |  |  |

@@ -1,0 +1,32 @@
+[
+  {
+    "name": "get-time: unknown unit",
+    "ref": "the time is not fixed, so only a parameter error has a fixed result (the values are tested with a fake clock in src/clock.test.ts)",
+    "op": "clock:get-time",
+    "params": {
+      "unit": "fortnights"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "get-time: a unit with the wrong case",
+    "ref": "the time is not fixed, so only a parameter error has a fixed result (the values are tested with a fake clock in src/clock.test.ts)",
+    "op": "clock:get-time",
+    "params": {
+      "unit": "Seconds"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  }
+]
