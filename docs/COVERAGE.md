@@ -20,14 +20,14 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Utils | 34 | 14 | 2 | 0 | 50 |
 | Date / Time | 5 | 4 | 0 | 0 | 9 |
 | Extractors | 1 | 8 | 0 | 9 | 18 |
-| Compression | 1 | 5 | 0 | 15 | 21 |
+| Compression | 1 | 9 | 0 | 11 | 21 |
 | Hashing | 34 | 14 | 0 | 0 | 48 |
 | Code tidy | 0 | 0 | 0 | 24 | 24 |
 | Forensics | 0 | 0 | 0 | 9 | 9 |
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 9 | 4 | 3 | 5 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **194** | **129** | **5** | **178** | **506** |
+| **Total** | **194** | **133** | **5** | **174** | **506** |
 
 ## Data format (80)
 
@@ -436,12 +436,12 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Bzip2 Compress | not yet |  |  |
 | Tar | not yet |  |  |
 | Untar | not yet |  |  |
-| LZString Decompress | not yet |  |  |
-| LZString Compress | not yet |  |  |
+| LZString Decompress | redesigned | `lzstring:decompress` | The same formats as Compress, and the same representation of the default format (an even number of bytes, E_COERCE otherwise). Empty input, a truncated stream (no end marker), a code naming no dictionary entry, a wrong alphabet and decompressed text that holds an unpaired surrogate are E_COERCE (the library returns null or an empty string for several of these). The format expands quadratically, so before the library runs a replay of the token structure with lengths only stops at the value limit with E_LIMIT_VALUE; a 4 MB bomb of a few KB is refused in milliseconds. The vectors come from the library itself: no independent implementation could be run locally. |
+| LZString Compress | redesigned | `lzstring:compress` | lz-string 1.5.0 does the compressing. CyberChef's Compression Format (default, UTF16, Base64) is the format choice, with uri (compressToEncodedURIComponent) added. The result is bytes: Forge text cannot hold lone surrogates, which the default format's 16-bit units often contain (CyberChef shows that string as UTF-8, which cannot round-trip), so default is the units as UCS-2 big-endian byte pairs, exactly the library's compressToUint8Array; utf16 is compressToUTF16 written as UTF-8; base64 and uri are ASCII. The input is UTF-8 text (anything else is E_COERCE). The compressed values equal the library's. |
 | LZMA Decompress | not yet |  |  |
 | LZMA Compress | not yet |  |  |
-| LZ4 Decompress | not yet |  |  |
-| LZ4 Compress | not yet |  |  |
+| LZ4 Decompress | redesigned | `lz4:decompress` | Frames (version, flags, block sizes; independent and linked blocks; stored blocks), with the header checksum, block checksums, content checksum and content size verified by default (verify; off recovers damaged data). Concatenated frames are joined, skippable frames are skipped and legacy frames (0x184C2102) are read; a dictionary id, an unknown magic number, trailing bytes that are not a frame (as the lz4 command rejects them) and cut-short data are E_COERCE. Output past the value limit is E_LIMIT_VALUE; the content size is never used to size a buffer. Raw (frameless) blocks, which CyberChef does not offer either, are not supported. |
+| LZ4 Compress | redesigned | `lz4:compress` | The LZ4 frame format written from the specification (no library; CyberChef uses lz4js, whose frame has independent 4 MB blocks and a content checksum, which are this op's defaults apart from level). Parameters added: level (0 stores, 1 to 9 a greedy hash-chain matcher following up to 2^(level-1) candidates; default 1), block-size (64KB to 4MB), independent, block-checksum, content-checksum and content-size. The bytes differ from lz4js and the lz4 command, but both read them (240 option combinations checked with lz4 v1.10.0 -d). |
 | LZNT1 Decompress | not yet |  |  |
 | XPRESS Decompress | not yet |  |  |
 | XPRESS LZ77+Huffman Decompress | not yet |  |  |
