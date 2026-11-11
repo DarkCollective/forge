@@ -40,6 +40,20 @@ IN: util
   choice "none" = [ "" ]
   [ choice "comma" = [ "," ] [ choice "newline" = [ "\n" ] [ " " ] if ] if ] if ;
 
+: delimiter ( choice:str -- str )
+  "The text for a delimiter choice of the wave 5 list and line ops: space (one space), comma, semicolon, colon, newline (a line feed, U+000A), crlf (carriage return then line feed), cr (a lone carriage return), tab and none (the empty string). Anything else is E_RANGE. Use the header form delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab|none}=\"newline\" (see the ops README, Wave 5 conventions). Unlike separator, an unknown choice is an error." doc
+  choice "space" = [ " " ] [
+  choice "comma" = [ "," ] [
+  choice "semicolon" = [ ";" ] [
+  choice "colon" = [ ":" ] [
+  choice "newline" = [ "\n" ] [
+  choice "crlf" = [ "\r\n" ] [
+  choice "cr" = [ "\r" ] [
+  choice "tab" = [ "\t" ] [
+  choice "none" = [ "" ] [
+  "unknown delimiter choice (use space, comma, semicolon, colon, newline, crlf, cr, tab or none)" raise:range ""
+  ] if ] if ] if ] if ] if ] if ] if ] if ] if ;
+
 : space-or-comma? ( b:int -- bool )
   "True for the separators of numeric text: ASCII white space (see space?) and the comma (44)." doc
   b 44 = b space? or ;

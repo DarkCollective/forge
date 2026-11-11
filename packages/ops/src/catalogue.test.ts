@@ -452,7 +452,7 @@ USING: regex ;
 describe("module facts", () => {
   test("constants", () => {
     expect(CATALOGUE_FORMAT).toBe(1);
-    expect([...INTERNAL_VOCABS]).toEqual(["recipe", "bake", "util", "blockmode"]);
+    expect([...INTERNAL_VOCABS]).toEqual(["recipe", "bake", "util", "blockmode", "random", "list"]);
     expect([...UI_PARAM_TYPES]).toEqual([
       "bytes",
       "str",
