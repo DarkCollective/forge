@@ -42,7 +42,7 @@ describe("sm4 primitives", () => {
   });
 
   test("GB/T 32907-2016 appendix A example 2: 1,000,000 encryptions", () => {
-    let b = KEY;
+    let b: Uint8Array = KEY;
     for (let i = 0; i < 1_000_000; i++) b = sm4EncryptBlock(b, KEY);
     expect(hex(b)).toBe("595298c7c6fd271f0402f804c33d3f66");
   }, 60_000);

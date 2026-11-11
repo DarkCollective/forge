@@ -115,11 +115,9 @@ async function run(
     str(opts.padding ?? "pkcs7"),
     ...c.extra,
   ];
-  const t0 = performance.now();
   const r = await runtime.call(`${c.vocab}:${word}`, args);
-  const ms = performance.now() - t0;
-  if (!r.ok) return { code: r.error.code, steps: r.steps, ms };
-  return { out: (r.stack[r.stack.length - 1] as { v: Uint8Array }).v, steps: r.steps, ms };
+  if (!r.ok) return { code: r.error.code, steps: r.steps };
+  return { out: (r.stack[r.stack.length - 1] as { v: Uint8Array }).v, steps: r.steps };
 }
 
 /** CBC, CFB, OFB and CTR written out on the single-block function, for whole data of any length (a short last block for the stream modes). */
@@ -132,7 +130,7 @@ function reference(
 ): Uint8Array {
   const out = new Uint8Array(data.length);
   const bs = c.bs;
-  let prev = Uint8Array.from(iv);
+  let prev: Uint8Array = Uint8Array.from(iv);
   const ctr = Uint8Array.from(iv);
   for (let i = 0; i < data.length; i += bs) {
     const blk = data.subarray(i, Math.min(i + bs, data.length));
