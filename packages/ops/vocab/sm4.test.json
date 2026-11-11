@@ -1,0 +1,542 @@
+[
+  {
+    "name": "encrypt GB/T 32907-2016 example 1",
+    "ref": "GB/T 32907-2016 appendix A example 1: key = plaintext 0123456789abcdeffedcba9876543210",
+    "op": "sm4:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeffedcba9876543210",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0123456789abcdeffedcba9876543210",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "681edf34d206965e86b3e94f536e4246",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt GB/T 32907-2016 example 1",
+    "ref": "GB/T 32907-2016 appendix A example 1: key = plaintext 0123456789abcdeffedcba9876543210",
+    "op": "sm4:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeffedcba9876543210",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "681edf34d206965e86b3e94f536e4246",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0123456789abcdeffedcba9876543210",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB two blocks",
+    "ref": "openssl enc -sm4-ecb -K 0123456789abcdeffedcba9876543210 -nopad",
+    "op": "sm4:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeffedcba9876543210",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e51",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "04986759e497d52811e74954b3b01ddd4bbe417e143fdb168960db244ad9d317",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB two blocks",
+    "ref": "openssl enc -sm4-ecb -K 0123456789abcdeffedcba9876543210 -nopad",
+    "op": "sm4:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeffedcba9876543210",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "04986759e497d52811e74954b3b01ddd4bbe417e143fdb168960db244ad9d317",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e51",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt CBC two blocks",
+    "ref": "openssl enc -sm4-cbc -K 0123456789abcdeffedcba9876543210 -iv 000102030405060708090a0b0c0d0e0f -nopad",
+    "op": "sm4:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeffedcba9876543210",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "none"
+    },
+    "input": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e51",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "784626c834ab18614677eb2074f2c5575146022d81cd18fef9bc1a1fd3a64d61",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt CBC two blocks",
+    "ref": "openssl enc -sm4-cbc -K 0123456789abcdeffedcba9876543210 -iv 000102030405060708090a0b0c0d0e0f -nopad",
+    "op": "sm4:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeffedcba9876543210",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "none"
+    },
+    "input": {
+      "value": "784626c834ab18614677eb2074f2c5575146022d81cd18fef9bc1a1fd3a64d61",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e51",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt CFB two blocks",
+    "ref": "openssl enc -sm4-cfb -K 0123456789abcdeffedcba9876543210 -iv 000102030405060708090a0b0c0d0e0f -nopad",
+    "op": "sm4:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeffedcba9876543210",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "mode": "CFB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e51",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6d59228313e6f73bc3b08993923bee401543be4d922e2c5e72e518de66199f90",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt CFB two blocks",
+    "ref": "openssl enc -sm4-cfb -K 0123456789abcdeffedcba9876543210 -iv 000102030405060708090a0b0c0d0e0f -nopad",
+    "op": "sm4:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeffedcba9876543210",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "mode": "CFB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "6d59228313e6f73bc3b08993923bee401543be4d922e2c5e72e518de66199f90",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e51",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt OFB two blocks",
+    "ref": "openssl enc -sm4-ofb -K 0123456789abcdeffedcba9876543210 -iv 000102030405060708090a0b0c0d0e0f -nopad",
+    "op": "sm4:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeffedcba9876543210",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "mode": "OFB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e51",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6d59228313e6f73bc3b08993923bee405dc2c81ba980f6e1ffe88338988c6671",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt OFB two blocks",
+    "ref": "openssl enc -sm4-ofb -K 0123456789abcdeffedcba9876543210 -iv 000102030405060708090a0b0c0d0e0f -nopad",
+    "op": "sm4:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeffedcba9876543210",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "mode": "OFB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "6d59228313e6f73bc3b08993923bee405dc2c81ba980f6e1ffe88338988c6671",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e51",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt CTR two blocks",
+    "ref": "openssl enc -sm4-ctr -K 0123456789abcdeffedcba9876543210 -iv 000102030405060708090a0b0c0d0e0f -nopad",
+    "op": "sm4:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeffedcba9876543210",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "mode": "CTR",
+      "padding": "none"
+    },
+    "input": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e51",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6d59228313e6f73bc3b08993923bee40c12a871c5ea0509d44267c49c4af234b",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt CTR two blocks",
+    "ref": "openssl enc -sm4-ctr -K 0123456789abcdeffedcba9876543210 -iv 000102030405060708090a0b0c0d0e0f -nopad",
+    "op": "sm4:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeffedcba9876543210",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "mode": "CTR",
+      "padding": "none"
+    },
+    "input": {
+      "value": "6d59228313e6f73bc3b08993923bee40c12a871c5ea0509d44267c49c4af234b",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e51",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt CBC PKCS#7 13 bytes",
+    "ref": "openssl enc -sm4-cbc -K 0123456789abcdeffedcba9876543210 -iv 000102030405060708090a0b0c0d0e0f",
+    "op": "sm4:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeffedcba9876543210",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "pkcs7"
+    },
+    "input": {
+      "value": "000102030405060708090a0b0c",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "60f47ffe85629f97017010767a4a29d9",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt CBC PKCS#7 13 bytes",
+    "ref": "openssl enc -sm4-cbc -K 0123456789abcdeffedcba9876543210 -iv 000102030405060708090a0b0c0d0e0f",
+    "op": "sm4:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeffedcba9876543210",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "pkcs7"
+    },
+    "input": {
+      "value": "60f47ffe85629f97017010767a4a29d9",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "000102030405060708090a0b0c",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt CTR 21 bytes (a short last block)",
+    "ref": "openssl enc -sm4-ctr -K 0123456789abcdeffedcba9876543210 -iv 000102030405060708090a0b0c0d0e0f",
+    "op": "sm4:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeffedcba9876543210",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "mode": "CTR",
+      "padding": "none"
+    },
+    "input": {
+      "value": "000000000000000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "06989c613da668ad2a8df782e1a8f96a6f070d4b40",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt CTR 21 bytes (a short last block)",
+    "ref": "openssl enc -sm4-ctr -K 0123456789abcdeffedcba9876543210 -iv 000102030405060708090a0b0c0d0e0f",
+    "op": "sm4:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeffedcba9876543210",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "mode": "CTR",
+      "padding": "none"
+    },
+    "input": {
+      "value": "06989c613da668ad2a8df782e1a8f96a6f070d4b40",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "000000000000000000000000000000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB PKCS#7 empty input",
+    "ref": "openssl enc -sm4-ecb -K 0123456789abcdeffedcba9876543210 (empty input, one padding block)",
+    "op": "sm4:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeffedcba9876543210",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "pkcs7"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "002a8a4efa863ccad024ac0300bb40d2",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB PKCS#7 empty input",
+    "ref": "openssl enc -sm4-ecb -K 0123456789abcdeffedcba9876543210 (empty input, one padding block)",
+    "op": "sm4:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeffedcba9876543210",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "pkcs7"
+    },
+    "input": {
+      "value": "002a8a4efa863ccad024ac0300bb40d2",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt key of 15 bytes",
+    "ref": "key length",
+    "op": "sm4:encrypt",
+    "params": {
+      "key": {
+        "value": "010101010101010101010101010101",
+        "enc": "hex"
+      },
+      "mode": "ECB"
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "encrypt IV of 8 bytes in CBC",
+    "ref": "IV length",
+    "op": "sm4:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeffedcba9876543210",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "0101010101010101",
+        "enc": "hex"
+      },
+      "mode": "CBC"
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "decrypt unaligned",
+    "ref": "whole blocks",
+    "op": "sm4:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeffedcba9876543210",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "0011223344",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decrypt bad padding",
+    "ref": "PKCS#7 check",
+    "op": "sm4:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeffedcba9876543210",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "pkcs7"
+    },
+    "input": {
+      "value": "00112233445566778899aabbccddeeff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

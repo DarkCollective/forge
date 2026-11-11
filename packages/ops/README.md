@@ -52,7 +52,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 
 ## Vocabularies
 
-81 vocabularies, 184 ops (two ops each unless noted). Vocabulary names are lower-kebab-case.
+88 vocabularies, 198 ops (two ops each unless noted). Vocabulary names are lower-kebab-case.
 
 | Vocabulary         | Ops                                                                                                                                                                    |
 | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -74,6 +74,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `blake2b`          | BLAKE2b (RFC 7693), sizes 16 to 64 bytes, optional key (1 op)                                                                                                          |
 | `blake2s`          | BLAKE2s (RFC 7693), sizes 16 to 32 bytes, optional key (1 op)                                                                                                          |
 | `blake3`           | BLAKE3 with a length from 1 to 65536 bytes and an optional 32-byte key (1 op)                                                                                          |
+| `blowfish`         | Blowfish encrypt and decrypt (Schneier 1993): ECB, CBC, CFB, OFB, CTR, 4 to 56-byte keys, PKCS#7 or no padding                                                         |
 | `bombe`            | Turing-Welchman Bombe for the Enigma I and M3: a crib search for stops, one word for one or many rotor orders (1 op)                                                   |
 | `braille`          | bytes as 8-dot Unicode Braille patterns and back                                                                                                                       |
 | `caret`            | caret and M- notation as printed by `cat -v`                                                                                                                           |
@@ -84,6 +85,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `colossus`         | Colossus-style counting: how often a Boolean condition holds over every start position of two chi wheels, for the Lorenz break-in (1 op)                               |
 | `crc`              | CRC checksums: the 171 CyberChef presets and any width from 1 to 82 bits from the Rocksoft model (2 ops)                                                               |
 | `decimal`          | bytes to and from decimal numbers                                                                                                                                      |
+| `des`              | DES encrypt and decrypt (FIPS 46-3): ECB, CBC, CFB, OFB, CTR, 8-byte key, PKCS#7 or no padding                                                                         |
 | `endian`           | swap the byte order of 2, 4 or 8 byte words                                                                                                                            |
 | `enigma`           | Enigma I, M3 and M4 rotor machines, one reciprocal word; also the shared historical rotor, turnover and reflector data (1 op)                                          |
 | `fletcher`         | Fletcher-8, -16, -32 and -64 (1 op)                                                                                                                                    |
@@ -116,6 +118,8 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `punycode`         | Punycode (RFC 3492), as a label or per domain label with `xn--`                                                                                                        |
 | `quoted-printable` | Quoted-Printable (RFC 2045 section 6.7) encode and decode                                                                                                              |
 | `radix`            | convert an integer of any size from one base to another                                                                                                                |
+| `rc2`              | RC2 encrypt and decrypt (RFC 2268): ECB and CBC, 1 to 128-byte keys, effective key bits, PKCS#7 or no padding                                                          |
+| `rc6`              | RC6-w/r encrypt and decrypt: ECB, CBC, CFB, OFB, CTR, word size 8 to 256 and rounds as parameters, PKCS#7 or no padding                                                |
 | `regex`            | test, find-all, replace, split                                                                                                                                         |
 | `ripemd`           | RIPEMD-128, -160, -256 and -320 (1 op)                                                                                                                                 |
 | `ripemd160`        | RIPEMD-160 alone, for HMAC (1 op)                                                                                                                                      |
@@ -126,12 +130,15 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `shake`            | SHAKE128 and SHAKE256 with a length in bytes (1 op)                                                                                                                    |
 | `sigaba`           | SIGABA (ECM Mark II) rotor machine, one reciprocal word (1 op)                                                                                                         |
 | `sm3`              | SM3 (GB/T 32905-2016) (1 op)                                                                                                                                           |
+| `sm4`              | SM4 encrypt and decrypt (GB/T 32907-2016): ECB, CBC, CFB, OFB, CTR, 16-byte key, PKCS#7 or no padding                                                                  |
 | `snefru`           | Snefru, 128 or 256 bits, 2, 4 or 8 passes (1 op)                                                                                                                       |
 | `ssdeep`           | ssdeep context triggered piecewise hash (also ctph) and its comparison (2 ops)                                                                                         |
 | `streebog`         | GOST R 34.11-2012, 256 or 512 bits (1 op)                                                                                                                              |
 | `tcpip`            | Internet checksum (RFC 1071) (1 op)                                                                                                                                    |
 | `text`             | split, join, replace, reverse, upper, lower                                                                                                                            |
 | `transposition`    | columnar transposition, encrypt and decrypt                                                                                                                            |
+| `triple-des`       | Triple DES encrypt and decrypt (EDE, SP 800-67): ECB, CBC, CFB, OFB, CTR, 16 or 24-byte keys, PKCS#7 or no padding                                                     |
+| `twofish`          | Twofish encrypt and decrypt: ECB, CBC, CFB, OFB, CTR, 128/192/256-bit keys, PKCS#7 or no padding                                                                       |
 | `typex`            | Typex-style five-rotor machine with the wirings as parameters (1 op)                                                                                                   |
 | `unicode`          | escape and unescape code points (`\u`, `U+`, `%u`, `\x{}`, `&#x;`), normalisation, smart quotes to ASCII (4 ops)                                                       |
 | `url`              | percent-encode and decode (RFC 3986)                                                                                                                                   |

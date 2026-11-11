@@ -1,0 +1,787 @@
+[
+  {
+    "name": "encrypt ECB 0000000000000000 0000000000000000",
+    "ref": "Eric Young's Blowfish ECB test vectors (Schneier, vectors-2.txt)",
+    "op": "blowfish:encrypt",
+    "params": {
+      "key": {
+        "value": "0000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "4ef997456198dd78",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB 0000000000000000 0000000000000000",
+    "ref": "Eric Young's Blowfish ECB test vectors (Schneier, vectors-2.txt)",
+    "op": "blowfish:decrypt",
+    "params": {
+      "key": {
+        "value": "0000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "4ef997456198dd78",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB ffffffffffffffff ffffffffffffffff",
+    "ref": "Eric Young's Blowfish ECB test vectors (Schneier, vectors-2.txt)",
+    "op": "blowfish:encrypt",
+    "params": {
+      "key": {
+        "value": "ffffffffffffffff",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "ffffffffffffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "51866fd5b85ecb8a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB ffffffffffffffff ffffffffffffffff",
+    "ref": "Eric Young's Blowfish ECB test vectors (Schneier, vectors-2.txt)",
+    "op": "blowfish:decrypt",
+    "params": {
+      "key": {
+        "value": "ffffffffffffffff",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "51866fd5b85ecb8a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ffffffffffffffff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB 3000000000000000 1000000000000001",
+    "ref": "Eric Young's Blowfish ECB test vectors (Schneier, vectors-2.txt)",
+    "op": "blowfish:encrypt",
+    "params": {
+      "key": {
+        "value": "3000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "1000000000000001",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "7d856f9a613063f2",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB 3000000000000000 1000000000000001",
+    "ref": "Eric Young's Blowfish ECB test vectors (Schneier, vectors-2.txt)",
+    "op": "blowfish:decrypt",
+    "params": {
+      "key": {
+        "value": "3000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "7d856f9a613063f2",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1000000000000001",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB 1111111111111111 1111111111111111",
+    "ref": "Eric Young's Blowfish ECB test vectors (Schneier, vectors-2.txt)",
+    "op": "blowfish:encrypt",
+    "params": {
+      "key": {
+        "value": "1111111111111111",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "1111111111111111",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "2466dd878b963c9d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB 1111111111111111 1111111111111111",
+    "ref": "Eric Young's Blowfish ECB test vectors (Schneier, vectors-2.txt)",
+    "op": "blowfish:decrypt",
+    "params": {
+      "key": {
+        "value": "1111111111111111",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "2466dd878b963c9d",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1111111111111111",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB 0123456789abcdef 1111111111111111",
+    "ref": "Eric Young's Blowfish ECB test vectors (Schneier, vectors-2.txt)",
+    "op": "blowfish:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "1111111111111111",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "61f9c3802281b096",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB 0123456789abcdef 1111111111111111",
+    "ref": "Eric Young's Blowfish ECB test vectors (Schneier, vectors-2.txt)",
+    "op": "blowfish:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "61f9c3802281b096",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1111111111111111",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB fedcba9876543210 0123456789abcdef",
+    "ref": "Eric Young's Blowfish ECB test vectors (Schneier, vectors-2.txt)",
+    "op": "blowfish:encrypt",
+    "params": {
+      "key": {
+        "value": "fedcba9876543210",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0123456789abcdef",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0aceab0fc6a0a28d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB fedcba9876543210 0123456789abcdef",
+    "ref": "Eric Young's Blowfish ECB test vectors (Schneier, vectors-2.txt)",
+    "op": "blowfish:decrypt",
+    "params": {
+      "key": {
+        "value": "fedcba9876543210",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0aceab0fc6a0a28d",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0123456789abcdef",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB 7ca110454a1a6e57 01a1d6d039776742",
+    "ref": "Eric Young's Blowfish ECB test vectors (Schneier, vectors-2.txt)",
+    "op": "blowfish:encrypt",
+    "params": {
+      "key": {
+        "value": "7ca110454a1a6e57",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "01a1d6d039776742",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "59c68245eb05282b",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB 7ca110454a1a6e57 01a1d6d039776742",
+    "ref": "Eric Young's Blowfish ECB test vectors (Schneier, vectors-2.txt)",
+    "op": "blowfish:decrypt",
+    "params": {
+      "key": {
+        "value": "7ca110454a1a6e57",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "59c68245eb05282b",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "01a1d6d039776742",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB 0131d9619dc1376e 5cd54ca83def57da",
+    "ref": "Eric Young's Blowfish ECB test vectors (Schneier, vectors-2.txt)",
+    "op": "blowfish:encrypt",
+    "params": {
+      "key": {
+        "value": "0131d9619dc1376e",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "5cd54ca83def57da",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "b1b8cc0b250f09a0",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB 0131d9619dc1376e 5cd54ca83def57da",
+    "ref": "Eric Young's Blowfish ECB test vectors (Schneier, vectors-2.txt)",
+    "op": "blowfish:decrypt",
+    "params": {
+      "key": {
+        "value": "0131d9619dc1376e",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "b1b8cc0b250f09a0",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "5cd54ca83def57da",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB 1c587f1c13924fef 305532286d6f295a",
+    "ref": "Eric Young's Blowfish ECB test vectors (Schneier, vectors-2.txt)",
+    "op": "blowfish:encrypt",
+    "params": {
+      "key": {
+        "value": "1c587f1c13924fef",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "305532286d6f295a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "55cb3774d13ef201",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB 1c587f1c13924fef 305532286d6f295a",
+    "ref": "Eric Young's Blowfish ECB test vectors (Schneier, vectors-2.txt)",
+    "op": "blowfish:decrypt",
+    "params": {
+      "key": {
+        "value": "1c587f1c13924fef",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "55cb3774d13ef201",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "305532286d6f295a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB fedcba9876543210 ffffffffffffffff",
+    "ref": "Eric Young's Blowfish ECB test vectors (Schneier, vectors-2.txt)",
+    "op": "blowfish:encrypt",
+    "params": {
+      "key": {
+        "value": "fedcba9876543210",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "ffffffffffffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6b5c5a9c5d9e0a5a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB fedcba9876543210 ffffffffffffffff",
+    "ref": "Eric Young's Blowfish ECB test vectors (Schneier, vectors-2.txt)",
+    "op": "blowfish:decrypt",
+    "params": {
+      "key": {
+        "value": "fedcba9876543210",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "6b5c5a9c5d9e0a5a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ffffffffffffffff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt CBC, the chaining test",
+    "ref": "Eric Young's Blowfish chaining data (vectors-2.txt): the 29 bytes '7654321 Now is the time for ' + NUL, zero-padded to 32",
+    "op": "blowfish:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeff0e1d2c3b4a59687",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "fedcba9876543210",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "none"
+    },
+    "input": {
+      "value": "37363534333231204e6f77206973207468652074696d6520666f722000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6b77b4d63006dee605b156e27403979358deb9e7154616d959f1652bd5ff92cc",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt CBC, the chaining test",
+    "ref": "Eric Young's Blowfish chaining data (vectors-2.txt): the 29 bytes '7654321 Now is the time for ' + NUL, zero-padded to 32",
+    "op": "blowfish:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeff0e1d2c3b4a59687",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "fedcba9876543210",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "none"
+    },
+    "input": {
+      "value": "6b77b4d63006dee605b156e27403979358deb9e7154616d959f1652bd5ff92cc",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "37363534333231204e6f77206973207468652074696d6520666f722000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt CFB64, the chaining test",
+    "ref": "Eric Young's Blowfish chaining data (vectors-2.txt), CFB64 over the 29 bytes",
+    "op": "blowfish:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeff0e1d2c3b4a59687",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "fedcba9876543210",
+        "enc": "hex"
+      },
+      "mode": "CFB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "37363534333231204e6f77206973207468652074696d6520666f722000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "e73214a2822139caf26ecf6d2eb9e76e3da3de04d1517200519d57a6c3",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt CFB64, the chaining test",
+    "ref": "Eric Young's Blowfish chaining data (vectors-2.txt), CFB64 over the 29 bytes",
+    "op": "blowfish:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeff0e1d2c3b4a59687",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "fedcba9876543210",
+        "enc": "hex"
+      },
+      "mode": "CFB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "e73214a2822139caf26ecf6d2eb9e76e3da3de04d1517200519d57a6c3",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "37363534333231204e6f77206973207468652074696d6520666f722000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt OFB64, the chaining test",
+    "ref": "Eric Young's Blowfish chaining data (vectors-2.txt), OFB64 over the 29 bytes",
+    "op": "blowfish:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeff0e1d2c3b4a59687",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "fedcba9876543210",
+        "enc": "hex"
+      },
+      "mode": "OFB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "37363534333231204e6f77206973207468652074696d6520666f722000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "e73214a2822139ca62b343cc5b65587310dd908d0c241b2263c2cf80da",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt OFB64, the chaining test",
+    "ref": "Eric Young's Blowfish chaining data (vectors-2.txt), OFB64 over the 29 bytes",
+    "op": "blowfish:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeff0e1d2c3b4a59687",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "fedcba9876543210",
+        "enc": "hex"
+      },
+      "mode": "OFB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "e73214a2822139ca62b343cc5b65587310dd908d0c241b2263c2cf80da",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "37363534333231204e6f77206973207468652074696d6520666f722000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt CBC PKCS#7",
+    "ref": "openssl enc -bf-cbc -provider legacy -K 0123456789abcdeff0e1d2c3b4a59687 -iv fedcba9876543210",
+    "op": "blowfish:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeff0e1d2c3b4a59687",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "fedcba9876543210",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "pkcs7"
+    },
+    "input": {
+      "value": "000102030405060708090a0b0c",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "4d4a388b3e166b70a531947cbcf800d7",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt CBC PKCS#7",
+    "ref": "openssl enc -bf-cbc -provider legacy -K 0123456789abcdeff0e1d2c3b4a59687 -iv fedcba9876543210",
+    "op": "blowfish:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeff0e1d2c3b4a59687",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "fedcba9876543210",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "pkcs7"
+    },
+    "input": {
+      "value": "4d4a388b3e166b70a531947cbcf800d7",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "000102030405060708090a0b0c",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt key of 3 bytes",
+    "ref": "key length 4 to 56",
+    "op": "blowfish:encrypt",
+    "params": {
+      "key": {
+        "value": "010203",
+        "enc": "hex"
+      },
+      "mode": "ECB"
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "encrypt key of 57 bytes",
+    "ref": "key length 4 to 56",
+    "op": "blowfish:encrypt",
+    "params": {
+      "key": {
+        "value": "010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+        "enc": "hex"
+      },
+      "mode": "ECB"
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "encrypt IV of 9 bytes",
+    "ref": "IV length",
+    "op": "blowfish:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeff0e1d2c3b4a59687",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "010101010101010101",
+        "enc": "hex"
+      },
+      "mode": "OFB"
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "decrypt bad padding",
+    "ref": "PKCS#7 check",
+    "op": "blowfish:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdeff0e1d2c3b4a59687",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "pkcs7",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0011223344556677",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]
