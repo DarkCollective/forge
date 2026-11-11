@@ -1,0 +1,449 @@
+[
+  {
+    "name": "diff: a changed line",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "diff:compare",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "by": "line",
+      "ignore-whitespace": false,
+      "context": 3
+    },
+    "input": {
+      "value": "a\nb\nc\nd\n\na\nB\nc\nd",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "--- sample 1\n+++ sample 2\n@@ -1,4 +1,4 @@\n a\n-b\n+B\n c\n d",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "diff: defaults",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "diff:compare",
+    "params": {},
+    "input": {
+      "value": "x\ny\n\nx\nz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "--- sample 1\n+++ sample 2\n@@ -1,2 +1,2 @@\n x\n-y\n+z",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "diff: identical samples give nothing",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "diff:compare",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "by": "line",
+      "ignore-whitespace": false,
+      "context": 3
+    },
+    "input": {
+      "value": "a\nb\n\na\nb",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "diff: an added line at the end, with one line of context",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "diff:compare",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "by": "line",
+      "ignore-whitespace": false,
+      "context": 1
+    },
+    "input": {
+      "value": "x\ny\n\nx\ny\nz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "--- sample 1\n+++ sample 2\n@@ -2 +2,2 @@\n y\n+z",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "diff: a removed line in the middle",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "diff:compare",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "by": "line",
+      "ignore-whitespace": false,
+      "context": 1
+    },
+    "input": {
+      "value": "x\ny\nz\n\nx\nz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "--- sample 1\n+++ sample 2\n@@ -1,3 +1,2 @@\n x\n-y\n z",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "diff: two hunks when the gap is longer than twice the context",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "diff:compare",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "by": "line",
+      "ignore-whitespace": false,
+      "context": 2
+    },
+    "input": {
+      "value": "a\nb\nc\nd\ne\nf\ng\nh\ni\nj\nk\nl\nm\nn\no\np\n\na\nB\nc\nd\ne\nf\ng\nh\ni\nj\nk\nl\nm\nn\no\np\nq",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "--- sample 1\n+++ sample 2\n@@ -1,4 +1,4 @@\n a\n-b\n+B\n c\n d\n@@ -15,2 +15,3 @@\n o\n p\n+q",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "diff: a gap of exactly twice the context joins the hunks",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "diff:compare",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "by": "line",
+      "ignore-whitespace": false,
+      "context": 1
+    },
+    "input": {
+      "value": "a\nb\nc\nd\n\nA\nb\nc\nD",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "--- sample 1\n+++ sample 2\n@@ -1,4 +1,4 @@\n-a\n+A\n b\n c\n-d\n+D",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "diff: context 0",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "diff:compare",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "by": "line",
+      "ignore-whitespace": false,
+      "context": 0
+    },
+    "input": {
+      "value": "a\nb\nc\n\nb\nc\nd",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "--- sample 1\n+++ sample 2\n@@ -1 +0,0 @@\n-a\n@@ -3,0 +3 @@\n+d",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "diff: an empty first sample",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "diff:compare",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "by": "line",
+      "ignore-whitespace": false,
+      "context": 3
+    },
+    "input": {
+      "value": "\n\nx",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "--- sample 1\n+++ sample 2\n@@ -0,0 +1 @@\n+x",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "diff: an empty second sample",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "diff:compare",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "by": "line",
+      "ignore-whitespace": false,
+      "context": 3
+    },
+    "input": {
+      "value": "x\ny\n\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "--- sample 1\n+++ sample 2\n@@ -1,2 +0,0 @@\n-x\n-y",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "diff: a final line feed ends the last line",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "diff:compare",
+    "params": {
+      "sample-delimiter": "---",
+      "by": "line",
+      "ignore-whitespace": false,
+      "context": 3
+    },
+    "input": {
+      "value": "a\n---b\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "--- sample 1\n+++ sample 2\n@@ -1 +1 @@\n-a\n+b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "diff: white space matters",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "diff:compare",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "by": "line",
+      "ignore-whitespace": false,
+      "context": 3
+    },
+    "input": {
+      "value": "a  b\nc\n\na b\nc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "--- sample 1\n+++ sample 2\n@@ -1,2 +1,2 @@\n-a  b\n+a b\n c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "diff: ignoring white space",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "diff:compare",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "by": "line",
+      "ignore-whitespace": true,
+      "context": 3
+    },
+    "input": {
+      "value": "a  b\nc\n\na b\nc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "diff: ignoring white space shows the first sample for kept lines",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "diff:compare",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "by": "line",
+      "ignore-whitespace": true,
+      "context": 3
+    },
+    "input": {
+      "value": "a  b\nc\nd\n\na b\nc\nD",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "--- sample 1\n+++ sample 2\n@@ -1,3 +1,3 @@\n a  b\n c\n-d\n+D",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "diff: words",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "diff:compare",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "by": "word",
+      "ignore-whitespace": false,
+      "context": 3
+    },
+    "input": {
+      "value": "the quick brown fox\n\nthe slow  brown dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "the [-quick -]{+slow  +}brown [-fox-]{+dog+}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "diff: words, ignoring white space",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "diff:compare",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "by": "word",
+      "ignore-whitespace": true,
+      "context": 3
+    },
+    "input": {
+      "value": "the quick brown fox\n\nthe slow  brown dog",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "the [-quick-]{+slow+} brown [-fox-]{+dog+}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "diff: words that are the same are shown as they are",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "diff:compare",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "by": "word",
+      "ignore-whitespace": false,
+      "context": 3
+    },
+    "input": {
+      "value": "a b\n\na b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "diff: characters (kitten and sitting)",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "diff:compare",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "by": "character",
+      "ignore-whitespace": false,
+      "context": 3
+    },
+    "input": {
+      "value": "kitten\n\nsitting",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[-k-]{+s+}itt[-e-]{+i+}n{+g+}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "diff: characters, a custom sample delimiter",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "diff:compare",
+    "params": {
+      "sample-delimiter": "|||",
+      "by": "character",
+      "ignore-whitespace": false,
+      "context": 3
+    },
+    "input": {
+      "value": "a|||b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[-a-]{+b+}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "diff: characters are code points",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "diff:compare",
+    "params": {
+      "sample-delimiter": "|||",
+      "by": "character",
+      "ignore-whitespace": false,
+      "context": 3
+    },
+    "input": {
+      "value": "😀x|||😀y",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "😀[-x-]{+y+}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "diff: three samples are refused",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "diff:compare",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "by": "line",
+      "ignore-whitespace": false,
+      "context": 3
+    },
+    "input": {
+      "value": "a\n\nb\n\nc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "diff: one sample is refused",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "diff:compare",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "by": "line",
+      "ignore-whitespace": false,
+      "context": 3
+    },
+    "input": {
+      "value": "a\nb",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "diff: an empty sample delimiter is refused",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "diff:compare",
+    "params": {
+      "sample-delimiter": "",
+      "by": "line",
+      "ignore-whitespace": false,
+      "context": 3
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "diff: an unknown mode is refused",
+    "ref": "hand-computed from the definition in the doc string",
+    "op": "diff:compare",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "by": "sentence",
+      "ignore-whitespace": false,
+      "context": 3
+    },
+    "input": {
+      "value": "a\n\nb",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  }
+]
