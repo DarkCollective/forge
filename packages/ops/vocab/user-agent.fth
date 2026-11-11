@@ -77,7 +77,7 @@ IN: user-agent
 : _windows-name ( v:str -- str )
   { { "10.0" "10" } { "6.4" "10" } { "6.3" "8.1" } { "6.2" "8" } { "6.1" "7" } { "6.0" "Vista" } { "5.2" "XP" }
     { "5.1" "XP" } { "5.0" "2000" } { "4.0" "NT 4.0" } }
-  [ 0 nth v = ] filter dup len 0 = [ drop v ] [ 0 nth 1 nth ] if ;
+  [ 0 nth v = ] filter { { v v } } cat 0 nth 1 nth ;
 
 : _os-rules ( -- list )
   { { "Windows Phone (?:OS )?([\\d.]+)" "Windows Phone" }

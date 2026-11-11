@@ -9,11 +9,6 @@ IN: hassh
 
 USING: md5 hex base64 ;
 
-\ The bytes of an op's input: hex text (any white space ignored), Base64 text or the raw bytes.
-: _input ( data:bytes format:str -- bytes )
-  format "raw" = [ data ] [
-    format "hex" = [ data hex:decode ] [ data "standard" base64:decode ] if ] if ;
-
 \ Four bytes at p as a big-endian unsigned integer (the caller has checked that they are there).
 : _u32 ( d:bytes p:int -- int )
   d p nth 24 shl d p 1 + nth 16 shl bor d p 2 + nth 8 shl bor d p 3 + nth bor ;
@@ -76,9 +71,6 @@ USING: md5 hex base64 ;
 
 \ ---- the outputs ----
 
-: _md5hex ( s:str -- str )
-  s str>bytes md5:digest bytes>hex lower ;
-
 \ The four fields of the HASSH string: the key exchange list and the three lists of one direction (c2s: 2, 4, 6; s2c: 3, 5, 7).
 : _fields ( names:list a:int b:int c:int -- list )
   { names 0 nth names a nth names b nth names c nth } ;
@@ -86,17 +78,17 @@ USING: md5 hex base64 ;
 : _out ( f:list s:str fmt:str dir:str -- str )
   fmt "string" = [ s ] [
     fmt "full" =
-    [ "Hash digest:\n" s _md5hex cat "\n\nFull HASSH algorithms string:\n" cat s cat
+    [ "Hash digest:\n" s util:md5-hex cat "\n\nFull HASSH algorithms string:\n" cat s cat
       "\n\nKey Exchange Algorithms:\n" cat f 0 nth cat
       "\nEncryption Algorithms " cat dir cat ":\n" cat f 1 nth cat
       "\nMAC Algorithms " cat dir cat ":\n" cat f 2 nth cat
       "\nCompression Algorithms " cat dir cat ":\n" cat f 3 nth cat ]
-    [ s _md5hex ] if ] if ;
+    [ s util:md5-hex ] if ] if ;
 
 : client ( data:bytes input-format:choice{hex|base64|raw}="hex" output-format:choice{hash|string|full}="hash" -- str )
   "The HASSH fingerprint (Salesforce) of an SSH client, from the SSH_MSG_KEXINIT packet it sends, as CyberChef's HASSH Client Fingerprint. The input is the SSH binary packet (hex text, Base64 text or raw bytes): the 4-byte packet length, the padding length, the message code 20, the 16-byte cookie, the ten name-lists (key exchange, server host key, encryption, MAC, compression and language, each client to server and then server to client), first_kex_packet_follows, 4 reserved bytes and the padding; exactly one packet, with nothing before or after it (the identification string and a MAC are not part of it). The HASSH string joins four lists with semicolons: the key exchange algorithms, the encryption, MAC and compression algorithms from client to server, each list as the client wrote it (commas inside). The fingerprint is the MD5 of that string as 32 lower-case hex digits. output-format: hash, string or full (CyberChef's layout: the hash, the string and the four lists under their headings). A length that does not match the data, a message code other than 20, padding under 4 bytes, a name-list that runs past the payload, a name-list with a byte that is not printable ASCII, and bytes in the payload after the last field are E_COERCE with the offset (CyberChef checks only the length and the message code, and takes text without looking at it)." doc
   "Networking" category
-  data input-format _input _lists 2 4 6 _fields
+  data input-format util:wire-input _lists 2 4 6 _fields
   dup ";" join output-format "Client to Server" _out ;
 
 META: client
@@ -108,7 +100,7 @@ META: client
 : server ( data:bytes input-format:choice{hex|base64|raw}="hex" output-format:choice{hash|string|full}="hash" -- str )
   "The HASSHServer fingerprint (Salesforce) of an SSH server, from the SSH_MSG_KEXINIT packet it sends, as CyberChef's HASSH Server Fingerprint. The input is the same binary packet as for HASSH Client Fingerprint (hex text, Base64 text or raw bytes), sent by the server. The HASSH string joins four lists with semicolons: the key exchange algorithms, the encryption, MAC and compression algorithms from server to client, each as the server wrote it. The fingerprint is the MD5 of that string as 32 lower-case hex digits. output-format: hash, string or full (the hash, the string and the four lists under their headings, as CyberChef). Malformed packets are E_COERCE, as for the client." doc
   "Networking" category
-  data input-format _input _lists 3 5 7 _fields
+  data input-format util:wire-input _lists 3 5 7 _fields
   dup ";" join output-format "Server to Client" _out ;
 
 META: server

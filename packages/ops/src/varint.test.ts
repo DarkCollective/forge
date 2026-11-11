@@ -137,8 +137,17 @@ describe("the bounds", () => {
     expect(code(await encode(-(1n << 63n) - 1n, true))).toBe("E_RANGE");
   });
 
+  test("0x, 0o and 0b prefixes are read as in CyberChef (BigInt)", async () => {
+    // 255 = ff 01, 16 = 10, 364 = ec 02, 511 = ff 03 (computed by hand: 7-bit groups, least significant first)
+    for (const [s, hexOut] of [["0xFF", "ff01"], ["0x10", "10"], ["0b101101100", "ec02"], ["0o777", "ff03"], [" 0Xff ", "ff01"]] as const) {
+      const r = await encode(s);
+      expect(code(r), s).toBe("ok");
+      expect(Buffer.from(top(r).v as Uint8Array).toString("hex"), s).toBe(hexOut);
+    }
+  });
+
   test("text that is not a whole number is E_COERCE", async () => {
-    for (const s of ["", " ", "abc", "1.5", "1e3", "0x10", "+5", "1 2", "--1", "١٢"])
+    for (const s of ["", " ", "abc", "1.5", "1e3", "0xzz", "0x", "0b2", "0o8", "+5", "1 2", "--1", "١٢"])
       expect(code(await encode(s)), JSON.stringify(s)).toBe("E_COERCE");
   });
 

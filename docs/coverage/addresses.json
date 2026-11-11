@@ -2,79 +2,105 @@
   {
     "cyberchef": "Parse IP range",
     "status": "covered",
-    "forge": ["ip:parse-range"],
-    "note": "A CIDR range, a hyphenated range or a list of addresses and CIDR ranges, IPv4 and IPv6, with CyberChef's three parameters (Include network info, Enumerate IP addresses, Allow large queries) and its report layout (Network, CIDR, Mask, Range, Total addresses; for a hyphenated range or a list the smallest holding subnet, tab-indented, then the range). The counts are exact (CyberChef adds IPv6 totals as floating point numbers) and IPv4 /32 is accepted (CyberChef stops at /31). Enumeration is IPv4 only, as in CyberChef. Where CyberChef puts a warning in the output for a range of more than 65,536 addresses, or prints that the second address is smaller, Forge raises E_RANGE; with Allow large queries the listing stops at 1,048,576 addresses (E_RANGE beyond), because the result must fit the value limit. Text that is not a range, a prefix length over 32 or 128, or a mix of IPv4 and IPv6 in a list is E_COERCE where CyberChef answers 'Invalid input'."
+    "forge": [
+      "ip:parse-range"
+    ],
+    "note": "Cross-checked in WP 5.59b against CyberChef 11.5.0: its operation module was read and run on the same inputs (output compared text for text). A CIDR range, a hyphenated range or a list of addresses and CIDR ranges, IPv4 and IPv6, with CyberChef's three parameters (Include network info, Enumerate IP addresses, Allow large queries) and its report layout (Network, CIDR, Mask, Range, Total addresses; for a hyphenated range or a list the smallest holding subnet, tab-indented, then the range). The counts are exact (CyberChef adds IPv6 totals as floating point numbers) and IPv4 /32 is accepted (CyberChef stops at /31). Enumeration is IPv4 only, as in CyberChef. Where CyberChef puts a warning in the output for a range of more than 65,536 addresses, or prints that the second address is smaller, Forge raises E_RANGE; with Allow large queries the listing stops at 1,048,576 addresses (E_RANGE beyond), because the result must fit the value limit. Text that is not a range, a prefix length over 32 or 128, or a mix of IPv4 and IPv6 in a list is E_COERCE where CyberChef answers 'Invalid input'."
   },
   {
     "cyberchef": "Parse IPv6 address",
     "status": "covered",
-    "forge": ["ip:parse-ipv6"],
-    "note": "Longhand and shorthand (RFC 5952: the first longest run of two or more zero groups) and what the range is: unspecified, loopback, IPv4-mapped, IPv4-translated, discard, NAT64 (well-known and the RFC 8215 local-use prefix), Teredo (server, client address and port with the inversion undone and the obfuscated values, the cone, R, Random1, UG and Random2 flags, checked against RFC 4380 and RFC 5991), benchmarking, ORCHID v1 and v2, documentation, 6to4 (IPv4 address, SLA ID, interface ID in hex and decimal), unique local, link-local, multicast with the scope of the address and the well-known groups, plus ISATAP (RFC 5214) and the modified EUI-64 with its MAC address. The text is CyberChef's, with the additions (ISATAP, the scope of any multicast address, the Teredo obfuscated line, the RFC 8215 prefix, a Zone ID line); CyberChef's 6to4 interface ID and Teredo client address have arithmetic slips that Forge does not copy. The input may carry [brackets] and a %zone. An address that does not parse is E_COERCE where CyberChef answers 'Invalid IPv6 address'."
+    "forge": [
+      "ip:parse-ipv6"
+    ],
+    "note": "Cross-checked in WP 5.59b against CyberChef 11.5.0: its operation module was read and run on the same inputs (output compared text for text). Identical text for the ranges tested except where CyberChef is wrong: it mangles an address with a dotted IPv4 tail (::ffff:192.0.2.1 is read as ::ffff:0192, 64:ff9b::192.0.2.33 gives 0.0.1.146), writes the 6to4 interface ID as 4 hex digits (it is 64 bits, 16 digits), Forge does it right (the Teredo example gave the same text apart from Forge's added obfuscated-values line). Longhand and shorthand (RFC 5952: the first longest run of two or more zero groups) and what the range is: unspecified, loopback, IPv4-mapped, IPv4-translated, discard, NAT64 (well-known and the RFC 8215 local-use prefix), Teredo (server, client address and port with the inversion undone and the obfuscated values, the cone, R, Random1, UG and Random2 flags, checked against RFC 4380 and RFC 5991), benchmarking, ORCHID v1 and v2, documentation, 6to4 (IPv4 address, SLA ID, interface ID in hex and decimal), unique local, link-local, multicast with the scope of the address and the well-known groups, plus ISATAP (RFC 5214) and the modified EUI-64 with its MAC address. The text is CyberChef's, with the additions (ISATAP, the scope of any multicast address, the Teredo obfuscated line, the RFC 8215 prefix, a Zone ID line); CyberChef's 6to4 interface ID has an arithmetic slip that Forge does not copy. The input may carry [brackets] and a %zone. An address that does not parse is E_COERCE where CyberChef answers 'Invalid IPv6 address'."
   },
   {
     "cyberchef": "IPv6 Transition Addresses",
     "status": "covered",
-    "forge": ["ip:transition"],
-    "note": "Per line: an IPv4 address to its 6to4 (2002:XXXX:XXXX::/48), IPv4-mapped, IPv4-translated and NAT64 forms; a 192.0.2.0/24 range with /40 and /120 (other prefix lengths are E_COERCE); a MAC address with colons to its modified EUI-64 interface identifier; and back from an IPv6 transition address (or an ISATAP address) to the IPv4 address, and from an EUI-64 address to the MAC. Both parameters, Ignore ranges (default on) and Remove headers (default off), are CyberChef's. CyberChef reads the IPv6 side with string slicing and glues the lines of a MAC address together; Forge parses the address and ends every line with a line feed. A line that is none of these is E_COERCE (CyberChef replaces the whole output with a message), and an IPv6 address with nothing embedded gets a line saying so."
+    "forge": [
+      "ip:transition"
+    ],
+    "note": "Cross-checked in WP 5.59b against CyberChef 11.5.0: its operation module was read and run on the same inputs (output compared text for text). Same lines for the IPv4, CIDR, MAC and IPv6 inputs tested, with both options. Per line: an IPv4 address to its 6to4 (2002:XXXX:XXXX::/48), IPv4-mapped, IPv4-translated and NAT64 forms; a 192.0.2.0/24 range with /40 and /120 (other prefix lengths are E_COERCE); a MAC address with colons to its modified EUI-64 interface identifier; and back from an IPv6 transition address (or an ISATAP address) to the IPv4 address, and from an EUI-64 address to the MAC. Both parameters, Ignore ranges (default on) and Remove headers (default off), are CyberChef's. CyberChef reads the IPv6 side with string slicing and glues the lines of a MAC address together; Forge parses the address and ends every line with a line feed. A line that is none of these is E_COERCE (CyberChef replaces the whole output with a message), and an IPv6 address with nothing embedded gets a line saying so."
   },
   {
     "cyberchef": "Change IP format",
     "status": "covered",
-    "forge": ["ip:change-format"],
-    "note": "IPv4 addresses, one per line, between dotted decimal, decimal, octal (one number written with a leading 0, as CyberChef does) and hex (eight digits); both formats default to dotted decimal, as in CyberChef. The octal and hex forms also read without the leading 0 and with 0x. Every line is validated (CyberChef computes with whatever parseInt makes of it and, for equal formats, copies the line), a number over 32 bits or an octet over 255 is E_COERCE, and empty lines are dropped as in CyberChef."
+    "forge": [
+      "ip:change-format"
+    ],
+    "note": "Cross-checked in WP 5.59b against CyberChef 11.5.0: its operation module was read and run on the same inputs (output compared text for text). Same output for every pair of formats tested, including empty lines and the defaults. IPv4 addresses, one per line, between dotted decimal, decimal, octal (one number written with a leading 0, as CyberChef does) and hex (eight digits); both formats default to dotted decimal, as in CyberChef. The octal and hex forms also read without the leading 0 and with 0x. Every line is validated (CyberChef computes with whatever parseInt makes of it and, for equal formats, copies the line), a number over 32 bits or an octet over 255 is E_COERCE, and empty lines are dropped as in CyberChef."
   },
   {
     "cyberchef": "Group IP addresses",
     "status": "covered",
-    "forge": ["ip:group"],
-    "note": "The layout is CyberChef's (network/prefix, the addresses indented by two spaces, a blank line), with its delimiters (newline, CRLF, space, comma, semicolon), prefix length (default 24) and Only show the subnets. IPv4 first, then IPv6 in shorthand. Forge sorts the IPv4 addresses of a group by number (CyberChef sorts them as text), sorts the IPv6 networks and addresses (CyberChef does not), accepts a prefix length of 128, and refuses a piece that is not an address, and an IPv4 address with a prefix length over 32, with E_COERCE (CyberChef ignores the first and prints the second as /32 with the longer number)."
+    "forge": [
+      "ip:group"
+    ],
+    "note": "Cross-checked in WP 5.59b against CyberChef 11.5.0: its operation module was read and run on the same inputs (output compared text for text). Same layout for IPv4 and IPv6 groups, delimiters and Only show the subnets. The layout is CyberChef's (network/prefix, the addresses indented by two spaces, a blank line), with its delimiters (newline, CRLF, space, comma, semicolon), prefix length (default 24) and Only show the subnets. IPv4 first, then IPv6 in shorthand. Forge sorts the IPv4 addresses of a group by number (CyberChef sorts them as text), sorts the IPv6 networks and addresses (CyberChef does not), accepts a prefix length of 128, and refuses a piece that is not an address, and an IPv4 address with a prefix length over 32, with E_COERCE (CyberChef ignores the first and prints the second as /32 with the longer number)."
   },
   {
     "cyberchef": "Format MAC addresses",
     "status": "covered",
-    "forge": ["mac:format"],
-    "note": "CyberChef's parameters and layout: Output case (both, upper, lower), No delimiter, Dash delimiter, Colon delimiter, Cisco style and IPv6 interface ID, addresses cut at commas, white space and line feeds, a blank line after each address. The interface ID is the modified EUI-64 of RFC 4291 (ff fe inserted and the universal/local bit flipped), written as four groups. CyberChef has no validity check; Forge raises E_COERCE for anything that is not twelve hex digits (with or without : - . between them)."
+    "forge": [
+      "mac:format"
+    ],
+    "note": "Cross-checked in WP 5.59b against CyberChef 11.5.0: its operation module was read and run on the same inputs (output compared text for text). Parameter names, order and defaults are CyberChef's (Output case: both, upper, lower; No delimiter, Dash, Colon, Cisco style, IPv6 interface ID); the output was identical on the inputs tested. Output case (both, upper, lower), No delimiter, Dash delimiter, Colon delimiter, Cisco style and IPv6 interface ID, addresses cut at commas, white space and line feeds, a blank line after each address. The interface ID is the modified EUI-64 of RFC 4291 (ff fe inserted and the universal/local bit flipped), written as four groups. CyberChef has no validity check; Forge raises E_COERCE for anything that is not twelve hex digits (with or without : - . between them)."
   },
   {
     "cyberchef": "Encode NetBIOS Name",
     "status": "covered",
-    "forge": ["netbios:encode"],
-    "note": "The first-level encoding of RFC 1001 section 14.1: the name padded with spaces to 16 bytes and every byte written as the two half bytes plus Offset (default 65). A name of more than 16 bytes is E_RANGE where CyberChef returns nothing; the offset must be 0 to 240 (E_RANGE). The result is bytes, as in CyberChef. The second level (the DNS label form) is not part of the operation, as in CyberChef."
+    "forge": [
+      "netbios:encode"
+    ],
+    "note": "Cross-checked in WP 5.59b against CyberChef 11.5.0: its operation module was read and run on the same inputs (output compared text for text). Offset default 65 as CyberChef; same bytes on the inputs tested. The first-level encoding of RFC 1001 section 14.1: the name padded with spaces to 16 bytes and every byte written as the two half bytes plus Offset (default 65). A name of more than 16 bytes is E_RANGE where CyberChef returns nothing; the offset must be 0 to 240 (E_RANGE). The result is bytes, as in CyberChef. The second level (the DNS label form) is not part of the operation, as in CyberChef."
   },
   {
     "cyberchef": "Decode NetBIOS Name",
     "status": "covered",
-    "forge": ["netbios:decode"],
-    "note": "The inverse, with the same Offset (default 65): trailing spaces (the padding) are taken off, keeping the first byte. An odd length, more than 32 bytes or a byte outside offset to offset + 15 is E_COERCE where CyberChef returns nothing or a wrong byte."
+    "forge": [
+      "netbios:decode"
+    ],
+    "note": "Cross-checked in WP 5.59b against CyberChef 11.5.0: its operation module was read and run on the same inputs (output compared text for text). Same default offset (65) and same output on valid names. The inverse, with the same Offset (default 65): trailing spaces (the padding) are taken off, keeping the first byte. An odd length, more than 32 bytes or a byte outside offset to offset + 15 is E_COERCE where CyberChef returns nothing or a wrong byte."
   },
   {
     "cyberchef": "Defang URL",
     "status": "covered",
-    "forge": ["defang:defang-url"],
-    "note": "CyberChef's four parameters and patterns: Escape dots, Escape http, Escape ://, and Process (valid domains and full URLs, only full URLs, everything), with its URL and domain regular expressions. The process choices are named valid-domains-and-full-urls, only-full-urls and everything."
+    "forge": [
+      "defang:defang-url"
+    ],
+    "note": "Cross-checked in WP 5.59b against CyberChef 11.5.0: its operation module was read and run on the same inputs (output compared text for text). Parameters, order and defaults are CyberChef's. Forge's two regular expressions are CyberChef's with lookbehinds added so that the search stays linear at 64 KiB; the URL one only forbids a start inside a run of letters (no change of result), the domain one forbids a start after a dot or hyphen that follows a letter or digit. A differential run on 400 random strings gave identical output. The one case that differs: a name that is only a valid domain after an earlier label with an underscore or a double hyphen is defanged by CyberChef from the dot on (_dmarc.example.com becomes _dmarc.example[.]com) and left alone by Forge. The first version of the lookbehind also skipped '.example.com' and '*.example.com'; the cross-check found it and it is fixed. Process choices are named valid-domains-and-full-urls, only-full-urls and everything."
   },
   {
     "cyberchef": "Fang URL",
     "status": "covered",
-    "forge": ["defang:fang-url"],
-    "note": "Restore [.], restore hxxp (lower case only, as CyberChef) and restore [://], each switchable."
+    "forge": [
+      "defang:fang-url"
+    ],
+    "note": "Cross-checked in WP 5.59b against CyberChef 11.5.0: its operation module was read and run on the same inputs (output compared text for text). Restore [.], restore hxxp (lower case only, as CyberChef) and restore [://], each switchable, same results."
   },
   {
     "cyberchef": "Defang IP Addresses",
     "status": "covered",
-    "forge": ["ip:defang"],
-    "note": "IPv4 addresses (and a /prefix) get [.], IPv6 addresses get [:] (and [.] in an IPv4 tail). Forge finds an IPv6 address as a run of hex digits, colons and dots that parses as an address (CyberChef uses one long regular expression), and an IPv4 address only when it is not part of a longer dotted or numeric run (CyberChef would defang the first four numbers of 1.2.3.4.5). The word is in the ip vocabulary, because it uses the address parser."
+    "forge": [
+      "ip:defang"
+    ],
+    "note": "Cross-checked in WP 5.59b against CyberChef 11.5.0: its operation module was read and run on the same inputs (output compared text for text). IPv4 addresses (and a /prefix) get [.], IPv6 addresses get [:] (and [.] in an IPv4 tail). Forge finds an IPv6 address as a run of hex digits, colons and dots that parses as an address (CyberChef uses one long regular expression), and an IPv4 address only when it is not part of a longer dotted or numeric run (CyberChef would defang the first four numbers of 1.2.3.4.5). The word is in the ip vocabulary, because it uses the address parser. Same output otherwise (IPv4 with a /prefix, IPv6 with [:])."
   },
   {
     "cyberchef": "Parse URI",
     "status": "covered",
-    "forge": ["uri:parse"],
-    "note": "CyberChef's layout (Protocol, Auth, Hostname, Port, Path name, Arguments, Hash; tab separated; the arguments padded and decoded as URLSearchParams does, a repeated one joined by commas) on the RFC 3986 reading: the authority is read after // and a port that is not digits is E_COERCE. The protocol is lower case with its colon, the host lower case, and for http, https, ftp, gopher, file, ws and wss with a host the path is at least /. CyberChef uses Node's legacy url.parse, which also reads a host from mailto:a@b.example and escapes spaces in the path; Forge does neither. The arguments appear in the order in which each name first appears (CyberChef puts integer-like names first)."
+    "forge": [
+      "uri:parse"
+    ],
+    "note": "Cross-checked in WP 5.59b against CyberChef 11.5.0: its operation module was read and run on the same inputs (output compared text for text). Same layout (Protocol, Auth, Hostname, Port, Path name, Arguments, Hash; tab separated) and same results for http, https, ftp, file, ws, IPv6 hosts, empty query and fragment, repeated arguments and relative paths. Differs: CyberChef uses Node's legacy url.parse, so mailto:a@b.example gets Auth a and Hostname b.example, urn:isbn:0451450523 gets host isbn and port 0451450523, //example.com/path is a path, and a space in the host ends the host; Forge reads RFC 3986 (mailto and urn are a path, //example.com/path has the host example.com, a space in the host stays in the host). the authority is read after // and a port that is not digits is E_COERCE. The protocol is lower case with its colon, the host lower case, and for http, https, ftp, gopher, file, ws and wss with a host the path is at least /. CyberChef uses Node's legacy url.parse, which also reads a host from mailto:a@b.example and escapes spaces in the path; Forge does neither. The arguments appear in the order in which each name first appears (CyberChef puts integer-like names first)."
   },
   {
     "cyberchef": "Parse User Agent",
     "status": "redesigned",
-    "forge": ["user-agent:parse"],
-    "note": "CyberChef's report layout (Browser, Device, Engine, OS and CPU, with unknown for what is not found) from a table of about 70 rules written in FL over the regex words, not the ua-parser-js library: version 2 of that library is AGPL, and version 1.x would put a library full of its own regular expressions outside the regex seam and add its size to the bundle. The table covers the common browsers, engines, systems, Apple, Samsung and Google devices (and the model in Android build strings), consoles, smart TVs and CPU architectures, so a rare or new agent can come out differently from ua-parser-js (the names follow that library: Mobile Safari, Samsung Internet, Chromium OS, Mac OS, amd64, ia32, arm64). The first rule that matches wins; a leading User-Agent: label is ignored; a string of more than 4,096 characters is E_RANGE."
+    "forge": [
+      "user-agent:parse"
+    ],
+    "note": "Cross-checked in WP 5.59b against CyberChef 11.5.0 (which uses ua-parser-js 2.0.10, AGPL, run on the same strings): about 80 real User-Agent strings were compared field by field, and 70 now give identical output. The names follow that library (macOS, Chrome OS, Mobile Chrome, Mobile Firefox, Mobile Safari, Chrome WebView, MIUI Browser, Electron, WebKit for a bare AppleWebKit token, PlayStation). The layout is CyberChef's (Browser, Device, Engine, OS and CPU, with unknown for what is not found). Forge uses its own table of about 80 rules written in FL over the regex words, not the library, so a rare or new agent can come out differently. Known remaining differences: BlackBerry and Windows Phone devices, Xbox and Nintendo Switch as the OS, webOS version, Raspbian as OS, the Opera Mini Android OS, Samsung Tizen phones as Mobile Safari, Brave (not in the string), the Facebook app (Forge says Facebook with its version, the library says WebKit), and device vendors for some Android makes. A leading User-Agent: label is ignored and a string of more than 4,096 characters is E_RANGE (additions)."
   }
 ]
