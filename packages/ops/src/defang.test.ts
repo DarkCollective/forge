@@ -102,9 +102,14 @@ describe("Defang URL and Fang URL", () => {
     expect(out(await defang("xn--bcher-kva.example", "valid-domains-and-full-urls"))).toBe(
       "xn--bcher-kva[.]example",
     );
-    // a name right after a dot or a hyphen is not a new name (the lookbehind that keeps the search linear)
+    // a name right after a dot or a hyphen that follows a letter or digit is not a new start (the lookbehind that
+    // keeps the search linear); after anything else it is, as in CyberChef (found by the WP 5.59b cross-check:
+    // the first lookbehind also skipped ".example.com", "*.example.com" and "-bad-.example.com")
     expect(out(await defang("-bad-.example.com", "valid-domains-and-full-urls"))).toBe(
-      "-bad-.example.com",
+      "-bad-.example[.]com",
+    );
+    expect(out(await defang("*.example.com .a.bc a..b.com www.-a.com", "valid-domains-and-full-urls"))).toBe(
+      "*.example[.]com .a[.]bc a..b[.]com www.-a[.]com",
     );
     expect(out(await defang("see (www.example.com)", "valid-domains-and-full-urls"))).toBe(
       "see (www[.]example[.]com)",
@@ -145,6 +150,9 @@ describe("Defang URL and Fang URL", () => {
       "xn--".repeat(10000) + ".com",
       "HTTP://" + "-".repeat(60000),
       ("a" + ".a".repeat(60)).repeat(500),
+      ".-a".repeat(20000),
+      "a..".repeat(20000),
+      "_a.".repeat(20000),
     ]) {
       expect(code(await defang(t))).toBe("ok");
     }

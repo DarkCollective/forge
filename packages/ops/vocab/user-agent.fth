@@ -42,17 +42,23 @@ IN: user-agent
     { "FBAV/([\\d.]+)" "Facebook" }
     { "Instagram ([\\d.]+)" "Instagram" }
     { "MicroMessenger/([\\d.]+)" "WeChat" }
-    { "FxiOS/([\\d.]+)" "Firefox" }
+    { "MiuiBrowser/([\\d.]+)" "MIUI Browser" }
+    { "FxiOS/([\\d.]+)" "Mobile Firefox" }
+    { "^(?=.*\\bMobile\\b).*Firefox/([\\d.]+)" "Mobile Firefox" }
     { "Firefox/([\\d.]+)" "Firefox" }
-    { "CriOS/([\\d.]+)" "Chrome" }
+    { "Electron/([\\d.]+)" "Electron" }
+    { "; wv\\).*Chrome/([\\d.]+)" "Chrome WebView" }
+    { "CriOS/([\\d.]+)" "Mobile Chrome" }
     { "Chromium/([\\d.]+)" "Chromium" }
+    { "Chrome/([\\d.]+)(?=.* Mobile)" "Mobile Chrome" }
     { "Chrome/([\\d.]+)" "Chrome" }
     { "MSIE ([\\d.]+)" "IE" }
     { "Trident/.*rv:([\\d.]+)" "IE" }
     { "Android.*Version/([\\d.]+)" "Android Browser" }
     { "(?:iPhone|iPad|iPod).*Version/([\\d.]+).*Safari" "Mobile Safari" }
     { "Mobile.*Version/([\\d.]+).*Safari" "Mobile Safari" }
-    { "Version/([\\d.]+).*Safari" "Safari" } } ;
+    { "Version/([\\d.]+).*Safari" "Safari" }
+    { "AppleWebKit/([\\d.]+)" "WebKit" } } ;
 
 \ ---- engine ----
 
@@ -79,9 +85,9 @@ IN: user-agent
     { "CPU (?:iPhone )?OS ([\\d_]+) like Mac OS X" "iOS" }
     { "(?:iPhone|iPad|iPod).*? OS ([\\d_]+)" "iOS" }
     { "Android[ /-]?([\\d.]+)" "Android" }
-    { "CrOS \\S+ ([\\d.]+)" "Chromium OS" }
-    { "Mac OS X ([\\d_.]+)" "Mac OS" }
-    { "Macintosh|Mac_PowerPC" "Mac OS" }
+    { "CrOS \\S+ ([\\d.]+)" "Chrome OS" }
+    { "Mac OS X ([\\d_.]+)" "macOS" }
+    { "Macintosh|Mac_PowerPC" "macOS" }
     { "Ubuntu/?([\\d.]*)" "Ubuntu" }
     { "Debian/?([\\d.]*)" "Debian" }
     { "Fedora/?([\\d.]*)" "Fedora" }
@@ -89,6 +95,8 @@ IN: user-agent
     { "OpenBSD" "OpenBSD" }
     { "NetBSD" "NetBSD" }
     { "SunOS" "Solaris" }
+    { "PlayStation ([\\d.]+)" "PlayStation" }
+    { "Web0S|webOS" "webOS" }
     { "Tizen[ /]?([\\d.]*)" "Tizen" }
     { "KaiOS/([\\d.]+)" "KaiOS" }
     { "Linux" "Linux" } } ;
@@ -110,23 +118,31 @@ IN: user-agent
     { rule 1 nth rule 2 nth } swap append ] if ;
 
 : _device-rules ( -- list )
-  { { "iPhone" "Apple" "mobile" "iPhone" }
-    { "iPod" "Apple" "mobile" "iPod" }
+  { { "iPod" "Apple" "mobile" "iPod touch" }
+    { "iPhone" "Apple" "mobile" "iPhone" }
     { "iPad" "Apple" "tablet" "iPad" }
     { "Macintosh" "Apple" "" "Macintosh" }
     { "\\b(SM-[TPX]\\w+)" "Samsung" "tablet" "" }
     { "\\b(SM-\\w+|GT-\\w+|SCH-\\w+|SHV-\\w+)" "Samsung" "mobile" "" }
     { "\\b(Pixel(?: [0-9]+[a-z]*)?(?: (?:XL|Pro|Fold))*)(?=[;) ])" "Google" "mobile" "" }
-    { "\\b(Nexus [0-9]+)" "Google" "mobile" "" }
+    { "(Nexus 6P)" "Huawei" "mobile" "" }
+    { "\\b(Nexus [0-9]+X?)\\b" "Google" "mobile" "" }
+    { "(Lumia [0-9]+)" "Microsoft" "mobile" "" }
+    { "\\bHUAWEI ([\\w-]+)" "Huawei" "mobile" "" }
+    { "(moto [^;()]+(?:\\([^)]*\\))?)" "Motorola" "mobile" "" }
+    { "Android[^;)]*; (Mi [\\w ]+?|Redmi [\\w ]+?|HM [\\w ]+?)(?= Build|[;)])" "Xiaomi" "mobile" "" }
+    { "\\bAFT(\\w+)" "Amazon" "smarttv" "" }
     { "CrKey" "Google" "smarttv" "Chromecast" }
     { "(PlayStation [0-9A-Za-z]+)" "Sony" "console" "" }
-    { "Xbox" "Microsoft" "console" "Xbox" }
-    { "(Nintendo [0-9A-Za-z]+)" "Nintendo" "console" "" }
+    { "(Xbox One|Xbox Series [XS]|Xbox)" "Microsoft" "console" "" }
+    { "Nintendo ([0-9A-Za-z]+)" "Nintendo" "console" "" }
     { "AppleTV" "Apple" "smarttv" "Apple TV" }
     { "\\bRoku" "Roku" "smarttv" "" }
+    { "SMART-TV.*Tizen|Tizen.*SMART-TV|SamsungBrowser.*\\bTV\\b" "Samsung" "smarttv" "" }
     { "SmartTV|SMART-TV|HbbTV|Web0S|NetCast|Tizen.*TV" "" "smarttv" "" }
-    { "Android[^;)]*; ([^;)]+?)(?: Build|\\)).*Mobile" "" "mobile" "" }
-    { "Android[^;)]*; ([^;)]+?)(?: Build|\\))" "" "tablet" "" } } ;
+    { "Android[^;)]*; Mobile; rv:" "" "mobile" "" }
+    { "Android[^;)]*; ((?:[^;()]|\\([^()]*\\))+?)(?: Build[^)]*)?\\).*Mobile" "" "mobile" "" }
+    { "Android[^;)]*; ((?:[^;()]|\\([^()]*\\))+?)(?: Build[^)]*)?\\)" "" "tablet" "" } } ;
 
 : _device ( ua:str -- list )
   _device-rules { } [ over len 0 = [ nip ua swap _try-device ] [ drop ] if ] reduce ;

@@ -9,7 +9,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Source port: 51234\nDestination port: 443\nSequence number: 2864434397\nAcknowledgement number: 0\nData offset: 10 (40 bytes)\nReserved bits: 0\nFlags: 0x002 (SYN)\n  NS: 0 (Not set)\n  CWR: 0 (Not set)\n  ECE: 0 (Not set)\n  URG: 0 (Not set)\n  ACK: 0 (Not set)\n  PSH: 0 (Not set)\n  RST: 0 (Not set)\n  SYN: 1 (Set)\n  FIN: 0 (Not set)\nWindow size: 64240\nChecksum: 0x1234\nUrgent pointer: 0\nOptions:\n  Maximum Segment Size (2): 1460\n  SACK Permitted (4)\n  Timestamps (8): TSval 305441741, TSecr 0\n  No-Operation (1)\n  Window Scale (3): shift 7 (multiplier 128)",
+      "value": "Source port: 51234\nDestination port: 443\nSequence number: 2864434397\nAcknowledgement number: 0\nData offset: 10 (40 bytes)\nReserved bits: 0\nFlags: 0x002 (SYN)\n  NS: 0 (Not set)\n  CWR: 0 (Not set)\n  ECE: 0 (Not set)\n  URG: 0 (Not set)\n  ACK: 0 (Not set)\n  PSH: 0 (Not set)\n  RST: 0 (Not set)\n  SYN: 1 (Set)\n  FIN: 0 (Not set)\nWindow size: 64240\nChecksum: 0x1234\nUrgent pointer: 0x0000\nOptions:\n  Maximum Segment Size (2): 1460\n  SACK Permitted (4)\n  Timestamps (8): TSval 305441741, TSecr 0\n  No-Operation (1)\n  Window Scale (3): shift 7 (multiplier 128)",
       "enc": "utf8"
     }
   },
@@ -23,7 +23,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Source port: 443\nDestination port: 51234\nSequence number: 1000\nAcknowledgement number: 2864434398\nData offset: 8 (32 bytes)\nReserved bits: 0\nFlags: 0x012 (ACK, SYN)\n  NS: 0 (Not set)\n  CWR: 0 (Not set)\n  ECE: 0 (Not set)\n  URG: 0 (Not set)\n  ACK: 1 (Set)\n  PSH: 0 (Not set)\n  RST: 0 (Not set)\n  SYN: 1 (Set)\n  FIN: 0 (Not set)\nWindow size: 65160\nChecksum: 0x1234\nUrgent pointer: 0\nOptions:\n  Maximum Segment Size (2): 1380\n  No-Operation (1)\n  Window Scale (3): shift 8 (multiplier 256)\n  SACK Permitted (4)\n  No-Operation (1)\n  No-Operation (1)",
+      "value": "Source port: 443\nDestination port: 51234\nSequence number: 1000\nAcknowledgement number: 2864434398\nData offset: 8 (32 bytes)\nReserved bits: 0\nFlags: 0x012 (ACK, SYN)\n  NS: 0 (Not set)\n  CWR: 0 (Not set)\n  ECE: 0 (Not set)\n  URG: 0 (Not set)\n  ACK: 1 (Set)\n  PSH: 0 (Not set)\n  RST: 0 (Not set)\n  SYN: 1 (Set)\n  FIN: 0 (Not set)\nWindow size: 65160\nChecksum: 0x1234\nUrgent pointer: 0x0000\nOptions:\n  Maximum Segment Size (2): 1380\n  No-Operation (1)\n  Window Scale (3): shift 8 (multiplier 256)\n  SACK Permitted (4)\n  No-Operation (1)\n  No-Operation (1)",
       "enc": "utf8"
     }
   },
@@ -37,7 +37,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Source port: 51234\nDestination port: 443\nSequence number: 2864434398\nAcknowledgement number: 1001\nData offset: 8 (32 bytes)\nReserved bits: 0\nFlags: 0x018 (ACK, PSH)\n  NS: 0 (Not set)\n  CWR: 0 (Not set)\n  ECE: 0 (Not set)\n  URG: 0 (Not set)\n  ACK: 1 (Set)\n  PSH: 1 (Set)\n  RST: 0 (Not set)\n  SYN: 0 (Not set)\n  FIN: 0 (Not set)\nWindow size: 502\nChecksum: 0x1234\nUrgent pointer: 0\nOptions:\n  No-Operation (1)\n  No-Operation (1)\n  Timestamps (8): TSval 7, TSecr 9\nPayload (27 bytes): 474554202f20485454502f312e310d0a486f73743a20610d0a0d0a",
+      "value": "Source port: 51234\nDestination port: 443\nSequence number: 2864434398\nAcknowledgement number: 1001\nData offset: 8 (32 bytes)\nReserved bits: 0\nFlags: 0x018 (ACK, PSH)\n  NS: 0 (Not set)\n  CWR: 0 (Not set)\n  ECE: 0 (Not set)\n  URG: 0 (Not set)\n  ACK: 1 (Set)\n  PSH: 1 (Set)\n  RST: 0 (Not set)\n  SYN: 0 (Not set)\n  FIN: 0 (Not set)\nWindow size: 502\nChecksum: 0x1234\nUrgent pointer: 0x0000\nOptions:\n  No-Operation (1)\n  No-Operation (1)\n  Timestamps (8): TSval 7, TSecr 9\nPayload (27 bytes): 474554202f20485454502f312e310d0a486f73743a20610d0a0d0a",
       "enc": "utf8"
     }
   },
@@ -51,7 +51,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Source port: 80\nDestination port: 1234\nSequence number: 1\nAcknowledgement number: 2\nData offset: 10 (40 bytes)\nReserved bits: 0\nFlags: 0x010 (ACK)\n  NS: 0 (Not set)\n  CWR: 0 (Not set)\n  ECE: 0 (Not set)\n  URG: 0 (Not set)\n  ACK: 1 (Set)\n  PSH: 0 (Not set)\n  RST: 0 (Not set)\n  SYN: 0 (Not set)\n  FIN: 0 (Not set)\nWindow size: 100\nChecksum: 0x1234\nUrgent pointer: 0\nOptions:\n  No-Operation (1)\n  No-Operation (1)\n  SACK (5): 100-200, 300-400",
+      "value": "Source port: 80\nDestination port: 1234\nSequence number: 1\nAcknowledgement number: 2\nData offset: 10 (40 bytes)\nReserved bits: 0\nFlags: 0x010 (ACK)\n  NS: 0 (Not set)\n  CWR: 0 (Not set)\n  ECE: 0 (Not set)\n  URG: 0 (Not set)\n  ACK: 1 (Set)\n  PSH: 0 (Not set)\n  RST: 0 (Not set)\n  SYN: 0 (Not set)\n  FIN: 0 (Not set)\nWindow size: 100\nChecksum: 0x1234\nUrgent pointer: 0x0000\nOptions:\n  No-Operation (1)\n  No-Operation (1)\n  SACK (5): 100-200, 300-400",
       "enc": "utf8"
     }
   },
@@ -65,7 +65,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Source port: 1\nDestination port: 2\nSequence number: 3\nAcknowledgement number: 4\nData offset: 9 (36 bytes)\nReserved bits: 0\nFlags: 0x004 (RST)\n  NS: 0 (Not set)\n  CWR: 0 (Not set)\n  ECE: 0 (Not set)\n  URG: 0 (Not set)\n  ACK: 0 (Not set)\n  PSH: 0 (Not set)\n  RST: 1 (Set)\n  SYN: 0 (Not set)\n  FIN: 0 (Not set)\nWindow size: 0\nChecksum: 0x1234\nUrgent pointer: 0\nOptions:\n  Fast Open Cookie (34), length 10: deadbeef01020304\n  Unknown (99), length 4: abcd\n  End of Option List (0)\nPayload (2 bytes): 0000",
+      "value": "Source port: 1\nDestination port: 2\nSequence number: 3\nAcknowledgement number: 4\nData offset: 9 (36 bytes)\nReserved bits: 0\nFlags: 0x004 (RST)\n  NS: 0 (Not set)\n  CWR: 0 (Not set)\n  ECE: 0 (Not set)\n  URG: 0 (Not set)\n  ACK: 0 (Not set)\n  PSH: 0 (Not set)\n  RST: 1 (Set)\n  SYN: 0 (Not set)\n  FIN: 0 (Not set)\nWindow size: 0\nChecksum: 0x1234\nUrgent pointer: 0x0000\nOptions:\n  Fast Open Cookie (34), length 10: deadbeef01020304\n  Unknown (99), length 4: abcd\n  End of Option List (0)\nPayload (2 bytes): 0000",
       "enc": "utf8"
     }
   },
@@ -79,7 +79,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Source port: 7\nDestination port: 8\nSequence number: 9\nAcknowledgement number: 10\nData offset: 6 (24 bytes)\nReserved bits: 0\nFlags: 0x001 (FIN)\n  NS: 0 (Not set)\n  CWR: 0 (Not set)\n  ECE: 0 (Not set)\n  URG: 0 (Not set)\n  ACK: 0 (Not set)\n  PSH: 0 (Not set)\n  RST: 0 (Not set)\n  SYN: 0 (Not set)\n  FIN: 1 (Set)\nWindow size: 11\nChecksum: 0x1234\nUrgent pointer: 0\nOptions:\n  No-Operation (1)\n  End of Option List (0)\nPayload (1 bytes): 78",
+      "value": "Source port: 7\nDestination port: 8\nSequence number: 9\nAcknowledgement number: 10\nData offset: 6 (24 bytes)\nReserved bits: 0\nFlags: 0x001 (FIN)\n  NS: 0 (Not set)\n  CWR: 0 (Not set)\n  ECE: 0 (Not set)\n  URG: 0 (Not set)\n  ACK: 0 (Not set)\n  PSH: 0 (Not set)\n  RST: 0 (Not set)\n  SYN: 0 (Not set)\n  FIN: 1 (Set)\nWindow size: 11\nChecksum: 0x1234\nUrgent pointer: 0x0000\nOptions:\n  No-Operation (1)\n  End of Option List (0)\nPayload (1 bytes): 78",
       "enc": "utf8"
     }
   },
@@ -93,7 +93,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Source port: 7\nDestination port: 8\nSequence number: 9\nAcknowledgement number: 10\nData offset: 5 (20 bytes)\nReserved bits: 5\nFlags: 0x1ff (NS, CWR, ECE, URG, ACK, PSH, RST, SYN, FIN)\n  NS: 1 (Set)\n  CWR: 1 (Set)\n  ECE: 1 (Set)\n  URG: 1 (Set)\n  ACK: 1 (Set)\n  PSH: 1 (Set)\n  RST: 1 (Set)\n  SYN: 1 (Set)\n  FIN: 1 (Set)\nWindow size: 11\nChecksum: 0x1234\nUrgent pointer: 77",
+      "value": "Source port: 7\nDestination port: 8\nSequence number: 9\nAcknowledgement number: 10\nData offset: 5 (20 bytes)\nReserved bits: 5\nFlags: 0x1ff (NS, CWR, ECE, URG, ACK, PSH, RST, SYN, FIN)\n  NS: 1 (Set)\n  CWR: 1 (Set)\n  ECE: 1 (Set)\n  URG: 1 (Set)\n  ACK: 1 (Set)\n  PSH: 1 (Set)\n  RST: 1 (Set)\n  SYN: 1 (Set)\n  FIN: 1 (Set)\nWindow size: 11\nChecksum: 0x1234\nUrgent pointer: 0x004d",
       "enc": "utf8"
     }
   },
@@ -107,7 +107,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Source port: 5000\nDestination port: 25\nSequence number: 0\nAcknowledgement number: 0\nData offset: 5 (20 bytes)\nReserved bits: 0\nFlags: 0x029 (URG, PSH, FIN)\n  NS: 0 (Not set)\n  CWR: 0 (Not set)\n  ECE: 0 (Not set)\n  URG: 1 (Set)\n  ACK: 0 (Not set)\n  PSH: 1 (Set)\n  RST: 0 (Not set)\n  SYN: 0 (Not set)\n  FIN: 1 (Set)\nWindow size: 1\nChecksum: 0x1234\nUrgent pointer: 0",
+      "value": "Source port: 5000\nDestination port: 25\nSequence number: 0\nAcknowledgement number: 0\nData offset: 5 (20 bytes)\nReserved bits: 0\nFlags: 0x029 (URG, PSH, FIN)\n  NS: 0 (Not set)\n  CWR: 0 (Not set)\n  ECE: 0 (Not set)\n  URG: 1 (Set)\n  ACK: 0 (Not set)\n  PSH: 1 (Set)\n  RST: 0 (Not set)\n  SYN: 0 (Not set)\n  FIN: 1 (Set)\nWindow size: 1\nChecksum: 0x1234\nUrgent pointer: 0x0000",
       "enc": "utf8"
     }
   },
@@ -123,7 +123,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Source port: 51234\nDestination port: 443\nSequence number: 2864434397\nAcknowledgement number: 0\nData offset: 10 (40 bytes)\nReserved bits: 0\nFlags: 0x002 (SYN)\n  NS: 0 (Not set)\n  CWR: 0 (Not set)\n  ECE: 0 (Not set)\n  URG: 0 (Not set)\n  ACK: 0 (Not set)\n  PSH: 0 (Not set)\n  RST: 0 (Not set)\n  SYN: 1 (Set)\n  FIN: 0 (Not set)\nWindow size: 64240\nChecksum: 0x1234\nUrgent pointer: 0\nOptions:\n  Maximum Segment Size (2): 1460\n  SACK Permitted (4)\n  Timestamps (8): TSval 305441741, TSecr 0\n  No-Operation (1)\n  Window Scale (3): shift 7 (multiplier 128)",
+      "value": "Source port: 51234\nDestination port: 443\nSequence number: 2864434397\nAcknowledgement number: 0\nData offset: 10 (40 bytes)\nReserved bits: 0\nFlags: 0x002 (SYN)\n  NS: 0 (Not set)\n  CWR: 0 (Not set)\n  ECE: 0 (Not set)\n  URG: 0 (Not set)\n  ACK: 0 (Not set)\n  PSH: 0 (Not set)\n  RST: 0 (Not set)\n  SYN: 1 (Set)\n  FIN: 0 (Not set)\nWindow size: 64240\nChecksum: 0x1234\nUrgent pointer: 0x0000\nOptions:\n  Maximum Segment Size (2): 1460\n  SACK Permitted (4)\n  Timestamps (8): TSval 305441741, TSecr 0\n  No-Operation (1)\n  Window Scale (3): shift 7 (multiplier 128)",
       "enc": "utf8"
     }
   },
@@ -137,7 +137,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Source port: 5000\nDestination port: 25\nSequence number: 0\nAcknowledgement number: 0\nData offset: 5 (20 bytes)\nReserved bits: 0\nFlags: 0x029 (URG, PSH, FIN)\n  NS: 0 (Not set)\n  CWR: 0 (Not set)\n  ECE: 0 (Not set)\n  URG: 1 (Set)\n  ACK: 0 (Not set)\n  PSH: 1 (Set)\n  RST: 0 (Not set)\n  SYN: 0 (Not set)\n  FIN: 1 (Set)\nWindow size: 1\nChecksum: 0x1234\nUrgent pointer: 0",
+      "value": "Source port: 5000\nDestination port: 25\nSequence number: 0\nAcknowledgement number: 0\nData offset: 5 (20 bytes)\nReserved bits: 0\nFlags: 0x029 (URG, PSH, FIN)\n  NS: 0 (Not set)\n  CWR: 0 (Not set)\n  ECE: 0 (Not set)\n  URG: 1 (Set)\n  ACK: 0 (Not set)\n  PSH: 1 (Set)\n  RST: 0 (Not set)\n  SYN: 0 (Not set)\n  FIN: 1 (Set)\nWindow size: 1\nChecksum: 0x1234\nUrgent pointer: 0x0000",
       "enc": "utf8"
     }
   },
@@ -145,7 +145,9 @@
     "name": "Strip TCP header: options and data",
     "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
     "op": "packets:strip-tcp",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "c82201bbaabbccde000003e9801801f6123400000101080a0000000700000009474554202f20485454502f312e310d0a486f73743a20610d0a0d0a",
       "enc": "utf8"
@@ -159,7 +161,9 @@
     "name": "Strip TCP header: no data",
     "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
     "op": "packets:strip-tcp",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "c82201bbaabbccdd00000000a002faf012340000020405b40402080a1234abcd0000000001030307",
       "enc": "utf8"
@@ -306,7 +310,9 @@
     "name": "Strip TCP header: 19 bytes",
     "ref": "cut short",
     "op": "packets:strip-tcp",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "13880019000000000000000050290001123400",
       "enc": "utf8"
@@ -405,7 +411,9 @@
     "name": "Strip UDP header",
     "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
     "op": "packets:strip-udp",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "cf84003500259a3c1a2b01000001000000000000076578616d706c6503636f6d0000010001",
       "enc": "utf8"
@@ -419,7 +427,9 @@
     "name": "Strip UDP header: link padding dropped",
     "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
     "op": "packets:strip-udp",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "cf84003500259a3c1a2b01000001000000000000076578616d706c6503636f6d0000010001000000000000000000000000000000000000",
       "enc": "utf8"
@@ -433,7 +443,9 @@
     "name": "Strip UDP header: length beyond the data keeps all",
     "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
     "op": "packets:strip-udp",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "cf84003500259a3c1a2b01000001000000000000",
       "enc": "utf8"
@@ -502,7 +514,9 @@
     "name": "Strip UDP header: length 3",
     "ref": "length below the header",
     "op": "packets:strip-udp",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "0001000200030000",
       "enc": "utf8"
@@ -521,7 +535,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Version: 4\nInternet Header Length (IHL): 5 (20 bytes)\nDifferentiated Services Code Point (DSCP): 0\nExplicit Congestion Notification (ECN): 0\nTotal length: 60 bytes\nIdentification: 0x1c46 (7238)\nFlags: 0x2\n  Reserved bit: 0 (Not set)\n  Don't fragment: 1 (Set)\n  More fragments: 0 (Not set)\nFragment offset: 0 (0 bytes)\nTime-To-Live: 64\nProtocol: 6 (TCP)\nHeader checksum: 0xb262 (valid)\nSource IP address: 172.16.254.1\nDestination IP address: 192.0.2.1",
+      "value": "Version: 4\nInternet Header Length (IHL): 5 (20 bytes)\nDifferentiated Services Code Point (DSCP): 0\nExplicit Congestion Notification (ECN): 0\nTotal length: 60 bytes\nIdentification: 0x1c46 (7238)\nFlags: 0x02\n  Reserved bit: 0 (Not set)\n  Don't fragment: 1 (Set)\n  More fragments: 0 (Not set)\nFragment offset: 0 (0 bytes)\nTime-To-Live: 64\nProtocol: 6 (TCP)\nHeader checksum: 0xb262 (correct)\nSource IP address: 172.16.254.1\nDestination IP address: 192.0.2.1",
       "enc": "utf8"
     }
   },
@@ -535,7 +549,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Version: 4\nInternet Header Length (IHL): 5 (20 bytes)\nDifferentiated Services Code Point (DSCP): 46\nExplicit Congestion Notification (ECN): 0\nTotal length: 57 bytes\nIdentification: 0xbeef (48879)\nFlags: 0x0\n  Reserved bit: 0 (Not set)\n  Don't fragment: 0 (Not set)\n  More fragments: 0 (Not set)\nFragment offset: 0 (0 bytes)\nTime-To-Live: 128\nProtocol: 17 (UDP)\nHeader checksum: 0x6705 (valid)\nSource IP address: 10.0.0.7\nDestination IP address: 10.0.0.1",
+      "value": "Version: 4\nInternet Header Length (IHL): 5 (20 bytes)\nDifferentiated Services Code Point (DSCP): 46\nExplicit Congestion Notification (ECN): 0\nTotal length: 57 bytes\nIdentification: 0xbeef (48879)\nFlags: 0x00\n  Reserved bit: 0 (Not set)\n  Don't fragment: 0 (Not set)\n  More fragments: 0 (Not set)\nFragment offset: 0 (0 bytes)\nTime-To-Live: 128\nProtocol: 17 (UDP)\nHeader checksum: 0x6705 (correct)\nSource IP address: 10.0.0.7\nDestination IP address: 10.0.0.1",
       "enc": "utf8"
     }
   },
@@ -549,7 +563,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Version: 4\nInternet Header Length (IHL): 5 (20 bytes)\nDifferentiated Services Code Point (DSCP): 0\nExplicit Congestion Notification (ECN): 0\nTotal length: 28 bytes\nIdentification: 0x0000 (0)\nFlags: 0x2\n  Reserved bit: 0 (Not set)\n  Don't fragment: 1 (Set)\n  More fragments: 0 (Not set)\nFragment offset: 0 (0 bytes)\nTime-To-Live: 255\nProtocol: 1 (ICMP)\nHeader checksum: 0x6dd3 (valid)\nSource IP address: 8.8.4.4\nDestination IP address: 1.1.1.1",
+      "value": "Version: 4\nInternet Header Length (IHL): 5 (20 bytes)\nDifferentiated Services Code Point (DSCP): 0\nExplicit Congestion Notification (ECN): 0\nTotal length: 28 bytes\nIdentification: 0x0000 (0)\nFlags: 0x02\n  Reserved bit: 0 (Not set)\n  Don't fragment: 1 (Set)\n  More fragments: 0 (Not set)\nFragment offset: 0 (0 bytes)\nTime-To-Live: 255\nProtocol: 1 (ICMP)\nHeader checksum: 0x6dd3 (correct)\nSource IP address: 8.8.4.4\nDestination IP address: 1.1.1.1",
       "enc": "utf8"
     }
   },
@@ -563,7 +577,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Version: 4\nInternet Header Length (IHL): 5 (20 bytes)\nDifferentiated Services Code Point (DSCP): 0\nExplicit Congestion Notification (ECN): 0\nTotal length: 120 bytes\nIdentification: 0x0001 (1)\nFlags: 0x1\n  Reserved bit: 0 (Not set)\n  Don't fragment: 0 (Not set)\n  More fragments: 1 (Set)\nFragment offset: 185 (1480 bytes)\nTime-To-Live: 1\nProtocol: 17 (UDP)\nHeader checksum: 0x2ca8 (valid)\nSource IP address: 172.16.254.1\nDestination IP address: 192.0.2.1",
+      "value": "Version: 4\nInternet Header Length (IHL): 5 (20 bytes)\nDifferentiated Services Code Point (DSCP): 0\nExplicit Congestion Notification (ECN): 0\nTotal length: 120 bytes\nIdentification: 0x0001 (1)\nFlags: 0x01\n  Reserved bit: 0 (Not set)\n  Don't fragment: 0 (Not set)\n  More fragments: 1 (Set)\nFragment offset: 185 (1480 bytes)\nTime-To-Live: 1\nProtocol: 17 (UDP)\nHeader checksum: 0x2ca8 (correct)\nSource IP address: 172.16.254.1\nDestination IP address: 192.0.2.1",
       "enc": "utf8"
     }
   },
@@ -577,7 +591,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Version: 4\nInternet Header Length (IHL): 5 (20 bytes)\nDifferentiated Services Code Point (DSCP): 0\nExplicit Congestion Notification (ECN): 3\nTotal length: 20 bytes\nIdentification: 0x1c46 (7238)\nFlags: 0x4\n  Reserved bit: 1 (Set)\n  Don't fragment: 0 (Not set)\n  More fragments: 0 (Not set)\nFragment offset: 0 (0 bytes)\nTime-To-Live: 64\nProtocol: 6 (TCP)\nHeader checksum: 0x7287 (valid)\nSource IP address: 172.16.254.1\nDestination IP address: 192.0.2.1",
+      "value": "Version: 4\nInternet Header Length (IHL): 5 (20 bytes)\nDifferentiated Services Code Point (DSCP): 0\nExplicit Congestion Notification (ECN): 3\nTotal length: 20 bytes\nIdentification: 0x1c46 (7238)\nFlags: 0x04\n  Reserved bit: 1 (Set)\n  Don't fragment: 0 (Not set)\n  More fragments: 0 (Not set)\nFragment offset: 0 (0 bytes)\nTime-To-Live: 64\nProtocol: 6 (TCP)\nHeader checksum: 0x7287 (correct)\nSource IP address: 172.16.254.1\nDestination IP address: 192.0.2.1",
       "enc": "utf8"
     }
   },
@@ -591,7 +605,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Version: 4\nInternet Header Length (IHL): 5 (20 bytes)\nDifferentiated Services Code Point (DSCP): 0\nExplicit Congestion Notification (ECN): 0\nTotal length: 20 bytes\nIdentification: 0x1c46 (7238)\nFlags: 0x2\n  Reserved bit: 0 (Not set)\n  Don't fragment: 1 (Set)\n  More fragments: 0 (Not set)\nFragment offset: 0 (0 bytes)\nTime-To-Live: 64\nProtocol: 6 (TCP)\nHeader checksum: 0x0000 (invalid, it should be 0xb28a)\nSource IP address: 172.16.254.1\nDestination IP address: 192.0.2.1",
+      "value": "Version: 4\nInternet Header Length (IHL): 5 (20 bytes)\nDifferentiated Services Code Point (DSCP): 0\nExplicit Congestion Notification (ECN): 0\nTotal length: 20 bytes\nIdentification: 0x1c46 (7238)\nFlags: 0x02\n  Reserved bit: 0 (Not set)\n  Don't fragment: 1 (Set)\n  More fragments: 0 (Not set)\nFragment offset: 0 (0 bytes)\nTime-To-Live: 64\nProtocol: 6 (TCP)\nHeader checksum: 0x0000 (incorrect, should be 0xb28a)\nSource IP address: 172.16.254.1\nDestination IP address: 192.0.2.1",
       "enc": "utf8"
     }
   },
@@ -605,7 +619,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Version: 4\nInternet Header Length (IHL): 9 (36 bytes)\nDifferentiated Services Code Point (DSCP): 46\nExplicit Congestion Notification (ECN): 0\nTotal length: 36 bytes\nIdentification: 0x1c46 (7238)\nFlags: 0x1\n  Reserved bit: 0 (Not set)\n  Don't fragment: 0 (Not set)\n  More fragments: 1 (Set)\nFragment offset: 185 (1480 bytes)\nTime-To-Live: 1\nProtocol: 1 (ICMP)\nHeader checksum: 0xc7f8 (valid)\nSource IP address: 1.2.3.4\nDestination IP address: 5.6.7.8\nOptions:\n  Router Alert (148), length 4: 0000\n  Record Route (7), length 7: 040a000001\n  No Operation (1)\n  End of Option List (0)",
+      "value": "Version: 4\nInternet Header Length (IHL): 9 (36 bytes)\nDifferentiated Services Code Point (DSCP): 46\nExplicit Congestion Notification (ECN): 0\nTotal length: 36 bytes\nIdentification: 0x1c46 (7238)\nFlags: 0x01\n  Reserved bit: 0 (Not set)\n  Don't fragment: 0 (Not set)\n  More fragments: 1 (Set)\nFragment offset: 185 (1480 bytes)\nTime-To-Live: 1\nProtocol: 1 (ICMP)\nHeader checksum: 0xc7f8 (correct)\nSource IP address: 1.2.3.4\nDestination IP address: 5.6.7.8\nOptions:\n  Router Alert (148), length 4: 0000\n  Record Route (7), length 7: 040a000001\n  No Operation (1)\n  End of Option List (0)",
       "enc": "utf8"
     }
   },
@@ -619,7 +633,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Version: 4\nInternet Header Length (IHL): 10 (40 bytes)\nDifferentiated Services Code Point (DSCP): 0\nExplicit Congestion Notification (ECN): 0\nTotal length: 40 bytes\nIdentification: 0x1c46 (7238)\nFlags: 0x2\n  Reserved bit: 0 (Not set)\n  Don't fragment: 1 (Set)\n  More fragments: 0 (Not set)\nFragment offset: 0 (0 bytes)\nTime-To-Live: 64\nProtocol: 6 (TCP)\nHeader checksum: 0xd672 (valid)\nSource IP address: 172.16.254.1\nDestination IP address: 192.0.2.1\nOptions:\n  Loose Source Route (131), length 7: 040a000001\n  Strict Source Route (137), length 3: 63\n  Time Stamp (68), length 4: 0500\n  No Operation (1)\n  No Operation (1)\n  No Operation (1)\n  No Operation (1)\n  End of Option List (0)",
+      "value": "Version: 4\nInternet Header Length (IHL): 10 (40 bytes)\nDifferentiated Services Code Point (DSCP): 0\nExplicit Congestion Notification (ECN): 0\nTotal length: 40 bytes\nIdentification: 0x1c46 (7238)\nFlags: 0x02\n  Reserved bit: 0 (Not set)\n  Don't fragment: 1 (Set)\n  More fragments: 0 (Not set)\nFragment offset: 0 (0 bytes)\nTime-To-Live: 64\nProtocol: 6 (TCP)\nHeader checksum: 0xd672 (correct)\nSource IP address: 172.16.254.1\nDestination IP address: 192.0.2.1\nOptions:\n  Loose Source Route (131), length 7: 040a000001\n  Strict Source Route (137), length 3: 63\n  Time Stamp (68), length 4: 0500\n  No Operation (1)\n  No Operation (1)\n  No Operation (1)\n  No Operation (1)\n  End of Option List (0)",
       "enc": "utf8"
     }
   },
@@ -635,7 +649,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Version: 4\nInternet Header Length (IHL): 5 (20 bytes)\nDifferentiated Services Code Point (DSCP): 0\nExplicit Congestion Notification (ECN): 0\nTotal length: 60 bytes\nIdentification: 0x1c46 (7238)\nFlags: 0x2\n  Reserved bit: 0 (Not set)\n  Don't fragment: 1 (Set)\n  More fragments: 0 (Not set)\nFragment offset: 0 (0 bytes)\nTime-To-Live: 64\nProtocol: 6 (TCP)\nHeader checksum: 0xb262 (valid)\nSource IP address: 172.16.254.1\nDestination IP address: 192.0.2.1",
+      "value": "Version: 4\nInternet Header Length (IHL): 5 (20 bytes)\nDifferentiated Services Code Point (DSCP): 0\nExplicit Congestion Notification (ECN): 0\nTotal length: 60 bytes\nIdentification: 0x1c46 (7238)\nFlags: 0x02\n  Reserved bit: 0 (Not set)\n  Don't fragment: 1 (Set)\n  More fragments: 0 (Not set)\nFragment offset: 0 (0 bytes)\nTime-To-Live: 64\nProtocol: 6 (TCP)\nHeader checksum: 0xb262 (correct)\nSource IP address: 172.16.254.1\nDestination IP address: 192.0.2.1",
       "enc": "utf8"
     }
   },
@@ -649,7 +663,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Version: 4\nInternet Header Length (IHL): 5 (20 bytes)\nDifferentiated Services Code Point (DSCP): 0\nExplicit Congestion Notification (ECN): 0\nTotal length: 28 bytes\nIdentification: 0x0000 (0)\nFlags: 0x2\n  Reserved bit: 0 (Not set)\n  Don't fragment: 1 (Set)\n  More fragments: 0 (Not set)\nFragment offset: 0 (0 bytes)\nTime-To-Live: 255\nProtocol: 1 (ICMP)\nHeader checksum: 0x6dd3 (valid)\nSource IP address: 8.8.4.4\nDestination IP address: 1.1.1.1",
+      "value": "Version: 4\nInternet Header Length (IHL): 5 (20 bytes)\nDifferentiated Services Code Point (DSCP): 0\nExplicit Congestion Notification (ECN): 0\nTotal length: 28 bytes\nIdentification: 0x0000 (0)\nFlags: 0x02\n  Reserved bit: 0 (Not set)\n  Don't fragment: 1 (Set)\n  More fragments: 0 (Not set)\nFragment offset: 0 (0 bytes)\nTime-To-Live: 255\nProtocol: 1 (ICMP)\nHeader checksum: 0x6dd3 (correct)\nSource IP address: 8.8.4.4\nDestination IP address: 1.1.1.1",
       "enc": "utf8"
     }
   },
@@ -787,7 +801,9 @@
     "name": "Strip IPv4 header: TCP payload",
     "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
     "op": "packets:strip-ipv4",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "4500003c1c4640004006b262ac10fe01c0000201c82201bbaabbccdd00000000a002faf012340000020405b40402080a1234abcd0000000001030307",
       "enc": "utf8"
@@ -801,7 +817,9 @@
     "name": "Strip IPv4 header: Ethernet padding after the datagram is dropped",
     "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
     "op": "packets:strip-ipv4",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "45b80039beef0000801167050a0000070a000001cf84003500259a3c1a2b01000001000000000000076578616d706c6503636f6d0000010001000000000000000000000000000000000000",
       "enc": "utf8"
@@ -815,7 +833,9 @@
     "name": "Strip IPv4 header: header with options",
     "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
     "op": "packets:strip-ipv4",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "49b800281c4620b90101c7f40102030405060708940400000707040a000001010000000070696e67",
       "enc": "utf8"
@@ -829,7 +849,9 @@
     "name": "Strip IPv4 header: total length 0 keeps all",
     "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
     "op": "packets:strip-ipv4",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "450000001c4640004006b29eac10fe01c000020174736f2d7365676d656e74",
       "enc": "utf8"
@@ -843,7 +865,9 @@
     "name": "Strip IPv4 header: total length beyond the data keeps all",
     "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
     "op": "packets:strip-ipv4",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "4500001a1c4640004006b284ac10fe01c0000201616263",
       "enc": "utf8"
@@ -857,7 +881,9 @@
     "name": "Strip IPv4 header: total length below the header keeps all",
     "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
     "op": "packets:strip-ipv4",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "4500000a1c4640004006b294ac10fe01c000020164617461",
       "enc": "utf8"
@@ -887,7 +913,9 @@
     "name": "Strip IPv4 header: header only",
     "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
     "op": "packets:strip-ipv4",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "450000141c46400040060000ac10fe01c0000201",
       "enc": "utf8"
@@ -901,7 +929,9 @@
     "name": "Strip IPv4 header: empty",
     "ref": "cut short",
     "op": "packets:strip-ipv4",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "",
       "enc": "utf8"
@@ -914,7 +944,9 @@
     "name": "Strip IPv4 header: version 5",
     "ref": "wrong version",
     "op": "packets:strip-ipv4",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "5500003c1c4640004006b262ac10fe01c0000201",
       "enc": "utf8"
@@ -927,7 +959,9 @@
     "name": "Strip IPv4 header: IHL 15 with a short input",
     "ref": "header cut short",
     "op": "packets:strip-ipv4",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "4f00003c1c4640004006b262ac10fe01c0000201",
       "enc": "utf8"
@@ -940,13 +974,15 @@
     "name": "Ethernet: IPv4 over Ethernet II",
     "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
     "op": "packets:parse-ethernet",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "001a2b3c4d5edeadbeef000108004500003c1c4640004006b262ac10fe01c0000201c82201bbaabbccdd00000000a002faf012340000020405b40402080a1234abcd0000000001030307",
       "enc": "utf8"
     },
     "expect": {
-      "value": "Destination MAC: 00:1a:2b:3c:4d:5e\nSource MAC: de:ad:be:ef:00:01\nEtherType: 0x0800 (IPv4)\nPayload (60 bytes): 4500003c1c4640004006b262ac10fe01c0000201c82201bbaabbccdd00000000a002faf012340000020405b40402080a1234abcd0000000001030307",
+      "value": "Source MAC: de:ad:be:ef:00:01\nDestination MAC: 00:1a:2b:3c:4d:5e\nEtherType: 0x0800 (IPv4)\nPayload (60 bytes): 4500003c1c4640004006b262ac10fe01c0000201c82201bbaabbccdd00000000a002faf012340000020405b40402080a1234abcd0000000001030307",
       "enc": "utf8"
     }
   },
@@ -954,13 +990,15 @@
     "name": "Ethernet: a broadcast ARP request",
     "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
     "op": "packets:parse-ethernet",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "ffffffffffffdeadbeef000108060001080006040001deadbeef0001c0a8010a000000000000c0a80101000000000000000000000000000000000000",
       "enc": "utf8"
     },
     "expect": {
-      "value": "Destination MAC: ff:ff:ff:ff:ff:ff\nSource MAC: de:ad:be:ef:00:01\nEtherType: 0x0806 (ARP)\nPayload (46 bytes): 0001080006040001deadbeef0001c0a8010a000000000000c0a80101000000000000000000000000000000000000",
+      "value": "Source MAC: de:ad:be:ef:00:01\nDestination MAC: ff:ff:ff:ff:ff:ff\nEtherType: 0x0806 (ARP)\nPayload (46 bytes): 0001080006040001deadbeef0001c0a8010a000000000000c0a80101000000000000000000000000000000000000",
       "enc": "utf8"
     }
   },
@@ -968,13 +1006,15 @@
     "name": "Ethernet: one 802.1Q tag (priority 3, VLAN 100) over IPv6",
     "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
     "op": "packets:parse-ethernet",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "001a2b3c4d5edeadbeef00018100606486dd60000000000000000000000000000000000000000000000000000000000000000000000000000000",
       "enc": "utf8"
     },
     "expect": {
-      "value": "Destination MAC: 00:1a:2b:3c:4d:5e\nSource MAC: de:ad:be:ef:00:01\nVLAN tag 1:\n  TPID: 0x8100 (802.1Q)\n  Priority (PCP): 3\n  Drop eligible (DEI): 0\n  VLAN ID: 100\nEtherType: 0x86dd (IPv6)\nPayload (40 bytes): 60000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "value": "Source MAC: de:ad:be:ef:00:01\nDestination MAC: 00:1a:2b:3c:4d:5e\nVLAN tag 1:\n  TPID: 0x8100 (802.1Q)\n  Priority (PCP): 3\n  Drop eligible (DEI): 0\n  VLAN ID: 100\nEtherType: 0x86dd (IPv6)\nPayload (40 bytes): 60000000000000000000000000000000000000000000000000000000000000000000000000000000",
       "enc": "utf8"
     }
   },
@@ -982,13 +1022,15 @@
     "name": "Ethernet: 802.1ad outer tag with DEI and 802.1Q inner tag over MPLS",
     "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
     "op": "packets:parse-ethernet",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "01005e0000fbdeadbeef000188a8babc810000078847000141ff",
       "enc": "utf8"
     },
     "expect": {
-      "value": "Destination MAC: 01:00:5e:00:00:fb\nSource MAC: de:ad:be:ef:00:01\nVLAN tag 1:\n  TPID: 0x88a8 (802.1ad)\n  Priority (PCP): 5\n  Drop eligible (DEI): 1\n  VLAN ID: 2748\nVLAN tag 2:\n  TPID: 0x8100 (802.1Q)\n  Priority (PCP): 0\n  Drop eligible (DEI): 0\n  VLAN ID: 7\nEtherType: 0x8847 (MPLS unicast)\nPayload (4 bytes): 000141ff",
+      "value": "Source MAC: de:ad:be:ef:00:01\nDestination MAC: 01:00:5e:00:00:fb\nVLAN tag 1:\n  TPID: 0x88a8 (802.1ad)\n  Priority (PCP): 5\n  Drop eligible (DEI): 1\n  VLAN ID: 2748\nVLAN tag 2:\n  TPID: 0x8100 (802.1Q)\n  Priority (PCP): 0\n  Drop eligible (DEI): 0\n  VLAN ID: 7\nEtherType: 0x8847 (MPLS unicast)\nPayload (4 bytes): 000141ff",
       "enc": "utf8"
     }
   },
@@ -996,13 +1038,15 @@
     "name": "Ethernet: an IEEE 802.3 frame (length 3)",
     "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
     "op": "packets:parse-ethernet",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "0180c2000000deadbeef00010003424203",
       "enc": "utf8"
     },
     "expect": {
-      "value": "Destination MAC: 01:80:c2:00:00:00\nSource MAC: de:ad:be:ef:00:01\nLength: 3 (IEEE 802.3 length field, no EtherType)\nPayload (3 bytes): 424203",
+      "value": "Source MAC: de:ad:be:ef:00:01\nDestination MAC: 01:80:c2:00:00:00\nLength: 3 (IEEE 802.3 length field, no EtherType)\nPayload (3 bytes): 424203",
       "enc": "utf8"
     }
   },
@@ -1010,13 +1054,15 @@
     "name": "Ethernet: LLDP with no payload",
     "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
     "op": "packets:parse-ethernet",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "001a2b3c4d5edeadbeef000188cc",
       "enc": "utf8"
     },
     "expect": {
-      "value": "Destination MAC: 00:1a:2b:3c:4d:5e\nSource MAC: de:ad:be:ef:00:01\nEtherType: 0x88cc (LLDP)",
+      "value": "Source MAC: de:ad:be:ef:00:01\nDestination MAC: 00:1a:2b:3c:4d:5e\nEtherType: 0x88cc (LLDP)",
       "enc": "utf8"
     }
   },
@@ -1024,13 +1070,15 @@
     "name": "Ethernet: an EtherType with no name",
     "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
     "op": "packets:parse-ethernet",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "001a2b3c4d5edeadbeef00011234ff",
       "enc": "utf8"
     },
     "expect": {
-      "value": "Destination MAC: 00:1a:2b:3c:4d:5e\nSource MAC: de:ad:be:ef:00:01\nEtherType: 0x1234\nPayload (1 bytes): ff",
+      "value": "Source MAC: de:ad:be:ef:00:01\nDestination MAC: 00:1a:2b:3c:4d:5e\nEtherType: 0x1234\nPayload (1 bytes): ff",
       "enc": "utf8"
     }
   },
@@ -1038,13 +1086,15 @@
     "name": "Ethernet: length 1500 is still a length",
     "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
     "op": "packets:parse-ethernet",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "001a2b3c4d5edeadbeef000105dc07070707",
       "enc": "utf8"
     },
     "expect": {
-      "value": "Destination MAC: 00:1a:2b:3c:4d:5e\nSource MAC: de:ad:be:ef:00:01\nLength: 1500 (IEEE 802.3 length field, no EtherType)\nPayload (4 bytes): 07070707",
+      "value": "Source MAC: de:ad:be:ef:00:01\nDestination MAC: 00:1a:2b:3c:4d:5e\nLength: 1500 (IEEE 802.3 length field, no EtherType)\nPayload (4 bytes): 07070707",
       "enc": "utf8"
     }
   },
@@ -1060,7 +1110,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Destination MAC: 00:1a:2b:3c:4d:5e\nSource MAC: de:ad:be:ef:00:01\nEtherType: 0x0800 (IPv4)\nPayload (60 bytes): 4500003c1c4640004006b262ac10fe01c0000201c82201bbaabbccdd00000000a002faf012340000020405b40402080a1234abcd0000000001030307",
+      "value": "Source MAC: de:ad:be:ef:00:01\nDestination MAC: 00:1a:2b:3c:4d:5e\nEtherType: 0x0800 (IPv4)\nPayload (60 bytes): 4500003c1c4640004006b262ac10fe01c0000201c82201bbaabbccdd00000000a002faf012340000020405b40402080a1234abcd0000000001030307",
       "enc": "utf8"
     }
   },
@@ -1068,13 +1118,15 @@
     "name": "Ethernet: hex with spaces",
     "ref": "Python struct, RFC 1071 checksum and the field layouts rendered by independent code (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad)",
     "op": "packets:parse-ethernet",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "01 80 c2 00 00 00 de ad be ef 00 01 00 03 42 42 03",
       "enc": "utf8"
     },
     "expect": {
-      "value": "Destination MAC: 01:80:c2:00:00:00\nSource MAC: de:ad:be:ef:00:01\nLength: 3 (IEEE 802.3 length field, no EtherType)\nPayload (3 bytes): 424203",
+      "value": "Source MAC: de:ad:be:ef:00:01\nDestination MAC: 01:80:c2:00:00:00\nLength: 3 (IEEE 802.3 length field, no EtherType)\nPayload (3 bytes): 424203",
       "enc": "utf8"
     }
   },
@@ -1082,7 +1134,9 @@
     "name": "Ethernet: empty input",
     "ref": "cut short",
     "op": "packets:parse-ethernet",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "",
       "enc": "utf8"
@@ -1095,7 +1149,9 @@
     "name": "Ethernet: 13 bytes",
     "ref": "cut short",
     "op": "packets:parse-ethernet",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "001a2b3c4d5edeadbeef000108",
       "enc": "utf8"
@@ -1108,7 +1164,9 @@
     "name": "Ethernet: VLAN tag cut after the TPID",
     "ref": "tag cut short",
     "op": "packets:parse-ethernet",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "001a2b3c4d5edeadbeef00018100",
       "enc": "utf8"
@@ -1121,7 +1179,9 @@
     "name": "Ethernet: VLAN tag without the EtherType",
     "ref": "type cut short",
     "op": "packets:parse-ethernet",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "001a2b3c4d5edeadbeef000181006064",
       "enc": "utf8"
@@ -1134,7 +1194,9 @@
     "name": "Ethernet: bad hex",
     "ref": "not hex",
     "op": "packets:parse-ethernet",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "not hex",
       "enc": "utf8"
@@ -1147,7 +1209,9 @@
     "name": "TLS 1.3 handshake: ClientHello (openssl 3.0.13)",
     "ref": "bytes captured between openssl 3.0.13 s_client and s_server on localhost; values checked against s_client -trace of the same run; layout by independent Python",
     "op": "packets:parse-tls",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "16030101460100014203036a2cb016ac1931d5e07664ea1d1517a242c9118529c713af6996b05d0de39cc620efc721ada088783ef80b31ddf4797f6ecce7657c7c954699fb546b2d6bc6f2b9003e130213031301c02cc030009fcca9cca8ccaac02bc02f009ec024c028006bc023c0270067c00ac0140039c009c0130033009d009c003d003c0035002f00ff010000bb00000010000e00000b6578616d706c652e636f6d000b000403000102000a00160014001d0017001e0019001801000101010201030104002300000010000e000c02683208687474702f312e310016000000170000000d002a0028040305030603080708080809080a080b080408050806040105010601030303010302040205020602002b00050403040303002d00020101003300260024001d0020650469fce30f04194bc0afcb0201428d6ab2f17f9697b4356c2ac8116088da7c1403030001011703030045be9a11c4065b5a37d1b5e7abe659f878d4c02a452839cc32181bb016aaf038950597368813bd7bdf6c2c76904c55be1cf4d33ed4ad19841d295826f926bb484dc4c96808a41703030013296955dc2e5b0d97b25b0f79b94c0cef40283f",
       "enc": "utf8"
@@ -1161,7 +1225,9 @@
     "name": "TLS 1.3: ServerHello and encrypted records",
     "ref": "bytes captured between openssl 3.0.13 s_client and s_server on localhost; values checked against s_client -trace of the same run; layout by independent Python",
     "op": "packets:parse-tls",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "160303007a020000760303491670b36bb82374a86da2d668e2a20ac3d0c63485065751d49f7794840ccb5720efc721ada088783ef80b31ddf4797f6ecce7657c7c954699fb546b2d6bc6f2b9130200002e002b0002030400330024001d002011ff9bdabc7f35a8b1b106dd84ca20253116f219e8f8ed3a1a71c9b60c78337e1403030001011703030017b14c9632f66d22073321f5cba9156ed5bbc99d97c292bb17030301a29f8dcc88d448abcd42eb6be9aa3b713ea384d89d5225f03ee33c39c98af7c75de58d082367dae583686d0b536716c15e7cca17a8db96060f2456251f9dffb922e0c93ca073ea60c0d4f53eb8365e2b36da38c42d394ff0141309bca72b1fc0f66e013758f2cf0de9575959978d18617043733737c5a113cacfa5433e93f0a132de3d09aec68c8936a02e7841e8ba5048fe026de25eac3a662d7da5c2d16ad58882d874306c4a1ae7bcb025c5d9f243e88db0f742255666704385f0d69b63dec36e01cb69c2f0792733b61ed704a51d43adaa45b553043080aacc00c5bcf54567f2bbcf8e76b82a0bed5fabadf9c4604ddc209b300c379b7cdba023c50c7e9bad35f2bdbe155f0a1470e1c8478c366d89025976fa89b8fe2d11275c3d2b08f2443734617c5bf27c20e6400d3302f319fbf39e5b573f532c3d7c5034354832a501f28f34c6d4ec830b67940a5be4c4ae892421908ca78c9837880784ab646ef2bbb63ff9bc3f1048f45f4e04ac66c111feda558da2d565dba5f0949a60954108f9660ded6e1682ebd46c01eee310f4848d4b728d1a30e97f879024f0d6c8d7f89c9ac2170303006130af4bf7c4d807fa8db342680426320f19da929142f19513b1ea5e97607256785f280de8ceb2c7e51f36a45d22e5fff8ca9043fec6e8a9d85b43cca0e944d9d1454efaad9104778349125039f9ff1b07b58f62fc8aea6505cccd04cc3848c68f0417030300459073c02fcbb453ae04fb315fdc96734f9630e6d046fe5138cc890aa3e37e31e903bb15fb294ed632e54d13875b44bdadd5e32b0efa17bdaea0300166ed36d3534fad00435717030300fad94e7aa97911432196c07f1cb8d7aef68ebb66e29f9c4c32724a7951f8af37e2f49a202cddd66bba3eb71428938ac85f5462327326ff9592dee9693b35a87ce7b155641095a3a55ef0a3631ae0645ec9561d38029bedbb4cb25dfb04413c75fef7fc944efa15f755816ac4028e07d506851852287ab3321c8769e563e01e71343dd107fa6116cc00d667b3d6b8accb853cce274c5fc1f86ec24ff0a0fab823f05d3731b1a65eae3173eca2be5bcec512a76519844102d92cb8ad0c1fac88bdfb10dbdc8b2a318e0696e8050a050cffecf8bc6e269c4e07768324cb514108d5c9f508f4c11b5126e6f7f1280cf2e802ff052c9fe3a1f07650abd017030300fa9bee92d137f76e72236f858c249b6b3442fa7f2b036ca0d4a0fab37afb01bcc8c0f3e689a1c2db4c86b49934b25fa593bd1e72d2410234b17a4d24f21ec6528b4cb6623e31847584ac994b574ae0e783c05828ea9046601ae9bb936fd75ea5443e42bfc311bbfcdf71e940744892f91c09856afb815ac74376df3c042770b08873a08eebb630fc10749cc41ba889a490001cc6958a7c0f5dcb1f4582d298703cf6055372360336682e8329393113741ec29876ed81c64f5cc5497af275e6c81d40a7e8c3df2602eb2dc4d12641e9197942750aebd179a6f7368a721d2e261cccba25c03d7635f6cef0ceb39727f5819c248bca2405c6521822d617030300132c163f2ad5a8b37100d04ffa8a6551db62cc11",
       "enc": "utf8"
@@ -1175,7 +1241,9 @@
     "name": "TLS 1.2: ClientHello with SNI and ALPN",
     "ref": "bytes captured between openssl 3.0.13 s_client and s_server on localhost; values checked against s_client -trace of the same run; layout by independent Python",
     "op": "packets:parse-tls",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "16030100de010000da0303d893daca2259abff8b3221524a40fbfb580546868621e854acf27daef08a1200000038c02cc030009fcca9cca8ccaac02bc02f009ec024c028006bc023c0270067c00ac0140039c009c0130033009d009c003d003c0035002f00ff0100007900000014001200000f7777772e6578616d706c652e6f7267000b000403000102000a000c000a001d0017001e00190018002300000010000b000908687474702f312e310016000000170000000d002a0028040305030603080708080809080a080b0804080508060401050106010303030103020402050206021603030025100000212081d1ab0fdef16e0a07a2ab9ceeeb7df40ec15ffe8fb90b357f6f87639f267a7a1403030001011603030028828af376ea8f4a2d05c4a966a2741364a32963e776f6981902b39896c30410fcceacbf8e62d96625150303001a828af376ea8f4a2eaca3251f62e55ee552336d46c1f7ef9ad69f",
       "enc": "utf8"
@@ -1189,7 +1257,9 @@
     "name": "TLS 1.2: ServerHello, Certificate, ServerKeyExchange, ServerHelloDone",
     "ref": "bytes captured between openssl 3.0.13 s_client and s_server on localhost; values checked against s_client -trace of the same run; layout by independent Python",
     "op": "packets:parse-tls",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "16030300410200003d03038c7c4bbf29e7e5792b0c8d3b48db38cb9423dfd2e3eb908f5eb8bc9547aefdd000c02c000015ff01000100000b0004030001020023000000170000160303018e0b00018a0001870001843082018030820127a0030201020214052e0b44e1161fd68886c2ea8c268fe7e9c3d8f2300a06082a8648ce3d04030230163114301206035504030c0b6578616d706c652e636f6d301e170d3236313131313230343333335a170d3236313131333230343333335a30163114301206035504030c0b6578616d706c652e636f6d3059301306072a8648ce3d020106082a8648ce3d030107034200046b52b6dc56c3beea4760c9f4ea9eaef97a0a316ef61749aa67244dbdd6a91d681f2eed9153dc1a59c2604ae05435223b8852a7d8728b3753df809e7b9b6ca4eea3533051301d0603551d0e04160414319eb9bd6d9c8409dffdc054549a573a347db24a301f0603551d23041830168014319eb9bd6d9c8409dffdc054549a573a347db24a300f0603551d130101ff040530030101ff300a06082a8648ce3d0403020347003044022035f7ceb3e91aa69756e87dfe4727453479392241e21482fbf0283f6309bad6c7022075b95dbab5d937d55633951f3ff6182470721f613456f31ba08550cd2adbddbc16030300730c00006f03001d20570dbf0feb63575285c941eb06fec8ddb32772b71e48a0dfbc7fa3c0459cb735040300473045022100c867255ffa333c91e97459573a9554c89eafcf55ddc881bd06c052cfbd659f6f02207692e772d41e4eba22063b07a63c5ecfe7a84efcbb8098061897a29b298739af16030300040e00000016030300ba040000b600001c2000b074eea5485e6389e50258e9658b75dc1e09a0cb192bc812352f1b9550493c643d63536747cd0679e967b32c117769cdc6cdc18a404b21340f9a3a62f53cc0fb3930347bde9246e6285fef690113a1eacec7d973808c905b4e4daa902bd0bd4f7685badbe1cdeea2ffa41faf3d29c16c9e7a6812605d54c276ce9b6c155fd5f1f58c38dd3b9160f1dac4d75f9e08f12ccfe96a7d026603a00cf95d67657ecbe92c44fd5698b70214b928e940b30ba61c1b1403030001011603030028f8d3532b499f08db940d35b664c300f31dc9d2ac2e3c8125fca3d8f4f30cc5b9919ed8b096713051150303001af8d3532b499f08dc7ef015dd183ae27a44fc98263f61c2e3747c",
       "enc": "utf8"
@@ -1203,7 +1273,9 @@
     "name": "TLS 1.0: ClientHello and ServerHello with older ciphers",
     "ref": "bytes captured between openssl 3.0.13 s_client and s_server on localhost; values checked against s_client -trace of the same run; layout by independent Python",
     "op": "packets:parse-tls",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "160301007f0100007b030171deb092ee42fa6cb147e04123b47bb5374acfafa100d46adcc13df83da24a0f00002ec00ac0140039003800880087c019003a0089c009c0130033003200450044c0180034004600350084002f004100ff01000024000b000403000102000a000c000a001d0017001e001900180023000000160000001700001603010025100000212063448c98b95a34adf842bc1a2ff5ffe7becef29c40676df21745b4b9f7ce231714030100010116030100348abe9d945acc040fd70db6cc4b88b48f974256416c160bffd47b0c428f712d35d8c10d89e731ac2c2b6af2b6bfbf5af29891aee915030100244013c1ecd7cf9c43e2de2c9f8411c2f37f670292ad102b94402b4cfd1e12a773be5ab77e",
       "enc": "utf8"
@@ -1217,7 +1289,9 @@
     "name": "TLS 1.0: server flight",
     "ref": "bytes captured between openssl 3.0.13 s_client and s_server on localhost; values checked against s_client -trace of the same run; layout by independent Python",
     "op": "packets:parse-tls",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "1603010045020000410301b3b61c0bae49dcd79264cd82051a69de02fe843823740e33bd8bdd421d5a228c00c00a000019ff01000100000b000403000102002300000016000000170000160301018e0b00018a0001870001843082018030820127a0030201020214052e0b44e1161fd68886c2ea8c268fe7e9c3d8f2300a06082a8648ce3d04030230163114301206035504030c0b6578616d706c652e636f6d301e170d3236313131313230343333335a170d3236313131333230343333335a30163114301206035504030c0b6578616d706c652e636f6d3059301306072a8648ce3d020106082a8648ce3d030107034200046b52b6dc56c3beea4760c9f4ea9eaef97a0a316ef61749aa67244dbdd6a91d681f2eed9153dc1a59c2604ae05435223b8852a7d8728b3753df809e7b9b6ca4eea3533051301d0603551d0e04160414319eb9bd6d9c8409dffdc054549a573a347db24a301f0603551d23041830168014319eb9bd6d9c8409dffdc054549a573a347db24a300f0603551d130101ff040530030101ff300a06082a8648ce3d0403020347003044022035f7ceb3e91aa69756e87dfe4727453479392241e21482fbf0283f6309bad6c7022075b95dbab5d937d55633951f3ff6182470721f613456f31ba08550cd2adbddbc16030100720c00006e03001d206a967de0763a0a6a4893feb5024dd64c711e705de921140928c411cfd6237f5100483046022100cdefedbb1189c70a5d4cba8a7c0df0acc46dcf9fcf515f7914b1ca5c3d55cb9b022100cc514b75cfd8f0cf6663af09db708b16e83b4908a4ec6d61c3c6546a482c2aa816030100040e00000016030100ba040000b600001c2000b012b7aebefd0f89fdb172eee76df0941d5557cd6754d5f4cd5307a28936efc28bfeda9ab3f96bddd3a8a5943842f473b1b885eedfa4512fb97e375080f2eb7fa1f38322524f5799bd82e70720bb1cd9de8f9f93e2c41642acad1bad0da228ec6a4340713a6af4c58dbbe94a8e25c8676d463528f0f4c919bd3f2478daff2bbabe7a6e205632d1c375c488b83559c4d3214e576fe6fdb35eee73b3d72e0f325855a87d1997b5b0d04e2fa04f6238ad824514030100010116030100348a5ed50c97ba5abb05a5e234d8a5fffb6846b5b8476e75daf845c33d74520824cbbc9eee0a6a8feca4f5848ffb45cf3cf66e4d4c15030100249a760d550b356721eba9d21284d745ec9c75afcc8419645f87d6cc25be5145c9050223e3",
       "enc": "utf8"
@@ -1231,7 +1305,9 @@
     "name": "TLS 1.3: HelloRetryRequest flight",
     "ref": "bytes captured between openssl 3.0.13 s_client and s_server on localhost; values checked against s_client -trace of the same run; layout by independent Python",
     "op": "packets:parse-tls",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "1603030058020000540303cf21ad74e59a6111be1d8c021e65b891c2a211167abb8c5e079e09e2c8a8339c2048c5d5f6c626460406b8982d786ba94f34568ae0fed4a6adfc144fd300a0a504130200000c002b00020304003300020017140303000101160303009b020000970303944649132d25a70535333014c92aaec1a117edf03bf34ade105ef93f8b0d60ee2048c5d5f6c626460406b8982d786ba94f34568ae0fed4a6adfc144fd300a0a504130200004f002b0002030400330045001700410403047e01fb5c941ec59952b1859f5c790c2f2a3cce06c04714e9d3f2feb8d422453866b448caf3bf1537f6d635ebc8ade5b6d43e65a2c43ef53fabb6b000e0b11703030017e88bba0fa2789fa7d41720ab5680fa470e4e45eb4a093c17030301a23d20d1da71c3fa7932a47619fcbd8590575de806a3c4a45d7cfba22dd439042f57550b1418e0072d5f805bdd483d64b65e1d0a13a228015aa4ed0b79d0a0162365abf6df95aebce3abb4861619c00d79cd33ac902525dc94e57655d5b01ec54df45a7ecd2da81405301c61dd666f64570485d3eac2aecac04d815a84865a308f883c9e33bd80d165db55e8487e56d2196884de09b997f01782060de872db9795235b1ab69ba215717e1c201f92d22593ad4c663868f682545f02c38a3f91f734bc9ebd3ad3c8f77479f4b9b46de8a9d154d7cef82f49d24741a02d935521fb9a1c621f9d05e68a2b3532c7503997dabfc6c70c8c4e54bd1ff23bcbf153313f08cce58ada412b74c336e2a11c57c505a24cb730eb73be68a426037612cd69dd466699ce862e20a82d87afbed4f4292f9b585d009456ea01c840799de0966f7c2371688e381b913eac0f95593a20fa96146868d3680806bdc7607cf6eb2cb75f5e1ec3e81aac17e8972edd1ecd75223f9fcffdcb4270cb2e6e5f1a88c4b2f0e5af8fb8ebd7cae0423e68b0bc57fdda768264d34fa51f83c91891ff43ea668bc9d8a77c170303005f27d4599f244f871f3735cd557f4e555de0835beadc2e6c775e7eb3a5ecba234a3be14de9bf5a3427e317b460320596ffa5cd7374acde9bd0e805fed5007b91594a2f5ed0810bf2efba6744a6b05d7ae442be2e7ca379b9c639bd8308471226170303004541f61dbb572addff13193f3b6032f4f141dcf0f586ef37dc628b12305c669a30bcfe1fdbbc30e75d7381fa5cf93ebfe0bdda4ea6758772ca7e0ce8f202a673f5b5a523feb717030300faf8a65387e565a3baf31c900fe879087bf49bb7e94b49c148fecba5cc00769ea794a9586a4086aa3c6cbfd87ed1d76d9253c3f6cbb62b7297b9f6b4d6b133b1598a1dd0563e448bda651ba735aa003044b7853fd3150033c076fd0b7005495d865a6334ed93a20485eeda063bac47705f3ccea3dce1d80b0a285c6abd3fefb82775e859ad9fa57829019f66d594998cd390f8e0e5c1874cb5adccd226f4e8b5f7770276fbccfd7ac63cb00112490bb8f45780ba165b9adeafb5f69cc9b5af312d57ff624e7662d780a819e684191e29fe83d0892c8adcadbd89ffd1f4821ff1de0ec06f65f53b578349cb397e655d004b4d389843bc59153b56ff17030300faf80173f2c3af890f623d2e8ec9364c43e721b3643f8439a0798c5fb4ed4588463f5e3ca870c0e0d554e56212454d699ca7e1aae1b2dfee13fc1ec8cad4a26eb3077f2c02bc55fdda016514dc35b2e56494abd0ea45035f2fa05516c8d523e963333b9408764efd9856358cafba34f18f13cc7c00927d0e9f3e84d91a9bb4d882d40d713b1f8bbba74c8ddbc015831d156a276b4e086b980bf7ef99ca033da689e7251aed520e4032aace8233f06db009ea6b3e7d9ba66a8d8b3da404153f619323286984c1db5b9f0cee03119dca56da4d90225cab5ef28afc4676ac091e47dcb7919a051114465dd2a7a5fedfaa2f62ac146e601d6e45856b5f17030300137d02a7130cd3d61d90a990685b94a2d5d790f0",
       "enc": "utf8"
@@ -1245,7 +1321,9 @@
     "name": "TLS 1.3: second ClientHello after a HelloRetryRequest",
     "ref": "bytes captured between openssl 3.0.13 s_client and s_server on localhost; values checked against s_client -trace of the same run; layout by independent Python",
     "op": "packets:parse-tls",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "16030101210100011d0303c7c5b5e0dc6b8a48cc426b12e36a91db9190f2fbdd1107c81b7206d5c8c316812048c5d5f6c626460406b8982d786ba94f34568ae0fed4a6adfc144fd300a0a504003e130213031301c02cc030009fcca9cca8ccaac02bc02f009ec024c028006bc023c0270067c00ac0140039c009c0130033009d009c003d003c0035002f00ff010000960000000d000b0000086872722e74657374000b000403000102000a00060004001d0017002300000016000000170000000d002a0028040305030603080708080809080a080b080408050806040105010601030303010302040205020602002b00050403040303002d00020101003300260024001d0020b1436a6ede9001564aaf49291826ee387d03e8bab30af584d9ca9d9ac280df5114030300010116030301420100013e0303c7c5b5e0dc6b8a48cc426b12e36a91db9190f2fbdd1107c81b7206d5c8c316812048c5d5f6c626460406b8982d786ba94f34568ae0fed4a6adfc144fd300a0a504003e130213031301c02cc030009fcca9cca8ccaac02bc02f009ec024c028006bc023c0270067c00ac0140039c009c0130033009d009c003d003c0035002f00ff010000b70000000d000b0000086872722e74657374000b000403000102000a00060004001d0017002300000016000000170000000d002a0028040305030603080708080809080a080b080408050806040105010601030303010302040205020602002b00050403040303002d00020101003300470045001700410433753c058533a3aab4eab937d135bf83f0de827bdabe42cfeddff419e9efdccb4362cd2df9f26b45057d217de03c78ee840b556c4e79742e324a087019415b121703030045e7ccf3b0d4f62a2ac9c888b37bb8d40a987491361462f8a86bb5e983a8e5bbf21e17425a092c14c36703425f64ea8d34a20d16dcfbf019a704bf19adea055dda9900469d131703030013484fe84f1d28a0652d02bdf91894cc4db07e49",
       "enc": "utf8"
@@ -1259,7 +1337,9 @@
     "name": "TLS 1.3: short extension lists",
     "ref": "bytes captured between openssl 3.0.13 s_client and s_server on localhost; values checked against s_client -trace of the same run; layout by independent Python",
     "op": "packets:parse-tls",
-    "params": {},
+    "params": {
+      "format": "hex"
+    },
     "input": {
       "value": "16030100dc010000d80303f73e83d341beda6c06b32a6b60655f05c9f7ddfaadf79622f72093c12df82fe320835575b3b171793a50afd7fe47966c6b50334b0df2eb9da000577f27c2d463b30016130213031301c02ccca9c02bc024c023c00ac00900ff0100007900000012001000000d612e622e632e6578616d706c65000b000403000102000a00080006001d00170018002300000016000000170000000d0006000404030807002b00050403040303002d00020101003300260024001d002074308b7eac3e96c243ba37b254ac2d551ae92735dcd3cc9a3bcbfd476ea4e64814030300010117030300450678b9d679459ff514428bfc4bd846b71adbf21d8ff48f0cd861e114555cfdcd306348dcd1a20c9f7d93eca5264dba7d668bfaaff63a6ca54e6e4dfc3702a4fc9d222577c217030300132f036e752f91065aab8aac5c4f3e359b6d92a9",
       "enc": "utf8"

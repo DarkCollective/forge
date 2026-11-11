@@ -24,15 +24,17 @@ IN: defang
 
 \ ---- Defang URL and Fang URL ----
 
-\ CyberChef's patterns (the lookbehinds are added: a match can only start at the start of a run of letters, or of a
-\ name, so a long run of letters or of labels is read once and not once from every position, which took seconds at
-\ 64 KiB): a full URL (scheme in capital letters or not, ://, a host with at least one dot, an optional
+\ CyberChef's patterns (the lookbehinds are added: a match cannot start inside a run of letters (that changes nothing:
+\ the leftmost match already starts at the front of the run) and a domain cannot start after a dot or a hyphen that
+\ follows a letter or digit, so a long run of labels is read once and not once from every position, which took
+\ seconds at 64 KiB. The cross-check of WP 5.59b found the first version of the domain lookbehind, which also
+\ refused a start after a dot or hyphen that follows something else, skipped ".example.com" and "*.example.com"): a full URL (scheme in capital letters or not, ://, a host with at least one dot, an optional
 \ port, an optional path that does not end in . ! , or ?) and a domain name (labels of 1 to 63 characters).
 : _url-pattern ( -- str )
   "(?<![A-Z])[A-Z]+://[-\\w]+(?:\\.\\w[-\\w]*)+(?::\\d+)?(?:/[^.!,?\"<>\\[\\]{}\\s\\x7F-\\xFF]*(?:[.!,?]+[^.!,?\"<>\\[\\]{}\\s\\x7F-\\xFF]+)*)?" ;
 
 : _domain-pattern ( -- str )
-  "(?<![a-z0-9.-])\\b(?:(?=[a-z0-9-]{1,63}\\.)(?:xn--)?[a-z0-9]+(?:-[a-z0-9]+)*\\.)+[a-z]{2,63}\\b" ;
+  "(?<![a-z0-9]|[a-z0-9][.-])\\b(?:(?=[a-z0-9-]{1,63}\\.)(?:xn--)?[a-z0-9]+(?:-[a-z0-9]+)*\\.)+[a-z]{2,63}\\b" ;
 
 \ Dots, then http, then ://.
 : _defang-one ( url:str dots:bool http:bool slashes:bool -- str )
