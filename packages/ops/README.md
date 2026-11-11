@@ -63,6 +63,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `aes-kw`           | AES Key Wrap and Unwrap (RFC 3394), 16/24/32-byte key-encryption key, default IV (2 ops)                                                                               |
 | `analysis`         | entropy (bits per byte), byte-frequency distribution, index of coincidence and chi-squared against English (4 ops)                                                     |
 | `argon2`           | Argon2d, Argon2i and Argon2id (RFC 9106): derive, as the encoded PHC string or raw, and compare against an encoded hash (2 ops)                                        |
+| `ascon`            | Ascon-Hash256, Ascon-Mac and Ascon-AEAD128 (NIST SP 800-232): hash, mac, and authenticated encrypt and decrypt (4 ops)                                                 |
 | `base32`           | encode and decode, standard and hex alphabets (RFC 4648)                                                                                                               |
 | `base45`           | encode and decode (RFC 9285)                                                                                                                                           |
 | `base58`           | encode and decode, bitcoin, flickr and ripple alphabets                                                                                                                |
@@ -71,6 +72,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `base85`           | encode and decode, Ascii85 and Z85                                                                                                                                     |
 | `base92`           | encode and decode (thenoviceoof)                                                                                                                                       |
 | `bcd`              | binary-coded decimal: 8421, 7421, 4221 and excess-3, packed or unpacked, signed or not                                                                                 |
+| `bcrypt`           | bcrypt password hash: hash with a random salt, hash with a given salt, compare, parse (4 ops; cost 4 to 16)                                                            |
 | `bech32`           | Bech32 and Bech32m (BIP-173, BIP-350) encode and decode                                                                                                                |
 | `bigint`           | big-endian bytes to and from decimal text of an unsigned integer                                                                                                       |
 | `binary`           | bytes to and from 8-bit binary text                                                                                                                                    |
@@ -87,6 +89,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `charset`          | legacy character sets (single-byte, EBCDIC, UTF-16/32, CJK), with brute force (3 ops)                                                                                  |
 | `ciphersaber2`     | CipherSaber-2 encrypt (random IV in front) and decrypt (2 ops)                                                                                                         |
 | `classical`        | rot (Caesar, ROT13), rot47, rot8000, rot brute force, Atbash, Affine, Vigenère, Bacon, Bifid, Rail Fence, Caesar box, A1Z26, Cetacean, CTX1, LS47, Substitute (26 ops) |
+| `cmac`             | CMAC (SP 800-38B, RFC 4493) over AES or Triple DES (1 op)                                                                                                              |
 | `cobs`             | Consistent Overhead Byte Stuffing encode and decode                                                                                                                    |
 | `colossus`         | Colossus-style counting: how often a Boolean condition holds over every start position of two chi wheels, for the Lorenz break-in (1 op)                               |
 | `crc`              | CRC checksums: the 171 CyberChef presets and any width from 1 to 82 bits from the Rocksoft model (2 ops)                                                               |
@@ -113,6 +116,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `html`             | encode and decode character references (full named-entity table)                                                                                                       |
 | `jwt`              | JSON Web Tokens: decode, and HS256/HS384/HS512 sign and verify; never `none` (3 ops)                                                                                   |
 | `keccak`           | Keccak with the original padding, 224 to 512 bits (1 op)                                                                                                               |
+| `lmhash`           | LM hash, the DES of "KGS!@#$%" under the halves of the upper-cased password (1 op)                                                                                     |
 | `lorenz`           | Lorenz SZ40/42a/42b with the KH, ZMUG and BREAM patterns and the P5 mode, and a pattern merge helper (2 ops)                                                           |
 | `luhn`             | Luhn check digit and validity, any even radix (2 ops)                                                                                                                  |
 | `md2`              | MD2 (RFC 1319) (1 op)                                                                                                                                                  |

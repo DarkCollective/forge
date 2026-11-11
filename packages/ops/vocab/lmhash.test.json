@@ -1,0 +1,58 @@
+[
+  {
+    "name": "the empty password",
+    "ref": "the well-known LM hash of the empty password (Microsoft KB 299656 and Wikipedia, LAN Manager); each half is DES(KGS!@#$%) under the zero key, checked with OpenSSL DES-ECB",
+    "op": "lmhash:digest",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "aad3b435b51404eeaad3b435b51404ee",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "password, lower case",
+    "ref": "the well-known LM hash of password (uppercased to PASSWORD); both halves checked against OpenSSL DES-ECB",
+    "op": "lmhash:digest",
+    "params": {},
+    "input": {
+      "value": "password",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "e52cac67419a9a224a3b108f3fa6cb6d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Password, mixed case is the same",
+    "ref": "upper-casing before hashing: same as PASSWORD",
+    "op": "lmhash:digest",
+    "params": {},
+    "input": {
+      "value": "Password",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "e52cac67419a9a224a3b108f3fa6cb6d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "PASSWORD, upper case",
+    "ref": "the well-known LM hash of PASSWORD",
+    "op": "lmhash:digest",
+    "params": {},
+    "input": {
+      "value": "PASSWORD",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "e52cac67419a9a224a3b108f3fa6cb6d",
+      "enc": "hex"
+    }
+  }
+]
