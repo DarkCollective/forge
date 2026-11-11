@@ -1,0 +1,168 @@
+[
+  {
+    "name": "to leet, basic",
+    "ref": "a4 b8 e3 g6 i1 o0 s5 t7 z2",
+    "op": "leet:convert",
+    "params": {
+      "direction": "to",
+      "style": "basic"
+    },
+    "input": {
+      "value": "abegiostz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "483610572",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to leet, in a sentence",
+    "ref": "upper case letters without an entry keep their case",
+    "op": "leet:convert",
+    "params": {
+      "direction": "to",
+      "style": "basic"
+    },
+    "input": {
+      "value": "Leet speak",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "L337 5p34k",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to leet, upper case input",
+    "ref": "the table is applied to either case",
+    "op": "leet:convert",
+    "params": {
+      "direction": "to",
+      "style": "basic"
+    },
+    "input": {
+      "value": "ELITE TESTS",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3L173 73575",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to leet, extended",
+    "ref": "c ( d ) h # l | q 9 x % on top of the basic table",
+    "op": "leet:convert",
+    "params": {
+      "direction": "to",
+      "style": "extended"
+    },
+    "input": {
+      "value": "Hello World",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "#3||0 W0r|)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to leet, unchanged characters",
+    "ref": "letters without an entry, digits, punctuation and non-ASCII",
+    "op": "leet:convert",
+    "params": {
+      "direction": "to"
+    },
+    "input": {
+      "value": "fjk 0123 !? é 日本",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fjk 0123 !? é 日本",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from leet, basic",
+    "ref": "the digits back to letters, lower case",
+    "op": "leet:convert",
+    "params": {
+      "direction": "from",
+      "style": "basic"
+    },
+    "input": {
+      "value": "L337 5p34k",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Leet speak",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from leet, extended",
+    "ref": "symbols back to letters",
+    "op": "leet:convert",
+    "params": {
+      "direction": "from",
+      "style": "extended"
+    },
+    "input": {
+      "value": "#3||0 W0r|)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "hello World",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from leet, the extended symbols are left alone in basic",
+    "ref": "( ) # | % 9 are not in the basic table",
+    "op": "leet:convert",
+    "params": {
+      "direction": "from",
+      "style": "basic"
+    },
+    "input": {
+      "value": "()#|9%",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "()#|9%",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "the empty text",
+    "ref": "nothing to do",
+    "op": "leet:convert",
+    "params": {
+      "direction": "to"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "an unknown direction",
+    "ref": "to or from",
+    "op": "leet:convert",
+    "params": {
+      "direction": "sideways"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  }
+]

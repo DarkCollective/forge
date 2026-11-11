@@ -1,0 +1,121 @@
+[
+  {
+    "name": "underline",
+    "ref": "U+0332 COMBINING LOW LINE after each character",
+    "op": "unicode-format:decorate",
+    "params": {
+      "underline": true,
+      "strikethrough": false
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a̲b̲c̲",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "strikethrough",
+    "ref": "U+0336 COMBINING LONG STROKE OVERLAY after each character",
+    "op": "unicode-format:decorate",
+    "params": {
+      "underline": false,
+      "strikethrough": true
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a̶b̶c̶",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "both",
+    "ref": "the underline mark, then the strikethrough mark",
+    "op": "unicode-format:decorate",
+    "params": {
+      "underline": true,
+      "strikethrough": true
+    },
+    "input": {
+      "value": "ab",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a̶̲b̶̲",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "neither",
+    "ref": "no marks, no change",
+    "op": "unicode-format:decorate",
+    "params": {
+      "underline": false,
+      "strikethrough": false
+    },
+    "input": {
+      "value": "a b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "spaces are marked, line breaks are not",
+    "ref": "a line feed is not decorated",
+    "op": "unicode-format:decorate",
+    "params": {
+      "underline": true,
+      "strikethrough": false
+    },
+    "input": {
+      "value": "a b\nc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a̲ ̲b̲\nc̲",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a code point above the BMP",
+    "ref": "one mark per code point",
+    "op": "unicode-format:decorate",
+    "params": {
+      "underline": true,
+      "strikethrough": false
+    },
+    "input": {
+      "value": "😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "😀̲",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "the empty text",
+    "ref": "nothing to do",
+    "op": "unicode-format:decorate",
+    "params": {
+      "underline": true,
+      "strikethrough": true
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  }
+]

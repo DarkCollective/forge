@@ -98,8 +98,10 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `cobs`             | Consistent Overhead Byte Stuffing encode and decode                                                                                                                    |
 | `colossus`         | Colossus-style counting: how often a Boolean condition holds over every start position of two chi wheels, for the Lorenz break-in (1 op)                               |
 | `crc`              | CRC checksums: the 171 CyberChef presets and any width from 1 to 82 bits from the Rocksoft model (2 ops)                                                               |
+| `de-bruijn`        | the de Bruijn sequence B(k, n), k up to 36 symbols, k^n up to 65,536 (1 op)                                                                                            |
 | `decimal`          | bytes to and from decimal numbers                                                                                                                                      |
 | `des`              | DES encrypt and decrypt (FIPS 46-3): ECB, CBC, CFB, OFB, CTR, 8-byte key, PKCS#7 or no padding                                                                         |
+| `diacritics`       | remove accents and other combining marks (NFD, drop marks, NFC) and the letters with a stroke (1 op)                                                                   |
 | `endian`           | swap the byte order of 2, 4 or 8 byte words                                                                                                                            |
 | `enigma`           | Enigma I, M3 and M4 rotor machines, one reciprocal word; also the shared historical rotor, turnover and reflector data (1 op)                                          |
 | `evp`              | OpenSSL EVP_BytesToKey key derivation in FL over MD5, SHA-1 and SHA-2 (1 op)                                                                                           |
@@ -119,10 +121,13 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `hkdf`             | HKDF (RFC 5869) in FL over the HMAC hashes (1 op)                                                                                                                      |
 | `hmac`             | HMAC (RFC 2104) over MD5, SHA-1, SHA-2, SHA-3 and RIPEMD-160 (1 op)                                                                                                    |
 | `html`             | encode and decode character references (full named-entity table)                                                                                                       |
+| `html-text`        | the readable text of HTML: tags, comments, script and style dropped, br and blocks as line feeds, character references decoded (1 op)                                  |
 | `jwt`              | JSON Web Tokens: decode, and HS256/HS384/HS512 sign and verify; never `none` (3 ops)                                                                                   |
 | `keccak`           | Keccak with the original padding, 224 to 512 bits (1 op)                                                                                                               |
+| `leet`             | leet speak to and from, a basic and an extended table (1 op)                                                                                                           |
 | `list`             | internal: the shared list words `list:sort`, `list:sort-by` and `list:shuffle` (no ops)                                                                                |
 | `lmhash`           | LM hash, the DES of "KGS!@#$%" under the halves of the upper-cased password (1 op)                                                                                     |
+| `lorem`            | Lorem ipsum from a word list of Cicero's De finibus: paragraphs, sentences, words or bytes (1 op, `+random`)                                                           |
 | `lorenz`           | Lorenz SZ40/42a/42b with the KH, ZMUG and BREAM patterns and the P5 mode, and a pattern merge helper (2 ops)                                                           |
 | `luhn`             | Luhn check digit and validity, any even radix (2 ops)                                                                                                                  |
 | `md2`              | MD2 (RFC 1319) (1 op)                                                                                                                                                  |
@@ -132,13 +137,16 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `modhex`           | Yubico ModHex encode and decode                                                                                                                                        |
 | `morse`            | encode and decode (ITU-R M.1677-1)                                                                                                                                     |
 | `murmur3`          | MurmurHash3 x86_32 with a seed (1 op)                                                                                                                                  |
+| `nato`             | the ICAO spelling alphabet, letters and digits, encode and decode (2 ops)                                                                                              |
 | `nthash`           | NT hash, the MD4 of UTF-16LE text (1 op)                                                                                                                               |
 | `octal`            | bytes to and from octal numbers                                                                                                                                        |
+| `otp`              | HOTP (RFC 4226) and TOTP (RFC 6238) over SHA-1, SHA-256 or SHA-512, with the otpauth URI (2 ops, `+random` for a made secret, `+time`)                                 |
 | `parity`           | add or check a parity bit on a string of binary digits (2 ops)                                                                                                         |
 | `pbkdf2`           | PBKDF2 with HMAC (RFC 8018) over SHA-1, SHA-2 and MD5 (1 op)                                                                                                           |
 | `polyalphabetic`   | Beaufort, Gronsfeld, Porta and autokey Vigenere (6 ops)                                                                                                                |
 | `polygraphic`      | Playfair, four-square and Hill (6 ops)                                                                                                                                 |
 | `present`          | PRESENT encrypt and decrypt: 80 and 128-bit keys, ECB, CBC, CFB, OFB, CTR (2 ops)                                                                                      |
+| `prime`            | a random prime of a given bit or digit size, Miller-Rabin on the host CSPRNG (1 op, `+random`)                                                                         |
 | `prng`             | the CyberChef random generators: Pseudo-Random Number Generator as `prng:bytes` and Pseudo-Random Integer Generator as `prng:integers` (`+random`)                     |
 | `punycode`         | Punycode (RFC 3492), as a label or per domain label with `xn--`                                                                                                        |
 | `quoted-printable` | Quoted-Printable (RFC 2045 section 6.7) encode and decode                                                                                                              |
@@ -173,7 +181,9 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `twofish`          | Twofish encrypt and decrypt: ECB, CBC, CFB, OFB, CTR, 128/192/256-bit keys, PKCS#7 or no padding                                                                       |
 | `typex`            | Typex-style five-rotor machine with the wirings as parameters (1 op)                                                                                                   |
 | `unicode`          | escape and unescape code points (`\u`, `U+`, `%u`, `\x{}`, `&#x;`), normalisation, smart quotes to ASCII (4 ops)                                                       |
+| `unicode-format`   | underline and strikethrough with combining characters (1 op)                                                                                                           |
 | `url`              | percent-encode and decode (RFC 3986)                                                                                                                                   |
+| `uuid`             | UUID versions 1, 3, 4, 5, 6, 7, nil and max (RFC 9562), and an analyser (2 ops, `+random`, `+time`)                                                                    |
 | `whirlpool`        | Whirlpool (ISO/IEC 10118-3) (1 op)                                                                                                                                     |
 | `xor-checksum`     | column-wise XOR of the blocks of the input (1 op)                                                                                                                      |
 | `xsalsa20`         | XSalsa20/20 stream cipher, 32-byte key, 24-byte nonce (1 op)                                                                                                           |
