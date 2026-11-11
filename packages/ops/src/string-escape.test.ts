@@ -147,7 +147,7 @@ describe("string-escape", () => {
     for (const bad of ["\\ud83d", "\\ude00", "\\ud83dx", "\\u{d800}", "\\u{110000}"]) {
       const r = await unescape(bad);
       expect(r.ok, bad).toBe(false);
-      expect(r.error?.code).toBe("E_COERCE");
+      expect(r.ok ? "ok" : r.error.code).toBe("E_COERCE");
     }
   });
 });
