@@ -104,12 +104,12 @@ describe("gost-mac", () => {
     expect(await text(mac, data)).toBe("The signature matches");
     for (let i = 0; i < 64; i++) {
       const m = Uint8Array.from(mac);
-      m[i >> 3] ^= 1 << (i & 7);
+      m[i >> 3] = (m[i >> 3] ?? 0) ^ (1 << (i & 7));
       expect(await text(m, data)).toBe("The signature does not match");
     }
     for (let i = 0; i < data.length * 8; i++) {
       const d = Uint8Array.from(data);
-      d[i >> 3] ^= 1 << (i & 7);
+      d[i >> 3] = (d[i >> 3] ?? 0) ^ (1 << (i & 7));
       expect(await text(mac, d)).toBe("The signature does not match");
     }
   });

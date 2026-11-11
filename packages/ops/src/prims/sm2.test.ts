@@ -24,7 +24,10 @@ import { SM2_PARAMS, mul, mulBase, order, primitives, validPoint } from "./sm2.j
 const hex = (u: Uint8Array) => Array.from(u, (b) => b.toString(16).padStart(2, "0")).join("");
 const unhex = (s: string) => Uint8Array.from(s.match(/../g) ?? [], (h) => parseInt(h, 16));
 
-afterEach(() => vi.restoreAllMocks());
+afterEach(() => {
+  vi.restoreAllMocks();
+  vi.unstubAllGlobals();
+});
 
 describe("sm2 primitives", () => {
   test("they are the private helpers of the sm2 words", () => {
@@ -75,7 +78,7 @@ describe("sm2 primitives", () => {
     const pub = mulBase(unhex("00".repeat(31) + "02"));
     expect(validPoint(pub)).toBe(true);
     const off = Uint8Array.from(pub);
-    off[64] ^= 1;
+    off[64] = (off[64] ?? 0) ^ 1;
     expect(validPoint(off)).toBe(false);
     expect(validPoint(pub.subarray(1))).toBe(false);
     expect(validPoint(new Uint8Array(65))).toBe(false);
@@ -86,9 +89,15 @@ describe("sm2 primitives", () => {
   });
 
   test("it never reads the host's random generator", () => {
-    const spy = vi.spyOn(globalThis.crypto, "getRandomValues");
+    let reads = 0;
+    vi.stubGlobal("crypto", {
+      getRandomValues: (a: Uint8Array) => {
+        reads++;
+        return a;
+      },
+    });
     const pub = mulBase(unhex("00".repeat(31) + "05"));
     mul(pub, unhex("00".repeat(31) + "07"));
-    expect(spy).not.toHaveBeenCalled();
+    expect(reads).toBe(0);
   });
 });

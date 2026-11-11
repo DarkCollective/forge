@@ -101,17 +101,42 @@ const convert = (sig: string, from = "auto", to = "asn1-hex") =>
   runtime.call("ecdsa:convert-signature", [str(sig), str(from), str(to)]);
 const publicKey = (key: string) => runtime.call("ecdsa:public-key", [str(key)]);
 const seedOf = (n: number) => Uint8Array.from({ length: n }, (_, i) => (i * 7 + 3) & 255);
+const B64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+function b64(bytes: Uint8Array, url = false): string {
+  let out = "";
+  for (let i = 0; i < bytes.length; i += 3) {
+    const n = ((bytes[i] ?? 0) << 16) | ((bytes[i + 1] ?? 0) << 8) | (bytes[i + 2] ?? 0);
+    const chunk = [18, 12, 6, 0].map((s) => B64.charAt((n >> s) & 63)).join("");
+    out +=
+      chunk.slice(0, Math.min(4, bytes.length - i + 1)) +
+      "=".repeat(Math.max(0, i + 3 - bytes.length));
+  }
+  return url ? out.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "") : out;
+}
+function unb64(text: string): Uint8Array {
+  const out: number[] = [];
+  let acc = 0;
+  let bits = 0;
+  for (const c of text) {
+    const v = B64.indexOf(c);
+    if (v < 0) continue;
+    acc = (acc << 6) | v;
+    bits += 6;
+    if (bits >= 8) {
+      bits -= 8;
+      out.push((acc >> bits) & 255);
+    }
+  }
+  return Uint8Array.from(out);
+}
 const pem = (label: string, der: Uint8Array) =>
-  `-----BEGIN ${label}-----\n${Buffer.from(der).toString("base64")}\n-----END ${label}-----\n`;
+  `-----BEGIN ${label}-----\n${b64(der)}\n-----END ${label}-----\n`;
 const derOf = (p: string) =>
-  Uint8Array.from(
-    Buffer.from(
-      p
-        .split("\n")
-        .filter((l) => !l.startsWith("-----"))
-        .join(""),
-      "base64",
-    ),
+  unb64(
+    p
+      .split("\n")
+      .filter((l) => !l.startsWith("-----"))
+      .join(""),
   );
 
 describe("ecdsa:generate-key-pair", () => {
@@ -263,11 +288,12 @@ describe("ecdsa:sign", () => {
   });
 
   test("secp256k1, P-384 and P-521 keys sign and verify", async () => {
-    for (const [priv, pub] of [
+    const pairs: [string, string][] = [
       [KEYS.k1Sec1, KEYS.k1Pub],
       [KEYS.p384P8, KEYS.p384Pub],
       [KEYS.p521Sec1, KEYS.p521Pub],
-    ]) {
+    ];
+    for (const [priv, pub] of pairs) {
       for (const digest of ["sha1", "sha256", "sha384", "sha512", "md5"]) {
         const sig = out(await sign("m", priv, digest, "jws"));
         expect(out(await verify(sig, pub, "m", "jws", digest))).toBe("Verified OK");
@@ -319,7 +345,7 @@ describe("keys, cut at every point and mutated", () => {
       const der = derOf(p);
       for (let i = 0; i < der.length; i++) {
         const m = Uint8Array.from(der);
-        m[i] ^= 0xa5;
+        m[i] = (m[i] ?? 0) ^ 0xa5;
         const key = pem(label, m);
         const r =
           label === "PUBLIC KEY"
@@ -422,7 +448,10 @@ describe("signatures: hostile and large input", () => {
 
   test("auto: JSON first, then hex (30 + DER is DER, else P1363), then Base64url", async () => {
     const p1363 = "00".repeat(31) + "01" + "00".repeat(31) + "02";
-    const jws = Buffer.from(p1363, "hex").toString("base64url");
+    const jws = b64(
+      Uint8Array.from(p1363.match(/../g) ?? [], (h) => parseInt(h, 16)),
+      true,
+    );
     expect(out(await convert(p1363, "auto", "raw-json"))).toBe('{"r":"01","s":"02"}');
     expect(out(await convert(jws, "auto", "raw-json"))).toBe('{"r":"01","s":"02"}');
     expect(out(await convert("3006020101020102", "auto", "raw-json"))).toBe('{"r":"01","s":"02"}');
