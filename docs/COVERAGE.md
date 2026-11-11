@@ -18,7 +18,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Networking | 0 | 0 | 0 | 34 | 34 |
 | Language | 0 | 4 | 0 | 0 | 4 |
 | Utils | 28 | 20 | 2 | 0 | 50 |
-| Date / Time | 0 | 1 | 0 | 8 | 9 |
+| Date / Time | 0 | 9 | 0 | 0 | 9 |
 | Extractors | 1 | 8 | 0 | 9 | 18 |
 | Compression | 0 | 0 | 0 | 21 | 21 |
 | Hashing | 34 | 14 | 0 | 0 | 48 |
@@ -27,7 +27,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 4 | 9 | 3 | 5 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **159** | **150** | **5** | **192** | **506** |
+| **Total** | **159** | **158** | **5** | **184** | **506** |
 
 ## Data format (80)
 
@@ -387,14 +387,14 @@ it and regenerate this file. An operation listed in several CyberChef categories
 
 | CyberChef | Status | Forge | Note |
 | --- | --- | --- | --- |
-| Parse DateTime | not yet |  |  |
-| Translate DateTime Format | not yet |  |  |
-| From UNIX Timestamp | not yet |  |  |
-| To UNIX Timestamp | not yet |  |  |
-| Windows Filetime to UNIX Timestamp | not yet |  |  |
-| UNIX Timestamp to Windows Filetime | not yet |  |  |
-| DateTime Delta | not yet |  |  |
-| Extract dates | not yet |  |  |
+| Parse DateTime | redesigned | `datetime:parse` | The same report (date, time, AM or PM, time zone, UTC offset, daylight saving, leap year, days in the month, day of the year, week number, quarter). Forge has no populate-the-box control, so the built-in formats are a preset choice and the format string applies with the preset Custom. Reading is forgiving like moment.js but a literal of the format is used up only when it is the next text, and fields the format does not name default to 1970-01-01 00:00 (not today). The week number is the ISO week. The zone abbreviation comes from the host's Intl data (it can read GMT+9 where a time zone database says JST). Written in FL with Forge's own moment.js-style tokens and no date library; only the zone rules come from the host. |
+| Translate DateTime Format | redesigned | `datetime:translate` | Input format, input zone, output format and output zone as in CyberChef, with the built-in formats as a preset choice per side (Custom uses the format string). The tokens are Forge's own moment.js-compatible set (YYYY to SSSSSSSSS, Z, z, X, x, W, G, L, [literal] and so on); the SSS tokens keep the full nanosecond and z comes from the host's Intl data. No date library. |
+| From UNIX Timestamp | redesigned | `datetime:from-unix` | Units are seconds, milliseconds, microseconds or nanoseconds; the default output is CyberChef's (Wed 11 November 2026 12:34:56 UTC). Instead of the Treat as UTC switch there is a zone parameter and a format string, so the time can be written in any zone and any format. Whole and decimal numbers, negative allowed, exact to the nanosecond. |
+| To UNIX Timestamp | redesigned | `datetime:to-unix` | Units and Show parsed datetime (on by default, as in CyberChef) as there. CyberChef lets moment.js guess the input format; Forge reads a stated format (default YYYY-MM-DD HH:mm:ss, forgiving, so an ISO 8601 text like 2026-11-11T12:34:56Z reads) in a zone parameter that replaces Treat as UTC. Rounded down to a whole number in the unit. |
+| Windows Filetime to UNIX Timestamp | redesigned | `datetime:filetime-to-unix` | Input decimal, hex big endian or hex little endian; output seconds, milliseconds, microseconds or nanoseconds, with BigInt-exact arithmetic and division towards zero. Argument order is input then unit, and the choices are lower case (decimal, hex-be, hex-le); an optional 0x and spaces are accepted. |
+| UNIX Timestamp to Windows Filetime | redesigned | `datetime:unix-to-filetime` | Input unit and output decimal, hex big endian or hex little endian (lower-case choices decimal, hex-be, hex-le). The hex forms are always 16 digits (the 64-bit value, zero padded); a time before 1601 or past the 64-bit range is E_RANGE. Decimal timestamps are accepted and a fraction finer than 100 ns is cut. |
+| DateTime Delta | redesigned | `datetime:delta` | Add or subtract days, hours, minutes and seconds (and milliseconds, which CyberChef lacks) from a date in a preset or custom format, written back in that format. A zone parameter is added (UTC by default, as in CyberChef); days are calendar days there, the rest elapsed time. Negative amounts reverse the direction. |
+| Extract dates | redesigned | `datetime:extract-dates` | yyyy-mm-dd, dd/mm/yyyy and mm/dd/yyyy dates with - / . or space between the parts, one per line, with Display total, Sort and Unique as in CyberChef. Forge writes its own pattern: months and days of one or two digits, years 1900 to 2099, word boundaries on both sides, and a month-first date is found when the day is above 12. Nothing is checked beyond the pattern (2026-02-30 is listed). |
 | Get Time | redesigned | `clock:get-time` | The time since the Unix epoch in seconds, milliseconds (the default), microseconds or nanoseconds, as decimal text. The host clock counts milliseconds, so the finer units are that count times 1,000 and 1,000,000 and the extra digits are zero. The input is ignored. |
 
 ## Extractors (18)
