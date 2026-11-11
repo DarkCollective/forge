@@ -66,6 +66,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `aes`              | AES encrypt and decrypt (FIPS 197): ECB, CBC, CFB, OFB, CTR and GCM, 128/192/256-bit keys, PKCS#7 or no padding, GCM additional data                                   |
 | `aes-kw`           | AES Key Wrap and Unwrap (RFC 3394), 16/24/32-byte key-encryption key, default IV (2 ops)                                                                               |
 | `analysis`         | entropy (bits per byte), byte-frequency distribution, index of coincidence and chi-squared against English (4 ops)                                                     |
+| `arith`            | exact-decimal arithmetic on a list of numbers and on big integers: Sum to Standard Deviation, Extended GCD, Modular Exponentiation and Inverse (11 ops)                |
 | `argon2`           | Argon2d, Argon2i and Argon2id (RFC 9106): derive, as the encoded PHC string or raw, and compare against an encoded hash (2 ops)                                        |
 | `ascon`            | Ascon-Hash256, Ascon-Mac and Ascon-AEAD128 (NIST SP 800-232): hash, mac, and authenticated encrypt and decrypt (4 ops)                                                 |
 | `base32`           | encode and decode, standard and hex alphabets (RFC 4648)                                                                                                               |
@@ -154,6 +155,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `ror13`            | ROR13 API-name hash (1 op)                                                                                                                                             |
 | `salsa20`          | Salsa20/20 stream cipher (eSTREAM), 16 or 32-byte keys, 8-byte nonce (1 op)                                                                                            |
 | `scrypt`           | scrypt (RFC 7914) key derivation (1 op)                                                                                                                                |
+| `set`              | set union, intersection, difference, symmetric difference, Cartesian product and power set on delimited text (6 ops)                                                   |
 | `sha0`             | SHA-0 (1 op)                                                                                                                                                           |
 | `sha1`             | SHA-1 (1 op)                                                                                                                                                           |
 | `sha2`             | SHA-224, -256, -384, -512, -512/224 and -512/256 (1 op)                                                                                                                |

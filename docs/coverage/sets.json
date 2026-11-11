@@ -1,0 +1,50 @@
+[
+ {
+  "cyberchef": "Set Union",
+  "status": "redesigned",
+  "forge": [
+   "set:union"
+  ],
+  "note": "The input is the sets cut at the sample delimiter (a blank line by default) and each set cut at the item delimiter (a comma by default); both are free text, as in CyberChef. Items are exact text (nothing is trimmed) and a set holds each item once, in order of first appearance. Two or more sets (CyberChef: exactly two); fewer than two is E_RANGE. The result is one set joined by the item delimiter."
+ },
+ {
+  "cyberchef": "Set Intersection",
+  "status": "redesigned",
+  "forge": [
+   "set:intersection"
+  ],
+  "note": "The input is the sets cut at the sample delimiter (a blank line by default) and each set cut at the item delimiter (a comma by default); both are free text, as in CyberChef. Items are exact text (nothing is trimmed) and a set holds each item once, in order of first appearance. Two or more sets (CyberChef: exactly two); the items in all of them, in the order of the first. Fewer than two is E_RANGE."
+ },
+ {
+  "cyberchef": "Set Difference",
+  "status": "redesigned",
+  "forge": [
+   "set:difference"
+  ],
+  "note": "The input is the sets cut at the sample delimiter (a blank line by default) and each set cut at the item delimiter (a comma by default); both are free text, as in CyberChef. Items are exact text (nothing is trimmed) and a set holds each item once, in order of first appearance. Two or more sets (CyberChef: exactly two); the items of the first that are in none of the others. Fewer than two is E_RANGE."
+ },
+ {
+  "cyberchef": "Symmetric Difference",
+  "status": "redesigned",
+  "forge": [
+   "set:symmetric-difference"
+  ],
+  "note": "The input is the sets cut at the sample delimiter (a blank line by default) and each set cut at the item delimiter (a comma by default); both are free text, as in CyberChef. Items are exact text (nothing is trimmed) and a set holds each item once, in order of first appearance. Two or more sets (CyberChef: exactly two); with more than two it is applied left to right, so an item stays when it is in an odd number of sets. Fewer than two is E_RANGE."
+ },
+ {
+  "cyberchef": "Cartesian Product",
+  "status": "redesigned",
+  "forge": [
+   "set:cartesian-product"
+  ],
+  "note": "The input is the sets cut at the sample delimiter (a blank line by default) and each set cut at the item delimiter (a comma by default); both are free text, as in CyberChef. Items are exact text (nothing is trimmed) and a set holds each item once, in order of first appearance. Exactly two sets (anything else is E_RANGE). Each pair is written (a,b) and the pairs are joined by the item delimiter, those of the first item of A first."
+ },
+ {
+  "cyberchef": "Power Set",
+  "status": "redesigned",
+  "forge": [
+   "set:power-set"
+  ],
+  "note": "One set cut at the item delimiter (a comma by default), duplicates removed. The subsets are written as their items joined by the item delimiter and joined to each other by the subset delimiter (a line feed by default, a Forge parameter); the order is the one of adding the items one at a time (the empty set first, then a, b, a+b, c, ...). At most 16 distinct items (E_RANGE beyond), since the output has 2^n subsets."
+ }
+]
