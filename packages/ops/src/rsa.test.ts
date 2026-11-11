@@ -859,7 +859,9 @@ describe("keys", () => {
     expect(message(r)).toMatch(/use the ecdsa words for elliptic curve keys/);
     const pub = await publicKey(ec);
     expect(code(pub)).toBe("ok");
-    expect(Buffer.from(topBytes(pub)).toString("latin1")).toMatch(/^-----BEGIN PUBLIC KEY-----\n/);
+    expect(new TextDecoder("latin1").decode(topBytes(pub))).toMatch(
+      /^-----BEGIN PUBLIC KEY-----\n/,
+    );
   });
 
   test("a key cut at every byte, in every form, is E_COERCE and never a key or a crash", async () => {
