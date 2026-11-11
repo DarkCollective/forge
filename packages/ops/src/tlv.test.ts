@@ -40,7 +40,6 @@ const runtime = await loadRuntime(["tlv"]);
 const parse = (d: Uint8Array, tag = 1, len = 1, ber = false, indent = 0) =>
   runtime.call("tlv:parse", [asBytes(d), int(tag), int(len), bool(ber), int(indent)]);
 
-const hex = (b: Uint8Array) => Array.from(b, (x) => x.toString(16).padStart(2, "0")).join("");
 function build(
   elems: [number, Uint8Array][],
   tw: number,
@@ -58,7 +57,7 @@ function build(
         out.push(0x80 | nb);
         for (let i = nb - 1; i >= 0; i--) out.push(Math.floor(val.length / 256 ** i) % 256);
       }
-    } else for (let i = lw - 1; i >= 0; i--) out.push(Math.floor(val.length / 256 ** i) % 256);
+    } else for (let i = 0; i < lw; i++) out.push(Math.floor(val.length / 256 ** i) % 256);
     out.push(...val);
     ends.push(out.length);
   }
@@ -84,16 +83,18 @@ describe("parse", () => {
       ]);
       const { data } = build(elems, tw, lw, ber);
       const got = JSON.parse(text(await parse(data, tw, lw, ber))) as {
-        type: string;
+        key: number[];
         length: number;
-        value: string;
+        value: number[];
       }[];
       expect(got).toHaveLength(elems.length);
       got.forEach((g, i) => {
         const [tag, val] = elems[i] as [number, Uint8Array];
-        expect(g.type).toBe(tag.toString(16).padStart(tw * 2, "0"));
+        expect(g.key.map((x) => x.toString(16).padStart(2, "0")).join("")).toBe(
+          tag.toString(16).padStart(tw * 2, "0"),
+        );
         expect(g.length).toBe(val.length);
-        expect(g.value).toBe(hex(val));
+        expect(g.value).toEqual(Array.from(val));
       });
     }
   });
@@ -145,9 +146,10 @@ describe("parse", () => {
     expect(Date.now() - t0).toBeLessThan(2000);
   });
   test("the widths are checked", async () => {
-    expect(code(await parse(new Uint8Array(2), 0, 1))).toBe("E_RANGE");
+    expect(code(await parse(new Uint8Array(2), 0, 0))).toBe("E_RANGE");
+    expect(code(await parse(new Uint8Array(2), 0, 1))).toBe("ok");
     expect(code(await parse(new Uint8Array(2), 17, 1))).toBe("E_RANGE");
-    expect(code(await parse(new Uint8Array(2), 1, 0))).toBe("E_RANGE");
+    expect(code(await parse(new Uint8Array(2), 1, -1))).toBe("E_RANGE");
     expect(code(await parse(new Uint8Array(2), 1, 9))).toBe("E_RANGE");
     expect(code(await parse(new Uint8Array(2), 1, 1, false, 33))).toBe("E_RANGE");
   });

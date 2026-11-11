@@ -341,7 +341,33 @@ function decode(text: string, mode: string, ctx: PrimitiveContext): Value {
   return v;
 }
 
+/**
+ * rison.js's `quote` for URIs: encodeURIComponent, but `~!*()-_.'` and `,:@$/` stay and a space is `+`. (rison.js
+ * 0.1.1 passes a third argument to String.replace that modern engines ignore, so it restores only the first `,:@$/`
+ * of an encoded text; this restores all of them, as the comment of rison.js says.)
+ */
+function uriQuote(text: string): string {
+  if (/^[-A-Za-z0-9~!*()_.',:@$/]*$/.test(text)) return text;
+  if (/[\ud800-\udbff](?![\udc00-\udfff])|(?<![\ud800-\udbff])[\udc00-\udfff]/.test(text))
+    throw new ForgeError({
+      code: "E_COERCE",
+      message: "cannot convert str to a URI: the text holds a lone surrogate",
+      detail: { from: "str", to: "uri" },
+    });
+  return encodeURIComponent(text)
+    .replace(/%2C/g, ",")
+    .replace(/%3A/g, ":")
+    .replace(/%40/g, "@")
+    .replace(/%24/g, "$")
+    .replace(/%2F/g, "/")
+    .replace(/%20/g, "+");
+}
+
 export const primitives: readonly PrimitiveDef[] = [
+  definePrimitive("rison", "_quote", "( text:str -- str )", uriQuote, {
+    doc: "Rison text made safe for a URI, as rison.js quote does (private helper of rison:encode).",
+    category: "Data format",
+  }),
   definePrimitive("rison", "_encode", "( value:any mode:str -- str )", encode, {
     doc: "A JSON value as Rison, O-Rison or A-Rison text (private helper of rison:encode).",
     category: "Data format",

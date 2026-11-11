@@ -33,7 +33,7 @@ USING: alphabet list ;
 \ depends on them partly) and the last character when the data stops inside a group (it depends on the bytes that
 \ would follow) are left out unless show-variable is on, which also adds the padding.
 : _trim ( text:str k:int nz:int show:bool pad-char:str -- str )
-  show [ k ] [ k 0 > [ k 1 + ] [ k ] if ] if
+  show [ 0 ] [ k 0 > [ k 1 + ] [ k ] if ] if
   text len show [ 0 ] [ nz 3 mod 0 <> [ 1 ] [ 0 ] if ] if -
   text -rot slice
   show [ pad-char nz _pad-count util:repeat-str cat ] when ;
@@ -56,15 +56,16 @@ USING: alphabet list ;
   input-type "hex" = [ data bytes>str hex>bytes ] [ input-type "base64" = [ data "standard" base64:decode ] [ data ] if ] if ;
 
 : _run ( data:bytes table:bytes show:bool pad-char:str -- str )
-  "Offset 0 (aligned): " data 0 table show pad-char _line cat
-  "\n" cat "Offset 1: " cat data 1 table show pad-char _line cat
-  "\n" cat "Offset 2: " cat data 2 table show pad-char _line cat ;
+  show [ "Offset 0: " ] [ "" ] if data 0 table show pad-char _line cat
+  "\n" cat show [ "Offset 1: " ] [ "" ] if cat data 1 table show pad-char _line cat
+  "\n" cat show [ "Offset 2: " ] [ "" ] if cat data 2 table show pad-char _line cat ;
 
 : _go ( data:bytes alpha:bytes show:bool -- str )
+  data len 0 = [ "the input is empty" raise:coerce ] when
   data alpha _table show alpha len 64 > [ alpha 64 nth util:cp>str ] [ "" ] if _run ;
 
 : show ( data:bytes alphabet:str="A-Za-z0-9+/=" show-variable:bool=true input-type:choice{raw|hex|base64}=raw -- str )
-  "Show how the Base64 encoding of the data looks when it starts at each of the three alignments, as CyberChef's Show Base64 offsets does, as text. Offset 0 (aligned) is the encoding of the data. Offsets 1 and 2 are what the same bytes look like when one or two other bytes come before them: the characters that depend on those unknown bytes are left out (the text starts at the first character the data fixes). With show-variable on, the one character that depends on both the unknown byte and the data, the last character when the data stops inside a three-byte group, and the = padding are kept as well (they are computed with the unknown bytes as zero); with it off they are dropped. The alphabet is written with ranges (A-Za-z0-9+/=) and has 64 characters, or 65 when the last one is the padding (no padding without it). input-type reads the data as it is, as hex or as Base64 text first. The alphabet must be 64 or 65 different ASCII characters; hex or Base64 text that is not valid is E_COERCE. The output is text with no HTML (CyberChef colours the variable characters), in the layout Offset 0 (aligned): ..., Offset 1: ..., Offset 2: ... on three lines." doc
+  "Show how the Base64 encoding of the data looks when it starts at each of the three alignments, as CyberChef's Show Base64 offsets does, as text. Offset 0 is the encoding of the data. Offsets 1 and 2 are what the same bytes look like when one or two other bytes (zeros here) come before them. With show-variable on (the default) the three lines are labelled Offset 0:, Offset 1: and Offset 2: and hold the whole encoding: the leading characters that only stand for the unknown bytes (CyberChef colours them red and green), the last character when the data stops inside a three-byte group (it depends on the bytes that would follow), and the = padding. With it off the three lines have no label and hold only the characters that the data alone fixes. CyberChef colours the characters and shows the static part decoded as a tooltip, and writes four lines of explanation above the offsets; text has neither, so Forge writes neither. The alphabet is written with ranges (A-Za-z0-9+/=) and has 64 characters, or 65 when the last one is the padding (no padding without it). input-type reads the data as it is, as hex (an addition to CyberChef's raw and Base64) or as Base64 text first. The alphabet must be 64 or 65 different ASCII characters; empty data (CyberChef: Please enter a string.) and hex or Base64 text that is not valid are E_COERCE." doc
   "Data format" category
   data input-type _input alphabet _alphabet show-variable _go ;
 

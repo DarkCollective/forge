@@ -43,7 +43,7 @@ const BINARY = fromHex(
   "62706c6973743030d20102030951615162a5040506070810012340040000000000005178093341c1deca92800000d20a0b0c0d516351644200016200e920ac080d0f1117192224252e3335373a0000000000000101000000000000000e0000000000000000000000000000003f",
 );
 const OUTLINE =
-  "{\n    a => [\n        1\n        2.5\n        x\n        true\n        2020-01-02T03:04:05Z\n    ]\n    b => {\n        c => AAE=\n        d => é€\n    }\n}";
+  'plist => {\n\ta => [\n\t\t0 => 1\n\t\t1 => 2.5\n\t\t2 => "x"\n\t\t3 => true\n\t\t4 => 2020-01-02T03:04:05Z\n\t]\n\tb => {\n\t\tc => AAE=\n\t\td => "é€"\n\t}\n}\n/plist\n';
 const XML = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0"><dict><key>a</key><array><integer>1</integer><real>2.5</real><string>x</string><true/><date>2020-01-02T03:04:05Z</date></array>
@@ -104,7 +104,7 @@ describe("view", () => {
     expect(code(await view(mk([0x08], [8], trailer(1, 0, 9, 1, 0))))).toBe("E_COERCE");
     expect(code(await view(mk([0x08], [200], trailer(1, 0, 9))))).toBe("E_COERCE");
     expect(code(await view(mk([0x08], [8], trailer(2 ** 40, 0, 9))))).toBe("E_COERCE");
-    expect(text(await view(mk([0x08], [8], trailer(1, 0, 9))))).toBe("false");
+    expect(text(await view(mk([0x08], [8], trailer(1, 0, 9))))).toBe("plist => false\n/plist\n");
   });
   test("a million nested arrays stop at the depth limit", async () => {
     const r = await view(xml(`<plist>${"<array>".repeat(500_000)}`));
@@ -123,7 +123,7 @@ describe("view", () => {
           xml("\ufeff<plist><string><![CDATA[a<b]]>&#x41;&amp;<!-- c -->z</string></plist>"),
         ),
       ),
-    ).toBe("a<bA&z");
+    ).toBe('plist => "a<bA&z"\n/plist\n');
     expect(code(await view(new Uint8Array([0xff, 0xfe, 0x3c])))).toBe("E_COERCE");
   });
 });
@@ -140,7 +140,7 @@ describe("cost at 64 KiB", () => {
     const t0 = Date.now();
     const r = await view(d);
     const ms = Date.now() - t0;
-    expect(text(r).split("\n")).toHaveLength(1500 * 4 + 2);
+    expect(text(r).split("\n")).toHaveLength(1500 * 4 + 4);
     expect(steps(r)).toBeLessThan(100);
     process.stderr.write(`\nplist ${d.length} bytes of XML: ${steps(r)} steps ${ms} ms\n`);
   });

@@ -29,7 +29,7 @@
  *    never-used code 0xc1, bytes after the object, a truncated object, invalid UTF-8, an invalid timestamp and
  *    nesting deeper than 64 are E_COERCE with the offset. NaN and the infinities are null (as JSON.stringify).
  *  - `_encode ( value:any typed:bool -- bytes )`: the shortest format that holds each value (positive integers as
- *    uint, negative as int, floats as float32 when that is exact, else float64, str8 and the other new formats
+ *    uint, negative as int, floats as float64 (as CyberChef and Python do), str8 and the other new formats
  *    are used); maps keep the order of the keys. With `typed`, {"type":"Buffer","data":[...]} is written as bin,
  *    {"ext":N,"data":<Buffer>} as an extension and {"timestamp":"<ISO 8601>"} as a timestamp extension.
  */
@@ -377,17 +377,11 @@ function encode(value: Value, typed: boolean, ctx: PrimitiveContext): Uint8Array
         writeInt(v.v);
         return;
       case "num": {
-        if (Math.fround(v.v) === v.v) {
-          const t = new DataView(new ArrayBuffer(4));
-          t.setFloat32(0, v.v);
-          out.byte(0xca);
-          out.bytes(new Uint8Array(t.buffer));
-        } else {
-          const t = new DataView(new ArrayBuffer(8));
-          t.setFloat64(0, v.v);
-          out.byte(0xcb);
-          out.bytes(new Uint8Array(t.buffer));
-        }
+        // always float 64, as CyberChef (notepack.io) and Python's msgpack write it
+        const t = new DataView(new ArrayBuffer(8));
+        t.setFloat64(0, v.v);
+        out.byte(0xcb);
+        out.bytes(new Uint8Array(t.buffer));
         return;
       }
       case "str": {

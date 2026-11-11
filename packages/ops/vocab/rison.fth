@@ -7,13 +7,13 @@ IN: rison
 
 USING: json ;
 
-: encode ( data:str mode:choice{rison|o-rison|a-rison}=rison -- str )
-  "Write JSON text as Rison (the compact JSON-in-URLs syntax of rison.js), as CyberChef's Rison Encode does. null is !n, true and false are !t and !f, an array is !(1,2), an object is (a:1,b:2) with its keys sorted, a string is bare when it is an identifier (it does not start with - or a digit and holds none of space ' ! : ( ) , * @ $) and otherwise in single quotes with ' and ! escaped by !, and a number is written as JavaScript prints it without the + of an exponent (an integer in full digits; 1.0 is 1). Mode o-rison writes an object without its outer parentheses and a-rison an array without !( and ), as CyberChef's Encode Object and Encode Array do; a value of the wrong kind is E_COERCE. Text that is not JSON and nesting deeper than 64 levels are E_COERCE." doc
+: encode ( data:str mode:choice{rison|o-rison|a-rison|uri}=rison -- str )
+  "Write JSON text as Rison (the compact JSON-in-URLs syntax of rison.js), as CyberChef's Rison Encode does. null is !n, true and false are !t and !f, an array is !(1,2), an object is (a:1,b:2) with its keys sorted, a string is bare when it is an identifier (it does not start with - or a digit and holds none of space ' ! : ( ) , * @ $) and otherwise in single quotes with ' and ! escaped by !, and a number is written as JavaScript prints it without the + of an exponent (an integer in full digits; 1.0 is 1). Mode o-rison writes an object without its outer parentheses and a-rison an array without !( and ), as CyberChef's Encode Object and Encode Array do; a value of the wrong kind is E_COERCE. Mode uri is CyberChef's Encode URI: the Rison text of any value, quoted for a URI as rison.js does (encodeURIComponent, but ~ ! * ( ) - _ . ' , : @ $ / stay and a space is +; rison.js 0.1.1 restores only the first , : @ $ / of a text because of a replace call that modern engines read differently, Forge restores all). Text that is not JSON and nesting deeper than 64 levels are E_COERCE." doc
   "Data format" category
-  data json:parse mode rison:_encode ;
+  data json:parse mode "uri" = [ "rison" rison:_encode rison:_quote ] [ mode rison:_encode ] if ;
 
 META: encode
-  param mode "rison for any value, o-rison for an object without its parentheses, a-rison for an array without !( and )." ;
+  param mode "rison for any value, o-rison for an object without its parentheses, a-rison for an array without !( and ), uri for any value quoted for a URI." ;
   see-also rison:decode ;
 ;
 

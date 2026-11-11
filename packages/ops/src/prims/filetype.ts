@@ -811,13 +811,14 @@ export interface Carved {
 
 /**
  * Cut out every file found by `scan`. A file that cannot be cut out is left out when `ignoreFailed`,
- * otherwise `E_COERCE` names it. The sum of the sizes is bounded by `maxBytes` (`E_LIMIT_VALUE`).
+ * otherwise `E_COERCE` names it. A type with no end finder is always left out, and so is a file smaller than `minSize`. The sum of the sizes is bounded by `maxBytes` (`E_LIMIT_VALUE`).
  */
 export function carve(
   d: Uint8Array,
   cats: ReadonlySet<Category>,
   ignoreFailed: boolean,
   maxBytes: number,
+  minSize = 0,
 ): Carved[] {
   const found = scan(d, cats, false, Math.floor(maxBytes / RECORD_BYTES));
   let textCache: string | undefined;
@@ -830,12 +831,15 @@ export function carve(
   const out: Carved[] = [];
   let total = 0;
   for (const m of found) {
+    // a type with no end finder is never an error, as in CyberChef ("No extraction algorithm available")
+    if (m.sig.end === undefined) continue;
     const r = endOf(ctx, m.sig, m.offset);
     if ("reason" in r) {
       if (ignoreFailed) continue;
       throw coerceFailure(`the ${m.sig.name} at offset ${m.offset}`, "a file", r.reason);
     }
     const size = r.end - m.offset;
+    if (size < minSize) continue;
     total += size + RECORD_BYTES;
     if (total > maxBytes)
       throw limitFailure("maxValueBytes", maxBytes, total, "the extracted files");
@@ -895,9 +899,15 @@ export const primitives: readonly PrimitiveDef[] = [
   definePrimitive(
     "filetype",
     "carve",
-    "( data:bytes categories:list ignore-failed:bool -- list )",
-    (d: Uint8Array, cats: Value[], ignoreFailed: boolean, ctx: PrimitiveContext) =>
-      carve(d, categoriesOf(cats), ignoreFailed, ctx.limits.maxValueBytes).map((f) =>
+    "( data:bytes categories:list ignore-failed:bool min-size:int -- list )",
+    (
+      d: Uint8Array,
+      cats: Value[],
+      ignoreFailed: boolean,
+      minSize: number | bigint,
+      ctx: PrimitiveContext,
+    ) =>
+      carve(d, categoriesOf(cats), ignoreFailed, ctx.limits.maxValueBytes, Number(minSize)).map((f) =>
         record([
           ["name", str(f.name)],
           ["offset", int(f.offset)],
@@ -907,7 +917,7 @@ export const primitives: readonly PrimitiveDef[] = [
         ]),
       ),
     {
-      doc: "The files found by file signature, cut out with the end finder of their type, as records of name (extracted_at_0x<offset>.<extension>), offset, size, type (MIME) and data, in order of offset. A type with no end finder, or a file that is damaged or cut short, is left out with ignore-failed and E_COERCE otherwise. The sum of the sizes is bounded by the value limit (E_LIMIT_VALUE). Shared word of the filetype vocabulary.",
+      doc: "The files found by file signature, cut out with the end finder of their type, as records of name (extracted_at_0x<offset>.<extension>), offset, size, type (MIME) and data, in order of offset. A type with no end finder is always left out; a file that is damaged or cut short is left out with ignore-failed and E_COERCE otherwise; a file smaller than min-size bytes is left out. The sum of the sizes is bounded by the value limit (E_LIMIT_VALUE). Shared word of the filetype vocabulary.",
     },
   ),
 ];

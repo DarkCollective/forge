@@ -20,12 +20,13 @@
  * scanner is too slow in FL (5.5 VM steps a character before any state, see json.ts), so the reader is a
  * primitive; it builds the outline text directly.
  *
- *  - `_view ( data:bytes -- str )`: the property list as text, four spaces per level. A dictionary is `{`, one
- *    `key => value` line per entry and `}`; an array is `[`, one item per line and `]`; an entry whose value is a
- *    dictionary or an array opens it on the same line (`key => {`); an empty dictionary or array is `{}` or `[]`.
- *    A string is shown as it is (a multi-line string keeps its line breaks), an integer and a real in decimal, true
- *    and false, a date as its ISO 8601 text (a binary date is converted from seconds since 2001-01-01), data as
- *    Base64 text, a binary UID as `UID(n)` and a set as an array. A top-level scalar is just its text.
+ *  - `_view ( data:bytes -- str )`: the property list as text in the layout of CyberChef's P-list Viewer: a first line
+ *    `plist => ` followed by the root, a last line `/plist`, one tab per level. A dictionary is `{`, one `key => value`
+ *    line per entry and `}`; an array is `[`, one `index => item` line per item (from 0) and `]`; an entry whose value
+ *    is a dictionary or an array opens it on the same line (`key => {`); an empty dictionary or array is `{}` or `[]`.
+ *    A string is shown in double quotes, otherwise as it is (a multi-line string keeps its line breaks), an integer and
+ *    a real in decimal, true and false, a date as its ISO 8601 text (a binary date is converted from seconds since
+ *    2001-01-01), data as Base64 text, a binary UID as `UID(n)` and a set as an array.
  *    The XML reader accepts the XML declaration, a doctype, comments, processing instructions and CDATA, the
  *    five predefined entities and numeric character references; an unknown element, a key without a value, a
  *    mismatched tag, nesting deeper than 64 levels and anything after the closing plist tag are E_COERCE with the
@@ -39,17 +40,18 @@ import { MAX_DEPTH, Meter, decodeStrict, formatFailure, strictUtf8 } from "../da
 type Node =
   | { k: "dict"; entries: [string, Node][] }
   | { k: "array"; items: Node[] }
-  | { k: "text"; text: string };
+  | { k: "text"; text: string; q?: boolean };
 
-const IND = "    ";
+const IND = "\t";
 
 function render(root: Node, ctx: PrimitiveContext): string {
   const meter = new Meter(ctx.limits.maxValueBytes, "plist outline");
   const out: string[] = [];
   function emit(n: Node, indent: string, prefix: string): void {
     if (n.k === "text") {
-      meter.add(2 * (indent.length + prefix.length + n.text.length) + 16);
-      out.push(`${indent}${prefix}${n.text}`);
+      const shown = n.q ? `"${n.text}"` : n.text;
+      meter.add(2 * (indent.length + prefix.length + shown.length) + 16);
+      out.push(`${indent}${prefix}${shown}`);
     } else if (n.k === "dict") {
       if (n.entries.length === 0) {
         out.push(`${indent}${prefix}{}`);
@@ -64,12 +66,12 @@ function render(root: Node, ctx: PrimitiveContext): string {
         return;
       }
       out.push(`${indent}${prefix}[`);
-      for (const v of n.items) emit(v, indent + IND, "");
+      n.items.forEach((v, i) => emit(v, indent + IND, `${i} => `));
       out.push(`${indent}]`);
     }
   }
-  emit(root, "", "");
-  return out.join("\n");
+  emit(root, "", "plist => ");
+  return `${out.join("\n")}\n/plist\n`;
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -183,8 +185,11 @@ function readXml(text: string, ctx: PrimitiveContext): Node {
       case "false":
         if (!t.empty) content(t.name);
         return { k: "text", text: t.name };
-      case "string":
-        return simple((s) => s);
+      case "string": {
+        const node = simple((s) => s);
+        (node as { q?: boolean }).q = true;
+        return node;
+      }
       case "integer": {
         return simple((s) => {
           const v = s.trim();
@@ -373,7 +378,7 @@ function readBinary(d: Uint8Array, ctx: PrimitiveContext): Node {
         for (let i = 0; i < len; i++)
           if ((d[p + i] as number) > 0x7f)
             throw fail("an ASCII string holds a byte above 127", p + i);
-        return text(String.fromCharCode(...d.subarray(p, p + len)));
+        return { ...text(String.fromCharCode(...d.subarray(p, p + len))), q: true };
       }
       case 6: {
         const { len, p } = lengthAt(at + 1, lo);
@@ -388,7 +393,7 @@ function readBinary(d: Uint8Array, ctx: PrimitiveContext): Node {
           le[i] = be[i + 1] as number;
           le[i + 1] = be[i] as number;
         }
-        return text(strictUtf8Utf16(le, p));
+        return { ...text(strictUtf8Utf16(le, p)), q: true };
       }
       case 8:
         return text(`UID(${uint(at + 1, lo + 1)})`);

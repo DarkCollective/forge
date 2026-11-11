@@ -12,7 +12,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "{\"id\":1,\"name\":\"a\",\"score\":null,\"tags\":[\"x\",\"y\"],\"attrs\":{\"k\":1},\"kind\":\"B\",\"raw\":{\"type\":\"Buffer\",\"data\":[0,255]},\"fx\":{\"type\":\"Buffer\",\"data\":[97,98,99,100]},\"f\":0.10000000149011612,\"ok\":true,\"next\":null}\n{\"id\":-9007199254740993123,\"name\":\"é\",\"score\":2.5,\"tags\":[],\"attrs\":{},\"kind\":\"C\",\"raw\":{\"type\":\"Buffer\",\"data\":[]},\"fx\":{\"type\":\"Buffer\",\"data\":[1,2,3,4]},\"f\":-1.5,\"ok\":false,\"next\":{\"id\":2,\"name\":\"n\",\"score\":null,\"tags\":[],\"attrs\":{},\"kind\":\"A\",\"raw\":{\"type\":\"Buffer\",\"data\":[122]},\"fx\":{\"type\":\"Buffer\",\"data\":[0,0,0,0]},\"f\":3.0,\"ok\":true,\"next\":null}}",
+      "value": "{\"id\":1,\"name\":\"a\",\"score\":null,\"tags\":[\"x\",\"y\"],\"attrs\":{\"k\":1},\"kind\":\"B\",\"raw\":{\"type\":\"Buffer\",\"data\":[0,255]},\"fx\":{\"type\":\"Buffer\",\"data\":[97,98,99,100]},\"f\":0.10000000149011612,\"ok\":true,\"next\":null}\n{\"id\":-9007199254740993123,\"name\":\"é\",\"score\":2.5,\"tags\":[],\"attrs\":{},\"kind\":\"C\",\"raw\":{\"type\":\"Buffer\",\"data\":[]},\"fx\":{\"type\":\"Buffer\",\"data\":[1,2,3,4]},\"f\":-1.5,\"ok\":false,\"next\":{\"id\":2,\"name\":\"n\",\"score\":null,\"tags\":[],\"attrs\":{},\"kind\":\"A\",\"raw\":{\"type\":\"Buffer\",\"data\":[122]},\"fx\":{\"type\":\"Buffer\",\"data\":[0,0,0,0]},\"f\":3.0,\"ok\":true,\"next\":null}}\n",
       "enc": "utf8"
     }
   },
@@ -51,7 +51,7 @@
     }
   },
   {
-    "name": "records indented by 2 (one record after the other)",
+    "name": "records indented by 2 (one record after the other) (indent is not used for lines)",
     "ref": "fastavro 1.13.1 writer/reader (Apache Avro 1.11 specification)",
     "op": "avro:to-json",
     "params": {
@@ -63,7 +63,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "{\n  \"id\": 1,\n  \"name\": \"a\",\n  \"score\": null,\n  \"tags\": [\n    \"x\",\n    \"y\"\n  ],\n  \"attrs\": {\n    \"k\": 1\n  },\n  \"kind\": \"B\",\n  \"raw\": {\n    \"type\": \"Buffer\",\n    \"data\": [\n      0,\n      255\n    ]\n  },\n  \"fx\": {\n    \"type\": \"Buffer\",\n    \"data\": [\n      97,\n      98,\n      99,\n      100\n    ]\n  },\n  \"f\": 0.10000000149011612,\n  \"ok\": true,\n  \"next\": null\n}\n{\n  \"id\": -9007199254740993123,\n  \"name\": \"é\",\n  \"score\": 2.5,\n  \"tags\": [],\n  \"attrs\": {},\n  \"kind\": \"C\",\n  \"raw\": {\n    \"type\": \"Buffer\",\n    \"data\": []\n  },\n  \"fx\": {\n    \"type\": \"Buffer\",\n    \"data\": [\n      1,\n      2,\n      3,\n      4\n    ]\n  },\n  \"f\": -1.5,\n  \"ok\": false,\n  \"next\": {\n    \"id\": 2,\n    \"name\": \"n\",\n    \"score\": null,\n    \"tags\": [],\n    \"attrs\": {},\n    \"kind\": \"A\",\n    \"raw\": {\n      \"type\": \"Buffer\",\n      \"data\": [\n        122\n      ]\n    },\n    \"fx\": {\n      \"type\": \"Buffer\",\n      \"data\": [\n        0,\n        0,\n        0,\n        0\n      ]\n    },\n    \"f\": 3.0,\n    \"ok\": true,\n    \"next\": null\n  }\n}",
+      "value": "{\"id\":1,\"name\":\"a\",\"score\":null,\"tags\":[\"x\",\"y\"],\"attrs\":{\"k\":1},\"kind\":\"B\",\"raw\":{\"type\":\"Buffer\",\"data\":[0,255]},\"fx\":{\"type\":\"Buffer\",\"data\":[97,98,99,100]},\"f\":0.10000000149011612,\"ok\":true,\"next\":null}\n{\"id\":-9007199254740993123,\"name\":\"é\",\"score\":2.5,\"tags\":[],\"attrs\":{},\"kind\":\"C\",\"raw\":{\"type\":\"Buffer\",\"data\":[]},\"fx\":{\"type\":\"Buffer\",\"data\":[1,2,3,4]},\"f\":-1.5,\"ok\":false,\"next\":{\"id\":2,\"name\":\"n\",\"score\":null,\"tags\":[],\"attrs\":{},\"kind\":\"A\",\"raw\":{\"type\":\"Buffer\",\"data\":[122]},\"fx\":{\"type\":\"Buffer\",\"data\":[0,0,0,0]},\"f\":3.0,\"ok\":true,\"next\":null}}\n\n",
       "enc": "utf8"
     }
   },
@@ -80,7 +80,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "{\"id\":1,\"name\":\"a\",\"score\":null,\"tags\":[\"x\",\"y\"],\"attrs\":{\"k\":1},\"kind\":\"B\",\"raw\":{\"type\":\"Buffer\",\"data\":[0,255]},\"fx\":{\"type\":\"Buffer\",\"data\":[97,98,99,100]},\"f\":0.10000000149011612,\"ok\":true,\"next\":null}\n{\"id\":-9007199254740993123,\"name\":\"é\",\"score\":2.5,\"tags\":[],\"attrs\":{},\"kind\":\"C\",\"raw\":{\"type\":\"Buffer\",\"data\":[]},\"fx\":{\"type\":\"Buffer\",\"data\":[1,2,3,4]},\"f\":-1.5,\"ok\":false,\"next\":{\"id\":2,\"name\":\"n\",\"score\":null,\"tags\":[],\"attrs\":{},\"kind\":\"A\",\"raw\":{\"type\":\"Buffer\",\"data\":[122]},\"fx\":{\"type\":\"Buffer\",\"data\":[0,0,0,0]},\"f\":3.0,\"ok\":true,\"next\":null}}",
+      "value": "{\"id\":1,\"name\":\"a\",\"score\":null,\"tags\":[\"x\",\"y\"],\"attrs\":{\"k\":1},\"kind\":\"B\",\"raw\":{\"type\":\"Buffer\",\"data\":[0,255]},\"fx\":{\"type\":\"Buffer\",\"data\":[97,98,99,100]},\"f\":0.10000000149011612,\"ok\":true,\"next\":null}\n{\"id\":-9007199254740993123,\"name\":\"é\",\"score\":2.5,\"tags\":[],\"attrs\":{},\"kind\":\"C\",\"raw\":{\"type\":\"Buffer\",\"data\":[]},\"fx\":{\"type\":\"Buffer\",\"data\":[1,2,3,4]},\"f\":-1.5,\"ok\":false,\"next\":{\"id\":2,\"name\":\"n\",\"score\":null,\"tags\":[],\"attrs\":{},\"kind\":\"A\",\"raw\":{\"type\":\"Buffer\",\"data\":[122]},\"fx\":{\"type\":\"Buffer\",\"data\":[0,0,0,0]},\"f\":3.0,\"ok\":true,\"next\":null}}\n",
       "enc": "utf8"
     }
   },
@@ -97,7 +97,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "{\"id\":1,\"name\":\"a\",\"score\":null,\"tags\":[\"x\",\"y\"],\"attrs\":{\"k\":1},\"kind\":\"B\",\"raw\":{\"type\":\"Buffer\",\"data\":[0,255]},\"fx\":{\"type\":\"Buffer\",\"data\":[97,98,99,100]},\"f\":0.10000000149011612,\"ok\":true,\"next\":null}\n{\"id\":-9007199254740993123,\"name\":\"é\",\"score\":2.5,\"tags\":[],\"attrs\":{},\"kind\":\"C\",\"raw\":{\"type\":\"Buffer\",\"data\":[]},\"fx\":{\"type\":\"Buffer\",\"data\":[1,2,3,4]},\"f\":-1.5,\"ok\":false,\"next\":{\"id\":2,\"name\":\"n\",\"score\":null,\"tags\":[],\"attrs\":{},\"kind\":\"A\",\"raw\":{\"type\":\"Buffer\",\"data\":[122]},\"fx\":{\"type\":\"Buffer\",\"data\":[0,0,0,0]},\"f\":3.0,\"ok\":true,\"next\":null}}",
+      "value": "{\"id\":1,\"name\":\"a\",\"score\":null,\"tags\":[\"x\",\"y\"],\"attrs\":{\"k\":1},\"kind\":\"B\",\"raw\":{\"type\":\"Buffer\",\"data\":[0,255]},\"fx\":{\"type\":\"Buffer\",\"data\":[97,98,99,100]},\"f\":0.10000000149011612,\"ok\":true,\"next\":null}\n{\"id\":-9007199254740993123,\"name\":\"é\",\"score\":2.5,\"tags\":[],\"attrs\":{},\"kind\":\"C\",\"raw\":{\"type\":\"Buffer\",\"data\":[]},\"fx\":{\"type\":\"Buffer\",\"data\":[1,2,3,4]},\"f\":-1.5,\"ok\":false,\"next\":{\"id\":2,\"name\":\"n\",\"score\":null,\"tags\":[],\"attrs\":{},\"kind\":\"A\",\"raw\":{\"type\":\"Buffer\",\"data\":[122]},\"fx\":{\"type\":\"Buffer\",\"data\":[0,0,0,0]},\"f\":3.0,\"ok\":true,\"next\":null}}\n",
       "enc": "utf8"
     }
   },
@@ -114,7 +114,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "{\"id\":1,\"name\":\"a\",\"score\":null,\"tags\":[\"x\",\"y\"],\"attrs\":{\"k\":1},\"kind\":\"B\",\"raw\":{\"type\":\"Buffer\",\"data\":[0,255]},\"fx\":{\"type\":\"Buffer\",\"data\":[97,98,99,100]},\"f\":0.10000000149011612,\"ok\":true,\"next\":null}\n{\"id\":-9007199254740993123,\"name\":\"é\",\"score\":2.5,\"tags\":[],\"attrs\":{},\"kind\":\"C\",\"raw\":{\"type\":\"Buffer\",\"data\":[]},\"fx\":{\"type\":\"Buffer\",\"data\":[1,2,3,4]},\"f\":-1.5,\"ok\":false,\"next\":{\"id\":2,\"name\":\"n\",\"score\":null,\"tags\":[],\"attrs\":{},\"kind\":\"A\",\"raw\":{\"type\":\"Buffer\",\"data\":[122]},\"fx\":{\"type\":\"Buffer\",\"data\":[0,0,0,0]},\"f\":3.0,\"ok\":true,\"next\":null}}\n{\"id\":1,\"name\":\"a\",\"score\":null,\"tags\":[\"x\",\"y\"],\"attrs\":{\"k\":1},\"kind\":\"B\",\"raw\":{\"type\":\"Buffer\",\"data\":[0,255]},\"fx\":{\"type\":\"Buffer\",\"data\":[97,98,99,100]},\"f\":0.10000000149011612,\"ok\":true,\"next\":null}\n{\"id\":-9007199254740993123,\"name\":\"é\",\"score\":2.5,\"tags\":[],\"attrs\":{},\"kind\":\"C\",\"raw\":{\"type\":\"Buffer\",\"data\":[]},\"fx\":{\"type\":\"Buffer\",\"data\":[1,2,3,4]},\"f\":-1.5,\"ok\":false,\"next\":{\"id\":2,\"name\":\"n\",\"score\":null,\"tags\":[],\"attrs\":{},\"kind\":\"A\",\"raw\":{\"type\":\"Buffer\",\"data\":[122]},\"fx\":{\"type\":\"Buffer\",\"data\":[0,0,0,0]},\"f\":3.0,\"ok\":true,\"next\":null}}\n{\"id\":1,\"name\":\"a\",\"score\":null,\"tags\":[\"x\",\"y\"],\"attrs\":{\"k\":1},\"kind\":\"B\",\"raw\":{\"type\":\"Buffer\",\"data\":[0,255]},\"fx\":{\"type\":\"Buffer\",\"data\":[97,98,99,100]},\"f\":0.10000000149011612,\"ok\":true,\"next\":null}\n{\"id\":-9007199254740993123,\"name\":\"é\",\"score\":2.5,\"tags\":[],\"attrs\":{},\"kind\":\"C\",\"raw\":{\"type\":\"Buffer\",\"data\":[]},\"fx\":{\"type\":\"Buffer\",\"data\":[1,2,3,4]},\"f\":-1.5,\"ok\":false,\"next\":{\"id\":2,\"name\":\"n\",\"score\":null,\"tags\":[],\"attrs\":{},\"kind\":\"A\",\"raw\":{\"type\":\"Buffer\",\"data\":[122]},\"fx\":{\"type\":\"Buffer\",\"data\":[0,0,0,0]},\"f\":3.0,\"ok\":true,\"next\":null}}\n{\"id\":1,\"name\":\"a\",\"score\":null,\"tags\":[\"x\",\"y\"],\"attrs\":{\"k\":1},\"kind\":\"B\",\"raw\":{\"type\":\"Buffer\",\"data\":[0,255]},\"fx\":{\"type\":\"Buffer\",\"data\":[97,98,99,100]},\"f\":0.10000000149011612,\"ok\":true,\"next\":null}\n{\"id\":-9007199254740993123,\"name\":\"é\",\"score\":2.5,\"tags\":[],\"attrs\":{},\"kind\":\"C\",\"raw\":{\"type\":\"Buffer\",\"data\":[]},\"fx\":{\"type\":\"Buffer\",\"data\":[1,2,3,4]},\"f\":-1.5,\"ok\":false,\"next\":{\"id\":2,\"name\":\"n\",\"score\":null,\"tags\":[],\"attrs\":{},\"kind\":\"A\",\"raw\":{\"type\":\"Buffer\",\"data\":[122]},\"fx\":{\"type\":\"Buffer\",\"data\":[0,0,0,0]},\"f\":3.0,\"ok\":true,\"next\":null}}\n{\"id\":1,\"name\":\"a\",\"score\":null,\"tags\":[\"x\",\"y\"],\"attrs\":{\"k\":1},\"kind\":\"B\",\"raw\":{\"type\":\"Buffer\",\"data\":[0,255]},\"fx\":{\"type\":\"Buffer\",\"data\":[97,98,99,100]},\"f\":0.10000000149011612,\"ok\":true,\"next\":null}\n{\"id\":-9007199254740993123,\"name\":\"é\",\"score\":2.5,\"tags\":[],\"attrs\":{},\"kind\":\"C\",\"raw\":{\"type\":\"Buffer\",\"data\":[]},\"fx\":{\"type\":\"Buffer\",\"data\":[1,2,3,4]},\"f\":-1.5,\"ok\":false,\"next\":{\"id\":2,\"name\":\"n\",\"score\":null,\"tags\":[],\"attrs\":{},\"kind\":\"A\",\"raw\":{\"type\":\"Buffer\",\"data\":[122]},\"fx\":{\"type\":\"Buffer\",\"data\":[0,0,0,0]},\"f\":3.0,\"ok\":true,\"next\":null}}",
+      "value": "{\"id\":1,\"name\":\"a\",\"score\":null,\"tags\":[\"x\",\"y\"],\"attrs\":{\"k\":1},\"kind\":\"B\",\"raw\":{\"type\":\"Buffer\",\"data\":[0,255]},\"fx\":{\"type\":\"Buffer\",\"data\":[97,98,99,100]},\"f\":0.10000000149011612,\"ok\":true,\"next\":null}\n{\"id\":-9007199254740993123,\"name\":\"é\",\"score\":2.5,\"tags\":[],\"attrs\":{},\"kind\":\"C\",\"raw\":{\"type\":\"Buffer\",\"data\":[]},\"fx\":{\"type\":\"Buffer\",\"data\":[1,2,3,4]},\"f\":-1.5,\"ok\":false,\"next\":{\"id\":2,\"name\":\"n\",\"score\":null,\"tags\":[],\"attrs\":{},\"kind\":\"A\",\"raw\":{\"type\":\"Buffer\",\"data\":[122]},\"fx\":{\"type\":\"Buffer\",\"data\":[0,0,0,0]},\"f\":3.0,\"ok\":true,\"next\":null}}\n{\"id\":1,\"name\":\"a\",\"score\":null,\"tags\":[\"x\",\"y\"],\"attrs\":{\"k\":1},\"kind\":\"B\",\"raw\":{\"type\":\"Buffer\",\"data\":[0,255]},\"fx\":{\"type\":\"Buffer\",\"data\":[97,98,99,100]},\"f\":0.10000000149011612,\"ok\":true,\"next\":null}\n{\"id\":-9007199254740993123,\"name\":\"é\",\"score\":2.5,\"tags\":[],\"attrs\":{},\"kind\":\"C\",\"raw\":{\"type\":\"Buffer\",\"data\":[]},\"fx\":{\"type\":\"Buffer\",\"data\":[1,2,3,4]},\"f\":-1.5,\"ok\":false,\"next\":{\"id\":2,\"name\":\"n\",\"score\":null,\"tags\":[],\"attrs\":{},\"kind\":\"A\",\"raw\":{\"type\":\"Buffer\",\"data\":[122]},\"fx\":{\"type\":\"Buffer\",\"data\":[0,0,0,0]},\"f\":3.0,\"ok\":true,\"next\":null}}\n{\"id\":1,\"name\":\"a\",\"score\":null,\"tags\":[\"x\",\"y\"],\"attrs\":{\"k\":1},\"kind\":\"B\",\"raw\":{\"type\":\"Buffer\",\"data\":[0,255]},\"fx\":{\"type\":\"Buffer\",\"data\":[97,98,99,100]},\"f\":0.10000000149011612,\"ok\":true,\"next\":null}\n{\"id\":-9007199254740993123,\"name\":\"é\",\"score\":2.5,\"tags\":[],\"attrs\":{},\"kind\":\"C\",\"raw\":{\"type\":\"Buffer\",\"data\":[]},\"fx\":{\"type\":\"Buffer\",\"data\":[1,2,3,4]},\"f\":-1.5,\"ok\":false,\"next\":{\"id\":2,\"name\":\"n\",\"score\":null,\"tags\":[],\"attrs\":{},\"kind\":\"A\",\"raw\":{\"type\":\"Buffer\",\"data\":[122]},\"fx\":{\"type\":\"Buffer\",\"data\":[0,0,0,0]},\"f\":3.0,\"ok\":true,\"next\":null}}\n{\"id\":1,\"name\":\"a\",\"score\":null,\"tags\":[\"x\",\"y\"],\"attrs\":{\"k\":1},\"kind\":\"B\",\"raw\":{\"type\":\"Buffer\",\"data\":[0,255]},\"fx\":{\"type\":\"Buffer\",\"data\":[97,98,99,100]},\"f\":0.10000000149011612,\"ok\":true,\"next\":null}\n{\"id\":-9007199254740993123,\"name\":\"é\",\"score\":2.5,\"tags\":[],\"attrs\":{},\"kind\":\"C\",\"raw\":{\"type\":\"Buffer\",\"data\":[]},\"fx\":{\"type\":\"Buffer\",\"data\":[1,2,3,4]},\"f\":-1.5,\"ok\":false,\"next\":{\"id\":2,\"name\":\"n\",\"score\":null,\"tags\":[],\"attrs\":{},\"kind\":\"A\",\"raw\":{\"type\":\"Buffer\",\"data\":[122]},\"fx\":{\"type\":\"Buffer\",\"data\":[0,0,0,0]},\"f\":3.0,\"ok\":true,\"next\":null}}\n{\"id\":1,\"name\":\"a\",\"score\":null,\"tags\":[\"x\",\"y\"],\"attrs\":{\"k\":1},\"kind\":\"B\",\"raw\":{\"type\":\"Buffer\",\"data\":[0,255]},\"fx\":{\"type\":\"Buffer\",\"data\":[97,98,99,100]},\"f\":0.10000000149011612,\"ok\":true,\"next\":null}\n{\"id\":-9007199254740993123,\"name\":\"é\",\"score\":2.5,\"tags\":[],\"attrs\":{},\"kind\":\"C\",\"raw\":{\"type\":\"Buffer\",\"data\":[]},\"fx\":{\"type\":\"Buffer\",\"data\":[1,2,3,4]},\"f\":-1.5,\"ok\":false,\"next\":{\"id\":2,\"name\":\"n\",\"score\":null,\"tags\":[],\"attrs\":{},\"kind\":\"A\",\"raw\":{\"type\":\"Buffer\",\"data\":[122]},\"fx\":{\"type\":\"Buffer\",\"data\":[0,0,0,0]},\"f\":3.0,\"ok\":true,\"next\":null}}\n",
       "enc": "utf8"
     }
   },
@@ -131,7 +131,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "\"a\"\n\"bé\"\n\"\"",
+      "value": "\"a\"\n\"bé\"\n\"\"\n",
       "enc": "utf8"
     }
   },
@@ -148,7 +148,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "0\n1\n-1\n63\n64\n-64\n-65\n2147483648\n-2147483648\n4611686018427387904\n-9223372036854775808\n9223372036854775807",
+      "value": "0\n1\n-1\n63\n64\n-64\n-65\n2147483648\n-2147483648\n4611686018427387904\n-9223372036854775808\n9223372036854775807\n",
       "enc": "utf8"
     }
   },
@@ -165,7 +165,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "0\n1\n-1\n2147483647\n-2147483648",
+      "value": "0\n1\n-1\n2147483647\n-2147483648\n",
       "enc": "utf8"
     }
   },
@@ -182,7 +182,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "0.0\n-0.0\n1.5\n1e+300\nnull\nnull\n5e-324",
+      "value": "0.0\n-0.0\n1.5\n1e+300\nnull\nnull\n5e-324\n",
       "enc": "utf8"
     }
   },
@@ -199,7 +199,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "0.0\n1.5\n0.10000000149011612\n3.4028234663852886e+38\nnull",
+      "value": "0.0\n1.5\n0.10000000149011612\n3.4028234663852886e+38\nnull\n",
       "enc": "utf8"
     }
   },
@@ -216,7 +216,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "true\nfalse",
+      "value": "true\nfalse\n",
       "enc": "utf8"
     }
   },
@@ -233,7 +233,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "null\nnull\nnull",
+      "value": "null\nnull\nnull\n",
       "enc": "utf8"
     }
   },
@@ -250,7 +250,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "{\"type\":\"Buffer\",\"data\":[]}\n{\"type\":\"Buffer\",\"data\":[0,1,254]}",
+      "value": "{\"type\":\"Buffer\",\"data\":[]}\n{\"type\":\"Buffer\",\"data\":[0,1,254]}\n",
       "enc": "utf8"
     }
   },
@@ -267,7 +267,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "[[1,2],[]]\n[]\n[[3]]",
+      "value": "[[1,2],[]]\n[]\n[[3]]\n",
       "enc": "utf8"
     }
   },
@@ -284,7 +284,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "{\"a\":\"b\",\"c\":null}\n{}",
+      "value": "{\"a\":\"b\",\"c\":null}\n{}\n",
       "enc": "utf8"
     }
   },
@@ -301,7 +301,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "null\n5\n\"s\"\n[1,2]",
+      "value": "null\n5\n\"s\"\n[1,2]\n",
       "enc": "utf8"
     }
   },
@@ -318,7 +318,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "{\"v\":1,\"kids\":[{\"v\":2,\"kids\":[]},{\"v\":3,\"kids\":[{\"v\":4,\"kids\":[]}]}]}",
+      "value": "{\"v\":1,\"kids\":[{\"v\":2,\"kids\":[]},{\"v\":3,\"kids\":[{\"v\":4,\"kids\":[]}]}]}\n",
       "enc": "utf8"
     }
   },
@@ -335,7 +335,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "{\"a\":{\"q\":\"1\"},\"b\":{\"q\":\"2\"},\"c\":{\"q\":\"3\"},\"d\":\"Y\",\"e\":\"X\"}",
+      "value": "{\"a\":{\"q\":\"1\"},\"b\":{\"q\":\"2\"},\"c\":{\"q\":\"3\"},\"d\":\"Y\",\"e\":\"X\"}\n",
       "enc": "utf8"
     }
   },
@@ -352,7 +352,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "{\"t\":1577934245000,\"u\":\"00000000-0000-0000-0000-000000000005\",\"dec\":{\"type\":\"Buffer\",\"data\":[4,210]},\"dt\":18263}",
+      "value": "{\"t\":1577934245000,\"u\":\"00000000-0000-0000-0000-000000000005\",\"dec\":{\"type\":\"Buffer\",\"data\":[4,210]},\"dt\":18263}\n",
       "enc": "utf8"
     }
   },
@@ -467,7 +467,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "\"hi\"\n\"yo\"",
+      "value": "\"hi\"\n\"yo\"\n",
       "enc": "utf8"
     }
   },
@@ -484,7 +484,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "\"a\"\n\"b\"",
+      "value": "\"a\"\n\"b\"\n",
       "enc": "utf8"
     }
   },
@@ -904,6 +904,20 @@
     },
     "expect": {
       "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "the defaults: a valid JSON array, 4 spaces",
+    "ref": "fastavro 1.13.1 writer/reader (Apache Avro 1.11 specification)",
+    "op": "avro:to-json",
+    "params": {},
+    "input": {
+      "value": "4f626a0104146176726f2e636f646563086e756c6c166176726f2e736368656d61a2097b2274797065223a20227265636f7264222c20226e616d65223a2022782e526563222c20226669656c6473223a205b7b226e616d65223a20226964222c202274797065223a20226c6f6e67227d2c207b226e616d65223a20226e616d65222c202274797065223a2022737472696e67227d2c207b226e616d65223a202273636f7265222c202274797065223a205b226e756c6c222c2022646f75626c65225d7d2c207b226e616d65223a202274616773222c202274797065223a207b2274797065223a20226172726179222c20226974656d73223a2022737472696e67227d7d2c207b226e616d65223a20226174747273222c202274797065223a207b2274797065223a20226d6170222c202276616c756573223a2022696e74227d7d2c207b226e616d65223a20226b696e64222c202274797065223a207b2274797065223a2022656e756d222c20226e616d65223a2022782e4b696e64222c202273796d626f6c73223a205b2241222c202242222c202243225d7d7d2c207b226e616d65223a2022726177222c202274797065223a20226279746573227d2c207b226e616d65223a20226678222c202274797065223a207b2274797065223a20226669786564222c20226e616d65223a2022782e4634222c202273697a65223a20347d7d2c207b226e616d65223a202266222c202274797065223a2022666c6f6174227d2c207b226e616d65223a20226f6b222c202274797065223a2022626f6f6c65616e227d2c207b226e616d65223a20226e657874222c202274797065223a205b226e756c6c222c2022782e526563225d7d5d7d00b9552d6e4f2858c291768d0a324e520104a8010202610004027802790002026b0200020400ff61626364cdcccc3d0100c591808080808080fa0104c3a902000000000000044000000400010203040000c0bf000204026e00000000027a00000000000040400100b9552d6e4f2858c291768d0a324e5201",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[\n    {\n        \"id\": 1,\n        \"name\": \"a\",\n        \"score\": null,\n        \"tags\": [\n            \"x\",\n            \"y\"\n        ],\n        \"attrs\": {\n            \"k\": 1\n        },\n        \"kind\": \"B\",\n        \"raw\": {\n            \"type\": \"Buffer\",\n            \"data\": [\n                0,\n                255\n            ]\n        },\n        \"fx\": {\n            \"type\": \"Buffer\",\n            \"data\": [\n                97,\n                98,\n                99,\n                100\n            ]\n        },\n        \"f\": 0.10000000149011612,\n        \"ok\": true,\n        \"next\": null\n    },\n    {\n        \"id\": -9007199254740993123,\n        \"name\": \"é\",\n        \"score\": 2.5,\n        \"tags\": [],\n        \"attrs\": {},\n        \"kind\": \"C\",\n        \"raw\": {\n            \"type\": \"Buffer\",\n            \"data\": []\n        },\n        \"fx\": {\n            \"type\": \"Buffer\",\n            \"data\": [\n                1,\n                2,\n                3,\n                4\n            ]\n        },\n        \"f\": -1.5,\n        \"ok\": false,\n        \"next\": {\n            \"id\": 2,\n            \"name\": \"n\",\n            \"score\": null,\n            \"tags\": [],\n            \"attrs\": {},\n            \"kind\": \"A\",\n            \"raw\": {\n                \"type\": \"Buffer\",\n                \"data\": [\n                    122\n                ]\n            },\n            \"fx\": {\n                \"type\": \"Buffer\",\n                \"data\": [\n                    0,\n                    0,\n                    0,\n                    0\n                ]\n            },\n            \"f\": 3.0,\n            \"ok\": true,\n            \"next\": null\n        }\n    }\n]",
+      "enc": "utf8"
     }
   }
 ]

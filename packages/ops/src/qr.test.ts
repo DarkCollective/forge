@@ -39,7 +39,7 @@ const { int, str } = valueHelpers;
 const runtime = await loadRuntime(["qr"]);
 
 const generate = (data: string, format = "text", level = "M", size = 1, margin = 0) =>
-  runtime.call("qr:generate", [str(data), str(format), str(level), int(size), int(margin)]);
+  runtime.call("qr:generate", [str(data), str(format), int(size), int(margin), str(level)]);
 /** The module matrix of a text-format result, margin 0. */
 async function matrix(data: string, level = "M"): Promise<number[][]> {
   const t = utf8(raw(await generate(data, "text", level, 1, 0)));
@@ -297,7 +297,7 @@ describe("outputs", () => {
   test("an image over the value limit is E_LIMIT_VALUE", async () => {
     const r = await runtime.call(
       "qr:generate",
-      [str("a"), str("png"), str("L"), int(100), int(100)],
+      [str("a"), str("png"), int(100), int(100), str("L")],
       { limits: { maxValueBytes: 100_000 } },
     );
     expect(code(r)).toBe("E_LIMIT_VALUE");

@@ -118,8 +118,9 @@ describe("csv:to-json: reading", () => {
     expect(await arrays(' "a",b')).toEqual([[' "a"', "b"]]);
   });
 
-  test("a BOM is part of the first cell (strip it with another op)", async () => {
-    expect(await arrays("\ufeffa,b")).toEqual([["\ufeffa", "b"]]);
+  test("a BOM at the start is dropped, as CyberChef does; one inside the text stays", async () => {
+    expect(await arrays("\ufeffa,b")).toEqual([["a", "b"]]);
+    expect(await arrays("a,\ufeffb")).toEqual([["a", "\ufeffb"]]);
   });
 
   test("unicode, including characters above U+FFFF as delimiters", async () => {
@@ -220,43 +221,43 @@ describe("csv:from-json", () => {
   test("RFC 4180 quoting rules: delimiter, quote, CR, LF; spaces and other characters are not quoted", async () => {
     expect(
       out(await fromJson('[["a b"," lead","x,y","q\\"q","c\\rr","l\\nl","tab\\t","é;"]]')),
-    ).toBe('a b, lead,"x,y","q""q","c\rr","l\nl",tab\t,é;');
+    ).toBe('a b, lead,"x,y","q""q","c\rr","l\nl",tab\t,é;\r\n');
   });
 
   test("a custom delimiter quotes its own text, in a cell and in a row delimiter", async () => {
-    expect(out(await fromJson('[["a;b","c,d"],["e","f|g"]]', ";", "|"))).toBe('"a;b";c,d|e;"f|g"');
-    expect(out(await fromJson('[["a","b"],["c","d"]]', "::", "\\n"))).toBe("a::b\nc::d");
-    expect(out(await fromJson('[["a::b"]]', "::", "\\n"))).toBe('"a::b"');
+    expect(out(await fromJson('[["a;b","c,d"],["e","f|g"]]', ";", "|"))).toBe('"a;b";c,d|e;"f|g"|');
+    expect(out(await fromJson('[["a","b"],["c","d"]]', "::", "\\n"))).toBe("a::b\nc::d\n");
+    expect(out(await fromJson('[["a::b"]]', "::", "\\n"))).toBe('"a::b"\n');
   });
 
   test("keys of the first object come first, the others follow in order of appearance", async () => {
-    expect(out(await fromJson('[{"b":1,"a":2},{"c":3,"a":4}]'))).toBe("b,a,c\r\n1,2,\r\n,4,3");
+    expect(out(await fromJson('[{"b":1,"a":2},{"c":3,"a":4}]'))).toBe("b,a,c\r\n1,2,\r\n,4,3\r\n");
   });
 
   test("a key that needs quoting is quoted in the header", async () => {
-    expect(out(await fromJson('[{"a,b":1,"c\\"d":2}]'))).toBe('"a,b","c""d"\r\n1,2');
+    expect(out(await fromJson('[{"a,b":1,"c\\"d":2}]'))).toBe('"a,b","c""d"\r\n1,2\r\n');
   });
 
   test("numbers keep their exact JSON text, with a big integer and a float", async () => {
     expect(out(await fromJson("[[1,-0.0,100.0,1e21,12345678901234567890,0.1]]"))).toBe(
-      "1,-0.0,100.0,1e+21,12345678901234567890,0.1",
+      "1,-0.0,100.0,1e+21,12345678901234567890,0.1\r\n",
     );
   });
 
   test("nested values are their compact JSON text, quoted when they hold the delimiter", async () => {
     expect(out(await fromJson('[{"a":[1,{"b":"c"}],"d":{}}]'))).toBe(
-      'a,d\r\n"[1,{""b"":""c""}]",{}',
+      'a,d\r\n"[1,{""b"":""c""}]",{}\r\n',
     );
   });
 
   test("null is an empty cell in an array row, in an object and nested null stays null", async () => {
-    expect(out(await fromJson('[[null,"x",[null]]]'))).toBe(",x,[null]");
+    expect(out(await fromJson('[[null,"x",[null]]]'))).toBe(",x,[null]\r\n");
   });
 
   test("an empty array, an array of empty objects and an array of empty arrays", async () => {
     expect(out(await fromJson("[]"))).toBe("");
-    expect(out(await fromJson("[{}]"))).toBe("\r\n");
-    expect(out(await fromJson("[[],[]]"))).toBe("\r\n");
+    expect(out(await fromJson("[{}]"))).toBe("\r\n\r\n");
+    expect(out(await fromJson("[[],[]]"))).toBe("\r\n\r\n");
   });
 
   test("errors: not convertible JSON, mixed arrays, scalar rows, repeated keys, bad delimiters", async () => {
@@ -334,7 +335,7 @@ describe("round trips", () => {
 
   test("a one-cell empty row is quoted so it survives", async () => {
     const csv = out(await fromJson('[[""],[""],["x"]]'));
-    expect(csv).toBe('""\r\n""\r\nx');
+    expect(csv).toBe('""\r\n""\r\nx\r\n');
     expect(await arrays(csv)).toEqual([[""], [""], ["x"]]);
   });
 });

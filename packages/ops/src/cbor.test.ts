@@ -106,9 +106,9 @@ describe("decode", () => {
     expect(await dec("c24100")).toBe("0");
     expect(await dec("c34100")).toBe("-1");
     expect(await dec("c240")).toBe("0");
-    expect(await dec("c2f6")).toBe('{"tag":2,"value":null}'); // a bignum tag on a non-byte-string is shown as a tag
-    expect(await dec("d9d9f700")).toBe('{"tag":55799,"value":0}');
-    expect(await dec("c1f97c00")).toBe('{"tag":1,"value":null}'); // an infinite epoch time is null, so it is no date
+    expect(await dec("c2f6")).toBe('{"tag":2,"contents":null}'); // a bignum tag on a non-byte-string is shown as a tag
+    expect(await dec("d9d9f700")).toBe('{"tag":55799,"contents":0}');
+    expect(await dec("c1f97c00")).toBe('{"tag":1,"contents":null}'); // an infinite epoch time is null, so it is no date
     expect(code(await decode(fromHex("c1fb7fe0000000000000")))).toBe("E_COERCE"); // 1.3e308 seconds are out of range
   });
   test("simple values", async () => {

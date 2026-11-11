@@ -795,7 +795,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "{\"tag\":23,\"value\":{\"type\":\"Buffer\",\"data\":[1,2,3,4]}}",
+      "value": "{\"tag\":23,\"contents\":{\"type\":\"Buffer\",\"data\":[1,2,3,4]}}",
       "enc": "utf8"
     }
   },
@@ -811,7 +811,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "{\"tag\":24,\"value\":{\"type\":\"Buffer\",\"data\":[100,73,69,84,70]}}",
+      "value": "{\"tag\":24,\"contents\":{\"type\":\"Buffer\",\"data\":[100,73,69,84,70]}}",
       "enc": "utf8"
     }
   },
@@ -827,7 +827,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "{\"tag\":32,\"value\":\"http://www.example.com\"}",
+      "value": "{\"tag\":32,\"contents\":\"http://www.example.com\"}",
       "enc": "utf8"
     }
   },
@@ -2604,14 +2604,14 @@
     }
   },
   {
-    "name": "typed-objects {\"tag\":32,\"value\":\"http://www.example.com\"}",
+    "name": "typed-objects {\"tag\":32,\"contents\":\"http://www.example.com\"}",
     "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
     "op": "cbor:encode",
     "params": {
       "typed-objects": true
     },
     "input": {
-      "value": "{\"tag\":32,\"value\":\"http://www.example.com\"}",
+      "value": "{\"tag\":32,\"contents\":\"http://www.example.com\"}",
       "enc": "utf8"
     },
     "expect": {
@@ -2620,14 +2620,14 @@
     }
   },
   {
-    "name": "typed-objects {\"tag\":24,\"value\":{\"type\":\"Buffer\",\"data\":[100,73,69,84,70]}}",
+    "name": "typed-objects {\"tag\":24,\"contents\":{\"type\":\"Buffer\",\"data\":[100,73,69,84,70]}}",
     "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
     "op": "cbor:encode",
     "params": {
       "typed-objects": true
     },
     "input": {
-      "value": "{\"tag\":24,\"value\":{\"type\":\"Buffer\",\"data\":[100,73,69,84,70]}}",
+      "value": "{\"tag\":24,\"contents\":{\"type\":\"Buffer\",\"data\":[100,73,69,84,70]}}",
       "enc": "utf8"
     },
     "expect": {
@@ -2668,14 +2668,14 @@
     }
   },
   {
-    "name": "typed-objects [{\"tag\":55799,\"value\":1},{\"type\":\"Buffer\",\"data\":[255]}]",
+    "name": "typed-objects [{\"tag\":55799,\"contents\":1},{\"type\":\"Buffer\",\"data\":[255]}]",
     "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
     "op": "cbor:encode",
     "params": {
       "typed-objects": true
     },
     "input": {
-      "value": "[{\"tag\":55799,\"value\":1},{\"type\":\"Buffer\",\"data\":[255]}]",
+      "value": "[{\"tag\":55799,\"contents\":1},{\"type\":\"Buffer\",\"data\":[255]}]",
       "enc": "utf8"
     },
     "expect": {

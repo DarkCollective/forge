@@ -19,26 +19,27 @@
  * time in FL is quadratic (the tar and zip walks measured the same), so the walk is a primitive; the parameters,
  * the checks and the JSON text are FL.
  *
- *  - `_parse ( data:bytes tag-bytes:int length-bytes:int ber:bool -- list )`: a record per element with `type`
- *    (the tag bytes as lower-case hex), `length` (an int) and `value` (the value bytes as lower-case hex). The tag
- *    is `tag-bytes` bytes (1 to 16). The length is `length-bytes` bytes (1 to 8), big-endian, or with `ber` the
- *    BER/DER form of X.690 (a byte below 0x80, or 0x80 + n followed by n length bytes, n up to 6; the indefinite
- *    form 0x80 and the reserved 0xff are E_COERCE) and `length-bytes` is not used. A header or value that runs past
- *    the data is E_COERCE with the offset (a length is only compared with the bytes that are left); empty data is
- *    an empty list.
+ *  - `_parse ( data:bytes tag-bytes:int length-bytes:int ber:bool -- list )`: a record per element with `key` (the
+ *    tag bytes as a list of ints; left out when `tag-bytes` is 0), `length` (an int) and `value` (the value bytes as a
+ *    list of ints), the layout of CyberChef's Parse TLV. The tag is `tag-bytes` bytes (0 to 16). The length is
+ *    `length-bytes` bytes (0 to 8), little-endian as CyberChef reads it, or with `ber` the BER/DER form of X.690
+ *    (a byte below 0x80, or 0x80 + n followed by n length bytes, big-endian, n up to 6; the indefinite form 0x80 and
+ *    the reserved 0xff are E_COERCE) and `length-bytes` is not used. Both widths 0 is E_RANGE. A header or value that
+ *    runs past the data is E_COERCE with the offset (a length is only compared with the bytes that are left; CyberChef
+ *    silently returns a shorter value); empty data is an empty list.
  */
 import { definePrimitive, valueHelpers } from "@forge/lang";
 import type { PrimitiveContext, PrimitiveDef, Value } from "@forge/lang";
 import { Meter, formatFailure } from "../data-format-util.js";
 import { rangeFailure } from "../prim-util.js";
 
-const { int, str, record } = valueHelpers;
+const { int, list, record } = valueHelpers;
 
-const HEX = Array.from({ length: 256 }, (_, i) => i.toString(16).padStart(2, "0"));
-function hex(b: Uint8Array): string {
-  let s = "";
-  for (let i = 0; i < b.length; i++) s += HEX[b[i] as number];
-  return s;
+/** The bytes as a list of ints, the way CyberChef shows them (an array of numbers). */
+function byteList(b: Uint8Array): Value {
+  const items = new Array<Value>(b.length);
+  for (let i = 0; i < b.length; i++) items[i] = int(b[i] as number);
+  return list(items);
 }
 
 function parse(
@@ -50,8 +51,10 @@ function parse(
 ): Value[] {
   const tw = Number(tagBytes);
   const lw = Number(lengthBytes);
-  if (!(tw >= 1 && tw <= 16)) throw rangeFailure("the tag width must be 1 to 16 bytes");
-  if (!(lw >= 1 && lw <= 8)) throw rangeFailure("the length width must be 1 to 8 bytes");
+  if (!(tw >= 0 && tw <= 16)) throw rangeFailure("the tag width must be 0 to 16 bytes");
+  if (!(lw >= 0 && lw <= 8)) throw rangeFailure("the length width must be 0 to 8 bytes");
+  if (tw === 0 && lw === 0 && !ber)
+    throw rangeFailure("the tag width and the length width cannot both be 0 bytes");
   const meter = new Meter(ctx.limits.maxValueBytes, "parsed TLV list");
   const out: Value[] = [];
   let p = 0;
@@ -63,7 +66,7 @@ function parse(
         `the tag at offset ${at} needs ${tw} bytes but only ${data.length - p} are left (truncated)`,
         at,
       );
-    const type = hex(data.subarray(p, p + tw));
+    const tag = data.subarray(p, p + tw);
     p += tw;
     let len: number;
     if (ber) {
@@ -93,8 +96,9 @@ function parse(
           `the length needs ${lw} bytes but only ${data.length - p} are left (truncated)`,
           p,
         );
+      // little-endian, as CyberChef reads a fixed-width length
       let big = 0n;
-      for (let i = 0; i < lw; i++) big = (big << 8n) | BigInt(data[p + i] as number);
+      for (let i = lw - 1; i >= 0; i--) big = (big << 8n) | BigInt(data[p + i] as number);
       p += lw;
       if (big > BigInt(data.length - p))
         throw formatFailure(
@@ -110,14 +114,11 @@ function parse(
         `the value declares ${len} bytes but only ${data.length - p} are left (truncated)`,
         p,
       );
-    meter.add(160 + 2 * tw + 4 * len);
-    out.push(
-      record([
-        ["type", str(type)],
-        ["length", int(len)],
-        ["value", str(hex(data.subarray(p, p + len)))],
-      ]),
-    );
+    meter.add(160 + 32 * tw + 32 * len);
+    const fields: [string, Value][] = [];
+    if (tw > 0) fields.push(["key", byteList(tag)]);
+    fields.push(["length", int(len)], ["value", byteList(data.subarray(p, p + len))]);
+    out.push(record(fields));
     p += len;
   }
   return out;
@@ -130,7 +131,7 @@ export const primitives: readonly PrimitiveDef[] = [
     "( data:bytes tag-bytes:int length-bytes:int ber:bool -- list )",
     parse,
     {
-      doc: "The tag-length-value elements of the bytes as records of type, length and value (private helper of tlv:parse).",
+      doc: "The tag-length-value elements of the bytes as records of key, length and value (private helper of tlv:parse).",
       category: "Data format",
     },
   ),
