@@ -1,0 +1,579 @@
+[
+  {
+    "name": "decrypt the annex example, C1C3C2",
+    "ref": "GB/T 32918.5-2017 annex A, SM2 encryption example (message encryption standard; d, k, C1, C3, C2 as published; the independent Python SM2 here reproduces them)",
+    "op": "sm2:decrypt",
+    "params": {
+      "private-key": "3945208f7b2144b13f36e38ac6d39f95889393692860b51a42fb81ef4df7c5b8",
+      "input-format": "C1C3C2"
+    },
+    "input": {
+      "value": "04ebfc718e8d1798620432268e77feb6415e2ede0e073c0f4f640ecd2e149a73e858f9d81e5430a57b36daab8f950a3c64e6ee6a63094d99283aff767e124df059983c18f809e262923c53aec295d30383b54e39d609d160afcb1908d0bd876621886ca989ca9c7d58087307ca93092d651efa",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "encryption standard",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decrypt the annex example, C1C3C2, C1 with its 04 byte",
+    "ref": "GB/T 32918.5-2017 annex A, SM2 encryption example (message encryption standard; d, k, C1, C3, C2 as published; the independent Python SM2 here reproduces them)",
+    "op": "sm2:decrypt",
+    "params": {
+      "private-key": "3945208f7b2144b13f36e38ac6d39f95889393692860b51a42fb81ef4df7c5b8",
+      "input-format": "C1C3C2"
+    },
+    "input": {
+      "value": "0404ebfc718e8d1798620432268e77feb6415e2ede0e073c0f4f640ecd2e149a73e858f9d81e5430a57b36daab8f950a3c64e6ee6a63094d99283aff767e124df059983c18f809e262923c53aec295d30383b54e39d609d160afcb1908d0bd876621886ca989ca9c7d58087307ca93092d651efa",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "encryption standard",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decrypt the annex example, C1C2C3",
+    "ref": "GB/T 32918.5-2017 annex A, SM2 encryption example (message encryption standard; d, k, C1, C3, C2 as published; the independent Python SM2 here reproduces them)",
+    "op": "sm2:decrypt",
+    "params": {
+      "private-key": "3945208f7b2144b13f36e38ac6d39f95889393692860b51a42fb81ef4df7c5b8",
+      "input-format": "C1C2C3"
+    },
+    "input": {
+      "value": "04ebfc718e8d1798620432268e77feb6415e2ede0e073c0f4f640ecd2e149a73e858f9d81e5430a57b36daab8f950a3c64e6ee6a63094d99283aff767e124df021886ca989ca9c7d58087307ca93092d651efa59983c18f809e262923c53aec295d30383b54e39d609d160afcb1908d0bd8766",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "encryption standard",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decrypt the annex example, C1C2C3, C1 with its 04 byte",
+    "ref": "GB/T 32918.5-2017 annex A, SM2 encryption example (message encryption standard; d, k, C1, C3, C2 as published; the independent Python SM2 here reproduces them)",
+    "op": "sm2:decrypt",
+    "params": {
+      "private-key": "3945208f7b2144b13f36e38ac6d39f95889393692860b51a42fb81ef4df7c5b8",
+      "input-format": "C1C2C3"
+    },
+    "input": {
+      "value": "0404ebfc718e8d1798620432268e77feb6415e2ede0e073c0f4f640ecd2e149a73e858f9d81e5430a57b36daab8f950a3c64e6ee6a63094d99283aff767e124df021886ca989ca9c7d58087307ca93092d651efa59983c18f809e262923c53aec295d30383b54e39d609d160afcb1908d0bd8766",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "encryption standard",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decrypt the annex example: upper case hex with line breaks",
+    "ref": "GB/T 32918.5-2017 annex A, SM2 encryption example (message encryption standard; d, k, C1, C3, C2 as published; the independent Python SM2 here reproduces them)",
+    "op": "sm2:decrypt",
+    "params": {
+      "private-key": "3945208f7b2144b13f36e38ac6d39f95889393692860b51a42fb81ef4df7c5b8",
+      "input-format": "C1C3C2"
+    },
+    "input": {
+      "value": "04EBFC718E8D1798620432268E77FEB6415E2EDE0E073C0F4F640ECD2E149A73\nE858F9D81E5430A57B36DAAB8F950A3C64E6EE6A63094D99283AFF767E124DF059983C18F809E262923C53AEC295D30383B54E39D609D160AFCB1908D0BD876621886CA989CA9C7D58087307CA93092D651EFA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "encryption standard",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decrypt an OpenSSL ciphertext of 1 bytes, C1C3C2",
+    "ref": "openssl pkeyutl -encrypt (OpenSSL 3.0, SM2 key from openssl genpkey -algorithm SM2); the DER SM2_Ciphertext regrouped as C1 || C3 || C2 (or C1 || C2 || C3) with Python",
+    "op": "sm2:decrypt",
+    "params": {
+      "private-key": "f94d80e51ce2d860a60d47467de0d18f7ebc09cb5fb65c03381cb827e9a5eb57",
+      "input-format": "C1C3C2"
+    },
+    "input": {
+      "value": "6e89ea282ea157cabf4c4dc3f6167b36a46e710f1ba054c20555b279db8133b5271c44a88bb60414ceb3a71acafce0599cd26ed559744039ef14bdbd10fc348397a4a309e32e829ffc76a083f7b1aa348bb6b6964be57642950e4a562f2b1df39a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "61",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt an OpenSSL ciphertext of 1 bytes, C1C2C3",
+    "ref": "openssl pkeyutl -encrypt (OpenSSL 3.0, SM2 key from openssl genpkey -algorithm SM2); the DER SM2_Ciphertext regrouped as C1 || C3 || C2 (or C1 || C2 || C3) with Python",
+    "op": "sm2:decrypt",
+    "params": {
+      "private-key": "f94d80e51ce2d860a60d47467de0d18f7ebc09cb5fb65c03381cb827e9a5eb57",
+      "input-format": "C1C2C3"
+    },
+    "input": {
+      "value": "6e89ea282ea157cabf4c4dc3f6167b36a46e710f1ba054c20555b279db8133b5271c44a88bb60414ceb3a71acafce0599cd26ed559744039ef14bdbd10fc34839a97a4a309e32e829ffc76a083f7b1aa348bb6b6964be57642950e4a562f2b1df3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "61",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt an OpenSSL ciphertext of 1 bytes, C1 with 04",
+    "ref": "openssl pkeyutl -encrypt (OpenSSL 3.0, SM2 key from openssl genpkey -algorithm SM2); the DER SM2_Ciphertext regrouped as C1 || C3 || C2 (or C1 || C2 || C3) with Python",
+    "op": "sm2:decrypt",
+    "params": {
+      "private-key": "f94d80e51ce2d860a60d47467de0d18f7ebc09cb5fb65c03381cb827e9a5eb57",
+      "input-format": "C1C3C2"
+    },
+    "input": {
+      "value": "046e89ea282ea157cabf4c4dc3f6167b36a46e710f1ba054c20555b279db8133b5271c44a88bb60414ceb3a71acafce0599cd26ed559744039ef14bdbd10fc348397a4a309e32e829ffc76a083f7b1aa348bb6b6964be57642950e4a562f2b1df39a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "61",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt an OpenSSL ciphertext of 31 bytes, C1C3C2",
+    "ref": "openssl pkeyutl -encrypt (OpenSSL 3.0, SM2 key from openssl genpkey -algorithm SM2); the DER SM2_Ciphertext regrouped as C1 || C3 || C2 (or C1 || C2 || C3) with Python",
+    "op": "sm2:decrypt",
+    "params": {
+      "private-key": "f94d80e51ce2d860a60d47467de0d18f7ebc09cb5fb65c03381cb827e9a5eb57",
+      "input-format": "C1C3C2"
+    },
+    "input": {
+      "value": "4a495f64af1238b8f77d4df5ce336242b3da804bffb7edcb7b727a0736e1a42b40dedf723df379818a8185e7c72c379d2d6e3cfd9bae12ced31c2186c17aed9f7658eebb948e1b04382aaa64b4b9fedbbfb1207951df5eced70e67af435604ff54e1b6807a9fba95a7e1ed2d71b800926ab8d626558746e542901e6b9acc92",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "78787878787878787878787878787878787878787878787878787878787878",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt an OpenSSL ciphertext of 32 bytes, C1C3C2",
+    "ref": "openssl pkeyutl -encrypt (OpenSSL 3.0, SM2 key from openssl genpkey -algorithm SM2); the DER SM2_Ciphertext regrouped as C1 || C3 || C2 (or C1 || C2 || C3) with Python",
+    "op": "sm2:decrypt",
+    "params": {
+      "private-key": "f94d80e51ce2d860a60d47467de0d18f7ebc09cb5fb65c03381cb827e9a5eb57",
+      "input-format": "C1C3C2"
+    },
+    "input": {
+      "value": "a67d3b3f08ebdbb42d98e143f053d48296f1149d620d476f11551e000ae7c63311a975a304cfeca092afba3f33835916e5aefbc6d641db539a2f0a9db019ccfcc50257499ae614f6caf491ae7ab446d2b0dfc25390a0b04c201dc36e7ea8aa8169249dce4ebfe449ee8bfb9534f75e215d8ff00473f96f208433bf1fda0a1c89",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "7979797979797979797979797979797979797979797979797979797979797979",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt an OpenSSL ciphertext of 33 bytes, C1C3C2",
+    "ref": "openssl pkeyutl -encrypt (OpenSSL 3.0, SM2 key from openssl genpkey -algorithm SM2); the DER SM2_Ciphertext regrouped as C1 || C3 || C2 (or C1 || C2 || C3) with Python",
+    "op": "sm2:decrypt",
+    "params": {
+      "private-key": "f94d80e51ce2d860a60d47467de0d18f7ebc09cb5fb65c03381cb827e9a5eb57",
+      "input-format": "C1C3C2"
+    },
+    "input": {
+      "value": "16afe6bb3b4ae85e120317d3c21274dca663edb089ad21b0b38d708ea296404bab7b1ae37dc5dcb7dbf8126ed05f6a2e6298761e9c31fbdb9d81712e0354538345b5026998bc7c29cf5c674c53b949cbbf486ea9378265ed16e4bfdf09ccdd2b2fce22fcea5993859f06df2518e3259f1532b2cb973bf7ce0b7d15d544f66b7a3d",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt an OpenSSL ciphertext of 33 bytes, C1C2C3",
+    "ref": "openssl pkeyutl -encrypt (OpenSSL 3.0, SM2 key from openssl genpkey -algorithm SM2); the DER SM2_Ciphertext regrouped as C1 || C3 || C2 (or C1 || C2 || C3) with Python",
+    "op": "sm2:decrypt",
+    "params": {
+      "private-key": "f94d80e51ce2d860a60d47467de0d18f7ebc09cb5fb65c03381cb827e9a5eb57",
+      "input-format": "C1C2C3"
+    },
+    "input": {
+      "value": "16afe6bb3b4ae85e120317d3c21274dca663edb089ad21b0b38d708ea296404bab7b1ae37dc5dcb7dbf8126ed05f6a2e6298761e9c31fbdb9d81712e035453832fce22fcea5993859f06df2518e3259f1532b2cb973bf7ce0b7d15d544f66b7a3d45b5026998bc7c29cf5c674c53b949cbbf486ea9378265ed16e4bfdf09ccdd2b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt an OpenSSL ciphertext of 33 bytes, C1 with 04",
+    "ref": "openssl pkeyutl -encrypt (OpenSSL 3.0, SM2 key from openssl genpkey -algorithm SM2); the DER SM2_Ciphertext regrouped as C1 || C3 || C2 (or C1 || C2 || C3) with Python",
+    "op": "sm2:decrypt",
+    "params": {
+      "private-key": "f94d80e51ce2d860a60d47467de0d18f7ebc09cb5fb65c03381cb827e9a5eb57",
+      "input-format": "C1C3C2"
+    },
+    "input": {
+      "value": "0416afe6bb3b4ae85e120317d3c21274dca663edb089ad21b0b38d708ea296404bab7b1ae37dc5dcb7dbf8126ed05f6a2e6298761e9c31fbdb9d81712e0354538345b5026998bc7c29cf5c674c53b949cbbf486ea9378265ed16e4bfdf09ccdd2b2fce22fcea5993859f06df2518e3259f1532b2cb973bf7ce0b7d15d544f66b7a3d",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt an OpenSSL ciphertext of 200 bytes, C1C3C2",
+    "ref": "openssl pkeyutl -encrypt (OpenSSL 3.0, SM2 key from openssl genpkey -algorithm SM2); the DER SM2_Ciphertext regrouped as C1 || C3 || C2 (or C1 || C2 || C3) with Python",
+    "op": "sm2:decrypt",
+    "params": {
+      "private-key": "f94d80e51ce2d860a60d47467de0d18f7ebc09cb5fb65c03381cb827e9a5eb57",
+      "input-format": "C1C3C2"
+    },
+    "input": {
+      "value": "8b71ce96b2bf5acc164f34cec5318519f7b31f1442280ea462d3d6399df2e382aa090e3ddc482665fd6700f774abee9443b0b46c2d2f6724337fcb86cf11d90f9bed7cc9ab7d51715647f7cd233613c5af11e89d6a09f029a3be8fb01df384c3f0d110a503a16f3bd43409e6d3d804eb64d9deea532b1d1ef196157d83d15ef7c592e5aa44501537bc1e77cee6bdddec99aa03f4828058c892dec0b7c5de7144d4c8eb6c743d0dbf29c63aa23e826dc0385e4a423c40acdc843b9311962a249e30dfac025324db2d86baac9ec3282469da2b6bb8087c104e6c662e947c68a6720789469132918c15f8557a80f08902983af5a0c674c131122588b226a9f6a202c91d095af8f27bd1a28c4506c9c7ca8693dcf65258851e5124f6bd50ef50c0081ed46c6bef36e020",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt an OpenSSL ciphertext of 200 bytes, C1C2C3",
+    "ref": "openssl pkeyutl -encrypt (OpenSSL 3.0, SM2 key from openssl genpkey -algorithm SM2); the DER SM2_Ciphertext regrouped as C1 || C3 || C2 (or C1 || C2 || C3) with Python",
+    "op": "sm2:decrypt",
+    "params": {
+      "private-key": "f94d80e51ce2d860a60d47467de0d18f7ebc09cb5fb65c03381cb827e9a5eb57",
+      "input-format": "C1C2C3"
+    },
+    "input": {
+      "value": "8b71ce96b2bf5acc164f34cec5318519f7b31f1442280ea462d3d6399df2e382aa090e3ddc482665fd6700f774abee9443b0b46c2d2f6724337fcb86cf11d90ff0d110a503a16f3bd43409e6d3d804eb64d9deea532b1d1ef196157d83d15ef7c592e5aa44501537bc1e77cee6bdddec99aa03f4828058c892dec0b7c5de7144d4c8eb6c743d0dbf29c63aa23e826dc0385e4a423c40acdc843b9311962a249e30dfac025324db2d86baac9ec3282469da2b6bb8087c104e6c662e947c68a6720789469132918c15f8557a80f08902983af5a0c674c131122588b226a9f6a202c91d095af8f27bd1a28c4506c9c7ca8693dcf65258851e5124f6bd50ef50c0081ed46c6bef36e0209bed7cc9ab7d51715647f7cd233613c5af11e89d6a09f029a3be8fb01df384c3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt an OpenSSL ciphertext of 200 bytes, C1 with 04",
+    "ref": "openssl pkeyutl -encrypt (OpenSSL 3.0, SM2 key from openssl genpkey -algorithm SM2); the DER SM2_Ciphertext regrouped as C1 || C3 || C2 (or C1 || C2 || C3) with Python",
+    "op": "sm2:decrypt",
+    "params": {
+      "private-key": "f94d80e51ce2d860a60d47467de0d18f7ebc09cb5fb65c03381cb827e9a5eb57",
+      "input-format": "C1C3C2"
+    },
+    "input": {
+      "value": "048b71ce96b2bf5acc164f34cec5318519f7b31f1442280ea462d3d6399df2e382aa090e3ddc482665fd6700f774abee9443b0b46c2d2f6724337fcb86cf11d90f9bed7cc9ab7d51715647f7cd233613c5af11e89d6a09f029a3be8fb01df384c3f0d110a503a16f3bd43409e6d3d804eb64d9deea532b1d1ef196157d83d15ef7c592e5aa44501537bc1e77cee6bdddec99aa03f4828058c892dec0b7c5de7144d4c8eb6c743d0dbf29c63aa23e826dc0385e4a423c40acdc843b9311962a249e30dfac025324db2d86baac9ec3282469da2b6bb8087c104e6c662e947c68a6720789469132918c15f8557a80f08902983af5a0c674c131122588b226a9f6a202c91d095af8f27bd1a28c4506c9c7ca8693dcf65258851e5124f6bd50ef50c0081ed46c6bef36e020",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt an OpenSSL ciphertext of 129 bytes, C1C3C2",
+    "ref": "openssl pkeyutl -encrypt (OpenSSL 3.0, SM2 key from openssl genpkey -algorithm SM2); the DER SM2_Ciphertext regrouped as C1 || C3 || C2 (or C1 || C2 || C3) with Python",
+    "op": "sm2:decrypt",
+    "params": {
+      "private-key": "f94d80e51ce2d860a60d47467de0d18f7ebc09cb5fb65c03381cb827e9a5eb57",
+      "input-format": "C1C3C2"
+    },
+    "input": {
+      "value": "5f520f1907ec356acc5faae6f4e0bdc1b8b21235e867d94827546d2dbde6fb89cb3252620eb2bc12731ab75763c3fe259baac63e560d6ab1233eecdd3a5128a54b84d1cd13679bdf946fe779cd5862c8aabf0cdae6debe07267495058df6e6330277d11f290feea6fbf2b42e5ee2745c132589ec298075176ec400a61a552a19a10ed47396b670dd9ed15897e23971d8610043898649403ff97bcfeb123b22c8b29b5e092e792f4ddb66ec5c13acb6d354d1cb55f1a1889e19c82d5c13c108d4064190ab5984e536e9bf1544212cf6313c909d4e926683aef6d07ed26bda53b52e",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "54686520717569636b2062726f776e20666f78206a756d7073206f76657220746865206c617a7920646f6754686520717569636b2062726f776e20666f78206a756d7073206f76657220746865206c617a7920646f6754686520717569636b2062726f776e20666f78206a756d7073206f76657220746865206c617a7920646f67",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt: the wrong private key",
+    "ref": "error case",
+    "op": "sm2:decrypt",
+    "params": {
+      "private-key": "3945208f7b2144b13f36e38ac6d39f95889393692860b51a42fb81ef4df7c5b8",
+      "input-format": "C1C3C2"
+    },
+    "input": {
+      "value": "2c676210d9cf59471c85a38f6f80eebd93660ea2d3c7ff8dff77afbcf5dda360e59cf2576d0ad9ff982e1039e42c9729dedc099a5bf7bca8b19ba7f1ea239355936dbab0ccab61df20c6cad5a3681a3ba5606b2f1c65578d308544c16d86c5cec5787eede2928d68601c76a7d1ace84608ff",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decrypt: the wrong order (C3 does not match)",
+    "ref": "error case",
+    "op": "sm2:decrypt",
+    "params": {
+      "private-key": "f94d80e51ce2d860a60d47467de0d18f7ebc09cb5fb65c03381cb827e9a5eb57",
+      "input-format": "C1C2C3"
+    },
+    "input": {
+      "value": "2c676210d9cf59471c85a38f6f80eebd93660ea2d3c7ff8dff77afbcf5dda360e59cf2576d0ad9ff982e1039e42c9729dedc099a5bf7bca8b19ba7f1ea239355936dbab0ccab61df20c6cad5a3681a3ba5606b2f1c65578d308544c16d86c5cec5787eede2928d68601c76a7d1ace84608ff",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decrypt: a flipped bit in C2",
+    "ref": "error case",
+    "op": "sm2:decrypt",
+    "params": {
+      "private-key": "f94d80e51ce2d860a60d47467de0d18f7ebc09cb5fb65c03381cb827e9a5eb57",
+      "input-format": "C1C3C2"
+    },
+    "input": {
+      "value": "2c676210d9cf59471c85a38f6f80eebd93660ea2d3c7ff8dff77afbcf5dda360e59cf2576d0ad9ff982e1039e42c9729dedc099a5bf7bca8b19ba7f1ea239355936dbab0ccab61df20c6cad5a3681a3ba5606b2f1c65578d308544c16d86c5cec5787eede2928d68601c76a7d1ace84608fe",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decrypt: a flipped bit in C3",
+    "ref": "error case",
+    "op": "sm2:decrypt",
+    "params": {
+      "private-key": "f94d80e51ce2d860a60d47467de0d18f7ebc09cb5fb65c03381cb827e9a5eb57",
+      "input-format": "C1C3C2"
+    },
+    "input": {
+      "value": "2c676210d9cf59471c85a38f6f80eebd93660ea2d3c7ff8dff77afbcf5dda360e59cf2576d0ad9ff982e1039e42c9729dedc099a5bf7bca8b19ba7f1ea239355936dbab0ccabe1df20c6cad5a3681a3ba5606b2f1c65578d308544c16d86c5cec5787eede2928d68601c76a7d1ace84608ff",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decrypt: C1 not on the curve",
+    "ref": "error case",
+    "op": "sm2:decrypt",
+    "params": {
+      "private-key": "f94d80e51ce2d860a60d47467de0d18f7ebc09cb5fb65c03381cb827e9a5eb57",
+      "input-format": "C1C3C2"
+    },
+    "input": {
+      "value": "2c676210d9cf59471c85a38f6f80eebd93660ea2d3c7ff8dff77afbcf5dda360e59cf2576d0ad9ff982e1039e42c9729dedc099a5bf7bca8b19ba7f1ea239350936dbab0ccab61df20c6cad5a3681a3ba5606b2f1c65578d308544c16d86c5cec5787eede2928d68601c76a7d1ace84608ff",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decrypt: shorter than C1 and C3",
+    "ref": "error case",
+    "op": "sm2:decrypt",
+    "params": {
+      "private-key": "f94d80e51ce2d860a60d47467de0d18f7ebc09cb5fb65c03381cb827e9a5eb57",
+      "input-format": "C1C3C2"
+    },
+    "input": {
+      "value": "2c676210d9cf59471c85a38f6f80eebd93660ea2d3c7ff8dff77afbcf5dda360e59cf2576d0ad9ff982e1039e42c9729dedc099a5bf7bca8b19ba7f1ea239355936dbab0ccab61df20c6cad5a3681a3ba5606b2f1c65578d308544c16d86c5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decrypt: empty",
+    "ref": "error case",
+    "op": "sm2:decrypt",
+    "params": {
+      "private-key": "f94d80e51ce2d860a60d47467de0d18f7ebc09cb5fb65c03381cb827e9a5eb57",
+      "input-format": "C1C3C2"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decrypt: odd number of hex digits",
+    "ref": "error case",
+    "op": "sm2:decrypt",
+    "params": {
+      "private-key": "f94d80e51ce2d860a60d47467de0d18f7ebc09cb5fb65c03381cb827e9a5eb57",
+      "input-format": "C1C3C2"
+    },
+    "input": {
+      "value": "2c676210d9cf59471c85a38f6f80eebd93660ea2d3c7ff8dff77afbcf5dda360e59cf2576d0ad9ff982e1039e42c9729dedc099a5bf7bca8b19ba7f1ea239355936dbab0ccab61df20c6cad5a3681a3ba5606b2f1c65578d308544c16d86c5cec5787eede2928d68601c76a7d1ace84608ff0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decrypt: not hex",
+    "ref": "error case",
+    "op": "sm2:decrypt",
+    "params": {
+      "private-key": "f94d80e51ce2d860a60d47467de0d18f7ebc09cb5fb65c03381cb827e9a5eb57",
+      "input-format": "C1C3C2"
+    },
+    "input": {
+      "value": "zz676210d9cf59471c85a38f6f80eebd93660ea2d3c7ff8dff77afbcf5dda360e59cf2576d0ad9ff982e1039e42c9729dedc099a5bf7bca8b19ba7f1ea239355936dbab0ccab61df20c6cad5a3681a3ba5606b2f1c65578d308544c16d86c5cec5787eede2928d68601c76a7d1ace84608ff",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decrypt: private key of 31 bytes",
+    "ref": "error case",
+    "op": "sm2:decrypt",
+    "params": {
+      "private-key": "4d80e51ce2d860a60d47467de0d18f7ebc09cb5fb65c03381cb827e9a5eb57",
+      "input-format": "C1C3C2"
+    },
+    "input": {
+      "value": "2c676210d9cf59471c85a38f6f80eebd93660ea2d3c7ff8dff77afbcf5dda360e59cf2576d0ad9ff982e1039e42c9729dedc099a5bf7bca8b19ba7f1ea239355936dbab0ccab61df20c6cad5a3681a3ba5606b2f1c65578d308544c16d86c5cec5787eede2928d68601c76a7d1ace84608ff",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "decrypt: private key zero",
+    "ref": "error case",
+    "op": "sm2:decrypt",
+    "params": {
+      "private-key": "0000000000000000000000000000000000000000000000000000000000000000",
+      "input-format": "C1C3C2"
+    },
+    "input": {
+      "value": "2c676210d9cf59471c85a38f6f80eebd93660ea2d3c7ff8dff77afbcf5dda360e59cf2576d0ad9ff982e1039e42c9729dedc099a5bf7bca8b19ba7f1ea239355936dbab0ccab61df20c6cad5a3681a3ba5606b2f1c65578d308544c16d86c5cec5787eede2928d68601c76a7d1ace84608ff",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "decrypt: private key equal to the order",
+    "ref": "error case",
+    "op": "sm2:decrypt",
+    "params": {
+      "private-key": "fffffffeffffffffffffffffffffffff7203df6b21c6052b53bbf40939d54123",
+      "input-format": "C1C3C2"
+    },
+    "input": {
+      "value": "2c676210d9cf59471c85a38f6f80eebd93660ea2d3c7ff8dff77afbcf5dda360e59cf2576d0ad9ff982e1039e42c9729dedc099a5bf7bca8b19ba7f1ea239355936dbab0ccab61df20c6cad5a3681a3ba5606b2f1c65578d308544c16d86c5cec5787eede2928d68601c76a7d1ace84608ff",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "decrypt: no private key",
+    "ref": "error case",
+    "op": "sm2:decrypt",
+    "params": {
+      "private-key": "",
+      "input-format": "C1C3C2"
+    },
+    "input": {
+      "value": "2c676210d9cf59471c85a38f6f80eebd93660ea2d3c7ff8dff77afbcf5dda360e59cf2576d0ad9ff982e1039e42c9729dedc099a5bf7bca8b19ba7f1ea239355936dbab0ccab61df20c6cad5a3681a3ba5606b2f1c65578d308544c16d86c5cec5787eede2928d68601c76a7d1ace84608ff",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "encrypt: no public key",
+    "ref": "error case; the ciphertexts of encrypt are random, see src/sm2.test.ts (fixed-k known answers and round trips)",
+    "op": "sm2:encrypt",
+    "params": {
+      "public-key-x": "",
+      "public-key-y": ""
+    },
+    "input": {
+      "value": "hello",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "encrypt: X of 31 bytes",
+    "ref": "error case; the ciphertexts of encrypt are random, see src/sm2.test.ts (fixed-k known answers and round trips)",
+    "op": "sm2:encrypt",
+    "params": {
+      "public-key-x": "94b4086b36bd21f4b0168f782572d975818caca02e3efd7fab4216d756e77b",
+      "public-key-y": "84d86942a8ccbcbdedf9672af3df67d70611480d68886ce8310adfd35a1202bc"
+    },
+    "input": {
+      "value": "hello",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "encrypt: Y of 33 bytes",
+    "ref": "error case; the ciphertexts of encrypt are random, see src/sm2.test.ts (fixed-k known answers and round trips)",
+    "op": "sm2:encrypt",
+    "params": {
+      "public-key-x": "7994b4086b36bd21f4b0168f782572d975818caca02e3efd7fab4216d756e77b",
+      "public-key-y": "0084d86942a8ccbcbdedf9672af3df67d70611480d68886ce8310adfd35a1202bc"
+    },
+    "input": {
+      "value": "hello",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "encrypt: a point not on the curve",
+    "ref": "error case; the ciphertexts of encrypt are random, see src/sm2.test.ts (fixed-k known answers and round trips)",
+    "op": "sm2:encrypt",
+    "params": {
+      "public-key-x": "7994b4086b36bd21f4b0168f782572d975818caca02e3efd7fab4216d756e77b",
+      "public-key-y": "84d86942a8ccbcbdedf9672af3df67d70611480d68886ce8310adfd35a1202bd"
+    },
+    "input": {
+      "value": "hello",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "encrypt: the point (0, 0)",
+    "ref": "error case; the ciphertexts of encrypt are random, see src/sm2.test.ts (fixed-k known answers and round trips)",
+    "op": "sm2:encrypt",
+    "params": {
+      "public-key-x": "0000000000000000000000000000000000000000000000000000000000000000",
+      "public-key-y": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "input": {
+      "value": "hello",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]
