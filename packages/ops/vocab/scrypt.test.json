@@ -1,0 +1,270 @@
+[
+  {
+    "name": "rfc7914 empty password and salt",
+    "ref": "RFC 7914 section 12, first test vector",
+    "op": "scrypt:derive",
+    "params": {
+      "salt": {
+        "value": "",
+        "enc": "utf8"
+      },
+      "n": 16,
+      "r": 1,
+      "p": 1,
+      "length": 64
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "77d6576238657b203b19ca42c18a0497f16b4844e3074ae8dfdffa3fede21442fcd0069ded0948f8326a753a0fc81f17e8d3e0fb2e0d3628cf35e20c38d18906",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "rfc7914 password/NaCl N=1024 r=8 p=16",
+    "ref": "RFC 7914 section 12, second test vector",
+    "op": "scrypt:derive",
+    "params": {
+      "salt": {
+        "value": "NaCl",
+        "enc": "utf8"
+      },
+      "n": 1024,
+      "r": 8,
+      "p": 16,
+      "length": 64
+    },
+    "input": {
+      "value": "password",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fdbabe1c9d3472007856e7190d01e9fe7c6ad7cbc8237830e77376634b3731622eaf30d92e22a3886ff109279d9830dac727afb94a83ee6d8360cbdfa2cc0640",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "rfc7914 pleaseletmein N=16384 r=8 p=1",
+    "ref": "RFC 7914 section 12, third test vector",
+    "op": "scrypt:derive",
+    "params": {
+      "salt": {
+        "value": "SodiumChloride",
+        "enc": "utf8"
+      },
+      "n": 16384,
+      "r": 8,
+      "p": 1,
+      "length": 64
+    },
+    "input": {
+      "value": "pleaseletmein",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "7023bdcb3afd7348461c06cd81fd38ebfda8fbba904f8e3ea9b543f6545da1f2d5432955613f0fcf62d49705242a9af9e61e85dc0d651e40dfcf017b45575887",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hex salt, a small N and a 17 byte key",
+    "ref": "node:crypto scryptSync (OpenSSL), N=4 r=2 p=3, fixed here",
+    "op": "scrypt:derive",
+    "params": {
+      "salt": {
+        "value": "deadbeef",
+        "enc": "hex"
+      },
+      "n": 4,
+      "r": 2,
+      "p": 3,
+      "length": 17
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "478084d9beed91f82add5b50aca2251e1e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "RFC 7914 N=1048576 r=8 needs 1 GiB: over the memory cap (E_RANGE)",
+    "ref": "WP 5.25 caps: N a power of two to 2^20, 128*N*r at most 256 MiB, N*r*p at most 2^23",
+    "op": "scrypt:derive",
+    "params": {
+      "salt": {
+        "value": "",
+        "enc": "utf8"
+      },
+      "n": 1048576,
+      "r": 8,
+      "p": 1,
+      "length": 64
+    },
+    "input": {
+      "value": "password",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "N not a power of two is E_RANGE",
+    "ref": "WP 5.25 caps: N a power of two to 2^20, 128*N*r at most 256 MiB, N*r*p at most 2^23",
+    "op": "scrypt:derive",
+    "params": {
+      "salt": {
+        "value": "",
+        "enc": "utf8"
+      },
+      "n": 1000,
+      "r": 8,
+      "p": 1,
+      "length": 64
+    },
+    "input": {
+      "value": "password",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "N = 1 is E_RANGE",
+    "ref": "WP 5.25 caps: N a power of two to 2^20, 128*N*r at most 256 MiB, N*r*p at most 2^23",
+    "op": "scrypt:derive",
+    "params": {
+      "salt": {
+        "value": "",
+        "enc": "utf8"
+      },
+      "n": 1,
+      "r": 8,
+      "p": 1,
+      "length": 64
+    },
+    "input": {
+      "value": "password",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "r = 0 is E_RANGE",
+    "ref": "WP 5.25 caps: N a power of two to 2^20, 128*N*r at most 256 MiB, N*r*p at most 2^23",
+    "op": "scrypt:derive",
+    "params": {
+      "salt": {
+        "value": "",
+        "enc": "utf8"
+      },
+      "n": 16,
+      "r": 0,
+      "p": 1,
+      "length": 64
+    },
+    "input": {
+      "value": "password",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "p = 0 is E_RANGE",
+    "ref": "WP 5.25 caps: N a power of two to 2^20, 128*N*r at most 256 MiB, N*r*p at most 2^23",
+    "op": "scrypt:derive",
+    "params": {
+      "salt": {
+        "value": "",
+        "enc": "utf8"
+      },
+      "n": 16,
+      "r": 1,
+      "p": 0,
+      "length": 64
+    },
+    "input": {
+      "value": "password",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "length 0 is E_RANGE",
+    "ref": "WP 5.25 caps: N a power of two to 2^20, 128*N*r at most 256 MiB, N*r*p at most 2^23",
+    "op": "scrypt:derive",
+    "params": {
+      "salt": {
+        "value": "",
+        "enc": "utf8"
+      },
+      "n": 16,
+      "r": 1,
+      "p": 1,
+      "length": 0
+    },
+    "input": {
+      "value": "password",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "work N*r*p over 2^23 is E_RANGE",
+    "ref": "WP 5.25 caps: N a power of two to 2^20, 128*N*r at most 256 MiB, N*r*p at most 2^23",
+    "op": "scrypt:derive",
+    "params": {
+      "salt": {
+        "value": "",
+        "enc": "utf8"
+      },
+      "n": 65536,
+      "r": 8,
+      "p": 32,
+      "length": 64
+    },
+    "input": {
+      "value": "password",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "N over 2^20 is E_RANGE",
+    "ref": "WP 5.25 caps: N a power of two to 2^20, 128*N*r at most 256 MiB, N*r*p at most 2^23",
+    "op": "scrypt:derive",
+    "params": {
+      "salt": {
+        "value": "",
+        "enc": "utf8"
+      },
+      "n": 2097152,
+      "r": 1,
+      "p": 1,
+      "length": 64
+    },
+    "input": {
+      "value": "password",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  }
+]

@@ -36,6 +36,7 @@ The private primitives, each in `src/prims/<v>.ts`:
 - `float:_pack` and `float:_unpack`: decimal text to and from IEEE 754 bytes;
 - `unicode:_normalize`: Unicode normalisation (NFC, NFD, NFKC, NFKD);
 - `aes:_check-key`, `aes:_block-enc`, `aes:_block-dec`, `aes:_crypt` and `aes:_gcm`: AES over the audited `@noble/ciphers` (the block pair also drives `blockmode` for OFB);
+- `pbkdf2:_derive`, `scrypt:_derive`, `argon2:_derive` and `argon2:_verify`: the key derivation functions over the audited `@noble/hashes` (they are memory- or time-hard, far beyond the FL step budget; each caps its cost, see the vocabulary's primitive file; the Argon2 primitive also writes and parses the PHC encoded string). HKDF and EVP_BytesToKey are plain FL, over `hmac:digest` and the md5, sha1 and sha2 digest words.
 - `sigaba:_run`: the SIGABA rotor stack over letters 0 to 25 (the loop needs a fast mutable array, which FL lacks);
 - `classical:_ls47`: the LS47 letter-by-letter cipher on a given board, for the same reason;
 - `bombe:_search`: the Bombe test over the 17,576 start positions of one rotor order;
@@ -52,13 +53,15 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 
 ## Vocabularies
 
-81 vocabularies, 184 ops (two ops each unless noted). Vocabulary names are lower-kebab-case.
+85 vocabularies, 189 ops (two ops each unless noted). Vocabulary names are lower-kebab-case.
 
 | Vocabulary         | Ops                                                                                                                                                                    |
 | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `adler32`          | Adler-32 checksum (RFC 1950) (1 op)                                                                                                                                    |
 | `aes`              | AES encrypt and decrypt (FIPS 197): ECB, CBC, CFB, OFB, CTR and GCM, 128/192/256-bit keys, PKCS#7 or no padding, GCM additional data                                   |
+| `aes-kw`           | AES Key Wrap and Unwrap (RFC 3394), 16/24/32-byte key-encryption key, default IV (2 ops)                                                                               |
 | `analysis`         | entropy (bits per byte), byte-frequency distribution, index of coincidence and chi-squared against English (4 ops)                                                     |
+| `argon2`           | Argon2d, Argon2i and Argon2id (RFC 9106): derive, as the encoded PHC string or raw, and compare against an encoded hash (2 ops)                                        |
 | `base32`           | encode and decode, standard and hex alphabets (RFC 4648)                                                                                                               |
 | `base45`           | encode and decode (RFC 9285)                                                                                                                                           |
 | `base58`           | encode and decode, bitcoin, flickr and ripple alphabets                                                                                                                |
@@ -77,6 +80,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `bombe`            | Turing-Welchman Bombe for the Enigma I and M3: a crib search for stops, one word for one or many rotor orders (1 op)                                                   |
 | `braille`          | bytes as 8-dot Unicode Braille patterns and back                                                                                                                       |
 | `caret`            | caret and M- notation as printed by `cat -v`                                                                                                                           |
+| `chacha`           | ChaCha stream cipher (RFC 8439 and the original 8-byte nonce), 20, 12 or 8 rounds (1 op)                                                                               |
 | `charcode`         | text to and from character codes in a chosen base                                                                                                                      |
 | `charset`          | legacy character sets (single-byte, EBCDIC, UTF-16/32, CJK), with brute force (3 ops)                                                                                  |
 | `ciphersaber2`     | CipherSaber-2 encrypt (random IV in front) and decrypt (2 ops)                                                                                                         |
@@ -87,6 +91,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `decimal`          | bytes to and from decimal numbers                                                                                                                                      |
 | `endian`           | swap the byte order of 2, 4 or 8 byte words                                                                                                                            |
 | `enigma`           | Enigma I, M3 and M4 rotor machines, one reciprocal word; also the shared historical rotor, turnover and reflector data (1 op)                                          |
+| `evp`              | OpenSSL EVP_BytesToKey key derivation in FL over MD5, SHA-1 and SHA-2 (1 op)                                                                                           |
 | `fletcher`         | Fletcher-8, -16, -32 and -64 (1 op)                                                                                                                                    |
 | `float`            | IEEE 754 binary32 and binary64 numbers to and from bytes                                                                                                               |
 | `fractionating`    | ADFGX and ADFGVX, Polybius, Nihilist and Trifid (8 ops)                                                                                                                |
@@ -98,6 +103,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `hex`              | encode and decode                                                                                                                                                      |
 | `hex-content`      | Snort and Suricata rule `content` text, with `                                                                                                                         | 41 42 | ` hex sections |
 | `hexdump`          | xxd-style hex dump, encode and decode                                                                                                                                  |
+| `hkdf`             | HKDF (RFC 5869) in FL over the HMAC hashes (1 op)                                                                                                                      |
 | `hmac`             | HMAC (RFC 2104) over MD5, SHA-1, SHA-2, SHA-3 and RIPEMD-160 (1 op)                                                                                                    |
 | `html`             | encode and decode character references (full named-entity table)                                                                                                       |
 | `keccak`           | Keccak with the original padding, 224 to 512 bits (1 op)                                                                                                               |
@@ -113,6 +119,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `nthash`           | NT hash, the MD4 of UTF-16LE text (1 op)                                                                                                                               |
 | `octal`            | bytes to and from octal numbers                                                                                                                                        |
 | `parity`           | add or check a parity bit on a string of binary digits (2 ops)                                                                                                         |
+| `pbkdf2`           | PBKDF2 with HMAC (RFC 8018) over SHA-1, SHA-2 and MD5 (1 op)                                                                                                           |
 | `polyalphabetic`   | Beaufort, Gronsfeld, Porta and autokey Vigenere (6 ops)                                                                                                                |
 | `polygraphic`      | Playfair, four-square and Hill (6 ops)                                                                                                                                 |
 | `present`          | PRESENT encrypt and decrypt: 80 and 128-bit keys, ECB, CBC, CFB, OFB, CTR (2 ops)                                                                                      |
@@ -125,6 +132,8 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `ripemd`           | RIPEMD-128, -160, -256 and -320 (1 op)                                                                                                                                 |
 | `ripemd160`        | RIPEMD-160 alone, for HMAC (1 op)                                                                                                                                      |
 | `ror13`            | ROR13 API-name hash (1 op)                                                                                                                                             |
+| `salsa20`          | Salsa20/20 stream cipher (eSTREAM), 16 or 32-byte keys, 8-byte nonce (1 op)                                                                                            |
+| `scrypt`           | scrypt (RFC 7914) key derivation (1 op)                                                                                                                                |
 | `sha0`             | SHA-0 (1 op)                                                                                                                                                           |
 | `sha1`             | SHA-1 (1 op)                                                                                                                                                           |
 | `sha2`             | SHA-224, -256, -384, -512, -512/224 and -512/256 (1 op)                                                                                                                |
@@ -144,6 +153,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `url`              | percent-encode and decode (RFC 3986)                                                                                                                                   |
 | `whirlpool`        | Whirlpool (ISO/IEC 10118-3) (1 op)                                                                                                                                     |
 | `xor-checksum`     | column-wise XOR of the blocks of the input (1 op)                                                                                                                      |
+| `xsalsa20`         | XSalsa20/20 stream cipher, 32-byte key, 24-byte nonce (1 op)                                                                                                           |
 | `xtea`             | XTEA encrypt and decrypt with a round count: ECB, CBC, CFB, OFB, CTR (2 ops)                                                                                           |
 | `xxtea`            | XXTEA (Corrected Block TEA) encrypt and decrypt (2 ops)                                                                                                                |
 

@@ -29,7 +29,16 @@
  *   - the pairs `"text" doc` and `"text" category` are dropped;
  *   - each input name of the header becomes `$0`, `$1`, ... by position;
  *   - a word defined in the same vocabulary, and a qualified word, both become `vocab:name`;
+ *   - a call to a PRIMITIVE of the same vocabulary (a TypeScript `definePrimitive` in
+ *     `src/prims/<vocab>.ts`, passed to `extractDefinitions` as `vocab:name`) also becomes
+ *     `vocab:name`. Two thin wrappers over different primitives (`salsa20:_crypt` and
+ *     `xsalsa20:_crypt`) are different code, so they must not normalise to the same body. A call to
+ *     a private FL helper is not affected (it is `vocab:name` only when defined in the vocabulary,
+ *     as before), so copies of FL helpers are still caught;
  *   - every other token keeps its kind and text (`i:32`, `s:...`, `w:swap`, `[`, `]`).
+ *
+ * A primitive of the same vocabulary is not a core word either: it is vocabulary-specific, as an
+ * own FL helper is.
  *
  * Exact duplicate: two or more definitions in different vocabularies with the same input and
  * output types and identical normalised bodies.
@@ -166,12 +175,14 @@ function tokenText(
   locals: ReadonlyMap<string, number>,
   own: ReadonlySet<string>,
   vocab: string,
+  prims: ReadonlySet<string>,
 ): string {
   switch (t.kind) {
     case "word": {
       const local = locals.get(t.text);
       if (local !== undefined) return `$${local}`;
-      return own.has(t.text) ? `w:${vocab}:${t.text}` : `w:${t.text}`;
+      if (own.has(t.text) || prims.has(`${vocab}:${t.text}`)) return `w:${vocab}:${t.text}`;
+      return `w:${t.text}`;
     }
     case "qword":
       return `w:${t.vocab}:${t.name}`;
@@ -202,8 +213,37 @@ function markersOf(text: string): Map<string, string> {
   return out;
 }
 
-/** Every colon definition of the given `.fth` files, normalised. A file the reader rejects throws. */
-export function extractDefinitions(files: readonly SourceFile[]): Definition[] {
+/** A primitive module as the loaders see it: only the `vocab` and `name` of each definition matter here. */
+export interface PrimitiveModuleLike {
+  readonly primitives?: readonly { readonly vocab: string; readonly name: string }[];
+}
+
+/**
+ * The set of primitives as `vocab:name`, from the per-vocabulary module loaders of a source provider
+ * (`createNodeProvider().primitiveLoaders()` in Node). A module that does not export `primitives` as
+ * an array contributes nothing here (the bundle loader reports that case itself).
+ */
+export async function primitiveSet(
+  loaders: Readonly<Record<string, () => Promise<PrimitiveModuleLike>>>,
+): Promise<Set<string>> {
+  const out = new Set<string>();
+  for (const load of Object.values(loaders)) {
+    const mod = await load();
+    if (!Array.isArray(mod.primitives)) continue;
+    for (const def of mod.primitives) out.add(`${def.vocab}:${def.name}`);
+  }
+  return out;
+}
+
+/**
+ * Every colon definition of the given `.fth` files, normalised. `primitives` is the set of
+ * primitives as `vocab:name` (see `primitiveSet`); calls to them keep their vocabulary. A file the
+ * reader rejects throws.
+ */
+export function extractDefinitions(
+  files: readonly SourceFile[],
+  primitives: ReadonlySet<string> = new Set(),
+): Definition[] {
   const out: Definition[] = [];
   for (const file of files) {
     if (!file.name.endsWith(".fth")) continue;
@@ -246,10 +286,12 @@ export function extractDefinitions(files: readonly SourceFile[]): Definition[] {
           j++; // drop the pair
           continue;
         }
-        const text = tokenText(b, locals, own, vocab);
+        const text = tokenText(b, locals, own, vocab, primitives);
         body.push(text);
+        const ownPrim = b.kind === "word" && primitives.has(`${vocab}:${b.text}`);
         const isCore =
-          (b.kind === "word" && !locals.has(b.text) && !own.has(b.text)) || b.kind === "qword";
+          (b.kind === "word" && !locals.has(b.text) && !own.has(b.text) && !ownPrim) ||
+          b.kind === "qword";
         if (isCore) core.add(text);
       }
       out.push({
