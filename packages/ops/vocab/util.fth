@@ -14,6 +14,12 @@ IN: util
   "True when lo <= n <= hi (both ends included)." doc
   n lo >= n hi <= and ;
 
+: check-int-range ( n:int lo:int hi:int what:str -- )
+  "Raises E_RANGE unless lo <= n <= hi (both ends included). The message is what, then must be lo to hi, not n: 12 checked against 0 9 for the compression level gives the compression level must be 0 to 9, not 12." doc
+  n lo < n hi > or [
+    what " must be " cat lo int>str cat " to " cat hi int>str cat ", not " cat n int>str cat raise:range
+  ] when ;
+
 : cp>str ( cp:int -- str )
   "The one-character string of a code point (0 to 0x10FFFF, not a surrogate: anything else is the error codes>str raises)." doc
   { cp } codes>str ;
