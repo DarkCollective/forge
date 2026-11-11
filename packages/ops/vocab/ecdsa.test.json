@@ -1,0 +1,2940 @@
+[
+  {
+    "name": "sign P-256 sec1 sha256 asn1-hex",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIHLGwbsc6mJo5I9MNBvjFJFmkehAcrmpU+y1LDsVRjgKoAoGCCqGSM49\nAwEHoUQDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo40o/+ywZoh2dEl6dbQ+zDukt/\nh7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END EC PRIVATE KEY-----\n",
+      "digest": "sha256",
+      "format": "asn1-hex"
+    },
+    "input": {
+      "value": "sample",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3045022100f83c0674987e9506ce7aa9a54740b5db0bd1458c7a411caeab72ca07112e4c100220184aa2cdfc743660168872a65e4ef3ee9a2e8fe4da20c594fb7c988d33f16873",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign P-256 sec1 sha256 p1363-hex",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIHLGwbsc6mJo5I9MNBvjFJFmkehAcrmpU+y1LDsVRjgKoAoGCCqGSM49\nAwEHoUQDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo40o/+ywZoh2dEl6dbQ+zDukt/\nh7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END EC PRIVATE KEY-----\n",
+      "digest": "sha256",
+      "format": "p1363-hex"
+    },
+    "input": {
+      "value": "sample",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f83c0674987e9506ce7aa9a54740b5db0bd1458c7a411caeab72ca07112e4c10184aa2cdfc743660168872a65e4ef3ee9a2e8fe4da20c594fb7c988d33f16873",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign P-256 sec1 sha256 jws",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIHLGwbsc6mJo5I9MNBvjFJFmkehAcrmpU+y1LDsVRjgKoAoGCCqGSM49\nAwEHoUQDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo40o/+ywZoh2dEl6dbQ+zDukt/\nh7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END EC PRIVATE KEY-----\n",
+      "digest": "sha256",
+      "format": "jws"
+    },
+    "input": {
+      "value": "sample",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-DwGdJh-lQbOeqmlR0C12wvRRYx6QRyuq3LKBxEuTBAYSqLN_HQ2YBaIcqZeTvPumi6P5NogxZT7fJiNM_Focw",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign P-256 sec1 sha256 raw-json",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIHLGwbsc6mJo5I9MNBvjFJFmkehAcrmpU+y1LDsVRjgKoAoGCCqGSM49\nAwEHoUQDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo40o/+ywZoh2dEl6dbQ+zDukt/\nh7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END EC PRIVATE KEY-----\n",
+      "digest": "sha256",
+      "format": "raw-json"
+    },
+    "input": {
+      "value": "sample",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"r\":\"00f83c0674987e9506ce7aa9a54740b5db0bd1458c7a411caeab72ca07112e4c10\",\"s\":\"184aa2cdfc743660168872a65e4ef3ee9a2e8fe4da20c594fb7c988d33f16873\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign P-256 p8 sha256 asn1-hex",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN PRIVATE KEY-----\nMIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgcsbBuxzqYmjkj0w0\nG+MUkWaR6EByualT7LUsOxVGOAqhRANCAARXsf939oll7u5KDahRKQ9OmpfI+jjS\nj/7LBmiHZ0SXp1tD7MO6S3+HseukaBKscliAQFb2mcDbQQoUg3DWolsw\n-----END PRIVATE KEY-----\n",
+      "digest": "sha256",
+      "format": "asn1-hex"
+    },
+    "input": {
+      "value": "sample",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3045022100f83c0674987e9506ce7aa9a54740b5db0bd1458c7a411caeab72ca07112e4c100220184aa2cdfc743660168872a65e4ef3ee9a2e8fe4da20c594fb7c988d33f16873",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign P-384 sec1 sha256 asn1-hex",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN EC PRIVATE KEY-----\nMIGkAgEBBDC5hEnxwhBiMEH3RnR72lGMasDSi8j3wcSYDhXzWIlVHlEi85Ex6bJn\nhZAUH1Q1f3ygBwYFK4EEACKhZANiAATH7kdbNX5neValiAgAFyH91cKZww7tKBea\n3NzRljeUi2lEVuvgojp1emGNyxKPNC129ruB900O0HySYbK7klgj8OYdscANkcNu\nHCqObahCnuBx3Wvriziu+OfSZf5Qhd4=\n-----END EC PRIVATE KEY-----\n",
+      "digest": "sha256",
+      "format": "asn1-hex"
+    },
+    "input": {
+      "value": "sample",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3066023100e5dd3779f7d81ce3c7e1b48f8f683a6066484b6c4d7883f9d2129f667db1bb8f6fe84c61da49327a43d703db59370acc023100ed26ccdd0925700c386ca5a0d9cc7c1e4e925afea383f6dc60944e799064667acf674d7d6f5f0e95d176855a853713f6",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign P-384 sec1 sha256 p1363-hex",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN EC PRIVATE KEY-----\nMIGkAgEBBDC5hEnxwhBiMEH3RnR72lGMasDSi8j3wcSYDhXzWIlVHlEi85Ex6bJn\nhZAUH1Q1f3ygBwYFK4EEACKhZANiAATH7kdbNX5neValiAgAFyH91cKZww7tKBea\n3NzRljeUi2lEVuvgojp1emGNyxKPNC129ruB900O0HySYbK7klgj8OYdscANkcNu\nHCqObahCnuBx3Wvriziu+OfSZf5Qhd4=\n-----END EC PRIVATE KEY-----\n",
+      "digest": "sha256",
+      "format": "p1363-hex"
+    },
+    "input": {
+      "value": "sample",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "e5dd3779f7d81ce3c7e1b48f8f683a6066484b6c4d7883f9d2129f667db1bb8f6fe84c61da49327a43d703db59370acced26ccdd0925700c386ca5a0d9cc7c1e4e925afea383f6dc60944e799064667acf674d7d6f5f0e95d176855a853713f6",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign P-384 sec1 sha256 jws",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN EC PRIVATE KEY-----\nMIGkAgEBBDC5hEnxwhBiMEH3RnR72lGMasDSi8j3wcSYDhXzWIlVHlEi85Ex6bJn\nhZAUH1Q1f3ygBwYFK4EEACKhZANiAATH7kdbNX5neValiAgAFyH91cKZww7tKBea\n3NzRljeUi2lEVuvgojp1emGNyxKPNC129ruB900O0HySYbK7klgj8OYdscANkcNu\nHCqObahCnuBx3Wvriziu+OfSZf5Qhd4=\n-----END EC PRIVATE KEY-----\n",
+      "digest": "sha256",
+      "format": "jws"
+    },
+    "input": {
+      "value": "sample",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "5d03effYHOPH4bSPj2g6YGZIS2xNeIP50hKfZn2xu49v6Exh2kkyekPXA9tZNwrM7SbM3QklcAw4bKWg2cx8Hk6SWv6jg_bcYJROeZBkZnrPZ019b18OldF2hVqFNxP2",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign P-384 sec1 sha256 raw-json",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN EC PRIVATE KEY-----\nMIGkAgEBBDC5hEnxwhBiMEH3RnR72lGMasDSi8j3wcSYDhXzWIlVHlEi85Ex6bJn\nhZAUH1Q1f3ygBwYFK4EEACKhZANiAATH7kdbNX5neValiAgAFyH91cKZww7tKBea\n3NzRljeUi2lEVuvgojp1emGNyxKPNC129ruB900O0HySYbK7klgj8OYdscANkcNu\nHCqObahCnuBx3Wvriziu+OfSZf5Qhd4=\n-----END EC PRIVATE KEY-----\n",
+      "digest": "sha256",
+      "format": "raw-json"
+    },
+    "input": {
+      "value": "sample",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"r\":\"00e5dd3779f7d81ce3c7e1b48f8f683a6066484b6c4d7883f9d2129f667db1bb8f6fe84c61da49327a43d703db59370acc\",\"s\":\"00ed26ccdd0925700c386ca5a0d9cc7c1e4e925afea383f6dc60944e799064667acf674d7d6f5f0e95d176855a853713f6\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign P-384 p8 sha256 asn1-hex",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN PRIVATE KEY-----\nMIG2AgEAMBAGByqGSM49AgEGBSuBBAAiBIGeMIGbAgEBBDC5hEnxwhBiMEH3RnR7\n2lGMasDSi8j3wcSYDhXzWIlVHlEi85Ex6bJnhZAUH1Q1f3yhZANiAATH7kdbNX5n\neValiAgAFyH91cKZww7tKBea3NzRljeUi2lEVuvgojp1emGNyxKPNC129ruB900O\n0HySYbK7klgj8OYdscANkcNuHCqObahCnuBx3Wvriziu+OfSZf5Qhd4=\n-----END PRIVATE KEY-----\n",
+      "digest": "sha256",
+      "format": "asn1-hex"
+    },
+    "input": {
+      "value": "sample",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3066023100e5dd3779f7d81ce3c7e1b48f8f683a6066484b6c4d7883f9d2129f667db1bb8f6fe84c61da49327a43d703db59370acc023100ed26ccdd0925700c386ca5a0d9cc7c1e4e925afea383f6dc60944e799064667acf674d7d6f5f0e95d176855a853713f6",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign P-521 sec1 sha256 asn1-hex",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN EC PRIVATE KEY-----\nMIHcAgEBBEIAMe5wWiEl+Exk8wwG0mU1T1y/+LhGgDZSeoDXP+I8L6MSVwkkf/KA\nRZ/G31FnJr2OX8wNXK7GUDfVZHZazsDUr2mgBwYFK4EEACOhgYkDgYYABAAwzQU0\nGrjsLA65Nj8E2noeByeqgpE2H/bEjuG9QX676jOSC/vkptAYUDQdlI9i3IG2zTrw\nD24QDqc7giMxE4cwUgF1QrSGoqXqeaWtl8qcbsAzOpMXPYjuj4UXh4D/VLmP9R2Q\ncz+60+YF6Ma241t6SGTtcfAKjEZUAw+f+5gQar8jww==\n-----END EC PRIVATE KEY-----\n",
+      "digest": "sha256",
+      "format": "asn1-hex"
+    },
+    "input": {
+      "value": "sample",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "308186024124d4294eb9237390fff55e7f2178fea44ff7f10d985fcbe01a109f765b86dcfa0cd0743d071e0abe3f506471a861874b6820796aeb9f2196373adf6e9677b36f4e02415889f4587292cb6ce3a43114cc39a08c6644593e51c0a405101cbd7de17257d3f0c9c2a0930b3a2b7420448fa635f433180ca7cb5f68c17482eb71dc2c4d007931",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign P-521 sec1 sha256 p1363-hex",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN EC PRIVATE KEY-----\nMIHcAgEBBEIAMe5wWiEl+Exk8wwG0mU1T1y/+LhGgDZSeoDXP+I8L6MSVwkkf/KA\nRZ/G31FnJr2OX8wNXK7GUDfVZHZazsDUr2mgBwYFK4EEACOhgYkDgYYABAAwzQU0\nGrjsLA65Nj8E2noeByeqgpE2H/bEjuG9QX676jOSC/vkptAYUDQdlI9i3IG2zTrw\nD24QDqc7giMxE4cwUgF1QrSGoqXqeaWtl8qcbsAzOpMXPYjuj4UXh4D/VLmP9R2Q\ncz+60+YF6Ma241t6SGTtcfAKjEZUAw+f+5gQar8jww==\n-----END EC PRIVATE KEY-----\n",
+      "digest": "sha256",
+      "format": "p1363-hex"
+    },
+    "input": {
+      "value": "sample",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0024d4294eb9237390fff55e7f2178fea44ff7f10d985fcbe01a109f765b86dcfa0cd0743d071e0abe3f506471a861874b6820796aeb9f2196373adf6e9677b36f4e005889f4587292cb6ce3a43114cc39a08c6644593e51c0a405101cbd7de17257d3f0c9c2a0930b3a2b7420448fa635f433180ca7cb5f68c17482eb71dc2c4d007931",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign P-521 sec1 sha256 jws",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN EC PRIVATE KEY-----\nMIHcAgEBBEIAMe5wWiEl+Exk8wwG0mU1T1y/+LhGgDZSeoDXP+I8L6MSVwkkf/KA\nRZ/G31FnJr2OX8wNXK7GUDfVZHZazsDUr2mgBwYFK4EEACOhgYkDgYYABAAwzQU0\nGrjsLA65Nj8E2noeByeqgpE2H/bEjuG9QX676jOSC/vkptAYUDQdlI9i3IG2zTrw\nD24QDqc7giMxE4cwUgF1QrSGoqXqeaWtl8qcbsAzOpMXPYjuj4UXh4D/VLmP9R2Q\ncz+60+YF6Ma241t6SGTtcfAKjEZUAw+f+5gQar8jww==\n-----END EC PRIVATE KEY-----\n",
+      "digest": "sha256",
+      "format": "jws"
+    },
+    "input": {
+      "value": "sample",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ACTUKU65I3OQ__VefyF4_qRP9_ENmF_L4BoQn3Zbhtz6DNB0PQceCr4_UGRxqGGHS2ggeWrrnyGWNzrfbpZ3s29OAFiJ9Fhyksts46QxFMw5oIxmRFk-UcCkBRAcvX3hclfT8MnCoJMLOit0IESPpjX0MxgMp8tfaMF0gutx3CxNAHkx",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign P-521 sec1 sha256 raw-json",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN EC PRIVATE KEY-----\nMIHcAgEBBEIAMe5wWiEl+Exk8wwG0mU1T1y/+LhGgDZSeoDXP+I8L6MSVwkkf/KA\nRZ/G31FnJr2OX8wNXK7GUDfVZHZazsDUr2mgBwYFK4EEACOhgYkDgYYABAAwzQU0\nGrjsLA65Nj8E2noeByeqgpE2H/bEjuG9QX676jOSC/vkptAYUDQdlI9i3IG2zTrw\nD24QDqc7giMxE4cwUgF1QrSGoqXqeaWtl8qcbsAzOpMXPYjuj4UXh4D/VLmP9R2Q\ncz+60+YF6Ma241t6SGTtcfAKjEZUAw+f+5gQar8jww==\n-----END EC PRIVATE KEY-----\n",
+      "digest": "sha256",
+      "format": "raw-json"
+    },
+    "input": {
+      "value": "sample",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"r\":\"24d4294eb9237390fff55e7f2178fea44ff7f10d985fcbe01a109f765b86dcfa0cd0743d071e0abe3f506471a861874b6820796aeb9f2196373adf6e9677b36f4e\",\"s\":\"5889f4587292cb6ce3a43114cc39a08c6644593e51c0a405101cbd7de17257d3f0c9c2a0930b3a2b7420448fa635f433180ca7cb5f68c17482eb71dc2c4d007931\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign P-521 p8 sha256 asn1-hex",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN PRIVATE KEY-----\nMIHuAgEAMBAGByqGSM49AgEGBSuBBAAjBIHWMIHTAgEBBEIAMe5wWiEl+Exk8wwG\n0mU1T1y/+LhGgDZSeoDXP+I8L6MSVwkkf/KARZ/G31FnJr2OX8wNXK7GUDfVZHZa\nzsDUr2mhgYkDgYYABAAwzQU0GrjsLA65Nj8E2noeByeqgpE2H/bEjuG9QX676jOS\nC/vkptAYUDQdlI9i3IG2zTrwD24QDqc7giMxE4cwUgF1QrSGoqXqeaWtl8qcbsAz\nOpMXPYjuj4UXh4D/VLmP9R2Qcz+60+YF6Ma241t6SGTtcfAKjEZUAw+f+5gQar8j\nww==\n-----END PRIVATE KEY-----\n",
+      "digest": "sha256",
+      "format": "asn1-hex"
+    },
+    "input": {
+      "value": "sample",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "308186024124d4294eb9237390fff55e7f2178fea44ff7f10d985fcbe01a109f765b86dcfa0cd0743d071e0abe3f506471a861874b6820796aeb9f2196373adf6e9677b36f4e02415889f4587292cb6ce3a43114cc39a08c6644593e51c0a405101cbd7de17257d3f0c9c2a0930b3a2b7420448fa635f433180ca7cb5f68c17482eb71dc2c4d007931",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign secp256k1 sec1 sha256 asn1-hex",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN EC PRIVATE KEY-----\nMHQCAQEEIC7Mc4cMCS+rg1uE2RSYsHwN8BQrQXGJvueuIpOi0SbBoAcGBSuBBAAK\noUQDQgAEDHv+EgIPqgr7qX4B64my/1Czqiv9cQHfzGU5VjxueT5Zlf35+aIj+sKf\nKO1fTAdZ3ErBinPvDfehZG2jfwaAMg==\n-----END EC PRIVATE KEY-----\n",
+      "digest": "sha256",
+      "format": "asn1-hex"
+    },
+    "input": {
+      "value": "sample",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3046022100ca7aa481c7337b68e49f00bae6cadb540d36147a90c1966e3dead8566a428534022100ee2c5927463221e25658322f91a0bf4ac2a87c235014e92cb582d8beff628755",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign secp256k1 sec1 sha256 p1363-hex",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN EC PRIVATE KEY-----\nMHQCAQEEIC7Mc4cMCS+rg1uE2RSYsHwN8BQrQXGJvueuIpOi0SbBoAcGBSuBBAAK\noUQDQgAEDHv+EgIPqgr7qX4B64my/1Czqiv9cQHfzGU5VjxueT5Zlf35+aIj+sKf\nKO1fTAdZ3ErBinPvDfehZG2jfwaAMg==\n-----END EC PRIVATE KEY-----\n",
+      "digest": "sha256",
+      "format": "p1363-hex"
+    },
+    "input": {
+      "value": "sample",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ca7aa481c7337b68e49f00bae6cadb540d36147a90c1966e3dead8566a428534ee2c5927463221e25658322f91a0bf4ac2a87c235014e92cb582d8beff628755",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign secp256k1 sec1 sha256 jws",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN EC PRIVATE KEY-----\nMHQCAQEEIC7Mc4cMCS+rg1uE2RSYsHwN8BQrQXGJvueuIpOi0SbBoAcGBSuBBAAK\noUQDQgAEDHv+EgIPqgr7qX4B64my/1Czqiv9cQHfzGU5VjxueT5Zlf35+aIj+sKf\nKO1fTAdZ3ErBinPvDfehZG2jfwaAMg==\n-----END EC PRIVATE KEY-----\n",
+      "digest": "sha256",
+      "format": "jws"
+    },
+    "input": {
+      "value": "sample",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ynqkgccze2jknwC65srbVA02FHqQwZZuPerYVmpChTTuLFknRjIh4lZYMi-RoL9Kwqh8I1AU6Sy1gti-_2KHVQ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign secp256k1 sec1 sha256 raw-json",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN EC PRIVATE KEY-----\nMHQCAQEEIC7Mc4cMCS+rg1uE2RSYsHwN8BQrQXGJvueuIpOi0SbBoAcGBSuBBAAK\noUQDQgAEDHv+EgIPqgr7qX4B64my/1Czqiv9cQHfzGU5VjxueT5Zlf35+aIj+sKf\nKO1fTAdZ3ErBinPvDfehZG2jfwaAMg==\n-----END EC PRIVATE KEY-----\n",
+      "digest": "sha256",
+      "format": "raw-json"
+    },
+    "input": {
+      "value": "sample",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"r\":\"00ca7aa481c7337b68e49f00bae6cadb540d36147a90c1966e3dead8566a428534\",\"s\":\"00ee2c5927463221e25658322f91a0bf4ac2a87c235014e92cb582d8beff628755\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign secp256k1 p8 sha256 asn1-hex",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN PRIVATE KEY-----\nMIGEAgEAMBAGByqGSM49AgEGBSuBBAAKBG0wawIBAQQgLsxzhwwJL6uDW4TZFJiw\nfA3wFCtBcYm+564ik6LRJsGhRANCAAQMe/4SAg+qCvupfgHribL/ULOqK/1xAd/M\nZTlWPG55PlmV/fn5oiP6wp8o7V9MB1ncSsGKc+8N96FkbaN/BoAy\n-----END PRIVATE KEY-----\n",
+      "digest": "sha256",
+      "format": "asn1-hex"
+    },
+    "input": {
+      "value": "sample",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3046022100ca7aa481c7337b68e49f00bae6cadb540d36147a90c1966e3dead8566a428534022100ee2c5927463221e25658322f91a0bf4ac2a87c235014e92cb582d8beff628755",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign P-256 sha1",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIHLGwbsc6mJo5I9MNBvjFJFmkehAcrmpU+y1LDsVRjgKoAoGCCqGSM49\nAwEHoUQDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo40o/+ywZoh2dEl6dbQ+zDukt/\nh7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END EC PRIVATE KEY-----\n",
+      "digest": "sha1",
+      "format": "p1363-hex"
+    },
+    "input": {
+      "value": "sample",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3eb4cc3c178ee7fa5e2cae4b201340e4e116d36d7b084389f7f1790613f147fe5fff00716311ab360f171c8e3cd646588de2ef69c347166c4c3c4e38e2d055d7",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign P-256 sha384",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIHLGwbsc6mJo5I9MNBvjFJFmkehAcrmpU+y1LDsVRjgKoAoGCCqGSM49\nAwEHoUQDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo40o/+ywZoh2dEl6dbQ+zDukt/\nh7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END EC PRIVATE KEY-----\n",
+      "digest": "sha384",
+      "format": "p1363-hex"
+    },
+    "input": {
+      "value": "sample",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "05bb4f2c25841b2f7c24b3424b862c0ff7817a982cf6bb37468f827c16ec30bb43e3be7142f78860139b89e7362e050413a1e52e599cdd15fd44d5f72e66d72d",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign P-256 sha512",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIHLGwbsc6mJo5I9MNBvjFJFmkehAcrmpU+y1LDsVRjgKoAoGCCqGSM49\nAwEHoUQDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo40o/+ywZoh2dEl6dbQ+zDukt/\nh7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END EC PRIVATE KEY-----\n",
+      "digest": "sha512",
+      "format": "p1363-hex"
+    },
+    "input": {
+      "value": "sample",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "42bd35f74ef1298623f335605039d339bf2c36c9de827d75f1db3415f9329683893a0bc6fefa6fd10fe1e151f1c386d6fa0df18df4f4927148d14f65759d7bdc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign P-256 md5",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIHLGwbsc6mJo5I9MNBvjFJFmkehAcrmpU+y1LDsVRjgKoAoGCCqGSM49\nAwEHoUQDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo40o/+ywZoh2dEl6dbQ+zDukt/\nh7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END EC PRIVATE KEY-----\n",
+      "digest": "md5",
+      "format": "p1363-hex"
+    },
+    "input": {
+      "value": "sample",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f58194a048ff7525c3ffe733132d37e4c3be64aae097d3a24799a75cf9cc34c9b84a1c920e5fc487df881181f4bff5a5771426da0ddedf5d417e859094798252",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign P-521 sha1",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN EC PRIVATE KEY-----\nMIHcAgEBBEIAMe5wWiEl+Exk8wwG0mU1T1y/+LhGgDZSeoDXP+I8L6MSVwkkf/KA\nRZ/G31FnJr2OX8wNXK7GUDfVZHZazsDUr2mgBwYFK4EEACOhgYkDgYYABAAwzQU0\nGrjsLA65Nj8E2noeByeqgpE2H/bEjuG9QX676jOSC/vkptAYUDQdlI9i3IG2zTrw\nD24QDqc7giMxE4cwUgF1QrSGoqXqeaWtl8qcbsAzOpMXPYjuj4UXh4D/VLmP9R2Q\ncz+60+YF6Ma241t6SGTtcfAKjEZUAw+f+5gQar8jww==\n-----END EC PRIVATE KEY-----\n",
+      "digest": "sha1",
+      "format": "p1363-hex"
+    },
+    "input": {
+      "value": "sample",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "01aa6f58b8905e61f6c68706844bc6cb6f1503566711e179511cc877fc5ecd128f1f4f13feeebc83a1904684fc37e4cb1cfc43c9feea5a9ff6c8cdb04c469e05db7600cef5674d92f2e2f0e4e11ad427f5b6c76a7db002d314e5de31a91f3e8c84e7b2c76d385c16a4c665a55f4310a708f82354b6a10ed6caa974b680844882e1133258",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign P-521 sha512",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN EC PRIVATE KEY-----\nMIHcAgEBBEIAMe5wWiEl+Exk8wwG0mU1T1y/+LhGgDZSeoDXP+I8L6MSVwkkf/KA\nRZ/G31FnJr2OX8wNXK7GUDfVZHZazsDUr2mgBwYFK4EEACOhgYkDgYYABAAwzQU0\nGrjsLA65Nj8E2noeByeqgpE2H/bEjuG9QX676jOSC/vkptAYUDQdlI9i3IG2zTrw\nD24QDqc7giMxE4cwUgF1QrSGoqXqeaWtl8qcbsAzOpMXPYjuj4UXh4D/VLmP9R2Q\ncz+60+YF6Ma241t6SGTtcfAKjEZUAw+f+5gQar8jww==\n-----END EC PRIVATE KEY-----\n",
+      "digest": "sha512",
+      "format": "p1363-hex"
+    },
+    "input": {
+      "value": "sample",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00673709fa706ec710e2b285a7be741d86daea32396a7410136b462b3a88f672e0c69ab15a60c0824c161fe63c615a9625d272f1a65186fff48a60f0c2a3b76f9b5400f7f5612f823960fad003483e52a241f4a5b6c5b214c61da338e244af46b1368bc7c3f957fa4a66e3efe8f7fec4d00e8e18d69f6c86ddf2780bfbc7f39516dd1932",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign P-521 md5",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN EC PRIVATE KEY-----\nMIHcAgEBBEIAMe5wWiEl+Exk8wwG0mU1T1y/+LhGgDZSeoDXP+I8L6MSVwkkf/KA\nRZ/G31FnJr2OX8wNXK7GUDfVZHZazsDUr2mgBwYFK4EEACOhgYkDgYYABAAwzQU0\nGrjsLA65Nj8E2noeByeqgpE2H/bEjuG9QX676jOSC/vkptAYUDQdlI9i3IG2zTrw\nD24QDqc7giMxE4cwUgF1QrSGoqXqeaWtl8qcbsAzOpMXPYjuj4UXh4D/VLmP9R2Q\ncz+60+YF6Ma241t6SGTtcfAKjEZUAw+f+5gQar8jww==\n-----END EC PRIVATE KEY-----\n",
+      "digest": "md5",
+      "format": "p1363-hex"
+    },
+    "input": {
+      "value": "sample",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "013963e7a444eacca3892d46ca81d1ff4f68bff5f5d0d2361f4b054502d60120f5093d4f57d43f60cb59b357603ed83182e6f30fee46d311a42c89c6d2cd29e5d5330103a9a3f2c0168f5bb7734eee72e964b14a699ab8e1e1cbe6fb8f683783138d4fa039d78679482b885ccdf3dfe23cfe2b4452d01c85d2dc1c2038a3c8bf51d61539",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign P-384 sha1",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN EC PRIVATE KEY-----\nMIGkAgEBBDC5hEnxwhBiMEH3RnR72lGMasDSi8j3wcSYDhXzWIlVHlEi85Ex6bJn\nhZAUH1Q1f3ygBwYFK4EEACKhZANiAATH7kdbNX5neValiAgAFyH91cKZww7tKBea\n3NzRljeUi2lEVuvgojp1emGNyxKPNC129ruB900O0HySYbK7klgj8OYdscANkcNu\nHCqObahCnuBx3Wvriziu+OfSZf5Qhd4=\n-----END EC PRIVATE KEY-----\n",
+      "digest": "sha1",
+      "format": "p1363-hex"
+    },
+    "input": {
+      "value": "sample",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "29066afb2df7a726359751358585b5fc416b8a1feb62992c409c1455ed95a4321f58e5ae41424587a259d9f9d13686653196e02dc28c78c9e7192793a8d2dd6c1c485310b69b24855ad7f7cd4c4c9b21b75ccd6dfcc7e5e86fe65728282b9d63",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign P-256 a binary message (all 256 byte values)",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIHLGwbsc6mJo5I9MNBvjFJFmkehAcrmpU+y1LDsVRjgKoAoGCCqGSM49\nAwEHoUQDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo40o/+ywZoh2dEl6dbQ+zDukt/\nh7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END EC PRIVATE KEY-----\n",
+      "digest": "sha256",
+      "format": "asn1-hex"
+    },
+    "input": {
+      "value": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "3046022100c54ec90e4f4f8214a24cc3839024ba1dcaa6a1a78ac3827b6dfc52c553ca900302210085868d903203529629d9edf0928cd70994e571e0a9949ca3f0ddbe4392127d4f",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign P-256 the empty message",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIHLGwbsc6mJo5I9MNBvjFJFmkehAcrmpU+y1LDsVRjgKoAoGCCqGSM49\nAwEHoUQDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo40o/+ywZoh2dEl6dbQ+zDukt/\nh7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END EC PRIVATE KEY-----\n",
+      "digest": "sha256",
+      "format": "asn1-hex"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3046022100ff4bcc1c1f7f0113ab8d2c52d13d04b75a6075da1d4497d07917cdf75123fb91022100c811562e0b7c086616bb15e0505cf73262f4719b879665a06c81f465430f9caa",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign RFC 6979 A.2.5 P-256 SHA-256 'sample'",
+    "ref": "RFC 6979 appendix A.2.5 (r and s checked against the published values in src/prims/ecdsa.test.ts)",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN PRIVATE KEY-----\nMIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgya+p2EW6dRZrXCFX\nZ7HWk05Qw9s26JsSe4piKxIPZyGhRANCAARg/tS6JVqdMclh63TGNW1owEm4kjth\n+mzmaWIuYPKftnkD/hAIuLyZpBrp6VYovGTy8bIMLX6fUXejwpTURiKZ\n-----END PRIVATE KEY-----\n",
+      "digest": "sha256",
+      "format": "p1363-hex"
+    },
+    "input": {
+      "value": "sample",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "efd48b2aacb6a8fd1140dd9cd45e81d69d2c877b56aaf991c34d0ea84eaf3716f7cb1c942d657c41d436c7a1b6e29f65f3e900dbb9aff4064dc4ab2f843acda8",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign RFC 6979 A.2.5 P-256 SHA-256 'test'",
+    "ref": "RFC 6979 appendix A.2.5 (r and s checked against the published values in src/prims/ecdsa.test.ts)",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN PRIVATE KEY-----\nMIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgya+p2EW6dRZrXCFX\nZ7HWk05Qw9s26JsSe4piKxIPZyGhRANCAARg/tS6JVqdMclh63TGNW1owEm4kjth\n+mzmaWIuYPKftnkD/hAIuLyZpBrp6VYovGTy8bIMLX6fUXejwpTURiKZ\n-----END PRIVATE KEY-----\n",
+      "digest": "sha256",
+      "format": "p1363-hex"
+    },
+    "input": {
+      "value": "test",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f1abb023518351cd71d881567b1ea663ed3efcf6c5132b354f28d3b0b7d38367019f4113742a2b14bd25926b49c649155f267e60d3814b4c0cc84250e46f0083",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign: a public key is not a private key",
+    "ref": "error case",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n"
+    },
+    "input": {
+      "value": "x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "sign: no key",
+    "ref": "error case",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": ""
+    },
+    "input": {
+      "value": "x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "sign: not a PEM",
+    "ref": "error case",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "hello"
+    },
+    "input": {
+      "value": "x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "sign: an RSA key is not an EC key",
+    "ref": "openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:1024",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN PRIVATE KEY-----\nMIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAKhFgYU3r2V+tZoq\nSGYa7ziv+v7f7C3Xcxi+6ZslTja3xsGb/feR0YuZwFyjG3L2oQqPkGTD1L1bK3Qa\nP/X8CDuEvqVeNO8uqs0ihQ12diJhpRr2g0wrht1a753TI1z2lY50usbPiQq0VYgr\ndJMhJsBKSjCh0SJ7YhX3Mfoq1xzNAgMBAAECgYAFOZtK+q6slSGodtWmrgFtnjFK\nBsP7rGv7gboZQjBKjKxUSLa7IEEEd7K8baglirj3bfvK1TXe51zTDxmbVscenRp/\nA7KoiHfJXZTQiyFyZJT2vype/yN9oKANhBv6gvdeeIG3jYzfp0bIIi6u/IVvldCD\nkZlUG1uevJxDv+fQQQJBANkkMMVn8anAxVfIlLvG8qB6T7pz2H+lRO+2ecM5yqXy\nS5sHAkxKasRMqynCcnO+dvbEsCk6g7JS11gSxx2MB1ECQQDGYnXUmKEKmQmBwBqj\nieJihZQ+j7716k4OrPvJRvY0ubleRS7nlAQuH9U2LUNfO72IWCqJVR3Ba5GenlYg\n2Na9AkB2H934ReeNdTTl4FQpIr1y15bv031/UyUBUr9CmPnI9Np0Z4e0gPc7+olS\nmlkw5fhJng5HH3HtXGuRmgV/6WFBAkEAn7eHe/jBtsGNCNw71ixdicpXlqKuMFhK\nLcCRGfQ6pipclgwG/kSJtQTF6E86rYJwTkQFQvm28hEDdPuvBdTt1QJBAIBBOvRY\nt1ALIdFtYgRyD4AMwO1xfluXHwLMDhJs0HkeD/FZ5dwRqKAQm1X1gMwFHBFPfA1c\nMsI9zVxdaDZSe04=\n-----END PRIVATE KEY-----\n"
+    },
+    "input": {
+      "value": "x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "sign: a key cut short",
+    "ref": "error case",
+    "op": "ecdsa:sign",
+    "params": {
+      "private-key": "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIHLGwbsc6mJo5I9MNBvjFJFmkehAcrmpU+y1LDsVRjgKoAoGCCqGSM49\n-----END EC PRIVATE KEY-----"
+    },
+    "input": {
+      "value": "x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "verify P-256 sha256 asn1-hex (named)",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "asn1-hex",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-256",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "3046022100ff7e5f51cb58fa5a9eda1f5512a5531dc7896c3f2c74aeb0a86aa588ebbc8414022100e12d79c066b39ad45dc798602d56850b43c023cb38e4a015dc95062f66c64aae",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify P-256 sha256 p1363-hex (named)",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "p1363-hex",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-256",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "ff7e5f51cb58fa5a9eda1f5512a5531dc7896c3f2c74aeb0a86aa588ebbc8414e12d79c066b39ad45dc798602d56850b43c023cb38e4a015dc95062f66c64aae",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify P-256 sha256 jws (named)",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "jws",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-256",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "_35fUctY-lqe2h9VEqVTHceJbD8sdK6wqGqliOu8hBThLXnAZrOa1F3HmGAtVoULQ8AjyzjkoBXclQYvZsZKrg",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify P-256 sha256 raw-json (named)",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "raw-json",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-256",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "{\"r\":\"00ff7e5f51cb58fa5a9eda1f5512a5531dc7896c3f2c74aeb0a86aa588ebbc8414\",\"s\":\"00e12d79c066b39ad45dc798602d56850b43c023cb38e4a015dc95062f66c64aae\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify P-256 sha256 auto",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "auto",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-256",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "3046022100ff7e5f51cb58fa5a9eda1f5512a5531dc7896c3f2c74aeb0a86aa588ebbc8414022100e12d79c066b39ad45dc798602d56850b43c023cb38e4a015dc95062f66c64aae",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify P-256 sha256 auto detects p1363-hex",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "auto",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-256",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "ff7e5f51cb58fa5a9eda1f5512a5531dc7896c3f2c74aeb0a86aa588ebbc8414e12d79c066b39ad45dc798602d56850b43c023cb38e4a015dc95062f66c64aae",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify P-256 sha256 auto detects jws",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "auto",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-256",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "_35fUctY-lqe2h9VEqVTHceJbD8sdK6wqGqliOu8hBThLXnAZrOa1F3HmGAtVoULQ8AjyzjkoBXclQYvZsZKrg",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify P-256 sha256 auto detects raw-json",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "auto",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-256",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "{\"r\":\"00ff7e5f51cb58fa5a9eda1f5512a5531dc7896c3f2c74aeb0a86aa588ebbc8414\",\"s\":\"00e12d79c066b39ad45dc798602d56850b43c023cb38e4a015dc95062f66c64aae\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify: wrong message",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "auto",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "another message",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "3046022100ff7e5f51cb58fa5a9eda1f5512a5531dc7896c3f2c74aeb0a86aa588ebbc8414022100e12d79c066b39ad45dc798602d56850b43c023cb38e4a015dc95062f66c64aae",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verification Failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify: wrong digest",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "auto",
+      "digest": "sha384",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-256",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "3046022100ff7e5f51cb58fa5a9eda1f5512a5531dc7896c3f2c74aeb0a86aa588ebbc8414022100e12d79c066b39ad45dc798602d56850b43c023cb38e4a015dc95062f66c64aae",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verification Failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify: message as hex",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "auto",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "6d65737361676520666f7220502d323536",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "3046022100ff7e5f51cb58fa5a9eda1f5512a5531dc7896c3f2c74aeb0a86aa588ebbc8414022100e12d79c066b39ad45dc798602d56850b43c023cb38e4a015dc95062f66c64aae",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify: message as base64",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "auto",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "bWVzc2FnZSBmb3IgUC0yNTY=",
+        "enc": "base64"
+      }
+    },
+    "input": {
+      "value": "3046022100ff7e5f51cb58fa5a9eda1f5512a5531dc7896c3f2c74aeb0a86aa588ebbc8414022100e12d79c066b39ad45dc798602d56850b43c023cb38e4a015dc95062f66c64aae",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify: white space around the hex signature is ignored",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "auto",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-256",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "  3046022100ff7e5f51cb58fa5a9eda1f5512a5531dc7896c3f2c74aeb0a86aa588ebbc8414022100e12d79c066b39ad45dc798602d56850b43c023cb38e4a015dc95062f66c64aae\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify: a key of another curve gives failure",
+    "ref": "openssl",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "auto",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEx+5HWzV+Z3lWpYgIABch/dXCmcMO7SgX\nmtzc0ZY3lItpRFbr4KI6dXphjcsSjzQtdva7gfdNDtB8kmGyu5JYI/DmHbHADZHD\nbhwqjm2oQp7gcd1r64s4rvjn0mX+UIXe\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-256",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "3046022100ff7e5f51cb58fa5a9eda1f5512a5531dc7896c3f2c74aeb0a86aa588ebbc8414022100e12d79c066b39ad45dc798602d56850b43c023cb38e4a015dc95062f66c64aae",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verification Failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify: the other half of s (n - s) is also a valid signature",
+    "ref": "ECDSA: (r, n - s) verifies when (r, s) does; openssl accepts both",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "auto",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-256",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "3045022100ff7e5f51cb58fa5a9eda1f5512a5531dc7896c3f2c74aeb0a86aa588ebbc841402201ed2863e994c652ca238679fd2a97af47926d6e26e32fe6f1724c493959cdaa3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify: r of zero is a failure",
+    "ref": "error case",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "p1363-hex",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "m",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verification Failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify: a value wider than the curve is a failure",
+    "ref": "error case",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "p1363-hex",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "m",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "0100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verification Failure",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify P-256 sha384 asn1-hex (named)",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "asn1-hex",
+      "digest": "sha384",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-256",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "3045022100b7ea7b31feef54f06efa0a5c9d2456c696fa09f1eb3186951ba079cdd82b7ada02206286d77a3f23dd80b66fbe21e52e7801ea5b695c1022ed8d9581c5e2826b9a69",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify P-256 sha384 p1363-hex (named)",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "p1363-hex",
+      "digest": "sha384",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-256",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "b7ea7b31feef54f06efa0a5c9d2456c696fa09f1eb3186951ba079cdd82b7ada6286d77a3f23dd80b66fbe21e52e7801ea5b695c1022ed8d9581c5e2826b9a69",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify P-256 sha384 jws (named)",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "jws",
+      "digest": "sha384",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-256",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "t-p7Mf7vVPBu-gpcnSRWxpb6CfHrMYaVG6B5zdgretpihtd6PyPdgLZvviHlLngB6ltpXBAi7Y2VgcXigmuaaQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify P-256 sha384 raw-json (named)",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "raw-json",
+      "digest": "sha384",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-256",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "{\"r\":\"00b7ea7b31feef54f06efa0a5c9d2456c696fa09f1eb3186951ba079cdd82b7ada\",\"s\":\"6286d77a3f23dd80b66fbe21e52e7801ea5b695c1022ed8d9581c5e2826b9a69\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify P-256 sha384 auto",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "auto",
+      "digest": "sha384",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-256",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "3045022100b7ea7b31feef54f06efa0a5c9d2456c696fa09f1eb3186951ba079cdd82b7ada02206286d77a3f23dd80b66fbe21e52e7801ea5b695c1022ed8d9581c5e2826b9a69",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify P-384 sha256 asn1-hex (named)",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "asn1-hex",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEx+5HWzV+Z3lWpYgIABch/dXCmcMO7SgX\nmtzc0ZY3lItpRFbr4KI6dXphjcsSjzQtdva7gfdNDtB8kmGyu5JYI/DmHbHADZHD\nbhwqjm2oQp7gcd1r64s4rvjn0mX+UIXe\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-384",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "3066023100c2bf51c11abe2dc15ee21a28ff6e0d58f9ce0422f227044f9b95318de7f746b70847e7104124ee3b89c2571c057de52b023100860255643ef5c5d370c642576e741ead62a256b1dfffcc671f29e569bef038e4331ae03fdef9cf00fee7db80165a206c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify P-384 sha256 p1363-hex (named)",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "p1363-hex",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEx+5HWzV+Z3lWpYgIABch/dXCmcMO7SgX\nmtzc0ZY3lItpRFbr4KI6dXphjcsSjzQtdva7gfdNDtB8kmGyu5JYI/DmHbHADZHD\nbhwqjm2oQp7gcd1r64s4rvjn0mX+UIXe\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-384",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "c2bf51c11abe2dc15ee21a28ff6e0d58f9ce0422f227044f9b95318de7f746b70847e7104124ee3b89c2571c057de52b860255643ef5c5d370c642576e741ead62a256b1dfffcc671f29e569bef038e4331ae03fdef9cf00fee7db80165a206c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify P-384 sha256 jws (named)",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "jws",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEx+5HWzV+Z3lWpYgIABch/dXCmcMO7SgX\nmtzc0ZY3lItpRFbr4KI6dXphjcsSjzQtdva7gfdNDtB8kmGyu5JYI/DmHbHADZHD\nbhwqjm2oQp7gcd1r64s4rvjn0mX+UIXe\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-384",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "wr9RwRq-LcFe4hoo_24NWPnOBCLyJwRPm5Uxjef3RrcIR-cQQSTuO4nCVxwFfeUrhgJVZD71xdNwxkJXbnQerWKiVrHf_8xnHynlab7wOOQzGuA_3vnPAP7n24AWWiBs",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify P-384 sha256 raw-json (named)",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "raw-json",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEx+5HWzV+Z3lWpYgIABch/dXCmcMO7SgX\nmtzc0ZY3lItpRFbr4KI6dXphjcsSjzQtdva7gfdNDtB8kmGyu5JYI/DmHbHADZHD\nbhwqjm2oQp7gcd1r64s4rvjn0mX+UIXe\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-384",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "{\"r\":\"00c2bf51c11abe2dc15ee21a28ff6e0d58f9ce0422f227044f9b95318de7f746b70847e7104124ee3b89c2571c057de52b\",\"s\":\"00860255643ef5c5d370c642576e741ead62a256b1dfffcc671f29e569bef038e4331ae03fdef9cf00fee7db80165a206c\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify P-384 sha256 auto",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "auto",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEx+5HWzV+Z3lWpYgIABch/dXCmcMO7SgX\nmtzc0ZY3lItpRFbr4KI6dXphjcsSjzQtdva7gfdNDtB8kmGyu5JYI/DmHbHADZHD\nbhwqjm2oQp7gcd1r64s4rvjn0mX+UIXe\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-384",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "3066023100c2bf51c11abe2dc15ee21a28ff6e0d58f9ce0422f227044f9b95318de7f746b70847e7104124ee3b89c2571c057de52b023100860255643ef5c5d370c642576e741ead62a256b1dfffcc671f29e569bef038e4331ae03fdef9cf00fee7db80165a206c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify P-384 sha384 asn1-hex (named)",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "asn1-hex",
+      "digest": "sha384",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEx+5HWzV+Z3lWpYgIABch/dXCmcMO7SgX\nmtzc0ZY3lItpRFbr4KI6dXphjcsSjzQtdva7gfdNDtB8kmGyu5JYI/DmHbHADZHD\nbhwqjm2oQp7gcd1r64s4rvjn0mX+UIXe\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-384",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "3064023071244b1187832e84cbba6b352e5bd726b0839681670664a3ac7c2e383a243e9e4bc8bf5b683c08e850e5713e7ded9dd502300aff3e57dac4dbde6ca9b2a369f06ba6abe07598a92a88e801754663295b82ca5c7fd4639a5c6fb56e8fa2e64a1a4239",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify P-384 sha384 p1363-hex (named)",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "p1363-hex",
+      "digest": "sha384",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEx+5HWzV+Z3lWpYgIABch/dXCmcMO7SgX\nmtzc0ZY3lItpRFbr4KI6dXphjcsSjzQtdva7gfdNDtB8kmGyu5JYI/DmHbHADZHD\nbhwqjm2oQp7gcd1r64s4rvjn0mX+UIXe\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-384",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "71244b1187832e84cbba6b352e5bd726b0839681670664a3ac7c2e383a243e9e4bc8bf5b683c08e850e5713e7ded9dd50aff3e57dac4dbde6ca9b2a369f06ba6abe07598a92a88e801754663295b82ca5c7fd4639a5c6fb56e8fa2e64a1a4239",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify P-384 sha384 jws (named)",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "jws",
+      "digest": "sha384",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEx+5HWzV+Z3lWpYgIABch/dXCmcMO7SgX\nmtzc0ZY3lItpRFbr4KI6dXphjcsSjzQtdva7gfdNDtB8kmGyu5JYI/DmHbHADZHD\nbhwqjm2oQp7gcd1r64s4rvjn0mX+UIXe\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-384",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "cSRLEYeDLoTLums1LlvXJrCDloFnBmSjrHwuODokPp5LyL9baDwI6FDlcT597Z3VCv8-V9rE295sqbKjafBrpqvgdZipKojoAXVGYylbgspcf9RjmlxvtW6PouZKGkI5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify P-384 sha384 raw-json (named)",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "raw-json",
+      "digest": "sha384",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEx+5HWzV+Z3lWpYgIABch/dXCmcMO7SgX\nmtzc0ZY3lItpRFbr4KI6dXphjcsSjzQtdva7gfdNDtB8kmGyu5JYI/DmHbHADZHD\nbhwqjm2oQp7gcd1r64s4rvjn0mX+UIXe\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-384",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "{\"r\":\"71244b1187832e84cbba6b352e5bd726b0839681670664a3ac7c2e383a243e9e4bc8bf5b683c08e850e5713e7ded9dd5\",\"s\":\"0aff3e57dac4dbde6ca9b2a369f06ba6abe07598a92a88e801754663295b82ca5c7fd4639a5c6fb56e8fa2e64a1a4239\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify P-384 sha384 auto",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "auto",
+      "digest": "sha384",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEx+5HWzV+Z3lWpYgIABch/dXCmcMO7SgX\nmtzc0ZY3lItpRFbr4KI6dXphjcsSjzQtdva7gfdNDtB8kmGyu5JYI/DmHbHADZHD\nbhwqjm2oQp7gcd1r64s4rvjn0mX+UIXe\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-384",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "3064023071244b1187832e84cbba6b352e5bd726b0839681670664a3ac7c2e383a243e9e4bc8bf5b683c08e850e5713e7ded9dd502300aff3e57dac4dbde6ca9b2a369f06ba6abe07598a92a88e801754663295b82ca5c7fd4639a5c6fb56e8fa2e64a1a4239",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify P-521 sha512 asn1-hex (named)",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "asn1-hex",
+      "digest": "sha512",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMIGbMBAGByqGSM49AgEGBSuBBAAjA4GGAAQAMM0FNBq47CwOuTY/BNp6HgcnqoKR\nNh/2xI7hvUF+u+ozkgv75KbQGFA0HZSPYtyBts068A9uEA6nO4IjMROHMFIBdUK0\nhqKl6nmlrZfKnG7AMzqTFz2I7o+FF4eA/1S5j/UdkHM/utPmBejGtuNbekhk7XHw\nCoxGVAMPn/uYEGq/I8M=\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-521",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "308188024201f351f26f69c8955c69e93ca2c3d199e57d032c1d5fbbc3c426a57e54e3dc9ec3c4e602c8bffe29a853061327ef052c45362e6e9288d62d7085d821355163a408bf0242009bd327a58af01458a39d222e1ce791069401dcf0afdccc8184324bf39180a1f5805c7a4d87409d5a668ab601f5228355a14c1dbad5bd69e01ef2406898c7641939",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify P-521 sha512 p1363-hex (named)",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "p1363-hex",
+      "digest": "sha512",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMIGbMBAGByqGSM49AgEGBSuBBAAjA4GGAAQAMM0FNBq47CwOuTY/BNp6HgcnqoKR\nNh/2xI7hvUF+u+ozkgv75KbQGFA0HZSPYtyBts068A9uEA6nO4IjMROHMFIBdUK0\nhqKl6nmlrZfKnG7AMzqTFz2I7o+FF4eA/1S5j/UdkHM/utPmBejGtuNbekhk7XHw\nCoxGVAMPn/uYEGq/I8M=\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-521",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "01f351f26f69c8955c69e93ca2c3d199e57d032c1d5fbbc3c426a57e54e3dc9ec3c4e602c8bffe29a853061327ef052c45362e6e9288d62d7085d821355163a408bf009bd327a58af01458a39d222e1ce791069401dcf0afdccc8184324bf39180a1f5805c7a4d87409d5a668ab601f5228355a14c1dbad5bd69e01ef2406898c7641939",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify P-521 sha512 jws (named)",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "jws",
+      "digest": "sha512",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMIGbMBAGByqGSM49AgEGBSuBBAAjA4GGAAQAMM0FNBq47CwOuTY/BNp6HgcnqoKR\nNh/2xI7hvUF+u+ozkgv75KbQGFA0HZSPYtyBts068A9uEA6nO4IjMROHMFIBdUK0\nhqKl6nmlrZfKnG7AMzqTFz2I7o+FF4eA/1S5j/UdkHM/utPmBejGtuNbekhk7XHw\nCoxGVAMPn/uYEGq/I8M=\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-521",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "AfNR8m9pyJVcaek8osPRmeV9AywdX7vDxCalflTj3J7DxOYCyL_-KahTBhMn7wUsRTYubpKI1i1whdghNVFjpAi_AJvTJ6WK8BRYo50iLhznkQaUAdzwr9zMgYQyS_ORgKH1gFx6TYdAnVpmirYB9SKDVaFMHbrVvWngHvJAaJjHZBk5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify P-521 sha512 raw-json (named)",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "raw-json",
+      "digest": "sha512",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMIGbMBAGByqGSM49AgEGBSuBBAAjA4GGAAQAMM0FNBq47CwOuTY/BNp6HgcnqoKR\nNh/2xI7hvUF+u+ozkgv75KbQGFA0HZSPYtyBts068A9uEA6nO4IjMROHMFIBdUK0\nhqKl6nmlrZfKnG7AMzqTFz2I7o+FF4eA/1S5j/UdkHM/utPmBejGtuNbekhk7XHw\nCoxGVAMPn/uYEGq/I8M=\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-521",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "{\"r\":\"01f351f26f69c8955c69e93ca2c3d199e57d032c1d5fbbc3c426a57e54e3dc9ec3c4e602c8bffe29a853061327ef052c45362e6e9288d62d7085d821355163a408bf\",\"s\":\"009bd327a58af01458a39d222e1ce791069401dcf0afdccc8184324bf39180a1f5805c7a4d87409d5a668ab601f5228355a14c1dbad5bd69e01ef2406898c7641939\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify P-521 sha512 auto",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "auto",
+      "digest": "sha512",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMIGbMBAGByqGSM49AgEGBSuBBAAjA4GGAAQAMM0FNBq47CwOuTY/BNp6HgcnqoKR\nNh/2xI7hvUF+u+ozkgv75KbQGFA0HZSPYtyBts068A9uEA6nO4IjMROHMFIBdUK0\nhqKl6nmlrZfKnG7AMzqTFz2I7o+FF4eA/1S5j/UdkHM/utPmBejGtuNbekhk7XHw\nCoxGVAMPn/uYEGq/I8M=\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for P-521",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "308188024201f351f26f69c8955c69e93ca2c3d199e57d032c1d5fbbc3c426a57e54e3dc9ec3c4e602c8bffe29a853061327ef052c45362e6e9288d62d7085d821355163a408bf0242009bd327a58af01458a39d222e1ce791069401dcf0afdccc8184324bf39180a1f5805c7a4d87409d5a668ab601f5228355a14c1dbad5bd69e01ef2406898c7641939",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify secp256k1 sha256 asn1-hex (named)",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "asn1-hex",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEDHv+EgIPqgr7qX4B64my/1Czqiv9cQHf\nzGU5VjxueT5Zlf35+aIj+sKfKO1fTAdZ3ErBinPvDfehZG2jfwaAMg==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for secp256k1",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "3045022100916a3dc00c45626ad0b3934d635127b74f81908b3b1e5f0206ebb4adacb4597b02203799657877129f3ae4c920061f6fbed0b258ddc857e03f688df41dd95fc78393",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify secp256k1 sha256 p1363-hex (named)",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "p1363-hex",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEDHv+EgIPqgr7qX4B64my/1Czqiv9cQHf\nzGU5VjxueT5Zlf35+aIj+sKfKO1fTAdZ3ErBinPvDfehZG2jfwaAMg==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for secp256k1",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "916a3dc00c45626ad0b3934d635127b74f81908b3b1e5f0206ebb4adacb4597b3799657877129f3ae4c920061f6fbed0b258ddc857e03f688df41dd95fc78393",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify secp256k1 sha256 jws (named)",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "jws",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEDHv+EgIPqgr7qX4B64my/1Czqiv9cQHf\nzGU5VjxueT5Zlf35+aIj+sKfKO1fTAdZ3ErBinPvDfehZG2jfwaAMg==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for secp256k1",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "kWo9wAxFYmrQs5NNY1Ent0-BkIs7Hl8CBuu0ray0WXs3mWV4dxKfOuTJIAYfb77QsljdyFfgP2iN9B3ZX8eDkw",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify secp256k1 sha256 raw-json (named)",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "raw-json",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEDHv+EgIPqgr7qX4B64my/1Czqiv9cQHf\nzGU5VjxueT5Zlf35+aIj+sKfKO1fTAdZ3ErBinPvDfehZG2jfwaAMg==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for secp256k1",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "{\"r\":\"00916a3dc00c45626ad0b3934d635127b74f81908b3b1e5f0206ebb4adacb4597b\",\"s\":\"3799657877129f3ae4c920061f6fbed0b258ddc857e03f688df41dd95fc78393\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify secp256k1 sha256 auto",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "auto",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEDHv+EgIPqgr7qX4B64my/1Czqiv9cQHf\nzGU5VjxueT5Zlf35+aIj+sKfKO1fTAdZ3ErBinPvDfehZG2jfwaAMg==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for secp256k1",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "3045022100916a3dc00c45626ad0b3934d635127b74f81908b3b1e5f0206ebb4adacb4597b02203799657877129f3ae4c920061f6fbed0b258ddc857e03f688df41dd95fc78393",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify secp256k1 sha384 asn1-hex (named)",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "asn1-hex",
+      "digest": "sha384",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEDHv+EgIPqgr7qX4B64my/1Czqiv9cQHf\nzGU5VjxueT5Zlf35+aIj+sKfKO1fTAdZ3ErBinPvDfehZG2jfwaAMg==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for secp256k1",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "304502205b1b82ac380d4d27d4c55e0c19aa973c780e7f4a6992f35807bc339c123516ed022100fabd12871d5467670f0252808ee272c4d345efb6aa086ed89b551db0e430e8dc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify secp256k1 sha384 p1363-hex (named)",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "p1363-hex",
+      "digest": "sha384",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEDHv+EgIPqgr7qX4B64my/1Czqiv9cQHf\nzGU5VjxueT5Zlf35+aIj+sKfKO1fTAdZ3ErBinPvDfehZG2jfwaAMg==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for secp256k1",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "5b1b82ac380d4d27d4c55e0c19aa973c780e7f4a6992f35807bc339c123516edfabd12871d5467670f0252808ee272c4d345efb6aa086ed89b551db0e430e8dc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify secp256k1 sha384 jws (named)",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "jws",
+      "digest": "sha384",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEDHv+EgIPqgr7qX4B64my/1Czqiv9cQHf\nzGU5VjxueT5Zlf35+aIj+sKfKO1fTAdZ3ErBinPvDfehZG2jfwaAMg==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for secp256k1",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "WxuCrDgNTSfUxV4MGaqXPHgOf0ppkvNYB7wznBI1Fu36vRKHHVRnZw8CUoCO4nLE00XvtqoIbtibVR2w5DDo3A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify secp256k1 sha384 raw-json (named)",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "raw-json",
+      "digest": "sha384",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEDHv+EgIPqgr7qX4B64my/1Czqiv9cQHf\nzGU5VjxueT5Zlf35+aIj+sKfKO1fTAdZ3ErBinPvDfehZG2jfwaAMg==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for secp256k1",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "{\"r\":\"5b1b82ac380d4d27d4c55e0c19aa973c780e7f4a6992f35807bc339c123516ed\",\"s\":\"00fabd12871d5467670f0252808ee272c4d345efb6aa086ed89b551db0e430e8dc\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify secp256k1 sha384 auto",
+    "ref": "openssl dgst -sign (random k) on a key from openssl ecparam; formats converted with Python",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "auto",
+      "digest": "sha384",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEDHv+EgIPqgr7qX4B64my/1Czqiv9cQHf\nzGU5VjxueT5Zlf35+aIj+sKfKO1fTAdZ3ErBinPvDfehZG2jfwaAMg==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "message for secp256k1",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "304502205b1b82ac380d4d27d4c55e0c19aa973c780e7f4a6992f35807bc339c123516ed022100fabd12871d5467670f0252808ee272c4d345efb6aa086ed89b551db0e430e8dc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a deterministic P-256 md5 signature",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "auto",
+      "digest": "md5",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "sample",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "3046022100f58194a048ff7525c3ffe733132d37e4c3be64aae097d3a24799a75cf9cc34c9022100b84a1c920e5fc487df881181f4bff5a5771426da0ddedf5d417e859094798252",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a deterministic P-256 sha1 signature",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "auto",
+      "digest": "sha1",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "sample",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "304402203eb4cc3c178ee7fa5e2cae4b201340e4e116d36d7b084389f7f1790613f147fe02205fff00716311ab360f171c8e3cd646588de2ef69c347166c4c3c4e38e2d055d7",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a secp256k1 signature",
+    "ref": "RFC 6979 deterministic ECDSA from Python cryptography (OpenSSL, deterministic_signing=True) and the ecdsa package, which agree; key from openssl ecparam",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "p1363-hex",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEDHv+EgIPqgr7qX4B64my/1Czqiv9cQHf\nzGU5VjxueT5Zlf35+aIj+sKfKO1fTAdZ3ErBinPvDfehZG2jfwaAMg==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "sample",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "ca7aa481c7337b68e49f00bae6cadb540d36147a90c1966e3dead8566a428534ee2c5927463221e25658322f91a0bf4ac2a87c235014e92cb582d8beff628755",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Verified OK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify: a private key is not a public key",
+    "ref": "error case",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "auto",
+      "digest": "sha256",
+      "public-key": "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIHLGwbsc6mJo5I9MNBvjFJFmkehAcrmpU+y1LDsVRjgKoAoGCCqGSM49\nAwEHoUQDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo40o/+ywZoh2dEl6dbQ+zDukt/\nh7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END EC PRIVATE KEY-----\n",
+      "message": {
+        "value": "sample",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "3045022100f83c0674987e9506ce7aa9a54740b5db0bd1458c7a411caeab72ca07112e4c100220184aa2cdfc743660168872a65e4ef3ee9a2e8fe4da20c594fb7c988d33f16873",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "verify: no key",
+    "ref": "error case",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "auto",
+      "digest": "sha256",
+      "public-key": "",
+      "message": {
+        "value": "sample",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "3045022100f83c0674987e9506ce7aa9a54740b5db0bd1458c7a411caeab72ca07112e4c100220184aa2cdfc743660168872a65e4ef3ee9a2e8fe4da20c594fb7c988d33f16873",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "verify: format not detected",
+    "ref": "error case",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "auto",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "sample",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "!!! not a signature",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "verify: the empty signature",
+    "ref": "error case",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "auto",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "sample",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "verify: JSON without r",
+    "ref": "error case",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "raw-json",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "sample",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "{\"s\":\"01\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "verify: JSON with r not hex",
+    "ref": "error case",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "raw-json",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "sample",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "{\"r\":\"xyz\",\"s\":\"01\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "verify: DER with three integers",
+    "ref": "error case",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "asn1-hex",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "sample",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "3009020101020102020103",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "verify: DER cut short",
+    "ref": "error case",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "asn1-hex",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "sample",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "3045022100f83c0674987e9506ce7aa9a54740b5db0bd1458c7a411caeab72ca07112e4c100220184aa2cdfc743660168872a65e4ef3ee9a2e8fe4da20c594fb7c988d33f1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "verify: P1363 of odd length",
+    "ref": "error case",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "p1363-hex",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "sample",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "0102030405",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "verify: bad hex",
+    "ref": "error case",
+    "op": "ecdsa:verify",
+    "params": {
+      "input-format": "asn1-hex",
+      "digest": "sha256",
+      "public-key": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "message": {
+        "value": "sample",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "30zz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "convert P-256 asn1-hex to p1363-hex",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "asn1-hex",
+      "output-format": "p1363-hex"
+    },
+    "input": {
+      "value": "3045022100f83c0674987e9506ce7aa9a54740b5db0bd1458c7a411caeab72ca07112e4c100220184aa2cdfc743660168872a65e4ef3ee9a2e8fe4da20c594fb7c988d33f16873",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f83c0674987e9506ce7aa9a54740b5db0bd1458c7a411caeab72ca07112e4c10184aa2cdfc743660168872a65e4ef3ee9a2e8fe4da20c594fb7c988d33f16873",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert P-256 asn1-hex to jws",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "asn1-hex",
+      "output-format": "jws"
+    },
+    "input": {
+      "value": "3045022100f83c0674987e9506ce7aa9a54740b5db0bd1458c7a411caeab72ca07112e4c100220184aa2cdfc743660168872a65e4ef3ee9a2e8fe4da20c594fb7c988d33f16873",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-DwGdJh-lQbOeqmlR0C12wvRRYx6QRyuq3LKBxEuTBAYSqLN_HQ2YBaIcqZeTvPumi6P5NogxZT7fJiNM_Focw",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert P-256 asn1-hex to raw-json",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "asn1-hex",
+      "output-format": "raw-json"
+    },
+    "input": {
+      "value": "3045022100f83c0674987e9506ce7aa9a54740b5db0bd1458c7a411caeab72ca07112e4c100220184aa2cdfc743660168872a65e4ef3ee9a2e8fe4da20c594fb7c988d33f16873",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"r\":\"00f83c0674987e9506ce7aa9a54740b5db0bd1458c7a411caeab72ca07112e4c10\",\"s\":\"184aa2cdfc743660168872a65e4ef3ee9a2e8fe4da20c594fb7c988d33f16873\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert P-256 p1363-hex to asn1-hex",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "p1363-hex",
+      "output-format": "asn1-hex"
+    },
+    "input": {
+      "value": "f83c0674987e9506ce7aa9a54740b5db0bd1458c7a411caeab72ca07112e4c10184aa2cdfc743660168872a65e4ef3ee9a2e8fe4da20c594fb7c988d33f16873",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3045022100f83c0674987e9506ce7aa9a54740b5db0bd1458c7a411caeab72ca07112e4c100220184aa2cdfc743660168872a65e4ef3ee9a2e8fe4da20c594fb7c988d33f16873",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert P-256 p1363-hex to jws",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "p1363-hex",
+      "output-format": "jws"
+    },
+    "input": {
+      "value": "f83c0674987e9506ce7aa9a54740b5db0bd1458c7a411caeab72ca07112e4c10184aa2cdfc743660168872a65e4ef3ee9a2e8fe4da20c594fb7c988d33f16873",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-DwGdJh-lQbOeqmlR0C12wvRRYx6QRyuq3LKBxEuTBAYSqLN_HQ2YBaIcqZeTvPumi6P5NogxZT7fJiNM_Focw",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert P-256 p1363-hex to raw-json",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "p1363-hex",
+      "output-format": "raw-json"
+    },
+    "input": {
+      "value": "f83c0674987e9506ce7aa9a54740b5db0bd1458c7a411caeab72ca07112e4c10184aa2cdfc743660168872a65e4ef3ee9a2e8fe4da20c594fb7c988d33f16873",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"r\":\"00f83c0674987e9506ce7aa9a54740b5db0bd1458c7a411caeab72ca07112e4c10\",\"s\":\"184aa2cdfc743660168872a65e4ef3ee9a2e8fe4da20c594fb7c988d33f16873\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert P-256 jws to asn1-hex",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "jws",
+      "output-format": "asn1-hex"
+    },
+    "input": {
+      "value": "-DwGdJh-lQbOeqmlR0C12wvRRYx6QRyuq3LKBxEuTBAYSqLN_HQ2YBaIcqZeTvPumi6P5NogxZT7fJiNM_Focw",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3045022100f83c0674987e9506ce7aa9a54740b5db0bd1458c7a411caeab72ca07112e4c100220184aa2cdfc743660168872a65e4ef3ee9a2e8fe4da20c594fb7c988d33f16873",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert P-256 jws to p1363-hex",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "jws",
+      "output-format": "p1363-hex"
+    },
+    "input": {
+      "value": "-DwGdJh-lQbOeqmlR0C12wvRRYx6QRyuq3LKBxEuTBAYSqLN_HQ2YBaIcqZeTvPumi6P5NogxZT7fJiNM_Focw",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f83c0674987e9506ce7aa9a54740b5db0bd1458c7a411caeab72ca07112e4c10184aa2cdfc743660168872a65e4ef3ee9a2e8fe4da20c594fb7c988d33f16873",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert P-256 jws to raw-json",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "jws",
+      "output-format": "raw-json"
+    },
+    "input": {
+      "value": "-DwGdJh-lQbOeqmlR0C12wvRRYx6QRyuq3LKBxEuTBAYSqLN_HQ2YBaIcqZeTvPumi6P5NogxZT7fJiNM_Focw",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"r\":\"00f83c0674987e9506ce7aa9a54740b5db0bd1458c7a411caeab72ca07112e4c10\",\"s\":\"184aa2cdfc743660168872a65e4ef3ee9a2e8fe4da20c594fb7c988d33f16873\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert P-256 raw-json to asn1-hex",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "raw-json",
+      "output-format": "asn1-hex"
+    },
+    "input": {
+      "value": "{\"r\":\"00f83c0674987e9506ce7aa9a54740b5db0bd1458c7a411caeab72ca07112e4c10\",\"s\":\"184aa2cdfc743660168872a65e4ef3ee9a2e8fe4da20c594fb7c988d33f16873\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3045022100f83c0674987e9506ce7aa9a54740b5db0bd1458c7a411caeab72ca07112e4c100220184aa2cdfc743660168872a65e4ef3ee9a2e8fe4da20c594fb7c988d33f16873",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert P-256 raw-json to p1363-hex",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "raw-json",
+      "output-format": "p1363-hex"
+    },
+    "input": {
+      "value": "{\"r\":\"00f83c0674987e9506ce7aa9a54740b5db0bd1458c7a411caeab72ca07112e4c10\",\"s\":\"184aa2cdfc743660168872a65e4ef3ee9a2e8fe4da20c594fb7c988d33f16873\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f83c0674987e9506ce7aa9a54740b5db0bd1458c7a411caeab72ca07112e4c10184aa2cdfc743660168872a65e4ef3ee9a2e8fe4da20c594fb7c988d33f16873",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert P-256 raw-json to jws",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "raw-json",
+      "output-format": "jws"
+    },
+    "input": {
+      "value": "{\"r\":\"00f83c0674987e9506ce7aa9a54740b5db0bd1458c7a411caeab72ca07112e4c10\",\"s\":\"184aa2cdfc743660168872a65e4ef3ee9a2e8fe4da20c594fb7c988d33f16873\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-DwGdJh-lQbOeqmlR0C12wvRRYx6QRyuq3LKBxEuTBAYSqLN_HQ2YBaIcqZeTvPumi6P5NogxZT7fJiNM_Focw",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert P-256 auto to p1363-hex",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "auto",
+      "output-format": "p1363-hex"
+    },
+    "input": {
+      "value": "3045022100f83c0674987e9506ce7aa9a54740b5db0bd1458c7a411caeab72ca07112e4c100220184aa2cdfc743660168872a65e4ef3ee9a2e8fe4da20c594fb7c988d33f16873",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f83c0674987e9506ce7aa9a54740b5db0bd1458c7a411caeab72ca07112e4c10184aa2cdfc743660168872a65e4ef3ee9a2e8fe4da20c594fb7c988d33f16873",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert P-384 asn1-hex to p1363-hex",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "asn1-hex",
+      "output-format": "p1363-hex"
+    },
+    "input": {
+      "value": "3066023100e5dd3779f7d81ce3c7e1b48f8f683a6066484b6c4d7883f9d2129f667db1bb8f6fe84c61da49327a43d703db59370acc023100ed26ccdd0925700c386ca5a0d9cc7c1e4e925afea383f6dc60944e799064667acf674d7d6f5f0e95d176855a853713f6",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "e5dd3779f7d81ce3c7e1b48f8f683a6066484b6c4d7883f9d2129f667db1bb8f6fe84c61da49327a43d703db59370acced26ccdd0925700c386ca5a0d9cc7c1e4e925afea383f6dc60944e799064667acf674d7d6f5f0e95d176855a853713f6",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert P-384 asn1-hex to jws",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "asn1-hex",
+      "output-format": "jws"
+    },
+    "input": {
+      "value": "3066023100e5dd3779f7d81ce3c7e1b48f8f683a6066484b6c4d7883f9d2129f667db1bb8f6fe84c61da49327a43d703db59370acc023100ed26ccdd0925700c386ca5a0d9cc7c1e4e925afea383f6dc60944e799064667acf674d7d6f5f0e95d176855a853713f6",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "5d03effYHOPH4bSPj2g6YGZIS2xNeIP50hKfZn2xu49v6Exh2kkyekPXA9tZNwrM7SbM3QklcAw4bKWg2cx8Hk6SWv6jg_bcYJROeZBkZnrPZ019b18OldF2hVqFNxP2",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert P-384 asn1-hex to raw-json",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "asn1-hex",
+      "output-format": "raw-json"
+    },
+    "input": {
+      "value": "3066023100e5dd3779f7d81ce3c7e1b48f8f683a6066484b6c4d7883f9d2129f667db1bb8f6fe84c61da49327a43d703db59370acc023100ed26ccdd0925700c386ca5a0d9cc7c1e4e925afea383f6dc60944e799064667acf674d7d6f5f0e95d176855a853713f6",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"r\":\"00e5dd3779f7d81ce3c7e1b48f8f683a6066484b6c4d7883f9d2129f667db1bb8f6fe84c61da49327a43d703db59370acc\",\"s\":\"00ed26ccdd0925700c386ca5a0d9cc7c1e4e925afea383f6dc60944e799064667acf674d7d6f5f0e95d176855a853713f6\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert P-384 p1363-hex to asn1-hex",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "p1363-hex",
+      "output-format": "asn1-hex"
+    },
+    "input": {
+      "value": "e5dd3779f7d81ce3c7e1b48f8f683a6066484b6c4d7883f9d2129f667db1bb8f6fe84c61da49327a43d703db59370acced26ccdd0925700c386ca5a0d9cc7c1e4e925afea383f6dc60944e799064667acf674d7d6f5f0e95d176855a853713f6",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3066023100e5dd3779f7d81ce3c7e1b48f8f683a6066484b6c4d7883f9d2129f667db1bb8f6fe84c61da49327a43d703db59370acc023100ed26ccdd0925700c386ca5a0d9cc7c1e4e925afea383f6dc60944e799064667acf674d7d6f5f0e95d176855a853713f6",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert P-384 jws to asn1-hex",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "jws",
+      "output-format": "asn1-hex"
+    },
+    "input": {
+      "value": "5d03effYHOPH4bSPj2g6YGZIS2xNeIP50hKfZn2xu49v6Exh2kkyekPXA9tZNwrM7SbM3QklcAw4bKWg2cx8Hk6SWv6jg_bcYJROeZBkZnrPZ019b18OldF2hVqFNxP2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3066023100e5dd3779f7d81ce3c7e1b48f8f683a6066484b6c4d7883f9d2129f667db1bb8f6fe84c61da49327a43d703db59370acc023100ed26ccdd0925700c386ca5a0d9cc7c1e4e925afea383f6dc60944e799064667acf674d7d6f5f0e95d176855a853713f6",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert P-384 raw-json to asn1-hex",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "raw-json",
+      "output-format": "asn1-hex"
+    },
+    "input": {
+      "value": "{\"r\":\"00e5dd3779f7d81ce3c7e1b48f8f683a6066484b6c4d7883f9d2129f667db1bb8f6fe84c61da49327a43d703db59370acc\",\"s\":\"00ed26ccdd0925700c386ca5a0d9cc7c1e4e925afea383f6dc60944e799064667acf674d7d6f5f0e95d176855a853713f6\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3066023100e5dd3779f7d81ce3c7e1b48f8f683a6066484b6c4d7883f9d2129f667db1bb8f6fe84c61da49327a43d703db59370acc023100ed26ccdd0925700c386ca5a0d9cc7c1e4e925afea383f6dc60944e799064667acf674d7d6f5f0e95d176855a853713f6",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert P-384 auto to p1363-hex",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "auto",
+      "output-format": "p1363-hex"
+    },
+    "input": {
+      "value": "3066023100e5dd3779f7d81ce3c7e1b48f8f683a6066484b6c4d7883f9d2129f667db1bb8f6fe84c61da49327a43d703db59370acc023100ed26ccdd0925700c386ca5a0d9cc7c1e4e925afea383f6dc60944e799064667acf674d7d6f5f0e95d176855a853713f6",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "e5dd3779f7d81ce3c7e1b48f8f683a6066484b6c4d7883f9d2129f667db1bb8f6fe84c61da49327a43d703db59370acced26ccdd0925700c386ca5a0d9cc7c1e4e925afea383f6dc60944e799064667acf674d7d6f5f0e95d176855a853713f6",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert P-521 asn1-hex to p1363-hex",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "asn1-hex",
+      "output-format": "p1363-hex"
+    },
+    "input": {
+      "value": "308186024124d4294eb9237390fff55e7f2178fea44ff7f10d985fcbe01a109f765b86dcfa0cd0743d071e0abe3f506471a861874b6820796aeb9f2196373adf6e9677b36f4e02415889f4587292cb6ce3a43114cc39a08c6644593e51c0a405101cbd7de17257d3f0c9c2a0930b3a2b7420448fa635f433180ca7cb5f68c17482eb71dc2c4d007931",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0024d4294eb9237390fff55e7f2178fea44ff7f10d985fcbe01a109f765b86dcfa0cd0743d071e0abe3f506471a861874b6820796aeb9f2196373adf6e9677b36f4e005889f4587292cb6ce3a43114cc39a08c6644593e51c0a405101cbd7de17257d3f0c9c2a0930b3a2b7420448fa635f433180ca7cb5f68c17482eb71dc2c4d007931",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert P-521 asn1-hex to jws",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "asn1-hex",
+      "output-format": "jws"
+    },
+    "input": {
+      "value": "308186024124d4294eb9237390fff55e7f2178fea44ff7f10d985fcbe01a109f765b86dcfa0cd0743d071e0abe3f506471a861874b6820796aeb9f2196373adf6e9677b36f4e02415889f4587292cb6ce3a43114cc39a08c6644593e51c0a405101cbd7de17257d3f0c9c2a0930b3a2b7420448fa635f433180ca7cb5f68c17482eb71dc2c4d007931",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ACTUKU65I3OQ__VefyF4_qRP9_ENmF_L4BoQn3Zbhtz6DNB0PQceCr4_UGRxqGGHS2ggeWrrnyGWNzrfbpZ3s29OAFiJ9Fhyksts46QxFMw5oIxmRFk-UcCkBRAcvX3hclfT8MnCoJMLOit0IESPpjX0MxgMp8tfaMF0gutx3CxNAHkx",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert P-521 asn1-hex to raw-json",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "asn1-hex",
+      "output-format": "raw-json"
+    },
+    "input": {
+      "value": "308186024124d4294eb9237390fff55e7f2178fea44ff7f10d985fcbe01a109f765b86dcfa0cd0743d071e0abe3f506471a861874b6820796aeb9f2196373adf6e9677b36f4e02415889f4587292cb6ce3a43114cc39a08c6644593e51c0a405101cbd7de17257d3f0c9c2a0930b3a2b7420448fa635f433180ca7cb5f68c17482eb71dc2c4d007931",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"r\":\"24d4294eb9237390fff55e7f2178fea44ff7f10d985fcbe01a109f765b86dcfa0cd0743d071e0abe3f506471a861874b6820796aeb9f2196373adf6e9677b36f4e\",\"s\":\"5889f4587292cb6ce3a43114cc39a08c6644593e51c0a405101cbd7de17257d3f0c9c2a0930b3a2b7420448fa635f433180ca7cb5f68c17482eb71dc2c4d007931\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert P-521 p1363-hex to asn1-hex",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "p1363-hex",
+      "output-format": "asn1-hex"
+    },
+    "input": {
+      "value": "0024d4294eb9237390fff55e7f2178fea44ff7f10d985fcbe01a109f765b86dcfa0cd0743d071e0abe3f506471a861874b6820796aeb9f2196373adf6e9677b36f4e005889f4587292cb6ce3a43114cc39a08c6644593e51c0a405101cbd7de17257d3f0c9c2a0930b3a2b7420448fa635f433180ca7cb5f68c17482eb71dc2c4d007931",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "308186024124d4294eb9237390fff55e7f2178fea44ff7f10d985fcbe01a109f765b86dcfa0cd0743d071e0abe3f506471a861874b6820796aeb9f2196373adf6e9677b36f4e02415889f4587292cb6ce3a43114cc39a08c6644593e51c0a405101cbd7de17257d3f0c9c2a0930b3a2b7420448fa635f433180ca7cb5f68c17482eb71dc2c4d007931",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert P-521 jws to asn1-hex",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "jws",
+      "output-format": "asn1-hex"
+    },
+    "input": {
+      "value": "ACTUKU65I3OQ__VefyF4_qRP9_ENmF_L4BoQn3Zbhtz6DNB0PQceCr4_UGRxqGGHS2ggeWrrnyGWNzrfbpZ3s29OAFiJ9Fhyksts46QxFMw5oIxmRFk-UcCkBRAcvX3hclfT8MnCoJMLOit0IESPpjX0MxgMp8tfaMF0gutx3CxNAHkx",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "308186024124d4294eb9237390fff55e7f2178fea44ff7f10d985fcbe01a109f765b86dcfa0cd0743d071e0abe3f506471a861874b6820796aeb9f2196373adf6e9677b36f4e02415889f4587292cb6ce3a43114cc39a08c6644593e51c0a405101cbd7de17257d3f0c9c2a0930b3a2b7420448fa635f433180ca7cb5f68c17482eb71dc2c4d007931",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert P-521 raw-json to asn1-hex",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "raw-json",
+      "output-format": "asn1-hex"
+    },
+    "input": {
+      "value": "{\"r\":\"24d4294eb9237390fff55e7f2178fea44ff7f10d985fcbe01a109f765b86dcfa0cd0743d071e0abe3f506471a861874b6820796aeb9f2196373adf6e9677b36f4e\",\"s\":\"5889f4587292cb6ce3a43114cc39a08c6644593e51c0a405101cbd7de17257d3f0c9c2a0930b3a2b7420448fa635f433180ca7cb5f68c17482eb71dc2c4d007931\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "308186024124d4294eb9237390fff55e7f2178fea44ff7f10d985fcbe01a109f765b86dcfa0cd0743d071e0abe3f506471a861874b6820796aeb9f2196373adf6e9677b36f4e02415889f4587292cb6ce3a43114cc39a08c6644593e51c0a405101cbd7de17257d3f0c9c2a0930b3a2b7420448fa635f433180ca7cb5f68c17482eb71dc2c4d007931",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert P-521 auto to p1363-hex",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "auto",
+      "output-format": "p1363-hex"
+    },
+    "input": {
+      "value": "308186024124d4294eb9237390fff55e7f2178fea44ff7f10d985fcbe01a109f765b86dcfa0cd0743d071e0abe3f506471a861874b6820796aeb9f2196373adf6e9677b36f4e02415889f4587292cb6ce3a43114cc39a08c6644593e51c0a405101cbd7de17257d3f0c9c2a0930b3a2b7420448fa635f433180ca7cb5f68c17482eb71dc2c4d007931",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0024d4294eb9237390fff55e7f2178fea44ff7f10d985fcbe01a109f765b86dcfa0cd0743d071e0abe3f506471a861874b6820796aeb9f2196373adf6e9677b36f4e005889f4587292cb6ce3a43114cc39a08c6644593e51c0a405101cbd7de17257d3f0c9c2a0930b3a2b7420448fa635f433180ca7cb5f68c17482eb71dc2c4d007931",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert: r shorter than 32 bytes, DER to P1363 pads it",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "asn1-hex",
+      "output-format": "p1363-hex"
+    },
+    "input": {
+      "value": "3043021f4b403a1b4f045c6f35f89a6b5127e35323f88f37b801ac2713e8106a90662802205524904901f6acf790befd7a43ae66d6f1d939a09f7f3e45ac43a3b7ec69c8fe",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "004b403a1b4f045c6f35f89a6b5127e35323f88f37b801ac2713e8106a9066285524904901f6acf790befd7a43ae66d6f1d939a09f7f3e45ac43a3b7ec69c8fe",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert: r shorter than 32 bytes, P1363 to DER strips the zeros",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "p1363-hex",
+      "output-format": "asn1-hex"
+    },
+    "input": {
+      "value": "004b403a1b4f045c6f35f89a6b5127e35323f88f37b801ac2713e8106a9066285524904901f6acf790befd7a43ae66d6f1d939a09f7f3e45ac43a3b7ec69c8fe",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3043021f4b403a1b4f045c6f35f89a6b5127e35323f88f37b801ac2713e8106a90662802205524904901f6acf790befd7a43ae66d6f1d939a09f7f3e45ac43a3b7ec69c8fe",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert: r shorter than 32 bytes, JSON hex has no padding",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "auto",
+      "output-format": "raw-json"
+    },
+    "input": {
+      "value": "004b403a1b4f045c6f35f89a6b5127e35323f88f37b801ac2713e8106a9066285524904901f6acf790befd7a43ae66d6f1d939a09f7f3e45ac43a3b7ec69c8fe",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"r\":\"4b403a1b4f045c6f35f89a6b5127e35323f88f37b801ac2713e8106a906628\",\"s\":\"5524904901f6acf790befd7a43ae66d6f1d939a09f7f3e45ac43a3b7ec69c8fe\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert: JSON with r and s of the high bit set, unpadded hex",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "raw-json",
+      "output-format": "asn1-hex"
+    },
+    "input": {
+      "value": "{\"r\": \"8000000000000000000000000000000000000000000000000000000000000000\", \"s\": \"9000000000000000000000000000000000000000000000000000000000000000\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "304602210080000000000000000000000000000000000000000000000000000000000000000221009000000000000000000000000000000000000000000000000000000000000000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert: JSON with the 00 pad",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "raw-json",
+      "output-format": "p1363-hex"
+    },
+    "input": {
+      "value": "{\"r\": \"008000000000000000000000000000000000000000000000000000000000000000\", \"s\": \"009000000000000000000000000000000000000000000000000000000000000000\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "80000000000000000000000000000000000000000000000000000000000000009000000000000000000000000000000000000000000000000000000000000000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert: JSON with white space and r first",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "auto",
+      "output-format": "asn1-hex"
+    },
+    "input": {
+      "value": "{ \"s\" : \"9000000000000000000000000000000000000000000000000000000000000000\", \"r\" : \"8000000000000000000000000000000000000000000000000000000000000000\" }",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "304602210080000000000000000000000000000000000000000000000000000000000000000221009000000000000000000000000000000000000000000000000000000000000000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert: JWS with = padding is read",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "jws",
+      "output-format": "p1363-hex"
+    },
+    "input": {
+      "value": "gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "80000000000000000000000000000000000000000000000000000000000000009000000000000000000000000000000000000000000000000000000000000000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert: small values are P-256 width",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "asn1-hex",
+      "output-format": "p1363-hex"
+    },
+    "input": {
+      "value": "3006020101020102",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000002",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert: a 33-byte value is P-384 width",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "asn1-hex",
+      "output-format": "p1363-hex"
+    },
+    "input": {
+      "value": "30260221010000000000000000000000000000000000000000000000000000000000000000020102",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert: a value over 66 bytes cannot be written fixed width",
+    "ref": "error case",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "asn1-hex",
+      "output-format": "p1363-hex"
+    },
+    "input": {
+      "value": "304c02470100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020102",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "convert: a value over 66 bytes is fine as JSON",
+    "ref": "DER built by Python (r and s as DER INTEGERs), openssl asn1parse agrees; the other forms by struct/base64",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "asn1-hex",
+      "output-format": "raw-json"
+    },
+    "input": {
+      "value": "304c02470100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020102",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"r\":\"0100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\",\"s\":\"02\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "convert: empty",
+    "ref": "error case",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "auto",
+      "output-format": "asn1-hex"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "convert: not a signature",
+    "ref": "error case",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "auto",
+      "output-format": "asn1-hex"
+    },
+    "input": {
+      "value": "hello world!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "convert: JSON that is not an object",
+    "ref": "error case",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "raw-json",
+      "output-format": "asn1-hex"
+    },
+    "input": {
+      "value": "[1,2]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "convert: JSON with an empty r",
+    "ref": "error case",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "raw-json",
+      "output-format": "asn1-hex"
+    },
+    "input": {
+      "value": "{\"r\":\"\",\"s\":\"01\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "convert: DER with a negative integer",
+    "ref": "error case",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "asn1-hex",
+      "output-format": "p1363-hex"
+    },
+    "input": {
+      "value": "3006020180020102",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "convert: DER with trailing bytes",
+    "ref": "error case",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "asn1-hex",
+      "output-format": "p1363-hex"
+    },
+    "input": {
+      "value": "300602010102010200",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "convert: DER that is not a SEQUENCE",
+    "ref": "error case",
+    "op": "ecdsa:convert-signature",
+    "params": {
+      "input-format": "asn1-hex",
+      "output-format": "p1363-hex"
+    },
+    "input": {
+      "value": "020101020102",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "public key of a P-256 sec1 private key",
+    "ref": "openssl pkey -pubout",
+    "op": "ecdsa:public-key",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIHLGwbsc6mJo5I9MNBvjFJFmkehAcrmpU+y1LDsVRjgKoAoGCCqGSM49\nAwEHoUQDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo40o/+ywZoh2dEl6dbQ+zDukt/\nh7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END EC PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "public key of a P-256 p8 private key",
+    "ref": "openssl pkey -pubout",
+    "op": "ecdsa:public-key",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgcsbBuxzqYmjkj0w0\nG+MUkWaR6EByualT7LUsOxVGOAqhRANCAARXsf939oll7u5KDahRKQ9OmpfI+jjS\nj/7LBmiHZ0SXp1tD7MO6S3+HseukaBKscliAQFb2mcDbQQoUg3DWolsw\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "public key of a P-384 sec1 private key",
+    "ref": "openssl pkey -pubout",
+    "op": "ecdsa:public-key",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN EC PRIVATE KEY-----\nMIGkAgEBBDC5hEnxwhBiMEH3RnR72lGMasDSi8j3wcSYDhXzWIlVHlEi85Ex6bJn\nhZAUH1Q1f3ygBwYFK4EEACKhZANiAATH7kdbNX5neValiAgAFyH91cKZww7tKBea\n3NzRljeUi2lEVuvgojp1emGNyxKPNC129ruB900O0HySYbK7klgj8OYdscANkcNu\nHCqObahCnuBx3Wvriziu+OfSZf5Qhd4=\n-----END EC PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEx+5HWzV+Z3lWpYgIABch/dXCmcMO7SgX\nmtzc0ZY3lItpRFbr4KI6dXphjcsSjzQtdva7gfdNDtB8kmGyu5JYI/DmHbHADZHD\nbhwqjm2oQp7gcd1r64s4rvjn0mX+UIXe\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "public key of a P-384 p8 private key",
+    "ref": "openssl pkey -pubout",
+    "op": "ecdsa:public-key",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMIG2AgEAMBAGByqGSM49AgEGBSuBBAAiBIGeMIGbAgEBBDC5hEnxwhBiMEH3RnR7\n2lGMasDSi8j3wcSYDhXzWIlVHlEi85Ex6bJnhZAUH1Q1f3yhZANiAATH7kdbNX5n\neValiAgAFyH91cKZww7tKBea3NzRljeUi2lEVuvgojp1emGNyxKPNC129ruB900O\n0HySYbK7klgj8OYdscANkcNuHCqObahCnuBx3Wvriziu+OfSZf5Qhd4=\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEx+5HWzV+Z3lWpYgIABch/dXCmcMO7SgX\nmtzc0ZY3lItpRFbr4KI6dXphjcsSjzQtdva7gfdNDtB8kmGyu5JYI/DmHbHADZHD\nbhwqjm2oQp7gcd1r64s4rvjn0mX+UIXe\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "public key of a P-521 sec1 private key",
+    "ref": "openssl pkey -pubout",
+    "op": "ecdsa:public-key",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN EC PRIVATE KEY-----\nMIHcAgEBBEIAMe5wWiEl+Exk8wwG0mU1T1y/+LhGgDZSeoDXP+I8L6MSVwkkf/KA\nRZ/G31FnJr2OX8wNXK7GUDfVZHZazsDUr2mgBwYFK4EEACOhgYkDgYYABAAwzQU0\nGrjsLA65Nj8E2noeByeqgpE2H/bEjuG9QX676jOSC/vkptAYUDQdlI9i3IG2zTrw\nD24QDqc7giMxE4cwUgF1QrSGoqXqeaWtl8qcbsAzOpMXPYjuj4UXh4D/VLmP9R2Q\ncz+60+YF6Ma241t6SGTtcfAKjEZUAw+f+5gQar8jww==\n-----END EC PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMIGbMBAGByqGSM49AgEGBSuBBAAjA4GGAAQAMM0FNBq47CwOuTY/BNp6HgcnqoKR\nNh/2xI7hvUF+u+ozkgv75KbQGFA0HZSPYtyBts068A9uEA6nO4IjMROHMFIBdUK0\nhqKl6nmlrZfKnG7AMzqTFz2I7o+FF4eA/1S5j/UdkHM/utPmBejGtuNbekhk7XHw\nCoxGVAMPn/uYEGq/I8M=\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "public key of a P-521 p8 private key",
+    "ref": "openssl pkey -pubout",
+    "op": "ecdsa:public-key",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMIHuAgEAMBAGByqGSM49AgEGBSuBBAAjBIHWMIHTAgEBBEIAMe5wWiEl+Exk8wwG\n0mU1T1y/+LhGgDZSeoDXP+I8L6MSVwkkf/KARZ/G31FnJr2OX8wNXK7GUDfVZHZa\nzsDUr2mhgYkDgYYABAAwzQU0GrjsLA65Nj8E2noeByeqgpE2H/bEjuG9QX676jOS\nC/vkptAYUDQdlI9i3IG2zTrwD24QDqc7giMxE4cwUgF1QrSGoqXqeaWtl8qcbsAz\nOpMXPYjuj4UXh4D/VLmP9R2Qcz+60+YF6Ma241t6SGTtcfAKjEZUAw+f+5gQar8j\nww==\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMIGbMBAGByqGSM49AgEGBSuBBAAjA4GGAAQAMM0FNBq47CwOuTY/BNp6HgcnqoKR\nNh/2xI7hvUF+u+ozkgv75KbQGFA0HZSPYtyBts068A9uEA6nO4IjMROHMFIBdUK0\nhqKl6nmlrZfKnG7AMzqTFz2I7o+FF4eA/1S5j/UdkHM/utPmBejGtuNbekhk7XHw\nCoxGVAMPn/uYEGq/I8M=\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "public key of a secp256k1 sec1 private key",
+    "ref": "openssl pkey -pubout",
+    "op": "ecdsa:public-key",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN EC PRIVATE KEY-----\nMHQCAQEEIC7Mc4cMCS+rg1uE2RSYsHwN8BQrQXGJvueuIpOi0SbBoAcGBSuBBAAK\noUQDQgAEDHv+EgIPqgr7qX4B64my/1Czqiv9cQHfzGU5VjxueT5Zlf35+aIj+sKf\nKO1fTAdZ3ErBinPvDfehZG2jfwaAMg==\n-----END EC PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEDHv+EgIPqgr7qX4B64my/1Czqiv9cQHf\nzGU5VjxueT5Zlf35+aIj+sKfKO1fTAdZ3ErBinPvDfehZG2jfwaAMg==\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "public key of a secp256k1 p8 private key",
+    "ref": "openssl pkey -pubout",
+    "op": "ecdsa:public-key",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMIGEAgEAMBAGByqGSM49AgEGBSuBBAAKBG0wawIBAQQgLsxzhwwJL6uDW4TZFJiw\nfA3wFCtBcYm+564ik6LRJsGhRANCAAQMe/4SAg+qCvupfgHribL/ULOqK/1xAd/M\nZTlWPG55PlmV/fn5oiP6wp8o7V9MB1ncSsGKc+8N96FkbaN/BoAy\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEDHv+EgIPqgr7qX4B64my/1Czqiv9cQHf\nzGU5VjxueT5Zlf35+aIj+sKfKO1fTAdZ3ErBinPvDfehZG2jfwaAMg==\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "public key: ecparam output (EC PARAMETERS in front) is read",
+    "ref": "openssl ecparam -genkey (without -noout)",
+    "op": "ecdsa:public-key",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN EC PARAMETERS-----\nBggqhkjOPQMBBw==\n-----END EC PARAMETERS-----\n-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIDvg60FSJyLRXT3Yz3VU9n0fuXtQ7YAmUIJw00KOTdr6oAoGCCqGSM49\nAwEHoUQDQgAE5a4/VWAQnfbQSp1VgWPMVYeXEHi8Lz0f8CR2A/vjZu7viBcY5mu/\n+KR6noXE7wjWLT+rEhuQTsHYXjF4bIf+DQ==\n-----END EC PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE5a4/VWAQnfbQSp1VgWPMVYeXEHi8\nLz0f8CR2A/vjZu7viBcY5mu/+KR6noXE7wjWLT+rEhuQTsHYXjF4bIf+DQ==\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "public key: a public key is refused",
+    "ref": "error case",
+    "op": "ecdsa:public-key",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "public key: empty",
+    "ref": "error case",
+    "op": "ecdsa:public-key",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "public key: an Ed25519 key is not an EC key",
+    "ref": "openssl genpkey -algorithm ed25519",
+    "op": "ecdsa:public-key",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VwBCIEIECme8kWQhNConm6v857VZRNQ8I6oaY/husltZhNCKzj\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "public key: an encrypted key is refused",
+    "ref": "openssl pkcs8 -topk8 -v2 aes256 (password)",
+    "op": "ecdsa:public-key",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN ENCRYPTED PRIVATE KEY-----\nMIHsMFcGCSqGSIb3DQEFDTBKMCkGCSqGSIb3DQEFDDAcBAjnmL95c053QQICCAAw\nDAYIKoZIhvcNAgkFADAdBglghkgBZQMEASoEEHnC8TjWKKrofq+HJIdTnAYEgZBC\n0IcanyZbY42mLe5Kv3ZIsCx1nA5JAhnZIaU/OoSXycZQ/2vo/vsqANg8xTST5tON\nC4yepCAkmBjipIYHjFqcHOymhXh4E1OmA6hez27MaDbAzaq4myIPUOTlDpWsYPO6\nZLbhA3i1pqKybUxJgtrzNZDjyzV71yt6Gc1C6r8lsAszahoOEZ2zjDUcLJJdhvY=\n-----END ENCRYPTED PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "public key: a SEC1 key without its curve",
+    "ref": "SEC1 ECPrivateKey with the [0] parameters removed",
+    "op": "ecdsa:public-key",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN EC PRIVATE KEY-----\nMCUCAQEEIHLGwbsc6mJo5I9MNBvjFJFmkehAcrmpU+y1LDsVRjgK\n-----END EC PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "public key: a curve that is not supported (brainpoolP256r1)",
+    "ref": "openssl ecparam -name brainpoolP256r1",
+    "op": "ecdsa:public-key",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN EC PRIVATE KEY-----\nMHgCAQEEIHFCpM3mkNt1ffiLyAdBtSkBtLyJ/I817ow8P3bklJVgoAsGCSskAwMC\nCAEBB6FEA0IABHFK/Ju8rlLUUdr5iSSEH4ITeTL5cLuuWWXJa9cyn+0sS/2PYZM/\naRLBlQECcopmjGpmsmE5IW9ytYf1NcQKXhM=\n-----END EC PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "generate: the output is random, so only a bad curve is a fixed result (the rest is in src/ecdsa.test.ts)",
+    "ref": "error case; the pinned-seed key pairs are checked with openssl in src/ecdsa.test.ts",
+    "op": "ecdsa:generate-key-pair",
+    "params": {
+      "curve": "P-999",
+      "format": "PEM"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  }
+]
