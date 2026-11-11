@@ -1,0 +1,1259 @@
+[
+  {
+    "name": "from-pem: RSA 1024 private key (PKCS #8)",
+    "ref": "openssl genpkey; members from Python cryptography (RSA numbers)",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAMBotZ7gED8l1O00\n7waOsRwrJtqm92Z3lbx8c2O0dhMmNI+1sle9MUFeMyHe8U6WbRjn5AdxOAcgUPer\nNjsurV6KYBt4S5OCOzePdvlgpGbkYff5ZjrmYFLy+u8laijJpXcag0Q603h4rOwu\nQJNElYhpVqHvkoDtCsXemP9A7AKtAgMBAAECgYBG+Ni1h9S2VlAaR0I72vp9d3VX\nhesQAuBarFUr2+8J1TfiIpVsQ78da4/U2JWN9XK8kxzLmfmet07mbGMOpYMRDbAQ\nF0RcqI9UrE905YvWU25kT0l0H/PEXZ9Ux8rZcDB221C9ix6q9o5sqP0T76TPvO8h\nbF4BIQtup9az1/ObiQJBAPcg4uyK8Z5T1gzT/0KG9LD17LR/GzqlHN8kh4GmY29x\nRTMdlF/Yy8DQLCa6Y4xz5Kf9MQzdXF9XN5VaGpkaI78CQQDHUPNhPWc70jr88s/f\n4Y0QiAZ2+W3k4B/Nhhun6327hqhto5CuI62IAKMPyXxnUpe6VGV5mTDZDZgfCopG\nRYSTAkAKQ6FpNbQnYVAIpF17w+Mx3mUAci8NVoJGelvudJy4qjm3j8jz2itMTNko\nmqE72ixrFccNw7vscdDrMRzdswo9AkAVyzYxhcNJ+TzV977fHgyMqDL8w11Oz2rq\n0CUqAUfoP1sfUek6AVCyNE+gJEnkClXo292UpDmBIkll64MfF+7dAkBeu85uFX9S\nKhUQUvCOlJicRVFvAgELxyDAZBu3EyQnl8VBaScLkS8gYaY+jBGvrlzJ0b9cGpz7\n8cjL4cWsKgIy\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n  \"kty\": \"RSA\",\n  \"n\": \"wGi1nuAQPyXU7TTvBo6xHCsm2qb3ZneVvHxzY7R2EyY0j7WyV70xQV4zId7xTpZtGOfkB3E4ByBQ96s2Oy6tXopgG3hLk4I7N492-WCkZuRh9_lmOuZgUvL67yVqKMmldxqDRDrTeHis7C5Ak0SViGlWoe-SgO0Kxd6Y_0DsAq0\",\n  \"e\": \"AQAB\",\n  \"d\": \"RvjYtYfUtlZQGkdCO9r6fXd1V4XrEALgWqxVK9vvCdU34iKVbEO_HWuP1NiVjfVyvJMcy5n5nrdO5mxjDqWDEQ2wEBdEXKiPVKxPdOWL1lNuZE9JdB_zxF2fVMfK2XAwdttQvYseqvaObKj9E--kz7zvIWxeASELbqfWs9fzm4k\",\n  \"p\": \"9yDi7IrxnlPWDNP_Qob0sPXstH8bOqUc3ySHgaZjb3FFMx2UX9jLwNAsJrpjjHPkp_0xDN1cX1c3lVoamRojvw\",\n  \"q\": \"x1DzYT1nO9I6_PLP3-GNEIgGdvlt5OAfzYYbp-t9u4aobaOQriOtiACjD8l8Z1KXulRleZkw2Q2YHwqKRkWEkw\",\n  \"dp\": \"CkOhaTW0J2FQCKRde8PjMd5lAHIvDVaCRnpb7nScuKo5t4_I89orTEzZKJqhO9osaxXHDcO77HHQ6zEc3bMKPQ\",\n  \"dq\": \"Fcs2MYXDSfk81fe-3x4MjKgy_MNdTs9q6tAlKgFH6D9bH1HpOgFQsjRPoCRJ5ApV6NvdlKQ5gSJJZeuDHxfu3Q\",\n  \"qi\": \"XrvObhV_UioVEFLwjpSYnEVRbwIBC8cgwGQbtxMkJ5fFQWknC5EvIGGmPowRr65cydG_XBqc-_HIy-HFrCoCMg\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: RSA 1024 public key (SPKI)",
+    "ref": "openssl pkey -pubout; members from Python cryptography",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDAaLWe4BA/JdTtNO8GjrEcKyba\npvdmd5W8fHNjtHYTJjSPtbJXvTFBXjMh3vFOlm0Y5+QHcTgHIFD3qzY7Lq1eimAb\neEuTgjs3j3b5YKRm5GH3+WY65mBS8vrvJWooyaV3GoNEOtN4eKzsLkCTRJWIaVah\n75KA7QrF3pj/QOwCrQIDAQAB\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n  \"kty\": \"RSA\",\n  \"n\": \"wGi1nuAQPyXU7TTvBo6xHCsm2qb3ZneVvHxzY7R2EyY0j7WyV70xQV4zId7xTpZtGOfkB3E4ByBQ96s2Oy6tXopgG3hLk4I7N492-WCkZuRh9_lmOuZgUvL67yVqKMmldxqDRDrTeHis7C5Ak0SViGlWoe-SgO0Kxd6Y_0DsAq0\",\n  \"e\": \"AQAB\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-pem: RSA 1024 private JWK",
+    "ref": "openssl genpkey (PKCS #8 DER compared byte for byte); JWK from Python cryptography",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\n  \"kty\": \"RSA\",\n  \"n\": \"wGi1nuAQPyXU7TTvBo6xHCsm2qb3ZneVvHxzY7R2EyY0j7WyV70xQV4zId7xTpZtGOfkB3E4ByBQ96s2Oy6tXopgG3hLk4I7N492-WCkZuRh9_lmOuZgUvL67yVqKMmldxqDRDrTeHis7C5Ak0SViGlWoe-SgO0Kxd6Y_0DsAq0\",\n  \"e\": \"AQAB\",\n  \"d\": \"RvjYtYfUtlZQGkdCO9r6fXd1V4XrEALgWqxVK9vvCdU34iKVbEO_HWuP1NiVjfVyvJMcy5n5nrdO5mxjDqWDEQ2wEBdEXKiPVKxPdOWL1lNuZE9JdB_zxF2fVMfK2XAwdttQvYseqvaObKj9E--kz7zvIWxeASELbqfWs9fzm4k\",\n  \"p\": \"9yDi7IrxnlPWDNP_Qob0sPXstH8bOqUc3ySHgaZjb3FFMx2UX9jLwNAsJrpjjHPkp_0xDN1cX1c3lVoamRojvw\",\n  \"q\": \"x1DzYT1nO9I6_PLP3-GNEIgGdvlt5OAfzYYbp-t9u4aobaOQriOtiACjD8l8Z1KXulRleZkw2Q2YHwqKRkWEkw\",\n  \"dp\": \"CkOhaTW0J2FQCKRde8PjMd5lAHIvDVaCRnpb7nScuKo5t4_I89orTEzZKJqhO9osaxXHDcO77HHQ6zEc3bMKPQ\",\n  \"dq\": \"Fcs2MYXDSfk81fe-3x4MjKgy_MNdTs9q6tAlKgFH6D9bH1HpOgFQsjRPoCRJ5ApV6NvdlKQ5gSJJZeuDHxfu3Q\",\n  \"qi\": \"XrvObhV_UioVEFLwjpSYnEVRbwIBC8cgwGQbtxMkJ5fFQWknC5EvIGGmPowRr65cydG_XBqc-_HIy-HFrCoCMg\"\n}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAMBotZ7gED8l1O00\n7waOsRwrJtqm92Z3lbx8c2O0dhMmNI+1sle9MUFeMyHe8U6WbRjn5AdxOAcgUPer\nNjsurV6KYBt4S5OCOzePdvlgpGbkYff5ZjrmYFLy+u8laijJpXcag0Q603h4rOwu\nQJNElYhpVqHvkoDtCsXemP9A7AKtAgMBAAECgYBG+Ni1h9S2VlAaR0I72vp9d3VX\nhesQAuBarFUr2+8J1TfiIpVsQ78da4/U2JWN9XK8kxzLmfmet07mbGMOpYMRDbAQ\nF0RcqI9UrE905YvWU25kT0l0H/PEXZ9Ux8rZcDB221C9ix6q9o5sqP0T76TPvO8h\nbF4BIQtup9az1/ObiQJBAPcg4uyK8Z5T1gzT/0KG9LD17LR/GzqlHN8kh4GmY29x\nRTMdlF/Yy8DQLCa6Y4xz5Kf9MQzdXF9XN5VaGpkaI78CQQDHUPNhPWc70jr88s/f\n4Y0QiAZ2+W3k4B/Nhhun6327hqhto5CuI62IAKMPyXxnUpe6VGV5mTDZDZgfCopG\nRYSTAkAKQ6FpNbQnYVAIpF17w+Mx3mUAci8NVoJGelvudJy4qjm3j8jz2itMTNko\nmqE72ixrFccNw7vscdDrMRzdswo9AkAVyzYxhcNJ+TzV977fHgyMqDL8w11Oz2rq\n0CUqAUfoP1sfUek6AVCyNE+gJEnkClXo292UpDmBIkll64MfF+7dAkBeu85uFX9S\nKhUQUvCOlJicRVFvAgELxyDAZBu3EyQnl8VBaScLkS8gYaY+jBGvrlzJ0b9cGpz7\n8cjL4cWsKgIy\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-pem: RSA 1024 public JWK",
+    "ref": "openssl pkey -pubout; JWK from Python cryptography",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\n  \"kty\": \"RSA\",\n  \"n\": \"wGi1nuAQPyXU7TTvBo6xHCsm2qb3ZneVvHxzY7R2EyY0j7WyV70xQV4zId7xTpZtGOfkB3E4ByBQ96s2Oy6tXopgG3hLk4I7N492-WCkZuRh9_lmOuZgUvL67yVqKMmldxqDRDrTeHis7C5Ak0SViGlWoe-SgO0Kxd6Y_0DsAq0\",\n  \"e\": \"AQAB\"\n}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDAaLWe4BA/JdTtNO8GjrEcKyba\npvdmd5W8fHNjtHYTJjSPtbJXvTFBXjMh3vFOlm0Y5+QHcTgHIFD3qzY7Lq1eimAb\neEuTgjs3j3b5YKRm5GH3+WY65mBS8vrvJWooyaV3GoNEOtN4eKzsLkCTRJWIaVah\n75KA7QrF3pj/QOwCrQIDAQAB\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: P-256 private key (PKCS #8)",
+    "ref": "openssl genpkey; members from Python cryptography (EC numbers)",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgTMC53iZHafURaZnD\ngqye34d+Up/HgmtwPy7fdsn7jImhRANCAATNDguahk8yelM8K0XE1o0ET8shi41D\nzcg5GI0LWx92txUso6j/JQyO+KN0FW8Eo3QDqJuXoMXmeMvJAA47K586\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n  \"kty\": \"EC\",\n  \"crv\": \"P-256\",\n  \"x\": \"zQ4LmoZPMnpTPCtFxNaNBE_LIYuNQ83IORiNC1sfdrc\",\n  \"y\": \"FSyjqP8lDI74o3QVbwSjdAOom5egxeZ4y8kADjsrnzo\",\n  \"d\": \"TMC53iZHafURaZnDgqye34d-Up_HgmtwPy7fdsn7jIk\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: P-256 public key (SPKI)",
+    "ref": "openssl pkey -pubout; members from Python cryptography",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEzQ4LmoZPMnpTPCtFxNaNBE/LIYuN\nQ83IORiNC1sfdrcVLKOo/yUMjvijdBVvBKN0A6ibl6DF5njLyQAOOyufOg==\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n  \"kty\": \"EC\",\n  \"crv\": \"P-256\",\n  \"x\": \"zQ4LmoZPMnpTPCtFxNaNBE_LIYuNQ83IORiNC1sfdrc\",\n  \"y\": \"FSyjqP8lDI74o3QVbwSjdAOom5egxeZ4y8kADjsrnzo\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-pem: P-256 private JWK",
+    "ref": "openssl genpkey (PKCS #8 DER compared byte for byte); JWK from Python cryptography",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\n  \"kty\": \"EC\",\n  \"crv\": \"P-256\",\n  \"x\": \"zQ4LmoZPMnpTPCtFxNaNBE_LIYuNQ83IORiNC1sfdrc\",\n  \"y\": \"FSyjqP8lDI74o3QVbwSjdAOom5egxeZ4y8kADjsrnzo\",\n  \"d\": \"TMC53iZHafURaZnDgqye34d-Up_HgmtwPy7fdsn7jIk\"\n}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgTMC53iZHafURaZnD\ngqye34d+Up/HgmtwPy7fdsn7jImhRANCAATNDguahk8yelM8K0XE1o0ET8shi41D\nzcg5GI0LWx92txUso6j/JQyO+KN0FW8Eo3QDqJuXoMXmeMvJAA47K586\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-pem: P-256 public JWK",
+    "ref": "openssl pkey -pubout; JWK from Python cryptography",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\n  \"kty\": \"EC\",\n  \"crv\": \"P-256\",\n  \"x\": \"zQ4LmoZPMnpTPCtFxNaNBE_LIYuNQ83IORiNC1sfdrc\",\n  \"y\": \"FSyjqP8lDI74o3QVbwSjdAOom5egxeZ4y8kADjsrnzo\"\n}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEzQ4LmoZPMnpTPCtFxNaNBE/LIYuN\nQ83IORiNC1sfdrcVLKOo/yUMjvijdBVvBKN0A6ibl6DF5njLyQAOOyufOg==\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: P-384 private key (PKCS #8)",
+    "ref": "openssl genpkey; members from Python cryptography (EC numbers)",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMIG2AgEAMBAGByqGSM49AgEGBSuBBAAiBIGeMIGbAgEBBDC8MTodwcXOEZEZtN0c\nqszkcB0MLU+ucMULI/PHgpJ0cAceikCmWsUaIVd1tfFH7XyhZANiAARtvCW3n+1b\niPGgZPqUCrcbe3qFzDrqYzIR+wL2L/mKPIzn7C0zJ8JmvQ5nRfEM6cflQr+L5hvp\nVj+NZgs55rGJS3PfFOAEeYQI5AoT3CDh9MG4Qd9j8TqO2ht2efy/Hw4=\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n  \"kty\": \"EC\",\n  \"crv\": \"P-384\",\n  \"x\": \"bbwlt5_tW4jxoGT6lAq3G3t6hcw66mMyEfsC9i_5ijyM5-wtMyfCZr0OZ0XxDOnH\",\n  \"y\": \"5UK_i-Yb6VY_jWYLOeaxiUtz3xTgBHmECOQKE9wg4fTBuEHfY_E6jtobdnn8vx8O\",\n  \"d\": \"vDE6HcHFzhGRGbTdHKrM5HAdDC1PrnDFCyPzx4KSdHAHHopAplrFGiFXdbXxR-18\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: P-384 public key (SPKI)",
+    "ref": "openssl pkey -pubout; members from Python cryptography",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEbbwlt5/tW4jxoGT6lAq3G3t6hcw66mMy\nEfsC9i/5ijyM5+wtMyfCZr0OZ0XxDOnH5UK/i+Yb6VY/jWYLOeaxiUtz3xTgBHmE\nCOQKE9wg4fTBuEHfY/E6jtobdnn8vx8O\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n  \"kty\": \"EC\",\n  \"crv\": \"P-384\",\n  \"x\": \"bbwlt5_tW4jxoGT6lAq3G3t6hcw66mMyEfsC9i_5ijyM5-wtMyfCZr0OZ0XxDOnH\",\n  \"y\": \"5UK_i-Yb6VY_jWYLOeaxiUtz3xTgBHmECOQKE9wg4fTBuEHfY_E6jtobdnn8vx8O\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-pem: P-384 private JWK",
+    "ref": "openssl genpkey (PKCS #8 DER compared byte for byte); JWK from Python cryptography",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\n  \"kty\": \"EC\",\n  \"crv\": \"P-384\",\n  \"x\": \"bbwlt5_tW4jxoGT6lAq3G3t6hcw66mMyEfsC9i_5ijyM5-wtMyfCZr0OZ0XxDOnH\",\n  \"y\": \"5UK_i-Yb6VY_jWYLOeaxiUtz3xTgBHmECOQKE9wg4fTBuEHfY_E6jtobdnn8vx8O\",\n  \"d\": \"vDE6HcHFzhGRGbTdHKrM5HAdDC1PrnDFCyPzx4KSdHAHHopAplrFGiFXdbXxR-18\"\n}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMIG2AgEAMBAGByqGSM49AgEGBSuBBAAiBIGeMIGbAgEBBDC8MTodwcXOEZEZtN0c\nqszkcB0MLU+ucMULI/PHgpJ0cAceikCmWsUaIVd1tfFH7XyhZANiAARtvCW3n+1b\niPGgZPqUCrcbe3qFzDrqYzIR+wL2L/mKPIzn7C0zJ8JmvQ5nRfEM6cflQr+L5hvp\nVj+NZgs55rGJS3PfFOAEeYQI5AoT3CDh9MG4Qd9j8TqO2ht2efy/Hw4=\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-pem: P-384 public JWK",
+    "ref": "openssl pkey -pubout; JWK from Python cryptography",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\n  \"kty\": \"EC\",\n  \"crv\": \"P-384\",\n  \"x\": \"bbwlt5_tW4jxoGT6lAq3G3t6hcw66mMyEfsC9i_5ijyM5-wtMyfCZr0OZ0XxDOnH\",\n  \"y\": \"5UK_i-Yb6VY_jWYLOeaxiUtz3xTgBHmECOQKE9wg4fTBuEHfY_E6jtobdnn8vx8O\"\n}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEbbwlt5/tW4jxoGT6lAq3G3t6hcw66mMy\nEfsC9i/5ijyM5+wtMyfCZr0OZ0XxDOnH5UK/i+Yb6VY/jWYLOeaxiUtz3xTgBHmE\nCOQKE9wg4fTBuEHfY/E6jtobdnn8vx8O\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: P-521 private key (PKCS #8)",
+    "ref": "openssl genpkey; members from Python cryptography (EC numbers)",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMIHuAgEAMBAGByqGSM49AgEGBSuBBAAjBIHWMIHTAgEBBEIAx3dpqRpVtPU3HWkL\nWEZXRlnrrYtBhwTXp59ybF5bunjGLRe5M2teZLcNWGt29i/7W76VPrKrD+taZh6I\natTz3tmhgYkDgYYABADKQYCWVg1JyEb3/QeWgy1FHPXYmqt8Fy57q+/iaM6NjSpq\nvMzuLxYsR5jsGhP41lPlL2l0aWAEMu3NPSQRZXdJvwFoXkmtbVLPVXmV7tXFpTzf\nccSYebM/BN0Nesn64J+Bow5frbNvYRKLIWYs9G/QT3rNfrXiXi28b0kkr8VGzWMI\n9g==\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n  \"kty\": \"EC\",\n  \"crv\": \"P-521\",\n  \"x\": \"AMpBgJZWDUnIRvf9B5aDLUUc9diaq3wXLnur7-Jozo2NKmq8zO4vFixHmOwaE_jWU-UvaXRpYAQy7c09JBFld0m_\",\n  \"y\": \"AWheSa1tUs9VeZXu1cWlPN9xxJh5sz8E3Q16yfrgn4GjDl-ts29hEoshZiz0b9BPes1-teJeLbxvSSSvxUbNYwj2\",\n  \"d\": \"AMd3aakaVbT1Nx1pC1hGV0ZZ662LQYcE16efcmxeW7p4xi0XuTNrXmS3DVhrdvYv-1u-lT6yqw_rWmYeiGrU897Z\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: P-521 public key (SPKI)",
+    "ref": "openssl pkey -pubout; members from Python cryptography",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMIGbMBAGByqGSM49AgEGBSuBBAAjA4GGAAQAykGAllYNSchG9/0HloMtRRz12Jqr\nfBcue6vv4mjOjY0qarzM7i8WLEeY7BoT+NZT5S9pdGlgBDLtzT0kEWV3Sb8BaF5J\nrW1Sz1V5le7VxaU833HEmHmzPwTdDXrJ+uCfgaMOX62zb2ESiyFmLPRv0E96zX61\n4l4tvG9JJK/FRs1jCPY=\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n  \"kty\": \"EC\",\n  \"crv\": \"P-521\",\n  \"x\": \"AMpBgJZWDUnIRvf9B5aDLUUc9diaq3wXLnur7-Jozo2NKmq8zO4vFixHmOwaE_jWU-UvaXRpYAQy7c09JBFld0m_\",\n  \"y\": \"AWheSa1tUs9VeZXu1cWlPN9xxJh5sz8E3Q16yfrgn4GjDl-ts29hEoshZiz0b9BPes1-teJeLbxvSSSvxUbNYwj2\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-pem: P-521 private JWK",
+    "ref": "openssl genpkey (PKCS #8 DER compared byte for byte); JWK from Python cryptography",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\n  \"kty\": \"EC\",\n  \"crv\": \"P-521\",\n  \"x\": \"AMpBgJZWDUnIRvf9B5aDLUUc9diaq3wXLnur7-Jozo2NKmq8zO4vFixHmOwaE_jWU-UvaXRpYAQy7c09JBFld0m_\",\n  \"y\": \"AWheSa1tUs9VeZXu1cWlPN9xxJh5sz8E3Q16yfrgn4GjDl-ts29hEoshZiz0b9BPes1-teJeLbxvSSSvxUbNYwj2\",\n  \"d\": \"AMd3aakaVbT1Nx1pC1hGV0ZZ662LQYcE16efcmxeW7p4xi0XuTNrXmS3DVhrdvYv-1u-lT6yqw_rWmYeiGrU897Z\"\n}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMIHuAgEAMBAGByqGSM49AgEGBSuBBAAjBIHWMIHTAgEBBEIAx3dpqRpVtPU3HWkL\nWEZXRlnrrYtBhwTXp59ybF5bunjGLRe5M2teZLcNWGt29i/7W76VPrKrD+taZh6I\natTz3tmhgYkDgYYABADKQYCWVg1JyEb3/QeWgy1FHPXYmqt8Fy57q+/iaM6NjSpq\nvMzuLxYsR5jsGhP41lPlL2l0aWAEMu3NPSQRZXdJvwFoXkmtbVLPVXmV7tXFpTzf\nccSYebM/BN0Nesn64J+Bow5frbNvYRKLIWYs9G/QT3rNfrXiXi28b0kkr8VGzWMI\n9g==\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-pem: P-521 public JWK",
+    "ref": "openssl pkey -pubout; JWK from Python cryptography",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\n  \"kty\": \"EC\",\n  \"crv\": \"P-521\",\n  \"x\": \"AMpBgJZWDUnIRvf9B5aDLUUc9diaq3wXLnur7-Jozo2NKmq8zO4vFixHmOwaE_jWU-UvaXRpYAQy7c09JBFld0m_\",\n  \"y\": \"AWheSa1tUs9VeZXu1cWlPN9xxJh5sz8E3Q16yfrgn4GjDl-ts29hEoshZiz0b9BPes1-teJeLbxvSSSvxUbNYwj2\"\n}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMIGbMBAGByqGSM49AgEGBSuBBAAjA4GGAAQAykGAllYNSchG9/0HloMtRRz12Jqr\nfBcue6vv4mjOjY0qarzM7i8WLEeY7BoT+NZT5S9pdGlgBDLtzT0kEWV3Sb8BaF5J\nrW1Sz1V5le7VxaU833HEmHmzPwTdDXrJ+uCfgaMOX62zb2ESiyFmLPRv0E96zX61\n4l4tvG9JJK/FRs1jCPY=\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: secp256k1 private key (PKCS #8)",
+    "ref": "openssl genpkey; members from Python cryptography (EC numbers)",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMIGEAgEAMBAGByqGSM49AgEGBSuBBAAKBG0wawIBAQQgmeLn6aa295cY6AVxonj4\n21qOORntv6kyL95X2agY9GahRANCAAQDX+H1Ecj4VkBSoW9U7qxg1azWcg8LWksP\nej1e+P+rlpSLORp3SD8gF/wZYApwU1G0Ggqlc51JmGU8bD6TEp+7\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n  \"kty\": \"EC\",\n  \"crv\": \"secp256k1\",\n  \"x\": \"A1_h9RHI-FZAUqFvVO6sYNWs1nIPC1pLD3o9Xvj_q5Y\",\n  \"y\": \"lIs5GndIPyAX_BlgCnBTUbQaCqVznUmYZTxsPpMSn7s\",\n  \"d\": \"meLn6aa295cY6AVxonj421qOORntv6kyL95X2agY9GY\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: secp256k1 public key (SPKI)",
+    "ref": "openssl pkey -pubout; members from Python cryptography",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEA1/h9RHI+FZAUqFvVO6sYNWs1nIPC1pL\nD3o9Xvj/q5aUizkad0g/IBf8GWAKcFNRtBoKpXOdSZhlPGw+kxKfuw==\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n  \"kty\": \"EC\",\n  \"crv\": \"secp256k1\",\n  \"x\": \"A1_h9RHI-FZAUqFvVO6sYNWs1nIPC1pLD3o9Xvj_q5Y\",\n  \"y\": \"lIs5GndIPyAX_BlgCnBTUbQaCqVznUmYZTxsPpMSn7s\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-pem: secp256k1 private JWK",
+    "ref": "openssl genpkey (PKCS #8 DER compared byte for byte); JWK from Python cryptography",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\n  \"kty\": \"EC\",\n  \"crv\": \"secp256k1\",\n  \"x\": \"A1_h9RHI-FZAUqFvVO6sYNWs1nIPC1pLD3o9Xvj_q5Y\",\n  \"y\": \"lIs5GndIPyAX_BlgCnBTUbQaCqVznUmYZTxsPpMSn7s\",\n  \"d\": \"meLn6aa295cY6AVxonj421qOORntv6kyL95X2agY9GY\"\n}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMIGEAgEAMBAGByqGSM49AgEGBSuBBAAKBG0wawIBAQQgmeLn6aa295cY6AVxonj4\n21qOORntv6kyL95X2agY9GahRANCAAQDX+H1Ecj4VkBSoW9U7qxg1azWcg8LWksP\nej1e+P+rlpSLORp3SD8gF/wZYApwU1G0Ggqlc51JmGU8bD6TEp+7\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-pem: secp256k1 public JWK",
+    "ref": "openssl pkey -pubout; JWK from Python cryptography",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\n  \"kty\": \"EC\",\n  \"crv\": \"secp256k1\",\n  \"x\": \"A1_h9RHI-FZAUqFvVO6sYNWs1nIPC1pLD3o9Xvj_q5Y\",\n  \"y\": \"lIs5GndIPyAX_BlgCnBTUbQaCqVznUmYZTxsPpMSn7s\"\n}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEA1/h9RHI+FZAUqFvVO6sYNWs1nIPC1pL\nD3o9Xvj/q5aUizkad0g/IBf8GWAKcFNRtBoKpXOdSZhlPGw+kxKfuw==\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: Ed25519 private key (PKCS #8)",
+    "ref": "openssl genpkey; members from Python cryptography (OKP numbers)",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VwBCIEIK/NVrJ6ED4BnI0K0oJ20cCIMepYE6fmbEHRP8fHs8SU\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n  \"kty\": \"OKP\",\n  \"crv\": \"Ed25519\",\n  \"x\": \"zEWbM3D2vSV4S0CqNlx7HPDIQ7Cx6mSHpi3aA8cEUUA\",\n  \"d\": \"r81WsnoQPgGcjQrSgnbRwIgx6lgTp-ZsQdE_x8ezxJQ\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: Ed25519 public key (SPKI)",
+    "ref": "openssl pkey -pubout; members from Python cryptography",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAzEWbM3D2vSV4S0CqNlx7HPDIQ7Cx6mSHpi3aA8cEUUA=\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n  \"kty\": \"OKP\",\n  \"crv\": \"Ed25519\",\n  \"x\": \"zEWbM3D2vSV4S0CqNlx7HPDIQ7Cx6mSHpi3aA8cEUUA\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-pem: Ed25519 private JWK",
+    "ref": "openssl genpkey (PKCS #8 DER compared byte for byte); JWK from Python cryptography",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\n  \"kty\": \"OKP\",\n  \"crv\": \"Ed25519\",\n  \"x\": \"zEWbM3D2vSV4S0CqNlx7HPDIQ7Cx6mSHpi3aA8cEUUA\",\n  \"d\": \"r81WsnoQPgGcjQrSgnbRwIgx6lgTp-ZsQdE_x8ezxJQ\"\n}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VwBCIEIK/NVrJ6ED4BnI0K0oJ20cCIMepYE6fmbEHRP8fHs8SU\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-pem: Ed25519 public JWK",
+    "ref": "openssl pkey -pubout; JWK from Python cryptography",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\n  \"kty\": \"OKP\",\n  \"crv\": \"Ed25519\",\n  \"x\": \"zEWbM3D2vSV4S0CqNlx7HPDIQ7Cx6mSHpi3aA8cEUUA\"\n}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAzEWbM3D2vSV4S0CqNlx7HPDIQ7Cx6mSHpi3aA8cEUUA=\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: X25519 private key (PKCS #8)",
+    "ref": "openssl genpkey; members from Python cryptography (OKP numbers)",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VuBCIEIIAJ3jsk/c5MQcc5nFKlHPdZrooxF/ZuohIVjcPxFUVY\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n  \"kty\": \"OKP\",\n  \"crv\": \"X25519\",\n  \"x\": \"5C7AoI1yePbrQ37lYLi0BgWJtuKhkGe3UJQfQn-sCH4\",\n  \"d\": \"gAneOyT9zkxBxzmcUqUc91muijEX9m6iEhWNw_EVRVg\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: X25519 public key (SPKI)",
+    "ref": "openssl pkey -pubout; members from Python cryptography",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VuAyEA5C7AoI1yePbrQ37lYLi0BgWJtuKhkGe3UJQfQn+sCH4=\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n  \"kty\": \"OKP\",\n  \"crv\": \"X25519\",\n  \"x\": \"5C7AoI1yePbrQ37lYLi0BgWJtuKhkGe3UJQfQn-sCH4\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-pem: X25519 private JWK",
+    "ref": "openssl genpkey (PKCS #8 DER compared byte for byte); JWK from Python cryptography",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\n  \"kty\": \"OKP\",\n  \"crv\": \"X25519\",\n  \"x\": \"5C7AoI1yePbrQ37lYLi0BgWJtuKhkGe3UJQfQn-sCH4\",\n  \"d\": \"gAneOyT9zkxBxzmcUqUc91muijEX9m6iEhWNw_EVRVg\"\n}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VuBCIEIIAJ3jsk/c5MQcc5nFKlHPdZrooxF/ZuohIVjcPxFUVY\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-pem: X25519 public JWK",
+    "ref": "openssl pkey -pubout; JWK from Python cryptography",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\n  \"kty\": \"OKP\",\n  \"crv\": \"X25519\",\n  \"x\": \"5C7AoI1yePbrQ37lYLi0BgWJtuKhkGe3UJQfQn-sCH4\"\n}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VuAyEA5C7AoI1yePbrQ37lYLi0BgWJtuKhkGe3UJQfQn+sCH4=\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: Ed448 private key (PKCS #8)",
+    "ref": "openssl genpkey; members from Python cryptography (OKP numbers)",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMEcCAQAwBQYDK2VxBDsEObFbsB5x+MpDgcFa+H3JaD2Xg2dVfRPGLdfczwQWaBed\nzMh7DOwIW944YXeJx9JmcUJwt3iZuQKnoA==\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n  \"kty\": \"OKP\",\n  \"crv\": \"Ed448\",\n  \"x\": \"53IwfMY9jDk2-bFQU_nGo4wxzlBZejpZ6L2MVF88uWU5m5nzaFRIVy4HYnzSPirYwU8HMoAySvUA\",\n  \"d\": \"sVuwHnH4ykOBwVr4fcloPZeDZ1V9E8Yt19zPBBZoF53MyHsM7Ahb3jhhd4nH0mZxQnC3eJm5Aqeg\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: Ed448 public key (SPKI)",
+    "ref": "openssl pkey -pubout; members from Python cryptography",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMEMwBQYDK2VxAzoA53IwfMY9jDk2+bFQU/nGo4wxzlBZejpZ6L2MVF88uWU5m5nz\naFRIVy4HYnzSPirYwU8HMoAySvUA\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n  \"kty\": \"OKP\",\n  \"crv\": \"Ed448\",\n  \"x\": \"53IwfMY9jDk2-bFQU_nGo4wxzlBZejpZ6L2MVF88uWU5m5nzaFRIVy4HYnzSPirYwU8HMoAySvUA\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-pem: Ed448 private JWK",
+    "ref": "openssl genpkey (PKCS #8 DER compared byte for byte); JWK from Python cryptography",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\n  \"kty\": \"OKP\",\n  \"crv\": \"Ed448\",\n  \"x\": \"53IwfMY9jDk2-bFQU_nGo4wxzlBZejpZ6L2MVF88uWU5m5nzaFRIVy4HYnzSPirYwU8HMoAySvUA\",\n  \"d\": \"sVuwHnH4ykOBwVr4fcloPZeDZ1V9E8Yt19zPBBZoF53MyHsM7Ahb3jhhd4nH0mZxQnC3eJm5Aqeg\"\n}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMEcCAQAwBQYDK2VxBDsEObFbsB5x+MpDgcFa+H3JaD2Xg2dVfRPGLdfczwQWaBed\nzMh7DOwIW944YXeJx9JmcUJwt3iZuQKnoA==\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-pem: Ed448 public JWK",
+    "ref": "openssl pkey -pubout; JWK from Python cryptography",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\n  \"kty\": \"OKP\",\n  \"crv\": \"Ed448\",\n  \"x\": \"53IwfMY9jDk2-bFQU_nGo4wxzlBZejpZ6L2MVF88uWU5m5nzaFRIVy4HYnzSPirYwU8HMoAySvUA\"\n}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMEMwBQYDK2VxAzoA53IwfMY9jDk2+bFQU/nGo4wxzlBZejpZ6L2MVF88uWU5m5nz\naFRIVy4HYnzSPirYwU8HMoAySvUA\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: X448 private key (PKCS #8)",
+    "ref": "openssl genpkey; members from Python cryptography (OKP numbers)",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMEYCAQAwBQYDK2VvBDoEOKCnjnahOD2LnTXUvJ5yl9AWXK5oQarOOpPLh7tYPJ0D\niryWRIW8sPiA0If3wqatsu1SvRQyFMKe\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n  \"kty\": \"OKP\",\n  \"crv\": \"X448\",\n  \"x\": \"fQLQQx2ZDf8VHn3owh_PhCc1vo1ErxzzAP4EF6VD76Op99Wv1b8qu1HznbeA2pCLXxuuuYPpbcc\",\n  \"d\": \"oKeOdqE4PYudNdS8nnKX0BZcrmhBqs46k8uHu1g8nQOKvJZEhbyw-IDQh_fCpq2y7VK9FDIUwp4\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: X448 public key (SPKI)",
+    "ref": "openssl pkey -pubout; members from Python cryptography",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMEIwBQYDK2VvAzkAfQLQQx2ZDf8VHn3owh/PhCc1vo1ErxzzAP4EF6VD76Op99Wv\n1b8qu1HznbeA2pCLXxuuuYPpbcc=\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n  \"kty\": \"OKP\",\n  \"crv\": \"X448\",\n  \"x\": \"fQLQQx2ZDf8VHn3owh_PhCc1vo1ErxzzAP4EF6VD76Op99Wv1b8qu1HznbeA2pCLXxuuuYPpbcc\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-pem: X448 private JWK",
+    "ref": "openssl genpkey (PKCS #8 DER compared byte for byte); JWK from Python cryptography",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\n  \"kty\": \"OKP\",\n  \"crv\": \"X448\",\n  \"x\": \"fQLQQx2ZDf8VHn3owh_PhCc1vo1ErxzzAP4EF6VD76Op99Wv1b8qu1HznbeA2pCLXxuuuYPpbcc\",\n  \"d\": \"oKeOdqE4PYudNdS8nnKX0BZcrmhBqs46k8uHu1g8nQOKvJZEhbyw-IDQh_fCpq2y7VK9FDIUwp4\"\n}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMEYCAQAwBQYDK2VvBDoEOKCnjnahOD2LnTXUvJ5yl9AWXK5oQarOOpPLh7tYPJ0D\niryWRIW8sPiA0If3wqatsu1SvRQyFMKe\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-pem: X448 public JWK",
+    "ref": "openssl pkey -pubout; JWK from Python cryptography",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\n  \"kty\": \"OKP\",\n  \"crv\": \"X448\",\n  \"x\": \"fQLQQx2ZDf8VHn3owh_PhCc1vo1ErxzzAP4EF6VD76Op99Wv1b8qu1HznbeA2pCLXxuuuYPpbcc\"\n}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMEIwBQYDK2VvAzkAfQLQQx2ZDf8VHn3owh/PhCc1vo1ErxzzAP4EF6VD76Op99Wv\n1b8qu1HznbeA2pCLXxuuuYPpbcc=\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: indent 0 is compact JSON",
+    "ref": "openssl pkey -pubout; json.dumps(separators)",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEzQ4LmoZPMnpTPCtFxNaNBE/LIYuN\nQ83IORiNC1sfdrcVLKOo/yUMjvijdBVvBKN0A6ibl6DF5njLyQAOOyufOg==\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"kty\":\"EC\",\"crv\":\"P-256\",\"x\":\"zQ4LmoZPMnpTPCtFxNaNBE_LIYuNQ83IORiNC1sfdrc\",\"y\":\"FSyjqP8lDI74o3QVbwSjdAOom5egxeZ4y8kADjsrnzo\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: indent 4",
+    "ref": "json.dumps(indent=4)",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEzQ4LmoZPMnpTPCtFxNaNBE/LIYuN\nQ83IORiNC1sfdrcVLKOo/yUMjvijdBVvBKN0A6ibl6DF5njLyQAOOyufOg==\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n    \"kty\": \"EC\",\n    \"crv\": \"P-256\",\n    \"x\": \"zQ4LmoZPMnpTPCtFxNaNBE_LIYuNQ83IORiNC1sfdrc\",\n    \"y\": \"FSyjqP8lDI74o3QVbwSjdAOom5egxeZ4y8kADjsrnzo\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: RSA PRIVATE KEY (PKCS #1)",
+    "ref": "openssl rsa -traditional",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgQDAaLWe4BA/JdTtNO8GjrEcKybapvdmd5W8fHNjtHYTJjSPtbJX\nvTFBXjMh3vFOlm0Y5+QHcTgHIFD3qzY7Lq1eimAbeEuTgjs3j3b5YKRm5GH3+WY6\n5mBS8vrvJWooyaV3GoNEOtN4eKzsLkCTRJWIaVah75KA7QrF3pj/QOwCrQIDAQAB\nAoGARvjYtYfUtlZQGkdCO9r6fXd1V4XrEALgWqxVK9vvCdU34iKVbEO/HWuP1NiV\njfVyvJMcy5n5nrdO5mxjDqWDEQ2wEBdEXKiPVKxPdOWL1lNuZE9JdB/zxF2fVMfK\n2XAwdttQvYseqvaObKj9E++kz7zvIWxeASELbqfWs9fzm4kCQQD3IOLsivGeU9YM\n0/9ChvSw9ey0fxs6pRzfJIeBpmNvcUUzHZRf2MvA0CwmumOMc+Sn/TEM3VxfVzeV\nWhqZGiO/AkEAx1DzYT1nO9I6/PLP3+GNEIgGdvlt5OAfzYYbp+t9u4aobaOQriOt\niACjD8l8Z1KXulRleZkw2Q2YHwqKRkWEkwJACkOhaTW0J2FQCKRde8PjMd5lAHIv\nDVaCRnpb7nScuKo5t4/I89orTEzZKJqhO9osaxXHDcO77HHQ6zEc3bMKPQJAFcs2\nMYXDSfk81fe+3x4MjKgy/MNdTs9q6tAlKgFH6D9bH1HpOgFQsjRPoCRJ5ApV6Nvd\nlKQ5gSJJZeuDHxfu3QJAXrvObhV/UioVEFLwjpSYnEVRbwIBC8cgwGQbtxMkJ5fF\nQWknC5EvIGGmPowRr65cydG/XBqc+/HIy+HFrCoCMg==\n-----END RSA PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n  \"kty\": \"RSA\",\n  \"n\": \"wGi1nuAQPyXU7TTvBo6xHCsm2qb3ZneVvHxzY7R2EyY0j7WyV70xQV4zId7xTpZtGOfkB3E4ByBQ96s2Oy6tXopgG3hLk4I7N492-WCkZuRh9_lmOuZgUvL67yVqKMmldxqDRDrTeHis7C5Ak0SViGlWoe-SgO0Kxd6Y_0DsAq0\",\n  \"e\": \"AQAB\",\n  \"d\": \"RvjYtYfUtlZQGkdCO9r6fXd1V4XrEALgWqxVK9vvCdU34iKVbEO_HWuP1NiVjfVyvJMcy5n5nrdO5mxjDqWDEQ2wEBdEXKiPVKxPdOWL1lNuZE9JdB_zxF2fVMfK2XAwdttQvYseqvaObKj9E--kz7zvIWxeASELbqfWs9fzm4k\",\n  \"p\": \"9yDi7IrxnlPWDNP_Qob0sPXstH8bOqUc3ySHgaZjb3FFMx2UX9jLwNAsJrpjjHPkp_0xDN1cX1c3lVoamRojvw\",\n  \"q\": \"x1DzYT1nO9I6_PLP3-GNEIgGdvlt5OAfzYYbp-t9u4aobaOQriOtiACjD8l8Z1KXulRleZkw2Q2YHwqKRkWEkw\",\n  \"dp\": \"CkOhaTW0J2FQCKRde8PjMd5lAHIvDVaCRnpb7nScuKo5t4_I89orTEzZKJqhO9osaxXHDcO77HHQ6zEc3bMKPQ\",\n  \"dq\": \"Fcs2MYXDSfk81fe-3x4MjKgy_MNdTs9q6tAlKgFH6D9bH1HpOgFQsjRPoCRJ5ApV6NvdlKQ5gSJJZeuDHxfu3Q\",\n  \"qi\": \"XrvObhV_UioVEFLwjpSYnEVRbwIBC8cgwGQbtxMkJ5fFQWknC5EvIGGmPowRr65cydG_XBqc-_HIy-HFrCoCMg\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: RSA PUBLIC KEY (PKCS #1)",
+    "ref": "openssl rsa -pubin -RSAPublicKey_out",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN RSA PUBLIC KEY-----\nMIGJAoGBAMBotZ7gED8l1O007waOsRwrJtqm92Z3lbx8c2O0dhMmNI+1sle9MUFe\nMyHe8U6WbRjn5AdxOAcgUPerNjsurV6KYBt4S5OCOzePdvlgpGbkYff5ZjrmYFLy\n+u8laijJpXcag0Q603h4rOwuQJNElYhpVqHvkoDtCsXemP9A7AKtAgMBAAE=\n-----END RSA PUBLIC KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n  \"kty\": \"RSA\",\n  \"n\": \"wGi1nuAQPyXU7TTvBo6xHCsm2qb3ZneVvHxzY7R2EyY0j7WyV70xQV4zId7xTpZtGOfkB3E4ByBQ96s2Oy6tXopgG3hLk4I7N492-WCkZuRh9_lmOuZgUvL67yVqKMmldxqDRDrTeHis7C5Ak0SViGlWoe-SgO0Kxd6Y_0DsAq0\",\n  \"e\": \"AQAB\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: EC PRIVATE KEY (SEC 1) P-256",
+    "ref": "openssl ec",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIEzAud4mR2n1EWmZw4Ksnt+HflKfx4JrcD8u33bJ+4yJoAoGCCqGSM49\nAwEHoUQDQgAEzQ4LmoZPMnpTPCtFxNaNBE/LIYuNQ83IORiNC1sfdrcVLKOo/yUM\njvijdBVvBKN0A6ibl6DF5njLyQAOOyufOg==\n-----END EC PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n  \"kty\": \"EC\",\n  \"crv\": \"P-256\",\n  \"x\": \"zQ4LmoZPMnpTPCtFxNaNBE_LIYuNQ83IORiNC1sfdrc\",\n  \"y\": \"FSyjqP8lDI74o3QVbwSjdAOom5egxeZ4y8kADjsrnzo\",\n  \"d\": \"TMC53iZHafURaZnDgqye34d-Up_HgmtwPy7fdsn7jIk\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: EC PRIVATE KEY (SEC 1) P-521",
+    "ref": "openssl ec",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN EC PRIVATE KEY-----\nMIHcAgEBBEIAx3dpqRpVtPU3HWkLWEZXRlnrrYtBhwTXp59ybF5bunjGLRe5M2te\nZLcNWGt29i/7W76VPrKrD+taZh6IatTz3tmgBwYFK4EEACOhgYkDgYYABADKQYCW\nVg1JyEb3/QeWgy1FHPXYmqt8Fy57q+/iaM6NjSpqvMzuLxYsR5jsGhP41lPlL2l0\naWAEMu3NPSQRZXdJvwFoXkmtbVLPVXmV7tXFpTzfccSYebM/BN0Nesn64J+Bow5f\nrbNvYRKLIWYs9G/QT3rNfrXiXi28b0kkr8VGzWMI9g==\n-----END EC PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n  \"kty\": \"EC\",\n  \"crv\": \"P-521\",\n  \"x\": \"AMpBgJZWDUnIRvf9B5aDLUUc9diaq3wXLnur7-Jozo2NKmq8zO4vFixHmOwaE_jWU-UvaXRpYAQy7c09JBFld0m_\",\n  \"y\": \"AWheSa1tUs9VeZXu1cWlPN9xxJh5sz8E3Q16yfrgn4GjDl-ts29hEoshZiz0b9BPes1-teJeLbxvSSSvxUbNYwj2\",\n  \"d\": \"AMd3aakaVbT1Nx1pC1hGV0ZZ662LQYcE16efcmxeW7p4xi0XuTNrXmS3DVhrdvYv-1u-lT6yqw_rWmYeiGrU897Z\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: EC PARAMETERS block next to the key is skipped",
+    "ref": "openssl ecparam -name secp384r1 -genkey; members from Python cryptography",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN EC PARAMETERS-----\nBgUrgQQAIg==\n-----END EC PARAMETERS-----\n-----BEGIN EC PRIVATE KEY-----\nMIGkAgEBBDAu459VazG0zvsUrq21wQMVAlWQxcwBbwNmgrbWybz3IJW2okqJmjkI\nILd6EvHmqIqgBwYFK4EEACKhZANiAAR1yY4RffKEkGcB3480bmTKWLzkEl2mEZVA\nJCxydSzEBNs1opKGdMHqlgwRNixT9m+x5TPrlY7Int0HQpWEzB4k3ZqaZ8gS4nOh\nSmgbhEjhbX4k8BchcXMskDPCL9CALQY=\n-----END EC PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n  \"kty\": \"EC\",\n  \"crv\": \"P-384\",\n  \"x\": \"dcmOEX3yhJBnAd-PNG5kyli85BJdphGVQCQscnUsxATbNaKShnTB6pYMETYsU_Zv\",\n  \"y\": \"seUz65WOyJ7dB0KVhMweJN2ammfIEuJzoUpoG4RI4W1-JPAXIXFzLJAzwi_QgC0G\",\n  \"d\": \"LuOfVWsxtM77FK6ttcEDFQJVkMXMAW8DZoK21sm89yCVtqJKiZo5CCC3ehLx5qiK\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: SEC 1 key without the public key (x and y derived)",
+    "ref": "DER written by hand from RFC 5915; openssl ec -pubout gives the same public key; members from Python cryptography",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN EC PRIVATE KEY-----\nMDECAQEEIEzAud4mR2n1EWmZw4Ksnt+HflKfx4JrcD8u33bJ+4yJoAoGCCqGSM49\nAwEH\n-----END EC PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n  \"kty\": \"EC\",\n  \"crv\": \"P-256\",\n  \"x\": \"zQ4LmoZPMnpTPCtFxNaNBE_LIYuNQ83IORiNC1sfdrc\",\n  \"y\": \"FSyjqP8lDI74o3QVbwSjdAOom5egxeZ4y8kADjsrnzo\",\n  \"d\": \"TMC53iZHafURaZnDgqye34d-Up_HgmtwPy7fdsn7jIk\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: the key of a RSA certificate",
+    "ref": "openssl req -x509; openssl x509 -pubkey; members from Python cryptography",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN CERTIFICATE-----\nMIIGNzCCBR+gAwIBAgIMAMD/7hI0VniQq83vMA0GCSqGSIb3DQEBCwUAMIGZMQsw\nCQYDVQQGEwJERTEQMA4GA1UECAwHQmF2YXJpYTEPMA0GA1UEBwwGTXVuaWNoMRgw\nFgYDVQQKDA9Gb3JnZSBUZXN0IEdtYkgxETAPBgNVBAsMCFNlY3VyaXR5MRgwFgYD\nVQQDDA93d3cuZXhhbXBsZS5vcmcxIDAeBgkqhkiG9w0BCQEWEWFkbWluQGV4YW1w\nbGUub3JnMB4XDTI2MTExMTIwMjg1MFoXDTM2MTEwODIwMjg1MFowgZkxCzAJBgNV\nBAYTAkRFMRAwDgYDVQQIDAdCYXZhcmlhMQ8wDQYDVQQHDAZNdW5pY2gxGDAWBgNV\nBAoMD0ZvcmdlIFRlc3QgR21iSDERMA8GA1UECwwIU2VjdXJpdHkxGDAWBgNVBAMM\nD3d3dy5leGFtcGxlLm9yZzEgMB4GCSqGSIb3DQEJARYRYWRtaW5AZXhhbXBsZS5v\ncmcwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCit1qLyC0xZPF5HVkM\nR/hVfhiz0asBs+fwnoZMZcigA+JsibBwEDqjfph46rV63p08En0LQxksHb5BbbLw\n25HKZBkOC0hy0JL0s95Yr0VQ3fqXfQinMrZCSAuHR4ki+OjeYH/3GlPaq5QVuaOb\ntuw1grg0LHwFeNnCWYJBoVLLz8Lz07Sl+Fj3aeG+NH0jCl4IuY1u40QkwD8be2D1\napBbJG5CS3TlSeKiOn2z3KONY73/kcZ5a4jT3a5pc/oCcYLn0DG106Co6VwhRHJZ\npWC9hAbQGkjWoWxJM3oeGtTpjMEobBbCqdii50IFnxWEACGSa7AVVYsR2+fEYyGd\n1ajbAgMBAAGjggJ7MIICdzASBgNVHRMBAf8ECDAGAQH/AgEDMA4GA1UdDwEB/wQE\nAwIBhjAxBgNVHSUEKjAoBggrBgEFBQcDAQYIKwYBBQUHAwIGCCsGAQUFBwMDBggr\nBgEFBQcDBDCBogYDVR0RBIGaMIGXgg93d3cuZXhhbXBsZS5vcmeCDSouZXhhbXBs\nZS5vcmeHBMAAAgGHECABDbgAAAAAAAAAAAAAAAGBEWFkbWluQGV4YW1wbGUub3Jn\nhhZodHRwczovL2V4YW1wbGUub3JnL2lkiAMqAwSkLTArMRcwFQYDVQQDDA5EaXJl\nY3RvcnkgTmFtZTEQMA4GA1UECgwHRGlyIE9yZzAdBgNVHQ4EFgQU4XHmozYHxUAl\nxfxyrAr4FbVisSIwHwYDVR0jBBgwFoAU4XHmozYHxUAlxfxyrAr4FbVisSIwVAYD\nVR0fBE0wSzAjoCGgH4YdaHR0cDovL2NybC5leGFtcGxlLm9yZy9jYS5jcmwwJKAi\noCCGHmh0dHA6Ly9jcmwyLmV4YW1wbGUub3JnL2NhLmNybDBdBggrBgEFBQcBAQRR\nME8wIwYIKwYBBQUHMAGGF2h0dHA6Ly9vY3NwLmV4YW1wbGUub3JnMCgGCCsGAQUF\nBzAChhxodHRwOi8vY2EuZXhhbXBsZS5vcmcvY2EuY3J0MEIGA1UdIAQ7MDkwCAYG\nZ4EMAQIBMC0GBSoDBAUGMCQwIgYIKwYBBQUHAgEWFmh0dHA6Ly9leGFtcGxlLm9y\nZy9jcHMwKAYDVR0eBCEwH6APMA2CC2V4YW1wbGUub3JnoQwwCocICgAAAP8AAAAw\nFgYEKgMEBQQODAxjdXN0b20gdmFsdWUwDQYJKoZIhvcNAQELBQADggEBAH9kwfTl\nXSKpBquhStfFPvPae2fsI0dXHGKSxhvxgOTUuEnwpRgL4X7Jx3frPAtJQ/gmb48v\nXSo5ETmFAJx/zlWTwcmPeMpauiZcD0S5EHVM/JGAduisU7P16Qj2x+RXOd3yVQoG\nlODlMl2LMZeeqyJ73J6Hqgc+mR8/oPLWss/BgBUg30XQ/MxEepiX3QCOGpWYGB+c\npZa49Z1u8Ohmz8UDXEdZqHIlZ8fvahhlsecj3gt/va5e8ZzO4tdgO3apruH1Lrkw\n/1Aph4hikH+7XIVjpaEAR3G+8dObexyoUJNwSM3s86uRFh6NpvNStPNidB0nZndU\nZVSodyoIhynd5l0=\n-----END CERTIFICATE-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n  \"kty\": \"RSA\",\n  \"n\": \"ordai8gtMWTxeR1ZDEf4VX4Ys9GrAbPn8J6GTGXIoAPibImwcBA6o36YeOq1et6dPBJ9C0MZLB2-QW2y8NuRymQZDgtIctCS9LPeWK9FUN36l30IpzK2QkgLh0eJIvjo3mB_9xpT2quUFbmjm7bsNYK4NCx8BXjZwlmCQaFSy8_C89O0pfhY92nhvjR9IwpeCLmNbuNEJMA_G3tg9WqQWyRuQkt05Uniojp9s9yjjWO9_5HGeWuI092uaXP6AnGC59AxtdOgqOlcIURyWaVgvYQG0BpI1qFsSTN6HhrU6YzBKGwWwqnYoudCBZ8VhAAhkmuwFVWLEdvnxGMhndWo2w\",\n  \"e\": \"AQAB\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: the key of a Ed25519 certificate",
+    "ref": "openssl req -x509; openssl x509 -pubkey; members from Python cryptography",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN CERTIFICATE-----\nMIIBQjCB9aADAgECAhR4kCGfIIzsIYv1ql1+CXiS3rw73zAFBgMrZXAwFzEVMBMG\nA1UEAwwMZWQyNTUxOSB0ZXN0MB4XDTI2MTExMTIwMjk1NFoXDTI2MTIxMTIwMjk1\nNFowFzEVMBMGA1UEAwwMZWQyNTUxOSB0ZXN0MCowBQYDK2VwAyEAJVOBO59x+X5W\nqj4uYXtte2I/wjrQvynCA3KtdCwEaAujUzBRMB0GA1UdDgQWBBT1qRns0EZqpaWz\nmKoyaAl+En0YNDAfBgNVHSMEGDAWgBT1qRns0EZqpaWzmKoyaAl+En0YNDAPBgNV\nHRMBAf8EBTADAQH/MAUGAytlcANBAJilmZk3BdRvZSr64Mlgkocuqw4dUykQawRD\nbO4K5eLxww4xRo5ZbA80um5MvonZDaoQT0cnjwTipzADOhjvPgs=\n-----END CERTIFICATE-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n  \"kty\": \"OKP\",\n  \"crv\": \"Ed25519\",\n  \"x\": \"JVOBO59x-X5Wqj4uYXtte2I_wjrQvynCA3KtdCwEaAs\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: the key of a P-384 certificate",
+    "ref": "openssl req -x509; openssl x509 -pubkey; members from Python cryptography",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN CERTIFICATE-----\nMIICGzCCAaCgAwIBAgIUdfjjfRyrU5WOT1DCjIXJngS+dd8wCgYIKoZIzj0EAwMw\nNzELMAkGA1UEBhMCVVMxEDAOBgNVBAoMB0VDIFRlc3QxFjAUBgNVBAMMDWVjMzg0\nLmV4YW1wbGUwHhcNMjYxMTExMjAyOTU0WhcNMjcxMTExMjAyOTU0WjA3MQswCQYD\nVQQGEwJVUzEQMA4GA1UECgwHRUMgVGVzdDEWMBQGA1UEAwwNZWMzODQuZXhhbXBs\nZTB2MBAGByqGSM49AgEGBSuBBAAiA2IABEhThh3UDhateCK5Q9f4gOos0lVFi05D\npbA3xGpI18whxVR6sQ4LOSCN+pPrKMFDQVOt8M6AUx77EDpEfkwTgH5SC756HCsE\nUBcdM1MQ6EY8SG3eh75PhazgQDnswEhYSqNtMGswHQYDVR0OBBYEFKFHNCffnYMR\nxz10oZXhITp8VzdjMB8GA1UdIwQYMBaAFKFHNCffnYMRxz10oZXhITp8VzdjMA8G\nA1UdEwEB/wQFMAMBAf8wGAYDVR0RBBEwD4INZWMzODQuZXhhbXBsZTAKBggqhkjO\nPQQDAwNpADBmAjEArLqbtbsVP/I8bHW2D+S4GRSS7+bpHdtSPfIWRWpiuwp93R2a\nGufgcJdrqZYxSYQNAjEAwcfXwRL0A3nGB/ZI9YcWYW4epmx8P42rUa0PJnWbNjqo\nUS1ONM1XWT8pXQYuPZFD\n-----END CERTIFICATE-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n  \"kty\": \"EC\",\n  \"crv\": \"P-384\",\n  \"x\": \"SFOGHdQOFq14IrlD1_iA6izSVUWLTkOlsDfEakjXzCHFVHqxDgs5II36k-sowUNB\",\n  \"y\": \"U63wzoBTHvsQOkR-TBOAflILvnocKwRQFx0zUxDoRjxIbd6Hvk-FrOBAOezASFhK\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: two keys give an array",
+    "ref": "two openssl keys",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEzQ4LmoZPMnpTPCtFxNaNBE/LIYuN\nQ83IORiNC1sfdrcVLKOo/yUMjvijdBVvBKN0A6ibl6DF5njLyQAOOyufOg==\n-----END PUBLIC KEY-----\n-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAzEWbM3D2vSV4S0CqNlx7HPDIQ7Cx6mSHpi3aA8cEUUA=\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[{\"kty\":\"EC\",\"crv\":\"P-256\",\"x\":\"zQ4LmoZPMnpTPCtFxNaNBE_LIYuNQ83IORiNC1sfdrc\",\"y\":\"FSyjqP8lDI74o3QVbwSjdAOom5egxeZ4y8kADjsrnzo\"},{\"kty\":\"OKP\",\"crv\":\"Ed25519\",\"x\":\"zEWbM3D2vSV4S0CqNlx7HPDIQ7Cx6mSHpi3aA8cEUUA\"}]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: RFC 8037 appendix A.1 Ed25519 private key",
+    "ref": "RFC 8037 A.1 (d and x); PEM from Python cryptography",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VwBCIEIJ1hsZ3v/VpguoRK9JLsLMREScVpezJpGXA7rAMcrn9g\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"kty\":\"OKP\",\"crv\":\"Ed25519\",\"x\":\"11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo\",\"d\":\"nWGxne_9WmC6hEr0kuwsxERJxWl7MmkZcDusAxyuf2A\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-pem: RFC 8037 appendix A.2 Ed25519 public key",
+    "ref": "RFC 8037 A.2 (x); PEM from Python cryptography",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\"kty\": \"OKP\", \"crv\": \"Ed25519\", \"x\": \"11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA11qYAYKxCrfVS/7TyWQHOg7hcvPapiMlrwIaaPcHURo=\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-pem: RFC 8037 appendix A.6 X25519 public key",
+    "ref": "RFC 8037 A.6 (x); PEM from Python cryptography",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\"kty\": \"OKP\", \"crv\": \"X25519\", \"x\": \"hSDwCYkwp1R0i33ctD73Wg2_Og0mOBr066SpjqqbTmo\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VuAyEAhSDwCYkwp1R0i33ctD73Wg2/Og0mOBr066SpjqqbTmo=\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: RFC 7517 appendix A.2 EC P-256 private key",
+    "ref": "RFC 7517 A.2 (checked: d times G is (x, y)); PEM from openssl pkcs8 -topk8",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQg870MB6gfuTJ4HtUn\nUvYMyJpr5eUZNP4Bk43bVdj3eAGhRANCAAQwoEJM0hwpRIOKLXXJKzfnbqINnwCJ\nOjtO7oo8Cq/sPuBLZekkVtmIi1Kzeb371R7oae8fD8ZbZllpW2zOCBcj\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"kty\":\"EC\",\"crv\":\"P-256\",\"x\":\"MKBCTNIcKUSDii11ySs3526iDZ8AiTo7Tu6KPAqv7D4\",\"y\":\"4Etl6SRW2YiLUrN5vfvVHuhp7x8PxltmWWlbbM4IFyM\",\"d\":\"870MB6gfuTJ4HtUnUvYMyJpr5eUZNP4Bk43bVdj3eAE\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-pem: RFC 7517 appendix A.2 EC P-256 private key",
+    "ref": "RFC 7517 A.2; PKCS #8 from openssl pkcs8 -topk8",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\"kty\": \"EC\", \"crv\": \"P-256\", \"x\": \"MKBCTNIcKUSDii11ySs3526iDZ8AiTo7Tu6KPAqv7D4\", \"y\": \"4Etl6SRW2YiLUrN5vfvVHuhp7x8PxltmWWlbbM4IFyM\", \"d\": \"870MB6gfuTJ4HtUnUvYMyJpr5eUZNP4Bk43bVdj3eAE\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQg870MB6gfuTJ4HtUn\nUvYMyJpr5eUZNP4Bk43bVdj3eAGhRANCAAQwoEJM0hwpRIOKLXXJKzfnbqINnwCJ\nOjtO7oo8Cq/sPuBLZekkVtmIi1Kzeb371R7oae8fD8ZbZllpW2zOCBcj\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-pem: RFC 7517 appendix A.1 EC P-256 public key",
+    "ref": "RFC 7517 A.1; SPKI from openssl pkey -pubout",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\"kty\": \"EC\", \"crv\": \"P-256\", \"x\": \"MKBCTNIcKUSDii11ySs3526iDZ8AiTo7Tu6KPAqv7D4\", \"y\": \"4Etl6SRW2YiLUrN5vfvVHuhp7x8PxltmWWlbbM4IFyM\", \"use\": \"enc\", \"kid\": \"1\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEMKBCTNIcKUSDii11ySs3526iDZ8A\niTo7Tu6KPAqv7D7gS2XpJFbZiItSs3m9+9Ue6GnvHw/GW2ZZaVtszggXIw==\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-pem: a JWK Set gives one block per key",
+    "ref": "two openssl public keys",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\"keys\": [{\"kty\": \"EC\", \"crv\": \"P-256\", \"x\": \"zQ4LmoZPMnpTPCtFxNaNBE_LIYuNQ83IORiNC1sfdrc\", \"y\": \"FSyjqP8lDI74o3QVbwSjdAOom5egxeZ4y8kADjsrnzo\"}, {\"kty\": \"OKP\", \"crv\": \"Ed25519\", \"x\": \"zEWbM3D2vSV4S0CqNlx7HPDIQ7Cx6mSHpi3aA8cEUUA\"}]}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEzQ4LmoZPMnpTPCtFxNaNBE/LIYuN\nQ83IORiNC1sfdrcVLKOo/yUMjvijdBVvBKN0A6ibl6DF5njLyQAOOyufOg==\n-----END PUBLIC KEY-----\n-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAzEWbM3D2vSV4S0CqNlx7HPDIQ7Cx6mSHpi3aA8cEUUA=\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-pem: an array of JWKs",
+    "ref": "two openssl public keys",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "[{\"kty\": \"EC\", \"crv\": \"P-256\", \"x\": \"zQ4LmoZPMnpTPCtFxNaNBE_LIYuNQ83IORiNC1sfdrc\", \"y\": \"FSyjqP8lDI74o3QVbwSjdAOom5egxeZ4y8kADjsrnzo\"}, {\"kty\": \"OKP\", \"crv\": \"Ed25519\", \"x\": \"zEWbM3D2vSV4S0CqNlx7HPDIQ7Cx6mSHpi3aA8cEUUA\"}]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEzQ4LmoZPMnpTPCtFxNaNBE/LIYuN\nQ83IORiNC1sfdrcVLKOo/yUMjvijdBVvBKN0A6ibl6DF5njLyQAOOyufOg==\n-----END PUBLIC KEY-----\n-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAzEWbM3D2vSV4S0CqNlx7HPDIQ7Cx6mSHpi3aA8cEUUA=\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-pem: extra members (use, kid, alg) are ignored",
+    "ref": "RSA public key from openssl",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\"kty\": \"RSA\", \"n\": \"wGi1nuAQPyXU7TTvBo6xHCsm2qb3ZneVvHxzY7R2EyY0j7WyV70xQV4zId7xTpZtGOfkB3E4ByBQ96s2Oy6tXopgG3hLk4I7N492-WCkZuRh9_lmOuZgUvL67yVqKMmldxqDRDrTeHis7C5Ak0SViGlWoe-SgO0Kxd6Y_0DsAq0\", \"e\": \"AQAB\", \"use\": \"sig\", \"kid\": \"k1\", \"alg\": \"RS256\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDAaLWe4BA/JdTtNO8GjrEcKyba\npvdmd5W8fHNjtHYTJjSPtbJXvTFBXjMh3vFOlm0Y5+QHcTgHIFD3qzY7Lq1eimAb\neEuTgjs3j3b5YKRm5GH3+WY65mBS8vrvJWooyaV3GoNEOtN4eKzsLkCTRJWIaVah\n75KA7QrF3pj/QOwCrQIDAQAB\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-pem: empty input",
+    "ref": "no PEM block",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "from-pem: text without a PEM block",
+    "ref": "no PEM block",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "hello world",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "from-pem: a PUBLIC KEY block that is not DER",
+    "ref": "Base64 of \"hello\"",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN PUBLIC KEY-----\naGVsbG8=\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "from-pem: a block that is not closed",
+    "ref": "truncated PEM",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEzQ4LmoZPMnpTPCtFxNaNBE/LIYuN\nQ83IORiNC1sfdrcVLKOo/yUMjvijdBVvBKN0A6ibl6DF5njLyQAOOyufOg==\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "from-pem: a PEM label that is not a key",
+    "ref": "openssl req -new",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN CERTIFICATE REQUEST-----\nMIIDKDCCAhACAQAwOTELMAkGA1UEBhMCR0IxEDAOBgNVBAoMB0NTUiBPcmcxGDAW\nBgNVBAMMD2Nzci5leGFtcGxlLm9yZzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC\nAQoCggEBAKK3WovILTFk8XkdWQxH+FV+GLPRqwGz5/CehkxlyKAD4myJsHAQOqN+\nmHjqtXrenTwSfQtDGSwdvkFtsvDbkcpkGQ4LSHLQkvSz3livRVDd+pd9CKcytkJI\nC4dHiSL46N5gf/caU9qrlBW5o5u27DWCuDQsfAV42cJZgkGhUsvPwvPTtKX4WPdp\n4b40fSMKXgi5jW7jRCTAPxt7YPVqkFskbkJLdOVJ4qI6fbPco41jvf+RxnlriNPd\nrmlz+gJxgufQMbXToKjpXCFEclmlYL2EBtAaSNahbEkzeh4a1OmMwShsFsKp2KLn\nQgWfFYQAIZJrsBVVixHb58RjIZ3VqNsCAwEAAaCBqTAYBgkqhkiG9w0BCQIxCwwJ\nU29tZSBOYW1lMBgGCSqGSIb3DQEJBzELDAlzZWNyZXQxMjMwcwYJKoZIhvcNAQkO\nMWYwZDA1BgNVHREELjAsgg9jc3IuZXhhbXBsZS5vcmeCE3d3dy5jc3IuZXhhbXBs\nZS5vcmeHBMYzZAcwCwYDVR0PBAQDAgWgMBMGA1UdJQQMMAoGCCsGAQUFBwMBMAkG\nA1UdEwQCMAAwDQYJKoZIhvcNAQELBQADggEBADMGTAjgFO24plzbbr0tTdLBzQEw\nz2T8lLCUpeJ8ye174dT6AnewbQnDSn6rqeEJW9G4txg1KlLK2s71QgjGVeyXfstb\n5UPdZZzLT6b0HjZI7//7jDVBwh50HImbRi5OBMYPbBD8s7adDzib493Gus68GuiB\naWPeOBp6PzLDkqaGobNH2Y23FMjwZDdi6Nb4AmWcc9O4tKnJO5gerqb/NPSOpz9k\n4SnWywacoasAXw0LCEIuYpMxBgKYZy0kSPS7JSyfeYLwM0Xg/M3KmY/zC2TqGT56\nxZD+/xQk2kcEhf3axsCeEe479uFhbL+GG/ldBdtSUGV/AxEJ1kNcZD1myXw=\n-----END CERTIFICATE REQUEST-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "from-pem: an encrypted RSA PRIVATE KEY",
+    "ref": "openssl rsa -traditional -aes128 (Proc-Type header)",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN RSA PRIVATE KEY-----\nProc-Type: 4,ENCRYPTED\nDEK-Info: AES-128-CBC,E9F394151B155EEAD3685BFD77C0ED61\n\no+wGvTZYkm9PbW6XNa3jvB8PnOc+/V3I105GxscmRR6a0EyniicOPZ5J0RRzFEcJ\nBhBl2m/XXeXLtZxoFVpf2w1QVm09SEZ13qvpQJrjF6Qwg7q+DBs1Sq6JuyaRY43Z\nXLBQWz/E5zdFZlhpzkuqwIH+4L2RK0XmOeS7xSnttCzFTb78pZe1VugbGhjNDfGj\nSmPM6aOsIXIu4SGl4XclagB2Bq5Ry0Q+p7//4VtuhNvZgaj0hLevJrfgznUb4gvR\nMc8OtuiTbXYwWCaQSb3sZjBLQzqXP1e7MusUCvZcxz7eu9V2baREfk7S/pLdTDk9\nyuaa2Lqfc+ht1tJjQGquednH7iOPuknY/E8Jay3nFRBpm4QH9HJcq8Wra3CaMCHY\n/tEEIKpnZ4MKq3P3H044Aw1oygxv4fllv1yQQ/VzjbzCTdeDQQtQMdo2D/MhOFjk\nx6/tizEkJXLlIcV5JZMuwVMHKMCU/Xu4hDf16P0kCajr61cDH3ZYy17p+VCbMtQh\nowCqFEE70hJhE79ug9j3bE0ClrHOw85QJHz6M8fxxndOZBMKhAfkKpBh3U/dvDu3\ndDmdQZUQaaPr8ON9M3OUuDDkgiXJfTWRbZIoYgSCdwFczpr4zUT4vau9bTqvFgpP\nNrP+li6z/HEngbXJZg1Kwmq9NB4dx7VLlNmglko2DPfdvxBUw6YVuJPk13tJqeze\nNjJvwi67FyB/IFLJ1FOzEPcRPyUsPkxRu8ofR3bDQbquILhTMn4+qCqcZca/FIND\nyv4QnZ6XVaCnLfbRGFHQ0oMVPsEhWC7BAkpnDGlo8hc=\n-----END RSA PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "from-pem: an ENCRYPTED PRIVATE KEY",
+    "ref": "openssl pkcs8 -topk8 -v2 aes-128-cbc",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN ENCRYPTED PRIVATE KEY-----\nMIIC3TBXBgkqhkiG9w0BBQ0wSjApBgkqhkiG9w0BBQwwHAQIZdrBATEK3FICAggA\nMAwGCCqGSIb3DQIJBQAwHQYJYIZIAWUDBAECBBCvJZIUEymcY1XUeMNqtnaOBIIC\ngIvvDRReRsg6xsBtEXBD0JsNTp7qYPV4mTI3xU0v2qPe+CyjlexD3jV07/kOBr7j\ndROGHyGshEP1sA43AEmxcM6cK4BJOCRwbDpuM5MPfmTK4ZEzcy2Sgwxg7ym28afu\nDcuRV+hprui3RJz3BBOq7rAGqSpz8Gt7BzIVcxLcp3uaPQ7VmGz7AcsFPhHjRl6d\nW+0MqTvJHyNN6+laNjiAZEynP3L4e2fLWukC1ldTcRSzdD8ZWpnucR95wRZSHDKx\nz/w6+Y/nv82984b23edGv+Eaz+upVIbCaG8/rdBpqYxcztZv8WnjkuFpnyk1l9SK\nVGTdxFrWGhYhmz5VDfbUd1MX/A1V4Ro1o2l4IODn2PU1/8dMxwzyecNZGMxcbswA\nDPO/yZZajfaUa2e6aKduRiWv5n+Ybl7it7dW5HWX6WpSk3fmrY9EEFre9Diw5hcU\n6oge4xy3mwR8QcrqiG6j8TuGfpZHrY6NwOTe3rTOJqDWkhTqOxF8zisbr+JCfJhK\neFaJy7keY+1RK7NDsikz/umqz59gY3ehgeCbW55WVokoT5UoW9o+RFjocm48ve3/\nwOMsN3ywfyJ9aiGu6St3ZkSODOJT6SDAhtXkOc7Wm5MsDjkVEfPk8VZ5Cu+QJbHA\nDFifHKhic5bndHx+pl8YX9FStyDIlwnEFPe/x5FWX05qdBKZM1uXelWllGblg6W8\niPd82QlL61gqPFx5WIexRfeV9kE3RLS3Khp4YilWseozFejtZKnKThX8jVuFtlfj\nW63hZgY4/FOdDqU5RkWQavzj6HhVXPfENOTAeLsT+lMpXx4z0AVmIpitYy4m05zM\nMdvU+ihmywhqZlZyw0lBcU4=\n-----END ENCRYPTED PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "from-pem: a compressed EC point",
+    "ref": "openssl ec -pubout -conv_form compressed",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMDkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDIgACzQ4LmoZPMnpTPCtFxNaNBE/LIYuN\nQ83IORiNC1sfdrc=\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "from-pem: indent over 32",
+    "ref": "json:stringify range",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 33
+    },
+    "input": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEzQ4LmoZPMnpTPCtFxNaNBE/LIYuN\nQ83IORiNC1sfdrcVLKOo/yUMjvijdBVvBKN0A6ibl6DF5njLyQAOOyufOg==\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "to-pem: empty input",
+    "ref": "not JSON",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-pem: text that is not JSON",
+    "ref": "not JSON",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "hello",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-pem: an empty array",
+    "ref": "no key",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "[]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-pem: a JSON number",
+    "ref": "not a JWK",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "42",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-pem: a symmetric key",
+    "ref": "RFC 7518 6.4 oct key",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\"kty\": \"oct\", \"k\": \"AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-pem: an unknown key type",
+    "ref": "kty XYZ",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\"kty\": \"XYZ\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-pem: no kty",
+    "ref": "missing member",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\"n\": \"AQAB\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-pem: an RSA key without n",
+    "ref": "missing member",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\"kty\": \"RSA\", \"e\": \"AQAB\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-pem: an RSA private key without p",
+    "ref": "missing CRT member",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\"kty\": \"RSA\", \"n\": \"wGi1nuAQPyXU7TTvBo6xHCsm2qb3ZneVvHxzY7R2EyY0j7WyV70xQV4zId7xTpZtGOfkB3E4ByBQ96s2Oy6tXopgG3hLk4I7N492-WCkZuRh9_lmOuZgUvL67yVqKMmldxqDRDrTeHis7C5Ak0SViGlWoe-SgO0Kxd6Y_0DsAq0\", \"e\": \"AQAB\", \"d\": \"RvjYtYfUtlZQGkdCO9r6fXd1V4XrEALgWqxVK9vvCdU34iKVbEO_HWuP1NiVjfVyvJMcy5n5nrdO5mxjDqWDEQ2wEBdEXKiPVKxPdOWL1lNuZE9JdB_zxF2fVMfK2XAwdttQvYseqvaObKj9E--kz7zvIWxeASELbqfWs9fzm4k\", \"q\": \"x1DzYT1nO9I6_PLP3-GNEIgGdvlt5OAfzYYbp-t9u4aobaOQriOtiACjD8l8Z1KXulRleZkw2Q2YHwqKRkWEkw\", \"dp\": \"CkOhaTW0J2FQCKRde8PjMd5lAHIvDVaCRnpb7nScuKo5t4_I89orTEzZKJqhO9osaxXHDcO77HHQ6zEc3bMKPQ\", \"dq\": \"Fcs2MYXDSfk81fe-3x4MjKgy_MNdTs9q6tAlKgFH6D9bH1HpOgFQsjRPoCRJ5ApV6NvdlKQ5gSJJZeuDHxfu3Q\", \"qi\": \"XrvObhV_UioVEFLwjpSYnEVRbwIBC8cgwGQbtxMkJ5fFQWknC5EvIGGmPowRr65cydG_XBqc-_HIy-HFrCoCMg\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-pem: an RSA modulus of zero",
+    "ref": "n = 0",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\"kty\": \"RSA\", \"n\": \"AA\", \"e\": \"AQAB\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-pem: base64url that is damaged",
+    "ref": "invalid character",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\"kty\": \"RSA\", \"n\": \"wGi1nuAQPyXU7TTvBo6xHCsm2qb3ZneVvHxzY7R2EyY0j7WyV70xQV4zId7xTpZtGOfkB3E4ByBQ96s2Oy6tXopgG3hLk4I7N492-WCkZuRh9_lmOuZgUvL67yVqKMmldxqDRDrTeHis7C5Ak0SViGlWoe-SgO0Kxd6Y_0DsAq0\", \"e\": \"AQ!B\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-pem: a member that is not a string",
+    "ref": "number instead of base64url",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\"kty\": \"RSA\", \"n\": \"wGi1nuAQPyXU7TTvBo6xHCsm2qb3ZneVvHxzY7R2EyY0j7WyV70xQV4zId7xTpZtGOfkB3E4ByBQ96s2Oy6tXopgG3hLk4I7N492-WCkZuRh9_lmOuZgUvL67yVqKMmldxqDRDrTeHis7C5Ak0SViGlWoe-SgO0Kxd6Y_0DsAq0\", \"e\": 65537}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-pem: an EC x of the wrong length",
+    "ref": "RFC 7518 6.2.1.2: full size",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\"kty\": \"EC\", \"crv\": \"P-256\", \"x\": \"Dguahk8yelM8K0XE1o0ET8shi41Dzcg5GI0LWx92tw\", \"y\": \"FSyjqP8lDI74o3QVbwSjdAOom5egxeZ4y8kADjsrnzo\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-pem: an EC point that is not on the curve",
+    "ref": "y changed by one bit; the Python cryptography library refuses it too",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\"kty\": \"EC\", \"crv\": \"P-256\", \"x\": \"zQ4LmoZPMnpTPCtFxNaNBE_LIYuNQ83IORiNC1sfdrc\", \"y\": \"FSyjqP8lDI74o3QVbwSjdAOom5egxeZ4y8kADjsrnzs\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-pem: a d that does not belong to x and y",
+    "ref": "d changed by one bit",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\"kty\": \"EC\", \"crv\": \"P-256\", \"x\": \"zQ4LmoZPMnpTPCtFxNaNBE_LIYuNQ83IORiNC1sfdrc\", \"y\": \"FSyjqP8lDI74o3QVbwSjdAOom5egxeZ4y8kADjsrnzo\", \"d\": \"TMC53iZHafURaZnDgqye34d-Up_HgmtwPy7fdsn7jIg\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-pem: an unsupported curve",
+    "ref": "P-192",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\"kty\": \"EC\", \"crv\": \"P-192\", \"x\": \"zQ4LmoZPMnpTPCtFxNaNBE_LIYuNQ83IORiNC1sfdrc\", \"y\": \"FSyjqP8lDI74o3QVbwSjdAOom5egxeZ4y8kADjsrnzo\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-pem: kty OKP with an EC curve",
+    "ref": "kty and crv disagree",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\"kty\": \"OKP\", \"crv\": \"P-256\", \"x\": \"zQ4LmoZPMnpTPCtFxNaNBE_LIYuNQ83IORiNC1sfdrc\", \"y\": \"FSyjqP8lDI74o3QVbwSjdAOom5egxeZ4y8kADjsrnzo\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-pem: an Ed25519 x of 33 bytes",
+    "ref": "RFC 8037: 32 bytes",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\"kty\": \"OKP\", \"crv\": \"Ed25519\", \"x\": \"zEWbM3D2vSV4S0CqNlx7HPDIQ7Cx6mSHpi3aA8cEUUAA\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-pem: a JWK Set whose keys is not an array",
+    "ref": "RFC 7517 5",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "{\"keys\": 1}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-pem: an array holding a non-object",
+    "ref": "not a JWK",
+    "op": "jwk:to-pem",
+    "params": {},
+    "input": {
+      "value": "[1]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]
