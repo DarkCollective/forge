@@ -39,7 +39,7 @@
     "cyberchef": "Generate all hashes",
     "status": "redesigned",
     "forge": ["generate-all:hashes"],
-    "note": "A text report, one hash per line with its hex, built from the digest words: MD2 to MD6, SHA-0 to SHA-3, Keccak, SHAKE, RIPEMD, HAS-160, Whirlpool, BLAKE2, BLAKE3, Streebog, GOST, Snefru, SM3, the NT hash and SSDEEP, with the same Length and Include names parameters. Not included: the LM hash (wave 4), Whirlpool-0 and Whirlpool-T, and the CTPH line (see CTPH). Lines CyberChef does not have: SHA-512/224 and /256, BLAKE3 and Snefru."
+    "note": "A text report, one hash per line with its hex, built from the digest words: MD2 to MD6, SHA-0 to SHA-3, Keccak, SHAKE, RIPEMD, HAS-160, Whirlpool, BLAKE2, BLAKE3, Streebog, GOST, Snefru, SM3, the LM hash, the NT hash and SSDEEP, with the same Length and Include names parameters. The LM hash line sits where CyberChef has it, just before the NT hash; like the NT hash it reads the input as UTF-8 text and shows a note on its line (the report still completes) for input that is not text it can take (the LM hash takes characters up to U+00FF only). Not included: Whirlpool-0 and Whirlpool-T, and the CTPH line (see CTPH). Lines CyberChef does not have: SHA-512/224 and /256, BLAKE3 and Snefru."
   },
   {
     "cyberchef": "Generate all checksums",

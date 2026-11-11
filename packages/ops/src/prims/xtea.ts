@@ -24,7 +24,7 @@
  */
 import { definePrimitive } from "@forge/lang";
 import type { PrimitiveDef } from "@forge/lang";
-import { be32, checkBlock, putBe32 } from "../cipher-util-b.js";
+import { getBE32, checkBlock, putBE32 } from "../cipher-util.js";
 import { rangeFailure } from "../prim-util.js";
 
 const DELTA = 0x9e3779b9;
@@ -35,7 +35,7 @@ function setup(block: Uint8Array, key: Uint8Array, rounds: number): number[] {
   if (!Number.isSafeInteger(rounds) || rounds < 1 || rounds > 255)
     throw rangeFailure(`the XTEA rounds must be 1 to 255, not ${rounds}`);
   checkBlock(block, 8, "XTEA");
-  return [be32(key, 0), be32(key, 4), be32(key, 8), be32(key, 12)];
+  return [getBE32(key, 0), getBE32(key, 4), getBE32(key, 8), getBE32(key, 12)];
 }
 
 const mix = (v: number): number => ((((v << 4) ^ (v >>> 5)) >>> 0) + v) >>> 0;
@@ -43,8 +43,8 @@ const mix = (v: number): number => ((((v << 4) ^ (v >>> 5)) >>> 0) + v) >>> 0;
 /** One 8-byte block encrypted with `rounds` cycles. */
 export function encryptBlock(block: Uint8Array, key: Uint8Array, rounds: number): Uint8Array {
   const k = setup(block, key, rounds);
-  let v0 = be32(block, 0);
-  let v1 = be32(block, 4);
+  let v0 = getBE32(block, 0);
+  let v1 = getBE32(block, 4);
   let sum = 0;
   for (let i = 0; i < rounds; i++) {
     v0 = (v0 + ((mix(v1) ^ (sum + k[sum & 3]!)) >>> 0)) >>> 0;
@@ -52,16 +52,16 @@ export function encryptBlock(block: Uint8Array, key: Uint8Array, rounds: number)
     v1 = (v1 + ((mix(v0) ^ (sum + k[(sum >>> 11) & 3]!)) >>> 0)) >>> 0;
   }
   const out = new Uint8Array(8);
-  putBe32(out, 0, v0);
-  putBe32(out, 4, v1);
+  putBE32(out, 0, v0);
+  putBE32(out, 4, v1);
   return out;
 }
 
 /** One 8-byte block decrypted with `rounds` cycles. */
 export function decryptBlock(block: Uint8Array, key: Uint8Array, rounds: number): Uint8Array {
   const k = setup(block, key, rounds);
-  let v0 = be32(block, 0);
-  let v1 = be32(block, 4);
+  let v0 = getBE32(block, 0);
+  let v1 = getBE32(block, 4);
   let sum = Math.imul(DELTA, rounds) >>> 0;
   for (let i = 0; i < rounds; i++) {
     v1 = (v1 - ((mix(v0) ^ (sum + k[(sum >>> 11) & 3]!)) >>> 0)) >>> 0;
@@ -69,8 +69,8 @@ export function decryptBlock(block: Uint8Array, key: Uint8Array, rounds: number)
     v0 = (v0 - ((mix(v1) ^ (sum + k[sum & 3]!)) >>> 0)) >>> 0;
   }
   const out = new Uint8Array(8);
-  putBe32(out, 0, v0);
-  putBe32(out, 4, v1);
+  putBE32(out, 0, v0);
+  putBE32(out, 4, v1);
   return out;
 }
 

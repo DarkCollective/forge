@@ -21,7 +21,8 @@
  *  - `_check-key`: the key must be 16, 24 or 32 bytes (E_RANGE);
  *  - `_block-enc` and `_block-dec`: one raw AES block (the block function of the shared `blockmode`
  *    layer, which the OFB mode of `aes:encrypt` runs on, since noble has no OFB);
- *  - `_crypt`: ECB, CBC, CFB (CFB-128) and CTR (whole 16-byte counter block), with or without PKCS#7;
+ *  - `_crypt`: ECB, CBC, CFB (CFB-128) and CTR (the last four bytes of the counter block count, modulo
+ *    2^32 with no carry into the rest, as node-forge and so CyberChef do), with or without PKCS#7;
  *  - `_gcm`: AES-GCM with the 16-byte tag appended to the ciphertext.
  *
  * Errors: a bad key or IV length is E_RANGE; a failed padding check, a failed tag check and a ciphertext
@@ -66,6 +67,29 @@ export function blockDecrypt(block: Uint8Array, key: Uint8Array): Uint8Array {
 }
 
 /**
+ * CTR with a 32-bit counter: only the last four bytes of the counter block are incremented, big-endian modulo
+ * 2^32, and a wrap does not carry into the other twelve bytes (node-forge's inc32, which CyberChef's AES uses).
+ * Noble's `ctr` carries through the whole block, so the data is cut where the low word would wrap, and each
+ * piece runs under noble with the counter the wrap leaves (the high twelve bytes unchanged, the low word 0).
+ * A counter that does not wrap inside the data gives the same key stream as the whole-block counter.
+ */
+function ctr32(key: Uint8Array, iv: Uint8Array, data: Uint8Array): Uint8Array {
+  const out = new Uint8Array(data.length);
+  const counter = Uint8Array.from(iv);
+  const view = new DataView(counter.buffer);
+  let offset = 0;
+  while (offset < data.length) {
+    const low = view.getUint32(12, false);
+    const toWrap = (0x100000000 - low) * BLOCK; // bytes until the low word wraps
+    const end = Math.min(data.length, offset + toWrap);
+    out.set(ctr(key, counter.slice()).encrypt(data.subarray(offset, end)), offset);
+    offset = end;
+    view.setUint32(12, 0, false);
+  }
+  return out;
+}
+
+/**
  * ECB, CBC, CFB or CTR. `padding` applies to ECB and CBC only (PKCS#7); with it off those two need whole
  * blocks. `decrypt` selects the direction. The IV is ignored for ECB.
  */
@@ -101,8 +125,8 @@ export function crypt(
       c = cfb(key, iv);
       break;
     case "CTR":
-      c = ctr(key, iv);
-      break;
+      // Encryption and decryption are the same operation in CTR.
+      return ctr32(key, iv, data);
     default:
       throw rangeFailure(`unknown AES mode '${mode.slice(0, 20)}'`);
   }

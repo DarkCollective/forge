@@ -19,6 +19,7 @@
  * RFC 3602 and GCM specification vectors are in vocab/aes.test.json; these cover 64 KiB inputs in every mode against
  * node:crypto (OpenSSL), the defaults, round trips at every length around the block size, and the error codes.
  */
+import { ecb } from "@noble/ciphers/aes.js";
 import { sha256 } from "@noble/hashes/sha2.js";
 import { valueHelpers } from "@forge/lang";
 import { describe, expect, test } from "vitest";
@@ -135,6 +136,32 @@ describe("aes:encrypt and aes:decrypt", () => {
               ? n + 16
               : n;
         expect(enc.out!.length).toBe(expectLen);
+      }
+    }
+  });
+
+  // SP 800-38A leaves the incrementing function to the application. CyberChef's AES is node-forge, which adds one
+  // to the last four bytes of the counter block, modulo 2^32, with no carry into the other twelve; Forge follows
+  // it. The expected key stream is built here from raw ECB blocks of the counters that convention gives.
+  test("CTR adds one to the last four bytes only, wrapping without a carry", async () => {
+    for (const klen of [16, 24, 32]) {
+      for (const low of [0xfffffffe, 0xffffffff, 0xfffffffd, 0]) {
+        const iv = Uint8Array.from({ length: 16 }, (_, i) => (i < 12 ? 0x30 + i : 0));
+        new DataView(iv.buffer).setUint32(12, low, false);
+        const data = pattern(16 * 5 + 3);
+        const key = pattern(klen);
+        const counter = Uint8Array.from(iv);
+        const stream = new Uint8Array(16 * 6);
+        for (let b = 0; b < 6; b++) {
+          stream.set(ecb(key, { disablePadding: true }).encrypt(counter), b * 16);
+          const v = new DataView(counter.buffer);
+          v.setUint32(12, (v.getUint32(12, false) + 1) >>> 0, false);
+        }
+        const want = data.map((x, i) => x ^ stream[i]!);
+        const got = await run("encrypt", data, { mode: "CTR", key, iv });
+        expect(hex(got.out!), `${klen} bytes, low word ${low.toString(16)}`).toBe(hex(want));
+        const back = await run("decrypt", got.out!, { mode: "CTR", key, iv });
+        expect(hex(back.out!)).toBe(hex(data));
       }
     }
   });

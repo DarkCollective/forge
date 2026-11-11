@@ -10,7 +10,7 @@
 IN: generate-all
 
 USING: hex md2 md4 md5 md6 sha0 sha1 sha2 sha3 keccak shake ripemd has160 whirlpool blake2b blake2s blake3
-  streebog gost snefru sm3 nthash ssdeep crc adler32 fletcher ;
+  streebog gost snefru sm3 lmhash nthash ssdeep crc adler32 fletcher ;
 
 \ The name with a colon, padded with spaces to at least width characters, then the digest.
 : _line ( name:str hex:str names:bool width:int -- str )
@@ -27,13 +27,14 @@ USING: hex md2 md4 md5 md6 sha0 sha1 sha2 sha3 keccak shake ripemd has160 whirlp
   [ "" ]
   if ;
 
-\ The NT hash takes text; binary input that is not UTF-8 gets a note instead of failing the report.
-: _nt ( data:bytes length:str names:bool -- str )
+\ The NT and LM hashes (128 bits) take text: f computes the raw bytes of the hash of the input read as UTF-8.
+\ Binary input that is not text f can take gets the note msg instead of failing the report.
+: _text ( data:bytes name:str f:quot msg:str length:str names:bool -- str )
   length "all" = length "128" = or
-  [ [ data bytes>str nthash:digest "none" "lower" hex:encode ]
-    [ drop "(the input is not valid UTF-8 text)" ]
+  [ [ data bytes>str f call "none" "lower" hex:encode ]
+    [ drop msg ]
     try
-    "NT Hash" swap names 14 _line ]
+    name swap names 14 _line ]
   [ "" ]
   if ;
 
@@ -45,7 +46,7 @@ USING: hex md2 md4 md5 md6 sha0 sha1 sha2 sha3 keccak shake ripemd has160 whirlp
   if ;
 
 : hashes ( data:bytes length:choice{"all"|"128"|"160"|"224"|"256"|"320"|"384"|"512"}="all" names:bool=true -- str )
-  "A report of the hashes of the input, one per line with the digest in hex: MD2, MD4, MD5, MD6, SHA-0, SHA-1, the SHA-2 sizes, the SHA-3 sizes, Keccak, SHAKE128 (32 bytes) and SHAKE256 (64 bytes), RIPEMD, HAS-160, Whirlpool, BLAKE2b, BLAKE2s, BLAKE3 (32 bytes), Streebog, GOST R 34.11-94 (CryptoPro), Snefru (8 passes), SM3, the NT hash and SSDEEP. Each line is what the digest word of that family gives, with its default parameters. length keeps only the digests of that many bits (SSDEEP, which is text, only for all). names off gives the digests alone. LM hash is not available. The input must be text for the NT hash line (UTF-8), but not for the others." doc
+  "A report of the hashes of the input, one per line with the digest in hex: MD2, MD4, MD5, MD6, SHA-0, SHA-1, the SHA-2 sizes, the SHA-3 sizes, Keccak, SHAKE128 (32 bytes) and SHAKE256 (64 bytes), RIPEMD, HAS-160, Whirlpool, BLAKE2b, BLAKE2s, BLAKE3 (32 bytes), Streebog, GOST R 34.11-94 (CryptoPro), Snefru (8 passes), SM3, the LM hash, the NT hash and SSDEEP. Each line is what the digest word of that family gives, with its default parameters. length keeps only the digests of that many bits (SSDEEP, which is text, only for all). names off gives the digests alone. The input must be text for the LM hash line (UTF-8 with characters up to U+00FF) and for the NT hash line (UTF-8), but not for the others; where it is not, the line holds a note." doc
   "Hashing" category
   { data "MD2" 128 [ md2:digest ] length names 14 _h
     data "MD4" 128 [ md4:digest ] length names 14 _h
@@ -90,7 +91,8 @@ USING: hex md2 md4 md5 md6 sha0 sha1 sha2 sha3 keccak shake ripemd has160 whirlp
     data "Snefru-128" 128 [ "128" "8" snefru:digest ] length names 14 _h
     data "Snefru-256" 256 [ "256" "8" snefru:digest ] length names 14 _h
     data "SM3" 256 [ sm3:digest ] length names 14 _h
-    data length names _nt
+    data "LM Hash" [ lmhash:digest ] "(the input is not UTF-8 text of Latin-1 characters)" length names _text
+    data "NT Hash" [ nthash:digest ] "(the input is not valid UTF-8 text)" length names _text
     data length names _ss }
   "" join ;
 

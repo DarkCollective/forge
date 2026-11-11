@@ -24,10 +24,10 @@ USING: hmac base64 ;
 : _sign ( payload:bytes key:bytes salt:bytes alg:str ts:int -- bytes )
   key _need-key
   ts 1 < [ "the timestamp must be a positive Unix time in seconds" raise:range ] when
-  payload "url" false base64:encode str>bytes "." str>bytes cat
-  ts util:int>bytes "url" false base64:encode str>bytes cat
+  payload false util:b64url-encode "." str>bytes cat
+  ts util:int>bytes false util:b64url-encode cat
   dup alg salt _salt alg key hmac:digest hmac:digest
-  "url" false base64:encode str>bytes "." str>bytes swap cat cat ;
+  false util:b64url-encode "." str>bytes swap cat cat ;
 
 \ The three parts of a cookie. Surrounding white space is ignored. A compressed payload (leading dot) makes four.
 : _parts ( token:bytes -- list )
@@ -37,11 +37,11 @@ USING: hmac base64 ;
 
 \ The payload text of the cookie parts.
 : _payload ( parts:list -- str )
-  parts 0 nth str>bytes "url" base64:decode bytes>str ;
+  parts 0 nth str>bytes util:b64url-decode bytes>str ;
 
 \ The signing time of the cookie parts.
 : _time ( parts:list -- int )
-  parts 1 nth str>bytes "url" base64:decode 256 util:digits>int ;
+  parts 1 nth str>bytes util:b64url-decode 256 util:digits>int ;
 
 \ The cookie parts as JSON text: {"payload":P,"timestamp":T} with the time, or just P without it.
 : _decode ( parts:list view:bool -- bytes )
@@ -53,7 +53,7 @@ USING: hmac base64 ;
 : _check-sig ( parts:list key:bytes salt:bytes alg:str -- )
   key _need-key
   parts 0 nth "." cat parts 1 nth cat str>bytes alg salt _salt alg key hmac:digest hmac:digest
-  parts 2 nth str>bytes "url" base64:decode <>
+  parts 2 nth str>bytes util:b64url-decode <>
   [ "the Flask signature does not verify (wrong key, salt or algorithm, or the cookie was altered)" raise:coerce ] when ;
 
 \ {"valid":true,"payload":P} with ,"timestamp":T before the brace when view is set.

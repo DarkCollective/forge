@@ -18,7 +18,7 @@ USING: aes hmac base64 ;
   key len 32 =
   [ key ]
   [ key len 43 < key len 44 > or [ "the Fernet key must be 32 bytes, or their url-safe base64 text" raise:range ] when
-    key "url" base64:decode _check-key-len ] if ;
+    key util:b64url-decode _check-key-len ] if ;
 
 \ The signing key (first 16 bytes) and the encryption key (last 16 bytes).
 : _signing ( key:bytes -- bytes )
@@ -29,7 +29,7 @@ USING: aes hmac base64 ;
 
 \ The payload with its HMAC appended, as url-safe base64 text with padding.
 : _finish ( payload:bytes key:bytes -- bytes )
-  payload dup "sha256" key _signing hmac:digest cat "url" true base64:encode str>bytes ;
+  payload dup "sha256" key _signing hmac:digest cat true util:b64url-encode ;
 
 \ The token for data with the given IV (16 bytes) and Unix time.
 : _seal ( data:bytes key:bytes iv:bytes ts:int -- bytes )
@@ -61,7 +61,7 @@ USING: aes hmac base64 ;
 \ The plaintext of a token (url-safe base64 text) at the given time.
 : _open ( token:bytes key:bytes ttl:int now:int -- bytes )
   ttl 0 < [ "the TTL cannot be negative" raise:range ] when
-  token "url" base64:decode key ttl now _open-raw ;
+  token util:b64url-decode key ttl now _open-raw ;
 
 : encrypt ( bytes key:key{utf8|hex|latin1|base64} -- bytes )
   "Fernet encryption (github.com/fernet/spec): the token, as url-safe base64 text with padding, of the input. The key is 32 bytes (the signing key, then the encryption key), or their url-safe base64 text as Fernet libraries print it (43 or 44 characters, the CyberChef form); any other length is E_RANGE. The IV is 16 random bytes and the time is the clock, so the output differs on every call (the word carries the +random and +time effects)." doc

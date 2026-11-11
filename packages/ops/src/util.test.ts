@@ -310,6 +310,63 @@ describe("util:repeat-str and util:zero-bytes", () => {
   });
 });
 
+describe("util:iv-or-zeros", () => {
+  test("an empty IV is n zero bytes, any other IV is kept as it is", async () => {
+    const { bytes } = valueHelpers;
+    expect(u8(await value("util:iv-or-zeros", [bytes(new Uint8Array(0)), int(8)]))).toEqual(
+      new Array(8).fill(0),
+    );
+    expect(u8(await value("util:iv-or-zeros", [bytes(new Uint8Array(0)), int(4)]))).toEqual([
+      0, 0, 0, 0,
+    ]);
+    expect(
+      u8(await value("util:iv-or-zeros", [bytes(Uint8Array.from([1, 2, 3])), int(8)])),
+    ).toEqual([1, 2, 3]);
+    expect(u8(await value("util:iv-or-zeros", [bytes(new Uint8Array(0)), int(0)]))).toEqual([]);
+  });
+});
+
+describe("util:b64url-encode and util:b64url-decode", () => {
+  const { bytes, bool } = valueHelpers;
+  const text = (v: unknown) => String.fromCharCode(...(v as Uint8Array));
+
+  test("encode writes the URL-safe alphabet, with the padding on request (RFC 4648 section 10 and section 5)", async () => {
+    // RFC 4648 section 10: BASE64("foobar") = "Zm9vYmFy", and the padded forms of the shorter prefixes.
+    const enc = async (s: string, pad: boolean) =>
+      text(await value("util:b64url-encode", [bytes(new TextEncoder().encode(s)), bool(pad)]));
+    expect(await enc("foobar", false)).toBe("Zm9vYmFy");
+    expect(await enc("fooba", true)).toBe("Zm9vYmE=");
+    expect(await enc("fooba", false)).toBe("Zm9vYmE");
+    expect(await enc("f", true)).toBe("Zg==");
+    expect(await enc("", true)).toBe("");
+    // bytes that need - and _ in place of + and /
+    expect(
+      text(
+        await value("util:b64url-encode", [
+          bytes(Uint8Array.from([0xfb, 0xff, 0xfe])),
+          bool(false),
+        ]),
+      ),
+    ).toBe("-__-");
+  });
+
+  test("decode accepts the padding or not and reads - and _", async () => {
+    const dec = async (s: string) =>
+      u8(await value("util:b64url-decode", [bytes(new TextEncoder().encode(s))]));
+    expect(await dec("Zm9vYmFy")).toEqual(Array.from(new TextEncoder().encode("foobar")));
+    expect(await dec("Zm9vYmE=")).toEqual(Array.from(new TextEncoder().encode("fooba")));
+    expect(await dec("Zm9vYmE")).toEqual(Array.from(new TextEncoder().encode("fooba")));
+    expect(await dec("-__-")).toEqual([0xfb, 0xff, 0xfe]);
+    expect(await dec("")).toEqual([]);
+  });
+
+  test("text that is not URL-safe Base64 is E_COERCE", async () => {
+    const r = await runtime.call("util:b64url-decode", [bytes(new TextEncoder().encode("a+b/"))]);
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.error.code).toBe("E_COERCE");
+  });
+});
+
 describe("util:count-leading, util:trim-start and util:trim-end", () => {
   test("count-leading on bytes, lists and the empty sequence", async () => {
     expect(await fl("#[ 00 00 01 00 ] [ 0 = ] util:count-leading")).toBe(2);

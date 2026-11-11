@@ -73,6 +73,10 @@ USING: blockmode tblock ;
   data mode iv 16 padding [ key tblock:aes-enc ] blockmode:encrypt ;
 : adec ( data:bytes mode:str iv:bytes padding:bool key:bytes -- bytes )
   data mode iv 16 padding [ key tblock:aes-enc ] [ key tblock:aes-dec ] blockmode:decrypt ;
+: x4enc ( data:bytes mode:str iv:bytes -- bytes )
+  data mode iv 4 false [ #[ 00 00 00 00 ] tblock:xor8 ] blockmode:encrypt ;
+: x8enc ( data:bytes mode:str iv:bytes -- bytes )
+  data mode iv 8 false [ #[ 00 00 00 00 00 00 00 00 ] tblock:xor8 ] blockmode:encrypt ;
 `,
   { unit: "tbtest", trusted: true, scope: { current: "tbtest", using: [] } },
 );
@@ -287,5 +291,94 @@ describe("blockmode driven by raw AES blocks is byte-identical to noble's modes 
       expect(hex(m.out!)).toBe(hex(nobleModes[mode]?.(key, iv).encrypt(d) ?? m.out!));
       expect(m.steps!).toBeLessThan(2_000_000);
     }
+  });
+});
+
+// With an all-zero key the xor block function is the identity, so the key stream of a counter mode is the
+// sequence of counter blocks itself, and encrypting zeros shows them.
+describe("blockmode: the counter conventions (CTR, CTR32, CTRLE) and any block size", () => {
+  async function counters(word: "x4enc" | "x8enc", mode: string, ivHex: string, blocks: number) {
+    const bs = word === "x4enc" ? 4 : 8;
+    const r: RunResult = await runtime.call(`tbtest:${word}`, [
+      bytes(new Uint8Array(bs * blocks)),
+      str(mode),
+      bytes(unhex(ivHex)),
+    ]);
+    if (!r.ok) throw new Error(r.error.message);
+    const out = hex((r.stack[r.stack.length - 1] as { v: Uint8Array }).v);
+    return out.match(new RegExp(`.{${bs * 2}}`, "g"));
+  }
+
+  test("CTR counts the whole block as one big-endian integer, for a block of 4 bytes as well as 8", async () => {
+    expect(await counters("x8enc", "CTR", "0123456789abcdff", 3)).toEqual([
+      "0123456789abcdff",
+      "0123456789abce00",
+      "0123456789abce01",
+    ]);
+    expect(await counters("x4enc", "CTR", "0000ffff", 3)).toEqual([
+      "0000ffff",
+      "00010000",
+      "00010001",
+    ]);
+    expect(await counters("x4enc", "CTR", "fffffffe", 3)).toEqual([
+      "fffffffe",
+      "ffffffff",
+      "00000000",
+    ]);
+  });
+
+  test("CTR32 adds one to the last four bytes, modulo 2^32, with no carry into the rest", async () => {
+    expect(await counters("x8enc", "CTR32", "0123456789abcdff", 3)).toEqual([
+      "0123456789abcdff",
+      "0123456789abce00",
+      "0123456789abce01",
+    ]);
+    expect(await counters("x8enc", "CTR32", "a1b2c3d4fffffffe", 4)).toEqual([
+      "a1b2c3d4fffffffe",
+      "a1b2c3d4ffffffff",
+      "a1b2c3d400000000",
+      "a1b2c3d400000001",
+    ]);
+    // a block of exactly four bytes is all counter
+    expect(await counters("x4enc", "CTR32", "fffffffe", 3)).toEqual([
+      "fffffffe",
+      "ffffffff",
+      "00000000",
+    ]);
+  });
+
+  test("CTRLE reads the block as a little-endian integer, the first byte least significant", async () => {
+    expect(await counters("x8enc", "CTRLE", "fe00000000000000", 3)).toEqual([
+      "fe00000000000000",
+      "ff00000000000000",
+      "0001000000000000",
+    ]);
+    expect(await counters("x8enc", "CTRLE", "ffffffffffffffff", 3)).toEqual([
+      "ffffffffffffffff",
+      "0000000000000000",
+      "0100000000000000",
+    ]);
+    expect(await counters("x4enc", "CTRLE", "ffff0000", 2)).toEqual(["ffff0000", "00000100"]);
+  });
+
+  test("blockmode:ctr-as maps CTR to the variant and leaves every other mode alone", async () => {
+    const as = async (mode: string, variant: string) => {
+      const r = await runtime.call("blockmode:ctr-as", [str(mode), str(variant)]);
+      if (!r.ok) throw new Error(r.error.message);
+      return (r.stack[r.stack.length - 1] as { v: string }).v;
+    };
+    expect(await as("CTR", "CTR32")).toBe("CTR32");
+    expect(await as("CTR", "CTRLE")).toBe("CTRLE");
+    for (const m of ["ECB", "CBC", "CFB", "OFB", "GCM"]) expect(await as(m, "CTR32")).toBe(m);
+  });
+
+  test("the bad IV length check holds for the new modes", async () => {
+    const r = await runtime.call("tbtest:x8enc", [
+      bytes(pattern(8)),
+      str("CTR32"),
+      bytes(unhex("0102")),
+    ]);
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.error.code).toBe("E_RANGE");
   });
 });

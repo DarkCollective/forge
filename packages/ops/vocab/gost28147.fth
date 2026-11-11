@@ -26,16 +26,16 @@ IN: gost28147
   "Encryption" category
   key sbox _check-key
   mode meshing _ext?
-  [ key iv len 0 = [ #[ 00 00 00 00 00 00 00 00 ] ] [ iv ] if mode padding "pkcs7" = sbox meshing "CP" = _ext-enc ]
-  [ mode iv len 0 = [ #[ 00 00 00 00 00 00 00 00 ] ] [ iv ] if 8 padding "pkcs7" = [ key sbox _encrypt-block ] blockmode:encrypt ] if ;
+  [ key iv 8 util:iv-or-zeros mode padding "pkcs7" = sbox meshing "CP" = _ext-enc ]
+  [ mode iv 8 util:iv-or-zeros 8 padding "pkcs7" = [ key sbox _encrypt-block ] blockmode:encrypt ] if ;
 
 : decrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice{CBC|CFB|OFB|CTR|ECB}="CBC" padding:choice{pkcs7|none}="pkcs7" sbox:choice{E-TEST|E-A|E-B|E-C|E-D|E-Z|D-TEST|D-A}="E-TEST" meshing:choice{NO|CP}="NO" -- bytes )
   "GOST 28147-89 decryption, the inverse of gost28147:encrypt with the same key, IV, mode, padding, S-box and meshing. PKCS#7 padding that does not check (usually a wrong key or IV) and CBC or ECB input that is not whole blocks are E_COERCE. A key of the wrong length is E_RANGE." doc
   "Encryption" category
   key sbox _check-key
   mode meshing _ext?
-  [ key iv len 0 = [ #[ 00 00 00 00 00 00 00 00 ] ] [ iv ] if mode padding "pkcs7" = sbox meshing "CP" = _ext-dec ]
-  [ mode iv len 0 = [ #[ 00 00 00 00 00 00 00 00 ] ] [ iv ] if 8 padding "pkcs7" = [ key sbox _encrypt-block ] [ key sbox _decrypt-block ] blockmode:decrypt ] if ;
+  [ key iv 8 util:iv-or-zeros mode padding "pkcs7" = sbox meshing "CP" = _ext-dec ]
+  [ mode iv 8 util:iv-or-zeros 8 padding "pkcs7" = [ key sbox _encrypt-block ] [ key sbox _decrypt-block ] blockmode:decrypt ] if ;
 
 : wrap-key ( bytes key:key{hex|utf8|latin1|base64} ukm:key{hex|utf8|latin1|base64} sbox:choice{E-TEST|E-A|E-B|E-C|E-D|E-Z|D-TEST|D-A}="E-TEST" wrapping:choice{NO|CP}="NO" -- bytes )
   "GOST 28147-89 key wrap (RFC 4357 section 6.1, or with wrapping CP section 6.3, which diversifies the key by the UKM first). The input is the 32-byte content key (E_COERCE otherwise), key is the 32-byte key encryption key (E_RANGE) and ukm the 8-byte user key material (E_RANGE). The output is CEK_ENC (the content key in ECB under the KEK) followed by CEK_MAC (the 4-byte IMIT with the UKM as the initial register), 36 bytes: CyberChef's layout, which leaves out the UKM that RFC 4357 puts in front (chain the UKM bytes in front with cat to get the RFC's 44 bytes). Not covered: CyberChef's SC (Signal-COM) wrapping." doc

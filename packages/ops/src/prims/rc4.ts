@@ -23,7 +23,7 @@
  */
 import { definePrimitive } from "@forge/lang";
 import type { PrimitiveDef } from "@forge/lang";
-import { rc4Schedule, rc4Xor } from "../cipher-util-b.js";
+import { rc4Schedule, rc4Xor } from "../cipher-util.js";
 import { rangeFailure } from "../prim-util.js";
 
 const MAX_DROP = 1 << 24;
