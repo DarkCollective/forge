@@ -530,22 +530,47 @@ USING: tcpip hex ;
 : _key-shares ( ext:record client:bool -- list )
   client [ ext 2 _ext-vec _ks-list ] [ ext "data" get _ks-server ] if ;
 
-\ The decoded extension of this type (the first), or an empty list when the hello has none; q decodes one extension.
-: _decoded ( h:record type:int q:quot -- list )
-  h type _exts-of dup len 0 = [ drop { } ] [ 0 nth q call ] if ;
+\ The first extension of this type, as a list of zero or one; each field below decodes it.
+: _first-of ( h:record type:int -- list )
+  h type _exts-of ;
+
+: _f-sni ( h:record -- list )
+  h 0 _first-of dup len 0 = [ drop { } ] [ 0 nth _ext-sni ] if ;
+
+: _f-alpn ( h:record -- list )
+  h 16 _first-of dup len 0 = [ drop { } ] [ 0 nth _ext-alpn ] if ;
+
+: _f-groups ( h:record -- list )
+  h 10 _first-of dup len 0 = [ drop { } ] [ 0 nth 2 _u16s ] if ;
+
+: _f-points ( h:record -- list )
+  h 11 _first-of dup len 0 = [ drop { } ] [ 0 nth 1 _u8s ] if ;
+
+: _f-sigs ( h:record -- list )
+  h 13 _first-of dup len 0 = [ drop { } ] [ 0 nth 2 _u16s ] if ;
+
+: _f-versions ( h:record -- list )
+  h 43 _first-of dup len 0 = [ drop { } ] [
+    0 nth h "kind" get "client_hello" = [ 1 ] [ 0 ] if _u16s ] if ;
+
+: _f-psk ( h:record -- list )
+  h 45 _first-of dup len 0 = [ drop { } ] [ 0 nth 1 _u8s ] if ;
+
+: _f-shares ( h:record -- list )
+  h 51 _first-of dup len 0 = [ drop { } ] [ 0 nth h "kind" get "client_hello" = _key-shares ] if ;
 
 \ The hello record with the fields JA3 and JA4 read, decoded from its extensions.
 : _with-fields ( h:record -- record )
   h
   "ext-types" h "extensions" get [ "type" get ] map put
-  "sni" h 0 [ _ext-sni ] _decoded put
-  "alpn" h 16 [ _ext-alpn ] _decoded put
-  "groups" h 10 [ 2 _u16s ] _decoded put
-  "point-formats" h 11 [ 1 _u8s ] _decoded put
-  "sig-algs" h 13 [ 2 _u16s ] _decoded put
-  "versions" h 43 [ h "kind" get "client_hello" = [ 1 ] [ 0 ] if _u16s ] _decoded put
-  "psk-modes" h 45 [ 1 _u8s ] _decoded put
-  "key-shares" h 51 [ h "kind" get "client_hello" = _key-shares ] _decoded put ;
+  "sni" h _f-sni put
+  "alpn" h _f-alpn put
+  "groups" h _f-groups put
+  "point-formats" h _f-points put
+  "sig-algs" h _f-sigs put
+  "versions" h _f-versions put
+  "psk-modes" h _f-psk put
+  "key-shares" h _f-shares put ;
 
 : _want ( kinds:list -- list )
   kinds len 0 = [ { 1 2 } ] [ kinds ] if ;
@@ -696,11 +721,29 @@ USING: tcpip hex ;
   "\n" cat rec _fragment-text cat
   1 _ind "\n" swap cat cat ;
 
+: _hello-msg? ( m:record -- bool )
+  m "complete" get m "type" get dup 1 = swap 2 = or and ;
+
+\ The hello messages in the records, in order (the handshake records are few, the other records only cost the filter).
+: _hello-msgs ( records:list -- list )
+  records [ "type" get 22 = ] filter
+  [ "fragment" get _handshakes [ _hello-msg? ] filter ] map
+  [ len 0 > ] filter util:list-flatten ;
+
+\ Decode every extension of a hello (the report would raise the same errors, but too deep in the call stack: an
+\ error reports only its 16 innermost frames, and the recipe step is found from the outermost one).
+: _check-ext ( ext:record client:bool -- )
+  ext client ext "type" get _ext-body2 drop ;
+
+: _check-hello ( h:record -- )
+  h "extensions" get [ h "kind" get "client_hello" = _check-ext ] each ;
+
 : parse-tls ( data:bytes format:choice{hex|raw}="hex" -- str )
   "Parse TLS records (Parse TLS record), one or more in a row, given as hex text or raw bytes: for each record the content type (ChangeCipherSpec, Alert, Handshake, ApplicationData, Heartbeat), the version and the length; an alert with its level and description; a handshake record with each message (type and length) and, for a ClientHello or ServerHello, the version, the random, the session ID, the cipher suites with their registry names, the compression methods and the extensions with their names, and decoded for server_name, supported_groups, ec_point_formats, signature_algorithms, ALPN, supported_versions, psk_key_exchange_modes, key_share, compress_certificate, record_size_limit, padding and session_ticket (any other extension as hex). Records are separated by a blank line. Reads SSL 3.0, TLS 1.0 to 1.3 records; DTLS and SSL 2.0 are not TLS records. Empty input, a header that is not a TLS record (content type outside 20 to 24, a major version other than 3, a length above 18432), a cut-short record, hello or extension are E_COERCE with the offset. Handshake messages are not joined across records: a message that goes on in the next record shows only what is in the first. The layout is Forge's own." doc
   "Networking" category
   data format _input _records
   dup len 0 = [ "no TLS record: the input is empty" raise:coerce ] when
+  dup _hello-msgs [ _hello ] map [ _check-hello ] each
   [ _record-text ] mapi "\n\n" join ;
 
 META: parse-ethernet
