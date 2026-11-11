@@ -1,14 +1,16 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ ciphersaber2: CipherSaber-2, RC4 keyed with the key and a 10-byte IV and a repeated key setup. Encryption
-\ draws the IV at random (the +random effect is inferred from _random-iv) and puts it in front of the
+\ draws the IV at random (the +random effect is inferred from random:bytes-of) and puts it in front of the
 \ ciphertext; decryption takes the first 10 bytes as the IV. The key stream is a private primitive
 \ (src/prims/ciphersaber2.ts), like RC4's.
 IN: ciphersaber2
 
+USING: random ;
+
 : encrypt ( bytes key:key{hex|utf8|latin1|base64} rounds:int[1..10000]=20 -- bytes )
   "CipherSaber-2 encryption. A fresh random 10-byte IV is drawn, RC4 is keyed with the key followed by the IV (the key setup repeated rounds times; CipherSaber-1 is 1 round), and the output is the IV followed by the encrypted input. The word is not deterministic; to reproduce a ciphertext, decrypt a known one. Chain hex:encode for text." doc
   "Encryption" category
-  _random-iv tuck key swap rounds _crypt cat ;
+  10 random:bytes-of tuck key swap rounds _crypt cat ;
 
 : decrypt ( bytes key:key{hex|utf8|latin1|base64} rounds:int[1..10000]=20 -- bytes )
   "CipherSaber-2 decryption, the inverse of ciphersaber2:encrypt with the same key and rounds: the first 10 bytes of the input are the IV and the rest is decrypted. Input shorter than the 10-byte IV is E_COERCE. A wrong key or round count gives garbage, not an error (there is no check value)." doc

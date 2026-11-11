@@ -9,11 +9,6 @@ USING: random clock md5 sha1 ;
 
 \ ---- text ----
 
-\ The decimal text of v, left-padded with zeros to n digits (a longer number is written whole): 10^n + v starts with a 1
-\ followed by the padded digits.
-: _pad ( v:int n:int -- str )
-  v 10 n pow < [ 10 n pow v + int>str 1 n 1 + slice ] [ v int>str ] if ;
-
 \ The 32 hex digits in groups of 8-4-4-4-12.
 : _dashes ( h:str -- str )
   h 0 8 slice "-" cat h 8 12 slice cat "-" cat h 12 16 slice cat "-" cat h 16 20 slice cat "-" cat h 20 32 slice cat ;
@@ -109,37 +104,9 @@ META: generate
 : _be-int ( b:bytes -- int )
   b 256 util:digits>int ;
 
-\ The proleptic Gregorian date of a day number (days since 1970-01-01) as year, month and day: the civil-from-days
-\ algorithm of Howard Hinnant (public domain), in four steps. Floor division makes it right before 1970 too.
-\ Step 4: mp counts months from March; the year ticks over in January and February.
-: _civil4 ( mp:int doy:int y0:int -- int int int )
-  y0 mp 2 + 12 div + mp 2 + 12 mod 1 + doy 153 mp * 2 + 5 div - 1 + ;
-
-: _civil3 ( doy:int y0:int -- int int int )
-  doy 5 * 2 + 153 div doy y0 _civil4 ;
-
-: _civil2 ( yoe:int era:int doe:int -- int int int )
-  doe 365 yoe * yoe 4 div + yoe 100 div - - yoe era 400 * + _civil3 ;
-
-: _civil1 ( era:int doe:int -- int int int )
-  doe doe 1460 div - doe 36524 div + doe 146096 div - 365 div era doe _civil2 ;
-
-: _civil ( days:int -- int int int )
-  days 719468 + dup 146097 div swap 146097 mod _civil1 ;
-
-\ YYYY-MM-DDTHH:MM:SS.mmm from a year, month, day and the milliseconds into the day (no zone, UTC).
-: _stamp-text ( y:int m:int d:int tod:int -- str )
-  y 4 _pad "-" cat m 2 _pad cat "-" cat d 2 _pad cat "T" cat
-  tod 3600000 div 2 _pad cat ":" cat tod 60000 div 60 mod 2 _pad cat ":" cat
-  tod 1000 div 60 mod 2 _pad cat "." cat tod 1000 mod 3 _pad cat ;
-
-\ The UTC date and time of a Unix time in milliseconds, to the millisecond.
-: _iso ( ms:int -- str )
-  ms 86400000 div _civil ms 86400000 mod _stamp-text ;
-
 \ The Unix time in 100 ns ticks as UTC text with seven fractional digits.
 : _iso-ticks ( u:int -- str )
-  u 10000 div _iso u 10000 mod 4 _pad cat "Z" cat ;
+  u 10000 div util:iso-from-ms u 10000 mod 4 util:zero-pad cat "Z" cat ;
 
 \ The tick count of a version 1 UUID (time_low, time_mid, time_hi) and of a version 6 UUID (time_high, time_mid,
 \ time_low), minus the Gregorian offset: Unix 100 ns ticks.
@@ -169,7 +136,7 @@ META: generate
 : _time-lines ( b:bytes v:int -- list )
   v 1 = [ { } "Timestamp: " b _ticks1 _iso-ticks cat append ] [
   v 6 = [ { } "Timestamp: " b _ticks6 _iso-ticks cat append ] [
-  v 7 = [ { } "Timestamp: " b 0 6 slice _be-int _iso cat "Z" cat append ] [ { } ] if ] if ] if ;
+  v 7 = [ { } "Timestamp: " b 0 6 slice _be-int util:iso-from-ms cat "Z" cat append ] [ { } ] if ] if ] if ;
 
 : _rfc-report ( b:bytes v:int -- str )
   { } "Version: " v int>str cat " (" cat v _version-name cat ")" cat append

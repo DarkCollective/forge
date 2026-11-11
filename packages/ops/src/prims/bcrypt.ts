@@ -30,7 +30,6 @@
  *  - `_hash ( password salt cost prefix -- bytes )`: the 60-character string as ASCII bytes;
  *  - `_verify ( password hash -- bool )`: parses the string, recomputes and compares in constant time;
  *  - `_parse ( hash -- str )`: a text report of the cost, salt and hash (CyberChef's "Bcrypt parse");
- *  - `_random-salt ( -- bytes )`: 16 random bytes (effect +random), the only source of randomness.
  *
  * Cost cap: the work doubles with each step of the cost, and the bake deadline of an untrusted recipe is
  * 10 s. `MAX_COST` (16) bounds the cost of `_hash` and of the cost read from a string in `_verify`
@@ -184,14 +183,6 @@ export function parse(text: string): string {
   return `Rounds: ${p.cost}\nSalt: $${p.prefix}$${String(p.cost).padStart(2, "0")}$${p.salt}\nPassword hash: ${p.hash}\nFull hash: ${text}`;
 }
 
-/** Sixteen random bytes from the host's CSPRNG. */
-export function randomSalt(): Uint8Array {
-  const c = (globalThis as unknown as { crypto?: { getRandomValues(a: Uint8Array): Uint8Array } })
-    .crypto;
-  if (c === undefined) throw rangeFailure("no secure random source is available in this host");
-  return c.getRandomValues(new Uint8Array(SALT_LENGTH));
-}
-
 export const primitives: readonly PrimitiveDef[] = [
   definePrimitive(
     "bcrypt",
@@ -210,10 +201,5 @@ export const primitives: readonly PrimitiveDef[] = [
   definePrimitive("bcrypt", "_parse", "( hash:str -- str )", parse, {
     doc: "A text report of the cost, salt and hash of a bcrypt string (private helper of bcrypt:parse).",
     category: "Key derivation",
-  }),
-  definePrimitive("bcrypt", "_random-salt", "( -- bytes )", randomSalt, {
-    doc: "Sixteen random bytes for a bcrypt salt (private helper of bcrypt:hash).",
-    category: "Key derivation",
-    effects: ["+random"],
   }),
 ];

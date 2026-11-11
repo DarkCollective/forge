@@ -41,10 +41,7 @@ IN: coords
   t _nd swap int>num swap int>num / ;
 
 \ An unsigned decimal number as pico-degrees, rounded to the nearest.
-: _pico2 ( n:int d:int -- int )
-  n 1000000000000 * d 2 div + d div ;
-
-: _pico ( t:str -- int ) t _nd _pico2 ;
+: _pico ( t:str -- int ) t _nd swap 1000000000000 * swap util:round-div ;
 
 \ ---- text out ----
 
@@ -174,15 +171,11 @@ IN: coords
   toks len 2 > [ toks 2 nth 3600 _minor + ] when
   toks 0 nth "-" util:starts-with? [ neg ] when ;
 
-\ True when the list has the item.
-: _has? ( items:list x:str -- bool )
-  items [ x = ] filter len 0 > ;
-
 \ The numbers of the text split into a latitude half and a longitude half of h tokens each; the
 \ letters S and W make the value negative.
 : _halves ( nums:list letters:list h:int -- int int )
-  nums 0 h slice _half letters "S" _has? [ abs neg ] when
-  nums h nums len slice _half letters "W" _has? [ abs neg ] when ;
+  nums 0 h slice _half letters "S" util:contains? [ abs neg ] when
+  nums h nums len slice _half letters "W" util:contains? [ abs neg ] when ;
 
 \ How many numbers each format has (0 for auto).
 : _expected ( from:str -- int )

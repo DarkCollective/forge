@@ -19,7 +19,7 @@ IN: diff
 \ The words of a sample: runs of white space (ASCII, as util:space? has it) and runs of anything else, in order, so
 \ joining them gives the text back.
 : _words ( s:str -- list )
-  s "[\t-\r ]+|[^\t-\r ]+" "" regex:find-all [ "text" get ] map ;
+  s "[\t-\r ]+|[^\t-\r ]+" "" util:match-texts ;
 
 : _tokens ( s:str by:str -- list )
   by "line" = [ s _sample-lines ] [ by "word" = [ s _words ] [ s str>codes [ util:cp>str ] map ] if ] if ;
