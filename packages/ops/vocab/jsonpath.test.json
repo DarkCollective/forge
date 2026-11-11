@@ -1,0 +1,1290 @@
+[
+  {
+    "name": "RFC 9535 section 1.5 example: $.store.book[*].author",
+    "ref": "RFC 9535 Table 2 queries on the bookstore document; results from the jsonpath-rfc9535 and json-p3 implementations (equal)",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$.store.book[*].author",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"store\": {\"book\": [{\"category\": \"reference\", \"author\": \"Nigel Rees\", \"title\": \"Sayings of the Century\", \"price\": 8.95}, {\"category\": \"fiction\", \"author\": \"Evelyn Waugh\", \"title\": \"Sword of Honour\", \"price\": 12.99}, {\"category\": \"fiction\", \"author\": \"Herman Melville\", \"title\": \"Moby Dick\", \"isbn\": \"0-553-21311-3\", \"price\": 8.99}, {\"category\": \"fiction\", \"author\": \"J. R. R. Tolkien\", \"title\": \"The Lord of the Rings\", \"isbn\": \"0-395-19395-8\", \"price\": 22.99}], \"bicycle\": {\"color\": \"red\", \"price\": 399}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"Nigel Rees\"\n\"Evelyn Waugh\"\n\"Herman Melville\"\n\"J. R. R. Tolkien\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 9535 section 1.5 example: $..author",
+    "ref": "RFC 9535 Table 2 queries on the bookstore document; results from the jsonpath-rfc9535 and json-p3 implementations (equal)",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$..author",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"store\": {\"book\": [{\"category\": \"reference\", \"author\": \"Nigel Rees\", \"title\": \"Sayings of the Century\", \"price\": 8.95}, {\"category\": \"fiction\", \"author\": \"Evelyn Waugh\", \"title\": \"Sword of Honour\", \"price\": 12.99}, {\"category\": \"fiction\", \"author\": \"Herman Melville\", \"title\": \"Moby Dick\", \"isbn\": \"0-553-21311-3\", \"price\": 8.99}, {\"category\": \"fiction\", \"author\": \"J. R. R. Tolkien\", \"title\": \"The Lord of the Rings\", \"isbn\": \"0-395-19395-8\", \"price\": 22.99}], \"bicycle\": {\"color\": \"red\", \"price\": 399}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"Nigel Rees\"\n\"Evelyn Waugh\"\n\"Herman Melville\"\n\"J. R. R. Tolkien\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 9535 section 1.5 example: $.store.*",
+    "ref": "RFC 9535 Table 2 queries on the bookstore document; results from the jsonpath-rfc9535 and json-p3 implementations (equal)",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$.store.*",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"store\": {\"book\": [{\"category\": \"reference\", \"author\": \"Nigel Rees\", \"title\": \"Sayings of the Century\", \"price\": 8.95}, {\"category\": \"fiction\", \"author\": \"Evelyn Waugh\", \"title\": \"Sword of Honour\", \"price\": 12.99}, {\"category\": \"fiction\", \"author\": \"Herman Melville\", \"title\": \"Moby Dick\", \"isbn\": \"0-553-21311-3\", \"price\": 8.99}, {\"category\": \"fiction\", \"author\": \"J. R. R. Tolkien\", \"title\": \"The Lord of the Rings\", \"isbn\": \"0-395-19395-8\", \"price\": 22.99}], \"bicycle\": {\"color\": \"red\", \"price\": 399}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[{\"category\":\"reference\",\"author\":\"Nigel Rees\",\"title\":\"Sayings of the Century\",\"price\":8.95},{\"category\":\"fiction\",\"author\":\"Evelyn Waugh\",\"title\":\"Sword of Honour\",\"price\":12.99},{\"category\":\"fiction\",\"author\":\"Herman Melville\",\"title\":\"Moby Dick\",\"isbn\":\"0-553-21311-3\",\"price\":8.99},{\"category\":\"fiction\",\"author\":\"J. R. R. Tolkien\",\"title\":\"The Lord of the Rings\",\"isbn\":\"0-395-19395-8\",\"price\":22.99}]\n{\"color\":\"red\",\"price\":399}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 9535 section 1.5 example: $.store..price",
+    "ref": "RFC 9535 Table 2 queries on the bookstore document; results from the jsonpath-rfc9535 and json-p3 implementations (equal)",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$.store..price",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"store\": {\"book\": [{\"category\": \"reference\", \"author\": \"Nigel Rees\", \"title\": \"Sayings of the Century\", \"price\": 8.95}, {\"category\": \"fiction\", \"author\": \"Evelyn Waugh\", \"title\": \"Sword of Honour\", \"price\": 12.99}, {\"category\": \"fiction\", \"author\": \"Herman Melville\", \"title\": \"Moby Dick\", \"isbn\": \"0-553-21311-3\", \"price\": 8.99}, {\"category\": \"fiction\", \"author\": \"J. R. R. Tolkien\", \"title\": \"The Lord of the Rings\", \"isbn\": \"0-395-19395-8\", \"price\": 22.99}], \"bicycle\": {\"color\": \"red\", \"price\": 399}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "8.95\n12.99\n8.99\n22.99\n399",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 9535 section 1.5 example: $..book[2]",
+    "ref": "RFC 9535 Table 2 queries on the bookstore document; results from the jsonpath-rfc9535 and json-p3 implementations (equal)",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$..book[2]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"store\": {\"book\": [{\"category\": \"reference\", \"author\": \"Nigel Rees\", \"title\": \"Sayings of the Century\", \"price\": 8.95}, {\"category\": \"fiction\", \"author\": \"Evelyn Waugh\", \"title\": \"Sword of Honour\", \"price\": 12.99}, {\"category\": \"fiction\", \"author\": \"Herman Melville\", \"title\": \"Moby Dick\", \"isbn\": \"0-553-21311-3\", \"price\": 8.99}, {\"category\": \"fiction\", \"author\": \"J. R. R. Tolkien\", \"title\": \"The Lord of the Rings\", \"isbn\": \"0-395-19395-8\", \"price\": 22.99}], \"bicycle\": {\"color\": \"red\", \"price\": 399}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"category\":\"fiction\",\"author\":\"Herman Melville\",\"title\":\"Moby Dick\",\"isbn\":\"0-553-21311-3\",\"price\":8.99}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 9535 section 1.5 example: $..book[2].author",
+    "ref": "RFC 9535 Table 2 queries on the bookstore document; results from the jsonpath-rfc9535 and json-p3 implementations (equal)",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$..book[2].author",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"store\": {\"book\": [{\"category\": \"reference\", \"author\": \"Nigel Rees\", \"title\": \"Sayings of the Century\", \"price\": 8.95}, {\"category\": \"fiction\", \"author\": \"Evelyn Waugh\", \"title\": \"Sword of Honour\", \"price\": 12.99}, {\"category\": \"fiction\", \"author\": \"Herman Melville\", \"title\": \"Moby Dick\", \"isbn\": \"0-553-21311-3\", \"price\": 8.99}, {\"category\": \"fiction\", \"author\": \"J. R. R. Tolkien\", \"title\": \"The Lord of the Rings\", \"isbn\": \"0-395-19395-8\", \"price\": 22.99}], \"bicycle\": {\"color\": \"red\", \"price\": 399}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"Herman Melville\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 9535 section 1.5 example: $..book[2].publisher",
+    "ref": "RFC 9535 Table 2 queries on the bookstore document; results from the jsonpath-rfc9535 and json-p3 implementations (equal)",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$..book[2].publisher",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"store\": {\"book\": [{\"category\": \"reference\", \"author\": \"Nigel Rees\", \"title\": \"Sayings of the Century\", \"price\": 8.95}, {\"category\": \"fiction\", \"author\": \"Evelyn Waugh\", \"title\": \"Sword of Honour\", \"price\": 12.99}, {\"category\": \"fiction\", \"author\": \"Herman Melville\", \"title\": \"Moby Dick\", \"isbn\": \"0-553-21311-3\", \"price\": 8.99}, {\"category\": \"fiction\", \"author\": \"J. R. R. Tolkien\", \"title\": \"The Lord of the Rings\", \"isbn\": \"0-395-19395-8\", \"price\": 22.99}], \"bicycle\": {\"color\": \"red\", \"price\": 399}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 9535 section 1.5 example: $..book[-1]",
+    "ref": "RFC 9535 Table 2 queries on the bookstore document; results from the jsonpath-rfc9535 and json-p3 implementations (equal)",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$..book[-1]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"store\": {\"book\": [{\"category\": \"reference\", \"author\": \"Nigel Rees\", \"title\": \"Sayings of the Century\", \"price\": 8.95}, {\"category\": \"fiction\", \"author\": \"Evelyn Waugh\", \"title\": \"Sword of Honour\", \"price\": 12.99}, {\"category\": \"fiction\", \"author\": \"Herman Melville\", \"title\": \"Moby Dick\", \"isbn\": \"0-553-21311-3\", \"price\": 8.99}, {\"category\": \"fiction\", \"author\": \"J. R. R. Tolkien\", \"title\": \"The Lord of the Rings\", \"isbn\": \"0-395-19395-8\", \"price\": 22.99}], \"bicycle\": {\"color\": \"red\", \"price\": 399}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"category\":\"fiction\",\"author\":\"J. R. R. Tolkien\",\"title\":\"The Lord of the Rings\",\"isbn\":\"0-395-19395-8\",\"price\":22.99}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 9535 section 1.5 example: $..book[0,1]",
+    "ref": "RFC 9535 Table 2 queries on the bookstore document; results from the jsonpath-rfc9535 and json-p3 implementations (equal)",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$..book[0,1]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"store\": {\"book\": [{\"category\": \"reference\", \"author\": \"Nigel Rees\", \"title\": \"Sayings of the Century\", \"price\": 8.95}, {\"category\": \"fiction\", \"author\": \"Evelyn Waugh\", \"title\": \"Sword of Honour\", \"price\": 12.99}, {\"category\": \"fiction\", \"author\": \"Herman Melville\", \"title\": \"Moby Dick\", \"isbn\": \"0-553-21311-3\", \"price\": 8.99}, {\"category\": \"fiction\", \"author\": \"J. R. R. Tolkien\", \"title\": \"The Lord of the Rings\", \"isbn\": \"0-395-19395-8\", \"price\": 22.99}], \"bicycle\": {\"color\": \"red\", \"price\": 399}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"category\":\"reference\",\"author\":\"Nigel Rees\",\"title\":\"Sayings of the Century\",\"price\":8.95}\n{\"category\":\"fiction\",\"author\":\"Evelyn Waugh\",\"title\":\"Sword of Honour\",\"price\":12.99}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 9535 section 1.5 example: $..book[:2]",
+    "ref": "RFC 9535 Table 2 queries on the bookstore document; results from the jsonpath-rfc9535 and json-p3 implementations (equal)",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$..book[:2]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"store\": {\"book\": [{\"category\": \"reference\", \"author\": \"Nigel Rees\", \"title\": \"Sayings of the Century\", \"price\": 8.95}, {\"category\": \"fiction\", \"author\": \"Evelyn Waugh\", \"title\": \"Sword of Honour\", \"price\": 12.99}, {\"category\": \"fiction\", \"author\": \"Herman Melville\", \"title\": \"Moby Dick\", \"isbn\": \"0-553-21311-3\", \"price\": 8.99}, {\"category\": \"fiction\", \"author\": \"J. R. R. Tolkien\", \"title\": \"The Lord of the Rings\", \"isbn\": \"0-395-19395-8\", \"price\": 22.99}], \"bicycle\": {\"color\": \"red\", \"price\": 399}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"category\":\"reference\",\"author\":\"Nigel Rees\",\"title\":\"Sayings of the Century\",\"price\":8.95}\n{\"category\":\"fiction\",\"author\":\"Evelyn Waugh\",\"title\":\"Sword of Honour\",\"price\":12.99}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 9535 section 1.5 example: $..book[?@.isbn]",
+    "ref": "RFC 9535 Table 2 queries on the bookstore document; results from the jsonpath-rfc9535 and json-p3 implementations (equal)",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$..book[?@.isbn]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"store\": {\"book\": [{\"category\": \"reference\", \"author\": \"Nigel Rees\", \"title\": \"Sayings of the Century\", \"price\": 8.95}, {\"category\": \"fiction\", \"author\": \"Evelyn Waugh\", \"title\": \"Sword of Honour\", \"price\": 12.99}, {\"category\": \"fiction\", \"author\": \"Herman Melville\", \"title\": \"Moby Dick\", \"isbn\": \"0-553-21311-3\", \"price\": 8.99}, {\"category\": \"fiction\", \"author\": \"J. R. R. Tolkien\", \"title\": \"The Lord of the Rings\", \"isbn\": \"0-395-19395-8\", \"price\": 22.99}], \"bicycle\": {\"color\": \"red\", \"price\": 399}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"category\":\"fiction\",\"author\":\"Herman Melville\",\"title\":\"Moby Dick\",\"isbn\":\"0-553-21311-3\",\"price\":8.99}\n{\"category\":\"fiction\",\"author\":\"J. R. R. Tolkien\",\"title\":\"The Lord of the Rings\",\"isbn\":\"0-395-19395-8\",\"price\":22.99}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 9535 section 1.5 example: $..book[?@.price<10]",
+    "ref": "RFC 9535 Table 2 queries on the bookstore document; results from the jsonpath-rfc9535 and json-p3 implementations (equal)",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$..book[?@.price<10]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"store\": {\"book\": [{\"category\": \"reference\", \"author\": \"Nigel Rees\", \"title\": \"Sayings of the Century\", \"price\": 8.95}, {\"category\": \"fiction\", \"author\": \"Evelyn Waugh\", \"title\": \"Sword of Honour\", \"price\": 12.99}, {\"category\": \"fiction\", \"author\": \"Herman Melville\", \"title\": \"Moby Dick\", \"isbn\": \"0-553-21311-3\", \"price\": 8.99}, {\"category\": \"fiction\", \"author\": \"J. R. R. Tolkien\", \"title\": \"The Lord of the Rings\", \"isbn\": \"0-395-19395-8\", \"price\": 22.99}], \"bicycle\": {\"color\": \"red\", \"price\": 399}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"category\":\"reference\",\"author\":\"Nigel Rees\",\"title\":\"Sayings of the Century\",\"price\":8.95}\n{\"category\":\"fiction\",\"author\":\"Herman Melville\",\"title\":\"Moby Dick\",\"isbn\":\"0-553-21311-3\",\"price\":8.99}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 9535 section 1.5 example: $..*",
+    "ref": "RFC 9535 Table 2 queries on the bookstore document; results from the jsonpath-rfc9535 and json-p3 implementations (equal)",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$..*",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"store\": {\"book\": [{\"category\": \"reference\", \"author\": \"Nigel Rees\", \"title\": \"Sayings of the Century\", \"price\": 8.95}, {\"category\": \"fiction\", \"author\": \"Evelyn Waugh\", \"title\": \"Sword of Honour\", \"price\": 12.99}, {\"category\": \"fiction\", \"author\": \"Herman Melville\", \"title\": \"Moby Dick\", \"isbn\": \"0-553-21311-3\", \"price\": 8.99}, {\"category\": \"fiction\", \"author\": \"J. R. R. Tolkien\", \"title\": \"The Lord of the Rings\", \"isbn\": \"0-395-19395-8\", \"price\": 22.99}], \"bicycle\": {\"color\": \"red\", \"price\": 399}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"book\":[{\"category\":\"reference\",\"author\":\"Nigel Rees\",\"title\":\"Sayings of the Century\",\"price\":8.95},{\"category\":\"fiction\",\"author\":\"Evelyn Waugh\",\"title\":\"Sword of Honour\",\"price\":12.99},{\"category\":\"fiction\",\"author\":\"Herman Melville\",\"title\":\"Moby Dick\",\"isbn\":\"0-553-21311-3\",\"price\":8.99},{\"category\":\"fiction\",\"author\":\"J. R. R. Tolkien\",\"title\":\"The Lord of the Rings\",\"isbn\":\"0-395-19395-8\",\"price\":22.99}],\"bicycle\":{\"color\":\"red\",\"price\":399}}\n[{\"category\":\"reference\",\"author\":\"Nigel Rees\",\"title\":\"Sayings of the Century\",\"price\":8.95},{\"category\":\"fiction\",\"author\":\"Evelyn Waugh\",\"title\":\"Sword of Honour\",\"price\":12.99},{\"category\":\"fiction\",\"author\":\"Herman Melville\",\"title\":\"Moby Dick\",\"isbn\":\"0-553-21311-3\",\"price\":8.99},{\"category\":\"fiction\",\"author\":\"J. R. R. Tolkien\",\"title\":\"The Lord of the Rings\",\"isbn\":\"0-395-19395-8\",\"price\":22.99}]\n{\"color\":\"red\",\"price\":399}\n{\"category\":\"reference\",\"author\":\"Nigel Rees\",\"title\":\"Sayings of the Century\",\"price\":8.95}\n{\"category\":\"fiction\",\"author\":\"Evelyn Waugh\",\"title\":\"Sword of Honour\",\"price\":12.99}\n{\"category\":\"fiction\",\"author\":\"Herman Melville\",\"title\":\"Moby Dick\",\"isbn\":\"0-553-21311-3\",\"price\":8.99}\n{\"category\":\"fiction\",\"author\":\"J. R. R. Tolkien\",\"title\":\"The Lord of the Rings\",\"isbn\":\"0-395-19395-8\",\"price\":22.99}\n\"reference\"\n\"Nigel Rees\"\n\"Sayings of the Century\"\n8.95\n\"fiction\"\n\"Evelyn Waugh\"\n\"Sword of Honour\"\n12.99\n\"fiction\"\n\"Herman Melville\"\n\"Moby Dick\"\n\"0-553-21311-3\"\n8.99\n\"fiction\"\n\"J. R. R. Tolkien\"\n\"The Lord of the Rings\"\n\"0-395-19395-8\"\n22.99\n\"red\"\n399",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a custom result delimiter",
+    "ref": "RFC 9535",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$.store.book[*].author",
+      "result-delimiter": " | "
+    },
+    "input": {
+      "value": "{\"store\": {\"book\": [{\"category\": \"reference\", \"author\": \"Nigel Rees\", \"title\": \"Sayings of the Century\", \"price\": 8.95}, {\"category\": \"fiction\", \"author\": \"Evelyn Waugh\", \"title\": \"Sword of Honour\", \"price\": 12.99}, {\"category\": \"fiction\", \"author\": \"Herman Melville\", \"title\": \"Moby Dick\", \"isbn\": \"0-553-21311-3\", \"price\": 8.99}, {\"category\": \"fiction\", \"author\": \"J. R. R. Tolkien\", \"title\": \"The Lord of the Rings\", \"isbn\": \"0-395-19395-8\", \"price\": 22.99}], \"bicycle\": {\"color\": \"red\", \"price\": 399}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"Nigel Rees\" | \"Evelyn Waugh\" | \"Herman Melville\" | \"J. R. R. Tolkien\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a delimiter with escapes (CR LF)",
+    "ref": "RFC 9535",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$.store.book[0:2].price",
+      "result-delimiter": "\\r\\n"
+    },
+    "input": {
+      "value": "{\"store\": {\"book\": [{\"category\": \"reference\", \"author\": \"Nigel Rees\", \"title\": \"Sayings of the Century\", \"price\": 8.95}, {\"category\": \"fiction\", \"author\": \"Evelyn Waugh\", \"title\": \"Sword of Honour\", \"price\": 12.99}, {\"category\": \"fiction\", \"author\": \"Herman Melville\", \"title\": \"Moby Dick\", \"isbn\": \"0-553-21311-3\", \"price\": 8.99}, {\"category\": \"fiction\", \"author\": \"J. R. R. Tolkien\", \"title\": \"The Lord of the Rings\", \"isbn\": \"0-395-19395-8\", \"price\": 22.99}], \"bicycle\": {\"color\": \"red\", \"price\": 399}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "8.95\r\n12.99",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a query that selects nothing gives an empty result",
+    "ref": "RFC 9535 section 2.1",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$..book[2].publisher",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"store\": {\"book\": [{\"category\": \"reference\", \"author\": \"Nigel Rees\", \"title\": \"Sayings of the Century\", \"price\": 8.95}, {\"category\": \"fiction\", \"author\": \"Evelyn Waugh\", \"title\": \"Sword of Honour\", \"price\": 12.99}, {\"category\": \"fiction\", \"author\": \"Herman Melville\", \"title\": \"Moby Dick\", \"isbn\": \"0-553-21311-3\", \"price\": 8.99}, {\"category\": \"fiction\", \"author\": \"J. R. R. Tolkien\", \"title\": \"The Lord of the Rings\", \"isbn\": \"0-395-19395-8\", \"price\": 22.99}], \"bicycle\": {\"color\": \"red\", \"price\": 399}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "the JPath filter syntax with parentheses",
+    "ref": "RFC 9535 section 2.3.5 (a parenthesised expression)",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$.store.book[?(@.price<9)].title",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"store\": {\"book\": [{\"category\": \"reference\", \"author\": \"Nigel Rees\", \"title\": \"Sayings of the Century\", \"price\": 8.95}, {\"category\": \"fiction\", \"author\": \"Evelyn Waugh\", \"title\": \"Sword of Honour\", \"price\": 12.99}, {\"category\": \"fiction\", \"author\": \"Herman Melville\", \"title\": \"Moby Dick\", \"isbn\": \"0-553-21311-3\", \"price\": 8.99}, {\"category\": \"fiction\", \"author\": \"J. R. R. Tolkien\", \"title\": \"The Lord of the Rings\", \"isbn\": \"0-395-19395-8\", \"price\": 22.99}], \"bicycle\": {\"color\": \"red\", \"price\": 399}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"Sayings of the Century\"\n\"Moby Dick\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: basic, root",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "[\"first\",\"second\"]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[\"first\",\"second\"]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: basic, name shorthand, absent data",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $.c",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$.c",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"a\":\"A\",\"b\":\"B\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: basic, multiple selectors",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $[0,2]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[0,2]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "[0,1,2,3,4,5,6,7,8,9]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0\n2",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: basic, multiple selectors, duplicate index",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $[1,1]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[1,1]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "[0,1,2,3,4,5,6,7,8,9]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1\n1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: basic, descendant segment, name shorthand",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $..a",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$..a",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"o\":[{\"a\":\"b\"},{\"a\":\"c\"}]}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"b\"\n\"c\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: filter, existence",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $[?@.a]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[?@.a]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "[{\"a\":\"b\",\"d\":\"e\"},{\"b\":\"c\",\"d\":\"f\"}]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"a\":\"b\",\"d\":\"e\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: filter, not-equals numeric string, double quotes",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $[?@.a!=\"1\"]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[?@.a!=\"1\"]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "[{\"a\":\"1\",\"d\":\"e\"},{\"a\":1,\"d\":\"f\"}]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"a\":1,\"d\":\"f\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: filter, greater than string, single quotes",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $[?@.a>'c']",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[?@.a>'c']",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "[{\"a\":\"b\",\"d\":\"e\"},{\"a\":\"c\",\"d\":\"f\"},{\"a\":\"d\",\"d\":\"f\"}]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"a\":\"d\",\"d\":\"f\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: filter, non-singular existence, wildcard",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $[?@.*]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[?@.*]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "[1,[],[2],{},{\"a\":3}]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[2]\n{\"a\":3}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: filter, equals number, exponent +00",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $[?@.a==1e+00]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[?@.a==1e+00]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "[{\"a\":1,\"d\":\"e\"},{\"a\":2,\"d\":\"f\"},{\"a\":\"1\",\"d\":\"g\"}]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"a\":1,\"d\":\"e\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: index selector, first element",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $[0]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[0]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "[\"first\",\"second\"]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"first\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: index selector, out of bound",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $[2]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[2]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "[\"first\",\"second\"]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: index selector, max exact index",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $[9007199254740991]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[9007199254740991]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "[\"first\",\"second\"]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: index selector, more negative",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $[-2]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[-2]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "[\"first\",\"second\"]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"first\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: index selector, on object",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $[0]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[0]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"foo\":1}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: name selector, double quotes",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $[\"a\"]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[\"a\"]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"a\":\"A\",\"b\":\"B\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"A\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: name selector, double quotes, escaped double quote",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $[\"\\\"\"]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[\"\\\"\"]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"\\\"\":\"A\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"A\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: name selector, double quotes, escaped ☺, upper case hex",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $[\"\\u263A\"]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[\"\\u263A\"]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"☺\":\"A\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"A\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: name selector, single quotes",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $['a']",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$['a']",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"a\":\"A\",\"b\":\"B\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"A\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: name selector, single quotes, escaped form feed",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $['\\f']",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$['\\f']",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"\\f\":\"A\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"A\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: slice selector, slice selector",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $[1:3]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[1:3]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "[0,1,2,3,4,5,6,7,8,9]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1\n2",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: slice selector, negative step with default end",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $[2::-1]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[2::-1]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "[0,1,2,3]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2\n1\n0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: slice selector, positive from, negative to",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $[1:-1]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[1:-1]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "[0,1,2,3,4,5,6,7,8,9]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1\n2\n3\n4\n5\n6\n7\n8",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: slice selector, slice selector with everything omitted with empty array",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $[:]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[:]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "[]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: slice selector, excessively large step",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $[1:10:113667776004]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[1:10:113667776004]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "[0,1,2,3,4,5,6,7,8,9]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: functions, count, count function",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $[?count(@..*)>2]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[?count(@..*)>2]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "[{\"a\":[1,2,3]},{\"a\":[1],\"d\":\"f\"},{\"a\":1,\"d\":\"f\"}]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"a\":[1,2,3]}\n{\"a\":[1],\"d\":\"f\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: functions, length, arg is a function expression",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $.values[?length(@.a)==length(value($..c))]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$.values[?length(@.a)==length(value($..c))]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"c\":\"cd\",\"values\":[{\"a\":\"ab\"},{\"a\":\"d\"}]}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"a\":\"ab\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: functions, match, filter, match function, unicode char class negated, uppercase",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $[?match(@, '\\\\P{Lu}')]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[?match(@, '\\\\P{Lu}')]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "[\"ж\",\"Ж\",\"1\",true,[],{}]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"ж\"\n\"1\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: functions, match, explicit dollar",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $[?match(@, '.*bc$')]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[?match(@, '.*bc$')]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "[\"abc\",\"axc\",\"ab\",\"abcx\"]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"abc\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: functions, search, filter, search function, unicode char class, uppercase",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $[?search(@, '\\\\p{Lu}')]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[?search(@, '\\\\p{Lu}')]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "[\"ж\",\"Ж\",\"1\",\"жЖ\",true,[],{}]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"Ж\"\n\"жЖ\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: whitespace, filter, space between question mark and expression",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $[? @.a]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[? @.a]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "[{\"a\":\"b\",\"d\":\"e\"},{\"b\":\"c\",\"d\":\"f\"}]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"a\":\"b\",\"d\":\"e\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: whitespace, functions, return between arg and parenthesis",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $[?count(@.*\r)==1]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[?count(@.*\r)==1]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "[{\"a\":1},{\"b\":2},{\"a\":2,\"b\":1}]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"a\":1}\n{\"b\":2}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: whitespace, operators, tab after ==",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $[?@.a==\t@.b]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[?@.a==\t@.b]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "[{\"a\":1,\"b\":1},{\"a\":1,\"b\":2}]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"a\":1,\"b\":1}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: whitespace, operators, newline after <=",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $[?@.a<=\n@.b]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[?@.a<=\n@.b]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "[{\"a\":1,\"b\":1},{\"a\":1,\"b\":2},{\"a\":2,\"b\":1}]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"a\":1,\"b\":1}\n{\"a\":1,\"b\":2}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS: whitespace, selectors, space between bracket and selector",
+    "ref": "JSONPath Compliance Test Suite (jsonpath-standard), selector $[ 'a']",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[ 'a']",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"a\":\"ab\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"ab\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CTS invalid: basic, no leading whitespace",
+    "ref": "JSONPath Compliance Test Suite, invalid selector  $",
+    "op": "jsonpath:query",
+    "params": {
+      "query": " $",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "null",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "CTS invalid: filter, non-singular query in comparison, slice",
+    "ref": "JSONPath Compliance Test Suite, invalid selector $[?@[0:0]==0]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[?@[0:0]==0]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "null",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "CTS invalid: filter, relative non-singular query, wildcard, equal",
+    "ref": "JSONPath Compliance Test Suite, invalid selector $[?(@.*==42)]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[?(@.*==42)]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "null",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "CTS invalid: filter, absolute non-singular query, combined, not equal",
+    "ref": "JSONPath Compliance Test Suite, invalid selector $[?($[0, '0']!=42)]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[?($[0, '0']!=42)]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "null",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "CTS invalid: filter, equals number, invalid 00",
+    "ref": "JSONPath Compliance Test Suite, invalid selector $[?@.a==00]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[?@.a==00]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "null",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "CTS invalid: filter, literal false must be compared",
+    "ref": "JSONPath Compliance Test Suite, invalid selector $[?false]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[?false]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "null",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "CTS invalid: filter, null, incorrectly capitalized",
+    "ref": "JSONPath Compliance Test Suite, invalid selector $[?@==Null]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[?@==Null]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "null",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "CTS invalid: name selector, double quotes, embedded U+0002",
+    "ref": "JSONPath Compliance Test Suite, invalid selector $[\"\u0002\"]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[\"\u0002\"]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "null",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "CTS invalid: name selector, double quotes, embedded U+000F",
+    "ref": "JSONPath Compliance Test Suite, invalid selector $[\"\u000f\"]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[\"\u000f\"]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "null",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "CTS invalid: name selector, double quotes, embedded U+001C",
+    "ref": "JSONPath Compliance Test Suite, invalid selector $[\"\u001c\"]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[\"\u001c\"]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "null",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "CTS invalid: name selector, double quotes, n escape",
+    "ref": "JSONPath Compliance Test Suite, invalid selector $[\"\\N{LATIN CAPITAL LETTER A}\"]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[\"\\N{LATIN CAPITAL LETTER A}\"]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "null",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "CTS invalid: name selector, double quotes, non-surrogate surrogate",
+    "ref": "JSONPath Compliance Test Suite, invalid selector $[\"\\u1234\\uDC00\"]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[\"\\u1234\\uDC00\"]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "null",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "CTS invalid: name selector, single quotes, embedded U+0009",
+    "ref": "JSONPath Compliance Test Suite, invalid selector $['\t']",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$['\t']",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "null",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "CTS invalid: name selector, single quotes, embedded U+0016",
+    "ref": "JSONPath Compliance Test Suite, invalid selector $['\u0016']",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$['\u0016']",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "null",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "CTS invalid: slice selector, too many colons",
+    "ref": "JSONPath Compliance Test Suite, invalid selector $[1:2:3:4]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[1:2:3:4]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "null",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "CTS invalid: slice selector, underflowing step",
+    "ref": "JSONPath Compliance Test Suite, invalid selector $[-1:-10:-231584178474632390847141970017375815706539969331281128078915168015826259279872]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[-1:-10:-231584178474632390847141970017375815706539969331281128078915168015826259279872]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "null",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "CTS invalid: slice selector, step, leading 0",
+    "ref": "JSONPath Compliance Test Suite, invalid selector $[::01]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[::01]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "null",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "CTS invalid: functions, count, too many params",
+    "ref": "JSONPath Compliance Test Suite, invalid selector $[?count(@.a,@.b)==1]",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[?count(@.a,@.b)==1]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "null",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "malformed JSON",
+    "ref": "RFC 8259",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"a\":",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "empty query",
+    "ref": "RFC 9535 section 2.2: a query starts with $",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"a\":1}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a script expression of the old dialect",
+    "ref": "not in RFC 9535",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$..book[(@.length-1)]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"store\": {\"book\": [{\"category\": \"reference\", \"author\": \"Nigel Rees\", \"title\": \"Sayings of the Century\", \"price\": 8.95}, {\"category\": \"fiction\", \"author\": \"Evelyn Waugh\", \"title\": \"Sword of Honour\", \"price\": 12.99}, {\"category\": \"fiction\", \"author\": \"Herman Melville\", \"title\": \"Moby Dick\", \"isbn\": \"0-553-21311-3\", \"price\": 8.99}, {\"category\": \"fiction\", \"author\": \"J. R. R. Tolkien\", \"title\": \"The Lord of the Rings\", \"isbn\": \"0-395-19395-8\", \"price\": 22.99}], \"bicycle\": {\"color\": \"red\", \"price\": 399}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "object keys that look like properties of Object",
+    "ref": "own properties only",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$.constructor",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"a\":1}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a key named __proto__ is an ordinary key",
+    "ref": "RFC 9535 member-name-shorthand",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$.__proto__",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"__proto__\":{\"x\":1}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"x\":1}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "null values are selected as null",
+    "ref": "RFC 9535 section 2.1",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$[*]",
+      "result-delimiter": ","
+    },
+    "input": {
+      "value": "[null,1,\"a\",false]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "null,1,\"a\",false",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a big integer stays exact",
+    "ref": "RFC 8259 / RFC 9535",
+    "op": "jsonpath:query",
+    "params": {
+      "query": "$.n",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "{\"n\":123456789012345678901234567890}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "123456789012345678901234567890",
+      "enc": "utf8"
+    }
+  }
+]

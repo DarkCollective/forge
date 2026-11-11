@@ -1,0 +1,884 @@
+[
+  {
+    "name": "a variable",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "Hello {{name}}!"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Hello World!",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a dotted path",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "{{user.first}} / {{user.nested.deep}} / {{user.missing.x}}."
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Ann / d / .",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "html is escaped in {{x}}",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "{{html}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "&lt;b&gt;&amp;&quot;&#x27;&#x60;&#x3D;&lt;/b&gt;",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "triple braces and & do not escape",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "{{{html}}}|{{& html}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<b>&\"'`=</b>|<b>&\"'`=</b>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "numbers, booleans, null and missing values",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "[{{n}}][{{num}}][{{t}}][{{f}}][{{nul}}][{{missing}}][{{s}}]"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[0][12.5][true][false][][][]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "arrays and objects as text",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "{{items}} {{empty}} {{user}} {{objs}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a,b,c  [object Object] [object Object],[object Object]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "each over an array with @index and @last",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "{{#each items}}{{@index}}={{this}}{{#unless @last}}, {{/unless}}{{/each}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0=a, 1=b, 2=c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "each over an object: integer keys first",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "{{#each map}}{{@key}}:{{this}};{{/each}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1:one;2:two;z:zed;",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "each with else for the empty case",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "{{#each empty}}x{{else}}nothing{{/each}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "nothing",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "each with block parameters",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "{{#each items as |item i|}}{{i}}-{{item}} {{/each}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0-a 1-b 2-c ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "nested each and ../",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "{{#each objs}}{{id}}:{{#each tags}}{{this}}{{../id}} {{/each}}|{{/each}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1:x1 y1 |2:|",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "@first and @../index",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "{{#each objs}}{{#each tags}}{{@../index}}{{@index}} {{/each}}{{/each}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00 01 ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "if / else",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "{{#if user.admin}}admin{{else}}user{{/if}} {{#if f}}F{{else}}notF{{/if}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "admin notF",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "else if chain",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "{{#if n}}n{{else if user.first}}first={{user.first}}{{else}}none{{/if}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "first=Ann",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unless",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "{{#unless f}}shown{{/unless}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "shown",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "if treats 0, empty string and empty list as false",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "{{#if n}}A{{/if}}{{#if s}}B{{/if}}{{#if empty}}C{{/if}}{{#if items}}D{{/if}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "D",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "if includeZero",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "{{#if n includeZero=true}}zero counts{{/if}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "zero counts",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "with",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "{{#with user}}{{first}} ({{nested.deep}}){{/with}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Ann (d)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "with and ../",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "{{#with user}}{{first}} of {{../name}}{{/with}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Ann of World",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "lookup helper",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "{{lookup items 1}} {{lookup user 'first'}} {{lookup map 1}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "b Ann one",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "subexpression lookup",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "{{#if (lookup user 'admin')}}A{{/if}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "A",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "length and index paths",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "{{items.length}} {{items.[1]}} {{name.length}} {{objs.[0].tags.length}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3 b 5 2",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "this and @root",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "{{#each items}}{{this}}{{@root.name}} {{/each}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "aWorld bWorld cWorld ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Mustache section over a list",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "{{#items}}<{{.}}>{{/items}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<a><b><c>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Mustache section over an object",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "{{#user}}{{first}}-{{admin}}{{/user}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Ann-true",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Mustache section with else, and an inverted section",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "{{#empty}}full{{else}}none{{/empty}} {{^empty}}inverted{{/empty}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "none inverted",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "comments",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "a{{! hidden }}b{{!-- {{also}} hidden --}}c"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "abc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escaped braces",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "\\{{name}} and {{name}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{{name}} and World",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "white-space control with ~",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "x   {{~name~}}   y"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "xWorldy",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a block alone on its line removes the line",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "A\n{{#if t}}\nB\n{{/if}}\nC\n"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "A\nB\nC\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "standalone each",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "{{#each items}}\n- {{this}}\n{{/each}}\nend\n"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "- a\n- b\n- c\nend\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "standalone else",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "{{#if f}}\nyes\n{{else}}\nno\n{{/if}}\n"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "no\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "indented standalone block",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "  {{#if t}}\n  kept\n  {{/if}}\nz"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "  kept\nz",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "standalone comment line",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "a\n  {{! note }}\nb"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a\nb",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a mustache on its own line keeps its line break",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "a\n{{name}}\nb"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a\nWorld\nb",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CRLF line breaks",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "A\r\n{{#if t}}\r\nB\r\n{{/if}}\r\nC"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "A\r\nB\r\nC",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "literals as arguments",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "{{lookup items 2}} {{lookup user \"first\"}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c Ann",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unicode",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "{{name}} ☕ {{user.first}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "World ☕ Ann",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "empty template",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": ""
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "text only",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "no mustaches here"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "no mustaches here",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "error: a partial",
+    "ref": "Handlebars rejects it or Forge's subset does not offer it",
+    "op": "template:render",
+    "params": {
+      "template": "{{> p}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: an unclosed block",
+    "ref": "Handlebars rejects it or Forge's subset does not offer it",
+    "op": "template:render",
+    "params": {
+      "template": "{{#if t}}x"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: a mismatched close",
+    "ref": "Handlebars rejects it or Forge's subset does not offer it",
+    "op": "template:render",
+    "params": {
+      "template": "{{#each items}}x{{/if}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: a close with no block",
+    "ref": "Handlebars rejects it or Forge's subset does not offer it",
+    "op": "template:render",
+    "params": {
+      "template": "x{{/if}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: a stray else",
+    "ref": "Handlebars rejects it or Forge's subset does not offer it",
+    "op": "template:render",
+    "params": {
+      "template": "x{{else}}y"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: an unclosed mustache",
+    "ref": "Handlebars rejects it or Forge's subset does not offer it",
+    "op": "template:render",
+    "params": {
+      "template": "x {{name"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: a missing helper",
+    "ref": "Handlebars rejects it or Forge's subset does not offer it",
+    "op": "template:render",
+    "params": {
+      "template": "{{foo bar}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: a raw block",
+    "ref": "Handlebars rejects it or Forge's subset does not offer it",
+    "op": "template:render",
+    "params": {
+      "template": "{{{{raw}}}}x{{{{/raw}}}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: a decorator",
+    "ref": "Handlebars rejects it or Forge's subset does not offer it",
+    "op": "template:render",
+    "params": {
+      "template": "{{*inline}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: an unknown data variable",
+    "ref": "Handlebars rejects it or Forge's subset does not offer it",
+    "op": "template:render",
+    "params": {
+      "template": "{{@level}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: if without an argument",
+    "ref": "Handlebars rejects it or Forge's subset does not offer it",
+    "op": "template:render",
+    "params": {
+      "template": "{{#if}}x{{/if}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: each with a named argument it does not know",
+    "ref": "Handlebars rejects it or Forge's subset does not offer it",
+    "op": "template:render",
+    "params": {
+      "template": "{{#each items foo=1}}x{{/each}}"
+    },
+    "input": {
+      "value": "{\"name\":\"World\",\"n\":0,\"t\":true,\"f\":false,\"s\":\"\",\"items\":[\"a\",\"b\",\"c\"],\"empty\":[],\"objs\":[{\"id\":1,\"tags\":[\"x\",\"y\"]},{\"id\":2,\"tags\":[]}],\"user\":{\"first\":\"Ann\",\"admin\":true,\"nested\":{\"deep\":\"d\"}},\"html\":\"<b>&\\\"'`=</b>\",\"num\":12.5,\"nul\":null,\"map\":{\"1\":\"one\",\"2\":\"two\",\"z\":\"zed\"}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: malformed JSON input",
+    "ref": "RFC 8259",
+    "op": "template:render",
+    "params": {
+      "template": "{{a}}"
+    },
+    "input": {
+      "value": "{",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: empty input",
+    "ref": "RFC 8259",
+    "op": "template:render",
+    "params": {
+      "template": "{{a}}"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "the top-level value may be a list",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "{{#each this}}[{{this}}]{{/each}}"
+    },
+    "input": {
+      "value": "[1,2,3]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[1][2][3]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "the top-level value may be a string",
+    "ref": "Handlebars 4.7.10 (the reference implementation of the language) run on the same data and template",
+    "op": "template:render",
+    "params": {
+      "template": "<{{this}}>"
+    },
+    "input": {
+      "value": "\"hi & bye\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<hi &amp; bye>",
+      "enc": "utf8"
+    }
+  }
+]

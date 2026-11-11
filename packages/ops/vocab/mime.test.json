@@ -1,0 +1,401 @@
+[
+  {
+    "name": "Q encoded word with UTF-8",
+    "ref": "Python email.header.decode_header (RFC 2047), chunks decoded and joined",
+    "op": "mime:decode",
+    "params": {},
+    "input": {
+      "value": "=?UTF-8?Q?Caf=C3=A9?=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Café",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "B encoded word with UTF-8",
+    "ref": "Python email.header.decode_header (RFC 2047), chunks decoded and joined",
+    "op": "mime:decode",
+    "params": {},
+    "input": {
+      "value": "=?UTF-8?B?Q2Fmw6k=?=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Café",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "text around a word is kept",
+    "ref": "Python email.header.decode_header (RFC 2047), chunks decoded and joined",
+    "op": "mime:decode",
+    "params": {},
+    "input": {
+      "value": "Subject: =?UTF-8?Q?Caf=C3=A9?= <a@b.example>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Subject: Café <a@b.example>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ISO-8859-1 Q word",
+    "ref": "Python email.header.decode_header (RFC 2047), chunks decoded and joined",
+    "op": "mime:decode",
+    "params": {},
+    "input": {
+      "value": "=?iso-8859-1?Q?Andr=E9?=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "André",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Q: underscore is a space",
+    "ref": "Python email.header.decode_header (RFC 2047), chunks decoded and joined",
+    "op": "mime:decode",
+    "params": {},
+    "input": {
+      "value": "=?UTF-8?Q?a_b_c?=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a b c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "two adjacent words: the white space between them is dropped",
+    "ref": "Python email.header.decode_header (RFC 2047), chunks decoded and joined",
+    "op": "mime:decode",
+    "params": {},
+    "input": {
+      "value": "=?UTF-8?Q?a?= =?UTF-8?Q?b?=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ab",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a word, plain text, a word",
+    "ref": "Python email.header.decode_header (RFC 2047), chunks decoded and joined",
+    "op": "mime:decode",
+    "params": {},
+    "input": {
+      "value": "=?UTF-8?Q?a?= and =?UTF-8?Q?b?=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a and b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a folded header: the line break between words is dropped",
+    "ref": "Python email.header.decode_header (RFC 2047), chunks decoded and joined",
+    "op": "mime:decode",
+    "params": {},
+    "input": {
+      "value": "=?UTF-8?B?4pyT?=\r\n =?UTF-8?Q?_ok?=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "✓ ok",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "lower case encoding letters and charset",
+    "ref": "Python email.header.decode_header (RFC 2047), chunks decoded and joined",
+    "op": "mime:decode",
+    "params": {},
+    "input": {
+      "value": "=?utf-8?q?Caf=C3=A9?= =?utf-8?b?Q2Fmw6k=?=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "CaféCafé",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "KOI8-R",
+    "ref": "Python email.header.decode_header (RFC 2047), chunks decoded and joined",
+    "op": "mime:decode",
+    "params": {},
+    "input": {
+      "value": "=?koi8-r?B?8NLJ18XU?=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Привет",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "windows-1252 Q word",
+    "ref": "Python email.header.decode_header (RFC 2047), chunks decoded and joined",
+    "op": "mime:decode",
+    "params": {},
+    "input": {
+      "value": "=?windows-1252?Q?Caf=E9_=80?=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Café €",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ISO-8859-15 B word (euro sign)",
+    "ref": "Python email.header.decode_header (RFC 2047), chunks decoded and joined",
+    "op": "mime:decode",
+    "params": {},
+    "input": {
+      "value": "=?ISO-8859-15?B?pA==?=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "€",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "Shift_JIS B word",
+    "ref": "Python email.header.decode_header (RFC 2047), chunks decoded and joined",
+    "op": "mime:decode",
+    "params": {},
+    "input": {
+      "value": "=?shift_jis?B?k/qWe4zq?=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "日本語",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "GB2312 Q word",
+    "ref": "Python email.header.decode_header (RFC 2047), chunks decoded and joined",
+    "op": "mime:decode",
+    "params": {},
+    "input": {
+      "value": "=?gb2312?B?1tDOxA==?=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "中文",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "emoji in UTF-8 B",
+    "ref": "Python email.header.decode_header (RFC 2047), chunks decoded and joined",
+    "op": "mime:decode",
+    "params": {},
+    "input": {
+      "value": "=?UTF-8?B?8J+YgA==?=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "😀",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "plain text is unchanged",
+    "ref": "Python email.header.decode_header (RFC 2047), chunks decoded and joined",
+    "op": "mime:decode",
+    "params": {},
+    "input": {
+      "value": "Just a plain header value",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Just a plain header value",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "empty input",
+    "ref": "Python email.header.decode_header (RFC 2047), chunks decoded and joined",
+    "op": "mime:decode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "language part of the charset (RFC 2231)",
+    "ref": "RFC 2231 section 5 (Python decode_header does not read it, so the expected text is by hand)",
+    "op": "mime:decode",
+    "params": {},
+    "input": {
+      "value": "=?utf-8*en?q?hi?=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "hi",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "US-ASCII word",
+    "ref": "Python email.header.decode_header (RFC 2047), chunks decoded and joined",
+    "op": "mime:decode",
+    "params": {},
+    "input": {
+      "value": "=?us-ascii?Q?hello?=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "hello",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "an unknown encoding letter leaves the text as it is",
+    "ref": "RFC 2047 section 2: only B and Q exist",
+    "op": "mime:decode",
+    "params": {},
+    "input": {
+      "value": "=?UTF-8?X?abc?= stays",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "=?UTF-8?X?abc?= stays",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "white space inside a word means it is not an encoded word",
+    "ref": "RFC 2047 section 2: encoded-text has no white space",
+    "op": "mime:decode",
+    "params": {},
+    "input": {
+      "value": "=?UTF-8?Q?a b?=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "=?UTF-8?Q?a b?=",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CRLF in plain text becomes LF",
+    "ref": "CyberChef's documented behaviour",
+    "op": "mime:decode",
+    "params": {},
+    "input": {
+      "value": "a\r\nb",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a\nb",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unknown character set",
+    "ref": "RFC 2047 section 6.3 allows a display of the raw text; refused by design",
+    "op": "mime:decode",
+    "params": {},
+    "input": {
+      "value": "=?x-unknown?Q?a?=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "bad hex escape in Q",
+    "ref": "RFC 2047 section 4.2",
+    "op": "mime:decode",
+    "params": {},
+    "input": {
+      "value": "=?UTF-8?Q?bad=ZZ?=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "truncated hex escape in Q",
+    "ref": "RFC 2047 section 4.2",
+    "op": "mime:decode",
+    "params": {},
+    "input": {
+      "value": "=?UTF-8?Q?bad=4?=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "bad base64",
+    "ref": "RFC 2047 section 4.1",
+    "op": "mime:decode",
+    "params": {},
+    "input": {
+      "value": "=?UTF-8?B?!!!?=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "bytes that are not valid UTF-8",
+    "ref": "RFC 3629",
+    "op": "mime:decode",
+    "params": {},
+    "input": {
+      "value": "=?UTF-8?Q?=FF?=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a byte above 127 in a us-ascii word",
+    "ref": "RFC 2047 section 5",
+    "op": "mime:decode",
+    "params": {},
+    "input": {
+      "value": "=?us-ascii?Q?=E9?=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a non-ASCII character inside Q text",
+    "ref": "RFC 2047 section 4.2",
+    "op": "mime:decode",
+    "params": {},
+    "input": {
+      "value": "=?UTF-8?Q?é?=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]
