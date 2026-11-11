@@ -256,7 +256,7 @@ The hashing vocabularies (wave 3) follow the `sha2` vocabulary, which is the tem
 
 ## Running the vectors
 
-Every op has vectors in `vocab/<v>.test.json`, and the catalogue test fails if an op has none. All 2,407 vectors (80 files) run through the in-process baker in Node as part of the worker package's tests:
+Every op has vectors in `vocab/<v>.test.json`, and the catalogue test fails if an op has none. All 2,425 vectors (80 files) run through the in-process baker in Node as part of the worker package's tests:
 
 ```sh
 npm test -w @forge/worker                              # includes test/vectors.test.ts

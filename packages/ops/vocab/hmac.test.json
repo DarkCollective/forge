@@ -878,5 +878,365 @@
       "value": "b613679a0814d9ec772f95d778c35fc5ff1697c493715653c6c712144292c5ad",
       "enc": "hex"
     }
+  },
+  {
+    "name": "hmac md2 short key (RFC 2202 case 2 inputs)",
+    "ref": "HMAC-MD2 over the RFC 2202 case 2 inputs; RFC 2104 construction written in a throwaway script over Forge's own md2 digest (checked by that vocabulary's own vectors)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "md2",
+      "key": {
+        "value": "Jefe",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "what do ya want for nothing?",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "292f9d34f9e311846de86c495d7adfa2",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac md2 key longer than the block is hashed first (RFC 2202 case 6 inputs)",
+    "ref": "HMAC-MD2 over the RFC 2202 case 6 inputs; RFC 2104 construction written in a throwaway script over Forge's own md2 digest (checked by that vocabulary's own vectors)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "md2",
+      "key": {
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "Test Using Larger Than Block-Size Key - Hash Key First",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "615b1c392f5aaeeeab7e82572e6395d5",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac md4 short key (RFC 2202 case 2 inputs)",
+    "ref": "HMAC-MD4 over the RFC 2202 case 2 inputs; OpenSSL 3 legacy provider (openssl mac -provider legacy)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "md4",
+      "key": {
+        "value": "Jefe",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "what do ya want for nothing?",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "be192c588a8e914d8a59b474a828128f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac md4 key longer than the block is hashed first (RFC 2202 case 6 inputs)",
+    "ref": "HMAC-MD4 over the RFC 2202 case 6 inputs; OpenSSL 3 legacy provider (openssl mac -provider legacy)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "md4",
+      "key": {
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "Test Using Larger Than Block-Size Key - Hash Key First",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "545b8f2577657042df628fbb98430d5f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha0 short key (RFC 2202 case 2 inputs)",
+    "ref": "HMAC-SHA0 over the RFC 2202 case 2 inputs; RFC 2104 construction written in a throwaway script over Forge's own sha0 digest (checked by that vocabulary's own vectors)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha0",
+      "key": {
+        "value": "Jefe",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "what do ya want for nothing?",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "e13cc418ffa5e34731786bffcb3af84593463ba8",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac sha0 key longer than the block is hashed first (RFC 2202 case 6 inputs)",
+    "ref": "HMAC-SHA0 over the RFC 2202 case 6 inputs; RFC 2104 construction written in a throwaway script over Forge's own sha0 digest (checked by that vocabulary's own vectors)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "sha0",
+      "key": {
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "Test Using Larger Than Block-Size Key - Hash Key First",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "de21e90c69c161b03b6ba2a7849ccf8c0f23ccdb",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac ripemd128 short key (RFC 2202 case 2 inputs)",
+    "ref": "HMAC-RIPEMD128 over the RFC 2202 case 2 inputs; RFC 2104 construction written in a throwaway script over Forge's own ripemd128 digest (checked by that vocabulary's own vectors)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "ripemd128",
+      "key": {
+        "value": "Jefe",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "what do ya want for nothing?",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "875f828862b6b334b427c55f9f7ff09b",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac ripemd128 key longer than the block is hashed first (RFC 2202 case 6 inputs)",
+    "ref": "HMAC-RIPEMD128 over the RFC 2202 case 6 inputs; RFC 2104 construction written in a throwaway script over Forge's own ripemd128 digest (checked by that vocabulary's own vectors)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "ripemd128",
+      "key": {
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "Test Using Larger Than Block-Size Key - Hash Key First",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "dc732928de98104a1f59d373c150acbb",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac ripemd256 short key (RFC 2202 case 2 inputs)",
+    "ref": "HMAC-RIPEMD256 over the RFC 2202 case 2 inputs; RFC 2104 construction written in a throwaway script over Forge's own ripemd256 digest (checked by that vocabulary's own vectors)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "ripemd256",
+      "key": {
+        "value": "Jefe",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "what do ya want for nothing?",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "932d3e799272765675dd63c33f8d2815ea38181494f43271dd52fde91392619f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac ripemd256 key longer than the block is hashed first (RFC 2202 case 6 inputs)",
+    "ref": "HMAC-RIPEMD256 over the RFC 2202 case 6 inputs; RFC 2104 construction written in a throwaway script over Forge's own ripemd256 digest (checked by that vocabulary's own vectors)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "ripemd256",
+      "key": {
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "Test Using Larger Than Block-Size Key - Hash Key First",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "821543a295eccf093af9b461f630d7c49206fb2158e5ac89e73a02cf089528ed",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac ripemd320 short key (RFC 2202 case 2 inputs)",
+    "ref": "HMAC-RIPEMD320 over the RFC 2202 case 2 inputs; RFC 2104 construction written in a throwaway script over Forge's own ripemd320 digest (checked by that vocabulary's own vectors)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "ripemd320",
+      "key": {
+        "value": "Jefe",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "what do ya want for nothing?",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "e440b00b6326e4f7dad3a6591e8189e9708fc17e3cab306fc67efaf70947aad2ea89e28f79d03bd3",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac ripemd320 key longer than the block is hashed first (RFC 2202 case 6 inputs)",
+    "ref": "HMAC-RIPEMD320 over the RFC 2202 case 6 inputs; RFC 2104 construction written in a throwaway script over Forge's own ripemd320 digest (checked by that vocabulary's own vectors)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "ripemd320",
+      "key": {
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "Test Using Larger Than Block-Size Key - Hash Key First",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a61c1123c1a23ffdd9af5fb28b62b95f989876ac322452f5e4f4470c25182ef4816aaec7f0377167",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac has160 short key (RFC 2202 case 2 inputs)",
+    "ref": "HMAC-HAS160 over the RFC 2202 case 2 inputs; RFC 2104 construction written in a throwaway script over Forge's own has160 digest (checked by that vocabulary's own vectors)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "has160",
+      "key": {
+        "value": "Jefe",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "what do ya want for nothing?",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a74547c1ef0aa147c7428ab7e71664549be2a412",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac has160 key longer than the block is hashed first (RFC 2202 case 6 inputs)",
+    "ref": "HMAC-HAS160 over the RFC 2202 case 6 inputs; RFC 2104 construction written in a throwaway script over Forge's own has160 digest (checked by that vocabulary's own vectors)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "has160",
+      "key": {
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "Test Using Larger Than Block-Size Key - Hash Key First",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "63750d67af40e3fde33526545d300972a1527053",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac whirlpool short key (RFC 2202 case 2 inputs)",
+    "ref": "HMAC-WHIRLPOOL over the RFC 2202 case 2 inputs; OpenSSL 3 legacy provider (openssl mac -provider legacy)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "whirlpool",
+      "key": {
+        "value": "Jefe",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "what do ya want for nothing?",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3d595ccd1d4f4cfd045af53ba7d5c8283fee6ded6eaf1269071b6b4ea64800056b5077c6a942cfa1221bd4e5aed791276e5dd46a407d2b8007163d3e7cd1de66",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac whirlpool key longer than the block is hashed first (RFC 2202 case 6 inputs)",
+    "ref": "HMAC-WHIRLPOOL over the RFC 2202 case 6 inputs; OpenSSL 3 legacy provider (openssl mac -provider legacy)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "whirlpool",
+      "key": {
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "Test Using Larger Than Block-Size Key - Hash Key First",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "dd90bd637cfcd27ca914c290f33402cf68576d6e70601af0295f6b9dafa9d988d8b8fb4fde8605ac544638158dba2baa90a2bf882546cd0b876d59ab3f18962e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac snefru short key (RFC 2202 case 2 inputs)",
+    "ref": "HMAC-SNEFRU over the RFC 2202 case 2 inputs; RFC 2104 construction written in a throwaway script over Forge's own snefru digest (checked by that vocabulary's own vectors)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "snefru",
+      "key": {
+        "value": "Jefe",
+        "enc": "utf8"
+      }
+    },
+    "input": {
+      "value": "what do ya want for nothing?",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f02d40405a715c06ba231eb148056ba0",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hmac snefru key longer than the block is hashed first (RFC 2202 case 6 inputs)",
+    "ref": "HMAC-SNEFRU over the RFC 2202 case 6 inputs; RFC 2104 construction written in a throwaway script over Forge's own snefru digest (checked by that vocabulary's own vectors)",
+    "op": "hmac:digest",
+    "params": {
+      "alg": "snefru",
+      "key": {
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "Test Using Larger Than Block-Size Key - Hash Key First",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "65b66454c9ffeac8fbafe39fd525b15d",
+      "enc": "hex"
+    }
   }
 ]
