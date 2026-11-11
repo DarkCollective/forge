@@ -37,6 +37,7 @@ The private primitives, each in `src/prims/<v>.ts`:
 - `unicode:_normalize`: Unicode normalisation (NFC, NFD, NFKC, NFKD);
 - `aes:_check-key`, `aes:_block-enc`, `aes:_block-dec`, `aes:_crypt` and `aes:_gcm`: AES over the audited `@noble/ciphers` (the block pair also drives `blockmode` for OFB);
 - `pbkdf2:_derive`, `scrypt:_derive`, `argon2:_derive` and `argon2:_verify`: the key derivation functions over the audited `@noble/hashes` (they are memory- or time-hard, far beyond the FL step budget; each caps its cost, see the vocabulary's primitive file; the Argon2 primitive also writes and parses the PHC encoded string). HKDF and EVP_BytesToKey are plain FL, over `hmac:digest` and the md5, sha1 and sha2 digest words.
+- `fernet:_now`, `fernet:_random-iv` and `flask-session:_now`: the clock (`+time`) and the host CSPRNG (`+random`), which FL cannot read; the first two are the only labelled words in the package. The constructions (`fernet:_seal`, `fernet:_open`, `flask-session:_sign`) take the time and the IV as arguments, so tests pin them; the public words only supply them. `fernet:_random-iv` never falls back to `Math.random`.
 - `sigaba:_run`: the SIGABA rotor stack over letters 0 to 25 (the loop needs a fast mutable array, which FL lacks);
 - `classical:_ls47`: the LS47 letter-by-letter cipher on a given board, for the same reason;
 - `bombe:_search`: the Bombe test over the 17,576 start positions of one rotor order;
@@ -93,6 +94,8 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `endian`           | swap the byte order of 2, 4 or 8 byte words                                                                                                                            |
 | `enigma`           | Enigma I, M3 and M4 rotor machines, one reciprocal word; also the shared historical rotor, turnover and reflector data (1 op)                                          |
 | `evp`              | OpenSSL EVP_BytesToKey key derivation in FL over MD5, SHA-1 and SHA-2 (1 op)                                                                                           |
+| `fernet`           | Fernet encrypt and decrypt (github.com/fernet/spec) over aes and hmac, with the +random and +time effects (2 ops)                                                      |
+| `flask-session`    | Flask session cookies (itsdangerous, HMAC-SHA1/256) decode, sign and verify (3 ops)                                                                                    |
 | `fletcher`         | Fletcher-8, -16, -32 and -64 (1 op)                                                                                                                                    |
 | `float`            | IEEE 754 binary32 and binary64 numbers to and from bytes                                                                                                               |
 | `fractionating`    | ADFGX and ADFGVX, Polybius, Nihilist and Trifid (8 ops)                                                                                                                |
@@ -106,6 +109,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `hkdf`             | HKDF (RFC 5869) in FL over the HMAC hashes (1 op)                                                                                                                      |
 | `hmac`             | HMAC (RFC 2104) over MD5, SHA-1, SHA-2, SHA-3 and RIPEMD-160 (1 op)                                                                                                    |
 | `html`             | encode and decode character references (full named-entity table)                                                                                                       |
+| `jwt`              | JSON Web Tokens: decode, and HS256/HS384/HS512 sign and verify; never `none` (3 ops)                                                                                   |
 | `keccak`           | Keccak with the original padding, 224 to 512 bits (1 op)                                                                                                               |
 | `lorenz`           | Lorenz SZ40/42a/42b with the KH, ZMUG and BREAM patterns and the P5 mode, and a pattern merge helper (2 ops)                                                           |
 | `luhn`             | Luhn check digit and validity, any even radix (2 ops)                                                                                                                  |

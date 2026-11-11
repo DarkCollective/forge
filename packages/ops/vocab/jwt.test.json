@@ -1,0 +1,658 @@
+[
+  {
+    "name": "decode payload, RFC 7515 A.1",
+    "ref": "RFC 7515 appendix A.1 (JWS using HMAC SHA-256)",
+    "op": "jwt:decode",
+    "params": {
+      "part": "payload"
+    },
+    "input": {
+      "value": "eyJ0eXAiOiJKV1QiLA0KICJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"iss\":\"joe\",\r\n \"exp\":1300819380,\r\n \"http://example.com/is_root\":true}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode header, RFC 7515 A.1",
+    "ref": "RFC 7515 appendix A.1 (JWS using HMAC SHA-256)",
+    "op": "jwt:decode",
+    "params": {
+      "part": "header"
+    },
+    "input": {
+      "value": "eyJ0eXAiOiJKV1QiLA0KICJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"typ\":\"JWT\",\r\n \"alg\":\"HS256\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode the unsecured token's payload",
+    "ref": "RFC 7519 section 3.1 (unsecured JWT example)",
+    "op": "jwt:decode",
+    "params": {
+      "part": "payload"
+    },
+    "input": {
+      "value": "eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"iss\":\"joe\",\r\n \"exp\":1300819380,\r\n \"http://example.com/is_root\":true}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode the unsecured token's header",
+    "ref": "RFC 7519 section 3.1 (unsecured JWT example)",
+    "op": "jwt:decode",
+    "params": {
+      "part": "header"
+    },
+    "input": {
+      "value": "eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"alg\":\"none\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ignores a trailing newline",
+    "ref": "RFC 7515 appendix A.1 (JWS using HMAC SHA-256)",
+    "op": "jwt:decode",
+    "params": {
+      "part": "payload"
+    },
+    "input": {
+      "value": "eyJ0eXAiOiJKV1QiLA0KICJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"iss\":\"joe\",\r\n \"exp\":1300819380,\r\n \"http://example.com/is_root\":true}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode an encrypted (five-part) JWT is E_COERCE",
+    "ref": "RFC 7516 compact form has five parts",
+    "op": "jwt:decode",
+    "params": {
+      "part": "payload"
+    },
+    "input": {
+      "value": "a.b.c.d.e",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode two parts is E_COERCE",
+    "ref": "RFC 7515 section 7.1",
+    "op": "jwt:decode",
+    "params": {
+      "part": "payload"
+    },
+    "input": {
+      "value": "a.b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode a payload that is not an object is E_COERCE",
+    "ref": "computed with Python hmac/hashlib over the same header and payload (python3 -I, hmac.new(key, header_b64 + b'.' + payload_b64, hashlib.shaN))",
+    "op": "jwt:decode",
+    "params": {
+      "part": "payload"
+    },
+    "input": {
+      "value": "eyJhbGciOiJIUzI1NiJ9.WzFd.x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode bad base64url is E_COERCE",
+    "ref": "RFC 7515 section 2 (base64url)",
+    "op": "jwt:decode",
+    "params": {
+      "part": "payload"
+    },
+    "input": {
+      "value": "eyJhbGciOiJIUzI1NiJ9.@@@.x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "verify RFC 7515 A.1",
+    "ref": "RFC 7515 appendix A.1 (JWS using HMAC SHA-256) (key from the JWK k, base64url, as hex)",
+    "op": "jwt:verify",
+    "params": {
+      "key": {
+        "value": "0323354b2b0fa5bc837e0665777ba68f5ab328e6f054c928a90f84b2d2502ebfd3fb5a92d20647ef968ab4c377623d223d2e2172052e4f08c0cd9af567d080a3",
+        "enc": "hex"
+      },
+      "alg": "auto"
+    },
+    "input": {
+      "value": "eyJ0eXAiOiJKV1QiLA0KICJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"iss\":\"joe\",\r\n \"exp\":1300819380,\r\n \"http://example.com/is_root\":true}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify RFC 7515 A.1 pinned to HS256",
+    "ref": "RFC 7515 appendix A.1 (JWS using HMAC SHA-256)",
+    "op": "jwt:verify",
+    "params": {
+      "key": {
+        "value": "0323354b2b0fa5bc837e0665777ba68f5ab328e6f054c928a90f84b2d2502ebfd3fb5a92d20647ef968ab4c377623d223d2e2172052e4f08c0cd9af567d080a3",
+        "enc": "hex"
+      },
+      "alg": "HS256"
+    },
+    "input": {
+      "value": "eyJ0eXAiOiJKV1QiLA0KICJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"iss\":\"joe\",\r\n \"exp\":1300819380,\r\n \"http://example.com/is_root\":true}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify HS256",
+    "ref": "HS256 token of the jwt.io example (SflKxwRJ...); computed with Python hmac/hashlib over the same header and payload (python3 -I, hmac.new(key, header_b64 + b'.' + payload_b64, hashlib.shaN))",
+    "op": "jwt:verify",
+    "params": {
+      "key": {
+        "value": "your-256-bit-secret",
+        "enc": "utf8"
+      },
+      "alg": "auto"
+    },
+    "input": {
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"sub\":\"1234567890\",\"name\":\"John Doe\",\"iat\":1516239022}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify HS384",
+    "ref": "HS384 token ; computed with Python hmac/hashlib over the same header and payload (python3 -I, hmac.new(key, header_b64 + b'.' + payload_b64, hashlib.shaN))",
+    "op": "jwt:verify",
+    "params": {
+      "key": {
+        "value": "your-256-bit-secret",
+        "enc": "utf8"
+      },
+      "alg": "auto"
+    },
+    "input": {
+      "value": "eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.RGFdh_VuEuURSubru7xP4rbaA4boUyueI7rEm75l1cNdE9gQ7H6mx2DYpauBjX5S",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"sub\":\"1234567890\",\"name\":\"John Doe\",\"iat\":1516239022}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify HS512",
+    "ref": "HS512 token ; computed with Python hmac/hashlib over the same header and payload (python3 -I, hmac.new(key, header_b64 + b'.' + payload_b64, hashlib.shaN))",
+    "op": "jwt:verify",
+    "params": {
+      "key": {
+        "value": "your-256-bit-secret",
+        "enc": "utf8"
+      },
+      "alg": "auto"
+    },
+    "input": {
+      "value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.pazba9Pj009HgANP4pTCQAHpXNU7pVbjIGff_plktSzsa9rXTGzFngaawzXGEO6Q0Hx5dtGi-dMDlIadV81o3Q",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"sub\":\"1234567890\",\"name\":\"John Doe\",\"iat\":1516239022}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify HS384 pinned",
+    "ref": "computed with Python hmac/hashlib over the same header and payload (python3 -I, hmac.new(key, header_b64 + b'.' + payload_b64, hashlib.shaN))",
+    "op": "jwt:verify",
+    "params": {
+      "key": {
+        "value": "your-256-bit-secret",
+        "enc": "utf8"
+      },
+      "alg": "HS384"
+    },
+    "input": {
+      "value": "eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.RGFdh_VuEuURSubru7xP4rbaA4boUyueI7rEm75l1cNdE9gQ7H6mx2DYpauBjX5S",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"sub\":\"1234567890\",\"name\":\"John Doe\",\"iat\":1516239022}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a pinned alg that differs from the token's is E_COERCE",
+    "ref": "computed with Python hmac/hashlib over the same header and payload (python3 -I, hmac.new(key, header_b64 + b'.' + payload_b64, hashlib.shaN))",
+    "op": "jwt:verify",
+    "params": {
+      "key": {
+        "value": "your-256-bit-secret",
+        "enc": "utf8"
+      },
+      "alg": "HS256"
+    },
+    "input": {
+      "value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.pazba9Pj009HgANP4pTCQAHpXNU7pVbjIGff_plktSzsa9rXTGzFngaawzXGEO6Q0Hx5dtGi-dMDlIadV81o3Q",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a wrong key is E_COERCE",
+    "ref": "computed with Python hmac/hashlib over the same header and payload (python3 -I, hmac.new(key, header_b64 + b'.' + payload_b64, hashlib.shaN))",
+    "op": "jwt:verify",
+    "params": {
+      "key": {
+        "value": "wrong",
+        "enc": "utf8"
+      },
+      "alg": "auto"
+    },
+    "input": {
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "an altered payload is E_COERCE",
+    "ref": "computed with Python hmac/hashlib over the same header and payload (python3 -I, hmac.new(key, header_b64 + b'.' + payload_b64, hashlib.shaN))",
+    "op": "jwt:verify",
+    "params": {
+      "key": {
+        "value": "your-256-bit-secret",
+        "enc": "utf8"
+      },
+      "alg": "auto"
+    },
+    "input": {
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIjOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "an empty signature is E_COERCE",
+    "ref": "computed with Python hmac/hashlib over the same header and payload (python3 -I, hmac.new(key, header_b64 + b'.' + payload_b64, hashlib.shaN))",
+    "op": "jwt:verify",
+    "params": {
+      "key": {
+        "value": "your-256-bit-secret",
+        "enc": "utf8"
+      },
+      "alg": "auto"
+    },
+    "input": {
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "the unsecured token is never accepted (E_RANGE)",
+    "ref": "RFC 7519 section 3.1 (unsecured JWT example)",
+    "op": "jwt:verify",
+    "params": {
+      "key": {
+        "value": "your-256-bit-secret",
+        "enc": "utf8"
+      },
+      "alg": "auto"
+    },
+    "input": {
+      "value": "eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "alg none with a real-looking signature is E_RANGE",
+    "ref": "computed with Python hmac/hashlib over the same header and payload (python3 -I, hmac.new(key, header_b64 + b'.' + payload_b64, hashlib.shaN))",
+    "op": "jwt:verify",
+    "params": {
+      "key": {
+        "value": "your-256-bit-secret",
+        "enc": "utf8"
+      },
+      "alg": "auto"
+    },
+    "input": {
+      "value": "eyJhbGciOiJub25lIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.auIgSfV6-oCIbv2GxRFkw5FEpaO3gNrrcZf5dVGNFyQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "alg none stays refused when HS256 is pinned",
+    "ref": "RFC 7519 section 3.1 (unsecured JWT example)",
+    "op": "jwt:verify",
+    "params": {
+      "key": {
+        "value": "your-256-bit-secret",
+        "enc": "utf8"
+      },
+      "alg": "HS256"
+    },
+    "input": {
+      "value": "eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "a public-key alg (RS256) is E_RANGE",
+    "ref": "RFC 7518 section 3.1; public-key algorithms are wave 7",
+    "op": "jwt:verify",
+    "params": {
+      "key": {
+        "value": "your-256-bit-secret",
+        "enc": "utf8"
+      },
+      "alg": "auto"
+    },
+    "input": {
+      "value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.-8ccjAIZdl7LlF82l0OuwyvGLuF2CCFvienOKtM6MzQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "a header with alg twice is ambiguous (E_COERCE)",
+    "ref": "defence against parser differentials; computed with Python hmac/hashlib over the same header and payload (python3 -I, hmac.new(key, header_b64 + b'.' + payload_b64, hashlib.shaN))",
+    "op": "jwt:verify",
+    "params": {
+      "key": {
+        "value": "your-256-bit-secret",
+        "enc": "utf8"
+      },
+      "alg": "auto"
+    },
+    "input": {
+      "value": "eyJhbGciOiJub25lIiwiYWxnIjoiSFMyNTYifQ.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.j0AM5kbvT-6r8dWbE60rl1wnqc3xnfPobjPfAQ3WcGc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "an empty key is E_RANGE",
+    "ref": "jwt: the key must not be empty",
+    "op": "jwt:verify",
+    "params": {
+      "key": {
+        "value": "",
+        "enc": "utf8"
+      },
+      "alg": "auto"
+    },
+    "input": {
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "sign HS256",
+    "ref": "computed with Python hmac/hashlib over the same header and payload (python3 -I, hmac.new(key, header_b64 + b'.' + payload_b64, hashlib.shaN))",
+    "op": "jwt:sign",
+    "params": {
+      "key": {
+        "value": "your-256-bit-secret",
+        "enc": "utf8"
+      },
+      "alg": "HS256",
+      "header": "{}"
+    },
+    "input": {
+      "value": "{\"sub\":\"1234567890\",\"name\":\"John Doe\",\"iat\":1516239022}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign HS384",
+    "ref": "computed with Python hmac/hashlib over the same header and payload (python3 -I, hmac.new(key, header_b64 + b'.' + payload_b64, hashlib.shaN))",
+    "op": "jwt:sign",
+    "params": {
+      "key": {
+        "value": "your-256-bit-secret",
+        "enc": "utf8"
+      },
+      "alg": "HS384",
+      "header": "{}"
+    },
+    "input": {
+      "value": "{\"sub\":\"1234567890\",\"name\":\"John Doe\",\"iat\":1516239022}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.RGFdh_VuEuURSubru7xP4rbaA4boUyueI7rEm75l1cNdE9gQ7H6mx2DYpauBjX5S",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign HS512",
+    "ref": "computed with Python hmac/hashlib over the same header and payload (python3 -I, hmac.new(key, header_b64 + b'.' + payload_b64, hashlib.shaN))",
+    "op": "jwt:sign",
+    "params": {
+      "key": {
+        "value": "your-256-bit-secret",
+        "enc": "utf8"
+      },
+      "alg": "HS512",
+      "header": "{}"
+    },
+    "input": {
+      "value": "{\"sub\":\"1234567890\",\"name\":\"John Doe\",\"iat\":1516239022}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.pazba9Pj009HgANP4pTCQAHpXNU7pVbjIGff_plktSzsa9rXTGzFngaawzXGEO6Q0Hx5dtGi-dMDlIadV81o3Q",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign with an extra header member",
+    "ref": "computed with Python hmac/hashlib over the same header and payload (python3 -I, hmac.new(key, header_b64 + b'.' + payload_b64, hashlib.shaN))",
+    "op": "jwt:sign",
+    "params": {
+      "key": {
+        "value": "your-256-bit-secret",
+        "enc": "utf8"
+      },
+      "alg": "HS256",
+      "header": "{\"kid\":\"k1\"}"
+    },
+    "input": {
+      "value": "{\"sub\":\"1234567890\",\"name\":\"John Doe\",\"iat\":1516239022}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImsxIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.7_waepInKUYpi5mFJ12NwiMxGQZQIGsVVDL5BsolGCA",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign with typ replaced by the header",
+    "ref": "computed with Python hmac/hashlib over the same header and payload (python3 -I, hmac.new(key, header_b64 + b'.' + payload_b64, hashlib.shaN))",
+    "op": "jwt:sign",
+    "params": {
+      "key": {
+        "value": "your-256-bit-secret",
+        "enc": "utf8"
+      },
+      "alg": "HS256",
+      "header": " { \"typ\":\"at+jwt\" } "
+    },
+    "input": {
+      "value": "{\"sub\":\"1234567890\",\"name\":\"John Doe\",\"iat\":1516239022}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.c0IcqS4dlPxIP9o82qUU1f5A2iAsyvoUvDipAsgq4N0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign an empty object",
+    "ref": "computed with Python hmac/hashlib over the same header and payload (python3 -I, hmac.new(key, header_b64 + b'.' + payload_b64, hashlib.shaN))",
+    "op": "jwt:sign",
+    "params": {
+      "key": {
+        "value": "your-256-bit-secret",
+        "enc": "utf8"
+      },
+      "alg": "HS256",
+      "header": ""
+    },
+    "input": {
+      "value": "{}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.Et9HFtf9R3GEMA0IICOfFMVXY7kkTX1wr4qCyhIf58U",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign: alg in the extra header is E_RANGE",
+    "ref": "jwt: the alg comes from the alg parameter",
+    "op": "jwt:sign",
+    "params": {
+      "key": {
+        "value": "your-256-bit-secret",
+        "enc": "utf8"
+      },
+      "alg": "HS256",
+      "header": "{\"alg\":\"none\"}"
+    },
+    "input": {
+      "value": "{\"sub\":\"1234567890\",\"name\":\"John Doe\",\"iat\":1516239022}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "sign: an empty key is E_RANGE",
+    "ref": "jwt: the key must not be empty",
+    "op": "jwt:sign",
+    "params": {
+      "key": {
+        "value": "",
+        "enc": "utf8"
+      },
+      "alg": "HS256",
+      "header": "{}"
+    },
+    "input": {
+      "value": "{\"sub\":\"1234567890\",\"name\":\"John Doe\",\"iat\":1516239022}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "sign: a payload that is not an object is E_COERCE",
+    "ref": "RFC 7519 section 4 (claims set is a JSON object)",
+    "op": "jwt:sign",
+    "params": {
+      "key": {
+        "value": "your-256-bit-secret",
+        "enc": "utf8"
+      },
+      "alg": "HS256",
+      "header": "{}"
+    },
+    "input": {
+      "value": "[1]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "sign: an extra header that is not an object is E_COERCE",
+    "ref": "jwt: the header parameter is a JSON object",
+    "op": "jwt:sign",
+    "params": {
+      "key": {
+        "value": "your-256-bit-secret",
+        "enc": "utf8"
+      },
+      "alg": "HS256",
+      "header": "kid"
+    },
+    "input": {
+      "value": "{\"sub\":\"1234567890\",\"name\":\"John Doe\",\"iat\":1516239022}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]
