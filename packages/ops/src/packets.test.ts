@@ -77,6 +77,8 @@ const rec = (type: number, version: number, frag: Uint8Array): Uint8Array =>
 const hs = (type: number, body: Uint8Array): Uint8Array =>
   cat(Uint8Array.from([type]), u24(body.length), body);
 
+const latin1 = (b: Uint8Array): string => Array.from(b, (c) => String.fromCharCode(c)).join("");
+
 interface Vector {
   name: string;
   op: string;
@@ -85,7 +87,12 @@ interface Vector {
   expect: { value?: string; enc?: string; error?: string };
 }
 const load = (file: string): Vector[] =>
-  JSON.parse(readFileSync(fileURLToPath(new URL(`../vocab/${file}`, import.meta.url)), "utf8"));
+  JSON.parse(
+    readFileSync(
+      fileURLToPath(import.meta.url).replace(/[/\\]src[/\\][^/\\]*$/, `/vocab/${file}`),
+      "utf8",
+    ),
+  );
 const packetVectors = load("packets.test.json");
 /** The packet bytes of a vector by the start of its name (its input is the hex of the packet, as text or as bytes). */
 const packet = (name: string): Uint8Array => {
@@ -648,9 +655,11 @@ describe("the shared TLS words", () => {
   const clientFlight = packet("TLS 1.3 handshake: ClientHello");
   const serverFlight = packet("TLS 1.3: ServerHello and encrypted");
   const rec_ = async (data: Uint8Array, types: number[] = []) =>
-    (await val("packets:tls-records", bytes(data), list(types.map((n) => int(n))))) as Array<{
-      v: Map<string, Value>;
-    }>;
+    (await val(
+      "packets:tls-records",
+      bytes(data),
+      list(types.map((n) => int(n))),
+    )) as unknown as Array<{ v: Map<string, Value> }>;
   const f = (r: { v: Map<string, Value> }, k: string): unknown => (r.v.get(k) as Value).v;
 
   test("tls-records: types, versions, lengths, offsets and fragments", async () => {
@@ -676,7 +685,7 @@ describe("the shared TLS words", () => {
       list([]),
     ])) as Result;
     const first = (top(records).v as Value[])[0] as Value;
-    const msgs = (await val("packets:tls-handshakes", first, list([]))) as Array<{
+    const msgs = (await val("packets:tls-handshakes", first, list([]))) as unknown as Array<{
       v: Map<string, Value>;
     }>;
     expect(msgs.map((m) => f(m, "type"))).toEqual([2, 14, 11]);
@@ -693,9 +702,11 @@ describe("the shared TLS words", () => {
   });
 
   const hellos = async (data: Uint8Array, kinds: number[] = []) =>
-    (await val("packets:tls-hellos", bytes(data), list(kinds.map((n) => int(n))))) as Array<{
-      v: Map<string, Value>;
-    }>;
+    (await val(
+      "packets:tls-hellos",
+      bytes(data),
+      list(kinds.map((n) => int(n))),
+    )) as unknown as Array<{ v: Map<string, Value> }>;
   const lst = (h: { v: Map<string, Value> }, k: string): unknown[] =>
     (f(h, k) as Value[]).map((x) => x.v);
 
@@ -738,7 +749,7 @@ describe("the shared TLS words", () => {
     const hrr = packet("TLS 1.3: HelloRetryRequest flight");
     const [r] = await hellos(hrr);
     expect(f(r as never, "hrr")).toBe(true);
-    const k = (await val("packets:tls-hellos", bytes(hrr), list([int(2)]))) as Array<{
+    const k = (await val("packets:tls-hellos", bytes(hrr), list([int(2)]))) as unknown as Array<{
       v: Map<string, Value>;
     }>;
     const shares2 = f(k[0] as never, "key-shares") as Value[];
@@ -868,7 +879,7 @@ describe("cost on 64 KiB (steps are VM steps, measured)", () => {
 describe("Strip HTTP headers (http:strip-headers)", () => {
   const strip = async (s: string | Uint8Array) =>
     val("http:strip-headers", bytes(typeof s === "string" ? new TextEncoder().encode(s) : s));
-  const text = (b: unknown) => new TextDecoder().decode(b as Uint8Array);
+  const text = (b: unknown) => latin1(b as Uint8Array);
 
   test("the body after the first empty line, whatever the line ends", async () => {
     expect(text(await strip("A: b\r\n\r\nbody"))).toBe("body");
@@ -902,7 +913,7 @@ describe("Strip HTTP headers (http:strip-headers)", () => {
 
 describe("Dechunk HTTP response (http:dechunk, src/prims/http.ts)", () => {
   const enc = (s: string) => new TextEncoder().encode(s);
-  const dec = (s: string, limit = 1 << 20) => new TextDecoder().decode(dechunk(enc(s), limit));
+  const dec = (s: string, limit = 1 << 20) => latin1(dechunk(enc(s), limit));
 
   test("chunks, extensions, trailers, bare line feeds", () => {
     expect(dec("4\r\nWiki\r\n6;a=b\r\npedia \r\nE\r\nin \r\n\r\nchunks.\r\n0\r\n\r\n")).toBe(
@@ -941,7 +952,7 @@ describe("Dechunk HTTP response (http:dechunk, src/prims/http.ts)", () => {
 
   test("every cut of a valid body is E_COERCE", () => {
     const body = enc("3;x=y\r\nabc\r\n5\r\n12345\r\n0\r\nTrail: v\r\n\r\n");
-    expect(new TextDecoder().decode(dechunk(body, 1 << 20))).toBe("abc12345");
+    expect(latin1(dechunk(body, 1 << 20))).toBe("abc12345");
     for (let cut = 0; cut < body.length; cut++)
       expect(() => dechunk(body.subarray(0, cut), 1 << 20), `cut ${cut}`).toThrow();
   });
