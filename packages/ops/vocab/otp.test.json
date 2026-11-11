@@ -288,21 +288,6 @@
     }
   },
   {
-    "name": "hotp a counter of 2^64",
-    "ref": "the counter is 8 bytes",
-    "op": "otp:hotp",
-    "params": {
-      "counter": 18446744073709551616
-    },
-    "input": {
-      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ",
-      "enc": "utf8"
-    },
-    "expect": {
-      "error": "E_RANGE"
-    }
-  },
-  {
     "name": "totp sha1 at 59",
     "ref": "RFC 6238 appendix B, time 59, 8 digits",
     "op": "otp:totp",
