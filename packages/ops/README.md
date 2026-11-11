@@ -1,6 +1,6 @@
 # @forge/ops
 
-The operation vocabularies of Forge: 414 ops in 179 vocabularies, written in FL (the Forth-like Forge language), plus the build-time catalogue and the loaders that make them available in Node and in the browser.
+The operation vocabularies of Forge: 424 ops in 181 vocabularies, written in FL (the Forth-like Forge language), plus the build-time catalogue and the loaders that make them available in Node and in the browser.
 
 The package holds:
 
@@ -68,6 +68,8 @@ The private primitives, each in `src/prims/<v>.ts`:
 - `gost-mac:_imit`: the GOST 28147-89 IMIT with a MAC of 1 to 8 bytes (the 16-round loop per block is far too slow in FL at 64 KiB; 64 KiB is 300 steps). It keeps a copy of the S-box tables of `gost28147` (whose block cipher is private to its file); `src/gost-mac.test.ts` checks the two agree for all eight S-boxes.
 
 - `cbor:_decode`, `cbor:_encode`, `msgpack:_decode`, `msgpack:_encode`, `amf:_decode`, `amf:_encode`, `avro:_header`, `avro:_decode`, `tlv:_parse`, `rison:_decode`, `rison:_encode`, `plist:_view`, `qr:_svg`, `qr:_text` and `qr:_scanlines`: the readers, writers and the QR encoder of WP 5.55 (binary and text data formats between bytes or text and the shared `json` value model). Each is one tree or byte walk, justified by the cost of a node-by-node reader in FL (the ASN.1 outline measured 245 VM steps an element, and a bare character loop 5.5 steps a character, see "JSON values"), which would cap a 64 KiB item far below the value limit; with the primitives a 64 KiB item is decoded or encoded in 5 to 40 VM steps and 40 to 250 ms. The JSON text side, the parameters, the checks and (for `avro`) the container loop, the codec choice and the deflate codec, and (for `qr`) the PNG file, are FL. See "Binary data formats (WP 5.55)".
+
+- `packets:_name` and `packets:_walk`, `http:_dechunk`: the packet layers of wave 7. `_name ( table key -- str )` looks a number up in the registry name tables of `src/packets-names.ts` (EtherTypes, IP protocols, option kinds and the TLS registries, with about 335 cipher suites), which FL cannot hold as a constant (the precedent is `asn1:oid-name`; a lookup is 2 VM steps). `_walk ( data start end skip width partial what -- list )` gives the offsets of a sequence of length-prefixed items (TLS records, handshake messages, extensions, the vectors inside them): each offset depends on the length before it, and growing a list in FL is quadratic and metered as allocation: appending 13,000 offsets stops with E_LIMIT_TOTAL on the untrusted limits (the same walk as `tar:_headers`). `_dechunk ( data -- bytes )` decodes the chunked transfer coding of RFC 9112: appending a 6-byte chunk to a bytes value 10,900 times (64 KiB of small chunks) overran the same limit after 0.2 s. The header layouts, the option walks, the TLS hello reader and all the reports are FL. See "Packet layers (WP 5.52)".
 - `sigaba:_run`: the SIGABA rotor stack over letters 0 to 25 (the loop needs a fast mutable array, which FL lacks);
 - `classical:_ls47`: the LS47 letter-by-letter cipher on a given board, for the same reason;
 - `bombe:_search`: the Bombe test over the 17,576 start positions of one rotor order;
@@ -84,192 +86,195 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 
 ## Vocabularies
 
-179 vocabularies, 414 ops (two ops each unless noted or listed). Vocabulary names are lower-kebab-case.
+181 vocabularies, 424 ops (two ops each unless noted or listed). Vocabulary names are lower-kebab-case.
 
-| Vocabulary         | Ops                                                                                                                                                                                              |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `adler32`          | Adler-32 checksum (RFC 1950) (1 op)                                                                                                                                                              |
-| `aes`              | AES encrypt and decrypt (FIPS 197): ECB, CBC, CFB, OFB, CTR and GCM, 128/192/256-bit keys, PKCS#7 or no padding, GCM additional data                                                             |
-| `aes-kw`           | AES Key Wrap and Unwrap (RFC 3394), 16/24/32-byte key-encryption key, default IV (2 ops)                                                                                                         |
-| `alphabet`         | write out ranges such as a-z as a list of characters, with a delimiter choice (1 op)                                                                                                             |
-| `amf`              | Action Message Format 0 and 3: AMF Encode and AMF Decode, JSON text to bytes and back, references followed, one value (2 ops, on the `json` words and two private primitives)                    |
-| `analysis`         | entropy (bits per byte), byte-frequency distribution, index of coincidence and chi-squared against English (4 ops)                                                                               |
-| `arith`            | exact-decimal arithmetic on a list of numbers and on big integers: Sum to Standard Deviation, Extended GCD, Modular Exponentiation and Inverse (11 ops)                                          |
-| `argon2`           | Argon2d, Argon2i and Argon2id (RFC 9106): derive, as the encoded PHC string or raw, and compare against an encoded hash (2 ops)                                                                  |
-| `ascon`            | Ascon-Hash256, Ascon-Mac and Ascon-AEAD128 (NIST SP 800-232): hash, mac, and authenticated encrypt and decrypt (4 ops)                                                                           |
-| `asn1-dump`        | Parse ASN.1 hex string: an indented outline of DER with OID names, strings, and OCTET and BIT STRINGS that hold DER opened; text, not a tree (1 op)                                              |
-| `avro`             | Avro to JSON: Object Container Files with the null and deflate codecs, schema from the file header, one record a line or one array (1 op, on the `json` and `deflate` words and two primitives)  |
-| `base32`           | encode and decode, standard and hex alphabets (RFC 4648)                                                                                                                                         |
-| `base45`           | encode and decode (RFC 9285)                                                                                                                                                                     |
-| `base58`           | encode and decode, bitcoin, flickr and ripple alphabets                                                                                                                                          |
-| `base62`           | encode and decode, standard and inverted alphabets                                                                                                                                               |
-| `base64`           | encode and decode, standard and URL-safe alphabets                                                                                                                                               |
-| `base64-offsets`   | Show Base64 offsets as text: the Base64 of the data behind 0, 1 and 2 other bytes, any alphabet, raw, hex or Base64 input (1 op)                                                                 |
-| `base85`           | encode and decode, Ascii85 and Z85                                                                                                                                                               |
-| `base92`           | encode and decode (thenoviceoof)                                                                                                                                                                 |
-| `bcd`              | binary-coded decimal: 8421, 7421, 4221 and excess-3, packed or unpacked, signed or not                                                                                                           |
-| `bcrypt`           | bcrypt password hash: hash with a random salt, hash with a given salt, compare, parse (4 ops; cost 4 to 16)                                                                                      |
-| `bech32`           | Bech32 and Bech32m (BIP-173, BIP-350) encode and decode                                                                                                                                          |
-| `bigint`           | big-endian bytes to and from decimal text of an unsigned integer                                                                                                                                 |
-| `binary`           | bytes to and from 8-bit binary text                                                                                                                                                              |
-| `bits`             | XOR (and brute force), AND, OR, NOT, ADD, SUB, bit shifts and rotates (11 ops)                                                                                                                   |
-| `blake2b`          | BLAKE2b (RFC 7693), sizes 16 to 64 bytes, optional key (1 op)                                                                                                                                    |
-| `blake2s`          | BLAKE2s (RFC 7693), sizes 16 to 32 bytes, optional key (1 op)                                                                                                                                    |
-| `blake3`           | BLAKE3 with a length from 1 to 65536 bytes and an optional 32-byte key (1 op)                                                                                                                    |
-| `blowfish`         | Blowfish encrypt and decrypt (Schneier 1993): ECB, CBC, CFB, OFB, CTR, 4 to 56-byte keys, PKCS#7 or no padding                                                                                   |
-| `bombe`            | Turing-Welchman Bombe for the Enigma I and M3: a crib search for stops, one word for one or many rotor orders (1 op)                                                                             |
-| `braille`          | bytes as 8-dot Unicode Braille patterns and back                                                                                                                                                 |
-| `brotli`           | Brotli decompression (RFC 7932) on a vendored, output-capped copy of the brotli 2.1.0 decoder (1 op)                                                                                             |
-| `bytes-slice`      | take or remove a span of bytes, or every nth byte, of the whole input or of each line (4 ops)                                                                                                    |
-| `bzip2`            | bzip2 compress and decompress (the format written from its specification, no library): block size 1 to 9, several streams, randomised blocks, block and stream CRC-32 checked (2 ops)            |
-| `caret`            | caret and M- notation as printed by `cat -v`                                                                                                                                                     |
-| `case`             | swap case, alternating caps, all casings of the letters, and case-insensitive regular expressions to and from (5 ops)                                                                            |
-| `cbor`             | CBOR (RFC 8949) Encode (deterministic) and Decode, JSON text to bytes and back (2 ops, on the `json` words and two private primitives)                                                           |
-| `chacha`           | ChaCha stream cipher (RFC 8439 and the original 8-byte nonce), 20, 12 or 8 rounds (1 op)                                                                                                         |
-| `charcode`         | text to and from character codes in a chosen base                                                                                                                                                |
-| `charset`          | legacy character sets (single-byte, EBCDIC, UTF-16/32, CJK), with brute force (3 ops)                                                                                                            |
-| `ciphersaber2`     | CipherSaber-2 encrypt (random IV in front) and decrypt (2 ops)                                                                                                                                   |
-| `classical`        | rot (Caesar, ROT13), rot47, rot8000, rot brute force, Atbash, Affine, Vigenère, Bacon, Bifid, Rail Fence, Caesar box, A1Z26, Cetacean, CTX1, LS47, Substitute (26 ops)                           |
-| `clean`            | remove white space, null bytes and ANSI escape sequences (3 ops)                                                                                                                                 |
-| `clock`            | the current time: Get Time (1 op, `clock:get-time`); the shared words `clock:now-ms` and `clock:now-s` for other vocabularies (`+time`)                                                          |
-| `cmac`             | CMAC (SP 800-38B, RFC 4493) over AES or Triple DES (1 op)                                                                                                                                        |
-| `cobs`             | Consistent Overhead Byte Stuffing encode and decode                                                                                                                                              |
-| `colossus`         | Colossus-style counting: how often a Boolean condition holds over every start position of two chi wheels, for the Lorenz break-in (1 op)                                                         |
-| `colour`           | parse a colour code (hex, rgb, hsl, cmyk, with alpha) and write it in all of them (1 op)                                                                                                         |
-| `coords`           | co-ordinate formats (decimal, DMM, DMS, geohash, UTM, MGRS) and the haversine distance (2 ops)                                                                                                   |
-| `crc`              | CRC checksums: the 171 CyberChef presets and any width from 1 to 82 bits from the Rocksoft model (2 ops)                                                                                         |
-| `csv`              | CSV to JSON and JSON to CSV (RFC 4180), with cell and row delimiters and the array-of-objects or array-of-arrays format (2 ops, on the `json` words and two private scanner primitives)          |
-| `datetime`         | date and time (moment.js-style tokens, no date library): parse, translate, Unix and Windows file times, delta, extract dates (8 ops)                                                             |
-| `de-bruijn`        | the de Bruijn sequence B(k, n), k up to 36 symbols, k^n up to 65,536 (1 op)                                                                                                                      |
-| `decimal`          | bytes to and from decimal numbers                                                                                                                                                                |
-| `defang`           | Defang URL and Fang URL (hxxp[://]example[.]com), CyberChef's patterns and options; the shared `defang:rewrite` (2 ops)                                                                          |
-| `deflate`          | raw DEFLATE, zlib and gzip: Raw Deflate/Inflate, Zlib Deflate/Inflate, Gzip, Gunzip on fflate; level 0 to 9, gzip name, comment, header CRC and mtime, Adler-32 and CRC-32 checked in FL (6 ops) |
-| `des`              | DES encrypt and decrypt (FIPS 46-3): ECB, CBC, CFB, OFB, CTR, 8-byte key, PKCS#7 or no padding                                                                                                   |
-| `diacritics`       | remove accents and other combining marks (NFD, drop marks, NFC), and with a switch the letters with a stroke (1 op)                                                                              |
-| `diff`             | the differences between two samples as plain text: a unified-style diff by line, marked text by word or character (1 op)                                                                         |
-| `distance`         | Hamming distance in bytes, characters or bits, and the weighted Levenshtein distance of two samples (2 ops)                                                                                      |
-| `ecdsa`            | ECDSA over P-256, P-384, P-521 and secp256k1: Generate ECDSA Key Pair, ECDSA Sign, ECDSA Verify, ECDSA Signature Conversion, and the public key of an EC private key (5 ops)                     |
-| `endian`           | swap the byte order of 2, 4 or 8 byte words                                                                                                                                                      |
-| `enigma`           | Enigma I, M3 and M4 rotor machines, one reciprocal word; also the shared historical rotor, turnover and reflector data (1 op)                                                                    |
-| `evp`              | OpenSSL EVP_BytesToKey key derivation in FL over MD5, SHA-1 and SHA-2 (1 op)                                                                                                                     |
-| `extract`          | strings (single, UTF-16LE/BE), IP, e-mail and MAC addresses, URLs, domains, file paths, hashes; total, sort, unique (8 ops)                                                                      |
-| `fernet`           | Fernet encrypt and decrypt (github.com/fernet/spec) over aes and hmac, with the +random and +time effects (2 ops)                                                                                |
-| `file-mode`        | UNIX file permissions, octal and symbolic, and a plain-text breakdown (2 ops)                                                                                                                    |
-| `flask-session`    | Flask session cookies (itsdangerous, HMAC-SHA1/256) decode, sign and verify (3 ops)                                                                                                              |
-| `fletcher`         | Fletcher-8, -16, -32 and -64 (1 op)                                                                                                                                                              |
-| `float`            | IEEE 754 binary32 and binary64 numbers to and from bytes                                                                                                                                         |
-| `fractionating`    | ADFGX and ADFGVX, Polybius, Nihilist and Trifid (8 ops)                                                                                                                                          |
-| `generate-all`     | a text report of many hashes or many checksums of the same input, one per line (2 ops)                                                                                                           |
-| `gost`             | GOST R 34.11-94 with the test or the CryptoPro S-box (1 op)                                                                                                                                      |
-| `gost-mac`         | GOST Sign and GOST Verify: the GOST 28147-89 MAC (IMIT), 8 to 64 bits (2 ops)                                                                                                                    |
-| `gost28147`        | GOST 28147-89 encrypt, decrypt, key wrap and unwrap (RFC 4357): five modes, eight S-boxes, CryptoPro key meshing (4 ops)                                                                         |
-| `gost3410`         | GOST R 34.10-2012 digital signature (RFC 7091) with Streebog: sign, verify, public key (3 ops)                                                                                                   |
-| `has160`           | HAS-160 (1 op)                                                                                                                                                                                   |
-| `hash-analysis`    | guess the hash functions from the length of a digest in hex (1 op)                                                                                                                               |
-| `hex`              | encode and decode                                                                                                                                                                                |
-| `hex-content`      | Snort and Suricata rule `content` text, with `                                                                                                                                                   | 41 42 | ` hex sections |
-| `hexdump`          | xxd-style hex dump, encode and decode                                                                                                                                                            |
-| `hkdf`             | HKDF (RFC 5869) in FL over the HMAC hashes (1 op)                                                                                                                                                |
-| `hmac`             | HMAC (RFC 2104) over MD5, SHA-1, SHA-2, SHA-3 and RIPEMD-160 (1 op)                                                                                                                              |
-| `html`             | encode and decode character references (full named-entity table)                                                                                                                                 |
-| `html-text`        | the readable text of HTML: tags, comments, script and style dropped, br and blocks as line feeds, character references decoded (1 op)                                                            |
-| `ip`               | IP addresses: Parse IP range, Parse IPv6 address, IPv6 Transition Addresses, Change IP format, Group IP addresses and Defang IP Addresses, on 128-bit integers (6 ops)                           |
-| `json`             | internal: the shared JSON words `json:parse`, `json:stringify`, `json:compact`, `json:pretty`, `json:null` and `json:null?` (no ops)                                                             |
-| `jwt`              | JSON Web Tokens: decode, and HS256/HS384/HS512 sign and verify; never `none` (3 ops)                                                                                                             |
-| `keccak`           | Keccak with the original padding, 224 to 512 bits (1 op)                                                                                                                                         |
-| `leet`             | leet speak to and from, a basic and an extended table (1 op)                                                                                                                                     |
-| `lines`            | sort (six orders), shuffle, unique, filter, head, tail, line numbers, pad, wrap, to-table and file-tree (12 ops)                                                                                 |
-| `list`             | internal: the shared list words `list:sort`, `list:sort-by`, `list:shuffle` and `list:unique` (no ops)                                                                                           |
-| `lmhash`           | LM hash, the DES of "KGS!@#$%" under the halves of the upper-cased password (1 op)                                                                                                               |
-| `lznt1`            | LZNT1 Decompress (MS-XCA 2.5, the NTFS compression format) (1 op)                                                                                                                                |
-| `lorem`            | Lorem ipsum from a word list of Cicero's De finibus: paragraphs, sentences, words or bytes (1 op, `+random`)                                                                                     |
-| `lorenz`           | Lorenz SZ40/42a/42b with the KH, ZMUG and BREAM patterns and the P5 mode, and a pattern merge helper (2 ops)                                                                                     |
-| `luhn`             | Luhn check digit and validity, any even radix (2 ops)                                                                                                                                            |
-| `lz4`              | LZ4 frames, no library: Compress (level, block size, linked blocks, checksums) and Decompress (legacy and skippable frames) (2 ops)                                                              |
-| `lzma`             | LZMA in the .lzma (LZMA alone) format on lzma1: Compress (levels 1 to 9, default 7) and Decompress, the output limit and the header checks (2 ops)                                               |
-| `lzstring`         | LZString (lz-string 1.5.0): default, UTF-16, Base64 and URI formats (2 ops)                                                                                                                      |
-| `mac`              | Format MAC addresses: plain, hyphens, colons, Cisco dots and the EUI-64 interface identifier, both cases (1 op)                                                                                  |
-| `md2`              | MD2 (RFC 1319) (1 op)                                                                                                                                                                            |
-| `md4`              | MD4 (RFC 1320) (1 op)                                                                                                                                                                            |
-| `md5`              | MD5 (RFC 1321) (1 op)                                                                                                                                                                            |
-| `md6`              | MD6, sizes 8 to 512 bits, levels and key (1 op)                                                                                                                                                  |
-| `modhex`           | Yubico ModHex encode and decode                                                                                                                                                                  |
-| `morse`            | encode and decode (ITU-R M.1677-1)                                                                                                                                                               |
-| `msgpack`          | MessagePack To and From, with extensions and timestamps, JSON text to bytes and back (2 ops, on the `json` words and two private primitives)                                                     |
-| `murmur3`          | MurmurHash3 x86_32 with a seed (1 op)                                                                                                                                                            |
-| `nato`             | the ICAO spelling alphabet, letters and digits, encode and decode (2 ops)                                                                                                                        |
-| `netbios`          | Encode and Decode NetBIOS Name, the first-level encoding of RFC 1001 with an offset (2 ops)                                                                                                      |
-| `nthash`           | NT hash, the MD4 of UTF-16LE text (1 op)                                                                                                                                                         |
-| `objectid`         | the creation time of a MongoDB ObjectID as ISO 8601 UTC (1 op)                                                                                                                                   |
-| `octal`            | bytes to and from octal numbers                                                                                                                                                                  |
-| `oid`              | Hex to Object Identifier and Object Identifier to Hex: dotted text and the DER content bytes, arcs of any size (2 ops)                                                                           |
-| `otp`              | HOTP (RFC 4226) and TOTP (RFC 6238) over SHA-1, SHA-256 or SHA-512, with the otpauth URI (2 ops, `+random` for a made secret, `+time`)                                                           |
-| `parity`           | add or check a parity bit on a string of binary digits (2 ops)                                                                                                                                   |
-| `pbkdf2`           | PBKDF2 with HMAC (RFC 8018) over SHA-1, SHA-2 and MD5 (1 op)                                                                                                                                     |
-| `pem`              | PEM to Hex and Hex to PEM (RFC 7468), with a header label (2 ops)                                                                                                                                |
-| `plist`            | P-list Viewer: XML and binary Apple property lists as an outline (1 op, one private primitive)                                                                                                   |
-| `polyalphabetic`   | Beaufort, Gronsfeld, Porta and autokey Vigenere (6 ops)                                                                                                                                          |
-| `polygraphic`      | Playfair, four-square and Hill (6 ops)                                                                                                                                                           |
-| `present`          | PRESENT encrypt and decrypt: 80 and 128-bit keys, ECB, CBC, CFB, OFB, CTR (2 ops)                                                                                                                |
-| `prime`            | a random prime of a given bit or digit size, Miller-Rabin on the host CSPRNG (1 op, `+random`)                                                                                                   |
-| `prng`             | the CyberChef random generators: Pseudo-Random Number Generator as `prng:bytes` and Pseudo-Random Integer Generator as `prng:integers` (2 ops, `+random`)                                        |
-| `punycode`         | Punycode (RFC 3492), as a label or per domain label with `xn--`                                                                                                                                  |
-| `qr`               | Generate QR Code (ISO/IEC 18004): versions 1 to 40, levels L to H, as SVG, text or a 1-bit PNG (1 op, on the `deflate` and `crc` words and three private primitives)                             |
-| `quoted-printable` | Quoted-Printable (RFC 2045 section 6.7) encode and decode                                                                                                                                        |
-| `rabbit`           | Rabbit stream cipher (RFC 4503), with or without IV, big or little endian (1 op)                                                                                                                 |
-| `radix`            | convert an integer of any size from one base to another                                                                                                                                          |
-| `rake`             | RAKE keyword extraction (Rose et al. 2010), built-in English stop list, phrase length limit, scores (1 op)                                                                                       |
-| `random`           | internal: the shared host-CSPRNG words `random:bytes-of`, `random:below` and `random:between` (no ops)                                                                                           |
-| `rc2`              | RC2 encrypt and decrypt (RFC 2268): ECB and CBC, 1 to 128-byte keys, effective key bits, PKCS#7 or no padding                                                                                    |
-| `rc4`              | RC4 and RC4 Drop (one op with a drop param in bytes) (1 op)                                                                                                                                      |
-| `rc6`              | RC6-w/r encrypt and decrypt: ECB, CBC, CFB, OFB, CTR, word size 8 to 256 and rounds as parameters, PKCS#7 or no padding                                                                          |
-| `regex`            | test, find-all, replace, split                                                                                                                                                                   |
-| `ripemd`           | RIPEMD-128, -160, -256 and -320 (1 op)                                                                                                                                                           |
-| `ripemd160`        | RIPEMD-160 alone, for HMAC (1 op)                                                                                                                                                                |
-| `rison`            | Rison, O-Rison and A-Rison Encode and Decode, JSON text to text and back (2 ops, on the `json` words and two private primitives)                                                                 |
-| `ror13`            | ROR13 API-name hash (1 op)                                                                                                                                                                       |
-| `rsa`              | RSA on bigints, no library: key pair, sign and verify (PKCS#1 v1.5, PSS), encrypt and decrypt (OAEP, v1.5, raw), public key of a private key (6 ops)                                             |
-| `salsa20`          | Salsa20/20 stream cipher (eSTREAM), 16 or 32-byte keys, 8-byte nonce (1 op)                                                                                                                      |
-| `scrypt`           | scrypt (RFC 7914) key derivation (1 op)                                                                                                                                                          |
-| `search`           | count occurrences (string, extended or regex), fuzzy line matching with scores, and the stretches where samples agree by offset (3 ops)                                                          |
-| `set`              | set union, intersection, difference, symmetric difference, Cartesian product and power set on delimited text (6 ops)                                                                             |
-| `sha0`             | SHA-0 (1 op)                                                                                                                                                                                     |
-| `sha1`             | SHA-1 (1 op)                                                                                                                                                                                     |
-| `sha2`             | SHA-224, -256, -384, -512, -512/224 and -512/256 (1 op)                                                                                                                                          |
-| `sha3`             | SHA3-224 to SHA3-512 (1 op)                                                                                                                                                                      |
-| `shake`            | SHAKE128 and SHAKE256 with a length in bytes (1 op)                                                                                                                                              |
-| `sigaba`           | SIGABA (ECM Mark II) rotor machine, one reciprocal word (1 op)                                                                                                                                   |
-| `sm2`              | SM2 public key encryption (GB/T 32918.4), C1C3C2 or C1C2C3: encrypt and decrypt                                                                                                                  |
-| `sm3`              | SM3 (GB/T 32905-2016) (1 op)                                                                                                                                                                     |
-| `sm4`              | SM4 encrypt and decrypt (GB/T 32907-2016): ECB, CBC, CFB, OFB, CTR, 16-byte key, PKCS#7 or no padding                                                                                            |
-| `snefru`           | Snefru, 128 or 256 bits, 2, 4 or 8 passes (1 op)                                                                                                                                                 |
-| `ssdeep`           | ssdeep context triggered piecewise hash (also ctph) and its comparison (2 ops)                                                                                                                   |
-| `streebog`         | GOST R 34.11-2012, 256 or 512 bits (1 op)                                                                                                                                                        |
-| `string-escape`    | escape and unescape text as the body of a JavaScript string literal: levels, quotes, JSON, ES6 and hex case (2 ops)                                                                              |
-| `tar`              | tar archives (ustar): Tar writes one file, Untar lists records (name, size, dir, mtime, mode, data), tar:entry takes one file by name; v7 and GNU long names read (3 ops)                        |
-| `tcpip`            | Internet checksum (RFC 1071) (1 op)                                                                                                                                                              |
-| `tea`              | TEA encrypt and decrypt: ECB, CBC, CFB, OFB, CTR (2 ops)                                                                                                                                         |
-| `text`             | split, join, replace, reverse, upper, lower                                                                                                                                                      |
-| `tlv`              | Parse TLV: tag-length-value runs with fixed widths or BER lengths, as JSON text (1 op, one private primitive)                                                                                    |
-| `transposition`    | columnar transposition, encrypt and decrypt                                                                                                                                                      |
-| `triple-des`       | Triple DES encrypt and decrypt (EDE, SP 800-67): ECB, CBC, CFB, OFB, CTR, 16 or 24-byte keys, PKCS#7 or no padding                                                                               |
-| `twofish`          | Twofish encrypt and decrypt: ECB, CBC, CFB, OFB, CTR, 128/192/256-bit keys, PKCS#7 or no padding                                                                                                 |
-| `typex`            | Typex-style five-rotor machine with the wirings as parameters (1 op)                                                                                                                             |
-| `unicode`          | escape and unescape code points (`\u`, `U+`, `%u`, `\x{}`, `&#x;`), normalisation, smart quotes to ASCII (4 ops)                                                                                 |
-| `unicode-format`   | underline and strikethrough with combining characters (1 op)                                                                                                                                     |
-| `units`            | exact unit conversion, rounded to a number of decimal places: distance, area, mass, speed and data units (5 ops)                                                                                 |
-| `uri`              | Parse URI: protocol, auth, host, port, path, decoded arguments and fragment (1 op)                                                                                                               |
-| `url`              | percent-encode and decode (RFC 3986)                                                                                                                                                             |
-| `user-agent`       | Parse User Agent from a table of about 70 rules, no library (1 op)                                                                                                                               |
-| `uuid`             | UUID versions 1, 3, 4, 5, 6, 7, nil and max (RFC 9562), and an analyser (2 ops, `+random`, `+time`)                                                                                              |
-| `whirlpool`        | Whirlpool (ISO/IEC 10118-3) (1 op)                                                                                                                                                               |
-| `xor-checksum`     | column-wise XOR of the blocks of the input (1 op)                                                                                                                                                |
-| `xpress`           | XPRESS Decompress (Plain LZ77) and XPRESS LZ77+Huffman Decompress (MS-XCA 2.4 and 2.2) (2 ops)                                                                                                   |
-| `xsalsa20`         | XSalsa20/20 stream cipher, 32-byte key, 24-byte nonce (1 op)                                                                                                                                     |
-| `xtea`             | XTEA encrypt and decrypt with a round count: ECB, CBC, CFB, OFB, CTR (2 ops)                                                                                                                     |
-| `xxtea`            | XXTEA (Corrected Block TEA) encrypt and decrypt (2 ops)                                                                                                                                          |
-| `zip`              | zip archives: Zip writes one file (stored or deflate), Unzip lists records (name, size, dir, mtime, mode, data), zip:entry takes one entry by name; CRC-32 checked (3 ops)                       |
-| `zstd`             | Zstandard decompression (RFC 8878) on fzstd, beyond CyberChef: every frame, concatenated and skippable frames, the XXH64 checksum checked by default; no dictionaries, no compression (1 op)     |
+| Vocabulary       | Ops                                                                                                                                                                                              |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `adler32`        | Adler-32 checksum (RFC 1950) (1 op)                                                                                                                                                              |
+| `aes`            | AES encrypt and decrypt (FIPS 197): ECB, CBC, CFB, OFB, CTR and GCM, 128/192/256-bit keys, PKCS#7 or no padding, GCM additional data                                                             |
+| `aes-kw`         | AES Key Wrap and Unwrap (RFC 3394), 16/24/32-byte key-encryption key, default IV (2 ops)                                                                                                         |
+| `alphabet`       | write out ranges such as a-z as a list of characters, with a delimiter choice (1 op)                                                                                                             |
+| `amf`            | Action Message Format 0 and 3: AMF Encode and AMF Decode, JSON text to bytes and back, references followed, one value (2 ops, on the `json` words and two private primitives)                    |
+| `analysis`       | entropy (bits per byte), byte-frequency distribution, index of coincidence and chi-squared against English (4 ops)                                                                               |
+| `arith`          | exact-decimal arithmetic on a list of numbers and on big integers: Sum to Standard Deviation, Extended GCD, Modular Exponentiation and Inverse (11 ops)                                          |
+| `argon2`         | Argon2d, Argon2i and Argon2id (RFC 9106): derive, as the encoded PHC string or raw, and compare against an encoded hash (2 ops)                                                                  |
+| `ascon`          | Ascon-Hash256, Ascon-Mac and Ascon-AEAD128 (NIST SP 800-232): hash, mac, and authenticated encrypt and decrypt (4 ops)                                                                           |
+| `asn1-dump`      | Parse ASN.1 hex string: an indented outline of DER with OID names, strings, and OCTET and BIT STRINGS that hold DER opened; text, not a tree (1 op)                                              |
+| `avro`           | Avro to JSON: Object Container Files with the null and deflate codecs, schema from the file header, one record a line or one array (1 op, on the `json` and `deflate` words and two primitives)  |
+| `base32`         | encode and decode, standard and hex alphabets (RFC 4648)                                                                                                                                         |
+| `base45`         | encode and decode (RFC 9285)                                                                                                                                                                     |
+| `base58`         | encode and decode, bitcoin, flickr and ripple alphabets                                                                                                                                          |
+| `base62`         | encode and decode, standard and inverted alphabets                                                                                                                                               |
+| `base64`         | encode and decode, standard and URL-safe alphabets                                                                                                                                               |
+| `base64-offsets` | Show Base64 offsets as text: the Base64 of the data behind 0, 1 and 2 other bytes, any alphabet, raw, hex or Base64 input (1 op)                                                                 |
+| `base85`         | encode and decode, Ascii85 and Z85                                                                                                                                                               |
+| `base92`         | encode and decode (thenoviceoof)                                                                                                                                                                 |
+| `bcd`            | binary-coded decimal: 8421, 7421, 4221 and excess-3, packed or unpacked, signed or not                                                                                                           |
+| `bcrypt`         | bcrypt password hash: hash with a random salt, hash with a given salt, compare, parse (4 ops; cost 4 to 16)                                                                                      |
+| `bech32`         | Bech32 and Bech32m (BIP-173, BIP-350) encode and decode                                                                                                                                          |
+| `bigint`         | big-endian bytes to and from decimal text of an unsigned integer                                                                                                                                 |
+| `binary`         | bytes to and from 8-bit binary text                                                                                                                                                              |
+| `bits`           | XOR (and brute force), AND, OR, NOT, ADD, SUB, bit shifts and rotates (11 ops)                                                                                                                   |
+| `blake2b`        | BLAKE2b (RFC 7693), sizes 16 to 64 bytes, optional key (1 op)                                                                                                                                    |
+| `blake2s`        | BLAKE2s (RFC 7693), sizes 16 to 32 bytes, optional key (1 op)                                                                                                                                    |
+| `blake3`         | BLAKE3 with a length from 1 to 65536 bytes and an optional 32-byte key (1 op)                                                                                                                    |
+| `blowfish`       | Blowfish encrypt and decrypt (Schneier 1993): ECB, CBC, CFB, OFB, CTR, 4 to 56-byte keys, PKCS#7 or no padding                                                                                   |
+| `bombe`          | Turing-Welchman Bombe for the Enigma I and M3: a crib search for stops, one word for one or many rotor orders (1 op)                                                                             |
+| `braille`        | bytes as 8-dot Unicode Braille patterns and back                                                                                                                                                 |
+| `brotli`         | Brotli decompression (RFC 7932) on a vendored, output-capped copy of the brotli 2.1.0 decoder (1 op)                                                                                             |
+| `bytes-slice`    | take or remove a span of bytes, or every nth byte, of the whole input or of each line (4 ops)                                                                                                    |
+| `bzip2`          | bzip2 compress and decompress (the format written from its specification, no library): block size 1 to 9, several streams, randomised blocks, block and stream CRC-32 checked (2 ops)            |
+| `caret`          | caret and M- notation as printed by `cat -v`                                                                                                                                                     |
+| `case`           | swap case, alternating caps, all casings of the letters, and case-insensitive regular expressions to and from (5 ops)                                                                            |
+| `cbor`           | CBOR (RFC 8949) Encode (deterministic) and Decode, JSON text to bytes and back (2 ops, on the `json` words and two private primitives)                                                           |
+| `chacha`         | ChaCha stream cipher (RFC 8439 and the original 8-byte nonce), 20, 12 or 8 rounds (1 op)                                                                                                         |
+| `charcode`       | text to and from character codes in a chosen base                                                                                                                                                |
+| `charset`        | legacy character sets (single-byte, EBCDIC, UTF-16/32, CJK), with brute force (3 ops)                                                                                                            |
+| `ciphersaber2`   | CipherSaber-2 encrypt (random IV in front) and decrypt (2 ops)                                                                                                                                   |
+| `classical`      | rot (Caesar, ROT13), rot47, rot8000, rot brute force, Atbash, Affine, Vigenère, Bacon, Bifid, Rail Fence, Caesar box, A1Z26, Cetacean, CTX1, LS47, Substitute (26 ops)                           |
+| `clean`          | remove white space, null bytes and ANSI escape sequences (3 ops)                                                                                                                                 |
+| `clock`          | the current time: Get Time (1 op, `clock:get-time`); the shared words `clock:now-ms` and `clock:now-s` for other vocabularies (`+time`)                                                          |
+| `cmac`           | CMAC (SP 800-38B, RFC 4493) over AES or Triple DES (1 op)                                                                                                                                        |
+| `cobs`           | Consistent Overhead Byte Stuffing encode and decode                                                                                                                                              |
+| `colossus`       | Colossus-style counting: how often a Boolean condition holds over every start position of two chi wheels, for the Lorenz break-in (1 op)                                                         |
+| `colour`         | parse a colour code (hex, rgb, hsl, cmyk, with alpha) and write it in all of them (1 op)                                                                                                         |
+| `coords`         | co-ordinate formats (decimal, DMM, DMS, geohash, UTM, MGRS) and the haversine distance (2 ops)                                                                                                   |
+| `crc`            | CRC checksums: the 171 CyberChef presets and any width from 1 to 82 bits from the Rocksoft model (2 ops)                                                                                         |
+| `csv`            | CSV to JSON and JSON to CSV (RFC 4180), with cell and row delimiters and the array-of-objects or array-of-arrays format (2 ops, on the `json` words and two private scanner primitives)          |
+| `datetime`       | date and time (moment.js-style tokens, no date library): parse, translate, Unix and Windows file times, delta, extract dates (8 ops)                                                             |
+| `de-bruijn`      | the de Bruijn sequence B(k, n), k up to 36 symbols, k^n up to 65,536 (1 op)                                                                                                                      |
+| `decimal`        | bytes to and from decimal numbers                                                                                                                                                                |
+| `defang`         | Defang URL and Fang URL (hxxp[://]example[.]com), CyberChef's patterns and options; the shared `defang:rewrite` (2 ops)                                                                          |
+| `deflate`        | raw DEFLATE, zlib and gzip: Raw Deflate/Inflate, Zlib Deflate/Inflate, Gzip, Gunzip on fflate; level 0 to 9, gzip name, comment, header CRC and mtime, Adler-32 and CRC-32 checked in FL (6 ops) |
+| `des`            | DES encrypt and decrypt (FIPS 46-3): ECB, CBC, CFB, OFB, CTR, 8-byte key, PKCS#7 or no padding                                                                                                   |
+| `diacritics`     | remove accents and other combining marks (NFD, drop marks, NFC), and with a switch the letters with a stroke (1 op)                                                                              |
+| `diff`           | the differences between two samples as plain text: a unified-style diff by line, marked text by word or character (1 op)                                                                         |
+| `distance`       | Hamming distance in bytes, characters or bits, and the weighted Levenshtein distance of two samples (2 ops)                                                                                      |
+| `ecdsa`          | ECDSA over P-256, P-384, P-521 and secp256k1: Generate ECDSA Key Pair, ECDSA Sign, ECDSA Verify, ECDSA Signature Conversion, and the public key of an EC private key (5 ops)                     |
+| `endian`         | swap the byte order of 2, 4 or 8 byte words                                                                                                                                                      |
+| `enigma`         | Enigma I, M3 and M4 rotor machines, one reciprocal word; also the shared historical rotor, turnover and reflector data (1 op)                                                                    |
+| `evp`            | OpenSSL EVP_BytesToKey key derivation in FL over MD5, SHA-1 and SHA-2 (1 op)                                                                                                                     |
+| `extract`        | strings (single, UTF-16LE/BE), IP, e-mail and MAC addresses, URLs, domains, file paths, hashes; total, sort, unique (8 ops)                                                                      |
+| `fernet`         | Fernet encrypt and decrypt (github.com/fernet/spec) over aes and hmac, with the +random and +time effects (2 ops)                                                                                |
+| `file-mode`      | UNIX file permissions, octal and symbolic, and a plain-text breakdown (2 ops)                                                                                                                    |
+| `flask-session`  | Flask session cookies (itsdangerous, HMAC-SHA1/256) decode, sign and verify (3 ops)                                                                                                              |
+| `fletcher`       | Fletcher-8, -16, -32 and -64 (1 op)                                                                                                                                                              |
+| `float`          | IEEE 754 binary32 and binary64 numbers to and from bytes                                                                                                                                         |
+| `fractionating`  | ADFGX and ADFGVX, Polybius, Nihilist and Trifid (8 ops)                                                                                                                                          |
+| `generate-all`   | a text report of many hashes or many checksums of the same input, one per line (2 ops)                                                                                                           |
+| `gost`           | GOST R 34.11-94 with the test or the CryptoPro S-box (1 op)                                                                                                                                      |
+| `gost-mac`       | GOST Sign and GOST Verify: the GOST 28147-89 MAC (IMIT), 8 to 64 bits (2 ops)                                                                                                                    |
+| `gost28147`      | GOST 28147-89 encrypt, decrypt, key wrap and unwrap (RFC 4357): five modes, eight S-boxes, CryptoPro key meshing (4 ops)                                                                         |
+| `gost3410`       | GOST R 34.10-2012 digital signature (RFC 7091) with Streebog: sign, verify, public key (3 ops)                                                                                                   |
+| `has160`         | HAS-160 (1 op)                                                                                                                                                                                   |
+| `hash-analysis`  | guess the hash functions from the length of a digest in hex (1 op)                                                                                                                               |
+| `hex`            | encode and decode                                                                                                                                                                                |
+| `hex-content`    | Snort and Suricata rule `content` text, with `                                                                                                                                                   | 41 42 | ` hex sections |
+| `hexdump`        | xxd-style hex dump, encode and decode                                                                                                                                                            |
+| `hkdf`           | HKDF (RFC 5869) in FL over the HMAC hashes (1 op)                                                                                                                                                |
+| `hmac`           | HMAC (RFC 2104) over MD5, SHA-1, SHA-2, SHA-3 and RIPEMD-160 (1 op)                                                                                                                              |
+| `html`           | encode and decode character references (full named-entity table)                                                                                                                                 |
+| `html-text`      | the readable text of HTML: tags, comments, script and style dropped, br and blocks as line feeds, character references decoded (1 op)                                                            |
+| `ip`             | IP addresses: Parse IP range, Parse IPv6 address, IPv6 Transition Addresses, Change IP format, Group IP addresses and Defang IP Addresses, on 128-bit integers (6 ops)                           |
+
+| `http` | Strip HTTP headers and Dechunk HTTP response (RFC 9112 section 7.1), on bytes (2 ops) |
+| `json` | internal: the shared JSON words `json:parse`, `json:stringify`, `json:compact`, `json:pretty`, `json:null` and `json:null?` (no ops) |
+| `jwt` | JSON Web Tokens: decode, and HS256/HS384/HS512 sign and verify; never `none` (3 ops) |
+| `keccak` | Keccak with the original padding, 224 to 512 bits (1 op) |
+| `leet` | leet speak to and from, a basic and an extended table (1 op) |
+| `lines` | sort (six orders), shuffle, unique, filter, head, tail, line numbers, pad, wrap, to-table and file-tree (12 ops) |
+| `list` | internal: the shared list words `list:sort`, `list:sort-by`, `list:shuffle` and `list:unique` (no ops) |
+| `lmhash` | LM hash, the DES of "KGS!@#$%" under the halves of the upper-cased password (1 op) |
+| `lznt1` | LZNT1 Decompress (MS-XCA 2.5, the NTFS compression format) (1 op) |
+| `lorem` | Lorem ipsum from a word list of Cicero's De finibus: paragraphs, sentences, words or bytes (1 op, `+random`) |
+| `lorenz` | Lorenz SZ40/42a/42b with the KH, ZMUG and BREAM patterns and the P5 mode, and a pattern merge helper (2 ops) |
+| `luhn` | Luhn check digit and validity, any even radix (2 ops) |
+| `lz4` | LZ4 frames, no library: Compress (level, block size, linked blocks, checksums) and Decompress (legacy and skippable frames) (2 ops) |
+| `lzma` | LZMA in the .lzma (LZMA alone) format on lzma1: Compress (levels 1 to 9, default 7) and Decompress, the output limit and the header checks (2 ops) |
+| `lzstring` | LZString (lz-string 1.5.0): default, UTF-16, Base64 and URI formats (2 ops) |
+| `mac` | Format MAC addresses: plain, hyphens, colons, Cisco dots and the EUI-64 interface identifier, both cases (1 op) |
+| `md2` | MD2 (RFC 1319) (1 op) |
+| `md4` | MD4 (RFC 1320) (1 op) |
+| `md5` | MD5 (RFC 1321) (1 op) |
+| `md6` | MD6, sizes 8 to 512 bits, levels and key (1 op) |
+| `modhex` | Yubico ModHex encode and decode |
+| `morse` | encode and decode (ITU-R M.1677-1) |
+| `msgpack` | MessagePack To and From, with extensions and timestamps, JSON text to bytes and back (2 ops, on the `json` words and two private primitives) |
+| `murmur3` | MurmurHash3 x86_32 with a seed (1 op) |
+| `nato` | the ICAO spelling alphabet, letters and digits, encode and decode (2 ops) |
+| `netbios` | Encode and Decode NetBIOS Name, the first-level encoding of RFC 1001 with an offset (2 ops) |
+| `nthash` | NT hash, the MD4 of UTF-16LE text (1 op) |
+| `objectid` | the creation time of a MongoDB ObjectID as ISO 8601 UTC (1 op) |
+| `octal` | bytes to and from octal numbers |
+| `oid` | Hex to Object Identifier and Object Identifier to Hex: dotted text and the DER content bytes, arcs of any size (2 ops) |
+| `otp` | HOTP (RFC 4226) and TOTP (RFC 6238) over SHA-1, SHA-256 or SHA-512, with the otpauth URI (2 ops, `+random` for a made secret, `+time`) |
+| `packets` | Parse Ethernet frame, IPv4 header, TCP, UDP and TLS record and the Strip ops for IPv4, TCP and UDP, on hex text or raw bytes; shared TLS hello reader (8 ops) |
+| `parity` | add or check a parity bit on a string of binary digits (2 ops) |
+| `pbkdf2` | PBKDF2 with HMAC (RFC 8018) over SHA-1, SHA-2 and MD5 (1 op) |
+| `pem` | PEM to Hex and Hex to PEM (RFC 7468), with a header label (2 ops) |
+| `plist` | P-list Viewer: XML and binary Apple property lists as an outline (1 op, one private primitive) |
+| `polyalphabetic` | Beaufort, Gronsfeld, Porta and autokey Vigenere (6 ops) |
+| `polygraphic` | Playfair, four-square and Hill (6 ops) |
+| `present` | PRESENT encrypt and decrypt: 80 and 128-bit keys, ECB, CBC, CFB, OFB, CTR (2 ops) |
+| `prime` | a random prime of a given bit or digit size, Miller-Rabin on the host CSPRNG (1 op, `+random`) |
+| `prng` | the CyberChef random generators: Pseudo-Random Number Generator as `prng:bytes` and Pseudo-Random Integer Generator as `prng:integers` (2 ops, `+random`) |
+| `punycode` | Punycode (RFC 3492), as a label or per domain label with `xn--` |
+| `qr` | Generate QR Code (ISO/IEC 18004): versions 1 to 40, levels L to H, as SVG, text or a 1-bit PNG (1 op, on the `deflate` and `crc` words and three private primitives) |
+| `quoted-printable` | Quoted-Printable (RFC 2045 section 6.7) encode and decode |
+| `rabbit` | Rabbit stream cipher (RFC 4503), with or without IV, big or little endian (1 op) |
+| `radix` | convert an integer of any size from one base to another |
+| `rake` | RAKE keyword extraction (Rose et al. 2010), built-in English stop list, phrase length limit, scores (1 op) |
+| `random` | internal: the shared host-CSPRNG words `random:bytes-of`, `random:below` and `random:between` (no ops) |
+| `rc2` | RC2 encrypt and decrypt (RFC 2268): ECB and CBC, 1 to 128-byte keys, effective key bits, PKCS#7 or no padding |
+| `rc4` | RC4 and RC4 Drop (one op with a drop param in bytes) (1 op) |
+| `rc6` | RC6-w/r encrypt and decrypt: ECB, CBC, CFB, OFB, CTR, word size 8 to 256 and rounds as parameters, PKCS#7 or no padding |
+| `regex` | test, find-all, replace, split |
+| `ripemd` | RIPEMD-128, -160, -256 and -320 (1 op) |
+| `ripemd160` | RIPEMD-160 alone, for HMAC (1 op) |
+| `rison` | Rison, O-Rison and A-Rison Encode and Decode, JSON text to text and back (2 ops, on the `json` words and two private primitives) |
+| `ror13` | ROR13 API-name hash (1 op) |
+| `rsa` | RSA on bigints, no library: key pair, sign and verify (PKCS#1 v1.5, PSS), encrypt and decrypt (OAEP, v1.5, raw), public key of a private key (6 ops) |
+| `salsa20` | Salsa20/20 stream cipher (eSTREAM), 16 or 32-byte keys, 8-byte nonce (1 op) |
+| `scrypt` | scrypt (RFC 7914) key derivation (1 op) |
+| `search` | count occurrences (string, extended or regex), fuzzy line matching with scores, and the stretches where samples agree by offset (3 ops) |
+| `set` | set union, intersection, difference, symmetric difference, Cartesian product and power set on delimited text (6 ops) |
+| `sha0` | SHA-0 (1 op) |
+| `sha1` | SHA-1 (1 op) |
+| `sha2` | SHA-224, -256, -384, -512, -512/224 and -512/256 (1 op) |
+| `sha3` | SHA3-224 to SHA3-512 (1 op) |
+| `shake` | SHAKE128 and SHAKE256 with a length in bytes (1 op) |
+| `sigaba` | SIGABA (ECM Mark II) rotor machine, one reciprocal word (1 op) |
+| `sm2` | SM2 public key encryption (GB/T 32918.4), C1C3C2 or C1C2C3: encrypt and decrypt |
+| `sm3` | SM3 (GB/T 32905-2016) (1 op) |
+| `sm4` | SM4 encrypt and decrypt (GB/T 32907-2016): ECB, CBC, CFB, OFB, CTR, 16-byte key, PKCS#7 or no padding |
+| `snefru` | Snefru, 128 or 256 bits, 2, 4 or 8 passes (1 op) |
+| `ssdeep` | ssdeep context triggered piecewise hash (also ctph) and its comparison (2 ops) |
+| `streebog` | GOST R 34.11-2012, 256 or 512 bits (1 op) |
+| `string-escape` | escape and unescape text as the body of a JavaScript string literal: levels, quotes, JSON, ES6 and hex case (2 ops) |
+| `tar` | tar archives (ustar): Tar writes one file, Untar lists records (name, size, dir, mtime, mode, data), tar:entry takes one file by name; v7 and GNU long names read (3 ops) |
+| `tcpip` | Internet checksum (RFC 1071) (1 op) |
+| `tea` | TEA encrypt and decrypt: ECB, CBC, CFB, OFB, CTR (2 ops) |
+| `text` | split, join, replace, reverse, upper, lower |
+| `tlv` | Parse TLV: tag-length-value runs with fixed widths or BER lengths, as JSON text (1 op, one private primitive) |
+| `transposition` | columnar transposition, encrypt and decrypt |
+| `triple-des` | Triple DES encrypt and decrypt (EDE, SP 800-67): ECB, CBC, CFB, OFB, CTR, 16 or 24-byte keys, PKCS#7 or no padding |
+| `twofish` | Twofish encrypt and decrypt: ECB, CBC, CFB, OFB, CTR, 128/192/256-bit keys, PKCS#7 or no padding |
+| `typex` | Typex-style five-rotor machine with the wirings as parameters (1 op) |
+| `unicode` | escape and unescape code points (`\u`, `U+`, `%u`, `\x{}`, `&#x;`), normalisation, smart quotes to ASCII (4 ops) |
+| `unicode-format` | underline and strikethrough with combining characters (1 op) |
+| `units` | exact unit conversion, rounded to a number of decimal places: distance, area, mass, speed and data units (5 ops) |
+| `uri` | Parse URI: protocol, auth, host, port, path, decoded arguments and fragment (1 op) |
+| `url` | percent-encode and decode (RFC 3986) |
+| `user-agent` | Parse User Agent from a table of about 70 rules, no library (1 op) |
+| `uuid` | UUID versions 1, 3, 4, 5, 6, 7, nil and max (RFC 9562), and an analyser (2 ops, `+random`, `+time`) |
+| `whirlpool` | Whirlpool (ISO/IEC 10118-3) (1 op) |
+| `xor-checksum` | column-wise XOR of the blocks of the input (1 op) |
+| `xpress` | XPRESS Decompress (Plain LZ77) and XPRESS LZ77+Huffman Decompress (MS-XCA 2.4 and 2.2) (2 ops) |
+| `xsalsa20` | XSalsa20/20 stream cipher, 32-byte key, 24-byte nonce (1 op) |
+| `xtea` | XTEA encrypt and decrypt with a round count: ECB, CBC, CFB, OFB, CTR (2 ops) |
+| `xxtea` | XXTEA (Corrected Block TEA) encrypt and decrypt (2 ops) |
+| `zip` | zip archives: Zip writes one file (stored or deflate), Unzip lists records (name, size, dir, mtime, mode, data), zip:entry takes one entry by name; CRC-32 checked (3 ops) |
+| `zstd` | Zstandard decompression (RFC 8878) on fzstd, beyond CyberChef: every frame, concatenated and skippable frames, the XXH64 checksum checked by default; no dictionaries, no compression (1 op) |
 
 Eight internal vocabularies are not part of the catalogue as ops: `recipe` (the words recipes compile to), `raise` (typed errors, above), `util` (shared helpers, below), `blockmode` (the shared block cipher modes and PKCS#7 padding; see "Cipher conventions"), `random` (the shared host-CSPRNG words), `list` (the shared sort, shuffle and unique words), `json` (the shared JSON reader and writer; see "JSON values") and `asn1` (the shared DER reader and writer, object identifiers and PEM of wave 7); `random` and `list` are described in "Wave 5 conventions", `asn1` in "Wave 7 conventions".
 
@@ -759,6 +764,19 @@ Nine vocabularies, 13 ops, all with the category `Data format`: `cbor`, `msgpack
 The Avro steps are the `json:stringify` call per record in FL (about 4 steps each). The QR PNG's 943 steps are `crc:checksum`'s preset lookup.
 
 **Vector sources** (independent tools, never CyberChef): Python `cbor2` 6.2.1 and RFC 8949 Appendix A (CBOR), `msgpack` 1.2.4 and the specification's formats (MessagePack), bytes built by hand with `struct` from Adobe's AMF0 and AMF3 specifications and cross-checked with `amfy` 0.1.1 (AMF; no AMF0 library built on this Python), `fastavro` 1.13.1 and containers built by hand from the specification (Avro), elements assembled with `int.to_bytes` (TLV), `prison` 0.2.1 and the rison.js rules (Rison), `plistlib` for both forms with the outline rendered by an independent function (P-list), `base64` (Show Base64 offsets), `python-qrcode` 8.2, Pillow and OpenCV (QR; `segno` 1.6.6 was also run: it differs in the mask choice and, in byte mode, in the data). The generator scripts are not in the repository. The libraries were installed in a throwaway virtual environment; none is a dependency of Forge, and no dependency was added.
+
+### Packet layers (WP 5.52)
+
+Vocabularies `packets` (Parse Ethernet frame, Parse IPv4 header, Strip IPv4 header, Parse TCP, Strip TCP header, Parse UDP, Strip UDP header, Parse TLS record, and the shared TLS reader) and `http` (Strip HTTP headers, Dechunk HTTP response). Category `Networking`. Words: `packets:parse-ethernet`, `parse-ipv4`, `strip-ipv4`, `parse-tcp`, `strip-tcp`, `parse-udp`, `strip-udp`, `parse-tls` (each `( data:bytes format:choice{hex|raw}="hex" -- str )`, the strip ops `-- bytes`), `http:strip-headers` and `http:dechunk` (`( data:bytes -- bytes )`).
+
+- **Input.** `format` is `hex` (default: the bytes of the input are hex text, any white space ignored, read by `hex:decode`) or `raw` (the bytes are the packet). A recipe that has the packet as bytes uses `raw` or To Hex first. The parse ops give text; the strip ops give the payload bytes (CyberChef's own output type for them was not verified; a recipe adds To Hex).
+- **Reports.** One `Name: value` line per field, two spaces of indent per level, a blank line between TLS records; hex in lower case, addresses and MACs in the usual notation, numbers in decimal with the hex form where the RFC writes hex (`Identification: 0x1c46 (7238)`). Names come from the registries: the EtherType, IP protocol, IPv4 and TCP option kinds, and for TLS the content type, version, handshake type, alert, cipher suite, extension, group, signature scheme, EC point format, compression and PSK mode tables (`src/packets-names.ts`; RFC 8701 GREASE values are named GREASE). A number with no name is `unknown`. Ethernet reads any number of VLAN tags (802.1Q and 802.1ad); IPv4 checks the header checksum (the one hand-written RFC 1071 pass is `tcpip:checksum`) and decodes the options; TCP decodes MSS, window scale, SACK permitted, SACK, timestamps, NOP, EOL and prints unknown kinds as hex; TCP and UDP checksums are shown as stored (verifying them needs the IP addresses).
+- **Truncation is judged by the unit.** A header cut short is `E_COERCE` with the offset and the counts. For IPv4 and UDP a declared total length or length beyond the data is not an error (a header alone, or a capture cut by its snap length, is normal): the report shows what is there (UDP says `only N are present`), strip returns what is there, and a length of 0 means "to the end" (TCP segmentation offload). A declared length below the data drops the padding after the datagram. TLS records, hello messages and chunked bodies are complete units: any cut is `E_COERCE`. A known TCP option with the wrong length, an option whose length byte is missing, below 2 or past the header, a version or IHL that is wrong, a TLS header that is not a record (content type outside 20 to 24, major version other than 3, length above 18432) and bytes that do not fill a structure are `E_COERCE`. Nothing is allocated from a length in the data.
+- **The TLS reader is shared** (for WP 5.54, JA3, JA3S, JA4, JA4S): `packets:tls-records ( data:bytes types:list -- list )` (records with `type version length offset fragment`; `types` filters by content type, empty keeps all), `packets:tls-handshakes ( rec:record types:list -- list )` (messages with `type length offset complete body`; a message that goes on in the next record has `complete` false; messages are not joined across records) and `packets:tls-hellos ( data:bytes kinds:list -- list )` (every ClientHello (1) or ServerHello (2) as a record with `kind version random session-id ciphers compression extensions has-extensions hrr` and the decoded `ext-types sni alpn groups point-formats sig-algs versions psk-modes key-shares`, each an empty list when the extension is absent; GREASE values are kept as they are). Each has a list parameter, so none is a catalogue op (RECIPES.md section 2.2 checks only the parameters after the first input; a word with one UI-typed input would be an op, and would need a category and vectors). The extension decoders are private.
+- **Measured costs (VM steps, 64 KiB).** Parse Ethernet frame 447 steps (449 from hex); Parse IPv4 header 1,134 (of which about 700 are the checksum check); Strip IPv4 118; Parse TCP 948 and Strip TCP 63 (40 option bytes: 1,080); UDP the same order; Strip HTTP headers a few dozen; Dechunk 64 KiB in 10,900 chunks a few dozen. TLS is per item: a record about 160 steps for `tls-records` and about 340 for Parse TLS record (13,000 empty records, the most 64 KiB can hold: `tls-records` 2.04 million, `tls-hellos` 2.12 million, Parse TLS record 4.50 million, under the 5 million of an untrusted bake and 10 million by default); a hello with 4,000 extensions 586,000; with 8,000 cipher suites 705,000; Parse Ethernet frame with 16,000 VLAN tags 3.44 million. A larger hostile input ends with `E_LIMIT_STEPS`, never with a hang.
+- **Vectors.** Packets built with Python `struct` and a hand-written RFC 1071 checksum (RFC 791, 793, 768, IEEE 802.3, 802.1Q/ad), with the expected report rendered by independent Python code; TLS hellos and the rest of the flights captured between `openssl s_client` and `s_server` 3.0.13 on localhost (TLS 1.0, 1.2, 1.3, a HelloRetryRequest) with the values compared against `s_client -trace` of the same run, and hellos built by hand (GREASE, SSL 3.0, DEFLATE, unknown suites, two SNI names, post-quantum groups) from RFC 8446, 5246, 8701 and 8879; cipher suite names from `openssl ciphers -stdname`. Chunked bodies are decoded by Python's `http.client` (the bare-LF vector is the one exception, written by hand from RFC 9112 section 2.2). The RFC 8448 example traces could not be fetched (no network), so none is used. `src/packets.test.ts` also checks the name tables against OpenSSL's list and `tls1.h` (191 suites, no name differs), truncation at every cut of each op's input, 300 mutations of each of twelve inputs, hostile lengths, the shared words, and the step counts above.
+- **Cipher suite table.** 335 suites: the 326 of the HTTP/2 block list of Go's `net/http` (RFC 7540 appendix A, from the IANA registry), whose names agree with OpenSSL's `-stdname` and `tls1.h` where they overlap, plus 0x1301 to 0x1305 (RFC 8446, 8447) and 0xD001 to 0xD003 and 0xD005 (RFC 8442); the last four are from the RFC and not checked against a tool. The extension, group and signature scheme tables are from the IANA registries as published in the RFCs and were not checked against a tool, except that every extension name in the captures matches `s_client -trace` (OpenSSL calls 65281 `renegotiate`).
+- **Not done.** IPv6, ICMP and ARP headers; TCP and UDP checksum verification; joining a handshake message that spans records; DTLS and SSL 2.0; decoding the Certificate, key exchange and other handshake bodies (only ClientHello and ServerHello are opened); QUIC.
 
 ## JSON values (WP 5.48)
 
