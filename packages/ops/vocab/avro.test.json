@@ -1,0 +1,909 @@
+[
+  {
+    "name": "records with every kind of type, null codec, one line each",
+    "ref": "fastavro 1.13.1 writer/reader (Apache Avro 1.11 specification)",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104146176726f2e636f646563086e756c6c166176726f2e736368656d61a2097b2274797065223a20227265636f7264222c20226e616d65223a2022782e526563222c20226669656c6473223a205b7b226e616d65223a20226964222c202274797065223a20226c6f6e67227d2c207b226e616d65223a20226e616d65222c202274797065223a2022737472696e67227d2c207b226e616d65223a202273636f7265222c202274797065223a205b226e756c6c222c2022646f75626c65225d7d2c207b226e616d65223a202274616773222c202274797065223a207b2274797065223a20226172726179222c20226974656d73223a2022737472696e67227d7d2c207b226e616d65223a20226174747273222c202274797065223a207b2274797065223a20226d6170222c202276616c756573223a2022696e74227d7d2c207b226e616d65223a20226b696e64222c202274797065223a207b2274797065223a2022656e756d222c20226e616d65223a2022782e4b696e64222c202273796d626f6c73223a205b2241222c202242222c202243225d7d7d2c207b226e616d65223a2022726177222c202274797065223a20226279746573227d2c207b226e616d65223a20226678222c202274797065223a207b2274797065223a20226669786564222c20226e616d65223a2022782e4634222c202273697a65223a20347d7d2c207b226e616d65223a202266222c202274797065223a2022666c6f6174227d2c207b226e616d65223a20226f6b222c202274797065223a2022626f6f6c65616e227d2c207b226e616d65223a20226e657874222c202274797065223a205b226e756c6c222c2022782e526563225d7d5d7d00b9552d6e4f2858c291768d0a324e520104a8010202610004027802790002026b0200020400ff61626364cdcccc3d0100c591808080808080fa0104c3a902000000000000044000000400010203040000c0bf000204026e00000000027a00000000000040400100b9552d6e4f2858c291768d0a324e5201",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"id\":1,\"name\":\"a\",\"score\":null,\"tags\":[\"x\",\"y\"],\"attrs\":{\"k\":1},\"kind\":\"B\",\"raw\":{\"type\":\"Buffer\",\"data\":[0,255]},\"fx\":{\"type\":\"Buffer\",\"data\":[97,98,99,100]},\"f\":0.10000000149011612,\"ok\":true,\"next\":null}\n{\"id\":-9007199254740993123,\"name\":\"é\",\"score\":2.5,\"tags\":[],\"attrs\":{},\"kind\":\"C\",\"raw\":{\"type\":\"Buffer\",\"data\":[]},\"fx\":{\"type\":\"Buffer\",\"data\":[1,2,3,4]},\"f\":-1.5,\"ok\":false,\"next\":{\"id\":2,\"name\":\"n\",\"score\":null,\"tags\":[],\"attrs\":{},\"kind\":\"A\",\"raw\":{\"type\":\"Buffer\",\"data\":[122]},\"fx\":{\"type\":\"Buffer\",\"data\":[0,0,0,0]},\"f\":3.0,\"ok\":true,\"next\":null}}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "force-valid-json, compact",
+    "ref": "fastavro 1.13.1 writer/reader (Apache Avro 1.11 specification)",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": true,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104146176726f2e636f646563086e756c6c166176726f2e736368656d61a2097b2274797065223a20227265636f7264222c20226e616d65223a2022782e526563222c20226669656c6473223a205b7b226e616d65223a20226964222c202274797065223a20226c6f6e67227d2c207b226e616d65223a20226e616d65222c202274797065223a2022737472696e67227d2c207b226e616d65223a202273636f7265222c202274797065223a205b226e756c6c222c2022646f75626c65225d7d2c207b226e616d65223a202274616773222c202274797065223a207b2274797065223a20226172726179222c20226974656d73223a2022737472696e67227d7d2c207b226e616d65223a20226174747273222c202274797065223a207b2274797065223a20226d6170222c202276616c756573223a2022696e74227d7d2c207b226e616d65223a20226b696e64222c202274797065223a207b2274797065223a2022656e756d222c20226e616d65223a2022782e4b696e64222c202273796d626f6c73223a205b2241222c202242222c202243225d7d7d2c207b226e616d65223a2022726177222c202274797065223a20226279746573227d2c207b226e616d65223a20226678222c202274797065223a207b2274797065223a20226669786564222c20226e616d65223a2022782e4634222c202273697a65223a20347d7d2c207b226e616d65223a202266222c202274797065223a2022666c6f6174227d2c207b226e616d65223a20226f6b222c202274797065223a2022626f6f6c65616e227d2c207b226e616d65223a20226e657874222c202274797065223a205b226e756c6c222c2022782e526563225d7d5d7d00b9552d6e4f2858c291768d0a324e520104a8010202610004027802790002026b0200020400ff61626364cdcccc3d0100c591808080808080fa0104c3a902000000000000044000000400010203040000c0bf000204026e00000000027a00000000000040400100b9552d6e4f2858c291768d0a324e5201",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[{\"id\":1,\"name\":\"a\",\"score\":null,\"tags\":[\"x\",\"y\"],\"attrs\":{\"k\":1},\"kind\":\"B\",\"raw\":{\"type\":\"Buffer\",\"data\":[0,255]},\"fx\":{\"type\":\"Buffer\",\"data\":[97,98,99,100]},\"f\":0.10000000149011612,\"ok\":true,\"next\":null},{\"id\":-9007199254740993123,\"name\":\"é\",\"score\":2.5,\"tags\":[],\"attrs\":{},\"kind\":\"C\",\"raw\":{\"type\":\"Buffer\",\"data\":[]},\"fx\":{\"type\":\"Buffer\",\"data\":[1,2,3,4]},\"f\":-1.5,\"ok\":false,\"next\":{\"id\":2,\"name\":\"n\",\"score\":null,\"tags\":[],\"attrs\":{},\"kind\":\"A\",\"raw\":{\"type\":\"Buffer\",\"data\":[122]},\"fx\":{\"type\":\"Buffer\",\"data\":[0,0,0,0]},\"f\":3.0,\"ok\":true,\"next\":null}}]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "force-valid-json, indent 2",
+    "ref": "fastavro 1.13.1 writer/reader (Apache Avro 1.11 specification)",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": true,
+      "indent": 2
+    },
+    "input": {
+      "value": "4f626a0104146176726f2e636f646563086e756c6c166176726f2e736368656d61a2097b2274797065223a20227265636f7264222c20226e616d65223a2022782e526563222c20226669656c6473223a205b7b226e616d65223a20226964222c202274797065223a20226c6f6e67227d2c207b226e616d65223a20226e616d65222c202274797065223a2022737472696e67227d2c207b226e616d65223a202273636f7265222c202274797065223a205b226e756c6c222c2022646f75626c65225d7d2c207b226e616d65223a202274616773222c202274797065223a207b2274797065223a20226172726179222c20226974656d73223a2022737472696e67227d7d2c207b226e616d65223a20226174747273222c202274797065223a207b2274797065223a20226d6170222c202276616c756573223a2022696e74227d7d2c207b226e616d65223a20226b696e64222c202274797065223a207b2274797065223a2022656e756d222c20226e616d65223a2022782e4b696e64222c202273796d626f6c73223a205b2241222c202242222c202243225d7d7d2c207b226e616d65223a2022726177222c202274797065223a20226279746573227d2c207b226e616d65223a20226678222c202274797065223a207b2274797065223a20226669786564222c20226e616d65223a2022782e4634222c202273697a65223a20347d7d2c207b226e616d65223a202266222c202274797065223a2022666c6f6174227d2c207b226e616d65223a20226f6b222c202274797065223a2022626f6f6c65616e227d2c207b226e616d65223a20226e657874222c202274797065223a205b226e756c6c222c2022782e526563225d7d5d7d00b9552d6e4f2858c291768d0a324e520104a8010202610004027802790002026b0200020400ff61626364cdcccc3d0100c591808080808080fa0104c3a902000000000000044000000400010203040000c0bf000204026e00000000027a00000000000040400100b9552d6e4f2858c291768d0a324e5201",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[\n  {\n    \"id\": 1,\n    \"name\": \"a\",\n    \"score\": null,\n    \"tags\": [\n      \"x\",\n      \"y\"\n    ],\n    \"attrs\": {\n      \"k\": 1\n    },\n    \"kind\": \"B\",\n    \"raw\": {\n      \"type\": \"Buffer\",\n      \"data\": [\n        0,\n        255\n      ]\n    },\n    \"fx\": {\n      \"type\": \"Buffer\",\n      \"data\": [\n        97,\n        98,\n        99,\n        100\n      ]\n    },\n    \"f\": 0.10000000149011612,\n    \"ok\": true,\n    \"next\": null\n  },\n  {\n    \"id\": -9007199254740993123,\n    \"name\": \"é\",\n    \"score\": 2.5,\n    \"tags\": [],\n    \"attrs\": {},\n    \"kind\": \"C\",\n    \"raw\": {\n      \"type\": \"Buffer\",\n      \"data\": []\n    },\n    \"fx\": {\n      \"type\": \"Buffer\",\n      \"data\": [\n        1,\n        2,\n        3,\n        4\n      ]\n    },\n    \"f\": -1.5,\n    \"ok\": false,\n    \"next\": {\n      \"id\": 2,\n      \"name\": \"n\",\n      \"score\": null,\n      \"tags\": [],\n      \"attrs\": {},\n      \"kind\": \"A\",\n      \"raw\": {\n        \"type\": \"Buffer\",\n        \"data\": [\n          122\n        ]\n      },\n      \"fx\": {\n        \"type\": \"Buffer\",\n        \"data\": [\n          0,\n          0,\n          0,\n          0\n        ]\n      },\n      \"f\": 3.0,\n      \"ok\": true,\n      \"next\": null\n    }\n  }\n]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "records indented by 2 (one record after the other)",
+    "ref": "fastavro 1.13.1 writer/reader (Apache Avro 1.11 specification)",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 2
+    },
+    "input": {
+      "value": "4f626a0104146176726f2e636f646563086e756c6c166176726f2e736368656d61a2097b2274797065223a20227265636f7264222c20226e616d65223a2022782e526563222c20226669656c6473223a205b7b226e616d65223a20226964222c202274797065223a20226c6f6e67227d2c207b226e616d65223a20226e616d65222c202274797065223a2022737472696e67227d2c207b226e616d65223a202273636f7265222c202274797065223a205b226e756c6c222c2022646f75626c65225d7d2c207b226e616d65223a202274616773222c202274797065223a207b2274797065223a20226172726179222c20226974656d73223a2022737472696e67227d7d2c207b226e616d65223a20226174747273222c202274797065223a207b2274797065223a20226d6170222c202276616c756573223a2022696e74227d7d2c207b226e616d65223a20226b696e64222c202274797065223a207b2274797065223a2022656e756d222c20226e616d65223a2022782e4b696e64222c202273796d626f6c73223a205b2241222c202242222c202243225d7d7d2c207b226e616d65223a2022726177222c202274797065223a20226279746573227d2c207b226e616d65223a20226678222c202274797065223a207b2274797065223a20226669786564222c20226e616d65223a2022782e4634222c202273697a65223a20347d7d2c207b226e616d65223a202266222c202274797065223a2022666c6f6174227d2c207b226e616d65223a20226f6b222c202274797065223a2022626f6f6c65616e227d2c207b226e616d65223a20226e657874222c202274797065223a205b226e756c6c222c2022782e526563225d7d5d7d00b9552d6e4f2858c291768d0a324e520104a8010202610004027802790002026b0200020400ff61626364cdcccc3d0100c591808080808080fa0104c3a902000000000000044000000400010203040000c0bf000204026e00000000027a00000000000040400100b9552d6e4f2858c291768d0a324e5201",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\n  \"id\": 1,\n  \"name\": \"a\",\n  \"score\": null,\n  \"tags\": [\n    \"x\",\n    \"y\"\n  ],\n  \"attrs\": {\n    \"k\": 1\n  },\n  \"kind\": \"B\",\n  \"raw\": {\n    \"type\": \"Buffer\",\n    \"data\": [\n      0,\n      255\n    ]\n  },\n  \"fx\": {\n    \"type\": \"Buffer\",\n    \"data\": [\n      97,\n      98,\n      99,\n      100\n    ]\n  },\n  \"f\": 0.10000000149011612,\n  \"ok\": true,\n  \"next\": null\n}\n{\n  \"id\": -9007199254740993123,\n  \"name\": \"é\",\n  \"score\": 2.5,\n  \"tags\": [],\n  \"attrs\": {},\n  \"kind\": \"C\",\n  \"raw\": {\n    \"type\": \"Buffer\",\n    \"data\": []\n  },\n  \"fx\": {\n    \"type\": \"Buffer\",\n    \"data\": [\n      1,\n      2,\n      3,\n      4\n    ]\n  },\n  \"f\": -1.5,\n  \"ok\": false,\n  \"next\": {\n    \"id\": 2,\n    \"name\": \"n\",\n    \"score\": null,\n    \"tags\": [],\n    \"attrs\": {},\n    \"kind\": \"A\",\n    \"raw\": {\n      \"type\": \"Buffer\",\n      \"data\": [\n        122\n      ]\n    },\n    \"fx\": {\n      \"type\": \"Buffer\",\n      \"data\": [\n        0,\n        0,\n        0,\n        0\n      ]\n    },\n    \"f\": 3.0,\n    \"ok\": true,\n    \"next\": null\n  }\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "deflate codec",
+    "ref": "fastavro 1.13.1 writer/reader (Apache Avro 1.11 specification)",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104146176726f2e636f6465630e6465666c617465166176726f2e736368656d61a2097b2274797065223a20227265636f7264222c20226e616d65223a2022782e526563222c20226669656c6473223a205b7b226e616d65223a20226964222c202274797065223a20226c6f6e67227d2c207b226e616d65223a20226e616d65222c202274797065223a2022737472696e67227d2c207b226e616d65223a202273636f7265222c202274797065223a205b226e756c6c222c2022646f75626c65225d7d2c207b226e616d65223a202274616773222c202274797065223a207b2274797065223a20226172726179222c20226974656d73223a2022737472696e67227d7d2c207b226e616d65223a20226174747273222c202274797065223a207b2274797065223a20226d6170222c202276616c756573223a2022696e74227d7d2c207b226e616d65223a20226b696e64222c202274797065223a207b2274797065223a2022656e756d222c20226e616d65223a2022782e4b696e64222c202273796d626f6c73223a205b2241222c202242222c202243225d7d7d2c207b226e616d65223a2022726177222c202274797065223a20226279746573227d2c207b226e616d65223a20226678222c202274797065223a207b2274797065223a20226669786564222c20226e616d65223a2022782e4634222c202273697a65223a20347d7d2c207b226e616d65223a202266222c202274797065223a2022666c6f6174227d2c207b226e616d65223a20226f6b222c202274797065223a2022626f6f6c65616e227d2c207b226e616d65223a20226e657874222c202274797065223a205b226e756c6c222c2022782e526563225d7d5d7d0029a62269b4a68b3b763dfa5b4bd124cf04940163624a646061aa60aa646062ca6662606261f89f98949c72f6cc195b4686a3131bc0e01723cbe1954c0c60c0e200c40c8c4ccc2c0c0c07f6033530e5818499aa20d20e0e8c0c0057111129a62269b4a68b3b763dfa5b4bd124cf",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"id\":1,\"name\":\"a\",\"score\":null,\"tags\":[\"x\",\"y\"],\"attrs\":{\"k\":1},\"kind\":\"B\",\"raw\":{\"type\":\"Buffer\",\"data\":[0,255]},\"fx\":{\"type\":\"Buffer\",\"data\":[97,98,99,100]},\"f\":0.10000000149011612,\"ok\":true,\"next\":null}\n{\"id\":-9007199254740993123,\"name\":\"é\",\"score\":2.5,\"tags\":[],\"attrs\":{},\"kind\":\"C\",\"raw\":{\"type\":\"Buffer\",\"data\":[]},\"fx\":{\"type\":\"Buffer\",\"data\":[1,2,3,4]},\"f\":-1.5,\"ok\":false,\"next\":{\"id\":2,\"name\":\"n\",\"score\":null,\"tags\":[],\"attrs\":{},\"kind\":\"A\",\"raw\":{\"type\":\"Buffer\",\"data\":[122]},\"fx\":{\"type\":\"Buffer\",\"data\":[0,0,0,0]},\"f\":3.0,\"ok\":true,\"next\":null}}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "one block per record",
+    "ref": "fastavro 1.13.1 writer/reader (Apache Avro 1.11 specification)",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104146176726f2e636f646563086e756c6c166176726f2e736368656d61a2097b2274797065223a20227265636f7264222c20226e616d65223a2022782e526563222c20226669656c6473223a205b7b226e616d65223a20226964222c202274797065223a20226c6f6e67227d2c207b226e616d65223a20226e616d65222c202274797065223a2022737472696e67227d2c207b226e616d65223a202273636f7265222c202274797065223a205b226e756c6c222c2022646f75626c65225d7d2c207b226e616d65223a202274616773222c202274797065223a207b2274797065223a20226172726179222c20226974656d73223a2022737472696e67227d7d2c207b226e616d65223a20226174747273222c202274797065223a207b2274797065223a20226d6170222c202276616c756573223a2022696e74227d7d2c207b226e616d65223a20226b696e64222c202274797065223a207b2274797065223a2022656e756d222c20226e616d65223a2022782e4b696e64222c202273796d626f6c73223a205b2241222c202242222c202243225d7d7d2c207b226e616d65223a2022726177222c202274797065223a20226279746573227d2c207b226e616d65223a20226678222c202274797065223a207b2274797065223a20226669786564222c20226e616d65223a2022782e4634222c202273697a65223a20347d7d2c207b226e616d65223a202266222c202274797065223a2022666c6f6174227d2c207b226e616d65223a20226f6b222c202274797065223a2022626f6f6c65616e227d2c207b226e616d65223a20226e657874222c202274797065223a205b226e756c6c222c2022782e526563225d7d5d7d00652d2acb412965345077a4851d23b5cd023a0202610004027802790002026b0200020400ff61626364cdcccc3d0100652d2acb412965345077a4851d23b5cd026ec591808080808080fa0104c3a902000000000000044000000400010203040000c0bf000204026e00000000027a00000000000040400100652d2acb412965345077a4851d23b5cd",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"id\":1,\"name\":\"a\",\"score\":null,\"tags\":[\"x\",\"y\"],\"attrs\":{\"k\":1},\"kind\":\"B\",\"raw\":{\"type\":\"Buffer\",\"data\":[0,255]},\"fx\":{\"type\":\"Buffer\",\"data\":[97,98,99,100]},\"f\":0.10000000149011612,\"ok\":true,\"next\":null}\n{\"id\":-9007199254740993123,\"name\":\"é\",\"score\":2.5,\"tags\":[],\"attrs\":{},\"kind\":\"C\",\"raw\":{\"type\":\"Buffer\",\"data\":[]},\"fx\":{\"type\":\"Buffer\",\"data\":[1,2,3,4]},\"f\":-1.5,\"ok\":false,\"next\":{\"id\":2,\"name\":\"n\",\"score\":null,\"tags\":[],\"attrs\":{},\"kind\":\"A\",\"raw\":{\"type\":\"Buffer\",\"data\":[122]},\"fx\":{\"type\":\"Buffer\",\"data\":[0,0,0,0]},\"f\":3.0,\"ok\":true,\"next\":null}}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "several deflate blocks",
+    "ref": "fastavro 1.13.1 writer/reader (Apache Avro 1.11 specification)",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104146176726f2e636f6465630e6465666c617465166176726f2e736368656d61a2097b2274797065223a20227265636f7264222c20226e616d65223a2022782e526563222c20226669656c6473223a205b7b226e616d65223a20226964222c202274797065223a20226c6f6e67227d2c207b226e616d65223a20226e616d65222c202274797065223a2022737472696e67227d2c207b226e616d65223a202273636f7265222c202274797065223a205b226e756c6c222c2022646f75626c65225d7d2c207b226e616d65223a202274616773222c202274797065223a207b2274797065223a20226172726179222c20226974656d73223a2022737472696e67227d7d2c207b226e616d65223a20226174747273222c202274797065223a207b2274797065223a20226d6170222c202276616c756573223a2022696e74227d7d2c207b226e616d65223a20226b696e64222c202274797065223a207b2274797065223a2022656e756d222c20226e616d65223a2022782e4b696e64222c202273796d626f6c73223a205b2241222c202242222c202243225d7d7d2c207b226e616d65223a2022726177222c202274797065223a20226279746573227d2c207b226e616d65223a20226678222c202274797065223a207b2274797065223a20226669786564222c20226e616d65223a2022782e4634222c202273697a65223a20347d7d2c207b226e616d65223a202266222c202274797065223a2022666c6f6174227d2c207b226e616d65223a20226f6b222c202274797065223a2022626f6f6c65616e227d2c207b226e616d65223a20226e657874222c202274797065223a205b226e756c6c222c2022782e526563225d7d5d7d00907a014cb5077913d4616726b041398b0c9c0163624a646061aa60aa646062ca6662606261f89f98949c72f6cc195b4686a3131bc0e01723cbe1954c0c60c0e200c40c8c4ccc2c0c0c07f6033530e5818499aa20d20e0e8c409386869900ca1233907a014cb5077913d4616726b041398b089c0163624a646061aa60aa646062ca6662606261f89f98949c72f6cc195b4686a3131bc0e01723cbe1954c0c60c0e200c40c8c4ccc2c0c0c07f6033530e5818499aa20d20e0e8c4093a86f2600451c22907a014cb5077913d4616726b041398b",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"id\":1,\"name\":\"a\",\"score\":null,\"tags\":[\"x\",\"y\"],\"attrs\":{\"k\":1},\"kind\":\"B\",\"raw\":{\"type\":\"Buffer\",\"data\":[0,255]},\"fx\":{\"type\":\"Buffer\",\"data\":[97,98,99,100]},\"f\":0.10000000149011612,\"ok\":true,\"next\":null}\n{\"id\":-9007199254740993123,\"name\":\"é\",\"score\":2.5,\"tags\":[],\"attrs\":{},\"kind\":\"C\",\"raw\":{\"type\":\"Buffer\",\"data\":[]},\"fx\":{\"type\":\"Buffer\",\"data\":[1,2,3,4]},\"f\":-1.5,\"ok\":false,\"next\":{\"id\":2,\"name\":\"n\",\"score\":null,\"tags\":[],\"attrs\":{},\"kind\":\"A\",\"raw\":{\"type\":\"Buffer\",\"data\":[122]},\"fx\":{\"type\":\"Buffer\",\"data\":[0,0,0,0]},\"f\":3.0,\"ok\":true,\"next\":null}}\n{\"id\":1,\"name\":\"a\",\"score\":null,\"tags\":[\"x\",\"y\"],\"attrs\":{\"k\":1},\"kind\":\"B\",\"raw\":{\"type\":\"Buffer\",\"data\":[0,255]},\"fx\":{\"type\":\"Buffer\",\"data\":[97,98,99,100]},\"f\":0.10000000149011612,\"ok\":true,\"next\":null}\n{\"id\":-9007199254740993123,\"name\":\"é\",\"score\":2.5,\"tags\":[],\"attrs\":{},\"kind\":\"C\",\"raw\":{\"type\":\"Buffer\",\"data\":[]},\"fx\":{\"type\":\"Buffer\",\"data\":[1,2,3,4]},\"f\":-1.5,\"ok\":false,\"next\":{\"id\":2,\"name\":\"n\",\"score\":null,\"tags\":[],\"attrs\":{},\"kind\":\"A\",\"raw\":{\"type\":\"Buffer\",\"data\":[122]},\"fx\":{\"type\":\"Buffer\",\"data\":[0,0,0,0]},\"f\":3.0,\"ok\":true,\"next\":null}}\n{\"id\":1,\"name\":\"a\",\"score\":null,\"tags\":[\"x\",\"y\"],\"attrs\":{\"k\":1},\"kind\":\"B\",\"raw\":{\"type\":\"Buffer\",\"data\":[0,255]},\"fx\":{\"type\":\"Buffer\",\"data\":[97,98,99,100]},\"f\":0.10000000149011612,\"ok\":true,\"next\":null}\n{\"id\":-9007199254740993123,\"name\":\"é\",\"score\":2.5,\"tags\":[],\"attrs\":{},\"kind\":\"C\",\"raw\":{\"type\":\"Buffer\",\"data\":[]},\"fx\":{\"type\":\"Buffer\",\"data\":[1,2,3,4]},\"f\":-1.5,\"ok\":false,\"next\":{\"id\":2,\"name\":\"n\",\"score\":null,\"tags\":[],\"attrs\":{},\"kind\":\"A\",\"raw\":{\"type\":\"Buffer\",\"data\":[122]},\"fx\":{\"type\":\"Buffer\",\"data\":[0,0,0,0]},\"f\":3.0,\"ok\":true,\"next\":null}}\n{\"id\":1,\"name\":\"a\",\"score\":null,\"tags\":[\"x\",\"y\"],\"attrs\":{\"k\":1},\"kind\":\"B\",\"raw\":{\"type\":\"Buffer\",\"data\":[0,255]},\"fx\":{\"type\":\"Buffer\",\"data\":[97,98,99,100]},\"f\":0.10000000149011612,\"ok\":true,\"next\":null}\n{\"id\":-9007199254740993123,\"name\":\"é\",\"score\":2.5,\"tags\":[],\"attrs\":{},\"kind\":\"C\",\"raw\":{\"type\":\"Buffer\",\"data\":[]},\"fx\":{\"type\":\"Buffer\",\"data\":[1,2,3,4]},\"f\":-1.5,\"ok\":false,\"next\":{\"id\":2,\"name\":\"n\",\"score\":null,\"tags\":[],\"attrs\":{},\"kind\":\"A\",\"raw\":{\"type\":\"Buffer\",\"data\":[122]},\"fx\":{\"type\":\"Buffer\",\"data\":[0,0,0,0]},\"f\":3.0,\"ok\":true,\"next\":null}}\n{\"id\":1,\"name\":\"a\",\"score\":null,\"tags\":[\"x\",\"y\"],\"attrs\":{\"k\":1},\"kind\":\"B\",\"raw\":{\"type\":\"Buffer\",\"data\":[0,255]},\"fx\":{\"type\":\"Buffer\",\"data\":[97,98,99,100]},\"f\":0.10000000149011612,\"ok\":true,\"next\":null}\n{\"id\":-9007199254740993123,\"name\":\"é\",\"score\":2.5,\"tags\":[],\"attrs\":{},\"kind\":\"C\",\"raw\":{\"type\":\"Buffer\",\"data\":[]},\"fx\":{\"type\":\"Buffer\",\"data\":[1,2,3,4]},\"f\":-1.5,\"ok\":false,\"next\":{\"id\":2,\"name\":\"n\",\"score\":null,\"tags\":[],\"attrs\":{},\"kind\":\"A\",\"raw\":{\"type\":\"Buffer\",\"data\":[122]},\"fx\":{\"type\":\"Buffer\",\"data\":[0,0,0,0]},\"f\":3.0,\"ok\":true,\"next\":null}}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "primitive schema: string",
+    "ref": "fastavro 1.13.1 writer/reader (Apache Avro 1.11 specification)",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104146176726f2e636f646563086e756c6c166176726f2e736368656d611022737472696e6722002b97d129e5c29a02ad67c435cf930650060e02610662c3a9002b97d129e5c29a02ad67c435cf930650",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"a\"\n\"bé\"\n\"\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "primitive schema: long values at the varint edges",
+    "ref": "fastavro 1.13.1 writer/reader (Apache Avro 1.11 specification)",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104146176726f2e636f646563086e756c6c166176726f2e736368656d610c226c6f6e67220074f033ad80fbce92cfe936f62bcd473a18620002017e80017f81018080808010ffffffff0f80808080808080808001ffffffffffffffffff01feffffffffffffffff0174f033ad80fbce92cfe936f62bcd473a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0\n1\n-1\n63\n64\n-64\n-65\n2147483648\n-2147483648\n4611686018427387904\n-9223372036854775808\n9223372036854775807",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "primitive schema: int values",
+    "ref": "fastavro 1.13.1 writer/reader (Apache Avro 1.11 specification)",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104146176726f2e636f646563086e756c6c166176726f2e736368656d610a22696e7422009d0d28d1ac459de47223d92dc3349d710a1a000201feffffff0fffffffff0f9d0d28d1ac459de47223d92dc3349d71",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0\n1\n-1\n2147483647\n-2147483648",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "primitive schema: double (NaN and infinity are null)",
+    "ref": "fastavro 1.13.1 writer/reader (Apache Avro 1.11 specification)",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104146176726f2e636f646563086e756c6c166176726f2e736368656d611022646f75626c65220011b5da5b3790c7879dfc8c4785ab6ba90e7000000000000000000000000000000080000000000000f83f9c7500883ce4377e000000000000f87f000000000000f07f010000000000000011b5da5b3790c7879dfc8c4785ab6ba9",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0.0\n-0.0\n1.5\n1e+300\nnull\nnull\n5e-324",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "primitive schema: float is shown as the double it widens to",
+    "ref": "fastavro 1.13.1 writer/reader (Apache Avro 1.11 specification)",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104146176726f2e636f646563086e756c6c166176726f2e736368656d610e22666c6f6174220076da3f5a58ac96ff0ba2017d043fa6430a28000000000000c03fcdcccc3dffff7f7f000080ff76da3f5a58ac96ff0ba2017d043fa643",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0.0\n1.5\n0.10000000149011612\n3.4028234663852886e+38\nnull",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "primitive schema: boolean",
+    "ref": "fastavro 1.13.1 writer/reader (Apache Avro 1.11 specification)",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104146176726f2e636f646563086e756c6c166176726f2e736368656d611222626f6f6c65616e22001c3a6f6f9521b02f39e6934acdc44e12040401001c3a6f6f9521b02f39e6934acdc44e12",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "true\nfalse",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "primitive schema: null (data of no bytes)",
+    "ref": "fastavro 1.13.1 writer/reader (Apache Avro 1.11 specification)",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104146176726f2e636f646563086e756c6c166176726f2e736368656d610c226e756c6c22008d35d4819388078126e6ac5540ae18c306008d35d4819388078126e6ac5540ae18c3",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "null\nnull\nnull",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "primitive schema: bytes",
+    "ref": "fastavro 1.13.1 writer/reader (Apache Avro 1.11 specification)",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104146176726f2e636f646563086e756c6c166176726f2e736368656d610e22627974657322002635ab4b3cbd79470ef5f1788b39b7ed040a00060001fe2635ab4b3cbd79470ef5f1788b39b7ed",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"type\":\"Buffer\",\"data\":[]}\n{\"type\":\"Buffer\",\"data\":[0,1,254]}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "nested arrays",
+    "ref": "fastavro 1.13.1 writer/reader (Apache Avro 1.11 specification)",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104146176726f2e636f646563086e756c6c166176726f2e736368656d617a7b2274797065223a20226172726179222c20226974656d73223a207b2274797065223a20226172726179222c20226974656d73223a2022696e74227d7d007d0d284425af17cc2383f76659f6a2f8061a040402040000000002020600007d0d284425af17cc2383f76659f6a2f8",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[[1,2],[]]\n[]\n[[3]]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "maps of unions",
+    "ref": "fastavro 1.13.1 writer/reader (Apache Avro 1.11 specification)",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104146176726f2e636f646563086e756c6c166176726f2e736368656d615a7b2274797065223a20226d6170222c202276616c756573223a205b226e756c6c222c2022737472696e67225d7d00279f576ff195e72aaeda4e690c03a7f304160402610202620263000000279f576ff195e72aaeda4e690c03a7f3",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"a\":\"b\",\"c\":null}\n{}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "top-level union",
+    "ref": "fastavro 1.13.1 writer/reader (Apache Avro 1.11 specification)",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104146176726f2e636f646563086e756c6c166176726f2e736368656d617a5b226e756c6c222c2022696e74222c2022737472696e67222c207b2274797065223a20226172726179222c20226974656d73223a20226c6f6e67227d5d00b5a08f2da656c5236c4c0eb165620748081600020a0402730604020400b5a08f2da656c5236c4c0eb165620748",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "null\n5\n\"s\"\n[1,2]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "recursive record through an array",
+    "ref": "fastavro 1.13.1 writer/reader (Apache Avro 1.11 specification)",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104146176726f2e636f646563086e756c6c166176726f2e736368656d6194027b2274797065223a20227265636f7264222c20226e616d65223a20224e6f6465222c20226669656c6473223a205b7b226e616d65223a202276222c202274797065223a2022696e74227d2c207b226e616d65223a20226b696473222c202274797065223a207b2274797065223a20226172726179222c20226974656d73223a20224e6f6465227d7d5d7d006916361ed1e9e0f6bb909ed2914fd1250214020404000602080000006916361ed1e9e0f6bb909ed2914fd125",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"v\":1,\"kids\":[{\"v\":2,\"kids\":[]},{\"v\":3,\"kids\":[{\"v\":4,\"kids\":[]}]}]}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "named types and namespaces",
+    "ref": "fastavro 1.13.1 writer/reader (Apache Avro 1.11 specification)",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104146176726f2e636f646563086e756c6c166176726f2e736368656d61fa057b2274797065223a20227265636f7264222c20226e616d65223a2022636f6d2e6578616d706c652e4f75746572222c20226669656c6473223a205b7b226e616d65223a202261222c202274797065223a207b2274797065223a20227265636f7264222c20226e616d65223a2022636f6d2e6578616d706c652e496e6e6572222c20226669656c6473223a205b7b226e616d65223a202271222c202274797065223a2022737472696e67227d5d7d7d2c207b226e616d65223a202262222c202274797065223a2022636f6d2e6578616d706c652e496e6e6572227d2c207b226e616d65223a202263222c202274797065223a2022636f6d2e6578616d706c652e496e6e6572227d2c207b226e616d65223a202264222c202274797065223a207b2274797065223a2022656e756d222c20226e616d65223a20226f746865722e45222c202273796d626f6c73223a205b2258222c202259225d7d7d2c207b226e616d65223a202265222c202274797065223a20226f746865722e45227d5d7d00364d1587fa7d4bcd111684d903f9e57202100231023202330200364d1587fa7d4bcd111684d903f9e572",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"a\":{\"q\":\"1\"},\"b\":{\"q\":\"2\"},\"c\":{\"q\":\"3\"},\"d\":\"Y\",\"e\":\"X\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "logical types are shown as their underlying values",
+    "ref": "fastavro 1.13.1 writer/reader (Apache Avro 1.11 specification) (expected: the underlying long, string, bytes and int written by hand: 1577934245000 ms, decimal 1234 unscaled, 18263 days)",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104146176726f2e636f646563086e756c6c166176726f2e736368656d61b6057b2274797065223a20227265636f7264222c20226e616d65223a20224c222c20226669656c6473223a205b7b226e616d65223a202274222c202274797065223a207b226c6f676963616c54797065223a202274696d657374616d702d6d696c6c6973222c202274797065223a20226c6f6e67227d7d2c207b226e616d65223a202275222c202274797065223a207b226c6f676963616c54797065223a202275756964222c202274797065223a2022737472696e67227d7d2c207b226e616d65223a2022646563222c202274797065223a207b226c6f676963616c54797065223a2022646563696d616c222c2022707265636973696f6e223a20352c20227363616c65223a20322c202274797065223a20226279746573227d7d2c207b226e616d65223a20226474222c202274797065223a207b226c6f676963616c54797065223a202264617465222c202274797065223a2022696e74227d7d5d7d00e9fbaa76221b025c67c7973ab43e008e026290b2aec3ec5b4830303030303030302d303030302d303030302d303030302d3030303030303030303030350404d2ae9d02e9fbaa76221b025c67c7973ab43e008e",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"t\":1577934245000,\"u\":\"00000000-0000-0000-0000-000000000005\",\"dec\":{\"type\":\"Buffer\",\"data\":[4,210]},\"dt\":18263}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "file with no records",
+    "ref": "fastavro 1.13.1 writer/reader (Apache Avro 1.11 specification)",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104146176726f2e636f646563086e756c6c166176726f2e736368656d611022737472696e672200cccc7beebc166363518402bc0792fa96",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "file with no records, forced array",
+    "ref": "fastavro 1.13.1 writer/reader (Apache Avro 1.11 specification)",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": true,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104146176726f2e636f646563086e756c6c166176726f2e736368656d611022737472696e672200cccc7beebc166363518402bc0792fa96",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "error: codec bzip2 is not supported",
+    "ref": "fastavro 1.13.1 writer/reader (Apache Avro 1.11 specification)",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104146176726f2e636f6465630a627a697032166176726f2e736368656d611022737472696e672200866415ebae36e0010d9e1372a5f1b0330254425a68393141592653598b4b13e3000000410000100244a00030cd00c34629971772453850908b4b13e3866415ebae36e0010d9e1372a5f1b033",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: codec xz is not supported",
+    "ref": "fastavro 1.13.1 writer/reader (Apache Avro 1.11 specification)",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104146176726f2e636f64656304787a166176726f2e736368656d611022737472696e672200e5f1155ac2039b01fe26720029a999fa028001fd377a585a000004e6d6b4460200210116000000742fe5a30100050a68656c6c6f0000000ccca5abfb7f50eb00011e06c12fa41d1fb6f37d010000000004595ae5f1155ac2039b01fe26720029a999fa",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: codec snappy is not supported (hand-built container)",
+    "ref": "Apache Avro specification, Object Container Files",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104166176726f2e736368656d611022737472696e6722146176726f2e636f6465630c736e6170707900000102030405060708090a0b0c0d0e0f0206046869000102030405060708090a0b0c0d0e0f",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: codec zstandard is not supported (hand-built container)",
+    "ref": "Apache Avro specification, Object Container Files",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104166176726f2e736368656d611022737472696e6722146176726f2e636f646563127a7374616e6461726400000102030405060708090a0b0c0d0e0f0206046869000102030405060708090a0b0c0d0e0f",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "hand-built container without avro.codec (null)",
+    "ref": "Apache Avro specification, Object Container Files",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0102166176726f2e736368656d611022737472696e672200000102030405060708090a0b0c0d0e0f040c04686904796f000102030405060708090a0b0c0d0e0f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"hi\"\n\"yo\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hand-built container with two blocks",
+    "ref": "Apache Avro specification, Object Container Files",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104166176726f2e736368656d611022737472696e6722146176726f2e636f646563086e756c6c00000102030405060708090a0b0c0d0e0f02040261000102030405060708090a0b0c0d0e0f02040262000102030405060708090a0b0c0d0e0f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"a\"\n\"b\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hand-built container with an empty block",
+    "ref": "Apache Avro specification, Object Container Files",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104166176726f2e736368656d611022737472696e6722146176726f2e636f646563086e756c6c00000102030405060708090a0b0c0d0e0f0000000102030405060708090a0b0c0d0e0f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "metadata block with a negative count (block size follows)",
+    "ref": "Apache Avro specification, maps",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a01012a166176726f2e736368656d611022737472696e672200000102030405060708090a0b0c0d0e0f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "error: empty input",
+    "ref": "Apache Avro specification, Object Container Files",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: not Avro",
+    "ref": "Apache Avro specification, Object Container Files",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: wrong version byte",
+    "ref": "Apache Avro specification, Object Container Files",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a02",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: header cut after the magic",
+    "ref": "Apache Avro specification, Object Container Files",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a01",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: last sync marker cut short",
+    "ref": "Apache Avro specification, Object Container Files",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0102166176726f2e736368656d611022737472696e672200000102030405060708090a0b0c0d0e0f040c04686904796f000102030405060708090a0b0c0d0e",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: block cut short",
+    "ref": "Apache Avro specification, Object Container Files",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0102166176726f2e736368656d611022737472696e672200000102030405060708090a0b0c0d0e0f040c0468",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: wrong sync marker",
+    "ref": "Apache Avro specification",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0102166176726f2e736368656d611022737472696e672200000102030405060708090a0b0c0d0e0f040c04686904796f000102030405060708090a0b0c0d0e0e",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: byte after the last block",
+    "ref": "Apache Avro specification",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0102166176726f2e736368656d611022737472696e672200000102030405060708090a0b0c0d0e0f040c04686904796f000102030405060708090a0b0c0d0e0f00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: block declares more data than it holds",
+    "ref": "Apache Avro specification",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104166176726f2e736368656d611022737472696e6722146176726f2e636f646563086e756c6c00000102030405060708090a0b0c0d0e0f060802610262000102030405060708090a0b0c0d0e0f",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: bytes left over in a block",
+    "ref": "Apache Avro specification",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104166176726f2e736368656d611022737472696e6722146176726f2e636f646563086e756c6c00000102030405060708090a0b0c0d0e0f0206026100000102030405060708090a0b0c0d0e0f",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: enum index out of range",
+    "ref": "Apache Avro specification",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104166176726f2e736368656d615c7b2274797065223a22656e756d222c226e616d65223a2245222c2273796d626f6c73223a5b2241222c2242225d7d146176726f2e636f646563086e756c6c00000102030405060708090a0b0c0d0e0f020204000102030405060708090a0b0c0d0e0f",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: union index out of range",
+    "ref": "Apache Avro specification",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104166176726f2e736368656d611c5b226e756c6c222c22696e74225d146176726f2e636f646563086e756c6c00000102030405060708090a0b0c0d0e0f020204000102030405060708090a0b0c0d0e0f",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: boolean that is not 0 or 1",
+    "ref": "Apache Avro specification",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104166176726f2e736368656d611222626f6f6c65616e22146176726f2e636f646563086e756c6c00000102030405060708090a0b0c0d0e0f020202000102030405060708090a0b0c0d0e0f",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: int that does not fit in 32 bits",
+    "ref": "Apache Avro specification",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104166176726f2e736368656d610a22696e7422146176726f2e636f646563086e756c6c00000102030405060708090a0b0c0d0e0f020a8080808010000102030405060708090a0b0c0d0e0f",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: negative string length",
+    "ref": "Apache Avro specification",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104166176726f2e736368656d611022737472696e6722146176726f2e636f646563086e756c6c00000102030405060708090a0b0c0d0e0f020201000102030405060708090a0b0c0d0e0f",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: string longer than the block",
+    "ref": "Apache Avro specification",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104166176726f2e736368656d611022737472696e6722146176726f2e636f646563086e756c6c00000102030405060708090a0b0c0d0e0f020e80808080804078000102030405060708090a0b0c0d0e0f",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: invalid UTF-8",
+    "ref": "Apache Avro specification",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104166176726f2e736368656d611022737472696e6722146176726f2e636f646563086e756c6c00000102030405060708090a0b0c0d0e0f020402ff000102030405060708090a0b0c0d0e0f",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: repeated map key",
+    "ref": "Apache Avro specification",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104166176726f2e736368656d613a7b2274797065223a226d6170222c2276616c756573223a22696e74227d146176726f2e636f646563086e756c6c00000102030405060708090a0b0c0d0e0f02100402610202610400000102030405060708090a0b0c0d0e0f",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: schema schema that is not JSON",
+    "ref": "Apache Avro specification, schemas",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104166176726f2e736368656d61027b146176726f2e636f646563086e756c6c00000102030405060708090a0b0c0d0e0f020200000102030405060708090a0b0c0d0e0f",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: schema undefined type name",
+    "ref": "Apache Avro specification, schemas",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104166176726f2e736368656d6110226e6f7375636822146176726f2e636f646563086e756c6c00000102030405060708090a0b0c0d0e0f020200000102030405060708090a0b0c0d0e0f",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: schema repeated field name",
+    "ref": "Apache Avro specification, schemas",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104166176726f2e736368656d61b6017b2274797065223a227265636f7264222c226e616d65223a2252222c226669656c6473223a5b7b226e616d65223a2261222c2274797065223a22696e74227d2c7b226e616d65223a2261222c2274797065223a22696e74227d5d7d146176726f2e636f646563086e756c6c00000102030405060708090a0b0c0d0e0f020200000102030405060708090a0b0c0d0e0f",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: schema union inside a union",
+    "ref": "Apache Avro specification, schemas",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104166176726f2e736368656d61205b5b226e756c6c225d2c22696e74225d146176726f2e636f646563086e756c6c00000102030405060708090a0b0c0d0e0f020200000102030405060708090a0b0c0d0e0f",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: schema fixed without a size",
+    "ref": "Apache Avro specification, schemas",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104166176726f2e736368656d61367b2274797065223a226669786564222c226e616d65223a2246227d146176726f2e636f646563086e756c6c00000102030405060708090a0b0c0d0e0f020200000102030405060708090a0b0c0d0e0f",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: schema enum symbol that is not a name",
+    "ref": "Apache Avro specification, schemas",
+    "op": "avro:to-json",
+    "params": {
+      "force-valid-json": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "4f626a0104166176726f2e736368656d61567b2274797065223a22656e756d222c226e616d65223a2245222c2273796d626f6c73223a5b223178225d7d146176726f2e636f646563086e756c6c00000102030405060708090a0b0c0d0e0f020200000102030405060708090a0b0c0d0e0f",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

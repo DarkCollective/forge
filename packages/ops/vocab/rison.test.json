@@ -1,0 +1,2249 @@
+[
+  {
+    "name": "encode null",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "null",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "!n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode true",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "true",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "!t",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode false",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "false",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "!f",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode 0",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode 1",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode -1",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "-1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode 1.5",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "1.5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1.5",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode -0.25",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "-0.25",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-0.25",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode 123456789012345678901234567890",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "123456789012345678901234567890",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "123456789012345678901234567890",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode \"abc\"",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "\"abc\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "abc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode \"a b\"",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "\"a b\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "'a b'",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode \"\"",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "\"\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "''",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode \"1\"",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "\"1\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "'1'",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode \"-1\"",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "\"-1\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "'-1'",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode \"it's\"",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "\"it's\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "'it!'s'",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode \"wow!\"",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "\"wow!\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "'wow!!'",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode \"a:b\"",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "\"a:b\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "'a:b'",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode \"a,b\"",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "\"a,b\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "'a,b'",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode \"(x)\"",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "\"(x)\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "'(x)'",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode \"a-b\"",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "\"a-b\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a-b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode \"-a\"",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "\"-a\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "'-a'",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode \"a.b\"",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "\"a.b\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a.b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode \"a*b\"",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "\"a*b\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "'a*b'",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode \"a@b\"",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "\"a@b\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "'a@b'",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode \"a$b\"",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "\"a$b\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "'a$b'",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode \"é€😀\"",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "\"é€😀\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "é€😀",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode \"!\"",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "\"!\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "'!!'",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode \"'\"",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "\"'\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "'!''",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode {}",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "{}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "()",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode {\"a\":1}",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "{\"a\":1}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "(a:1)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode {\"b\":2,\"a\":1}",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "{\"b\":2,\"a\":1}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "(a:1,b:2)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode {\"a\":{\"b\":[1,2,{\"c\":null}]}}",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "{\"a\":{\"b\":[1,2,{\"c\":null}]}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "(a:(b:!(1,2,(c:!n))))",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode {\"a b\":1}",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "{\"a b\":1}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "('a b':1)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode {\"1\":1}",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "{\"1\":1}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "('1':1)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode {\"\":1}",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "{\"\":1}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "('':1)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode {\"it's\":true}",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "{\"it's\":true}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "('it!'s':!t)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode []",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "[]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "!()",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode [1,2]",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "[1,2]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "!(1,2)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode [[1]]",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "[[1]]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "!(!(1))",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode [{\"a\":1},[]]",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "[{\"a\":1},[]]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "!((a:1),!())",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode [true,false,null,\"x y\",\"\"]",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "[true,false,null,\"x y\",\"\"]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "!(!t,!f,!n,'x y','')",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode {\"k\":[]}",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "{\"k\":[]}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "(k:!())",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode {\"k\":{}}",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "{\"k\":{}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "(k:())",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode {\"z\":1,\"y\":2,\"x\":3,\"Ab\":4,\"aB\":5,\"é\":6}",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "{\"z\":1,\"y\":2,\"x\":3,\"Ab\":4,\"aB\":5,\"é\":6}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "(Ab:4,aB:5,x:3,y:2,z:1,é:6)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode number 1e21",
+    "ref": "rison.js encoder rules (numbers as JavaScript prints them, without the +), derived by hand",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "1e21",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1e21",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode number 1.5e-7",
+    "ref": "rison.js encoder rules (numbers as JavaScript prints them, without the +), derived by hand",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "1.5e-7",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1.5e-7",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode number 100.0",
+    "ref": "rison.js encoder rules (numbers as JavaScript prints them, without the +), derived by hand",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "100.0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "100",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode number 1e300",
+    "ref": "rison.js encoder rules (numbers as JavaScript prints them, without the +), derived by hand",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "1e300",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1e300",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode number -1e-7",
+    "ref": "rison.js encoder rules (numbers as JavaScript prints them, without the +), derived by hand",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "-1e-7",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-1e-7",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode number 0.1",
+    "ref": "rison.js encoder rules (numbers as JavaScript prints them, without the +), derived by hand",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "0.1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0.1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode number -0.0",
+    "ref": "rison.js encoder rules (numbers as JavaScript prints them, without the +), derived by hand",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "-0.0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "o-rison encode {\"b\":[1],\"a\":\"x\"}",
+    "ref": "prison.dumps without the outer parentheses (O-Rison, rison.js encode_object)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "o-rison"
+    },
+    "input": {
+      "value": "{\"b\":[1],\"a\":\"x\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a:x,b:!(1)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "o-rison encode {}",
+    "ref": "prison.dumps without the outer parentheses (O-Rison, rison.js encode_object)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "o-rison"
+    },
+    "input": {
+      "value": "{}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "o-rison encode {\"a\":{\"b\":1}}",
+    "ref": "prison.dumps without the outer parentheses (O-Rison, rison.js encode_object)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "o-rison"
+    },
+    "input": {
+      "value": "{\"a\":{\"b\":1}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a:(b:1)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a-rison encode [1,\"x\",[2]]",
+    "ref": "prison.dumps without the outer !( and ) (A-Rison, rison.js encode_array)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "a-rison"
+    },
+    "input": {
+      "value": "[1,\"x\",[2]]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1,x,!(2)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a-rison encode []",
+    "ref": "prison.dumps without the outer !( and ) (A-Rison, rison.js encode_array)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "a-rison"
+    },
+    "input": {
+      "value": "[]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a-rison encode [{\"a\":1}]",
+    "ref": "prison.dumps without the outer !( and ) (A-Rison, rison.js encode_array)",
+    "op": "rison:encode",
+    "params": {
+      "mode": "a-rison"
+    },
+    "input": {
+      "value": "[{\"a\":1}]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "(a:1)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "error: o-rison of an array",
+    "ref": "rison.js",
+    "op": "rison:encode",
+    "params": {
+      "mode": "o-rison"
+    },
+    "input": {
+      "value": "[1]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: o-rison of a number",
+    "ref": "rison.js",
+    "op": "rison:encode",
+    "params": {
+      "mode": "o-rison"
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: o-rison of null",
+    "ref": "rison.js",
+    "op": "rison:encode",
+    "params": {
+      "mode": "o-rison"
+    },
+    "input": {
+      "value": "null",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: a-rison of an object",
+    "ref": "rison.js",
+    "op": "rison:encode",
+    "params": {
+      "mode": "a-rison"
+    },
+    "input": {
+      "value": "{\"a\":1}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: a-rison of a number",
+    "ref": "rison.js",
+    "op": "rison:encode",
+    "params": {
+      "mode": "a-rison"
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: empty text",
+    "ref": "rison.js",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: bad JSON",
+    "ref": "rison.js",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "{",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: nesting of 65 arrays",
+    "ref": "depth limit 64",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "nesting of 64 arrays",
+    "ref": "depth limit 64",
+    "op": "rison:encode",
+    "params": {
+      "mode": "rison"
+    },
+    "input": {
+      "value": "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(0))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode !n",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "!n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "null",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode !t",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "!t",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "true",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode !f",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "!f",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "false",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 0",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 1",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode -1",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "-1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 1.5",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "1.5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1.5",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode -0.25",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "-0.25",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-0.25",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 2.5e3",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "2.5e3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2500.0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 1e-2",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "1e-2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0.01",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 123456789012345678901234567890",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "123456789012345678901234567890",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "123456789012345678901234567890",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode abc",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"abc\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 'a b'",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "'a b'",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"a b\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ''",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "''",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode '1'",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "'1'",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"1\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 'it!'s'",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "'it!'s'",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"it's\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 'wow!!'",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "'wow!!'",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"wow!\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 'a:b'",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "'a:b'",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"a:b\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode é€😀",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "é€😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"é€😀\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode a-b",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "a-b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"a-b\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode a.b",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "a.b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"a.b\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ()",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "()",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode (a:1)",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "(a:1)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"a\":1}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode (b:2,a:1)",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "(b:2,a:1)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"b\":2,\"a\":1}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode (a:(b:!(1,2,(c:!n))))",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "(a:(b:!(1,2,(c:!n))))",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"a\":{\"b\":[1,2,{\"c\":null}]}}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ('a b':1)",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "('a b':1)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"a b\":1}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ('1':1)",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "('1':1)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"1\":1}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode (1:2)",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "(1:2)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"1\":2}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ('':1)",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "('':1)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"\":1}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode !()",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "!()",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode !(1,2)",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "!(1,2)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[1,2]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode !(!(1))",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "!(!(1))",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[[1]]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode !((a:1),!())",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "!((a:1),!())",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[{\"a\":1},[]]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode !(!t,!f,!n,'x y','')",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "!(!t,!f,!n,'x y','')",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[true,false,null,\"x y\",\"\"]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode (k:!())",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "(k:!())",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"k\":[]}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode (k:())",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "(k:())",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"k\":{}}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode with indent 4",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 4
+    },
+    "input": {
+      "value": "(a:1,b:!(1,2))",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n    \"a\": 1,\n    \"b\": [\n        1,\n        2\n    ]\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode with indent 2",
+    "ref": "python prison 0.2.1 dumps/loads (Rison, after rison.js)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 2
+    },
+    "input": {
+      "value": "(a:1,b:!(1,2))",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n  \"a\": 1,\n  \"b\": [\n    1,\n    2\n  ]\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "white space around the text is ignored",
+    "ref": "rison.js",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": " \n(a:1)\t",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"a\":1}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "o-rison decode 'a:1,b:!(1)'",
+    "ref": "prison.loads of the text in parentheses (O-Rison, rison.js decode_object)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "o-rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "a:1,b:!(1)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"a\":1,\"b\":[1]}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "o-rison decode ''",
+    "ref": "prison.loads of the text in parentheses (O-Rison, rison.js decode_object)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "o-rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "o-rison decode 'a:(b:1)'",
+    "ref": "prison.loads of the text in parentheses (O-Rison, rison.js decode_object)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "o-rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "a:(b:1)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"a\":{\"b\":1}}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "o-rison decode \"'x y':!t\"",
+    "ref": "prison.loads of the text in parentheses (O-Rison, rison.js decode_object)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "o-rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "'x y':!t",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"x y\":true}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a-rison decode '1,x,!(2)'",
+    "ref": "prison.loads of the text in !( ) (A-Rison, rison.js decode_array)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "a-rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "1,x,!(2)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[1,\"x\",[2]]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a-rison decode ''",
+    "ref": "prison.loads of the text in !( ) (A-Rison, rison.js decode_array)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "a-rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a-rison decode '(a:1)'",
+    "ref": "prison.loads of the text in !( ) (A-Rison, rison.js decode_array)",
+    "op": "rison:decode",
+    "params": {
+      "mode": "a-rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "(a:1)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[{\"a\":1}]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "error: empty text",
+    "ref": "rison.js grammar",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: unterminated object",
+    "ref": "rison.js grammar",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "(",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: object without its closing parenthesis",
+    "ref": "rison.js grammar",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "(a:1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: array without its closing parenthesis",
+    "ref": "rison.js grammar",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "!(1,2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: key without a value",
+    "ref": "rison.js grammar",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "(a)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: repeated key",
+    "ref": "rison.js grammar",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "(a:1,a:2)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: unterminated string",
+    "ref": "rison.js grammar",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "'abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: unknown escape !b",
+    "ref": "rison.js grammar",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "'a!b'",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: unknown ! form",
+    "ref": "rison.js grammar",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "!x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: garbage after a number",
+    "ref": "rison.js grammar",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "1a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: minus without digits",
+    "ref": "rison.js grammar",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "-",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: number with a point and no digits",
+    "ref": "rison.js grammar",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "1.",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: number with an exponent and no digits",
+    "ref": "rison.js grammar",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "1e",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: text after the value",
+    "ref": "rison.js grammar",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "abc def",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: space inside",
+    "ref": "rison.js grammar",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "a b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: trailing comma in an object",
+    "ref": "rison.js grammar",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "(a:1,)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: trailing comma in an array",
+    "ref": "rison.js grammar",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "!(1,)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: two items without a comma",
+    "ref": "rison.js grammar",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "!(1 2)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: stray closing parenthesis",
+    "ref": "rison.js grammar",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "1)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: comma alone",
+    "ref": "rison.js grammar",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": ",",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: o-rison with a stray closing parenthesis",
+    "ref": "rison.js grammar",
+    "op": "rison:decode",
+    "params": {
+      "mode": "o-rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "a:1)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: o-rison member without a value",
+    "ref": "rison.js grammar",
+    "op": "rison:decode",
+    "params": {
+      "mode": "o-rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: a-rison with a stray closing parenthesis",
+    "ref": "rison.js grammar",
+    "op": "rison:decode",
+    "params": {
+      "mode": "a-rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "1,)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: a-rison with a trailing comma",
+    "ref": "rison.js grammar",
+    "op": "rison:decode",
+    "params": {
+      "mode": "a-rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "1,",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: nesting of 65 arrays",
+    "ref": "depth limit 64",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(0)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "nesting of 64 arrays",
+    "ref": "depth limit 64",
+    "op": "rison:decode",
+    "params": {
+      "mode": "rison",
+      "indent": 0
+    },
+    "input": {
+      "value": "!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(0))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]",
+      "enc": "utf8"
+    }
+  }
+]

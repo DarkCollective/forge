@@ -1,0 +1,2379 @@
+[
+  {
+    "name": "decode None",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "c0",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "null",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode True",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "c3",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "true",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode False",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "c2",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "false",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 0",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 1",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "01",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 127",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "7f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "127",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 128",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "cc80",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "128",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 255",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "ccff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "255",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 256",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "cd0100",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "256",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 65535",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "cdffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "65535",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 65536",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "ce00010000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "65536",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 4294967295",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "ceffffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "4294967295",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 4294967296",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "cf0000000100000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "4294967296",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 18446744073709551615",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "cfffffffffffffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "18446744073709551615",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode -1",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "-1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode -32",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "e0",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "-32",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode -33",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "d0df",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "-33",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode -128",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "d080",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "-128",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode -129",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "d1ff7f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "-129",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode -32768",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "d18000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "-32768",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode -32769",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "d2ffff7fff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "-32769",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode -2147483648",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "d280000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "-2147483648",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode -2147483649",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "d3ffffffff7fffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "-2147483649",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode -9223372036854775808",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "d38000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "-9223372036854775808",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 1.5",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "cb3ff8000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1.5",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 0.1",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "cb3fb999999999999a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0.1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode -0.0",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "cb8000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "-0.0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 1e+300",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "cb7e37e43c8800759c",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1e+300",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 3.4028234663852886e+38",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "cb47efffffe0000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "3.4028234663852886e+38",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ''",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "a0",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 'a'",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "a161",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"a\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "bf78787878787878787878787878787878787878787878787878787878787878",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "d9207878787878787878787878787878787878787878787878787878787878787878",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "d9ff787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "da010078787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode 'é€😀'",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "a9c3a9e282acf09f9880",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"é€😀\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode []",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "90",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode [1]",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "9101",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[1]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "9f000102030405060708090a0b0c0d0e",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "dc0010000102030405060708090a0b0c0d0e0f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode {}",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "80",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode {'a': 1}",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "81a16101",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"a\":1}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "de0010a13000a13101a13202a13303a13404a13505a13606a13707a13808a13909a231300aa231310ba231320ca231330da231340ea231350f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"0\":0,\"1\":1,\"2\":2,\"3\":3,\"4\":4,\"5\":5,\"6\":6,\"7\":7,\"8\":8,\"9\":9,\"10\":10,\"11\":11,\"12\":12,\"13\":13,\"14\":14,\"15\":15}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode {'a': [1, {'b': None}], 'c': 'd'}",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "82a161920181a162c0a163a164",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"a\":[1,{\"b\":null}],\"c\":\"d\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode b''",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "c400",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"type\":\"Buffer\",\"data\":[]}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode b'\\x00\\xff'",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "c40200ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"type\":\"Buffer\",\"data\":[0,255]}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode b'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "c5010078787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"type\":\"Buffer\",\"data\":[120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120]}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ExtType(code=5, data=b'\\x01')",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "d40501",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"ext\":5,\"data\":{\"type\":\"Buffer\",\"data\":[1]}}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ExtType(code=7, data=b'\\x01\\x02')",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "d5070102",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"ext\":7,\"data\":{\"type\":\"Buffer\",\"data\":[1,2]}}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ExtType(code=1, data=b'1234')",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "d60131323334",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"ext\":1,\"data\":{\"type\":\"Buffer\",\"data\":[49,50,51,52]}}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ExtType(code=2, data=b'12345678')",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "d7023132333435363738",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"ext\":2,\"data\":{\"type\":\"Buffer\",\"data\":[49,50,51,52,53,54,55,56]}}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ExtType(code=3, data=b'1111111111111111')",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "d80331313131313131313131313131313131",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"ext\":3,\"data\":{\"type\":\"Buffer\",\"data\":[49,49,49,49,49,49,49,49,49,49,49,49,49,49,49,49]}}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ExtType(code=4, data=b'123')",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "c70304313233",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"ext\":4,\"data\":{\"type\":\"Buffer\",\"data\":[49,50,51]}}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ExtType(code=100, data=b'xxxxxxxxxxxxxxxxxxxxxxxxx",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "c8012c64787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"ext\":100,\"data\":{\"type\":\"Buffer\",\"data\":[120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120]}}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode Timestamp(seconds=1, nanoseconds=0)",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "d6ff00000001",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"1970-01-01T00:00:01.000Z\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode Timestamp(seconds=1700000000, nanoseconds=0)",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "d6ff6553f100",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"2023-11-14T22:13:20.000Z\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode Timestamp(seconds=1700000000, nanoseconds=50000000",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "d7ff773594006553f100",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"2023-11-14T22:13:20.500Z\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode Timestamp(seconds=1, nanoseconds=123456789)",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "d7ff1d6f345400000001",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"1970-01-01T00:00:01.123456789Z\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode Timestamp(seconds=17179869184, nanoseconds=0)",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "c70cff000000000000000400000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"2514-05-30T01:53:04.000Z\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode Timestamp(seconds=17179869189, nanoseconds=7)",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "c70cff000000070000000400000005",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"2514-05-30T01:53:09.000000007Z\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode Timestamp(seconds=-1, nanoseconds=0)",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "c70cff00000000ffffffffffffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"1969-12-31T23:59:59.000Z\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode Timestamp(seconds=-86400, nanoseconds=999999999)",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "c70cff3b9ac9fffffffffffffeae80",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"1969-12-31T00:00:00.999999999Z\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode Timestamp(seconds=0, nanoseconds=0)",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "d6ff00000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"1970-01-01T00:00:00.000Z\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode fixext 1 of type -5 (hand-built, spec: type is a signed byte)",
+    "ref": "MessagePack specification, ext format family",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "d4fb01",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"ext\":-5,\"data\":{\"type\":\"Buffer\",\"data\":[1]}}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode float 32 2.5",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "ca40200000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "2.5",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode float 32 0.1 (shown as the double it widens to)",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "ca3dcccccd",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0.10000000149011612",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "indent 2",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "82a161920102a162c0",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\n  \"a\": [\n    1,\n    2\n  ],\n  \"b\": null\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "indent 4",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "82a161920102a162c0",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\n    \"a\": [\n        1,\n        2\n    ],\n    \"b\": null\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "map keys that are not text",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "8301a161c0a163cb3ff8000000000000a164",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"1\":\"a\",\"null\":\"c\",\"1.5\":\"d\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "boolean map key (hand-built)",
+    "ref": "MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "81c301",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"true\":1}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "error: empty input",
+    "ref": "MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: the unused code 0xc1",
+    "ref": "MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "c1",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: truncated uint 16",
+    "ref": "MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "cd01",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: array cut short",
+    "ref": "MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "9201",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: string cut short",
+    "ref": "MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "a36162",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: bin 8 cut short",
+    "ref": "MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "c4050102",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: trailing byte",
+    "ref": "MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "c0c0",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: invalid UTF-8",
+    "ref": "MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "a1ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: repeated map key",
+    "ref": "MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "82a16101a16102",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: array as a map key",
+    "ref": "MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "819001",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: array 32 of 2^32-1 items",
+    "ref": "MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "ddffffffff00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: str 32 of 2^32-1 bytes",
+    "ref": "MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "dbffffffff61",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: timestamp of 3 bytes",
+    "ref": "MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "c703ff000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: timestamp 64 with 1073741823 nanoseconds",
+    "ref": "MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "d7ffffffffffffffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: timestamp 96 with 10^9 nanoseconds",
+    "ref": "MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "c70cff3b9aca000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: timestamp 96 out of range",
+    "ref": "MessagePack specification",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "c70cff000000007fffffffffffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: nesting of 65 arrays",
+    "ref": "depth limit 64",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "919191919191919191919191919191919191919191919191919191919191919191919191919191919191919191919191919191919191919191919191919191919100",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "nesting of 64 arrays",
+    "ref": "depth limit 64",
+    "op": "msgpack:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "9191919191919191919191919191919191919191919191919191919191919191919191919191919191919191919191919191919191919191919191919191919100",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode 0",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 127",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "127",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "7f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 128",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "128",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "cc80",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 255",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "255",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ccff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 256",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "256",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "cd0100",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 65535",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "65535",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "cdffff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 65536",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "65536",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ce00010000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 4294967295",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "4294967295",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ceffffffff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 4294967296",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "4294967296",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "cf0000000100000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 18446744073709551615",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "18446744073709551615",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "cfffffffffffffffff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode -1",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "-1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode -32",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "-32",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "e0",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode -33",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "-33",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d0df",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode -128",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "-128",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d080",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode -129",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "-129",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d1ff7f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode -32768",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "-32768",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d18000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode -32769",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "-32769",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d2ffff7fff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode -2147483648",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "-2147483648",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d280000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode -2147483649",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "-2147483649",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d3ffffffff7fffffff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode -9223372036854775808",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "-9223372036854775808",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d38000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 1.5",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "1.5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ca3fc00000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 0.1",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "0.1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "cb3fb999999999999a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode -0.0",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "-0.0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ca80000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 1e300",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "1e300",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "cb7e37e43c8800759c",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 100000.0",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "100000.0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ca47c35000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 3.4028234663852886e38",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "3.4028234663852886e38",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ca7f7fffff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 1.401298464324817e-45",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "1.401298464324817e-45",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ca00000001",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode true",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "true",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c3",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode false",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "false",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c2",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode null",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "null",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c0",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode \"\"",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "\"\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a0",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode \"a\"",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "\"a\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a161",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode \"é€😀\"",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "\"é€😀\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a9c3a9e282acf09f9880",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode []",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "[]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "90",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode {}",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "{}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "80",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode [1,2,3]",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "[1,2,3]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "93010203",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode {\"b\":1,\"a\":2}",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "{\"b\":1,\"a\":2}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "82a16201a16102",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode {\"a\":[1,{\"b\":null}],\"c\":\"d\"}",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "{\"a\":[1,{\"b\":null}],\"c\":\"d\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "82a161920181a162c0a163a164",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "dc0010000102030405060708090a0b0c0d0e0f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode {\"0\": 0, \"1\": 1, \"2\": 2, \"3\": 3, \"4\": 4, \"5\": 5, \"",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "{\"0\": 0, \"1\": 1, \"2\": 2, \"3\": 3, \"4\": 4, \"5\": 5, \"6\": 6, \"7\": 7, \"8\": 8, \"9\": 9, \"10\": 10, \"11\": 11, \"12\": 12, \"13\": 13, \"14\": 14, \"15\": 15}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "de0010a13000a13101a13202a13303a13404a13505a13606a13707a13808a13909a231300aa231310ba231320ca231330da231340ea231350f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d9207878787878787878787878787878787878787878787878787878787878787878",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification (a float is float 32 when that is exact: use_single_float per value)",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "da010078787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "typed-objects ext of type -5 (hand-built)",
+    "ref": "MessagePack specification, ext format family",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": true
+    },
+    "input": {
+      "value": "{\"ext\":-5,\"data\":{\"type\":\"Buffer\",\"data\":[1]}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d4fb01",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "typed-objects ext 8 of type -5 (hand-built)",
+    "ref": "MessagePack specification, ext format family",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": true
+    },
+    "input": {
+      "value": "{\"ext\":-5,\"data\":{\"type\":\"Buffer\",\"data\":[1,2,3]}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c703fb010203",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "typed-objects {\"type\":\"Buffer\",\"data\":[0,255]}",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": true
+    },
+    "input": {
+      "value": "{\"type\":\"Buffer\",\"data\":[0,255]}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c40200ff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "typed-objects {\"type\":\"Buffer\",\"data\":[]}",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": true
+    },
+    "input": {
+      "value": "{\"type\":\"Buffer\",\"data\":[]}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c400",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "typed-objects {\"ext\":5,\"data\":{\"type\":\"Buffer\",\"data\":[1]}}",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": true
+    },
+    "input": {
+      "value": "{\"ext\":5,\"data\":{\"type\":\"Buffer\",\"data\":[1]}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d40501",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "typed-objects {\"ext\":1,\"data\":{\"type\":\"Buffer\",\"data\":[1,2,3,4,5,6,7,8]}}",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": true
+    },
+    "input": {
+      "value": "{\"ext\":1,\"data\":{\"type\":\"Buffer\",\"data\":[1,2,3,4,5,6,7,8]}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d7010102030405060708",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "typed-objects {\"ext\":9,\"data\":{\"type\":\"Buffer\",\"data\":[]}}",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": true
+    },
+    "input": {
+      "value": "{\"ext\":9,\"data\":{\"type\":\"Buffer\",\"data\":[]}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c70009",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "typed-objects {\"timestamp\":\"2023-11-14T22:13:20.000Z\"}",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": true
+    },
+    "input": {
+      "value": "{\"timestamp\":\"2023-11-14T22:13:20.000Z\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d6ff6553f100",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "typed-objects {\"timestamp\":\"2023-11-14T22:13:20.5Z\"}",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": true
+    },
+    "input": {
+      "value": "{\"timestamp\":\"2023-11-14T22:13:20.5Z\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d7ff773594006553f100",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "typed-objects {\"timestamp\":\"1970-01-01T00:00:01.123456789Z\"}",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": true
+    },
+    "input": {
+      "value": "{\"timestamp\":\"1970-01-01T00:00:01.123456789Z\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d7ff1d6f345400000001",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "typed-objects {\"timestamp\":\"1969-12-31T23:59:59.000Z\"}",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": true
+    },
+    "input": {
+      "value": "{\"timestamp\":\"1969-12-31T23:59:59.000Z\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c70cff00000000ffffffffffffffff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "typed-objects {\"timestamp\":\"2514-05-30T01:53:04.000Z\"}",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": true
+    },
+    "input": {
+      "value": "{\"timestamp\":\"2514-05-30T01:53:04.000Z\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c70cff000000000000000400000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "typed-objects {\"timestamp\":\"2106-02-07T06:28:16.000Z\"}",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": true
+    },
+    "input": {
+      "value": "{\"timestamp\":\"2106-02-07T06:28:16.000Z\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d7ff0000000100000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "without typed-objects the Buffer shape is a map",
+    "ref": "python msgpack 1.2.4 packb/unpackb and the MessagePack specification",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "{\"type\":\"Buffer\",\"data\":[1]}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "82a474797065a6427566666572a4646174619101",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "error: empty text",
+    "ref": "MessagePack specification",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: bad JSON",
+    "ref": "MessagePack specification",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "{",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: integer above 2^64-1",
+    "ref": "MessagePack specification",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "18446744073709551616",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: integer below -2^63",
+    "ref": "MessagePack specification",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "-9223372036854775809",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: timestamp that is not ISO 8601",
+    "ref": "MessagePack specification",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": true
+    },
+    "input": {
+      "value": "{\"timestamp\":\"yesterday\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: nesting of 65 arrays",
+    "ref": "depth limit 64",
+    "op": "msgpack:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]
