@@ -1,0 +1,441 @@
+[
+  {
+    "name": "swap case",
+    "ref": "Unicode default case mapping (String.prototype.toUpperCase and toLowerCase), one character at a time",
+    "op": "case:swap-case",
+    "params": {},
+    "input": {
+      "value": "Hello, World!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "hELLO, wORLD!",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "swap case with accents",
+    "ref": "Unicode default case mapping (String.prototype.toUpperCase and toLowerCase), one character at a time",
+    "op": "case:swap-case",
+    "params": {},
+    "input": {
+      "value": "ÀÉ àé 123",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "àé ÀÉ 123",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "swap case of the sharp s",
+    "ref": "Unicode default case mapping (String.prototype.toUpperCase and toLowerCase), one character at a time; U+00DF upper-cases to SS",
+    "op": "case:swap-case",
+    "params": {},
+    "input": {
+      "value": "straße",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "STRASSE",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "swap case of empty input",
+    "ref": "Unicode default case mapping (String.prototype.toUpperCase and toLowerCase), one character at a time",
+    "op": "case:swap-case",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "alternating caps, lower first",
+    "ref": "hand-computed: letters alternate, characters without case are kept and not counted",
+    "op": "case:alternating",
+    "params": {
+      "first": "lower"
+    },
+    "input": {
+      "value": "Hello, World!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "hElLo, WoRlD!",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "alternating caps, upper first",
+    "ref": "hand-computed: letters alternate, characters without case are kept and not counted",
+    "op": "case:alternating",
+    "params": {
+      "first": "upper"
+    },
+    "input": {
+      "value": "Hello, World!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "HeLlO, wOrLd!",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "alternating caps skips digits",
+    "ref": "hand-computed: letters alternate, characters without case are kept and not counted",
+    "op": "case:alternating",
+    "params": {
+      "first": "lower"
+    },
+    "input": {
+      "value": "a1b2c3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a1B2c3",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "alternating caps of empty input",
+    "ref": "hand-computed: letters alternate, characters without case are kept and not counted",
+    "op": "case:alternating",
+    "params": {
+      "first": "lower"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "all casings of two letters",
+    "ref": "hand-computed: 2^k combinations, first letter varies fastest, all lower case first",
+    "op": "case:all-casings",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "ab",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ab\nAb\naB\nAB",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "all casings keeps other characters",
+    "ref": "hand-computed: 2^k combinations, first letter varies fastest, all lower case first",
+    "op": "case:all-casings",
+    "params": {
+      "delimiter": "comma"
+    },
+    "input": {
+      "value": "a1b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a1b,A1b,a1B,A1B",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "all casings ignores the input case",
+    "ref": "hand-computed: 2^k combinations, first letter varies fastest, all lower case first",
+    "op": "case:all-casings",
+    "params": {
+      "delimiter": "space"
+    },
+    "input": {
+      "value": "B",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "b B",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "all casings of text without letters",
+    "ref": "hand-computed: 2^k combinations, first letter varies fastest, all lower case first",
+    "op": "case:all-casings",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "123",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "123",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "all casings of empty input",
+    "ref": "hand-computed: 2^k combinations, first letter varies fastest, all lower case first",
+    "op": "case:all-casings",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "all casings of thirteen letters is E_RANGE",
+    "ref": "hand-computed: 2^k combinations, first letter varies fastest, all lower case first",
+    "op": "case:all-casings",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "abcdefghijklm",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "to insensitive regex of letters",
+    "ref": "hand-computed from the ECMAScript regular expression syntax (ECMA-262 22.2.1)",
+    "op": "case:to-insensitive-regex",
+    "params": {},
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[aA][bB][cC]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to insensitive regex keeps the written case first",
+    "ref": "hand-computed from the ECMAScript regular expression syntax (ECMA-262 22.2.1)",
+    "op": "case:to-insensitive-regex",
+    "params": {},
+    "input": {
+      "value": "A.b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[Aa].[bB]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to insensitive regex of a class and a range",
+    "ref": "hand-computed from the ECMAScript regular expression syntax (ECMA-262 22.2.1)",
+    "op": "case:to-insensitive-regex",
+    "params": {},
+    "input": {
+      "value": "[a-c_]\\d+",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[a-c_A-C]\\d+",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to insensitive regex of a negated class",
+    "ref": "hand-computed from the ECMAScript regular expression syntax (ECMA-262 22.2.1)",
+    "op": "case:to-insensitive-regex",
+    "params": {},
+    "input": {
+      "value": "[^q]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[^qQ]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to insensitive regex keeps escapes and group names",
+    "ref": "hand-computed from the ECMAScript regular expression syntax (ECMA-262 22.2.1)",
+    "op": "case:to-insensitive-regex",
+    "params": {},
+    "input": {
+      "value": "\\x41b\\u00e9(?<n>x)\\k<n>\\p{Lu}\\cJ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\\x41[bB]\\u00e9(?<n>[xX])\\k<n>\\p{Lu}\\cJ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to insensitive regex of a non-ASCII letter",
+    "ref": "hand-computed from the ECMAScript regular expression syntax (ECMA-262 22.2.1)",
+    "op": "case:to-insensitive-regex",
+    "params": {},
+    "input": {
+      "value": "é",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[éÉ]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to insensitive regex leaves the sharp s",
+    "ref": "hand-computed from the ECMAScript regular expression syntax (ECMA-262 22.2.1); U+00DF upper-cases to SS, two code points",
+    "op": "case:to-insensitive-regex",
+    "params": {},
+    "input": {
+      "value": "ß",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ß",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to insensitive regex of quantifiers and anchors",
+    "ref": "hand-computed from the ECMAScript regular expression syntax (ECMA-262 22.2.1)",
+    "op": "case:to-insensitive-regex",
+    "params": {},
+    "input": {
+      "value": "^a{2,3}|b+$",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "^[aA]{2,3}|[bB]+$",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to insensitive regex of empty input",
+    "ref": "hand-computed from the ECMAScript regular expression syntax (ECMA-262 22.2.1)",
+    "op": "case:to-insensitive-regex",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from insensitive regex of letter classes",
+    "ref": "hand-computed from the ECMAScript regular expression syntax (ECMA-262 22.2.1)",
+    "op": "case:from-insensitive-regex",
+    "params": {},
+    "input": {
+      "value": "[aA][bB]c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "abc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from insensitive regex keeps the first case",
+    "ref": "hand-computed from the ECMAScript regular expression syntax (ECMA-262 22.2.1)",
+    "op": "case:from-insensitive-regex",
+    "params": {},
+    "input": {
+      "value": "[Aa].[bB]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "A.b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from insensitive regex drops the second range",
+    "ref": "hand-computed from the ECMAScript regular expression syntax (ECMA-262 22.2.1)",
+    "op": "case:from-insensitive-regex",
+    "params": {},
+    "input": {
+      "value": "[a-zA-Z0-9]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[a-z0-9]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from insensitive regex of a negated class",
+    "ref": "hand-computed from the ECMAScript regular expression syntax (ECMA-262 22.2.1)",
+    "op": "case:from-insensitive-regex",
+    "params": {},
+    "input": {
+      "value": "[^xX]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[^x]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from insensitive regex leaves other classes",
+    "ref": "hand-computed from the ECMAScript regular expression syntax (ECMA-262 22.2.1)",
+    "op": "case:from-insensitive-regex",
+    "params": {},
+    "input": {
+      "value": "[abc]\\x41[bB]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[abc]\\x41b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from insensitive regex of an unrelated pattern",
+    "ref": "hand-computed from the ECMAScript regular expression syntax (ECMA-262 22.2.1)",
+    "op": "case:from-insensitive-regex",
+    "params": {},
+    "input": {
+      "value": "^hello\\d+$",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "^hello\\d+$",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "insensitive regex round trip",
+    "ref": "hand-computed from the ECMAScript regular expression syntax (ECMA-262 22.2.1)",
+    "op": "case:from-insensitive-regex",
+    "params": {},
+    "input": {
+      "value": "^[hH][eE][lL][lL][oO]\\s[wW][oO][rR][lL][dD]$",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "^hello\\sworld$",
+      "enc": "utf8"
+    }
+  }
+]

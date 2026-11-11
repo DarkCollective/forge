@@ -17,7 +17,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Arithmetic / Logic | 9 | 0 | 0 | 17 | 26 |
 | Networking | 0 | 0 | 0 | 34 | 34 |
 | Language | 0 | 0 | 0 | 4 | 4 |
-| Utils | 6 | 0 | 2 | 42 | 50 |
+| Utils | 18 | 8 | 2 | 22 | 50 |
 | Date / Time | 0 | 1 | 0 | 8 | 9 |
 | Extractors | 0 | 0 | 0 | 18 | 18 |
 | Compression | 0 | 0 | 0 | 21 | 21 |
@@ -27,7 +27,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 4 | 1 | 3 | 13 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **136** | **92** | **5** | **273** | **506** |
+| **Total** | **148** | **100** | **5** | **253** | **506** |
 
 ## Data format (80)
 
@@ -333,18 +333,18 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | CyberChef | Status | Forge | Note |
 | --- | --- | --- | --- |
 | Diff | not yet |  |  |
-| Remove whitespace | not yet |  |  |
-| Remove null bytes | not yet |  |  |
-| Remove ANSI Escape Codes | not yet |  |  |
+| Remove whitespace | covered | `clean:remove-whitespace` | The same six options and defaults, as booleans. |
+| Remove null bytes | covered | `clean:remove-null-bytes` |  |
+| Remove ANSI Escape Codes | covered | `clean:remove-ansi` | Forge's own ECMA-48 pattern: CSI, OSC/DCS/SOS/PM/APC strings and two-byte ESC sequences. |
 | To Upper case | covered | `text:upper` |  |
 | To Lower case | covered | `text:lower` |  |
-| Swap case | not yet |  |  |
-| Alternating Caps | not yet |  |  |
-| To Case Insensitive Regex | not yet |  |  |
-| From Case Insensitive Regex | not yet |  |  |
+| Swap case | covered | `case:swap-case` |  |
+| Alternating Caps | covered | `case:alternating` | Starts with a lower case letter and counts letters only, as CyberChef does; adds a first parameter to start upper. |
+| To Case Insensitive Regex | redesigned | `case:to-insensitive-regex` | Forge's own pattern tokenizer: letters become [xX] (the letter as written first), classes and ASCII letter ranges gain the other case, escapes, group names and quantifiers are copied. |
+| From Case Insensitive Regex | redesigned | `case:from-insensitive-regex` | The exact inverse of case:to-insensitive-regex (a class with both cases of a letter becomes the first one); CyberChef's own pattern shapes are not reproduced. |
 | Add line numbers | not yet |  |  |
 | Remove line numbers | not yet |  |  |
-| Get All Casings | not yet |  |  |
+| Get All Casings | redesigned | `case:all-casings` | Only letters with a case are varied (at most 12, so at most 4,096 lines) instead of every character; the first letter varies fastest, all lower case first; the delimiter is a choice. |
 | To Table | not yet |  |  |
 | Reverse | covered | `text:reverse` |  |
 | Sort | not yet |  |  |
@@ -354,17 +354,17 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Filter | not yet |  |  |
 | Head | not yet |  |  |
 | Tail | not yet |  |  |
-| Count occurrences | not yet |  |  |
-| Expand alphabet range | not yet |  |  |
-| Drop bytes | not yet |  |  |
-| Take bytes | not yet |  |  |
+| Count occurrences | redesigned | `search:count` | Modes string and regex plus an ignore-case flag; CyberChef's extended-string mode (\n, \x escapes in the search text) is not offered, use string-escape:unescape on the pattern. |
+| Expand alphabet range | redesigned | `alphabet:expand` | The delimiter is the shared choice list (a space by default), a backwards range is E_RANGE, ranges may not exceed 65,536 code points, and \- and \\ are the only escapes. |
+| Drop bytes | covered | `bytes-slice:remove` | Named remove (drop is a core word). |
+| Take bytes | covered | `bytes-slice:take` |  |
 | Pad lines | not yet |  |  |
 | Find / Replace | covered | `text:replace`, `regex:replace` | Literal replacement in text:replace, pattern replacement in regex:replace. |
 | Regular expression | covered | `regex:find-all`, `regex:test` | Matches come back as records (start, end, text); regex:test is the yes/no form. |
-| Fuzzy Match | not yet |  |  |
-| Offset checker | not yet |  |  |
-| Hamming Distance | not yet |  |  |
-| Levenshtein Distance | not yet |  |  |
+| Fuzzy Match | redesigned | `search:fuzzy` | A text report instead of highlighted HTML: one row per matching line with a score, the matched positions and the line, scored by a documented greedy rule rather than CyberChef's Sublime-style matcher. |
+| Offset checker | redesigned | `search:offsets` | A text report instead of highlighting: one row per stretch of offsets where all samples share the same character (offset, length, text). |
+| Hamming Distance | covered | `distance:hamming` | Units byte and bit as CyberChef, plus char; input raw or hex. |
+| Levenshtein Distance | covered | `distance:levenshtein` | Over code points; the dynamic programme is a private primitive (limit 100 million cells). |
 | Convert distance | not yet |  |  |
 | Convert area | not yet |  |  |
 | Convert mass | not yet |  |  |
@@ -375,13 +375,13 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Parse UNIX file permissions | not yet |  |  |
 | Parse ObjectID timestamp | not yet |  |  |
 | Parse colour code | not yet |  |  |
-| Escape string | not yet |  |  |
-| Unescape string | not yet |  |  |
+| Escape string | redesigned | `string-escape:escape` | Forge's own escaper, written in FL (CyberChef uses a library): levels special, everything and minimal; quote single, double or backtick; JSON, ES6 and upper-case hex options; no surrounding quotes; NUL is \x00; everything uses numeric escapes only. |
+| Unescape string | covered | `string-escape:unescape` | Reads the single-letter escapes, \xHH, \uHHHH (and surrogate pairs), \u{H} and octal; an unknown escape is kept as written. |
 | Sleep | dropped |  | A bake has no use for waiting: recipes are pure transformations under a step and time budget, and a pause only spends that budget. |
 | File Tree | not yet |  |  |
 | Wrap | not yet |  |  |
-| Take nth bytes | not yet |  |  |
-| Drop nth bytes | not yet |  |  |
+| Take nth bytes | covered | `bytes-slice:take-nth` |  |
+| Drop nth bytes | covered | `bytes-slice:remove-nth` |  |
 
 ## Date / Time (9)
 

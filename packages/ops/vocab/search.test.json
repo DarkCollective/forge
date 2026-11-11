@@ -1,0 +1,582 @@
+[
+  {
+    "name": "count a string",
+    "ref": "hand-computed: non-overlapping occurrences from the left; regex matches as ECMAScript counts them",
+    "op": "search:count",
+    "params": {
+      "mode": "string",
+      "ignore-case": false,
+      "pattern": "ab"
+    },
+    "input": {
+      "value": "ababab ab",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 4
+    }
+  },
+  {
+    "name": "count does not overlap",
+    "ref": "hand-computed: non-overlapping occurrences from the left; regex matches as ECMAScript counts them",
+    "op": "search:count",
+    "params": {
+      "mode": "string",
+      "ignore-case": false,
+      "pattern": "aa"
+    },
+    "input": {
+      "value": "aaaa",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 2
+    }
+  },
+  {
+    "name": "count ignoring case",
+    "ref": "hand-computed: non-overlapping occurrences from the left; regex matches as ECMAScript counts them",
+    "op": "search:count",
+    "params": {
+      "mode": "string",
+      "ignore-case": true,
+      "pattern": "abc"
+    },
+    "input": {
+      "value": "Abc abc ABC",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 3
+    }
+  },
+  {
+    "name": "count is case sensitive by default",
+    "ref": "hand-computed: non-overlapping occurrences from the left; regex matches as ECMAScript counts them",
+    "op": "search:count",
+    "params": {
+      "mode": "string",
+      "ignore-case": false,
+      "pattern": "abc"
+    },
+    "input": {
+      "value": "Abc abc ABC",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 1
+    }
+  },
+  {
+    "name": "count a string that is not there",
+    "ref": "hand-computed: non-overlapping occurrences from the left; regex matches as ECMAScript counts them",
+    "op": "search:count",
+    "params": {
+      "mode": "string",
+      "ignore-case": false,
+      "pattern": "z"
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 0
+    }
+  },
+  {
+    "name": "count in empty input",
+    "ref": "hand-computed: non-overlapping occurrences from the left; regex matches as ECMAScript counts them",
+    "op": "search:count",
+    "params": {
+      "mode": "string",
+      "ignore-case": false,
+      "pattern": "z"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 0
+    }
+  },
+  {
+    "name": "count a regex",
+    "ref": "hand-computed: non-overlapping occurrences from the left; regex matches as ECMAScript counts them",
+    "op": "search:count",
+    "params": {
+      "mode": "regex",
+      "ignore-case": false,
+      "pattern": "[0-9]+"
+    },
+    "input": {
+      "value": "a1b22c333",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 3
+    }
+  },
+  {
+    "name": "count a regex ignoring case",
+    "ref": "hand-computed: non-overlapping occurrences from the left; regex matches as ECMAScript counts them",
+    "op": "search:count",
+    "params": {
+      "mode": "regex",
+      "ignore-case": true,
+      "pattern": "^a"
+    },
+    "input": {
+      "value": "Abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 1
+    }
+  },
+  {
+    "name": "count a regex treats the pattern as a pattern",
+    "ref": "hand-computed: non-overlapping occurrences from the left; regex matches as ECMAScript counts them",
+    "op": "search:count",
+    "params": {
+      "mode": "regex",
+      "ignore-case": false,
+      "pattern": "."
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 3
+    }
+  },
+  {
+    "name": "count a string treats the pattern as text",
+    "ref": "hand-computed: non-overlapping occurrences from the left; regex matches as ECMAScript counts them",
+    "op": "search:count",
+    "params": {
+      "mode": "string",
+      "ignore-case": false,
+      "pattern": "."
+    },
+    "input": {
+      "value": "a.b.c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 2
+    }
+  },
+  {
+    "name": "count a regex that matches the empty string",
+    "ref": "hand-computed: ECMAScript finds an empty match at 0, 1 and 2",
+    "op": "search:count",
+    "params": {
+      "mode": "regex",
+      "ignore-case": false,
+      "pattern": "x*"
+    },
+    "input": {
+      "value": "ab",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 3
+    }
+  },
+  {
+    "name": "count with an empty pattern is E_RECIPE_INVALID",
+    "ref": "hand-computed: the pattern must hold at least one character",
+    "op": "search:count",
+    "params": {
+      "mode": "string",
+      "ignore-case": false,
+      "pattern": ""
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "count with a bad regex is E_PARAM_INVALID",
+    "ref": "hand-computed: non-overlapping occurrences from the left; regex matches as ECMAScript counts them",
+    "op": "search:count",
+    "params": {
+      "mode": "regex",
+      "ignore-case": false,
+      "pattern": "("
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_PARAM_INVALID"
+    }
+  },
+  {
+    "name": "fuzzy one exact line",
+    "ref": "hand-computed from the scoring rule in the doc: 1 per match, +4 consecutive, +6 at a word start, minus the gap",
+    "op": "search:fuzzy",
+    "params": {
+      "case-sensitive": false,
+      "best-first": true,
+      "delimiter": "newline",
+      "query": "ab"
+    },
+    "input": {
+      "value": "ab",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "12 0,1 ab",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "fuzzy ranks by score",
+    "ref": "hand-computed from the scoring rule in the doc: 1 per match, +4 consecutive, +6 at a word start, minus the gap",
+    "op": "search:fuzzy",
+    "params": {
+      "case-sensitive": false,
+      "best-first": true,
+      "delimiter": "newline",
+      "query": "ab"
+    },
+    "input": {
+      "value": "xab\na_b\nab",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "13 0,2 a_b\n12 0,1 ab\n6 1,2 xab",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "fuzzy keeps the input order without best-first",
+    "ref": "hand-computed from the scoring rule in the doc: 1 per match, +4 consecutive, +6 at a word start, minus the gap",
+    "op": "search:fuzzy",
+    "params": {
+      "case-sensitive": false,
+      "best-first": false,
+      "delimiter": "newline",
+      "query": "ab"
+    },
+    "input": {
+      "value": "xab\na_b\nab",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "6 1,2 xab\n13 0,2 a_b\n12 0,1 ab",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "fuzzy ties stay in input order",
+    "ref": "hand-computed from the scoring rule in the doc: 1 per match, +4 consecutive, +6 at a word start, minus the gap",
+    "op": "search:fuzzy",
+    "params": {
+      "case-sensitive": false,
+      "best-first": true,
+      "delimiter": "newline",
+      "query": "ab"
+    },
+    "input": {
+      "value": "ab\nab",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "12 0,1 ab\n12 0,1 ab",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "fuzzy leaves out lines that do not match",
+    "ref": "hand-computed from the scoring rule in the doc: 1 per match, +4 consecutive, +6 at a word start, minus the gap",
+    "op": "search:fuzzy",
+    "params": {
+      "case-sensitive": false,
+      "best-first": true,
+      "delimiter": "newline",
+      "query": "ab"
+    },
+    "input": {
+      "value": "ba\nzz\nab",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "12 0,1 ab",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "fuzzy is case-insensitive by default",
+    "ref": "hand-computed from the scoring rule in the doc: 1 per match, +4 consecutive, +6 at a word start, minus the gap",
+    "op": "search:fuzzy",
+    "params": {
+      "case-sensitive": false,
+      "best-first": true,
+      "delimiter": "newline",
+      "query": "ab"
+    },
+    "input": {
+      "value": "AB",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "12 0,1 AB",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "fuzzy case-sensitive finds nothing",
+    "ref": "hand-computed from the scoring rule in the doc: 1 per match, +4 consecutive, +6 at a word start, minus the gap",
+    "op": "search:fuzzy",
+    "params": {
+      "case-sensitive": true,
+      "best-first": true,
+      "delimiter": "newline",
+      "query": "ab"
+    },
+    "input": {
+      "value": "AB",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "fuzzy takes a gap off the score",
+    "ref": "hand-computed: a 7, b 5, c 1 is 13, minus 1 unmatched character between the first and last match",
+    "op": "search:fuzzy",
+    "params": {
+      "case-sensitive": false,
+      "best-first": true,
+      "delimiter": "newline",
+      "query": "abc"
+    },
+    "input": {
+      "value": "abxc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "12 0,1,3 abxc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "fuzzy with a comma delimiter",
+    "ref": "hand-computed from the scoring rule in the doc: 1 per match, +4 consecutive, +6 at a word start, minus the gap",
+    "op": "search:fuzzy",
+    "params": {
+      "case-sensitive": false,
+      "best-first": true,
+      "delimiter": "comma",
+      "query": "b"
+    },
+    "input": {
+      "value": "abc,b,xyz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "7 0 b,1 1 abc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "fuzzy in empty input",
+    "ref": "hand-computed from the scoring rule in the doc: 1 per match, +4 consecutive, +6 at a word start, minus the gap",
+    "op": "search:fuzzy",
+    "params": {
+      "case-sensitive": false,
+      "best-first": true,
+      "delimiter": "newline",
+      "query": "a"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "offsets of three samples",
+    "ref": "hand-computed: offsets at which every sample has the same code point, up to the shortest sample",
+    "op": "search:offsets",
+    "params": {
+      "delimiter": "\n\n",
+      "min-run": 1
+    },
+    "input": {
+      "value": "abcdefgh\n\nabXdefgZ\n\nabYdefg",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0 2 ab\n3 4 defg",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "offsets of two samples",
+    "ref": "hand-computed: offsets at which every sample has the same code point, up to the shortest sample",
+    "op": "search:offsets",
+    "params": {
+      "delimiter": "\n\n",
+      "min-run": 1
+    },
+    "input": {
+      "value": "abcd\n\nabXd",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0 2 ab\n3 1 d",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "offsets with a minimum run",
+    "ref": "hand-computed: offsets at which every sample has the same code point, up to the shortest sample",
+    "op": "search:offsets",
+    "params": {
+      "delimiter": "\n\n",
+      "min-run": 2
+    },
+    "input": {
+      "value": "abcd\n\nabXd",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0 2 ab",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "offsets of identical samples",
+    "ref": "hand-computed: offsets at which every sample has the same code point, up to the shortest sample",
+    "op": "search:offsets",
+    "params": {
+      "delimiter": "\n\n",
+      "min-run": 1
+    },
+    "input": {
+      "value": "hello\n\nhello",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0 5 hello",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "offsets with nothing in common",
+    "ref": "hand-computed: offsets at which every sample has the same code point, up to the shortest sample",
+    "op": "search:offsets",
+    "params": {
+      "delimiter": "\n\n",
+      "min-run": 1
+    },
+    "input": {
+      "value": "abc\n\nxyz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "offsets stop at the shortest sample",
+    "ref": "hand-computed: offsets at which every sample has the same code point, up to the shortest sample",
+    "op": "search:offsets",
+    "params": {
+      "delimiter": "\n\n",
+      "min-run": 1
+    },
+    "input": {
+      "value": "abcdef\n\nabc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0 3 abc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "offsets write control characters as escapes",
+    "ref": "hand-computed: offsets at which every sample has the same code point, up to the shortest sample",
+    "op": "search:offsets",
+    "params": {
+      "delimiter": "|",
+      "min-run": 1
+    },
+    "input": {
+      "value": "a\tb\\|a\tb\\",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0 4 a\\tb\\\\",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "offsets with another delimiter",
+    "ref": "hand-computed: offsets at which every sample has the same code point, up to the shortest sample",
+    "op": "search:offsets",
+    "params": {
+      "delimiter": "; ",
+      "min-run": 1
+    },
+    "input": {
+      "value": "cat; cut",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0 1 c\n2 1 t",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "offsets in astral text",
+    "ref": "hand-computed: offsets at which every sample has the same code point, up to the shortest sample",
+    "op": "search:offsets",
+    "params": {
+      "delimiter": "\n\n",
+      "min-run": 1
+    },
+    "input": {
+      "value": "a😀c\n\nb😀d",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1 1 😀",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "offsets of one sample is E_COERCE",
+    "ref": "hand-computed: at least two samples are needed",
+    "op": "search:offsets",
+    "params": {
+      "delimiter": "\n\n",
+      "min-run": 1
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

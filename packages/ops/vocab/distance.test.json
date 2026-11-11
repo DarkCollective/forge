@@ -1,0 +1,475 @@
+[
+  {
+    "name": "hamming of karolin and kathrin",
+    "ref": "Hamming distance: Wikipedia examples karolin/kathrin = 3; cryptopals set 1 challenge 6 (this is a test / wokka wokka!!!) = 37 bits",
+    "op": "distance:hamming",
+    "params": {
+      "delimiter": "\n\n",
+      "unit": "byte",
+      "format": "raw"
+    },
+    "input": {
+      "value": "karolin\n\nkathrin",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 3
+    }
+  },
+  {
+    "name": "hamming of identical samples",
+    "ref": "Hamming distance: Wikipedia examples karolin/kathrin = 3; cryptopals set 1 challenge 6 (this is a test / wokka wokka!!!) = 37 bits",
+    "op": "distance:hamming",
+    "params": {
+      "delimiter": "\n\n",
+      "unit": "byte",
+      "format": "raw"
+    },
+    "input": {
+      "value": "same\n\nsame",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 0
+    }
+  },
+  {
+    "name": "hamming in bits, cryptopals",
+    "ref": "Hamming distance: Wikipedia examples karolin/kathrin = 3; cryptopals set 1 challenge 6 (this is a test / wokka wokka!!!) = 37 bits",
+    "op": "distance:hamming",
+    "params": {
+      "delimiter": "\n\n",
+      "unit": "bit",
+      "format": "raw"
+    },
+    "input": {
+      "value": "this is a test\n\nwokka wokka!!!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 37
+    }
+  },
+  {
+    "name": "hamming in bits of hex",
+    "ref": "hand-computed: 00ff xor 0f0f = 0ff0, eight set bits",
+    "op": "distance:hamming",
+    "params": {
+      "delimiter": "\n\n",
+      "unit": "bit",
+      "format": "hex"
+    },
+    "input": {
+      "value": "00ff\n\n0f0f",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 8
+    }
+  },
+  {
+    "name": "hamming in bytes of hex",
+    "ref": "hand-computed: the middle byte differs",
+    "op": "distance:hamming",
+    "params": {
+      "delimiter": "\n\n",
+      "unit": "byte",
+      "format": "hex"
+    },
+    "input": {
+      "value": "00 ff aa\n\n00 0f aa",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 1
+    }
+  },
+  {
+    "name": "hamming in chars of astral text",
+    "ref": "hand-computed: the second code point differs",
+    "op": "distance:hamming",
+    "params": {
+      "delimiter": "\n\n",
+      "unit": "char",
+      "format": "raw"
+    },
+    "input": {
+      "value": "a😀c\n\naxc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 1
+    }
+  },
+  {
+    "name": "hamming with another delimiter",
+    "ref": "Wikipedia, Hamming distance: 1011101 and 1001001 differ in two places",
+    "op": "distance:hamming",
+    "params": {
+      "delimiter": "|",
+      "unit": "byte",
+      "format": "raw"
+    },
+    "input": {
+      "value": "1011101|1001001",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 2
+    }
+  },
+  {
+    "name": "hamming of two empty samples",
+    "ref": "hand-computed: no positions",
+    "op": "distance:hamming",
+    "params": {
+      "delimiter": "\n\n",
+      "unit": "byte",
+      "format": "raw"
+    },
+    "input": {
+      "value": "\n\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 0
+    }
+  },
+  {
+    "name": "hamming of unequal byte lengths is E_COERCE",
+    "ref": "hand-computed: 5 bytes against 2",
+    "op": "distance:hamming",
+    "params": {
+      "delimiter": "\n\n",
+      "unit": "byte",
+      "format": "raw"
+    },
+    "input": {
+      "value": "a😀\n\nab",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "hamming of three samples is E_COERCE",
+    "ref": "hand-computed: exactly two samples are needed",
+    "op": "distance:hamming",
+    "params": {
+      "delimiter": "\n\n",
+      "unit": "byte",
+      "format": "raw"
+    },
+    "input": {
+      "value": "a\n\nb\n\nc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "hamming of one sample is E_COERCE",
+    "ref": "hand-computed: exactly two samples are needed",
+    "op": "distance:hamming",
+    "params": {
+      "delimiter": "\n\n",
+      "unit": "byte",
+      "format": "raw"
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "hamming of bad hex is E_COERCE",
+    "ref": "hand-computed: zz is not hex",
+    "op": "distance:hamming",
+    "params": {
+      "delimiter": "\n\n",
+      "unit": "byte",
+      "format": "hex"
+    },
+    "input": {
+      "value": "zz\n\n00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "hamming in chars of hex is E_RANGE",
+    "ref": "hand-computed: char needs raw text",
+    "op": "distance:hamming",
+    "params": {
+      "delimiter": "\n\n",
+      "unit": "char",
+      "format": "hex"
+    },
+    "input": {
+      "value": "00\n\n01",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "levenshtein of kitten and sitting",
+    "ref": "Levenshtein distance: Wikipedia examples kitten/sitting = 3 and Saturday/Sunday = 3; flaw/lawn = 2",
+    "op": "distance:levenshtein",
+    "params": {
+      "delimiter": "\n",
+      "insertion": 1,
+      "deletion": 1,
+      "substitution": 1
+    },
+    "input": {
+      "value": "kitten\nsitting",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 3
+    }
+  },
+  {
+    "name": "levenshtein of Saturday and Sunday",
+    "ref": "Levenshtein distance: Wikipedia examples kitten/sitting = 3 and Saturday/Sunday = 3; flaw/lawn = 2",
+    "op": "distance:levenshtein",
+    "params": {
+      "delimiter": "\n",
+      "insertion": 1,
+      "deletion": 1,
+      "substitution": 1
+    },
+    "input": {
+      "value": "Saturday\nSunday",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 3
+    }
+  },
+  {
+    "name": "levenshtein of flaw and lawn",
+    "ref": "Levenshtein distance: Wikipedia examples kitten/sitting = 3 and Saturday/Sunday = 3; flaw/lawn = 2",
+    "op": "distance:levenshtein",
+    "params": {
+      "delimiter": "\n",
+      "insertion": 1,
+      "deletion": 1,
+      "substitution": 1
+    },
+    "input": {
+      "value": "flaw\nlawn",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 2
+    }
+  },
+  {
+    "name": "levenshtein of identical samples",
+    "ref": "Levenshtein distance: Wikipedia examples kitten/sitting = 3 and Saturday/Sunday = 3; flaw/lawn = 2",
+    "op": "distance:levenshtein",
+    "params": {
+      "delimiter": "\n",
+      "insertion": 1,
+      "deletion": 1,
+      "substitution": 1
+    },
+    "input": {
+      "value": "abc\nabc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 0
+    }
+  },
+  {
+    "name": "levenshtein against an empty sample",
+    "ref": "Levenshtein distance: Wikipedia examples kitten/sitting = 3 and Saturday/Sunday = 3; flaw/lawn = 2",
+    "op": "distance:levenshtein",
+    "params": {
+      "delimiter": "\n",
+      "insertion": 1,
+      "deletion": 1,
+      "substitution": 1
+    },
+    "input": {
+      "value": "\nabc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 3
+    }
+  },
+  {
+    "name": "levenshtein of two empty samples",
+    "ref": "Levenshtein distance: Wikipedia examples kitten/sitting = 3 and Saturday/Sunday = 3; flaw/lawn = 2",
+    "op": "distance:levenshtein",
+    "params": {
+      "delimiter": "\n",
+      "insertion": 1,
+      "deletion": 1,
+      "substitution": 1
+    },
+    "input": {
+      "value": "\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 0
+    }
+  },
+  {
+    "name": "levenshtein counts code points",
+    "ref": "Levenshtein distance: Wikipedia examples kitten/sitting = 3 and Saturday/Sunday = 3; flaw/lawn = 2",
+    "op": "distance:levenshtein",
+    "params": {
+      "delimiter": "\n",
+      "insertion": 1,
+      "deletion": 1,
+      "substitution": 1
+    },
+    "input": {
+      "value": "😀a\nb😀a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 1
+    }
+  },
+  {
+    "name": "levenshtein with a dear substitution",
+    "ref": "hand-computed: k to s and e to i cost 2 each as a delete and an insert, plus one insert",
+    "op": "distance:levenshtein",
+    "params": {
+      "delimiter": "\n",
+      "insertion": 1,
+      "deletion": 1,
+      "substitution": 2
+    },
+    "input": {
+      "value": "kitten\nsitting",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 5
+    }
+  },
+  {
+    "name": "levenshtein with a dear insertion",
+    "ref": "hand-computed: one insertion",
+    "op": "distance:levenshtein",
+    "params": {
+      "delimiter": "\n",
+      "insertion": 5,
+      "deletion": 1,
+      "substitution": 1
+    },
+    "input": {
+      "value": "a\nab",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 5
+    }
+  },
+  {
+    "name": "levenshtein with a dear deletion",
+    "ref": "hand-computed: one deletion",
+    "op": "distance:levenshtein",
+    "params": {
+      "delimiter": "\n",
+      "insertion": 1,
+      "deletion": 7,
+      "substitution": 1
+    },
+    "input": {
+      "value": "ab\na",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 7
+    }
+  },
+  {
+    "name": "levenshtein with free edits",
+    "ref": "hand-computed: every edit is free",
+    "op": "distance:levenshtein",
+    "params": {
+      "delimiter": "\n",
+      "insertion": 0,
+      "deletion": 0,
+      "substitution": 0
+    },
+    "input": {
+      "value": "abc\nxyzw",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 0
+    }
+  },
+  {
+    "name": "levenshtein with another delimiter",
+    "ref": "Levenshtein distance: Wikipedia examples kitten/sitting = 3 and Saturday/Sunday = 3; flaw/lawn = 2",
+    "op": "distance:levenshtein",
+    "params": {
+      "delimiter": " vs ",
+      "insertion": 1,
+      "deletion": 1,
+      "substitution": 1
+    },
+    "input": {
+      "value": "kitten vs sitting",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": 3
+    }
+  },
+  {
+    "name": "levenshtein of three samples is E_COERCE",
+    "ref": "hand-computed: exactly two samples are needed",
+    "op": "distance:levenshtein",
+    "params": {
+      "delimiter": "\n",
+      "insertion": 1,
+      "deletion": 1,
+      "substitution": 1
+    },
+    "input": {
+      "value": "a\nb\nc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "levenshtein of one sample is E_COERCE",
+    "ref": "hand-computed: exactly two samples are needed",
+    "op": "distance:levenshtein",
+    "params": {
+      "delimiter": "\n",
+      "insertion": 1,
+      "deletion": 1,
+      "substitution": 1
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]
