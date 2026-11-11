@@ -1,0 +1,2189 @@
+[
+  {
+    "name": "sum: 0.1 + 0.2 has no float noise",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:sum",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "0.1\n0.2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0.3",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sum: comma list with sign and exponent",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:sum",
+    "params": {
+      "delimiter": "comma"
+    },
+    "input": {
+      "value": "1,2.5,-3e2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-296.5",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sum: one number",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:sum",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "42",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "42",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sum: integers beyond 2^64",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:sum",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "123456789012345678901234567890\n98765432109876543210\n1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "123456789111111111011111111101",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sum: space delimiter, extra spaces",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:sum",
+    "params": {
+      "delimiter": "space"
+    },
+    "input": {
+      "value": " 1.25  2.5   3 ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "6.75",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sum: blank lines and a trailing line feed are skipped",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:sum",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "1\n\n2\n \n3\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "6",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sum: CRLF delimiter",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:sum",
+    "params": {
+      "delimiter": "crlf"
+    },
+    "input": {
+      "value": "1.5\r\n2.5\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sum: tab delimiter",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:sum",
+    "params": {
+      "delimiter": "tab"
+    },
+    "input": {
+      "value": "10\t-4.5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "5.5",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sum: semicolon and colon forms",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:sum",
+    "params": {
+      "delimiter": "semicolon"
+    },
+    "input": {
+      "value": "0.001;0.002;0.003",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0.006",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sum: a leading plus, a bare point and a trailing point",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:sum",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "+2\n.5\n5.",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "7.5",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sum: exponent shifts the digits",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:sum",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "1e3\n1.5e-3\n2E+1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1020.0015",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sum: result zero is written 0",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:sum",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "-0.5\n0.5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sum: negative zero input",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:sum",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "0.000\n-0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sum: many decimals stay exact",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:sum",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "0.1\n0.1\n0.1\n0.1\n0.1\n0.1\n0.1\n0.1\n0.1\n0.1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "subtract: left to right",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:subtract",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "10\n0.25\n3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "6.75",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "subtract: one number",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:subtract",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "-7.5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-7.5",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "subtract: to zero",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:subtract",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "1\n1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "subtract: to a negative decimal",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:subtract",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "0.3\n0.5\n0.01",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-0.21",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "subtract: huge integers",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:subtract",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "100000000000000000000000000000\n1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "99999999999999999999999999999",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "subtract: comma delimiter",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:subtract",
+    "params": {
+      "delimiter": "comma"
+    },
+    "input": {
+      "value": "5,3,1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "multiply: 1.5 * 2.5",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:multiply",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "1.5\n2.5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3.75",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "multiply: (2^64-1)^2",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:multiply",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "18446744073709551615\n18446744073709551615",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "340282366920938463426481119284349108225",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "multiply: decimals multiply exactly",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:multiply",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "0.1\n0.1\n0.1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0.001",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "multiply: sign and tiny result",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:multiply",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "-0.001\n0.001",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-0.000001",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "multiply: zero",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:multiply",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "5\n0\n3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "multiply: three factors",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:multiply",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "2\n3\n4",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "24",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "multiply: exponents",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:multiply",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "2e3\n3e-2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "60",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "divide: 1 / 3 rounds at 20 places",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:divide",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "1\n3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0.33333333333333333333",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "divide: 2 / 3 rounds up at the 20th place",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:divide",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "2\n3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0.66666666666666666667",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "divide: -2 / 3",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:divide",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "-2\n3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-0.66666666666666666667",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "divide: 1 / 8 is exact",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:divide",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "1\n8",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0.125",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "divide: 10 / 4",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:divide",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "10\n4",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2.5",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "divide: each step is rounded: 1 / 3 / 3",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:divide",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "1\n3\n3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0.11111111111111111111",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "divide: 100 / 3 / 2",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:divide",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "100\n3\n2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "16.66666666666666666667",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "divide: a tie rounds away from zero (5e-21)",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:divide",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "1\n200000000000000000000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0.00000000000000000001",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "divide: a negative tie rounds away from zero",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:divide",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "-1\n200000000000000000000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-0.00000000000000000001",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "divide: below half rounds to 0",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:divide",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "1\n300000000000000000000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "divide: decimal operands",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:divide",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "0.3\n0.1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "divide: big integers",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:divide",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "340282366920938463463374607431768211456\n18446744073709551616",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "18446744073709551616",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "divide: one number",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:divide",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "9.5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "9.5",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mod: -7 mod 3 keeps the sign of the dividend",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:mod",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "-7\n3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mod: 7 mod -3",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:mod",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "7\n-3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mod: 5.5 mod 2",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:mod",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "5.5\n2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1.5",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mod: left to right: 10 mod 4 mod 3",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:mod",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "10\n4\n3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mod: exact decimals: 0.3 mod 0.1",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:mod",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "0.3\n0.1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mod: big integers",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:mod",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "1000000000000000000000000000057\n1000000007",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "999657064",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mod: smaller than the divisor",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:mod",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "2\n9",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mean: 1 2 4",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:mean",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "1\n2\n4",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2.33333333333333333333",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mean: exact when it ends",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:mean",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "1\n2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1.5",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mean: decimals",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:mean",
+    "params": {
+      "delimiter": "comma"
+    },
+    "input": {
+      "value": "0.1,0.2,0.4",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0.23333333333333333333",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mean: one number",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:mean",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "-3.5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-3.5",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mean: negative values",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:mean",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "-10\n-20\n5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-8.33333333333333333333",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "median: odd count, unsorted",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:median",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "5\n1\n3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "median: even count averages the middle two",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:median",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "5\n1\n3\n2.5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2.75",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "median: two numbers",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:median",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "1\n2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1.5",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "median: one number",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:median",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "7.50",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "7.5",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "median: negatives",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:median",
+    "params": {
+      "delimiter": "space"
+    },
+    "input": {
+      "value": "-5 -1 -3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-3",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "median: repeated values",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:median",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "2\n2\n2\n9",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "median: big integers",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:median",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "100000000000000000000\n300000000000000000001\n200000000000000000000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "200000000000000000000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "median: even count, rounding at 20 places",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:median",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "0\n0.00000000000000000001",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0.00000000000000000001",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "standard-deviation: population: 2 4 4 4 5 5 7 9 is 2",
+    "ref": "exact rational arithmetic, computed with Python fractions; square root with Python decimal, rounded half up at 20 places",
+    "op": "arith:standard-deviation",
+    "params": {
+      "kind": "population",
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "2\n4\n4\n4\n5\n5\n7\n9",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "standard-deviation: sample: same data",
+    "ref": "exact rational arithmetic, computed with Python fractions; square root with Python decimal, rounded half up at 20 places",
+    "op": "arith:standard-deviation",
+    "params": {
+      "kind": "sample",
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "2\n4\n4\n4\n5\n5\n7\n9",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2.13808993529939507748",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "standard-deviation: population of one number is 0",
+    "ref": "exact rational arithmetic, computed with Python fractions; square root with Python decimal, rounded half up at 20 places",
+    "op": "arith:standard-deviation",
+    "params": {
+      "kind": "population",
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "standard-deviation: two numbers, sample",
+    "ref": "exact rational arithmetic, computed with Python fractions; square root with Python decimal, rounded half up at 20 places",
+    "op": "arith:standard-deviation",
+    "params": {
+      "kind": "sample",
+      "delimiter": "comma"
+    },
+    "input": {
+      "value": "1,3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1.4142135623730950488",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "standard-deviation: decimals, population",
+    "ref": "exact rational arithmetic, computed with Python fractions; square root with Python decimal, rounded half up at 20 places",
+    "op": "arith:standard-deviation",
+    "params": {
+      "kind": "population",
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "1.5\n2.5\n3.5\n10.25",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3.42953622957973721418",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "standard-deviation: identical values",
+    "ref": "exact rational arithmetic, computed with Python fractions; square root with Python decimal, rounded half up at 20 places",
+    "op": "arith:standard-deviation",
+    "params": {
+      "kind": "sample",
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "4\n4\n4",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "standard-deviation: negative and positive",
+    "ref": "exact rational arithmetic, computed with Python fractions; square root with Python decimal, rounded half up at 20 places",
+    "op": "arith:standard-deviation",
+    "params": {
+      "kind": "population",
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "-3\n3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "standard-deviation: irrational root rounds at 20 places",
+    "ref": "exact rational arithmetic, computed with Python fractions; square root with Python decimal, rounded half up at 20 places",
+    "op": "arith:standard-deviation",
+    "params": {
+      "kind": "population",
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "1\n2\n3\n4",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1.1180339887498948482",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sum: a piece that is not a number",
+    "ref": "documented in the word doc",
+    "op": "arith:sum",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "1\nabc\n3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "sum: no numbers",
+    "ref": "documented in the word doc",
+    "op": "arith:sum",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "subtract: a piece that is not a number",
+    "ref": "documented in the word doc",
+    "op": "arith:subtract",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "1\nabc\n3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "subtract: no numbers",
+    "ref": "documented in the word doc",
+    "op": "arith:subtract",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "multiply: a piece that is not a number",
+    "ref": "documented in the word doc",
+    "op": "arith:multiply",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "1\nabc\n3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "multiply: no numbers",
+    "ref": "documented in the word doc",
+    "op": "arith:multiply",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "divide: a piece that is not a number",
+    "ref": "documented in the word doc",
+    "op": "arith:divide",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "1\nabc\n3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "divide: no numbers",
+    "ref": "documented in the word doc",
+    "op": "arith:divide",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "mod: a piece that is not a number",
+    "ref": "documented in the word doc",
+    "op": "arith:mod",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "1\nabc\n3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "mod: no numbers",
+    "ref": "documented in the word doc",
+    "op": "arith:mod",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "mean: a piece that is not a number",
+    "ref": "documented in the word doc",
+    "op": "arith:mean",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "1\nabc\n3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "mean: no numbers",
+    "ref": "documented in the word doc",
+    "op": "arith:mean",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "median: a piece that is not a number",
+    "ref": "documented in the word doc",
+    "op": "arith:median",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "1\nabc\n3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "median: no numbers",
+    "ref": "documented in the word doc",
+    "op": "arith:median",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "sum: blank pieces only",
+    "ref": "documented in the word doc",
+    "op": "arith:sum",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "\n \n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "sum: hex is not a number",
+    "ref": "documented in the word doc",
+    "op": "arith:sum",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "0x10",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "sum: NaN is not a number",
+    "ref": "documented in the word doc",
+    "op": "arith:sum",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "NaN",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "sum: a lone sign",
+    "ref": "documented in the word doc",
+    "op": "arith:sum",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "-",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "sum: a lone point",
+    "ref": "documented in the word doc",
+    "op": "arith:sum",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": ".",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "sum: two signs",
+    "ref": "documented in the word doc",
+    "op": "arith:sum",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "--5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "sum: a missing exponent",
+    "ref": "documented in the word doc",
+    "op": "arith:sum",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "1e",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "sum: two points",
+    "ref": "documented in the word doc",
+    "op": "arith:sum",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "1.2.3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "sum: exponent beyond 5000",
+    "ref": "documented in the word doc",
+    "op": "arith:sum",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "1e5001",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "sum: the wrong delimiter leaves a piece with two numbers",
+    "ref": "documented in the word doc",
+    "op": "arith:sum",
+    "params": {
+      "delimiter": "comma"
+    },
+    "input": {
+      "value": "1\n2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "divide: divide by zero",
+    "ref": "documented in the word doc",
+    "op": "arith:divide",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "1\n0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_DIV_ZERO"
+    }
+  },
+  {
+    "name": "divide: divide by zero decimal",
+    "ref": "documented in the word doc",
+    "op": "arith:divide",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "5\n0.000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_DIV_ZERO"
+    }
+  },
+  {
+    "name": "mod: modulo zero",
+    "ref": "documented in the word doc",
+    "op": "arith:mod",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "5\n0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_DIV_ZERO"
+    }
+  },
+  {
+    "name": "standard-deviation: sample of one number",
+    "ref": "documented in the word doc",
+    "op": "arith:standard-deviation",
+    "params": {
+      "kind": "sample",
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "standard-deviation: a piece that is not a number",
+    "ref": "documented in the word doc",
+    "op": "arith:standard-deviation",
+    "params": {
+      "kind": "population",
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "1\nx",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "sum: a delimiter outside the list",
+    "ref": "documented in the word doc",
+    "op": "arith:sum",
+    "params": {
+      "delimiter": "none"
+    },
+    "input": {
+      "value": "1\n2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "ext-gcd: gcd(240, 46) = 2 = 240*(-9) + 46*47",
+    "ref": "Wikipedia, Extended Euclidean algorithm (worked example), re-checked in Python",
+    "op": "arith:ext-gcd",
+    "params": {
+      "b": "46",
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "240",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2\n-9\n47",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ext-gcd: negative a",
+    "ref": "Python math.gcd, with a*x + b*y = g asserted",
+    "op": "arith:ext-gcd",
+    "params": {
+      "b": "46",
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "-240",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2\n9\n47",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ext-gcd: negative b",
+    "ref": "Python math.gcd, with a*x + b*y = g asserted",
+    "op": "arith:ext-gcd",
+    "params": {
+      "b": "-46",
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "240",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2\n-9\n-47",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ext-gcd: both negative, comma",
+    "ref": "Python math.gcd, with a*x + b*y = g asserted",
+    "op": "arith:ext-gcd",
+    "params": {
+      "b": "-46",
+      "delimiter": "comma"
+    },
+    "input": {
+      "value": "-240",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2,9,-47",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ext-gcd: coprime: 17 and 3120",
+    "ref": "Python math.gcd, with a*x + b*y = g asserted",
+    "op": "arith:ext-gcd",
+    "params": {
+      "b": "3120",
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "17",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1\n-367\n2",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ext-gcd: a is zero",
+    "ref": "Python math.gcd, with a*x + b*y = g asserted",
+    "op": "arith:ext-gcd",
+    "params": {
+      "b": "5",
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "5\n0\n1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ext-gcd: b is zero",
+    "ref": "Python math.gcd, with a*x + b*y = g asserted",
+    "op": "arith:ext-gcd",
+    "params": {
+      "b": "0",
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "17",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "17\n1\n0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ext-gcd: both zero",
+    "ref": "Python math.gcd, with a*x + b*y = g asserted",
+    "op": "arith:ext-gcd",
+    "params": {
+      "b": "0",
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0\n1\n0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ext-gcd: equal numbers",
+    "ref": "Python math.gcd, with a*x + b*y = g asserted",
+    "op": "arith:ext-gcd",
+    "params": {
+      "b": "7",
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "7",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "7\n0\n1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ext-gcd: one divides the other",
+    "ref": "Python math.gcd, with a*x + b*y = g asserted",
+    "op": "arith:ext-gcd",
+    "params": {
+      "b": "36",
+      "delimiter": "space"
+    },
+    "input": {
+      "value": "12",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "12 1 0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ext-gcd: big integers",
+    "ref": "Python math.gcd, with a*x + b*y = g asserted",
+    "op": "arith:ext-gcd",
+    "params": {
+      "b": "98765432109876543210",
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "12345678901234567890123",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3\n3935555305271604311\n-491944408676107074025",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ext-gcd: two 128-bit Fibonacci-like neighbours",
+    "ref": "Python math.gcd, with a*x + b*y = g asserted",
+    "op": "arith:ext-gcd",
+    "params": {
+      "b": "155576970220531065681649693",
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "251728825683549488150424261",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1\n59425114757512643212875125\n-96151855463018422468774568",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ext-gcd: spaces around the numbers",
+    "ref": "Python math.gcd, with a*x + b*y = g asserted",
+    "op": "arith:ext-gcd",
+    "params": {
+      "b": " 46 ",
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": " 240 ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2\n-9\n47",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ext-gcd: input not an integer",
+    "ref": "documented in the word doc",
+    "op": "arith:ext-gcd",
+    "params": {
+      "b": "3",
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "2.5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "ext-gcd: b not an integer",
+    "ref": "documented in the word doc",
+    "op": "arith:ext-gcd",
+    "params": {
+      "b": "x",
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "ext-gcd: empty input",
+    "ref": "documented in the word doc",
+    "op": "arith:ext-gcd",
+    "params": {
+      "b": "3",
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "mod-pow: 4^13 mod 497 = 445",
+    "ref": "Wikipedia, Modular exponentiation (worked example)",
+    "op": "arith:mod-pow",
+    "params": {
+      "exponent": "13",
+      "modulus": "497"
+    },
+    "input": {
+      "value": "4",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "445",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mod-pow: exponent 0 gives 1",
+    "ref": "Python pow(b, e, m)",
+    "op": "arith:mod-pow",
+    "params": {
+      "exponent": "0",
+      "modulus": "7"
+    },
+    "input": {
+      "value": "12345",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mod-pow: modulus 1 gives 0",
+    "ref": "Python pow(b, e, m)",
+    "op": "arith:mod-pow",
+    "params": {
+      "exponent": "3",
+      "modulus": "1"
+    },
+    "input": {
+      "value": "5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mod-pow: negative base",
+    "ref": "Python pow(b, e, m)",
+    "op": "arith:mod-pow",
+    "params": {
+      "exponent": "3",
+      "modulus": "7"
+    },
+    "input": {
+      "value": "-3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mod-pow: 65537 exponent (RSA public)",
+    "ref": "Python pow(b, e, m)",
+    "op": "arith:mod-pow",
+    "params": {
+      "exponent": "65537",
+      "modulus": "1000000007"
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "560583526",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mod-pow: big numbers",
+    "ref": "Python pow(b, e, m)",
+    "op": "arith:mod-pow",
+    "params": {
+      "exponent": "1267650600228229401496703205383",
+      "modulus": "170141183460469231731687303715884105727"
+    },
+    "input": {
+      "value": "1606938044258990275541962092341162602522202993782792835313721",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "156972595709185660450736429407903734389",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mod-pow: Fermat: 2^(p-1) mod p = 1 for p = 2^61-1",
+    "ref": "Fermat's little theorem; 2^61-1 is a Mersenne prime",
+    "op": "arith:mod-pow",
+    "params": {
+      "exponent": "2305843009213693950",
+      "modulus": "2305843009213693951"
+    },
+    "input": {
+      "value": "2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mod-pow: negative exponent",
+    "ref": "documented in the word doc",
+    "op": "arith:mod-pow",
+    "params": {
+      "exponent": "-1",
+      "modulus": "7"
+    },
+    "input": {
+      "value": "3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "mod-pow: modulus 0",
+    "ref": "documented in the word doc",
+    "op": "arith:mod-pow",
+    "params": {
+      "exponent": "2",
+      "modulus": "0"
+    },
+    "input": {
+      "value": "3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "mod-pow: negative modulus",
+    "ref": "documented in the word doc",
+    "op": "arith:mod-pow",
+    "params": {
+      "exponent": "2",
+      "modulus": "-5"
+    },
+    "input": {
+      "value": "3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "mod-pow: exponent not an integer",
+    "ref": "documented in the word doc",
+    "op": "arith:mod-pow",
+    "params": {
+      "exponent": "1.5",
+      "modulus": "7"
+    },
+    "input": {
+      "value": "3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "mod-pow: modulus empty",
+    "ref": "documented in the word doc",
+    "op": "arith:mod-pow",
+    "params": {
+      "exponent": "2",
+      "modulus": ""
+    },
+    "input": {
+      "value": "3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "mod-inverse: 3 mod 11 = 4",
+    "ref": "3 * 4 = 12 = 1 mod 11",
+    "op": "arith:mod-inverse",
+    "params": {
+      "modulus": "11"
+    },
+    "input": {
+      "value": "3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mod-inverse: 17 mod 3120 = 2753 (RSA textbook)",
+    "ref": "Wikipedia, RSA (worked example: d = 2753)",
+    "op": "arith:mod-inverse",
+    "params": {
+      "modulus": "3120"
+    },
+    "input": {
+      "value": "17",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2753",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mod-inverse: negative input",
+    "ref": "Python pow(a, -1, m)",
+    "op": "arith:mod-inverse",
+    "params": {
+      "modulus": "11"
+    },
+    "input": {
+      "value": "-3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "7",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mod-inverse: input larger than the modulus",
+    "ref": "Python pow(a, -1, m)",
+    "op": "arith:mod-inverse",
+    "params": {
+      "modulus": "7"
+    },
+    "input": {
+      "value": "25",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mod-inverse: modulus 2",
+    "ref": "Python pow(a, -1, m)",
+    "op": "arith:mod-inverse",
+    "params": {
+      "modulus": "2"
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mod-inverse: big numbers",
+    "ref": "Python pow(a, -1, m)",
+    "op": "arith:mod-inverse",
+    "params": {
+      "modulus": "170141183460469231731687303715884105727"
+    },
+    "input": {
+      "value": "1267650600228229401496703205379",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "95486812670085700789781895071574514591",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mod-inverse: no inverse (2 mod 4)",
+    "ref": "documented in the word doc",
+    "op": "arith:mod-inverse",
+    "params": {
+      "modulus": "4"
+    },
+    "input": {
+      "value": "2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "mod-inverse: zero has no inverse",
+    "ref": "documented in the word doc",
+    "op": "arith:mod-inverse",
+    "params": {
+      "modulus": "7"
+    },
+    "input": {
+      "value": "0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "mod-inverse: modulus 0",
+    "ref": "documented in the word doc",
+    "op": "arith:mod-inverse",
+    "params": {
+      "modulus": "0"
+    },
+    "input": {
+      "value": "3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "mod-inverse: modulus negative",
+    "ref": "documented in the word doc",
+    "op": "arith:mod-inverse",
+    "params": {
+      "modulus": "-7"
+    },
+    "input": {
+      "value": "3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "mod-inverse: input not an integer",
+    "ref": "documented in the word doc",
+    "op": "arith:mod-inverse",
+    "params": {
+      "modulus": "7"
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

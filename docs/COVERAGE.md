@@ -14,7 +14,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Data format | 54 | 6 | 0 | 20 | 80 |
 | Encryption / Encoding | 29 | 63 | 0 | 3 | 95 |
 | Public Key | 0 | 0 | 0 | 30 | 30 |
-| Arithmetic / Logic | 9 | 0 | 0 | 17 | 26 |
+| Arithmetic / Logic | 9 | 17 | 0 | 0 | 26 |
 | Networking | 0 | 0 | 0 | 34 | 34 |
 | Language | 0 | 0 | 0 | 4 | 4 |
 | Utils | 6 | 0 | 2 | 42 | 50 |
@@ -27,7 +27,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 4 | 1 | 3 | 13 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **137** | **100** | **5** | **264** | **506** |
+| **Total** | **137** | **117** | **5** | **247** | **506** |
 
 ## Data format (80)
 
@@ -253,28 +253,28 @@ it and regenerate this file. An operation listed in several CyberChef categories
 
 | CyberChef | Status | Forge | Note |
 | --- | --- | --- | --- |
-| Set Union | not yet |  |  |
-| Set Intersection | not yet |  |  |
-| Set Difference | not yet |  |  |
-| Symmetric Difference | not yet |  |  |
-| Cartesian Product | not yet |  |  |
-| Power Set | not yet |  |  |
+| Set Union | redesigned | `set:union` | The input is the sets cut at the sample delimiter (a blank line by default) and each set cut at the item delimiter (a comma by default); both are free text, as in CyberChef. Items are exact text (nothing is trimmed) and a set holds each item once, in order of first appearance. Two or more sets (CyberChef: exactly two); fewer than two is E_RANGE. The result is one set joined by the item delimiter. |
+| Set Intersection | redesigned | `set:intersection` | The input is the sets cut at the sample delimiter (a blank line by default) and each set cut at the item delimiter (a comma by default); both are free text, as in CyberChef. Items are exact text (nothing is trimmed) and a set holds each item once, in order of first appearance. Two or more sets (CyberChef: exactly two); the items in all of them, in the order of the first. Fewer than two is E_RANGE. |
+| Set Difference | redesigned | `set:difference` | The input is the sets cut at the sample delimiter (a blank line by default) and each set cut at the item delimiter (a comma by default); both are free text, as in CyberChef. Items are exact text (nothing is trimmed) and a set holds each item once, in order of first appearance. Two or more sets (CyberChef: exactly two); the items of the first that are in none of the others. Fewer than two is E_RANGE. |
+| Symmetric Difference | redesigned | `set:symmetric-difference` | The input is the sets cut at the sample delimiter (a blank line by default) and each set cut at the item delimiter (a comma by default); both are free text, as in CyberChef. Items are exact text (nothing is trimmed) and a set holds each item once, in order of first appearance. Two or more sets (CyberChef: exactly two); with more than two it is applied left to right, so an item stays when it is in an odd number of sets. Fewer than two is E_RANGE. |
+| Cartesian Product | redesigned | `set:cartesian-product` | The input is the sets cut at the sample delimiter (a blank line by default) and each set cut at the item delimiter (a comma by default); both are free text, as in CyberChef. Items are exact text (nothing is trimmed) and a set holds each item once, in order of first appearance. Exactly two sets (anything else is E_RANGE). Each pair is written (a,b) and the pairs are joined by the item delimiter, those of the first item of A first. |
+| Power Set | redesigned | `set:power-set` | One set cut at the item delimiter (a comma by default), duplicates removed. The subsets are written as their items joined by the item delimiter and joined to each other by the subset delimiter (a line feed by default, a Forge parameter); the order is the one of adding the items one at a time (the empty set first, then a, b, a+b, c, ...). At most 16 distinct items (E_RANGE beyond), since the output has 2^n subsets. |
 | OR | covered | `bits:or` |  |
 | NOT | covered | `bits:not` |  |
 | AND | covered | `bits:and` |  |
 | ADD | covered | `bits:add` |  |
 | SUB | covered | `bits:sub` |  |
-| Sum | not yet |  |  |
-| Subtract | not yet |  |  |
-| Multiply | not yet |  |  |
-| Divide | not yet |  |  |
-| MOD | not yet |  |  |
-| Extended GCD | not yet |  |  |
-| Modular Exponentiation | not yet |  |  |
-| Modular Inverse | not yet |  |  |
-| Mean | not yet |  |  |
-| Median | not yet |  |  |
-| Standard Deviation | not yet |  |  |
+| Sum | redesigned | `arith:sum` | Exact decimal arithmetic (0.1 + 0.2 is 0.3, integers of any size are exact). The numbers are cut at a delimiter from the wave 5 list (a line feed by default; CyberChef offers line feed, space, comma, semi-colon, colon and CRLF, and Forge adds cr and tab), blanks around a number and blank pieces are skipped. A piece that is not a number is E_COERCE naming it (CyberChef silently ignores it); no numbers is E_RANGE. The result is plain decimal text with no trailing zeros. |
+| Subtract | redesigned | `arith:subtract` | The first number minus the others, left to right, exact. The numbers are cut at a delimiter from the wave 5 list (a line feed by default; CyberChef offers line feed, space, comma, semi-colon, colon and CRLF, and Forge adds cr and tab), blanks around a number and blank pieces are skipped. A piece that is not a number is E_COERCE (CyberChef ignores it); no numbers is E_RANGE. |
+| Multiply | redesigned | `arith:multiply` | The product of all the numbers, exact (integers of any size up to the 65,536-bit limit). The numbers are cut at a delimiter from the wave 5 list (a line feed by default; CyberChef offers line feed, space, comma, semi-colon, colon and CRLF, and Forge adds cr and tab), blanks around a number and blank pieces are skipped. A piece that is not a number is E_COERCE (CyberChef ignores it); no numbers is E_RANGE. |
+| Divide | redesigned | `arith:divide` | The first number divided by the others, left to right; each step is rounded half away from zero to 20 decimal places, the BigNumber defaults CyberChef uses, so results match. Division by zero is E_DIV_ZERO (CyberChef prints Infinity or NaN). The numbers are cut at a delimiter from the wave 5 list (a line feed by default; CyberChef offers line feed, space, comma, semi-colon, colon and CRLF, and Forge adds cr and tab), blanks around a number and blank pieces are skipped. A piece that is not a number is E_COERCE (CyberChef ignores it). |
+| MOD | redesigned | `arith:mod` | The remainder of the first number divided by the others, left to right, exact for decimals; the sign is the dividend's (the BigNumber default). A zero divisor is E_DIV_ZERO. The numbers are cut at a delimiter from the wave 5 list (a line feed by default; CyberChef offers line feed, space, comma, semi-colon, colon and CRLF, and Forge adds cr and tab), blanks around a number and blank pieces are skipped. A piece that is not a number is E_COERCE (CyberChef ignores it). |
+| Extended GCD | redesigned | `arith:ext-gcd` | Integers of any size: the input is a and the parameter b is a second integer (a text parameter, so it can be big). The output is g, x and y joined by a delimiter (a line feed by default) with a*x + b*y = g and g the greatest common divisor (never negative); the coefficients are those of the iterative algorithm on the absolute values with the signs put back. Not an integer is E_COERCE. |
+| Modular Exponentiation | redesigned | `arith:mod-pow` | Integers of any size: the input is the base, the parameters exponent and modulus are text. The result is in 0 to modulus - 1. A negative exponent or a modulus below 1 is E_RANGE; not an integer is E_COERCE. |
+| Modular Inverse | redesigned | `arith:mod-inverse` | Integers of any size: the input is a, the parameter modulus is text. The result is in 0 to modulus - 1; no inverse (a shares a factor with the modulus) or a modulus below 1 is E_RANGE; not an integer is E_COERCE. |
+| Mean | redesigned | `arith:mean` | The exact sum divided by the count, rounded half away from zero to 20 decimal places. The numbers are cut at a delimiter from the wave 5 list (a line feed by default; CyberChef offers line feed, space, comma, semi-colon, colon and CRLF, and Forge adds cr and tab), blanks around a number and blank pieces are skipped. A piece that is not a number is E_COERCE (CyberChef ignores it). |
+| Median | redesigned | `arith:median` | The middle of the sorted numbers, or the mean of the middle two (20 decimal places). The numbers are cut at a delimiter from the wave 5 list (a line feed by default; CyberChef offers line feed, space, comma, semi-colon, colon and CRLF, and Forge adds cr and tab), blanks around a number and blank pieces are skipped. A piece that is not a number is E_COERCE (CyberChef ignores it). |
+| Standard Deviation | redesigned | `arith:standard-deviation` | The square root of the variance, with the mean, the variance and the root each rounded to 20 decimal places. kind chooses the population deviation (n, the default and CyberChef's choice) or the sample deviation (n - 1, a Forge addition; one number is then E_RANGE). The numbers are cut at a delimiter from the wave 5 list (a line feed by default; CyberChef offers line feed, space, comma, semi-colon, colon and CRLF, and Forge adds cr and tab), blanks around a number and blank pieces are skipped. A piece that is not a number is E_COERCE (CyberChef ignores it). |
 | Bit shift left | covered | `bits:shift-left` |  |
 | Bit shift right | covered | `bits:shift-right` |  |
 | Rotate left | covered | `bits:rotate-left` |  |
