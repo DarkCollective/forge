@@ -1,0 +1,166 @@
+[
+  {
+    "name": "the MongoDB manual example",
+    "ref": "the ObjectID 507f1f77bcf86cd799439011 of the MongoDB manual: 0x507f1f77 = 1350508407 s = 2012-10-17T21:13:27Z (checked with the host Date)",
+    "op": "objectid:timestamp",
+    "params": {},
+    "input": {
+      "value": "507f1f77bcf86cd799439011",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2012-10-17T21:13:27.000Z",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "the epoch",
+    "ref": "all zero is 1970-01-01",
+    "op": "objectid:timestamp",
+    "params": {},
+    "input": {
+      "value": "000000000000000000000000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1970-01-01T00:00:00.000Z",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "the largest timestamp",
+    "ref": "0xFFFFFFFF = 4294967295 s = 2106-02-07T06:28:15Z",
+    "op": "objectid:timestamp",
+    "params": {},
+    "input": {
+      "value": " FFFFFFFF0000000000000000 \n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2106-02-07T06:28:15.000Z",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "midnight at the turn of the millennium",
+    "ref": "0x386d4380 = 946684800 s = 2000-01-01T00:00:00Z",
+    "op": "objectid:timestamp",
+    "params": {},
+    "input": {
+      "value": "386d4380bcf86cd799439011",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2000-01-01T00:00:00.000Z",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a leap day",
+    "ref": "1709164800 s = 2024-02-29T00:00:00Z",
+    "op": "objectid:timestamp",
+    "params": {},
+    "input": {
+      "value": "65dfc900bcf86cd799439011",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2024-02-29T00:00:00.000Z",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "the last second of a year",
+    "ref": "1704067199 s = 2023-12-31T23:59:59Z",
+    "op": "objectid:timestamp",
+    "params": {},
+    "input": {
+      "value": "6592007fbcf86cd799439011",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2023-12-31T23:59:59.000Z",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "the day after the end of February in a century year",
+    "ref": "951782400 s = 2000-02-29T00:00:00Z (2000 is a leap year)",
+    "op": "objectid:timestamp",
+    "params": {},
+    "input": {
+      "value": "38bb0c00bcf86cd799439011",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2000-02-29T00:00:00.000Z",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a time of day",
+    "ref": "1350508407 s: 21:13:27",
+    "op": "objectid:timestamp",
+    "params": {},
+    "input": {
+      "value": "507f1f77bcf86cd799439011",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2012-10-17T21:13:27.000Z",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "too short",
+    "ref": "an ObjectID is 24 hex digits",
+    "op": "objectid:timestamp",
+    "params": {},
+    "input": {
+      "value": "507f1f77bcf86cd79943901",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "too long",
+    "ref": "an ObjectID is 24 hex digits",
+    "op": "objectid:timestamp",
+    "params": {},
+    "input": {
+      "value": "507f1f77bcf86cd7994390111",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "not hex",
+    "ref": "g is not a hex digit",
+    "op": "objectid:timestamp",
+    "params": {},
+    "input": {
+      "value": "507f1f77bcf86cd79943901g",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "empty",
+    "ref": "nothing to read",
+    "op": "objectid:timestamp",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]
