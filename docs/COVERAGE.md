@@ -417,7 +417,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Extract ID3 | not yet |  |  |
 | Extract Audio Metadata | not yet |  |  |
 | Extract Files | not yet |  |  |
-| RAKE | redesigned | `rake:keywords` | RAKE of Rose et al. 2010 with Forge's own English stop list (replaceable by a comma or white space separated list), a maximum phrase length instead of regular-expression delimiters, and a limit; the output is one line per phrase with its score (two decimals), a tab and the phrase, highest score first. Words are letters, digits and marks with an inner apostrophe or hyphen; every other character ends a phrase. |
+| RAKE | redesigned | `rake:keywords` | RAKE of Rose et al. 2010 with Forge's own English stop list (replaceable by a comma or white space separated list), a maximum phrase length instead of regular-expression delimiters, and a limit; the output is one line per phrase as its score (two decimals), a colon, a space and the phrase, highest score first. Words are letters, digits and marks with an inner apostrophe or hyphen; every other character ends a phrase. |
 | Template | not yet |  |  |
 
 ## Compression (21)
