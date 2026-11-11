@@ -1,10 +1,66 @@
 [
- {"cyberchef": "Parse DateTime", "status": "redesigned", "forge": ["datetime:parse"], "note": "The same report (date, time, AM or PM, time zone, UTC offset, daylight saving, leap year, days in the month, day of the year, week number, quarter). Forge has no populate-the-box control, so the built-in formats are a preset choice and the format string applies with the preset Custom. Reading is forgiving like moment.js but a literal of the format is used up only when it is the next text, and fields the format does not name default to 1970-01-01 00:00 (not today). The week number is the ISO week. The zone abbreviation comes from the host's Intl data (it can read GMT+9 where a time zone database says JST). Written in FL with Forge's own moment.js-style tokens and no date library; only the zone rules come from the host."},
- {"cyberchef": "Translate DateTime Format", "status": "redesigned", "forge": ["datetime:translate"], "note": "Input format, input zone, output format and output zone as in CyberChef, with the built-in formats as a preset choice per side (Custom uses the format string). The tokens are Forge's own moment.js-compatible set (YYYY to SSSSSSSSS, Z, z, X, x, W, G, L, [literal] and so on); the SSS tokens keep the full nanosecond and z comes from the host's Intl data. No date library."},
- {"cyberchef": "From UNIX Timestamp", "status": "redesigned", "forge": ["datetime:from-unix"], "note": "Units are seconds, milliseconds, microseconds or nanoseconds; the default output is CyberChef's (Wed 11 November 2026 12:34:56 UTC). Instead of the Treat as UTC switch there is a zone parameter and a format string, so the time can be written in any zone and any format. Whole and decimal numbers, negative allowed, exact to the nanosecond."},
- {"cyberchef": "To UNIX Timestamp", "status": "redesigned", "forge": ["datetime:to-unix"], "note": "Units and Show parsed datetime (on by default, as in CyberChef) as there. CyberChef lets moment.js guess the input format; Forge reads a stated format (default YYYY-MM-DD HH:mm:ss, forgiving, so an ISO 8601 text like 2026-11-11T12:34:56Z reads) in a zone parameter that replaces Treat as UTC. Rounded down to a whole number in the unit."},
- {"cyberchef": "Windows Filetime to UNIX Timestamp", "status": "redesigned", "forge": ["datetime:filetime-to-unix"], "note": "Input decimal, hex big endian or hex little endian; output seconds, milliseconds, microseconds or nanoseconds, with BigInt-exact arithmetic and division towards zero. Argument order is input then unit, and the choices are lower case (decimal, hex-be, hex-le); an optional 0x and spaces are accepted."},
- {"cyberchef": "UNIX Timestamp to Windows Filetime", "status": "redesigned", "forge": ["datetime:unix-to-filetime"], "note": "Input unit and output decimal, hex big endian or hex little endian (lower-case choices decimal, hex-be, hex-le). The hex forms are always 16 digits (the 64-bit value, zero padded); a time before 1601 or past the 64-bit range is E_RANGE. Decimal timestamps are accepted and a fraction finer than 100 ns is cut."},
- {"cyberchef": "DateTime Delta", "status": "redesigned", "forge": ["datetime:delta"], "note": "Add or subtract days, hours, minutes and seconds (and milliseconds, which CyberChef lacks) from a date in a preset or custom format, written back in that format. A zone parameter is added (UTC by default, as in CyberChef); days are calendar days there, the rest elapsed time. Negative amounts reverse the direction."},
- {"cyberchef": "Extract dates", "status": "redesigned", "forge": ["datetime:extract-dates"], "note": "yyyy-mm-dd, dd/mm/yyyy and mm/dd/yyyy dates with - / . or space between the parts, one per line, with Display total, Sort and Unique as in CyberChef. Forge writes its own pattern: months and days of one or two digits, years 1900 to 2099, word boundaries on both sides, and a month-first date is found when the day is above 12. Nothing is checked beyond the pattern (2026-02-30 is listed)."}
+  {
+    "cyberchef": "Parse DateTime",
+    "status": "redesigned",
+    "forge": [
+      "datetime:parse"
+    ],
+    "note": "The same report (date, time, AM or PM, time zone, UTC offset, daylight saving, leap year, days in the month, day of the year, week number, quarter). Forge has no populate-the-box control, so the built-in formats are a preset choice and the format string applies with the preset Custom. Reading is forgiving like moment.js but a literal of the format is used up only when it is the next text, and fields the format does not name default to 1970-01-01 00:00 (not today). The week number is the ISO week. The zone abbreviation comes from the host's Intl data (it can read GMT+9 where a time zone database says JST). Written in FL with Forge's own moment.js-style tokens and no date library; only the zone rules come from the host."
+  },
+  {
+    "cyberchef": "Translate DateTime Format",
+    "status": "redesigned",
+    "forge": [
+      "datetime:translate"
+    ],
+    "note": "Input format, input zone, output format and output zone as in CyberChef, with the built-in formats as a preset choice per side (Custom uses the format string). The tokens are Forge's own moment.js-compatible set (YYYY to SSSSSSSSS, Z, z, X, x, W, G, L, [literal] and so on); the SSS tokens keep the full nanosecond and z comes from the host's Intl data. No date library."
+  },
+  {
+    "cyberchef": "From UNIX Timestamp",
+    "status": "covered",
+    "forge": [
+      "datetime:from-unix"
+    ],
+    "note": "Units are seconds, milliseconds, microseconds or nanoseconds; the default output is CyberChef's (Wed 11 November 2026 12:34:56 UTC for seconds, and with .SSS for the other units, whose milliseconds are shown). Instead of the Treat as UTC switch there is a zone parameter and a format string, so the time can be written in any zone and any format. Whole and decimal numbers, negative allowed, exact to the nanosecond. Text that is not a number is E_COERCE (CyberChef writes Invalid date)."
+  },
+  {
+    "cyberchef": "To UNIX Timestamp",
+    "status": "redesigned",
+    "forge": [
+      "datetime:to-unix"
+    ],
+    "note": "Units and Show parsed datetime (on by default, as in CyberChef) as there. CyberChef lets moment.js guess the input format; Forge reads a stated format (default YYYY-MM-DD HH:mm:ss, forgiving, so an ISO 8601 text like 2026-11-11T12:34:56Z reads) in a zone parameter that replaces Treat as UTC. Rounded down to a whole number in the unit."
+  },
+  {
+    "cyberchef": "Windows Filetime to UNIX Timestamp",
+    "status": "covered",
+    "forge": [
+      "datetime:filetime-to-unix"
+    ],
+    "note": "Input decimal, hex big endian or hex little endian; output seconds, milliseconds, microseconds or nanoseconds, exact as CyberChef's (up to seven decimals for seconds, four for milliseconds, one for microseconds, no trailing zeros). Argument order is input then unit, and the choices are lower case (decimal, hex-be, hex-le); an optional 0x and spaces are accepted."
+  },
+  {
+    "cyberchef": "UNIX Timestamp to Windows Filetime",
+    "status": "covered",
+    "forge": [
+      "datetime:unix-to-filetime"
+    ],
+    "note": "Input unit and output decimal, hex big endian or hex little endian (lower-case choices decimal, hex-be, hex-le). The big-endian hex has no leading zeros, as CyberChef writes it; the little-endian form is always 16 digits (the 8 bytes). A time before 1601 or past the 64-bit range is E_RANGE. Decimal timestamps are accepted and a fraction finer than 100 ns is cut (CyberChef keeps it as a fraction of a tick)."
+  },
+  {
+    "cyberchef": "DateTime Delta",
+    "status": "covered",
+    "forge": [
+      "datetime:delta"
+    ],
+    "note": "Add or subtract days, hours, minutes and seconds (and milliseconds, which CyberChef lacks) from a date in a preset or custom format, written back in that format. A zone parameter is added (UTC by default, as in CyberChef); days are calendar days there, the rest elapsed time. Negative amounts reverse the direction."
+  },
+  {
+    "cyberchef": "Extract dates",
+    "status": "redesigned",
+    "forge": [
+      "datetime:extract-dates"
+    ],
+    "note": "yyyy-mm-dd, dd/mm/yyyy and mm/dd/yyyy dates with - / . or space between the parts, one per line, with Display total, Sort and Unique as in CyberChef. Forge writes its own pattern: months and days of one or two digits, years 1900 to 2099, word boundaries on both sides, and a month-first date is found when the day is above 12. Nothing is checked beyond the pattern (2026-02-30 is listed)."
+  }
 ]

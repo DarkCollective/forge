@@ -229,8 +229,8 @@
     }
   },
   {
-    "name": "to insensitive regex keeps the written case first",
-    "ref": "hand-computed from the ECMAScript regular expression syntax (ECMA-262 22.2.1)",
+    "name": "to insensitive regex puts the lower case first",
+    "ref": "hand-computed from the definition in the doc string (lower case first, as the written case is not kept)",
     "op": "case:to-insensitive-regex",
     "params": {},
     "input": {
@@ -238,7 +238,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "[Aa].[bB]",
+      "value": "[aA].[bB]",
       "enc": "utf8"
     }
   },

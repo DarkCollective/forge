@@ -60,6 +60,11 @@ describe("catalogue", () => {
 });
 
 describe("prng:bytes", () => {
+  test("the default delimiter of the integers is a space, as CyberChef's", () => {
+    const p = runtime.meta("prng:integers").params.find((x) => x.name === "delimiter");
+    expect(p?.default).toBe("space");
+  });
+
   test("the header default of the length is 32", () => {
     expect(runtime.meta("prng:bytes").params[0]?.default).toBeDefined();
   });

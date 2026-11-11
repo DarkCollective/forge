@@ -9,7 +9,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Hex:   #ff8000\nRGB:   rgb(255, 128, 0)\nRGBA:  rgba(255, 128, 0, 1)\nHSL:   hsl(30, 100%, 50%)\nHSLA:  hsla(30, 100%, 50%, 1)\nCMYK:  cmyk(0%, 50%, 100%, 0%)",
+      "value": "Hex:  #ff8000\nRGB:  rgb(255, 128, 0)\nRGBA: rgba(255, 128, 0, 1)\nHSL:  hsl(30, 100%, 50%)\nHSLA: hsla(30, 100%, 50%, 1)\nCMYK: cmyk(0%, 50%, 100%, 0%)",
       "enc": "utf8"
     }
   },
@@ -23,7 +23,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Hex:   #ff8800\nRGB:   rgb(255, 136, 0)\nRGBA:  rgba(255, 136, 0, 1)\nHSL:   hsl(32, 100%, 50%)\nHSLA:  hsla(32, 100%, 50%, 1)\nCMYK:  cmyk(0%, 47%, 100%, 0%)",
+      "value": "Hex:  #ff8800\nRGB:  rgb(255, 136, 0)\nRGBA: rgba(255, 136, 0, 1)\nHSL:  hsl(32, 100%, 50%)\nHSLA: hsla(32, 100%, 50%, 1)\nCMYK: cmyk(0%, 47%, 100%, 0%)",
       "enc": "utf8"
     }
   },
@@ -37,7 +37,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Hex:   #ff800080\nRGB:   rgb(255, 128, 0)\nRGBA:  rgba(255, 128, 0, 0.5)\nHSL:   hsl(30, 100%, 50%)\nHSLA:  hsla(30, 100%, 50%, 0.5)\nCMYK:  cmyk(0%, 50%, 100%, 0%)",
+      "value": "Hex:  #ff800080\nRGB:  rgb(255, 128, 0)\nRGBA: rgba(255, 128, 0, 0.5)\nHSL:  hsl(30, 100%, 50%)\nHSLA: hsla(30, 100%, 50%, 0.5)\nCMYK: cmyk(0%, 50%, 100%, 0%)",
       "enc": "utf8"
     }
   },
@@ -51,7 +51,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Hex:   #ff880088\nRGB:   rgb(255, 136, 0)\nRGBA:  rgba(255, 136, 0, 0.53)\nHSL:   hsl(32, 100%, 50%)\nHSLA:  hsla(32, 100%, 50%, 0.53)\nCMYK:  cmyk(0%, 47%, 100%, 0%)",
+      "value": "Hex:  #ff880088\nRGB:  rgb(255, 136, 0)\nRGBA: rgba(255, 136, 0, 0.53)\nHSL:  hsl(32, 100%, 50%)\nHSLA: hsla(32, 100%, 50%, 0.53)\nCMYK: cmyk(0%, 47%, 100%, 0%)",
       "enc": "utf8"
     }
   },
@@ -65,7 +65,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Hex:   #ff8000\nRGB:   rgb(255, 128, 0)\nRGBA:  rgba(255, 128, 0, 1)\nHSL:   hsl(30, 100%, 50%)\nHSLA:  hsla(30, 100%, 50%, 1)\nCMYK:  cmyk(0%, 50%, 100%, 0%)",
+      "value": "Hex:  #ff8000\nRGB:  rgb(255, 128, 0)\nRGBA: rgba(255, 128, 0, 1)\nHSL:  hsl(30, 100%, 50%)\nHSLA: hsla(30, 100%, 50%, 1)\nCMYK: cmyk(0%, 50%, 100%, 0%)",
       "enc": "utf8"
     }
   },
@@ -79,7 +79,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Hex:   #0a141e40\nRGB:   rgb(10, 20, 30)\nRGBA:  rgba(10, 20, 30, 0.25)\nHSL:   hsl(210, 50%, 8%)\nHSLA:  hsla(210, 50%, 8%, 0.25)\nCMYK:  cmyk(67%, 33%, 0%, 88%)",
+      "value": "Hex:  #0a141e40\nRGB:  rgb(10, 20, 30)\nRGBA: rgba(10, 20, 30, 0.25)\nHSL:  hsl(210, 50%, 8%)\nHSLA: hsla(210, 50%, 8%, 0.25)\nCMYK: cmyk(67%, 33%, 0%, 88%)",
       "enc": "utf8"
     }
   },
@@ -93,7 +93,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Hex:   #ff0000\nRGB:   rgb(255, 0, 0)\nRGBA:  rgba(255, 0, 0, 1)\nHSL:   hsl(0, 100%, 50%)\nHSLA:  hsla(0, 100%, 50%, 1)\nCMYK:  cmyk(0%, 100%, 100%, 0%)",
+      "value": "Hex:  #ff0000\nRGB:  rgb(255, 0, 0)\nRGBA: rgba(255, 0, 0, 1)\nHSL:  hsl(0, 100%, 50%)\nHSLA: hsla(0, 100%, 50%, 1)\nCMYK: cmyk(0%, 100%, 100%, 0%)",
       "enc": "utf8"
     }
   },
@@ -107,7 +107,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Hex:   #ff8000\nRGB:   rgb(255, 128, 0)\nRGBA:  rgba(255, 128, 0, 1)\nHSL:   hsl(30, 100%, 50%)\nHSLA:  hsla(30, 100%, 50%, 1)\nCMYK:  cmyk(0%, 50%, 100%, 0%)",
+      "value": "Hex:  #ff8000\nRGB:  rgb(255, 128, 0)\nRGBA: rgba(255, 128, 0, 1)\nHSL:  hsl(30, 100%, 50%)\nHSLA: hsla(30, 100%, 50%, 1)\nCMYK: cmyk(0%, 50%, 100%, 0%)",
       "enc": "utf8"
     }
   },
@@ -121,7 +121,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Hex:   #33669980\nRGB:   rgb(51, 102, 153)\nRGBA:  rgba(51, 102, 153, 0.5)\nHSL:   hsl(210, 50%, 40%)\nHSLA:  hsla(210, 50%, 40%, 0.5)\nCMYK:  cmyk(67%, 33%, 0%, 40%)",
+      "value": "Hex:  #33669980\nRGB:  rgb(51, 102, 153)\nRGBA: rgba(51, 102, 153, 0.5)\nHSL:  hsl(210, 50%, 40%)\nHSLA: hsla(210, 50%, 40%, 0.5)\nCMYK: cmyk(67%, 33%, 0%, 40%)",
       "enc": "utf8"
     }
   },
@@ -135,7 +135,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Hex:   #ff8000\nRGB:   rgb(255, 128, 0)\nRGBA:  rgba(255, 128, 0, 1)\nHSL:   hsl(30, 100%, 50%)\nHSLA:  hsla(30, 100%, 50%, 1)\nCMYK:  cmyk(0%, 50%, 100%, 0%)",
+      "value": "Hex:  #ff8000\nRGB:  rgb(255, 128, 0)\nRGBA: rgba(255, 128, 0, 1)\nHSL:  hsl(30, 100%, 50%)\nHSLA: hsla(30, 100%, 50%, 1)\nCMYK: cmyk(0%, 50%, 100%, 0%)",
       "enc": "utf8"
     }
   },
@@ -149,7 +149,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Hex:   #ff8000\nRGB:   rgb(255, 128, 0)\nRGBA:  rgba(255, 128, 0, 1)\nHSL:   hsl(30, 100%, 50%)\nHSLA:  hsla(30, 100%, 50%, 1)\nCMYK:  cmyk(0%, 50%, 100%, 0%)",
+      "value": "Hex:  #ff8000\nRGB:  rgb(255, 128, 0)\nRGBA: rgba(255, 128, 0, 1)\nHSL:  hsl(30, 100%, 50%)\nHSLA: hsla(30, 100%, 50%, 1)\nCMYK: cmyk(0%, 50%, 100%, 0%)",
       "enc": "utf8"
     }
   },
@@ -163,7 +163,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Hex:   #000000\nRGB:   rgb(0, 0, 0)\nRGBA:  rgba(0, 0, 0, 1)\nHSL:   hsl(0, 0%, 0%)\nHSLA:  hsla(0, 0%, 0%, 1)\nCMYK:  cmyk(0%, 0%, 0%, 100%)",
+      "value": "Hex:  #000000\nRGB:  rgb(0, 0, 0)\nRGBA: rgba(0, 0, 0, 1)\nHSL:  hsl(0, 0%, 0%)\nHSLA: hsla(0, 0%, 0%, 1)\nCMYK: cmyk(0%, 0%, 0%, 100%)",
       "enc": "utf8"
     }
   },
@@ -177,7 +177,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Hex:   #ffffff\nRGB:   rgb(255, 255, 255)\nRGBA:  rgba(255, 255, 255, 1)\nHSL:   hsl(0, 0%, 100%)\nHSLA:  hsla(0, 0%, 100%, 1)\nCMYK:  cmyk(0%, 0%, 0%, 0%)",
+      "value": "Hex:  #ffffff\nRGB:  rgb(255, 255, 255)\nRGBA: rgba(255, 255, 255, 1)\nHSL:  hsl(0, 0%, 100%)\nHSLA: hsla(0, 0%, 100%, 1)\nCMYK: cmyk(0%, 0%, 0%, 0%)",
       "enc": "utf8"
     }
   },
@@ -191,7 +191,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Hex:   #0000ff\nRGB:   rgb(0, 0, 255)\nRGBA:  rgba(0, 0, 255, 1)\nHSL:   hsl(240, 100%, 50%)\nHSLA:  hsla(240, 100%, 50%, 1)\nCMYK:  cmyk(100%, 100%, 0%, 0%)",
+      "value": "Hex:  #0000ff\nRGB:  rgb(0, 0, 255)\nRGBA: rgba(0, 0, 255, 1)\nHSL:  hsl(240, 100%, 50%)\nHSLA: hsla(240, 100%, 50%, 1)\nCMYK: cmyk(100%, 100%, 0%, 0%)",
       "enc": "utf8"
     }
   },
@@ -205,7 +205,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Hex:   #808080\nRGB:   rgb(128, 128, 128)\nRGBA:  rgba(128, 128, 128, 1)\nHSL:   hsl(0, 0%, 50%)\nHSLA:  hsla(0, 0%, 50%, 1)\nCMYK:  cmyk(0%, 0%, 0%, 50%)",
+      "value": "Hex:  #808080\nRGB:  rgb(128, 128, 128)\nRGBA: rgba(128, 128, 128, 1)\nHSL:  hsl(0, 0%, 50%)\nHSLA: hsla(0, 0%, 50%, 1)\nCMYK: cmyk(0%, 0%, 0%, 50%)",
       "enc": "utf8"
     }
   },
@@ -219,7 +219,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Hex:   #00000000\nRGB:   rgb(0, 0, 0)\nRGBA:  rgba(0, 0, 0, 0)\nHSL:   hsl(0, 0%, 0%)\nHSLA:  hsla(0, 0%, 0%, 0)\nCMYK:  cmyk(0%, 0%, 0%, 100%)",
+      "value": "Hex:  #00000000\nRGB:  rgb(0, 0, 0)\nRGBA: rgba(0, 0, 0, 0)\nHSL:  hsl(0, 0%, 0%)\nHSLA: hsla(0, 0%, 0%, 0)\nCMYK: cmyk(0%, 0%, 0%, 100%)",
       "enc": "utf8"
     }
   },

@@ -640,18 +640,34 @@
     }
   },
   {
+    "name": "mod: 15 4 7 modulo 3, each number on its own",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:mod",
+    "params": {
+      "modulus": "3"
+    },
+    "input": {
+      "value": "15\n4\n7",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0 1 1",
+      "enc": "utf8"
+    }
+  },
+  {
     "name": "mod: -7 mod 3 keeps the sign of the dividend",
     "ref": "exact rational arithmetic, computed with Python fractions",
     "op": "arith:mod",
     "params": {
-      "delimiter": "newline"
+      "modulus": "3"
     },
     "input": {
-      "value": "-7\n3",
+      "value": "-7\n7\n8",
       "enc": "utf8"
     },
     "expect": {
-      "value": "-1",
+      "value": "-1 1 2",
       "enc": "utf8"
     }
   },
@@ -660,14 +676,14 @@
     "ref": "exact rational arithmetic, computed with Python fractions",
     "op": "arith:mod",
     "params": {
-      "delimiter": "newline"
+      "modulus": "-3"
     },
     "input": {
-      "value": "7\n-3",
+      "value": "7\n-7",
       "enc": "utf8"
     },
     "expect": {
-      "value": "1",
+      "value": "1 -1",
       "enc": "utf8"
     }
   },
@@ -676,10 +692,10 @@
     "ref": "exact rational arithmetic, computed with Python fractions",
     "op": "arith:mod",
     "params": {
-      "delimiter": "newline"
+      "modulus": "2"
     },
     "input": {
-      "value": "5.5\n2",
+      "value": "5.5",
       "enc": "utf8"
     },
     "expect": {
@@ -688,34 +704,18 @@
     }
   },
   {
-    "name": "mod: left to right: 10 mod 4 mod 3",
-    "ref": "exact rational arithmetic, computed with Python fractions",
-    "op": "arith:mod",
-    "params": {
-      "delimiter": "newline"
-    },
-    "input": {
-      "value": "10\n4\n3",
-      "enc": "utf8"
-    },
-    "expect": {
-      "value": "2",
-      "enc": "utf8"
-    }
-  },
-  {
     "name": "mod: exact decimals: 0.3 mod 0.1",
     "ref": "exact rational arithmetic, computed with Python fractions",
     "op": "arith:mod",
     "params": {
-      "delimiter": "newline"
+      "modulus": "0.1"
     },
     "input": {
-      "value": "0.3\n0.1",
+      "value": "0.3\n0.35",
       "enc": "utf8"
     },
     "expect": {
-      "value": "0",
+      "value": "0 0.05",
       "enc": "utf8"
     }
   },
@@ -724,30 +724,77 @@
     "ref": "exact rational arithmetic, computed with Python fractions",
     "op": "arith:mod",
     "params": {
-      "delimiter": "newline"
+      "modulus": "1000000007"
     },
     "input": {
       "value": "1000000000000000000000000000057\n1000000007",
       "enc": "utf8"
     },
     "expect": {
-      "value": "999657064",
+      "value": "999657064 0",
       "enc": "utf8"
     }
   },
   {
-    "name": "mod: smaller than the divisor",
+    "name": "mod: smaller than the modulus",
     "ref": "exact rational arithmetic, computed with Python fractions",
     "op": "arith:mod",
     "params": {
-      "delimiter": "newline"
+      "modulus": "9"
     },
     "input": {
       "value": "2\n9",
       "enc": "utf8"
     },
     "expect": {
-      "value": "2",
+      "value": "2 0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mod: the default modulus is 2",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:mod",
+    "params": {},
+    "input": {
+      "value": "1\n2\n3\n4",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1 0 1 0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mod: comma delimiter, joined by a space",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:mod",
+    "params": {
+      "modulus": "5",
+      "delimiter": "comma"
+    },
+    "input": {
+      "value": "10,11,12",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0 1 2",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mod: a modulus with an exponent",
+    "ref": "exact rational arithmetic, computed with Python fractions",
+    "op": "arith:mod",
+    "params": {
+      "modulus": "1e1"
+    },
+    "input": {
+      "value": "100\n101",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0 1",
       "enc": "utf8"
     }
   },
@@ -1216,36 +1263,6 @@
     }
   },
   {
-    "name": "mod: a piece that is not a number",
-    "ref": "documented in the word doc",
-    "op": "arith:mod",
-    "params": {
-      "delimiter": "newline"
-    },
-    "input": {
-      "value": "1\nabc\n3",
-      "enc": "utf8"
-    },
-    "expect": {
-      "error": "E_COERCE"
-    }
-  },
-  {
-    "name": "mod: no numbers",
-    "ref": "documented in the word doc",
-    "op": "arith:mod",
-    "params": {
-      "delimiter": "newline"
-    },
-    "input": {
-      "value": "",
-      "enc": "utf8"
-    },
-    "expect": {
-      "error": "E_RANGE"
-    }
-  },
-  {
     "name": "mean: a piece that is not a number",
     "ref": "documented in the word doc",
     "op": "arith:mean",
@@ -1486,21 +1503,6 @@
     }
   },
   {
-    "name": "mod: modulo zero",
-    "ref": "documented in the word doc",
-    "op": "arith:mod",
-    "params": {
-      "delimiter": "newline"
-    },
-    "input": {
-      "value": "5\n0",
-      "enc": "utf8"
-    },
-    "expect": {
-      "error": "E_DIV_ZERO"
-    }
-  },
-  {
     "name": "standard-deviation: sample of one number",
     "ref": "documented in the word doc",
     "op": "arith:standard-deviation",
@@ -1552,15 +1554,14 @@
     "ref": "Wikipedia, Extended Euclidean algorithm (worked example), re-checked in Python",
     "op": "arith:ext-gcd",
     "params": {
-      "b": "46",
-      "delimiter": "newline"
+      "b": "46"
     },
     "input": {
       "value": "240",
       "enc": "utf8"
     },
     "expect": {
-      "value": "2\n-9\n47",
+      "value": "gcd: 2\n\nBezout coefficients:\nx = -9\ny = 47\n\n",
       "enc": "utf8"
     }
   },
@@ -1569,15 +1570,14 @@
     "ref": "Python math.gcd, with a*x + b*y = g asserted",
     "op": "arith:ext-gcd",
     "params": {
-      "b": "46",
-      "delimiter": "newline"
+      "b": "46"
     },
     "input": {
       "value": "-240",
       "enc": "utf8"
     },
     "expect": {
-      "value": "2\n9\n47",
+      "value": "gcd: 2\n\nBezout coefficients:\nx = 9\ny = 47\n\n",
       "enc": "utf8"
     }
   },
@@ -1586,15 +1586,14 @@
     "ref": "Python math.gcd, with a*x + b*y = g asserted",
     "op": "arith:ext-gcd",
     "params": {
-      "b": "-46",
-      "delimiter": "newline"
+      "b": "-46"
     },
     "input": {
       "value": "240",
       "enc": "utf8"
     },
     "expect": {
-      "value": "2\n-9\n-47",
+      "value": "gcd: 2\n\nBezout coefficients:\nx = -9\ny = -47\n\n",
       "enc": "utf8"
     }
   },
@@ -1603,15 +1602,14 @@
     "ref": "Python math.gcd, with a*x + b*y = g asserted",
     "op": "arith:ext-gcd",
     "params": {
-      "b": "-46",
-      "delimiter": "comma"
+      "b": "-46"
     },
     "input": {
       "value": "-240",
       "enc": "utf8"
     },
     "expect": {
-      "value": "2,9,-47",
+      "value": "gcd: 2\n\nBezout coefficients:\nx = 9\ny = -47\n\n",
       "enc": "utf8"
     }
   },
@@ -1620,15 +1618,14 @@
     "ref": "Python math.gcd, with a*x + b*y = g asserted",
     "op": "arith:ext-gcd",
     "params": {
-      "b": "3120",
-      "delimiter": "newline"
+      "b": "3120"
     },
     "input": {
       "value": "17",
       "enc": "utf8"
     },
     "expect": {
-      "value": "1\n-367\n2",
+      "value": "gcd: 1\n\nBezout coefficients:\nx = -367\ny = 2\n\n",
       "enc": "utf8"
     }
   },
@@ -1637,15 +1634,14 @@
     "ref": "Python math.gcd, with a*x + b*y = g asserted",
     "op": "arith:ext-gcd",
     "params": {
-      "b": "5",
-      "delimiter": "newline"
+      "b": "5"
     },
     "input": {
       "value": "0",
       "enc": "utf8"
     },
     "expect": {
-      "value": "5\n0\n1",
+      "value": "gcd: 5\n\nBezout coefficients:\nx = 0\ny = 1\n\n",
       "enc": "utf8"
     }
   },
@@ -1654,15 +1650,14 @@
     "ref": "Python math.gcd, with a*x + b*y = g asserted",
     "op": "arith:ext-gcd",
     "params": {
-      "b": "0",
-      "delimiter": "newline"
+      "b": "0"
     },
     "input": {
       "value": "17",
       "enc": "utf8"
     },
     "expect": {
-      "value": "17\n1\n0",
+      "value": "gcd: 17\n\nBezout coefficients:\nx = 1\ny = 0\n\n",
       "enc": "utf8"
     }
   },
@@ -1671,15 +1666,14 @@
     "ref": "Python math.gcd, with a*x + b*y = g asserted",
     "op": "arith:ext-gcd",
     "params": {
-      "b": "0",
-      "delimiter": "newline"
+      "b": "0"
     },
     "input": {
       "value": "0",
       "enc": "utf8"
     },
     "expect": {
-      "value": "0\n1\n0",
+      "value": "gcd: 0\n\nBezout coefficients:\nx = 1\ny = 0\n\n",
       "enc": "utf8"
     }
   },
@@ -1688,15 +1682,14 @@
     "ref": "Python math.gcd, with a*x + b*y = g asserted",
     "op": "arith:ext-gcd",
     "params": {
-      "b": "7",
-      "delimiter": "newline"
+      "b": "7"
     },
     "input": {
       "value": "7",
       "enc": "utf8"
     },
     "expect": {
-      "value": "7\n0\n1",
+      "value": "gcd: 7\n\nBezout coefficients:\nx = 0\ny = 1\n\n",
       "enc": "utf8"
     }
   },
@@ -1705,15 +1698,14 @@
     "ref": "Python math.gcd, with a*x + b*y = g asserted",
     "op": "arith:ext-gcd",
     "params": {
-      "b": "36",
-      "delimiter": "space"
+      "b": "36"
     },
     "input": {
       "value": "12",
       "enc": "utf8"
     },
     "expect": {
-      "value": "12 1 0",
+      "value": "gcd: 12\n\nBezout coefficients:\nx = 1\ny = 0\n\n",
       "enc": "utf8"
     }
   },
@@ -1722,15 +1714,14 @@
     "ref": "Python math.gcd, with a*x + b*y = g asserted",
     "op": "arith:ext-gcd",
     "params": {
-      "b": "98765432109876543210",
-      "delimiter": "newline"
+      "b": "98765432109876543210"
     },
     "input": {
       "value": "12345678901234567890123",
       "enc": "utf8"
     },
     "expect": {
-      "value": "3\n3935555305271604311\n-491944408676107074025",
+      "value": "gcd: 3\n\nBezout coefficients:\nx = 3935555305271604311\ny = -491944408676107074025\n\n",
       "enc": "utf8"
     }
   },
@@ -1739,15 +1730,14 @@
     "ref": "Python math.gcd, with a*x + b*y = g asserted",
     "op": "arith:ext-gcd",
     "params": {
-      "b": "155576970220531065681649693",
-      "delimiter": "newline"
+      "b": "155576970220531065681649693"
     },
     "input": {
       "value": "251728825683549488150424261",
       "enc": "utf8"
     },
     "expect": {
-      "value": "1\n59425114757512643212875125\n-96151855463018422468774568",
+      "value": "gcd: 1\n\nBezout coefficients:\nx = 59425114757512643212875125\ny = -96151855463018422468774568\n\n",
       "enc": "utf8"
     }
   },
@@ -1756,15 +1746,14 @@
     "ref": "Python math.gcd, with a*x + b*y = g asserted",
     "op": "arith:ext-gcd",
     "params": {
-      "b": " 46 ",
-      "delimiter": "newline"
+      "b": " 46 "
     },
     "input": {
       "value": " 240 ",
       "enc": "utf8"
     },
     "expect": {
-      "value": "2\n-9\n47",
+      "value": "gcd: 2\n\nBezout coefficients:\nx = -9\ny = 47\n\n",
       "enc": "utf8"
     }
   },
@@ -1773,8 +1762,7 @@
     "ref": "documented in the word doc",
     "op": "arith:ext-gcd",
     "params": {
-      "b": "3",
-      "delimiter": "newline"
+      "b": "3"
     },
     "input": {
       "value": "2.5",
@@ -1789,8 +1777,7 @@
     "ref": "documented in the word doc",
     "op": "arith:ext-gcd",
     "params": {
-      "b": "x",
-      "delimiter": "newline"
+      "b": "x"
     },
     "input": {
       "value": "2",
@@ -1805,8 +1792,7 @@
     "ref": "documented in the word doc",
     "op": "arith:ext-gcd",
     "params": {
-      "b": "3",
-      "delimiter": "newline"
+      "b": "3"
     },
     "input": {
       "value": "",
@@ -2180,6 +2166,66 @@
     },
     "input": {
       "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "mod: a piece that is not a number",
+    "ref": "documented in the word doc",
+    "op": "arith:mod",
+    "params": {
+      "modulus": "3"
+    },
+    "input": {
+      "value": "1\nabc\n3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "mod: no numbers",
+    "ref": "documented in the word doc",
+    "op": "arith:mod",
+    "params": {
+      "modulus": "3"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "mod: modulo zero",
+    "ref": "documented in the word doc",
+    "op": "arith:mod",
+    "params": {
+      "modulus": "0"
+    },
+    "input": {
+      "value": "5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_DIV_ZERO"
+    }
+  },
+  {
+    "name": "mod: the modulus is not a number",
+    "ref": "documented in the word doc",
+    "op": "arith:mod",
+    "params": {
+      "modulus": "two"
+    },
+    "input": {
+      "value": "5",
       "enc": "utf8"
     },
     "expect": {

@@ -1,4 +1,18 @@
 [
- {"cyberchef": "Pseudo-Random Number Generator", "status": "redesigned", "forge": ["prng:bytes"], "note": "Bytes out: a number of random bytes (32 by default, 0 to 1 MiB) from the host CSPRNG (crypto.getRandomValues, never Math.random). CyberChef's Hex, Integer, Byte array and Raw output menu is a chain step (hex:encode, base64:encode, and so on). Like CyberChef the input is ignored. A host with no random source is E_PRIMITIVE."},
- {"cyberchef": "Pseudo-Random Integer Generator", "status": "redesigned", "forge": ["prng:integers"], "note": "Count integers, each uniform in [min, max] with both ends included (rejection sampling on the host CSPRNG, no modulo bias, big integers allowed), written as decimal text joined by a delimiter chosen from the wave 5 list (newline by default). Defaults min 0, max 99, count 1. The input is ignored; min above max is E_RANGE; count is limited to 65,536."}
+  {
+    "cyberchef": "Pseudo-Random Number Generator",
+    "status": "redesigned",
+    "forge": [
+      "prng:bytes"
+    ],
+    "note": "Bytes out: a number of random bytes (32 by default, 0 to 1 MiB) from the host CSPRNG (crypto.getRandomValues, never Math.random). CyberChef's Hex (its default), Integer, Byte array and Raw output menu is a chain step (hex:encode, base64:encode, and so on). Like CyberChef the input is ignored. A host with no random source is E_PRIMITIVE."
+  },
+  {
+    "cyberchef": "Pseudo-Random Integer Generator",
+    "status": "redesigned",
+    "forge": [
+      "prng:integers"
+    ],
+    "note": "Count integers, each uniform in [min, max] with both ends included (rejection sampling on the host CSPRNG, no modulo bias, big integers allowed), written as decimal text joined by a delimiter chosen from the wave 5 list (a space by default, as in CyberChef). Defaults min 0, max 99, count 1, as CyberChef. CyberChef's Output menu (Raw, Hex, Decimal) is not offered: the integers are decimal text (hex:encode and the other chain steps cover the rest), and the bounds may exceed 2^53. The input is ignored; min above max is E_RANGE; count is limited to 65,536."
+  }
 ]

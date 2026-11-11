@@ -828,5 +828,19 @@
     "expect": {
       "error": "E_RANGE"
     }
+  },
+  {
+    "name": "haversine: CyberChef's one line of four numbers",
+    "ref": "haversine formula on a sphere of radius 6371 km, computed independently in Python (math.asin form)",
+    "op": "coords:haversine",
+    "params": {},
+    "input": {
+      "value": "51.487263,-0.124323, 38.9517,-77.1467",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "5902542.836",
+      "enc": "utf8"
+    }
   }
 ]

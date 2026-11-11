@@ -19,10 +19,26 @@
     }
   },
   {
-    "name": "diff: defaults",
-    "ref": "hand-computed from the definition in the doc string",
+    "name": "diff: defaults compare characters, with the changes marked in line",
+    "ref": "by character is the default, as in CyberChef; the markers are [-deleted-] and {+inserted+} (hand-computed)",
     "op": "diff:compare",
     "params": {},
+    "input": {
+      "value": "x\ny\n\nx\nz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "x\n[-y-]{+z+}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "diff: by line is a unified-style text",
+    "ref": "unified diff text of two one-line changes (hand-computed)",
+    "op": "diff:compare",
+    "params": {
+      "by": "line"
+    },
     "input": {
       "value": "x\ny\n\nx\nz",
       "enc": "utf8"

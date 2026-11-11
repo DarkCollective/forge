@@ -389,5 +389,54 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "v3 of the input in the default namespace",
+    "ref": "RFC 9562 name-based UUID, computed with Python uuid.uuid3 (the input is the name)",
+    "op": "uuid:generate",
+    "params": {
+      "version": "v3"
+    },
+    "input": {
+      "value": "hello",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d6da4961-8758-3667-8620-de76de449582",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "v5 of the input in the default namespace",
+    "ref": "RFC 9562 name-based UUID, computed with Python uuid.uuid5 (the input is the name)",
+    "op": "uuid:generate",
+    "params": {
+      "version": "v5"
+    },
+    "input": {
+      "value": "hello",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "b26a20d5-4cd2-57db-933f-503d70f7580d",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "v5, the name parameter wins over the input",
+    "ref": "RFC 9562 name-based UUID, computed with Python uuid.uuid5",
+    "op": "uuid:generate",
+    "params": {
+      "version": "v5",
+      "name": "hello"
+    },
+    "input": {
+      "value": "ignored",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "b26a20d5-4cd2-57db-933f-503d70f7580d",
+      "enc": "utf8"
+    }
   }
 ]

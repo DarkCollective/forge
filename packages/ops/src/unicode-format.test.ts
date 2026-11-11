@@ -56,8 +56,8 @@ describe("unicode-format:decorate", () => {
     expect(await decorate("abc", false, true)).toBe(`a${S}b${S}c${S}`);
   });
 
-  test("both: the underline first", async () => {
-    expect(await decorate("ab", true, true)).toBe(`a${U}${S}b${U}${S}`);
+  test("both: the strikethrough first, as in CyberChef", async () => {
+    expect(await decorate("ab", true, true)).toBe(`a${S}${U}b${S}${U}`);
   });
 
   test("neither leaves the text alone", async () => {
@@ -78,6 +78,6 @@ describe("unicode-format:decorate", () => {
     const big = "x".repeat(60_000);
     const r = await decorate(big, true, true);
     expect(r).toHaveLength(180_000);
-    expect(r.startsWith(`x${U}${S}x${U}${S}`)).toBe(true);
+    expect(r.startsWith(`x${S}${U}x${S}${U}`)).toBe(true);
   });
 });

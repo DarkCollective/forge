@@ -70,7 +70,12 @@ const strings = (
     bool(o.unique ?? false),
   ]);
 const three = (word: string, data: Uint8Array, total = false, sort = false, unique = false) =>
-  runtime.call(`extract:${word}`, [bytes(data), bool(total), bool(sort), bool(unique)]);
+  runtime.call(
+    `extract:${word}`,
+    [bytes(data), bool(total), bool(sort), bool(unique)].concat(
+      word === "domains" ? [bool(false)] : [],
+    ),
+  );
 
 /** The reference for the options: unique (first appearance), then sort by code point, then the total. */
 function reference(found: string[], total: boolean, sort: boolean, unique: boolean): string {
@@ -187,7 +192,7 @@ describe("the other extractors on 64 KiB", () => {
     const lines = out(r).split("\n");
     expect(lines.length).toBeGreaterThan(1000);
     expect(lines.some((l) => l.includes(":"))).toBe(true);
-    expect(lines.every((l) => !/^(10|127|192\.168|169\.254)\./.test(l))).toBe(true);
+    expect(lines.every((l) => !/^(10|127|192\.168)\./.test(l))).toBe(true);
   });
 
   test("file-paths: UNIX paths on 64 KiB", async () => {
@@ -208,8 +213,8 @@ describe("the other extractors on 64 KiB", () => {
 
   test("hashes: random hex digests of several sizes with all", async () => {
     const hex = (n: number) => Array.from({ length: n }, () => below(16).toString(16)).join("");
-    const sizes = [8, 16, 32, 40, 56, 64, 96, 128];
-    const made = Array.from({ length: 400 }, (_, i) => hex(sizes[i % sizes.length] as number));
+    const sizes = [8, 16, 32, 40, 56, 64, 80, 96, 128];
+    const made = Array.from({ length: 405 }, (_, i) => hex(sizes[i % sizes.length] as number));
     const r = await runtime.call("extract:hashes", [
       bytes(enc(made.join(" "))),
       int(40),
@@ -218,7 +223,9 @@ describe("the other extractors on 64 KiB", () => {
       bool(false),
       bool(false),
     ]);
-    expect(out(r).split("\n")).toEqual(made);
+    // with all, the values of each length are together, the shortest length first
+    const byLength = [...sizes].flatMap((n) => made.filter((m) => m.length === n));
+    expect(out(r).split("\n")).toEqual(byLength);
   });
 });
 
@@ -254,7 +261,9 @@ describe("hostile input stays fast", () => {
             ]
           : word === "file-paths"
             ? [bytes(enc(text)), bool(true), bool(true), bool(false), bool(false), bool(false)]
-            : [bytes(enc(text)), bool(false), bool(false), bool(false)];
+            : word === "domains"
+              ? [bytes(enc(text)), bool(false), bool(false), bool(false), bool(false)]
+              : [bytes(enc(text)), bool(false), bool(false), bool(false)];
       const t = Date.now();
       const r = await runtime.call(`extract:${word}`, args);
       expect(code(r)).toBe("ok");

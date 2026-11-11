@@ -71,15 +71,22 @@ IN: set
   dup 1 nth swap 0 nth [ over _pairs ] map nip { } [ cat ] reduce item-delimiter join ;
 
 : _grow ( acc:list item:str -- list )
-  acc acc [ item append ] map cat ;
+  acc acc [ { item } swap cat ] map cat ;
 
+\ The subsets in CyberChef's order: counting in binary with the first item as the most significant bit (items added
+\ last to first, each in front of the subsets so far), then a stable sort by the length of the written subset.
 : power-set ( data:str item-delimiter:str[1..]="," subset-delimiter:str[1..]="\n" -- str )
-  "The power set of one set: all its subsets, 2 to the power n of them, each written as its items joined by the item delimiter and the subsets joined by the subset delimiter. The order is the one of adding the items one at a time: the empty set (an empty line) first, then each item followed by its combinations with the items before it (for a,b,c: empty, a, b, a+b, c, a+c, b+c, a+b+c). The set is cut at the item delimiter, duplicates removed; it may have at most 16 items (E_RANGE beyond that) because the output doubles with every item." doc
+  "The power set of one set: all its subsets, 2 to the power n of them, each written as its items joined by the item delimiter and each followed by the subset delimiter, as CyberChef writes them (the result ends with the subset delimiter). The order is CyberChef's: the subsets in binary counting order with the first item as the most significant bit (for a,b,c: empty, c, b, b+c, a, a+c, a+b, a+b+c), then stably sorted by the length of the written subset, so a longer item can come after a subset of more items. The set is cut at the item delimiter; empty items and duplicates are removed (CyberChef keeps duplicates); it may have at most 16 items (E_RANGE beyond that) because the output doubles with every item. An empty set gives an empty result." doc
   "Arithmetic" category
-  data item-delimiter _parse-set
-  dup len 16 > [ "the power set is limited to 16 items" raise:range ] when
-  { { } } [ _grow ] reduce
-  [ item-delimiter join ] map subset-delimiter join ;
+  data item-delimiter _parse-set [ len 0 > ] filter
+  dup len 0 =
+  [ drop "" ]
+  [ dup len 16 > [ "the power set is limited to 16 items" raise:range ] when
+    rev { { } } [ _grow ] reduce
+    [ item-delimiter join ] map
+    dup [ len ] map list:sort-by
+    [ subset-delimiter cat ] map "" join ]
+  if ;
 
 META: union
   param sample-delimiter "The text between the sets." ;

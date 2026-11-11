@@ -42,14 +42,15 @@ describe("catalogue", () => {
 
 describe("to leet", () => {
   test("the basic table, in either case", async () => {
-    expect(await convert("abegiostz")).toBe("483610572");
-    expect(await convert("ABEGIOSTZ")).toBe("483610572");
+    expect(await convert("abegiostz")).toBe("4b3g1057z");
+    expect(await convert("ABEGIOSTZ")).toBe("4B3G1057Z");
     expect(await convert("Leet speak")).toBe("L337 5p34k");
     expect(await convert("ELITE")).toBe("3L173");
   });
 
   test("the extended table", async () => {
     expect(await convert("abegiostzcdhlqx", "to", "extended")).toBe("483610572()#|9%");
+    expect(await convert("483610572()#|9%", "from", "extended")).toBe("abegiostzcdhlqx");
     expect(await convert("Hello World", "to", "extended")).toBe("#3||0 W0r|)");
   });
 
@@ -63,7 +64,8 @@ describe("to leet", () => {
 
 describe("from leet", () => {
   test("the basic table", async () => {
-    expect(await convert("483610572", "from")).toBe("abegiostz");
+    expect(await convert("431057", "from")).toBe("aeiost");
+    expect(await convert("8 6 2", "from")).toBe("8 6 2");
     expect(await convert("L337 5p34k", "from")).toBe("Leet speak");
   });
 

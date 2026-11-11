@@ -1,90 +1,90 @@
 [
- {
-  "cyberchef": "Sum",
-  "status": "redesigned",
-  "forge": [
-   "arith:sum"
-  ],
-  "note": "Exact decimal arithmetic (0.1 + 0.2 is 0.3, integers of any size are exact). The numbers are cut at a delimiter from the wave 5 list (a line feed by default; CyberChef offers line feed, space, comma, semi-colon, colon and CRLF, and Forge adds cr and tab), blanks around a number and blank pieces are skipped. A piece that is not a number is E_COERCE naming it (CyberChef silently ignores it); no numbers is E_RANGE. The result is plain decimal text with no trailing zeros."
- },
- {
-  "cyberchef": "Subtract",
-  "status": "redesigned",
-  "forge": [
-   "arith:subtract"
-  ],
-  "note": "The first number minus the others, left to right, exact. The numbers are cut at a delimiter from the wave 5 list (a line feed by default; CyberChef offers line feed, space, comma, semi-colon, colon and CRLF, and Forge adds cr and tab), blanks around a number and blank pieces are skipped. A piece that is not a number is E_COERCE (CyberChef ignores it); no numbers is E_RANGE."
- },
- {
-  "cyberchef": "Multiply",
-  "status": "redesigned",
-  "forge": [
-   "arith:multiply"
-  ],
-  "note": "The product of all the numbers, exact (integers of any size up to the 65,536-bit limit). The numbers are cut at a delimiter from the wave 5 list (a line feed by default; CyberChef offers line feed, space, comma, semi-colon, colon and CRLF, and Forge adds cr and tab), blanks around a number and blank pieces are skipped. A piece that is not a number is E_COERCE (CyberChef ignores it); no numbers is E_RANGE."
- },
- {
-  "cyberchef": "Divide",
-  "status": "redesigned",
-  "forge": [
-   "arith:divide"
-  ],
-  "note": "The first number divided by the others, left to right; each step is rounded half away from zero to 20 decimal places, the BigNumber defaults CyberChef uses, so results match. Division by zero is E_DIV_ZERO (CyberChef prints Infinity or NaN). The numbers are cut at a delimiter from the wave 5 list (a line feed by default; CyberChef offers line feed, space, comma, semi-colon, colon and CRLF, and Forge adds cr and tab), blanks around a number and blank pieces are skipped. A piece that is not a number is E_COERCE (CyberChef ignores it)."
- },
- {
-  "cyberchef": "MOD",
-  "status": "redesigned",
-  "forge": [
-   "arith:mod"
-  ],
-  "note": "The remainder of the first number divided by the others, left to right, exact for decimals; the sign is the dividend's (the BigNumber default). A zero divisor is E_DIV_ZERO. The numbers are cut at a delimiter from the wave 5 list (a line feed by default; CyberChef offers line feed, space, comma, semi-colon, colon and CRLF, and Forge adds cr and tab), blanks around a number and blank pieces are skipped. A piece that is not a number is E_COERCE (CyberChef ignores it)."
- },
- {
-  "cyberchef": "Mean",
-  "status": "redesigned",
-  "forge": [
-   "arith:mean"
-  ],
-  "note": "The exact sum divided by the count, rounded half away from zero to 20 decimal places. The numbers are cut at a delimiter from the wave 5 list (a line feed by default; CyberChef offers line feed, space, comma, semi-colon, colon and CRLF, and Forge adds cr and tab), blanks around a number and blank pieces are skipped. A piece that is not a number is E_COERCE (CyberChef ignores it)."
- },
- {
-  "cyberchef": "Median",
-  "status": "redesigned",
-  "forge": [
-   "arith:median"
-  ],
-  "note": "The middle of the sorted numbers, or the mean of the middle two (20 decimal places). The numbers are cut at a delimiter from the wave 5 list (a line feed by default; CyberChef offers line feed, space, comma, semi-colon, colon and CRLF, and Forge adds cr and tab), blanks around a number and blank pieces are skipped. A piece that is not a number is E_COERCE (CyberChef ignores it)."
- },
- {
-  "cyberchef": "Standard Deviation",
-  "status": "redesigned",
-  "forge": [
-   "arith:standard-deviation"
-  ],
-  "note": "The square root of the variance, with the mean, the variance and the root each rounded to 20 decimal places. kind chooses the population deviation (n, the default and CyberChef's choice) or the sample deviation (n - 1, a Forge addition; one number is then E_RANGE). The numbers are cut at a delimiter from the wave 5 list (a line feed by default; CyberChef offers line feed, space, comma, semi-colon, colon and CRLF, and Forge adds cr and tab), blanks around a number and blank pieces are skipped. A piece that is not a number is E_COERCE (CyberChef ignores it)."
- },
- {
-  "cyberchef": "Extended GCD",
-  "status": "redesigned",
-  "forge": [
-   "arith:ext-gcd"
-  ],
-  "note": "Integers of any size: the input is a and the parameter b is a second integer (a text parameter, so it can be big). The output is g, x and y joined by a delimiter (a line feed by default) with a*x + b*y = g and g the greatest common divisor (never negative); the coefficients are those of the iterative algorithm on the absolute values with the signs put back. Not an integer is E_COERCE."
- },
- {
-  "cyberchef": "Modular Exponentiation",
-  "status": "redesigned",
-  "forge": [
-   "arith:mod-pow"
-  ],
-  "note": "Integers of any size: the input is the base, the parameters exponent and modulus are text. The result is in 0 to modulus - 1. A negative exponent or a modulus below 1 is E_RANGE; not an integer is E_COERCE."
- },
- {
-  "cyberchef": "Modular Inverse",
-  "status": "redesigned",
-  "forge": [
-   "arith:mod-inverse"
-  ],
-  "note": "Integers of any size: the input is a, the parameter modulus is text. The result is in 0 to modulus - 1; no inverse (a shares a factor with the modulus) or a modulus below 1 is E_RANGE; not an integer is E_COERCE."
- }
+  {
+    "cyberchef": "Sum",
+    "status": "covered",
+    "forge": [
+      "arith:sum"
+    ],
+    "note": "Exact decimal arithmetic (0.1 + 0.2 is 0.3, integers of any size are exact). The numbers are cut at a delimiter from the wave 5 list (a line feed by default, as in CyberChef; Forge adds cr and tab), blanks around a number and blank pieces are skipped. Where CyberChef silently ignores a piece that is not a number (and reads 0xff as hexadecimal), Forge raises E_COERCE naming it; no numbers at all is E_RANGE where CyberChef prints NaN. The arithmetic is exact decimal, as BigNumber's. The result is plain decimal text with no trailing zeros."
+  },
+  {
+    "cyberchef": "Subtract",
+    "status": "covered",
+    "forge": [
+      "arith:subtract"
+    ],
+    "note": "The first number minus the others, left to right, exact. The numbers are cut at a delimiter from the wave 5 list (a line feed by default, as in CyberChef; Forge adds cr and tab), blanks around a number and blank pieces are skipped. Where CyberChef silently ignores a piece that is not a number (and reads 0xff as hexadecimal), Forge raises E_COERCE naming it; no numbers at all is E_RANGE where CyberChef prints NaN. The arithmetic is exact decimal, as BigNumber's."
+  },
+  {
+    "cyberchef": "Multiply",
+    "status": "covered",
+    "forge": [
+      "arith:multiply"
+    ],
+    "note": "The product of all the numbers, exact (integers of any size up to the 65,536-bit limit). The numbers are cut at a delimiter from the wave 5 list (a line feed by default, as in CyberChef; Forge adds cr and tab), blanks around a number and blank pieces are skipped. Where CyberChef silently ignores a piece that is not a number (and reads 0xff as hexadecimal), Forge raises E_COERCE naming it; no numbers at all is E_RANGE where CyberChef prints NaN. The arithmetic is exact decimal, as BigNumber's."
+  },
+  {
+    "cyberchef": "Divide",
+    "status": "covered",
+    "forge": [
+      "arith:divide"
+    ],
+    "note": "The first number divided by the others, left to right; each step is rounded half away from zero to 20 decimal places, the BigNumber defaults CyberChef uses, so results match. Division by zero is E_DIV_ZERO (CyberChef prints Infinity or NaN). The numbers are cut at a delimiter from the wave 5 list (a line feed by default, as in CyberChef; Forge adds cr and tab), blanks around a number and blank pieces are skipped. Where CyberChef silently ignores a piece that is not a number (and reads 0xff as hexadecimal), Forge raises E_COERCE naming it; no numbers at all is E_RANGE where CyberChef prints NaN. The arithmetic is exact decimal, as BigNumber's."
+  },
+  {
+    "cyberchef": "MOD",
+    "status": "covered",
+    "forge": [
+      "arith:mod"
+    ],
+    "note": "Every number of the list modulo the modulus (2 by default), joined by a single space whatever the delimiter is, as CyberChef writes it (15 4 7 modulo 3 is 0 1 1). The remainder has the sign of the dividend, like BigNumber's default, and is exact for decimals. The modulus is a text parameter, so it can be any decimal. A zero modulus is E_DIV_ZERO. The numbers are cut at a delimiter from the wave 5 list (a line feed by default, as in CyberChef; Forge adds cr and tab), blanks around a number and blank pieces are skipped. Where CyberChef silently ignores a piece that is not a number (and reads 0xff as hexadecimal), Forge raises E_COERCE naming it; no numbers at all is E_RANGE where CyberChef prints NaN. The arithmetic is exact decimal, as BigNumber's."
+  },
+  {
+    "cyberchef": "Mean",
+    "status": "covered",
+    "forge": [
+      "arith:mean"
+    ],
+    "note": "The exact sum divided by the count, rounded half away from zero to 20 decimal places. The numbers are cut at a delimiter from the wave 5 list (a line feed by default, as in CyberChef; Forge adds cr and tab), blanks around a number and blank pieces are skipped. Where CyberChef silently ignores a piece that is not a number (and reads 0xff as hexadecimal), Forge raises E_COERCE naming it; no numbers at all is E_RANGE where CyberChef prints NaN. The arithmetic is exact decimal, as BigNumber's."
+  },
+  {
+    "cyberchef": "Median",
+    "status": "covered",
+    "forge": [
+      "arith:median"
+    ],
+    "note": "The middle of the sorted numbers, or the mean of the middle two (20 decimal places). The numbers are cut at a delimiter from the wave 5 list (a line feed by default, as in CyberChef; Forge adds cr and tab), blanks around a number and blank pieces are skipped. Where CyberChef silently ignores a piece that is not a number (and reads 0xff as hexadecimal), Forge raises E_COERCE naming it; no numbers at all is E_RANGE where CyberChef prints NaN. The arithmetic is exact decimal, as BigNumber's."
+  },
+  {
+    "cyberchef": "Standard Deviation",
+    "status": "covered",
+    "forge": [
+      "arith:standard-deviation"
+    ],
+    "note": "The square root of the variance, with the mean, the variance and the root each rounded to 20 decimal places. kind chooses the population deviation (n, the default and CyberChef's choice) or the sample deviation (n - 1, a Forge addition; one number is then E_RANGE). The numbers are cut at a delimiter from the wave 5 list (a line feed by default, as in CyberChef; Forge adds cr and tab), blanks around a number and blank pieces are skipped. Where CyberChef silently ignores a piece that is not a number (and reads 0xff as hexadecimal), Forge raises E_COERCE naming it; no numbers at all is E_RANGE where CyberChef prints NaN. The arithmetic is exact decimal, as BigNumber's."
+  },
+  {
+    "cyberchef": "Extended GCD",
+    "status": "covered",
+    "forge": [
+      "arith:ext-gcd"
+    ],
+    "note": "Integers of any size: the input is a and the parameter b is a second integer (CyberChef takes a and b as arguments and falls back to the input when one is blank). The output is CyberChef's report: gcd: g, a blank line, Bezout coefficients:, the lines x = and y =, each ending in a line feed. The coefficients are those of the iterative algorithm on the absolute values with the signs put back, so a * x + b * y = g holds also for a negative a or b; CyberChef's coefficients are the same for a and b of 0 or more, but they do not satisfy the identity when b is negative. g is never negative. Not an integer is E_COERCE."
+  },
+  {
+    "cyberchef": "Modular Exponentiation",
+    "status": "covered",
+    "forge": [
+      "arith:mod-pow"
+    ],
+    "note": "Integers of any size: the input is the base, the parameters exponent and modulus are text (CyberChef takes the base and the exponent from its arguments or from the input). The result is in 0 to modulus - 1, also for a negative base (CyberChef's takes the sign of the base). A negative exponent or a modulus below 1 is E_RANGE (CyberChef's negative exponent gives a wrong result, its modulus must be above zero); not an integer is E_COERCE."
+  },
+  {
+    "cyberchef": "Modular Inverse",
+    "status": "covered",
+    "forge": [
+      "arith:mod-inverse"
+    ],
+    "note": "Integers of any size: the input is a, the parameter modulus is text. The result is in 0 to modulus - 1, the same as CyberChef's; no inverse (a shares a factor with the modulus) or a modulus below 1 is E_RANGE; not an integer is E_COERCE."
+  }
 ]

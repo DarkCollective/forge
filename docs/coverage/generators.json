@@ -1,9 +1,58 @@
 [
- {"cyberchef": "Pseudo-Random Prime Generator", "status": "redesigned", "forge": ["prime:generate"], "note": "A prime drawn uniformly from the primes of exactly size bits (2 to 2048) or size decimal digits (1 to 616) by rejection sampling on the host CSPRNG (crypto.getRandomValues, never Math.random), tested by trial division and Miller-Rabin with random bases (40 rounds below 256 bits, 8 above). Several primes can be asked for (count, up to 100, joined by a delimiter of the wave 5 list), as decimal or lower-case hex text. The input is ignored. A 2048-bit prime takes about two seconds. CyberChef's own size menu and output layout are not copied."},
- {"cyberchef": "Generate UUID", "status": "redesigned", "forge": ["uuid:generate"], "note": "One parameterised word for RFC 9562: v1, v3, v4 (the CyberChef default), v5, v6, v7, nil and max, as lower-case 8-4-4-4-12 text. v3 and v5 take a namespace (dns, url, oid, x500 or any UUID) and a name and are deterministic. v1 and v6 count 100 ns ticks but the host clock has millisecond resolution, so the finer digits are zero; the clock sequence and the node are random (node with the multicast bit set). The input is ignored."},
- {"cyberchef": "Analyse UUID", "status": "redesigned", "forge": ["uuid:analyse"], "note": "Reads a UUID (hyphens, braces, a urn:uuid: prefix and either case are accepted) and reports, one per line, the version and what it means, the variant and, for versions 1, 6 and 7, the timestamp in UTC; nil and max UUIDs are named. The wording is Forge's own, not CyberChef's. Text that is not 32 hex digits is E_COERCE."},
- {"cyberchef": "Generate TOTP", "status": "redesigned", "forge": ["otp:totp"], "note": "RFC 6238 over hmac:digest. The input is the Base32 secret as authenticator apps show it; an empty input makes a random secret of key-size bytes (32 by default). The result is CyberChef's two parts, URI: <otpauth URI>, a blank line, Password: <digits>. Name, code length (digits, 6), epoch offset (0) and interval (period, 30) follow CyberChef's options; additions are the HMAC hash (sha1 by default, also sha256 and sha512) and an explicit Unix time (-1, the default, is now) so the vectors of RFC 6238 appendix B can be reproduced."},
- {"cyberchef": "Generate HOTP", "status": "redesigned", "forge": ["otp:hotp"], "note": "RFC 4226 over hmac:digest, with the same input, output and options as otp:totp except that the counter replaces the time (counter 0 by default, up to 2^64 - 1). Matches the values of RFC 4226 appendix D."},
- {"cyberchef": "Generate De Bruijn Sequence", "status": "redesigned", "forge": ["de-bruijn:generate"], "note": "The lexicographically least de Bruijn sequence B(k, n) for an alphabet of k symbols (2 to 36, written with 0-9 then a-z) and words of n symbols (1 to 16), k to the power n at most 65,536 symbols. The input is ignored."},
- {"cyberchef": "Generate Lorem Ipsum", "status": "redesigned", "forge": ["lorem:generate"], "note": "Paragraphs (up to 500), sentences (up to 5,000), words or bytes (up to 65,536), chosen at random from Forge's own list of the 182 distinct words of two passages of Cicero's De finibus (public domain), starting with the traditional Lorem ipsum dolor sit amet, consectetur adipiscing elit. unless opening is off. The sentence and paragraph shapes are Forge's own. The input is ignored."}
+  {
+    "cyberchef": "Pseudo-Random Prime Generator",
+    "status": "redesigned",
+    "forge": [
+      "prime:generate"
+    ],
+    "note": "A prime drawn uniformly from the primes of exactly size bits (2 to 2048; 512 by default, as CyberChef's bit length) or size decimal digits (1 to 616) by rejection sampling on the host CSPRNG (crypto.getRandomValues, never Math.random), tested by trial division and Miller-Rabin with random bases (40 rounds below 256 bits, 8 above). Several primes can be asked for (count, up to 100, joined by a delimiter of the wave 5 list), as decimal text or lower-case hex text with 0x in front, as CyberChef writes it. CyberChef draws a number below 2^bits, so its primes can be shorter; Forge's have exactly the size asked for. The input is ignored. A 2048-bit prime takes about two seconds. CyberChef's Crypto grade switch is not offered."
+  },
+  {
+    "cyberchef": "Generate UUID",
+    "status": "covered",
+    "forge": [
+      "uuid:generate"
+    ],
+    "note": "One parameterised word for RFC 9562: v1, v3, v4 (the CyberChef default), v5, v6, v7, nil and max, as lower-case 8-4-4-4-12 text. v3 and v5 take a namespace (any UUID, CyberChef's default 1b671a64-40d5-491e-99b0-da01ff1f3341 if none is given, or dns, url, oid, x500) and a name, which is the input when the name parameter is empty as in CyberChef; they are deterministic and equal CyberChef's. v1 and v6 count 100 ns ticks but the host clock has millisecond resolution, so the finer digits are zero; the clock sequence and the node are random (node with the multicast bit set)."
+  },
+  {
+    "cyberchef": "Analyse UUID",
+    "status": "redesigned",
+    "forge": [
+      "uuid:analyse"
+    ],
+    "note": "Reads a UUID (hyphens, braces, a urn:uuid: prefix and either case are accepted) and reports, one per line, the version and what it means, the variant and, for versions 1, 6 and 7, the timestamp in UTC (with the 100 ns digits of versions 1 and 6); nil and max UUIDs are named. The wording and the layout are Forge's own: CyberChef writes labelled blocks (Version:, Timestamp:, Timestamp (ISO):, Node:, Clock:, UUID Integer:) and only for versions 1, 6 and 7. Text that is not 32 hex digits is E_COERCE."
+  },
+  {
+    "cyberchef": "Generate TOTP",
+    "status": "covered",
+    "forge": [
+      "otp:totp"
+    ],
+    "note": "RFC 6238 over hmac:digest. The input is the Base32 secret as authenticator apps show it; an empty input makes a random secret of key-size bytes (20 by default, as CyberChef). The result is CyberChef's two parts, URI: <otpauth URI>, a blank line, Password: <digits>, and the passwords equal CyberChef's for the same secret and time. Name (Account), code length (digits, 6) and interval (period, 30) follow CyberChef's options; additions are the HMAC hash (sha1 by default, also sha256 and sha512) and an explicit Unix time (-1, the default, is now) so the vectors of RFC 6238 appendix B can be reproduced. The epoch offset (T0) is applied as RFC 6238 says; CyberChef ignores it."
+  },
+  {
+    "cyberchef": "Generate HOTP",
+    "status": "covered",
+    "forge": [
+      "otp:hotp"
+    ],
+    "note": "RFC 4226 over hmac:digest, with the same input, output and options as otp:totp except that the counter replaces the time (counter 0 by default, up to 2^64 - 1). Matches the values of RFC 4226 appendix D and CyberChef's output."
+  },
+  {
+    "cyberchef": "Generate De Bruijn Sequence",
+    "status": "covered",
+    "forge": [
+      "de-bruijn:generate"
+    ],
+    "note": "The lexicographically least de Bruijn sequence B(k, n), the same as CyberChef's for the alphabets it has (k 2 to 9, written 0 to 8; n from 2). Forge reaches further: k up to 36 (digits then letters), n from 1 to 16, k to the power n at most 65,536 symbols (CyberChef 50,000). The input is ignored."
+  },
+  {
+    "cyberchef": "Generate Lorem Ipsum",
+    "status": "redesigned",
+    "forge": [
+      "lorem:generate"
+    ],
+    "note": "Paragraphs (up to 500), sentences (up to 5,000), words or bytes (up to 65,536), chosen at random from Forge's own list of the 182 distinct words of two passages of Cicero's De finibus (public domain), starting with the traditional Lorem ipsum dolor sit amet, consectetur adipiscing elit. unless opening is off. The sentence and paragraph shapes are Forge's own; CyberChef's word list, its closing full stop on a run of words and its sentence lengths are not copied. The input is ignored."
+  }
 ]

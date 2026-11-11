@@ -546,17 +546,17 @@ describe("file times and Unix times", () => {
     }
   });
 
-  test("file times that are not whole seconds, in each unit", async () => {
+  test("file times that are not whole seconds are exact in each unit", async () => {
     const ft = "134388740967891234"; // 1794400496.7891234 s
     expect(await call("datetime:filetime-to-unix", str(ft), str("decimal"), str("seconds"))).toBe(
-      "1794400496",
+      "1794400496.7891234",
     );
     expect(
       await call("datetime:filetime-to-unix", str(ft), str("decimal"), str("milliseconds")),
-    ).toBe("1794400496789");
+    ).toBe("1794400496789.1234");
     expect(
       await call("datetime:filetime-to-unix", str(ft), str("decimal"), str("microseconds")),
-    ).toBe("1794400496789123");
+    ).toBe("1794400496789123.4");
     expect(
       await call("datetime:filetime-to-unix", str(ft), str("decimal"), str("nanoseconds")),
     ).toBe("1794400496789123400");
@@ -565,7 +565,7 @@ describe("file times and Unix times", () => {
   test("the largest file time and the one after it", async () => {
     const max = "18446744073709551615";
     expect(await call("datetime:filetime-to-unix", str(max), str("decimal"), str("seconds"))).toBe(
-      "1833029933770",
+      "1833029933770.9551615",
     );
     expect(
       await call(
