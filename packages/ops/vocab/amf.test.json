@@ -1,0 +1,2711 @@
+[
+  {
+    "name": "AMF0 decode: number 3.5",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "00400c000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "3.5",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF0 decode: number 42 is an integer",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "004045000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "42",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF0 decode: number -0",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "008000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF0 decode: number 2^53",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "004340000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "9007199254740992",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF0 decode: number 1e22 stays a float",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "004480f0cf064dd592",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1e+22",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF0 decode: NaN is null",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "007ff8000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "null",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF0 decode: infinity is null",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "007ff0000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "null",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF0 decode: true",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "0101",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "true",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF0 decode: false",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "0100",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "false",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF0 decode: string",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "02000568656c6c6f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"hello\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF0 decode: empty string",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "020000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF0 decode: UTF-8 string",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "020005c3a9e282ac",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"é€\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF0 decode: null",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "05",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "null",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF0 decode: undefined",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "06",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "null",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF0 decode: unsupported marker",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "0d",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "null",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF0 decode: object",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "03000161003ff000000000000000016202000178000009",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"a\":1,\"b\":\"x\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF0 decode: empty object",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "03000009",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF0 decode: ECMA array",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "0800000002000130003ff000000000000000016b02000176000009",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"0\":1,\"k\":\"v\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF0 decode: strict array",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "0a00000003003ff00000000000000200016105",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[1,\"a\",null]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF0 decode: empty strict array",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "0a00000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF0 decode: date (time zone field ignored)",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "0b4276f6435cc880000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"2020-01-02T03:04:05.000Z\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF0 decode: date with milliseconds",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "0b4276f6435cf2e00001e0",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"2020-01-02T03:04:05.678Z\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF0 decode: long string",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "0c00000003616263",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"abc\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF0 decode: XML document",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "0f000000043c612f3e",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"<a/>\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF0 decode: typed object (class name dropped)",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "100003466f6f000178003ff0000000000000000009",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"x\":1}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF0 decode: references to an object",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "0a000000030300016e003ff0000000000000000009070001070001",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[{\"n\":1},{\"n\":1},{\"n\":1}]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF0 decode: switch to AMF3 (avmplus): integer 5",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "110405",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "5",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF0 decode: reference to a nested object",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "0300016f03000170003ff0000000000000000009000172070001000009",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"o\":{\"p\":1},\"r\":{\"p\":1}}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF0 decode error: empty input",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF0 decode error: truncated number",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "00400c",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF0 decode error: truncated string",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "02000568656c6c",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF0 decode error: string longer than the data",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "02ffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF0 decode error: trailing byte",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "003ff000000000000005",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF0 decode error: unknown marker",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "30",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF0 decode error: movieclip marker",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "04",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF0 decode error: recordset marker",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "0e",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF0 decode error: object end marker alone",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "09",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF0 decode error: reference to no object",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "070000",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF0 decode error: object that contains itself",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "03000161070000000009",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF0 decode error: object without an end marker",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "0300016105",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF0 decode error: empty key not followed by the end marker",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "03000005",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF0 decode error: strict array of 2^32-1 items",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "0affffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF0 decode error: long string of 2^32-1 bytes",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "0cffffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF0 decode error: invalid UTF-8",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "020001ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF0 decode error: repeated key",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "03000161003ff0000000000000000161004000000000000000000009",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF0 decode error: date that is not a number",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "0b7ff80000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF0 decode error: date out of range",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "0b7e37e43c8800759c0000",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF0 decode error: 65 nested arrays",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "0a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a0000000105",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF0 decode: 64 nested arrays",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF0",
+      "indent": 0
+    },
+    "input": {
+      "value": "0a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a000000010a0000000105",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[null]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF0 encode: number",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF0"
+    },
+    "input": {
+      "value": "3.5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00400c000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF0 encode: integer",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF0"
+    },
+    "input": {
+      "value": "42",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "004045000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF0 encode: negative integer",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF0"
+    },
+    "input": {
+      "value": "-7",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00c01c000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF0 encode: large number",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF0"
+    },
+    "input": {
+      "value": "1e22",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "004480f0cf064dd592",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF0 encode: big integer rounds to a double",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF0"
+    },
+    "input": {
+      "value": "123456789012345678901234567890",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0045f8ee90ff6c373e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF0 encode: true",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF0"
+    },
+    "input": {
+      "value": "true",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0101",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF0 encode: false",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF0"
+    },
+    "input": {
+      "value": "false",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0100",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF0 encode: null",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF0"
+    },
+    "input": {
+      "value": "null",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "05",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF0 encode: string",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF0"
+    },
+    "input": {
+      "value": "\"hello\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "02000568656c6c6f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF0 encode: empty string",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF0"
+    },
+    "input": {
+      "value": "\"\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "020000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF0 encode: UTF-8 string",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF0"
+    },
+    "input": {
+      "value": "\"é€\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "020005c3a9e282ac",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF0 encode: array",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF0"
+    },
+    "input": {
+      "value": "[1,\"a\",null]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0a00000003003ff00000000000000200016105",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF0 encode: empty array",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF0"
+    },
+    "input": {
+      "value": "[]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0a00000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF0 encode: object",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF0"
+    },
+    "input": {
+      "value": "{\"a\":1,\"b\":\"x\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "03000161003ff000000000000000016202000178000009",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF0 encode: empty object",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF0"
+    },
+    "input": {
+      "value": "{}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "03000009",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF0 encode: nested",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF0"
+    },
+    "input": {
+      "value": "{\"o\":{\"p\":[true]}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0300016f030001700a000000010101000009000009",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF0 encode error: empty text",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF0"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF0 encode error: object with an empty key",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF0"
+    },
+    "input": {
+      "value": "{\"\":1}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF0 encode error: bad JSON",
+    "ref": "hand-built from Adobe's AMF0 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF0"
+    },
+    "input": {
+      "value": "[1,",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF0 encode error: nesting of 65 arrays",
+    "ref": "depth limit 64",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF0"
+    },
+    "input": {
+      "value": "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF3 decode: undefined",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "null",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: null",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "01",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "null",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: false",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "02",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "false",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: true",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "03",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "true",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: integer 0",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "0400",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: integer 1",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "0401",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: integer 127",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "047f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "127",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: integer 128",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "048100",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "128",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: integer 16383",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "04ff7f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "16383",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: integer 16384",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "04818000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "16384",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: integer 2097151",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "04ffff7f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "2097151",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: integer 2097152",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "0480c08000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "2097152",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: integer 268435455",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "04bfffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "268435455",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: integer -1",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "04ffffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "-1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: integer -128",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "04ffffff80",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "-128",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: integer -268435456",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "04c0808000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "-268435456",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: double",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "05400c000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "3.5",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: double with an integer value",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "054045000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "42",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: NaN is null",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "057ff8000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "null",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: double 1e22",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "054480f0cf064dd592",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1e+22",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: string",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "060b68656c6c6f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"hello\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: empty string",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "0601",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: UTF-8 string",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "0613c3a9e282acf09f9880",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"é€😀\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: string reference",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "0905010603610600",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[\"a\",\"a\"]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: date",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "08014276f6435cc88000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"2020-01-02T03:04:05.000Z\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: dense array",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "090701040104020403",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[1,2,3]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: empty array",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "090101",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: array with an associative part",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "09050361040101040a040b",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"a\":1,\"0\":10,\"1\":11}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: dynamic anonymous object",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "0a0b0103610401036206037801",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"a\":1,\"b\":\"x\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: empty dynamic object",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "0a0b0101",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: sealed object with traits (class name dropped)",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "0a2307466f6f0378037904010402",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"x\":1,\"y\":2}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: object with a sealed and a dynamic member",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "0a1b01037804010b6578747261040901",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"x\":1,\"extra\":9}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: trait reference",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "0905010a2307466f6f03780379040104020a0104030404",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[{\"x\":1,\"y\":2},{\"x\":3,\"y\":4}]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: object reference",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "0905010a0b0103700401010a02",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[{\"p\":1},{\"p\":1}]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: byte array",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "0c070102ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"type\":\"Buffer\",\"data\":[1,2,255]}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: XML document",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "07093c612f3e",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"<a/>\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: XML",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "0b093c612f3e",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"<a/>\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: vector of int",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "0d0500ffffffff00000005",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[-1,5]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: vector of uint",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "0e0301ee6b2800",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[4000000000]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: vector of double",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "0f05003ff80000000000004000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[1.5,2]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: vector of objects",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "100300010405",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[5]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: dictionary",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "11030006036b0407",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"k\":7}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: amfy-encoded {\"a\": 1, \"b\": [true, null, \"x\", 1.5, -5]",
+    "ref": "amfy 0.1.1 dumps (an independent AMF3 library)",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "0a0b01036104010362090b010301060378053ff800000000000005c01400000000000001",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"a\":1,\"b\":[true,null,\"x\",1.5,-5]}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: amfy-encoded [1, 2, 3]",
+    "ref": "amfy 0.1.1 dumps (an independent AMF3 library)",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "090701040104020403",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[1,2,3]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: amfy-encoded \"h\\u00e9llo\"",
+    "ref": "amfy 0.1.1 dumps (an independent AMF3 library)",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "060d68c3a96c6c6f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"héllo\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: amfy-encoded 1048576",
+    "ref": "amfy 0.1.1 dumps (an independent AMF3 library)",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "04c08000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1048576",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode: amfy-encoded {\"x\": {\"y\": [1, 2, {\"z\": \"w\"}]}}",
+    "ref": "amfy 0.1.1 dumps (an independent AMF3 library)",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "0a0b0103780a010379090701040104020a01037a060377010101",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"x\":{\"y\":[1,2,{\"z\":\"w\"}]}}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 decode error: empty input",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF3 decode error: truncated integer",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "04",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF3 decode error: integer cut short",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "0480",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF3 decode error: truncated string",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "060b68656c6c",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF3 decode error: string reference to nothing",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "0600",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF3 decode error: object reference to nothing",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "0a04",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF3 decode error: trait reference to nothing",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "0a05",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF3 decode error: externalizable object",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "0a0701",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF3 decode error: array that contains itself",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "0903010900",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF3 decode error: trailing byte",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "040101",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF3 decode error: unknown marker",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "13",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF3 decode error: array of 2^29-1 items",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "09ffffff7f01",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF3 decode error: byte array of 2^28 bytes",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "0cffffff7f",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF3 decode error: invalid UTF-8",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "0603ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF3 decode error: repeated key",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "0a0b01036104010361040201",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF3 decode error: dictionary with an array as key",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "11030009000101",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF3 decode error: date out of range",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "08017e37e43c8800759c",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF3 decode error: vector of 2^28 ints",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "0dffffff7f00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF3 decode error: 65 nested arrays",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "09030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030101",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF3 decode: 64 nested arrays",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:decode",
+    "params": {
+      "format": "AMF3",
+      "indent": 0
+    },
+    "input": {
+      "value": "09030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030109030101",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[null]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "AMF3 encode: null",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF3"
+    },
+    "input": {
+      "value": "null",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "01",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF3 encode: true",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF3"
+    },
+    "input": {
+      "value": "true",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "03",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF3 encode: false",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF3"
+    },
+    "input": {
+      "value": "false",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "02",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF3 encode: integer 0",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF3"
+    },
+    "input": {
+      "value": "0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0400",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF3 encode: integer 1",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF3"
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0401",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF3 encode: integer 127",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF3"
+    },
+    "input": {
+      "value": "127",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "047f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF3 encode: integer 128",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF3"
+    },
+    "input": {
+      "value": "128",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "048100",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF3 encode: integer 16383",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF3"
+    },
+    "input": {
+      "value": "16383",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "04ff7f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF3 encode: integer 16384",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF3"
+    },
+    "input": {
+      "value": "16384",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "04818000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF3 encode: integer 2097152",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF3"
+    },
+    "input": {
+      "value": "2097152",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0480c08000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF3 encode: integer 268435455",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF3"
+    },
+    "input": {
+      "value": "268435455",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "04bfffffff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF3 encode: integer -1",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF3"
+    },
+    "input": {
+      "value": "-1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "04ffffffff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF3 encode: integer -268435456",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF3"
+    },
+    "input": {
+      "value": "-268435456",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "04c0808000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF3 encode: integer 2^28 does not fit in 29 bits: a double",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF3"
+    },
+    "input": {
+      "value": "268435456",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0541b0000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF3 encode: integer below -2^28: a double",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF3"
+    },
+    "input": {
+      "value": "-268435457",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "05c1b0000001000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF3 encode: number",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF3"
+    },
+    "input": {
+      "value": "3.5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "05400c000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF3 encode: float with an integer value is a double",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF3"
+    },
+    "input": {
+      "value": "1.0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "053ff0000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF3 encode: string",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF3"
+    },
+    "input": {
+      "value": "\"hello\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "060b68656c6c6f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF3 encode: empty string",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF3"
+    },
+    "input": {
+      "value": "\"\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0601",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF3 encode: UTF-8 string",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF3"
+    },
+    "input": {
+      "value": "\"é€😀\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0613c3a9e282acf09f9880",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF3 encode: array",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF3"
+    },
+    "input": {
+      "value": "[1,2,3]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "090701040104020403",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF3 encode: empty array",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF3"
+    },
+    "input": {
+      "value": "[]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "090101",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF3 encode: object",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF3"
+    },
+    "input": {
+      "value": "{\"a\":1,\"b\":\"x\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0a0b0103610401036206037801",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF3 encode: empty object",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF3"
+    },
+    "input": {
+      "value": "{}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0a0b0101",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF3 encode: nested",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF3"
+    },
+    "input": {
+      "value": "{\"o\":{\"p\":[true,null]}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0a0b01036f0a0b01037009050103010101",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "AMF3 encode error: empty text",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF3"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF3 encode error: object with an empty key",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF3"
+    },
+    "input": {
+      "value": "{\"\":1}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF3 encode error: bad JSON",
+    "ref": "hand-built from Adobe's AMF3 specification (struct.pack); expected JSON written from the intended value",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF3"
+    },
+    "input": {
+      "value": "[1,",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "AMF3 encode error: nesting of 65 arrays",
+    "ref": "depth limit 64",
+    "op": "amf:encode",
+    "params": {
+      "format": "AMF3"
+    },
+    "input": {
+      "value": "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

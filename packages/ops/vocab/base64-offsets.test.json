@@ -1,0 +1,625 @@
+[
+  {
+    "name": "b'' with variable characters",
+    "ref": "Python base64.b64encode of the data behind 0, 1 and 2 zero bytes; the trimming rule of the op doc applied by an independent function",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9+/=",
+      "show-variable": true,
+      "input-type": "raw"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Offset 0 (aligned): \nOffset 1: \nOffset 2: ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "b'' without variable characters",
+    "ref": "Python base64.b64encode of the data behind 0, 1 and 2 zero bytes; the trimming rule of the op doc applied by an independent function",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9+/=",
+      "show-variable": false,
+      "input-type": "raw"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Offset 0 (aligned): \nOffset 1: \nOffset 2: ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "b'a' with variable characters",
+    "ref": "Python base64.b64encode of the data behind 0, 1 and 2 zero bytes; the trimming rule of the op doc applied by an independent function",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9+/=",
+      "show-variable": true,
+      "input-type": "raw"
+    },
+    "input": {
+      "value": "61",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Offset 0 (aligned): YQ==\nOffset 1: GE=\nOffset 2: Bh",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "b'a' without variable characters",
+    "ref": "Python base64.b64encode of the data behind 0, 1 and 2 zero bytes; the trimming rule of the op doc applied by an independent function",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9+/=",
+      "show-variable": false,
+      "input-type": "raw"
+    },
+    "input": {
+      "value": "61",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Offset 0 (aligned): Y\nOffset 1: \nOffset 2: h",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "b'ab' with variable characters",
+    "ref": "Python base64.b64encode of the data behind 0, 1 and 2 zero bytes; the trimming rule of the op doc applied by an independent function",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9+/=",
+      "show-variable": true,
+      "input-type": "raw"
+    },
+    "input": {
+      "value": "6162",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Offset 0 (aligned): YWI=\nOffset 1: GFi\nOffset 2: BhYg==",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "b'ab' without variable characters",
+    "ref": "Python base64.b64encode of the data behind 0, 1 and 2 zero bytes; the trimming rule of the op doc applied by an independent function",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9+/=",
+      "show-variable": false,
+      "input-type": "raw"
+    },
+    "input": {
+      "value": "6162",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Offset 0 (aligned): YW\nOffset 1: Fi\nOffset 2: hY",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "b'abc' with variable characters",
+    "ref": "Python base64.b64encode of the data behind 0, 1 and 2 zero bytes; the trimming rule of the op doc applied by an independent function",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9+/=",
+      "show-variable": true,
+      "input-type": "raw"
+    },
+    "input": {
+      "value": "616263",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Offset 0 (aligned): YWJj\nOffset 1: GFiYw==\nOffset 2: BhYmM=",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "b'abc' without variable characters",
+    "ref": "Python base64.b64encode of the data behind 0, 1 and 2 zero bytes; the trimming rule of the op doc applied by an independent function",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9+/=",
+      "show-variable": false,
+      "input-type": "raw"
+    },
+    "input": {
+      "value": "616263",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Offset 0 (aligned): YWJj\nOffset 1: FiY\nOffset 2: hYm",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "b'abcd' with variable characters",
+    "ref": "Python base64.b64encode of the data behind 0, 1 and 2 zero bytes; the trimming rule of the op doc applied by an independent function",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9+/=",
+      "show-variable": true,
+      "input-type": "raw"
+    },
+    "input": {
+      "value": "61626364",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Offset 0 (aligned): YWJjZA==\nOffset 1: GFiY2Q=\nOffset 2: BhYmNk",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "b'abcd' without variable characters",
+    "ref": "Python base64.b64encode of the data behind 0, 1 and 2 zero bytes; the trimming rule of the op doc applied by an independent function",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9+/=",
+      "show-variable": false,
+      "input-type": "raw"
+    },
+    "input": {
+      "value": "61626364",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Offset 0 (aligned): YWJjZ\nOffset 1: FiY2\nOffset 2: hYmNk",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "b'Hello, World!' with variable characters",
+    "ref": "Python base64.b64encode of the data behind 0, 1 and 2 zero bytes; the trimming rule of the op doc applied by an independent function",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9+/=",
+      "show-variable": true,
+      "input-type": "raw"
+    },
+    "input": {
+      "value": "48656c6c6f2c20576f726c6421",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Offset 0 (aligned): SGVsbG8sIFdvcmxkIQ==\nOffset 1: EhlbGxvLCBXb3JsZCE=\nOffset 2: BIZWxsbywgV29ybGQh",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "b'Hello, World!' without variable characters",
+    "ref": "Python base64.b64encode of the data behind 0, 1 and 2 zero bytes; the trimming rule of the op doc applied by an independent function",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9+/=",
+      "show-variable": false,
+      "input-type": "raw"
+    },
+    "input": {
+      "value": "48656c6c6f2c20576f726c6421",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Offset 0 (aligned): SGVsbG8sIFdvcmxkI\nOffset 1: hlbGxvLCBXb3JsZC\nOffset 2: IZWxsbywgV29ybGQh",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "b'The quick brown fox' with variable characters",
+    "ref": "Python base64.b64encode of the data behind 0, 1 and 2 zero bytes; the trimming rule of the op doc applied by an independent function",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9+/=",
+      "show-variable": true,
+      "input-type": "raw"
+    },
+    "input": {
+      "value": "54686520717569636b2062726f776e20666f78",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Offset 0 (aligned): VGhlIHF1aWNrIGJyb3duIGZveA==\nOffset 1: FRoZSBxdWljayBicm93biBmb3g=\nOffset 2: BUaGUgcXVpY2sgYnJvd24gZm94",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "b'The quick brown fox' without variable characters",
+    "ref": "Python base64.b64encode of the data behind 0, 1 and 2 zero bytes; the trimming rule of the op doc applied by an independent function",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9+/=",
+      "show-variable": false,
+      "input-type": "raw"
+    },
+    "input": {
+      "value": "54686520717569636b2062726f776e20666f78",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Offset 0 (aligned): VGhlIHF1aWNrIGJyb3duIGZve\nOffset 1: RoZSBxdWljayBicm93biBmb3\nOffset 2: UaGUgcXVpY2sgYnJvd24gZm94",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "b'\\x00\\x01\\x02\\x03\\x04\\x05\\x06\\x07\\x08\\t\\n\\x0b\\x0c\\r\\x0e\\x0f\\x10\\x11\\x12\\x13' with variable characters",
+    "ref": "Python base64.b64encode of the data behind 0, 1 and 2 zero bytes; the trimming rule of the op doc applied by an independent function",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9+/=",
+      "show-variable": true,
+      "input-type": "raw"
+    },
+    "input": {
+      "value": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Offset 0 (aligned): AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJw==\nOffset 1: AABAgMEBQYHCAkKCwwNDg8QERITFBUWFxgZGhscHR4fICEiIyQlJic=\nOffset 2: AAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAhIiMkJSYn",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "b'\\x00\\x01\\x02\\x03\\x04\\x05\\x06\\x07\\x08\\t\\n\\x0b\\x0c\\r\\x0e\\x0f\\x10\\x11\\x12\\x13' without variable characters",
+    "ref": "Python base64.b64encode of the data behind 0, 1 and 2 zero bytes; the trimming rule of the op doc applied by an independent function",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9+/=",
+      "show-variable": false,
+      "input-type": "raw"
+    },
+    "input": {
+      "value": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Offset 0 (aligned): AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJ\nOffset 1: ABAgMEBQYHCAkKCwwNDg8QERITFBUWFxgZGhscHR4fICEiIyQlJi\nOffset 2: AAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAhIiMkJSYn",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "b'\\xff\\xff\\xff\\xff\\xff\\xff\\xff' with variable characters",
+    "ref": "Python base64.b64encode of the data behind 0, 1 and 2 zero bytes; the trimming rule of the op doc applied by an independent function",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9+/=",
+      "show-variable": true,
+      "input-type": "raw"
+    },
+    "input": {
+      "value": "ffffffffffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Offset 0 (aligned): /////////w==\nOffset 1: P////////8=\nOffset 2: D/////////",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "b'\\xff\\xff\\xff\\xff\\xff\\xff\\xff' without variable characters",
+    "ref": "Python base64.b64encode of the data behind 0, 1 and 2 zero bytes; the trimming rule of the op doc applied by an independent function",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9+/=",
+      "show-variable": false,
+      "input-type": "raw"
+    },
+    "input": {
+      "value": "ffffffffffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Offset 0 (aligned): /////////\nOffset 1: ////////\nOffset 2: /////////",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "URL-safe alphabet of 64 characters (no padding)",
+    "ref": "Python base64.b64encode of the data behind 0, 1 and 2 zero bytes; the trimming rule of the op doc applied by an independent function",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9-_",
+      "show-variable": true,
+      "input-type": "raw"
+    },
+    "input": {
+      "value": "48656c6c6f2c20576f726c6421",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Offset 0 (aligned): SGVsbG8sIFdvcmxkIQ\nOffset 1: EhlbGxvLCBXb3JsZCE\nOffset 2: BIZWxsbywgV29ybGQh",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "URL-safe alphabet, without variable characters",
+    "ref": "Python base64.b64encode of the data behind 0, 1 and 2 zero bytes; the trimming rule of the op doc applied by an independent function",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9-_",
+      "show-variable": false,
+      "input-type": "raw"
+    },
+    "input": {
+      "value": "48656c6c6f2c20576f726c647e3f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Offset 0 (aligned): SGVsbG8sIFdvcmxkfj\nOffset 1: hlbGxvLCBXb3JsZH4_\nOffset 2: IZWxsbywgV29ybGR-P",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "URL-safe alphabet with = padding",
+    "ref": "Python base64.b64encode of the data behind 0, 1 and 2 zero bytes; the trimming rule of the op doc applied by an independent function",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9-_=",
+      "show-variable": true,
+      "input-type": "raw"
+    },
+    "input": {
+      "value": "48656c6c6f2c20576f726c6421",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Offset 0 (aligned): SGVsbG8sIFdvcmxkIQ==\nOffset 1: EhlbGxvLCBXb3JsZCE=\nOffset 2: BIZWxsbywgV29ybGQh",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "URL-safe alphabet with . padding",
+    "ref": "Python base64.b64encode of the data behind 0, 1 and 2 zero bytes; the trimming rule of the op doc applied by an independent function",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9-_.",
+      "show-variable": true,
+      "input-type": "raw"
+    },
+    "input": {
+      "value": "48656c6c6f2c20576f726c6421",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Offset 0 (aligned): SGVsbG8sIFdvcmxkIQ..\nOffset 1: EhlbGxvLCBXb3JsZCE.\nOffset 2: BIZWxsbywgV29ybGQh",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "./0-9A-Za-z alphabet (a different order)",
+    "ref": "Python base64.b64encode of the data behind 0, 1 and 2 zero bytes; the trimming rule of the op doc applied by an independent function",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "./0-9A-Za-z=",
+      "show-variable": true,
+      "input-type": "raw"
+    },
+    "input": {
+      "value": "48656c6c6f2c20576f726c6421",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Offset 0 (aligned): G4JgP4wg63RjQalY6E==\nOffset 1: 2VZP4lj90/LPr7gN02=\nOffset 2: /6NKlgPmkUJqxmP4EV",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "./0-9A-Za-z alphabet, short data",
+    "ref": "Python base64.b64encode of the data behind 0, 1 and 2 zero bytes; the trimming rule of the op doc applied by an independent function",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "./0-9A-Za-z=",
+      "show-variable": true,
+      "input-type": "raw"
+    },
+    "input": {
+      "value": "4869",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Offset 0 (aligned): G4Y=\nOffset 1: 2Vd\nOffset 2: /6OE==",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hex input",
+    "ref": "Python base64.b64encode of the data behind 0, 1 and 2 zero bytes; the trimming rule of the op doc applied by an independent function",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9+/=",
+      "show-variable": true,
+      "input-type": "hex"
+    },
+    "input": {
+      "value": "48 65 6c 6c 6f",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Offset 0 (aligned): SGVsbG8=\nOffset 1: EhlbGxv\nOffset 2: BIZWxsbw==",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "base64 input",
+    "ref": "Python base64.b64encode of the data behind 0, 1 and 2 zero bytes; the trimming rule of the op doc applied by an independent function",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9+/=",
+      "show-variable": true,
+      "input-type": "base64"
+    },
+    "input": {
+      "value": "SGVsbG8=",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Offset 0 (aligned): SGVsbG8=\nOffset 1: EhlbGxv\nOffset 2: BIZWxsbw==",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "raw text input",
+    "ref": "Python base64.b64encode of the data behind 0, 1 and 2 zero bytes; the trimming rule of the op doc applied by an independent function",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9+/=",
+      "show-variable": false,
+      "input-type": "raw"
+    },
+    "input": {
+      "value": "Hello",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Offset 0 (aligned): SGVsbG\nOffset 1: hlbGxv\nOffset 2: IZWxsb",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "empty hex input",
+    "ref": "Python base64.b64encode of the data behind 0, 1 and 2 zero bytes; the trimming rule of the op doc applied by an independent function",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9+/=",
+      "show-variable": true,
+      "input-type": "hex"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Offset 0 (aligned): \nOffset 1: \nOffset 2: ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "range error: alphabet with 63 characters",
+    "ref": "CyberChef alphabet rule (64 or 65 characters)",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9+",
+      "show-variable": true,
+      "input-type": "raw"
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "range error: alphabet with 66 characters",
+    "ref": "CyberChef alphabet rule (64 or 65 characters)",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9+/==",
+      "show-variable": true,
+      "input-type": "raw"
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "range error: alphabet with a repeated character",
+    "ref": "CyberChef alphabet rule (64 or 65 characters)",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9++/",
+      "show-variable": true,
+      "input-type": "raw"
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "range error: alphabet with a non-ASCII character",
+    "ref": "CyberChef alphabet rule (64 or 65 characters)",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9+é",
+      "show-variable": true,
+      "input-type": "raw"
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "error: bad hex",
+    "ref": "From Hex",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9+/=",
+      "show-variable": true,
+      "input-type": "hex"
+    },
+    "input": {
+      "value": "zz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: odd number of hex digits",
+    "ref": "From Hex",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9+/=",
+      "show-variable": true,
+      "input-type": "hex"
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: bad Base64",
+    "ref": "RFC 4648",
+    "op": "base64-offsets:show",
+    "params": {
+      "alphabet": "A-Za-z0-9+/=",
+      "show-variable": true,
+      "input-type": "base64"
+    },
+    "input": {
+      "value": "!!!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

@@ -1,0 +1,2777 @@
+[
+  {
+    "name": "RFC 8949 Appendix A: 00",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 01",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "01",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 0a",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "0a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "10",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 17",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "17",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "23",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 1818",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "1818",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "24",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 1819",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "1819",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "25",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 1864",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "1864",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "100",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 1903e8",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "1903e8",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 1a000f4240",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "1a000f4240",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1000000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 1b000000e8d4a51000",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "1b000000e8d4a51000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1000000000000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 1bffffffffffffffff",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "1bffffffffffffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "18446744073709551615",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: c249010000000000000000",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "c249010000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "18446744073709551616",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 3bffffffffffffffff",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "3bffffffffffffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "-18446744073709551616",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: c349010000000000000000",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "c349010000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "-18446744073709551617",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 20",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "20",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "-1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 29",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "29",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "-10",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 3863",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "3863",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "-100",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 3903e7",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "3903e7",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "-1000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: f90000",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "f90000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0.0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: f98000",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "f98000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "-0.0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: f93c00",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "f93c00",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1.0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: fb3ff199999999999a",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "fb3ff199999999999a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1.1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: f93e00",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "f93e00",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1.5",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: f97bff",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "f97bff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "65504.0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: fa47c35000",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "fa47c35000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "100000.0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: fa7f7fffff",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "fa7f7fffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "3.4028234663852886e+38",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: fb7e37e43c8800759c",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "fb7e37e43c8800759c",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1e+300",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: f90001",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "f90001",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "5.960464477539063e-8",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: f90400",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "f90400",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0.00006103515625",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: f9c400",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "f9c400",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "-4.0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: fbc010666666666666",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "fbc010666666666666",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "-4.1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: f97c00",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "f97c00",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "null",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: f97e00",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "f97e00",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "null",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: f9fc00",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "f9fc00",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "null",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: fa7f800000",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "fa7f800000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "null",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: fa7fc00000",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "fa7fc00000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "null",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: faff800000",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "faff800000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "null",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: fb7ff0000000000000",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "fb7ff0000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "null",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: fb7ff8000000000000",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "fb7ff8000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "null",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: fbfff0000000000000",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "fbfff0000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "null",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: f4",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "f4",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "false",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: f5",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "f5",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "true",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: f6",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "f6",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "null",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: f7",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "f7",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "null",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: f0",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "f0",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"simple\":16}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: f8ff",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "f8ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"simple\":255}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: c074323031332d30332d32315432303a30343a30305a",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "c074323031332d30332d32315432303a30343a30305a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"2013-03-21T20:04:00.000Z\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: c11a514b67b0",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "c11a514b67b0",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"2013-03-21T20:04:00.000Z\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: c1fb41d452d9ec200000",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "c1fb41d452d9ec200000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"2013-03-21T20:04:00.500Z\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: d74401020304",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "d74401020304",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"tag\":23,\"value\":{\"type\":\"Buffer\",\"data\":[1,2,3,4]}}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: d818456449455446",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "d818456449455446",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"tag\":24,\"value\":{\"type\":\"Buffer\",\"data\":[100,73,69,84,70]}}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: d82076687474703a2f2f7777772e6578616d706c652e636f6d",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "d82076687474703a2f2f7777772e6578616d706c652e636f6d",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"tag\":32,\"value\":\"http://www.example.com\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 40",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "40",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"type\":\"Buffer\",\"data\":[]}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 4401020304",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "4401020304",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"type\":\"Buffer\",\"data\":[1,2,3,4]}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 60",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "60",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 6161",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "6161",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"a\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 6449455446",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "6449455446",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"IETF\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 62225c",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "62225c",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"\\\"\\\\\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 62c3bc",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "62c3bc",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"ü\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 63e6b0b4",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "63e6b0b4",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"水\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 64f0908591",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "64f0908591",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"𐅑\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 80",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "80",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 83010203",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "83010203",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[1,2,3]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 8301820203820405",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "8301820203820405",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[1,[2,3],[4,5]]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 98190102030405060708090a0b0c0d0e0f101112131415161718181819",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "98190102030405060708090a0b0c0d0e0f101112131415161718181819",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: a0",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "a0",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: a201020304",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "a201020304",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"1\":2,\"3\":4}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: a26161016162820203",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "a26161016162820203",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"a\":1,\"b\":[2,3]}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 826161a161626163",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "826161a161626163",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[\"a\",{\"b\":\"c\"}]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: a56161614161626142616361436164614461656145",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "a56161614161626142616361436164614461656145",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"a\":\"A\",\"b\":\"B\",\"c\":\"C\",\"d\":\"D\",\"e\":\"E\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 5f42010243030405ff",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "5f42010243030405ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"type\":\"Buffer\",\"data\":[1,2,3,4,5]}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 7f657374726561646d696e67ff",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "7f657374726561646d696e67ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"streaming\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 9fff",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "9fff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 9f018202039f0405ffff",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "9f018202039f0405ffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[1,[2,3],[4,5]]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 9f01820203820405ff",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "9f01820203820405ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[1,[2,3],[4,5]]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 83018202039f0405ff",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "83018202039f0405ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[1,[2,3],[4,5]]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 83019f0203ff820405",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "83019f0203ff820405",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[1,[2,3],[4,5]]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: bf61610161629f0203ffff",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "bf61610161629f0203ffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"a\":1,\"b\":[2,3]}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: 826161bf61626163ff",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "826161bf61626163ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[\"a\",{\"b\":\"c\"}]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "RFC 8949 Appendix A: bf6346756ef563416d7421ff",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "bf6346756ef563416d7421ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"Fun\":true,\"Amt\":-2}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "indent 4 (default layout)",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "a26161016162820203",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\n    \"a\": 1,\n    \"b\": [\n        2,\n        3\n    ]\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "indent 2",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "a26161016162820203",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\n  \"a\": 1,\n  \"b\": [\n    2,\n    3\n  ]\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "map keys that are integers, booleans, null and floats become text",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "a5016163216162f66164fb3ff8000000000000616561736166",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "{\"1\":\"c\",\"-2\":\"b\",\"null\":\"d\",\"1.5\":\"e\",\"s\":\"f\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "tag 1 with a float: millisecond date",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A (the date is cbor2's datetime printed in UTC)",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "c1fb41d452d9ec07df3b",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "\"2013-03-21T20:04:00.123Z\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "error: empty input",
+    "ref": "RFC 8949 section 3 (well-formedness)",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: truncated head",
+    "ref": "RFC 8949 section 3 (well-formedness)",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "18",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: truncated uint",
+    "ref": "RFC 8949 section 3 (well-formedness)",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "1a0102",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: byte string shorter than declared",
+    "ref": "RFC 8949 section 3 (well-formedness)",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "44010203",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: trailing byte",
+    "ref": "RFC 8949 section 3 (well-formedness)",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "8301020304",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: break outside an indefinite item",
+    "ref": "RFC 8949 section 3 (well-formedness)",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: reserved additional information 28",
+    "ref": "RFC 8949 section 3 (well-formedness)",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "1c",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: chunks then trailing bytes",
+    "ref": "RFC 8949 section 3 (well-formedness)",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "5f4101ff4101",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: text chunk inside an indefinite byte string",
+    "ref": "RFC 8949 section 3 (well-formedness)",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "5f6161ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: invalid UTF-8 in a text string",
+    "ref": "RFC 8949 section 3 (well-formedness)",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "62c328",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: repeated map key",
+    "ref": "RFC 8949 section 3 (well-formedness)",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "a2616101616102",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: simple value 0 in the two-byte form",
+    "ref": "RFC 8949 section 3 (well-formedness)",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "f800",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: array as a map key",
+    "ref": "RFC 8949 section 3 (well-formedness)",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "a1810102",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: indefinite array without break",
+    "ref": "RFC 8949 section 3 (well-formedness)",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "9f01",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: indefinite map cut after a key",
+    "ref": "RFC 8949 section 3 (well-formedness)",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "bf6161",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: array of 2^56 items",
+    "ref": "RFC 8949 section 3 (well-formedness)",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "9b00ffffffffffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: byte string of 2^56 bytes",
+    "ref": "RFC 8949 section 3 (well-formedness)",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "5b00ffffffffffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: tag 0 with a bad date",
+    "ref": "RFC 8949 section 3 (well-formedness)",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "c07161",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: reserved head",
+    "ref": "RFC 8949 section 3 (well-formedness)",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "1c00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: nesting of 65 arrays",
+    "ref": "depth limit 64 (wave 7 conventions)",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "818181818181818181818181818181818181818181818181818181818181818181818181818181818181818181818181818181818181818181818181818181818100",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "nesting of 64 arrays",
+    "ref": "depth limit 64 (wave 7 conventions)",
+    "op": "cbor:decode",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "8181818181818181818181818181818181818181818181818181818181818181818181818181818181818181818181818181818181818181818181818181818100",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "encode 0",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 1",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "01",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 23",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "23",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "17",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 24",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "24",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1818",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 255",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "255",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "18ff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 256",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "256",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "190100",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 65535",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "65535",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "19ffff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 65536",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "65536",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1a00010000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 4294967295",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "4294967295",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1affffffff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 4294967296",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "4294967296",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1b0000000100000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 18446744073709551615",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "18446744073709551615",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1bffffffffffffffff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 18446744073709551616",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "18446744073709551616",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c249010000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 123456789012345678901234567890",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "123456789012345678901234567890",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c24d018ee90ff6c373e0ee4e3f0ad2",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode -1",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "-1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "20",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode -24",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "-24",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "37",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode -25",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "-25",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3818",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode -256",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "-256",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "38ff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode -257",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "-257",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "390100",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode -18446744073709551616",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "-18446744073709551616",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3bffffffffffffffff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode -18446744073709551617",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "-18446744073709551617",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c349010000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 0.0",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "0.0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f90000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode -0.0",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "-0.0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f98000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 1.0",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "1.0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f93c00",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 1.5",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "1.5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f93e00",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 65504.0",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "65504.0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f97bff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 100000.0",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "100000.0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fa47c35000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 1.1",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "1.1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fb3ff199999999999a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode -4.1",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "-4.1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fbc010666666666666",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 1e300",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "1e300",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fb7e37e43c8800759c",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 3.4028234663852886e38",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "3.4028234663852886e38",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fa7f7fffff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 5.960464477539063e-8",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "5.960464477539063e-8",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f90001",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 0.00006103515625",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "0.00006103515625",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f90400",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 0.1",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "0.1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fb3fb999999999999a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode -4.0",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "-4.0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f9c400",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 16777216.5",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "16777216.5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fb4170000008000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode 1.401298464324817e-45",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "1.401298464324817e-45",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "fa00000001",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode true",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "true",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f5",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode false",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "false",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f4",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode null",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "null",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f6",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode \"\"",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "\"\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "60",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode \"a\"",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "\"a\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "6161",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode \"IETF\"",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "\"IETF\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "6449455446",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode \"\\\"\\\\\"",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "\"\\\"\\\\\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "62225c",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode \"ü\"",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "\"ü\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "62c3bc",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode \"水\"",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "\"水\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "63e6b0b4",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode \"\\ud800\\udd51\"",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "\"\\ud800\\udd51\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "64f0908591",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode []",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "[]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "80",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode {}",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "{}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a0",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode [1,2,3]",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "[1,2,3]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "83010203",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode [1,[2,3],[4,5]]",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "[1,[2,3],[4,5]]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "8301820203820405",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode {\"a\":1,\"b\":[2,3]}",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "{\"a\":1,\"b\":[2,3]}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a26161016162820203",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode [\"a\",{\"b\":\"c\"}]",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "[\"a\",{\"b\":\"c\"}]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "826161a161626163",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode {\"b\":1,\"a\":2}",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "{\"b\":1,\"a\":2}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a2616102616201",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode {\"bb\":1,\"a\":2,\"c\":3,\"aa\":4}",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "{\"bb\":1,\"a\":2,\"c\":3,\"aa\":4}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a46161026163036261610462626201",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode {\"\":0,\"a\":1}",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "{\"\":0,\"a\":1}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a26000616101",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode [[[[]]]]",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "[[[[]]]]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "81818180",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode {\"a\":{\"b\":{\"c\":null}}}",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "{\"a\":{\"b\":{\"c\":null}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a16161a16162a16163f6",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "typed-objects {\"type\":\"Buffer\",\"data\":[1,2,3,4]}",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": true
+    },
+    "input": {
+      "value": "{\"type\":\"Buffer\",\"data\":[1,2,3,4]}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4401020304",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "typed-objects {\"type\":\"Buffer\",\"data\":[]}",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": true
+    },
+    "input": {
+      "value": "{\"type\":\"Buffer\",\"data\":[]}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "40",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "typed-objects {\"tag\":32,\"value\":\"http://www.example.com\"}",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": true
+    },
+    "input": {
+      "value": "{\"tag\":32,\"value\":\"http://www.example.com\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d82076687474703a2f2f7777772e6578616d706c652e636f6d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "typed-objects {\"tag\":24,\"value\":{\"type\":\"Buffer\",\"data\":[100,73,69,84,70]}}",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": true
+    },
+    "input": {
+      "value": "{\"tag\":24,\"value\":{\"type\":\"Buffer\",\"data\":[100,73,69,84,70]}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d818456449455446",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "typed-objects {\"simple\":16}",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": true
+    },
+    "input": {
+      "value": "{\"simple\":16}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f0",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "typed-objects {\"simple\":255}",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": true
+    },
+    "input": {
+      "value": "{\"simple\":255}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f8ff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "typed-objects [{\"tag\":55799,\"value\":1},{\"type\":\"Buffer\",\"data\":[255]}]",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": true
+    },
+    "input": {
+      "value": "[{\"tag\":55799,\"value\":1},{\"type\":\"Buffer\",\"data\":[255]}]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "82d9d9f70141ff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "without typed-objects the Buffer shape is a map",
+    "ref": "cbor2 6.2.1 loads/dumps (canonical=True) and RFC 8949 Appendix A",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "{\"type\":\"Buffer\",\"data\":[1,2]}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a26464617461820102647479706566427566666572",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "error: empty text",
+    "ref": "RFC 8259",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: bad JSON",
+    "ref": "RFC 8259",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "{",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: trailing comma",
+    "ref": "RFC 8259",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "[1,]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: repeated key in JSON",
+    "ref": "RFC 8259",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "{\"a\":1,\"a\":2}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: nesting of 65 arrays",
+    "ref": "depth limit 64 (wave 7 conventions)",
+    "op": "cbor:encode",
+    "params": {
+      "typed-objects": false
+    },
+    "input": {
+      "value": "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

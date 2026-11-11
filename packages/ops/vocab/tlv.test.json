@@ -1,0 +1,612 @@
+[
+  {
+    "name": "default widths (1 and 1)",
+    "ref": "elements assembled with Python struct/int.to_bytes from (tag, value) lists; expected JSON written from the same lists",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 1,
+      "length-bytes": 1,
+      "ber": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "0102aabb0200ff0a00010203040506070809",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[{\"type\":\"01\",\"length\":2,\"value\":\"aabb\"},{\"type\":\"02\",\"length\":0,\"value\":\"\"},{\"type\":\"ff\",\"length\":10,\"value\":\"00010203040506070809\"}]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "indent 4 (the default layout)",
+    "ref": "elements assembled with Python struct/int.to_bytes from (tag, value) lists; expected JSON written from the same lists",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 1,
+      "length-bytes": 1,
+      "ber": false,
+      "indent": 4
+    },
+    "input": {
+      "value": "0102aabb0200ff0a00010203040506070809",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[\n    {\n        \"type\": \"01\",\n        \"length\": 2,\n        \"value\": \"aabb\"\n    },\n    {\n        \"type\": \"02\",\n        \"length\": 0,\n        \"value\": \"\"\n    },\n    {\n        \"type\": \"ff\",\n        \"length\": 10,\n        \"value\": \"00010203040506070809\"\n    }\n]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "indent 2",
+    "ref": "elements assembled with Python struct/int.to_bytes from (tag, value) lists; expected JSON written from the same lists",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 1,
+      "length-bytes": 1,
+      "ber": false,
+      "indent": 2
+    },
+    "input": {
+      "value": "0102aabb0200ff0a00010203040506070809",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[\n  {\n    \"type\": \"01\",\n    \"length\": 2,\n    \"value\": \"aabb\"\n  },\n  {\n    \"type\": \"02\",\n    \"length\": 0,\n    \"value\": \"\"\n  },\n  {\n    \"type\": \"ff\",\n    \"length\": 10,\n    \"value\": \"00010203040506070809\"\n  }\n]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "two-byte tags (EMV style)",
+    "ref": "elements assembled with Python struct/int.to_bytes from (tag, value) lists; expected JSON written from the same lists",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 2,
+      "length-bytes": 1,
+      "ber": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "9f02030102035f2a020978",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[{\"type\":\"9f02\",\"length\":3,\"value\":\"010203\"},{\"type\":\"5f2a\",\"length\":2,\"value\":\"0978\"}]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "three-byte tag and two-byte length",
+    "ref": "elements assembled with Python struct/int.to_bytes from (tag, value) lists; expected JSON written from the same lists",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 3,
+      "length-bytes": 2,
+      "ber": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "010203012c787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[{\"type\":\"010203\",\"length\":300,\"value\":\"787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878\"}]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "four-byte length",
+    "ref": "elements assembled with Python struct/int.to_bytes from (tag, value) lists; expected JSON written from the same lists",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 1,
+      "length-bytes": 4,
+      "ber": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "07000000036162630800000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[{\"type\":\"07\",\"length\":3,\"value\":\"616263\"},{\"type\":\"08\",\"length\":0,\"value\":\"\"}]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "eight-byte length",
+    "ref": "elements assembled with Python struct/int.to_bytes from (tag, value) lists; expected JSON written from the same lists",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 1,
+      "length-bytes": 8,
+      "ber": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "070000000000000003616263",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[{\"type\":\"07\",\"length\":3,\"value\":\"616263\"}]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "one empty element",
+    "ref": "elements assembled with Python struct/int.to_bytes from (tag, value) lists; expected JSON written from the same lists",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 1,
+      "length-bytes": 1,
+      "ber": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "0000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[{\"type\":\"00\",\"length\":0,\"value\":\"\"}]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sixteen-byte tag",
+    "ref": "elements assembled with Python struct/int.to_bytes from (tag, value) lists; expected JSON written from the same lists",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 16,
+      "length-bytes": 1,
+      "ber": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "000000000000000000000000000000010101000000000000000000000000000000020102",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[{\"type\":\"00000000000000000000000000000001\",\"length\":1,\"value\":\"01\"},{\"type\":\"00000000000000000000000000000002\",\"length\":1,\"value\":\"02\"}]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "BER lengths: short, 0x81, 0x82 and zero",
+    "ref": "elements assembled with Python struct/int.to_bytes from (tag, value) lists; expected JSON written from the same lists",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 1,
+      "length-bytes": 1,
+      "ber": true,
+      "indent": 0
+    },
+    "input": {
+      "value": "307f797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979790481807a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a31820100777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777770200",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[{\"type\":\"30\",\"length\":127,\"value\":\"79797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979\"},{\"type\":\"04\",\"length\":128,\"value\":\"7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a\"},{\"type\":\"31\",\"length\":256,\"value\":\"77777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777\"},{\"type\":\"02\",\"length\":0,\"value\":\"\"}]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "BER long form with a non-minimal length (0x81 0x05)",
+    "ref": "X.690 section 8.1.3",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 1,
+      "length-bytes": 1,
+      "ber": true,
+      "indent": 0
+    },
+    "input": {
+      "value": "0481056162636465",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[{\"type\":\"04\",\"length\":5,\"value\":\"6162636465\"}]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "BER long form with a two-byte length of 3 (0x82 0x00 0x03)",
+    "ref": "X.690 section 8.1.3",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 1,
+      "length-bytes": 1,
+      "ber": true,
+      "indent": 0
+    },
+    "input": {
+      "value": "04820003616263",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[{\"type\":\"04\",\"length\":3,\"value\":\"616263\"}]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "length-bytes is not used with BER",
+    "ref": "X.690 section 8.1.3",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 1,
+      "length-bytes": 3,
+      "ber": true,
+      "indent": 0
+    },
+    "input": {
+      "value": "0402abcd",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[{\"type\":\"04\",\"length\":2,\"value\":\"abcd\"}]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "empty input is an empty array",
+    "ref": "elements assembled with Python struct/int.to_bytes from (tag, value) lists; expected JSON written from the same lists",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 1,
+      "length-bytes": 1,
+      "ber": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "empty input, indent 4",
+    "ref": "elements assembled with Python struct/int.to_bytes from (tag, value) lists; expected JSON written from the same lists",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 1,
+      "length-bytes": 1,
+      "ber": false,
+      "indent": 4
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "constructed-looking values are not opened",
+    "ref": "elements assembled with Python struct/int.to_bytes from (tag, value) lists; expected JSON written from the same lists",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 1,
+      "length-bytes": 1,
+      "ber": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "0203aabbcc0100",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "[{\"type\":\"02\",\"length\":3,\"value\":\"aabbcc\"},{\"type\":\"01\",\"length\":0,\"value\":\"\"}]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "error: tag without a length",
+    "ref": "elements assembled with Python struct/int.to_bytes from (tag, value) lists; expected JSON written from the same lists",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 1,
+      "length-bytes": 1,
+      "ber": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "01",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: value shorter than its length",
+    "ref": "elements assembled with Python struct/int.to_bytes from (tag, value) lists; expected JSON written from the same lists",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 1,
+      "length-bytes": 1,
+      "ber": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "0105aabb",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: second element cut after the tag",
+    "ref": "elements assembled with Python struct/int.to_bytes from (tag, value) lists; expected JSON written from the same lists",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 1,
+      "length-bytes": 1,
+      "ber": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "0102aabb03",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: second element without its value",
+    "ref": "elements assembled with Python struct/int.to_bytes from (tag, value) lists; expected JSON written from the same lists",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 1,
+      "length-bytes": 1,
+      "ber": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "0102aabb0305",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: a length of 255 with nothing after it",
+    "ref": "elements assembled with Python struct/int.to_bytes from (tag, value) lists; expected JSON written from the same lists",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 1,
+      "length-bytes": 1,
+      "ber": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "0100ffffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: BER indefinite length",
+    "ref": "elements assembled with Python struct/int.to_bytes from (tag, value) lists; expected JSON written from the same lists",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 1,
+      "length-bytes": 1,
+      "ber": true,
+      "indent": 0
+    },
+    "input": {
+      "value": "0480",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: BER reserved length byte",
+    "ref": "elements assembled with Python struct/int.to_bytes from (tag, value) lists; expected JSON written from the same lists",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 1,
+      "length-bytes": 1,
+      "ber": true,
+      "indent": 0
+    },
+    "input": {
+      "value": "04ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: BER length of 8 bytes",
+    "ref": "elements assembled with Python struct/int.to_bytes from (tag, value) lists; expected JSON written from the same lists",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 1,
+      "length-bytes": 1,
+      "ber": true,
+      "indent": 0
+    },
+    "input": {
+      "value": "04880000000000000001",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: BER length cut short",
+    "ref": "elements assembled with Python struct/int.to_bytes from (tag, value) lists; expected JSON written from the same lists",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 1,
+      "length-bytes": 1,
+      "ber": true,
+      "indent": 0
+    },
+    "input": {
+      "value": "0482",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: BER length larger than the data",
+    "ref": "elements assembled with Python struct/int.to_bytes from (tag, value) lists; expected JSON written from the same lists",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 1,
+      "length-bytes": 1,
+      "ber": true,
+      "indent": 0
+    },
+    "input": {
+      "value": "0482ffff00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: eight-byte length of 2^64-1",
+    "ref": "elements assembled with Python struct/int.to_bytes from (tag, value) lists; expected JSON written from the same lists",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 1,
+      "length-bytes": 8,
+      "ber": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "01ffffffffffffffffaa",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: four-byte length of 2^32-1",
+    "ref": "elements assembled with Python struct/int.to_bytes from (tag, value) lists; expected JSON written from the same lists",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 1,
+      "length-bytes": 4,
+      "ber": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "01ffffffffaa",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "error: tag cut short",
+    "ref": "elements assembled with Python struct/int.to_bytes from (tag, value) lists; expected JSON written from the same lists",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 2,
+      "length-bytes": 1,
+      "ber": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "01",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "range error: tag-bytes 0",
+    "ref": "parameter check",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 0,
+      "length-bytes": 1,
+      "ber": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "0100",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "range error: tag-bytes 17",
+    "ref": "parameter check",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 17,
+      "length-bytes": 1,
+      "ber": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "0100",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "range error: length-bytes 0",
+    "ref": "parameter check",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 1,
+      "length-bytes": 0,
+      "ber": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "0100",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "range error: length-bytes 9",
+    "ref": "parameter check",
+    "op": "tlv:parse",
+    "params": {
+      "tag-bytes": 1,
+      "length-bytes": 9,
+      "ber": false,
+      "indent": 0
+    },
+    "input": {
+      "value": "0100",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  }
+]
