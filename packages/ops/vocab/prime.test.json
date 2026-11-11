@@ -1,0 +1,114 @@
+[
+  {
+    "name": "one bit has no prime",
+    "ref": "the output is random, so only a parameter error has a fixed result (the structure is tested in src/prime.test.ts)",
+    "op": "prime:generate",
+    "params": {
+      "size": 1,
+      "unit": "bits"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "more than 2048 bits is refused",
+    "ref": "the output is random, so only a parameter error has a fixed result (the structure is tested in src/prime.test.ts)",
+    "op": "prime:generate",
+    "params": {
+      "size": 2049,
+      "unit": "bits"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "zero digits is refused",
+    "ref": "the output is random, so only a parameter error has a fixed result (the structure is tested in src/prime.test.ts)",
+    "op": "prime:generate",
+    "params": {
+      "size": 0,
+      "unit": "digits"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "617 digits is more than 2048 bits",
+    "ref": "the output is random, so only a parameter error has a fixed result (the structure is tested in src/prime.test.ts)",
+    "op": "prime:generate",
+    "params": {
+      "size": 617,
+      "unit": "digits"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "an unknown unit",
+    "ref": "the output is random, so only a parameter error has a fixed result (the structure is tested in src/prime.test.ts)",
+    "op": "prime:generate",
+    "params": {
+      "size": 8,
+      "unit": "nibbles"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "an unknown format",
+    "ref": "the output is random, so only a parameter error has a fixed result (the structure is tested in src/prime.test.ts)",
+    "op": "prime:generate",
+    "params": {
+      "size": 8,
+      "format": "octal"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "a count of 0",
+    "ref": "the output is random, so only a parameter error has a fixed result (the structure is tested in src/prime.test.ts)",
+    "op": "prime:generate",
+    "params": {
+      "size": 8,
+      "count": 0
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  }
+]

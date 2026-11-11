@@ -1,0 +1,694 @@
+[
+  {
+    "name": "hotp counter 0",
+    "ref": "RFC 4226 appendix D (secret 12345678901234567890, 6 digits)",
+    "op": "otp:hotp",
+    "params": {
+      "counter": 0
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://hotp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=0\n\nPassword: 755224",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hotp counter 1",
+    "ref": "RFC 4226 appendix D (secret 12345678901234567890, 6 digits)",
+    "op": "otp:hotp",
+    "params": {
+      "counter": 1
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://hotp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=1\n\nPassword: 287082",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hotp counter 2",
+    "ref": "RFC 4226 appendix D (secret 12345678901234567890, 6 digits)",
+    "op": "otp:hotp",
+    "params": {
+      "counter": 2
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://hotp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=2\n\nPassword: 359152",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hotp counter 3",
+    "ref": "RFC 4226 appendix D (secret 12345678901234567890, 6 digits)",
+    "op": "otp:hotp",
+    "params": {
+      "counter": 3
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://hotp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=3\n\nPassword: 969429",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hotp counter 4",
+    "ref": "RFC 4226 appendix D (secret 12345678901234567890, 6 digits)",
+    "op": "otp:hotp",
+    "params": {
+      "counter": 4
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://hotp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=4\n\nPassword: 338314",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hotp counter 5",
+    "ref": "RFC 4226 appendix D (secret 12345678901234567890, 6 digits)",
+    "op": "otp:hotp",
+    "params": {
+      "counter": 5
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://hotp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=5\n\nPassword: 254676",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hotp counter 6",
+    "ref": "RFC 4226 appendix D (secret 12345678901234567890, 6 digits)",
+    "op": "otp:hotp",
+    "params": {
+      "counter": 6
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://hotp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=6\n\nPassword: 287922",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hotp counter 7",
+    "ref": "RFC 4226 appendix D (secret 12345678901234567890, 6 digits)",
+    "op": "otp:hotp",
+    "params": {
+      "counter": 7
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://hotp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=7\n\nPassword: 162583",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hotp counter 8",
+    "ref": "RFC 4226 appendix D (secret 12345678901234567890, 6 digits)",
+    "op": "otp:hotp",
+    "params": {
+      "counter": 8
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://hotp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=8\n\nPassword: 399871",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hotp counter 9",
+    "ref": "RFC 4226 appendix D (secret 12345678901234567890, 6 digits)",
+    "op": "otp:hotp",
+    "params": {
+      "counter": 9
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://hotp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=9\n\nPassword: 520489",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hotp lower case secret with spaces",
+    "ref": "the same secret as RFC 4226 appendix D, written the way an app shows it",
+    "op": "otp:hotp",
+    "params": {
+      "counter": 1
+    },
+    "input": {
+      "value": "gezd gnbv gy3t qojq gezd gnbv gy3t qojq",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://hotp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=1\n\nPassword: 287082",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hotp with a name and 8 digits",
+    "ref": "RFC 4226 secret; the digits are the truncation of the same HMAC (Python hmac)",
+    "op": "otp:hotp",
+    "params": {
+      "name": "Example Corp:alice@example.com",
+      "digits": 8,
+      "counter": 1
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://hotp/Example%20Corp%3Aalice%40example.com?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=8&counter=1\n\nPassword: 94287082",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hotp with 10 digits",
+    "ref": "the truncated value 1284755224 is the whole 31-bit number for counter 0 (Python hmac)",
+    "op": "otp:hotp",
+    "params": {
+      "counter": 0,
+      "digits": 10
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://hotp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=10&counter=0\n\nPassword: 1284755224",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hotp sha256",
+    "ref": "Python hmac with SHA-256 over the 32-byte RFC 6238 secret",
+    "op": "otp:hotp",
+    "params": {
+      "algorithm": "sha256",
+      "counter": 3
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://hotp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA&algorithm=SHA256&digits=6&counter=3\n\nPassword: 975832",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hotp sha512",
+    "ref": "Python hmac with SHA-512 over the 64-byte RFC 6238 secret",
+    "op": "otp:hotp",
+    "params": {
+      "algorithm": "sha512",
+      "counter": 3
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://hotp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA&algorithm=SHA512&digits=6&counter=3\n\nPassword: 628588",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hotp a secret that is not Base32",
+    "ref": "1 is not in the Base32 alphabet",
+    "op": "otp:hotp",
+    "params": {},
+    "input": {
+      "value": "GEZDG1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "hotp 0 digits",
+    "ref": "the number of digits is 1 to 10",
+    "op": "otp:hotp",
+    "params": {
+      "digits": 0
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "hotp 11 digits",
+    "ref": "the number of digits is 1 to 10",
+    "op": "otp:hotp",
+    "params": {
+      "digits": 11
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "totp sha1 at 59",
+    "ref": "RFC 6238 appendix B, time 59, 8 digits",
+    "op": "otp:totp",
+    "params": {
+      "algorithm": "sha1",
+      "digits": 8,
+      "time": 59
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=8&period=30\n\nPassword: 94287082",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "totp sha256 at 59",
+    "ref": "RFC 6238 appendix B, time 59, 8 digits",
+    "op": "otp:totp",
+    "params": {
+      "algorithm": "sha256",
+      "digits": 8,
+      "time": 59
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA&algorithm=SHA256&digits=8&period=30\n\nPassword: 46119246",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "totp sha512 at 59",
+    "ref": "RFC 6238 appendix B, time 59, 8 digits",
+    "op": "otp:totp",
+    "params": {
+      "algorithm": "sha512",
+      "digits": 8,
+      "time": 59
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA&algorithm=SHA512&digits=8&period=30\n\nPassword: 90693936",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "totp sha1 at 1111111109",
+    "ref": "RFC 6238 appendix B, time 1111111109, 8 digits",
+    "op": "otp:totp",
+    "params": {
+      "algorithm": "sha1",
+      "digits": 8,
+      "time": 1111111109
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=8&period=30\n\nPassword: 07081804",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "totp sha256 at 1111111109",
+    "ref": "RFC 6238 appendix B, time 1111111109, 8 digits",
+    "op": "otp:totp",
+    "params": {
+      "algorithm": "sha256",
+      "digits": 8,
+      "time": 1111111109
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA&algorithm=SHA256&digits=8&period=30\n\nPassword: 68084774",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "totp sha512 at 1111111109",
+    "ref": "RFC 6238 appendix B, time 1111111109, 8 digits",
+    "op": "otp:totp",
+    "params": {
+      "algorithm": "sha512",
+      "digits": 8,
+      "time": 1111111109
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA&algorithm=SHA512&digits=8&period=30\n\nPassword: 25091201",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "totp sha1 at 1111111111",
+    "ref": "RFC 6238 appendix B, time 1111111111, 8 digits",
+    "op": "otp:totp",
+    "params": {
+      "algorithm": "sha1",
+      "digits": 8,
+      "time": 1111111111
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=8&period=30\n\nPassword: 14050471",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "totp sha256 at 1111111111",
+    "ref": "RFC 6238 appendix B, time 1111111111, 8 digits",
+    "op": "otp:totp",
+    "params": {
+      "algorithm": "sha256",
+      "digits": 8,
+      "time": 1111111111
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA&algorithm=SHA256&digits=8&period=30\n\nPassword: 67062674",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "totp sha512 at 1111111111",
+    "ref": "RFC 6238 appendix B, time 1111111111, 8 digits",
+    "op": "otp:totp",
+    "params": {
+      "algorithm": "sha512",
+      "digits": 8,
+      "time": 1111111111
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA&algorithm=SHA512&digits=8&period=30\n\nPassword: 99943326",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "totp sha1 at 1234567890",
+    "ref": "RFC 6238 appendix B, time 1234567890, 8 digits",
+    "op": "otp:totp",
+    "params": {
+      "algorithm": "sha1",
+      "digits": 8,
+      "time": 1234567890
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=8&period=30\n\nPassword: 89005924",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "totp sha256 at 1234567890",
+    "ref": "RFC 6238 appendix B, time 1234567890, 8 digits",
+    "op": "otp:totp",
+    "params": {
+      "algorithm": "sha256",
+      "digits": 8,
+      "time": 1234567890
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA&algorithm=SHA256&digits=8&period=30\n\nPassword: 91819424",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "totp sha512 at 1234567890",
+    "ref": "RFC 6238 appendix B, time 1234567890, 8 digits",
+    "op": "otp:totp",
+    "params": {
+      "algorithm": "sha512",
+      "digits": 8,
+      "time": 1234567890
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA&algorithm=SHA512&digits=8&period=30\n\nPassword: 93441116",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "totp sha1 at 2000000000",
+    "ref": "RFC 6238 appendix B, time 2000000000, 8 digits",
+    "op": "otp:totp",
+    "params": {
+      "algorithm": "sha1",
+      "digits": 8,
+      "time": 2000000000
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=8&period=30\n\nPassword: 69279037",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "totp sha256 at 2000000000",
+    "ref": "RFC 6238 appendix B, time 2000000000, 8 digits",
+    "op": "otp:totp",
+    "params": {
+      "algorithm": "sha256",
+      "digits": 8,
+      "time": 2000000000
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA&algorithm=SHA256&digits=8&period=30\n\nPassword: 90698825",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "totp sha512 at 2000000000",
+    "ref": "RFC 6238 appendix B, time 2000000000, 8 digits",
+    "op": "otp:totp",
+    "params": {
+      "algorithm": "sha512",
+      "digits": 8,
+      "time": 2000000000
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA&algorithm=SHA512&digits=8&period=30\n\nPassword: 38618901",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "totp sha1 at 20000000000",
+    "ref": "RFC 6238 appendix B, time 20000000000, 8 digits",
+    "op": "otp:totp",
+    "params": {
+      "algorithm": "sha1",
+      "digits": 8,
+      "time": 20000000000
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=8&period=30\n\nPassword: 65353130",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "totp sha256 at 20000000000",
+    "ref": "RFC 6238 appendix B, time 20000000000, 8 digits",
+    "op": "otp:totp",
+    "params": {
+      "algorithm": "sha256",
+      "digits": 8,
+      "time": 20000000000
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA&algorithm=SHA256&digits=8&period=30\n\nPassword: 77737706",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "totp sha512 at 20000000000",
+    "ref": "RFC 6238 appendix B, time 20000000000, 8 digits",
+    "op": "otp:totp",
+    "params": {
+      "algorithm": "sha512",
+      "digits": 8,
+      "time": 20000000000
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA&algorithm=SHA512&digits=8&period=30\n\nPassword: 47863826",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "totp with a 60 s period",
+    "ref": "Python hmac: the counter is the time divided by the period",
+    "op": "otp:totp",
+    "params": {
+      "time": 1111111109,
+      "period": 60
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&period=60\n\nPassword: 360094",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "totp with an epoch offset",
+    "ref": "Python hmac: the counter counts from the epoch offset",
+    "op": "otp:totp",
+    "params": {
+      "time": 1111111109,
+      "epoch": 1000000000
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "URI: otpauth://totp/?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&period=30\n\nPassword: 080717",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "totp at a time before the epoch offset",
+    "ref": "T0 is later than the time",
+    "op": "otp:totp",
+    "params": {
+      "time": 10,
+      "epoch": 100
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "totp a secret that is not Base32",
+    "ref": "8 is not in the Base32 alphabet",
+    "op": "otp:totp",
+    "params": {
+      "time": 59
+    },
+    "input": {
+      "value": "GEZD8",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "totp a period of 0",
+    "ref": "the period is at least 1",
+    "op": "otp:totp",
+    "params": {
+      "period": 0
+    },
+    "input": {
+      "value": "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  }
+]

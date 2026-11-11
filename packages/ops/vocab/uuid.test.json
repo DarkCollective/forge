@@ -1,0 +1,393 @@
+[
+  {
+    "name": "v3 DNS www.example.com",
+    "ref": "RFC 9562 appendix A.2, example of a UUIDv3",
+    "op": "uuid:generate",
+    "params": {
+      "version": "v3",
+      "namespace": "dns",
+      "name": "www.example.com"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "5df41881-3aed-3515-88a7-2f4a814cf09e",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "v5 DNS www.example.com",
+    "ref": "RFC 9562 appendix A.4, example of a UUIDv5",
+    "op": "uuid:generate",
+    "params": {
+      "version": "v5",
+      "namespace": "dns",
+      "name": "www.example.com"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2ed6657d-e927-568b-95e1-2665a8aea6a2",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "v5 with the namespace as a UUID",
+    "ref": "same namespace as the previous vector, written as its UUID in upper case",
+    "op": "uuid:generate",
+    "params": {
+      "version": "v5",
+      "namespace": "6BA7B810-9DAD-11D1-80B4-00C04FD430C8",
+      "name": "www.example.com"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2ed6657d-e927-568b-95e1-2665a8aea6a2",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "v5 URL namespace",
+    "ref": "Python uuid.uuid5(uuid.NAMESPACE_URL, 'https://example.com/')",
+    "op": "uuid:generate",
+    "params": {
+      "version": "v5",
+      "namespace": "url",
+      "name": "https://example.com/"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "dd2c1780-811a-5296-81c5-178a0ef488bc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "v3 OID namespace",
+    "ref": "Python uuid.uuid3(uuid.NAMESPACE_OID, '1.3.6.1')",
+    "op": "uuid:generate",
+    "params": {
+      "version": "v3",
+      "namespace": "oid",
+      "name": "1.3.6.1"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "dd1a1cef-13d5-368a-ad82-eca71acd4cd1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "v5 X.500 namespace",
+    "ref": "Python uuid.uuid5(uuid.NAMESPACE_X500, 'cn=x')",
+    "op": "uuid:generate",
+    "params": {
+      "version": "v5",
+      "namespace": "x500",
+      "name": "cn=x"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a951fb6d-5aab-5a72-8e2e-9aa8df8d1f8f",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "v5 name in UTF-8",
+    "ref": "Python uuid.uuid5(uuid.NAMESPACE_DNS, 'grüße.example')",
+    "op": "uuid:generate",
+    "params": {
+      "version": "v5",
+      "namespace": "dns",
+      "name": "grüße.example"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "b7ef62df-d74e-5856-a4e5-c3ff9a38795d",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "v5 ignores the input",
+    "ref": "generators ignore their input",
+    "op": "uuid:generate",
+    "params": {
+      "version": "v5",
+      "namespace": "dns",
+      "name": "www.example.com"
+    },
+    "input": {
+      "value": "some data",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2ed6657d-e927-568b-95e1-2665a8aea6a2",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "nil",
+    "ref": "RFC 9562 section 5.9",
+    "op": "uuid:generate",
+    "params": {
+      "version": "nil"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00000000-0000-0000-0000-000000000000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "max",
+    "ref": "RFC 9562 section 5.10",
+    "op": "uuid:generate",
+    "params": {
+      "version": "max"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ffffffff-ffff-ffff-ffff-ffffffffffff",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a bad namespace",
+    "ref": "the output is random or time-based, so only the deterministic versions and the errors have a fixed result (the rest is tested in src/uuid.test.ts)",
+    "op": "uuid:generate",
+    "params": {
+      "version": "v5",
+      "namespace": "nowhere",
+      "name": "x"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "a namespace UUID that is too short",
+    "ref": "the output is random or time-based, so only the deterministic versions and the errors have a fixed result (the rest is tested in src/uuid.test.ts)",
+    "op": "uuid:generate",
+    "params": {
+      "version": "v3",
+      "namespace": "6ba7b810-9dad-11d1-80b4",
+      "name": "x"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "an unknown version",
+    "ref": "the output is random or time-based, so only the deterministic versions and the errors have a fixed result (the rest is tested in src/uuid.test.ts)",
+    "op": "uuid:generate",
+    "params": {
+      "version": "v2"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "analyse v1",
+    "ref": "RFC 9562 appendix A.3: 2022-02-22 19:22:22 UTC",
+    "op": "uuid:analyse",
+    "params": {},
+    "input": {
+      "value": "C232AB00-9414-11EC-B3C8-9F6BDECED846",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Version: 1 (Gregorian time and node)\nVariant: RFC 9562 (RFC 4122)\nTimestamp: 2022-02-22T19:22:22.0000000Z",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "analyse v6",
+    "ref": "RFC 9562 appendix A.4: 2022-02-22 19:22:22 UTC",
+    "op": "uuid:analyse",
+    "params": {},
+    "input": {
+      "value": "1EC9414C-232A-6B00-B3C8-9F6BDECED846",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Version: 6 (Gregorian time, sortable)\nVariant: RFC 9562 (RFC 4122)\nTimestamp: 2022-02-22T19:22:22.0000000Z",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "analyse v7",
+    "ref": "RFC 9562 appendix A.6: 2022-02-22 19:22:22.000 UTC (Unix ms 0x017F22E279B0)",
+    "op": "uuid:analyse",
+    "params": {},
+    "input": {
+      "value": "017F22E2-79B0-7CC3-98C4-DC0C0C07398F",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Version: 7 (Unix time and random)\nVariant: RFC 9562 (RFC 4122)\nTimestamp: 2022-02-22T19:22:22.000Z",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "analyse v4",
+    "ref": "a version 4 UUID; the version nibble is the 4 of the third group",
+    "op": "uuid:analyse",
+    "params": {},
+    "input": {
+      "value": "919108f7-52d1-4320-9bac-f847db4148a8",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Version: 4 (random)\nVariant: RFC 9562 (RFC 4122)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "analyse v3",
+    "ref": "RFC 9562 appendix A.2 example",
+    "op": "uuid:analyse",
+    "params": {},
+    "input": {
+      "value": "5df41881-3aed-3515-88a7-2f4a814cf09e",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Version: 3 (MD5 of a namespace and a name)\nVariant: RFC 9562 (RFC 4122)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "analyse v5 with braces",
+    "ref": "RFC 9562 appendix A.4 example, in braces and upper case",
+    "op": "uuid:analyse",
+    "params": {},
+    "input": {
+      "value": "{2ED6657D-E927-568B-95E1-2665A8AEA6A2}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Version: 5 (SHA-1 of a namespace and a name)\nVariant: RFC 9562 (RFC 4122)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "analyse a urn without hyphens",
+    "ref": "the v5 example written as urn:uuid: without hyphens",
+    "op": "uuid:analyse",
+    "params": {},
+    "input": {
+      "value": "urn:uuid:2ed6657de927568b95e12665a8aea6a2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Version: 5 (SHA-1 of a namespace and a name)\nVariant: RFC 9562 (RFC 4122)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "analyse nil",
+    "ref": "RFC 9562 section 5.9",
+    "op": "uuid:analyse",
+    "params": {},
+    "input": {
+      "value": "00000000-0000-0000-0000-000000000000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Nil UUID (all bits zero)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "analyse max",
+    "ref": "RFC 9562 section 5.10",
+    "op": "uuid:analyse",
+    "params": {},
+    "input": {
+      "value": "ffffffff-ffff-ffff-ffff-ffffffffffff",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Max UUID (all bits one)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "analyse a Microsoft-variant UUID",
+    "ref": "the top bits of byte 8 are 110",
+    "op": "uuid:analyse",
+    "params": {},
+    "input": {
+      "value": "00000000-0000-1000-c000-000000000001",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Variant: Microsoft (reserved)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "analyse text that is not a UUID",
+    "ref": "a UUID has 32 hex digits",
+    "op": "uuid:analyse",
+    "params": {},
+    "input": {
+      "value": "not a uuid",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "analyse a UUID that is one digit short",
+    "ref": "31 hex digits",
+    "op": "uuid:analyse",
+    "params": {},
+    "input": {
+      "value": "6ba7b810-9dad-11d1-80b4-00c04fd430c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

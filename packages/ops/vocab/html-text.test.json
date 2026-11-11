@@ -1,0 +1,212 @@
+[
+  {
+    "name": "tags are dropped",
+    "ref": "inline and block tags around text",
+    "op": "html-text:to-text",
+    "params": {},
+    "input": {
+      "value": "<p>Hello <b>world</b>!</p>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Hello world!",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "attributes",
+    "ref": "the attribute values are not text",
+    "op": "html-text:to-text",
+    "params": {},
+    "input": {
+      "value": "<a href=\"https://example.com/?a=1&amp;b=2\" title=\"x\">link</a>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "link",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "script and style with content",
+    "ref": "dropped in any case",
+    "op": "html-text:to-text",
+    "params": {},
+    "input": {
+      "value": "a<script>var x = '<b>';</script>b<STYLE>p{color:red}</STYLE>c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "abc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "an unclosed script",
+    "ref": "everything after it is script",
+    "op": "html-text:to-text",
+    "params": {},
+    "input": {
+      "value": "x<script>alert(1)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "x",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "comments and doctype",
+    "ref": "not text",
+    "op": "html-text:to-text",
+    "params": {},
+    "input": {
+      "value": "<!DOCTYPE html><html><!-- <b>hidden</b> -->visible</html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "visible",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "br",
+    "ref": "a line feed",
+    "op": "html-text:to-text",
+    "params": {},
+    "input": {
+      "value": "line1<br>line2<br/>line3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "line1\nline2\nline3",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "block elements",
+    "ref": "a line feed for each tag, runs of line feeds cut to two",
+    "op": "html-text:to-text",
+    "params": {},
+    "input": {
+      "value": "<h1>Title</h1><p>Body</p>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Title\n\nBody",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a list",
+    "ref": "li, ul and ol are block elements",
+    "op": "html-text:to-text",
+    "params": {},
+    "input": {
+      "value": "<ul><li>one</li><li>two</li></ul>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "one\n\ntwo",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "inline elements",
+    "ref": "no line break",
+    "op": "html-text:to-text",
+    "params": {},
+    "input": {
+      "value": "a<span>b</span><em>c</em>d",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "abcd",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "character references",
+    "ref": "named, decimal and hex, decoded after the tags are dropped",
+    "op": "html-text:to-text",
+    "params": {},
+    "input": {
+      "value": "&lt;b&gt; &amp; &copy; &#x41; &#66;",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<b> & © A B",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "references are decoded once",
+    "ref": "&amp;lt; is the text &lt;",
+    "op": "html-text:to-text",
+    "params": {},
+    "input": {
+      "value": "&amp;lt;",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "&lt;",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escaped markup stays text",
+    "ref": "&lt;script&gt; is not a script element",
+    "op": "html-text:to-text",
+    "params": {},
+    "input": {
+      "value": "&lt;script&gt;alert(1)&lt;/script&gt;",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<script>alert(1)</script>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a less-than sign in text",
+    "ref": "not a tag when no letter follows",
+    "op": "html-text:to-text",
+    "params": {},
+    "input": {
+      "value": "if a < b and 1<2 and c > d",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "if a < b and 1<2 and c > d",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "whitespace",
+    "ref": "three or more line feeds are cut to two, and the text is trimmed",
+    "op": "html-text:to-text",
+    "params": {},
+    "input": {
+      "value": "\n\n\n  a\n\n\n\n\nb  \n\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a\n\nb",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "the empty text",
+    "ref": "nothing to do",
+    "op": "html-text:to-text",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  }
+]

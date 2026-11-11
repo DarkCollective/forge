@@ -1,0 +1,292 @@
+[
+  {
+    "name": "the alphabet",
+    "ref": "ICAO Annex 10 Vol II 5.2.1.3 table of letters (Alfa and Juliett are the ICAO spellings)",
+    "op": "nato:encode",
+    "params": {},
+    "input": {
+      "value": "abcdefghijklmnopqrstuvwxyz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Alfa Bravo Charlie Delta Echo Foxtrot Golf Hotel India Juliett Kilo Lima Mike November Oscar Papa Quebec Romeo Sierra Tango Uniform Victor Whiskey X-ray Yankee Zulu",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "upper case input",
+    "ref": "case is ignored",
+    "op": "nato:encode",
+    "params": {},
+    "input": {
+      "value": "ABC",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Alfa Bravo Charlie",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "plain digits",
+    "ref": "the digits as English words",
+    "op": "nato:encode",
+    "params": {},
+    "input": {
+      "value": "0123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Zero One Two Three Four Five Six Seven Eight Nine",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ICAO digits",
+    "ref": "ICAO Annex 10 Vol II 5.2.1.3: Wun, Too, Tree, Fower, Fife, Six, Seven, Ait, Niner",
+    "op": "nato:encode",
+    "params": {
+      "digits": "icao"
+    },
+    "input": {
+      "value": "0123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Zero Wun Too Tree Fower Fife Six Seven Ait Niner",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a sentence",
+    "ref": "a space is a slash, other characters are kept",
+    "op": "nato:encode",
+    "params": {},
+    "input": {
+      "value": "Hello World 42!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Hotel Echo Lima Lima Oscar / Whiskey Oscar Romeo Lima Delta / Four Two !",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "comma delimiter",
+    "ref": "words joined by commas",
+    "op": "nato:encode",
+    "params": {
+      "delimiter": "comma"
+    },
+    "input": {
+      "value": "cab",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Charlie,Alfa,Bravo",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "newline delimiter",
+    "ref": "one word per line",
+    "op": "nato:encode",
+    "params": {
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "ab",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Alfa\nBravo",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "non-ASCII is kept",
+    "ref": "characters other than letters, digits and space pass through",
+    "op": "nato:encode",
+    "params": {},
+    "input": {
+      "value": "é-ü",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "é - ü",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "the empty text",
+    "ref": "nothing to spell",
+    "op": "nato:encode",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a delimiter of none",
+    "ref": "decode could not split the words again",
+    "op": "nato:encode",
+    "params": {
+      "delimiter": "none"
+    },
+    "input": {
+      "value": "ab",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "decode the alphabet",
+    "ref": "every word back to its letter",
+    "op": "nato:decode",
+    "params": {},
+    "input": {
+      "value": "Alfa Bravo Charlie Delta Echo Foxtrot Golf Hotel India Juliett Kilo Lima Mike November Oscar Papa Quebec Romeo Sierra Tango Uniform Victor Whiskey X-ray Yankee Zulu",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode in any case",
+    "ref": "case is ignored",
+    "op": "nato:decode",
+    "params": {},
+    "input": {
+      "value": "hotel ECHO Lima",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "HEL",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode plain digits",
+    "ref": "the digits as English words",
+    "op": "nato:decode",
+    "params": {},
+    "input": {
+      "value": "Zero One Two Three Four Five Six Seven Eight Nine",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0123456789",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode ICAO digits",
+    "ref": "Wun, Too, Tree, Fower, Fife, Ait, Niner",
+    "op": "nato:decode",
+    "params": {},
+    "input": {
+      "value": "Wun Too Tree Fower Fife Ait Niner",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1234589",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode variant spellings",
+    "ref": "Alpha, Juliet, Xray and Whisky are accepted",
+    "op": "nato:decode",
+    "params": {},
+    "input": {
+      "value": "Alpha Juliet Xray Whisky",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "AJXW",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode a sentence",
+    "ref": "slash is a space, other tokens are kept",
+    "op": "nato:decode",
+    "params": {},
+    "input": {
+      "value": "Hotel Echo Lima Lima Oscar / Four Two !",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "HELLO 42!",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode with a comma delimiter",
+    "ref": "spaces around a word are ignored",
+    "op": "nato:decode",
+    "params": {
+      "delimiter": "comma"
+    },
+    "input": {
+      "value": "Charlie, Alfa ,Bravo",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "CAB",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode drops empty tokens",
+    "ref": "two spaces are one separator",
+    "op": "nato:decode",
+    "params": {},
+    "input": {
+      "value": "Alfa  Bravo",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "AB",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode keeps an unknown token",
+    "ref": "foo is not a word",
+    "op": "nato:decode",
+    "params": {},
+    "input": {
+      "value": "Alfa foo Bravo",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "AfooB",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode a delimiter of none",
+    "ref": "the words cannot be split",
+    "op": "nato:decode",
+    "params": {
+      "delimiter": "none"
+    },
+    "input": {
+      "value": "AlfaBravo",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  }
+]
