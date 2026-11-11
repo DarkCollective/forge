@@ -1,0 +1,568 @@
+[
+  {
+    "name": "hash, 0-byte message (KAT Count 1)",
+    "ref": "ascon-c crypto_hash/asconhash256/LWC_HASH_KAT_128_256.txt, Count = 1",
+    "op": "ascon:hash",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0b3be5850f2f6b98caf29f8fdea89b64a1fa70aa249b8f839bd53baa304d92b2",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hash, 1-byte message (KAT Count 2)",
+    "ref": "ascon-c crypto_hash/asconhash256/LWC_HASH_KAT_128_256.txt, Count = 2",
+    "op": "ascon:hash",
+    "params": {},
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0728621035af3ed2bca03bf6fde900f9456f5330e4b5ee23e7f6a1e70291bc80",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hash, 8-byte message (KAT Count 9)",
+    "ref": "ascon-c crypto_hash/asconhash256/LWC_HASH_KAT_128_256.txt, Count = 9",
+    "op": "ascon:hash",
+    "params": {},
+    "input": {
+      "value": "0001020304050607",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "b88e497ae8e6fb641b87ef622eb8f2fca0ed95383f7ffebe167acf1099ba764f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hash, 16-byte message (KAT Count 17)",
+    "ref": "ascon-c crypto_hash/asconhash256/LWC_HASH_KAT_128_256.txt, Count = 17",
+    "op": "ascon:hash",
+    "params": {},
+    "input": {
+      "value": "000102030405060708090a0b0c0d0e0f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "3158c1940a2fbadbd68ab661777859b94a689e4efc375911467addd641835c38",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "hash, 33-byte message (KAT Count 34)",
+    "ref": "ascon-c crypto_hash/asconhash256/LWC_HASH_KAT_128_256.txt, Count = 34",
+    "op": "ascon:hash",
+    "params": {},
+    "input": {
+      "value": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "a58665a2cb9530c502096a7957a76e428af4ad044b4da5c471f9da6f7b3e5868",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "mac, 0-byte message (KAT Count 1)",
+    "ref": "ascon-c crypto_auth/asconmacv13/LWC_MAC_KAT_128_128.txt, Count = 1",
+    "op": "ascon:mac",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "eac9d74bbedf8bf1eba2862b26aa6d39",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "mac, 1-byte message (KAT Count 2)",
+    "ref": "ascon-c crypto_auth/asconmacv13/LWC_MAC_KAT_128_128.txt, Count = 2",
+    "op": "ascon:mac",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "10",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "e5be5b6dfb7b0e3eae00a070791947a8",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "mac, 32-byte message (KAT Count 33)",
+    "ref": "ascon-c crypto_auth/asconmacv13/LWC_MAC_KAT_128_128.txt, Count = 33",
+    "op": "ascon:mac",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "9b103257685dde6fd994426172bf7b64",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "mac, 33-byte message (KAT Count 34)",
+    "ref": "ascon-c crypto_auth/asconmacv13/LWC_MAC_KAT_128_128.txt, Count = 34",
+    "op": "ascon:mac",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f30",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "29313284670b54f0564f9c73f27131f1",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt, PT 0 bytes, AD 0 bytes (KAT Count 1)",
+    "ref": "ascon-c crypto_aead/asconaead128/LWC_AEAD_KAT_128_128.txt, Count = 1",
+    "op": "ascon:encrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "nonce": {
+        "value": "101112131415161718191a1b1c1d1e1f",
+        "enc": "hex"
+      },
+      "ad": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "4f9c278211bec9316bf68f46ee8b2ec6",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt, PT 0 bytes, AD 0 bytes (KAT Count 1)",
+    "ref": "ascon-c crypto_aead/asconaead128/LWC_AEAD_KAT_128_128.txt, Count = 1",
+    "op": "ascon:decrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "nonce": {
+        "value": "101112131415161718191a1b1c1d1e1f",
+        "enc": "hex"
+      },
+      "ad": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "4f9c278211bec9316bf68f46ee8b2ec6",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt, PT 0 bytes, AD 1 bytes (KAT Count 2)",
+    "ref": "ascon-c crypto_aead/asconaead128/LWC_AEAD_KAT_128_128.txt, Count = 2",
+    "op": "ascon:encrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "nonce": {
+        "value": "101112131415161718191a1b1c1d1e1f",
+        "enc": "hex"
+      },
+      "ad": {
+        "value": "30",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "cccb674fe18a09a285d6ab11b35675c0",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt, PT 0 bytes, AD 1 bytes (KAT Count 2)",
+    "ref": "ascon-c crypto_aead/asconaead128/LWC_AEAD_KAT_128_128.txt, Count = 2",
+    "op": "ascon:decrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "nonce": {
+        "value": "101112131415161718191a1b1c1d1e1f",
+        "enc": "hex"
+      },
+      "ad": {
+        "value": "30",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "cccb674fe18a09a285d6ab11b35675c0",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt, PT 1 bytes, AD 0 bytes (KAT Count 34)",
+    "ref": "ascon-c crypto_aead/asconaead128/LWC_AEAD_KAT_128_128.txt, Count = 34",
+    "op": "ascon:encrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "nonce": {
+        "value": "101112131415161718191a1b1c1d1e1f",
+        "enc": "hex"
+      },
+      "ad": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "20",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "e8dd576aba1cd3e6fc704de02aedb79588",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt, PT 1 bytes, AD 0 bytes (KAT Count 34)",
+    "ref": "ascon-c crypto_aead/asconaead128/LWC_AEAD_KAT_128_128.txt, Count = 34",
+    "op": "ascon:decrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "nonce": {
+        "value": "101112131415161718191a1b1c1d1e1f",
+        "enc": "hex"
+      },
+      "ad": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "e8dd576aba1cd3e6fc704de02aedb79588",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "20",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt, PT 1 bytes, AD 32 bytes (KAT Count 66)",
+    "ref": "ascon-c crypto_aead/asconaead128/LWC_AEAD_KAT_128_128.txt, Count = 66",
+    "op": "ascon:encrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "nonce": {
+        "value": "101112131415161718191a1b1c1d1e1f",
+        "enc": "hex"
+      },
+      "ad": {
+        "value": "303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "20",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "cb9963324ed507234028425d0f64ba269c",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt, PT 1 bytes, AD 32 bytes (KAT Count 66)",
+    "ref": "ascon-c crypto_aead/asconaead128/LWC_AEAD_KAT_128_128.txt, Count = 66",
+    "op": "ascon:decrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "nonce": {
+        "value": "101112131415161718191a1b1c1d1e1f",
+        "enc": "hex"
+      },
+      "ad": {
+        "value": "303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "cb9963324ed507234028425d0f64ba269c",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "20",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt, PT 16 bytes, AD 16 bytes (KAT Count 545)",
+    "ref": "ascon-c crypto_aead/asconaead128/LWC_AEAD_KAT_128_128.txt, Count = 545",
+    "op": "ascon:encrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "nonce": {
+        "value": "101112131415161718191a1b1c1d1e1f",
+        "enc": "hex"
+      },
+      "ad": {
+        "value": "303132333435363738393a3b3c3d3e3f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "202122232425262728292a2b2c2d2e2f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6373ebb28be97c9bac090cf399c13ef13abfc0d209e8f4844c90814d13f32c59",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt, PT 16 bytes, AD 16 bytes (KAT Count 545)",
+    "ref": "ascon-c crypto_aead/asconaead128/LWC_AEAD_KAT_128_128.txt, Count = 545",
+    "op": "ascon:decrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "nonce": {
+        "value": "101112131415161718191a1b1c1d1e1f",
+        "enc": "hex"
+      },
+      "ad": {
+        "value": "303132333435363738393a3b3c3d3e3f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "6373ebb28be97c9bac090cf399c13ef13abfc0d209e8f4844c90814d13f32c59",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "202122232425262728292a2b2c2d2e2f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt, PT 17 bytes, AD 0 bytes (KAT Count 562)",
+    "ref": "ascon-c crypto_aead/asconaead128/LWC_AEAD_KAT_128_128.txt, Count = 562",
+    "op": "ascon:encrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "nonce": {
+        "value": "101112131415161718191a1b1c1d1e1f",
+        "enc": "hex"
+      },
+      "ad": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "202122232425262728292a2b2c2d2e2f30",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "e8c3deee246cc5eae3e872313897a2bb60301002539d456275dd0b0ceab3b23844",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt, PT 17 bytes, AD 0 bytes (KAT Count 562)",
+    "ref": "ascon-c crypto_aead/asconaead128/LWC_AEAD_KAT_128_128.txt, Count = 562",
+    "op": "ascon:decrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "nonce": {
+        "value": "101112131415161718191a1b1c1d1e1f",
+        "enc": "hex"
+      },
+      "ad": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "e8c3deee246cc5eae3e872313897a2bb60301002539d456275dd0b0ceab3b23844",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "202122232425262728292a2b2c2d2e2f30",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt with a flipped tag bit is E_COERCE",
+    "ref": "KAT Count 34 with the last byte changed",
+    "op": "ascon:decrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "nonce": {
+        "value": "101112131415161718191a1b1c1d1e1f",
+        "enc": "hex"
+      },
+      "ad": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "e8dd576aba1cd3e6fc704de02aedb79589",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decrypt with the wrong associated data is E_COERCE",
+    "ref": "KAT Count 35 (AD 30) decrypted with no AD",
+    "op": "ascon:decrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "nonce": {
+        "value": "101112131415161718191a1b1c1d1e1f",
+        "enc": "hex"
+      },
+      "ad": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "962b8016836c75a7d86866588ca245d886",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "encrypt with a 15-byte nonce is E_RANGE",
+    "ref": "the nonce is 16 bytes",
+    "op": "ascon:encrypt",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e0f",
+        "enc": "hex"
+      },
+      "nonce": {
+        "value": "101112131415161718191a1b1c1d1e",
+        "enc": "hex"
+      },
+      "ad": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "mac with a 15-byte key is E_RANGE",
+    "ref": "the key is 16 bytes",
+    "op": "ascon:mac",
+    "params": {
+      "key": {
+        "value": "000102030405060708090a0b0c0d0e",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  }
+]

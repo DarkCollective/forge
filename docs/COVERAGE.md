@@ -12,7 +12,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Category | Covered | Redesigned | Dropped | Not yet | Total |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Data format | 54 | 6 | 0 | 20 | 80 |
-| Encryption / Encoding | 29 | 51 | 0 | 15 | 95 |
+| Encryption / Encoding | 29 | 54 | 0 | 12 | 95 |
 | Public Key | 0 | 0 | 0 | 30 | 30 |
 | Arithmetic / Logic | 9 | 0 | 0 | 17 | 26 |
 | Networking | 0 | 0 | 0 | 34 | 34 |
@@ -21,13 +21,13 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Date / Time | 0 | 0 | 0 | 9 | 9 |
 | Extractors | 0 | 0 | 0 | 18 | 18 |
 | Compression | 0 | 0 | 0 | 21 | 21 |
-| Hashing | 32 | 10 | 0 | 6 | 48 |
+| Hashing | 34 | 14 | 0 | 0 | 48 |
 | Code tidy | 0 | 0 | 0 | 24 | 24 |
 | Forensics | 0 | 0 | 0 | 9 | 9 |
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 4 | 0 | 3 | 14 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **134** | **74** | **3** | **295** | **506** |
+| **Total** | **136** | **81** | **3** | **286** | **506** |
 
 ## Data format (80)
 
@@ -142,8 +142,8 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | SM4 Decrypt | redesigned | `sm4:decrypt` | The inverse of sm4:encrypt with the same parameters. |
 | RC6 Encrypt | redesigned | `rc6:encrypt` | RC6-w/r with CyberChef's parameters: word-size (a multiple of 8, 8 to 256, default 32) and rounds (1 to 255, default 20); an empty IV is zero bytes as in CyberChef; modes CBC, CFB, OFB, CTR and ECB. Padding is pkcs7 or none: CyberChef's ZERO, RANDOM and BIT paddings are not offered (the shared padding is PKCS#7), and empty input encrypts to one padding block where CyberChef returns nothing. Word sizes other than 32 use BigInt arithmetic and are slow. |
 | RC6 Decrypt | redesigned | `rc6:decrypt` | The inverse of rc6:encrypt with the same parameters. |
-| Ascon Encrypt | not yet |  |  |
-| Ascon Decrypt | not yet |  |  |
+| Ascon Encrypt | redesigned | `ascon:encrypt` | Ascon-AEAD128 of NIST SP 800-232. The input is the plaintext bytes; the 16-byte key and 16-byte nonce are key params (E_RANGE otherwise) and the associated data a key param, empty by default. The output is the ciphertext followed by the 16-byte tag, as CyberChef. CyberChef's Input and Output menus (Raw or Hex) are chain steps (hex:decode, hex:encode). |
+| Ascon Decrypt | redesigned | `ascon:decrypt` | Ascon-AEAD128 decryption: the input is the ciphertext followed by the tag, with the key, nonce and associated data of ascon:encrypt. A tag that does not verify, or an input shorter than 16 bytes, is E_COERCE and returns no plaintext. The Input and Output menus are chain steps. |
 | PRESENT Encrypt | redesigned | `present:encrypt` | Bytes in and bytes out. Key 10 or 16 bytes, IV 8 bytes, mode CBC (the default) or ECB as in CyberChef (CFB, OFB and CTR are also offered), pkcs7 or none padding. CyberChef's ZERO, RANDOM and BIT paddings are not offered. |
 | PRESENT Decrypt | redesigned | `present:decrypt` | The inverse of present:encrypt with the same params. |
 | Twofish Encrypt | redesigned | `twofish:encrypt` | Keys of 16, 24 or 32 bytes, 16-byte IV, modes CBC, CFB, OFB, CTR and ECB. Padding is pkcs7 or none: CyberChef's ZERO, RANDOM and BIT paddings are not offered. |
@@ -192,7 +192,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Derive PBKDF2 key | redesigned | `pbkdf2:derive` | The passphrase is the input (CyberChef's Passphrase encodings are chain steps). The key size is in bytes (default 16), where CyberChef counts bits (default 128). Iterations default 1 and the hash defaults to sha1, the choices sha1, sha256, sha384, sha512 and md5, as in CyberChef. The salt is a key param (hex, utf8, latin1 or base64), empty by default; CyberChef generates a random salt for an empty one, but a recipe must be deterministic, so an empty salt stays empty. Output is raw key bytes (chain hex:encode). Limits (E_RANGE): key 1 to 1024 bytes, and iterations times the number of hash blocks of the key at most 2,000,000, about 1.2 s for SHA-1 and 4.7 s for SHA-512, inside the 10 s bake deadline. |
 | Derive EVP key | redesigned | `evp:derive` | OpenSSL's EVP_BytesToKey, written in FL over the md5, sha1 and sha2 digest words. The passphrase is the input. The key size is in bytes (default 16), where CyberChef counts bits (128); iterations default 1, the hash sha1, with the choices sha1, sha256, sha384, sha512 and md5, and the salt is a key param, as in CyberChef. CyberChef generates a random salt for an empty one; an empty salt stays empty here. A key and an IV come from one call: ask for both sizes and slice. Output is raw bytes (chain hex:encode). Size 1 to 1024 bytes; iterations cost about 18 VM steps each, so the untrusted bake step limit allows about 270,000 for one block. |
 | Derive HKDF key | redesigned | `hkdf:derive` | Written in FL over hmac:digest (RFC 5869). The input is the keying material. Salt and info are key params (hex, base64, utf8 or latin1; CyberChef also offers Decimal, a chain step here). The hash defaults to sha256 and offers every CyberChef choice except Whirlpool-0 and Whirlpool-T, which Forge does not implement; the extract mode (with salt, no salt, skip) and L in bytes (default 16) are CyberChef's, and L beyond 255 times the hash length is E_RANGE. Output is raw bytes (chain hex:encode). |
-| Bcrypt | not yet |  |  |
+| Bcrypt | redesigned | `bcrypt:hash`, `bcrypt:hash-salted` | The password is the input. bcrypt:hash draws a fresh random salt like CyberChef (its rounds parameter is the cost here, default 10, 4 to 16, E_RANGE otherwise) and carries the +random effect; the version prefix (2b by default, or 2a or 2y) is a parameter, where CyberChef writes 2a. bcrypt:hash-salted takes the 16-byte salt as a key param and is deterministic, which CyberChef cannot do. The output is the 60-character string as ASCII bytes. Only the first 72 bytes of the password count. The cost is capped at 16 (about 3.8 s) to stay inside the 10 s bake deadline; CyberChef allows up to 31. |
 | Scrypt | covered | `scrypt:derive` | The input is the password. Salt is a key param (hex, base64, utf8 or latin1), N (default 16384), r (8), p (1) and the key length (64 bytes) are CyberChef's. Output is raw key bytes (chain hex:encode). Limits (E_RANGE): N a power of two up to 2^20, memory 128 * N * r at most 256 MiB, N * r * p at most 2^23 (about 2 s), key 1 to 4096 bytes; the defaults take about 35 ms. |
 | JWT Sign | not yet |  |  |
 | JWT Verify | not yet |  |  |
@@ -471,8 +471,8 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | BLAKE2b | redesigned | `blake2b:digest` | The output size is in bytes (16, 20, 32, 48 or 64, default 64), where CyberChef's Size is in bits (128, 160, 256, 384, 512, default 512). The key is an optional key of up to 64 bytes in any of the key encodings. |
 | BLAKE2s | redesigned | `blake2s:digest` | The output size is in bytes (16, 20 or 32, default 32), where CyberChef's Size is in bits (128, 160, 256, default 256). The key is an optional key of up to 32 bytes in any of the key encodings. |
 | BLAKE3 | covered | `blake3:digest` | The output length is in bytes (1 to 65536, default 32, the BLAKE3 specification's default output; CyberChef's default is 16). The key is an optional 32-byte key, as in CyberChef. |
-| Ascon Hash | not yet |  |  |
-| Ascon MAC | not yet |  |  |
+| Ascon Hash | covered | `ascon:hash` | Ascon-Hash256 of NIST SP 800-232, the only variant CyberChef offers. The output is the 32 raw bytes (chain hex:encode for CyberChef's hex text). |
+| Ascon MAC | redesigned | `ascon:mac` | Ascon-Mac with a 16-byte key param (E_RANGE otherwise) and a 16-byte tag, as CyberChef. It is the PRF-based MAC of the Ascon designers' reference code (ascon-c, the asconmacv13 known answers), which CyberChef labels with SP 800-232 although that standard does not define a MAC. The output is raw bytes (chain hex:encode for hex text). |
 | GOST Hash | covered | `gost:digest`, `streebog:digest` | GOST R 34.11-94 is gost:digest with an sbox parameter: test (RFC 5831, CyberChef's D-TEST) or cryptopro (RFC 4357, CyberChef's D-A, the default here and the one its Generate all hashes uses). CyberChef's own default, E-TEST, and its other E-* sets are the sets of the 28147-89 cipher, not hash parameter sets, and are not offered. GOST R 34.11-2012 is the separate streebog:digest. Only the test and CryptoPro hash S-box sets are offered. Raw bytes (chain hex:encode). |
 | Streebog | covered | `streebog:digest` | Size 256 or 512, as in CyberChef. Raw bytes (chain hex:encode), in the byte order of the RFC 6986 examples reversed (little-endian), which is the conventional digest string. |
 | SSDEEP | covered | `ssdeep:digest` | Context triggered piecewise hashing (Kornblum 2006) as the reference ssdeep program computes it. The result is text, blocksize:hash1:hash2, not bytes: it is a structured string that the compare word reads piece by piece. |
@@ -480,13 +480,13 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Compare SSDEEP hashes | covered | `ssdeep:compare` | The 0 to 100 score of the reference algorithm: block size check, runs of more than three equal characters cut to three, a common substring of 7 characters, a weighted edit distance (insert and remove 1, replace 2) and the cap for small block sizes. The first hash is the data input and the second is the other parameter. Text that is not an ssdeep hash is an error here, where CyberChef scores it 0. |
 | Compare CTPH hashes | redesigned | `ssdeep:compare-ctph` | CyberChef's Compare CTPH hashes reads its own CTPH text, which Forge does not produce (see CTPH). compare-ctph is an alias of ssdeep:compare and scores ssdeep text. |
 | HMAC | covered | `hmac:digest` | Hash choice: md2, md4, md5, sha0, sha1, sha224, sha256 (the default; CyberChef's first choice, and so its default, is MD2), sha384, sha512, sha512/224, sha512/256, ripemd128, ripemd160, ripemd256, ripemd320, has160, whirlpool and snefru, which are every CyberChef choice except Whirlpool-0 and Whirlpool-T (Forge does not implement those variants of Whirlpool). The four SHA-3 sizes (sha3-224, sha3-256, sha3-384, sha3-512) are extra: CyberChef's HMAC has no SHA-3. snefru is Snefru with a 128-bit output and 8 passes, as CyberChef uses. The key is a key param in any of the key encodings (utf8, hex, latin1 or base64; CyberChef also offers Decimal, which Forge does not), empty by default. The output is the raw MAC bytes (chain hex:encode), where CyberChef shows hex text. Blake2 and BLAKE3 keyed modes are their own words. |
-| CMAC | not yet |  |  |
-| Bcrypt compare | not yet |  |  |
-| Bcrypt parse | not yet |  |  |
+| CMAC | redesigned | `cmac:digest` | NIST SP 800-38B and RFC 4493. The input is the message, the key is a key param (hex, utf8, latin1 or base64) and the algorithm is AES (default) or TDES (CyberChef's Triple DES). AES takes 16, 24 or 32 bytes, Triple DES 16 (two-key, K3 = K1) or 24 bytes, and another length is E_RANGE. The output is the raw tag, 16 bytes for AES and 8 for Triple DES (chain hex:encode for CyberChef's hex text). The block cipher is a private primitive that calls the TypeScript AES and Triple DES block functions directly, because the block words of those vocabularies are private. |
+| Bcrypt compare | redesigned | `bcrypt:compare` | The input is the password and the hash is a str param. The result is a bool, where CyberChef returns the text Match: <password> or No match. A string that is not a well-formed bcrypt hash (2a, 2b or 2y, a cost of 04 to 31, 22 salt and 31 hash characters) is E_COERCE, where CyberChef raises an error; a cost in it above 16 is E_RANGE. The comparison is constant time. |
+| Bcrypt parse | covered | `bcrypt:parse` | The input is the hash text. The report has CyberChef's four lines: Rounds, Salt (prefix, cost and the 22 salt characters), Password hash and Full hash. A string that is not a well-formed bcrypt hash is E_COERCE. Parsing does no hashing, so any cost from 04 to 31 is reported. |
 | Argon2 | redesigned | `argon2:derive` | The input is the password. Salt (default the text somesalt), iterations (3), memory in KiB (4096), parallelism (1), hash length in bytes (32) and type (argon2i, argon2d or argon2id; default argon2i) are CyberChef's. The output is a choice of encoded (the PHC string $argon2i$v=19$m=4096,t=3,p=1$salt$hash, as ASCII bytes; the default, as CyberChef) or raw hash bytes; CyberChef's Hex hash is raw chained through hex:encode. The salt must be at least 8 bytes. Limits (E_RANGE): memory 8 to 262,144 KiB (256 MiB), iterations 1 to 64, memory times iterations at most 1,048,576 (about 2.5 s), parallelism 1 to 64, length 4 to 1024; the defaults take about 40 ms. |
 | Argon2 compare | redesigned | `argon2:compare` | The input is the password and the encoded hash is a str param. The result is a bool, where CyberChef returns the text Match: <password> or No match. A string that is not a well-formed encoded Argon2 hash (type, optional version, m, t and p, unpadded base64 salt of at least 8 bytes and hash of at least 4) is E_COERCE, where CyberChef reports No match; the cost in the string is held to the limits of argon2:derive (E_RANGE). The comparison is constant time. |
 | NT Hash | covered | `nthash:digest` | MD4 of the UTF-16LE text (MS-NLMP NTOWFv1), 16 raw bytes. Takes text, not bytes. |
-| LM Hash | not yet |  |  |
+| LM Hash | redesigned | `lmhash:digest` | The password is the input text, upper-cased and then cut at 14 bytes, as CyberChef does (so a character that upper-cases to two, such as the German sharp s, counts twice). It is encoded as ISO 8859-1 where CyberChef's library writes the low byte of each character. The output is the 16 raw bytes (chain hex:encode for CyberChef's hex text). |
 | MurmurHash3 | covered | `murmur3:digest` | MurmurHash3 x86_32 with a 32-bit seed (default 0), written in FL; CyberChef offers only this 32-bit variant too, and the x86_128 and x64_128 variants are not implemented here either. Returns the 32-bit value as 4 raw bytes in big-endian order, the usual hex form (chain hex:encode); CyberChef shows the same value as an unsigned decimal (or signed, with its option). Forge hashes the bytes of the input; CyberChef hashes the low 8 bits of each character, so the two agree for byte-valued text and differ for text beyond Latin-1. |
 | Fletcher-8 Checksum | covered | `fletcher:checksum` | size 8. The output is 1 raw byte (chain hex:encode), where CyberChef shows hex text. |
 | Fletcher-16 Checksum | covered | `fletcher:checksum` | size 16. The output is 2 raw bytes (chain hex:encode), where CyberChef shows hex text. |

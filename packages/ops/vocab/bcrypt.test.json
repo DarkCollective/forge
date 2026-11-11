@@ -1,0 +1,404 @@
+[
+  {
+    "name": "hash-salted \"U*U\" cost 5",
+    "ref": "crypt_blowfish wrapper.c test vector, recalled from memory and reproduced by this implementation; the salt is the decoded 22 characters",
+    "op": "bcrypt:hash-salted",
+    "params": {
+      "salt": {
+        "value": "10410410410410410410410410410410",
+        "enc": "hex"
+      },
+      "cost": 5,
+      "version": "2a"
+    },
+    "input": {
+      "value": "U*U",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "$2a$05$CCCCCCCCCCCCCCCCCCCCC.E5YPO9kmyuRGyh0XouQYb4YMJKvyOeW",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hash-salted \"U*U*\" cost 5",
+    "ref": "crypt_blowfish wrapper.c test vector, recalled from memory and reproduced by this implementation; the salt is the decoded 22 characters",
+    "op": "bcrypt:hash-salted",
+    "params": {
+      "salt": {
+        "value": "10410410410410410410410410410410",
+        "enc": "hex"
+      },
+      "cost": 5,
+      "version": "2a"
+    },
+    "input": {
+      "value": "U*U*",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "$2a$05$CCCCCCCCCCCCCCCCCCCCC.VGOzA784oUp/Z0DY336zx7pLYAy0lwK",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hash-salted \"U*U*U\" cost 5",
+    "ref": "crypt_blowfish wrapper.c test vector, recalled from memory and reproduced by this implementation; the salt is the decoded 22 characters",
+    "op": "bcrypt:hash-salted",
+    "params": {
+      "salt": {
+        "value": "65965965965965965965965965965965",
+        "enc": "hex"
+      },
+      "cost": 5,
+      "version": "2a"
+    },
+    "input": {
+      "value": "U*U*U",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "$2a$05$XXXXXXXXXXXXXXXXXXXXXOAcXxm9kjPGEMsLznoKqmqw7tc8WCx4a",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hash-salted \"\" cost 5",
+    "ref": "crypt_blowfish wrapper.c test vector (empty password), recalled from memory and reproduced by this implementation; the salt is the decoded 22 characters",
+    "op": "bcrypt:hash-salted",
+    "params": {
+      "salt": {
+        "value": "10410410410410410410410410410410",
+        "enc": "hex"
+      },
+      "cost": 5,
+      "version": "2a"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "$2a$05$CCCCCCCCCCCCCCCCCCCCC.7uG0VCzI2bS7j6ymqJi9CdcdxiRTWNy",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hash-salted \"\" cost 6",
+    "ref": "jBCrypt/bcryptjs test table (empty password), recalled from memory and reproduced by this implementation; the salt is the decoded 22 characters",
+    "op": "bcrypt:hash-salted",
+    "params": {
+      "salt": {
+        "value": "144b3d691a7b4ecf39cf735c7fa7a79c",
+        "enc": "hex"
+      },
+      "cost": 6,
+      "version": "2a"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "$2a$06$DCq7YPn5Rq63x1Lad4cll.TV4S6ytwfsfvkgY8jIucDrjc8deX1s.",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hash-salted \"a\" cost 6",
+    "ref": "jBCrypt/bcryptjs test table, recalled from memory and reproduced by this implementation; the salt is the decoded 22 characters",
+    "op": "bcrypt:hash-salted",
+    "params": {
+      "salt": {
+        "value": "a3612d8c9a37dac2f99d94da03bd4521",
+        "enc": "hex"
+      },
+      "cost": 6,
+      "version": "2a"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "$2a$06$m0CrhHm10qJ3lXRY.5zDGO3rS2KdeeWLuGmsfGlMfOxih58VYVfxe",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hash-salted \"abc\" cost 6",
+    "ref": "jBCrypt/bcryptjs test table, recalled from memory and reproduced by this implementation; the salt is the decoded 22 characters",
+    "op": "bcrypt:hash-salted",
+    "params": {
+      "salt": {
+        "value": "2a1f1dc70a3d147956a46febe3016017",
+        "enc": "hex"
+      },
+      "cost": 6,
+      "version": "2a"
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "$2a$06$If6bvum7DFjUnE9p2uDeDu0YHzrHM6tf.iqN8.yx.jNN1ILEf7h0i",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hash-salted with the 2b prefix",
+    "ref": "the 2a, 2b and 2y versions give the same hash for a password under 72 bytes (OpenBSD bcrypt)",
+    "op": "bcrypt:hash-salted",
+    "params": {
+      "salt": {
+        "value": "a3612d8c9a37dac2f99d94da03bd4521",
+        "enc": "hex"
+      },
+      "cost": 6,
+      "version": "2b"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "$2b$06$m0CrhHm10qJ3lXRY.5zDGO3rS2KdeeWLuGmsfGlMfOxih58VYVfxe",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hash-salted with the 2y prefix",
+    "ref": "the 2a, 2b and 2y versions give the same hash for a password under 72 bytes (OpenBSD bcrypt)",
+    "op": "bcrypt:hash-salted",
+    "params": {
+      "salt": {
+        "value": "a3612d8c9a37dac2f99d94da03bd4521",
+        "enc": "hex"
+      },
+      "cost": 6,
+      "version": "2y"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "$2y$06$m0CrhHm10qJ3lXRY.5zDGO3rS2KdeeWLuGmsfGlMfOxih58VYVfxe",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hash-salted with a 15-byte salt is E_RANGE",
+    "ref": "a salt is 16 bytes",
+    "op": "bcrypt:hash-salted",
+    "params": {
+      "salt": {
+        "value": "000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "cost": 4,
+      "version": "2b"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "hash with cost 3 is E_RANGE (the random-salt output cannot be pinned; see src/bcrypt.test.ts)",
+    "ref": "the cost is 4 to 16",
+    "op": "bcrypt:hash",
+    "params": {
+      "cost": 3,
+      "version": "2b"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "compare \"U*U\" matches",
+    "ref": "crypt_blowfish wrapper.c test vector",
+    "op": "bcrypt:compare",
+    "params": {
+      "encoded": "$2a$05$CCCCCCCCCCCCCCCCCCCCC.E5YPO9kmyuRGyh0XouQYb4YMJKvyOeW"
+    },
+    "input": {
+      "value": "U*U",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": true
+    }
+  },
+  {
+    "name": "compare \"U*U*\" matches",
+    "ref": "crypt_blowfish wrapper.c test vector",
+    "op": "bcrypt:compare",
+    "params": {
+      "encoded": "$2a$05$CCCCCCCCCCCCCCCCCCCCC.VGOzA784oUp/Z0DY336zx7pLYAy0lwK"
+    },
+    "input": {
+      "value": "U*U*",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": true
+    }
+  },
+  {
+    "name": "compare \"U*U*U\" matches",
+    "ref": "crypt_blowfish wrapper.c test vector",
+    "op": "bcrypt:compare",
+    "params": {
+      "encoded": "$2a$05$XXXXXXXXXXXXXXXXXXXXXOAcXxm9kjPGEMsLznoKqmqw7tc8WCx4a"
+    },
+    "input": {
+      "value": "U*U*U",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": true
+    }
+  },
+  {
+    "name": "compare \"\" matches",
+    "ref": "crypt_blowfish wrapper.c test vector (empty password)",
+    "op": "bcrypt:compare",
+    "params": {
+      "encoded": "$2a$05$CCCCCCCCCCCCCCCCCCCCC.7uG0VCzI2bS7j6ymqJi9CdcdxiRTWNy"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": true
+    }
+  },
+  {
+    "name": "compare \"\" matches",
+    "ref": "jBCrypt/bcryptjs test table (empty password)",
+    "op": "bcrypt:compare",
+    "params": {
+      "encoded": "$2a$06$DCq7YPn5Rq63x1Lad4cll.TV4S6ytwfsfvkgY8jIucDrjc8deX1s."
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": true
+    }
+  },
+  {
+    "name": "compare \"a\" matches",
+    "ref": "jBCrypt/bcryptjs test table",
+    "op": "bcrypt:compare",
+    "params": {
+      "encoded": "$2a$06$m0CrhHm10qJ3lXRY.5zDGO3rS2KdeeWLuGmsfGlMfOxih58VYVfxe"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": true
+    }
+  },
+  {
+    "name": "compare \"abc\" matches",
+    "ref": "jBCrypt/bcryptjs test table",
+    "op": "bcrypt:compare",
+    "params": {
+      "encoded": "$2a$06$If6bvum7DFjUnE9p2uDeDu0YHzrHM6tf.iqN8.yx.jNN1ILEf7h0i"
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": true
+    }
+  },
+  {
+    "name": "compare a wrong password does not match",
+    "ref": "wrong password against the hash of abc",
+    "op": "bcrypt:compare",
+    "params": {
+      "encoded": "$2a$06$If6bvum7DFjUnE9p2uDeDu0YHzrHM6tf.iqN8.yx.jNN1ILEf7h0i"
+    },
+    "input": {
+      "value": "abd",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": false
+    }
+  },
+  {
+    "name": "compare an Apache htpasswd -B hash (2y)",
+    "ref": "produced by `htpasswd -nbB -C 6 u 'pässword'` (OpenBSD-derived implementation in Apache)",
+    "op": "bcrypt:compare",
+    "params": {
+      "encoded": "$2y$06$Xw2YPGW9fJcNET0YmsaCneayA0tLJhC5lmt9WLIURGJ0SjmbUwhz6"
+    },
+    "input": {
+      "value": "pässword",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": true
+    }
+  },
+  {
+    "name": "compare a malformed hash is E_COERCE",
+    "ref": "Cipher conventions: data that cannot be processed is E_COERCE",
+    "op": "bcrypt:compare",
+    "params": {
+      "encoded": "not a bcrypt hash"
+    },
+    "input": {
+      "value": "a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "parse reports cost, salt and hash",
+    "ref": "CyberChef's Bcrypt parse report layout (Rounds, Salt, Password hash, Full hash)",
+    "op": "bcrypt:parse",
+    "params": {},
+    "input": {
+      "value": "$2a$06$m0CrhHm10qJ3lXRY.5zDGO3rS2KdeeWLuGmsfGlMfOxih58VYVfxe",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Rounds: 6\nSalt: $2a$06$m0CrhHm10qJ3lXRY.5zDGO\nPassword hash: 3rS2KdeeWLuGmsfGlMfOxih58VYVfxe\nFull hash: $2a$06$m0CrhHm10qJ3lXRY.5zDGO3rS2KdeeWLuGmsfGlMfOxih58VYVfxe",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "parse a malformed hash is E_COERCE",
+    "ref": "Cipher conventions: data that cannot be processed is E_COERCE",
+    "op": "bcrypt:parse",
+    "params": {},
+    "input": {
+      "value": "$2a$05$short",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]
