@@ -1,6 +1,6 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ rsa: RSA (RFC 8017) on the bigints of the language, no library: Generate RSA Key Pair, RSA Sign, RSA Verify, RSA
-\ Encrypt, RSA Decrypt and Public Key from Private Key (the RSA case; an elliptic curve key is E_RANGE until WP 5.51).
+\ Encrypt, RSA Decrypt and Public Key from Private Key (which also reads elliptic curve keys, through the ecdsa words).
 \ Keys are PEM text, read and written with the shared asn1 words: public keys as RSAPublicKey (RSA PUBLIC KEY) or
 \ SubjectPublicKeyInfo (PUBLIC KEY), private keys as RSAPrivateKey (RSA PRIVATE KEY) or PKCS#8 (PRIVATE KEY), and
 \ encrypted private keys (the legacy Proc-Type/DEK-Info form with AES-CBC or Triple DES or DES, and PKCS#8 PBES2 with
@@ -16,7 +16,7 @@
 \ range) is never reported.
 IN: rsa
 
-USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ;
+USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ecdsa ;
 
 \ ---- digests ----
 
@@ -78,11 +78,11 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ;
 : _rsa-oid ( -- str )
   "1.2.840.113549.1.1.1" ;
 
-\ E_RANGE for a well-formed key of another algorithm (an EC key until WP 5.51 adds them).
+\ E_RANGE for a well-formed key of another algorithm (an EC key is for the ecdsa words, apart from rsa:public-key).
 : _check-oid ( oid:str -- )
   oid _rsa-oid <> [
     "the key is not an RSA key: its algorithm is " oid asn1:oid-label cat
-    oid "1.2.840.10045.2.1" = [ " (elliptic curve keys are not supported yet)" cat ] when
+    oid "1.2.840.10045.2.1" = [ " (use the ecdsa words for elliptic curve keys)" cat ] when
     raise:range ] when ;
 
 \ The AlgorithmIdentifier of a key names rsaEncryption (its parameters are NULL or absent).
@@ -157,7 +157,7 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ;
     [ "no PEM block found: " what cat " is expected (-----BEGIN ...-----)" cat raise:range ]
     [ blocks [ "label" get ] map ", " join
       "the PEM text has no " what cat " (found: " cat swap cat ")" cat
-      blocks [ "label" get "EC PRIVATE KEY" = ] filter len 0 > [ " (elliptic curve keys are not supported yet)" cat ] when
+      blocks [ "label" get "EC PRIVATE KEY" = ] filter len 0 > [ " (use the ecdsa words for elliptic curve keys)" cat ] when
       raise:range ] if ] when
   0 nth ;
 
@@ -629,10 +629,10 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ;
   data key password _private-key digest scheme salt-length _sign ;
 
 : verify ( data:bytes key:str message:key{utf8|hex|latin1|base64}="" digest:choice{SHA-1|MD5|SHA-256|SHA-384|SHA-512}="SHA-1" scheme:choice{RSASSA-PKCS1-V1_5|RSASSA-PSS}="RSASSA-PKCS1-V1_5" salt-length:int=-1 -- str )
-  "Verifies the input, a signature (RSA Verify), against the message and a PEM public key (PUBLIC KEY or RSA PUBLIC KEY block; the first one is used). The message is a parameter, as in CyberChef (UTF-8 text by default; hex, Latin-1 or Base64 for bytes), hashed with the digest. The result is the text Verified OK or Verification failure; any fault in the signature (wrong length, value, padding or digest) is a failed verification and not an error. With RSASSA-PSS, salt-length is the salt size the signature must have (-1 accepts any size). A key that is not an RSA public key is E_RANGE, a damaged one E_COERCE." doc
+  "Verifies the input, a signature (RSA Verify), against the message and a PEM public key (PUBLIC KEY or RSA PUBLIC KEY block; the first one is used). The message is a parameter, as in CyberChef (UTF-8 text by default; hex, Latin-1 or Base64 for bytes), hashed with the digest. The result is the text Verified OK or Verification Failure; any fault in the signature (wrong length, value, padding or digest) is a failed verification and not an error. With RSASSA-PSS, salt-length is the salt size the signature must have (-1 accepts any size). A key that is not an RSA public key is E_RANGE, a damaged one E_COERCE." doc
   "Public Key" category
   data key _public-key message digest scheme salt-length _verify
-  [ "Verified OK" ] [ "Verification failure" ] if ;
+  [ "Verified OK" ] [ "Verification Failure" ] if ;
 
 : encrypt ( data:bytes key:str scheme:choice{RSA-OAEP|RSAES-PKCS1-V1_5|RAW}="RSA-OAEP" digest:choice{SHA-1|MD5|SHA-256|SHA-384|SHA-512}="SHA-1" -- bytes )
   "RSA encryption (RSA Encrypt) of the input bytes under a PEM public key (PUBLIC KEY or RSA PUBLIC KEY block; the first one is used), as raw bytes of the length of the modulus. RSA-OAEP (the default, as in CyberChef) uses the digest for the label hash and MGF1, with an empty label: a message may have at most key bytes - 2 x digest - 2 bytes. RSAES-PKCS1-V1_5 allows key bytes - 11. RAW is textbook RSA with no padding: the message as a big-endian number must be below the modulus. A message that is too long, or a key that is not an RSA public key, is E_RANGE. OAEP and v1.5 use random bytes (the word carries +random), so the output differs on every call; RAW is deterministic." doc
@@ -644,10 +644,80 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ;
   "Public Key" category
   data key password _private-key scheme digest _decrypt ;
 
+: _ec-oid ( -- str )
+  "1.2.840.10045.2.1" ;
+
+: _private-labels ( -- list )
+  { "RSA PRIVATE KEY" "EC PRIVATE KEY" "PRIVATE KEY" "ENCRYPTED PRIVATE KEY" "DSA PRIVATE KEY" } ;
+
+\ Every private key block of the text, in order; none is E_RANGE, naming the labels found.
+: _private-blocks ( pem:str -- list )
+  pem str>bytes asn1:pem-decode
+  dup _private-labels "PRIVATE KEY, RSA PRIVATE KEY, EC PRIVATE KEY or ENCRYPTED PRIVATE KEY block" _find-block drop
+  [ "label" get _private-labels swap util:contains? ] filter ;
+
+\ The algorithm OID of a PKCS#8 PrivateKeyInfo.
+: _pkcs8-oid ( der:bytes -- str )
+  der asn1:parse
+  dup "universal" 16 "a PrivateKeyInfo" asn1:expect
+  dup asn1:children len 3 < [ "a PrivateKeyInfo needs a version, an algorithm and a key" raise:coerce ] when
+  1 asn1:child dup "universal" 16 "an AlgorithmIdentifier" asn1:expect
+  0 asn1:child asn1:node>oid ;
+
+\ "rsa" or "ec" for the label and the (decrypted) DER of a block; DSA and other algorithms are E_RANGE.
+: _key-kind ( label:str der:bytes -- str )
+  label "RSA PRIVATE KEY" = [ "rsa" ] [
+  label "EC PRIVATE KEY" = [ "ec" ] [
+  label "DSA PRIVATE KEY" = [ "DSA private keys are not supported" raise:range "" ] [
+  der _pkcs8-oid
+  dup _rsa-oid = [ drop "rsa" ] [
+  dup _ec-oid = [ drop "ec" ] [
+  "the key is not an RSA or EC key: its algorithm is " swap asn1:oid-label cat raise:range ""
+  ] if ] if ] if ] if ] if ;
+
+: _ec-crv ( oid:str -- str )
+  oid "1.2.840.10045.3.1.7" = [ "P-256" ] [
+  oid "1.3.132.0.34" = [ "P-384" ] [
+  oid "1.3.132.0.35" = [ "P-521" ] [
+  oid "1.3.132.0.10" = [ "secp256k1" ]
+  [ "unsupported curve " oid cat raise:coerce "" ] if ] if ] if ] if ;
+
+: _tail1 ( b:bytes -- bytes )
+  b 1 b len slice ;
+
+: _ec-jwk-xy ( crv:str point:bytes size:int -- str )
+  { { "kty" "EC" } { "crv" crv } { "x" point 1 size 1 + slice false util:b64url-encode bytes>str } { "y" point size 1 + point len slice false util:b64url-encode bytes>str } }
+  >record 0 json:stringify ;
+
+\ The JWK (kty, crv, x, y) of an EC PUBLIC KEY PEM text.
+: _ec-jwk ( pem:str -- str )
+  pem str>bytes asn1:pem-decode 0 nth "data" get asn1:parse
+  dup 0 asn1:child 1 asn1:child asn1:node>oid _ec-crv
+  swap 1 asn1:child "value" get _tail1
+  dup len 1 - 2 div _ec-jwk-xy ;
+
+: _ec-out ( pem:str format:str -- bytes )
+  format "PEM" = [ pem str>bytes ] [
+  format "DER" = [ pem str>bytes asn1:pem-decode 0 nth "data" get ] [
+  pem _ec-jwk str>bytes ] if ] if ;
+
+\ The label under which the decrypted DER of a block is read again.
+: _plain-label ( label:str -- str )
+  label "EC PRIVATE KEY" = [ label ] [ "PRIVATE KEY" ] if ;
+
+: _public-of ( label:str der:bytes format:str -- bytes )
+  label der _key-kind "ec" =
+  [ label _plain-label der asn1:pem-encode ecdsa:public-key format _ec-out ]
+  [ der _private-der format _public-out ] if ;
+
+: _block-public ( block:record password:str format:str -- bytes )
+  block "label" get block password _block-der format _public-of ;
+
 : public-key ( key:str format:choice{PEM|DER|JWK}="PEM" password:str="" -- bytes )
-  "The public key of a PEM private key (Public Key from Private Key): as a PUBLIC KEY (SubjectPublicKeyInfo) PEM block, as its DER bytes, or as a JWK (kty, n and e). The key may be RSA PRIVATE KEY (PKCS#1), PRIVATE KEY (PKCS#8) or encrypted, with the password. Only RSA keys are supported so far; an elliptic curve key is E_RANGE (CyberChef reads those too)." doc
+  "The public key of every PEM private key in the text (Public Key from Private Key), RSA or elliptic curve: as PUBLIC KEY (SubjectPublicKeyInfo) PEM blocks, as the DER bytes, or as JWKs (RSA: kty, n, e; EC: kty, crv, x, y), one per key, in the order of the keys; JWKs are one line of JSON each. The keys may be RSA PRIVATE KEY (PKCS#1), EC PRIVATE KEY (SEC 1), PRIVATE KEY (PKCS#8, RSA or id-ecPublicKey) or encrypted (ENCRYPTED PRIVATE KEY, or the legacy Proc-Type and DEK-Info form), with the password; blocks of other labels are skipped. CyberChef's op writes PEM only, takes no password and also reads DSA keys; DSA keys (DSA PRIVATE KEY, or PKCS#8 with the DSA algorithm), explicit EC parameters and other algorithms are E_RANGE or E_COERCE, and text with no private key block is E_RANGE." doc
   "Public Key" category
-  key password _private-key format _public-out ;
+  key _private-blocks [ password format _block-public ] map
+  format "JWK" = [ #[ 0a ] bjoin ] [ #[ ] bjoin ] if ;
 
 META: generate-key-pair
   param size "The key size in bits: 1024, 2048 or 4096." ;
@@ -689,7 +759,7 @@ META: decrypt
 ;
 
 META: public-key
-  param format "PEM (PUBLIC KEY), DER (the bytes) or JWK." ;
+  param format "PEM (PUBLIC KEY blocks), DER (the bytes) or JWK (one line of JSON per key)." ;
   param password "The password of an encrypted key (empty when the key is not encrypted)." ;
-  see-also rsa:generate-key-pair pem:to-hex asn1-dump:parse ;
+  see-also rsa:generate-key-pair ecdsa:public-key pem:to-hex asn1-dump:parse ;
 ;

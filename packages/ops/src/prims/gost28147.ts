@@ -110,7 +110,8 @@ function makeTables(name: string): Uint32Array[] {
 
 const tableCache = new Map<string, Uint32Array[]>();
 
-function tablesFor(name: string): Uint32Array[] {
+/** The cached round-function tables of an S-box set (shared with gost-mac.ts). */
+export function tablesFor(name: string): Uint32Array[] {
   let t = tableCache.get(name);
   if (t === undefined) {
     t = makeTables(name);
