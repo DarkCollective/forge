@@ -30,6 +30,7 @@ IN: elf
   "|0:NONE (None)|1:REL (Relocatable file)|2:EXEC (Executable file)|3:DYN (Shared object file)|4:CORE (Core file)|" ;
 
 \ The name of key in a "|hex:name|" table, or "" when it is not there.
+\ util-candidate: name-in-table
 : _name-in ( table:str key:int -- str )
   table "|" key 16 int>str-radix cat ":" cat split
   dup len 2 < [ drop "" ] [ 1 nth "|" split 0 nth ] if ;
@@ -38,7 +39,7 @@ IN: elf
 
 \ util-candidate: pad-left
 : _lpad ( s:str w:int -- str )
-  " " w s len - 0 max util:repeat-str s cat ;
+  s len w >= [ s ] [ " " w s len - util:repeat-str s cat ] if ;
 
 \ util-candidate: pad-right
 : _rpad ( s:str w:int -- str )

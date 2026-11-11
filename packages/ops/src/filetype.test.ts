@@ -46,7 +46,7 @@ const top = (r: Result): Value => {
 const code = (r: Result) => (r.ok ? "ok" : r.error.code);
 const msg = (r: Result) => (r.ok ? "" : r.error.message);
 const textOf = (r: Result) => (top(r) as { v: string }).v;
-const hex = (s: string) => Uint8Array.from(Buffer.from(s, "hex"));
+const hex = (s: string) => Uint8Array.from((s.match(/../g) ?? []).map((x) => parseInt(x, 16)));
 const sample = (name: string): Uint8Array =>
   hex((fixtures as Record<string, string>)[name] as string);
 const cat = (...parts: Uint8Array[]): Uint8Array => {
@@ -57,6 +57,12 @@ const cat = (...parts: Uint8Array[]): Uint8Array => {
     at += p.length;
   }
   return out;
+};
+const sameBytes = (a: Uint8Array, b: Uint8Array): boolean =>
+  a.length === b.length && a.every((x, i) => x === b[i]);
+const indexOfBytes = (d: Uint8Array, n: Uint8Array): number => {
+  for (let i = 0; i + n.length <= d.length; i++) if (n.every((b, k) => d[i + k] === b)) return i;
+  return -1;
 };
 const text = (s: string) => new TextEncoder().encode(s);
 
@@ -397,7 +403,7 @@ describe("Extract Files", () => {
       const mine = r.find((f) => f.offset === junk.length);
       expect(mine, `${name} found`).toBeDefined();
       expect(mine?.size).toBe(s.length);
-      expect(Buffer.from(mine?.data ?? []).equals(Buffer.from(s))).toBe(true);
+      expect(sameBytes(mine?.data ?? new Uint8Array(0), s)).toBe(true);
     });
   }
 
@@ -467,9 +473,7 @@ describe("Extract Files", () => {
     const a = await entry(data, 0);
     expect((top(a) as { v: Uint8Array }).v.length).toBe(sample("png").length);
     const b = await entry(data, 1);
-    expect(Buffer.from((top(b) as { v: Uint8Array }).v).equals(Buffer.from(sample("gzip")))).toBe(
-      true,
-    );
+    expect(sameBytes((top(b) as { v: Uint8Array }).v, sample("gzip"))).toBe(true);
     for (const bad of [2, -1]) {
       const r = await entry(data, bad);
       expect(code(r)).toBe("E_RANGE");
@@ -548,7 +552,7 @@ describe("Extract Files", () => {
     const r = files(await extract(outer));
     expect(r.find((f) => f.offset === 0)?.size).toBe(outer.length);
     const at = outer.length - 0;
-    const innerAt = Buffer.from(outer).indexOf(Buffer.from(inner));
+    const innerAt = indexOfBytes(outer, inner);
     expect(innerAt).toBeGreaterThan(0);
     expect(r.find((f) => f.offset === innerAt)?.size).toBe(inner.length);
     expect(at).toBe(outer.length);

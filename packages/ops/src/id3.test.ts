@@ -48,7 +48,8 @@ const msg = (r: Result) => (r.ok ? "" : r.error.message);
 const textOf = (r: Result) => (top(r) as { v: string }).v;
 const extract = (d: Uint8Array) => runtime.call("id3:extract", [bytes(d)]);
 const fx = fixtures as unknown as Record<string, string | Record<string, string>>;
-const sample = (name: string) => Uint8Array.from(Buffer.from(fx[name] as string, "hex"));
+const sample = (name: string) =>
+  Uint8Array.from(((fx[name] as string).match(/../g) ?? []).map((x) => parseInt(x, 16)));
 const expected = fx.expected as Record<string, string>;
 const text = (s: string) => new TextEncoder().encode(s);
 const cat = (...parts: Uint8Array[]): Uint8Array => {

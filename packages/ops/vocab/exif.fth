@@ -44,6 +44,7 @@ IN: exif
 : _s ( t:bytes p:int n:int -- int )
   t p n _u dup 1 n 8 * 1 - shl >= [ 1 n 8 * shl - ] when ;
 
+\ util-candidate: starts-with-bytes?
 : _starts? ( d:bytes prefix:bytes -- bool )
   d len prefix len >= [ d 0 prefix len slice prefix = ] [ false ] if ;
 
@@ -221,6 +222,7 @@ IN: exif
 : _ascii ( t:bytes count:int vstart:int -- str )
   t vstart vstart count 1024 min + slice bytes>latin1 "\x00" split 0 nth latin1>bytes util:text-lossless ;
 
+\ util-candidate: printable-bytes?
 : _printable? ( b:bytes -- bool )
   b len 0 > b [ dup 32 >= swap 126 <= and ] filter len b len = and ;
 

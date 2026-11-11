@@ -19,15 +19,15 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Language | 3 | 1 | 0 | 0 | 4 |
 | Utils | 34 | 14 | 2 | 0 | 50 |
 | Date / Time | 5 | 4 | 0 | 0 | 9 |
-| Extractors | 1 | 8 | 0 | 9 | 18 |
+| Extractors | 1 | 12 | 0 | 5 | 18 |
 | Compression | 5 | 16 | 0 | 0 | 21 |
 | Hashing | 34 | 14 | 0 | 0 | 48 |
 | Code tidy | 0 | 0 | 0 | 24 | 24 |
-| Forensics | 0 | 0 | 0 | 9 | 9 |
+| Forensics | 0 | 3 | 0 | 6 | 9 |
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 9 | 4 | 3 | 5 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **202** | **143** | **7** | **154** | **506** |
+| **Total** | **202** | **150** | **7** | **147** | **506** |
 
 ## Data format (80)
 
@@ -413,10 +413,10 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | JPath expression | not yet |  |  |
 | Jsonata Query | not yet |  |  |
 | CSS selector | not yet |  |  |
-| Extract EXIF | not yet |  |  |
-| Extract ID3 | not yet |  |  |
-| Extract Audio Metadata | not yet |  |  |
-| Extract Files | not yet |  |  |
+| Extract EXIF | redesigned | `exif:extract` | Found N tags. and a blank line, then Name: value for the tags of IFD0, the Exif IFD with the Interoperability IFD, the GPS IFD and the thumbnail IFD (names start with Thumbnail:), read without decoding the image, from a JPEG (the APP1 Exif segment), a PNG (eXIf), a WebP (EXIF) or a bare TIFF, in either byte order. The tag names are Pillow's ExifTags (TIFF 6, Exif 2.32, GPS). Values are the numbers stored, not translated words (Orientation: 1); rationals are decimals with up to six places, arrays show their first 16 values, the maker note is named by its size and not decoded, user comments are decoded by their character prefix, Windows XP tags are UTF-16, FLOAT and DOUBLE values are shown as hex. A JPEG without Exif gives Found 0 tags.; other data, a damaged TIFF structure or a value that runs past the data is E_COERCE. CyberChef's library (exif-parser) names tags and formats values differently in places (and gives GPS as decimal degrees); its layout is from memory and was not compared. Verified against Pillow's Image.Exif reader on files from an independent TIFF writer. |
+| Extract ID3 | redesigned | `id3:extract` | ID3v2.2, 2.3 and 2.4 at the start of the data and ID3v1 and v1.1 in the last 128 bytes, as text in Forge's own layout (one line per frame: Identifier (name): value; the flags unsynchronisation, extended header and footer in the heading). Text frames by their encoding byte (ISO-8859-1, UTF-16 with or without a mark, UTF-8, surrogate pairs), TXXX, WXXX, comments, lyrics, APIC and PIC (MIME type, picture type, size, description), PRIV, UFID, POPM, PCNT, GEOB; genres by number get the ID3v1 name (0 to 147). The whole-tag unsynchronisation of v2.3, the extended header and padding are handled; a frame with compression or encryption is named and not decoded; other frames show their size. No tag gives 'No ID3 tag found.'; a tag or frame that runs past the data is E_COERCE with the offset; at most 1,000 frames. ffprobe reads the same text fields (it cannot read the v2.3 whole-tag unsynchronisation). CyberChef's layout is not known to the author and was not compared. |
+| Extract Audio Metadata | redesigned | `audio-meta:extract` | Container metadata without decoding audio, as lines of Name: value and a Tags: block: MP3 (MPEG version and layer, bit rate, sample rate, channels, duration from the Xing, Info or VBRI frame count or else from the bit rate, and the ID3 tags as Extract ID3 shows them), FLAC (STREAMINFO, Vorbis comments, pictures), Ogg (Vorbis, Opus, Speex: identification packet, comment packet over several pages, duration from the last granule position), WAV (fmt, data size, LIST INFO) and MP4 or M4A (ftyp, mvhd, the audio sample entry, ilst tags and cover art size). Sample rate, channels and duration were compared with ffprobe on files from ffmpeg (Opus: the pre-skip is subtracted, as the specification says). Not read: APE, WavPack, AIFF, ASF, tags inside Ogg FLAC streams, chapter and cue data, Matroska. CyberChef 11's op uses a library (music-metadata) and its output layout is not known to the author; this is the reading of its purpose. The container walks are a TypeScript primitive (see the package README). |
+| Extract Files | redesigned | `filetype:extract`, `filetype:entry` | The files found by signature, cut out with an end finder per type where the format allows one: PNG (to IEND), JPEG (segments to EOI), GIF (blocks to the trailer), BMP and RIFF (WAV, AVI, WebP) by the size field, ICO, PDF (the last %%EOF before the next %PDF-), RTF (balanced braces), ZIP and its relatives (the end record whose directory closes exactly at that record, so a stored zip inside a zip is told from its container), 7z, gzip (the existing inflate, then the trailer), Zstandard (block walk), tar (header checksums), cab, DEX, SQLite, pcap and pcapng, DER certificates, PEM, MP4 boxes, Ogg pages, EBML segments, ELF and PE (sizes from the headers; a PE overlay is not included). A type with no end finder (TIFF, FLAC, MP3, RAR, bzip2, xz, Mach-O, OLE2, ...) or a damaged or cut-short file is left out with Ignore failed extractions (the default, as CyberChef) and is E_COERCE otherwise; nothing falls back to 'to the next signature'. The result is a list of records (name extracted_at_0x<offset>.<ext>, offset, size, type = the MIME type, data) in the Wave 7 archive convention, and filetype:entry returns one by index as bytes so that a recipe can go on. Miscellaneous is off by default as in CyberChef. Nested files are extracted as well; the total is bounded by the value limit (E_LIMIT_VALUE) and the work of the end finders by 2^28 bytes examined. Category Forensics (CyberChef files it under Extractors). |
 | RAKE | redesigned | `rake:keywords` | RAKE of Rose et al. 2010 with Forge's own English stop list (replaceable by a comma or white space separated list), a maximum phrase length (3 by default; CyberChef has none) instead of regular-expression delimiters, and a limit. The output is one line per phrase: its score (two decimals), a colon, a space and the phrase, highest score first, equal scores in alphabetical order. CyberChef writes Scores: , Keywords: , then score, phrase lines with the scores as plain numbers, and keeps punctuation attached to the words (so strict inequations, and strict inequations are different phrases there); Forge's words are letters, digits and marks with an inner apostrophe or hyphen, and every other character ends a phrase, so the keywords and scores differ. |
 | Template | not yet |  |  |
 
@@ -532,15 +532,15 @@ it and regenerate this file. An operation listed in several CyberChef categories
 
 | CyberChef | Status | Forge | Note |
 | --- | --- | --- | --- |
-| Detect File Type | not yet |  |  |
-| Scan for Embedded Files | not yet |  |  |
+| Detect File Type | redesigned | `filetype:detect` | A table of about 150 signatures (name, extensions, MIME type, description, magic bytes with offsets and masks) in src/filetype-sigs.ts, written from the format documents and file(1)'s magic list, not copied from CyberChef: images, video, audio, documents (PDF, RTF, OLE2, OOXML and ODF by their first ZIP entry, EPUB), applications (ELF, PE and DOS MZ told apart by the PE header, Mach-O, Java class, DEX, WebAssembly), archives (ZIP, JAR, RAR 4 and 5, 7z, gzip, bzip2, xz, Zstandard, tar, cab, cpio, ar, RPM, ISO, ...) and miscellaneous (SQLite, pcap and pcapng, bplist, DER certificates, PEM, LNK, fonts, registry hives). The seven category switches are CyberChef's. Output is File type, Extension, MIME type and Description for every match at offset 0, a blank line between matches, and CyberChef's text for no match; the names and extensions are Forge's own table, so they differ from CyberChef's in places (an APK or a JAR is a ZIP whose first entry says so, or just a ZIP). The layout is from memory of CyberChef 11.5.0 and not checked against it. |
+| Scan for Embedded Files | redesigned | `filetype:scan` | Every offset of the data where a signature of the same table matches (the file would start there; a signature at an offset such as tar's ustar at 257 is reported at the start of the file), ordered by offset, as text: Offset N (0xN):, then the four lines of Detect File Type, and Total found: N. The category switches are CyberChef's; Ignore common byte sequences (the default) leaves out the short signatures that occur by chance in any data (MZ, ICO and CUR, MPEG audio and AAC frame sync, a shebang, zlib headers, ...), which CyberChef's version of the option does with its own list. The scan is one primitive (filetype:scan-list, public so that the YARA ops reuse it): 5 ms for 64 KiB and one VM step; the report is FL, about 250 steps a match. More matches than the value limit allows is E_LIMIT_VALUE. The introductory sentence and the layout are from memory of CyberChef and not checked against it. |
 | YARA Rules | not yet |  |  |
 | Remove EXIF | not yet |  |  |
 | Extract RGBA | not yet |  |  |
 | View Bit Plane | not yet |  |  |
 | Randomize Colour Palette | not yet |  |  |
 | Extract LSB | not yet |  |  |
-| ELF Info | not yet |  |  |
+| ELF Info | redesigned | `elf:info` | The layout and the values of `readelf -W -h -l -S -s` for ELF32 and ELF64, little and big endian, checked block for block against GNU readelf 2.42 on real and hand-built files (executables, shared objects, ELF32 BE MIPS, ARM, PowerPC64, RISC-V, GNU and FreeBSD OS/ABIs): the header, the program headers (with the interpreter line and DYN (Position-Independent Executable file) from DT_FLAGS_1), the section headers with their names, and .symtab and .dynsym with value, size, type, bind, visibility, section index and name. At most 2,000 rows a table, then a line with the number of the others. The names of the 213 machines, the OS/ABIs, section types and segment types are readelf's. Not shown: machine-specific flag words in the header Flags field, machine-specific section and segment type names (ARM EXIDX, MIPS RTPROC), the 'Section to Segment mapping', symbol versions and the dynamic section. Data that is not ELF, a table that runs past the data, or counts and offsets that lie are E_COERCE with the offset. CyberChef's own report layout is from memory (it follows readelf) and was not compared. |
 
 ## Multimedia (27)
 

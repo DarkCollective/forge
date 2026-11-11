@@ -44,7 +44,7 @@ const code = (r: Result) => (r.ok ? "ok" : r.error.code);
 const msg = (r: Result) => (r.ok ? "" : r.error.message);
 const textOf = (r: Result) => (top(r) as { v: string }).v;
 const info = (d: Uint8Array) => runtime.call("elf:info", [bytes(d)]);
-const hex = (s: string) => Uint8Array.from(Buffer.from(s, "hex"));
+const hex = (s: string) => Uint8Array.from((s.match(/../g) ?? []).map((x) => parseInt(x, 16)));
 
 type Fixture = { hex: string; text: string };
 const fx = (name: string) => (fixtures as unknown as Record<string, Fixture>)[name] as Fixture;

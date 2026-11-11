@@ -1,305 +1,305 @@
 [
- {
-  "name": "detect: png",
-  "ref": "sample made by Pillow Image.save PNG 4x3; type confirmed with file(1) 5.45",
-  "op": "filetype:detect",
-  "params": {},
-  "input": {
-   "value": "89504e470d0a1a0a0000000d49484452000000040000000308020000003b9639910000001449444154789c633c2167c300034c0c48008503002b1201282be191a80000000049454e44ae426082",
-   "enc": "hex"
-  },
-  "expect": {
-   "value": "File type:   Portable Network Graphics image\nExtension:   png\nMIME type:   image/png\nDescription: PNG image\n",
-   "enc": "utf8"
-  }
- },
- {
-  "name": "detect: gzip",
-  "ref": "sample made by Python gzip.compress; type confirmed with file(1) 5.45",
-  "op": "filetype:detect",
-  "params": {},
-  "input": {
-   "value": "1f8b08000000000002ff2bc94855282ccd4cce56482aca2fcf5348cbaf5028a1b21800c685af2a64000000",
-   "enc": "hex"
-  },
-  "expect": {
-   "value": "File type:   GZIP compressed file\nExtension:   gz,tgz\nMIME type:   application/gzip\nDescription: gzip stream (deflate)\n",
-   "enc": "utf8"
-  }
- },
- {
-  "name": "detect: elf",
-  "ref": "sample made by cc -nostdlib -static -s (872 bytes); type confirmed with file(1) 5.45",
-  "op": "filetype:detect",
-  "params": {},
-  "input": {
-   "value": "7f454c4602010100000000000000000002003e000100000040014000000000004000000000000000e801000000000000000000004000380004004000060005000100000007000000200100000000000020014000000000002001400000000000640000000000000064000000000000000800000000000000040000000400000020010000000000002001400000000000200140000000000020000000000000002000000000000000080000000000000053e574640400000020010000000000002001400000000000200140000000000020000000000000002000000000000000080000000000000051e5746406000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000040000001000000005000000474e5500020000c0040000000300000000000000f30f1efa554889e590ebfd00000000001400000000000000017a5200017810011b0c070890010000180000001c000000d0ffffff0b00000000450e108602430d060000004743433a20285562756e74752031332e332e302d367562756e7475327e32342e30342e31292031332e332e3000002e7368737472746162002e6e6f74652e676e752e70726f7065727479002e74657874002e65685f6672616d65002e636f6d6d656e7400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000b0000000700000002000000000000002001400000000000200100000000000020000000000000000000000000000000080000000000000000000000000000001e000000010000000700000000000000400140000000000040010000000000000b00000000000000000000000000000001000000000000000000000000000000240000000100000002000000000000005001400000000000500100000000000034000000000000000000000000000000080000000000000000000000000000002e000000010000003000000000000000000000000000000084010000000000002d00000000000000000000000000000001000000000000000100000000000000010000000300000000000000000000000000000000000000b1010000000000003700000000000000000000000000000001000000000000000000000000000000",
-   "enc": "hex"
-  },
-  "expect": {
-   "value": "File type:   Executable and Linkable Format\nExtension:   elf,so,o,bin\nMIME type:   application/x-executable\nDescription: ELF executable, object or shared library\n",
-   "enc": "utf8"
-  }
- },
- {
-  "name": "detect: pdf",
-  "ref": "sample made by hand-written minimal PDF; type confirmed with file(1) 5.45",
-  "op": "filetype:detect",
-  "params": {},
-  "input": {
-   "value": "255044462d312e310a312030206f626a3c3c2f547970652f436174616c6f672f50616765732032203020523e3e656e646f626a0a322030206f626a3c3c2f547970652f50616765732f4b6964735b5d2f436f756e7420303e3e656e646f626a0a747261696c65723c3c2f526f6f742031203020523e3e0a2525454f460a",
-   "enc": "hex"
-  },
-  "expect": {
-   "value": "File type:   Portable Document Format\nExtension:   pdf\nMIME type:   application/pdf\nDescription: PDF document\n",
-   "enc": "utf8"
-  }
- },
- {
-  "name": "detect: sqlite",
-  "ref": "sample made by Python sqlite3 page_size=512; type confirmed with file(1) 5.45",
-  "op": "filetype:detect",
-  "params": {},
-  "input": {
-   "value": "53514c69746520666f726d61742033000200010100402020000000020000000200000000000000000000000100000004000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000002002e95c90d0000000101df0001df0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001f0106170f0f012f7461626c65747402435245415445205441424c4520742861290d0000000101fc0001fc00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002010209",
-   "enc": "hex"
-  },
-  "expect": {
-   "value": "File type:   SQLite 3 database\nExtension:   sqlite,db\nMIME type:   application/vnd.sqlite3\nDescription: SQLite format 3\n",
-   "enc": "utf8"
-  }
- },
- {
-  "name": "detect: bzip2",
-  "ref": "sample made by Python bz2.compress; type confirmed with file(1) 5.45",
-  "op": "filetype:detect",
-  "params": {},
-  "input": {
-   "value": "425a6839314159265359c79ca4d200000499804000100034204410200031064c4094681a2469c69790c650cf177245385090c79ca4d2",
-   "enc": "hex"
-  },
-  "expect": {
-   "value": "File type:   bzip2 compressed file\nExtension:   bz2,tbz2\nMIME type:   application/x-bzip2\nDescription: bzip2 stream\n",
-   "enc": "utf8"
-  }
- },
- {
-  "name": "detect: xz",
-  "ref": "sample made by Python lzma.compress; type confirmed with file(1) 5.45",
-  "op": "filetype:detect",
-  "params": {},
-  "input": {
-   "value": "fd377a585a000004e6d6b4460200210116000000742fe5a301000e787a206461746120787a206461746100001f440307e57b50870001270fdf1afc6a1fb6f37d010000000004595a",
-   "enc": "hex"
-  },
-  "expect": {
-   "value": "File type:   XZ compressed file\nExtension:   xz,txz\nMIME type:   application/x-xz\nDescription: xz stream\n",
-   "enc": "utf8"
-  }
- },
- {
-  "name": "detect: ZIP and JAR share a signature",
-  "ref": "sample made by Python zipfile; type confirmed with file(1) 5.45",
-  "op": "filetype:detect",
-  "params": {},
-  "input": {
-   "value": "504b0304140000000000f8a46b5d7adf5a201600000016000000140000004d4554412d494e462f4d414e49464553542e4d464d616e69666573742d56657273696f6e3a20312e300a504b01021403140000000000f8a46b5d7adf5a2016000000160000001400000000000000000000008001000000004d4554412d494e462f4d414e49464553542e4d46504b0506000000000100010042000000480000000000",
-   "enc": "hex"
-  },
-  "expect": {
-   "value": "File type:   ZIP archive\nExtension:   zip\nMIME type:   application/zip\nDescription: ZIP archive (also JAR, APK, OOXML and ODF)\n\nFile type:   Java archive\nExtension:   jar\nMIME type:   application/java-archive\nDescription: JAR (a ZIP that starts with META-INF)\n",
-   "enc": "utf8"
-  }
- },
- {
-  "name": "detect: category switch off",
-  "ref": "category rule",
-  "op": "filetype:detect",
-  "params": {
-   "images": false
-  },
-  "input": {
-   "value": "89504e470d0a1a0a0000000d49484452000000040000000308020000003b9639910000001449444154789c633c2167c300034c0c48008503002b1201282be191a80000000049454e44ae426082",
-   "enc": "hex"
-  },
-  "expect": {
-   "value": "Unknown file type. Have you tried checking the entropy of this data to determine whether it might be encrypted or compressed?",
-   "enc": "utf8"
-  }
- },
- {
-  "name": "detect: empty input",
-  "ref": "empty",
-  "op": "filetype:detect",
-  "params": {},
-  "input": {
-   "value": "",
-   "enc": "utf8"
-  },
-  "expect": {
-   "value": "Unknown file type. Have you tried checking the entropy of this data to determine whether it might be encrypted or compressed?",
-   "enc": "utf8"
-  }
- },
- {
-  "name": "scan: a PNG and a gzip stream in junk",
-  "ref": "offsets by construction (4 and 83)",
-  "op": "filetype:scan",
-  "params": {},
-  "input": {
-   "value": "6a756e6b89504e470d0a1a0a0000000d49484452000000040000000308020000003b9639910000001449444154789c633c2167c300034c0c48008503002b1201282be191a80000000049454e44ae4260822d2d1f8b08000000000002ff2bc94855282ccd4cce56482aca2fcf5348cbaf5028a1b21800c685af2a64000000656e64",
-   "enc": "hex"
-  },
-  "expect": {
-   "value": "Scanning data for 'magic bytes' which may indicate embedded files. The following results may be false positives and should not be treated as reliable. Any sufficiently long data is likely to contain these magic bytes coincidentally.\n\nOffset 4 (0x4):\n  File type:   Portable Network Graphics image\n  Extension:   png\n  MIME type:   image/png\n  Description: PNG image\n\nOffset 83 (0x53):\n  File type:   GZIP compressed file\n  Extension:   gz,tgz\n  MIME type:   application/gzip\n  Description: gzip stream (deflate)\n\nTotal found: 2",
-   "enc": "utf8"
-  }
- },
- {
-  "name": "scan: nothing",
-  "ref": "text",
-  "op": "filetype:scan",
-  "params": {},
-  "input": {
-   "value": "just some text",
-   "enc": "utf8"
-  },
-  "expect": {
-   "value": "Scanning data for 'magic bytes' which may indicate embedded files. The following results may be false positives and should not be treated as reliable. Any sufficiently long data is likely to contain these magic bytes coincidentally.\n\nNo embedded files were found.",
-   "enc": "utf8"
-  }
- },
- {
-  "name": "scan: weak signatures need ignore-common off",
-  "ref": "MZ is two bytes",
-  "op": "filetype:scan",
-  "params": {
-   "ignore-common": false
-  },
-  "input": {
-   "value": "#!/bin/sh\n",
-   "enc": "utf8"
-  },
-  "expect": {
-   "value": "Scanning data for 'magic bytes' which may indicate embedded files. The following results may be false positives and should not be treated as reliable. Any sufficiently long data is likely to contain these magic bytes coincidentally.\n\nOffset 0 (0x0):\n  File type:   Script with a shebang\n  Extension:   sh\n  MIME type:   text/x-shellscript\n  Description: Interpreter line (#!/...)\n\nTotal found: 1",
-   "enc": "utf8"
-  }
- },
- {
-  "name": "extract: PNG and gzip cut out of junk",
-  "ref": "samples cut out by length",
-  "op": "filetype:extract",
-  "params": {},
-  "input": {
-   "value": "6a756e6b89504e470d0a1a0a0000000d49484452000000040000000308020000003b9639910000001449444154789c633c2167c300034c0c48008503002b1201282be191a80000000049454e44ae4260822d2d1f8b08000000000002ff2bc94855282ccd4cce56482aca2fcf5348cbaf5028a1b21800c685af2a64000000656e64",
-   "enc": "hex"
-  },
-  "expect": {
-   "json": [
-    {
-     "name": "extracted_at_0x4.png",
-     "offset": 4,
-     "size": 77,
-     "type": "image/png",
-     "data": {
-      "$bytes": "89504e470d0a1a0a0000000d49484452000000040000000308020000003b9639910000001449444154789c633c2167c300034c0c48008503002b1201282be191a80000000049454e44ae426082"
-     }
+  {
+    "name": "detect: png",
+    "ref": "sample made by Pillow Image.save PNG 4x3; type confirmed with file(1) 5.45",
+    "op": "filetype:detect",
+    "params": {},
+    "input": {
+      "value": "89504e470d0a1a0a0000000d49484452000000040000000308020000003b9639910000001449444154789c633c2167c300034c0c48008503002b1201282be191a80000000049454e44ae426082",
+      "enc": "hex"
     },
-    {
-     "name": "extracted_at_0x53.gz",
-     "offset": 83,
-     "size": 43,
-     "type": "application/gzip",
-     "data": {
-      "$bytes": "1f8b08000000000002ff2bc94855282ccd4cce56482aca2fcf5348cbaf5028a1b21800c685af2a64000000"
-     }
+    "expect": {
+      "value": "File type:   Portable Network Graphics image\nExtension:   png\nMIME type:   image/png\nDescription: PNG image\n",
+      "enc": "utf8"
     }
-   ]
+  },
+  {
+    "name": "detect: gzip",
+    "ref": "sample made by Python gzip.compress; type confirmed with file(1) 5.45",
+    "op": "filetype:detect",
+    "params": {},
+    "input": {
+      "value": "1f8b08000000000002ff2bc94855282ccd4cce56482aca2fcf5348cbaf5028a1b21800c685af2a64000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "File type:   GZIP compressed file\nExtension:   gz,tgz\nMIME type:   application/gzip\nDescription: gzip stream (deflate)\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "detect: elf",
+    "ref": "sample made by cc -nostdlib -static -s (872 bytes); type confirmed with file(1) 5.45",
+    "op": "filetype:detect",
+    "params": {},
+    "input": {
+      "value": "7f454c4602010100000000000000000002003e000100000040014000000000004000000000000000e801000000000000000000004000380004004000060005000100000007000000200100000000000020014000000000002001400000000000640000000000000064000000000000000800000000000000040000000400000020010000000000002001400000000000200140000000000020000000000000002000000000000000080000000000000053e574640400000020010000000000002001400000000000200140000000000020000000000000002000000000000000080000000000000051e5746406000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000040000001000000005000000474e5500020000c0040000000300000000000000f30f1efa554889e590ebfd00000000001400000000000000017a5200017810011b0c070890010000180000001c000000d0ffffff0b00000000450e108602430d060000004743433a20285562756e74752031332e332e302d367562756e7475327e32342e30342e31292031332e332e3000002e7368737472746162002e6e6f74652e676e752e70726f7065727479002e74657874002e65685f6672616d65002e636f6d6d656e7400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000b0000000700000002000000000000002001400000000000200100000000000020000000000000000000000000000000080000000000000000000000000000001e000000010000000700000000000000400140000000000040010000000000000b00000000000000000000000000000001000000000000000000000000000000240000000100000002000000000000005001400000000000500100000000000034000000000000000000000000000000080000000000000000000000000000002e000000010000003000000000000000000000000000000084010000000000002d00000000000000000000000000000001000000000000000100000000000000010000000300000000000000000000000000000000000000b1010000000000003700000000000000000000000000000001000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "File type:   Executable and Linkable Format\nExtension:   elf,so,o,bin\nMIME type:   application/x-executable\nDescription: ELF executable, object or shared library\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "detect: pdf",
+    "ref": "sample made by hand-written minimal PDF; type confirmed with file(1) 5.45",
+    "op": "filetype:detect",
+    "params": {},
+    "input": {
+      "value": "255044462d312e310a312030206f626a3c3c2f547970652f436174616c6f672f50616765732032203020523e3e656e646f626a0a322030206f626a3c3c2f547970652f50616765732f4b6964735b5d2f436f756e7420303e3e656e646f626a0a747261696c65723c3c2f526f6f742031203020523e3e0a2525454f460a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "File type:   Portable Document Format\nExtension:   pdf\nMIME type:   application/pdf\nDescription: PDF document\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "detect: sqlite",
+    "ref": "sample made by Python sqlite3 page_size=512; type confirmed with file(1) 5.45",
+    "op": "filetype:detect",
+    "params": {},
+    "input": {
+      "value": "53514c69746520666f726d61742033000200010100402020000000020000000200000000000000000000000100000004000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000002002e95c90d0000000101df0001df0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001f0106170f0f012f7461626c65747402435245415445205441424c4520742861290d0000000101fc0001fc00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002010209",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "File type:   SQLite 3 database\nExtension:   sqlite,db\nMIME type:   application/vnd.sqlite3\nDescription: SQLite format 3\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "detect: bzip2",
+    "ref": "sample made by Python bz2.compress; type confirmed with file(1) 5.45",
+    "op": "filetype:detect",
+    "params": {},
+    "input": {
+      "value": "425a6839314159265359c79ca4d200000499804000100034204410200031064c4094681a2469c69790c650cf177245385090c79ca4d2",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "File type:   bzip2 compressed file\nExtension:   bz2,tbz2\nMIME type:   application/x-bzip2\nDescription: bzip2 stream\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "detect: xz",
+    "ref": "sample made by Python lzma.compress; type confirmed with file(1) 5.45",
+    "op": "filetype:detect",
+    "params": {},
+    "input": {
+      "value": "fd377a585a000004e6d6b4460200210116000000742fe5a301000e787a206461746120787a206461746100001f440307e57b50870001270fdf1afc6a1fb6f37d010000000004595a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "File type:   XZ compressed file\nExtension:   xz,txz\nMIME type:   application/x-xz\nDescription: xz stream\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "detect: ZIP and JAR share a signature",
+    "ref": "sample made by Python zipfile; type confirmed with file(1) 5.45",
+    "op": "filetype:detect",
+    "params": {},
+    "input": {
+      "value": "504b0304140000000000f8a46b5d7adf5a201600000016000000140000004d4554412d494e462f4d414e49464553542e4d464d616e69666573742d56657273696f6e3a20312e300a504b01021403140000000000f8a46b5d7adf5a2016000000160000001400000000000000000000008001000000004d4554412d494e462f4d414e49464553542e4d46504b0506000000000100010042000000480000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "File type:   ZIP archive\nExtension:   zip\nMIME type:   application/zip\nDescription: ZIP archive (also JAR, APK, OOXML and ODF)\n\nFile type:   Java archive\nExtension:   jar\nMIME type:   application/java-archive\nDescription: JAR (a ZIP that starts with META-INF)\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "detect: category switch off",
+    "ref": "category rule",
+    "op": "filetype:detect",
+    "params": {
+      "images": false
+    },
+    "input": {
+      "value": "89504e470d0a1a0a0000000d49484452000000040000000308020000003b9639910000001449444154789c633c2167c300034c0c48008503002b1201282be191a80000000049454e44ae426082",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Unknown file type. Have you tried checking the entropy of this data to determine whether it might be encrypted or compressed?",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "detect: empty input",
+    "ref": "empty",
+    "op": "filetype:detect",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Unknown file type. Have you tried checking the entropy of this data to determine whether it might be encrypted or compressed?",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "scan: a PNG and a gzip stream in junk",
+    "ref": "offsets by construction (4 and 83)",
+    "op": "filetype:scan",
+    "params": {},
+    "input": {
+      "value": "6a756e6b89504e470d0a1a0a0000000d49484452000000040000000308020000003b9639910000001449444154789c633c2167c300034c0c48008503002b1201282be191a80000000049454e44ae4260822d2d1f8b08000000000002ff2bc94855282ccd4cce56482aca2fcf5348cbaf5028a1b21800c685af2a64000000656e64",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Scanning data for 'magic bytes' which may indicate embedded files. The following results may be false positives and should not be treated as reliable. Any sufficiently long data is likely to contain these magic bytes coincidentally.\n\nOffset 4 (0x4):\n  File type:   Portable Network Graphics image\n  Extension:   png\n  MIME type:   image/png\n  Description: PNG image\n\nOffset 83 (0x53):\n  File type:   GZIP compressed file\n  Extension:   gz,tgz\n  MIME type:   application/gzip\n  Description: gzip stream (deflate)\n\nTotal found: 2",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "scan: nothing",
+    "ref": "text",
+    "op": "filetype:scan",
+    "params": {},
+    "input": {
+      "value": "just some text",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Scanning data for 'magic bytes' which may indicate embedded files. The following results may be false positives and should not be treated as reliable. Any sufficiently long data is likely to contain these magic bytes coincidentally.\n\nNo embedded files were found.",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "scan: weak signatures need ignore-common off",
+    "ref": "MZ is two bytes",
+    "op": "filetype:scan",
+    "params": {
+      "ignore-common": false
+    },
+    "input": {
+      "value": "#!/bin/sh\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Scanning data for 'magic bytes' which may indicate embedded files. The following results may be false positives and should not be treated as reliable. Any sufficiently long data is likely to contain these magic bytes coincidentally.\n\nOffset 0 (0x0):\n  File type:   Script with a shebang\n  Extension:   sh\n  MIME type:   text/x-shellscript\n  Description: Interpreter line (#!/...)\n\nTotal found: 1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "extract: PNG and gzip cut out of junk",
+    "ref": "samples cut out by length",
+    "op": "filetype:extract",
+    "params": {},
+    "input": {
+      "value": "6a756e6b89504e470d0a1a0a0000000d49484452000000040000000308020000003b9639910000001449444154789c633c2167c300034c0c48008503002b1201282be191a80000000049454e44ae4260822d2d1f8b08000000000002ff2bc94855282ccd4cce56482aca2fcf5348cbaf5028a1b21800c685af2a64000000656e64",
+      "enc": "hex"
+    },
+    "expect": {
+      "json": [
+        {
+          "name": "extracted_at_0x4.png",
+          "offset": 4,
+          "size": 77,
+          "type": "image/png",
+          "data": {
+            "$bytes": "89504e470d0a1a0a0000000d49484452000000040000000308020000003b9639910000001449444154789c633c2167c300034c0c48008503002b1201282be191a80000000049454e44ae426082"
+          }
+        },
+        {
+          "name": "extracted_at_0x53.gz",
+          "offset": 83,
+          "size": 43,
+          "type": "application/gzip",
+          "data": {
+            "$bytes": "1f8b08000000000002ff2bc94855282ccd4cce56482aca2fcf5348cbaf5028a1b21800c685af2a64000000"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "extract: nothing",
+    "ref": "text",
+    "op": "filetype:extract",
+    "params": {},
+    "input": {
+      "value": "no files here",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": []
+    }
+  },
+  {
+    "name": "extract: a type without an end finder is E_COERCE when failures are not ignored",
+    "ref": "Pillow TIFF",
+    "op": "filetype:extract",
+    "params": {
+      "ignore-failed": false
+    },
+    "input": {
+      "value": "49492a00080000000a0000010400010000000400000001010400010000000300000002010300030000008600000003010300010000000100000006010300010000000200000011010400010000008c0000001501030001000000030000001601040001000000030000001701040001000000240000001c010300010000000100000000000000080008000800c81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3c",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "extract: a type without an end finder is left out",
+    "ref": "Pillow TIFF",
+    "op": "filetype:extract",
+    "params": {},
+    "input": {
+      "value": "49492a00080000000a0000010400010000000400000001010400010000000300000002010300030000008600000003010300010000000100000006010300010000000200000011010400010000008c0000001501030001000000030000001601040001000000030000001701040001000000240000001c010300010000000100000000000000080008000800c81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3c",
+      "enc": "hex"
+    },
+    "expect": {
+      "json": []
+    }
+  },
+  {
+    "name": "entry: the second file",
+    "ref": "same as extract",
+    "op": "filetype:entry",
+    "params": {
+      "index": 1
+    },
+    "input": {
+      "value": "6a756e6b89504e470d0a1a0a0000000d49484452000000040000000308020000003b9639910000001449444154789c633c2167c300034c0c48008503002b1201282be191a80000000049454e44ae4260822d2d1f8b08000000000002ff2bc94855282ccd4cce56482aca2fcf5348cbaf5028a1b21800c685af2a64000000656e64",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1f8b08000000000002ff2bc94855282ccd4cce56482aca2fcf5348cbaf5028a1b21800c685af2a64000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "entry: past the last file",
+    "ref": "range",
+    "op": "filetype:entry",
+    "params": {
+      "index": 2
+    },
+    "input": {
+      "value": "6a756e6b89504e470d0a1a0a0000000d49484452000000040000000308020000003b9639910000001449444154789c633c2167c300034c0c48008503002b1201282be191a80000000049454e44ae4260822d2d1f8b08000000000002ff2bc94855282ccd4cce56482aca2fcf5348cbaf5028a1b21800c685af2a64000000656e64",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "entry: empty input",
+    "ref": "empty",
+    "op": "filetype:entry",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
   }
- },
- {
-  "name": "extract: nothing",
-  "ref": "text",
-  "op": "filetype:extract",
-  "params": {},
-  "input": {
-   "value": "no files here",
-   "enc": "utf8"
-  },
-  "expect": {
-   "json": []
-  }
- },
- {
-  "name": "extract: a type without an end finder is E_COERCE when failures are not ignored",
-  "ref": "Pillow TIFF",
-  "op": "filetype:extract",
-  "params": {
-   "ignore-failed": false
-  },
-  "input": {
-   "value": "49492a00080000000a0000010400010000000400000001010400010000000300000002010300030000008600000003010300010000000100000006010300010000000200000011010400010000008c0000001501030001000000030000001601040001000000030000001701040001000000240000001c010300010000000100000000000000080008000800c81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3c",
-   "enc": "hex"
-  },
-  "expect": {
-   "error": "E_COERCE"
-  }
- },
- {
-  "name": "extract: a type without an end finder is left out",
-  "ref": "Pillow TIFF",
-  "op": "filetype:extract",
-  "params": {},
-  "input": {
-   "value": "49492a00080000000a0000010400010000000400000001010400010000000300000002010300030000008600000003010300010000000100000006010300010000000200000011010400010000008c0000001501030001000000030000001601040001000000030000001701040001000000240000001c010300010000000100000000000000080008000800c81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3cc81e3c",
-   "enc": "hex"
-  },
-  "expect": {
-   "json": []
-  }
- },
- {
-  "name": "entry: the second file",
-  "ref": "same as extract",
-  "op": "filetype:entry",
-  "params": {
-   "index": 1
-  },
-  "input": {
-   "value": "6a756e6b89504e470d0a1a0a0000000d49484452000000040000000308020000003b9639910000001449444154789c633c2167c300034c0c48008503002b1201282be191a80000000049454e44ae4260822d2d1f8b08000000000002ff2bc94855282ccd4cce56482aca2fcf5348cbaf5028a1b21800c685af2a64000000656e64",
-   "enc": "hex"
-  },
-  "expect": {
-   "value": "1f8b08000000000002ff2bc94855282ccd4cce56482aca2fcf5348cbaf5028a1b21800c685af2a64000000",
-   "enc": "hex"
-  }
- },
- {
-  "name": "entry: past the last file",
-  "ref": "range",
-  "op": "filetype:entry",
-  "params": {
-   "index": 2
-  },
-  "input": {
-   "value": "6a756e6b89504e470d0a1a0a0000000d49484452000000040000000308020000003b9639910000001449444154789c633c2167c300034c0c48008503002b1201282be191a80000000049454e44ae4260822d2d1f8b08000000000002ff2bc94855282ccd4cce56482aca2fcf5348cbaf5028a1b21800c685af2a64000000656e64",
-   "enc": "hex"
-  },
-  "expect": {
-   "error": "E_RANGE"
-  }
- },
- {
-  "name": "entry: empty input",
-  "ref": "empty",
-  "op": "filetype:entry",
-  "params": {},
-  "input": {
-   "value": "",
-   "enc": "utf8"
-  },
-  "expect": {
-   "error": "E_RANGE"
-  }
- }
 ]

@@ -45,7 +45,8 @@ const msg = (r: Result) => (r.ok ? "" : r.error.message);
 const textOf = (r: Result) => (top(r) as { v: string }).v;
 const extract = (d: Uint8Array) => runtime.call("exif:extract", [bytes(d)]);
 const fx = fixtures as unknown as Record<string, string>;
-const sample = (name: string) => Uint8Array.from(Buffer.from(fx[name] as string, "hex"));
+const sample = (name: string) =>
+  Uint8Array.from(((fx[name] as string).match(/../g) ?? []).map((x) => parseInt(x, 16)));
 const text = (s: string) => new TextEncoder().encode(s);
 const dv = (d: Uint8Array) => new DataView(d.buffer, d.byteOffset, d.byteLength);
 const cat = (...parts: Uint8Array[]): Uint8Array => {

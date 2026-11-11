@@ -38,6 +38,7 @@ IN: id3
 : _tail ( b:bytes i:int -- bytes )
   b i b len min b len slice ;
 
+\ util-candidate: starts-with-bytes?
 : _starts? ( d:bytes prefix:bytes -- bool )
   d len prefix len >= [ d 0 prefix len slice prefix = ] [ false ] if ;
 
@@ -126,6 +127,7 @@ IN: id3
 : _field-text ( b:bytes enc:int -- str )
   b enc _text _values ;
 
+\ util-candidate: printable-bytes?
 : _printable? ( b:bytes -- bool )
   b len 0 > b [ dup 32 >= swap 126 <= and ] filter len b len = and ;
 
