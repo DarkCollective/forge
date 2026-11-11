@@ -542,7 +542,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Verification failure",
+      "value": "Verification Failure",
       "enc": "utf8"
     }
   },
@@ -563,7 +563,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Verification failure",
+      "value": "Verification Failure",
       "enc": "utf8"
     }
   },
@@ -584,7 +584,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Verification failure",
+      "value": "Verification Failure",
       "enc": "utf8"
     }
   },
@@ -605,7 +605,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Verification failure",
+      "value": "Verification Failure",
       "enc": "utf8"
     }
   },
@@ -626,7 +626,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Verification failure",
+      "value": "Verification Failure",
       "enc": "utf8"
     }
   },
@@ -753,7 +753,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Verification failure",
+      "value": "Verification Failure",
       "enc": "utf8"
     }
   },
@@ -774,7 +774,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Verification failure",
+      "value": "Verification Failure",
       "enc": "utf8"
     }
   },
@@ -796,7 +796,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Verification failure",
+      "value": "Verification Failure",
       "enc": "utf8"
     }
   },
@@ -864,7 +864,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Verification failure",
+      "value": "Verification Failure",
       "enc": "utf8"
     }
   },
@@ -932,7 +932,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Verification failure",
+      "value": "Verification Failure",
       "enc": "utf8"
     }
   },
@@ -1000,7 +1000,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Verification failure",
+      "value": "Verification Failure",
       "enc": "utf8"
     }
   },
@@ -1068,7 +1068,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Verification failure",
+      "value": "Verification Failure",
       "enc": "utf8"
     }
   },
@@ -1121,7 +1121,7 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "Verification failure",
+      "value": "Verification Failure",
       "enc": "utf8"
     }
   },
@@ -1654,32 +1654,6 @@
     }
   },
   {
-    "name": "public key from an EC private key (SEC1) is refused until WP 5.51",
-    "ref": "openssl ecparam -genkey",
-    "op": "rsa:public-key",
-    "params": {},
-    "input": {
-      "value": "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIKlCa7GfW9qrBgYT+xX5Ko5zazLJdqwPGk9yVUd2r6IWoAoGCCqGSM49\nAwEHoUQDQgAEVFHVfKafyK4NZ1enOoD0QvBUAQY528J4B2/8GqjaeRvgpBIq0XEH\nZwZZZ+HjbrFx8pRt3nDiMECYzpUiqgpdNg==\n-----END EC PRIVATE KEY-----\n",
-      "enc": "utf8"
-    },
-    "expect": {
-      "error": "E_RANGE"
-    }
-  },
-  {
-    "name": "public key from an EC private key (PKCS#8) is refused until WP 5.51",
-    "ref": "openssl pkcs8 -topk8 of an EC key",
-    "op": "rsa:public-key",
-    "params": {},
-    "input": {
-      "value": "-----BEGIN PRIVATE KEY-----\nMIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgqUJrsZ9b2qsGBhP7\nFfkqjnNrMsl2rA8aT3JVR3avohahRANCAARUUdV8pp/Irg1nV6c6gPRC8FQBBjnb\nwngHb/waqNp5G+CkEirRcQdnBlln4eNusXHylG3ecOIwQJjOlSKqCl02\n-----END PRIVATE KEY-----\n",
-      "enc": "utf8"
-    },
-    "expect": {
-      "error": "E_RANGE"
-    }
-  },
-  {
     "name": "sign with an EC key is refused",
     "ref": "EC key",
     "op": "rsa:sign",
@@ -1863,6 +1837,198 @@
     },
     "expect": {
       "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "public key from an EC private key (SEC1)",
+    "ref": "openssl pkey -pubout",
+    "op": "rsa:public-key",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgdWeMU3lAjPR8c+O6\nghBk65dBg5LXEC0isa+h1guZ0RqhRANCAARSsOdyU2nux+yH/ny/3ZGKZ1rYn9RR\nZQk5A1rTsojSfwAnSR2hBFo2biwpRjuIu3i9VfJA6lE0CQGslNaDoREY\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEUrDnclNp7sfsh/58v92Rimda2J/U\nUWUJOQNa07KI0n8AJ0kdoQRaNm4sKUY7iLt4vVXyQOpRNAkBrJTWg6ERGA==\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "public key from an EC private key (PKCS#8) as DER",
+    "ref": "openssl pkey -pubout -outform DER",
+    "op": "rsa:public-key",
+    "params": {
+      "format": "DER"
+    },
+    "input": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgdWeMU3lAjPR8c+O6\nghBk65dBg5LXEC0isa+h1guZ0RqhRANCAARSsOdyU2nux+yH/ny/3ZGKZ1rYn9RR\nZQk5A1rTsojSfwAnSR2hBFo2biwpRjuIu3i9VfJA6lE0CQGslNaDoREY\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3059301306072a8648ce3d020106082a8648ce3d0301070342000452b0e7725369eec7ec87fe7cbfdd918a675ad89fd451650939035ad3b288d27f0027491da1045a366e2c29463b88bb78bd55f240ea51340901ac94d683a11118",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "public key from a P-384 key as JWK",
+    "ref": "Python cryptography public_numbers, Base64url (RFC 7518 section 6.2.1)",
+    "op": "rsa:public-key",
+    "params": {
+      "format": "JWK"
+    },
+    "input": {
+      "value": "-----BEGIN EC PRIVATE KEY-----\nMIGkAgEBBDC9V6YxxPxpaP1yeK4jq1ISSG5wXr/Xsh7dt29WBv9pePNQfG4ntQFY\nXAvod2C7nYKgBwYFK4EEACKhZANiAAR8WcJ7g8s2gEz8s969/WnnsLS6WxyzHrTJ\nFjCEr7f2i69t9SImZtxcDRmNeyl8/CPHMgGqBxbvv0CHEDZIwHHvJAEopld/1Ngi\nnuFRT9p6wsEkWcwLHOVyuEW+VB4X3as=\n-----END EC PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"kty\":\"EC\",\"crv\":\"P-384\",\"x\":\"fFnCe4PLNoBM_LPevf1p57C0ulscsx60yRYwhK-39ouvbfUiJmbcXA0ZjXspfPwj\",\"y\":\"xzIBqgcW779AhxA2SMBx7yQBKKZXf9TYIp7hUU_aesLBJFnMCxzlcrhFvlQeF92r\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "public key from a P-521 key (SEC1)",
+    "ref": "openssl pkey -pubout",
+    "op": "rsa:public-key",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN EC PRIVATE KEY-----\nMIHcAgEBBEIBtwlgLY6irFcOLQFhtzIUQ9CM3htPHdZeqvTIgaN/9+7iJcl0YJky\n+BCxx/j02rgvq+tbAIk5hviwsr4+IElUBi6gBwYFK4EEACOhgYkDgYYABAG9ppHx\nOAzRvHh7kyIpEfI5HkFyexNn01x2m3YNU7fx/0PrgPyf5TGPaMz9yH8vY9CoY8kj\n4PIzEP2KR0M36sIC4QCm8F/FKp7SetqAyBJyzu4+KxauOau2BO+kRkquY4I9Q5Sg\nlF3HPAJB9RhFmEHJwkirQijknEnVFcZd0JloZr6UlQ==\n-----END EC PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMIGbMBAGByqGSM49AgEGBSuBBAAjA4GGAAQBvaaR8TgM0bx4e5MiKRHyOR5BcnsT\nZ9Ncdpt2DVO38f9D64D8n+Uxj2jM/ch/L2PQqGPJI+DyMxD9ikdDN+rCAuEApvBf\nxSqe0nragMgScs7uPisWrjmrtgTvpEZKrmOCPUOUoJRdxzwCQfUYRZhBycJIq0Io\n5JxJ1RXGXdCZaGa+lJU=\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "public key from a P-521 key as JWK, x and y are 66 bytes",
+    "ref": "Python cryptography public_numbers, Base64url (RFC 7518 section 6.2.1)",
+    "op": "rsa:public-key",
+    "params": {
+      "format": "JWK"
+    },
+    "input": {
+      "value": "-----BEGIN EC PRIVATE KEY-----\nMIHcAgEBBEIBtwlgLY6irFcOLQFhtzIUQ9CM3htPHdZeqvTIgaN/9+7iJcl0YJky\n+BCxx/j02rgvq+tbAIk5hviwsr4+IElUBi6gBwYFK4EEACOhgYkDgYYABAG9ppHx\nOAzRvHh7kyIpEfI5HkFyexNn01x2m3YNU7fx/0PrgPyf5TGPaMz9yH8vY9CoY8kj\n4PIzEP2KR0M36sIC4QCm8F/FKp7SetqAyBJyzu4+KxauOau2BO+kRkquY4I9Q5Sg\nlF3HPAJB9RhFmEHJwkirQijknEnVFcZd0JloZr6UlQ==\n-----END EC PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"kty\":\"EC\",\"crv\":\"P-521\",\"x\":\"Ab2mkfE4DNG8eHuTIikR8jkeQXJ7E2fTXHabdg1Tt_H_Q-uA_J_lMY9ozP3Ify9j0KhjySPg8jMQ_YpHQzfqwgLh\",\"y\":\"AKbwX8UqntJ62oDIEnLO7j4rFq45q7YE76RGSq5jgj1DlKCUXcc8AkH1GEWYQcnCSKtCKOScSdUVxl3QmWhmvpSV\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "public key from a secp256k1 key as JWK",
+    "ref": "Python cryptography public_numbers, Base64url",
+    "op": "rsa:public-key",
+    "params": {
+      "format": "JWK"
+    },
+    "input": {
+      "value": "-----BEGIN EC PRIVATE KEY-----\nMHQCAQEEIAlcEyPShVHofOkvMfbYVVkDmRddG+Eequ/XTgH8xtRUoAcGBSuBBAAK\noUQDQgAE6gxaJw2tv1+ZF0VaAxXEDXluSaFe8deddqpnP7nvFnTg9Ljl/0qoctj7\na510AQK8wZTbpts+lpEqgRpiSVrcWA==\n-----END EC PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"kty\":\"EC\",\"crv\":\"secp256k1\",\"x\":\"6gxaJw2tv1-ZF0VaAxXEDXluSaFe8deddqpnP7nvFnQ\",\"y\":\"4PS45f9KqHLY-2uddAECvMGU26bbPpaRKoEaYkla3Fg\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "public key from an encrypted PKCS#8 EC key",
+    "ref": "openssl pkcs8 -topk8 -passout pass:secret; openssl pkey -pubout",
+    "op": "rsa:public-key",
+    "params": {
+      "password": "secret"
+    },
+    "input": {
+      "value": "-----BEGIN ENCRYPTED PRIVATE KEY-----\nMIHsMFcGCSqGSIb3DQEFDTBKMCkGCSqGSIb3DQEFDDAcBAh04882rhiomQICCAAw\nDAYIKoZIhvcNAgkFADAdBglghkgBZQMEASoEEN28j32LUrhvK+swoJpMh0AEgZCZ\nK0j/DqI5erfkIhki/+bs9TrKQMjn3lsgAutdgOHw/ZWM6YfcTySGV/mr3Myh1Xy1\ncCPRVK9ahqXr2nCxlrM1CeFOkhsWjuUKlBfg8BC3MVfFsE/eeQVYlDocmYxGaZ9+\n4VoVkhffdRV2IM4lQ1dGPzz+3wOn/c5kg+qTd6946WbRKD1Xv/s+jnrcSQZwDDI=\n-----END ENCRYPTED PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEUrDnclNp7sfsh/58v92Rimda2J/U\nUWUJOQNa07KI0n8AJ0kdoQRaNm4sKUY7iLt4vVXyQOpRNAkBrJTWg6ERGA==\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "public key from a legacy encrypted EC key (AES-256-CBC)",
+    "ref": "openssl ec -aes256; openssl pkey -pubout",
+    "op": "rsa:public-key",
+    "params": {
+      "password": "pw1"
+    },
+    "input": {
+      "value": "-----BEGIN EC PRIVATE KEY-----\nProc-Type: 4,ENCRYPTED\nDEK-Info: AES-256-CBC,A2F0D9AFCD2E4C0FBEFD7D68161D3333\n\n9FPfQ8lus3nhdi0xTyDaOziDgH5DIet4HVpePnfvgf7oyTUeBi5TmSlLH0ELPupp\no1WMF7AlA8AC1nZyYwMn5aoC2scN42TBbJ4bJ3FkEWNepBXmsty9emaa/fG++Sbm\nQVk54H6i9q6sL5yTGhHTBM2d4jXbqqvcOVHOOCf7meN+rPDWTZz39WyHnKzydlIF\nAufet0T2bvt7u8L4sJ4F65+zv5oClGkhiOQphAnreI4=\n-----END EC PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEfFnCe4PLNoBM/LPevf1p57C0ulscsx60\nyRYwhK+39ouvbfUiJmbcXA0ZjXspfPwjxzIBqgcW779AhxA2SMBx7yQBKKZXf9TY\nIp7hUU/aesLBJFnMCxzlcrhFvlQeF92r\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "an EC key with a wrong password is E_COERCE",
+    "ref": "openssl ec -aes256",
+    "op": "rsa:public-key",
+    "params": {
+      "password": "nope"
+    },
+    "input": {
+      "value": "-----BEGIN EC PRIVATE KEY-----\nProc-Type: 4,ENCRYPTED\nDEK-Info: AES-256-CBC,A2F0D9AFCD2E4C0FBEFD7D68161D3333\n\n9FPfQ8lus3nhdi0xTyDaOziDgH5DIet4HVpePnfvgf7oyTUeBi5TmSlLH0ELPupp\no1WMF7AlA8AC1nZyYwMn5aoC2scN42TBbJ4bJ3FkEWNepBXmsty9emaa/fG++Sbm\nQVk54H6i9q6sL5yTGhHTBM2d4jXbqqvcOVHOOCf7meN+rPDWTZz39WyHnKzydlIF\nAufet0T2bvt7u8L4sJ4F65+zv5oClGkhiOQphAnreI4=\n-----END EC PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "public keys of an EC key, an RSA key and another EC key, in order",
+    "ref": "openssl pkey -pubout of each key",
+    "op": "rsa:public-key",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgdWeMU3lAjPR8c+O6\nghBk65dBg5LXEC0isa+h1guZ0RqhRANCAARSsOdyU2nux+yH/ny/3ZGKZ1rYn9RR\nZQk5A1rTsojSfwAnSR2hBFo2biwpRjuIu3i9VfJA6lE0CQGslNaDoREY\n-----END PRIVATE KEY-----\n-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDgwn549fAsMurW\ngZM8XGkloGvA1S1ZYJkPKP1mmu8dZnZITNn1Cirem7CDgH/2Iaibny7XfuASK/B/\nTMFWpV+lQGsLa1xCC3vfs9Xq1m+5L6YkgZlSstppkxE3zBb4RsbR5T0l3bSV4jJN\n7Tw3K4ipeK6yTeeb7Wl5qzxkENGhQE/cWOiOaySBJpJjaRcvvZQgNCDixNQLRY80\nuvPHoK1BQqfe5BbcUX+jmIxobDOVHQ2kc0iA64tU7U6p5D0qETlr+6J6HlkCvWhW\n+tlra+SyG1XUxrcLHpKcIJ6cqICcSq4cm2qowmxrUMieTcw/cEVhiz80SvDHKFmk\nukDOqBujAgMBAAECggEABUnzsZimn6uiZLd6MFFDtNEgZ/0RivO1IQBdF3qC25rA\neCAS1ZYj1HGDxvxm8R2b+u7VKoNU9iiBiW/+xrFaiFLKkg4N3DdVTA95Hlm7GaJP\nkwwCVcoD+LhaDzQ8FXiOOiczoqijv2PUvN+zFeCY39VeqwRz9EfdvlwIrkQfuAnL\nkuGbltMJrC0/gA5iWmLk2M2m00hxpeJ5KCfOst4aGu5blOvqGSAeAPcKo5Pfn/6u\nqfumkM1CFVyqTEPz5gf7N8zqcDaKvZ+y6mE1+sASvXBFA3WkB7o0NisAF2W30tdR\nvXwdFDe+dYXSgx3feR8lUDAEsg+Jt3o+f/v7pshY2QKBgQD+fhbM8S0DecX4B9TM\nH3qwYoabsl8Y7ZtsYZ47oalWN7mN8+VWoAlWrMbMPTbvJx6mXSNVTuNU0/yN6MhB\ngLdWqNIKuLUffZZ/JuHuEEpCypjAGoa1FehoOgrLAlJTOwHpWAGZjfdNIUJASZMC\n43AIrGBWDlFtkdwz3mG2j1A5CwKBgQDiF1F+1po0Tffh/d0ZcJxviSOUlSR6BFRV\nrq5ad6vep2hsu720ByBFVia5uvZR0ITrlLoSReX7ByppVszGEuRQ96bT9uv1INCc\nphMpDyZddHhpVvvk2MJOuxTe2kAsWLYmNwblYnrGxFMVt8ul+Xzb2Lg5V0sVUEBW\nbiWxmck2yQKBgHQSiE2zFmfGa6/Dyp/LH8dBOMncohkZjlDxeR0Tj8t+IQiInCpV\nVc0NgqJ2rQ6I1ibkxg/Lqk3vXfpPmL6feX9yAlLXieyx+ClIT7WoAmbSRrcfoh8H\nvfeDuZZ8GZZSjH2kIR6rLIcmSzRNGlsv5tJd5JZ7c1I5O6kAnaqJVPqfAoGAGu0G\nAqISOVpzxBFUzJvRtaLSfvaIIpPza0TjdNi9ukWbtR9ix1b16+wHrqTqgvHfcqMC\nyfxTGGNRFLyGpKxJTq8/ygylK0teLNnGfGRWgFjHolv+odGCypeTM7swW1exUbnJ\n83WYA6YL8xExirG8wf38aq/PvFkTYHe7u3wCL6kCgYEApPEX1ptr6/GafRoM2VoH\n88RgQ4kq8BfH1sV8GcjfSbd58SKZ7No3j2QQfCd4+TjGS/RpOSmG63b/lcujpflN\nuHSU1aAxkKcYUofqJSUT8K0QlW5C6Zhe+qy7o89pE4bE0IZEezMkkP6v681Bvqxs\ns8+PwBNv5F09m5HB5PbC2Ho=\n-----END PRIVATE KEY-----\n-----BEGIN EC PRIVATE KEY-----\nMHQCAQEEIAlcEyPShVHofOkvMfbYVVkDmRddG+Eequ/XTgH8xtRUoAcGBSuBBAAK\noUQDQgAE6gxaJw2tv1+ZF0VaAxXEDXluSaFe8deddqpnP7nvFnTg9Ljl/0qoctj7\na510AQK8wZTbpts+lpEqgRpiSVrcWA==\n-----END EC PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEUrDnclNp7sfsh/58v92Rimda2J/U\nUWUJOQNa07KI0n8AJ0kdoQRaNm4sKUY7iLt4vVXyQOpRNAkBrJTWg6ERGA==\n-----END PUBLIC KEY-----\n-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4MJ+ePXwLDLq1oGTPFxp\nJaBrwNUtWWCZDyj9ZprvHWZ2SEzZ9Qoq3puwg4B/9iGom58u137gEivwf0zBVqVf\npUBrC2tcQgt737PV6tZvuS+mJIGZUrLaaZMRN8wW+EbG0eU9Jd20leIyTe08NyuI\nqXiusk3nm+1peas8ZBDRoUBP3FjojmskgSaSY2kXL72UIDQg4sTUC0WPNLrzx6Ct\nQUKn3uQW3FF/o5iMaGwzlR0NpHNIgOuLVO1OqeQ9KhE5a/uieh5ZAr1oVvrZa2vk\nshtV1Ma3Cx6SnCCenKiAnEquHJtqqMJsa1DInk3MP3BFYYs/NErwxyhZpLpAzqgb\nowIDAQAB\n-----END PUBLIC KEY-----\n-----BEGIN PUBLIC KEY-----\nMFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE6gxaJw2tv1+ZF0VaAxXEDXluSaFe8ded\ndqpnP7nvFnTg9Ljl/0qoctj7a510AQK8wZTbpts+lpEqgRpiSVrcWA==\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a PKCS#8 Ed25519 key is E_RANGE",
+    "ref": "openssl genpkey -algorithm ed25519",
+    "op": "rsa:public-key",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VwBCIEIO8O/fZ/3L+aijk8ZsXbR+XpviGfs/CSrn5u8STAEdRO\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "a DSA private key is E_RANGE",
+    "ref": "openssl dsaparam -genkey",
+    "op": "rsa:public-key",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN DSA PARAMETERS-----\nMIIBJgKBgQD4V8Rvmhll/TH+3KOw6FdhrRRndXpk7SAhrXrPfphtoOw312mZHJem\n62TJD5cYX9Xxx8DcYnMOTGFLCxCUmRqkOTIwSSoL+JgdAzu5+LmPcfiBuZpjfmgC\nVZYLD0aKliTucOSJedoWpu+evfwaCwhPm12S9oeqJAMad1fb6aiGvQIdANbJ+thP\nfm8+Ug/xki+W/rOVVaGZN47cyscUBt8CgYBQD07HnkmCcQCsnXdwBWlER6jyLg9K\nvTbD8GIxGoplEc9PzMG7jVTJELpszC4m33dU+XIBeHuFA5/wL2hDSaL1l9pFnju9\nAlkfLmMW/GzkHETutV0uPAPwffB74GWa45yei01kaII3+P49SCcMA9frW19mprVM\nAdPBdzFVwL0jEw==\n-----END DSA PARAMETERS-----\n-----BEGIN PRIVATE KEY-----\nMIIBWwIBADCCATMGByqGSM44BAEwggEmAoGBAPhXxG+aGWX9Mf7co7DoV2GtFGd1\nemTtICGtes9+mG2g7DfXaZkcl6brZMkPlxhf1fHHwNxicw5MYUsLEJSZGqQ5MjBJ\nKgv4mB0DO7n4uY9x+IG5mmN+aAJVlgsPRoqWJO5w5Il52ham7569/BoLCE+bXZL2\nh6okAxp3V9vpqIa9Ah0A1sn62E9+bz5SD/GSL5b+s5VVoZk3jtzKxxQG3wKBgFAP\nTseeSYJxAKydd3AFaURHqPIuD0q9NsPwYjEaimURz0/MwbuNVMkQumzMLibfd1T5\ncgF4e4UDn/AvaENJovWX2kWeO70CWR8uYxb8bOQcRO61XS48A/B98HvgZZrjnJ6L\nTWRogjf4/j1IJwwD1+tbX2amtUwB08F3MVXAvSMTBB8CHQCfcLW933BXxblScCHS\nnHX1/5mUWXHTQfPxo/od\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "a PKCS#8 DSA key is E_RANGE",
+    "ref": "openssl pkcs8 -topk8 of a DSA key",
+    "op": "rsa:public-key",
+    "params": {},
+    "input": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMIIBWwIBADCCATMGByqGSM44BAEwggEmAoGBAPhXxG+aGWX9Mf7co7DoV2GtFGd1\nemTtICGtes9+mG2g7DfXaZkcl6brZMkPlxhf1fHHwNxicw5MYUsLEJSZGqQ5MjBJ\nKgv4mB0DO7n4uY9x+IG5mmN+aAJVlgsPRoqWJO5w5Il52ham7569/BoLCE+bXZL2\nh6okAxp3V9vpqIa9Ah0A1sn62E9+bz5SD/GSL5b+s5VVoZk3jtzKxxQG3wKBgFAP\nTseeSYJxAKydd3AFaURHqPIuD0q9NsPwYjEaimURz0/MwbuNVMkQumzMLibfd1T5\ncgF4e4UDn/AvaENJovWX2kWeO70CWR8uYxb8bOQcRO61XS48A/B98HvgZZrjnJ6L\nTWRogjf4/j1IJwwD1+tbX2amtUwB08F3MVXAvSMTBB8CHQCfcLW933BXxblScCHS\nnHX1/5mUWXHTQfPxo/od\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
     }
   }
 ]

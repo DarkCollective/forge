@@ -439,7 +439,7 @@ describe("signatures", () => {
         );
         expect(
           topStr(await verify(sig, pub, MSG, { digest: d, scheme: "RSASSA-PSS", salt: salt + 1 })),
-        ).toBe("Verification failure");
+        ).toBe("Verification Failure");
       }
     }
   });
@@ -489,18 +489,18 @@ describe("signatures", () => {
     const pub = await pubOf(K1024);
     const sig = topBytes(await sign(MSG, K1024, { digest: "SHA-256" }));
     expect(topStr(await verify(sig, await pubOf(K2048), MSG, { digest: "SHA-256" }))).toBe(
-      "Verification failure",
+      "Verification Failure",
     );
-    expect(topStr(await verify(new Uint8Array(129), pub, MSG))).toBe("Verification failure");
+    expect(topStr(await verify(new Uint8Array(129), pub, MSG))).toBe("Verification Failure");
     expect(topStr(await verify(new Uint8Array(128).fill(255), pub, MSG))).toBe(
-      "Verification failure",
+      "Verification Failure",
     );
-    expect(topStr(await verify(new Uint8Array(128), pub, MSG))).toBe("Verification failure");
+    expect(topStr(await verify(new Uint8Array(128), pub, MSG))).toBe("Verification Failure");
     for (const scheme of ["RSASSA-PKCS1-V1_5", "RSASSA-PSS"])
       for (let cut = 0; cut < sig.length; cut += 17)
         expect(
           topStr(await verify(sig.slice(0, cut), pub, MSG, { digest: "SHA-256", scheme })),
-        ).toBe("Verification failure");
+        ).toBe("Verification Failure");
   });
 
   test("verify accepts the first public key block of a longer text, and refuses text without one", async () => {
@@ -511,7 +511,7 @@ describe("signatures", () => {
       topStr(await verify(sig, `# comment\n${pub}\n${K1024}`, MSG, { digest: "SHA-256" })),
     ).toBe("Verified OK");
     expect(topStr(await verify(sig, `${both}`, MSG, { digest: "SHA-256" }))).toBe(
-      "Verification failure",
+      "Verification Failure",
     );
     expect(code(await verify(sig, K1024, MSG))).toBe("E_RANGE");
     expect(code(await verify(sig, "", MSG))).toBe("E_RANGE");
@@ -851,12 +851,15 @@ describe("keys", () => {
     expect(jwk).toEqual({ kty: "RSA", n: nodeJwk.n, e: nodeJwk.e });
   });
 
-  test("an EC key is E_RANGE, naming what is missing", async () => {
+  test("an EC key is E_RANGE for sign, pointing to the ecdsa words, and public-key reads it", async () => {
     const ec =
       "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIEAwJhVSn/wDvO2NDkcSr8S7GM15jEJpj5SIg0pN1lcAoAoGCCqGSM49\nAwEHoUQDQgAE4iZ7JhnbpuUcMAeQf9LvC+UlHIPyLwVyeg2z4yKBxVfTBa0j1wk4\nwyoyJwHA/bZ/aDNEB6pkpNfQqYkFA1ghuw==\n-----END EC PRIVATE KEY-----\n";
-    const r = await publicKey(ec);
+    const r = await sign(none, ec);
     expect(code(r)).toBe("E_RANGE");
-    expect(message(r)).toMatch(/elliptic curve keys are not supported yet/);
+    expect(message(r)).toMatch(/use the ecdsa words for elliptic curve keys/);
+    const pub = await publicKey(ec);
+    expect(code(pub)).toBe("ok");
+    expect(Buffer.from(topBytes(pub)).toString("latin1")).toMatch(/^-----BEGIN PUBLIC KEY-----\n/);
   });
 
   test("a key cut at every byte, in every form, is E_COERCE and never a key or a crash", async () => {
