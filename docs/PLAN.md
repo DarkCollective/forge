@@ -376,6 +376,22 @@ Language gaps found in wave 4 (candidates for the core, or for a primitive):
 - There are no forward references: a word must be defined above its first use (and `see-also` can name only an earlier word).
 - There is no constant-time compare in FL (`argon2:compare` and `bcrypt:compare` are primitives for that reason; the HMAC compares in `fernet`, `jwt` and `flask-session` are plain `=`).
 
+**Wave 5** *Not started (wave 5: utils, extractors, date and time, arithmetic, generators, language).*
+
+The long tail of CyberChef's operations that need no new codec: text and line utilities, arithmetic and sets, extractors, date and time, unit conversions and generators. They are written in FL, on a few shared words that WP 5.30 builds first: `random` (the host CSPRNG, `+random`), `clock` (the host clock, `+time`), `list` (a stable sort, a sort by parallel keys and a shuffle, which FL lacks) and `util:delimiter` (the text of the common delimiter choices). The conventions (line and list ops are `str` in and out with a `delimiter` choice, numbers in text, how nondeterministic ops are tested, the category names) are in the ops README ("Wave 5 conventions"). XPath, JPath, Jsonata, CSS selector and Template are deferred to wave 1b (they need JSON and XML parsing); Extract EXIF, ID3, Audio Metadata and Extract Files go to wave 7.
+
+| WP | Scope |
+|---|---|
+| 5.30 | Setup: the shared `random`, `clock` and `list` vocabularies (Pseudo-Random Number and Integer Generators, Get Time), `util:delimiter`, the wave 5 conventions; Show on map and Sleep dropped |
+| 5.31 | Arithmetic and sets: Sum, Subtract, Multiply, Divide, MOD, Mean, Median, Standard Deviation, Extended GCD, Modular Exponentiation, Modular Inverse, Set Union/Intersection/Difference, Symmetric Difference, Cartesian Product, Power Set |
+| 5.32 | Lines: Sort, Shuffle, Unique, Filter, Head, Tail, Add/Remove line numbers, Pad lines, Wrap, To Table, Diff, File Tree |
+| 5.33 | Strings and bytes: Remove whitespace/null bytes/ANSI escape codes, Swap case, Alternating Caps, Get All Casings, To/From Case Insensitive Regex, Expand alphabet range, Take/Drop bytes, Take/Drop nth bytes, Escape/Unescape string, Count occurrences, Hamming and Levenshtein distance, Fuzzy Match, Offset checker |
+| 5.34 | Conversions and parsers: Convert distance/area/mass/speed/data units/co-ordinate format, Haversine distance, Parse UNIX file permissions, Parse ObjectID timestamp, Parse colour code, Analyse UUID |
+| 5.35 | Date and time: Parse DateTime, Translate DateTime Format, From/To UNIX Timestamp, Windows Filetime to/from UNIX Timestamp, DateTime Delta, Extract dates (own token formatter, time zones from the host's Intl data) |
+| 5.36 | Extractors: Strings, Extract IP addresses/email addresses/MAC addresses/URLs/domains/file paths/hashes, RAKE |
+| 5.37 | Generators and language: Pseudo-Random Prime Generator, Generate UUID, Generate TOTP/HOTP, Generate De Bruijn Sequence, Generate Lorem Ipsum, Remove Diacritics, Convert to NATO alphabet, Convert Leet Speak, Unicode Text Format, HTML To Text |
+| 5.38 | Close-out: the throwaway cross-check against CyberChef, util promotions, the existing private `_now`/`_random-*` primitives moved onto `random` and `clock`, every dupes report resolved, docs |
+
 ### Phase 6 — Beyond CyberChef
 Magic auto-detection (declarative `checks` in META, depth-limited search). An optional recipe store backend behind `RecipeStore`. A PWA/offline mode. The `@forge/cli`. Recipe diff/swap. **Relix vocabulary** integration as an `relix:` vocab of primitives.
 

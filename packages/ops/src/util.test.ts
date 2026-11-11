@@ -64,6 +64,27 @@ describe("util:separator", () => {
   });
 });
 
+describe("util:delimiter", () => {
+  test.each([
+    ["space", " "],
+    ["comma", ","],
+    ["semicolon", ";"],
+    ["colon", ":"],
+    ["newline", "\n"],
+    ["crlf", "\r\n"],
+    ["cr", "\r"],
+    ["tab", "\t"],
+    ["none", ""],
+  ])("%s", async (choice, expected) => {
+    expect(await value("util:delimiter", [str(choice)])).toBe(expected);
+  });
+
+  test.each(["", "Space", "line feed", "pipe", "semi-colon"])("%j is E_RANGE", async (choice) => {
+    const r = await runtime.call("util:delimiter", [str(choice)]);
+    expect(r.ok ? "ok" : r.error.code).toBe("E_RANGE");
+  });
+});
+
 describe("util:decode-table", () => {
   const table = async (alpha: string, ws: number, pad: number) =>
     (await value("util:decode-table", [str(alpha), int(ws), int(pad)])) as Uint8Array;

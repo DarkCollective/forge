@@ -1,0 +1,325 @@
+[
+  {
+    "name": "bytes: zero bytes is empty",
+    "ref": "deterministic case of a random op: a range of size one, or a parameter error (the random cases are in src/prng.test.ts)",
+    "op": "prng:bytes",
+    "params": {
+      "length": 0
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "bytes: input is ignored",
+    "ref": "deterministic case of a random op: a range of size one, or a parameter error (the random cases are in src/prng.test.ts)",
+    "op": "prng:bytes",
+    "params": {
+      "length": 0
+    },
+    "input": {
+      "value": "anything at all",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "bytes: negative length",
+    "ref": "deterministic case of a random op: a range of size one, or a parameter error (the random cases are in src/prng.test.ts)",
+    "op": "prng:bytes",
+    "params": {
+      "length": -1
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "bytes: length above 1 MiB",
+    "ref": "deterministic case of a random op: a range of size one, or a parameter error (the random cases are in src/prng.test.ts)",
+    "op": "prng:bytes",
+    "params": {
+      "length": 1048577
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "integers: range of size one, three of them, comma",
+    "ref": "deterministic case of a random op: a range of size one, or a parameter error (the random cases are in src/prng.test.ts)",
+    "op": "prng:integers",
+    "params": {
+      "min": 7,
+      "max": 7,
+      "count": 3,
+      "delimiter": "comma"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "7,7,7",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "integers: negative single value",
+    "ref": "deterministic case of a random op: a range of size one, or a parameter error (the random cases are in src/prng.test.ts)",
+    "op": "prng:integers",
+    "params": {
+      "min": -5,
+      "max": -5,
+      "count": 1,
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-5",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "integers: default delimiter is a line feed",
+    "ref": "deterministic case of a random op: a range of size one, or a parameter error (the random cases are in src/prng.test.ts)",
+    "op": "prng:integers",
+    "params": {
+      "min": 0,
+      "max": 0,
+      "count": 4
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0\n0\n0\n0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "integers: space",
+    "ref": "deterministic case of a random op: a range of size one, or a parameter error (the random cases are in src/prng.test.ts)",
+    "op": "prng:integers",
+    "params": {
+      "min": 42,
+      "max": 42,
+      "count": 3,
+      "delimiter": "space"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "42 42 42",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "integers: semicolon",
+    "ref": "deterministic case of a random op: a range of size one, or a parameter error (the random cases are in src/prng.test.ts)",
+    "op": "prng:integers",
+    "params": {
+      "min": 1,
+      "max": 1,
+      "count": 2,
+      "delimiter": "semicolon"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1;1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "integers: colon",
+    "ref": "deterministic case of a random op: a range of size one, or a parameter error (the random cases are in src/prng.test.ts)",
+    "op": "prng:integers",
+    "params": {
+      "min": 1,
+      "max": 1,
+      "count": 2,
+      "delimiter": "colon"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1:1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "integers: crlf",
+    "ref": "deterministic case of a random op: a range of size one, or a parameter error (the random cases are in src/prng.test.ts)",
+    "op": "prng:integers",
+    "params": {
+      "min": 1,
+      "max": 1,
+      "count": 2,
+      "delimiter": "crlf"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1\r\n1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "integers: cr",
+    "ref": "deterministic case of a random op: a range of size one, or a parameter error (the random cases are in src/prng.test.ts)",
+    "op": "prng:integers",
+    "params": {
+      "min": 1,
+      "max": 1,
+      "count": 2,
+      "delimiter": "cr"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1\r1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "integers: tab",
+    "ref": "deterministic case of a random op: a range of size one, or a parameter error (the random cases are in src/prng.test.ts)",
+    "op": "prng:integers",
+    "params": {
+      "min": 1,
+      "max": 1,
+      "count": 2,
+      "delimiter": "tab"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1\t1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "integers: none",
+    "ref": "deterministic case of a random op: a range of size one, or a parameter error (the random cases are in src/prng.test.ts)",
+    "op": "prng:integers",
+    "params": {
+      "min": 1,
+      "max": 1,
+      "count": 3,
+      "delimiter": "none"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "111",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "integers: min above max",
+    "ref": "deterministic case of a random op: a range of size one, or a parameter error (the random cases are in src/prng.test.ts)",
+    "op": "prng:integers",
+    "params": {
+      "min": 10,
+      "max": 9,
+      "count": 1,
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "integers: count zero",
+    "ref": "deterministic case of a random op: a range of size one, or a parameter error (the random cases are in src/prng.test.ts)",
+    "op": "prng:integers",
+    "params": {
+      "min": 0,
+      "max": 9,
+      "count": 0,
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "integers: count above 65536",
+    "ref": "deterministic case of a random op: a range of size one, or a parameter error (the random cases are in src/prng.test.ts)",
+    "op": "prng:integers",
+    "params": {
+      "min": 0,
+      "max": 9,
+      "count": 65537,
+      "delimiter": "newline"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "integers: unknown delimiter",
+    "ref": "deterministic case of a random op: a range of size one, or a parameter error (the random cases are in src/prng.test.ts)",
+    "op": "prng:integers",
+    "params": {
+      "min": 0,
+      "max": 9,
+      "count": 1,
+      "delimiter": "pipe"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  }
+]
