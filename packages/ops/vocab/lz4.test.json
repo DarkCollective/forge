@@ -356,7 +356,7 @@
     }
   },
   {
-    "name": "compress: text, level 0, 1MB, independent True, block checksum True, content size False",
+    "name": "compress: text, level 0, 1MB, independent True, block checksum True, content size True",
     "ref": "Forge output pinned as a regression value; decoded back to the input by lz4 v1.10.0 (lz4 -d -c) when made (not an independent encoder)",
     "op": "lz4:compress",
     "params": {
@@ -364,7 +364,7 @@
       "block-size": "1MB",
       "independent": true,
       "block-checksum": true,
-      "content-size": false
+      "content-size": true
     },
     "input": {
       "value": "68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f",

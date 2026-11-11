@@ -7,10 +7,12 @@
 \ (magic 0x184C2102). The block checksums are checked inside _blocks.
 IN: lz4
 
-\ n little-endian bytes of data at p as an integer.
-\ util-candidate: le-bytes>int
-: _le ( data:bytes p:int n:int -- int )
-  data p p n + slice rev 256 util:digits>int ;
+\ The little-endian 32-bit and 64-bit integers of data at p (the caller has checked the length).
+: _u32 ( data:bytes p:int -- int )
+  data p p 4 + slice rev 256 util:digits>int ;
+
+: _u64 ( data:bytes p:int -- int )
+  data p p 8 + slice rev 256 util:digits>int ;
 
 \ The XXH32 (seed 0) of the bytes as four little-endian bytes, the way the frame stores it.
 : _xxh-bytes ( data:bytes -- bytes )
@@ -64,7 +66,7 @@ IN: lz4
 
 : _trailer ( out:bytes e:int data:bytes flg:int p:int verify:bool -- bytes int )
   verify flg 8 band 0 <> and [
-    out len data p 6 + 8 _le <> [
+    out len data p 6 + _u64 <> [
       "LZ4 content size mismatch: the size in the header differs from the output (corrupt data)" raise:coerce ] when ] when
   flg 4 band 0 = [ out e ] [
     data len e - 4 < [ "LZ4 data is cut short: the content checksum is missing" raise:coerce ] when
@@ -88,7 +90,7 @@ IN: lz4
 
 : _skip ( data:bytes p:int -- bytes int )
   data len p - 8 < [ "LZ4 data is cut short: a skippable frame header is incomplete" raise:coerce ] when
-  p 8 + data p 4 + 4 _le + dup data len > [
+  p 8 + data p 4 + _u32 + dup data len > [
     "LZ4 data is cut short: a skippable frame runs past the end" raise:coerce ] when
   data 0 0 slice swap ;
 
@@ -100,7 +102,7 @@ IN: lz4
 
 : _frames ( data:bytes p:int verify:bool -- bytes )
   data len p - 4 < [ "not LZ4 data: the frame magic number is incomplete" raise:coerce ] when
-  data p verify data p 4 _le _one
+  data p verify data p _u32 _one
   dup data len < [ data swap verify recurse cat ] [ drop ] if ;
 
 : decompress ( data:bytes verify:bool=true -- bytes )

@@ -21,6 +21,11 @@
 import { describe, expect, test } from "vitest";
 import { decodeFrameBlocks, decodeLegacyBlocks, encodeBlocks, primitives, xxh32 } from "./lz4.js";
 
+// The package builds against ES2022 only (no DOM typings), so declare the global used.
+declare class TextDecoder {
+  decode(input?: Uint8Array): string;
+}
+
 const text = (s: string) => new TextEncoder().encode(s);
 const BIG = 64 * 1024 * 1024;
 

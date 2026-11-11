@@ -29,6 +29,11 @@ import { describe, expect, test } from "vitest";
 import { assembleRuntime } from "./bundle.js";
 import { loadBundleNode } from "./sources-node.js";
 
+// The package builds against ES2022 only (no DOM typings), so declare the global used.
+declare class TextDecoder {
+  decode(input?: Uint8Array): string;
+}
+
 const { bytes, str } = valueHelpers;
 const runtime = assembleRuntime(await loadBundleNode(["lzstring"]));
 

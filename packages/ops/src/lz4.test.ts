@@ -27,6 +27,11 @@ import { describe, expect, test } from "vitest";
 import { assembleRuntime } from "./bundle.js";
 import { loadBundleNode } from "./sources-node.js";
 
+// The package builds against ES2022 only (no DOM typings), so declare the global used.
+declare class TextDecoder {
+  decode(input?: Uint8Array): string;
+}
+
 const { bytes, int, str, bool } = valueHelpers;
 const runtime = assembleRuntime(await loadBundleNode(["lz4"]));
 
@@ -193,13 +198,13 @@ describe("frames Forge reads that it does not write", () => {
 
   test("a frame that needs a dictionary is E_COERCE", async () => {
     const f = Uint8Array.from(frame);
-    f[4] |= 1;
+    f[4] = (f[4] as number) | 1;
     expect(code(await decompress(f, false))).toBe("E_COERCE");
   });
 
   test("with verify off a damaged checksum still returns the data; structure errors do not", async () => {
     const bad = Uint8Array.from(frame);
-    bad[bad.length - 1] ^= 1;
+    bad[bad.length - 1] = (bad[bad.length - 1] as number) ^ 1;
     expect(code(await decompress(bad))).toBe("E_COERCE");
     expect(out(await decompress(bad, false))?.length).toBe(46);
     expect(code(await decompress(bad.subarray(0, 30), false))).toBe("E_COERCE");
