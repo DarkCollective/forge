@@ -1,0 +1,325 @@
+[
+  {
+    "name": "80-bit key 00.., block 00..",
+    "ref": "CHES 2007 paper (Bogdanov et al.), appendix test vectors",
+    "op": "present:encrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "5579c1387b228445",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "80-bit key 00.., block 5579..",
+    "ref": "CHES 2007 paper (Bogdanov et al.), appendix test vectors",
+    "op": "present:decrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "5579c1387b228445",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "80-bit key ff.., block 00..",
+    "ref": "CHES 2007 paper (Bogdanov et al.), appendix test vectors",
+    "op": "present:encrypt",
+    "params": {
+      "key": {
+        "value": "ffffffffffffffffffff",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "e72c46c0f5945049",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "80-bit key ff.., block e72c..",
+    "ref": "CHES 2007 paper (Bogdanov et al.), appendix test vectors",
+    "op": "present:decrypt",
+    "params": {
+      "key": {
+        "value": "ffffffffffffffffffff",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "e72c46c0f5945049",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "80-bit key 00.., block ff..",
+    "ref": "CHES 2007 paper (Bogdanov et al.), appendix test vectors",
+    "op": "present:encrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "ffffffffffffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "a112ffc72f68417b",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "80-bit key 00.., block a112..",
+    "ref": "CHES 2007 paper (Bogdanov et al.), appendix test vectors",
+    "op": "present:decrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "a112ffc72f68417b",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ffffffffffffffff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "80-bit key ff.., block ff..",
+    "ref": "CHES 2007 paper (Bogdanov et al.), appendix test vectors",
+    "op": "present:encrypt",
+    "params": {
+      "key": {
+        "value": "ffffffffffffffffffff",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "ffffffffffffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "3333dcd3213210d2",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "80-bit key ff.., block 3333..",
+    "ref": "CHES 2007 paper (Bogdanov et al.), appendix test vectors",
+    "op": "present:decrypt",
+    "params": {
+      "key": {
+        "value": "ffffffffffffffffffff",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "3333dcd3213210d2",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ffffffffffffffff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "128-bit key, all zero",
+    "ref": "throwaway bit-level reference written from the paper (section 3 and the 128-bit key schedule); the 128-bit all-zero answer 96db702a2e6900af agrees with the figure widely quoted for PRESENT-128",
+    "op": "present:encrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "96db702a2e6900af",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "128-bit key and block all ones",
+    "ref": "throwaway bit-level reference written from the paper (section 3 and the 128-bit key schedule); the 128-bit all-zero answer 96db702a2e6900af agrees with the figure widely quoted for PRESENT-128",
+    "op": "present:encrypt",
+    "params": {
+      "key": {
+        "value": "ffffffffffffffffffffffffffffffff",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "ffffffffffffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "628d9fbd4218e5b4",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "128-bit key all ones",
+    "ref": "throwaway bit-level reference written from the paper (section 3 and the 128-bit key schedule); the 128-bit all-zero answer 96db702a2e6900af agrees with the figure widely quoted for PRESENT-128",
+    "op": "present:decrypt",
+    "params": {
+      "key": {
+        "value": "ffffffffffffffffffffffffffffffff",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "628d9fbd4218e5b4",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ffffffffffffffff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CBC with PKCS#7, 80-bit key",
+    "ref": "throwaway bit-level reference written from the paper (section 3 and the 128-bit key schedule); the 128-bit all-zero answer 96db702a2e6900af agrees with the figure widely quoted for PRESENT-128",
+    "op": "present:encrypt",
+    "params": {
+      "key": {
+        "value": "00010203040506070809",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "6465666768696a6b",
+        "enc": "hex"
+      },
+      "mode": "CBC"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "a9e1d410061c8060554297898e629fda6987bd5661e1760c",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "CBC with PKCS#7, 80-bit key",
+    "ref": "throwaway bit-level reference written from the paper (section 3 and the 128-bit key schedule); the 128-bit all-zero answer 96db702a2e6900af agrees with the figure widely quoted for PRESENT-128",
+    "op": "present:decrypt",
+    "params": {
+      "key": {
+        "value": "00010203040506070809",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "6465666768696a6b",
+        "enc": "hex"
+      },
+      "mode": "CBC"
+    },
+    "input": {
+      "value": "a9e1d410061c8060554297898e629fda6987bd5661e1760c",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "a 12-byte key is E_RANGE",
+    "ref": "PRESENT keys are 80 or 128 bits",
+    "op": "present:encrypt",
+    "params": {
+      "key": {
+        "value": "000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "6465666768696a6b",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "bad padding is E_COERCE",
+    "ref": "PKCS#7 (RFC 5652 section 6.3)",
+    "op": "present:decrypt",
+    "params": {
+      "key": {
+        "value": "00010203040506070809",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "6465666768696a6b",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

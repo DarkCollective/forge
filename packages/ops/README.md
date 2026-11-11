@@ -84,6 +84,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `chacha`           | ChaCha stream cipher (RFC 8439 and the original 8-byte nonce), 20, 12 or 8 rounds (1 op)                                                                               |
 | `charcode`         | text to and from character codes in a chosen base                                                                                                                      |
 | `charset`          | legacy character sets (single-byte, EBCDIC, UTF-16/32, CJK), with brute force (3 ops)                                                                                  |
+| `ciphersaber2`     | CipherSaber-2 encrypt (random IV in front) and decrypt (2 ops)                                                                                                         |
 | `classical`        | rot (Caesar, ROT13), rot47, rot8000, rot brute force, Atbash, Affine, Vigenère, Bacon, Bifid, Rail Fence, Caesar box, A1Z26, Cetacean, CTX1, LS47, Substitute (26 ops) |
 | `cobs`             | Consistent Overhead Byte Stuffing encode and decode                                                                                                                    |
 | `colossus`         | Colossus-style counting: how often a Boolean condition holds over every start position of two chi wheels, for the Lorenz break-in (1 op)                               |
@@ -98,6 +99,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `fractionating`    | ADFGX and ADFGVX, Polybius, Nihilist and Trifid (8 ops)                                                                                                                |
 | `generate-all`     | a text report of many hashes or many checksums of the same input, one per line (2 ops)                                                                                 |
 | `gost`             | GOST R 34.11-94 with the test or the CryptoPro S-box (1 op)                                                                                                            |
+| `gost28147`        | GOST 28147-89 encrypt, decrypt, key wrap and unwrap (RFC 4357): five modes, eight S-boxes, CryptoPro key meshing (4 ops)                                               |
 | `has160`           | HAS-160 (1 op)                                                                                                                                                         |
 | `hash-analysis`    | guess the hash functions from the length of a digest in hex (1 op)                                                                                                     |
 | `hex`              | encode and decode                                                                                                                                                      |
@@ -122,14 +124,18 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `pbkdf2`           | PBKDF2 with HMAC (RFC 8018) over SHA-1, SHA-2 and MD5 (1 op)                                                                                                           |
 | `polyalphabetic`   | Beaufort, Gronsfeld, Porta and autokey Vigenere (6 ops)                                                                                                                |
 | `polygraphic`      | Playfair, four-square and Hill (6 ops)                                                                                                                                 |
+| `present`          | PRESENT encrypt and decrypt: 80 and 128-bit keys, ECB, CBC, CFB, OFB, CTR (2 ops)                                                                                      |
 | `punycode`         | Punycode (RFC 3492), as a label or per domain label with `xn--`                                                                                                        |
 | `quoted-printable` | Quoted-Printable (RFC 2045 section 6.7) encode and decode                                                                                                              |
+| `rabbit`           | Rabbit stream cipher (RFC 4503), with or without IV, big or little endian (1 op)                                                                                       |
 | `radix`            | convert an integer of any size from one base to another                                                                                                                |
 | `rc2`              | RC2 encrypt and decrypt (RFC 2268): ECB and CBC, 1 to 128-byte keys, effective key bits, PKCS#7 or no padding                                                          |
+| `rc4`              | RC4 and RC4 Drop (one op with a drop param in bytes) (1 op)                                                                                                            |
 | `rc6`              | RC6-w/r encrypt and decrypt: ECB, CBC, CFB, OFB, CTR, word size 8 to 256 and rounds as parameters, PKCS#7 or no padding                                                |
 | `regex`            | test, find-all, replace, split                                                                                                                                         |
 | `ripemd`           | RIPEMD-128, -160, -256 and -320 (1 op)                                                                                                                                 |
 | `ripemd160`        | RIPEMD-160 alone, for HMAC (1 op)                                                                                                                                      |
+| `ror13`            | ROR13 API-name hash (1 op)                                                                                                                                             |
 | `salsa20`          | Salsa20/20 stream cipher (eSTREAM), 16 or 32-byte keys, 8-byte nonce (1 op)                                                                                            |
 | `scrypt`           | scrypt (RFC 7914) key derivation (1 op)                                                                                                                                |
 | `sha0`             | SHA-0 (1 op)                                                                                                                                                           |
@@ -144,6 +150,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `ssdeep`           | ssdeep context triggered piecewise hash (also ctph) and its comparison (2 ops)                                                                                         |
 | `streebog`         | GOST R 34.11-2012, 256 or 512 bits (1 op)                                                                                                                              |
 | `tcpip`            | Internet checksum (RFC 1071) (1 op)                                                                                                                                    |
+| `tea`              | TEA encrypt and decrypt: ECB, CBC, CFB, OFB, CTR (2 ops)                                                                                                               |
 | `text`             | split, join, replace, reverse, upper, lower                                                                                                                            |
 | `transposition`    | columnar transposition, encrypt and decrypt                                                                                                                            |
 | `triple-des`       | Triple DES encrypt and decrypt (EDE, SP 800-67): ECB, CBC, CFB, OFB, CTR, 16 or 24-byte keys, PKCS#7 or no padding                                                     |
@@ -154,6 +161,8 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `whirlpool`        | Whirlpool (ISO/IEC 10118-3) (1 op)                                                                                                                                     |
 | `xor-checksum`     | column-wise XOR of the blocks of the input (1 op)                                                                                                                      |
 | `xsalsa20`         | XSalsa20/20 stream cipher, 32-byte key, 24-byte nonce (1 op)                                                                                                           |
+| `xtea`             | XTEA encrypt and decrypt with a round count: ECB, CBC, CFB, OFB, CTR (2 ops)                                                                                           |
+| `xxtea`            | XXTEA (Corrected Block TEA) encrypt and decrypt (2 ops)                                                                                                                |
 
 Four internal vocabularies are not part of the catalogue as ops: `recipe` (the words recipes compile to), `raise` (typed errors, above), `util` (shared helpers, below) and `blockmode` (the shared block cipher modes and PKCS#7 padding; see "Cipher conventions").
 

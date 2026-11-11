@@ -1,0 +1,1086 @@
+[
+  {
+    "name": "Magma vector through S-box E-Z, ECB",
+    "ref": "RFC 8891 A.4 (Magma, TC26 S-box Z) with every 32-bit word byte-reversed, as GOST 28147-89 is little-endian",
+    "op": "gost28147:encrypt",
+    "params": {
+      "key": {
+        "value": "ccddeeff8899aabb4455667700112233f3f2f1f0f7f6f5f4fbfaf9f8fffefdfc",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "sbox": "E-Z"
+    },
+    "input": {
+      "value": "1032547698badcfe",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "3dcad8c2e501e94e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "Magma vector through S-box E-Z, ECB",
+    "ref": "RFC 8891 A.4 (Magma, TC26 S-box Z) with every 32-bit word byte-reversed, as GOST 28147-89 is little-endian",
+    "op": "gost28147:decrypt",
+    "params": {
+      "key": {
+        "value": "ccddeeff8899aabb4455667700112233f3f2f1f0f7f6f5f4fbfaf9f8fffefdfc",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "sbox": "E-Z"
+    },
+    "input": {
+      "value": "3dcad8c2e501e94e",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1032547698badcfe",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "E-TEST ECB",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:encrypt",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "05101b26313c4752",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "sbox": "E-TEST",
+      "meshing": "NO",
+      "padding": "none"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473030303",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "3546ae8458ec5a30bd5cbe3e1a28de32b7e6ca1f0cf0eb6e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "E-TEST CBC",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:encrypt",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "05101b26313c4752",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "sbox": "E-TEST",
+      "meshing": "NO",
+      "padding": "none"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473030303",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6ad73f66083e47629de339306b2d5ec846290b0c30eae339",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "E-TEST CBC with CryptoPro key meshing",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:encrypt",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "05101b26313c4752",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "sbox": "E-TEST",
+      "meshing": "CP",
+      "padding": "none"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473030303",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6ad73f66083e47629de339306b2d5ec846290b0c30eae339",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "E-TEST CFB",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:encrypt",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "05101b26313c4752",
+        "enc": "hex"
+      },
+      "mode": "CFB",
+      "sbox": "E-TEST",
+      "meshing": "NO"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "5f104784cc1532d063274c5959806a2c2201743a49",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "E-TEST CFB with CryptoPro key meshing",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:encrypt",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "05101b26313c4752",
+        "enc": "hex"
+      },
+      "mode": "CFB",
+      "sbox": "E-TEST",
+      "meshing": "CP"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "5f104784cc1532d063274c5959806a2c2201743a49",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "E-TEST OFB",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:encrypt",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "05101b26313c4752",
+        "enc": "hex"
+      },
+      "mode": "OFB",
+      "sbox": "E-TEST",
+      "meshing": "NO"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "5f104784cc1532d03c2efc9ae48219e4db31862f8c",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "E-TEST OFB with CryptoPro key meshing",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:encrypt",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "05101b26313c4752",
+        "enc": "hex"
+      },
+      "mode": "OFB",
+      "sbox": "E-TEST",
+      "meshing": "CP"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "5f104784cc1532d03c2efc9ae48219e4db31862f8c",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "E-TEST CTR",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:encrypt",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "05101b26313c4752",
+        "enc": "hex"
+      },
+      "mode": "CTR",
+      "sbox": "E-TEST",
+      "meshing": "NO"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "a1b8db37df698660fbd8fe89c44f22ca82a8c450df",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "E-TEST CTR with CryptoPro key meshing",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:encrypt",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "05101b26313c4752",
+        "enc": "hex"
+      },
+      "mode": "CTR",
+      "sbox": "E-TEST",
+      "meshing": "CP"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "a1b8db37df698660fbd8fe89c44f22ca82a8c450df",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "E-A ECB",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:encrypt",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "05101b26313c4752",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "sbox": "E-A",
+      "meshing": "NO",
+      "padding": "none"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473030303",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "24f4351698acdbb88dd63d1d270a316f81cb6b58c005c2fa",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "E-A CBC",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:encrypt",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "05101b26313c4752",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "sbox": "E-A",
+      "meshing": "NO",
+      "padding": "none"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473030303",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "74298a7029bf83afdabc9cd57bdfd12081019431c76df2b3",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "E-A CBC",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:decrypt",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "05101b26313c4752",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "sbox": "E-A",
+      "meshing": "NO",
+      "padding": "none"
+    },
+    "input": {
+      "value": "74298a7029bf83afdabc9cd57bdfd12081019431c76df2b3",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473030303",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "E-A CBC with CryptoPro key meshing",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:encrypt",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "05101b26313c4752",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "sbox": "E-A",
+      "meshing": "CP",
+      "padding": "none"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473030303",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "74298a7029bf83afdabc9cd57bdfd12081019431c76df2b3",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "E-A CBC with CryptoPro key meshing",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:decrypt",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "05101b26313c4752",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "sbox": "E-A",
+      "meshing": "CP",
+      "padding": "none"
+    },
+    "input": {
+      "value": "74298a7029bf83afdabc9cd57bdfd12081019431c76df2b3",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473030303",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "E-A CFB",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:encrypt",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "05101b26313c4752",
+        "enc": "hex"
+      },
+      "mode": "CFB",
+      "sbox": "E-A",
+      "meshing": "NO"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "7025c331a227d5008078d1b56bd6fc1c5baaeeaa00",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "E-A CFB with CryptoPro key meshing",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:encrypt",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "05101b26313c4752",
+        "enc": "hex"
+      },
+      "mode": "CFB",
+      "sbox": "E-A",
+      "meshing": "CP"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "7025c331a227d5008078d1b56bd6fc1c5baaeeaa00",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "E-A OFB",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:encrypt",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "05101b26313c4752",
+        "enc": "hex"
+      },
+      "mode": "OFB",
+      "sbox": "E-A",
+      "meshing": "NO"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "7025c331a227d5004df5c43a914230e961087523a0",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "E-A OFB with CryptoPro key meshing",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:encrypt",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "05101b26313c4752",
+        "enc": "hex"
+      },
+      "mode": "OFB",
+      "sbox": "E-A",
+      "meshing": "CP"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "7025c331a227d5004df5c43a914230e961087523a0",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "E-A CTR",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:encrypt",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "05101b26313c4752",
+        "enc": "hex"
+      },
+      "mode": "CTR",
+      "sbox": "E-A",
+      "meshing": "NO"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6d644a0bbcd0029251553335e4b9da3448747c576f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "E-A CTR",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:decrypt",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "05101b26313c4752",
+        "enc": "hex"
+      },
+      "mode": "CTR",
+      "sbox": "E-A",
+      "meshing": "NO"
+    },
+    "input": {
+      "value": "6d644a0bbcd0029251553335e4b9da3448747c576f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "E-A CTR with CryptoPro key meshing",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:encrypt",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "05101b26313c4752",
+        "enc": "hex"
+      },
+      "mode": "CTR",
+      "sbox": "E-A",
+      "meshing": "CP"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6d644a0bbcd0029251553335e4b9da3448747c576f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "E-A CTR with CryptoPro key meshing",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:decrypt",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "05101b26313c4752",
+        "enc": "hex"
+      },
+      "mode": "CTR",
+      "sbox": "E-A",
+      "meshing": "CP"
+    },
+    "input": {
+      "value": "6d644a0bbcd0029251553335e4b9da3448747c576f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "E-Z CBC",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:encrypt",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "05101b26313c4752",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "sbox": "E-Z",
+      "meshing": "NO",
+      "padding": "none"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473030303",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "c911ee59a7d8c8a7d2623f2a8aa7e0d69bed018ab35b1f01",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "D-A CBC",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:encrypt",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "05101b26313c4752",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "sbox": "D-A",
+      "meshing": "NO",
+      "padding": "none"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473030303",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "41d855c4d05eb7542018700b1b5ad113fd11e8ac70bca79d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "S-box E-Z, ECB",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:encrypt",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "05101b26313c4752",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "sbox": "E-Z",
+      "padding": "none"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473030303",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "14d8d38b10f4eed443ac910ae752acff8af84d5f26edaa4f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "S-box D-A, ECB",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:encrypt",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "05101b26313c4752",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "sbox": "D-A",
+      "padding": "none"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473030303",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ca5a92a3350e0144f220dd89ab4e3a22704225468f92968b",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "PKCS#7 padding in CBC",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:encrypt",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "05101b26313c4752",
+        "enc": "hex"
+      },
+      "mode": "CBC"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6ad73f66083e47629de339306b2d5ec846290b0c30eae339",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "a 31-byte key is E_RANGE",
+    "ref": "GOST 28147-89 keys are 256 bits (RFC 5830 section 3)",
+    "op": "gost28147:encrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000000000000000000000000000000000",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "bad padding is E_COERCE",
+    "ref": "PKCS#7 (RFC 5652 section 6.3)",
+    "op": "gost28147:decrypt",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "05101b26313c4752",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "E-TEST NO",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector): CEK_ENC then CEK_MAC, no UKM",
+    "op": "gost28147:wrap-key",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "ukm": {
+        "value": "0102030405060708",
+        "enc": "hex"
+      },
+      "sbox": "E-TEST",
+      "wrapping": "NO"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f71635547392b1d0ef0e2d4c6b8aa9c8",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "3546ae8458ec5a30bd5cbe3e1a28de324d4d00c527d8d71620fc8e8c8cfd685644c4c9ae",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "E-TEST NO",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:unwrap-key",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "ukm": {
+        "value": "0102030405060708",
+        "enc": "hex"
+      },
+      "sbox": "E-TEST",
+      "wrapping": "NO"
+    },
+    "input": {
+      "value": "3546ae8458ec5a30bd5cbe3e1a28de324d4d00c527d8d71620fc8e8c8cfd685644c4c9ae",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f71635547392b1d0ef0e2d4c6b8aa9c8",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "E-TEST CP",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector): CEK_ENC then CEK_MAC, no UKM",
+    "op": "gost28147:wrap-key",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "ukm": {
+        "value": "0102030405060708",
+        "enc": "hex"
+      },
+      "sbox": "E-TEST",
+      "wrapping": "CP"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f71635547392b1d0ef0e2d4c6b8aa9c8",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "2dc428b693138285dc15b38757b021a7c21cbbcb36f656d84e1c3820e30f40072856fbf2",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "E-TEST CP",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:unwrap-key",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "ukm": {
+        "value": "0102030405060708",
+        "enc": "hex"
+      },
+      "sbox": "E-TEST",
+      "wrapping": "CP"
+    },
+    "input": {
+      "value": "2dc428b693138285dc15b38757b021a7c21cbbcb36f656d84e1c3820e30f40072856fbf2",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f71635547392b1d0ef0e2d4c6b8aa9c8",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "E-A NO",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector): CEK_ENC then CEK_MAC, no UKM",
+    "op": "gost28147:wrap-key",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "ukm": {
+        "value": "0102030405060708",
+        "enc": "hex"
+      },
+      "sbox": "E-A",
+      "wrapping": "NO"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f71635547392b1d0ef0e2d4c6b8aa9c8",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "24f4351698acdbb88dd63d1d270a316f21408e80a1e70b62eb4e18380b241b0721b2c643",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "E-A NO",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:unwrap-key",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "ukm": {
+        "value": "0102030405060708",
+        "enc": "hex"
+      },
+      "sbox": "E-A",
+      "wrapping": "NO"
+    },
+    "input": {
+      "value": "24f4351698acdbb88dd63d1d270a316f21408e80a1e70b62eb4e18380b241b0721b2c643",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f71635547392b1d0ef0e2d4c6b8aa9c8",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "E-A CP",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector): CEK_ENC then CEK_MAC, no UKM",
+    "op": "gost28147:wrap-key",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "ukm": {
+        "value": "0102030405060708",
+        "enc": "hex"
+      },
+      "sbox": "E-A",
+      "wrapping": "CP"
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f71635547392b1d0ef0e2d4c6b8aa9c8",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "f5162bf9c65df916bfdcc777ab507d40434860dc19fe963c12ae6a4a8477cc50865a8562",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "E-A CP",
+    "ref": "throwaway independent reference from RFC 5830 and RFC 4357 (not a published vector)",
+    "op": "gost28147:unwrap-key",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "ukm": {
+        "value": "0102030405060708",
+        "enc": "hex"
+      },
+      "sbox": "E-A",
+      "wrapping": "CP"
+    },
+    "input": {
+      "value": "f5162bf9c65df916bfdcc777ab507d40434860dc19fe963c12ae6a4a8477cc50865a8562",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f71635547392b1d0ef0e2d4c6b8aa9c8",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "a damaged MAC is E_COERCE",
+    "ref": "RFC 4357 section 6.2 step 4",
+    "op": "gost28147:unwrap-key",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "ukm": {
+        "value": "0102030405060708",
+        "enc": "hex"
+      },
+      "sbox": "E-TEST",
+      "wrapping": "NO"
+    },
+    "input": {
+      "value": "3546ae8458ec5a30bd5cbe3e1a28de324d4d00c527d8d71620fc8e8c8cfd685644c4c900",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a 44-byte input (the RFC layout with UKM) is E_COERCE",
+    "ref": "this word takes the 36 bytes without the UKM",
+    "op": "gost28147:unwrap-key",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "ukm": {
+        "value": "0102030405060708",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a 16-byte content key is E_COERCE",
+    "ref": "RFC 4357 section 6.1: a 32-byte CEK",
+    "op": "gost28147:wrap-key",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "ukm": {
+        "value": "0102030405060708",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "00000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a 7-byte UKM is E_RANGE",
+    "ref": "RFC 4357 section 6.1: 8 octets of UKM",
+    "op": "gost28147:wrap-key",
+    "params": {
+      "key": {
+        "value": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+        "enc": "hex"
+      },
+      "ukm": {
+        "value": "00000000000000",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f71635547392b1d0ef0e2d4c6b8aa9c8",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  }
+]

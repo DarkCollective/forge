@@ -1,0 +1,58 @@
+[
+  {
+    "name": "empty input",
+    "ref": "the loop of the ROR13 API hash: no bytes, hash 0",
+    "op": "ror13:hash",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "one byte",
+    "ref": "h = ror(0, 13) + 0x41",
+    "op": "ror13:hash",
+    "params": {},
+    "input": {
+      "value": "A",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00000041",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "two bytes: the first byte is rotated",
+    "ref": "h = ror(0x41, 13) + 0x42; bits 0 and 6 move to bits 19 and 25",
+    "op": "ror13:hash",
+    "params": {},
+    "input": {
+      "value": "AB",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "02080042",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "LoadLibraryA with its terminating zero",
+    "ref": "throwaway reference of the same loop (the stub hash of Metasploit block_api additionally mixes in the module hash, so it is not this number)",
+    "op": "ror13:hash",
+    "params": {},
+    "input": {
+      "value": "4c6f61644c6962726172794100",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "74776072",
+      "enc": "hex"
+    }
+  }
+]
