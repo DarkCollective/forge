@@ -1,0 +1,22 @@
+[
+ { "cyberchef": "Remove whitespace", "status": "covered", "forge": ["clean:remove-whitespace"], "note": "The same six options and defaults, as booleans." },
+ { "cyberchef": "Remove null bytes", "status": "covered", "forge": ["clean:remove-null-bytes"] },
+ { "cyberchef": "Remove ANSI Escape Codes", "status": "covered", "forge": ["clean:remove-ansi"], "note": "Forge's own ECMA-48 pattern: CSI, OSC/DCS/SOS/PM/APC strings and two-byte ESC sequences." },
+ { "cyberchef": "Swap case", "status": "covered", "forge": ["case:swap-case"] },
+ { "cyberchef": "Alternating Caps", "status": "covered", "forge": ["case:alternating"], "note": "Starts with a lower case letter and counts letters only, as CyberChef does; adds a first parameter to start upper." },
+ { "cyberchef": "Get All Casings", "status": "redesigned", "forge": ["case:all-casings"], "note": "Only letters with a case are varied (at most 12, so at most 4,096 lines) instead of every character; the first letter varies fastest, all lower case first; the delimiter is a choice." },
+ { "cyberchef": "To Case Insensitive Regex", "status": "redesigned", "forge": ["case:to-insensitive-regex"], "note": "Forge's own pattern tokenizer: letters become [xX] (the letter as written first), classes and ASCII letter ranges gain the other case, escapes, group names and quantifiers are copied." },
+ { "cyberchef": "From Case Insensitive Regex", "status": "redesigned", "forge": ["case:from-insensitive-regex"], "note": "The exact inverse of case:to-insensitive-regex (a class with both cases of a letter becomes the first one); CyberChef's own pattern shapes are not reproduced." },
+ { "cyberchef": "Expand alphabet range", "status": "redesigned", "forge": ["alphabet:expand"], "note": "The delimiter is the shared choice list (a space by default), a backwards range is E_RANGE, ranges may not exceed 65,536 code points, and \\- and \\\\ are the only escapes." },
+ { "cyberchef": "Drop bytes", "status": "covered", "forge": ["bytes-slice:remove"], "note": "Named remove (drop is a core word)." },
+ { "cyberchef": "Take bytes", "status": "covered", "forge": ["bytes-slice:take"] },
+ { "cyberchef": "Drop nth bytes", "status": "covered", "forge": ["bytes-slice:remove-nth"] },
+ { "cyberchef": "Take nth bytes", "status": "covered", "forge": ["bytes-slice:take-nth"] },
+ { "cyberchef": "Escape string", "status": "redesigned", "forge": ["string-escape:escape"], "note": "Forge's own escaper, written in FL (CyberChef uses a library): levels special, everything and minimal; quote single, double or backtick; JSON, ES6 and upper-case hex options; no surrounding quotes; NUL is \\x00; everything uses numeric escapes only." },
+ { "cyberchef": "Unescape string", "status": "covered", "forge": ["string-escape:unescape"], "note": "Reads the single-letter escapes, \\xHH, \\uHHHH (and surrogate pairs), \\u{H} and octal; an unknown escape is kept as written." },
+ { "cyberchef": "Count occurrences", "status": "redesigned", "forge": ["search:count"], "note": "Modes string and regex plus an ignore-case flag; CyberChef's extended-string mode (\\n, \\x escapes in the search text) is not offered, use string-escape:unescape on the pattern." },
+ { "cyberchef": "Hamming Distance", "status": "covered", "forge": ["distance:hamming"], "note": "Units byte and bit as CyberChef, plus char; input raw or hex." },
+ { "cyberchef": "Levenshtein Distance", "status": "covered", "forge": ["distance:levenshtein"], "note": "Over code points; the dynamic programme is a private primitive (limit 100 million cells)." },
+ { "cyberchef": "Fuzzy Match", "status": "redesigned", "forge": ["search:fuzzy"], "note": "A text report instead of highlighted HTML: one row per matching line with a score, the matched positions and the line, scored by a documented greedy rule rather than CyberChef's Sublime-style matcher." },
+ { "cyberchef": "Offset checker", "status": "redesigned", "forge": ["search:offsets"], "note": "A text report instead of highlighting: one row per stretch of offsets where all samples share the same character (offset, length, text)." }
+]

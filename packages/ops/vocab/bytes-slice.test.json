@@ -1,0 +1,308 @@
+[
+  {
+    "name": "take bytes",
+    "ref": "hand-computed on the bytes 00 to 07",
+    "op": "bytes-slice:take",
+    "params": {
+      "start": 2,
+      "length": 3,
+      "each-line": false
+    },
+    "input": {
+      "value": "0001020304050607",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "020304",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "take bytes up to the end",
+    "ref": "hand-computed on the bytes 00 to 07",
+    "op": "bytes-slice:take",
+    "params": {
+      "start": 6,
+      "length": 10,
+      "each-line": false
+    },
+    "input": {
+      "value": "0001020304050607",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0607",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "take bytes from past the end",
+    "ref": "hand-computed on the bytes 00 to 07",
+    "op": "bytes-slice:take",
+    "params": {
+      "start": 9,
+      "length": 3,
+      "each-line": false
+    },
+    "input": {
+      "value": "0001020304050607",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "take zero bytes",
+    "ref": "hand-computed on the bytes 00 to 07",
+    "op": "bytes-slice:take",
+    "params": {
+      "start": 0,
+      "length": 0,
+      "each-line": false
+    },
+    "input": {
+      "value": "0001020304050607",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "take bytes of each line",
+    "ref": "hand-computed on the bytes 00 to 07; lines 00 01 02 | 03 04 | 05 06",
+    "op": "bytes-slice:take",
+    "params": {
+      "start": 1,
+      "length": 2,
+      "each-line": true
+    },
+    "input": {
+      "value": "0001020a03040a0506",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "01020a040a06",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "remove bytes",
+    "ref": "hand-computed on the bytes 00 to 07",
+    "op": "bytes-slice:remove",
+    "params": {
+      "start": 2,
+      "length": 3,
+      "each-line": false
+    },
+    "input": {
+      "value": "0001020304050607",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0001050607",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "remove bytes up to the end",
+    "ref": "hand-computed on the bytes 00 to 07",
+    "op": "bytes-slice:remove",
+    "params": {
+      "start": 6,
+      "length": 10,
+      "each-line": false
+    },
+    "input": {
+      "value": "0001020304050607",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "000102030405",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "remove bytes from past the end",
+    "ref": "hand-computed on the bytes 00 to 07",
+    "op": "bytes-slice:remove",
+    "params": {
+      "start": 9,
+      "length": 3,
+      "each-line": false
+    },
+    "input": {
+      "value": "0001020304050607",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0001020304050607",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "remove bytes of each line",
+    "ref": "hand-computed on the bytes 00 to 07; lines 00 01 02 | 03 04 | 05 06",
+    "op": "bytes-slice:remove",
+    "params": {
+      "start": 1,
+      "length": 1,
+      "each-line": true
+    },
+    "input": {
+      "value": "0001020a03040a0506",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00020a030a05",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "take every third byte from 1",
+    "ref": "hand-computed on the bytes 00 to 07",
+    "op": "bytes-slice:take-nth",
+    "params": {
+      "n": 3,
+      "start": 1,
+      "each-line": false
+    },
+    "input": {
+      "value": "0001020304050607",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "010407",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "take every byte",
+    "ref": "hand-computed on the bytes 00 to 07",
+    "op": "bytes-slice:take-nth",
+    "params": {
+      "n": 1,
+      "start": 0,
+      "each-line": false
+    },
+    "input": {
+      "value": "0001020304050607",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0001020304050607",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "take every nth byte from past the end",
+    "ref": "hand-computed on the bytes 00 to 07",
+    "op": "bytes-slice:take-nth",
+    "params": {
+      "n": 2,
+      "start": 8,
+      "each-line": false
+    },
+    "input": {
+      "value": "0001020304050607",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "take every second byte of each line",
+    "ref": "hand-computed on the bytes 00 to 07; lines 00 01 02 | 03 04 | 05 06",
+    "op": "bytes-slice:take-nth",
+    "params": {
+      "n": 2,
+      "start": 0,
+      "each-line": true
+    },
+    "input": {
+      "value": "0001020a03040a0506",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00020a030a05",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "remove every third byte from 1",
+    "ref": "hand-computed on the bytes 00 to 07",
+    "op": "bytes-slice:remove-nth",
+    "params": {
+      "n": 3,
+      "start": 1,
+      "each-line": false
+    },
+    "input": {
+      "value": "0001020304050607",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0002030506",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "remove every byte",
+    "ref": "hand-computed on the bytes 00 to 07",
+    "op": "bytes-slice:remove-nth",
+    "params": {
+      "n": 1,
+      "start": 0,
+      "each-line": false
+    },
+    "input": {
+      "value": "0001020304050607",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "remove every second byte of each line",
+    "ref": "hand-computed on the bytes 00 to 07; lines 00 01 02 | 03 04 | 05 06",
+    "op": "bytes-slice:remove-nth",
+    "params": {
+      "n": 2,
+      "start": 0,
+      "each-line": true
+    },
+    "input": {
+      "value": "0001020a03040a0506",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "010a040a06",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "remove every nth byte of empty input",
+    "ref": "hand-computed on the bytes 00 to 07",
+    "op": "bytes-slice:remove-nth",
+    "params": {
+      "n": 2,
+      "start": 0,
+      "each-line": false
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  }
+]

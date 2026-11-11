@@ -1,0 +1,400 @@
+[
+  {
+    "name": "escape quotes, backslash and control characters",
+    "ref": "hand-computed from the ECMAScript string literal escapes (ECMA-262 12.9.4)",
+    "op": "string-escape:escape",
+    "params": {
+      "level": "special",
+      "quote": "single",
+      "json": false,
+      "es6": true,
+      "uppercase": false
+    },
+    "input": {
+      "value": "It's\t\"é\"\\\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "It\\'s\\t\"\\xe9\"\\\\\\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape the double quote",
+    "ref": "hand-computed from the ECMAScript string literal escapes (ECMA-262 12.9.4)",
+    "op": "string-escape:escape",
+    "params": {
+      "level": "special",
+      "quote": "double",
+      "json": false,
+      "es6": true,
+      "uppercase": false
+    },
+    "input": {
+      "value": "It's \"x\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "It's \\\"x\\\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape the backtick",
+    "ref": "hand-computed from the ECMAScript string literal escapes (ECMA-262 12.9.4)",
+    "op": "string-escape:escape",
+    "params": {
+      "level": "special",
+      "quote": "backtick",
+      "json": false,
+      "es6": true,
+      "uppercase": false
+    },
+    "input": {
+      "value": "`'\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\\`'\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape an astral character with es6",
+    "ref": "hand-computed from the ECMAScript string literal escapes (ECMA-262 12.9.4)",
+    "op": "string-escape:escape",
+    "params": {
+      "level": "special",
+      "quote": "single",
+      "json": false,
+      "es6": true,
+      "uppercase": false
+    },
+    "input": {
+      "value": "😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\\u{1f600}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape an astral character without es6",
+    "ref": "hand-computed from the ECMAScript string literal escapes (ECMA-262 12.9.4)",
+    "op": "string-escape:escape",
+    "params": {
+      "level": "special",
+      "quote": "single",
+      "json": false,
+      "es6": false,
+      "uppercase": false
+    },
+    "input": {
+      "value": "😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\\ud83d\\ude00",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape in upper case hex",
+    "ref": "hand-computed from the ECMAScript string literal escapes (ECMA-262 12.9.4)",
+    "op": "string-escape:escape",
+    "params": {
+      "level": "special",
+      "quote": "single",
+      "json": false,
+      "es6": true,
+      "uppercase": true
+    },
+    "input": {
+      "value": "é€😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\\xE9\\u20AC\\u{1F600}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape for JSON",
+    "ref": "hand-computed from the ECMAScript string literal escapes (ECMA-262 12.9.4)",
+    "op": "string-escape:escape",
+    "params": {
+      "level": "special",
+      "quote": "single",
+      "json": true,
+      "es6": true,
+      "uppercase": false
+    },
+    "input": {
+      "value": "é\"'\u000b\n😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\\u00e9\\\"'\\u000b\\n\\ud83d\\ude00",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape the minimal level keeps non-ASCII",
+    "ref": "hand-computed from the ECMAScript string literal escapes (ECMA-262 12.9.4)",
+    "op": "string-escape:escape",
+    "params": {
+      "level": "minimal",
+      "quote": "single",
+      "json": false,
+      "es6": true,
+      "uppercase": false
+    },
+    "input": {
+      "value": "é€😀\u0001 ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "é€😀\\x01\\u2028",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape the everything level",
+    "ref": "hand-computed from the ECMAScript string literal escapes (ECMA-262 12.9.4)",
+    "op": "string-escape:escape",
+    "params": {
+      "level": "everything",
+      "quote": "single",
+      "json": false,
+      "es6": true,
+      "uppercase": false
+    },
+    "input": {
+      "value": "aé\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\\x61\\xe9\\x0a",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape everything for JSON",
+    "ref": "hand-computed from the ECMAScript string literal escapes (ECMA-262 12.9.4)",
+    "op": "string-escape:escape",
+    "params": {
+      "level": "everything",
+      "quote": "single",
+      "json": true,
+      "es6": true,
+      "uppercase": false
+    },
+    "input": {
+      "value": "a€",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\\u0061\\u20ac",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape NUL and DEL",
+    "ref": "hand-computed from the ECMAScript string literal escapes (ECMA-262 12.9.4)",
+    "op": "string-escape:escape",
+    "params": {
+      "level": "special",
+      "quote": "single",
+      "json": false,
+      "es6": true,
+      "uppercase": false
+    },
+    "input": {
+      "value": "\u0000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\\x00\\x7f",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape the named control characters",
+    "ref": "hand-computed from the ECMAScript string literal escapes (ECMA-262 12.9.4)",
+    "op": "string-escape:escape",
+    "params": {
+      "level": "special",
+      "quote": "single",
+      "json": false,
+      "es6": true,
+      "uppercase": false
+    },
+    "input": {
+      "value": "\b\t\n\u000b\f\r",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\\b\\t\\n\\v\\f\\r",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "escape of empty input",
+    "ref": "hand-computed from the ECMAScript string literal escapes (ECMA-262 12.9.4)",
+    "op": "string-escape:escape",
+    "params": {
+      "level": "special",
+      "quote": "single",
+      "json": false,
+      "es6": true,
+      "uppercase": false
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unescape the single-letter escapes",
+    "ref": "hand-computed from the ECMAScript string literal escapes (ECMA-262 12.9.4)",
+    "op": "string-escape:unescape",
+    "params": {},
+    "input": {
+      "value": "a\\nb\\tc\\\\d\\'e\\\"f\\`g\\/h\\rI\\bJ\\fK\\vL",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a\nb\tc\\d'e\"f`g/h\rI\bJ\fK\u000bL",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unescape hex, unicode and braces",
+    "ref": "hand-computed from the ECMAScript string literal escapes (ECMA-262 12.9.4)",
+    "op": "string-escape:unescape",
+    "params": {},
+    "input": {
+      "value": "\\x41\\u0042\\u{43}\\u{1F600}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ABC😀",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unescape a surrogate pair",
+    "ref": "hand-computed from the ECMAScript string literal escapes (ECMA-262 12.9.4)",
+    "op": "string-escape:unescape",
+    "params": {},
+    "input": {
+      "value": "\\ud83d\\ude00 \\uD83D\\uDE00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "😀 😀",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unescape octal",
+    "ref": "hand-computed from the ECMAScript string literal escapes (ECMA-262 12.9.4)",
+    "op": "string-escape:unescape",
+    "params": {},
+    "input": {
+      "value": "\\101\\7\\0\\377\\12",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "A\u0007\u0000ÿ\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unescape keeps an unknown escape",
+    "ref": "hand-computed from the ECMAScript string literal escapes (ECMA-262 12.9.4)",
+    "op": "string-escape:unescape",
+    "params": {},
+    "input": {
+      "value": "\\q \\x4 \\u12 \\8",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\\q \\x4 \\u12 \\8",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unescape keeps a backslash at the end",
+    "ref": "hand-computed from the ECMAScript string literal escapes (ECMA-262 12.9.4)",
+    "op": "string-escape:unescape",
+    "params": {},
+    "input": {
+      "value": "abc\\",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "abc\\",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unescape text without escapes",
+    "ref": "hand-computed from the ECMAScript string literal escapes (ECMA-262 12.9.4)",
+    "op": "string-escape:unescape",
+    "params": {},
+    "input": {
+      "value": "plain text é",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "plain text é",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unescape of empty input",
+    "ref": "hand-computed from the ECMAScript string literal escapes (ECMA-262 12.9.4)",
+    "op": "string-escape:unescape",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unescape a lone surrogate is E_COERCE",
+    "ref": "hand-computed from the ECMAScript string literal escapes (ECMA-262 12.9.4)",
+    "op": "string-escape:unescape",
+    "params": {},
+    "input": {
+      "value": "\\ud83d",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "unescape a code point above U+10FFFF is E_COERCE",
+    "ref": "hand-computed from the ECMAScript string literal escapes (ECMA-262 12.9.4)",
+    "op": "string-escape:unescape",
+    "params": {},
+    "input": {
+      "value": "\\u{110000}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]
