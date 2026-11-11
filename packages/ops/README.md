@@ -103,6 +103,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `endian`           | swap the byte order of 2, 4 or 8 byte words                                                                                                                            |
 | `enigma`           | Enigma I, M3 and M4 rotor machines, one reciprocal word; also the shared historical rotor, turnover and reflector data (1 op)                                          |
 | `evp`              | OpenSSL EVP_BytesToKey key derivation in FL over MD5, SHA-1 and SHA-2 (1 op)                                                                                           |
+| `extract`          | strings (single, UTF-16LE/BE), IP, e-mail and MAC addresses, URLs, domains, file paths, hashes; total, sort, unique (8 ops)                                            |
 | `fernet`           | Fernet encrypt and decrypt (github.com/fernet/spec) over aes and hmac, with the +random and +time effects (2 ops)                                                      |
 | `flask-session`    | Flask session cookies (itsdangerous, HMAC-SHA1/256) decode, sign and verify (3 ops)                                                                                    |
 | `fletcher`         | Fletcher-8, -16, -32 and -64 (1 op)                                                                                                                                    |
@@ -144,6 +145,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `quoted-printable` | Quoted-Printable (RFC 2045 section 6.7) encode and decode                                                                                                              |
 | `rabbit`           | Rabbit stream cipher (RFC 4503), with or without IV, big or little endian (1 op)                                                                                       |
 | `radix`            | convert an integer of any size from one base to another                                                                                                                |
+| `rake`             | RAKE keyword extraction (Rose et al. 2010), built-in English stop list, phrase length limit, scores (1 op)                                                             |
 | `random`           | internal: the shared host-CSPRNG words `random:bytes-of`, `random:below` and `random:between` (no ops)                                                                 |
 | `rc2`              | RC2 encrypt and decrypt (RFC 2268): ECB and CBC, 1 to 128-byte keys, effective key bits, PKCS#7 or no padding                                                          |
 | `rc4`              | RC4 and RC4 Drop (one op with a drop param in bytes) (1 op)                                                                                                            |

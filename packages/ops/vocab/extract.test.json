@@ -1,0 +1,1215 @@
+[
+  {
+    "name": "strings: single bytes, minimum length 4",
+    "ref": "hand-computed: runs of printable ASCII of 4 or more",
+    "op": "extract:strings",
+    "params": {
+      "encoding": "single",
+      "min-length": 4,
+      "match": "printable",
+      "null-terminated": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "61620068656c6c6f00776f7200776f726c6421017878",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "hello\nworld!",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "strings: minimum length 3",
+    "ref": "hand-computed: runs of printable ASCII of 3 or more",
+    "op": "extract:strings",
+    "params": {
+      "encoding": "single",
+      "min-length": 3,
+      "match": "printable",
+      "null-terminated": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "61620068656c6c6f00776f7200776f726c6421017878",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "hello\nwor\nworld!",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "strings: null-terminated keeps only strings followed by a zero byte",
+    "ref": "hand-computed: hello and wor end at a zero byte, world! ends the data",
+    "op": "extract:strings",
+    "params": {
+      "encoding": "single",
+      "min-length": 3,
+      "match": "printable",
+      "null-terminated": true,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "61620068656c6c6f00776f7200776f726c6421",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "hello\nwor",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "strings: UTF-16LE",
+    "ref": "hand-computed: 6 characters, each followed by a zero byte",
+    "op": "extract:strings",
+    "params": {
+      "encoding": "utf16le",
+      "min-length": 4,
+      "match": "printable",
+      "null-terminated": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "68006900210079006f00750000007a7a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "hi!you",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "strings: UTF-16BE",
+    "ref": "hand-computed: 6 characters, each preceded by a zero byte",
+    "op": "extract:strings",
+    "params": {
+      "encoding": "utf16be",
+      "min-length": 4,
+      "match": "printable",
+      "null-terminated": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "0068006900210079006f007500007a7a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "hi!you",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "strings: UTF-16LE ignores single-byte text",
+    "ref": "hand-computed: abcd has no zero bytes between its characters",
+    "op": "extract:strings",
+    "params": {
+      "encoding": "utf16le",
+      "min-length": 4,
+      "match": "printable",
+      "null-terminated": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "61626364016800690021007900",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "hi!y",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "strings: all encodings together, in order of appearance",
+    "ref": "hand-computed: single bytes, little-endian, then big-endian",
+    "op": "extract:strings",
+    "params": {
+      "encoding": "all",
+      "min-length": 4,
+      "match": "printable",
+      "null-terminated": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "61626364016800690021007900010068006900210079",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "abcd\nhi!y\nhi!y",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "strings: alphanumeric class stops at ~ { and }",
+    "ref": "hand-computed: ab-cd is letters and a hyphen; x~yz{} is cut into pieces below 3",
+    "op": "extract:strings",
+    "params": {
+      "encoding": "single",
+      "min-length": 3,
+      "match": "alphanumeric",
+      "null-terminated": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "61622d636401787e797a7b7d",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ab-cd",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "strings: printable class keeps ~ { and }",
+    "ref": "hand-computed: x~yz{} is 6 printable characters",
+    "op": "extract:strings",
+    "params": {
+      "encoding": "single",
+      "min-length": 3,
+      "match": "printable",
+      "null-terminated": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "61622d636401787e797a7b7d",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ab-cd\nx~yz{}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "strings: sort, unique and total",
+    "ref": "hand-computed: zeta alpha zeta beta, unique then sorted, 3 found",
+    "op": "extract:strings",
+    "params": {
+      "encoding": "single",
+      "min-length": 4,
+      "match": "printable",
+      "null-terminated": false,
+      "display-total": true,
+      "sort": true,
+      "unique": true
+    },
+    "input": {
+      "value": "7a65746100616c706861007a6574610062657461",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Total found: 3\n\nalpha\nbeta\nzeta",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "strings: unique keeps the order of first appearance",
+    "ref": "hand-computed: zeta alpha zeta beta",
+    "op": "extract:strings",
+    "params": {
+      "encoding": "single",
+      "min-length": 4,
+      "match": "printable",
+      "null-terminated": false,
+      "display-total": false,
+      "sort": false,
+      "unique": true
+    },
+    "input": {
+      "value": "7a65746100616c706861007a6574610062657461",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "zeta\nalpha\nbeta",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "strings: sort without unique keeps duplicates",
+    "ref": "hand-computed: zeta alpha zeta beta sorted",
+    "op": "extract:strings",
+    "params": {
+      "encoding": "single",
+      "min-length": 4,
+      "match": "printable",
+      "null-terminated": false,
+      "display-total": false,
+      "sort": true,
+      "unique": false
+    },
+    "input": {
+      "value": "7a65746100616c706861007a6574610062657461",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "alpha\nbeta\nzeta\nzeta",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "strings: total only",
+    "ref": "hand-computed: two strings",
+    "op": "extract:strings",
+    "params": {
+      "encoding": "single",
+      "min-length": 4,
+      "match": "printable",
+      "null-terminated": false,
+      "display-total": true,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "7a65746100616c706861",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Total found: 2\n\nzeta\nalpha",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "strings: no string gives an empty output",
+    "ref": "hand-computed: every run is shorter than 4",
+    "op": "extract:strings",
+    "params": {
+      "encoding": "single",
+      "min-length": 4,
+      "match": "printable",
+      "null-terminated": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "6162006364006566",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "strings: no string with the total",
+    "ref": "hand-computed: zero found",
+    "op": "extract:strings",
+    "params": {
+      "encoding": "single",
+      "min-length": 4,
+      "match": "printable",
+      "null-terminated": false,
+      "display-total": true,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "6162",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Total found: 0\n\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "strings: empty input",
+    "ref": "hand-computed: nothing to find",
+    "op": "extract:strings",
+    "params": {
+      "encoding": "single",
+      "min-length": 4,
+      "match": "printable",
+      "null-terminated": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "strings: UTF-8 text is read as bytes, only ASCII runs count",
+    "ref": "hand-computed: the two-byte é breaks the run",
+    "op": "extract:strings",
+    "params": {
+      "encoding": "single",
+      "min-length": 3,
+      "match": "printable",
+      "null-terminated": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "abc é def",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "abc \n def",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "strings: minimum length 0 is refused",
+    "ref": "the header limits min-length to 1 or more",
+    "op": "extract:strings",
+    "params": {
+      "encoding": "single",
+      "min-length": 0,
+      "match": "printable",
+      "null-terminated": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "abcd",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "strings: unknown encoding is refused",
+    "ref": "the header lists single, utf16le, utf16be and all",
+    "op": "extract:strings",
+    "params": {
+      "encoding": "utf32",
+      "min-length": 4,
+      "match": "printable",
+      "null-terminated": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "abcd",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "ip: IPv4 addresses, not parts of longer numbers",
+    "ref": "hand-computed: 1.2.3.4.5 has five parts and 999 is not an octet",
+    "op": "extract:ip-addresses",
+    "params": {
+      "ipv4": true,
+      "ipv6": false,
+      "remove-local": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "a 192.168.1.1 and 8.8.8.8, 1.2.3.4.5 999.1.1.1 10.0.0.1.",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "192.168.1.1\n8.8.8.8\n10.0.0.1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ip: octet bounds 255 and 256",
+    "ref": "hand-computed: 255.255.255.255 is valid, 256.1.1.1 is not",
+    "op": "extract:ip-addresses",
+    "params": {
+      "ipv4": true,
+      "ipv6": false,
+      "remove-local": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "255.255.255.255 256.1.1.1 0.0.0.0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "255.255.255.255\n0.0.0.0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ip: leading zeros are accepted",
+    "ref": "hand-computed: 010.001.002.003 is four octets",
+    "op": "extract:ip-addresses",
+    "params": {
+      "ipv4": true,
+      "ipv6": false,
+      "remove-local": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "010.001.002.003",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "010.001.002.003",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ip: remove-local drops private, loopback and link-local",
+    "ref": "RFC 1918, RFC 1122 and RFC 3927 ranges, hand-selected: 172.32.1.1 is outside 172.16/12",
+    "op": "extract:ip-addresses",
+    "params": {
+      "ipv4": true,
+      "ipv6": false,
+      "remove-local": true,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "192.168.1.1 8.8.8.8 127.0.0.1 172.20.1.1 172.32.1.1 169.254.0.1 10.9.9.9 172.15.0.1 172.31.255.255",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "8.8.8.8\n172.32.1.1\n172.15.0.1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ip: unique, sort and total",
+    "ref": "hand-computed: sorted as text, 10.0.0.9 after 10.0.0.10",
+    "op": "extract:ip-addresses",
+    "params": {
+      "ipv4": true,
+      "ipv6": false,
+      "remove-local": false,
+      "display-total": true,
+      "sort": true,
+      "unique": true
+    },
+    "input": {
+      "value": "10.0.0.9 10.0.0.10 10.0.0.9 8.8.8.8",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Total found: 3\n\n10.0.0.10\n10.0.0.9\n8.8.8.8",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ip: IPv6 forms",
+    "ref": "RFC 4291 section 2.2 examples and the loopback address",
+    "op": "extract:ip-addresses",
+    "params": {
+      "ipv4": false,
+      "ipv6": true,
+      "remove-local": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "x ::1 fe80::1 2001:DB8::ff00:42:8329 1::2 1:2:3:4:5:6:7:8 ::ffff:1.2.3.4 std::string 12:30:45 64:ff9b::1.2.3.4 1::",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "::1\nfe80::1\n2001:DB8::ff00:42:8329\n1::2\n1:2:3:4:5:6:7:8\n::ffff:1.2.3.4\n64:ff9b::1.2.3.4\n1::",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ip: IPv4 and IPv6 together",
+    "ref": "hand-computed: appearance order",
+    "op": "extract:ip-addresses",
+    "params": {
+      "ipv4": true,
+      "ipv6": true,
+      "remove-local": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "host 10.0.0.1 and 2001:db8::1 or ::ffff:10.0.0.2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "10.0.0.1\n2001:db8::1\n::ffff:10.0.0.2",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ip: IPv4 off and IPv6 on ignores dotted quads",
+    "ref": "hand-computed",
+    "op": "extract:ip-addresses",
+    "params": {
+      "ipv4": false,
+      "ipv6": true,
+      "remove-local": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "10.0.0.1 2001:db8::1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2001:db8::1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ip: both off finds nothing",
+    "ref": "documented: with both off nothing is found",
+    "op": "extract:ip-addresses",
+    "params": {
+      "ipv4": false,
+      "ipv6": false,
+      "remove-local": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "10.0.0.1 ::1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ip: an address in brackets and a port",
+    "ref": "hand-computed: the brackets and the port are not part of the address",
+    "op": "extract:ip-addresses",
+    "params": {
+      "ipv4": true,
+      "ipv6": true,
+      "remove-local": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "[2001:db8::1]:443 10.1.2.3:80",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2001:db8::1\n10.1.2.3",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ip: found in binary data",
+    "ref": "hand-computed: the bytes around the address are not text",
+    "op": "extract:ip-addresses",
+    "params": {
+      "ipv4": true,
+      "ipv6": false,
+      "remove-local": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "ff0020312e322e332e3400fe",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1.2.3.4",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "emails: plain addresses, a trailing full stop is not part of one",
+    "ref": "hand-computed",
+    "op": "extract:emails",
+    "params": {
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "mail bob.smith+x@example.co.uk, or a@b.c. also bad@x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "bob.smith+x@example.co.uk\na@b.c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "emails: unique, sort and total",
+    "ref": "hand-computed",
+    "op": "extract:emails",
+    "params": {
+      "display-total": true,
+      "sort": true,
+      "unique": true
+    },
+    "input": {
+      "value": "b@x.org a@x.org b@x.org",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Total found: 2\n\na@x.org\nb@x.org",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "emails: a dot before the address is not part of it",
+    "ref": "hand-computed: the ellipsis stays outside",
+    "op": "extract:emails",
+    "params": {
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "see...bob@x.com",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "bob@x.com",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "emails: no address",
+    "ref": "hand-computed",
+    "op": "extract:emails",
+    "params": {
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "no at sign here, user@ nothing, @host.com",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mac: colon, hyphen and dotted forms",
+    "ref": "hand-computed: IEEE 802 notations",
+    "op": "extract:mac-addresses",
+    "params": {
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "00:1A:2b:3c:4d:5e 00-11-22-33-44-55 0011.2233.4455",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00:1A:2b:3c:4d:5e\n00-11-22-33-44-55\n0011.2233.4455",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mac: not inside a longer run of pairs",
+    "ref": "hand-computed: seven pairs and an IPv6 address are not MAC addresses",
+    "op": "extract:mac-addresses",
+    "params": {
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "00:11:22:33:44:55:66 fe80::1 2001:db8:0:0:0:0:0:1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "mac: unique and sort",
+    "ref": "hand-computed",
+    "op": "extract:mac-addresses",
+    "params": {
+      "display-total": false,
+      "sort": true,
+      "unique": true
+    },
+    "input": {
+      "value": "aa:bb:cc:dd:ee:ff 00:00:00:00:00:01 aa:bb:cc:dd:ee:ff",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00:00:00:00:00:01\naa:bb:cc:dd:ee:ff",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "urls: schemes, ports, queries and fragments",
+    "ref": "hand-computed: trailing punctuation and brackets are left out",
+    "op": "extract:urls",
+    "params": {
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "see http://example.com/a/b?x=1#f. and https://user@host.org:8080/p(1), ftp://1.2.3.4/x; http://a.com/ <http://q.org/z>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "http://example.com/a/b?x=1#f\nhttps://user@host.org:8080/p(1)\nftp://1.2.3.4/x\nhttp://a.com/\nhttp://q.org/z",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "urls: a URL in round brackets loses the closing one",
+    "ref": "hand-computed: the bracket is unpaired",
+    "op": "extract:urls",
+    "params": {
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "(http://a.com/x) and http://b.org/y_(z)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "http://a.com/x\nhttp://b.org/y_(z)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "urls: IPv6 host",
+    "ref": "hand-computed",
+    "op": "extract:urls",
+    "params": {
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "go to http://[2001:db8::1]:8080/index.html now",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "http://[2001:db8::1]:8080/index.html",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "urls: a scheme alone is not a URL",
+    "ref": "hand-computed",
+    "op": "extract:urls",
+    "params": {
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "http:// and mailto:x@y.z",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "urls: unique, sort and total",
+    "ref": "hand-computed",
+    "op": "extract:urls",
+    "params": {
+      "display-total": true,
+      "sort": true,
+      "unique": true
+    },
+    "input": {
+      "value": "http://b.com http://a.com http://b.com",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Total found: 2\n\nhttp://a.com\nhttp://b.com",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "domains: names with a top-level label",
+    "ref": "hand-computed: 1.2.3.4 has no letters in its last label",
+    "op": "extract:domains",
+    "params": {
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "visit www.example.com, mail x@sub.test.org. and file.txt 1.2.3.4 a-b.co",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "www.example.com\nsub.test.org\nfile.txt\na-b.co",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "domains: punycode top-level label",
+    "ref": "hand-computed",
+    "op": "extract:domains",
+    "params": {
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "see example.xn--p1ai now",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "example.xn--p1ai",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "domains: unique, sort and total",
+    "ref": "hand-computed",
+    "op": "extract:domains",
+    "params": {
+      "display-total": true,
+      "sort": true,
+      "unique": true
+    },
+    "input": {
+      "value": "b.org a.org b.org",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Total found: 2\n\na.org\nb.org",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "domains: no domain",
+    "ref": "hand-computed: a single label is not a domain",
+    "op": "extract:domains",
+    "params": {
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "localhost and 127.0.0.1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "paths: Windows and UNIX",
+    "ref": "hand-computed: a folder name may hold a space, the file name may not",
+    "op": "extract:file-paths",
+    "params": {
+      "windows": true,
+      "unix": true,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "open C:\\Program Files\\App\\app.exe now and /etc/passwd. also http://x.com/a/b and a/b/c /usr/local/bin/",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "C:\\Program Files\\App\\app.exe\n/etc/passwd\n/usr/local/bin/",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "paths: Windows only",
+    "ref": "hand-computed",
+    "op": "extract:file-paths",
+    "params": {
+      "windows": true,
+      "unix": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "C:\\Windows\\System32 and /etc/passwd",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "C:\\Windows\\System32",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "paths: UNIX only",
+    "ref": "hand-computed",
+    "op": "extract:file-paths",
+    "params": {
+      "windows": false,
+      "unix": true,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "C:\\Windows\\System32 and /etc/passwd",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "/etc/passwd",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "paths: both off finds nothing",
+    "ref": "documented",
+    "op": "extract:file-paths",
+    "params": {
+      "windows": false,
+      "unix": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "C:\\x /etc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "paths: a drive without a folder",
+    "ref": "hand-computed: the root of D:",
+    "op": "extract:file-paths",
+    "params": {
+      "windows": true,
+      "unix": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "D:\\ and e:\\temp\\",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "D:\\\ne:\\temp\\",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "paths: unique, sort and total",
+    "ref": "hand-computed",
+    "op": "extract:file-paths",
+    "params": {
+      "windows": true,
+      "unix": true,
+      "display-total": true,
+      "sort": true,
+      "unique": true
+    },
+    "input": {
+      "value": "/b/x /a/y /b/x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Total found: 2\n\n/a/y\n/b/x",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hashes: 40 hex digits (SHA-1), either case",
+    "ref": "FIPS 180-4 SHA-1 of the empty string, hand-cased",
+    "op": "extract:hashes",
+    "params": {
+      "length": 40,
+      "all": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "d41d8cd98f00b204e9800998ecf8427e da39a3ee5e6b4b0d3255bfef95601890afd80709 DA39A3EE5E6B4B0D3255BFEF95601890AFD80709",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "da39a3ee5e6b4b0d3255bfef95601890afd80709\nDA39A3EE5E6B4B0D3255BFEF95601890AFD80709",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hashes: 32 hex digits (MD5)",
+    "ref": "RFC 1321 MD5 of the empty string",
+    "op": "extract:hashes",
+    "params": {
+      "length": 32,
+      "all": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "d41d8cd98f00b204e9800998ecf8427e da39a3ee5e6b4b0d3255bfef95601890afd80709",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "d41d8cd98f00b204e9800998ecf8427e",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hashes: a longer run of hex digits is not cut",
+    "ref": "hand-computed: 41 digits are not a 40-digit hash",
+    "op": "extract:hashes",
+    "params": {
+      "length": 40,
+      "all": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "da39a3ee5e6b4b0d3255bfef95601890afd807090",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hashes: a run inside a word is not found",
+    "ref": "hand-computed",
+    "op": "extract:hashes",
+    "params": {
+      "length": 40,
+      "all": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "xda39a3ee5e6b4b0d3255bfef95601890afd80709 da39a3ee5e6b4b0d3255bfef95601890afd80709_",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hashes: all usual sizes",
+    "ref": "hand-computed: 4, 8, 16, 32, 40 digits found; 5 and 9 digits are not digest sizes",
+    "op": "extract:hashes",
+    "params": {
+      "length": 40,
+      "all": true,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "cafe babe0 deadbeef 0123456789abcdef d41d8cd98f00b204e9800998ecf8427e da39a3ee5e6b4b0d3255bfef95601890afd80709 abcdefabc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "cafe\ndeadbeef\n0123456789abcdef\nd41d8cd98f00b204e9800998ecf8427e\nda39a3ee5e6b4b0d3255bfef95601890afd80709",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hashes: unique, sort and total",
+    "ref": "hand-computed",
+    "op": "extract:hashes",
+    "params": {
+      "length": 8,
+      "all": false,
+      "display-total": true,
+      "sort": true,
+      "unique": true
+    },
+    "input": {
+      "value": "deadbeef cafebabe deadbeef",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Total found: 2\n\ncafebabe\ndeadbeef",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hashes: length 0 is refused",
+    "ref": "the header limits length to 1 to 128",
+    "op": "extract:hashes",
+    "params": {
+      "length": 0,
+      "all": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "hashes: length 129 is refused",
+    "ref": "the header limits length to 1 to 128",
+    "op": "extract:hashes",
+    "params": {
+      "length": 129,
+      "all": false,
+      "display-total": false,
+      "sort": false,
+      "unique": false
+    },
+    "input": {
+      "value": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  }
+]
