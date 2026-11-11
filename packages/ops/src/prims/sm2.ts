@@ -55,8 +55,7 @@ function point() {
 }
 
 function scalar(k: unknown, what: string): bigint {
-  if (!(k instanceof Uint8Array) || k.length !== 32)
-    throw rangeFailure(`${what} must be 32 bytes`);
+  if (!(k instanceof Uint8Array) || k.length !== 32) throw rangeFailure(`${what} must be 32 bytes`);
   let v = 0n;
   for (const b of k) v = (v << 8n) | BigInt(b);
   if (v < 1n || v >= SM2_PARAMS.n)
