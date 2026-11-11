@@ -572,3 +572,12 @@ IN: util
 : int>b64url ( v:int -- str )
   "The big-endian bytes of a non-negative integer (none for 0) as Base64url text without padding, the form of the integer members of a JWK (RFC 7518 section 6.3)." doc
   v int>bytes false b64url-encode bytes>str ;
+
+: wire-input ( data:bytes format:str -- bytes )
+  "The bytes of an op's input given as hex text (format hex, white space ignored), Base64 text (format base64, the standard alphabet) or raw bytes (any other format name, normally raw). The shared input step of the fingerprint ops (JA3, JA4, HASSH)." doc
+  format "hex" = [ data hex:decode ] [
+    format "base64" = [ data "standard" base64:decode ] [ data ] if ] if ;
+
+: md5-hex ( s:str -- str )
+  "The MD5 digest of the characters of s (as UTF-8) as 32 lower-case hex digits." doc
+  s str>bytes md5:digest bytes>hex lower ;

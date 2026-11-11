@@ -51,7 +51,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Browser\n    Name: Safari\n    Version: 17.1\nDevice\n    Model: Macintosh\n    Type: unknown\n    Vendor: Apple\nEngine\n    Name: WebKit\n    Version: 605.1.15\nOS\n    Name: Mac OS\n    Version: 10.15.7\nCPU\n    Architecture: unknown",
+      "value": "Browser\n    Name: Safari\n    Version: 17.1\nDevice\n    Model: Macintosh\n    Type: unknown\n    Vendor: Apple\nEngine\n    Name: WebKit\n    Version: 605.1.15\nOS\n    Name: macOS\n    Version: 10.15.7\nCPU\n    Architecture: unknown",
       "enc": "utf8"
     }
   },
@@ -93,7 +93,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Browser\n    Name: Chrome\n    Version: 120.0.6099.50\nDevice\n    Model: iPhone\n    Type: mobile\n    Vendor: Apple\nEngine\n    Name: WebKit\n    Version: 605.1.15\nOS\n    Name: iOS\n    Version: 17.1\nCPU\n    Architecture: unknown",
+      "value": "Browser\n    Name: Mobile Chrome\n    Version: 120.0.6099.50\nDevice\n    Model: iPhone\n    Type: mobile\n    Vendor: Apple\nEngine\n    Name: WebKit\n    Version: 605.1.15\nOS\n    Name: iOS\n    Version: 17.1\nCPU\n    Architecture: unknown",
       "enc": "utf8"
     }
   },
@@ -107,7 +107,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Browser\n    Name: Chrome\n    Version: 120.0.6099.43\nDevice\n    Model: SM-G991B\n    Type: mobile\n    Vendor: Samsung\nEngine\n    Name: Blink\n    Version: 120.0.6099.43\nOS\n    Name: Android\n    Version: 13\nCPU\n    Architecture: unknown",
+      "value": "Browser\n    Name: Mobile Chrome\n    Version: 120.0.6099.43\nDevice\n    Model: SM-G991B\n    Type: mobile\n    Vendor: Samsung\nEngine\n    Name: Blink\n    Version: 120.0.6099.43\nOS\n    Name: Android\n    Version: 13\nCPU\n    Architecture: unknown",
       "enc": "utf8"
     }
   },
@@ -135,7 +135,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Browser\n    Name: Chrome\n    Version: 120.0.6099.43\nDevice\n    Model: Pixel 8 Pro\n    Type: mobile\n    Vendor: Google\nEngine\n    Name: Blink\n    Version: 120.0.6099.43\nOS\n    Name: Android\n    Version: 14\nCPU\n    Architecture: unknown",
+      "value": "Browser\n    Name: Mobile Chrome\n    Version: 120.0.6099.43\nDevice\n    Model: Pixel 8 Pro\n    Type: mobile\n    Vendor: Google\nEngine\n    Name: Blink\n    Version: 120.0.6099.43\nOS\n    Name: Android\n    Version: 14\nCPU\n    Architecture: unknown",
       "enc": "utf8"
     }
   },
@@ -233,7 +233,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Browser\n    Name: Firefox\n    Version: 121.0\nDevice\n    Model: unknown\n    Type: unknown\n    Vendor: unknown\nEngine\n    Name: Gecko\n    Version: 121.0\nOS\n    Name: Android\n    Version: 13\nCPU\n    Architecture: unknown",
+      "value": "Browser\n    Name: Mobile Firefox\n    Version: 121.0\nDevice\n    Model: unknown\n    Type: mobile\n    Vendor: unknown\nEngine\n    Name: Gecko\n    Version: 121.0\nOS\n    Name: Android\n    Version: 13\nCPU\n    Architecture: unknown",
       "enc": "utf8"
     }
   },
@@ -247,7 +247,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Browser\n    Name: Chrome\n    Version: 114.0.0.0\nDevice\n    Model: unknown\n    Type: unknown\n    Vendor: unknown\nEngine\n    Name: Blink\n    Version: 114.0.0.0\nOS\n    Name: Chromium OS\n    Version: 14541.0.0\nCPU\n    Architecture: arm64",
+      "value": "Browser\n    Name: Chrome\n    Version: 114.0.0.0\nDevice\n    Model: unknown\n    Type: unknown\n    Vendor: unknown\nEngine\n    Name: Blink\n    Version: 114.0.0.0\nOS\n    Name: Chrome OS\n    Version: 14541.0.0\nCPU\n    Architecture: arm64",
       "enc": "utf8"
     }
   },
@@ -275,7 +275,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "Browser\n    Name: unknown\n    Version: unknown\nDevice\n    Model: PlayStation 5\n    Type: console\n    Vendor: Sony\nEngine\n    Name: WebKit\n    Version: 605.1.15\nOS\n    Name: unknown\n    Version: unknown\nCPU\n    Architecture: unknown",
+      "value": "Browser\n    Name: WebKit\n    Version: 605.1.15\nDevice\n    Model: PlayStation 5\n    Type: console\n    Vendor: Sony\nEngine\n    Name: WebKit\n    Version: 605.1.15\nOS\n    Name: PlayStation\n    Version: 5\nCPU\n    Architecture: unknown",
       "enc": "utf8"
     }
   },

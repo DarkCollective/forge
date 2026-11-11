@@ -1120,12 +1120,12 @@
     }
   },
   {
-    "name": "error: hex notation",
+    "name": "error: hex prefix without hex digits",
     "ref": "must be rejected",
     "op": "varint:encode",
     "params": {},
     "input": {
-      "value": "0x10",
+      "value": "0xzz",
       "enc": "utf8"
     },
     "expect": {
@@ -1290,6 +1290,62 @@
     },
     "expect": {
       "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "encode with prefix 0xFF",
+    "ref": "Python google.protobuf.internal.encoder._VarintBytes (value computed from the prefix by hand: 0xFF = 255)",
+    "op": "varint:encode",
+    "params": {},
+    "input": {
+      "value": "0xFF",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ff01",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode with prefix 0x10",
+    "ref": "Python google.protobuf.internal.encoder._VarintBytes (value computed from the prefix by hand: 0x10 = 16)",
+    "op": "varint:encode",
+    "params": {},
+    "input": {
+      "value": "0x10",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "10",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode with prefix 0b101101100",
+    "ref": "Python google.protobuf.internal.encoder._VarintBytes (value computed from the prefix by hand: 0b101101100 = 364)",
+    "op": "varint:encode",
+    "params": {},
+    "input": {
+      "value": "0b101101100",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ec02",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encode with prefix 0o777",
+    "ref": "Python google.protobuf.internal.encoder._VarintBytes (value computed from the prefix by hand: 0o777 = 511)",
+    "op": "varint:encode",
+    "params": {},
+    "input": {
+      "value": "0o777",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ff03",
+      "enc": "hex"
     }
   }
 ]

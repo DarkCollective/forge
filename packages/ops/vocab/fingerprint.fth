@@ -11,11 +11,6 @@ USING: packets md5 sha2 hex base64 list ;
 
 \ ---- the input ----
 
-\ The bytes of an op's input: hex text (any white space ignored), Base64 text or the raw bytes.
-: _input ( data:bytes format:str -- bytes )
-  format "hex" = [ data hex:decode ] [
-    format "base64" = [ data "standard" base64:decode ] [ data ] if ] if ;
-
 \ TLS records, as the TLS words want them: bytes that start with a bare ClientHello (1) or ServerHello (2) handshake
 \ message (what a QUIC CRYPTO frame holds) get a record header in front; anything else is left to be read as records.
 : _records ( b:bytes -- bytes )
@@ -26,7 +21,7 @@ USING: packets md5 sha2 hex base64 list ;
 
 \ The first hello of a kind (1 ClientHello, 2 ServerHello) in the input; E_COERCE when there is none.
 : _hello ( data:bytes format:str kind:int what:str -- record )
-  data format _input _records { kind } packets:tls-hellos
+  data format util:wire-input _records { kind } packets:tls-hellos
   dup len 0 = [ "the input holds no " what cat " (handshake type " cat kind int>str cat ")" cat raise:coerce ] when
   0 nth ;
 
@@ -39,30 +34,27 @@ USING: packets md5 sha2 hex base64 list ;
 : _no-grease ( items:list -- list )
   items [ _grease? not ] filter ;
 
-: _dash ( items:list -- str )
-  items [ int>str ] map "-" join ;
-
-: _md5hex ( s:str -- str )
-  s str>bytes md5:digest bytes>hex ;
+: _dash ( items:list sep:str -- str )
+  items [ int>str ] map sep join ;
 
 \ ---- JA3 (Salesforce): version,ciphers,extensions,groups,point formats ----
 
 \ The five fields of the JA3 string. GREASE values are left out of the lists, except the point formats (one byte each).
 : _ja3-parts ( h:record -- list )
   { h "version" get int>str
-    h "ciphers" get _no-grease _dash
-    h "ext-types" get _no-grease _dash
-    h "groups" get _no-grease _dash
-    h "point-formats" get _dash } ;
+    h "ciphers" get _no-grease "-" _dash
+    h "ext-types" get _no-grease "-" _dash
+    h "groups" get _no-grease "-" _dash
+    h "point-formats" get "-" _dash } ;
 
 : _ja3-out ( p:list s:str fmt:str -- str )
   fmt "string" = [ s ] [
     fmt "full" =
-    [ "Hash digest:\n" s _md5hex cat "\n\nFull JA3 string:\n" cat s cat
+    [ "Hash digest:\n" s util:md5-hex cat "\n\nFull JA3 string:\n" cat s cat
       "\n\nTLS Version:\n" cat p 0 nth cat "\nCipher Suites:\n" cat p 1 nth cat
       "\nExtensions:\n" cat p 2 nth cat "\nElliptic Curves:\n" cat p 3 nth cat
       "\nElliptic Curve Point Formats:\n" cat p 4 nth cat ]
-    [ s _md5hex ] if ] if ;
+    [ s util:md5-hex ] if ] if ;
 
 : ja3 ( data:bytes input-format:choice{hex|base64|raw}="hex" output-format:choice{hash|string|full}="hash" -- str )
   "The JA3 fingerprint (Salesforce) of the TLS ClientHello in the input, as CyberChef's JA3 Fingerprint. The input is a TLS handshake record (hex text, Base64 text or raw bytes; a bare ClientHello message without the record header is read too) and the first ClientHello in it is used. The JA3 string is five fields separated by commas: the legacy client version in decimal, the cipher suites, the extension types, the supported groups (elliptic curves) and the EC point formats, each list in the order of the hello with its numbers in decimal joined by dashes and with GREASE values (RFC 8701) removed; a field the hello does not have is empty. The fingerprint is the MD5 of that string as 32 lower-case hex digits. output-format: hash (the MD5), string (the JA3 string) or full (CyberChef's layout: the hash, the string and the five fields, each under its heading). The input must be a well-formed hello: a record that is not a TLS record, a hello that is cut short or that goes on in the next record, a damaged extension (see Parse TLS record), or no ClientHello at all is E_COERCE with the offset; CyberChef rejects fewer inputs of the first kind and none of the last (it needs exactly one record and does not look inside the extensions it does not decode)." doc
@@ -81,15 +73,15 @@ META: ja3
 : _ja3s-parts ( h:record -- list )
   { h "version" get int>str
     h "ciphers" get 0 nth int>str
-    h "ext-types" get _dash } ;
+    h "ext-types" get "-" _dash } ;
 
 : _ja3s-out ( p:list s:str fmt:str -- str )
   fmt "string" = [ s ] [
     fmt "full" =
-    [ "Hash digest:\n" s _md5hex cat "\n\nFull JA3S string:\n" cat s cat
+    [ "Hash digest:\n" s util:md5-hex cat "\n\nFull JA3S string:\n" cat s cat
       "\n\nTLS Version:\n" cat p 0 nth cat "\nCipher Suite:\n" cat p 1 nth cat
       "\nExtensions:\n" cat p 2 nth cat ]
-    [ s _md5hex ] if ] if ;
+    [ s util:md5-hex ] if ] if ;
 
 : ja3s ( data:bytes input-format:choice{hex|base64|raw}="hex" output-format:choice{hash|string|full}="hash" -- str )
   "The JA3S fingerprint (Salesforce) of the TLS ServerHello in the input, as CyberChef's JA3S Fingerprint. The input is a TLS handshake record (hex text, Base64 text or raw bytes; a bare ServerHello message is read too) and the first ServerHello in it is used. The JA3S string is three fields separated by commas: the legacy server version in decimal, the cipher suite the server chose in decimal, and the extension types in the order of the hello joined by dashes (empty when there are none; nothing is removed, as in CyberChef and Salesforce's script). The fingerprint is the MD5 of that string as 32 lower-case hex digits. output-format: hash, string or full (CyberChef's layout: the hash, the string and the three fields under their headings). A malformed hello or no ServerHello is E_COERCE (see JA3 Fingerprint)." doc
@@ -182,14 +174,15 @@ META: ja3s
 : _form ( r:record b:str c:str hashed:bool -- str )
   r "a" get r b get r c get hashed _ja4-join ;
 
+: _ja4-pick ( r:record k:int -- str )
+  r k 1 band 1 = [ "bo" "co" ] [ "bs" "cs" ] if k 2 < _form ;
+
+: _ja4-all ( r:record -- str )
+  "JA4:    " r 0 _ja4-pick cat "\nJA4_o:  " cat r 1 _ja4-pick cat
+  "\nJA4_r:  " cat r 2 _ja4-pick cat "\nJA4_ro: " cat r 3 _ja4-pick cat ;
+
 : _ja4-out ( r:record fmt:str -- str )
-  fmt "ja4" = [ r "bs" "cs" true _form ] [
-  fmt "ja4-o" = [ r "bo" "co" true _form ] [
-  fmt "ja4-r" = [ r "bs" "cs" false _form ] [
-  fmt "ja4-ro" = [ r "bo" "co" false _form ] [
-  "JA4:    " r "bs" "cs" true _form cat "\nJA4_o:  " cat r "bo" "co" true _form cat
-  "\nJA4_r:  " cat r "bs" "cs" false _form cat "\nJA4_ro: " cat r "bo" "co" false _form cat
-  ] if ] if ] if ] if ;
+  fmt "all" = [ r _ja4-all ] [ r fmt "ja4-o" = [ 1 ] [ fmt "ja4-r" = [ 2 ] [ fmt "ja4-ro" = [ 3 ] [ 0 ] if ] if ] if _ja4-pick ] if ;
 
 : _proto ( transport:str -- str )
   transport "quic" = [ "q" ] [ "t" ] if ;

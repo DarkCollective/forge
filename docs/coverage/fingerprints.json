@@ -1,11 +1,74 @@
 [
- {"cyberchef": "JA3 Fingerprint", "status": "covered", "forge": ["fingerprint:ja3"], "note": "Input format hex, base64 or raw; output hash digest (default), JA3 string or full details, with CyberChef's layouts (read from the 11.5.0 source). The JA3 string is Salesforce's: version, ciphers, extension types, groups and point formats, GREASE removed from the first four, MD5. Added: a bare ClientHello message is read as well as a record, and the first ClientHello of a flight of records is used. Stricter than CyberChef: a record that is not a TLS record, a hello that is cut short, a damaged extension or no ClientHello is E_COERCE with the offset (CyberChef needs exactly one record of the right length and does not look inside the extensions it does not read). Values checked against an independent Python implementation, not against CyberChef (the WP 5.59 cross-check does that)."},
- {"cyberchef": "JA3S Fingerprint", "status": "covered", "forge": ["fingerprint:ja3s"], "note": "As JA3 Fingerprint for the ServerHello: version, chosen cipher and extension types (nothing removed), MD5; output hash digest, JA3S string or full details. A bare ServerHello message and the first ServerHello of a flight are read too; malformed input is E_COERCE."},
- {"cyberchef": "JA4 Fingerprint", "status": "redesigned", "forge": ["fingerprint:ja4"], "note": "Input format hex, base64 or raw; output JA4 (default), JA4 Original Rendering, JA4 Raw, JA4 Raw Original Rendering or All (the four labelled lines), as CyberChef. The fingerprint follows the FoxIO definition, and differs from CyberChef in two points that the FoxIO text decides: a list with no entries hashes to twelve zeros (CyberChef hashes the empty text) and the underscore and the signature algorithms are written only when the hello has the signature_algorithms extension (CyberChef always writes the underscore). Added: transport tcp (default, t) or quic (q) for the first character, and a bare ClientHello message is read too (a QUIC CRYPTO frame holds one; CyberChef does not read QUIC and always writes t). The original-order forms keep server_name and ALPN in the extension list as CyberChef's source builds them (not checked against the FoxIO page, which was not available offline). Verified with an independent Python implementation and the published Chrome fingerprint t13d1516h2_8daaf6152771_e5627efa2ab1, not against CyberChef."},
- {"cyberchef": "JA4Server Fingerprint", "status": "covered", "forge": ["fingerprint:ja4s"], "note": "Input format hex, base64 or raw; output JA4S (default), JA4S Raw or Both, as CyberChef: protocol, version (supported_versions or the version field), number of extensions, chosen ALPN, the chosen cipher, and the SHA-256 hash (12 hex digits, or twelve zeros for no extension) of the extension types in order. Added: the transport option and a bare ServerHello message; malformed input is E_COERCE."},
- {"cyberchef": "HASSH Client Fingerprint", "status": "covered", "forge": ["hassh:client"], "note": "Input format hex, base64 or raw: the SSH binary packet of SSH_MSG_KEXINIT sent by the client (exactly one packet, no MAC), as CyberChef takes it; output hash digest (default), HASSH algorithms string or full details, with CyberChef's layouts. kex;encryption c2s;mac c2s;compression c2s, MD5. Stricter than CyberChef: the name-lists must lie inside the payload and be printable US-ASCII, the padding at least 4 bytes and nothing may sit between the last field and the padding; each fault is E_COERCE with the offset."},
- {"cyberchef": "HASSH Server Fingerprint", "status": "covered", "forge": ["hassh:server"], "note": "As HASSH Client Fingerprint for the server's packet: kex;encryption s2c;mac s2c;compression s2c, MD5."},
- {"cyberchef": "VarInt Encode", "status": "redesigned", "forge": ["varint:encode"], "note": "Decimal text in, bytes out (To Hex shows them). Unsigned 64-bit, exact; a negative number or one above 2^64 - 1 is E_RANGE and text that is not a whole decimal number is E_COERCE (CyberChef also reads 0x text and writes numbers of any size). Added: zigzag, for the signed protobuf types sint32 and sint64."},
- {"cyberchef": "VarInt Decode", "status": "redesigned", "forge": ["varint:decode"], "note": "Bytes in, decimal text out, exact. Exactly one VarInt of 1 to 10 bytes below 2^64: empty input, a truncated VarInt, one longer than 10 bytes or of 64 bits and more, and bytes after it are E_COERCE (CyberChef reads the first VarInt, ignores the rest and reads a truncated one as NaN). Added: zigzag."},
- {"cyberchef": "Protobuf Decode", "status": "redesigned", "forge": ["protobuf:decode"], "note": "Without a schema only: the .proto schema and Show Unknown Fields are not supported (not done in WP 5.54; they need a proto parser and a schema-driven reader). Show Types is show-types; added: indent (default 4, CyberChef's JSON output). JSON keyed by field number in ascending order, repeated fields as arrays, a length-delimited field read as a nested message when it parses completely (an empty one is {}), else UTF-8 text, else hex digits (CyberChef shows Latin-1 characters). Integers are exact (CyberChef's are doubles). Stricter: field number 0, a truncated field, a length past the data, a varint over 64 bits and the group wire types are E_COERCE with the offset (a nested guess fails on them instead); nesting is tried to 64 levels. The layout is from the CyberChef source (read for the layout only) and not cross-checked."}
+  {
+    "cyberchef": "JA3 Fingerprint",
+    "status": "covered",
+    "forge": [
+      "fingerprint:ja3"
+    ],
+    "note": "Cross-checked in WP 5.59b against CyberChef 11.5.0: its operation module was read and run on the same inputs (the Forge test vectors, in every output format). Input and output formats, names, defaults and the three output layouts are CyberChef's, and the output is identical where CyberChef accepts the input. Differs: CyberChef needs exactly one handshake record whose length fits the data ('Incorrect handshake length' for a flight of several records, 'Not handshake data.' otherwise); Forge reads the first ClientHello of a flight, a bare ClientHello message too. CyberChef also does not read the extensions it does not use, so a damaged extension passes; in Forge a record that is not a TLS record, a hello cut short, a damaged extension or no ClientHello is E_COERCE with the offset."
+  },
+  {
+    "cyberchef": "JA3S Fingerprint",
+    "status": "covered",
+    "forge": [
+      "fingerprint:ja3s"
+    ],
+    "note": "Cross-checked in WP 5.59b against CyberChef 11.5.0: its operation module was read and run on the same inputs (the Forge test vectors, in every output format). As JA3 Fingerprint for the ServerHello; same layouts (output hash digest, JA3S string or full details) and same values where CyberChef accepts the input; the same differences in input strictness (one exact record in CyberChef, the first ServerHello of a flight or a bare message in Forge, E_COERCE on damage)."
+  },
+  {
+    "cyberchef": "JA4 Fingerprint",
+    "status": "redesigned",
+    "forge": [
+      "fingerprint:ja4"
+    ],
+    "note": "Cross-checked in WP 5.59b against CyberChef 11.5.0: its operation module was read and run on the same inputs (the Forge test vectors, in every output format). Input and output choices and their order are CyberChef's (JA4, JA4 Original Rendering, JA4 Raw, JA4 Raw Original Rendering, All; the All layout is the four labelled lines). Identical output on every hello with a signature_algorithms extension, including the original-order forms, in which server_name and ALPN stay in the extension list in both. Two points where Forge follows the FoxIO definition and CyberChef does not: a list with no entries hashes to twelve zeros (CyberChef hashes the empty text, e3b0c44298fc), and the underscore and the signature algorithms are written only when the hello has the signature_algorithms extension (CyberChef always writes the underscore, which changes the extension hash of a hello without them). Added: transport tcp (default, t) or quic (q) for the first character, and a bare ClientHello message is read too (CyberChef does not read QUIC: 'Data is not a valid TLS Client Hello', and always writes t). Malformed input is E_COERCE."
+  },
+  {
+    "cyberchef": "JA4Server Fingerprint",
+    "status": "covered",
+    "forge": [
+      "fingerprint:ja4s"
+    ],
+    "note": "Cross-checked in WP 5.59b against CyberChef 11.5.0: its operation module was read and run on the same inputs (the Forge test vectors, in every output format). Input and output choices (JA4S, JA4S Raw, Both) and the Both layout are CyberChef's; identical output when the ServerHello has extensions. Differs as for JA4: with no extension at all Forge writes twelve zeros (the FoxIO rule), CyberChef the hash of the empty text. Added: the transport option and a bare ServerHello message; malformed input is E_COERCE."
+  },
+  {
+    "cyberchef": "HASSH Client Fingerprint",
+    "status": "covered",
+    "forge": [
+      "hassh:client"
+    ],
+    "note": "Cross-checked in WP 5.59b against CyberChef 11.5.0: its operation module was read and run on the same inputs (the Forge test vectors, in every output format). Input format hex, base64 or raw: the SSH binary packet of SSH_MSG_KEXINIT sent by the client (exactly one packet, no MAC); output hash digest (default), HASSH algorithms string or full details; identical output to CyberChef on all 30 client vectors tested in each format. kex;encryption c2s;mac c2s;compression c2s, MD5. Stricter than CyberChef: the name-lists must lie inside the payload and be printable US-ASCII, the padding at least 4 bytes and nothing may sit between the last field and the padding; each fault is E_COERCE with the offset."
+  },
+  {
+    "cyberchef": "HASSH Server Fingerprint",
+    "status": "covered",
+    "forge": [
+      "hassh:server"
+    ],
+    "note": "Cross-checked in WP 5.59b against CyberChef 11.5.0: its operation module was read and run on the same inputs (the Forge test vectors, in every output format). As HASSH Client Fingerprint for the server's packet (kex;encryption s2c;mac s2c;compression s2c, MD5); identical output on the vectors tested."
+  },
+  {
+    "cyberchef": "VarInt Encode",
+    "status": "redesigned",
+    "forge": [
+      "varint:encode"
+    ],
+    "note": "Cross-checked in WP 5.59b against CyberChef 11.5.0 (module run). Text in, bytes out (To Hex shows them). Same bytes for decimal numbers and for 0x, 0o and 0b prefixed numbers (Forge reads the prefixes since the cross-check, as CyberChef does through BigInt). Differs: Forge is unsigned 64-bit, so a negative number is E_RANGE (CyberChef: an error) and a number above 2^64 - 1 is E_RANGE (CyberChef writes any size); text that is not a whole number is E_COERCE (CyberChef: the empty text is 0, '+5' is read, other text is an error). Added: zigzag, for the signed protobuf types sint32 and sint64."
+  },
+  {
+    "cyberchef": "VarInt Decode",
+    "status": "redesigned",
+    "forge": [
+      "varint:decode"
+    ],
+    "note": "Cross-checked in WP 5.59b against CyberChef 11.5.0 (module run). Bytes in, decimal text out, exact; same values for complete VarInts. Differs deliberately: exactly one VarInt of 1 to 10 bytes below 2^64 is accepted; empty input, a truncated VarInt, one longer than 10 bytes or of 64 bits and more, and bytes after it are E_COERCE where CyberChef reads the first VarInt, ignores the rest, reads a truncated one as the bits it has and an empty input as 0. Added: zigzag."
+  },
+  {
+    "cyberchef": "Protobuf Decode",
+    "status": "redesigned",
+    "forge": [
+      "protobuf:decode"
+    ],
+    "note": "Cross-checked in WP 5.59b against CyberChef 11.5.0 (module run on all 26 Forge vectors, with and without Show Types). Without a schema only: the .proto schema and Show Unknown Fields are not supported (they need a proto parser and a schema-driven reader), and Protobuf Encode, which needs a schema, is not done. The layout is CyberChef's: JSON keyed by field number, repeated fields as arrays, a length-delimited field read as a nested message when it parses, else text; with Show Types the keys are 'field #N: <wire type label>' with CyberChef's labels (VarInt (e.g. int32, bool), 64-Bit (e.g. fixed64, double), L-delim (e.g. string, message), 32-Bit (e.g. fixed32, float)) in the same key order; identical text for messages that CyberChef decodes. Added: indent (default 4). Differences: integers above 2^53 are exact in Forge (CyberChef's are doubles: 18446744073709551615 prints as 18446744073709552000); bytes that are not UTF-8 are shown as hex digits (CyberChef: Latin-1 characters); Forge reports E_COERCE with the offset for field number 0, a truncated field, a length past the data, a varint over 64 bits and the group wire types, and tries nested messages to 64 levels (the vectors that CyberChef decodes gave identical text; its handling of damaged input was not compared further)."
+  }
 ]

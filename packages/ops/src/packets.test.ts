@@ -434,15 +434,16 @@ describe("the ops and the shared words", () => {
     }
   });
 
-  test("the parameter lists: format hex or raw, default hex", () => {
+  test("the parameter lists: format hex or raw (as CyberChef: raw, the default, for the ops whose input it types as bytes)", () => {
+    const hexFirst = ["packets:parse-ipv4", "packets:parse-tcp", "packets:parse-udp"];
     for (const op of ops.filter((o) => o.startsWith("packets:"))) {
       const p = runtime.meta(op).params;
       expect(
         p.map((x) => x.name),
         op,
       ).toEqual(["format"]);
-      expect(p[0]?.options, op).toEqual(["hex", "raw"]);
-      expect(p[0]?.default, op).toBe("hex");
+      expect(p[0]?.options, op).toEqual(hexFirst.includes(op) ? ["hex", "raw"] : ["raw", "hex"]);
+      expect(p[0]?.default, op).toBe(hexFirst.includes(op) ? "hex" : "raw");
     }
     expect(runtime.meta("http:dechunk").params).toEqual([]);
     expect(runtime.meta("http:strip-headers").params).toEqual([]);

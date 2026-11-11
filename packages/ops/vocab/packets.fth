@@ -82,7 +82,7 @@ USING: tcpip hex ;
 
 : _ethernet2 ( d:bytes n:int -- list )
   d n 4 * 12 + 2 "Ethernet frame" _need
-  { "Destination MAC: " d 0 _mac cat "Source MAC: " d 6 _mac cat }
+  { "Source MAC: " d 6 _mac cat "Destination MAC: " d 0 _mac cat }
   n 0 > [ { 0 n range [ d swap _vlan ] map "\n" join } cat ] when
   { d n 4 * 12 + 2 util:be-int _type-line } cat
   d n 4 * 14 + d len _payload cat ;
@@ -91,8 +91,8 @@ USING: tcpip hex ;
   d 0 14 "Ethernet frame" _need
   d d _tag-count _ethernet2 "\n" join ;
 
-: parse-ethernet ( data:bytes format:choice{hex|raw}="hex" -- str )
-  "Parse an Ethernet frame (Parse Ethernet frame), given as hex text or raw bytes, without the preamble and the frame check sequence: the destination and sender MAC addresses (lower case, colon separated), every VLAN tag (IEEE 802.1Q TPID 0x8100 or 802.1ad 0x88a8, with the priority, the drop eligible bit and the VLAN ID), the EtherType with its name (IPv4, ARP, IPv6, ...; a value up to 1500 is the length of an IEEE 802.3 frame instead), and the payload as hex. A frame shorter than its header, or a VLAN tag cut short, is E_COERCE with the offset; bad hex is E_COERCE. The layout is Forge's own, in CyberChef's field order." doc
+: parse-ethernet ( data:bytes format:choice{raw|hex}="raw" -- str )
+  "Parse an Ethernet frame (Parse Ethernet frame), given as raw bytes (the default, as CyberChef's Raw) or hex text, without the preamble and the frame check sequence: the sender and destination MAC addresses (lower case, colon separated), every VLAN tag (IEEE 802.1Q TPID 0x8100 or 802.1ad 0x88a8, with the priority, the drop eligible bit and the VLAN ID), the EtherType with its name (IPv4, ARP, IPv6, ...; a value up to 1500 is the length of an IEEE 802.3 frame instead), and the payload as hex. A frame shorter than its header, or a VLAN tag cut short, is E_COERCE with the offset; bad hex is E_COERCE. The fields are CyberChef's (the sender first, then the destination; the VLAN IDs and the data), shown as text with more detail; CyberChef's Return type (packet data as raw or hex) is not an option: take the payload from the last line." doc
   "Networking" category
   data format _input _ethernet ;
 
@@ -147,9 +147,9 @@ USING: tcpip hex ;
 
 : _ipv4-checksum ( d:bytes hl:int -- str )
   d 0 hl slice tcpip:checksum bytes>hex "0000" =
-  [ " (valid)" ]
+  [ " (correct)" ]
   [ d 0 10 slice #[ 00 00 ] cat d 12 hl slice cat tcpip:checksum bytes>hex
-    " (invalid, it should be 0x" swap cat ")" cat ] if ;
+    " (incorrect, should be 0x" swap cat ")" cat ] if ;
 
 : _frag ( v:int -- str )
   v int>str " (" cat v 8 * int>str cat " bytes)" cat ;
@@ -161,7 +161,7 @@ USING: tcpip hex ;
     "Explicit Congestion Notification (ECN): " d 1 nth 3 band int>str cat
     "Total length: " d 2 2 util:be-int int>str cat " bytes" cat
     "Identification: " d 4 2 util:be-int 4 _hex0x cat " (" cat d 4 2 util:be-int int>str cat ")" cat
-    "Flags: " d 6 nth 5 shr 1 _hex0x cat
+    "Flags: " d 6 nth 5 shr 2 _hex0x cat
     "Reserved bit" d 6 nth 7 shr 1 band _bit-line
     "Don't fragment" d 6 nth 6 shr 1 band _bit-line
     "More fragments" d 6 nth 5 shr 1 band _bit-line
@@ -174,15 +174,15 @@ USING: tcpip hex ;
   hl 20 > [ { "Options:" } cat d 20 hl _ip-opts cat ] when ;
 
 : parse-ipv4 ( data:bytes format:choice{hex|raw}="hex" -- str )
-  "Parse an IPv4 header (Parse IPv4 header), given as hex text or raw bytes (the header alone, or the whole datagram, of which only the header is read): version, header length (IHL), DSCP and ECN, total length, identification, the flags (reserved, don't fragment, more fragments) and the fragment offset, time to live, the protocol with its name, the header checksum with a check of it (valid, or invalid with the value it should have), both addresses and, when the header is longer than 20 bytes, the options (end of option list, no operation, and any other with its name, kind, length and data in hex). A header shorter than 20 bytes or than its IHL, a version other than 4, an IHL below 5 and an option whose length byte is missing, below 2 or past the header are E_COERCE. CyberChef shows the same fields; the layout is Forge's own." doc
+  "Parse an IPv4 header (Parse IPv4 header), given as hex text (the default) or raw bytes (the header alone, or the whole datagram, of which only the header is read): version, header length (IHL), DSCP and ECN, total length, identification, the flags (reserved, don't fragment, more fragments) and the fragment offset, time to live, the protocol with its name, the header checksum with a check of it (correct, or incorrect with the value it should have), both addresses and, when the header is longer than 20 bytes, the options (end of option list, no operation, and any other with its name, kind, length and data in hex). A header shorter than 20 bytes or than its IHL, a version other than 4, an IHL below 5 and an option whose length byte is missing, below 2 or past the header are E_COERCE. CyberChef shows the same fields in the same order, as an HTML table; this is text, and CyberChef's Output format (data as hex or raw) is not an option." doc
   "Networking" category
   data format _input dup _ipv4-hl _ipv4-lines "\n" join ;
 
 : _strip-ipv4 ( d:bytes hl:int -- bytes )
   d hl d 2 2 util:be-int hl d len _end slice ;
 
-: strip-ipv4 ( data:bytes format:choice{hex|raw}="hex" -- bytes )
-  "Remove the IPv4 header (Strip IPv4 header) and give the payload as bytes: everything after the header, which is IHL times 4 bytes long, up to the total length when that is set and the data holds that many bytes (so link padding after the datagram is dropped; a total length of 0, as with TCP segmentation offload, or one beyond the data, keeps all that is there). The input is hex text or raw bytes. A header cut short, a version other than 4 or an IHL below 5 is E_COERCE." doc
+: strip-ipv4 ( data:bytes format:choice{raw|hex}="raw" -- bytes )
+  "Remove the IPv4 header (Strip IPv4 header) and give the payload as bytes: everything after the header, which is IHL times 4 bytes long, up to the total length when that is set and the data holds that many bytes (so link padding after the datagram is dropped; a total length of 0, as with TCP segmentation offload, or one beyond the data, keeps all that is there). The input is raw bytes (the default, as CyberChef's ArrayBuffer input) or hex text. A header cut short, a version other than 4 or an IHL below 5 is E_COERCE." doc
   "Networking" category
   data format _input dup _ipv4-hl _strip-ipv4 ;
 
@@ -269,20 +269,20 @@ USING: tcpip hex ;
   d 12 nth 1 band 256 * d 13 nth + _tcp-flag-lines cat
   { "Window size: " d 14 2 util:be-int int>str cat
     "Checksum: " d 16 2 util:be-int 4 _hex0x cat
-    "Urgent pointer: " d 18 2 util:be-int int>str cat } cat
+    "Urgent pointer: " d 18 2 util:be-int 4 _hex0x cat } cat
   hl 20 > [ { "Options:" } cat d 20 hl _tcp-opts cat ] when
   d hl d len _payload cat ;
 
 : parse-tcp ( data:bytes format:choice{hex|raw}="hex" -- str )
-  "Parse a TCP segment (Parse TCP), given as hex text or raw bytes: sender and receiver port, sequence and acknowledgement number, the data offset (the header length in 32-bit words), the reserved bits, the nine flags (NS, CWR, ECE, URG, ACK, PSH, RST, SYN, FIN, with their names in the summary), window size, checksum (as stored: it is not checked, which needs the IP addresses), urgent pointer, the options decoded (maximum segment size, window scale, SACK permitted, SACK blocks, timestamps, No-Operation, End of Option List; any other kind with its name when known, its kind, length and data in hex) and the payload as hex. A header shorter than 20 bytes or than its data offset, a data offset below 5 and an option with a missing, short or overlong length byte, or a known kind with the wrong length, are E_COERCE with the offset. The layout is Forge's own, in CyberChef's field order." doc
+  "Parse a TCP segment (Parse TCP), given as hex text or raw bytes: sender and receiver port, sequence and acknowledgement number, the data offset (the header length in 32-bit words), the reserved bits, the nine flags (NS, CWR, ECE, URG, ACK, PSH, RST, SYN, FIN, with their names in the summary), window size, checksum (as stored: it is not checked, which needs the IP addresses), urgent pointer, the options decoded (maximum segment size, window scale, SACK permitted, SACK blocks, timestamps, No-Operation, End of Option List; any other kind with its name when known, its kind, length and data in hex) and the payload as hex. A header shorter than 20 bytes or than its data offset, a data offset below 5 and an option with a missing, short or overlong length byte, or a known kind with the wrong length, are E_COERCE with the offset. The fields and their order are CyberChef's, as text instead of an HTML table; the window size is not scaled by the window scale option (RFC 7323 never scales the window of a SYN segment, which CyberChef does)." doc
   "Networking" category
   data format _input dup _tcp-hl _tcp-lines "\n" join ;
 
 : _strip-tcp ( d:bytes hl:int -- bytes )
   d hl d len slice ;
 
-: strip-tcp ( data:bytes format:choice{hex|raw}="hex" -- bytes )
-  "Remove the TCP header (Strip TCP header) and give the payload as bytes: everything after the header, which is the data offset times 4 bytes long. The input is hex text or raw bytes. A header cut short or a data offset below 5 is E_COERCE." doc
+: strip-tcp ( data:bytes format:choice{raw|hex}="raw" -- bytes )
+  "Remove the TCP header (Strip TCP header) and give the payload as bytes: everything after the header, which is the data offset times 4 bytes long. The input is raw bytes (the default, as CyberChef) or hex text. A header cut short or a data offset below 5 is E_COERCE." doc
   "Networking" category
   data format _input dup _tcp-hl _strip-tcp ;
 
@@ -303,15 +303,15 @@ USING: tcpip hex ;
   d 8 length 8 d len _end _payload cat ;
 
 : parse-udp ( data:bytes format:choice{hex|raw}="hex" -- str )
-  "Parse a UDP datagram (Parse UDP), given as hex text or raw bytes: sender and receiver port, the length (header and data; a length beyond the data is shown with the number of bytes that are present, and a length of 0 means up to the end), the checksum as stored (it is not checked, which needs the IP addresses) and the payload as hex, up to the length. A header shorter than 8 bytes or a length between 1 and 7 is E_COERCE. The layout is Forge's own, in CyberChef's field order." doc
+  "Parse a UDP datagram (Parse UDP), given as hex text or raw bytes: sender and receiver port, the length (header and data; a length beyond the data is shown with the number of bytes that are present, and a length of 0 means up to the end), the checksum as stored (it is not checked, which needs the IP addresses) and the payload as hex, up to the length. A header shorter than 8 bytes or a length between 1 and 7 is E_COERCE. The fields and their order are CyberChef's, as text instead of an HTML table." doc
   "Networking" category
   data format _input dup _udp-length _udp-lines "\n" join ;
 
 : _strip-udp ( d:bytes length:int -- bytes )
   d 8 length 8 d len _end slice ;
 
-: strip-udp ( data:bytes format:choice{hex|raw}="hex" -- bytes )
-  "Remove the UDP header (Strip UDP header) and give the payload as bytes: the 8-byte header is dropped, and so is anything after the length the header declares (link padding); a length of 0 or beyond the data keeps all that is there. The input is hex text or raw bytes. A header shorter than 8 bytes or a length between 1 and 7 is E_COERCE." doc
+: strip-udp ( data:bytes format:choice{raw|hex}="raw" -- bytes )
+  "Remove the UDP header (Strip UDP header) and give the payload as bytes: the 8-byte header is dropped, and so is anything after the length the header declares (link padding); a length of 0 or beyond the data keeps all that is there. The input is raw bytes (the default, as CyberChef) or hex text. A header shorter than 8 bytes or a length between 1 and 7 is E_COERCE." doc
   "Networking" category
   data format _input dup _udp-length _strip-udp ;
 
@@ -734,8 +734,8 @@ USING: tcpip hex ;
 : _check-hello ( h:record -- )
   h "extensions" get [ h "kind" get "client_hello" = _check-ext ] each ;
 
-: parse-tls ( data:bytes format:choice{hex|raw}="hex" -- str )
-  "Parse TLS records (Parse TLS record), one or more in a row, given as hex text or raw bytes: for each record the content type (ChangeCipherSpec, Alert, Handshake, ApplicationData, Heartbeat), the version and the length; an alert with its level and description; a handshake record with each message (type and length) and, for a ClientHello or ServerHello, the version, the random, the session ID, the cipher suites with their registry names, the compression methods and the extensions with their names, and decoded for server_name, supported_groups, ec_point_formats, signature_algorithms, ALPN, supported_versions, psk_key_exchange_modes, key_share, compress_certificate, record_size_limit, padding and session_ticket (any other extension as hex). Records are separated by a blank line. Reads SSL 3.0, TLS 1.0 to 1.3 records; DTLS and SSL 2.0 are not TLS records. Empty input, a header that is not a TLS record (content type outside 20 to 24, a major version other than 3, a length above 18432), a cut-short record, hello or extension are E_COERCE with the offset. Handshake messages are not joined across records: a message that goes on in the next record shows only what is in the first. The layout is Forge's own." doc
+: parse-tls ( data:bytes format:choice{raw|hex}="raw" -- str )
+  "Parse TLS records (Parse TLS record), one or more in a row, given as raw bytes (the default, as CyberChef's input) or hex text: for each record the content type (ChangeCipherSpec, Alert, Handshake, ApplicationData, Heartbeat), the version and the length; an alert with its level and description; a handshake record with each message (type and length) and, for a ClientHello or ServerHello, the version, the random, the session ID, the cipher suites with their registry names, the compression methods and the extensions with their names, and decoded for server_name, supported_groups, ec_point_formats, signature_algorithms, ALPN, supported_versions, psk_key_exchange_modes, key_share, compress_certificate, record_size_limit, padding and session_ticket (any other extension as hex). Records are separated by a blank line. Reads SSL 3.0, TLS 1.0 to 1.3 records; DTLS and SSL 2.0 are not TLS records. Empty input, a header that is not a TLS record (content type outside 20 to 24, a major version other than 3, a length above 18432), a cut-short record, hello or extension are E_COERCE with the offset. Handshake messages are not joined across records: a message that goes on in the next record shows only what is in the first. The layout is Forge's own." doc
   "Networking" category
   data format _input _records
   dup len 0 = [ "no TLS record: the input is empty" raise:coerce ] when

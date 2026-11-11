@@ -115,7 +115,7 @@ IN: uri
   dup "^[0-9]*$" "" regex:test not [ "the port is not a number: " swap cat raise:coerce ] when ;
 
 : _line ( label:str value:str -- str )
-  value len 0 = [ "" ] [ label value cat "\n" cat ] if ;
+  label value cat "\n" cat value len 0 = [ drop "" ] when ;
 
 : _proto ( s:str -- str )
   s _scheme lower dup len 0 = not [ ":" cat ] when ;
