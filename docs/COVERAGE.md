@@ -13,7 +13,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Data format | 56 | 9 | 0 | 15 | 80 |
 | Encryption / Encoding | 29 | 64 | 0 | 2 | 95 |
-| Public Key | 2 | 0 | 0 | 28 | 30 |
+| Public Key | 6 | 4 | 0 | 20 | 30 |
 | Arithmetic / Logic | 24 | 2 | 0 | 0 | 26 |
 | Networking | 0 | 0 | 2 | 32 | 34 |
 | Language | 3 | 1 | 0 | 0 | 4 |
@@ -27,7 +27,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 9 | 4 | 3 | 5 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **202** | **143** | **7** | **154** | **506** |
+| **Total** | **206** | **147** | **7** | **146** | **506** |
 
 ## Data format (80)
 
@@ -218,13 +218,13 @@ it and regenerate this file. An operation listed in several CyberChef categories
 
 | CyberChef | Status | Forge | Note |
 | --- | --- | --- | --- |
-| Parse X.509 certificate | not yet |  |  |
-| Parse X.509 certificate bundles | not yet |  |  |
-| Parse X.509 CRL | not yet |  |  |
+| Parse X.509 certificate | redesigned | `x509:parse` | A text report in CyberChef's section layout (Version, Serial number in decimal and hex, Algorithm ID, Validity, Issuer, Subject, Public Key, Certificate Signature, Extensions) with Forge's own wording of the values: dates are YYYY-MM-DD HH:MM:SS UTC (CyberChef's date layout is not reproduced; it is from memory and was not checked), the names are one attribute per line with the names padded as CyberChef does, and every extension value is written as OpenSSL's x509 -text writes it (Basic Constraints, Key Usage, Extended Key Usage, Subject and Issuer Alternative Name, Subject and Authority Key Identifier, CRL Distribution Points, Authority and Subject Information Access, Certificate Policies, Name Constraints, Policy Mappings and Constraints, Inhibit Any Policy, TLS Feature, Netscape Cert Type), one name per line; any other extension, and a known one whose value is damaged, is shown as hex (the second with the reason). Public keys: RSA (size, modulus, exponent), EC (curve, size, point), DSA (p, q, g, y), EdDSA and X25519/X448 (key); ECDSA and DSA signatures show r and s, RSASSA-PSS shows its hash, mask and salt length. input-format is pem (default), der-hex, base64 or raw (CyberChef's Input format, with the same four choices). Stricter than CyberChef: one certificate (several are Parse X.509 certificate bundles), bytes after it, a cut-short or malformed structure are E_COERCE, and an INTEGER over 65,536 bits is E_LIMIT_VALUE. A multi-valued RDN is shown as separate lines. The layout of labels and the parameter set are from memory of CyberChef 11.5.0 and not verified until the wave 7 cross-check. |
+| Parse X.509 certificate bundles | covered | `x509:parse-bundle` | Every certificate of a PEM bundle (or of DER certificates one after the other in der-hex, base64 or raw), each reported as Parse X.509 certificate does under a heading Certificate N of M, separated by a blank line. A malformed certificate is E_COERCE with its number in the message. PEM blocks of other kinds are skipped. |
+| Parse X.509 CRL | redesigned | `x509:parse-crl` | A text report of the revocation list: Version, Algorithm ID, Issuer, Last Update and Next Update (UTC), the CRL extensions (CRL Number, Authority Key Identifier, Issuer Alternative Name, Issuing Distribution Point, ... as OpenSSL writes them), every revoked certificate (serial in decimal and hex, revocation date, entry extensions such as the reason code) and the Signature. input-format is pem, der-hex, base64 or raw. CyberChef's output-format choice (text or JSON) is not offered: the report is text, and the parsed structure is for FL code. Layout is Forge's own. |
 | Hex to Object Identifier | covered | `oid:from-hex` | The hex digits of the content bytes of an OBJECT IDENTIFIER (no tag and length) to dotted text: 2a864886f70d010101 is 1.2.840.113549.1.1.1. Arcs of any size (2.25.<UUID>). An empty input, a cut-short or non-minimal sub-identifier, or more than 4,096 bytes is E_COERCE. |
 | Object Identifier to Hex | covered | `oid:to-hex` | Dotted text to the hex of the content bytes (lower case, no separators, no tag and length). At least two arcs, the first 0 to 2, the second below 40 under 0 and 1, digits without leading zeros; anything else is E_COERCE. |
-| PEM to JWK | not yet |  |  |
-| JWK to PEM | not yet |  |  |
+| PEM to JWK | covered | `jwk:from-pem` | PEM keys to RFC 7517 JSON Web Keys: PUBLIC KEY, PRIVATE KEY (PKCS #8), RSA PRIVATE KEY, RSA PUBLIC KEY, EC PRIVATE KEY (SEC 1) and the key of a CERTIFICATE; RSA, EC (P-256, P-384, P-521, secp256k1) and OKP (Ed25519, X25519, Ed448, X448, RFC 8037) keys, private keys with their public part (derived with @noble/curves when the file does not carry it). One key gives a JSON object, several an array. Members are in the order of RFC 7518. Added parameter indent (default 2; CyberChef writes 4 and takes none). Encrypted keys, compressed EC points, multi-prime RSA keys and other algorithms are E_COERCE; CyberChef's handling of those is not known. |
+| JWK to PEM | covered | `jwk:to-pem` | A JWK, a JWK Set or an array of JWKs to PEM: a public key as PUBLIC KEY (SubjectPublicKeyInfo), a key with d as PRIVATE KEY (PKCS #8), for RSA, EC and OKP keys as in PEM to JWK. The DER written is the same as openssl's (compared byte for byte). EC points are checked to lie on the curve, d is checked to belong to x and y, coordinates must have the full size of the curve, and an RSA private key needs p, q, dp, dq and qi; the symmetric kty oct has no PEM form. All of these are E_COERCE. |
 | Generate PGP Key Pair | not yet |  |  |
 | PGP Encrypt | not yet |  |  |
 | PGP Decrypt | not yet |  |  |
@@ -242,9 +242,9 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | ECDSA Signature Conversion | not yet |  |  |
 | ECDSA Sign | not yet |  |  |
 | ECDSA Verify | not yet |  |  |
-| Parse SSH Host Key | not yet |  |  |
-| Parse CSR | not yet |  |  |
-| Public Key from Certificate | not yet |  |  |
+| Parse SSH Host Key | redesigned | `x509:parse-ssh-host-key` | A text report of an OpenSSH public key (a .pub, authorized_keys or known_hosts line, the Base64 of the key blob, or its hex; input-format auto, base64 or hex): the key type, the comment, the fingerprints as ssh-keygen -l writes them (MD5:aa:bb:..., SHA256:<Base64>) and the fields of the key: ssh-rsa exponent, modulus and size; ssh-dss p, q, g, y; ecdsa-sha2-* curve, size and point; ssh-ed25519, ssh-ed448 and the FIDO sk-ssh-ed25519@openssh.com, sk-ecdsa-sha2-nistp256@openssh.com keys. Certificate types, a blob cut short or with bytes after the fields, a curve that does not match the type and more than one key are E_COERCE. The labels and the layout are Forge's own (CyberChef's field names are not reproduced). |
+| Parse CSR | redesigned | `x509:parse-csr` | A text report of the PKCS #10 request: Version, Subject, Public Key, Signature, the Attributes (challengePassword, unstructuredName, ...) and the Requested Extensions of the extensionRequest attribute, written like the certificate extensions. input-format is pem (default), der-hex, base64 or raw. The self-signature is not verified (neither does CyberChef's). Layout is Forge's own, in CyberChef's section style. |
+| Public Key from Certificate | covered | `x509:public-key` | The SubjectPublicKeyInfo of each certificate as a PUBLIC KEY PEM block, copied byte for byte (the same as openssl x509 -pubkey), for any key algorithm. input-format is pem (default), der-hex, base64 or raw; the blocks of several certificates follow one another. |
 | Public Key from Private Key | not yet |  |  |
 | SM2 Encrypt | not yet |  |  |
 | SM2 Decrypt | not yet |  |  |
