@@ -9,24 +9,18 @@ IN: deflate
 
 USING: adler32 crc ;
 
-\ util-candidate: check-int-range
-: _check-range ( n:int lo:int hi:int what:str -- )
-  n lo < n hi > or [
-    what " must be " cat lo int>str cat " to " cat hi int>str cat ", not " cat n int>str cat raise:range
-  ] when ;
-
 \ ---- raw ----
 
 : deflate ( data:bytes level:int=6 -- bytes )
   "A raw DEFLATE stream (RFC 1951) of the input. level is 0 (stored blocks, CyberChef's None) or 1 to 9 (fflate picks fixed or dynamic Huffman blocks by size: CyberChef's Dynamic Huffman Coding is the default 6; there is no Fixed-only mode); any other level is E_RANGE. The bytes differ from other encoders' but every inflater reads them." doc
   "Compression" category
-  level 0 9 "the compression level" _check-range
+  level 0 9 "the compression level" util:check-int-range
   data level _deflate ;
 
 : inflate ( data:bytes start:int=0 -- bytes )
   "Inflate a raw DEFLATE stream (RFC 1951) that begins at byte start of the input (CyberChef's Start index); bytes after the stream are ignored. A corrupt or cut-short stream is E_COERCE naming the fault; a start beyond the input is E_RANGE; output past the value limit stops with E_LIMIT_VALUE (the decompression bomb rule of the Wave 6 conventions)." doc
   "Compression" category
-  start 0 data len "the start index" _check-range
+  start 0 data len "the start index" util:check-int-range
   data start _inflate drop ;
 
 \ ---- zlib ----
@@ -41,7 +35,7 @@ USING: adler32 crc ;
 : zlib-deflate ( data:bytes level:int=6 -- bytes )
   "A zlib stream (RFC 1950) of the input: the two header bytes, the raw DEFLATE stream and the big-endian Adler-32 of the input. level is 0 to 9 as for deflate:deflate (E_RANGE otherwise); the header's FLEVEL follows zlib's own levels." doc
   "Compression" category
-  level 0 9 "the compression level" _check-range
+  level 0 9 "the compression level" util:check-int-range
   level _zlib-header data level _deflate cat data adler32:checksum cat ;
 
 : _zlib-check-header ( data:bytes s:int -- )
@@ -63,7 +57,7 @@ USING: adler32 crc ;
 : zlib-inflate ( data:bytes start:int=0 verify:bool=true -- bytes )
   "Inflate zlib data (RFC 1950) that begins at byte start. The header is checked (not zlib, another method, a preset dictionary: E_COERCE), and with verify (the default; CyberChef's Verify result is off) the Adler-32 trailer must be present and match the output, otherwise E_COERCE. Without verify the trailer is not read. Output past the value limit stops with E_LIMIT_VALUE. CyberChef's buffer size and expansion options do not exist here: the primitive manages its own buffers." doc
   "Compression" category
-  start 0 data len "the start index" _check-range
+  start 0 data len "the start index" util:check-int-range
   data start _zlib-check-header
   data start 2 + _inflate data verify _zlib-finish ;
 
@@ -102,8 +96,8 @@ USING: adler32 crc ;
 : gzip ( data:bytes level:int=6 filename:str="" comment:str="" header-crc:bool=false mtime:int=0 -- bytes )
   "A gzip file (RFC 1952) of the input: a 10-byte header, the optional zero-terminated Latin-1 file name and comment, the optional header CRC-16 (CyberChef's Include file checksum), the raw DEFLATE stream, and the little-endian CRC-32 and length. level is 0 to 9 as for deflate:deflate (E_RANGE otherwise). mtime is the modification time in Unix seconds, 0 by default (CyberChef writes the current time, which makes its output differ on every run); the OS byte is 255 (unknown) and XFL follows the level as gzip writes it. A file name or comment with a NUL or above U+00FF is E_RANGE." doc
   "Compression" category
-  level 0 9 "the compression level" _check-range
-  mtime 0 4294967295 "mtime" _check-range
+  level 0 9 "the compression level" util:check-int-range
+  mtime 0 4294967295 "mtime" util:check-int-range
   level mtime filename "the file name" _gz-text comment "the comment" _gz-text header-crc _gz-header
   header-crc _gz-header-crc
   data level _deflate cat data _gz-trailer cat ;
