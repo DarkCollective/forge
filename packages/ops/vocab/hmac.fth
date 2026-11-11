@@ -1,9 +1,10 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ hmac: HMAC, RFC 2104, written in FL over the digest words of the other hash vocabularies (md2, md4,
-\ md5, sha0, sha1, sha2, sha3, ripemd, ripemd160, has160, whirlpool and snefru). Blake2 and BLAKE3 have keyed modes of their own and SHAKE has no fixed
-\ output length, so they are not offered. The key is hashed when it is longer than the block size of
-\ the hash, then zero-padded to the block size; the inner key is the padded key xor 0x36 and the outer
-\ key is the padded key xor 0x5C. The MAC is raw bytes; chain hex:encode for text.
+\ hmac: HMAC, RFC 2104, written in FL over the digest words of the other hash vocabularies (md2,
+\ md4, md5, sha0, sha1, sha2, sha3, ripemd, ripemd160, has160, whirlpool and snefru). Blake2 and
+\ BLAKE3 have keyed modes of their own and SHAKE has no fixed output length, so they are not
+\ offered. The key is hashed when it is longer than the block size of the hash, then zero-padded to
+\ the block size; the inner key is the padded key xor 0x36 and the outer key is the padded key xor
+\ 0x5C. The MAC is raw bytes; chain hex:encode for text.
 IN: hmac
 
 USING: md2 md4 md5 sha0 sha1 sha2 sha3 ripemd ripemd160 has160 whirlpool snefru ;
@@ -39,7 +40,8 @@ USING: md2 md4 md5 sha0 sha1 sha2 sha3 ripemd ripemd160 has160 whirlpool snefru 
 \ the SHA-3 sizes are the rates of the sponge.
 : _block ( str -- int )
   dup "md2" = [ drop 16 ] [
-  dup "snefru" = [ drop 48 ] [  dup "sha3-224" = [ drop 144 ] [
+  dup "snefru" = [ drop 48 ] [
+  dup "sha3-224" = [ drop 144 ] [
   dup "sha3-256" = [ drop 136 ] [
   dup "sha3-384" = [ drop 104 ] [
   dup "sha3-512" = [ drop 72 ] [
