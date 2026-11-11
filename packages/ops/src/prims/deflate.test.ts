@@ -19,7 +19,7 @@
  * words read their trailers at), chunk boundaries, and the output limit. The reference streams come
  * from the host's zlib.
  */
-import { deflateRawSync } from "node:zlib";
+import { deflateRawSync, inflateRawSync } from "node:zlib";
 import { describe, expect, test } from "vitest";
 import { deflateRaw, inflateLimited, primitives } from "./deflate.js";
 
@@ -61,6 +61,20 @@ describe("deflate primitives", () => {
       const c = deflateRawSync(data, { level: n % 10 });
       const r = inflateLimited(Uint8Array.from([...c, 0x55, 0x55, 0x55]), 0, BIG);
       expect(r.end, `length ${n}`).toBe(c.length);
+    }
+  });
+
+  test("level 0 writes exactly the stored blocks: no stray empty block at multiples of 65535", () => {
+    // fflate 0.8.3 appended a second, empty final block when the length was a nonzero multiple of 65535
+    // (found by the wave 6 cross-check): zlib then read the trailer from the wrong place.
+    for (const n of [0, 1, 65_534, 65_535, 65_536, 131_069, 131_070, 131_071, 196_605]) {
+      const data = randBytes(n, n + 9);
+      const c = deflateRaw(data, 0);
+      expect(c.length, `length ${n}`).toBe(n + 5 * Math.max(1, Math.ceil(n / 65_535)));
+      const r = inflateLimited(Uint8Array.from([...c, 0xaa, 0xbb]), 0, BIG);
+      expect(Array.from(r.out), `length ${n}`).toEqual(Array.from(data));
+      expect(r.end, `length ${n}`).toBe(c.length);
+      expect(Array.from(inflateRawSync(c)), `length ${n}`).toEqual(Array.from(data));
     }
   });
 
