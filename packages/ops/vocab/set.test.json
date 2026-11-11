@@ -1,0 +1,1351 @@
+[
+  {
+    "name": "union: a,b,c and b,c,d",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:union",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,b,c\n\nb,c,d",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a,b,c,d",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "union: numbers",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:union",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "1,2,3,4\n\n3,4,5,6",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1,2,3,4,5,6",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "union: duplicates inside a set are removed",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:union",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,a,b,b\n\nb,b,a,c,c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a,b,c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "union: disjoint sets",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:union",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "x,y\n\nz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "x,y,z",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "union: identical sets",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:union",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "p,q,r\n\np,q,r",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "p,q,r",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "union: the first set is empty",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:union",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "\n\na,b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a,b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "union: the second set is empty",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:union",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,b\n\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a,b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "union: both sets empty",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:union",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "\n\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "union: another sample and item delimiter",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:union",
+    "params": {
+      "sample-delimiter": "|",
+      "item-delimiter": " "
+    },
+    "input": {
+      "value": "a b c|b c d",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a b c d",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "union: three sets",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:union",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,b,c,d\n\nb,c,e\n\nc,d,f",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a,b,c,d,e,f",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "union: items are exact text: case and spaces count",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:union",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,A,b \n\na,b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a,A,b ,b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "union: an empty item is an item",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:union",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,,b\n\n,c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a,,b,c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "union: order of first appearance",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:union",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "z,y,x\n\ny,w,z,v",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "z,y,x,w,v",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "intersection: a,b,c and b,c,d",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:intersection",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,b,c\n\nb,c,d",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "b,c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "intersection: numbers",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:intersection",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "1,2,3,4\n\n3,4,5,6",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3,4",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "intersection: duplicates inside a set are removed",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:intersection",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,a,b,b\n\nb,b,a,c,c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a,b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "intersection: disjoint sets",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:intersection",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "x,y\n\nz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "intersection: identical sets",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:intersection",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "p,q,r\n\np,q,r",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "p,q,r",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "intersection: the first set is empty",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:intersection",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "\n\na,b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "intersection: the second set is empty",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:intersection",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,b\n\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "intersection: both sets empty",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:intersection",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "\n\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "intersection: another sample and item delimiter",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:intersection",
+    "params": {
+      "sample-delimiter": "|",
+      "item-delimiter": " "
+    },
+    "input": {
+      "value": "a b c|b c d",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "b c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "intersection: three sets",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:intersection",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,b,c,d\n\nb,c,e\n\nc,d,f",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "intersection: items are exact text: case and spaces count",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:intersection",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,A,b \n\na,b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "intersection: an empty item is an item",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:intersection",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,,b\n\n,c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "intersection: order of first appearance",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:intersection",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "z,y,x\n\ny,w,z,v",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "z,y",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "difference: a,b,c and b,c,d",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:difference",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,b,c\n\nb,c,d",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "difference: numbers",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:difference",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "1,2,3,4\n\n3,4,5,6",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1,2",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "difference: duplicates inside a set are removed",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:difference",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,a,b,b\n\nb,b,a,c,c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "difference: disjoint sets",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:difference",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "x,y\n\nz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "x,y",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "difference: identical sets",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:difference",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "p,q,r\n\np,q,r",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "difference: the first set is empty",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:difference",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "\n\na,b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "difference: the second set is empty",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:difference",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,b\n\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a,b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "difference: both sets empty",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:difference",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "\n\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "difference: another sample and item delimiter",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:difference",
+    "params": {
+      "sample-delimiter": "|",
+      "item-delimiter": " "
+    },
+    "input": {
+      "value": "a b c|b c d",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "difference: three sets",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:difference",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,b,c,d\n\nb,c,e\n\nc,d,f",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "difference: items are exact text: case and spaces count",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:difference",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,A,b \n\na,b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "A,b ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "difference: an empty item is an item",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:difference",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,,b\n\n,c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a,b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "difference: order of first appearance",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:difference",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "z,y,x\n\ny,w,z,v",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "x",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "symmetric-difference: a,b,c and b,c,d",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:symmetric-difference",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,b,c\n\nb,c,d",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a,d",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "symmetric-difference: numbers",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:symmetric-difference",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "1,2,3,4\n\n3,4,5,6",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1,2,5,6",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "symmetric-difference: duplicates inside a set are removed",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:symmetric-difference",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,a,b,b\n\nb,b,a,c,c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "symmetric-difference: disjoint sets",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:symmetric-difference",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "x,y\n\nz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "x,y,z",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "symmetric-difference: identical sets",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:symmetric-difference",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "p,q,r\n\np,q,r",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "symmetric-difference: the first set is empty",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:symmetric-difference",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "\n\na,b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a,b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "symmetric-difference: the second set is empty",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:symmetric-difference",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,b\n\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a,b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "symmetric-difference: both sets empty",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:symmetric-difference",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "\n\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "symmetric-difference: another sample and item delimiter",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:symmetric-difference",
+    "params": {
+      "sample-delimiter": "|",
+      "item-delimiter": " "
+    },
+    "input": {
+      "value": "a b c|b c d",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a d",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "symmetric-difference: three sets",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:symmetric-difference",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,b,c,d\n\nb,c,e\n\nc,d,f",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a,e,c,f",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "symmetric-difference: items are exact text: case and spaces count",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:symmetric-difference",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,A,b \n\na,b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "A,b ,b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "symmetric-difference: an empty item is an item",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:symmetric-difference",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,,b\n\n,c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a,b,c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "symmetric-difference: order of first appearance",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:symmetric-difference",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "z,y,x\n\ny,w,z,v",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "x,w,v",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "union: a result in another item delimiter",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:union",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ";"
+    },
+    "input": {
+      "value": "1;2\n\n2;3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1;2;3",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "union: one set only",
+    "ref": "documented in the word doc",
+    "op": "set:union",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,b,c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "union: empty input is one empty set",
+    "ref": "documented in the word doc",
+    "op": "set:union",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "intersection: one set only",
+    "ref": "documented in the word doc",
+    "op": "set:intersection",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,b,c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "intersection: empty input is one empty set",
+    "ref": "documented in the word doc",
+    "op": "set:intersection",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "difference: one set only",
+    "ref": "documented in the word doc",
+    "op": "set:difference",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,b,c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "difference: empty input is one empty set",
+    "ref": "documented in the word doc",
+    "op": "set:difference",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "symmetric-difference: one set only",
+    "ref": "documented in the word doc",
+    "op": "set:symmetric-difference",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,b,c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "symmetric-difference: empty input is one empty set",
+    "ref": "documented in the word doc",
+    "op": "set:symmetric-difference",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "cartesian-product: 1,2 x a,b,c",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:cartesian-product",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "1,2\n\na,b,c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "(1,a),(1,b),(1,c),(2,a),(2,b),(2,c)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "cartesian-product: one item each",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:cartesian-product",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "x\n\ny",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "(x,y)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "cartesian-product: duplicates removed first",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:cartesian-product",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,a\n\nb,b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "(a,b)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "cartesian-product: an empty set gives an empty result",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:cartesian-product",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,b\n\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "cartesian-product: both empty",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:cartesian-product",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "\n\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "cartesian-product: other delimiters",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:cartesian-product",
+    "params": {
+      "sample-delimiter": "|",
+      "item-delimiter": ";"
+    },
+    "input": {
+      "value": "1;2|3;4",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "(1,3);(1,4);(2,3);(2,4)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "cartesian-product: 3 x 3",
+    "ref": "set theory definition, computed in Python",
+    "op": "set:cartesian-product",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "0,1,2\n\n0,1,2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "(0,0),(0,1),(0,2),(1,0),(1,1),(1,2),(2,0),(2,1),(2,2)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "cartesian-product: one set",
+    "ref": "documented in the word doc",
+    "op": "set:cartesian-product",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a,b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "cartesian-product: three sets",
+    "ref": "documented in the word doc",
+    "op": "set:cartesian-product",
+    "params": {
+      "sample-delimiter": "\n\n",
+      "item-delimiter": ","
+    },
+    "input": {
+      "value": "a\n\nb\n\nc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "power-set: a,b,c",
+    "ref": "set theory definition, computed in Python (items added one at a time)",
+    "op": "set:power-set",
+    "params": {
+      "item-delimiter": ",",
+      "subset-delimiter": "\n"
+    },
+    "input": {
+      "value": "a,b,c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\na\nb\na,b\nc\na,c\nb,c\na,b,c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "power-set: one item",
+    "ref": "set theory definition, computed in Python (items added one at a time)",
+    "op": "set:power-set",
+    "params": {
+      "item-delimiter": ",",
+      "subset-delimiter": "\n"
+    },
+    "input": {
+      "value": "x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\nx",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "power-set: empty set has one subset, the empty one",
+    "ref": "set theory definition, computed in Python (items added one at a time)",
+    "op": "set:power-set",
+    "params": {
+      "item-delimiter": ",",
+      "subset-delimiter": "\n"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "power-set: two items",
+    "ref": "set theory definition, computed in Python (items added one at a time)",
+    "op": "set:power-set",
+    "params": {
+      "item-delimiter": ",",
+      "subset-delimiter": "\n"
+    },
+    "input": {
+      "value": "1,2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\n1\n2\n1,2",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "power-set: duplicates removed",
+    "ref": "set theory definition, computed in Python (items added one at a time)",
+    "op": "set:power-set",
+    "params": {
+      "item-delimiter": ",",
+      "subset-delimiter": "\n"
+    },
+    "input": {
+      "value": "a,a,b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\na\nb\na,b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "power-set: four items",
+    "ref": "set theory definition, computed in Python (items added one at a time)",
+    "op": "set:power-set",
+    "params": {
+      "item-delimiter": ",",
+      "subset-delimiter": "\n"
+    },
+    "input": {
+      "value": "1,2,3,4",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\n1\n2\n1,2\n3\n1,3\n2,3\n1,2,3\n4\n1,4\n2,4\n1,2,4\n3,4\n1,3,4\n2,3,4\n1,2,3,4",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "power-set: other delimiters",
+    "ref": "set theory definition, computed in Python (items added one at a time)",
+    "op": "set:power-set",
+    "params": {
+      "item-delimiter": " ",
+      "subset-delimiter": "|"
+    },
+    "input": {
+      "value": "a b c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "|a|b|a b|c|a c|b c|a b c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "power-set: semicolon items, comma between subsets",
+    "ref": "set theory definition, computed in Python (items added one at a time)",
+    "op": "set:power-set",
+    "params": {
+      "item-delimiter": ";",
+      "subset-delimiter": ","
+    },
+    "input": {
+      "value": "a;b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": ",a,b,a;b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "power-set: ten items, 1,024 subsets",
+    "ref": "set theory definition, computed in Python (items added one at a time)",
+    "op": "set:power-set",
+    "params": {
+      "item-delimiter": ",",
+      "subset-delimiter": "\n"
+    },
+    "input": {
+      "value": "0,1,2,3,4,5,6,7,8,9",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\n0\n1\n0,1\n2\n0,2\n1,2\n0,1,2\n3\n0,3\n1,3\n0,1,3\n2,3\n0,2,3\n1,2,3\n0,1,2,3\n4\n0,4\n1,4\n0,1,4\n2,4\n0,2,4\n1,2,4\n0,1,2,4\n3,4\n0,3,4\n1,3,4\n0,1,3,4\n2,3,4\n0,2,3,4\n1,2,3,4\n0,1,2,3,4\n5\n0,5\n1,5\n0,1,5\n2,5\n0,2,5\n1,2,5\n0,1,2,5\n3,5\n0,3,5\n1,3,5\n0,1,3,5\n2,3,5\n0,2,3,5\n1,2,3,5\n0,1,2,3,5\n4,5\n0,4,5\n1,4,5\n0,1,4,5\n2,4,5\n0,2,4,5\n1,2,4,5\n0,1,2,4,5\n3,4,5\n0,3,4,5\n1,3,4,5\n0,1,3,4,5\n2,3,4,5\n0,2,3,4,5\n1,2,3,4,5\n0,1,2,3,4,5\n6\n0,6\n1,6\n0,1,6\n2,6\n0,2,6\n1,2,6\n0,1,2,6\n3,6\n0,3,6\n1,3,6\n0,1,3,6\n2,3,6\n0,2,3,6\n1,2,3,6\n0,1,2,3,6\n4,6\n0,4,6\n1,4,6\n0,1,4,6\n2,4,6\n0,2,4,6\n1,2,4,6\n0,1,2,4,6\n3,4,6\n0,3,4,6\n1,3,4,6\n0,1,3,4,6\n2,3,4,6\n0,2,3,4,6\n1,2,3,4,6\n0,1,2,3,4,6\n5,6\n0,5,6\n1,5,6\n0,1,5,6\n2,5,6\n0,2,5,6\n1,2,5,6\n0,1,2,5,6\n3,5,6\n0,3,5,6\n1,3,5,6\n0,1,3,5,6\n2,3,5,6\n0,2,3,5,6\n1,2,3,5,6\n0,1,2,3,5,6\n4,5,6\n0,4,5,6\n1,4,5,6\n0,1,4,5,6\n2,4,5,6\n0,2,4,5,6\n1,2,4,5,6\n0,1,2,4,5,6\n3,4,5,6\n0,3,4,5,6\n1,3,4,5,6\n0,1,3,4,5,6\n2,3,4,5,6\n0,2,3,4,5,6\n1,2,3,4,5,6\n0,1,2,3,4,5,6\n7\n0,7\n1,7\n0,1,7\n2,7\n0,2,7\n1,2,7\n0,1,2,7\n3,7\n0,3,7\n1,3,7\n0,1,3,7\n2,3,7\n0,2,3,7\n1,2,3,7\n0,1,2,3,7\n4,7\n0,4,7\n1,4,7\n0,1,4,7\n2,4,7\n0,2,4,7\n1,2,4,7\n0,1,2,4,7\n3,4,7\n0,3,4,7\n1,3,4,7\n0,1,3,4,7\n2,3,4,7\n0,2,3,4,7\n1,2,3,4,7\n0,1,2,3,4,7\n5,7\n0,5,7\n1,5,7\n0,1,5,7\n2,5,7\n0,2,5,7\n1,2,5,7\n0,1,2,5,7\n3,5,7\n0,3,5,7\n1,3,5,7\n0,1,3,5,7\n2,3,5,7\n0,2,3,5,7\n1,2,3,5,7\n0,1,2,3,5,7\n4,5,7\n0,4,5,7\n1,4,5,7\n0,1,4,5,7\n2,4,5,7\n0,2,4,5,7\n1,2,4,5,7\n0,1,2,4,5,7\n3,4,5,7\n0,3,4,5,7\n1,3,4,5,7\n0,1,3,4,5,7\n2,3,4,5,7\n0,2,3,4,5,7\n1,2,3,4,5,7\n0,1,2,3,4,5,7\n6,7\n0,6,7\n1,6,7\n0,1,6,7\n2,6,7\n0,2,6,7\n1,2,6,7\n0,1,2,6,7\n3,6,7\n0,3,6,7\n1,3,6,7\n0,1,3,6,7\n2,3,6,7\n0,2,3,6,7\n1,2,3,6,7\n0,1,2,3,6,7\n4,6,7\n0,4,6,7\n1,4,6,7\n0,1,4,6,7\n2,4,6,7\n0,2,4,6,7\n1,2,4,6,7\n0,1,2,4,6,7\n3,4,6,7\n0,3,4,6,7\n1,3,4,6,7\n0,1,3,4,6,7\n2,3,4,6,7\n0,2,3,4,6,7\n1,2,3,4,6,7\n0,1,2,3,4,6,7\n5,6,7\n0,5,6,7\n1,5,6,7\n0,1,5,6,7\n2,5,6,7\n0,2,5,6,7\n1,2,5,6,7\n0,1,2,5,6,7\n3,5,6,7\n0,3,5,6,7\n1,3,5,6,7\n0,1,3,5,6,7\n2,3,5,6,7\n0,2,3,5,6,7\n1,2,3,5,6,7\n0,1,2,3,5,6,7\n4,5,6,7\n0,4,5,6,7\n1,4,5,6,7\n0,1,4,5,6,7\n2,4,5,6,7\n0,2,4,5,6,7\n1,2,4,5,6,7\n0,1,2,4,5,6,7\n3,4,5,6,7\n0,3,4,5,6,7\n1,3,4,5,6,7\n0,1,3,4,5,6,7\n2,3,4,5,6,7\n0,2,3,4,5,6,7\n1,2,3,4,5,6,7\n0,1,2,3,4,5,6,7\n8\n0,8\n1,8\n0,1,8\n2,8\n0,2,8\n1,2,8\n0,1,2,8\n3,8\n0,3,8\n1,3,8\n0,1,3,8\n2,3,8\n0,2,3,8\n1,2,3,8\n0,1,2,3,8\n4,8\n0,4,8\n1,4,8\n0,1,4,8\n2,4,8\n0,2,4,8\n1,2,4,8\n0,1,2,4,8\n3,4,8\n0,3,4,8\n1,3,4,8\n0,1,3,4,8\n2,3,4,8\n0,2,3,4,8\n1,2,3,4,8\n0,1,2,3,4,8\n5,8\n0,5,8\n1,5,8\n0,1,5,8\n2,5,8\n0,2,5,8\n1,2,5,8\n0,1,2,5,8\n3,5,8\n0,3,5,8\n1,3,5,8\n0,1,3,5,8\n2,3,5,8\n0,2,3,5,8\n1,2,3,5,8\n0,1,2,3,5,8\n4,5,8\n0,4,5,8\n1,4,5,8\n0,1,4,5,8\n2,4,5,8\n0,2,4,5,8\n1,2,4,5,8\n0,1,2,4,5,8\n3,4,5,8\n0,3,4,5,8\n1,3,4,5,8\n0,1,3,4,5,8\n2,3,4,5,8\n0,2,3,4,5,8\n1,2,3,4,5,8\n0,1,2,3,4,5,8\n6,8\n0,6,8\n1,6,8\n0,1,6,8\n2,6,8\n0,2,6,8\n1,2,6,8\n0,1,2,6,8\n3,6,8\n0,3,6,8\n1,3,6,8\n0,1,3,6,8\n2,3,6,8\n0,2,3,6,8\n1,2,3,6,8\n0,1,2,3,6,8\n4,6,8\n0,4,6,8\n1,4,6,8\n0,1,4,6,8\n2,4,6,8\n0,2,4,6,8\n1,2,4,6,8\n0,1,2,4,6,8\n3,4,6,8\n0,3,4,6,8\n1,3,4,6,8\n0,1,3,4,6,8\n2,3,4,6,8\n0,2,3,4,6,8\n1,2,3,4,6,8\n0,1,2,3,4,6,8\n5,6,8\n0,5,6,8\n1,5,6,8\n0,1,5,6,8\n2,5,6,8\n0,2,5,6,8\n1,2,5,6,8\n0,1,2,5,6,8\n3,5,6,8\n0,3,5,6,8\n1,3,5,6,8\n0,1,3,5,6,8\n2,3,5,6,8\n0,2,3,5,6,8\n1,2,3,5,6,8\n0,1,2,3,5,6,8\n4,5,6,8\n0,4,5,6,8\n1,4,5,6,8\n0,1,4,5,6,8\n2,4,5,6,8\n0,2,4,5,6,8\n1,2,4,5,6,8\n0,1,2,4,5,6,8\n3,4,5,6,8\n0,3,4,5,6,8\n1,3,4,5,6,8\n0,1,3,4,5,6,8\n2,3,4,5,6,8\n0,2,3,4,5,6,8\n1,2,3,4,5,6,8\n0,1,2,3,4,5,6,8\n7,8\n0,7,8\n1,7,8\n0,1,7,8\n2,7,8\n0,2,7,8\n1,2,7,8\n0,1,2,7,8\n3,7,8\n0,3,7,8\n1,3,7,8\n0,1,3,7,8\n2,3,7,8\n0,2,3,7,8\n1,2,3,7,8\n0,1,2,3,7,8\n4,7,8\n0,4,7,8\n1,4,7,8\n0,1,4,7,8\n2,4,7,8\n0,2,4,7,8\n1,2,4,7,8\n0,1,2,4,7,8\n3,4,7,8\n0,3,4,7,8\n1,3,4,7,8\n0,1,3,4,7,8\n2,3,4,7,8\n0,2,3,4,7,8\n1,2,3,4,7,8\n0,1,2,3,4,7,8\n5,7,8\n0,5,7,8\n1,5,7,8\n0,1,5,7,8\n2,5,7,8\n0,2,5,7,8\n1,2,5,7,8\n0,1,2,5,7,8\n3,5,7,8\n0,3,5,7,8\n1,3,5,7,8\n0,1,3,5,7,8\n2,3,5,7,8\n0,2,3,5,7,8\n1,2,3,5,7,8\n0,1,2,3,5,7,8\n4,5,7,8\n0,4,5,7,8\n1,4,5,7,8\n0,1,4,5,7,8\n2,4,5,7,8\n0,2,4,5,7,8\n1,2,4,5,7,8\n0,1,2,4,5,7,8\n3,4,5,7,8\n0,3,4,5,7,8\n1,3,4,5,7,8\n0,1,3,4,5,7,8\n2,3,4,5,7,8\n0,2,3,4,5,7,8\n1,2,3,4,5,7,8\n0,1,2,3,4,5,7,8\n6,7,8\n0,6,7,8\n1,6,7,8\n0,1,6,7,8\n2,6,7,8\n0,2,6,7,8\n1,2,6,7,8\n0,1,2,6,7,8\n3,6,7,8\n0,3,6,7,8\n1,3,6,7,8\n0,1,3,6,7,8\n2,3,6,7,8\n0,2,3,6,7,8\n1,2,3,6,7,8\n0,1,2,3,6,7,8\n4,6,7,8\n0,4,6,7,8\n1,4,6,7,8\n0,1,4,6,7,8\n2,4,6,7,8\n0,2,4,6,7,8\n1,2,4,6,7,8\n0,1,2,4,6,7,8\n3,4,6,7,8\n0,3,4,6,7,8\n1,3,4,6,7,8\n0,1,3,4,6,7,8\n2,3,4,6,7,8\n0,2,3,4,6,7,8\n1,2,3,4,6,7,8\n0,1,2,3,4,6,7,8\n5,6,7,8\n0,5,6,7,8\n1,5,6,7,8\n0,1,5,6,7,8\n2,5,6,7,8\n0,2,5,6,7,8\n1,2,5,6,7,8\n0,1,2,5,6,7,8\n3,5,6,7,8\n0,3,5,6,7,8\n1,3,5,6,7,8\n0,1,3,5,6,7,8\n2,3,5,6,7,8\n0,2,3,5,6,7,8\n1,2,3,5,6,7,8\n0,1,2,3,5,6,7,8\n4,5,6,7,8\n0,4,5,6,7,8\n1,4,5,6,7,8\n0,1,4,5,6,7,8\n2,4,5,6,7,8\n0,2,4,5,6,7,8\n1,2,4,5,6,7,8\n0,1,2,4,5,6,7,8\n3,4,5,6,7,8\n0,3,4,5,6,7,8\n1,3,4,5,6,7,8\n0,1,3,4,5,6,7,8\n2,3,4,5,6,7,8\n0,2,3,4,5,6,7,8\n1,2,3,4,5,6,7,8\n0,1,2,3,4,5,6,7,8\n9\n0,9\n1,9\n0,1,9\n2,9\n0,2,9\n1,2,9\n0,1,2,9\n3,9\n0,3,9\n1,3,9\n0,1,3,9\n2,3,9\n0,2,3,9\n1,2,3,9\n0,1,2,3,9\n4,9\n0,4,9\n1,4,9\n0,1,4,9\n2,4,9\n0,2,4,9\n1,2,4,9\n0,1,2,4,9\n3,4,9\n0,3,4,9\n1,3,4,9\n0,1,3,4,9\n2,3,4,9\n0,2,3,4,9\n1,2,3,4,9\n0,1,2,3,4,9\n5,9\n0,5,9\n1,5,9\n0,1,5,9\n2,5,9\n0,2,5,9\n1,2,5,9\n0,1,2,5,9\n3,5,9\n0,3,5,9\n1,3,5,9\n0,1,3,5,9\n2,3,5,9\n0,2,3,5,9\n1,2,3,5,9\n0,1,2,3,5,9\n4,5,9\n0,4,5,9\n1,4,5,9\n0,1,4,5,9\n2,4,5,9\n0,2,4,5,9\n1,2,4,5,9\n0,1,2,4,5,9\n3,4,5,9\n0,3,4,5,9\n1,3,4,5,9\n0,1,3,4,5,9\n2,3,4,5,9\n0,2,3,4,5,9\n1,2,3,4,5,9\n0,1,2,3,4,5,9\n6,9\n0,6,9\n1,6,9\n0,1,6,9\n2,6,9\n0,2,6,9\n1,2,6,9\n0,1,2,6,9\n3,6,9\n0,3,6,9\n1,3,6,9\n0,1,3,6,9\n2,3,6,9\n0,2,3,6,9\n1,2,3,6,9\n0,1,2,3,6,9\n4,6,9\n0,4,6,9\n1,4,6,9\n0,1,4,6,9\n2,4,6,9\n0,2,4,6,9\n1,2,4,6,9\n0,1,2,4,6,9\n3,4,6,9\n0,3,4,6,9\n1,3,4,6,9\n0,1,3,4,6,9\n2,3,4,6,9\n0,2,3,4,6,9\n1,2,3,4,6,9\n0,1,2,3,4,6,9\n5,6,9\n0,5,6,9\n1,5,6,9\n0,1,5,6,9\n2,5,6,9\n0,2,5,6,9\n1,2,5,6,9\n0,1,2,5,6,9\n3,5,6,9\n0,3,5,6,9\n1,3,5,6,9\n0,1,3,5,6,9\n2,3,5,6,9\n0,2,3,5,6,9\n1,2,3,5,6,9\n0,1,2,3,5,6,9\n4,5,6,9\n0,4,5,6,9\n1,4,5,6,9\n0,1,4,5,6,9\n2,4,5,6,9\n0,2,4,5,6,9\n1,2,4,5,6,9\n0,1,2,4,5,6,9\n3,4,5,6,9\n0,3,4,5,6,9\n1,3,4,5,6,9\n0,1,3,4,5,6,9\n2,3,4,5,6,9\n0,2,3,4,5,6,9\n1,2,3,4,5,6,9\n0,1,2,3,4,5,6,9\n7,9\n0,7,9\n1,7,9\n0,1,7,9\n2,7,9\n0,2,7,9\n1,2,7,9\n0,1,2,7,9\n3,7,9\n0,3,7,9\n1,3,7,9\n0,1,3,7,9\n2,3,7,9\n0,2,3,7,9\n1,2,3,7,9\n0,1,2,3,7,9\n4,7,9\n0,4,7,9\n1,4,7,9\n0,1,4,7,9\n2,4,7,9\n0,2,4,7,9\n1,2,4,7,9\n0,1,2,4,7,9\n3,4,7,9\n0,3,4,7,9\n1,3,4,7,9\n0,1,3,4,7,9\n2,3,4,7,9\n0,2,3,4,7,9\n1,2,3,4,7,9\n0,1,2,3,4,7,9\n5,7,9\n0,5,7,9\n1,5,7,9\n0,1,5,7,9\n2,5,7,9\n0,2,5,7,9\n1,2,5,7,9\n0,1,2,5,7,9\n3,5,7,9\n0,3,5,7,9\n1,3,5,7,9\n0,1,3,5,7,9\n2,3,5,7,9\n0,2,3,5,7,9\n1,2,3,5,7,9\n0,1,2,3,5,7,9\n4,5,7,9\n0,4,5,7,9\n1,4,5,7,9\n0,1,4,5,7,9\n2,4,5,7,9\n0,2,4,5,7,9\n1,2,4,5,7,9\n0,1,2,4,5,7,9\n3,4,5,7,9\n0,3,4,5,7,9\n1,3,4,5,7,9\n0,1,3,4,5,7,9\n2,3,4,5,7,9\n0,2,3,4,5,7,9\n1,2,3,4,5,7,9\n0,1,2,3,4,5,7,9\n6,7,9\n0,6,7,9\n1,6,7,9\n0,1,6,7,9\n2,6,7,9\n0,2,6,7,9\n1,2,6,7,9\n0,1,2,6,7,9\n3,6,7,9\n0,3,6,7,9\n1,3,6,7,9\n0,1,3,6,7,9\n2,3,6,7,9\n0,2,3,6,7,9\n1,2,3,6,7,9\n0,1,2,3,6,7,9\n4,6,7,9\n0,4,6,7,9\n1,4,6,7,9\n0,1,4,6,7,9\n2,4,6,7,9\n0,2,4,6,7,9\n1,2,4,6,7,9\n0,1,2,4,6,7,9\n3,4,6,7,9\n0,3,4,6,7,9\n1,3,4,6,7,9\n0,1,3,4,6,7,9\n2,3,4,6,7,9\n0,2,3,4,6,7,9\n1,2,3,4,6,7,9\n0,1,2,3,4,6,7,9\n5,6,7,9\n0,5,6,7,9\n1,5,6,7,9\n0,1,5,6,7,9\n2,5,6,7,9\n0,2,5,6,7,9\n1,2,5,6,7,9\n0,1,2,5,6,7,9\n3,5,6,7,9\n0,3,5,6,7,9\n1,3,5,6,7,9\n0,1,3,5,6,7,9\n2,3,5,6,7,9\n0,2,3,5,6,7,9\n1,2,3,5,6,7,9\n0,1,2,3,5,6,7,9\n4,5,6,7,9\n0,4,5,6,7,9\n1,4,5,6,7,9\n0,1,4,5,6,7,9\n2,4,5,6,7,9\n0,2,4,5,6,7,9\n1,2,4,5,6,7,9\n0,1,2,4,5,6,7,9\n3,4,5,6,7,9\n0,3,4,5,6,7,9\n1,3,4,5,6,7,9\n0,1,3,4,5,6,7,9\n2,3,4,5,6,7,9\n0,2,3,4,5,6,7,9\n1,2,3,4,5,6,7,9\n0,1,2,3,4,5,6,7,9\n8,9\n0,8,9\n1,8,9\n0,1,8,9\n2,8,9\n0,2,8,9\n1,2,8,9\n0,1,2,8,9\n3,8,9\n0,3,8,9\n1,3,8,9\n0,1,3,8,9\n2,3,8,9\n0,2,3,8,9\n1,2,3,8,9\n0,1,2,3,8,9\n4,8,9\n0,4,8,9\n1,4,8,9\n0,1,4,8,9\n2,4,8,9\n0,2,4,8,9\n1,2,4,8,9\n0,1,2,4,8,9\n3,4,8,9\n0,3,4,8,9\n1,3,4,8,9\n0,1,3,4,8,9\n2,3,4,8,9\n0,2,3,4,8,9\n1,2,3,4,8,9\n0,1,2,3,4,8,9\n5,8,9\n0,5,8,9\n1,5,8,9\n0,1,5,8,9\n2,5,8,9\n0,2,5,8,9\n1,2,5,8,9\n0,1,2,5,8,9\n3,5,8,9\n0,3,5,8,9\n1,3,5,8,9\n0,1,3,5,8,9\n2,3,5,8,9\n0,2,3,5,8,9\n1,2,3,5,8,9\n0,1,2,3,5,8,9\n4,5,8,9\n0,4,5,8,9\n1,4,5,8,9\n0,1,4,5,8,9\n2,4,5,8,9\n0,2,4,5,8,9\n1,2,4,5,8,9\n0,1,2,4,5,8,9\n3,4,5,8,9\n0,3,4,5,8,9\n1,3,4,5,8,9\n0,1,3,4,5,8,9\n2,3,4,5,8,9\n0,2,3,4,5,8,9\n1,2,3,4,5,8,9\n0,1,2,3,4,5,8,9\n6,8,9\n0,6,8,9\n1,6,8,9\n0,1,6,8,9\n2,6,8,9\n0,2,6,8,9\n1,2,6,8,9\n0,1,2,6,8,9\n3,6,8,9\n0,3,6,8,9\n1,3,6,8,9\n0,1,3,6,8,9\n2,3,6,8,9\n0,2,3,6,8,9\n1,2,3,6,8,9\n0,1,2,3,6,8,9\n4,6,8,9\n0,4,6,8,9\n1,4,6,8,9\n0,1,4,6,8,9\n2,4,6,8,9\n0,2,4,6,8,9\n1,2,4,6,8,9\n0,1,2,4,6,8,9\n3,4,6,8,9\n0,3,4,6,8,9\n1,3,4,6,8,9\n0,1,3,4,6,8,9\n2,3,4,6,8,9\n0,2,3,4,6,8,9\n1,2,3,4,6,8,9\n0,1,2,3,4,6,8,9\n5,6,8,9\n0,5,6,8,9\n1,5,6,8,9\n0,1,5,6,8,9\n2,5,6,8,9\n0,2,5,6,8,9\n1,2,5,6,8,9\n0,1,2,5,6,8,9\n3,5,6,8,9\n0,3,5,6,8,9\n1,3,5,6,8,9\n0,1,3,5,6,8,9\n2,3,5,6,8,9\n0,2,3,5,6,8,9\n1,2,3,5,6,8,9\n0,1,2,3,5,6,8,9\n4,5,6,8,9\n0,4,5,6,8,9\n1,4,5,6,8,9\n0,1,4,5,6,8,9\n2,4,5,6,8,9\n0,2,4,5,6,8,9\n1,2,4,5,6,8,9\n0,1,2,4,5,6,8,9\n3,4,5,6,8,9\n0,3,4,5,6,8,9\n1,3,4,5,6,8,9\n0,1,3,4,5,6,8,9\n2,3,4,5,6,8,9\n0,2,3,4,5,6,8,9\n1,2,3,4,5,6,8,9\n0,1,2,3,4,5,6,8,9\n7,8,9\n0,7,8,9\n1,7,8,9\n0,1,7,8,9\n2,7,8,9\n0,2,7,8,9\n1,2,7,8,9\n0,1,2,7,8,9\n3,7,8,9\n0,3,7,8,9\n1,3,7,8,9\n0,1,3,7,8,9\n2,3,7,8,9\n0,2,3,7,8,9\n1,2,3,7,8,9\n0,1,2,3,7,8,9\n4,7,8,9\n0,4,7,8,9\n1,4,7,8,9\n0,1,4,7,8,9\n2,4,7,8,9\n0,2,4,7,8,9\n1,2,4,7,8,9\n0,1,2,4,7,8,9\n3,4,7,8,9\n0,3,4,7,8,9\n1,3,4,7,8,9\n0,1,3,4,7,8,9\n2,3,4,7,8,9\n0,2,3,4,7,8,9\n1,2,3,4,7,8,9\n0,1,2,3,4,7,8,9\n5,7,8,9\n0,5,7,8,9\n1,5,7,8,9\n0,1,5,7,8,9\n2,5,7,8,9\n0,2,5,7,8,9\n1,2,5,7,8,9\n0,1,2,5,7,8,9\n3,5,7,8,9\n0,3,5,7,8,9\n1,3,5,7,8,9\n0,1,3,5,7,8,9\n2,3,5,7,8,9\n0,2,3,5,7,8,9\n1,2,3,5,7,8,9\n0,1,2,3,5,7,8,9\n4,5,7,8,9\n0,4,5,7,8,9\n1,4,5,7,8,9\n0,1,4,5,7,8,9\n2,4,5,7,8,9\n0,2,4,5,7,8,9\n1,2,4,5,7,8,9\n0,1,2,4,5,7,8,9\n3,4,5,7,8,9\n0,3,4,5,7,8,9\n1,3,4,5,7,8,9\n0,1,3,4,5,7,8,9\n2,3,4,5,7,8,9\n0,2,3,4,5,7,8,9\n1,2,3,4,5,7,8,9\n0,1,2,3,4,5,7,8,9\n6,7,8,9\n0,6,7,8,9\n1,6,7,8,9\n0,1,6,7,8,9\n2,6,7,8,9\n0,2,6,7,8,9\n1,2,6,7,8,9\n0,1,2,6,7,8,9\n3,6,7,8,9\n0,3,6,7,8,9\n1,3,6,7,8,9\n0,1,3,6,7,8,9\n2,3,6,7,8,9\n0,2,3,6,7,8,9\n1,2,3,6,7,8,9\n0,1,2,3,6,7,8,9\n4,6,7,8,9\n0,4,6,7,8,9\n1,4,6,7,8,9\n0,1,4,6,7,8,9\n2,4,6,7,8,9\n0,2,4,6,7,8,9\n1,2,4,6,7,8,9\n0,1,2,4,6,7,8,9\n3,4,6,7,8,9\n0,3,4,6,7,8,9\n1,3,4,6,7,8,9\n0,1,3,4,6,7,8,9\n2,3,4,6,7,8,9\n0,2,3,4,6,7,8,9\n1,2,3,4,6,7,8,9\n0,1,2,3,4,6,7,8,9\n5,6,7,8,9\n0,5,6,7,8,9\n1,5,6,7,8,9\n0,1,5,6,7,8,9\n2,5,6,7,8,9\n0,2,5,6,7,8,9\n1,2,5,6,7,8,9\n0,1,2,5,6,7,8,9\n3,5,6,7,8,9\n0,3,5,6,7,8,9\n1,3,5,6,7,8,9\n0,1,3,5,6,7,8,9\n2,3,5,6,7,8,9\n0,2,3,5,6,7,8,9\n1,2,3,5,6,7,8,9\n0,1,2,3,5,6,7,8,9\n4,5,6,7,8,9\n0,4,5,6,7,8,9\n1,4,5,6,7,8,9\n0,1,4,5,6,7,8,9\n2,4,5,6,7,8,9\n0,2,4,5,6,7,8,9\n1,2,4,5,6,7,8,9\n0,1,2,4,5,6,7,8,9\n3,4,5,6,7,8,9\n0,3,4,5,6,7,8,9\n1,3,4,5,6,7,8,9\n0,1,3,4,5,6,7,8,9\n2,3,4,5,6,7,8,9\n0,2,3,4,5,6,7,8,9\n1,2,3,4,5,6,7,8,9\n0,1,2,3,4,5,6,7,8,9",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "power-set: 17 items is too many",
+    "ref": "documented in the word doc",
+    "op": "set:power-set",
+    "params": {
+      "item-delimiter": ",",
+      "subset-delimiter": "\n"
+    },
+    "input": {
+      "value": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  }
+]
