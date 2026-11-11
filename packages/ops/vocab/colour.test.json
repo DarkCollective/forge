@@ -1,0 +1,343 @@
+[
+  {
+    "name": "hex orange",
+    "ref": "CSS Color 4: #ff8000 is rgb(255 128 0), hsl(30 100% 50%) (hue 128/255 x 60 = 30.1 degrees)",
+    "op": "colour:parse",
+    "params": {},
+    "input": {
+      "value": "#ff8000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Hex:   #ff8000\nRGB:   rgb(255, 128, 0)\nRGBA:  rgba(255, 128, 0, 1)\nHSL:   hsl(30, 100%, 50%)\nHSLA:  hsla(30, 100%, 50%, 1)\nCMYK:  cmyk(0%, 50%, 100%, 0%)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "short hex without a hash",
+    "ref": "CSS: #f80 is #ff8800; hue 136/255 x 60 = 32 degrees; magenta (255-136)/255 = 46.7 percent",
+    "op": "colour:parse",
+    "params": {},
+    "input": {
+      "value": "F80",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Hex:   #ff8800\nRGB:   rgb(255, 136, 0)\nRGBA:  rgba(255, 136, 0, 1)\nHSL:   hsl(32, 100%, 50%)\nHSLA:  hsla(32, 100%, 50%, 1)\nCMYK:  cmyk(0%, 47%, 100%, 0%)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hex with alpha",
+    "ref": "8 hex digits end in the alpha: 0x80 = 128 = 0.50 of 255",
+    "op": "colour:parse",
+    "params": {},
+    "input": {
+      "value": "#ff800080",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Hex:   #ff800080\nRGB:   rgb(255, 128, 0)\nRGBA:  rgba(255, 128, 0, 0.5)\nHSL:   hsl(30, 100%, 50%)\nHSLA:  hsla(30, 100%, 50%, 0.5)\nCMYK:  cmyk(0%, 50%, 100%, 0%)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "short hex with alpha",
+    "ref": "#f808 is #ff880088; 0x88 = 136 of 255 = 0.53",
+    "op": "colour:parse",
+    "params": {},
+    "input": {
+      "value": "#f808",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Hex:   #ff880088\nRGB:   rgb(255, 136, 0)\nRGBA:  rgba(255, 136, 0, 0.53)\nHSL:   hsl(32, 100%, 50%)\nHSLA:  hsla(32, 100%, 50%, 0.53)\nCMYK:  cmyk(0%, 47%, 100%, 0%)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "rgb function",
+    "ref": "rgb(255, 128, 0) is #ff8000",
+    "op": "colour:parse",
+    "params": {},
+    "input": {
+      "value": "rgb(255, 128, 0)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Hex:   #ff8000\nRGB:   rgb(255, 128, 0)\nRGBA:  rgba(255, 128, 0, 1)\nHSL:   hsl(30, 100%, 50%)\nHSLA:  hsla(30, 100%, 50%, 1)\nCMYK:  cmyk(0%, 50%, 100%, 0%)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "rgba with space and slash syntax",
+    "ref": "CSS Color 4 allows rgb(10 20 30 / 0.25); alpha 0.25 x 255 = 63.75, rounded to 64 = 0x40; HSL of (10,20,30): hue 210, saturation 20/40 = 50 percent, lightness 40/510 = 7.8 percent",
+    "op": "colour:parse",
+    "params": {},
+    "input": {
+      "value": "RGBA(10 20 30 / 0.25)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Hex:   #0a141e40\nRGB:   rgb(10, 20, 30)\nRGBA:  rgba(10, 20, 30, 0.25)\nHSL:   hsl(210, 50%, 8%)\nHSLA:  hsla(210, 50%, 8%, 0.25)\nCMYK:  cmyk(67%, 33%, 0%, 88%)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "rgb with percentages",
+    "ref": "100% is 255",
+    "op": "colour:parse",
+    "params": {},
+    "input": {
+      "value": "rgb(100%, 0%, 0%)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Hex:   #ff0000\nRGB:   rgb(255, 0, 0)\nRGBA:  rgba(255, 0, 0, 1)\nHSL:   hsl(0, 100%, 50%)\nHSLA:  hsla(0, 100%, 50%, 1)\nCMYK:  cmyk(0%, 100%, 100%, 0%)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hsl function",
+    "ref": "CSS Color 4: hsl(30 100% 50%) is rgb(255 128 0) (127.5 rounds up)",
+    "op": "colour:parse",
+    "params": {},
+    "input": {
+      "value": "hsl(30, 100%, 50%)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Hex:   #ff8000\nRGB:   rgb(255, 128, 0)\nRGBA:  rgba(255, 128, 0, 1)\nHSL:   hsl(30, 100%, 50%)\nHSLA:  hsla(30, 100%, 50%, 1)\nCMYK:  cmyk(0%, 50%, 100%, 0%)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hsla with degrees",
+    "ref": "hsla(210deg 50% 40% 0.5): C = 0.5 x 0.8 = 0.4, so channels 0.2, 0.4, 0.6 x 255 = 51, 102, 153; alpha 0.5 x 255 = 127.5 -> 128",
+    "op": "colour:parse",
+    "params": {},
+    "input": {
+      "value": "hsla(210deg 50% 40% 0.5)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Hex:   #33669980\nRGB:   rgb(51, 102, 153)\nRGBA:  rgba(51, 102, 153, 0.5)\nHSL:   hsl(210, 50%, 40%)\nHSLA:  hsla(210, 50%, 40%, 0.5)\nCMYK:  cmyk(67%, 33%, 0%, 40%)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hue past 360 wraps",
+    "ref": "hsl(390, 100%, 50%) is the same as hsl(30, 100%, 50%)",
+    "op": "colour:parse",
+    "params": {},
+    "input": {
+      "value": "hsl(390, 100%, 50%)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Hex:   #ff8000\nRGB:   rgb(255, 128, 0)\nRGBA:  rgba(255, 128, 0, 1)\nHSL:   hsl(30, 100%, 50%)\nHSLA:  hsla(30, 100%, 50%, 1)\nCMYK:  cmyk(0%, 50%, 100%, 0%)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "cmyk function",
+    "ref": "R = 255 (1-C)(1-K): cmyk(0 50 100 0) is rgb(255 127.5 0), rounded up to 128",
+    "op": "colour:parse",
+    "params": {},
+    "input": {
+      "value": "cmyk(0%, 50%, 100%, 0%)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Hex:   #ff8000\nRGB:   rgb(255, 128, 0)\nRGBA:  rgba(255, 128, 0, 1)\nHSL:   hsl(30, 100%, 50%)\nHSLA:  hsla(30, 100%, 50%, 1)\nCMYK:  cmyk(0%, 50%, 100%, 0%)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "black",
+    "ref": "black has key 100 percent",
+    "op": "colour:parse",
+    "params": {},
+    "input": {
+      "value": "#000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Hex:   #000000\nRGB:   rgb(0, 0, 0)\nRGBA:  rgba(0, 0, 0, 1)\nHSL:   hsl(0, 0%, 0%)\nHSLA:  hsla(0, 0%, 0%, 1)\nCMYK:  cmyk(0%, 0%, 0%, 100%)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "white",
+    "ref": "white has lightness 100 percent",
+    "op": "colour:parse",
+    "params": {},
+    "input": {
+      "value": "#fff",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Hex:   #ffffff\nRGB:   rgb(255, 255, 255)\nRGBA:  rgba(255, 255, 255, 1)\nHSL:   hsl(0, 0%, 100%)\nHSLA:  hsla(0, 0%, 100%, 1)\nCMYK:  cmyk(0%, 0%, 0%, 0%)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "blue",
+    "ref": "hue 240",
+    "op": "colour:parse",
+    "params": {},
+    "input": {
+      "value": "#0000ff",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Hex:   #0000ff\nRGB:   rgb(0, 0, 255)\nRGBA:  rgba(0, 0, 255, 1)\nHSL:   hsl(240, 100%, 50%)\nHSLA:  hsla(240, 100%, 50%, 1)\nCMYK:  cmyk(100%, 100%, 0%, 0%)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a grey with a fraction of lightness",
+    "ref": "rgb(128 128 128): lightness 128/255 = 50.2 percent",
+    "op": "colour:parse",
+    "params": {},
+    "input": {
+      "value": "#808080",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Hex:   #808080\nRGB:   rgb(128, 128, 128)\nRGBA:  rgba(128, 128, 128, 1)\nHSL:   hsl(0, 0%, 50%)\nHSLA:  hsla(0, 0%, 50%, 1)\nCMYK:  cmyk(0%, 0%, 0%, 50%)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "alpha of zero",
+    "ref": "fully transparent",
+    "op": "colour:parse",
+    "params": {},
+    "input": {
+      "value": "rgba(0, 0, 0, 0)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Hex:   #00000000\nRGB:   rgb(0, 0, 0)\nRGBA:  rgba(0, 0, 0, 0)\nHSL:   hsl(0, 0%, 0%)\nHSLA:  hsla(0, 0%, 0%, 0)\nCMYK:  cmyk(0%, 0%, 0%, 100%)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hex digits count",
+    "ref": "3, 4, 6 or 8 digits",
+    "op": "colour:parse",
+    "params": {},
+    "input": {
+      "value": "#12345",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "not hex",
+    "ref": "g is not a hex digit",
+    "op": "colour:parse",
+    "params": {},
+    "input": {
+      "value": "#12345g",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "channel out of range",
+    "ref": "a channel is 0 to 255",
+    "op": "colour:parse",
+    "params": {},
+    "input": {
+      "value": "rgb(300, 0, 0)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "alpha out of range",
+    "ref": "alpha is 0 to 1",
+    "op": "colour:parse",
+    "params": {},
+    "input": {
+      "value": "rgba(1, 2, 3, 1.5)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "unknown function",
+    "ref": "rgb, rgba, hsl, hsla and cmyk are read",
+    "op": "colour:parse",
+    "params": {},
+    "input": {
+      "value": "lab(50 10 10)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "missing bracket",
+    "ref": "a function ends with )",
+    "op": "colour:parse",
+    "params": {},
+    "input": {
+      "value": "rgb(1, 2, 3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "too few values",
+    "ref": "rgb takes three or four",
+    "op": "colour:parse",
+    "params": {},
+    "input": {
+      "value": "rgb(1, 2)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "not a number",
+    "ref": "a channel that is not a number",
+    "op": "colour:parse",
+    "params": {},
+    "input": {
+      "value": "rgb(a, b, c)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "empty",
+    "ref": "nothing to read",
+    "op": "colour:parse",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]
