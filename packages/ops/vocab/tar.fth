@@ -1,21 +1,16 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ tar: the tar container (POSIX ustar, IEEE 1003.1), one file in (tar:tar) or any number out
-\ (tar:untar, tar:entry). FL on the core words, and one primitive, _sum (src/prims/tar.ts: the byte
-\ sum for the header checksum, 2,500 VM steps per header in FL): 512-byte headers with octal fields,
-\ the header checksum, padding to whole blocks and the two zero blocks that end an archive. Reading
-\ takes ustar (name prefix included), the older v7 headers and the GNU long-name form (a type L
-\ entry); writing is ustar. An entry's data is a slice of the input, so the total of all entries can
-\ never pass the input length (the bomb rule needs no budget here).
+\ (tar:untar, tar:entry). FL on the core words, plus three small primitives (src/prims/tar.ts): _headers
+\ (the sequential walk over the headers, which is quadratic in FL: 12,000 entries took over 30 s), _oct
+\ (an octal field, 250 VM steps each in FL) and _sum (the byte sum of the header checksum, 2,500 steps in
+\ FL). The format: 512-byte headers with octal fields, the header checksum, padding to whole blocks and
+\ the two zero blocks that end an archive. Reading takes ustar (name prefix included), the older v7
+\ headers and the GNU long-name form (a type L entry); writing is ustar. An entry's data is a slice of
+\ the input, so the total of all entries can never pass the input length (the bomb rule needs no budget).
 IN: tar
 
-\ util-candidate: check-int-range
-: _check-range ( n:int lo:int hi:int what:str -- )
-  n lo < n hi > or [
-    what " must be " cat lo int>str cat " to " cat hi int>str cat ", not " cat n int>str cat raise:range
-  ] when ;
-
-\ util-candidate: bytes-text-lossless
 \ A name as text: UTF-8 when it is, Latin-1 otherwise.
+\ util-candidate: bytes-text-lossless
 : _text ( b:bytes -- str )
   [ b bytes>str ] [ drop b bytes>latin1 ] try ;
 
@@ -23,17 +18,7 @@ IN: tar
 
 \ The bytes of a field up to its first NUL.
 : _cstr ( field:bytes -- bytes )
-  field 0 field [ 0 <> ] util:count-leading slice ;
-
-\ An octal number field: digits between optional spaces, ended by a NUL or a space; empty is 0.
-: _oct ( field:bytes what:str -- int )
-  field 0 nth 128 band 0 <> [ "tar " what cat " uses the binary (base-256) form, which is not supported" cat raise:coerce ] when
-  field _cstr 32 util:drop-byte
-  dup len 0 = [ drop 0 ] [
-    dup [ 48 55 util:between? not ] filter len 0 <> [
-      "tar " what cat " is not an octal number (not a tar archive, or corrupt data)" cat raise:coerce ] when
-    [ 48 - ] map 8 util:digits>int
-  ] if ;
+  field bytes>latin1 "\x00" split 0 nth latin1>bytes ;
 
 \ The checksum of a header block: the sum of its bytes with the 8 checksum bytes counted as spaces.
 : _header-sum ( h:bytes -- int )
@@ -45,41 +30,6 @@ IN: tar
   [ h 345 500 slice _cstr _text "/" cat swap cat ] when ;
 
 \ ---- reading ----
-
-\ True at the end of the archive: the end of the data, or a block of zeros. A part of a block
-\ that is not zeros is a cut-short archive.
-: _end? ( data:bytes p:int -- bool )
-  p data len >= [ true ] [
-    data len p - 512 <
-    [ data p data len slice 0 util:drop-byte len 0 <> [ "tar data is cut short: the last header is incomplete" raise:coerce ] when true ]
-    [ data p p 512 + slice 0 util:drop-byte len 0 = ] if
-  ] if ;
-
-: _check-header ( data:bytes p:int verify:bool -- )
-  verify [
-    data p p 512 + slice dup 148 156 slice "header checksum" _oct swap _header-sum <> [
-      "tar header checksum mismatch at offset " p int>str cat " (not a tar archive, or corrupt data)" cat raise:coerce ] when
-  ] when ;
-
-: _size-at ( data:bytes p:int -- int )
-  data p 124 + p 136 + slice "size" _oct ;
-
-\ Adds the header at p to offs and gives the offset of the next header.
-: _step2 ( data:bytes offs:list p:int size:int -- list int )
-  p 512 + size + data len > [ "tar data is cut short: an entry's data ends early (truncated)" raise:coerce ] when
-  offs p append
-  p 512 + size 511 + 512 div 512 * + ;
-
-: _step ( offs:list p:int data:bytes verify:bool -- list int )
-  data p _end? [ offs -1 ] [
-    data p verify _check-header
-    data offs p data p _size-at _step2
-  ] if ;
-
-\ The offsets of all the headers, in order (a header is followed by its data, padded to 512 bytes).
-: _chain ( data:bytes verify:bool -- list )
-  data len 0 = [ "not tar data: the input is empty" raise:coerce ] when
-  { } 0 [ dup 0 >= ] [ data verify _step ] while drop ;
 
 : _meta2 ( h:bytes p:int -- record )
   { { "name" h _full-name }
@@ -130,7 +80,7 @@ IN: tar
   [ type "record" = ] filter ;
 
 : _entries ( data:bytes verify:bool -- list )
-  data data verify _chain [ data swap _meta ] map _entries2 ;
+  data data verify _headers [ data swap _meta ] map _entries2 ;
 
 \ util-candidate: record-by-name
 : _names ( metas:list -- list )
@@ -204,10 +154,10 @@ IN: tar
 : tar ( data:bytes filename:str="file.txt" mode:int=436 mtime:int=0 uid:int=0 gid:int=0 -- bytes )
   "A tar archive (POSIX ustar) holding the input as one file named filename, as CyberChef's Tar does (one file; it writes the current time, so its bytes differ on every run). The header holds the permission bits mode (436 is 0664, CyberChef's), the Unix time mtime (0 by default, so the output is the same on every run), uid and gid (0), type 0 and no owner names; the data is padded to 512 bytes and two zero blocks end the archive. A name of up to 100 bytes goes in the name field; a longer one (up to 255) is cut at a slash into the ustar prefix and name, otherwise E_RANGE. An empty name or a NUL is E_RANGE, and so is a mode, id or time that does not fit its field. GNU tar, bsdtar and Python read the output." doc
   "Compression" category
-  mode 0 4095 "mode" _check-range
-  uid 0 2097151 "uid" _check-range
-  gid 0 2097151 "gid" _check-range
-  mtime 0 8589934591 "mtime" _check-range
+  mode 0 4095 "mode" util:check-int-range
+  uid 0 2097151 "uid" util:check-int-range
+  gid 0 2097151 "gid" util:check-int-range
+  mtime 0 8589934591 "mtime" util:check-int-range
   filename _tar-name _split-name
   mode uid gid data len mtime _header
   data cat

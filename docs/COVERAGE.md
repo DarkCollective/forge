@@ -20,14 +20,14 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Utils | 34 | 14 | 2 | 0 | 50 |
 | Date / Time | 5 | 4 | 0 | 0 | 9 |
 | Extractors | 1 | 8 | 0 | 9 | 18 |
-| Compression | 1 | 5 | 0 | 15 | 21 |
+| Compression | 1 | 9 | 0 | 11 | 21 |
 | Hashing | 34 | 14 | 0 | 0 | 48 |
 | Code tidy | 0 | 0 | 0 | 24 | 24 |
 | Forensics | 0 | 0 | 0 | 9 | 9 |
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 9 | 4 | 3 | 5 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **194** | **129** | **5** | **178** | **506** |
+| **Total** | **194** | **133** | **5** | **174** | **506** |
 
 ## Data format (80)
 
@@ -430,12 +430,12 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Zlib Inflate | redesigned | `deflate:zlib-inflate` | RFC 1950 in FL over the raw inflate: the header is checked (not zlib, another method, a window over 32 KiB, a preset dictionary: E_COERCE) and the Adler-32 trailer is verified. Start index is kept; Verify result is verify and is on by default (CyberChef's is off): a missing or wrong trailer is E_COERCE, and with verify off the trailer is not read. The buffer size, expansion and resize options are not offered (see Raw Inflate). Output past the value limit is E_LIMIT_VALUE. Inputs over about 750,000 bytes (380,000 for an untrusted recipe) exceed the VM step limit because the checksum runs in FL. |
 | Gzip | redesigned | `deflate:gzip` | RFC 1952 in FL over the raw deflate and crc:checksum: the header, the optional file name and comment (Latin-1; a NUL or a character above U+00FF is E_RANGE), the optional header CRC-16 (CyberChef's Include file checksum, parameter header-crc), the raw stream and the little-endian CRC-32 and size. Compression type is the level (0 to 9, default 6). Added: mtime, the modification time in Unix seconds, 0 by default so the output is the same on every run (CyberChef writes the current time); the OS byte is 255 (unknown) and XFL follows the level as gzip writes it. The bytes differ from CyberChef's; gzip, Python and zlib read them. |
 | Gunzip | covered | `deflate:gunzip` | RFC 1952: the header (extra field, name, comment and header CRC-16 are read and skipped; a missing magic number, another method or reserved flags are E_COERCE), the stream, and the CRC-32 and size of the trailer, which are verified by default (the added parameter verify, on; off returns the data despite a bad trailer or header CRC). Members written one after the other are joined, as gzip does. Output past the value limit is E_LIMIT_VALUE; the size the trailer claims is never used to allocate. |
-| Zip | not yet |  |  |
-| Unzip | not yet |  |  |
+| Zip | redesigned | `zip:zip` | PKWARE APPNOTE container in FL (local header, central directory, end record) over a CRC-32 and a raw DEFLATE primitive; one file, as in CyberChef (the filename parameter, default file.txt; the file type does not exist yet). Comment (a file comment in the central directory), Compression method (method: deflate or store) and Operating system (os: msdos, unix or macintosh; the default is msdos, the first of CyberChef's list) are kept. Compression type becomes the level parameter (0 to 9, default 6; 0 stores in DEFLATE blocks; Fixed Huffman Coding is not offered, as for Raw Deflate). Added: mtime (Unix seconds, DOS precision, 0 by default meaning 1980-01-01 so the output is the same on every run; CyberChef writes the current time) and mode (the Unix permission bits, stored when os is unix). Password (ZipCrypto) is not supported. The compressed bytes differ from CyberChef's (a different encoder); unzip, Python and fflate read them. |
+| Unzip | redesigned | `zip:unzip`, `zip:entry` | Returns a list of records (name, size, dir, mtime, mode, data) in directory order, which the output pane shows as a tree, instead of CyberChef's list of files; mtime reads the DOS time as UTC and mode is the Unix permission bits for entries made on Unix (else 0). zip:entry (not a CyberChef row) takes one entry's bytes by name so a recipe can continue, and inflates only that entry. The central directory is read, so streamed archives (data descriptors) and archives with bytes in front work. Stored and deflate only; any other method, an encrypted entry, ZIP64 or a multi-disk archive is E_COERCE naming it, so CyberChef's Password is not supported. Verify result is verify and is on by default (CyberChef's is off): each entry's size and CRC-32 must match (E_COERCE), off returns damaged data. The sum of all entries is capped by the value limit while they are inflated (E_LIMIT_VALUE), whatever sizes the archive claims. No extra keys such as a comment. |
 | Bzip2 Decompress | not yet |  |  |
 | Bzip2 Compress | not yet |  |  |
-| Tar | not yet |  |  |
-| Untar | not yet |  |  |
+| Tar | redesigned | `tar:tar` | POSIX ustar in FL, one file as in CyberChef (filename, default file.txt). Header layout, mode default 0664 (436) and the empty owner names follow CyberChef; the data is padded to 512 bytes and two zero blocks end the archive. Added: mtime (Unix seconds, 0 by default so the output is the same on every run; CyberChef writes the current time), mode, uid and gid parameters. A name over 100 bytes is cut at a slash into the ustar prefix (up to 255 bytes in all, else E_RANGE; CyberChef overflows the field). GNU tar, bsdtar and Python read the output. |
+| Untar | redesigned | `tar:untar`, `tar:entry` | Returns a list of records (name, size, dir, mtime, mode, data) in archive order instead of CyberChef's list of files; mtime is Unix seconds and mode the permission bits. Files (types 0, NUL and 7) and directories (type 5) are listed, as in CyberChef; links, devices and FIFOs are skipped. Reads ustar (the prefix is joined to the name), v7 headers and the GNU long-name form (type L); PAX extended headers (x, g) are skipped and their path and size records are not applied. tar:entry (not a CyberChef row) takes one file's bytes by name. Added verify (on by default): each header's checksum must match, E_COERCE otherwise. Empty input, a bad octal field, or data that ends early is E_COERCE. An entry is a slice of the input, so the total never passes the input length. |
 | LZString Decompress | not yet |  |  |
 | LZString Compress | not yet |  |  |
 | LZMA Decompress | not yet |  |  |

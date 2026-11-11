@@ -1,20 +1,15 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ zip: the ZIP container (PKWARE APPNOTE 6.3), one file in (zip:zip) or any number out (zip:unzip,
 \ zip:entry). Everything about the container is FL: the local file header, the central directory and
-\ the end-of-central-directory record, the DOS date and time, the flags, the checks. Three private
+\ the end-of-central-directory record, the DOS date and time, the flags, the checks. Four private
 \ primitives (src/prims/zip.ts): _crc32 (FL would cost 13 VM steps a byte), _deflate (the raw DEFLATE
-\ encoder; a vocabulary cannot call deflate's private word) and _extract (inflate several entries
-\ under ONE output budget, the decompression bomb rule applied to the sum of all entries).
+\ encoder; a vocabulary cannot call deflate's private word), _cd-offsets (the sequential walk of the
+\ directory, quadratic in FL) and _extract (inflate several entries under ONE output budget, the
+\ decompression bomb rule applied to the sum of all entries).
 \ Reading follows the central directory, not the local headers (a zip written to a stream has zero
 \ sizes in the local header and a data descriptor after the data). Stored (0) and deflate (8) only;
 \ encryption, ZIP64 and multi-disk archives are E_COERCE.
 IN: zip
-
-\ util-candidate: check-int-range
-: _check-range ( n:int lo:int hi:int what:str -- )
-  n lo < n hi > or [
-    what " must be " cat lo int>str cat " to " cat hi int>str cat ", not " cat n int>str cat raise:range
-  ] when ;
 
 \ ---- reading integers ----
 
@@ -90,27 +85,14 @@ IN: zip
 
 \ ---- the central directory ----
 
-\ The length of the central directory entry at p.
-: _cd-len ( data:bytes p:int -- int )
-  data p 46 _need
-  data p 4 _rd 33639248 <> [ "the zip central directory is damaged: bad entry signature" raise:coerce ] when
-  46 data p 28 + 2 _rd + data p 30 + 2 _rd + data p 32 + 2 _rd + ;
-
-\ Where the entry after the last of offs starts.
-: _next-off ( offs:list data:bytes cdoff:int -- int )
-  offs len 0 = [ cdoff ] [ offs offs len 1 - nth data over _cd-len + ] if ;
-
-: _cd-offsets ( data:bytes cdoff:int n:int -- list )
-  0 n range { } [ drop dup data cdoff _next-off append ] reduce ;
-
 \ The offset of the data of the entry whose local header is at lo, past the name and extra field.
 : _local-start ( data:bytes lo:int -- int )
   data lo 30 _need
   data lo 4 _rd 67324752 <> [ "the zip local file header is damaged: bad signature" raise:coerce ] when
   lo 30 + data lo 26 + 2 _rd + data lo 28 + 2 _rd + ;
 
-\ util-candidate: bytes-text-lossless
 \ A name as text: UTF-8 when it is, Latin-1 otherwise.
+\ util-candidate: bytes-text-lossless
 : _text ( b:bytes -- str )
   [ b bytes>str ] [ drop b bytes>latin1 ] try ;
 
@@ -220,7 +202,7 @@ IN: zip
 \ ---- writing ----
 
 : _check-mtime ( mtime:int -- )
-  mtime 0 <> [ mtime 315532800 4354819199 "mtime (0, or Unix seconds from 1980-01-01 to the end of 2107)" _check-range ] when ;
+  mtime 0 <> [ mtime 315532800 4354819199 "mtime (0, or Unix seconds from 1980-01-01 to the end of 2107)" util:check-int-range ] when ;
 
 \ UTF-8 bytes of a field of at most 65535 bytes.
 : _field ( s:str what:str -- bytes )
@@ -273,8 +255,8 @@ IN: zip
 : zip ( data:bytes filename:str="file.txt" comment:str="" method:choice{deflate|store}="deflate" os:choice{msdos|unix|macintosh}="msdos" level:int=6 mtime:int=0 mode:int=420 -- bytes )
   "A zip archive (PKWARE APPNOTE) holding the input as one file named filename (CyberChef's Zip takes one file too), the way every unzip reads it. method is deflate (the default; at level 0 the DEFLATE blocks are stored) or store (CyberChef's None (Store); the level is then not used). level is 0 to 9 as for deflate:deflate (E_RANGE otherwise). comment is the file's comment in the central directory. os is the host recorded in the entry: msdos (the default), unix (which also stores the permission bits mode, 420 is 0644) or macintosh. The name and comment are UTF-8 (the UTF-8 flag is set when they are not ASCII); an empty name, a NUL or more than 65535 bytes is E_RANGE. mtime is the modification time in Unix seconds, 0 by default (and then the format's earliest time, 1980-01-01 00:00:00; CyberChef writes its own idea of the time, so its bytes differ on every run); times are stored at DOS precision (2 seconds), read as UTC, and run from 1980 to 2107 (E_RANGE otherwise). CyberChef's Password (ZipCrypto) is not supported, and neither is its Fixed Huffman Coding (see the coverage note). The compressed bytes differ from CyberChef's; every unzip reads them." doc
   "Compression" category
-  level 0 9 "the compression level" _check-range
-  mode 0 4095 "mode" _check-range
+  level 0 9 "the compression level" util:check-int-range
+  mode 0 4095 "mode" util:check-int-range
   mtime _check-mtime
   filename _name-bytes
   comment "the comment" _field

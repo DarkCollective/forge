@@ -17,13 +17,14 @@
 /*
  * zip primitives, over `fflate` (MIT, pinned) through the deflate primitives' bounded inflater. The
  * ZIP container itself (local headers, the central directory, the end record, DOS times, the
- * checks) is FL in vocab/zip.fth. Three private helpers:
+ * checks) is FL in vocab/zip.fth. Private helpers:
  *
  *  - `_crc32 ( data -- int )`: CRC-32 (the zip checksum). In FL it costs about 13 VM steps per
  *    byte, which would cap a zip at about 380,000 bytes in an untrusted recipe, well under the
  *    16 MiB value limit.
  *  - `_deflate ( data level -- bytes )`: a raw DEFLATE stream (the same encoder as `deflate:_deflate`;
  *    a vocabulary cannot call another vocabulary's private word).
+ *  - `_cd-offsets ( data cdoff n -- list )`: where each central directory entry starts (a sequential walk, quadratic in FL).
  *  - `_extract ( data plan -- list )`: the contents of several entries under ONE budget. Each plan
  *    item is `{ start compressed-size method }` (method 0 stored, 8 deflate; FL has already refused
  *    any other). The sum of all the entries is capped by `maxValueBytes`: the bomb rule of the wave 6
@@ -36,7 +37,7 @@ import type { PrimitiveContext, PrimitiveDef, Value } from "@forge/lang";
 import { bombFailure, coerceFailure, rangeFailure } from "../prim-util.js";
 import { deflateRaw, inflateLimited } from "./deflate.js";
 
-const { bytes } = valueHelpers;
+const { bytes, int } = valueHelpers;
 
 let table: Uint32Array | undefined;
 
@@ -109,6 +110,32 @@ export function extractEntries(
   return out;
 }
 
+/**
+ * The offset of each central directory entry: entry i + 1 starts after the name, extra field and comment
+ * of entry i, so the walk is sequential. In FL it has to grow a list one entry at a time, which is
+ * quadratic (3,000 entries take 1 s, 10,000 take 27 s, and the total-bytes meter ends it at about 14,000);
+ * the cobs vocabulary has the same walk and the same answer.
+ */
+export function cdOffsets(data: Uint8Array, cdoff: number, count: number): number[] {
+  const out: number[] = [];
+  let p = cdoff;
+  for (let i = 0; i < count; i++) {
+    if (p + 46 > data.length) throw corrupt("zip data is cut short (truncated)");
+    const sig =
+      ((data[p] as number) |
+        ((data[p + 1] as number) << 8) |
+        ((data[p + 2] as number) << 16) |
+        ((data[p + 3] as number) << 24)) >>>
+      0;
+    if (sig !== 0x02014b50)
+      throw corrupt("the zip central directory is damaged: bad entry signature");
+    out.push(p);
+    const at = (q: number) => (data[q] as number) | ((data[q + 1] as number) << 8);
+    p += 46 + at(p + 28) + at(p + 30) + at(p + 32);
+  }
+  return out;
+}
+
 function planOf(items: readonly Value[]): ZipPlanItem[] {
   return items.map((it) => {
     if (it.tag !== "list" || it.v.length !== 3)
@@ -118,7 +145,13 @@ function planOf(items: readonly Value[]): ZipPlanItem[] {
       number,
       number,
     ];
-    if (!Number.isSafeInteger(s) || !Number.isSafeInteger(z) || !Number.isSafeInteger(m) || s < 0 || z < 0)
+    if (
+      !Number.isSafeInteger(s) ||
+      !Number.isSafeInteger(z) ||
+      !Number.isSafeInteger(m) ||
+      s < 0 ||
+      z < 0
+    )
       throw rangeFailure("a plan item is three non-negative integers");
     return { start: s, size: z, method: m };
   });
@@ -136,6 +169,17 @@ export const primitives: readonly PrimitiveDef[] = [
     (data: Uint8Array, level: number | bigint) => deflateRaw(data, Number(level)),
     {
       doc: "A raw DEFLATE stream of the bytes at a level from 0 (stored blocks) to 9 (private helper of zip:zip).",
+      category: "Compression",
+    },
+  ),
+  definePrimitive(
+    "zip",
+    "_cd-offsets",
+    "( data:bytes cdoff:int n:int -- list )",
+    (data: Uint8Array, cdoff: number | bigint, n: number | bigint) =>
+      cdOffsets(data, Number(cdoff), Number(n)).map((p) => int(p)),
+    {
+      doc: "The offsets of the n central directory entries that start at cdoff, each checked for its signature (private helper of zip:unzip and zip:entry).",
       category: "Compression",
     },
   ),
