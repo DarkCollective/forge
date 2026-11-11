@@ -1,0 +1,86 @@
+[
+  {
+    "cyberchef": "DES Encrypt",
+    "status": "redesigned",
+    "forge": ["des:encrypt"],
+    "note": "Bytes in and bytes out (CyberChef's Input and Output menus are chain steps such as hex:decode and hex:encode). Key and IV are key params in any key encoding; the key is 8 bytes. Modes CBC (default), CFB, OFB, CTR and ECB as in CyberChef, with the shared blockmode layer; padding is its own choice (pkcs7 or none). A wrong key or IV length is E_RANGE."
+  },
+  {
+    "cyberchef": "DES Decrypt",
+    "status": "redesigned",
+    "forge": ["des:decrypt"],
+    "note": "The inverse of des:encrypt with the same parameters; bad PKCS#7 padding or ciphertext that is not whole 8-byte blocks is E_COERCE."
+  },
+  {
+    "cyberchef": "Triple DES Encrypt",
+    "status": "redesigned",
+    "forge": ["triple-des:encrypt"],
+    "note": "As DES with a 24-byte key, or a 16-byte key (two-key: K3 = K1, as CyberChef does); modes CBC, CFB, OFB, CTR and ECB; padding is its own choice. EDE form (SP 800-67)."
+  },
+  {
+    "cyberchef": "Triple DES Decrypt",
+    "status": "redesigned",
+    "forge": ["triple-des:decrypt"],
+    "note": "The inverse of triple-des:encrypt with the same parameters."
+  },
+  {
+    "cyberchef": "Blowfish Encrypt",
+    "status": "redesigned",
+    "forge": ["blowfish:encrypt"],
+    "note": "Key of 4 to 56 bytes (CyberChef's range), modes CBC, CFB, OFB, CTR and ECB, padding as a separate choice (pkcs7 or none). Big-endian words as in Schneier's paper."
+  },
+  {
+    "cyberchef": "Blowfish Decrypt",
+    "status": "redesigned",
+    "forge": ["blowfish:decrypt"],
+    "note": "The inverse of blowfish:encrypt with the same parameters."
+  },
+  {
+    "cyberchef": "RC2 Encrypt",
+    "status": "redesigned",
+    "forge": ["rc2:encrypt"],
+    "note": "RFC 2268. CyberChef runs CBC when an IV is given and ECB when it is blank, with no other setting; here mode (CBC, the default, or ECB) is explicit, so a blank IV in CBC is E_RANGE. The RFC's effective key bits are the effective-bits param (1 to 1024), whose default 128 is what CyberChef's library uses for any key length. Key 1 to 128 bytes; padding is its own choice."
+  },
+  {
+    "cyberchef": "RC2 Decrypt",
+    "status": "redesigned",
+    "forge": ["rc2:decrypt"],
+    "note": "The inverse of rc2:encrypt with the same parameters, including effective-bits."
+  },
+  {
+    "cyberchef": "RC6 Encrypt",
+    "status": "redesigned",
+    "forge": ["rc6:encrypt"],
+    "note": "RC6-w/r with CyberChef's parameters: word-size (a multiple of 8, 8 to 256, default 32) and rounds (1 to 255, default 20); an empty IV is zero bytes as in CyberChef; modes CBC, CFB, OFB, CTR and ECB. Padding is pkcs7 or none: CyberChef's ZERO, RANDOM and BIT paddings are not offered (the shared padding is PKCS#7), and empty input encrypts to one padding block where CyberChef returns nothing. Word sizes other than 32 use BigInt arithmetic and are slow."
+  },
+  {
+    "cyberchef": "RC6 Decrypt",
+    "status": "redesigned",
+    "forge": ["rc6:decrypt"],
+    "note": "The inverse of rc6:encrypt with the same parameters."
+  },
+  {
+    "cyberchef": "Twofish Encrypt",
+    "status": "redesigned",
+    "forge": ["twofish:encrypt"],
+    "note": "Keys of 16, 24 or 32 bytes, 16-byte IV, modes CBC, CFB, OFB, CTR and ECB. Padding is pkcs7 or none: CyberChef's ZERO, RANDOM and BIT paddings are not offered."
+  },
+  {
+    "cyberchef": "Twofish Decrypt",
+    "status": "redesigned",
+    "forge": ["twofish:decrypt"],
+    "note": "The inverse of twofish:encrypt with the same parameters."
+  },
+  {
+    "cyberchef": "SM4 Encrypt",
+    "status": "redesigned",
+    "forge": ["sm4:encrypt"],
+    "note": "GB/T 32907-2016, 16-byte key and IV, modes CBC, CFB, OFB, CTR and ECB. CyberChef's CBC/NoPadding and ECB/NoPadding modes are padding none."
+  },
+  {
+    "cyberchef": "SM4 Decrypt",
+    "status": "redesigned",
+    "forge": ["sm4:decrypt"],
+    "note": "The inverse of sm4:encrypt with the same parameters."
+  }
+]

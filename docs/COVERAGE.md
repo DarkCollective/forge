@@ -12,7 +12,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Category | Covered | Redesigned | Dropped | Not yet | Total |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Data format | 54 | 6 | 0 | 20 | 80 |
-| Encryption / Encoding | 29 | 19 | 0 | 47 | 95 |
+| Encryption / Encoding | 29 | 33 | 0 | 33 | 95 |
 | Public Key | 0 | 0 | 0 | 30 | 30 |
 | Arithmetic / Logic | 9 | 0 | 0 | 17 | 26 |
 | Networking | 0 | 0 | 0 | 34 | 34 |
@@ -27,7 +27,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 4 | 0 | 3 | 14 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **134** | **42** | **3** | **327** | **506** |
+| **Total** | **134** | **56** | **3** | **313** | **506** |
 
 ## Data format (80)
 
@@ -120,34 +120,34 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | --- | --- | --- | --- |
 | AES Encrypt | redesigned | `aes:encrypt` | Bytes in and bytes out (CyberChef's Input and Output encodings are chain steps such as hex:decode and hex:encode). The key and the IV are key params in any of the key encodings, the key 16, 24 or 32 bytes. The mode is CBC (the default), CFB, OFB, CTR, GCM or ECB, and padding is its own choice (pkcs7, the default, or none), where CyberChef has separate CBC/NoPadding and ECB/NoPadding modes. GCM takes the additional data as the aad param and appends the 16-byte tag to the ciphertext, where CyberChef returns the tag separately. A wrong key or IV length is E_RANGE. |
 | AES Decrypt | redesigned | `aes:decrypt` | The inverse of aes:encrypt with the same parameters. For GCM the last 16 bytes of the input are the tag (CyberChef takes a separate GCM Tag param), and a tag that does not verify is E_COERCE and returns no plaintext; bad PKCS#7 padding is E_COERCE too. The no-padding modes of CyberChef are padding none. |
-| Blowfish Encrypt | not yet |  |  |
-| Blowfish Decrypt | not yet |  |  |
-| DES Encrypt | not yet |  |  |
-| DES Decrypt | not yet |  |  |
-| Triple DES Encrypt | not yet |  |  |
-| Triple DES Decrypt | not yet |  |  |
+| Blowfish Encrypt | redesigned | `blowfish:encrypt` | Key of 4 to 56 bytes (CyberChef's range), modes CBC, CFB, OFB, CTR and ECB, padding as a separate choice (pkcs7 or none). Big-endian words as in Schneier's paper. |
+| Blowfish Decrypt | redesigned | `blowfish:decrypt` | The inverse of blowfish:encrypt with the same parameters. |
+| DES Encrypt | redesigned | `des:encrypt` | Bytes in and bytes out (CyberChef's Input and Output menus are chain steps such as hex:decode and hex:encode). Key and IV are key params in any key encoding; the key is 8 bytes. Modes CBC (default), CFB, OFB, CTR and ECB as in CyberChef, with the shared blockmode layer; padding is its own choice (pkcs7 or none). A wrong key or IV length is E_RANGE. |
+| DES Decrypt | redesigned | `des:decrypt` | The inverse of des:encrypt with the same parameters; bad PKCS#7 padding or ciphertext that is not whole 8-byte blocks is E_COERCE. |
+| Triple DES Encrypt | redesigned | `triple-des:encrypt` | As DES with a 24-byte key, or a 16-byte key (two-key: K3 = K1, as CyberChef does); modes CBC, CFB, OFB, CTR and ECB; padding is its own choice. EDE form (SP 800-67). |
+| Triple DES Decrypt | redesigned | `triple-des:decrypt` | The inverse of triple-des:encrypt with the same parameters. |
 | Fernet Encrypt | not yet |  |  |
 | Fernet Decrypt | not yet |  |  |
 | LS47 Encrypt | covered | `classical:ls47-encrypt` |  |
 | LS47 Decrypt | covered | `classical:ls47-decrypt` |  |
-| RC2 Encrypt | not yet |  |  |
-| RC2 Decrypt | not yet |  |  |
+| RC2 Encrypt | redesigned | `rc2:encrypt` | RFC 2268. CyberChef runs CBC when an IV is given and ECB when it is blank, with no other setting; here mode (CBC, the default, or ECB) is explicit, so a blank IV in CBC is E_RANGE. The RFC's effective key bits are the effective-bits param (1 to 1024), whose default 128 is what CyberChef's library uses for any key length. Key 1 to 128 bytes; padding is its own choice. |
+| RC2 Decrypt | redesigned | `rc2:decrypt` | The inverse of rc2:encrypt with the same parameters, including effective-bits. |
 | RC4 | not yet |  |  |
 | RC4 Drop | not yet |  |  |
 | ChaCha | redesigned | `chacha:encrypt` | One word, encrypt, for both directions (a stream cipher), with the key and the nonce as key params in any of the four encodings (the Integer nonce toggle is not offered), the block counter as a number from 0, and rounds as a choice of 20, 12 or 8. The layouts follow noble: a 12-byte nonce with a 4-byte counter (RFC 8439) takes a 32-byte key and 20, 12 or 8 rounds; an 8-byte nonce with an 8-byte counter takes a 16- or 32-byte key and 20 rounds only. A 16-byte key with a 12-byte nonce, which CyberChef accepts, is E_RANGE, because noble has no such core and none is written here. A counter that would overflow is E_RANGE (noble refuses it), where CyberChef truncates. Input and output are bytes (chain hex:decode and hex:encode for text). |
 | Salsa20 | redesigned | `salsa20:encrypt` | One word, encrypt, for both directions, with the key (16 or 32 bytes), the 8-byte nonce and the 64-bit block counter as CyberChef has them. There is no rounds parameter: noble runs Salsa20/20 only, so CyberChef's 12 and 8 rounds are not offered (no own core is written for them). The Integer nonce toggle is not offered. A counter that would overflow is E_RANGE. |
 | XSalsa20 | redesigned | `xsalsa20:encrypt` | One word, encrypt, for both directions, with the 24-byte nonce and the 64-bit block counter as CyberChef has them. The key is 32 bytes only: noble has no 16-byte XSalsa20, so CyberChef's 16-byte key is E_RANGE. There is no rounds parameter (20 rounds only, as for Salsa20), and no Integer nonce toggle (an 8-byte integer nonce is not a valid XSalsa20 nonce). |
 | Rabbit | not yet |  |  |
-| SM4 Encrypt | not yet |  |  |
-| SM4 Decrypt | not yet |  |  |
-| RC6 Encrypt | not yet |  |  |
-| RC6 Decrypt | not yet |  |  |
+| SM4 Encrypt | redesigned | `sm4:encrypt` | GB/T 32907-2016, 16-byte key and IV, modes CBC, CFB, OFB, CTR and ECB. CyberChef's CBC/NoPadding and ECB/NoPadding modes are padding none. |
+| SM4 Decrypt | redesigned | `sm4:decrypt` | The inverse of sm4:encrypt with the same parameters. |
+| RC6 Encrypt | redesigned | `rc6:encrypt` | RC6-w/r with CyberChef's parameters: word-size (a multiple of 8, 8 to 256, default 32) and rounds (1 to 255, default 20); an empty IV is zero bytes as in CyberChef; modes CBC, CFB, OFB, CTR and ECB. Padding is pkcs7 or none: CyberChef's ZERO, RANDOM and BIT paddings are not offered (the shared padding is PKCS#7), and empty input encrypts to one padding block where CyberChef returns nothing. Word sizes other than 32 use BigInt arithmetic and are slow. |
+| RC6 Decrypt | redesigned | `rc6:decrypt` | The inverse of rc6:encrypt with the same parameters. |
 | Ascon Encrypt | not yet |  |  |
 | Ascon Decrypt | not yet |  |  |
 | PRESENT Encrypt | not yet |  |  |
 | PRESENT Decrypt | not yet |  |  |
-| Twofish Encrypt | not yet |  |  |
-| Twofish Decrypt | not yet |  |  |
+| Twofish Encrypt | redesigned | `twofish:encrypt` | Keys of 16, 24 or 32 bytes, 16-byte IV, modes CBC, CFB, OFB, CTR and ECB. Padding is pkcs7 or none: CyberChef's ZERO, RANDOM and BIT paddings are not offered. |
+| Twofish Decrypt | redesigned | `twofish:decrypt` | The inverse of twofish:encrypt with the same parameters. |
 | GOST Encrypt | not yet |  |  |
 | GOST Decrypt | not yet |  |  |
 | GOST Sign | not yet |  |  |

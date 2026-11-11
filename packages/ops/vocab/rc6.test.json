@@ -1,0 +1,553 @@
+[
+  {
+    "name": "encrypt ECB 128-bit zero key",
+    "ref": "RC6 paper (Rivest, Robshaw, Sidney, Yin 1998) test vectors, RC6-32/20: 128-bit zero key",
+    "op": "rc6:encrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "word-size": 32,
+      "rounds": 20
+    },
+    "input": {
+      "value": "00000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "8fc3a53656b1f778c129df4e9848a41e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB 128-bit zero key",
+    "ref": "RC6 paper (Rivest, Robshaw, Sidney, Yin 1998) test vectors, RC6-32/20: 128-bit zero key",
+    "op": "rc6:decrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "word-size": 32,
+      "rounds": 20
+    },
+    "input": {
+      "value": "8fc3a53656b1f778c129df4e9848a41e",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00000000000000000000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB 128-bit key",
+    "ref": "RC6 paper (Rivest, Robshaw, Sidney, Yin 1998) test vectors, RC6-32/20: 128-bit key",
+    "op": "rc6:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef0112233445566778",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "word-size": 32,
+      "rounds": 20
+    },
+    "input": {
+      "value": "02132435465768798a9bacbdcedfe0f1",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "524e192f4715c6231f51f6367ea43f18",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB 128-bit key",
+    "ref": "RC6 paper (Rivest, Robshaw, Sidney, Yin 1998) test vectors, RC6-32/20: 128-bit key",
+    "op": "rc6:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef0112233445566778",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "word-size": 32,
+      "rounds": 20
+    },
+    "input": {
+      "value": "524e192f4715c6231f51f6367ea43f18",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "02132435465768798a9bacbdcedfe0f1",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB 192-bit zero key",
+    "ref": "RC6 paper (Rivest, Robshaw, Sidney, Yin 1998) test vectors, RC6-32/20: 192-bit zero key",
+    "op": "rc6:encrypt",
+    "params": {
+      "key": {
+        "value": "000000000000000000000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "word-size": 32,
+      "rounds": 20
+    },
+    "input": {
+      "value": "00000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6cd61bcb190b30384e8a3f168690ae82",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB 192-bit zero key",
+    "ref": "RC6 paper (Rivest, Robshaw, Sidney, Yin 1998) test vectors, RC6-32/20: 192-bit zero key",
+    "op": "rc6:decrypt",
+    "params": {
+      "key": {
+        "value": "000000000000000000000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "word-size": 32,
+      "rounds": 20
+    },
+    "input": {
+      "value": "6cd61bcb190b30384e8a3f168690ae82",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00000000000000000000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB 192-bit key",
+    "ref": "RC6 paper (Rivest, Robshaw, Sidney, Yin 1998) test vectors, RC6-32/20: 192-bit key",
+    "op": "rc6:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef0112233445566778899aabbccddeeff0",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "word-size": 32,
+      "rounds": 20
+    },
+    "input": {
+      "value": "02132435465768798a9bacbdcedfe0f1",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "688329d019e505041e52e92af95291d4",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB 192-bit key",
+    "ref": "RC6 paper (Rivest, Robshaw, Sidney, Yin 1998) test vectors, RC6-32/20: 192-bit key",
+    "op": "rc6:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef0112233445566778899aabbccddeeff0",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "word-size": 32,
+      "rounds": 20
+    },
+    "input": {
+      "value": "688329d019e505041e52e92af95291d4",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "02132435465768798a9bacbdcedfe0f1",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB 256-bit zero key",
+    "ref": "RC6 paper (Rivest, Robshaw, Sidney, Yin 1998) test vectors, RC6-32/20: 256-bit zero key",
+    "op": "rc6:encrypt",
+    "params": {
+      "key": {
+        "value": "0000000000000000000000000000000000000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "word-size": 32,
+      "rounds": 20
+    },
+    "input": {
+      "value": "00000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "8f5fbd0510d15fa893fa3fda6e857ec2",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB 256-bit zero key",
+    "ref": "RC6 paper (Rivest, Robshaw, Sidney, Yin 1998) test vectors, RC6-32/20: 256-bit zero key",
+    "op": "rc6:decrypt",
+    "params": {
+      "key": {
+        "value": "0000000000000000000000000000000000000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "word-size": 32,
+      "rounds": 20
+    },
+    "input": {
+      "value": "8f5fbd0510d15fa893fa3fda6e857ec2",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00000000000000000000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB 256-bit key",
+    "ref": "RC6 paper (Rivest, Robshaw, Sidney, Yin 1998) test vectors, RC6-32/20: 256-bit key",
+    "op": "rc6:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef0112233445566778899aabbccddeeff01032547698badcfe",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "word-size": 32,
+      "rounds": 20
+    },
+    "input": {
+      "value": "02132435465768798a9bacbdcedfe0f1",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "c8241816f0d7e48920ad16a1674e5d48",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB 256-bit key",
+    "ref": "RC6 paper (Rivest, Robshaw, Sidney, Yin 1998) test vectors, RC6-32/20: 256-bit key",
+    "op": "rc6:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef0112233445566778899aabbccddeeff01032547698badcfe",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "word-size": 32,
+      "rounds": 20
+    },
+    "input": {
+      "value": "c8241816f0d7e48920ad16a1674e5d48",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "02132435465768798a9bacbdcedfe0f1",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt CBC two blocks built from the second vector",
+    "ref": "CBC by hand from the RC6 paper vector: IV = pt, P1 = 0, P2 = C1 xor pt, so C1 = C2 = E(pt)",
+    "op": "rc6:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef0112233445566778",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "02132435465768798a9bacbdcedfe0f1",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "none",
+      "word-size": 32,
+      "rounds": 20
+    },
+    "input": {
+      "value": "00000000000000000000000000000000505d3d1a0142ae5a95ca5a8bb07bdfe9",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "524e192f4715c6231f51f6367ea43f18524e192f4715c6231f51f6367ea43f18",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt CBC two blocks built from the second vector",
+    "ref": "CBC by hand from the RC6 paper vector: IV = pt, P1 = 0, P2 = C1 xor pt, so C1 = C2 = E(pt)",
+    "op": "rc6:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef0112233445566778",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "02132435465768798a9bacbdcedfe0f1",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "none",
+      "word-size": 32,
+      "rounds": 20
+    },
+    "input": {
+      "value": "524e192f4715c6231f51f6367ea43f18524e192f4715c6231f51f6367ea43f18",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00000000000000000000000000000000505d3d1a0142ae5a95ca5a8bb07bdfe9",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt an empty IV is all zero bytes (as CyberChef)",
+    "ref": "CBC by hand: IV 0, P = 0 gives C = E(0), the first vector",
+    "op": "rc6:encrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "none",
+      "word-size": 32,
+      "rounds": 20
+    },
+    "input": {
+      "value": "00000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "8fc3a53656b1f778c129df4e9848a41e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt an empty IV is all zero bytes (as CyberChef)",
+    "ref": "CBC by hand: IV 0, P = 0 gives C = E(0), the first vector",
+    "op": "rc6:decrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "none",
+      "word-size": 32,
+      "rounds": 20
+    },
+    "input": {
+      "value": "8fc3a53656b1f778c129df4e9848a41e",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00000000000000000000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt key of 256 bytes",
+    "ref": "key length 0 to 255",
+    "op": "rc6:encrypt",
+    "params": {
+      "key": {
+        "value": "01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "word-size": 32,
+      "rounds": 20
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "encrypt word-size 12",
+    "ref": "word size a multiple of 8",
+    "op": "rc6:encrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "word-size": 12,
+      "rounds": 20
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "encrypt IV of 8 bytes in CBC",
+    "ref": "IV length",
+    "op": "rc6:encrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "0101010101010101",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "word-size": 32,
+      "rounds": 20
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "decrypt unaligned",
+    "ref": "whole blocks",
+    "op": "rc6:decrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "word-size": 32,
+      "rounds": 20
+    },
+    "input": {
+      "value": "0011223344",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decrypt bad padding",
+    "ref": "PKCS#7 check",
+    "op": "rc6:decrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "pkcs7",
+      "word-size": 32,
+      "rounds": 20
+    },
+    "input": {
+      "value": "00112233445566778899aabbccddeeff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

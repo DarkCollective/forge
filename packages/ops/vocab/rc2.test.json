@@ -1,0 +1,695 @@
+[
+  {
+    "name": "encrypt RFC 2268 vector 1",
+    "ref": "RFC 2268 section 5 test vector 1 (63 effective bits)",
+    "op": "rc2:encrypt",
+    "params": {
+      "key": {
+        "value": "0000000000000000",
+        "enc": "hex"
+      },
+      "effective-bits": 63,
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ebb773f993278eff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt RFC 2268 vector 1",
+    "ref": "RFC 2268 section 5 test vector 1 (63 effective bits)",
+    "op": "rc2:decrypt",
+    "params": {
+      "key": {
+        "value": "0000000000000000",
+        "enc": "hex"
+      },
+      "effective-bits": 63,
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "ebb773f993278eff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt RFC 2268 vector 2",
+    "ref": "RFC 2268 section 5 test vector 2 (64 effective bits)",
+    "op": "rc2:encrypt",
+    "params": {
+      "key": {
+        "value": "ffffffffffffffff",
+        "enc": "hex"
+      },
+      "effective-bits": 64,
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "ffffffffffffffff",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "278b27e42e2f0d49",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt RFC 2268 vector 2",
+    "ref": "RFC 2268 section 5 test vector 2 (64 effective bits)",
+    "op": "rc2:decrypt",
+    "params": {
+      "key": {
+        "value": "ffffffffffffffff",
+        "enc": "hex"
+      },
+      "effective-bits": 64,
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "278b27e42e2f0d49",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ffffffffffffffff",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt RFC 2268 vector 3",
+    "ref": "RFC 2268 section 5 test vector 3 (64 effective bits)",
+    "op": "rc2:encrypt",
+    "params": {
+      "key": {
+        "value": "3000000000000000",
+        "enc": "hex"
+      },
+      "effective-bits": 64,
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "1000000000000001",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "30649edf9be7d2c2",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt RFC 2268 vector 3",
+    "ref": "RFC 2268 section 5 test vector 3 (64 effective bits)",
+    "op": "rc2:decrypt",
+    "params": {
+      "key": {
+        "value": "3000000000000000",
+        "enc": "hex"
+      },
+      "effective-bits": 64,
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "30649edf9be7d2c2",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1000000000000001",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt RFC 2268 vector 4",
+    "ref": "RFC 2268 section 5 test vector 4 (64 effective bits)",
+    "op": "rc2:encrypt",
+    "params": {
+      "key": {
+        "value": "88",
+        "enc": "hex"
+      },
+      "effective-bits": 64,
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "61a8a244adacccf0",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt RFC 2268 vector 4",
+    "ref": "RFC 2268 section 5 test vector 4 (64 effective bits)",
+    "op": "rc2:decrypt",
+    "params": {
+      "key": {
+        "value": "88",
+        "enc": "hex"
+      },
+      "effective-bits": 64,
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "61a8a244adacccf0",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt RFC 2268 vector 5",
+    "ref": "RFC 2268 section 5 test vector 5 (64 effective bits)",
+    "op": "rc2:encrypt",
+    "params": {
+      "key": {
+        "value": "88bca90e90875a",
+        "enc": "hex"
+      },
+      "effective-bits": 64,
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "6ccf4308974c267f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt RFC 2268 vector 5",
+    "ref": "RFC 2268 section 5 test vector 5 (64 effective bits)",
+    "op": "rc2:decrypt",
+    "params": {
+      "key": {
+        "value": "88bca90e90875a",
+        "enc": "hex"
+      },
+      "effective-bits": 64,
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "6ccf4308974c267f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt RFC 2268 vector 6",
+    "ref": "RFC 2268 section 5 test vector 6 (64 effective bits)",
+    "op": "rc2:encrypt",
+    "params": {
+      "key": {
+        "value": "88bca90e90875a7f0f79c384627bafb2",
+        "enc": "hex"
+      },
+      "effective-bits": 64,
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1a807d272bbe5db1",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt RFC 2268 vector 6",
+    "ref": "RFC 2268 section 5 test vector 6 (64 effective bits)",
+    "op": "rc2:decrypt",
+    "params": {
+      "key": {
+        "value": "88bca90e90875a7f0f79c384627bafb2",
+        "enc": "hex"
+      },
+      "effective-bits": 64,
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "1a807d272bbe5db1",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt RFC 2268 vector 7",
+    "ref": "RFC 2268 section 5 test vector 7 (128 effective bits)",
+    "op": "rc2:encrypt",
+    "params": {
+      "key": {
+        "value": "88bca90e90875a7f0f79c384627bafb2",
+        "enc": "hex"
+      },
+      "effective-bits": 128,
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "2269552ab0f85ca6",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt RFC 2268 vector 7",
+    "ref": "RFC 2268 section 5 test vector 7 (128 effective bits)",
+    "op": "rc2:decrypt",
+    "params": {
+      "key": {
+        "value": "88bca90e90875a7f0f79c384627bafb2",
+        "enc": "hex"
+      },
+      "effective-bits": 128,
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "2269552ab0f85ca6",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt RFC 2268 vector 8",
+    "ref": "RFC 2268 section 5 test vector 8 (129 effective bits)",
+    "op": "rc2:encrypt",
+    "params": {
+      "key": {
+        "value": "88bca90e90875a7f0f79c384627bafb216f80a6f85920584c42fceb0be255daf1e",
+        "enc": "hex"
+      },
+      "effective-bits": 129,
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "5b78d3a43dfff1f1",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt RFC 2268 vector 8",
+    "ref": "RFC 2268 section 5 test vector 8 (129 effective bits)",
+    "op": "rc2:decrypt",
+    "params": {
+      "key": {
+        "value": "88bca90e90875a7f0f79c384627bafb216f80a6f85920584c42fceb0be255daf1e",
+        "enc": "hex"
+      },
+      "effective-bits": 129,
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "5b78d3a43dfff1f1",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt CBC, 128 effective bits (the default)",
+    "ref": "openssl enc -rc2-cbc -provider legacy -K 0123456789abcdef0123456789abcdef -iv 1234567890abcdef -nopad",
+    "op": "rc2:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef0123456789abcdef",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1234567890abcdef",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "none",
+      "effective-bits": 128
+    },
+    "input": {
+      "value": "4e6f77206973207468652074696d6520666f7220616c6c20",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "fae76067bf187b87cf6bedaa636df7b1bfda436bb3739a0a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt CBC, 128 effective bits (the default)",
+    "ref": "openssl enc -rc2-cbc -provider legacy -K 0123456789abcdef0123456789abcdef -iv 1234567890abcdef -nopad",
+    "op": "rc2:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef0123456789abcdef",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1234567890abcdef",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "none",
+      "effective-bits": 128
+    },
+    "input": {
+      "value": "fae76067bf187b87cf6bedaa636df7b1bfda436bb3739a0a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "4e6f77206973207468652074696d6520666f7220616c6c20",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB, 128 effective bits",
+    "ref": "openssl enc -rc2-ecb -provider legacy -K 0123456789abcdef0123456789abcdef -nopad",
+    "op": "rc2:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef0123456789abcdef",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "effective-bits": 128
+    },
+    "input": {
+      "value": "4e6f77206973207468652074696d6520666f7220616c6c20",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1263b8535905fc36083eda7c5b0debe9d38e4c85d3e8959e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB, 128 effective bits",
+    "ref": "openssl enc -rc2-ecb -provider legacy -K 0123456789abcdef0123456789abcdef -nopad",
+    "op": "rc2:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef0123456789abcdef",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "effective-bits": 128
+    },
+    "input": {
+      "value": "1263b8535905fc36083eda7c5b0debe9d38e4c85d3e8959e",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "4e6f77206973207468652074696d6520666f7220616c6c20",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt CBC, 40-bit key and 40 effective bits",
+    "ref": "openssl enc -rc2-40-cbc -provider legacy -K 0123456789 -iv 1234567890abcdef -nopad",
+    "op": "rc2:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1234567890abcdef",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "none",
+      "effective-bits": 40
+    },
+    "input": {
+      "value": "4e6f77206973207468652074696d6520666f7220616c6c20",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "57423ac28c86900d2afbb7c085793fc61a48014d7b06dfb3",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt CBC, 40-bit key and 40 effective bits",
+    "ref": "openssl enc -rc2-40-cbc -provider legacy -K 0123456789 -iv 1234567890abcdef -nopad",
+    "op": "rc2:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1234567890abcdef",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "none",
+      "effective-bits": 40
+    },
+    "input": {
+      "value": "57423ac28c86900d2afbb7c085793fc61a48014d7b06dfb3",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "4e6f77206973207468652074696d6520666f7220616c6c20",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt CBC PKCS#7",
+    "ref": "openssl enc -rc2-cbc -provider legacy -K 0123456789abcdef0123456789abcdef -iv 1234567890abcdef",
+    "op": "rc2:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef0123456789abcdef",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1234567890abcdef",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "pkcs7",
+      "effective-bits": 128
+    },
+    "input": {
+      "value": "000102030405060708090a0b0c",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "d1bf6415302e71766775d7250a101b69",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt CBC PKCS#7",
+    "ref": "openssl enc -rc2-cbc -provider legacy -K 0123456789abcdef0123456789abcdef -iv 1234567890abcdef",
+    "op": "rc2:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef0123456789abcdef",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1234567890abcdef",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "pkcs7",
+      "effective-bits": 128
+    },
+    "input": {
+      "value": "d1bf6415302e71766775d7250a101b69",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "000102030405060708090a0b0c",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt empty key",
+    "ref": "key length 1 to 128",
+    "op": "rc2:encrypt",
+    "params": {
+      "key": {
+        "value": "",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "effective-bits": 128
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "encrypt IV of 4 bytes in CBC",
+    "ref": "IV length",
+    "op": "rc2:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef0123456789abcdef",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "01020304",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "effective-bits": 128
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "decrypt unaligned",
+    "ref": "whole blocks",
+    "op": "rc2:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef0123456789abcdef",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "effective-bits": 128
+    },
+    "input": {
+      "value": "00112233",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

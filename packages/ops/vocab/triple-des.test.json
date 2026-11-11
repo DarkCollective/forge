@@ -1,0 +1,464 @@
+[
+  {
+    "name": "encrypt 3-key ECB, the NIST TDEA example",
+    "ref": "NIST SP 800-20 / FIPS 46-3 appendix TDEA example (key 0123..ef, 2345..01, 4567..23), confirmed with openssl enc -des-ede3",
+    "op": "triple-des:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef23456789abcdef01456789abcdef0123",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "54686520717566636b2062726f776e20666f78206a756d70",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "a826fd8ce53b855fcce21c8112256fe668d5c05dd9b6b900",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt 3-key ECB, the NIST TDEA example",
+    "ref": "NIST SP 800-20 / FIPS 46-3 appendix TDEA example (key 0123..ef, 2345..01, 4567..23), confirmed with openssl enc -des-ede3",
+    "op": "triple-des:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef23456789abcdef01456789abcdef0123",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "a826fd8ce53b855fcce21c8112256fe668d5c05dd9b6b900",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "54686520717566636b2062726f776e20666f78206a756d70",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt three equal keys are single DES",
+    "ref": "FIPS 46-3 / NBS SP 500-20 variable plaintext: key 0101010101010101 repeated, pt 8000000000000000",
+    "op": "triple-des:encrypt",
+    "params": {
+      "key": {
+        "value": "010101010101010101010101010101010101010101010101",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "8000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "95f8a5e5dd31d900",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt three equal keys are single DES",
+    "ref": "FIPS 46-3 / NBS SP 500-20 variable plaintext: key 0101010101010101 repeated, pt 8000000000000000",
+    "op": "triple-des:decrypt",
+    "params": {
+      "key": {
+        "value": "010101010101010101010101010101010101010101010101",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "95f8a5e5dd31d900",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "8000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt 2-key ECB (K3 = K1)",
+    "ref": "NIST SP 800-67 two-key TDEA; openssl enc -des-ede -K 0123456789abcdef23456789abcdef01 (CyberChef repeats K1 as K3)",
+    "op": "triple-des:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef23456789abcdef01",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "4e6f77206973207468652074696d6520666f7220616c6c20",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "b7835779ee26acb75d2731a8d9b401623dd3fc69a08cc6d9",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt 2-key ECB (K3 = K1)",
+    "ref": "NIST SP 800-67 two-key TDEA; openssl enc -des-ede -K 0123456789abcdef23456789abcdef01 (CyberChef repeats K1 as K3)",
+    "op": "triple-des:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef23456789abcdef01",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "b7835779ee26acb75d2731a8d9b401623dd3fc69a08cc6d9",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "4e6f77206973207468652074696d6520666f7220616c6c20",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt 2-key equals 3-key with K3 = K1",
+    "ref": "NIST SP 800-67",
+    "op": "triple-des:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef23456789abcdef010123456789abcdef",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "4e6f77206973207468652074696d6520666f7220616c6c20",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "b7835779ee26acb75d2731a8d9b401623dd3fc69a08cc6d9",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt 2-key equals 3-key with K3 = K1",
+    "ref": "NIST SP 800-67",
+    "op": "triple-des:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef23456789abcdef010123456789abcdef",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "b7835779ee26acb75d2731a8d9b401623dd3fc69a08cc6d9",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "4e6f77206973207468652074696d6520666f7220616c6c20",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt 3-key CBC",
+    "ref": "openssl enc -des-ede3-cbc -K 0123456789abcdef23456789abcdef01456789abcdef0123 -iv 1234567890abcdef -nopad",
+    "op": "triple-des:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef23456789abcdef01456789abcdef0123",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1234567890abcdef",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "none"
+    },
+    "input": {
+      "value": "4e6f77206973207468652074696d6520666f7220616c6c20",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "f3c0ff026c023089656fbb169def7edb30ba36075d6f0176",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt 3-key CBC",
+    "ref": "openssl enc -des-ede3-cbc -K 0123456789abcdef23456789abcdef01456789abcdef0123 -iv 1234567890abcdef -nopad",
+    "op": "triple-des:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef23456789abcdef01456789abcdef0123",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1234567890abcdef",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "none"
+    },
+    "input": {
+      "value": "f3c0ff026c023089656fbb169def7edb30ba36075d6f0176",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "4e6f77206973207468652074696d6520666f7220616c6c20",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt 3-key CFB",
+    "ref": "openssl enc -des-ede3-cfb -K 0123456789abcdef23456789abcdef01456789abcdef0123 -iv 1234567890abcdef -nopad",
+    "op": "triple-des:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef23456789abcdef01456789abcdef0123",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1234567890abcdef",
+        "enc": "hex"
+      },
+      "mode": "CFB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "4e6f77206973207468652074696d6520666f7220616c6c20",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ee7ec75c1a101301c4ab2f10462e5dd417400b445b5f2a72",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt 3-key CFB",
+    "ref": "openssl enc -des-ede3-cfb -K 0123456789abcdef23456789abcdef01456789abcdef0123 -iv 1234567890abcdef -nopad",
+    "op": "triple-des:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef23456789abcdef01456789abcdef0123",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1234567890abcdef",
+        "enc": "hex"
+      },
+      "mode": "CFB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "ee7ec75c1a101301c4ab2f10462e5dd417400b445b5f2a72",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "4e6f77206973207468652074696d6520666f7220616c6c20",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt 3-key OFB",
+    "ref": "openssl enc -des-ede3-ofb -K 0123456789abcdef23456789abcdef01456789abcdef0123 -iv 1234567890abcdef -nopad",
+    "op": "triple-des:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef23456789abcdef01456789abcdef0123",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1234567890abcdef",
+        "enc": "hex"
+      },
+      "mode": "OFB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "4e6f77206973207468652074696d6520666f7220616c6c20",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ee7ec75c1a1013019a8a610002668e0787e28af9ec26b889",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt 3-key OFB",
+    "ref": "openssl enc -des-ede3-ofb -K 0123456789abcdef23456789abcdef01456789abcdef0123 -iv 1234567890abcdef -nopad",
+    "op": "triple-des:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef23456789abcdef01456789abcdef0123",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1234567890abcdef",
+        "enc": "hex"
+      },
+      "mode": "OFB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "ee7ec75c1a1013019a8a610002668e0787e28af9ec26b889",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "4e6f77206973207468652074696d6520666f7220616c6c20",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt 3-key CBC PKCS#7",
+    "ref": "openssl enc -des-ede3-cbc -K 0123456789abcdef23456789abcdef01456789abcdef0123 -iv 1234567890abcdef",
+    "op": "triple-des:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef23456789abcdef01456789abcdef0123",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1234567890abcdef",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "pkcs7"
+    },
+    "input": {
+      "value": "000102030405060708090a0b0c",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "a242ad370ee232ed1c8a4f0ac0abaa9f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt 3-key CBC PKCS#7",
+    "ref": "openssl enc -des-ede3-cbc -K 0123456789abcdef23456789abcdef01456789abcdef0123 -iv 1234567890abcdef",
+    "op": "triple-des:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef23456789abcdef01456789abcdef0123",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1234567890abcdef",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "pkcs7"
+    },
+    "input": {
+      "value": "a242ad370ee232ed1c8a4f0ac0abaa9f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "000102030405060708090a0b0c",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt key of 8 bytes",
+    "ref": "key length",
+    "op": "triple-des:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef",
+        "enc": "hex"
+      },
+      "mode": "ECB"
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "encrypt key of 20 bytes",
+    "ref": "key length",
+    "op": "triple-des:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef0123456789abcdef01234567",
+        "enc": "hex"
+      },
+      "mode": "ECB"
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "decrypt bad padding",
+    "ref": "PKCS#7 check",
+    "op": "triple-des:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef23456789abcdef01456789abcdef0123",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "pkcs7",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0011223344556677",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

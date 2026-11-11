@@ -1,0 +1,642 @@
+[
+  {
+    "name": "encrypt ECB 128-bit key, I=1",
+    "ref": "Twofish submission ecb_ival.txt (Intermediate Value Test): 128-bit key, I=1",
+    "op": "twofish:encrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "00000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "9f589f5cf6122c32b6bfec2f2ae8c35a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB 128-bit key, I=1",
+    "ref": "Twofish submission ecb_ival.txt (Intermediate Value Test): 128-bit key, I=1",
+    "op": "twofish:decrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "9f589f5cf6122c32b6bfec2f2ae8c35a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00000000000000000000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB 128-bit key, I=2",
+    "ref": "Twofish submission ecb_ival.txt (Intermediate Value Test): 128-bit key, I=2",
+    "op": "twofish:encrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "9f589f5cf6122c32b6bfec2f2ae8c35a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "d491db16e7b1c39e86cb086b789f5419",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB 128-bit key, I=2",
+    "ref": "Twofish submission ecb_ival.txt (Intermediate Value Test): 128-bit key, I=2",
+    "op": "twofish:decrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "d491db16e7b1c39e86cb086b789f5419",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "9f589f5cf6122c32b6bfec2f2ae8c35a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB 128-bit key, I=3",
+    "ref": "Twofish submission ecb_ival.txt (Intermediate Value Test): 128-bit key, I=3",
+    "op": "twofish:encrypt",
+    "params": {
+      "key": {
+        "value": "9f589f5cf6122c32b6bfec2f2ae8c35a",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "d491db16e7b1c39e86cb086b789f5419",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "019f9809de1711858faac3a3ba20fbc3",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB 128-bit key, I=3",
+    "ref": "Twofish submission ecb_ival.txt (Intermediate Value Test): 128-bit key, I=3",
+    "op": "twofish:decrypt",
+    "params": {
+      "key": {
+        "value": "9f589f5cf6122c32b6bfec2f2ae8c35a",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "019f9809de1711858faac3a3ba20fbc3",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "d491db16e7b1c39e86cb086b789f5419",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB 192-bit key, I=1",
+    "ref": "Twofish submission ecb_ival.txt (Intermediate Value Test): 192-bit key, I=1",
+    "op": "twofish:encrypt",
+    "params": {
+      "key": {
+        "value": "000000000000000000000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "00000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "efa71f788965bd4453f860178fc19101",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB 192-bit key, I=1",
+    "ref": "Twofish submission ecb_ival.txt (Intermediate Value Test): 192-bit key, I=1",
+    "op": "twofish:decrypt",
+    "params": {
+      "key": {
+        "value": "000000000000000000000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "efa71f788965bd4453f860178fc19101",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00000000000000000000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB 192-bit key, I=2",
+    "ref": "Twofish submission ecb_ival.txt (Intermediate Value Test): 192-bit key, I=2",
+    "op": "twofish:encrypt",
+    "params": {
+      "key": {
+        "value": "000000000000000000000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "efa71f788965bd4453f860178fc19101",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "88b2b2706b105e36b446bb6d731a1e88",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB 192-bit key, I=2",
+    "ref": "Twofish submission ecb_ival.txt (Intermediate Value Test): 192-bit key, I=2",
+    "op": "twofish:decrypt",
+    "params": {
+      "key": {
+        "value": "000000000000000000000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "88b2b2706b105e36b446bb6d731a1e88",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "efa71f788965bd4453f860178fc19101",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB 192-bit key, I=3",
+    "ref": "Twofish submission ecb_ival.txt (Intermediate Value Test): 192-bit key, I=3",
+    "op": "twofish:encrypt",
+    "params": {
+      "key": {
+        "value": "efa71f788965bd4453f860178fc191010000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "88b2b2706b105e36b446bb6d731a1e88",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "39da69d6ba4997d585b6dc073ca341b2",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB 192-bit key, I=3",
+    "ref": "Twofish submission ecb_ival.txt (Intermediate Value Test): 192-bit key, I=3",
+    "op": "twofish:decrypt",
+    "params": {
+      "key": {
+        "value": "efa71f788965bd4453f860178fc191010000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "39da69d6ba4997d585b6dc073ca341b2",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "88b2b2706b105e36b446bb6d731a1e88",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB 256-bit key, I=1",
+    "ref": "Twofish submission ecb_ival.txt (Intermediate Value Test): 256-bit key, I=1",
+    "op": "twofish:encrypt",
+    "params": {
+      "key": {
+        "value": "0000000000000000000000000000000000000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "00000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "57ff739d4dc92c1bd7fc01700cc8216f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB 256-bit key, I=1",
+    "ref": "Twofish submission ecb_ival.txt (Intermediate Value Test): 256-bit key, I=1",
+    "op": "twofish:decrypt",
+    "params": {
+      "key": {
+        "value": "0000000000000000000000000000000000000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "57ff739d4dc92c1bd7fc01700cc8216f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00000000000000000000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB 256-bit key, I=2",
+    "ref": "Twofish submission ecb_ival.txt (Intermediate Value Test): 256-bit key, I=2",
+    "op": "twofish:encrypt",
+    "params": {
+      "key": {
+        "value": "0000000000000000000000000000000000000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "57ff739d4dc92c1bd7fc01700cc8216f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "d43bb7556ea32e46f2a282b7d45b4e0d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB 256-bit key, I=2",
+    "ref": "Twofish submission ecb_ival.txt (Intermediate Value Test): 256-bit key, I=2",
+    "op": "twofish:decrypt",
+    "params": {
+      "key": {
+        "value": "0000000000000000000000000000000000000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "d43bb7556ea32e46f2a282b7d45b4e0d",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "57ff739d4dc92c1bd7fc01700cc8216f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB 256-bit key, I=3",
+    "ref": "Twofish submission ecb_ival.txt (Intermediate Value Test): 256-bit key, I=3",
+    "op": "twofish:encrypt",
+    "params": {
+      "key": {
+        "value": "57ff739d4dc92c1bd7fc01700cc8216f00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "d43bb7556ea32e46f2a282b7d45b4e0d",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "90afe91bb288544f2c32dc239b2635e6",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB 256-bit key, I=3",
+    "ref": "Twofish submission ecb_ival.txt (Intermediate Value Test): 256-bit key, I=3",
+    "op": "twofish:decrypt",
+    "params": {
+      "key": {
+        "value": "57ff739d4dc92c1bd7fc01700cc8216f00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "90afe91bb288544f2c32dc239b2635e6",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "d43bb7556ea32e46f2a282b7d45b4e0d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt CBC two blocks built from I=1, I=2",
+    "ref": "CBC by hand from ecb_ival.txt: C1 = E(0), C2 = E(0 xor C1) = E(C1) = I=2 answer; key and IV zero",
+    "op": "twofish:encrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "none"
+    },
+    "input": {
+      "value": "0000000000000000000000000000000000000000000000000000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "9f589f5cf6122c32b6bfec2f2ae8c35ad491db16e7b1c39e86cb086b789f5419",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt CBC two blocks built from I=1, I=2",
+    "ref": "CBC by hand from ecb_ival.txt: C1 = E(0), C2 = E(0 xor C1) = E(C1) = I=2 answer; key and IV zero",
+    "op": "twofish:decrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "none"
+    },
+    "input": {
+      "value": "9f589f5cf6122c32b6bfec2f2ae8c35ad491db16e7b1c39e86cb086b789f5419",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0000000000000000000000000000000000000000000000000000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB two blocks I=1 and I=2 of the 256-bit key",
+    "ref": "ECB of the plaintexts of I=1 and I=2 (ecb_ival.txt, 256-bit key)",
+    "op": "twofish:encrypt",
+    "params": {
+      "key": {
+        "value": "0000000000000000000000000000000000000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "0000000000000000000000000000000057ff739d4dc92c1bd7fc01700cc8216f",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "57ff739d4dc92c1bd7fc01700cc8216fd43bb7556ea32e46f2a282b7d45b4e0d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB two blocks I=1 and I=2 of the 256-bit key",
+    "ref": "ECB of the plaintexts of I=1 and I=2 (ecb_ival.txt, 256-bit key)",
+    "op": "twofish:decrypt",
+    "params": {
+      "key": {
+        "value": "0000000000000000000000000000000000000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "57ff739d4dc92c1bd7fc01700cc8216fd43bb7556ea32e46f2a282b7d45b4e0d",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0000000000000000000000000000000057ff739d4dc92c1bd7fc01700cc8216f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt key of 20 bytes",
+    "ref": "key length",
+    "op": "twofish:encrypt",
+    "params": {
+      "key": {
+        "value": "0101010101010101010101010101010101010101",
+        "enc": "hex"
+      },
+      "mode": "ECB"
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "encrypt IV of 8 bytes in CBC",
+    "ref": "IV length",
+    "op": "twofish:encrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "0101010101010101",
+        "enc": "hex"
+      },
+      "mode": "CBC"
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "decrypt unaligned",
+    "ref": "whole blocks",
+    "op": "twofish:decrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "0011223344",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decrypt bad padding",
+    "ref": "PKCS#7 check",
+    "op": "twofish:decrypt",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "pkcs7"
+    },
+    "input": {
+      "value": "00112233445566778899aabbccddeeff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

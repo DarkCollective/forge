@@ -1,0 +1,852 @@
+[
+  {
+    "name": "encrypt ECB 133457799bbcdff1 0123456789abcdef",
+    "ref": "worked example of the DES literature",
+    "op": "des:encrypt",
+    "params": {
+      "key": {
+        "value": "133457799bbcdff1",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "0123456789abcdef",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "85e813540f0ab405",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB 133457799bbcdff1 0123456789abcdef",
+    "ref": "worked example of the DES literature",
+    "op": "des:decrypt",
+    "params": {
+      "key": {
+        "value": "133457799bbcdff1",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "85e813540f0ab405",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0123456789abcdef",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB 0123456789abcdef 4e6f772069732074",
+    "ref": "FIPS 81 'Now is t'",
+    "op": "des:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "4e6f772069732074",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "3fa40e8a984d4815",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB 0123456789abcdef 4e6f772069732074",
+    "ref": "FIPS 81 'Now is t'",
+    "op": "des:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "3fa40e8a984d4815",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "4e6f772069732074",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB 0101010101010101 8000000000000000",
+    "ref": "NBS SP 500-20 / FIPS 46-3 known answer test, variable plaintext",
+    "op": "des:encrypt",
+    "params": {
+      "key": {
+        "value": "0101010101010101",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "8000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "95f8a5e5dd31d900",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB 0101010101010101 8000000000000000",
+    "ref": "NBS SP 500-20 / FIPS 46-3 known answer test, variable plaintext",
+    "op": "des:decrypt",
+    "params": {
+      "key": {
+        "value": "0101010101010101",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "95f8a5e5dd31d900",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "8000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB 0101010101010101 4000000000000000",
+    "ref": "NBS SP 500-20 / FIPS 46-3 known answer test, variable plaintext",
+    "op": "des:encrypt",
+    "params": {
+      "key": {
+        "value": "0101010101010101",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "4000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "dd7f121ca5015619",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB 0101010101010101 4000000000000000",
+    "ref": "NBS SP 500-20 / FIPS 46-3 known answer test, variable plaintext",
+    "op": "des:decrypt",
+    "params": {
+      "key": {
+        "value": "0101010101010101",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "dd7f121ca5015619",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "4000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB 0101010101010101 0000000000000001",
+    "ref": "NBS SP 500-20 / FIPS 46-3 known answer test, variable plaintext",
+    "op": "des:encrypt",
+    "params": {
+      "key": {
+        "value": "0101010101010101",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "0000000000000001",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "166b40b44aba4bd6",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB 0101010101010101 0000000000000001",
+    "ref": "NBS SP 500-20 / FIPS 46-3 known answer test, variable plaintext",
+    "op": "des:decrypt",
+    "params": {
+      "key": {
+        "value": "0101010101010101",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "166b40b44aba4bd6",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0000000000000001",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB 8001010101010101 0000000000000000",
+    "ref": "NBS SP 500-20 / FIPS 46-3 known answer test, variable key",
+    "op": "des:encrypt",
+    "params": {
+      "key": {
+        "value": "8001010101010101",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "95a8d72813daa94d",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB 8001010101010101 0000000000000000",
+    "ref": "NBS SP 500-20 / FIPS 46-3 known answer test, variable key",
+    "op": "des:decrypt",
+    "params": {
+      "key": {
+        "value": "8001010101010101",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "95a8d72813daa94d",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB 0101010101010180 0000000000000000",
+    "ref": "NBS SP 500-20 / FIPS 46-3 known answer test, variable key (last bit)",
+    "op": "des:encrypt",
+    "params": {
+      "key": {
+        "value": "0101010101010180",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "9cc62df43b6eed74",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB 0101010101010180 0000000000000000",
+    "ref": "NBS SP 500-20 / FIPS 46-3 known answer test, variable key (last bit)",
+    "op": "des:decrypt",
+    "params": {
+      "key": {
+        "value": "0101010101010180",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "9cc62df43b6eed74",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0000000000000000",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB 7ca110454a1a6e57 01a1d6d039776742",
+    "ref": "Eric Young's permutation operation set, with OpenSSL's answer",
+    "op": "des:encrypt",
+    "params": {
+      "key": {
+        "value": "7ca110454a1a6e57",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "01a1d6d039776742",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "690f5b0d9a26939b",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB 7ca110454a1a6e57 01a1d6d039776742",
+    "ref": "Eric Young's permutation operation set, with OpenSSL's answer",
+    "op": "des:decrypt",
+    "params": {
+      "key": {
+        "value": "7ca110454a1a6e57",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "690f5b0d9a26939b",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "01a1d6d039776742",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt FIPS 81 ECB",
+    "ref": "FIPS 81 appendix: key 0123456789abcdef, IV 1234567890abcdef, 'Now is the time for all '",
+    "op": "des:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1234567890abcdef",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "4e6f77206973207468652074696d6520666f7220616c6c20",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "3fa40e8a984d48156a271787ab8883f9893d51ec4b563b53",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt FIPS 81 ECB",
+    "ref": "FIPS 81 appendix: key 0123456789abcdef, IV 1234567890abcdef, 'Now is the time for all '",
+    "op": "des:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1234567890abcdef",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "3fa40e8a984d48156a271787ab8883f9893d51ec4b563b53",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "4e6f77206973207468652074696d6520666f7220616c6c20",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt FIPS 81 CBC",
+    "ref": "FIPS 81 appendix: key 0123456789abcdef, IV 1234567890abcdef, 'Now is the time for all '",
+    "op": "des:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1234567890abcdef",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "none"
+    },
+    "input": {
+      "value": "4e6f77206973207468652074696d6520666f7220616c6c20",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "e5c7cdde872bf27c43e934008c389c0f683788499a7c05f6",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt FIPS 81 CBC",
+    "ref": "FIPS 81 appendix: key 0123456789abcdef, IV 1234567890abcdef, 'Now is the time for all '",
+    "op": "des:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1234567890abcdef",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "none"
+    },
+    "input": {
+      "value": "e5c7cdde872bf27c43e934008c389c0f683788499a7c05f6",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "4e6f77206973207468652074696d6520666f7220616c6c20",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt FIPS 81 CFB",
+    "ref": "FIPS 81 appendix: key 0123456789abcdef, IV 1234567890abcdef, 'Now is the time for all '",
+    "op": "des:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1234567890abcdef",
+        "enc": "hex"
+      },
+      "mode": "CFB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "4e6f77206973207468652074696d6520666f7220616c6c20",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "f3096249c7f46e51a69e839b1a92f78403467133898ea622",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt FIPS 81 CFB",
+    "ref": "FIPS 81 appendix: key 0123456789abcdef, IV 1234567890abcdef, 'Now is the time for all '",
+    "op": "des:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1234567890abcdef",
+        "enc": "hex"
+      },
+      "mode": "CFB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "f3096249c7f46e51a69e839b1a92f78403467133898ea622",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "4e6f77206973207468652074696d6520666f7220616c6c20",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt FIPS 81 OFB",
+    "ref": "FIPS 81 appendix: key 0123456789abcdef, IV 1234567890abcdef, 'Now is the time for all '",
+    "op": "des:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1234567890abcdef",
+        "enc": "hex"
+      },
+      "mode": "OFB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "4e6f77206973207468652074696d6520666f7220616c6c20",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "f3096249c7f46e5135f24a242eeb3d3f3d6d5be3255af8c3",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt FIPS 81 OFB",
+    "ref": "FIPS 81 appendix: key 0123456789abcdef, IV 1234567890abcdef, 'Now is the time for all '",
+    "op": "des:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1234567890abcdef",
+        "enc": "hex"
+      },
+      "mode": "OFB",
+      "padding": "none"
+    },
+    "input": {
+      "value": "f3096249c7f46e5135f24a242eeb3d3f3d6d5be3255af8c3",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "4e6f77206973207468652074696d6520666f7220616c6c20",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt CBC PKCS#7 13 bytes",
+    "ref": "openssl enc -des-cbc -provider legacy -K 0123456789abcdef -iv 1234567890abcdef",
+    "op": "des:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1234567890abcdef",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "pkcs7"
+    },
+    "input": {
+      "value": "000102030405060708090a0b0c",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "d93de8af2b1216c3e8f4af5ab32f1a76",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt CBC PKCS#7 13 bytes",
+    "ref": "openssl enc -des-cbc -provider legacy -K 0123456789abcdef -iv 1234567890abcdef",
+    "op": "des:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1234567890abcdef",
+        "enc": "hex"
+      },
+      "mode": "CBC",
+      "padding": "pkcs7"
+    },
+    "input": {
+      "value": "d93de8af2b1216c3e8f4af5ab32f1a76",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "000102030405060708090a0b0c",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB PKCS#7 empty input",
+    "ref": "openssl enc -des-ecb -provider legacy -K 0123456789abcdef (empty input, one padding block)",
+    "op": "des:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "pkcs7",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "086f9a1d74c94d4e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB PKCS#7 empty input",
+    "ref": "openssl enc -des-ecb -provider legacy -K 0123456789abcdef (empty input, one padding block)",
+    "op": "des:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "pkcs7",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "086f9a1d74c94d4e",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt ECB PKCS#7 whole block adds a block",
+    "ref": "openssl enc -des-ecb -provider legacy -K 0123456789abcdef",
+    "op": "des:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "pkcs7",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0011223344556677",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "cadb6782ee2b4823086f9a1d74c94d4e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt ECB PKCS#7 whole block adds a block",
+    "ref": "openssl enc -des-ecb -provider legacy -K 0123456789abcdef",
+    "op": "des:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "pkcs7",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "cadb6782ee2b4823086f9a1d74c94d4e",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "0011223344556677",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt CTR across the counter wrap",
+    "ref": "key stream = DES-ECB of the counters fffffffffffffffe, ffffffffffffffff, 0000000000000000 (openssl enc -des-ecb -K ...)",
+    "op": "des:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "fffffffffffffffe",
+        "enc": "hex"
+      },
+      "mode": "CTR",
+      "padding": "none"
+    },
+    "input": {
+      "value": "00112233445566778899aabbccddeeff0102030405",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "bc5e4b7801835324d1ea89ed3fb230f9d4d64cf325",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "decrypt CTR across the counter wrap",
+    "ref": "key stream = DES-ECB of the counters fffffffffffffffe, ffffffffffffffff, 0000000000000000 (openssl enc -des-ecb -K ...)",
+    "op": "des:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "fffffffffffffffe",
+        "enc": "hex"
+      },
+      "mode": "CTR",
+      "padding": "none"
+    },
+    "input": {
+      "value": "bc5e4b7801835324d1ea89ed3fb230f9d4d64cf325",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "00112233445566778899aabbccddeeff0102030405",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "encrypt key of 7 bytes",
+    "ref": "key length",
+    "op": "des:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcd",
+        "enc": "hex"
+      },
+      "mode": "ECB"
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "encrypt IV of 7 bytes in CBC",
+    "ref": "IV length",
+    "op": "des:encrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "12345678901234",
+        "enc": "hex"
+      },
+      "mode": "CBC"
+    },
+    "input": {
+      "value": "00",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "decrypt ECB none unaligned",
+    "ref": "whole blocks",
+    "op": "des:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "none",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0011223344",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decrypt bad padding",
+    "ref": "PKCS#7 check",
+    "op": "des:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "pkcs7",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "0011223344556677",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decrypt empty with padding",
+    "ref": "PKCS#7 check",
+    "op": "des:decrypt",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef",
+        "enc": "hex"
+      },
+      "mode": "ECB",
+      "padding": "pkcs7",
+      "iv": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]
