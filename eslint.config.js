@@ -23,6 +23,7 @@ export default tseslint.config(
       "**/dist/**",
       "**/dist-scripts/**",
       "**/coverage/**",
+      "packages/ops/src/vendor/**",
       "**/node_modules/**",
       "infra/**",
       ".claude/**",

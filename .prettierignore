@@ -2,6 +2,7 @@ node_modules
 dist
 dist-scripts
 coverage
+packages/ops/src/vendor
 *.log
 docs
 package-lock.json

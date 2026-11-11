@@ -39,10 +39,11 @@ own licence: lz-string (LZString), Copyright (c) 2013 pieroxy
 (https://github.com/pieroxy/lz-string), MIT License; fzstd (Zstandard
 decompression), Copyright (c) 2020 Arjun Barrett
 (https://github.com/101arrowz/fzstd), MIT License; the pure JavaScript decoder of
-brotli (brotli/decompress), a port of the Brotli decoder, whose source files
-carry Copyright 2013 Google Inc. under the Apache License 2.0 and which is
-published as the npm package brotli (https://github.com/devongovett/brotli.js)
-under the MIT License, with its dependency base64-js, Copyright (c) 2014
-Jameson Little (https://github.com/beatgammit/base64-js), MIT License; and lzma1
+the vendored Brotli decoder (packages/ops/src/vendor/brotli), a JavaScript port of the
+Brotli decoder (RFC 7932) taken from the pure decoder files of the npm package brotli
+2.1.0 (https://github.com/devongovett/brotli.js): its source files carry Copyright 2013
+Google Inc. under the Apache License 2.0, and the copy is modified by Darkcollective,
+LLC, 2026 (an output cap; the static dictionary is decoded without base64-js). The
+package's own MIT licence covers its wrapper, which is not used; and lzma1
 (LZMA), Copyright Filip Seman (https://github.com/xseman/lzma1), Apache License
 2.0, a port of XZ for Java by Lasse Collin and Igor Pavlov.
