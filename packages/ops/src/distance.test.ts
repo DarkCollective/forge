@@ -93,15 +93,15 @@ describe("distance", () => {
     const next = rng(7);
     const a = Array.from({ length: 5000 }, () => "acgt"[next() % 4]).join("");
     const b = Array.from({ length: 5000 }, () => "acgt"[next() % 4]).join("");
-    const t0 = performance.now();
+    const t0 = Date.now();
     const r = await lev(a, b);
     expect(r.ok).toBe(true);
-    expect(performance.now() - t0).toBeLessThan(5000);
+    expect(Date.now() - t0).toBeLessThan(5000);
     expect(r.steps).toBeLessThan(200);
     expect(MAX_CELLS).toBe(100_000_000);
     const big = await lev("a".repeat(10_001), "b".repeat(10_000));
     expect(big.ok).toBe(false);
-    expect(big.error?.code).toBe("E_LIMIT_VALUE");
+    expect(big.ok ? "ok" : big.error.code).toBe("E_LIMIT_VALUE");
   });
 
   test("hamming counts equal the definition on random bytes, in every unit", async () => {
@@ -110,7 +110,7 @@ describe("distance", () => {
       const len = 1 + (next() % 30);
       const x = Uint8Array.from({ length: len }, () => next() & 255);
       const y = Uint8Array.from({ length: len }, () => (next() % 3 === 0 ? next() & 255 : 0));
-      const hex = (u: Uint8Array) => Buffer.from(u).toString("hex");
+      const hex = (u: Uint8Array) => Array.from(u, (b) => b.toString(16).padStart(2, "0")).join("");
       const bytesDiff = x.filter((v, i) => v !== y[i]).length;
       const bitsDiff = x.reduce(
         (acc, v, i) =>
