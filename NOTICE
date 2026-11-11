@@ -63,3 +63,8 @@ R Seward and is used under the licence of the bzip2 source distribution, a
 BSD-style licence whose terms are in the LICENSE file of that distribution
 (https://sourceware.org/bzip2/). The program and library are distributed without
 warranty of any kind.
+
+The public key vocabularies of wave 7 (ECDSA, SM2 and GOST R 34.10 signatures
+and key generation) use the audited @noble/curves library, Copyright (c) 2022
+Paul Miller (https://paulmillr.com), licensed under the MIT License
+(https://github.com/paulmillr/noble-curves).

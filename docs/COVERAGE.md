@@ -11,11 +11,11 @@ it and regenerate this file. An operation listed in several CyberChef categories
 
 | Category | Covered | Redesigned | Dropped | Not yet | Total |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Data format | 54 | 8 | 0 | 18 | 80 |
+| Data format | 56 | 9 | 0 | 15 | 80 |
 | Encryption / Encoding | 29 | 64 | 0 | 2 | 95 |
-| Public Key | 0 | 0 | 0 | 30 | 30 |
+| Public Key | 2 | 0 | 0 | 28 | 30 |
 | Arithmetic / Logic | 24 | 2 | 0 | 0 | 26 |
-| Networking | 0 | 0 | 0 | 34 | 34 |
+| Networking | 0 | 0 | 2 | 32 | 34 |
 | Language | 3 | 1 | 0 | 0 | 4 |
 | Utils | 34 | 14 | 2 | 0 | 50 |
 | Date / Time | 5 | 4 | 0 | 0 | 9 |
@@ -27,7 +27,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 9 | 4 | 3 | 5 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **198** | **142** | **5** | **161** | **506** |
+| **Total** | **202** | **143** | **7** | **154** | **506** |
 
 ## Data format (80)
 
@@ -85,9 +85,9 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | AMF Decode | not yet |  |  |
 | To Hex Content | covered | `hex-content:encode` |  |
 | From Hex Content | covered | `hex-content:decode` |  |
-| PEM to Hex | not yet |  |  |
-| Hex to PEM | not yet |  |  |
-| Parse ASN.1 hex string | not yet |  |  |
+| PEM to Hex | covered | `pem:to-hex` | The decoded body of each PEM block (RFC 7468) as lower-case hex, one block per line; text outside the blocks is ignored, the label and the RFC 1421 header lines of old encrypted keys are read and dropped. No block, a block that is not closed or is closed by another label, a nested BEGIN or damaged Base64 is E_COERCE (CyberChef returns nothing for text without a block). |
+| Hex to PEM | covered | `pem:from-hex` | Hex to a PEM block with the header parameter (default CERTIFICATE): the BEGIN line, the Base64 in lines of 64 characters, the END line, each ended by a line feed. An empty header, a non-ASCII or multi-line header, or five hyphens in it is E_RANGE; bad hex is E_COERCE. |
+| Parse ASN.1 hex string | redesigned | `asn1-dump:parse` | The input is hex text, as in CyberChef, and the result is text: an indented outline, one element per line, two spaces per level, the type name and then the value (INTEGER in hex, ObjectIdentifier with its name from a table of about 250 common OIDs and its arcs in parentheses, strings in quotes, [0] and [2] for context tags, hex for anything else). An OCTET STRING or BIT STRING whose content is itself DER is opened like a constructed element, so certificate extensions are readable. The shape is that of the jsrsasign dump CyberChef prints, but the layout is Forge's own and not checked character for character against CyberChef. Text, not a record tree, because the output pane shows trees only 6 levels deep and a certificate nests deeper once its extension values are opened; the record tree is the shared word asn1:parse, for FL code. Parameters: start (a byte offset; CyberChef counts hex characters and then shows the first element only, here every element from there to the end is shown) and truncate (bytes of a value to show, default 32 as in CyberChef; 0 shows all). Malformed data (cut short, indefinite length, nesting over 64 levels, trailing bytes that are not an element) is E_COERCE, where CyberChef prints what it could read. Reads BER definite lengths too; DER is what other tools write. |
 | Change IP format | not yet |  |  |
 | Encode text | covered | `charset:encode` | Single-byte WHATWG sets, ISO 8859-1, 22 EBCDIC code pages (IBM 037 to 1149), UTF-8 and UTF-16. The multi-byte legacy sets (Shift_JIS, GBK, Big5, EUC-JP/KR, ISO-2022-JP) are decode only, because the host has no encoder for them; UTF-7 and UTF-32 are not offered. |
 | Decode text | covered | `charset:decode` | All WHATWG encodings of the browser (single-byte, CJK, UTF-16), ISO 8859-1 and 22 EBCDIC code pages; strict or lenient. UTF-7 and UTF-32 are not offered. |
@@ -221,8 +221,8 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Parse X.509 certificate | not yet |  |  |
 | Parse X.509 certificate bundles | not yet |  |  |
 | Parse X.509 CRL | not yet |  |  |
-| Hex to Object Identifier | not yet |  |  |
-| Object Identifier to Hex | not yet |  |  |
+| Hex to Object Identifier | covered | `oid:from-hex` | The hex digits of the content bytes of an OBJECT IDENTIFIER (no tag and length) to dotted text: 2a864886f70d010101 is 1.2.840.113549.1.1.1. Arcs of any size (2.25.<UUID>). An empty input, a cut-short or non-minimal sub-identifier, or more than 4,096 bytes is E_COERCE. |
+| Object Identifier to Hex | covered | `oid:to-hex` | Dotted text to the hex of the content bytes (lower case, no separators, no tag and length). At least two arcs, the first 0 to 2, the second below 40 under 0 and 1, digits without leading zeros; anything else is E_COERCE. |
 | PEM to JWK | not yet |  |  |
 | JWK to PEM | not yet |  |  |
 | Generate PGP Key Pair | not yet |  |  |
@@ -284,8 +284,8 @@ it and regenerate this file. An operation listed in several CyberChef categories
 
 | CyberChef | Status | Forge | Note |
 | --- | --- | --- | --- |
-| HTTP request | not yet |  |  |
-| DNS over HTTPS | not yet |  |  |
+| HTTP request | dropped |  | It sends a request to another host. The bake Web Worker runs under a CSP of connect-src 'self' and Forge never talks to another host (as for Show on map), so the operation cannot exist; use curl or a browser, and paste the response into Forge. |
+| DNS over HTTPS | dropped |  | It asks a DNS-over-HTTPS resolver (Cloudflare or Google) over the network. The bake Web Worker's CSP is connect-src 'self' and Forge never talks to another host (as for Show on map), so the operation cannot exist. |
 | Strip HTTP headers | not yet |  |  |
 | Dechunk HTTP response | not yet |  |  |
 | Parse Ethernet frame | not yet |  |  |

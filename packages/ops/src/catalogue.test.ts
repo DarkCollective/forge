@@ -460,6 +460,7 @@ describe("module facts", () => {
       "random",
       "list",
       "json",
+      "asn1",
     ]);
     expect([...UI_PARAM_TYPES]).toEqual([
       "bytes",

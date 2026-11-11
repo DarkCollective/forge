@@ -1,0 +1,699 @@
+[
+  {
+    "name": "from-hex: 2.25.329800735698586629295641978511506172918",
+    "ref": "openssl asn1parse -genstr OID:2.25.329800735698586629295641978511506172918 (content bytes of the output)",
+    "op": "oid:from-hex",
+    "params": {},
+    "input": {
+      "value": "6983f09da7ebcfdee0c7a1a7b2c0948cc8f9d776",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2.25.329800735698586629295641978511506172918",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-hex: 2.25.329800735698586629295641978511506172918",
+    "ref": "openssl asn1parse -genstr OID:2.25.329800735698586629295641978511506172918 (content bytes of the output)",
+    "op": "oid:to-hex",
+    "params": {},
+    "input": {
+      "value": "2.25.329800735698586629295641978511506172918",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "6983f09da7ebcfdee0c7a1a7b2c0948cc8f9d776",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: 1.2.18446744073709551616",
+    "ref": "openssl asn1parse -genstr OID:1.2.18446744073709551616 (content bytes of the output)",
+    "op": "oid:from-hex",
+    "params": {},
+    "input": {
+      "value": "2a82808080808080808000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1.2.18446744073709551616",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-hex: 1.2.18446744073709551616",
+    "ref": "openssl asn1parse -genstr OID:1.2.18446744073709551616 (content bytes of the output)",
+    "op": "oid:to-hex",
+    "params": {},
+    "input": {
+      "value": "1.2.18446744073709551616",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2a82808080808080808000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: 2.999",
+    "ref": "openssl asn1parse -genstr OID:2.999 (content bytes of the output)",
+    "op": "oid:from-hex",
+    "params": {},
+    "input": {
+      "value": "8837",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2.999",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-hex: 2.999",
+    "ref": "openssl asn1parse -genstr OID:2.999 (content bytes of the output)",
+    "op": "oid:to-hex",
+    "params": {},
+    "input": {
+      "value": "2.999",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "8837",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: 2.100.3",
+    "ref": "openssl asn1parse -genstr OID:2.100.3 (content bytes of the output)",
+    "op": "oid:from-hex",
+    "params": {},
+    "input": {
+      "value": "813403",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2.100.3",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-hex: 2.100.3",
+    "ref": "openssl asn1parse -genstr OID:2.100.3 (content bytes of the output)",
+    "op": "oid:to-hex",
+    "params": {},
+    "input": {
+      "value": "2.100.3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "813403",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: 0.0",
+    "ref": "openssl asn1parse -genstr OID:0.0 (content bytes of the output)",
+    "op": "oid:from-hex",
+    "params": {},
+    "input": {
+      "value": "00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0.0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-hex: 0.0",
+    "ref": "openssl asn1parse -genstr OID:0.0 (content bytes of the output)",
+    "op": "oid:to-hex",
+    "params": {},
+    "input": {
+      "value": "0.0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: 1.39",
+    "ref": "openssl asn1parse -genstr OID:1.39 (content bytes of the output)",
+    "op": "oid:from-hex",
+    "params": {},
+    "input": {
+      "value": "4f",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1.39",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-hex: 1.39",
+    "ref": "openssl asn1parse -genstr OID:1.39 (content bytes of the output)",
+    "op": "oid:to-hex",
+    "params": {},
+    "input": {
+      "value": "1.39",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4f",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: 0.39",
+    "ref": "openssl asn1parse -genstr OID:0.39 (content bytes of the output)",
+    "op": "oid:from-hex",
+    "params": {},
+    "input": {
+      "value": "27",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0.39",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-hex: 0.39",
+    "ref": "openssl asn1parse -genstr OID:0.39 (content bytes of the output)",
+    "op": "oid:to-hex",
+    "params": {},
+    "input": {
+      "value": "0.39",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "27",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: 2.0",
+    "ref": "openssl asn1parse -genstr OID:2.0 (content bytes of the output)",
+    "op": "oid:from-hex",
+    "params": {},
+    "input": {
+      "value": "50",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2.0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-hex: 2.0",
+    "ref": "openssl asn1parse -genstr OID:2.0 (content bytes of the output)",
+    "op": "oid:to-hex",
+    "params": {},
+    "input": {
+      "value": "2.0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "50",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: 1.2.840.113549.1.1.11",
+    "ref": "openssl asn1parse -genstr OID:1.2.840.113549.1.1.11 (content bytes of the output)",
+    "op": "oid:from-hex",
+    "params": {},
+    "input": {
+      "value": "2a864886f70d01010b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1.2.840.113549.1.1.11",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-hex: 1.2.840.113549.1.1.11",
+    "ref": "openssl asn1parse -genstr OID:1.2.840.113549.1.1.11 (content bytes of the output)",
+    "op": "oid:to-hex",
+    "params": {},
+    "input": {
+      "value": "1.2.840.113549.1.1.11",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2a864886f70d01010b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: 1.2.840.113549",
+    "ref": "openssl asn1parse -genstr OID:1.2.840.113549 (content bytes of the output)",
+    "op": "oid:from-hex",
+    "params": {},
+    "input": {
+      "value": "2a864886f70d",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1.2.840.113549",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-hex: 1.2.840.113549",
+    "ref": "openssl asn1parse -genstr OID:1.2.840.113549 (content bytes of the output)",
+    "op": "oid:to-hex",
+    "params": {},
+    "input": {
+      "value": "1.2.840.113549",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2a864886f70d",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: 2.5.4.3",
+    "ref": "openssl asn1parse -genstr OID:2.5.4.3 (content bytes of the output)",
+    "op": "oid:from-hex",
+    "params": {},
+    "input": {
+      "value": "550403",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2.5.4.3",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-hex: 2.5.4.3",
+    "ref": "openssl asn1parse -genstr OID:2.5.4.3 (content bytes of the output)",
+    "op": "oid:to-hex",
+    "params": {},
+    "input": {
+      "value": "2.5.4.3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "550403",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: 2.5.29.17",
+    "ref": "openssl asn1parse -genstr OID:2.5.29.17 (content bytes of the output)",
+    "op": "oid:from-hex",
+    "params": {},
+    "input": {
+      "value": "551d11",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2.5.29.17",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-hex: 2.5.29.17",
+    "ref": "openssl asn1parse -genstr OID:2.5.29.17 (content bytes of the output)",
+    "op": "oid:to-hex",
+    "params": {},
+    "input": {
+      "value": "2.5.29.17",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "551d11",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: 1.3.6.1.5.5.7.3.1",
+    "ref": "openssl asn1parse -genstr OID:1.3.6.1.5.5.7.3.1 (content bytes of the output)",
+    "op": "oid:from-hex",
+    "params": {},
+    "input": {
+      "value": "2b06010505070301",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1.3.6.1.5.5.7.3.1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-hex: 1.3.6.1.5.5.7.3.1",
+    "ref": "openssl asn1parse -genstr OID:1.3.6.1.5.5.7.3.1 (content bytes of the output)",
+    "op": "oid:to-hex",
+    "params": {},
+    "input": {
+      "value": "1.3.6.1.5.5.7.3.1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2b06010505070301",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: 1.3.6.1.4.1.311.60.2.1.3",
+    "ref": "openssl asn1parse -genstr OID:1.3.6.1.4.1.311.60.2.1.3 (content bytes of the output)",
+    "op": "oid:from-hex",
+    "params": {},
+    "input": {
+      "value": "2b0601040182373c020103",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1.3.6.1.4.1.311.60.2.1.3",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-hex: 1.3.6.1.4.1.311.60.2.1.3",
+    "ref": "openssl asn1parse -genstr OID:1.3.6.1.4.1.311.60.2.1.3 (content bytes of the output)",
+    "op": "oid:to-hex",
+    "params": {},
+    "input": {
+      "value": "1.3.6.1.4.1.311.60.2.1.3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2b0601040182373c020103",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: 2.16.840.1.101.3.4.2.1",
+    "ref": "openssl asn1parse -genstr OID:2.16.840.1.101.3.4.2.1 (content bytes of the output)",
+    "op": "oid:from-hex",
+    "params": {},
+    "input": {
+      "value": "608648016503040201",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2.16.840.1.101.3.4.2.1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-hex: 2.16.840.1.101.3.4.2.1",
+    "ref": "openssl asn1parse -genstr OID:2.16.840.1.101.3.4.2.1 (content bytes of the output)",
+    "op": "oid:to-hex",
+    "params": {},
+    "input": {
+      "value": "2.16.840.1.101.3.4.2.1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "608648016503040201",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: 1.3.6.1.4.1.99999999999999999999.1",
+    "ref": "openssl asn1parse -genstr OID:1.3.6.1.4.1.99999999999999999999.1 (content bytes of the output)",
+    "op": "oid:from-hex",
+    "params": {},
+    "input": {
+      "value": "2b060104018aebe3d7c5d698bfff7f01",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1.3.6.1.4.1.99999999999999999999.1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-hex: 1.3.6.1.4.1.99999999999999999999.1",
+    "ref": "openssl asn1parse -genstr OID:1.3.6.1.4.1.99999999999999999999.1 (content bytes of the output)",
+    "op": "oid:to-hex",
+    "params": {},
+    "input": {
+      "value": "1.3.6.1.4.1.99999999999999999999.1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2b060104018aebe3d7c5d698bfff7f01",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: white space between the digits and upper case",
+    "ref": "openssl asn1parse -genstr OID:1.2.840.113549.1.1.11",
+    "op": "oid:from-hex",
+    "params": {},
+    "input": {
+      "value": "2A 86 48 86\nF7 0D 01 01 0B",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1.2.840.113549.1.1.11",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-hex: white space around the text is ignored",
+    "ref": "openssl asn1parse -genstr OID:2.5.4.3",
+    "op": "oid:to-hex",
+    "params": {},
+    "input": {
+      "value": " 2.5.4.3\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "550403",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-hex: empty input",
+    "ref": "X.690 8.19.2 (sub-identifiers are minimal base 128)",
+    "op": "oid:from-hex",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "from-hex: last sub-identifier cut short (high bit set)",
+    "ref": "X.690 8.19.2 (sub-identifiers are minimal base 128)",
+    "op": "oid:from-hex",
+    "params": {},
+    "input": {
+      "value": "2a86",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "from-hex: leading 0x80 group is not minimal",
+    "ref": "X.690 8.19.2 (sub-identifiers are minimal base 128)",
+    "op": "oid:from-hex",
+    "params": {},
+    "input": {
+      "value": "802a03",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "from-hex: odd number of hex digits",
+    "ref": "X.690 8.19.2 (sub-identifiers are minimal base 128)",
+    "op": "oid:from-hex",
+    "params": {},
+    "input": {
+      "value": "2a8",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "from-hex: not hex",
+    "ref": "X.690 8.19.2 (sub-identifiers are minimal base 128)",
+    "op": "oid:from-hex",
+    "params": {},
+    "input": {
+      "value": "zz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "from-hex: only a high byte",
+    "ref": "X.690 8.19.2 (sub-identifiers are minimal base 128)",
+    "op": "oid:from-hex",
+    "params": {},
+    "input": {
+      "value": "80",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-hex: empty",
+    "ref": "X.690 8.19.4 (first two arcs); openssl rejects the same texts",
+    "op": "oid:to-hex",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-hex: one arc",
+    "ref": "X.690 8.19.4 (first two arcs); openssl rejects the same texts",
+    "op": "oid:to-hex",
+    "params": {},
+    "input": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-hex: first arc 3",
+    "ref": "X.690 8.19.4 (first two arcs); openssl rejects the same texts",
+    "op": "oid:to-hex",
+    "params": {},
+    "input": {
+      "value": "3.1",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-hex: second arc 40 under 1",
+    "ref": "X.690 8.19.4 (first two arcs); openssl rejects the same texts",
+    "op": "oid:to-hex",
+    "params": {},
+    "input": {
+      "value": "1.40",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-hex: second arc 40 under 0",
+    "ref": "X.690 8.19.4 (first two arcs); openssl rejects the same texts",
+    "op": "oid:to-hex",
+    "params": {},
+    "input": {
+      "value": "0.40",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-hex: trailing dot",
+    "ref": "X.690 8.19.4 (first two arcs); openssl rejects the same texts",
+    "op": "oid:to-hex",
+    "params": {},
+    "input": {
+      "value": "1.2.",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-hex: empty arc",
+    "ref": "X.690 8.19.4 (first two arcs); openssl rejects the same texts",
+    "op": "oid:to-hex",
+    "params": {},
+    "input": {
+      "value": "1..2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-hex: leading zero",
+    "ref": "X.690 8.19.4 (first two arcs); openssl rejects the same texts",
+    "op": "oid:to-hex",
+    "params": {},
+    "input": {
+      "value": "1.02",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-hex: letters",
+    "ref": "X.690 8.19.4 (first two arcs); openssl rejects the same texts",
+    "op": "oid:to-hex",
+    "params": {},
+    "input": {
+      "value": "a.b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-hex: negative arc",
+    "ref": "X.690 8.19.4 (first two arcs); openssl rejects the same texts",
+    "op": "oid:to-hex",
+    "params": {},
+    "input": {
+      "value": "1.2.-3",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-hex: hex-looking",
+    "ref": "X.690 8.19.4 (first two arcs); openssl rejects the same texts",
+    "op": "oid:to-hex",
+    "params": {},
+    "input": {
+      "value": "1.2.0x10",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]
