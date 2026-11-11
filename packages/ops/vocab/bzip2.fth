@@ -5,17 +5,11 @@
 \ parameters, their range checks and the metadata.
 IN: bzip2
 
-\ util-candidate: check-int-range
-: _check-range ( n:int lo:int hi:int what:str -- )
-  n lo < n hi > or [
-    what " must be " cat lo int>str cat " to " cat hi int>str cat ", not " cat n int>str cat raise:range
-  ] when ;
-
 : compress ( data:bytes block-size:int=9 work-factor:int=30 -- bytes )
   "A bzip2 stream (BZh1 to BZh9) of the input. block-size is the block size in hundreds of kilobytes, 1 to 9 (CyberChef's Block size, default 9; else E_RANGE). work-factor is accepted for CyberChef's recipes (0 to 250, else E_RANGE) and ignored: it tunes libbzip2's fallback between two sorting algorithms, and Forge sorts one way. The empty input gives the 14-byte empty stream. The bytes can differ from libbzip2's (a different Huffman refinement), and every bzip2 reads them." doc
   "Compression" category
-  block-size 1 9 "the block size" _check-range
-  work-factor 0 250 "the work factor" _check-range
+  block-size 1 9 "the block size" util:check-int-range
+  work-factor 0 250 "the work factor" util:check-int-range
   data block-size _compress ;
 
 : decompress ( data:bytes verify:bool=true -- bytes )
