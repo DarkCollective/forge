@@ -19,7 +19,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Language | 0 | 0 | 0 | 4 | 4 |
 | Utils | 6 | 0 | 2 | 42 | 50 |
 | Date / Time | 0 | 1 | 0 | 8 | 9 |
-| Extractors | 0 | 0 | 0 | 18 | 18 |
+| Extractors | 1 | 8 | 0 | 9 | 18 |
 | Compression | 0 | 0 | 0 | 21 | 21 |
 | Hashing | 34 | 14 | 0 | 0 | 48 |
 | Code tidy | 0 | 0 | 0 | 24 | 24 |
@@ -27,7 +27,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 4 | 1 | 3 | 13 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **136** | **92** | **5** | **273** | **506** |
+| **Total** | **137** | **100** | **5** | **264** | **506** |
 
 ## Data format (80)
 
@@ -401,14 +401,14 @@ it and regenerate this file. An operation listed in several CyberChef categories
 
 | CyberChef | Status | Forge | Note |
 | --- | --- | --- | --- |
-| Strings | not yet |  |  |
-| Extract IP addresses | not yet |  |  |
-| Extract email addresses | not yet |  |  |
-| Extract MAC addresses | not yet |  |  |
-| Extract URLs | not yet |  |  |
-| Extract domains | not yet |  |  |
-| Extract file paths | not yet |  |  |
-| Extract hashes | not yet |  |  |
+| Strings | redesigned | `extract:strings` | Encoding single, utf16le, utf16be or all; minimum length; the character class is printable (space to tilde) or alphanumeric plus common punctuation, with a null-terminated switch instead of CyberChef's third class; the Unicode (non-ASCII) classes are not offered; display total, sort and unique as in CyberChef (unique keeps the first appearance, then sort, then the total). Input is read as bytes. |
+| Extract IP addresses | covered | `extract:ip-addresses` | IPv4, IPv6 and remove-local as in CyberChef (the local ranges are 10/8, 172.16/12, 192.168/16, 127/8 and 169.254/16); display total, sort and unique. Forge's own patterns: leading zeros are accepted, an address that is part of a longer dotted number is not found, and the sort is by code point. |
+| Extract email addresses | redesigned | `extract:emails` | Forge's own pattern, ASCII only: quoted local parts and non-ASCII (internationalised) addresses are not found, and a host needs two or more labels. |
+| Extract MAC addresses | redesigned | `extract:mac-addresses` | Colon and hyphen forms as in CyberChef, plus the dotted Cisco form; a match inside a longer run of hex pairs is not found. |
+| Extract URLs | redesigned | `extract:urls` | Any scheme with ://, user information, IPv6 hosts in brackets; trailing punctuation and unpaired closing brackets are left out, round brackets in pairs stay. Forge's own pattern, so edge cases differ from CyberChef's. |
+| Extract domains | redesigned | `extract:domains` | The option to show only valid top-level domains is not offered (it needs the list of top-level domains): the last label only has to be letters (or xn--), so file names such as report.txt are found too. |
+| Extract file paths | redesigned | `extract:file-paths` | Windows and UNIX switches as in CyberChef. Forge's own patterns: a Windows folder name may hold single spaces but the last name stops at the first space; a UNIX path ends at white space and is not found inside a word, a URL or a relative path. |
+| Extract hashes | redesigned | `extract:hashes` | A length from 1 to 128 hex digits (40 by default), or all, which finds the usual digest sizes 4, 8, 16, 32, 40, 48, 56, 64, 96 and 128 digits instead of CyberChef's fixed set; a run must not touch other letters, digits or underscores. |
 | XPath expression | not yet |  |  |
 | JPath expression | not yet |  |  |
 | Jsonata Query | not yet |  |  |
@@ -417,7 +417,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Extract ID3 | not yet |  |  |
 | Extract Audio Metadata | not yet |  |  |
 | Extract Files | not yet |  |  |
-| RAKE | not yet |  |  |
+| RAKE | redesigned | `rake:keywords` | RAKE of Rose et al. 2010 with Forge's own English stop list (replaceable by a comma or white space separated list), a maximum phrase length instead of regular-expression delimiters, and a limit; the output is one line per phrase with its score (two decimals), a tab and the phrase, highest score first. Words are letters, digits and marks with an inner apostrophe or hyphen; every other character ends a phrase. |
 | Template | not yet |  |  |
 
 ## Compression (21)
