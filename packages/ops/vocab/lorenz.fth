@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ lorenz: the Lorenz SZ40/SZ42 teleprinter cipher attachment ("Tunny"), which enciphered German
 \ high command traffic from 1941 to 1945. The key is the sum of the characters of 12 wheels:
 \ five chi wheels (41 31 29 26 23 cams), five psi wheels (43 47 51 53 59) and two motor wheels

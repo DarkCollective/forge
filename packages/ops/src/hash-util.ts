@@ -15,11 +15,12 @@
  */
 
 /*
- * Helpers shared by the legacy hash primitives (md4, sha0, ripemd). This is not a primitive module
- * (it sits in src/, not src/prims/), so the vocabulary loaders ignore it.
+ * Helpers shared by the hash primitives in `prims/` (md4, sha0, ripemd, sm3, has160, whirlpool,
+ * snefru, gost, streebog). Private to the package. This is not a primitive module (it sits in src/,
+ * not src/prims/), so the vocabulary loaders ignore it.
  */
 
-/** Rotate a 32-bit word left by `n` (0 < n < 32). */
+/** Rotate a 32-bit word left by `n` (0 to 31). */
 export function rotl32(x: number, n: number): number {
   return ((x << n) | (x >>> (32 - n))) >>> 0;
 }
@@ -52,5 +53,36 @@ export function wordsToBytes(words: ArrayLike<number>, little: boolean): Uint8Ar
   const out = new Uint8Array(words.length * 4);
   const view = new DataView(out.buffer);
   for (let i = 0; i < words.length; i++) view.setUint32(i * 4, words[i] as number, little);
+  return out;
+}
+
+/**
+ * Merkle-Damgard padding: the message, a 0x80 byte, zeros, then the bit length in `lenBytes`
+ * bytes (8 for the 512-bit-block hashes, 32 for Whirlpool), big- or little-endian, so that the
+ * total is a multiple of `block` bytes. The length is far below 2^53 bits (a value is bounded by
+ * the runtime's limits), so it is written from a number.
+ */
+export function mdPad(
+  data: Uint8Array,
+  block: number,
+  lenBytes: number,
+  bigEndian: boolean,
+): Uint8Array {
+  const total = Math.ceil((data.length + 1 + lenBytes) / block) * block;
+  const out = new Uint8Array(total);
+  out.set(data);
+  out[data.length] = 0x80;
+  let bits = data.length * 8;
+  for (let i = 0; i < 8; i++) {
+    out[bigEndian ? total - 1 - i : total - lenBytes + i] = bits % 256;
+    bits = Math.floor(bits / 256);
+  }
+  return out;
+}
+
+/** Lower-case hex of bytes (used to decode table constants written as hex strings). */
+export function fromHex(s: string): Uint8Array {
+  const out = new Uint8Array(s.length >> 1);
+  for (let i = 0; i < out.length; i++) out[i] = parseInt(s.slice(2 * i, 2 * i + 2), 16);
   return out;
 }

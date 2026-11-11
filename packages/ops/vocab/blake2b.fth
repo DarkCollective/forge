@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ blake2b: BLAKE2b, RFC 7693, with the output sizes of CyberChef's BLAKE2b operation (512, 384, 256, 160
 \ and 128 bits, here in bytes: 64, 48, 32, 20 and 16) and an optional key for the keyed (MAC) mode. The
 \ digest is raw bytes; chain hex:encode for text. The hash itself is _hash, a private primitive

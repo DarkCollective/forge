@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ float: IEEE 754 binary32 and binary64 numbers as bytes, and as decimal text (IEEE 754-2019,
 \ clauses 3.4 and 5.12). The splitting, looping and parameters are FL; the conversion of one number
 \ is done by the private primitives _pack and _unpack (src/prims/float.ts), because the core cannot

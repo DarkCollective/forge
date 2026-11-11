@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ sigaba: the SIGABA cipher machine (ECM Mark II, CSP-889, Converter M-134-C). Fifteen rotors in three
 \ banks: 5 cipher rotors (26 contacts) that permute the letters, 5 control rotors (26 contacts) and
 \ 5 index rotors (10 contacts) that decide which cipher rotors step after each letter. The machine

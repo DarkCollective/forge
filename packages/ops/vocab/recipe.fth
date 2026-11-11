@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ recipe: the words that compiled recipes call. Internal: never listed in the catalogue.
 \ Container steps work on bytes; every word here that takes data takes bytes, so a str is
 \ UTF-8 encoded at the boundary.

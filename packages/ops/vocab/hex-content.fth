@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ hex-content: the Snort and Suricata rule "content" form, where bytes are written as literal
 \ text with |41 42| sections of hex digits. The words are FL and need no primitive; E_COERCE comes
 \ from the raise vocabulary (raise:coerce).

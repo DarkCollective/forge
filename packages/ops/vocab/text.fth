@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ text: operations on text. They take str, so bytes are decoded as strict UTF-8 first.
 \ replace, split and join are written in FL over the core string and list words.
 IN: text

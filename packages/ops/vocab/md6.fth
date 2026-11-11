@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ md6: the MD6 hash function (Rivest et al., the MD6 report submitted to NIST, 2008). The digest is
 \ raw bytes; chain hex:encode for text. The hash itself is _hash, a private primitive
 \ (src/prims/md6.ts); the parameters and the metadata are FL.

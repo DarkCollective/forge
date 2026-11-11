@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ analysis: statistics of the bytes of an input. Written in FL over the core words, except
 \ _log2, a private primitive (src/prims/analysis.ts): the core has no logarithm.
 IN: analysis

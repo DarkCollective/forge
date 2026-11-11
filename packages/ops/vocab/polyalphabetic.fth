@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ polyalphabetic: polyalphabetic ciphers beyond Vigenere (Beaufort, autokey, Gronsfeld). They work on
 \ bytes and touch ASCII letters only; every other byte passes through and uses up no key letter.
 IN: polyalphabetic

@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ base92: Base92 by thenoviceoof (https://github.com/thenoviceoof/base92, reference implementation in
 \ Python and C). The data is a bit stream cut into 13-bit groups; each group is two characters
 \ (value div 91, value mod 91). The 91 characters are ! (0), # to _ (1 to 61) and a to } (62 to 90);

@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ enigma: the German Enigma rotor machines of the Wehrmacht and Kriegsmarine: Enigma I (Heer and
 \ Luftwaffe), M3 and M4 (Kriegsmarine). One word, enigma:encrypt (alias decrypt), because the
 \ machine is reciprocal. Written for Forge from the public descriptions of the machines; no code,

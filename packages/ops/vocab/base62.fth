@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ base62: Base62 as a big-integer radix conversion, the same scheme as base58 (the data is one integer,
 \ repeatedly divided by 62; a leading zero byte is a leading first-alphabet character). Two alphabets:
 \ standard (0-9 A-Z a-z, the order of the ASCII table and of most Base62 libraries) and inverted

@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ sm3: the SM3 cryptographic hash, GB/T 32905-2016 (the Chinese national standard, also
 \ draft-sca-cfrg-sm3). The digest is 32 raw bytes; chain hex:encode for text. The hash itself is
 \ _hash, a private primitive (src/prims/sm3.ts) written from the specification; the metadata is FL.

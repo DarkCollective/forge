@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ snefru: Merkle's Snefru one-way hash (Xerox Secure Hash Function, reference version 2.5a). Output
 \ of 128 or 256 bits and 2, 4 or 8 passes. The digest is raw bytes; chain hex:encode for text. The
 \ hash itself is _hash, a private primitive (src/prims/snefru.ts); the parameters and the metadata

@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ nthash: the Windows NT password hash (NTOWFv1, MS-NLMP section 3.3.1): MD4 of the password as UTF-16LE.
 \ Written in FL over charset:encode and md4:digest, so it needs no primitive. It is its own
 \ vocabulary (not a word of md4) because its input is text, not bytes, and it is a distinct

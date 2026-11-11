@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ html: HTML character references. The words are FL and need no primitive.
 \
 \ decode follows the HTML Living Standard (https://html.spec.whatwg.org/multipage/parsing.html#character-reference-state)

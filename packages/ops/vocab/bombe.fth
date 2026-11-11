@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ bombe: a Turing-Welchman Bombe for the Enigma I and M3. Given a ciphertext and a crib (a guess of
 \ the plaintext at a known place) it searches the 17,576 start positions of each rotor order for
 \ "stops": positions at which the plugboard that the crib implies is consistent. One word, bombe:search.

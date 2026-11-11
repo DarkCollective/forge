@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ braille: bytes as 8-dot Unicode Braille patterns (Forge's own design, not CyberChef's table). Byte b
 \ is the code point U+2800 + b (Unicode block "Braille Patterns", U+2800 to U+28FF), so the mapping
 \ is lossless for every byte value. The words are FL and need no primitive; E_COERCE comes from the

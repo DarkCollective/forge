@@ -1,24 +1,30 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ hash-analysis: guess which hash functions could have made a digest, from its length alone. Written in
-\ FL, no primitives. The output is a text report (like CyberChef's Analyse hash), not bytes.
+\ FL, no primitives. The output is a text report (like CyberChef's Analyse hash), not bytes. The length
+\ is counted in bits from the hex digits (four per digit), so a half byte is a size too.
 IN: hash-analysis
 
-\ Digest size in bytes, then "|", then the algorithms with that digest size. Some of them (Tiger,
-\ HAVAL, Snefru, ...) are not implemented in Forge: the table is about what a digest could be.
+\ Digest size in bits, then "|", then the algorithms with that digest size. Some of them (Tiger,
+\ HAVAL, FSB, ...) are not implemented in Forge: the table is about what a digest could be. The
+\ MD6, BLAKE2 and FNV entries are the usual sizes of functions that Forge computes (or, for FNV, that
+\ are fixed-size).
 : _rows ( -- list )
-  { "1|CRC-8, Fletcher-8"
-    "2|CRC-16, Fletcher-16"
-    "4|CRC-32, Adler-32, Fletcher-32, MurmurHash3 (x86, 32-bit)"
-    "8|CRC-64, Fletcher-64, SipHash-2-4"
-    "16|MD2, MD4, MD5, NT hash, LM hash, RIPEMD-128, HAVAL-128, Tiger-128, Snefru-128, MurmurHash3 (128-bit)"
-    "20|SHA-1, SHA-0, RIPEMD-160, HAS-160, HAVAL-160, Tiger-160, BLAKE2b-160"
-    "24|Tiger-192, HAVAL-192"
-    "28|SHA-224, SHA-512/224, SHA3-224, Keccak-224, HAVAL-224, BLAKE2s-224"
-    "32|SHA-256, SHA-512/256, SHA3-256, Keccak-256, BLAKE2s-256, BLAKE2b-256, BLAKE3, RIPEMD-256, HAVAL-256, Snefru-256, GOST R 34.11-94, Streebog-256, SM3, Ascon-Hash"
-    "40|RIPEMD-320"
-    "48|SHA-384, SHA3-384, Keccak-384, BLAKE2b-384"
-    "64|SHA-512, SHA3-512, Keccak-512, BLAKE2b-512, Whirlpool, Streebog-512" } ;
+  { "4|Fletcher-4, Luhn algorithm, Verhoeff algorithm"
+    "8|CRC-8, Fletcher-8"
+    "16|CRC-16, Fletcher-16, BSD checksum, SYSV checksum"
+    "32|CRC-32, Adler-32, Fletcher-32, MurmurHash3 (x86, 32-bit), FNV-32"
+    "64|CRC-64, Fletcher-64, SipHash-2-4, RIPEMD-64, FNV-64"
+    "128|MD2, MD4, MD5, NT hash, LM hash, RIPEMD-128, HAVAL-128, Tiger-128, Snefru-128, MurmurHash3 (128-bit), BLAKE2b-128, BLAKE2s-128, MD6-128, FNV-128"
+    "160|SHA-1, SHA-0, RIPEMD-160, HAS-160, HAVAL-160, Tiger-160, BLAKE2b-160, BLAKE2s-160, FSB-160"
+    "192|Tiger-192, HAVAL-192"
+    "224|SHA-224, SHA-512/224, SHA3-224, Keccak-224, HAVAL-224, BLAKE2s-224, ECOH-224, FSB-224, MD6-224"
+    "256|SHA-256, SHA-512/256, SHA3-256, Keccak-256, BLAKE2s-256, BLAKE2b-256, BLAKE3, BLAKE-256, RIPEMD-256, HAVAL-256, Snefru-256, GOST R 34.11-94, Streebog-256, SM3, Ascon-Hash, ECOH-256, FSB-256, Groestl-256, PANAMA, MD6-256, FNV-256"
+    "320|RIPEMD-320"
+    "384|SHA-384, SHA3-384, Keccak-384, BLAKE2b-384, ECOH-384, FSB-384, MD6-384"
+    "512|SHA-512, SHA3-512, Keccak-512, BLAKE2b-512, BLAKE-512, Whirlpool, Streebog-512, ECOH-512, FSB-512, Groestl-512, JH, MD6-512, Spectral Hash, SWIFFT, FNV-512"
+    "1024|FNV-1024" } ;
 
-\ The algorithm names for a digest of n bytes (none when the table has no row).
+\ The algorithm names for a digest of n bits (none when the table has no row).
 : _names ( n:int -- list )
   _rows [ "|" split 0 nth n int>str = ] filter
   dup len 0 =
@@ -34,16 +40,25 @@ IN: hash-analysis
     names "\n" join cat ]
   if ;
 
-: _report ( n:int -- str )
-  { "Hash length: " n 2 * int>str "\n"
-    "Byte length: " n int>str "\n"
-    "Bit length: " n 8 * int>str "\n\n"
-    n _names _candidates }
+\ The size in bytes as text: a whole number, or with ".5" for a half byte.
+: _bytes-text ( digits:int -- str )
+  digits 2 mod 0 =
+  [ digits 2 div int>str ]
+  [ digits 2 div int>str ".5" cat ]
+  if ;
+
+\ The report for a digest of this many hex digits.
+: _report ( digits:int -- str )
+  { "Hash length: " digits int>str "\n"
+    "Byte length: " digits _bytes-text "\n"
+    "Bit length: " digits 4 * int>str "\n\n"
+    digits 4 * _names _candidates }
   "" join ;
 
 : analyse ( hash:str -- str )
-  "Report the length of a hash given as hex text (whitespace is ignored) in hex characters, bytes and bits, and list the hashing functions whose digest has that many bytes. The length is the only evidence: many functions share a size, and SHAKE and BLAKE3 can produce any size. The result is a text report. Text that is not hex digits, or has an odd number of them, is E_COERCE." doc
+  "Report the length of a hash given as hex text (whitespace is ignored) in hex characters, bytes and bits, and list the hashing functions whose digest has that many bits. The length is the only evidence: many functions share a size, and SHAKE, BLAKE3, BLAKE2 and MD6 can produce other sizes. An odd number of digits is a size too (4 bits for one digit). The result is a text report. Text that is not hex digits, or empty, is E_COERCE." doc
   "Hashing" category
-  hash hex>bytes len
-  dup 0 = [ "the hash is empty" raise:coerce ] when
-  _report ;
+  hash util:strip-space str>codes
+  dup len 0 = [ "the hash is empty" raise:coerce ] when
+  dup [ util:hex-digit? not ] filter len 0 > [ "the hash is not hex text" raise:coerce ] when
+  len _report ;

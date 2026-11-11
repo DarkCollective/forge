@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ punycode: Bootstring with the Punycode parameters, RFC 3492 (base 36, tmin 1, tmax 26, skew 38,
 \ damp 700, initial bias 72, initial n 128, delimiter "-"). Section numbers below are RFC 3492's.
 \ In domain mode a label with a non-ASCII character is written as xn-- plus its Punycode (RFC 3490

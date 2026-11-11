@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ base64: Base64 as in RFC 4648. The words are TypeScript primitives (src/prims/base64.ts);
 \ this unit only adds the parameter help.
 IN: base64

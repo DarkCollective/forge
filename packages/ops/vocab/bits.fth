@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ bits: bitwise operations on bytes. Written in FL on the core words; there are no primitives.
 IN: bits
 

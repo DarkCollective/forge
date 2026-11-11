@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ binary: binary text, one 0 or 1 digit per bit, eight digits per byte. The words are FL and
 \ need no primitive; E_COERCE comes from the raise vocabulary (raise:coerce).
 IN: binary

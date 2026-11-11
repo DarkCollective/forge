@@ -306,20 +306,37 @@ Language gaps found in wave 2 (candidates for the core, or for a primitive):
 - A public word whose params are all UI types becomes a catalogue op, so shared data needs zero-input words (`lorenz:kh-patterns`, `enigma:rotor-wirings`).
 - The dupes sweep never sees an exact copy when a helper calls a private helper of the same vocabulary, because the normalised bodies then differ (the Enigma and Typex stepping is such a pair; see the ops README, "Justified exceptions").
 
-**Wave 3** *(wave 3: hashing)*. Hashes use the audited `@noble/hashes` library (pinned, synchronous, not WebCrypto) behind minimal private primitives. Digest words return raw bytes (the user chains `hex:encode`), one parameterised word per family, with Forge-native names (`sha2:digest`). Checksums are written in FL. The conventions are in the ops README ("Hashing conventions").
+**Wave 3 ✅** *Done 2026-11-11 (wave 3: hashing). 182 ops in 80 vocabularies; CyberChef coverage 133 covered, 30 redesigned, 3 dropped, 340 not yet of 506. 2,407 op vectors in 80 files and 4,064 unit tests; `npm run gate4:browser -w @forge/worker` passes in Node and in Chromium Web Workers, with and without cross-origin isolation, and the data-driven UI smoke test now also checks the raw digests of the hashing vocabularies through the hex view.*
+
+Hashes use the audited `@noble/hashes` library (pinned, synchronous, not WebCrypto) behind minimal private primitives. Digest words return raw bytes (the user chains `hex:encode`), one parameterised word per family, with Forge-native names (`sha2:digest`). Checksums are written in FL. The conventions are in the ops README ("Hashing conventions").
 
 | WP | Scope |
 |---|---|
 | 5.15 | Setup: `@noble/hashes`, the hashing conventions, the `sha2` exemplar, the hashing coverage table |
 | 5.16 | Mainstream hashes via noble: md5, sha1, sha3, keccak, shake, ripemd-160, blake2b/s, blake3, hmac |
-| 5.17 | Checksums in FL: crc (parameterised, with CyberChef's presets), adler-32, fletcher 8/16/32/64, luhn, tcp/ip, xor, parity bit |
-| 5.18 | Legacy and national hashes as own primitives from the published specs: md2, md4 (+ NT hash), md6, sha0, sm3, has-160, whirlpool, snefru, gost/streebog, ripemd 128/256/320 |
-| 5.19 | Non-cryptographic and fuzzy: murmurhash3, ssdeep/ctph and their compare ops, analyse hash, generate all hashes/checksums |
-| 5.20 | Close-out |
+| 5.17 | Checksums in FL: crc (parameterised, with CyberChef's presets), adler-32, fletcher 8/16/32/64, luhn, tcp/ip, xor, parity bit; 5.17u promoted `sum` and `ceil-div` into util |
+| 5.18a | Legacy hashes as own primitives from the published specs: md2, md4 (+ NT hash), md6, sha0, ripemd 128/256/320 |
+| 5.18b | National hashes: sm3, has-160, whirlpool, snefru, gost, streebog |
+| 5.18c | RIPEMD unified: one `ripemd:digest` with a size choice of 128, 160, 256 and 320 (`ripemd160:digest` stays for HMAC) |
+| 5.19 | Non-cryptographic and fuzzy: murmurhash3, ssdeep/ctph and their compare ops, analyse hash |
+| 5.20 | Close-out: the throwaway cross-check against CyberChef (defaults aligned, Analyse hash table completed), Generate all hashes and Generate all checksums (`generate-all`), `hash-util` merged, licence headers on every `.fth`, the UI smoke test through the hex view, NOTICE for Snefru, docs |
 
 CMAC, LM hash, bcrypt (compare and parse), Argon2 (and compare) and Ascon (hash and MAC) move to wave 4, because they need AES/DES or are key derivation functions.
 
 CyberChef's SHA2 "Rounds" parameter (a non-standard round count) is not supported: `sha2:digest` implements the FIPS 180-4 round counts only.
+
+Wave 3 close-out (WP 5.20), from a local cross-check against CyberChef that was then deleted: the CRC presets (171 names, 5,310 random-input cases), custom CRCs, Fletcher-8/16/32/64, Adler-32, XOR checksum, Luhn, parity, MurmurHash3, BLAKE3 and Streebog all agree. MD2, MD4, MD5, MD6, SHA-0 to SHA-3, Keccak, SHAKE, RIPEMD, HAS-160, Whirlpool, Snefru, SM3, BLAKE2, the GOST hash and the NT hash agree with the expected outputs of CyberChef's own test suite. The cross-check found defaults to align (SHA-2, SHA-3 and Keccak now default to 512, SHAKE to 256, RIPEMD to 320), the Analyse hash table to complete, and that CyberChef's CTPH is not the same text as its SSDEEP: Forge has the one reference ssdeep algorithm and `ctph` is its alias. The TCP/IP checksum follows RFC 1071 where CyberChef folds the carry once. `generate-all:hashes` and `generate-all:checksums` report many digests at once; the 171 CRCs come from one private primitive, held equal to the FL `crc` by its tests, because 171 CRCs of 64 KiB in FL would be about 200 million VM steps. Sizes stay in bytes (SHAKE length, BLAKE2 size), so those coverage rows remain "redesigned". Snefru stays, with its Xerox notice in `NOTICE`.
+
+Language gaps found in wave 3 (candidates for the core, or for a primitive):
+
+- There is no early exit, and no "any" over a list: testing whether some element satisfies a predicate is a fold over everything (`ssdeep:_common7?` maps every window and ors the results).
+- `reduce`'s argument order is a trap: it is `seq init quot` (the sequence first, then the start value), and the quotation sees the accumulator below the element, the opposite of `foldl` in most languages.
+- `see-also` cannot name a word defined later in the same file, so related words are linked from `META:` blocks placed at the end of the file.
+- A vector `ref` is limited to 200 characters, which is short for a citation that names a document, a section and a table.
+- There are no per-vocabulary constants: the CRC preset table (171 lines of text) is parsed on every call, and every call rebuilds its 256-entry table (about 20,000 steps).
+- `see-also` cycles across vocabularies are a dependency error, so hash vocabularies cannot point to `hash-analysis` if it depends on them, which is why `generate-all` is its own vocabulary.
+- Arbitrary-precision integers made CRC-64 and CRC-82 easy (the whole Rocksoft model is a few dozen lines of FL with no special case for the width); worth keeping in the core.
+- A 64 KiB checksum in FL costs about a million VM steps, so any report over many of them needs a primitive.
 
 ### Phase 6 — Beyond CyberChef
 Magic auto-detection (declarative `checks` in META, depth-limited search). An optional recipe store backend behind `RecipeStore`. A PWA/offline mode. The `@forge/cli`. Recipe diff/swap. **Relix vocabulary** integration as an `relix:` vocab of primitives.

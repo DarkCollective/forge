@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ blake3: BLAKE3, with an output length (an extendable output: any length, the first bytes of a longer
 \ output are the shorter one) and an optional 32-byte key for the keyed mode. The digest is raw bytes;
 \ chain hex:encode for text. The hash itself is _hash, a private primitive (src/prims/blake3.ts) over the

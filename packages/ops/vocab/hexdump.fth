@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ hexdump: bytes as an xxd-style hex dump, and back. Written in FL; there are no primitives.
 \
 \ Layout written by encode, one line per width bytes, lines joined by a line feed (no final line feed):

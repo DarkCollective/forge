@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ ssdeep: context triggered piecewise hashing, also called fuzzy hashing or CTPH (Kornblum, "Identifying
 \ almost identical files using context triggered piecewise hashing", DFRWS 2006). The digest is TEXT,
 \ blocksize:hash:hash, not bytes: it is a structured string whose parts are compared character by

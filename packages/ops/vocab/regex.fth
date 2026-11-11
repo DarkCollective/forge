@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ regex: regular expressions (ECMAScript, always with the u flag). The words are TypeScript
 \ primitives (src/prims/regex.ts); this unit only adds the parameter help.
 IN: regex

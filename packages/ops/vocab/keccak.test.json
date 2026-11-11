@@ -142,5 +142,19 @@
       "value": "45d3b367a6904e6e8d502ee04999a7c27647f91fa845d456525fd352ae3d7371",
       "enc": "hex"
     }
+  },
+  {
+    "name": "digest default size 512: empty string",
+    "ref": "Keccak team, original Keccak padding; digest from an independent Keccak-f reference (checked against hashlib SHA-3)",
+    "op": "keccak:digest",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0eab42de4c3ceb9235fc91acffe746b29c29a8c366b7c60e4e67c466f36a4304c00fa9caf9d87976ba469bcbe06713b435f091ef2769fb160cdab33d3670680e",
+      "enc": "hex"
+    }
   }
 ]

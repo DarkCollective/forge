@@ -22,7 +22,7 @@
  */
 import { definePrimitive } from "@forge/lang";
 import type { PrimitiveDef } from "@forge/lang";
-import { mdPad, rotl32 } from "../hash-util-b.js";
+import { mdPad, rotl32 } from "../hash-util.js";
 
 // 4.1 Initialization vector.
 const IV = [

@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ sha0: SHA-0, the original Secure Hash Standard (FIPS 180, 1993). The digest is raw bytes; chain
 \ hex:encode for text. The hash itself is _hash, a private primitive (src/prims/sha0.ts); the
 \ metadata is FL.

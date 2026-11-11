@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ transposition: columnar transposition. Every byte takes part (nothing is dropped); the cipher only moves bytes.
 IN: transposition
 

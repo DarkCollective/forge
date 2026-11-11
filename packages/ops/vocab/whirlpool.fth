@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ whirlpool: the Whirlpool hash, ISO/IEC 10118-3 (the final, third version). 512-bit digest. The digest
 \ is 64 raw bytes; chain hex:encode for text. The hash itself is _hash, a private primitive
 \ (src/prims/whirlpool.ts); the metadata is FL. The earlier Whirlpool-0 and Whirlpool-T variants are

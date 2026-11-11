@@ -1,3 +1,4 @@
+\ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ colossus: a Forge-native counting machine in the manner of Colossus, the electronic computer
 \ that Bletchley Park built in 1943-44 to find the chi wheel settings of Lorenz traffic. Given
 \ the ciphertext (ITA2 in Bletchley Park notation, as lorenz:encrypt writes it) and the chi

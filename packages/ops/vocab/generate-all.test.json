@@ -1,0 +1,138 @@
+[
+  {
+    "name": "hashes: the four 224-bit digests of abc",
+    "ref": "digests of abc: FIPS 180-4 (SHA-2), FIPS 202 (SHA3-224), Keccak team (Keccak-224), as in the sha2, sha3 and keccak vectors",
+    "op": "generate-all:hashes",
+    "params": {
+      "length": "224",
+      "names": true
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "SHA2 224:     23097d223405d8228642a477bda255b32aadbce4bda0b3f7e36c9da7\nSHA2 512/224: 4634270f707b6a54daae7530460842e20e37ed265ceee9a43e8924aa\nSHA3 224:     e642824c3f8cf24ad09234ee7d3c766fc9a3a5168d0c94ad73b46fdf\nKeccak 224:   c30411768506ebe1c2871b1ee2e87d38df342317300a9b97a95ec6a8\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hashes: the 320-bit digest of abc without names",
+    "ref": "RIPEMD page, Bosselaers (homes.esat.kuleuven.be/~bosselae/ripemd160.html) test values",
+    "op": "generate-all:hashes",
+    "params": {
+      "length": "320",
+      "names": false
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "de4c01b3054f8930a79d09ae738e92301e5a17085beffdc1b8d116713e74f82fa942d64cdbc4682d\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "checksums: the 3-bit CRCs",
+    "ref": "reveng CRC catalogue, check values of 123456789 (the same as in the crc vectors)",
+    "op": "generate-all:checksums",
+    "params": {
+      "length": "3",
+      "names": true
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "CRC-3/GSM:                4\nCRC-3/ROHC:               6\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "checksums: the 4-bit CRCs",
+    "ref": "reveng CRC catalogue, check values of 123456789 (the same as in the crc vectors)",
+    "op": "generate-all:checksums",
+    "params": {
+      "length": "4",
+      "names": true
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "CRC-4/G-704:              7\nCRC-4/INTERLAKEN:         b\nCRC-4/ITU:                7\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "checksums: CRC-17/CAN-FD without names",
+    "ref": "reveng CRC catalogue, check values of 123456789 (the same as in the crc vectors)",
+    "op": "generate-all:checksums",
+    "params": {
+      "length": "17",
+      "names": false
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "04f03\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "checksums: CRC-21/CAN-FD",
+    "ref": "reveng CRC catalogue, check values of 123456789 (the same as in the crc vectors)",
+    "op": "generate-all:checksums",
+    "params": {
+      "length": "21",
+      "names": true
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "CRC-21/CAN-FD:            0ed841\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "checksums: CRC-40/GSM",
+    "ref": "reveng CRC catalogue, check values of 123456789 (the same as in the crc vectors)",
+    "op": "generate-all:checksums",
+    "params": {
+      "length": "40",
+      "names": true
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "CRC-40/GSM:               d4164fc646\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "checksums: CRC-82/DARC, the widest",
+    "ref": "reveng CRC catalogue, check values of 123456789 (the same as in the crc vectors)",
+    "op": "generate-all:checksums",
+    "params": {
+      "length": "82",
+      "names": true
+    },
+    "input": {
+      "value": "123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "CRC-82/DARC:              09ea83f625023801fd612\n",
+      "enc": "utf8"
+    }
+  }
+]
