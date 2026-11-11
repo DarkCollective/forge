@@ -20,14 +20,14 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Utils | 34 | 14 | 2 | 0 | 50 |
 | Date / Time | 5 | 4 | 0 | 0 | 9 |
 | Extractors | 1 | 8 | 0 | 9 | 18 |
-| Compression | 1 | 5 | 0 | 15 | 21 |
+| Compression | 2 | 6 | 0 | 13 | 21 |
 | Hashing | 34 | 14 | 0 | 0 | 48 |
 | Code tidy | 0 | 0 | 0 | 24 | 24 |
 | Forensics | 0 | 0 | 0 | 9 | 9 |
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 9 | 4 | 3 | 5 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **194** | **129** | **5** | **178** | **506** |
+| **Total** | **195** | **130** | **5** | **176** | **506** |
 
 ## Data format (80)
 
@@ -438,8 +438,8 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Untar | not yet |  |  |
 | LZString Decompress | not yet |  |  |
 | LZString Compress | not yet |  |  |
-| LZMA Decompress | not yet |  |  |
-| LZMA Compress | not yet |  |  |
+| LZMA Decompress | covered | `lzma:decompress` | The .lzma format, with no options, as CyberChef's operation has none. Output is the same bytes CyberChef gives for a valid stream. The header is checked (a short header or a properties byte out of range is E_COERCE), and a declared size above the value limit is E_LIMIT_VALUE before anything is decoded. An unknown size (all 0xFF) is decoded only up to the limit: more output is E_LIMIT_VALUE, the decompression bomb rule of the wave 6 conventions. Truncated, corrupt data, and output whose length differs from the declared size, are E_COERCE. |
+| LZMA Compress | redesigned | `lzma:compress` | The .lzma (LZMA alone) format over lzma1 0.6.1 (a port of XZ for Java), where CyberChef uses lzma-js. Compression Mode is the level parameter with the same 1 to 9 range and CyberChef's default of 7; there is no level 0, because the format has no store mode. The 13-byte header and the output are the same format, so xz --format=lzma, 7-Zip and Python's lzma module read the output, but the bytes differ from CyberChef's (a different encoder), and the outputs are pinned to lzma1 0.6.1. Out-of-range levels are E_RANGE. |
 | LZ4 Decompress | not yet |  |  |
 | LZ4 Compress | not yet |  |  |
 | LZNT1 Decompress | not yet |  |  |
