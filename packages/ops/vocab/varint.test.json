@@ -1120,12 +1120,12 @@
     }
   },
   {
-    "name": "error: hex notation",
+    "name": "error: hex prefix without hex digits",
     "ref": "must be rejected",
     "op": "varint:encode",
     "params": {},
     "input": {
-      "value": "0x10",
+      "value": "0xzz",
       "enc": "utf8"
     },
     "expect": {

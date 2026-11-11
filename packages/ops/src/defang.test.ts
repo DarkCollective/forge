@@ -108,9 +108,9 @@ describe("Defang URL and Fang URL", () => {
     expect(out(await defang("-bad-.example.com", "valid-domains-and-full-urls"))).toBe(
       "-bad-.example[.]com",
     );
-    expect(out(await defang("*.example.com .a.bc a..b.com www.-a.com", "valid-domains-and-full-urls"))).toBe(
-      "*.example[.]com .a[.]bc a..b[.]com www.-a[.]com",
-    );
+    expect(
+      out(await defang("*.example.com .a.bc a..b.com www.-a.com", "valid-domains-and-full-urls")),
+    ).toBe("*.example[.]com .a[.]bc a..b[.]com www.-a[.]com");
     expect(out(await defang("see (www.example.com)", "valid-domains-and-full-urls"))).toBe(
       "see (www[.]example[.]com)",
     );
