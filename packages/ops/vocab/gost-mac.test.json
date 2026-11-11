@@ -1,0 +1,856 @@
+[
+  {
+    "name": "sign E-TEST (the default length of 32 bits, zero IV)",
+    "ref": "independent Python IMIT written from RFC 5830 section 8 (S-box tables from RFC 4357 as in gost28147.ts); its 4-byte results equal the CEK_MAC of the RFC 4357 key wrap references in gost28147.test.json",
+    "op": "gost-mac:sign",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "sbox": "E-TEST"
+    },
+    "input": {
+      "value": "The quick brown fox",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "189c60d3",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign E-A (the default length of 32 bits, zero IV)",
+    "ref": "independent Python IMIT written from RFC 5830 section 8 (S-box tables from RFC 4357 as in gost28147.ts); its 4-byte results equal the CEK_MAC of the RFC 4357 key wrap references in gost28147.test.json",
+    "op": "gost-mac:sign",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "sbox": "E-A"
+    },
+    "input": {
+      "value": "The quick brown fox",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "67af29b8",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign E-B (the default length of 32 bits, zero IV)",
+    "ref": "independent Python IMIT written from RFC 5830 section 8 (S-box tables from RFC 4357 as in gost28147.ts); its 4-byte results equal the CEK_MAC of the RFC 4357 key wrap references in gost28147.test.json",
+    "op": "gost-mac:sign",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "sbox": "E-B"
+    },
+    "input": {
+      "value": "The quick brown fox",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "66c83880",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign E-C (the default length of 32 bits, zero IV)",
+    "ref": "independent Python IMIT written from RFC 5830 section 8 (S-box tables from RFC 4357 as in gost28147.ts); its 4-byte results equal the CEK_MAC of the RFC 4357 key wrap references in gost28147.test.json",
+    "op": "gost-mac:sign",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "sbox": "E-C"
+    },
+    "input": {
+      "value": "The quick brown fox",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "dc570f09",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign E-D (the default length of 32 bits, zero IV)",
+    "ref": "independent Python IMIT written from RFC 5830 section 8 (S-box tables from RFC 4357 as in gost28147.ts); its 4-byte results equal the CEK_MAC of the RFC 4357 key wrap references in gost28147.test.json",
+    "op": "gost-mac:sign",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "sbox": "E-D"
+    },
+    "input": {
+      "value": "The quick brown fox",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "5b6594c1",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign E-Z (the default length of 32 bits, zero IV)",
+    "ref": "independent Python IMIT written from RFC 5830 section 8 (S-box tables from RFC 4357 as in gost28147.ts); its 4-byte results equal the CEK_MAC of the RFC 4357 key wrap references in gost28147.test.json",
+    "op": "gost-mac:sign",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "sbox": "E-Z"
+    },
+    "input": {
+      "value": "The quick brown fox",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "b33794c7",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign D-TEST (the default length of 32 bits, zero IV)",
+    "ref": "independent Python IMIT written from RFC 5830 section 8 (S-box tables from RFC 4357 as in gost28147.ts); its 4-byte results equal the CEK_MAC of the RFC 4357 key wrap references in gost28147.test.json",
+    "op": "gost-mac:sign",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "sbox": "D-TEST"
+    },
+    "input": {
+      "value": "The quick brown fox",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "e7635efe",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign D-A (the default length of 32 bits, zero IV)",
+    "ref": "independent Python IMIT written from RFC 5830 section 8 (S-box tables from RFC 4357 as in gost28147.ts); its 4-byte results equal the CEK_MAC of the RFC 4357 key wrap references in gost28147.test.json",
+    "op": "gost-mac:sign",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "sbox": "D-A"
+    },
+    "input": {
+      "value": "The quick brown fox",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "8fe296c5",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign empty bytes with an IV, 64 bits",
+    "ref": "independent Python IMIT written from RFC 5830 section 8 (S-box tables from RFC 4357 as in gost28147.ts); its 4-byte results equal the CEK_MAC of the RFC 4357 key wrap references in gost28147.test.json",
+    "op": "gost-mac:sign",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1122334455667788",
+        "enc": "hex"
+      },
+      "sbox": "E-A",
+      "mac-length": 64
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "1122334455667788",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign 1 bytes with an IV, 64 bits",
+    "ref": "independent Python IMIT written from RFC 5830 section 8 (S-box tables from RFC 4357 as in gost28147.ts); its 4-byte results equal the CEK_MAC of the RFC 4357 key wrap references in gost28147.test.json",
+    "op": "gost-mac:sign",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1122334455667788",
+        "enc": "hex"
+      },
+      "sbox": "E-A",
+      "mac-length": 64
+    },
+    "input": {
+      "value": "61",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "cbfe43592a338979",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign 7 bytes with an IV, 64 bits",
+    "ref": "independent Python IMIT written from RFC 5830 section 8 (S-box tables from RFC 4357 as in gost28147.ts); its 4-byte results equal the CEK_MAC of the RFC 4357 key wrap references in gost28147.test.json",
+    "op": "gost-mac:sign",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1122334455667788",
+        "enc": "hex"
+      },
+      "sbox": "E-A",
+      "mac-length": 64
+    },
+    "input": {
+      "value": "61626364656667",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "e346c01d54557ccb",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign 8 bytes with an IV, 64 bits",
+    "ref": "independent Python IMIT written from RFC 5830 section 8 (S-box tables from RFC 4357 as in gost28147.ts); its 4-byte results equal the CEK_MAC of the RFC 4357 key wrap references in gost28147.test.json",
+    "op": "gost-mac:sign",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1122334455667788",
+        "enc": "hex"
+      },
+      "sbox": "E-A",
+      "mac-length": 64
+    },
+    "input": {
+      "value": "6162636465666768",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "e9436d6dbf2af2af",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign 9 bytes with an IV, 64 bits",
+    "ref": "independent Python IMIT written from RFC 5830 section 8 (S-box tables from RFC 4357 as in gost28147.ts); its 4-byte results equal the CEK_MAC of the RFC 4357 key wrap references in gost28147.test.json",
+    "op": "gost-mac:sign",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1122334455667788",
+        "enc": "hex"
+      },
+      "sbox": "E-A",
+      "mac-length": 64
+    },
+    "input": {
+      "value": "616263646566676869",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "5d7a878fb5c0f0b4",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign 16 bytes with an IV, 64 bits",
+    "ref": "independent Python IMIT written from RFC 5830 section 8 (S-box tables from RFC 4357 as in gost28147.ts); its 4-byte results equal the CEK_MAC of the RFC 4357 key wrap references in gost28147.test.json",
+    "op": "gost-mac:sign",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1122334455667788",
+        "enc": "hex"
+      },
+      "sbox": "E-A",
+      "mac-length": 64
+    },
+    "input": {
+      "value": "30313233343536373839616263646566",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "d7159268d793d4e6",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign 200 bytes with an IV, 64 bits",
+    "ref": "independent Python IMIT written from RFC 5830 section 8 (S-box tables from RFC 4357 as in gost28147.ts); its 4-byte results equal the CEK_MAC of the RFC 4357 key wrap references in gost28147.test.json",
+    "op": "gost-mac:sign",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1122334455667788",
+        "enc": "hex"
+      },
+      "sbox": "E-A",
+      "mac-length": 64
+    },
+    "input": {
+      "value": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "63d5ab73c6d062ba",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign: a MAC of 8 bits is the start of the longer one",
+    "ref": "independent Python IMIT written from RFC 5830 section 8 (S-box tables from RFC 4357 as in gost28147.ts); its 4-byte results equal the CEK_MAC of the RFC 4357 key wrap references in gost28147.test.json",
+    "op": "gost-mac:sign",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "mac-length": 8
+    },
+    "input": {
+      "value": "abcdefghi",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "34",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign: a MAC of 16 bits is the start of the longer one",
+    "ref": "independent Python IMIT written from RFC 5830 section 8 (S-box tables from RFC 4357 as in gost28147.ts); its 4-byte results equal the CEK_MAC of the RFC 4357 key wrap references in gost28147.test.json",
+    "op": "gost-mac:sign",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "mac-length": 16
+    },
+    "input": {
+      "value": "abcdefghi",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3427",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign: a MAC of 24 bits is the start of the longer one",
+    "ref": "independent Python IMIT written from RFC 5830 section 8 (S-box tables from RFC 4357 as in gost28147.ts); its 4-byte results equal the CEK_MAC of the RFC 4357 key wrap references in gost28147.test.json",
+    "op": "gost-mac:sign",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "mac-length": 24
+    },
+    "input": {
+      "value": "abcdefghi",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "342720",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign: a MAC of 40 bits is the start of the longer one",
+    "ref": "independent Python IMIT written from RFC 5830 section 8 (S-box tables from RFC 4357 as in gost28147.ts); its 4-byte results equal the CEK_MAC of the RFC 4357 key wrap references in gost28147.test.json",
+    "op": "gost-mac:sign",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "mac-length": 40
+    },
+    "input": {
+      "value": "abcdefghi",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3427209a92",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign: a MAC of 56 bits is the start of the longer one",
+    "ref": "independent Python IMIT written from RFC 5830 section 8 (S-box tables from RFC 4357 as in gost28147.ts); its 4-byte results equal the CEK_MAC of the RFC 4357 key wrap references in gost28147.test.json",
+    "op": "gost-mac:sign",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "mac-length": 56
+    },
+    "input": {
+      "value": "abcdefghi",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3427209a929a77",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign: a UTF-8 key and a Latin-1 IV",
+    "ref": "independent Python IMIT written from RFC 5830 section 8 (S-box tables from RFC 4357 as in gost28147.ts); its 4-byte results equal the CEK_MAC of the RFC 4357 key wrap references in gost28147.test.json",
+    "op": "gost-mac:sign",
+    "params": {
+      "key": {
+        "value": "0123456789abcdef0123456789ABCDEF",
+        "enc": "utf8"
+      },
+      "iv": {
+        "value": "ABCDEFGH",
+        "enc": "latin1"
+      }
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "82f66a0a",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sign: a key that is Base64",
+    "ref": "independent Python IMIT written from RFC 5830 section 8 (S-box tables from RFC 4357 as in gost28147.ts); its 4-byte results equal the CEK_MAC of the RFC 4357 key wrap references in gost28147.test.json",
+    "op": "gost-mac:sign",
+    "params": {
+      "key": {
+        "value": "EBESExQVFhcYGRobHB0eHyAhIiMkJSYnKCkqKywtLi8=",
+        "enc": "base64"
+      }
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "6ea51dba",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "verify: the MAC matches",
+    "ref": "independent Python IMIT written from RFC 5830 section 8 (S-box tables from RFC 4357 as in gost28147.ts); its 4-byte results equal the CEK_MAC of the RFC 4357 key wrap references in gost28147.test.json",
+    "op": "gost-mac:verify",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1122334455667788",
+        "enc": "hex"
+      },
+      "sbox": "E-C",
+      "mac": {
+        "value": "e7a3e492",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "verify me",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "The signature matches",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify: a shorter MAC (8 bits) is compared as long as it is",
+    "ref": "independent Python IMIT written from RFC 5830 section 8 (S-box tables from RFC 4357 as in gost28147.ts); its 4-byte results equal the CEK_MAC of the RFC 4357 key wrap references in gost28147.test.json",
+    "op": "gost-mac:verify",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1122334455667788",
+        "enc": "hex"
+      },
+      "sbox": "E-C",
+      "mac": {
+        "value": "e7",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "verify me",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "The signature matches",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify: the 64-bit MAC",
+    "ref": "independent Python IMIT written from RFC 5830 section 8 (S-box tables from RFC 4357 as in gost28147.ts); its 4-byte results equal the CEK_MAC of the RFC 4357 key wrap references in gost28147.test.json",
+    "op": "gost-mac:verify",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1122334455667788",
+        "enc": "hex"
+      },
+      "sbox": "E-C",
+      "mac": {
+        "value": "e7a3e49219e9632f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "verify me",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "The signature matches",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify: a MAC that differs",
+    "ref": "independent Python IMIT written from RFC 5830 section 8 (S-box tables from RFC 4357 as in gost28147.ts); its 4-byte results equal the CEK_MAC of the RFC 4357 key wrap references in gost28147.test.json",
+    "op": "gost-mac:verify",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1122334455667788",
+        "enc": "hex"
+      },
+      "sbox": "E-C",
+      "mac": {
+        "value": "e6a3e492",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "verify me",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "The signature does not match",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify: another message",
+    "ref": "independent Python IMIT written from RFC 5830 section 8 (S-box tables from RFC 4357 as in gost28147.ts); its 4-byte results equal the CEK_MAC of the RFC 4357 key wrap references in gost28147.test.json",
+    "op": "gost-mac:verify",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1122334455667788",
+        "enc": "hex"
+      },
+      "sbox": "E-C",
+      "mac": {
+        "value": "e7a3e492",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "verify you",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "The signature does not match",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify: another S-box",
+    "ref": "independent Python IMIT written from RFC 5830 section 8 (S-box tables from RFC 4357 as in gost28147.ts); its 4-byte results equal the CEK_MAC of the RFC 4357 key wrap references in gost28147.test.json",
+    "op": "gost-mac:verify",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "1122334455667788",
+        "enc": "hex"
+      },
+      "sbox": "E-D",
+      "mac": {
+        "value": "e7a3e492",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "verify me",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "The signature does not match",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify: another IV",
+    "ref": "independent Python IMIT written from RFC 5830 section 8 (S-box tables from RFC 4357 as in gost28147.ts); its 4-byte results equal the CEK_MAC of the RFC 4357 key wrap references in gost28147.test.json",
+    "op": "gost-mac:verify",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "0000000000000000",
+        "enc": "hex"
+      },
+      "sbox": "E-C",
+      "mac": {
+        "value": "e7a3e492",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "verify me",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "The signature does not match",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sign: a 31-byte key",
+    "ref": "error case",
+    "op": "gost-mac:sign",
+    "params": {
+      "key": {
+        "value": "1112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "sign: no key",
+    "ref": "error case",
+    "op": "gost-mac:sign",
+    "params": {
+      "key": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "sign: a 7-byte IV",
+    "ref": "error case",
+    "op": "gost-mac:sign",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "iv": {
+        "value": "00000000000000",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "sign: a MAC length that is not a multiple of 8",
+    "ref": "error case",
+    "op": "gost-mac:sign",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "mac-length": 12
+    },
+    "input": {
+      "value": "x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "sign: a MAC length of 0 is not in range",
+    "ref": "error case",
+    "op": "gost-mac:sign",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "mac-length": 0
+    },
+    "input": {
+      "value": "x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "sign: a MAC length of 72 is not in range",
+    "ref": "error case",
+    "op": "gost-mac:sign",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "mac-length": 72
+    },
+    "input": {
+      "value": "x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "verify: an empty MAC",
+    "ref": "error case",
+    "op": "gost-mac:verify",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "mac": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "verify: a 9-byte MAC",
+    "ref": "error case",
+    "op": "gost-mac:verify",
+    "params": {
+      "key": {
+        "value": "101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+        "enc": "hex"
+      },
+      "mac": {
+        "value": "000000000000000000",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "verify: a short key",
+    "ref": "error case",
+    "op": "gost-mac:verify",
+    "params": {
+      "key": {
+        "value": "00000000000000000000000000000000",
+        "enc": "hex"
+      },
+      "mac": {
+        "value": "00",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  }
+]
