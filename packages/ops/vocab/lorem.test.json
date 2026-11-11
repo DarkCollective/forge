@@ -1,0 +1,183 @@
+[
+  {
+    "name": "one sentence is the opening",
+    "ref": "the traditional opening sentence",
+    "op": "lorem:generate",
+    "params": {
+      "length": 1,
+      "unit": "sentences"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "the first 5 words",
+    "ref": "the first five words of the opening, with a capital",
+    "op": "lorem:generate",
+    "params": {
+      "length": 5,
+      "unit": "words"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Lorem ipsum dolor sit amet",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "the first 8 words",
+    "ref": "the eight words of the opening, without punctuation",
+    "op": "lorem:generate",
+    "params": {
+      "length": 8,
+      "unit": "words"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Lorem ipsum dolor sit amet consectetur adipiscing elit",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "the first 11 bytes",
+    "ref": "the first 11 bytes of the opening",
+    "op": "lorem:generate",
+    "params": {
+      "length": 11,
+      "unit": "bytes"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Lorem ipsum",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "exactly the opening in bytes",
+    "ref": "the opening is 56 bytes",
+    "op": "lorem:generate",
+    "params": {
+      "length": 56,
+      "unit": "bytes"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "the input is ignored",
+    "ref": "a generator ignores its input",
+    "op": "lorem:generate",
+    "params": {
+      "length": 3,
+      "unit": "words"
+    },
+    "input": {
+      "value": "data that is not used",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Lorem ipsum dolor",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "501 paragraphs",
+    "ref": "at most 500 paragraphs",
+    "op": "lorem:generate",
+    "params": {
+      "length": 501,
+      "unit": "paragraphs"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "5001 sentences",
+    "ref": "at most 5,000 sentences",
+    "op": "lorem:generate",
+    "params": {
+      "length": 5001,
+      "unit": "sentences"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "a length of 0",
+    "ref": "the text is random, so only the opening (the one fixed part) and the errors have a fixed result; the structure is tested in src/lorem.test.ts",
+    "op": "lorem:generate",
+    "params": {
+      "length": 0
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "65537 bytes",
+    "ref": "the text is random, so only the opening (the one fixed part) and the errors have a fixed result; the structure is tested in src/lorem.test.ts",
+    "op": "lorem:generate",
+    "params": {
+      "length": 65537,
+      "unit": "bytes"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "an unknown unit",
+    "ref": "the text is random, so only the opening (the one fixed part) and the errors have a fixed result; the structure is tested in src/lorem.test.ts",
+    "op": "lorem:generate",
+    "params": {
+      "length": 3,
+      "unit": "pages"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  }
+]

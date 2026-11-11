@@ -1,0 +1,303 @@
+[
+  {
+    "name": "B(2,1)",
+    "ref": "the lexicographically least de Bruijn sequence, from the textbook recursive FKM algorithm (independent Python implementation); B(2,3) = 00010111 and B(3,2) = 001021122 are the standard examples",
+    "op": "de-bruijn:generate",
+    "params": {
+      "k": 2,
+      "n": 1
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "01",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "B(2,2)",
+    "ref": "the lexicographically least de Bruijn sequence, from the textbook recursive FKM algorithm (independent Python implementation); B(2,3) = 00010111 and B(3,2) = 001021122 are the standard examples",
+    "op": "de-bruijn:generate",
+    "params": {
+      "k": 2,
+      "n": 2
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0011",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "B(2,3)",
+    "ref": "the lexicographically least de Bruijn sequence, from the textbook recursive FKM algorithm (independent Python implementation); B(2,3) = 00010111 and B(3,2) = 001021122 are the standard examples",
+    "op": "de-bruijn:generate",
+    "params": {
+      "k": 2,
+      "n": 3
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00010111",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "B(2,4)",
+    "ref": "the lexicographically least de Bruijn sequence, from the textbook recursive FKM algorithm (independent Python implementation); B(2,3) = 00010111 and B(3,2) = 001021122 are the standard examples",
+    "op": "de-bruijn:generate",
+    "params": {
+      "k": 2,
+      "n": 4
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0000100110101111",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "B(2,5)",
+    "ref": "the lexicographically least de Bruijn sequence, from the textbook recursive FKM algorithm (independent Python implementation); B(2,3) = 00010111 and B(3,2) = 001021122 are the standard examples",
+    "op": "de-bruijn:generate",
+    "params": {
+      "k": 2,
+      "n": 5
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00000100011001010011101011011111",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "B(3,2)",
+    "ref": "the lexicographically least de Bruijn sequence, from the textbook recursive FKM algorithm (independent Python implementation); B(2,3) = 00010111 and B(3,2) = 001021122 are the standard examples",
+    "op": "de-bruijn:generate",
+    "params": {
+      "k": 3,
+      "n": 2
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "001021122",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "B(3,3)",
+    "ref": "the lexicographically least de Bruijn sequence, from the textbook recursive FKM algorithm (independent Python implementation); B(2,3) = 00010111 and B(3,2) = 001021122 are the standard examples",
+    "op": "de-bruijn:generate",
+    "params": {
+      "k": 3,
+      "n": 3
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "000100201101202102211121222",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "B(4,2)",
+    "ref": "the lexicographically least de Bruijn sequence, from the textbook recursive FKM algorithm (independent Python implementation); B(2,3) = 00010111 and B(3,2) = 001021122 are the standard examples",
+    "op": "de-bruijn:generate",
+    "params": {
+      "k": 4,
+      "n": 2
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0010203112132233",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "B(10,1)",
+    "ref": "the lexicographically least de Bruijn sequence, from the textbook recursive FKM algorithm (independent Python implementation); B(2,3) = 00010111 and B(3,2) = 001021122 are the standard examples",
+    "op": "de-bruijn:generate",
+    "params": {
+      "k": 10,
+      "n": 1
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0123456789",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "B(12,2)",
+    "ref": "the lexicographically least de Bruijn sequence, from the textbook recursive FKM algorithm (independent Python implementation); B(2,3) = 00010111 and B(3,2) = 001021122 are the standard examples",
+    "op": "de-bruijn:generate",
+    "params": {
+      "k": 12,
+      "n": 2
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00102030405060708090a0b112131415161718191a1b2232425262728292a2b33435363738393a3b445464748494a4b5565758595a5b66768696a6b778797a7b8898a8b99a9baabb",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "B(5,3)",
+    "ref": "the lexicographically least de Bruijn sequence, from the textbook recursive FKM algorithm (independent Python implementation); B(2,3) = 00010111 and B(3,2) = 001021122 are the standard examples",
+    "op": "de-bruijn:generate",
+    "params": {
+      "k": 5,
+      "n": 3
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00010020030040110120130140210220230240310320330340410420430441112113114122123124132133134142143144222322423323424324433343444",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "B(36,1)",
+    "ref": "the lexicographically least de Bruijn sequence, from the textbook recursive FKM algorithm (independent Python implementation); B(2,3) = 00010111 and B(3,2) = 001021122 are the standard examples",
+    "op": "de-bruijn:generate",
+    "params": {
+      "k": 36,
+      "n": 1
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0123456789abcdefghijklmnopqrstuvwxyz",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "the input is ignored",
+    "ref": "a generator ignores its input",
+    "op": "de-bruijn:generate",
+    "params": {
+      "k": 2,
+      "n": 3
+    },
+    "input": {
+      "value": "anything at all",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00010111",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "k to the power n above 65536",
+    "ref": "the output is limited to 65,536 symbols",
+    "op": "de-bruijn:generate",
+    "params": {
+      "k": 2,
+      "n": 17
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "k to the power n above 65536 (k = 3, n = 11)",
+    "ref": "3^11 = 177,147 symbols",
+    "op": "de-bruijn:generate",
+    "params": {
+      "k": 3,
+      "n": 11
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "k of 1",
+    "ref": "an alphabet needs at least 2 symbols",
+    "op": "de-bruijn:generate",
+    "params": {
+      "k": 1,
+      "n": 3
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "k of 37",
+    "ref": "there are 36 symbols (0-9, a-z)",
+    "op": "de-bruijn:generate",
+    "params": {
+      "k": 37,
+      "n": 1
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "n of 0",
+    "ref": "words have at least 1 symbol",
+    "op": "de-bruijn:generate",
+    "params": {
+      "k": 2,
+      "n": 0
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  }
+]

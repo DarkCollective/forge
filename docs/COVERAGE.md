@@ -12,11 +12,11 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Category | Covered | Redesigned | Dropped | Not yet | Total |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Data format | 54 | 6 | 0 | 20 | 80 |
-| Encryption / Encoding | 29 | 63 | 0 | 3 | 95 |
+| Encryption / Encoding | 29 | 64 | 0 | 2 | 95 |
 | Public Key | 0 | 0 | 0 | 30 | 30 |
 | Arithmetic / Logic | 9 | 0 | 0 | 17 | 26 |
 | Networking | 0 | 0 | 0 | 34 | 34 |
-| Language | 0 | 0 | 0 | 4 | 4 |
+| Language | 0 | 4 | 0 | 0 | 4 |
 | Utils | 6 | 0 | 2 | 42 | 50 |
 | Date / Time | 0 | 1 | 0 | 8 | 9 |
 | Extractors | 0 | 0 | 0 | 18 | 18 |
@@ -25,9 +25,9 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Code tidy | 0 | 0 | 0 | 24 | 24 |
 | Forensics | 0 | 0 | 0 | 9 | 9 |
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
-| Other | 4 | 1 | 3 | 13 | 21 |
+| Other | 4 | 8 | 3 | 6 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **136** | **92** | **5** | **273** | **506** |
+| **Total** | **136** | **104** | **5** | **261** | **506** |
 
 ## Data format (80)
 
@@ -202,7 +202,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | AES Key Wrap | redesigned | `aes-kw:wrap` | RFC 3394 over noble's aeskw, with the key-encryption key (16, 24 or 32 bytes, a key-type param) and the input as bytes. The IV is the RFC 3394 default, A6A6A6A6A6A6A6A6, fixed by noble, so CyberChef's IV parameter is not offered (a custom IV is not RFC 3394's algorithm as noble implements it). The input must be a multiple of 8 bytes and at least 16 (E_COERCE otherwise, as CyberChef). RFC 5649 padding is not offered, because CyberChef does not offer it. The output is raw bytes (chain hex:encode for CyberChef's Hex output). |
 | AES Key Unwrap | redesigned | `aes-kw:unwrap` | The inverse of aes-kw:wrap under the same key-encryption key, with the same IV and no IV or padding parameters for the reason given for AES Key Wrap. The wrapped key must be a multiple of 8 bytes and at least 24 (E_COERCE otherwise). A wrong key or corrupted data fails the RFC 3394 integrity check: E_COERCE, and no key data is returned (CyberChef reports an IV mismatch error). |
 | Pseudo-Random Number Generator | redesigned | `prng:bytes` | Bytes out: a number of random bytes (32 by default, 0 to 1 MiB) from the host CSPRNG (crypto.getRandomValues, never Math.random). CyberChef's Hex, Integer, Byte array and Raw output menu is a chain step (hex:encode, base64:encode, and so on). Like CyberChef the input is ignored. A host with no random source is E_PRIMITIVE. |
-| Pseudo-Random Prime Generator | not yet |  |  |
+| Pseudo-Random Prime Generator | redesigned | `prime:generate` | A prime drawn uniformly from the primes of exactly size bits (2 to 2048) or size decimal digits (1 to 616) by rejection sampling on the host CSPRNG (crypto.getRandomValues, never Math.random), tested by trial division and Miller-Rabin with random bases (40 rounds below 256 bits, 8 above). Several primes can be asked for (count, up to 100, joined by a delimiter of the wave 5 list), as decimal or lower-case hex text. The input is ignored. A 2048-bit prime takes about two seconds. CyberChef's own size menu and output layout are not copied. |
 | Enigma | covered | `enigma:encrypt` | Enigma I, M3 and M4 with the historical rotors, reflectors and plugboard; one reciprocal word (alias decrypt). |
 | Bombe | redesigned | `bombe:search` | One Forge-native word covers both Bombe operations: give three rotors for a single rotor order. It searches all 17,576 start positions with a crib at an offset, using the menu, the diagonal board and the test register, and lists the stops with the steckers deduced and a decryption preview made with enigma:encrypt. Enigma I and M3 only (no M4); stops are window letters at the start of the message. |
 | Multiple Bombe | redesigned | `bombe:search` | The same word: give more than three rotors (up to five, 60 orders) and every order of three of them is searched, left rotor first; the output names the rotor order of each stop. Capped by rotor orders times menu edges so that a run finishes inside a bake. |
@@ -323,10 +323,10 @@ it and regenerate this file. An operation listed in several CyberChef categories
 
 | CyberChef | Status | Forge | Note |
 | --- | --- | --- | --- |
-| Unicode Text Format | not yet |  |  |
-| Remove Diacritics | not yet |  |  |
-| Convert to NATO alphabet | not yet |  |  |
-| Convert Leet Speak | not yet |  |  |
+| Unicode Text Format | redesigned | `unicode-format:decorate` | Underline (U+0332 COMBINING LOW LINE) and strikethrough (U+0336 COMBINING LONG STROKE OVERLAY), each switchable, put after every code point except the line breaks. Underline is on by default (with both off the text is unchanged). |
+| Remove Diacritics | redesigned | `diacritics:remove` | Unicode normalisation rather than a table of letters: NFD, drop the combining marks of the diacritic blocks (U+0300 to U+036F, U+1AB0 to U+1AFF, U+1DC0 to U+1DFF, U+20D0 to U+20FF, U+FE20 to U+FE2F), NFC again, so any script that decomposes is handled and other characters keep their form. Letters with a stroke that do not decompose (o with stroke, d with stroke, eth, l with stroke, h with stroke, t with stroke, dotless i) are turned into their base letter by default, switchable with strokes. Ligatures such as ae, oe and ss are left alone. |
+| Convert to NATO alphabet | redesigned | `nato:encode`, `nato:decode` | The ICAO spelling alphabet (Alfa, Juliett, X-ray), letters in either case, digits plain (Zero, One, Two ...) or as ICAO pronounces them (Wun, Too, Tree, Fower, Fife, Ait, Niner), and the way back as nato:decode, which also reads Alpha, Juliet, Xray and Whisky. Forge adds a delimiter (one of the wave 5 list except none) and writes a space as a slash so that words stay apart; other characters are kept. CyberChef's exact spellings and its treatment of other characters are not copied. |
+| Convert Leet Speak | redesigned | `leet:convert` | To and from leet in one word, with Forge's own table: basic (a4 b8 e3 g6 i1 o0 s5 t7 z2) or extended (adds c( d) h# l\| q9 x%). Each letter has exactly one leet character, so from is a reading of the table, not a CyberChef-compatible inverse; it gives lower-case letters and cannot tell a leet 1 from a real 1. Non-ASCII text is left alone. |
 
 ## Utils (50)
 
@@ -586,16 +586,16 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Disassemble x86 | not yet |  |  |
 | Disassemble ARM | not yet |  |  |
 | Pseudo-Random Integer Generator | redesigned | `prng:integers` | Count integers, each uniform in [min, max] with both ends included (rejection sampling on the host CSPRNG, no modulo bias, big integers allowed), written as decimal text joined by a delimiter chosen from the wave 5 list (newline by default). Defaults min 0, max 99, count 1. The input is ignored; min above max is E_RANGE; count is limited to 65,536. |
-| Generate De Bruijn Sequence | not yet |  |  |
-| Generate UUID | not yet |  |  |
-| Analyse UUID | not yet |  |  |
-| Generate TOTP | not yet |  |  |
-| Generate HOTP | not yet |  |  |
+| Generate De Bruijn Sequence | redesigned | `de-bruijn:generate` | The lexicographically least de Bruijn sequence B(k, n) for an alphabet of k symbols (2 to 36, written with 0-9 then a-z) and words of n symbols (1 to 16), k to the power n at most 65,536 symbols. The input is ignored. |
+| Generate UUID | redesigned | `uuid:generate` | One parameterised word for RFC 9562: v1, v3, v4 (the CyberChef default), v5, v6, v7, nil and max, as lower-case 8-4-4-4-12 text. v3 and v5 take a namespace (dns, url, oid, x500 or any UUID) and a name and are deterministic. v1 and v6 count 100 ns ticks but the host clock has millisecond resolution, so the finer digits are zero; the clock sequence and the node are random (node with the multicast bit set). The input is ignored. |
+| Analyse UUID | redesigned | `uuid:analyse` | Reads a UUID (hyphens, braces, a urn:uuid: prefix and either case are accepted) and reports, one per line, the version and what it means, the variant and, for versions 1, 6 and 7, the timestamp in UTC; nil and max UUIDs are named. The wording is Forge's own, not CyberChef's. Text that is not 32 hex digits is E_COERCE. |
+| Generate TOTP | redesigned | `otp:totp` | RFC 6238 over hmac:digest. The input is the Base32 secret as authenticator apps show it; an empty input makes a random secret of key-size bytes (32 by default). The result is CyberChef's two parts, URI: <otpauth URI>, a blank line, Password: <digits>. Name, code length (digits, 6), epoch offset (0) and interval (period, 30) follow CyberChef's options; additions are the HMAC hash (sha1 by default, also sha256 and sha512) and an explicit Unix time (-1, the default, is now) so the vectors of RFC 6238 appendix B can be reproduced. |
+| Generate HOTP | redesigned | `otp:hotp` | RFC 4226 over hmac:digest, with the same input, output and options as otp:totp except that the counter replaces the time (counter 0 by default, up to 2^64 - 1). Matches the values of RFC 4226 appendix D. |
 | Generate QR Code | not yet |  |  |
 | Parse QR Code | not yet |  |  |
 | Haversine distance | not yet |  |  |
-| HTML To Text | not yet |  |  |
-| Generate Lorem Ipsum | not yet |  |  |
+| HTML To Text | redesigned | `html-text:to-text` | CyberChef's operation only turns an HTML-typed output into text. Forge has no typed outputs, so the word reads HTML source instead: comments, script and style elements, the DOCTYPE and all tags are dropped (br and block-level tags become line feeds), character references are decoded with html:decode, runs of line feeds are cut to two and the text is trimmed. It is a pattern-based stripper, not a parser, and not a sanitiser. |
+| Generate Lorem Ipsum | redesigned | `lorem:generate` | Paragraphs (up to 500), sentences (up to 5,000), words or bytes (up to 65,536), chosen at random from Forge's own list of the 182 distinct words of two passages of Cicero's De finibus (public domain), starting with the traditional Lorem ipsum dolor sit amet, consectetur adipiscing elit. unless opening is off. The sentence and paragraph shapes are Forge's own. The input is ignored. |
 | Numberwang | dropped |  | A joke based on a comedy sketch; it has no data-processing use. |
 | XKCD Random Number | dropped |  | A joke: it always returns 4 (the xkcd 'random number'). |
 | Automated Validation Test Op | dropped |  | CyberChef's internal fixture for testing parameter validation; it is not a user operation. |
