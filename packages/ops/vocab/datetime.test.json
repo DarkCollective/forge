@@ -1,0 +1,1789 @@
+[
+  {
+    "name": "parse: the default format (DD/MM/YYYY HH:mm:ss) in UTC",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:parse",
+    "params": {},
+    "input": {
+      "value": "11/11/2026 12:34:56",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Date: Wednesday 11th November 2026\nTime: 12:34:56\nPeriod: PM\nTimezone: UTC\nUTC offset: +0000\n\nDaylight Saving Time: false\nLeap year: false\nDays in this month: 30\n\nDay of year: 315\nWeek number: 46\nQuarter: 4",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "parse: a leap day, midnight is AM",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:parse",
+    "params": {
+      "preset": "International date and time"
+    },
+    "input": {
+      "value": "2024-02-29 00:00:00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Date: Thursday 29th February 2024\nTime: 00:00:00\nPeriod: AM\nTimezone: UTC\nUTC offset: +0000\n\nDaylight Saving Time: false\nLeap year: true\nDays in this month: 29\n\nDay of year: 60\nWeek number: 9\nQuarter: 1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "parse: 1 January 2026 belongs to ISO week 1",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:parse",
+    "params": {
+      "preset": "American-style date and time"
+    },
+    "input": {
+      "value": "01/01/2026 23:59:59",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Date: Thursday 1st January 2026\nTime: 23:59:59\nPeriod: PM\nTimezone: UTC\nUTC offset: +0000\n\nDaylight Saving Time: false\nLeap year: false\nDays in this month: 31\n\nDay of year: 1\nWeek number: 1\nQuarter: 1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "parse: 3 January 2021 is in ISO week 53 of 2020",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:parse",
+    "params": {
+      "preset": "International date and time"
+    },
+    "input": {
+      "value": "2021-01-03 06:07:08",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Date: Sunday 3rd January 2021\nTime: 06:07:08\nPeriod: AM\nTimezone: UTC\nUTC offset: +0000\n\nDaylight Saving Time: false\nLeap year: false\nDays in this month: 31\n\nDay of year: 3\nWeek number: 53\nQuarter: 1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "parse: a fixed offset zone",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:parse",
+    "params": {
+      "preset": "International date and time",
+      "zone": "+09:00"
+    },
+    "input": {
+      "value": "2026-11-11 21:34:56",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Date: Wednesday 11th November 2026\nTime: 21:34:56\nPeriod: PM\nTimezone: +09\nUTC offset: +0900\n\nDaylight Saving Time: false\nLeap year: false\nDays in this month: 30\n\nDay of year: 315\nWeek number: 46\nQuarter: 4",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "parse: a custom format with 12-hour time",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:parse",
+    "params": {
+      "preset": "Custom",
+      "format": "dddd, MMMM D, YYYY h:mm:ss a",
+      "zone": "-0530"
+    },
+    "input": {
+      "value": "Wednesday, November 11, 2026 7:04:05 am",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Date: Wednesday 11th November 2026\nTime: 07:04:05\nPeriod: AM\nTimezone: -0530\nUTC offset: -0530\n\nDaylight Saving Time: false\nLeap year: false\nDays in this month: 30\n\nDay of year: 315\nWeek number: 46\nQuarter: 4",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "parse: an offset in the text wins over the zone",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:parse",
+    "params": {
+      "preset": "ISO 8601 date and time",
+      "zone": "UTC"
+    },
+    "input": {
+      "value": "2026-11-11T14:34:56+02:00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Date: Wednesday 11th November 2026\nTime: 12:34:56\nPeriod: PM\nTimezone: UTC\nUTC offset: +0000\n\nDaylight Saving Time: false\nLeap year: false\nDays in this month: 30\n\nDay of year: 315\nWeek number: 46\nQuarter: 4",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "parse: a Unix timestamp",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:parse",
+    "params": {
+      "preset": "UNIX timestamp"
+    },
+    "input": {
+      "value": "1794400496",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Date: Wednesday 11th November 2026\nTime: 12:34:56\nPeriod: PM\nTimezone: UTC\nUTC offset: +0000\n\nDaylight Saving Time: false\nLeap year: false\nDays in this month: 30\n\nDay of year: 315\nWeek number: 46\nQuarter: 4",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "parse: text that does not fit the format",
+    "ref": "hand-computed: no token matches",
+    "op": "datetime:parse",
+    "params": {},
+    "input": {
+      "value": "no date here",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "parse: empty input",
+    "ref": "hand-computed: no token matches",
+    "op": "datetime:parse",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "parse: a day that does not exist",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:parse",
+    "params": {
+      "preset": "International date and time"
+    },
+    "input": {
+      "value": "2026-02-30 00:00:00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "parse: month 13",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:parse",
+    "params": {
+      "preset": "International date and time"
+    },
+    "input": {
+      "value": "2026-13-01 00:00:00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "parse: hour 25",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:parse",
+    "params": {
+      "preset": "International date and time"
+    },
+    "input": {
+      "value": "2026-01-01 25:00:00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "parse: unknown zone",
+    "ref": "hand-computed: not a zone name",
+    "op": "datetime:parse",
+    "params": {
+      "zone": "Mars/Olympus"
+    },
+    "input": {
+      "value": "11/11/2026 12:34:56",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "parse: empty custom format",
+    "ref": "hand-computed",
+    "op": "datetime:parse",
+    "params": {
+      "preset": "Custom",
+      "format": ""
+    },
+    "input": {
+      "value": "11/11/2026",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "parse: preset not in the list",
+    "ref": "hand-computed: static choice check",
+    "op": "datetime:parse",
+    "params": {
+      "preset": "Martian"
+    },
+    "input": {
+      "value": "11/11/2026",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "parse: input that is not UTF-8",
+    "ref": "hand-computed: ff is never UTF-8",
+    "op": "datetime:parse",
+    "params": {},
+    "input": {
+      "value": "ff",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "translate: UTC to Tokyo, verbose",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:translate",
+    "params": {
+      "out-preset": "Custom",
+      "out-format": "dddd Do MMMM YYYY HH:mm:ss Z",
+      "out-zone": "Asia/Tokyo"
+    },
+    "input": {
+      "value": "11/11/2026 12:34:56",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Wednesday 11th November 2026 21:34:56 +09:00",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "translate: Tokyo to UTC across midnight",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:translate",
+    "params": {
+      "in-preset": "International date and time",
+      "in-zone": "Asia/Tokyo",
+      "out-preset": "International date and time"
+    },
+    "input": {
+      "value": "2026-01-01 08:30:00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2025-12-31 23:30:00",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "translate: Kolkata (+05:30, no daylight saving) to ISO 8601",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:translate",
+    "params": {
+      "in-preset": "International date and time",
+      "out-preset": "ISO 8601 date and time",
+      "out-zone": "Asia/Kolkata"
+    },
+    "input": {
+      "value": "2026-06-15 12:00:00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2026-06-15T17:30:00+05:30",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "translate: all the date tokens",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:translate",
+    "params": {
+      "in-preset": "International date and time",
+      "out-preset": "Custom",
+      "out-format": "YYYY YY Q Qo M MM MMM MMMM D DD Do DDD DDDD d dd ddd dddd E W WW GGGG gggg w H HH h hh k a A [YYYY] ss S SSS",
+      "out-zone": "UTC"
+    },
+    "input": {
+      "value": "2026-11-11 00:05:06",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2026 26 4 4th 11 11 Nov November 11 11 11th 315 315 3 We Wed Wednesday 3 46 46 2026 2026 46 0 00 12 12 24 am AM YYYY 06 0 000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "translate: week numbers at the turn of the year",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:translate",
+    "params": {
+      "in-preset": "International date and time",
+      "out-preset": "Custom",
+      "out-format": "GGGG-[W]WW-E gggg-[w]ww-e"
+    },
+    "input": {
+      "value": "2021-01-03 00:00:00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2020-W53-7 2021-w02-0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "translate: ordinal weeks",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:translate",
+    "params": {
+      "in-preset": "International date and time",
+      "out-preset": "Custom",
+      "out-format": "Wo wo DDDo Qo do"
+    },
+    "input": {
+      "value": "2026-01-01 00:00:00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1st 1st 1st 1st 4th",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "translate: X and x",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:translate",
+    "params": {
+      "in-preset": "International date and time",
+      "out-preset": "Custom",
+      "out-format": "X x"
+    },
+    "input": {
+      "value": "2026-11-11 12:34:56",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1794400496 1794400496000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "translate: Unix timestamp in, ISO date out",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:translate",
+    "params": {
+      "in-preset": "UNIX timestamp",
+      "out-preset": "International date"
+    },
+    "input": {
+      "value": "1794400496",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2026-11-11",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "translate: long date tokens",
+    "ref": "moment.js English locale: L is MM/DD/YYYY, LLLL is dddd, MMMM D, YYYY h:mm A",
+    "op": "datetime:translate",
+    "params": {
+      "in-preset": "International date and time",
+      "out-preset": "Custom",
+      "out-format": "L | LL | LLLL | LT"
+    },
+    "input": {
+      "value": "2026-11-11 15:04:05",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "11/11/2026 | November 11, 2026 | Wednesday, November 11, 2026 3:04 PM | 3:04 PM",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "translate: forgiving read skips text between the fields",
+    "ref": "hand-computed: moment.js non-strict reading",
+    "op": "datetime:translate",
+    "params": {
+      "in-preset": "Custom",
+      "in-format": "YYYY MM DD HH mm",
+      "out-preset": "International date and time"
+    },
+    "input": {
+      "value": "on 2026/11/11 at 08:09",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2026-11-11 08:09:00",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "translate: two-digit year",
+    "ref": "hand-computed: 69 to 99 are 19xx, 00 to 68 are 20xx",
+    "op": "datetime:translate",
+    "params": {
+      "in-preset": "Custom",
+      "in-format": "DD/MM/YY",
+      "out-preset": "International date"
+    },
+    "input": {
+      "value": "01/02/69",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1969-02-01",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "translate: day of the year in, date out",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:translate",
+    "params": {
+      "in-preset": "Custom",
+      "in-format": "YYYY-DDDD",
+      "out-preset": "International date"
+    },
+    "input": {
+      "value": "2024-366",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2024-12-31",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "translate: ISO week date in, date out",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:translate",
+    "params": {
+      "in-preset": "Custom",
+      "in-format": "GGGG-[W]WW-E",
+      "out-preset": "International date"
+    },
+    "input": {
+      "value": "2020-W53-7",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2021-01-03",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "translate: the 12-hour clock at noon and midnight",
+    "ref": "hand-computed: 12 pm is 12:00, 12 am is 00:00",
+    "op": "datetime:translate",
+    "params": {
+      "in-preset": "Custom",
+      "in-format": "h:mm A",
+      "out-preset": "Time"
+    },
+    "input": {
+      "value": "12:15 PM",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "12:15:00",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "translate: midnight with the 12-hour clock",
+    "ref": "hand-computed",
+    "op": "datetime:translate",
+    "params": {
+      "in-preset": "Custom",
+      "in-format": "h:mm A",
+      "out-preset": "Time"
+    },
+    "input": {
+      "value": "12:15 AM",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "00:15:00",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "translate: fraction of a second kept to the nanosecond",
+    "ref": "hand-computed",
+    "op": "datetime:translate",
+    "params": {
+      "in-preset": "Custom",
+      "in-format": "HH:mm:ss.SSSSSSSSS",
+      "out-preset": "Custom",
+      "out-format": "ss.SSS ss.SSSSSSSSS"
+    },
+    "input": {
+      "value": "01:02:03.123456789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "03.123 03.123456789",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "translate: non-ASCII text between the fields",
+    "ref": "hand-computed",
+    "op": "datetime:translate",
+    "params": {
+      "in-preset": "Custom",
+      "in-format": "YYYY MM DD",
+      "out-preset": "International date"
+    },
+    "input": {
+      "value": "日付 2026年11月11日",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2026-11-11",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "translate: text that does not fit",
+    "ref": "hand-computed",
+    "op": "datetime:translate",
+    "params": {},
+    "input": {
+      "value": "x",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "translate: a fixed offset beyond 23:59",
+    "ref": "hand-computed",
+    "op": "datetime:translate",
+    "params": {
+      "out-zone": "+25:00"
+    },
+    "input": {
+      "value": "11/11/2026 12:34:56",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "translate: unknown output zone",
+    "ref": "hand-computed",
+    "op": "datetime:translate",
+    "params": {
+      "out-zone": "Nowhere/Land"
+    },
+    "input": {
+      "value": "11/11/2026 12:34:56",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "translate: year 0 hour 24 with minutes",
+    "ref": "hand-computed: 24 is allowed only as 24:00:00",
+    "op": "datetime:translate",
+    "params": {
+      "in-preset": "International date and time"
+    },
+    "input": {
+      "value": "2026-01-01 24:30:00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "translate: 24:00:00 is midnight of the next day",
+    "ref": "moment.js reading of hour 24",
+    "op": "datetime:translate",
+    "params": {
+      "in-preset": "International date and time",
+      "out-preset": "International date and time"
+    },
+    "input": {
+      "value": "2026-01-01 24:00:00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2026-01-02 00:00:00",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-unix: the epoch",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:from-unix",
+    "params": {},
+    "input": {
+      "value": "0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Thu 1 January 1970 00:00:00 UTC",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-unix: seconds",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:from-unix",
+    "params": {},
+    "input": {
+      "value": "1794400496",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Wed 11 November 2026 12:34:56 UTC",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-unix: milliseconds",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:from-unix",
+    "params": {
+      "unit": "milliseconds"
+    },
+    "input": {
+      "value": "1794400496789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Wed 11 November 2026 12:34:56 UTC",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-unix: microseconds",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:from-unix",
+    "params": {
+      "unit": "microseconds"
+    },
+    "input": {
+      "value": "1794400496789123",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Wed 11 November 2026 12:34:56 UTC",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-unix: nanoseconds with the fraction shown",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:from-unix",
+    "params": {
+      "unit": "nanoseconds",
+      "format": "YYYY-MM-DD HH:mm:ss.SSSSSSSSS"
+    },
+    "input": {
+      "value": "1794400496789123456",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2026-11-11 12:34:56.789123456",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-unix: a negative timestamp",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:from-unix",
+    "params": {
+      "format": "YYYY-MM-DD HH:mm:ss"
+    },
+    "input": {
+      "value": "-86400",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1969-12-31 00:00:00",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-unix: a decimal timestamp",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:from-unix",
+    "params": {
+      "format": "HH:mm:ss.SSS"
+    },
+    "input": {
+      "value": "86399.5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "23:59:59.500",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-unix: leap day 2000",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:from-unix",
+    "params": {
+      "format": "YYYY-MM-DD"
+    },
+    "input": {
+      "value": "951782400",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2000-02-29",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-unix: year 2100 is not a leap year",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:from-unix",
+    "params": {
+      "format": "YYYY-MM-DD"
+    },
+    "input": {
+      "value": "4107542400",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2100-03-01",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-unix: Tokyo",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:from-unix",
+    "params": {
+      "zone": "Asia/Tokyo",
+      "format": "YYYY-MM-DD HH:mm:ss Z"
+    },
+    "input": {
+      "value": "1794400496",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2026-11-11 21:34:56 +09:00",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-unix: a fixed offset zone with surrounding spaces in the input",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:from-unix",
+    "params": {
+      "zone": "-03",
+      "format": "HH:mm Z ZZ z"
+    },
+    "input": {
+      "value": "  1794400496  ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "09:34 -03:00 -0300 -03",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-unix: year 9999",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:from-unix",
+    "params": {
+      "format": "YYYY-MM-DD HH:mm:ss"
+    },
+    "input": {
+      "value": "253402300799",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "9999-12-31 23:59:59",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-unix: year 10000 gets a plus sign",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:from-unix",
+    "params": {
+      "format": "YYYY-MM-DD"
+    },
+    "input": {
+      "value": "253402300800",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "+10000-01-01",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "from-unix: not a number",
+    "ref": "hand-computed",
+    "op": "datetime:from-unix",
+    "params": {},
+    "input": {
+      "value": "yesterday",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "from-unix: empty input",
+    "ref": "hand-computed",
+    "op": "datetime:from-unix",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "from-unix: unit not in the list",
+    "ref": "hand-computed",
+    "op": "datetime:from-unix",
+    "params": {
+      "unit": "fortnights"
+    },
+    "input": {
+      "value": "0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "to-unix: default, shows the parsed time",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:to-unix",
+    "params": {},
+    "input": {
+      "value": "2026-11-11 12:34:56",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1794400496 (Wed 11 November 2026 12:34:56 UTC)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-unix: an ISO 8601 text with T and Z",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:to-unix",
+    "params": {
+      "show-parsed": false
+    },
+    "input": {
+      "value": "2026-11-11T12:34:56Z",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1794400496",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-unix: milliseconds",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:to-unix",
+    "params": {
+      "unit": "milliseconds",
+      "show-parsed": false
+    },
+    "input": {
+      "value": "2026-11-11 12:34:56",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1794400496000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-unix: microseconds",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:to-unix",
+    "params": {
+      "unit": "microseconds",
+      "show-parsed": false
+    },
+    "input": {
+      "value": "2026-11-11 12:34:56",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1794400496000000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-unix: nanoseconds",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:to-unix",
+    "params": {
+      "unit": "nanoseconds",
+      "show-parsed": false
+    },
+    "input": {
+      "value": "2026-11-11 12:34:56",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1794400496000000000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-unix: the epoch",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:to-unix",
+    "params": {
+      "show-parsed": false
+    },
+    "input": {
+      "value": "1970-01-01 00:00:00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-unix: before the epoch, rounded down",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:to-unix",
+    "params": {
+      "preset": "Custom",
+      "format": "YYYY-MM-DD HH:mm:ss.SSS",
+      "show-parsed": false
+    },
+    "input": {
+      "value": "1969-12-31 23:59:59.500",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-unix: Tokyo wall clock",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:to-unix",
+    "params": {
+      "zone": "Asia/Tokyo",
+      "show-parsed": false
+    },
+    "input": {
+      "value": "2026-11-11 21:34:56",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1794400496",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-unix: a fixed offset",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:to-unix",
+    "params": {
+      "zone": "+05:30",
+      "show-parsed": false
+    },
+    "input": {
+      "value": "2026-11-11 18:04:56",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1794400496",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-unix: far past, year 1",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:to-unix",
+    "params": {
+      "show-parsed": false
+    },
+    "input": {
+      "value": "0001-01-01 00:00:00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-62135596800",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-unix: leap day",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:to-unix",
+    "params": {
+      "show-parsed": false
+    },
+    "input": {
+      "value": "2024-02-29 12:00:00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1709208000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "to-unix: no date in the text",
+    "ref": "hand-computed",
+    "op": "datetime:to-unix",
+    "params": {},
+    "input": {
+      "value": "never",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "to-unix: unknown zone",
+    "ref": "hand-computed",
+    "op": "datetime:to-unix",
+    "params": {
+      "zone": "Atlantis/City"
+    },
+    "input": {
+      "value": "2026-11-11 12:34:56",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "filetime-to-unix: the Unix epoch",
+    "ref": "documented: 116444736000000000 ticks of 100 ns between 1601-01-01 and 1970-01-01 (Microsoft FILETIME)",
+    "op": "datetime:filetime-to-unix",
+    "params": {},
+    "input": {
+      "value": "116444736000000000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "filetime-to-unix: seconds",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:filetime-to-unix",
+    "params": {},
+    "input": {
+      "value": "134388740960000000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1794400496",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "filetime-to-unix: milliseconds",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:filetime-to-unix",
+    "params": {
+      "unit": "milliseconds"
+    },
+    "input": {
+      "value": "134388740967890000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1794400496789",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "filetime-to-unix: microseconds",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:filetime-to-unix",
+    "params": {
+      "unit": "microseconds"
+    },
+    "input": {
+      "value": "134388740967891234",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1794400496789123",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "filetime-to-unix: nanoseconds",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:filetime-to-unix",
+    "params": {
+      "unit": "nanoseconds"
+    },
+    "input": {
+      "value": "134388740967891234",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1794400496789123400",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "filetime-to-unix: hex big endian",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:filetime-to-unix",
+    "params": {
+      "input": "hex-be"
+    },
+    "input": {
+      "value": "1dd71d90ebb9800",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1794400496",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "filetime-to-unix: hex big endian with 0x and spaces",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:filetime-to-unix",
+    "params": {
+      "input": "hex-be"
+    },
+    "input": {
+      "value": "  0x01dd71d90ebb9800 ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1794400496",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "filetime-to-unix: hex little endian",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:filetime-to-unix",
+    "params": {
+      "input": "hex-le"
+    },
+    "input": {
+      "value": "0098bb0ed971dd01",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1794400496",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "filetime-to-unix: before 1970 rounds towards zero",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:filetime-to-unix",
+    "params": {},
+    "input": {
+      "value": "116444735985000000",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-1",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "filetime-to-unix: zero is 1601",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:filetime-to-unix",
+    "params": {},
+    "input": {
+      "value": "0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-11644473600",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "filetime-to-unix: not decimal",
+    "ref": "hand-computed",
+    "op": "datetime:filetime-to-unix",
+    "params": {},
+    "input": {
+      "value": "12ab",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "filetime-to-unix: not hex",
+    "ref": "hand-computed",
+    "op": "datetime:filetime-to-unix",
+    "params": {
+      "input": "hex-be"
+    },
+    "input": {
+      "value": "xyz",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "filetime-to-unix: odd hex digits for little endian",
+    "ref": "hand-computed",
+    "op": "datetime:filetime-to-unix",
+    "params": {
+      "input": "hex-le"
+    },
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "filetime-to-unix: empty input",
+    "ref": "hand-computed",
+    "op": "datetime:filetime-to-unix",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "unix-to-filetime: the epoch",
+    "ref": "documented: 116444736000000000 ticks between 1601-01-01 and 1970-01-01",
+    "op": "datetime:unix-to-filetime",
+    "params": {},
+    "input": {
+      "value": "0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "116444736000000000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unix-to-filetime: seconds",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:unix-to-filetime",
+    "params": {},
+    "input": {
+      "value": "1794400496",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "134388740960000000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unix-to-filetime: milliseconds",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:unix-to-filetime",
+    "params": {
+      "unit": "milliseconds"
+    },
+    "input": {
+      "value": "1794400496789",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "134388740967890000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unix-to-filetime: nanoseconds, cut at 100 ns",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:unix-to-filetime",
+    "params": {
+      "unit": "nanoseconds"
+    },
+    "input": {
+      "value": "1794400496789123456",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "134388740967891234",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unix-to-filetime: a decimal number of seconds",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:unix-to-filetime",
+    "params": {},
+    "input": {
+      "value": "0.5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "116444736005000000",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unix-to-filetime: hex big endian",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:unix-to-filetime",
+    "params": {
+      "output": "hex-be"
+    },
+    "input": {
+      "value": "1794400496",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "01dd71d90ebb9800",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unix-to-filetime: hex little endian",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:unix-to-filetime",
+    "params": {
+      "output": "hex-le"
+    },
+    "input": {
+      "value": "1794400496",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0098bb0ed971dd01",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unix-to-filetime: 1601-01-01 is zero",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:unix-to-filetime",
+    "params": {},
+    "input": {
+      "value": "-11644473600",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unix-to-filetime: before 1601",
+    "ref": "hand-computed",
+    "op": "datetime:unix-to-filetime",
+    "params": {},
+    "input": {
+      "value": "-11644473601",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "unix-to-filetime: past 64 bits",
+    "ref": "hand-computed: 2^64 ticks is year 30828",
+    "op": "datetime:unix-to-filetime",
+    "params": {},
+    "input": {
+      "value": "99999999999999",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "unix-to-filetime: not a number",
+    "ref": "hand-computed",
+    "op": "datetime:unix-to-filetime",
+    "params": {},
+    "input": {
+      "value": "1e9",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "delta: add days, hours, minutes, seconds",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:delta",
+    "params": {
+      "days": 1,
+      "hours": 2,
+      "minutes": 3,
+      "seconds": 4
+    },
+    "input": {
+      "value": "11/03/2026 01:30:00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "12/03/2026 03:33:04",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "delta: subtract across a month and a year",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:delta",
+    "params": {
+      "preset": "International date and time",
+      "operation": "subtract",
+      "days": 1,
+      "seconds": 1
+    },
+    "input": {
+      "value": "2026-01-01 00:00:00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2025-12-30 23:59:59",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "delta: add into a leap day",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:delta",
+    "params": {
+      "preset": "International date and time",
+      "days": 1
+    },
+    "input": {
+      "value": "2024-02-28 12:00:00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2024-02-29 12:00:00",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "delta: milliseconds carry into seconds",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:delta",
+    "params": {
+      "preset": "Custom",
+      "format": "HH:mm:ss.SSS",
+      "milliseconds": 750
+    },
+    "input": {
+      "value": "10:00:00.500",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "10:00:01.250",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "delta: negative amounts reverse the direction",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:delta",
+    "params": {
+      "preset": "International date and time",
+      "hours": -25
+    },
+    "input": {
+      "value": "2026-11-11 12:00:00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2026-11-10 11:00:00",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "delta: in Tokyo",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:delta",
+    "params": {
+      "preset": "International date and time",
+      "zone": "Asia/Tokyo",
+      "hours": 5
+    },
+    "input": {
+      "value": "2026-11-11 21:00:00",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2026-11-12 02:00:00",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "delta: a year of days",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:delta",
+    "params": {
+      "preset": "International date",
+      "days": 365
+    },
+    "input": {
+      "value": "2027-03-01",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2028-02-29",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "delta: nothing to add",
+    "ref": "computed with an independent implementation (Python datetime, calendar and zoneinfo)",
+    "op": "datetime:delta",
+    "params": {
+      "preset": "International date and time"
+    },
+    "input": {
+      "value": "2026-11-11 12:34:56",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2026-11-11 12:34:56",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "delta: text that does not fit",
+    "ref": "hand-computed",
+    "op": "datetime:delta",
+    "params": {},
+    "input": {
+      "value": "tomorrow",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "delta: operation not in the list",
+    "ref": "hand-computed",
+    "op": "datetime:delta",
+    "params": {
+      "operation": "multiply"
+    },
+    "input": {
+      "value": "11/11/2026 12:34:56",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "delta: days that are not a number",
+    "ref": "hand-computed",
+    "op": "datetime:delta",
+    "params": {
+      "days": "many"
+    },
+    "input": {
+      "value": "11/11/2026 12:34:56",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RECIPE_INVALID"
+    }
+  },
+  {
+    "name": "extract-dates: the three styles",
+    "ref": "hand-computed from the pattern rules in the doc",
+    "op": "datetime:extract-dates",
+    "params": {},
+    "input": {
+      "value": "Born 1999-12-31, met on 3/4/2021 and 04/13/2022; also 13.04.2022, 2022 5 6 and 1/1/1899 but not 2022-13-01 or 12345-01-01.",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "1999-12-31\n3/4/2021\n04/13/2022\n13.04.2022\n2022 5 6",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "extract-dates: sorted with a total",
+    "ref": "hand-computed",
+    "op": "datetime:extract-dates",
+    "params": {
+      "display-total": true,
+      "sort": true
+    },
+    "input": {
+      "value": "2022-01-01 and 2021-12-31 and 2022-01-01",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Total found: 3\n\n2021-12-31\n2022-01-01\n2022-01-01",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "extract-dates: unique keeps the first position",
+    "ref": "hand-computed",
+    "op": "datetime:extract-dates",
+    "params": {
+      "unique": true
+    },
+    "input": {
+      "value": "2022-01-02 2021-12-31 2022-01-02",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2022-01-02\n2021-12-31",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "extract-dates: unique, sorted, with a total",
+    "ref": "hand-computed",
+    "op": "datetime:extract-dates",
+    "params": {
+      "display-total": true,
+      "sort": true,
+      "unique": true
+    },
+    "input": {
+      "value": "2022-01-02 2021-12-31 2022-01-02",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Total found: 2\n\n2021-12-31\n2022-01-02",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "extract-dates: no dates",
+    "ref": "hand-computed",
+    "op": "datetime:extract-dates",
+    "params": {},
+    "input": {
+      "value": "nothing to see",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "extract-dates: no dates with a total",
+    "ref": "hand-computed",
+    "op": "datetime:extract-dates",
+    "params": {
+      "display-total": true
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Total found: 0\n\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "extract-dates: empty input",
+    "ref": "hand-computed",
+    "op": "datetime:extract-dates",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "extract-dates: non-ASCII text around the dates",
+    "ref": "hand-computed",
+    "op": "datetime:extract-dates",
+    "params": {},
+    "input": {
+      "value": "日付:2026-11-11、期限:2026/12/31。",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2026-11-11\n2026/12/31",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "extract-dates: a date inside a longer number is not a date",
+    "ref": "hand-computed",
+    "op": "datetime:extract-dates",
+    "params": {},
+    "input": {
+      "value": "12026-11-11 and 2026-11-115",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  }
+]
