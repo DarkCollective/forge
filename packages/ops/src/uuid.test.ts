@@ -36,7 +36,6 @@ runtime.load(`IN: uuid
 : t-v6 ( ticks:int rnd:bytes -- str ) ticks rnd _v6 _text ;
 : t-v7 ( ms:int rnd:bytes -- str ) ms rnd _v7 _text ;
 : t-greg ( ms:int -- int ) ms _gregorian ;
-: t-iso ( ms:int -- str ) ms _iso ;
 : t-parse ( s:str -- str ) s _parse _text ;`);
 
 type Result = Awaited<ReturnType<typeof runtime.call>>;
@@ -253,25 +252,6 @@ describe("the parser and the ISO text", () => {
     "6ba7b810-9dad-11d1-80b4-00c04fd430cg",
   ])("%j is E_COERCE", async (s) => {
     expect(code(await runtime.call("uuid:t-parse", [str(s)]))).toBe("E_COERCE");
-  });
-
-  test.each([
-    [0, "1970-01-01T00:00:00.000"],
-    [951782400000, "2000-02-29T00:00:00.000"],
-    [-1, "1969-12-31T23:59:59.999"],
-    [-12219292800000, "1582-10-15T00:00:00.000"],
-    [253402300799999, "9999-12-31T23:59:59.999"],
-    [1709210096789, "2024-02-29T12:34:56.789"],
-    [4102444800000, "2100-01-01T00:00:00.000"],
-  ])("ISO text of %i ms", async (ms, expected) => {
-    expect(top(await runtime.call("uuid:t-iso", [int(ms)]))).toBe(expected);
-  });
-
-  test("ISO text agrees with Date for a spread of instants (years 1 to 9999, including before 1970)", async () => {
-    for (const ms of [-62135596800000, -5e12, -86400001, 86399999, 1e12, 1.5e12, 2.5e12, 1.8e13]) {
-      const want = new Date(ms).toISOString().replace("Z", "");
-      expect(top(await runtime.call("uuid:t-iso", [int(ms)]))).toBe(want);
-    }
   });
 });
 

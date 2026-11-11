@@ -308,19 +308,11 @@ META: pad
 
 \ ---- wrap ----
 
-\ The code points cut into pieces of width, written as text and joined with the delimiter. (util:str-chunks does the same
-\ on a string, but slices the string at code point offsets, which costs time in proportion to the length for every
-\ piece: 9 s for a 64 KiB line cut at 7. Slicing the list of code points does not.)
-: _chunks ( codes:list width:int delimiter:str -- str )
-  0 codes len width + 1 - width div range
-  [ width * dup width + codes len min codes -rot slice codes>str ] map
-  delimiter join ;
-
 : wrap ( data:str delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab}="newline" width:int[1..65536]=80 -- str )
   "Cut every piece of the text (lines by default) into pieces of at most width characters (code points), counting characters, not words, and put the delimiter between them. Empty pieces stay empty." doc
   "Utils" category
   data delimiter util:delimiter split
-  [ dup len 0 > [ str>codes width delimiter util:delimiter _chunks ] when ] map
+  [ dup len 0 > [ width util:str-chunks delimiter util:delimiter join ] when ] map
   delimiter util:delimiter join ;
 
 META: wrap

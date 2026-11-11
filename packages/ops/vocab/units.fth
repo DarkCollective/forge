@@ -47,10 +47,6 @@ IN: units
 
 \ ---- a fraction to decimal text ----
 
-\ n/d rounded to the nearest integer, halves up (n at least 0, d above 0).
-: _round-div ( n:int d:int -- int )
-  n 2 * d + d 2 * div ;
-
 \ The e with 10^e <= a/d < 10^(e+1), given l = the digits of a minus the digits of d (a above 0).
 : _exp10-from ( a:int d:int l:int -- int )
   l 0 >= [ a d 10 l pow * >= ] [ a 10 l neg pow * d >= ] if
@@ -61,7 +57,7 @@ IN: units
 
 \ a/d times ten to the power p, rounded to an integer.
 : _scaled ( a:int d:int p:int -- int )
-  p 0 >= [ a 10 p pow * d ] [ a d 10 p neg pow * ] if _round-div ;
+  p 0 >= [ a 10 p pow * d ] [ a d 10 p neg pow * ] if util:round-div ;
 
 \ The digits with a decimal point p places from the end (none for p of 0 or less, which adds zeros
 \ instead); trailing zeros after the point go.

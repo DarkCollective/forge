@@ -75,6 +75,7 @@ META: encode
   t ":" util:ends-with? ;
 
 \ The token without a trailing colon.
+\ Kept private: it only resembles case:_body (see the ops README, Justified exceptions).
 : _uncolon ( t:str -- str )
   t _colon?
   [ t 0 t len 1 - slice ]

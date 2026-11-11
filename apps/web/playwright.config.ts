@@ -15,8 +15,9 @@
  */
 import { defineConfig, devices } from "@playwright/test";
 
-// The port is fixed so that the server and the specs agree; change it here only (the specs use baseURL).
-const PORT = 4783;
+// The server and the specs agree on one port (the specs use baseURL). It is 4783 unless FORGE_E2E_PORT names another,
+// which parallel worktrees need: with a shared port, reuseExistingServer would make each run test the other's build.
+const PORT = Number(process.env.FORGE_E2E_PORT ?? 4783);
 
 export default defineConfig({
   testDir: "./e2e",

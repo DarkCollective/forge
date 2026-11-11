@@ -18,37 +18,12 @@ IN: datetime
 
 \ ---- calendar maths (days since 1970-01-01, proleptic Gregorian) ----
 
-\ Days from civil, once the year is counted from 1 March (Hinnant's algorithm).
-: _days-adj ( y:int m:int d:int -- int )
-  y 400 div 146097 *
-  y 400 mod dup 365 * over 4 div + swap 100 div -
-  +
-  m 9 + 12 mod 153 * 2 + 5 div d + 1 - +
-  719468 - ;
-
-\ Days since 1970-01-01 of year y, month m (1 to 12), day d (the day may run past the month).
-: _days ( y:int m:int d:int -- int )
-  y m 2 <= [ 1 ] [ 0 ] if - m d _days-adj ;
-
-: _civil-mp ( mp:int doy:int y:int -- list )
-  { y mp 10 >= [ 1 ] [ 0 ] if +
-    mp 10 < [ mp 3 + ] [ mp 9 - ] if
-    doy mp 153 * 2 + 5 div - 1 + } ;
-
-: _civil-doy ( doy:int y:int -- list )
-  doy 5 * 2 + 153 div doy y _civil-mp ;
-
-: _civil-yoe ( yoe:int era:int doe:int -- list )
-  doe yoe 365 * yoe 4 div + yoe 100 div - -
-  yoe era 400 * + _civil-doy ;
-
-: _civil-era ( era:int doe:int -- list )
-  doe doe 1460 div - doe 36524 div + doe 146096 div - 365 div
-  era doe _civil-yoe ;
-
 \ { year month day } of a day count (days since 1970-01-01).
+: _ymd-list ( y:int m:int d:int -- list )
+  { y m d } ;
+
 : _civil ( z:int -- list )
-  z 719468 + dup 146097 div swap 146097 mod _civil-era ;
+  z util:civil-from-days _ymd-list ;
 
 : _leap? ( y:int -- bool )
   y 4 mod 0 = y 100 mod 0 <> y 400 mod 0 = or and ;
@@ -66,7 +41,7 @@ IN: datetime
 \ ---- weeks (moment.js rules: a week starts on day fdow, and week 1 holds day fdoy of January) ----
 
 : _fwo2 ( fwd:int year:int fdow:int -- int )
-  7 year 1 fwd _days _dow-days + fdow - 7 mod
+  7 year 1 fwd util:days-from-civil _dow-days + fdow - 7 mod
   neg fwd + 1 - ;
 
 \ The offset of the first day of week 1 from 1 January.
@@ -166,7 +141,7 @@ IN: datetime
     { "s" loc 60000000000 mod 1000000000 div }
     { "frac" loc 1000000000 mod }
     { "dow" loc 86400000000000 div _dow-days }
-    { "doy" loc 86400000000000 div ymd 0 nth 1 1 _days - 1 + } }
+    { "doy" loc 86400000000000 div ymd 0 nth 1 1 util:days-from-civil - 1 + } }
   >record ;
 
 : _fields-local ( ns:int zone:str off:int loc:int -- record )
@@ -186,30 +161,20 @@ IN: datetime
 
 \ ---- formatting ----
 
-\ n (not negative) written with at least w digits (w up to 9).
-\ util-candidate: zero-pad
-: _zpad ( n:int w:int -- str )
-  "000000000" 0 w n int>str len - 0 max slice n int>str cat ;
-
-\ util-candidate: ordinal-suffix
-: _ord-suffix ( n:int -- str )
-  n 100 mod dup 11 >= swap 13 <= and
-  [ "th" ]
-  [ n 10 mod dup 1 = [ drop "st" ] [ dup 2 = [ drop "nd" ] [ 3 = [ "rd" ] [ "th" ] if ] if ] if ] if ;
 
 : _ord ( n:int -- str )
-  n int>str n _ord-suffix cat ;
+  n int>str n util:ordinal-suffix cat ;
 
 \ A year with a minus sign when negative and at least w digits.
 : _year ( y:int w:int -- str )
-  y 0 < [ "-" ] [ "" ] if y abs w _zpad cat ;
+  y 0 < [ "-" ] [ "" ] if y abs w util:zero-pad cat ;
 
 \ "+" or "-" and the digits of the offset (seconds east of UTC), with or without a colon.
 : _off-str ( off:int colon:bool -- str )
   off 0 < [ "-" ] [ "+" ] if
-  off abs 3600 div 2 _zpad cat
+  off abs 3600 div 2 util:zero-pad cat
   colon [ ":" ] [ "" ] if cat
-  off abs 60 div 60 mod 2 _zpad cat ;
+  off abs 60 div 60 mod 2 util:zero-pad cat ;
 
 : _hour12 ( h:int -- int )
   h 12 mod dup 0 = [ drop 12 ] when ;
@@ -230,25 +195,25 @@ IN: datetime
 
 : _fmt-y ( tok:str f:record -- str )
   tok len 2 =
-  [ f "y" get 100 mod 2 _zpad ]
+  [ f "y" get 100 mod 2 util:zero-pad ]
   [ tok len 4 <=
     [ f "y" get 9999 > [ "+" f "y" get int>str cat ] [ tok len 1 = [ f "y" get int>str ] [ f "y" get 4 _year ] if ] if ]
-    [ f "y" get 0 < [ "-" ] [ "+" ] if f "y" get abs tok len _zpad cat ] if ] if ;
+    [ f "y" get 0 < [ "-" ] [ "+" ] if f "y" get abs tok len util:zero-pad cat ] if ] if ;
 
 : _fmt-m ( tok:str f:record -- str )
   tok "M" = [ f "mo" get int>str ] [
-  tok "MM" = [ f "mo" get 2 _zpad ] [
+  tok "MM" = [ f "mo" get 2 util:zero-pad ] [
   tok "Mo" = [ f "mo" get _ord ] [
   tok "MMM" = [ _months f "mo" get 1 - nth 0 3 slice ] [
   _months f "mo" get 1 - nth ] if ] if ] if ] if ;
 
 : _fmt-d ( tok:str f:record -- str )
   tok "D" = [ f "d" get int>str ] [
-  tok "DD" = [ f "d" get 2 _zpad ] [
+  tok "DD" = [ f "d" get 2 util:zero-pad ] [
   tok "Do" = [ f "d" get _ord ] [
   tok "DDD" = [ f "doy" get int>str ] [
   tok "DDDo" = [ f "doy" get _ord ] [
-  f "doy" get 3 _zpad ] if ] if ] if ] if ] if ;
+  f "doy" get 3 util:zero-pad ] if ] if ] if ] if ] if ;
 
 : _fmt-wd ( tok:str f:record -- str )
   tok "d" = [ f "dow" get int>str ] [
@@ -260,20 +225,20 @@ IN: datetime
 \ ISO week (W) or locale week (w) of the year.
 : _fmt-week ( tok:str f:record fdow:int fdoy:int -- str )
   f fdow fdoy _fweek 0 nth
-  tok _tok-ordinal? [ _ord ] [ tok len 2 = [ 2 _zpad ] [ int>str ] if ] if ;
+  tok _tok-ordinal? [ _ord ] [ tok len 2 = [ 2 util:zero-pad ] [ int>str ] if ] if ;
 
 \ Week-year: GG gg (two digits), GGGG gggg (four), GGGGG ggggg (five, with a sign).
 : _fmt-wyear ( tok:str f:record fdow:int fdoy:int -- str )
   f fdow fdoy _fweek 1 nth
-  tok len 2 = [ 100 mod 2 _zpad ] [ tok len 4 = [ 4 _year ] [ dup 0 < [ "-" ] [ "+" ] if swap abs 5 _zpad cat ] if ] if ;
+  tok len 2 = [ 100 mod 2 util:zero-pad ] [ tok len 4 = [ 4 _year ] [ dup 0 < [ "-" ] [ "+" ] if swap abs 5 util:zero-pad cat ] if ] if ;
 
 : _fmt-h ( tok:str f:record -- str )
   tok "H" = [ f "h" get int>str ] [
-  tok "HH" = [ f "h" get 2 _zpad ] [
+  tok "HH" = [ f "h" get 2 util:zero-pad ] [
   tok "h" = [ f "h" get _hour12 int>str ] [
-  tok "hh" = [ f "h" get _hour12 2 _zpad ] [
+  tok "hh" = [ f "h" get _hour12 2 util:zero-pad ] [
   tok "k" = [ f "h" get dup 0 = [ drop 24 ] when int>str ] [
-  f "h" get dup 0 = [ drop 24 ] when 2 _zpad ] if ] if ] if ] if ] if ;
+  f "h" get dup 0 = [ drop 24 ] when 2 util:zero-pad ] if ] if ] if ] if ] if ;
 
 : _fmt-z ( tok:str f:record -- str )
   tok "Z" = [ f "off" get true _off-str ] [
@@ -285,9 +250,9 @@ IN: datetime
   c "M" = [ tok f _fmt-m ] [
   c "D" = [ tok f _fmt-d ] [
   c "H" = c "h" = or c "k" = or [ tok f _fmt-h ] [
-  c "m" = [ tok "m" = [ f "mi" get int>str ] [ f "mi" get 2 _zpad ] if ] [
-  c "s" = [ tok "s" = [ f "s" get int>str ] [ f "s" get 2 _zpad ] if ] [
-  c "S" = [ f "frac" get 9 _zpad 0 tok len 9 min slice ] [
+  c "m" = [ tok "m" = [ f "mi" get int>str ] [ f "mi" get 2 util:zero-pad ] if ] [
+  c "s" = [ tok "s" = [ f "s" get int>str ] [ f "s" get 2 util:zero-pad ] if ] [
+  c "S" = [ f "frac" get 9 util:zero-pad 0 tok len 9 min slice ] [
   c "a" = [ f "h" get 12 < [ "am" ] [ "pm" ] if ] [
   c "A" = [ f "h" get 12 < [ "AM" ] [ "PM" ] if ] [
   c "Z" = c "z" = or [ tok f _fmt-z ] [
@@ -314,7 +279,7 @@ IN: datetime
 \ The tokens of a format: [literals], the format tokens and every other character on its own.
 : _tokens ( fmt:str -- list )
   fmt "\\[[^\\]]*\\]|YYYYYY|YYYYY|YYYY|YY|Y|Qo|Q|MMMM|MMM|MM|Mo|M|DDDD|DDDo|DDD|DD|Do|D|dddd|ddd|dd|do|d|E|e|WW|Wo|W|ww|wo|w|GGGGG|GGGG|GG|ggggg|gggg|gg|HH|H|hh|h|kk|k|mm|m|ss|s|S+|a|A|ZZ|Z|zz|z|X|x|LTS|LT|LLLL|LLL|LL|L|llll|lll|ll|l|[\\s\\S]"
-  "" regex:find-all [ "text" get ] map ;
+  "" util:match-texts ;
 
 : _expand-token ( tok:str -- str )
   tok "LT" = [ "h:mm A" ] [
@@ -483,11 +448,11 @@ IN: datetime
 : _ymd ( y:int m:int d:int -- int )
   m 1 12 util:between? not [ "the month is not between 1 and 12" raise:coerce ] when
   d 1 y m _dim util:between? not [ "the day does not exist in that month" raise:coerce ] when
-  y m d _days ;
+  y m d util:days-from-civil ;
 
 : _days-doy ( y:int doy:int -- int )
   doy 1 y _diy util:between? not [ "the day of the year does not exist in that year" raise:coerce ] when
-  y 1 1 _days doy + 1 - ;
+  y 1 1 util:days-from-civil doy + 1 - ;
 
 : _month-of ( acc:record -- int )
   acc "M" _set? [ acc "M" get ]
@@ -504,7 +469,7 @@ IN: datetime
   acc yk acc "Y" 1970 _get-or _get-or
   acc wk 1 _get-or
   weekday fdow fdoy _from-weeks
-  dup 0 nth 1 1 _days swap 1 nth + 1 - ;
+  dup 0 nth 1 1 util:days-from-civil swap 1 nth + 1 - ;
 
 : _days-of ( acc:record -- int )
   acc "M" _set? not acc "D" _set? not and acc "doy" _set? not and
@@ -570,8 +535,8 @@ IN: datetime
 
 : _dst? ( f:record -- bool )
   f "off" get
-  f "y" get 1 1 _days 86400000000000 * f "zone" get _local>instant 1000000 div f "zone" get swap _offset
-  f "y" get 6 1 _days 86400000000000 * f "zone" get _local>instant 1000000 div f "zone" get swap _offset
+  f "y" get 1 1 util:days-from-civil 86400000000000 * f "zone" get _local>instant 1000000 div f "zone" get swap _offset
+  f "y" get 6 1 util:days-from-civil 86400000000000 * f "zone" get _local>instant 1000000 div f "zone" get swap _offset
   min > ;
 
 : _tf ( b:bool -- str )
@@ -606,11 +571,6 @@ IN: datetime
 : _unix-text ( ns:int unit:str show:bool -- str )
   ns unit _unit-scale div int>str
   show [ " (" cat "ddd D MMMM YYYY HH:mm:ss" ns "UTC" _format cat " UTC)" cat ] when ;
-
-\ Integer division that rounds towards zero.
-\ util-candidate: tdiv
-: _tdiv ( a:int b:int -- int )
-  a 0 < [ a neg b div neg ] [ a b div ] if ;
 
 \ 100-nanosecond ticks between 1601-01-01 (the Windows file time epoch) and 1970-01-01.
 116444736000000000 CONSTANT _filetime-epoch
@@ -667,14 +627,14 @@ IN: datetime
   "Date/Time" category
   data input _filetime-read _filetime-epoch -
   unit "nanoseconds" = [ 100 * ] [
-  unit "microseconds" = [ 10 _tdiv ] [
-  unit "milliseconds" = [ 10000 _tdiv ] [ 10000000 _tdiv ] if ] if ] if
+  unit "microseconds" = [ 10 util:tdiv ] [
+  unit "milliseconds" = [ 10000 util:tdiv ] [ 10000000 util:tdiv ] if ] if ] if
   int>str ;
 
 : unix-to-filetime ( data:str unit:choice{seconds|milliseconds|microseconds|nanoseconds}="seconds" output:choice{decimal|hex-be|hex-le}="decimal" -- str )
   "Convert a Unix timestamp (a whole or decimal number in the chosen unit) to a Windows file time, the number of 100-nanosecond intervals since 1601-01-01T00:00:00Z. The output is decimal digits, 16 hex digits (hex-be) or the 8 bytes in little-endian order as 16 hex digits (hex-le). A fraction finer than 100 nanoseconds is cut towards zero. Text that is not a number is E_COERCE; a time before 1601 or past the 64-bit range is E_RANGE." doc
   "Date/Time" category
-  data unit _unit-scale _amount-ns 100 _tdiv _filetime-epoch + output _filetime-write ;
+  data unit _unit-scale _amount-ns 100 util:tdiv _filetime-epoch + output _filetime-write ;
 
 : _shift ( ns:int zone:str sign:int days:int elapsed:int -- int )
   days 0 =
@@ -691,28 +651,16 @@ IN: datetime
   hours 3600000000000 * minutes 60000000000 * + seconds 1000000000 * + milliseconds 1000000 * +
   _shift zone _format ;
 
-: _pair ( k:str -- list )
-  { k true } ;
-
-\ The distinct items, each at its first position (a record keeps the first position of a key).
-\ util-candidate: distinct
-: _distinct ( items:list -- list )
-  items [ _pair ] map >record keys ;
-
 : _date-pattern ( -- str )
   "\\b(?:(?:19|20)\\d\\d[-/. ](?:0?[1-9]|1[0-2])[-/. ](?:0?[1-9]|[12]\\d|3[01])|(?:0?[1-9]|[12]\\d|3[01])[-/. ](?:0?[1-9]|1[0-2])[-/. ](?:19|20)\\d\\d|(?:0?[1-9]|1[0-2])[-/. ](?:1[3-9]|2\\d|3[01])[-/. ](?:19|20)\\d\\d)\\b" ;
-
-: _total-text ( items:list total:bool -- str )
-  items "\n" join
-  total [ "Total found: " items len int>str cat "\n\n" cat swap cat ] when ;
 
 : extract-dates ( data:str display-total:bool=false sort:bool=false unique:bool=false -- str )
   "Find the dates in the text and list them, one per line, in the order they appear. A date is a year, month and day written yyyy-mm-dd, a day, month and year written dd/mm/yyyy, or a month, day and year written mm/dd/yyyy (the day is more than 12 there, so it cannot be a month), with a hyphen, slash, full stop or space between the parts, one or two digits for the month and day and a year from 1900 to 2099. The match is by pattern only: a date that does not exist, like 2026-02-30, is still listed. With sort the dates are in code point order; with unique each is listed once (at its first position, or sorted); with display-total the first line says how many dates are listed, then a blank line." doc
   "Date/Time" category
-  data _date-pattern "" regex:find-all [ "text" get ] map
-  unique [ _distinct ] when
+  data _date-pattern "" util:match-texts
+  unique [ list:unique ] when
   sort [ list:sort ] when
-  display-total _total-text ;
+  display-total util:total-text ;
 
 META: parse
   param preset "A known format to read the date and time with, or Custom to use the format string." ;

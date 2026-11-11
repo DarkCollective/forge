@@ -18,8 +18,8 @@
  * ciphersaber2 primitives. CipherSaber-2 (Arnold Reinhold, 2000; the protocol is on ciphersaber.gurus.org):
  * RC4 whose key is the user key followed by a 10-byte IV, with the key setup repeated N times (the index j
  * carried over from round to round), then plain RC4 output. An encrypted message is the IV followed by the
- * XOR of the message with the key stream. `_random-iv` is the only source of randomness (effect +random);
- * `_crypt` is deterministic. The words `ciphersaber2:encrypt` and `decrypt` (vocab/ciphersaber2.fth) hold the
+ * XOR of the message with the key stream. `_crypt` is deterministic: the random IV comes from the shared
+ * `random:bytes-of`. The words `ciphersaber2:encrypt` and `decrypt` (vocab/ciphersaber2.fth) hold the
  * metadata and the parameters.
  */
 import { definePrimitive } from "@forge/lang";
@@ -29,14 +29,6 @@ import { rangeFailure } from "../prim-util.js";
 
 const IV_LENGTH = 10;
 const MAX_ROUNDS = 10000;
-
-/** Ten random bytes from the host's CSPRNG. */
-export function randomIv(): Uint8Array {
-  const c = (globalThis as unknown as { crypto?: { getRandomValues(a: Uint8Array): Uint8Array } })
-    .crypto;
-  if (c === undefined) throw rangeFailure("no secure random source is available in this host");
-  return c.getRandomValues(new Uint8Array(IV_LENGTH));
-}
 
 /** XORs `data` with the CipherSaber-2 key stream of key || iv after `rounds` key setup rounds. */
 export function crypt(
@@ -58,11 +50,6 @@ export function crypt(
 }
 
 export const primitives: readonly PrimitiveDef[] = [
-  definePrimitive("ciphersaber2", "_random-iv", "( -- bytes )", randomIv, {
-    doc: "Ten random bytes for a CipherSaber IV (private helper of ciphersaber2:encrypt).",
-    category: "Encryption",
-    effects: ["+random"],
-  }),
   definePrimitive(
     "ciphersaber2",
     "_crypt",

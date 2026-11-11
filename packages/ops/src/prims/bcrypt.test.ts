@@ -15,7 +15,7 @@
  */
 
 import { describe, expect, test } from "vitest";
-import { hash, MAX_COST, parse, primitives, randomSalt, verify } from "./bcrypt.js";
+import { hash, MAX_COST, parse, primitives, verify } from "./bcrypt.js";
 
 const text = (s: string) => new TextEncoder().encode(s);
 const ascii = (u: Uint8Array) => String.fromCharCode(...u);
@@ -35,8 +35,7 @@ const KNOWN: [string, string][] = [
 
 describe("bcrypt primitives", () => {
   test("are exported as private primitives", () => {
-    expect(primitives.map((p) => p.name)).toEqual(["_hash", "_verify", "_parse", "_random-salt"]);
-    expect(primitives.find((p) => p.name === "_random-salt")?.effects).toEqual(["+random"]);
+    expect(primitives.map((p) => p.name)).toEqual(["_hash", "_verify", "_parse"]);
   });
 
   test.each(KNOWN)("verify %j against a published hash", (pw, h) => {
@@ -111,11 +110,5 @@ describe("bcrypt primitives", () => {
     expect(code(() => hash(text("a"), new Uint8Array(16), MAX_COST + 1, "2b"))).toBe("E_RANGE");
     expect(code(() => hash(text("a"), new Uint8Array(15), 4, "2b"))).toBe("E_RANGE");
     expect(code(() => hash(text("a"), new Uint8Array(16), 4, "2x"))).toBe("E_RANGE");
-  });
-
-  test("a random salt is 16 bytes and differs between calls", () => {
-    const a = randomSalt();
-    expect(a.length).toBe(16);
-    expect(ascii(a)).not.toBe(ascii(randomSalt()));
   });
 });

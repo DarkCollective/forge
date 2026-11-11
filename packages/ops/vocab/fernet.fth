@@ -2,12 +2,12 @@
 \ fernet: Fernet tokens (github.com/fernet/spec), written in FL over aes:encrypt, aes:decrypt, hmac:digest and
 \ base64. A token is url-safe base64 (with padding) of: version 0x80, an 8-byte big-endian Unix time, a 16-byte IV,
 \ the AES-128-CBC ciphertext with PKCS#7 padding, and an HMAC-SHA256 over everything before it. The 32-byte key is
-\ the signing key (its first 16 bytes) then the encryption key (its last 16). Only two things are primitives
-\ (src/prims/fernet.ts): the clock (_now, +time) and the random IV (_random-iv, +random). _seal and _open take the
-\ IV and the time as arguments, so tests pin them; encrypt and decrypt just supply them.
+\ the signing key (its first 16 bytes) then the encryption key (its last 16). The clock (clock:now-s, +time) and the random
+\ IV (16 random:bytes-of, +random) are the shared words. _seal and _open take the IV and the time as arguments,
+\ so tests pin them; encrypt and decrypt just supply them.
 IN: fernet
 
-USING: aes hmac base64 ;
+USING: aes hmac base64 random clock ;
 
 \ The 32 raw key bytes. A key that is 32 bytes long is taken as it is; otherwise it is read as the url-safe base64
 \ text of the key (the form Fernet libraries print, 43 or 44 characters), which must decode to 32 bytes.
@@ -66,12 +66,12 @@ USING: aes hmac base64 ;
 : encrypt ( bytes key:key{utf8|hex|latin1|base64} -- bytes )
   "Fernet encryption (github.com/fernet/spec): the token, as url-safe base64 text with padding, of the input. The key is 32 bytes (the signing key, then the encryption key), or their url-safe base64 text as Fernet libraries print it (43 or 44 characters, the CyberChef form); any other length is E_RANGE. The IV is 16 random bytes and the time is the clock, so the output differs on every call (the word carries the +random and +time effects)." doc
   "Encryption" category
-  key _random-iv _now _seal ;
+  key 16 random:bytes-of clock:now-s _seal ;
 
 : decrypt ( bytes key:key{utf8|hex|latin1|base64} ttl:int=0 -- bytes )
   "Fernet decryption: the plaintext of a token (url-safe base64 text). The HMAC is verified before anything is decrypted; a token that is too short, has another version, fails the HMAC, is not whole blocks or has bad padding is E_COERCE, and so is bad base64. ttl is the maximum age in seconds: 0 (the default, as CyberChef) skips the time checks; above 0 the token must be no older than ttl and no more than 60 seconds in the future (E_COERCE). A negative ttl, or a key of the wrong size, is E_RANGE." doc
   "Encryption" category
-  key ttl ttl 0 > [ _now ] [ 0 ] if _open ;
+  key ttl ttl 0 > [ clock:now-s ] [ 0 ] if _open ;
 
 META: encrypt
   param key "The Fernet key: 32 bytes, or their url-safe base64 text (43 or 44 characters)." ;

@@ -11,43 +11,10 @@ IN: extract
 
 \ ---- shared: matching, unique, output ----
 
-\ The text of every match of the pattern, in order.
-: _matches ( text:str pattern:str flags:str -- list )
-  text pattern flags regex:find-all [ "text" get ] map ;
-
-\ Is position i of the sorted order the first of its run of equal items?
-: _first? ( i:int order:list items:list -- bool )
-  i 0 =
-  [ true ]
-  [ items order i nth nth items order i 1 - nth nth <> ]
-  if ;
-
-\ The items at the first position of each run in the sorted order, back in their original order.
-: _kept ( items:list order:list -- list )
-  0 order len range
-  [ order items _first? ] filter
-  [ order swap nth ] map
-  list:sort
-  [ items swap nth ] map ;
-
-\ Each distinct item once, in the order of first appearance: sort the positions by item (a stable sort, so the
-\ first of a run of equals has the lowest position), keep the first of each run, sort those positions again.
-\ This is n log n in primitives and linear in FL steps. util-candidate: list:unique
-: _unique ( items:list -- list )
-  items len 0 swap range items list:sort-by
-  items swap _kept ;
-
-\ The matches as text: unique, sort, then the optional total in front.
-: _render ( items:list display-total:bool -- str )
-  items "\n" join
-  display-total
-  [ "Total found: " items len int>str cat "\n\n" cat swap cat ]
-  when ;
-
 : _finish ( found:list display-total:bool sort:bool unique:bool -- str )
-  found unique [ _unique ] when
+  found unique [ list:unique ] when
   sort [ list:sort ] when
-  display-total _render ;
+  display-total util:total-text ;
 
 \ ---- strings ----
 
@@ -85,7 +52,7 @@ IN: extract
   "Extractors" category
   data bytes>latin1
   encoding match _class min-length int>str null-terminated _strings-regex
-  "" _matches
+  "" util:match-texts
   [ [ 0 <> ] filter ] map
   display-total sort unique _finish ;
 
@@ -139,7 +106,7 @@ META: strings
   "Extractors" category
   data bytes>latin1
   ipv4 ipv6 or
-  [ ipv4 ipv6 _ip-pattern "i" _matches remove-local [ [ _local? not ] filter ] when ]
+  [ ipv4 ipv6 _ip-pattern "i" util:match-texts remove-local [ [ _local? not ] filter ] when ]
   [ drop { } ]
   if
   display-total sort unique _finish ;
@@ -161,7 +128,7 @@ META: ip-addresses
   "Extractors" category
   data bytes>latin1
   "(?<![A-Za-z0-9!#$%&'*+/=?^_`{|}~-])(?<![A-Za-z0-9!#$%&'*+/=?^_`{|}~-]\\.)[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\\.)+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?"
-  "" _matches
+  "" util:match-texts
   display-total sort unique _finish ;
 
 META: emails
@@ -178,7 +145,7 @@ META: emails
   "Extractors" category
   data bytes>latin1
   "(?<![0-9A-Fa-f])(?<![0-9A-Fa-f][:.-])(?:[0-9A-Fa-f]{2}(?:[:-][0-9A-Fa-f]{2}){5}|[0-9A-Fa-f]{4}(?:\\.[0-9A-Fa-f]{4}){2})(?![0-9A-Fa-f])(?![:.-][0-9A-Fa-f])"
-  "" _matches
+  "" util:match-texts
   display-total sort unique _finish ;
 
 META: mac-addresses
@@ -195,7 +162,7 @@ META: mac-addresses
   "Extractors" category
   data bytes>latin1
   "(?<![A-Za-z0-9+.-])[A-Za-z][A-Za-z0-9+.-]*://(?:[^\\s/?#@\"<>\\[\\]{}|\\\\^`\\x7f-\\xff]+@)?(?:[\\w-]+(?:\\.[\\w-]+)*|\\[[0-9A-Fa-f:.]+\\])(?::\\d+)?(?:[/?#](?:(?:[^\\s\"<>\\[\\]{}|\\\\^`()\\x7f-\\xff]|\\([^\\s\"<>\\[\\]{}|\\\\^`()\\x7f-\\xff]*\\))*(?:[^\\s\"<>\\[\\]{}|\\\\^`()\\x7f-\\xff.,;:!?']|\\([^\\s\"<>\\[\\]{}|\\\\^`()\\x7f-\\xff]*\\)))?)?"
-  "" _matches
+  "" util:match-texts
   display-total sort unique _finish ;
 
 META: urls
@@ -212,7 +179,7 @@ META: urls
   "Extractors" category
   data bytes>latin1
   "(?<![\\w.-])(?:[A-Za-z0-9_](?:[A-Za-z0-9_-]{0,61}[A-Za-z0-9_])?\\.)+(?:[A-Za-z]{2,63}|xn--[A-Za-z0-9-]{1,59})(?![\\w-])(?!\\.\\w)"
-  "" _matches
+  "" util:match-texts
   display-total sort unique _finish ;
 
 META: domains
@@ -245,7 +212,7 @@ META: domains
   "Extractors" category
   data bytes>latin1
   windows unix or
-  [ windows unix _paths-pattern "" _matches ]
+  [ windows unix _paths-pattern "" util:match-texts ]
   [ drop { } ]
   if
   display-total sort unique _finish ;
@@ -271,7 +238,7 @@ META: file-paths
   "Extractors" category
   data bytes>latin1
   "(?<![0-9A-Za-z_])[0-9a-f]{" all [ "4,128" ] [ length int>str ] if cat "}(?![0-9A-Za-z_])" cat
-  "i" _matches
+  "i" util:match-texts
   all [ [ len _digest-lengths swap util:count-of 0 > ] filter ] when
   display-total sort unique _finish ;
 

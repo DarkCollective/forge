@@ -10,7 +10,7 @@
 \ is handled as text, exactly as the cookie holds it.
 IN: flask-session
 
-USING: hmac base64 ;
+USING: hmac base64 clock ;
 
 \ The key must not be empty (CyberChef: "Secret key required").
 : _need-key ( key:bytes -- )
@@ -76,7 +76,7 @@ USING: hmac base64 ;
 : sign ( bytes key:key{utf8|hex|latin1|base64} salt:key{utf8|hex|latin1|base64}="cookie-session" algorithm:choice{sha1|sha256}="sha1" timestamp:int=0 -- bytes )
   "Signs a session JSON as a Flask session cookie (itsdangerous URLSafeTimedSerializer, 'hmac' key derivation, salt cookie-session by default): payload.timestamp.signature, url-safe base64 without padding. The input is the JSON text, used as given (Flask writes it compact, with no spaces). The time is the clock unless timestamp (Unix seconds, above 0) pins it; 0 means now, so the word carries the +time effect. The payload is never compressed. An empty key or a negative timestamp is E_RANGE; an empty salt means cookie-session, as CyberChef." doc
   "Encryption" category
-  key salt algorithm timestamp dup 0 = [ drop _now ] when _sign ;
+  key salt algorithm timestamp dup 0 = [ drop clock:now-s ] when _sign ;
 
 META: decode
   param timestamp "Also return the signing time (Unix seconds): {\"payload\":...,\"timestamp\":N}." ;
