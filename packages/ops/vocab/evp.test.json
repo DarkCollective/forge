@@ -1,0 +1,263 @@
+[
+  {
+    "name": "aes-256-cbc md5, key and IV",
+    "ref": "openssl enc -aes-256-cbc -md md5 -S 0102030405060708 -k password -P",
+    "op": "evp:derive",
+    "params": {
+      "size": 48,
+      "iterations": 1,
+      "hash": "md5",
+      "salt": {
+        "value": "0102030405060708",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "password",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "e7b0971e52ca5cc8d0539fb3412f6316f7ba2e6ee293d9f3457b99436b51ce028d450e2ed75a84a923d4eac9fe49226b",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "aes-128-cbc sha256, a passphrase with a space",
+    "ref": "openssl enc -aes-128-cbc -md sha256 -S 0102030405060708 -k \"pass word\" -P",
+    "op": "evp:derive",
+    "params": {
+      "size": 32,
+      "iterations": 1,
+      "hash": "sha256",
+      "salt": {
+        "value": "0102030405060708",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "pass word",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "807da3248c06942665867a74999d2004c6be8d54b31f0e2b1e462db1b6cff454",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "aes-256-cbc sha1, key and IV",
+    "ref": "openssl enc -aes-256-cbc -md sha1 -S 0102030405060708 -k secret -P",
+    "op": "evp:derive",
+    "params": {
+      "size": 48,
+      "iterations": 1,
+      "hash": "sha1",
+      "salt": {
+        "value": "0102030405060708",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "secret",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "9471735ee978c27cd122db2c55c4e7bd75918cd88e52c548c9e1d45aeb71a2339afbddd979490616b897b6510bab48e5",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "aes-256-cbc sha512, key and IV",
+    "ref": "openssl enc -aes-256-cbc -md sha512 -S 0102030405060708 -k secret -P",
+    "op": "evp:derive",
+    "params": {
+      "size": 48,
+      "iterations": 1,
+      "hash": "sha512",
+      "salt": {
+        "value": "0102030405060708",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "secret",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "28ef04b0c3d04f066bc716ce90300e39711e54273682b310835a676706610b56c140b6f2f330a6167eea4d946fa1377e",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "aes-128-cbc sha384, no salt (-nosalt)",
+    "ref": "openssl enc -aes-128-cbc -md sha384 -nosalt -k secret -P",
+    "op": "evp:derive",
+    "params": {
+      "size": 32,
+      "iterations": 1,
+      "hash": "sha384",
+      "salt": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "secret",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "58a775ba4112be3005ae4407ce757d88fda71d40497bb8026ecac54d4e3ffc72",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sha1 with 5 iterations, 30 bytes",
+    "ref": "independent EVP_BytesToKey over node:crypto hashes (openssl enc has no iteration option without PBKDF2), fixed here",
+    "op": "evp:derive",
+    "params": {
+      "size": 30,
+      "iterations": 5,
+      "hash": "sha1",
+      "salt": {
+        "value": "a1b2c3d4e5f60708",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "iterate me",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "c7836e5eb9062af27e13311636ee58ed51947aecbf5beac2464c49948b7c",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "sha256 with 1000 iterations, 48 bytes",
+    "ref": "independent EVP_BytesToKey over node:crypto hashes (openssl enc has no iteration option without PBKDF2), fixed here",
+    "op": "evp:derive",
+    "params": {
+      "size": 48,
+      "iterations": 1000,
+      "hash": "sha256",
+      "salt": {
+        "value": "a1b2c3d4e5f60708",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "iterate me",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "2910acc40d229a9c3301f3c8973ef2bce9ecb942f9a71014224626118b9d6d2c4ff22b9f7f825907ee5107de6f41150c",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "md5 with 3 iterations, 40 bytes",
+    "ref": "independent EVP_BytesToKey over node:crypto hashes (openssl enc has no iteration option without PBKDF2), fixed here",
+    "op": "evp:derive",
+    "params": {
+      "size": 40,
+      "iterations": 3,
+      "hash": "md5",
+      "salt": {
+        "value": "a1b2c3d4e5f60708",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "iterate me",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "f20d512b42744af16efa0ffdc1393bc0684d17ed9c31f0a6eeef0b928acad35702cbfa357edb4c2f",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "empty passphrase and salt",
+    "ref": "independent EVP_BytesToKey over node:crypto hashes, fixed here",
+    "op": "evp:derive",
+    "params": {
+      "size": 16,
+      "iterations": 1,
+      "hash": "sha1",
+      "salt": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "da39a3ee5e6b4b0d3255bfef95601890",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "size 0 is E_RANGE",
+    "ref": "WP 5.25 limits: size 1 to 1024 bytes, iterations at least 1",
+    "op": "evp:derive",
+    "params": {
+      "size": 0,
+      "iterations": 1,
+      "hash": "sha1",
+      "salt": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "password",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "size over 1024 is E_RANGE",
+    "ref": "WP 5.25 limits: size 1 to 1024 bytes, iterations at least 1",
+    "op": "evp:derive",
+    "params": {
+      "size": 1025,
+      "iterations": 1,
+      "hash": "sha1",
+      "salt": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "password",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "0 iterations is E_RANGE",
+    "ref": "WP 5.25 limits: size 1 to 1024 bytes, iterations at least 1",
+    "op": "evp:derive",
+    "params": {
+      "size": 16,
+      "iterations": 0,
+      "hash": "sha1",
+      "salt": {
+        "value": "",
+        "enc": "hex"
+      }
+    },
+    "input": {
+      "value": "password",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  }
+]
