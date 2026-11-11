@@ -6,16 +6,10 @@
 \ output limit, because only it can read ctx.limits.maxValueBytes.
 IN: lzma
 
-\ util-candidate: check-int-range
-: _check-range ( n:int lo:int hi:int what:str -- )
-  n lo < n hi > or [
-    what " must be " cat lo int>str cat " to " cat hi int>str cat ", not " cat n int>str cat raise:range
-  ] when ;
-
 : compress ( data:bytes level:int=7 -- bytes )
   "An LZMA stream in the .lzma (LZMA alone) format: a 13-byte header (the properties, a dictionary size, the uncompressed size) and the LZMA data with its end marker. level is 1 (fastest) to 9 (smallest), CyberChef's Compression Mode, 7 by default; any other level is E_RANGE. The bytes differ from CyberChef's (another encoder), but xz --format=lzma, 7-Zip and Python's lzma module read them." doc
   "Compression" category
-  level 1 9 "the compression level" _check-range
+  level 1 9 "the compression level" util:check-int-range
   data level _compress ;
 
 \ The header is 13 bytes, and the properties byte (lc, lp and pb packed as (pb * 5 + lp) * 9 + lc) is below 225.

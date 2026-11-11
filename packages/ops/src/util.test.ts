@@ -268,6 +268,32 @@ describe("util:between?", () => {
   });
 });
 
+describe("util:check-int-range", () => {
+  const check = (n: number, lo: number, hi: number) =>
+    runtime.call("util:check-int-range", [int(n), int(lo), int(hi), str("the level")]);
+
+  test.each([
+    [0, 0, 9],
+    [5, 0, 9],
+    [9, 0, 9],
+  ])("%i in %i to %i leaves the stack alone", async (n, lo, hi) => {
+    const r = await check(n, lo, hi);
+    expect(r.ok).toBe(true);
+  });
+
+  test("below the lower bound is E_RANGE with the message", async () => {
+    const r = await check(-1, 0, 9);
+    expect(r.ok ? "ok" : r.error.code).toBe("E_RANGE");
+    expect(r.ok ? "" : r.error.message).toBe("the level must be 0 to 9, not -1");
+  });
+
+  test("above the upper bound is E_RANGE with the message", async () => {
+    const r = await check(10, 0, 9);
+    expect(r.ok ? "ok" : r.error.code).toBe("E_RANGE");
+    expect(r.ok ? "" : r.error.message).toBe("the level must be 0 to 9, not 10");
+  });
+});
+
 describe("util:byte>hex and util:pad-hex", () => {
   test("byte>hex is two upper-case digits", async () => {
     for (const b of [0, 9, 10, 15, 16, 127, 171, 255]) {
