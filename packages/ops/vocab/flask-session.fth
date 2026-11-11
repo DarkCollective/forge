@@ -5,12 +5,12 @@
 \ the shortest big-endian integer (4 bytes today); the signature is the HMAC of "payload.timestamp" under a derived
 \ key, itsdangerous's "hmac" derivation as Flask configures it: HMAC(secret, salt) with the salt "cookie-session".
 \ The digest is SHA-1 (Flask's default) or SHA-256. Flask compresses a payload with zlib when that is shorter and
-\ marks it with a leading "."; Forge has no decompression yet (it arrives with the compression wave), so decode and
-\ verify refuse such a cookie with a clear E_COERCE, and sign never compresses. FL has no JSON parser: the payload
-\ is handled as text, exactly as the cookie holds it.
+\ marks it with a leading "." (the cookie then reads .payload.timestamp.signature, and the signature covers the dot
+\ too): decode and verify inflate it with deflate:zlib-inflate, and sign never compresses. FL has no JSON parser: the
+\ payload is handled as text, exactly as the cookie holds it.
 IN: flask-session
 
-USING: hmac base64 clock ;
+USING: hmac base64 clock deflate ;
 
 \ The key must not be empty (CyberChef: "Secret key required").
 : _need-key ( key:bytes -- )
@@ -29,15 +29,25 @@ USING: hmac base64 clock ;
   dup alg salt _salt alg key hmac:digest hmac:digest
   false util:b64url-encode "." str>bytes swap cat cat ;
 
-\ The three parts of a cookie. Surrounding white space is ignored. A compressed payload (leading dot) makes four.
+\ A cookie with a compressed payload splits in four, the first part empty: join the dot back onto the payload,
+\ which is how itsdangerous signs it (".payload.timestamp"), so the parts are three again.
+: _undot ( p:list -- list )
+  { "." p 1 nth cat p 2 nth p 3 nth } ;
+
+\ The three parts of a cookie. Surrounding white space is ignored. A compressed payload keeps its leading dot.
 : _parts ( token:bytes -- list )
   token bytes>str util:strip-space "." split
-  dup len 4 = [ dup 0 nth len 0 = [ "this Flask cookie has a zlib-compressed payload (it starts with a dot); decompression comes with the compression vocabulary, so it cannot be read yet" raise:coerce ] when ] when
+  dup len 4 = [ dup 0 nth len 0 = ] [ false ] if [ _undot ] when
   dup len 3 <> [ "a Flask session cookie has three parts: payload.timestamp.signature" raise:coerce ] when ;
 
-\ The payload text of the cookie parts.
+\ The bytes of a compressed payload part: the dot, then url-safe base64 of a zlib stream (a bomb stops at the value limit).
+: _inflate ( s:str -- bytes )
+  s 1 s len slice str>bytes util:b64url-decode 0 true deflate:zlib-inflate ;
+
+\ The payload text of the cookie parts, inflated when the part starts with a dot.
 : _payload ( parts:list -- str )
-  parts 0 nth str>bytes util:b64url-decode bytes>str ;
+  parts 0 nth dup "." util:starts-with?
+  [ _inflate ] [ str>bytes util:b64url-decode ] if bytes>str ;
 
 \ The signing time of the cookie parts.
 : _time ( parts:list -- int )
@@ -64,12 +74,12 @@ USING: hmac base64 clock ;
   "}" cat str>bytes ;
 
 : decode ( bytes timestamp:bool=false -- bytes )
-  "Reads the payload of a Flask session cookie (itsdangerous) without checking the signature: the session JSON as the cookie holds it. With timestamp, the result is {\"payload\":...,\"timestamp\":N} where N is the signing time in Unix seconds. The cookie must have three dot-separated url-safe base64 parts (E_COERCE otherwise). A cookie whose payload Flask compressed with zlib (it starts with a dot) is E_COERCE for now: decompression arrives with the compression vocabulary. The JSON is not parsed or re-formatted." doc
+  "Reads the payload of a Flask session cookie (itsdangerous) without checking the signature: the session JSON as the cookie holds it. With timestamp, the result is {\"payload\":...,\"timestamp\":N} where N is the signing time in Unix seconds. The cookie must have three dot-separated url-safe base64 parts (E_COERCE otherwise). A payload that Flask compressed with zlib (the cookie starts with a dot) is inflated; a corrupt zlib stream is E_COERCE and the output is capped by the value limit. The JSON is not parsed or re-formatted." doc
   "Encryption" category
   _parts timestamp _decode ;
 
 : verify ( bytes key:key{utf8|hex|latin1|base64} salt:key{utf8|hex|latin1|base64}="cookie-session" algorithm:choice{sha1|sha256}="sha1" timestamp:bool=true -- bytes )
-  "Verifies a Flask session cookie (itsdangerous URLSafeTimedSerializer with the 'hmac' key derivation): the HMAC of payload.timestamp, under HMAC(key, salt), with SHA-1 or SHA-256, must equal the signature. The result is {\"valid\":true,\"payload\":...} with ,\"timestamp\":N when timestamp is set, as CyberChef. A signature that does not verify, or a malformed cookie, is E_COERCE (CyberChef: Invalid signature); an empty key is E_RANGE; an empty salt means cookie-session, as CyberChef. A zlib-compressed payload (leading dot) is E_COERCE for now: decompression arrives with the compression vocabulary. The age of the cookie is not checked." doc
+  "Verifies a Flask session cookie (itsdangerous URLSafeTimedSerializer with the 'hmac' key derivation): the HMAC of payload.timestamp, under HMAC(key, salt), with SHA-1 or SHA-256, must equal the signature. The result is {\"valid\":true,\"payload\":...} with ,\"timestamp\":N when timestamp is set, as CyberChef. A signature that does not verify, or a malformed cookie, is E_COERCE (CyberChef: Invalid signature); an empty key is E_RANGE; an empty salt means cookie-session, as CyberChef. A zlib-compressed payload (leading dot) is inflated, and the signature covers the dot as Flask signs it. The age of the cookie is not checked." doc
   "Encryption" category
   _parts key salt algorithm timestamp _verify ;
 

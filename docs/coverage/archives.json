@@ -1,0 +1,26 @@
+[
+  {
+    "cyberchef": "Zip",
+    "status": "redesigned",
+    "forge": ["zip:zip"],
+    "note": "PKWARE APPNOTE container in FL (local header, central directory, end record) over crc:checksum and deflate:deflate (the CRC-32 and the DEFLATE encoder are primitives); one file, as in CyberChef (the filename parameter, default file.txt; the file type does not exist yet). Comment (a file comment in the central directory), Compression method (method: deflate or store) and Operating system (os: msdos, unix or macintosh; the default is msdos, the first of CyberChef's list) are kept. Compression type becomes the level parameter (0 to 9, default 6; 0 stores in DEFLATE blocks; Fixed Huffman Coding is not offered, as for Raw Deflate). Added: mtime (Unix seconds, DOS precision, 0 by default meaning 1980-01-01 so the output is the same on every run; CyberChef writes the current time) and mode (the Unix permission bits, stored when os is unix). Password (ZipCrypto) is not supported. The compressed bytes differ from CyberChef's (a different encoder); unzip, Python and fflate read them."
+  },
+  {
+    "cyberchef": "Unzip",
+    "status": "redesigned",
+    "forge": ["zip:unzip", "zip:entry"],
+    "note": "Returns a list of records (name, size, dir, mtime, mode, data) in directory order, which the output pane shows as a tree, instead of CyberChef's list of files; mtime reads the DOS time as UTC and mode is the Unix permission bits for entries made on Unix (else 0). zip:entry (not a CyberChef row) takes one entry's bytes by name so a recipe can continue, and inflates only that entry. The central directory is read, so streamed archives (data descriptors) and archives with bytes in front work. Stored and deflate only; any other method, an encrypted entry, ZIP64 or a multi-disk archive is E_COERCE naming it, so CyberChef's Password is not supported. Verify result is verify and is on by default (CyberChef's is off): each entry's size and CRC-32 must match (E_COERCE), off returns damaged data. The sum of all entries is capped by the value limit while they are inflated (E_LIMIT_VALUE), whatever sizes the archive claims. No extra keys such as a comment."
+  },
+  {
+    "cyberchef": "Tar",
+    "status": "redesigned",
+    "forge": ["tar:tar"],
+    "note": "POSIX ustar in FL, one file as in CyberChef (filename, default file.txt). Header layout, mode default 0664 (436) and the empty owner names follow CyberChef; the data is padded to 512 bytes and two zero blocks end the archive. Added: mtime (Unix seconds, 0 by default so the output is the same on every run; CyberChef writes the current time), mode, uid and gid parameters. A name over 100 bytes is cut at a slash into the ustar prefix (up to 255 bytes in all, else E_RANGE; CyberChef overflows the field). GNU tar, bsdtar and Python read the output."
+  },
+  {
+    "cyberchef": "Untar",
+    "status": "redesigned",
+    "forge": ["tar:untar", "tar:entry"],
+    "note": "Returns a list of records (name, size, dir, mtime, mode, data) in archive order instead of CyberChef's list of files; mtime is Unix seconds and mode the permission bits. Files (types 0, NUL and 7) and directories (type 5) are listed, as in CyberChef; links, devices and FIFOs are skipped. Reads ustar (the prefix is joined to the name), v7 headers and the GNU long-name form (type L); PAX extended headers (x, g) are skipped and their path and size records are not applied. tar:entry (not a CyberChef row) takes one file's bytes by name. Added verify (on by default): each header's checksum must match, E_COERCE otherwise. Empty input, a bad octal field, or data that ends early is E_COERCE. An entry is a slice of the input, so the total never passes the input length."
+  }
+]

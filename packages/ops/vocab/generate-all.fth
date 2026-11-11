@@ -5,8 +5,8 @@
 \ gives. It is its own vocabulary, not part of hash-analysis: it depends on thirty hash vocabularies,
 \ and loading all of them for a guess from a digest length would be wasteful (and the hash vocabularies
 \ point back to hash-analysis in their see-also notes, which would be a dependency cycle). The CRC
-\ presets are one private primitive, _crcs (src/prims/generate-all.ts), because 171 CRCs of 64 KiB in
-\ FL would be about 200 million steps; it is held equal to crc:checksum by its tests.
+\ presets are one private primitive, _crcs (src/prims/generate-all.ts): one call for the 171 presets, which
+\ share the loop of crc:_crc (src/prims/crc.ts) and are held equal to crc:checksum by its tests.
 IN: generate-all
 
 USING: hex md2 md4 md5 md6 sha0 sha1 sha2 sha3 keccak shake ripemd has160 whirlpool blake2b blake2s blake3

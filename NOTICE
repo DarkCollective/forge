@@ -34,16 +34,32 @@ deflate:zlib-inflate, deflate:gzip, deflate:gunzip) and the archive vocabularies
 that follow it use the fflate library, Copyright (c) 2026 Arjun Barrett
 (https://github.com/101arrowz/fflate), licensed under the MIT License.
 
-The compression vocabularies of wave 6 also use these libraries, each under its
-own licence: lz-string (LZString), Copyright (c) 2013 pieroxy
-(https://github.com/pieroxy/lz-string), MIT License; fzstd (Zstandard
-decompression), Copyright (c) 2020 Arjun Barrett
-(https://github.com/101arrowz/fzstd), MIT License; the pure JavaScript decoder of
-the vendored Brotli decoder (packages/ops/src/vendor/brotli), a JavaScript port of the
-Brotli decoder (RFC 7932) taken from the pure decoder files of the npm package brotli
-2.1.0 (https://github.com/devongovett/brotli.js): its source files carry Copyright 2013
-Google Inc. under the Apache License 2.0, and the copy is modified by Darkcollective,
-LLC, 2026 (an output cap; the static dictionary is decoded without base64-js). The
-package's own MIT licence covers its wrapper, which is not used; and lzma1
-(LZMA), Copyright Filip Seman (https://github.com/xseman/lzma1), Apache License
-2.0, a port of XZ for Java by Lasse Collin and Igor Pavlov.
+The compression vocabularies of wave 6 also use the following libraries and
+data, each under its own licence.
+
+The lzstring vocabulary uses lz-string (LZString), Copyright (c) 2013 pieroxy
+(https://github.com/pieroxy/lz-string), licensed under the MIT License.
+
+The zstd vocabulary uses fzstd (Zstandard decompression), Copyright (c) 2020
+Arjun Barrett (https://github.com/101arrowz/fzstd), licensed under the MIT
+License.
+
+The brotli vocabulary uses a vendored copy of the pure JavaScript Brotli decoder
+(RFC 7932) of the npm package brotli 2.1.0 (https://github.com/devongovett/brotli.js),
+kept in packages/ops/src/vendor/brotli. Its source files carry Copyright 2013
+Google Inc. and are licensed under the Apache License 2.0. Darkcollective, LLC
+modified the copy in 2026: it stops at an output cap, and it decodes the static
+dictionary without base64-js. The package's own MIT licence covers its wrapper,
+which is not used.
+
+The lzma vocabulary uses lzma1 (LZMA), Copyright Filip Seman
+(https://github.com/xseman/lzma1), licensed under the Apache License 2.0; it is
+a port of XZ for Java by Lasse Collin and Igor Pavlov.
+
+The bzip2 vocabulary (packages/ops/src/prims/bzip2.ts) embeds the table of 512
+numbers that bzip2 uses to decode its deprecated randomised blocks (rNums in
+randtable.c of bzip2 and libbzip2). The table is Copyright (C) 1996-2019 Julian
+R Seward and is used under the licence of the bzip2 source distribution, a
+BSD-style licence whose terms are in the LICENSE file of that distribution
+(https://sourceware.org/bzip2/). The program and library are distributed without
+warranty of any kind.

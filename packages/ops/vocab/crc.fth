@@ -1,57 +1,12 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ crc: cyclic redundancy checks over the Rocksoft/Williams model (width, poly, init, refin, refout,
-\ xorout), written in FL on the core words; there are no primitives. Integers are arbitrary
-\ precision, so a 64-bit or 82-bit register needs no special case. The output is the checksum as
-\ ceil(width/8) big-endian bytes (CyberChef prints the same value as ceil(width/4) hex digits).
+\ xorout). The parameters, the preset table, the checks and the formatting are FL; the per-byte loop is
+\ one private primitive, _crc (src/prims/crc.ts), table-driven: in FL the loop cost about 13 VM steps a
+\ byte, which capped an input near 750 KB. The register is an arbitrary precision integer, so a 64-bit or
+\ 82-bit CRC needs no special case. The output is the checksum as ceil(width/8) big-endian bytes
+\ (CyberChef prints the same value as ceil(width/4) hex digits).
 \ Reference: Greg Cook, "Catalogue of parametrised CRC algorithms", reveng.sourceforge.io/crc-catalogue.
-\ Cost for 65536 bytes (measured, crc.test.ts): about 0.88 million steps for the reflected path
-\ (CRC-32, CRC-64, CRC-82), 1.29 million for the MSB-first path, against a default limit of 10
-\ million; the 256-entry table is rebuilt on every call (about 20 thousand steps).
 IN: crc
-
-\ v with its low w bits in reverse order.
-: _reflect ( v:int w:int -- int )
-  0 w range 0 [ v swap shr 1 band swap 1 shl bor ] reduce ;
-
-\ Byte-at-a-time table entry of the reflected (LSB-first) algorithm: eight shifts of the index.
-: _entry-r ( i:int poly:int -- int )
-  i 8 [ dup 1 band 0 = [ 1 shr ] [ 1 shr poly bxor ] if ] times ;
-
-: _table-r ( poly:int -- list )
-  0 256 range [ poly _entry-r ] map ;
-
-: _fold-r ( data:bytes table:list reg:int -- int )
-  data reg [ over bxor 255 band table swap nth swap 8 shr bxor ] reduce ;
-
-\ Register of a reflected CRC: the polynomial and the init value are reflected, the register is
-\ shifted right and needs no masking.
-: _reflected ( data:bytes w:int poly:int init:int -- int )
-  data poly w _reflect _table-r init w _reflect _fold-r ;
-
-\ The register width of the MSB-first algorithm: at least one byte, so that a byte can be xored
-\ in at the top (a narrower CRC is computed in a byte-wide register and shifted back).
-: _wp ( w:int -- int )
-  w 8 max ;
-
-: _entry-n ( i:int wp:int mask:int poly:int -- int )
-  i wp 8 - shl 8 [
-    dup wp 1 - shr 1 band 0 = [ 1 shl mask band ] [ 1 shl poly bxor mask band ] if
-  ] times ;
-
-: _fold-n ( data:bytes table:list wp:int mask:int reg:int -- int )
-  data reg [ over wp 8 - shr bxor 255 band table swap nth swap 8 shl mask band bxor ] reduce ;
-
-: _forward ( data:bytes w:int poly:int init:int -- int )
-  data
-  0 256 range [ w _wp 1 w _wp shl 1 - poly w _wp w - shl _entry-n ] map
-  w _wp 1 w _wp shl 1 - init w _wp w - shl _fold-n
-  w _wp w - shr ;
-
-\ The CRC register as an integer: xorout is applied after the output reflection.
-: _crc ( data:bytes w:int poly:int init:int refin:bool refout:bool xorout:int -- int )
-  refin [ data w poly init _reflected ] [ data w poly init _forward ] if
-  refin refout <> [ w _reflect ] when
-  xorout bxor ;
 
 : _bytes ( v:int w:int -- bytes )
   v w 7 + 8 div util:int>be-bytes ;

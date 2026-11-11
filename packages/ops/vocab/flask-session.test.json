@@ -317,45 +317,6 @@
     }
   },
   {
-    "name": "decode a compressed cookie is E_COERCE (compression comes later)",
-    "ref": "itsdangerous URLSafeSerializer: a zlib-compressed payload starts with a dot; Forge has no decompression until the compression wave",
-    "op": "flask-session:decode",
-    "params": {
-      "timestamp": false
-    },
-    "input": {
-      "value": ".eJyrViotTi1SslJKTMnNzFPSUSrKz0kFclNTMkvyi5RqAa4eCqo.ZVPxAA.eQdY7qYNEPoGVYa0GXzo01A9COE",
-      "enc": "utf8"
-    },
-    "expect": {
-      "error": "E_COERCE"
-    }
-  },
-  {
-    "name": "verify a compressed cookie is E_COERCE (compression comes later)",
-    "ref": "itsdangerous URLSafeSerializer: a zlib-compressed payload starts with a dot; Forge has no decompression until the compression wave",
-    "op": "flask-session:verify",
-    "params": {
-      "key": {
-        "value": "secret-key",
-        "enc": "utf8"
-      },
-      "salt": {
-        "value": "cookie-session",
-        "enc": "utf8"
-      },
-      "algorithm": "sha1",
-      "timestamp": true
-    },
-    "input": {
-      "value": ".eJyrViotTi1SslJKTMnNzFPSUSrKz0kFclNTMkvyi5RqAa4eCqo.ZVPxAA.eQdY7qYNEPoGVYa0GXzo01A9COE",
-      "enc": "utf8"
-    },
-    "expect": {
-      "error": "E_COERCE"
-    }
-  },
-  {
     "name": "verify sha1",
     "ref": "itsdangerous TimestampSigner + URLSafeSerializer, Flask settings (salt cookie-session, key_derivation hmac); computed with Python hmac/hashlib (itsdangerous not installed), see scratchpad flaskvec.py",
     "op": "flask-session:verify",
@@ -622,6 +583,151 @@
     },
     "expect": {
       "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "decode a zlib-compressed cookie (leading dot)",
+    "ref": "by hand in Python (itsdangerous is not installed): zlib.compress, base64url with a leading dot, HMAC-SHA-1 over the value with the dot, key HMAC(secret-key, cookie-session); scratchpad flaskz.py",
+    "op": "flask-session:decode",
+    "params": {
+      "timestamp": false
+    },
+    "input": {
+      "value": ".eJyrVkpOLCpRsopWSiwoyElV0sFJJyXmASE-RqyOUmlxapGSlVJiSm5mHlCiKB-o1UopNSWzJL9IqRYAczwi1g.ZVPxAA.QCoe3AWEJ0L8fnMPo6y0fdPi3AI",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"cart\":[\"apple\",\"apple\",\"apple\",\"apple\",\"banana\",\"banana\",\"banana\",\"banana\"],\"user\":\"admin\",\"role\":\"editor\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "decode a zlib-compressed cookie with the timestamp",
+    "ref": "by hand in Python (itsdangerous is not installed): zlib.compress, base64url with a leading dot, HMAC-SHA-1 over the value with the dot, key HMAC(secret-key, cookie-session); scratchpad flaskz.py",
+    "op": "flask-session:decode",
+    "params": {
+      "timestamp": true
+    },
+    "input": {
+      "value": ".eJyrVkpOLCpRsopWSiwoyElV0sFJJyXmASE-RqyOUmlxapGSlVJiSm5mHlCiKB-o1UopNSWzJL9IqRYAczwi1g.ZVPxAA.QCoe3AWEJ0L8fnMPo6y0fdPi3AI",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"payload\":{\"cart\":[\"apple\",\"apple\",\"apple\",\"apple\",\"banana\",\"banana\",\"banana\",\"banana\"],\"user\":\"admin\",\"role\":\"editor\"},\"timestamp\":1700000000}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a zlib-compressed cookie, sha1",
+    "ref": "by hand in Python (itsdangerous is not installed): zlib.compress, base64url with a leading dot, HMAC-SHA-1 over the value with the dot, key HMAC(secret-key, cookie-session); scratchpad flaskz.py",
+    "op": "flask-session:verify",
+    "params": {
+      "key": {
+        "value": "secret-key",
+        "enc": "utf8"
+      },
+      "salt": {
+        "value": "cookie-session",
+        "enc": "utf8"
+      },
+      "algorithm": "sha1",
+      "timestamp": true
+    },
+    "input": {
+      "value": ".eJyrVkpOLCpRsopWSiwoyElV0sFJJyXmASE-RqyOUmlxapGSlVJiSm5mHlCiKB-o1UopNSWzJL9IqRYAczwi1g.ZVPxAA.QCoe3AWEJ0L8fnMPo6y0fdPi3AI",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"valid\":true,\"payload\":{\"cart\":[\"apple\",\"apple\",\"apple\",\"apple\",\"banana\",\"banana\",\"banana\",\"banana\"],\"user\":\"admin\",\"role\":\"editor\"},\"timestamp\":1700000000}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a zlib-compressed cookie, sha256",
+    "ref": "by hand in Python (itsdangerous is not installed): zlib.compress, base64url with a leading dot, HMAC-SHA-256 over the value with the dot, key HMAC(secret-key, cookie-session); scratchpad flaskz.py",
+    "op": "flask-session:verify",
+    "params": {
+      "key": {
+        "value": "secret-key",
+        "enc": "utf8"
+      },
+      "salt": {
+        "value": "cookie-session",
+        "enc": "utf8"
+      },
+      "algorithm": "sha256",
+      "timestamp": true
+    },
+    "input": {
+      "value": ".eJyrVsosSc0tVrKKrlbKTFGyMtBRykvMTVWyUirPTElPLVGq1YFIGOKSMMIlYYxLwgSXhCkuCTNcEua4JCxwSVji9CBur2P6PVZHKbm4KA0oUoEFKNUCAIJabQk.ZVPxAA.fqwzgNvJUhuX-Jr94gJ0CE0YLsOv5uj1qjBYedhBHrg",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"valid\":true,\"payload\":{\"items\":[{\"id\":0,\"name\":\"widget\"},{\"id\":1,\"name\":\"widget\"},{\"id\":2,\"name\":\"widget\"},{\"id\":3,\"name\":\"widget\"},{\"id\":4,\"name\":\"widget\"},{\"id\":5,\"name\":\"widget\"},{\"id\":6,\"name\":\"widget\"},{\"id\":7,\"name\":\"widget\"},{\"id\":8,\"name\":\"widget\"},{\"id\":9,\"name\":\"widget\"},{\"id\":10,\"name\":\"widget\"},{\"id\":11,\"name\":\"widget\"}],\"csrf\":\"xxxxxxxxxxxxxxxxxxxx\"},\"timestamp\":1700000000}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "verify a zlib-compressed cookie with the wrong key is E_COERCE",
+    "ref": "by hand in Python (itsdangerous is not installed): zlib.compress, base64url with a leading dot, HMAC-SHA-1 over the value with the dot, key HMAC(secret-key, cookie-session); scratchpad flaskz.py",
+    "op": "flask-session:verify",
+    "params": {
+      "key": {
+        "value": "other-key",
+        "enc": "utf8"
+      },
+      "salt": {
+        "value": "cookie-session",
+        "enc": "utf8"
+      },
+      "algorithm": "sha1",
+      "timestamp": true
+    },
+    "input": {
+      "value": ".eJyrVkpOLCpRsopWSiwoyElV0sFJJyXmASE-RqyOUmlxapGSlVJiSm5mHlCiKB-o1UopNSWzJL9IqRYAczwi1g.ZVPxAA.QCoe3AWEJ0L8fnMPo6y0fdPi3AI",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "verify a zlib-compressed cookie whose dot was removed is E_COERCE",
+    "ref": "the signature covers the leading dot, so the cookie without it is neither signed nor a zlib payload",
+    "op": "flask-session:verify",
+    "params": {
+      "key": {
+        "value": "secret-key",
+        "enc": "utf8"
+      },
+      "salt": {
+        "value": "cookie-session",
+        "enc": "utf8"
+      },
+      "algorithm": "sha1",
+      "timestamp": true
+    },
+    "input": {
+      "value": "eJyrVkpOLCpRsopWSiwoyElV0sFJJyXmASE-RqyOUmlxapGSlVJiSm5mHlCiKB-o1UopNSWzJL9IqRYAczwi1g.ZVPxAA.QCoe3AWEJ0L8fnMPo6y0fdPi3AI",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "decode a compressed payload that is not a zlib stream is E_COERCE",
+    "ref": "base64url of zero bytes is not a zlib stream (the header check fails)",
+    "op": "flask-session:decode",
+    "params": {
+      "timestamp": false
+    },
+    "input": {
+      "value": ".AAAAAAAA.ZVPxAA.sig",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
     }
   }
 ]
