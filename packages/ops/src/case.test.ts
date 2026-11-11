@@ -90,7 +90,7 @@ describe("case", () => {
     expect(twelveInText.ok).toBe(true);
     const thirteen = await all("abcdefghijklm");
     expect(thirteen.ok).toBe(false);
-    expect(thirteen.error?.code).toBe("E_RANGE");
+    expect(thirteen.ok ? "ok" : thirteen.error.code).toBe("E_RANGE");
     const none = await runtime.call("case:all-casings", [str("ab"), str("none")]);
     expect(none.ok).toBe(false);
   });
