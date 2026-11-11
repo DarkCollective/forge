@@ -1,0 +1,262 @@
+[
+  {
+    "name": "remove whitespace, the defaults",
+    "ref": "hand-computed: the six characters of CyberChef's Remove whitespace options, removed one by one",
+    "op": "clean:remove-whitespace",
+    "params": {},
+    "input": {
+      "value": " a\tb\r\nc d\f.",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "abcd.",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "remove whitespace with full stops",
+    "ref": "hand-computed: the six characters of CyberChef's Remove whitespace options, removed one by one",
+    "op": "clean:remove-whitespace",
+    "params": {
+      "full-stops": true
+    },
+    "input": {
+      "value": "a.b. c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "abc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "remove whitespace, tabs only",
+    "ref": "hand-computed: the six characters of CyberChef's Remove whitespace options, removed one by one",
+    "op": "clean:remove-whitespace",
+    "params": {
+      "spaces": false,
+      "carriage-returns": false,
+      "line-feeds": false,
+      "tabs": true,
+      "form-feeds": false
+    },
+    "input": {
+      "value": "a b\tc\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a bc\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "remove whitespace keeps the no-break space",
+    "ref": "hand-computed: the six characters of CyberChef's Remove whitespace options, removed one by one; U+00A0 is not one of them",
+    "op": "clean:remove-whitespace",
+    "params": {},
+    "input": {
+      "value": "a b c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a bc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "remove whitespace, nothing to remove",
+    "ref": "hand-computed: the six characters of CyberChef's Remove whitespace options, removed one by one",
+    "op": "clean:remove-whitespace",
+    "params": {},
+    "input": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "abc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "remove whitespace of empty input",
+    "ref": "hand-computed: the six characters of CyberChef's Remove whitespace options, removed one by one",
+    "op": "clean:remove-whitespace",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "remove null bytes",
+    "ref": "hand-computed: every 0x00 byte is deleted",
+    "op": "clean:remove-null-bytes",
+    "params": {},
+    "input": {
+      "value": "004100004243 00",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "414243",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "remove null bytes, all zero",
+    "ref": "hand-computed: every 0x00 byte is deleted",
+    "op": "clean:remove-null-bytes",
+    "params": {},
+    "input": {
+      "value": "00000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "remove null bytes, none present",
+    "ref": "hand-computed: every 0x00 byte is deleted",
+    "op": "clean:remove-null-bytes",
+    "params": {},
+    "input": {
+      "value": "ff0102",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ff0102",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "remove null bytes of empty input",
+    "ref": "hand-computed: every 0x00 byte is deleted",
+    "op": "clean:remove-null-bytes",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "",
+      "enc": "hex"
+    }
+  },
+  {
+    "name": "remove ANSI colour codes",
+    "ref": "ECMA-48 (ISO/IEC 6429) section 5.4: control sequences; SGR is CSI Pm m",
+    "op": "clean:remove-ansi",
+    "params": {},
+    "input": {
+      "value": "\u001b[31mred\u001b[0m plain",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "red plain",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "remove ANSI cursor and private-mode codes",
+    "ref": "ECMA-48 (ISO/IEC 6429) section 5.4: control sequences; SGR is CSI Pm m; ?25l is a private parameter",
+    "op": "clean:remove-ansi",
+    "params": {},
+    "input": {
+      "value": "a\u001b[?25lb\u001b[1;2Hc\u001b[2Kd",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "abcd",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "remove ANSI intermediate bytes",
+    "ref": "ECMA-48 (ISO/IEC 6429) section 5.4: control sequences; SGR is CSI Pm m: parameter bytes, intermediate bytes, final byte",
+    "op": "clean:remove-ansi",
+    "params": {},
+    "input": {
+      "value": "x\u001b[1 qy",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "xy",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "remove the single-code-point CSI U+009B",
+    "ref": "ECMA-48 (ISO/IEC 6429) section 5.4: control sequences; SGR is CSI Pm m; C1 control CSI",
+    "op": "clean:remove-ansi",
+    "params": {},
+    "input": {
+      "value": "1mX",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "X",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "remove ANSI operating system command",
+    "ref": "ECMA-48 (ISO/IEC 6429) section 5.4: control sequences; SGR is CSI Pm m and OSC strings ended by BEL or ST",
+    "op": "clean:remove-ansi",
+    "params": {},
+    "input": {
+      "value": "\u001b]0;window title\u0007text\u001b]8;;http://x\u001b\\link",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "textlink",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "remove ANSI two-byte escape sequences",
+    "ref": "ECMA-48 (ISO/IEC 6429) section 5.4: control sequences; SGR is CSI Pm m; ESC ( B selects a character set, ESC = is DECKPAM",
+    "op": "clean:remove-ansi",
+    "params": {},
+    "input": {
+      "value": "a\u001b(Bb\u001b=c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "abc",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "remove ANSI keeps a lone ESC at the end",
+    "ref": "ECMA-48 (ISO/IEC 6429) section 5.4: control sequences; SGR is CSI Pm m",
+    "op": "clean:remove-ansi",
+    "params": {},
+    "input": {
+      "value": "abc\u001b",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "abc\u001b",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "remove ANSI of plain text",
+    "ref": "ECMA-48 (ISO/IEC 6429) section 5.4: control sequences; SGR is CSI Pm m",
+    "op": "clean:remove-ansi",
+    "params": {},
+    "input": {
+      "value": "no [escapes] here",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "no [escapes] here",
+      "enc": "utf8"
+    }
+  }
+]
