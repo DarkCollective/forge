@@ -1,0 +1,799 @@
+[
+  {
+    "name": "rule name only",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule demo : t1 t2 { meta: author = \"me\" n = 3 ok = true strings: $a = \"abc\" $b = { 61 ?? 63 } condition: all of them }"
+    },
+    "input": {
+      "value": "78782061626320616263",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Input matches rule \"demo\".\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "with metadata",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule demo : t1 t2 { meta: author = \"me\" n = 3 ok = true strings: $a = \"abc\" $b = { 61 ?? 63 } condition: all of them }",
+      "show-metadata": true
+    },
+    "input": {
+      "value": "78782061626320616263",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Input matches rule \"demo\" [author: me, n: 3, ok: true].\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "counts",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule demo : t1 t2 { meta: author = \"me\" n = 3 ok = true strings: $a = \"abc\" $b = { 61 ?? 63 } condition: all of them }",
+      "show-counts": true
+    },
+    "input": {
+      "value": "78782061626320616263",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Input matches rule \"demo\".\n  Pattern $a, count: 2\n  Pattern $b, count: 2\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "strings",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule demo : t1 t2 { meta: author = \"me\" n = 3 ok = true strings: $a = \"abc\" $b = { 61 ?? 63 } condition: all of them }",
+      "show-strings": true
+    },
+    "input": {
+      "value": "78782061626320616263",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Input matches rule \"demo\".\n  Pattern $a\n    Pos 3, data: \"abc\"\n    Pos 7, data: \"abc\"\n  Pattern $b\n    Pos 3, data: \"abc\"\n    Pos 7, data: \"abc\"\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "lengths",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule demo : t1 t2 { meta: author = \"me\" n = 3 ok = true strings: $a = \"abc\" $b = { 61 ?? 63 } condition: all of them }",
+      "show-string-lengths": true
+    },
+    "input": {
+      "value": "78782061626320616263",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Input matches rule \"demo\".\n  Pattern $a\n    Pos 3, length 3\n    Pos 7, length 3\n  Pattern $b\n    Pos 3, length 3\n    Pos 7, length 3\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "everything",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule demo : t1 t2 { meta: author = \"me\" n = 3 ok = true strings: $a = \"abc\" $b = { 61 ?? 63 } condition: all of them }",
+      "show-strings": true,
+      "show-string-lengths": true,
+      "show-metadata": true,
+      "show-counts": true
+    },
+    "input": {
+      "value": "78782061626320616263",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Input matches rule \"demo\" [author: me, n: 3, ok: true].\n  Pattern $a, count: 2\n    Pos 3, length 3, data: \"abc\"\n    Pos 7, length 3, data: \"abc\"\n  Pattern $b, count: 2\n    Pos 3, length 3, data: \"abc\"\n    Pos 7, length 3, data: \"abc\"\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "no match",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { strings: $a = \"zzz\" condition: $a }",
+      "show-strings": true,
+      "show-string-lengths": true,
+      "show-metadata": true,
+      "show-counts": true
+    },
+    "input": {
+      "value": "78782061626320616263",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "No rules matched.",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "empty rules",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": ""
+    },
+    "input": {
+      "value": "78782061626320616263",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "No rules matched.",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "empty input, not",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { strings: $a = \"x\" condition: not $a }"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Input matches rule \"a\".\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "two rules",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { strings: $x = \"abc\" condition: $x } rule b { condition: filesize == 10 } rule c { condition: false }",
+      "show-counts": true
+    },
+    "input": {
+      "value": "78782061626320616263",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Input matches rule \"a\".\n  Pattern $x, count: 2\nInput matches rule \"b\".\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "private rule hidden",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": "private rule p { condition: true } rule b { condition: p }"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Input matches rule \"b\".\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "global rule",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": "global rule g { condition: filesize > 100 } rule b { condition: true }"
+    },
+    "input": {
+      "value": "616263",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "No rules matched.",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "nocase wide",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { strings: $a = \"Hi\" nocase wide ascii condition: $a }",
+      "show-strings": true,
+      "show-string-lengths": true,
+      "show-counts": true
+    },
+    "input": {
+      "value": "68692048004900204849",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Input matches rule \"a\".\n  Pattern $a, count: 3\n    Pos 0, length 2, data: \"hi\"\n    Pos 3, length 4, data: \"H\\x00I\\x00\"\n    Pos 8, length 2, data: \"HI\"\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "xor",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { strings: $a = \"MZ\" xor(1-255) condition: $a }",
+      "show-strings": true,
+      "show-string-lengths": true,
+      "show-counts": true
+    },
+    "input": {
+      "value": "67704d5a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Input matches rule \"a\".\n  Pattern $a, count: 1\n    Pos 0, length 2, data: \"gp\"\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "base64",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { strings: $a = \"Hello\" base64 condition: $a }",
+      "show-strings": true,
+      "show-string-lengths": true,
+      "show-counts": true
+    },
+    "input": {
+      "value": "646174613a20534756736247383d20656e64",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Input matches rule \"a\".\n  Pattern $a, count: 1\n    Pos 6, length 6, data: \"SGVsbG\"\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "fullword",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { strings: $a = \"cat\" fullword condition: $a }",
+      "show-strings": true,
+      "show-string-lengths": true,
+      "show-counts": true
+    },
+    "input": {
+      "value": "63617420636f6e636174206361742e",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Input matches rule \"a\".\n  Pattern $a, count: 2\n    Pos 0, length 3, data: \"cat\"\n    Pos 11, length 3, data: \"cat\"\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "hex jump and alternation",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { strings: $a = { 4D 5A [2-4] ( 50 45 | 4C 45 ) } condition: $a }",
+      "show-strings": true,
+      "show-string-lengths": true,
+      "show-counts": true
+    },
+    "input": {
+      "value": "004d5a900050450000204d5a2e2e2e2e4c45",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Input matches rule \"a\".\n  Pattern $a, count: 2\n    Pos 1, length 6, data: \"MZ\\x90\\x00PE\"\n    Pos 10, length 8, data: \"MZ....LE\"\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "regex",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { strings: $a = /[0-9]{3}-[0-9]{4}/ condition: $a }",
+      "show-strings": true,
+      "show-string-lengths": true,
+      "show-counts": true
+    },
+    "input": {
+      "value": "63616c6c203535352d30313939206f72203535352d30313030",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Input matches rule \"a\".\n  Pattern $a, count: 2\n    Pos 5, length 8, data: \"555-0199\"\n    Pos 17, length 8, data: \"555-0100\"\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "regex data escaped",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { strings: $a = /[\\x00-\\x1f\"\\\\]+/ condition: $a }",
+      "show-strings": true,
+      "show-string-lengths": true,
+      "show-counts": true
+    },
+    "input": {
+      "value": "61225c0a0162",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Input matches rule \"a\".\n  Pattern $a, count: 4\n    Pos 1, length 4, data: \"\\\"\\\\\\n\\x01\"\n    Pos 2, length 3, data: \"\\\\\\n\\x01\"\n    Pos 3, length 2, data: \"\\n\\x01\"\n    Pos 4, length 1, data: \"\\x01\"\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "long match is cut",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { strings: $a = /x+/ condition: $a }",
+      "show-strings": true,
+      "show-string-lengths": true,
+      "show-counts": true
+    },
+    "input": {
+      "value": "78787878787878787878787878787878787878787878787878787878787878787878787878787878",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Input matches rule \"a\".\n  Pattern $a, count: 40\n    Pos 0, length 40, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...\"\n    Pos 1, length 39, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...\"\n    Pos 2, length 38, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...\"\n    Pos 3, length 37, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...\"\n    Pos 4, length 36, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...\"\n    Pos 5, length 35, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...\"\n    Pos 6, length 34, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...\"\n    Pos 7, length 33, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...\"\n    Pos 8, length 32, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\n    Pos 9, length 31, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\n    Pos 10, length 30, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\n    Pos 11, length 29, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\n    Pos 12, length 28, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\n    Pos 13, length 27, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxxx\"\n    Pos 14, length 26, data: \"xxxxxxxxxxxxxxxxxxxxxxxxxx\"\n    Pos 15, length 25, data: \"xxxxxxxxxxxxxxxxxxxxxxxxx\"\n    Pos 16, length 24, data: \"xxxxxxxxxxxxxxxxxxxxxxxx\"\n    Pos 17, length 23, data: \"xxxxxxxxxxxxxxxxxxxxxxx\"\n    Pos 18, length 22, data: \"xxxxxxxxxxxxxxxxxxxxxx\"\n    Pos 19, length 21, data: \"xxxxxxxxxxxxxxxxxxxxx\"\n    Pos 20, length 20, data: \"xxxxxxxxxxxxxxxxxxxx\"\n    Pos 21, length 19, data: \"xxxxxxxxxxxxxxxxxxx\"\n    Pos 22, length 18, data: \"xxxxxxxxxxxxxxxxxx\"\n    Pos 23, length 17, data: \"xxxxxxxxxxxxxxxxx\"\n    Pos 24, length 16, data: \"xxxxxxxxxxxxxxxx\"\n    Pos 25, length 15, data: \"xxxxxxxxxxxxxxx\"\n    Pos 26, length 14, data: \"xxxxxxxxxxxxxx\"\n    Pos 27, length 13, data: \"xxxxxxxxxxxxx\"\n    Pos 28, length 12, data: \"xxxxxxxxxxxx\"\n    Pos 29, length 11, data: \"xxxxxxxxxxx\"\n    Pos 30, length 10, data: \"xxxxxxxxxx\"\n    Pos 31, length 9, data: \"xxxxxxxxx\"\n    Pos 32, length 8, data: \"xxxxxxxx\"\n    Pos 33, length 7, data: \"xxxxxxx\"\n    Pos 34, length 6, data: \"xxxxxx\"\n    Pos 35, length 5, data: \"xxxxx\"\n    Pos 36, length 4, data: \"xxxx\"\n    Pos 37, length 3, data: \"xxx\"\n    Pos 38, length 2, data: \"xx\"\n    Pos 39, length 1, data: \"x\"\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "condition: offsets and counts",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { strings: $a = \"ab\" $b = \"cd\" condition: #a == 2 and @a[2] == 5 and !a[1] == 2 and $b at 2 and $a in (0..1) }",
+      "show-counts": true
+    },
+    "input": {
+      "value": "61626364206162",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Input matches rule \"a\".\n  Pattern $a, count: 2\n  Pattern $b, count: 1\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "condition: integer reads",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { strings: $a = \"ab\" condition: $a and uint16(0) == 0x6261 and uint16be(0) == 0x6162 and filesize == 2 }",
+      "show-metadata": true
+    },
+    "input": {
+      "value": "6162",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Input matches rule \"a\".\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "condition: n of and for of",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { strings: $a1 = \"ab\" $a2 = \"cd\" $b = \"zz\" condition: 2 of ($a*) and not any of ($b) and for any of them : (@ == 0) }",
+      "show-counts": true
+    },
+    "input": {
+      "value": "61626364",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Input matches rule \"a\".\n  Pattern $a1, count: 1\n  Pattern $a2, count: 1\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "condition: for in",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { strings: $a = \"ab\" condition: for all i in (1..#a) : (@a[i] < 10 and !a[i] == 2) }",
+      "show-counts": true
+    },
+    "input": {
+      "value": "61626162",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Input matches rule \"a\".\n  Pattern $a, count: 2\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "condition: rule reference",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { condition: true } rule b { condition: a and filesize == 0 }"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Input matches rule \"a\".\nInput matches rule \"b\".\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "metadata escapes",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { meta: s = \"x\\ty\" i = -5 h = 0x10 f = false condition: true }",
+      "show-metadata": true
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Input matches rule \"a\" [s: x\ty, i: -5, h: 16, f: false].\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "string meta with quotes",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { meta: d = \"say \\\"hi\\\"\" condition: true }",
+      "show-metadata": true
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Input matches rule \"a\" [d: say \"hi\"].\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "undefined is not a match",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { strings: $a = \"ab\" condition: @a[5] == 1 or uint32(100) == 1 }"
+    },
+    "input": {
+      "value": "6162",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "No rules matched.",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "integer condition",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { condition: 1 + 2 * 3 == 7 and 1 << 2 + 1 == 8 }"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Input matches rule \"a\".\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "utf-8 rule text",
+    "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { meta: d = \"caf\u00e9\" strings: $a = \"\u00e9\" condition: $a }",
+      "show-strings": true,
+      "show-string-lengths": true,
+      "show-metadata": true,
+      "show-counts": true
+    },
+    "input": {
+      "value": "636166c3a9",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "Input matches rule \"a\" [d: caf\u00e9].\n  Pattern $a, count: 1\n    Pos 3, length 2, data: \"\\xc3\\xa9\"\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "module: pe",
+    "ref": "refused: outside the documented subset (libyara supports it or rejects it differently)",
+    "op": "yara:scan",
+    "params": {
+      "rules": "import \"pe\"\nrule a { condition: pe.is_pe }"
+    },
+    "input": {
+      "value": "4d5a",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "module: math",
+    "ref": "refused: outside the documented subset (libyara supports it or rejects it differently)",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { condition: math.entropy(0, filesize) > 7 }"
+    },
+    "input": {
+      "value": "616263",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "module: hash",
+    "ref": "refused: outside the documented subset (libyara supports it or rejects it differently)",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { condition: hash.md5(0, filesize) == 1 }"
+    },
+    "input": {
+      "value": "616263",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "include",
+    "ref": "refused: outside the documented subset (libyara supports it or rejects it differently)",
+    "op": "yara:scan",
+    "params": {
+      "rules": "include \"other.yar\"\nrule a { condition: true }"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "floating point number",
+    "ref": "refused: outside the documented subset (libyara supports it or rejects it differently)",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { condition: 1.5 > 1 }"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "matches operator",
+    "ref": "refused: outside the documented subset (libyara supports it or rejects it differently)",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { strings: $a = \"x\" condition: $a matches /x/ }"
+    },
+    "input": {
+      "value": "78",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "string operator contains",
+    "ref": "refused: outside the documented subset (libyara supports it or rejects it differently)",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { condition: filesize contains 1 }"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "regex with wide",
+    "ref": "refused: outside the documented subset (libyara supports it or rejects it differently)",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { strings: $a = /ab/ wide condition: $a }"
+    },
+    "input": {
+      "value": "6162",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "regex back reference",
+    "ref": "refused: outside the documented subset (libyara supports it or rejects it differently)",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { strings: $a = /(a)\\1/ condition: $a }"
+    },
+    "input": {
+      "value": "6161",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "regex look-ahead",
+    "ref": "refused: outside the documented subset (libyara supports it or rejects it differently)",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { strings: $a = /a(?=b)/ condition: $a }"
+    },
+    "input": {
+      "value": "6162",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "regex repeat over 1000",
+    "ref": "refused: outside the documented subset (libyara supports it or rejects it differently)",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { strings: $a = /a{1001}/ condition: $a }"
+    },
+    "input": {
+      "value": "61",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "syntax error",
+    "ref": "refused: outside the documented subset (libyara supports it or rejects it differently)",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { condition: }"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "unterminated rule",
+    "ref": "refused: outside the documented subset (libyara supports it or rejects it differently)",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { condition: true"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "unreferenced string",
+    "ref": "refused: outside the documented subset (libyara supports it or rejects it differently)",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { strings: $a = \"x\" $b = \"y\" condition: $a }"
+    },
+    "input": {
+      "value": "78",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "undefined identifier",
+    "ref": "refused: outside the documented subset (libyara supports it or rejects it differently)",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { condition: foo }"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "duplicate rule name",
+    "ref": "refused: outside the documented subset (libyara supports it or rejects it differently)",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { condition: true } rule a { condition: false }"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "bad hex string",
+    "ref": "refused: outside the documented subset (libyara supports it or rejects it differently)",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { strings: $a = { 6 } condition: $a }"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "hex jump at the end",
+    "ref": "refused: outside the documented subset (libyara supports it or rejects it differently)",
+    "op": "yara:scan",
+    "params": {
+      "rules": "rule a { strings: $a = { 61 [2] } condition: $a }"
+    },
+    "input": {
+      "value": "",
+      "enc": "hex"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]
