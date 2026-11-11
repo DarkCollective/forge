@@ -11,7 +11,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 
 | Category | Covered | Redesigned | Dropped | Not yet | Total |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Data format | 56 | 9 | 0 | 15 | 80 |
+| Data format | 57 | 11 | 0 | 12 | 80 |
 | Encryption / Encoding | 29 | 64 | 0 | 2 | 95 |
 | Public Key | 2 | 0 | 0 | 28 | 30 |
 | Arithmetic / Logic | 24 | 2 | 0 | 0 | 26 |
@@ -19,7 +19,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Language | 3 | 1 | 0 | 0 | 4 |
 | Utils | 34 | 14 | 2 | 0 | 50 |
 | Date / Time | 5 | 4 | 0 | 0 | 9 |
-| Extractors | 1 | 8 | 0 | 9 | 18 |
+| Extractors | 3 | 11 | 0 | 4 | 18 |
 | Compression | 5 | 16 | 0 | 0 | 21 |
 | Hashing | 34 | 14 | 0 | 0 | 48 |
 | Code tidy | 0 | 0 | 0 | 24 | 24 |
@@ -27,7 +27,7 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Multimedia | 0 | 0 | 0 | 27 | 27 |
 | Other | 9 | 4 | 3 | 5 | 21 |
 | Flow control | 0 | 7 | 0 | 3 | 10 |
-| **Total** | **202** | **143** | **7** | **154** | **506** |
+| **Total** | **205** | **148** | **7** | **146** | **506** |
 
 ## Data format (80)
 
@@ -103,14 +103,14 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Avro to JSON | not yet |  |  |
 | CBOR Encode | not yet |  |  |
 | CBOR Decode | not yet |  |  |
-| YAML to JSON | not yet |  |  |
-| JSON to YAML | not yet |  |  |
+| YAML to JSON | redesigned | `yaml:to-json` | The reader is the yaml library (ISC), not js-yaml, and reads the YAML 1.2 core schema; CyberChef's js-yaml reads a YAML 1.1 mixture (yes and no, timestamps, !!binary, !!set). Here null, ~ and an empty value are null, true and false are the only booleans, integers (decimal, 0x, 0o) are exact with big integers kept, merge keys work, and a timestamp, !!binary, !!set or any other tag is not interpreted (the text stays a string). Like js-yaml: more than one document and a repeated key are errors. Stricter by design, each an E_COERCE with the offset, line and column or the reason: .inf and .nan (CyberChef writes null), a mapping key that is a collection, two keys that become the same text, an alias to a collection that contains it, a lone surrogate. Bounds: aliases are shared references and the expansion is charged to the value limit while the value is built (a billion-laughs document is E_LIMIT_VALUE), nesting deeper than 512 levels is E_LIMIT_VALUE. JSON output is indented by 4 spaces as CyberChef writes it; an added indent parameter (0 to 32, 0 is compact) saves a chain step. Floats print as the other JSON words print them (1.0, 1e+21). An empty stream is null. |
+| JSON to YAML | redesigned | `yaml:from-json` | Written by the yaml library in the layout of js-yaml's dump defaults (block style, 2-space indent, single quotes, keys in the order of the JSON text), reading the JSON with the shared strict parser. Differences from js-yaml, all cosmetic or safer: a long string is folded as a multi-line plain scalar instead of >-; a float with no fraction keeps it (1.0 is written 1.0, so the reader sees a float again); strings that YAML 1.1 or 1.2 would read as another type are quoted, as is a string with a tab or the strings << and =; a big integer is written exactly. A repeated key, a lone surrogate or malformed JSON is E_COERCE. |
 | Caret/M-decode | covered | `caret:decode` | The inverse of cat -v; caret:encode is the matching encoder. |
 | Rison Encode | not yet |  |  |
 | Rison Decode | not yet |  |  |
 | To Modhex | covered | `modhex:encode` |  |
 | From Modhex | covered | `modhex:decode` |  |
-| MIME Decoding | not yet |  |  |
+| MIME Decoding | covered | `mime:decode` | Written in FL over the regex words, base64 and charset. The encoded-word of RFC 2047 in B or Q form is decoded in any character set the charset vocabulary knows by its MIME name (CyberChef: utf-8, us-ascii, iso-8859-1 to 16); white space between two words is dropped, a language part (utf-8*en) is ignored, CRLF is read as LF as CyberChef does. A word must be well formed (no white space or ? inside) to be decoded, otherwise it stays as text; an unknown character set, bad base64, bad =XX or invalid bytes are E_COERCE. iso-8859-9, -11 and -12 are not offered (the charset vocabulary has no true table for them). |
 | To COBS | covered | `cobs:encode` |  |
 | From COBS | covered | `cobs:decode` |  |
 
@@ -409,16 +409,16 @@ it and regenerate this file. An operation listed in several CyberChef categories
 | Extract domains | redesigned | `extract:domains` | Forge's own pattern with CyberChef's Underscore option (off by default: a label with an underscore is then not part of a name). The option to show only valid top-level domains is not offered (it needs the list of top-level domains): the last label only has to be letters (or xn--), so file names such as report.txt are found too. A name after a dot or inside a longer word is not read from its middle (CyberChef finds example.com in _dmarc.example.com). |
 | Extract file paths | redesigned | `extract:file-paths` | Windows and UNIX switches as in CyberChef. Forge's own patterns: a Windows folder name may hold single spaces but the last name stops at the first space; a UNIX path ends at white space and is not found inside a word, a URL or a relative path. |
 | Extract hashes | redesigned | `extract:hashes` | A length from 1 to 128 hex digits (40 by default), or all, which finds the digest sizes 4, 8, 16, 32, 40, 48, 56, 64, 80, 96 and 128 digits with the values of each size together, the shortest size first, as CyberChef does (CyberChef also takes runs of 1 and 2 digits as hashes, which Forge does not); a run must not touch other letters, digits or underscores. |
-| XPath expression | not yet |  |  |
-| JPath expression | not yet |  |  |
-| Jsonata Query | not yet |  |  |
-| CSS selector | not yet |  |  |
+| XPath expression | covered | `xpath:query` | The xpath and @xmldom/xmldom libraries as CyberChef uses them: an XPath 1.0 expression over XML text, every selected node written as markup and joined with the result delimiter (escapes read, default \n), a name with no prefix matching any namespace. Added: an expression that gives a number, string or boolean writes that value (CyberChef fails). Attributes are written name="value". Bounds: expression length 4096 (E_RANGE), documents nested deeper than 512 levels or with more than 200,000 nodes and output past the value limit are E_LIMIT_VALUE; declared entities are not expanded and external entities are never read; some expressions are slow on a large document (a chain of ancestor:: and descendant:: steps took ten seconds on 64 KiB) and are stopped by the host's hard time limit. |
+| JPath expression | redesigned | `jsonpath:query` | The query language is RFC 9535 JSONPath (the json-p3 library, which passes the whole JSONPath Compliance Test Suite) instead of the Goessner dialect of jsonpath-plus, which evaluates script expressions with an interpreter of its own or with new Function and does not accept the RFC's filter syntax. The common queries are the same ($.store.book[*].author, $..price, $..book[?(@.price<10)], [0,1], [-1:], [:2]); script expressions [(@.length-1)] and the ^ ~ @path @property extensions are E_COERCE. Parameters and output as CyberChef: the query, a result delimiter (escapes read, default \n), every match as compact JSON text. A query that selects nothing gives an empty result. Own members only are read (a key named constructor or __proto__ is an ordinary key); integers beyond 2^53 are selected exactly but a filter comparing one never matches. Bounds: query length 4096 (E_RANGE), filters nested 30 deep and descent deeper than 512 levels (E_LIMIT_VALUE), results held to the value limit; an expensive query on a large document is stopped by the host's hard time limit. |
+| Jsonata Query | covered | `jsonata:query` | The jsonata library (IBM, MIT) as CyberChef uses it, parameter and output as CyberChef (the result as compact JSON text, nothing selected is the empty string). The primitive is asynchronous (version 2 of the library is). Deliberate differences: $random, $shuffle, $now and $millis raise an error (ops take randomness and time only from the random and clock vocabularies), $pad is limited to 1,000,000 characters, and evaluation is counted and bounded: more than 3,000,000 evaluation steps is E_LIMIT_STEPS, nesting past 1,000 levels, a sequence past 1,000,000 items and a range past 10 million are E_LIMIT_VALUE; integers beyond 2^53 lose precision as in JavaScript; a result that is a function is E_COERCE. |
+| CSS selector | redesigned | `css:select` | The HTML is read by htmlparser2 (which repairs bad markup like a browser and never fails), matched by css-select (CSS Selectors level 4) and written by dom-serializer, instead of xmldom and nwmatcher, which fail on HTML that is not XML. Parameters as CyberChef: the selector and a delimiter (escapes read, default \n); the outer HTML of each match in document order, nested matches listed again inside their parent; an empty selector or document gives an empty result. Matches are written as HTML (<br>, attribute values in double quotes, & < > as entities, other characters as they are). A pseudo-element, an unknown pseudo-class or a syntax error is E_COERCE. Bounds: selector length 4096 (E_RANGE), documents nested deeper than 512 levels or with more than 200,000 nodes and output past the value limit are E_LIMIT_VALUE. |
 | Extract EXIF | not yet |  |  |
 | Extract ID3 | not yet |  |  |
 | Extract Audio Metadata | not yet |  |  |
 | Extract Files | not yet |  |  |
 | RAKE | redesigned | `rake:keywords` | RAKE of Rose et al. 2010 with Forge's own English stop list (replaceable by a comma or white space separated list), a maximum phrase length (3 by default; CyberChef has none) instead of regular-expression delimiters, and a limit. The output is one line per phrase: its score (two decimals), a colon, a space and the phrase, highest score first, equal scores in alphabetical order. CyberChef writes Scores: , Keywords: , then score, phrase lines with the scores as plain numbers, and keeps punctuation attached to the words (so strict inequations, and strict inequations are different phrases there); Forge's words are letters, digits and marks with an inner apostrophe or hyphen, and every other character ends a phrase, so the keywords and scores differ. |
-| Template | not yet |  |  |
+| Template | redesigned | `template:render` | A documented subset of Handlebars rendered by a tree walker written for Forge, because Handlebars compiles templates to JavaScript and runs them with new Function (code execution, impossible under the strict CSP). Supported: {{x}} (HTML-escaped as Handlebars does), {{{x}}}, {{& x}}, comments, \{{ escapes, paths (a.b, a/b, this, ../, a.[b c], length, @root @index @key @first @last), if (with else if, includeZero), unless, each (lists and objects, else, block parameters), with, lookup, Mustache sections and inverted sections, white-space control {{~x~}} and the standalone-line rule; the output equals Handlebars 4.7.10 on 3,700 random templates and the 56 vectors. Not supported (E_COERCE with the line and column): partials, decorators, raw blocks, custom helpers, log. Only own properties are read. Bounds: blocks nested 100 deep (E_LIMIT_VALUE), 5,000,000 render steps (E_LIMIT_STEPS), output held to the value limit. |
 
 ## Compression (21)
 

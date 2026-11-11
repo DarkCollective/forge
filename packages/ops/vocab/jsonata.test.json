@@ -1,0 +1,772 @@
+[
+  {
+    "name": "a field",
+    "ref": "JSONata documentation example (docs.jsonata.org); expected value written from the documented result",
+    "op": "jsonata:query",
+    "params": {
+      "query": "Surname"
+    },
+    "input": {
+      "value": "{\"FirstName\":\"Fred\",\"Surname\":\"Smith\",\"Age\":28,\"Address\":{\"Street\":\"Hursley Park\",\"City\":\"Winchester\",\"Postcode\":\"SO21 2JN\"},\"Phone\":[{\"type\":\"home\",\"number\":\"0203 544 1234\"},{\"type\":\"office\",\"number\":\"01962 001234\"},{\"type\":\"office\",\"number\":\"01962 001235\"},{\"type\":\"mobile\",\"number\":\"077 7700 1234\"}],\"Email\":[{\"type\":\"work\",\"address\":[\"fred.smith@my-work.com\",\"fsmith@my-work.com\"]},{\"type\":\"home\",\"address\":[\"freddy@my-social.com\",\"frederic.smith@very-serious.com\"]}],\"Other\":{\"Over 18 ?\":true,\"Misc\":null,\"Alternative.Address\":{\"Street\":\"Brick Lane\",\"City\":\"London\",\"Postcode\":\"E1 6RF\"}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"Smith\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a number",
+    "ref": "JSONata documentation example (docs.jsonata.org); expected value written from the documented result",
+    "op": "jsonata:query",
+    "params": {
+      "query": "Age"
+    },
+    "input": {
+      "value": "{\"FirstName\":\"Fred\",\"Surname\":\"Smith\",\"Age\":28,\"Address\":{\"Street\":\"Hursley Park\",\"City\":\"Winchester\",\"Postcode\":\"SO21 2JN\"},\"Phone\":[{\"type\":\"home\",\"number\":\"0203 544 1234\"},{\"type\":\"office\",\"number\":\"01962 001234\"},{\"type\":\"office\",\"number\":\"01962 001235\"},{\"type\":\"mobile\",\"number\":\"077 7700 1234\"}],\"Email\":[{\"type\":\"work\",\"address\":[\"fred.smith@my-work.com\",\"fsmith@my-work.com\"]},{\"type\":\"home\",\"address\":[\"freddy@my-social.com\",\"frederic.smith@very-serious.com\"]}],\"Other\":{\"Over 18 ?\":true,\"Misc\":null,\"Alternative.Address\":{\"Street\":\"Brick Lane\",\"City\":\"London\",\"Postcode\":\"E1 6RF\"}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "28",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a nested path",
+    "ref": "JSONata documentation example (docs.jsonata.org); expected value written from the documented result",
+    "op": "jsonata:query",
+    "params": {
+      "query": "Address.City"
+    },
+    "input": {
+      "value": "{\"FirstName\":\"Fred\",\"Surname\":\"Smith\",\"Age\":28,\"Address\":{\"Street\":\"Hursley Park\",\"City\":\"Winchester\",\"Postcode\":\"SO21 2JN\"},\"Phone\":[{\"type\":\"home\",\"number\":\"0203 544 1234\"},{\"type\":\"office\",\"number\":\"01962 001234\"},{\"type\":\"office\",\"number\":\"01962 001235\"},{\"type\":\"mobile\",\"number\":\"077 7700 1234\"}],\"Email\":[{\"type\":\"work\",\"address\":[\"fred.smith@my-work.com\",\"fsmith@my-work.com\"]},{\"type\":\"home\",\"address\":[\"freddy@my-social.com\",\"frederic.smith@very-serious.com\"]}],\"Other\":{\"Over 18 ?\":true,\"Misc\":null,\"Alternative.Address\":{\"Street\":\"Brick Lane\",\"City\":\"London\",\"Postcode\":\"E1 6RF\"}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"Winchester\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a null value",
+    "ref": "JSONata documentation example (docs.jsonata.org); expected value written from the documented result",
+    "op": "jsonata:query",
+    "params": {
+      "query": "Other.Misc"
+    },
+    "input": {
+      "value": "{\"FirstName\":\"Fred\",\"Surname\":\"Smith\",\"Age\":28,\"Address\":{\"Street\":\"Hursley Park\",\"City\":\"Winchester\",\"Postcode\":\"SO21 2JN\"},\"Phone\":[{\"type\":\"home\",\"number\":\"0203 544 1234\"},{\"type\":\"office\",\"number\":\"01962 001234\"},{\"type\":\"office\",\"number\":\"01962 001235\"},{\"type\":\"mobile\",\"number\":\"077 7700 1234\"}],\"Email\":[{\"type\":\"work\",\"address\":[\"fred.smith@my-work.com\",\"fsmith@my-work.com\"]},{\"type\":\"home\",\"address\":[\"freddy@my-social.com\",\"frederic.smith@very-serious.com\"]}],\"Other\":{\"Over 18 ?\":true,\"Misc\":null,\"Alternative.Address\":{\"Street\":\"Brick Lane\",\"City\":\"London\",\"Postcode\":\"E1 6RF\"}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "null",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a field name with spaces and punctuation in backticks",
+    "ref": "JSONata documentation example (docs.jsonata.org); expected value written from the documented result",
+    "op": "jsonata:query",
+    "params": {
+      "query": "Other.`Over 18 ?`"
+    },
+    "input": {
+      "value": "{\"FirstName\":\"Fred\",\"Surname\":\"Smith\",\"Age\":28,\"Address\":{\"Street\":\"Hursley Park\",\"City\":\"Winchester\",\"Postcode\":\"SO21 2JN\"},\"Phone\":[{\"type\":\"home\",\"number\":\"0203 544 1234\"},{\"type\":\"office\",\"number\":\"01962 001234\"},{\"type\":\"office\",\"number\":\"01962 001235\"},{\"type\":\"mobile\",\"number\":\"077 7700 1234\"}],\"Email\":[{\"type\":\"work\",\"address\":[\"fred.smith@my-work.com\",\"fsmith@my-work.com\"]},{\"type\":\"home\",\"address\":[\"freddy@my-social.com\",\"frederic.smith@very-serious.com\"]}],\"Other\":{\"Over 18 ?\":true,\"Misc\":null,\"Alternative.Address\":{\"Street\":\"Brick Lane\",\"City\":\"London\",\"Postcode\":\"E1 6RF\"}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "true",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "an array index",
+    "ref": "JSONata documentation example (docs.jsonata.org); expected value written from the documented result",
+    "op": "jsonata:query",
+    "params": {
+      "query": "Phone[0]"
+    },
+    "input": {
+      "value": "{\"FirstName\":\"Fred\",\"Surname\":\"Smith\",\"Age\":28,\"Address\":{\"Street\":\"Hursley Park\",\"City\":\"Winchester\",\"Postcode\":\"SO21 2JN\"},\"Phone\":[{\"type\":\"home\",\"number\":\"0203 544 1234\"},{\"type\":\"office\",\"number\":\"01962 001234\"},{\"type\":\"office\",\"number\":\"01962 001235\"},{\"type\":\"mobile\",\"number\":\"077 7700 1234\"}],\"Email\":[{\"type\":\"work\",\"address\":[\"fred.smith@my-work.com\",\"fsmith@my-work.com\"]},{\"type\":\"home\",\"address\":[\"freddy@my-social.com\",\"frederic.smith@very-serious.com\"]}],\"Other\":{\"Over 18 ?\":true,\"Misc\":null,\"Alternative.Address\":{\"Street\":\"Brick Lane\",\"City\":\"London\",\"Postcode\":\"E1 6RF\"}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"type\":\"home\",\"number\":\"0203 544 1234\"}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a range of indexes",
+    "ref": "JSONata documentation example (docs.jsonata.org); expected value written from the documented result",
+    "op": "jsonata:query",
+    "params": {
+      "query": "Phone[[0..1]]"
+    },
+    "input": {
+      "value": "{\"FirstName\":\"Fred\",\"Surname\":\"Smith\",\"Age\":28,\"Address\":{\"Street\":\"Hursley Park\",\"City\":\"Winchester\",\"Postcode\":\"SO21 2JN\"},\"Phone\":[{\"type\":\"home\",\"number\":\"0203 544 1234\"},{\"type\":\"office\",\"number\":\"01962 001234\"},{\"type\":\"office\",\"number\":\"01962 001235\"},{\"type\":\"mobile\",\"number\":\"077 7700 1234\"}],\"Email\":[{\"type\":\"work\",\"address\":[\"fred.smith@my-work.com\",\"fsmith@my-work.com\"]},{\"type\":\"home\",\"address\":[\"freddy@my-social.com\",\"frederic.smith@very-serious.com\"]}],\"Other\":{\"Over 18 ?\":true,\"Misc\":null,\"Alternative.Address\":{\"Street\":\"Brick Lane\",\"City\":\"London\",\"Postcode\":\"E1 6RF\"}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[{\"type\":\"home\",\"number\":\"0203 544 1234\"},{\"type\":\"office\",\"number\":\"01962 001234\"}]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a predicate selecting one value",
+    "ref": "JSONata documentation example (docs.jsonata.org); expected value written from the documented result",
+    "op": "jsonata:query",
+    "params": {
+      "query": "Phone[type='mobile'].number"
+    },
+    "input": {
+      "value": "{\"FirstName\":\"Fred\",\"Surname\":\"Smith\",\"Age\":28,\"Address\":{\"Street\":\"Hursley Park\",\"City\":\"Winchester\",\"Postcode\":\"SO21 2JN\"},\"Phone\":[{\"type\":\"home\",\"number\":\"0203 544 1234\"},{\"type\":\"office\",\"number\":\"01962 001234\"},{\"type\":\"office\",\"number\":\"01962 001235\"},{\"type\":\"mobile\",\"number\":\"077 7700 1234\"}],\"Email\":[{\"type\":\"work\",\"address\":[\"fred.smith@my-work.com\",\"fsmith@my-work.com\"]},{\"type\":\"home\",\"address\":[\"freddy@my-social.com\",\"frederic.smith@very-serious.com\"]}],\"Other\":{\"Over 18 ?\":true,\"Misc\":null,\"Alternative.Address\":{\"Street\":\"Brick Lane\",\"City\":\"London\",\"Postcode\":\"E1 6RF\"}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"077 7700 1234\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a predicate selecting several values",
+    "ref": "JSONata documentation example (docs.jsonata.org); expected value written from the documented result",
+    "op": "jsonata:query",
+    "params": {
+      "query": "Phone[type='office'].number"
+    },
+    "input": {
+      "value": "{\"FirstName\":\"Fred\",\"Surname\":\"Smith\",\"Age\":28,\"Address\":{\"Street\":\"Hursley Park\",\"City\":\"Winchester\",\"Postcode\":\"SO21 2JN\"},\"Phone\":[{\"type\":\"home\",\"number\":\"0203 544 1234\"},{\"type\":\"office\",\"number\":\"01962 001234\"},{\"type\":\"office\",\"number\":\"01962 001235\"},{\"type\":\"mobile\",\"number\":\"077 7700 1234\"}],\"Email\":[{\"type\":\"work\",\"address\":[\"fred.smith@my-work.com\",\"fsmith@my-work.com\"]},{\"type\":\"home\",\"address\":[\"freddy@my-social.com\",\"frederic.smith@very-serious.com\"]}],\"Other\":{\"Over 18 ?\":true,\"Misc\":null,\"Alternative.Address\":{\"Street\":\"Brick Lane\",\"City\":\"London\",\"Postcode\":\"E1 6RF\"}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[\"01962 001234\",\"01962 001235\"]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a path over nested arrays is flattened",
+    "ref": "JSONata documentation example (docs.jsonata.org); expected value written from the documented result",
+    "op": "jsonata:query",
+    "params": {
+      "query": "Email.address"
+    },
+    "input": {
+      "value": "{\"FirstName\":\"Fred\",\"Surname\":\"Smith\",\"Age\":28,\"Address\":{\"Street\":\"Hursley Park\",\"City\":\"Winchester\",\"Postcode\":\"SO21 2JN\"},\"Phone\":[{\"type\":\"home\",\"number\":\"0203 544 1234\"},{\"type\":\"office\",\"number\":\"01962 001234\"},{\"type\":\"office\",\"number\":\"01962 001235\"},{\"type\":\"mobile\",\"number\":\"077 7700 1234\"}],\"Email\":[{\"type\":\"work\",\"address\":[\"fred.smith@my-work.com\",\"fsmith@my-work.com\"]},{\"type\":\"home\",\"address\":[\"freddy@my-social.com\",\"frederic.smith@very-serious.com\"]}],\"Other\":{\"Over 18 ?\":true,\"Misc\":null,\"Alternative.Address\":{\"Street\":\"Brick Lane\",\"City\":\"London\",\"Postcode\":\"E1 6RF\"}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[\"fred.smith@my-work.com\",\"fsmith@my-work.com\",\"freddy@my-social.com\",\"frederic.smith@very-serious.com\"]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "$count",
+    "ref": "JSONata documentation example (docs.jsonata.org); expected value written from the documented result",
+    "op": "jsonata:query",
+    "params": {
+      "query": "$count(Phone)"
+    },
+    "input": {
+      "value": "{\"FirstName\":\"Fred\",\"Surname\":\"Smith\",\"Age\":28,\"Address\":{\"Street\":\"Hursley Park\",\"City\":\"Winchester\",\"Postcode\":\"SO21 2JN\"},\"Phone\":[{\"type\":\"home\",\"number\":\"0203 544 1234\"},{\"type\":\"office\",\"number\":\"01962 001234\"},{\"type\":\"office\",\"number\":\"01962 001235\"},{\"type\":\"mobile\",\"number\":\"077 7700 1234\"}],\"Email\":[{\"type\":\"work\",\"address\":[\"fred.smith@my-work.com\",\"fsmith@my-work.com\"]},{\"type\":\"home\",\"address\":[\"freddy@my-social.com\",\"frederic.smith@very-serious.com\"]}],\"Other\":{\"Over 18 ?\":true,\"Misc\":null,\"Alternative.Address\":{\"Street\":\"Brick Lane\",\"City\":\"London\",\"Postcode\":\"E1 6RF\"}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "4",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "$uppercase and string concatenation",
+    "ref": "JSONata documentation example (docs.jsonata.org); expected value written from the documented result",
+    "op": "jsonata:query",
+    "params": {
+      "query": "$uppercase(Surname) & ', ' & FirstName"
+    },
+    "input": {
+      "value": "{\"FirstName\":\"Fred\",\"Surname\":\"Smith\",\"Age\":28,\"Address\":{\"Street\":\"Hursley Park\",\"City\":\"Winchester\",\"Postcode\":\"SO21 2JN\"},\"Phone\":[{\"type\":\"home\",\"number\":\"0203 544 1234\"},{\"type\":\"office\",\"number\":\"01962 001234\"},{\"type\":\"office\",\"number\":\"01962 001235\"},{\"type\":\"mobile\",\"number\":\"077 7700 1234\"}],\"Email\":[{\"type\":\"work\",\"address\":[\"fred.smith@my-work.com\",\"fsmith@my-work.com\"]},{\"type\":\"home\",\"address\":[\"freddy@my-social.com\",\"frederic.smith@very-serious.com\"]}],\"Other\":{\"Over 18 ?\":true,\"Misc\":null,\"Alternative.Address\":{\"Street\":\"Brick Lane\",\"City\":\"London\",\"Postcode\":\"E1 6RF\"}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"SMITH, Fred\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a comparison",
+    "ref": "JSONata documentation example (docs.jsonata.org); expected value written from the documented result",
+    "op": "jsonata:query",
+    "params": {
+      "query": "Age > 18"
+    },
+    "input": {
+      "value": "{\"FirstName\":\"Fred\",\"Surname\":\"Smith\",\"Age\":28,\"Address\":{\"Street\":\"Hursley Park\",\"City\":\"Winchester\",\"Postcode\":\"SO21 2JN\"},\"Phone\":[{\"type\":\"home\",\"number\":\"0203 544 1234\"},{\"type\":\"office\",\"number\":\"01962 001234\"},{\"type\":\"office\",\"number\":\"01962 001235\"},{\"type\":\"mobile\",\"number\":\"077 7700 1234\"}],\"Email\":[{\"type\":\"work\",\"address\":[\"fred.smith@my-work.com\",\"fsmith@my-work.com\"]},{\"type\":\"home\",\"address\":[\"freddy@my-social.com\",\"frederic.smith@very-serious.com\"]}],\"Other\":{\"Over 18 ?\":true,\"Misc\":null,\"Alternative.Address\":{\"Street\":\"Brick Lane\",\"City\":\"London\",\"Postcode\":\"E1 6RF\"}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "true",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "an object constructor",
+    "ref": "JSONata documentation example (docs.jsonata.org); expected value written from the documented result",
+    "op": "jsonata:query",
+    "params": {
+      "query": "{\"name\": FirstName, \"years\": Age}"
+    },
+    "input": {
+      "value": "{\"FirstName\":\"Fred\",\"Surname\":\"Smith\",\"Age\":28,\"Address\":{\"Street\":\"Hursley Park\",\"City\":\"Winchester\",\"Postcode\":\"SO21 2JN\"},\"Phone\":[{\"type\":\"home\",\"number\":\"0203 544 1234\"},{\"type\":\"office\",\"number\":\"01962 001234\"},{\"type\":\"office\",\"number\":\"01962 001235\"},{\"type\":\"mobile\",\"number\":\"077 7700 1234\"}],\"Email\":[{\"type\":\"work\",\"address\":[\"fred.smith@my-work.com\",\"fsmith@my-work.com\"]},{\"type\":\"home\",\"address\":[\"freddy@my-social.com\",\"frederic.smith@very-serious.com\"]}],\"Other\":{\"Over 18 ?\":true,\"Misc\":null,\"Alternative.Address\":{\"Street\":\"Brick Lane\",\"City\":\"London\",\"Postcode\":\"E1 6RF\"}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"name\":\"Fred\",\"years\":28}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "$distinct",
+    "ref": "JSONata documentation example (docs.jsonata.org); expected value written from the documented result",
+    "op": "jsonata:query",
+    "params": {
+      "query": "$distinct(Phone.type)"
+    },
+    "input": {
+      "value": "{\"FirstName\":\"Fred\",\"Surname\":\"Smith\",\"Age\":28,\"Address\":{\"Street\":\"Hursley Park\",\"City\":\"Winchester\",\"Postcode\":\"SO21 2JN\"},\"Phone\":[{\"type\":\"home\",\"number\":\"0203 544 1234\"},{\"type\":\"office\",\"number\":\"01962 001234\"},{\"type\":\"office\",\"number\":\"01962 001235\"},{\"type\":\"mobile\",\"number\":\"077 7700 1234\"}],\"Email\":[{\"type\":\"work\",\"address\":[\"fred.smith@my-work.com\",\"fsmith@my-work.com\"]},{\"type\":\"home\",\"address\":[\"freddy@my-social.com\",\"frederic.smith@very-serious.com\"]}],\"Other\":{\"Over 18 ?\":true,\"Misc\":null,\"Alternative.Address\":{\"Street\":\"Brick Lane\",\"City\":\"London\",\"Postcode\":\"E1 6RF\"}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[\"home\",\"office\",\"mobile\"]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "$map with a lambda",
+    "ref": "JSONata documentation example (docs.jsonata.org); expected value written from the documented result",
+    "op": "jsonata:query",
+    "params": {
+      "query": "$map(Phone, function($p){ $p.type })"
+    },
+    "input": {
+      "value": "{\"FirstName\":\"Fred\",\"Surname\":\"Smith\",\"Age\":28,\"Address\":{\"Street\":\"Hursley Park\",\"City\":\"Winchester\",\"Postcode\":\"SO21 2JN\"},\"Phone\":[{\"type\":\"home\",\"number\":\"0203 544 1234\"},{\"type\":\"office\",\"number\":\"01962 001234\"},{\"type\":\"office\",\"number\":\"01962 001235\"},{\"type\":\"mobile\",\"number\":\"077 7700 1234\"}],\"Email\":[{\"type\":\"work\",\"address\":[\"fred.smith@my-work.com\",\"fsmith@my-work.com\"]},{\"type\":\"home\",\"address\":[\"freddy@my-social.com\",\"frederic.smith@very-serious.com\"]}],\"Other\":{\"Over 18 ?\":true,\"Misc\":null,\"Alternative.Address\":{\"Street\":\"Brick Lane\",\"City\":\"London\",\"Postcode\":\"E1 6RF\"}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[\"home\",\"office\",\"office\",\"mobile\"]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "$join",
+    "ref": "JSONata documentation example (docs.jsonata.org); expected value written from the documented result",
+    "op": "jsonata:query",
+    "params": {
+      "query": "$join(Phone[type=\"office\"].number, \" / \")"
+    },
+    "input": {
+      "value": "{\"FirstName\":\"Fred\",\"Surname\":\"Smith\",\"Age\":28,\"Address\":{\"Street\":\"Hursley Park\",\"City\":\"Winchester\",\"Postcode\":\"SO21 2JN\"},\"Phone\":[{\"type\":\"home\",\"number\":\"0203 544 1234\"},{\"type\":\"office\",\"number\":\"01962 001234\"},{\"type\":\"office\",\"number\":\"01962 001235\"},{\"type\":\"mobile\",\"number\":\"077 7700 1234\"}],\"Email\":[{\"type\":\"work\",\"address\":[\"fred.smith@my-work.com\",\"fsmith@my-work.com\"]},{\"type\":\"home\",\"address\":[\"freddy@my-social.com\",\"frederic.smith@very-serious.com\"]}],\"Other\":{\"Over 18 ?\":true,\"Misc\":null,\"Alternative.Address\":{\"Street\":\"Brick Lane\",\"City\":\"London\",\"Postcode\":\"E1 6RF\"}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"01962 001234 / 01962 001235\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "$filter",
+    "ref": "JSONata documentation example (docs.jsonata.org); expected value written from the documented result",
+    "op": "jsonata:query",
+    "params": {
+      "query": "$filter(Phone, function($p){ $p.type = 'home' }).number"
+    },
+    "input": {
+      "value": "{\"FirstName\":\"Fred\",\"Surname\":\"Smith\",\"Age\":28,\"Address\":{\"Street\":\"Hursley Park\",\"City\":\"Winchester\",\"Postcode\":\"SO21 2JN\"},\"Phone\":[{\"type\":\"home\",\"number\":\"0203 544 1234\"},{\"type\":\"office\",\"number\":\"01962 001234\"},{\"type\":\"office\",\"number\":\"01962 001235\"},{\"type\":\"mobile\",\"number\":\"077 7700 1234\"}],\"Email\":[{\"type\":\"work\",\"address\":[\"fred.smith@my-work.com\",\"fsmith@my-work.com\"]},{\"type\":\"home\",\"address\":[\"freddy@my-social.com\",\"frederic.smith@very-serious.com\"]}],\"Other\":{\"Over 18 ?\":true,\"Misc\":null,\"Alternative.Address\":{\"Street\":\"Brick Lane\",\"City\":\"London\",\"Postcode\":\"E1 6RF\"}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"0203 544 1234\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "$keys",
+    "ref": "JSONata documentation example (docs.jsonata.org); expected value written from the documented result",
+    "op": "jsonata:query",
+    "params": {
+      "query": "$keys(Address)"
+    },
+    "input": {
+      "value": "{\"FirstName\":\"Fred\",\"Surname\":\"Smith\",\"Age\":28,\"Address\":{\"Street\":\"Hursley Park\",\"City\":\"Winchester\",\"Postcode\":\"SO21 2JN\"},\"Phone\":[{\"type\":\"home\",\"number\":\"0203 544 1234\"},{\"type\":\"office\",\"number\":\"01962 001234\"},{\"type\":\"office\",\"number\":\"01962 001235\"},{\"type\":\"mobile\",\"number\":\"077 7700 1234\"}],\"Email\":[{\"type\":\"work\",\"address\":[\"fred.smith@my-work.com\",\"fsmith@my-work.com\"]},{\"type\":\"home\",\"address\":[\"freddy@my-social.com\",\"frederic.smith@very-serious.com\"]}],\"Other\":{\"Over 18 ?\":true,\"Misc\":null,\"Alternative.Address\":{\"Street\":\"Brick Lane\",\"City\":\"London\",\"Postcode\":\"E1 6RF\"}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[\"Street\",\"City\",\"Postcode\"]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a conditional",
+    "ref": "JSONata documentation example (docs.jsonata.org); expected value written from the documented result",
+    "op": "jsonata:query",
+    "params": {
+      "query": "Age >= 18 ? 'adult' : 'minor'"
+    },
+    "input": {
+      "value": "{\"FirstName\":\"Fred\",\"Surname\":\"Smith\",\"Age\":28,\"Address\":{\"Street\":\"Hursley Park\",\"City\":\"Winchester\",\"Postcode\":\"SO21 2JN\"},\"Phone\":[{\"type\":\"home\",\"number\":\"0203 544 1234\"},{\"type\":\"office\",\"number\":\"01962 001234\"},{\"type\":\"office\",\"number\":\"01962 001235\"},{\"type\":\"mobile\",\"number\":\"077 7700 1234\"}],\"Email\":[{\"type\":\"work\",\"address\":[\"fred.smith@my-work.com\",\"fsmith@my-work.com\"]},{\"type\":\"home\",\"address\":[\"freddy@my-social.com\",\"frederic.smith@very-serious.com\"]}],\"Other\":{\"Over 18 ?\":true,\"Misc\":null,\"Alternative.Address\":{\"Street\":\"Brick Lane\",\"City\":\"London\",\"Postcode\":\"E1 6RF\"}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"adult\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a variable binding",
+    "ref": "JSONata documentation example (docs.jsonata.org); expected value written from the documented result",
+    "op": "jsonata:query",
+    "params": {
+      "query": "($n := Age + 2; $n * 2)"
+    },
+    "input": {
+      "value": "{\"FirstName\":\"Fred\",\"Surname\":\"Smith\",\"Age\":28,\"Address\":{\"Street\":\"Hursley Park\",\"City\":\"Winchester\",\"Postcode\":\"SO21 2JN\"},\"Phone\":[{\"type\":\"home\",\"number\":\"0203 544 1234\"},{\"type\":\"office\",\"number\":\"01962 001234\"},{\"type\":\"office\",\"number\":\"01962 001235\"},{\"type\":\"mobile\",\"number\":\"077 7700 1234\"}],\"Email\":[{\"type\":\"work\",\"address\":[\"fred.smith@my-work.com\",\"fsmith@my-work.com\"]},{\"type\":\"home\",\"address\":[\"freddy@my-social.com\",\"frederic.smith@very-serious.com\"]}],\"Other\":{\"Over 18 ?\":true,\"Misc\":null,\"Alternative.Address\":{\"Street\":\"Brick Lane\",\"City\":\"London\",\"Postcode\":\"E1 6RF\"}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "60",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "$substring and $length",
+    "ref": "JSONata documentation example (docs.jsonata.org); expected value written from the documented result",
+    "op": "jsonata:query",
+    "params": {
+      "query": "$substring(Surname, 0, 3) & $string($length(Surname))"
+    },
+    "input": {
+      "value": "{\"FirstName\":\"Fred\",\"Surname\":\"Smith\",\"Age\":28,\"Address\":{\"Street\":\"Hursley Park\",\"City\":\"Winchester\",\"Postcode\":\"SO21 2JN\"},\"Phone\":[{\"type\":\"home\",\"number\":\"0203 544 1234\"},{\"type\":\"office\",\"number\":\"01962 001234\"},{\"type\":\"office\",\"number\":\"01962 001235\"},{\"type\":\"mobile\",\"number\":\"077 7700 1234\"}],\"Email\":[{\"type\":\"work\",\"address\":[\"fred.smith@my-work.com\",\"fsmith@my-work.com\"]},{\"type\":\"home\",\"address\":[\"freddy@my-social.com\",\"frederic.smith@very-serious.com\"]}],\"Other\":{\"Over 18 ?\":true,\"Misc\":null,\"Alternative.Address\":{\"Street\":\"Brick Lane\",\"City\":\"London\",\"Postcode\":\"E1 6RF\"}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"Smi5\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "an array constructor",
+    "ref": "JSONata documentation example (docs.jsonata.org); expected value written from the documented result",
+    "op": "jsonata:query",
+    "params": {
+      "query": "[Age, Age + 1, Age + 2]"
+    },
+    "input": {
+      "value": "{\"FirstName\":\"Fred\",\"Surname\":\"Smith\",\"Age\":28,\"Address\":{\"Street\":\"Hursley Park\",\"City\":\"Winchester\",\"Postcode\":\"SO21 2JN\"},\"Phone\":[{\"type\":\"home\",\"number\":\"0203 544 1234\"},{\"type\":\"office\",\"number\":\"01962 001234\"},{\"type\":\"office\",\"number\":\"01962 001235\"},{\"type\":\"mobile\",\"number\":\"077 7700 1234\"}],\"Email\":[{\"type\":\"work\",\"address\":[\"fred.smith@my-work.com\",\"fsmith@my-work.com\"]},{\"type\":\"home\",\"address\":[\"freddy@my-social.com\",\"frederic.smith@very-serious.com\"]}],\"Other\":{\"Over 18 ?\":true,\"Misc\":null,\"Alternative.Address\":{\"Street\":\"Brick Lane\",\"City\":\"London\",\"Postcode\":\"E1 6RF\"}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[28,29,30]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a query that selects nothing gives an empty string",
+    "ref": "CyberChef writes JSON.stringify of an empty string for no result",
+    "op": "jsonata:query",
+    "params": {
+      "query": "Missing.Path"
+    },
+    "input": {
+      "value": "{\"FirstName\":\"Fred\",\"Surname\":\"Smith\",\"Age\":28,\"Address\":{\"Street\":\"Hursley Park\",\"City\":\"Winchester\",\"Postcode\":\"SO21 2JN\"},\"Phone\":[{\"type\":\"home\",\"number\":\"0203 544 1234\"},{\"type\":\"office\",\"number\":\"01962 001234\"},{\"type\":\"office\",\"number\":\"01962 001235\"},{\"type\":\"mobile\",\"number\":\"077 7700 1234\"}],\"Email\":[{\"type\":\"work\",\"address\":[\"fred.smith@my-work.com\",\"fsmith@my-work.com\"]},{\"type\":\"home\",\"address\":[\"freddy@my-social.com\",\"frederic.smith@very-serious.com\"]}],\"Other\":{\"Over 18 ?\":true,\"Misc\":null,\"Alternative.Address\":{\"Street\":\"Brick Lane\",\"City\":\"London\",\"Postcode\":\"E1 6RF\"}}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "$sum over a computed path (IEEE doubles, left to right)",
+    "ref": "documentation example; the sum computed in Python with the same IEEE doubles, left to right",
+    "op": "jsonata:query",
+    "params": {
+      "query": "$sum(Account.Order.Product.(Price * Quantity))"
+    },
+    "input": {
+      "value": "{\"Account\":{\"Account Name\":\"Firefly\",\"Order\":[{\"OrderID\":\"order103\",\"Product\":[{\"ProductID\":858383,\"Product Name\":\"Bowler Hat\",\"Price\":34.45,\"Quantity\":2},{\"ProductID\":345664,\"Product Name\":\"Trilby hat\",\"Price\":21.67,\"Quantity\":1}]},{\"OrderID\":\"order104\",\"Product\":[{\"ProductID\":858383,\"Product Name\":\"Bowler Hat\",\"Price\":34.45,\"Quantity\":4},{\"ProductID\":987654,\"Product Name\":\"Cloak\",\"Price\":107.99,\"Quantity\":1}]}]}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "336.36",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "$max and $average",
+    "ref": "documentation example data; values computed by hand",
+    "op": "jsonata:query",
+    "params": {
+      "query": "[$max(Account.Order.Product.Price), $average(Account.Order.Product.Quantity)]"
+    },
+    "input": {
+      "value": "{\"Account\":{\"Account Name\":\"Firefly\",\"Order\":[{\"OrderID\":\"order103\",\"Product\":[{\"ProductID\":858383,\"Product Name\":\"Bowler Hat\",\"Price\":34.45,\"Quantity\":2},{\"ProductID\":345664,\"Product Name\":\"Trilby hat\",\"Price\":21.67,\"Quantity\":1}]},{\"OrderID\":\"order104\",\"Product\":[{\"ProductID\":858383,\"Product Name\":\"Bowler Hat\",\"Price\":34.45,\"Quantity\":4},{\"ProductID\":987654,\"Product Name\":\"Cloak\",\"Price\":107.99,\"Quantity\":1}]}]}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[107.99,2]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a field with a space in its name",
+    "ref": "JSONata documentation example (docs.jsonata.org); expected value written from the documented result",
+    "op": "jsonata:query",
+    "params": {
+      "query": "Account.`Account Name`"
+    },
+    "input": {
+      "value": "{\"Account\":{\"Account Name\":\"Firefly\",\"Order\":[{\"OrderID\":\"order103\",\"Product\":[{\"ProductID\":858383,\"Product Name\":\"Bowler Hat\",\"Price\":34.45,\"Quantity\":2},{\"ProductID\":345664,\"Product Name\":\"Trilby hat\",\"Price\":21.67,\"Quantity\":1}]},{\"OrderID\":\"order104\",\"Product\":[{\"ProductID\":858383,\"Product Name\":\"Bowler Hat\",\"Price\":34.45,\"Quantity\":4},{\"ProductID\":987654,\"Product Name\":\"Cloak\",\"Price\":107.99,\"Quantity\":1}]}]}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"Firefly\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "grouping with an object constructor",
+    "ref": "documentation example data; values computed by hand",
+    "op": "jsonata:query",
+    "params": {
+      "query": "Account.Order.{OrderID: $sum(Product.Quantity)}"
+    },
+    "input": {
+      "value": "{\"Account\":{\"Account Name\":\"Firefly\",\"Order\":[{\"OrderID\":\"order103\",\"Product\":[{\"ProductID\":858383,\"Product Name\":\"Bowler Hat\",\"Price\":34.45,\"Quantity\":2},{\"ProductID\":345664,\"Product Name\":\"Trilby hat\",\"Price\":21.67,\"Quantity\":1}]},{\"OrderID\":\"order104\",\"Product\":[{\"ProductID\":858383,\"Product Name\":\"Bowler Hat\",\"Price\":34.45,\"Quantity\":4},{\"ProductID\":987654,\"Product Name\":\"Cloak\",\"Price\":107.99,\"Quantity\":1}]}]}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[{\"order103\":3},{\"order104\":5}]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "the root can be an array",
+    "ref": "JSONata documentation example (docs.jsonata.org); expected value written from the documented result",
+    "op": "jsonata:query",
+    "params": {
+      "query": "$[$ > 2]"
+    },
+    "input": {
+      "value": "[1,2,3,4]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[3,4]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "the root can be a string",
+    "ref": "JSONata documentation example (docs.jsonata.org); expected value written from the documented result",
+    "op": "jsonata:query",
+    "params": {
+      "query": "$uppercase($)"
+    },
+    "input": {
+      "value": "\"hello\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"HELLO\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "$base64encode and $base64decode",
+    "ref": "RFC 4648 (round trip); base64 of hello is aGVsbG8=",
+    "op": "jsonata:query",
+    "params": {
+      "query": "$base64decode($base64encode(s))"
+    },
+    "input": {
+      "value": "{\"s\":\"hello\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"hello\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "$base64encode text",
+    "ref": "RFC 4648 section 10 style: base64('hello') = aGVsbG8= (Python base64.b64encode)",
+    "op": "jsonata:query",
+    "params": {
+      "query": "$base64encode(s)"
+    },
+    "input": {
+      "value": "{\"s\":\"hello\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"aGVsbG8=\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "$pad within the limit",
+    "ref": "JSONata documentation example (docs.jsonata.org); expected value written from the documented result",
+    "op": "jsonata:query",
+    "params": {
+      "query": "$pad(s, 5, '*')"
+    },
+    "input": {
+      "value": "{\"s\":\"ab\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"ab***\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a regular expression",
+    "ref": "JSONata documentation example (docs.jsonata.org); expected value written from the documented result",
+    "op": "jsonata:query",
+    "params": {
+      "query": "$match(s, /[0-9]+/).match"
+    },
+    "input": {
+      "value": "{\"s\":\"a1b22c333\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[\"1\",\"22\",\"333\"]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "$eval runs JSONata, not JavaScript",
+    "ref": "JSONata documentation example (docs.jsonata.org); expected value written from the documented result",
+    "op": "jsonata:query",
+    "params": {
+      "query": "$eval('1 + 2')"
+    },
+    "input": {
+      "value": "{\"x\":2}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a syntax error",
+    "ref": "JSONata grammar (S0203)",
+    "op": "jsonata:query",
+    "params": {
+      "query": "$foo("
+    },
+    "input": {
+      "value": "{\"a\":1}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "an unterminated string",
+    "ref": "JSONata grammar (S0101)",
+    "op": "jsonata:query",
+    "params": {
+      "query": "\"abc"
+    },
+    "input": {
+      "value": "{\"a\":1}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "an operator on the wrong types",
+    "ref": "JSONata T2001",
+    "op": "jsonata:query",
+    "params": {
+      "query": "a + 1"
+    },
+    "input": {
+      "value": "{\"a\":\"x\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "$error raises",
+    "ref": "JSONata documentation of $error",
+    "op": "jsonata:query",
+    "params": {
+      "query": "$error('boom')"
+    },
+    "input": {
+      "value": "{\"a\":1}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "$assert fails",
+    "ref": "JSONata documentation of $assert",
+    "op": "jsonata:query",
+    "params": {
+      "query": "$assert(false, 'no')"
+    },
+    "input": {
+      "value": "{\"a\":1}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a function is not a result",
+    "ref": "a function has no JSON form",
+    "op": "jsonata:query",
+    "params": {
+      "query": "function($x){ $x }"
+    },
+    "input": {
+      "value": "{\"a\":1}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "$now is not available",
+    "ref": "by design: ops take time only from the clock vocabulary",
+    "op": "jsonata:query",
+    "params": {
+      "query": "$now()"
+    },
+    "input": {
+      "value": "{\"a\":1}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "$millis is not available",
+    "ref": "by design: ops take time only from the clock vocabulary",
+    "op": "jsonata:query",
+    "params": {
+      "query": "$millis()"
+    },
+    "input": {
+      "value": "{\"a\":1}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "$random is not available",
+    "ref": "by design: ops take randomness only from the random vocabulary",
+    "op": "jsonata:query",
+    "params": {
+      "query": "$random()"
+    },
+    "input": {
+      "value": "{\"a\":1}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "$shuffle is not available",
+    "ref": "by design: ops take randomness only from the random vocabulary",
+    "op": "jsonata:query",
+    "params": {
+      "query": "$shuffle([1,2,3])"
+    },
+    "input": {
+      "value": "{\"a\":1}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "$pad with a huge width",
+    "ref": "by design: width limit 1,000,000",
+    "op": "jsonata:query",
+    "params": {
+      "query": "$pad('x', 99999999)"
+    },
+    "input": {
+      "value": "{\"a\":1}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "the range operator past 10 million",
+    "ref": "JSONata D2014",
+    "op": "jsonata:query",
+    "params": {
+      "query": "[1..100000000]"
+    },
+    "input": {
+      "value": "{\"a\":1}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_LIMIT_VALUE"
+    }
+  },
+  {
+    "name": "malformed JSON",
+    "ref": "RFC 8259",
+    "op": "jsonata:query",
+    "params": {
+      "query": "a"
+    },
+    "input": {
+      "value": "{",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "empty input",
+    "ref": "RFC 8259",
+    "op": "jsonata:query",
+    "params": {
+      "query": "a"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

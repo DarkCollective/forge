@@ -1,0 +1,854 @@
+[
+  {
+    "name": "mapping with scalars, a flow list and a nested block",
+    "ref": "PyYAML safe_load and json.dumps",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "name: Ada\nage: 36\nratio: 2.5\nactive: true\nnothing: null\ntilde: ~\nempty:\nlist: [1, 2, 3]\nnested:\n  a: 1\n  b:\n    - x\n    - y\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n    \"name\": \"Ada\",\n    \"age\": 36,\n    \"ratio\": 2.5,\n    \"active\": true,\n    \"nothing\": null,\n    \"tilde\": null,\n    \"empty\": null,\n    \"list\": [\n        1,\n        2,\n        3\n    ],\n    \"nested\": {\n        \"a\": 1,\n        \"b\": [\n            \"x\",\n            \"y\"\n        ]\n    }\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "compact output (indent 0)",
+    "ref": "PyYAML safe_load and json.dumps",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 0
+    },
+    "input": {
+      "value": "a: 1\nb: [x, y]\nc:\n  d: null\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\"a\":1,\"b\":[\"x\",\"y\"],\"c\":{\"d\":null}}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "indent 2",
+    "ref": "PyYAML safe_load and json.dumps",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "a: 1\nb: [x, y]\nc:\n  d: null\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n  \"a\": 1,\n  \"b\": [\n    \"x\",\n    \"y\"\n  ],\n  \"c\": {\n    \"d\": null\n  }\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sequence of mappings",
+    "ref": "PyYAML safe_load and json.dumps",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "- id: 1\n  tags: [a, b]\n- id: 2\n  tags: []\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[\n    {\n        \"id\": 1,\n        \"tags\": [\n            \"a\",\n            \"b\"\n        ]\n    },\n    {\n        \"id\": 2,\n        \"tags\": []\n    }\n]",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "quoted strings and escapes",
+    "ref": "PyYAML safe_load and json.dumps",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "a: 'it''s'\nb: \"tab\\there \\u00e9 \\x41\"\nc: \"line\\nbreak\"\nd: 'plain # not a comment'\ne: x # comment\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n    \"a\": \"it's\",\n    \"b\": \"tab\\there é A\",\n    \"c\": \"line\\nbreak\",\n    \"d\": \"plain # not a comment\",\n    \"e\": \"x\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "block scalars: literal, folded, strip and keep",
+    "ref": "PyYAML safe_load and json.dumps",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "lit: |\n  line1\n  line2\nfold: >\n  folded\n  text\n\n  para\nstrip: |-\n  no newline\nkeep: |+\n  kept\n\nafter: 1\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n    \"lit\": \"line1\\nline2\\n\",\n    \"fold\": \"folded text\\npara\\n\",\n    \"strip\": \"no newline\",\n    \"keep\": \"kept\\n\\n\",\n    \"after\": 1\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "multi-line plain and flow scalars",
+    "ref": "PyYAML safe_load and json.dumps",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "a: first\n  second\n  third\nb: [one two,\n  three]\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n    \"a\": \"first second third\",\n    \"b\": [\n        \"one two\",\n        \"three\"\n    ]\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "anchors and aliases",
+    "ref": "PyYAML safe_load and json.dumps",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "base: &b [1, 2]\ncopy: *b\nobj: &o {x: 1}\nref: *o\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n    \"base\": [\n        1,\n        2\n    ],\n    \"copy\": [\n        1,\n        2\n    ],\n    \"obj\": {\n        \"x\": 1\n    },\n    \"ref\": {\n        \"x\": 1\n    }\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "merge key adds keys of an anchored mapping",
+    "ref": "PyYAML safe_load and json.dumps",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "base: &b {x: 1, y: 2}\nderived:\n  <<: *b\n  z: 3\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n    \"base\": {\n        \"x\": 1,\n        \"y\": 2\n    },\n    \"derived\": {\n        \"x\": 1,\n        \"y\": 2,\n        \"z\": 3\n    }\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "integers, big integers, floats, signs",
+    "ref": "PyYAML safe_load and json.dumps",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "a: 0\nb: -7\nc: 123456789012345678901234567890\nd: 0x1f\ne: 3.0\nf: -0.5\ng: 1.25\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n    \"a\": 0,\n    \"b\": -7,\n    \"c\": 123456789012345678901234567890,\n    \"d\": 31,\n    \"e\": 3.0,\n    \"f\": -0.5,\n    \"g\": 1.25\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "non-string keys become text",
+    "ref": "PyYAML safe_load and json.dumps",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "1: a\nnull: c\n2.5: d\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n    \"1\": \"a\",\n    \"null\": \"c\",\n    \"2.5\": \"d\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a boolean key becomes text",
+    "ref": "PyYAML safe_load and json.dumps",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "true: b\nfalse: c\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n    \"true\": \"b\",\n    \"false\": \"c\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unicode",
+    "ref": "PyYAML safe_load and json.dumps",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "name: café ☕\nemoji: 😀\n'ключ': значение\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n    \"name\": \"café ☕\",\n    \"emoji\": \"😀\",\n    \"ключ\": \"значение\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "top-level scalar",
+    "ref": "PyYAML safe_load and json.dumps",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "42\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "42",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "top-level string",
+    "ref": "PyYAML safe_load and json.dumps",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "just text\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\"just text\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "empty text is null",
+    "ref": "PyYAML safe_load and json.dumps",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "null",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "comment-only text is null",
+    "ref": "PyYAML safe_load and json.dumps",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "# nothing here\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "null",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "document start marker",
+    "ref": "PyYAML safe_load and json.dumps",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "---\na: 1\n...\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n    \"a\": 1\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "CRLF line breaks",
+    "ref": "PyYAML safe_load and json.dumps",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "a: 1\r\nb:\r\n  - x\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n    \"a\": 1,\n    \"b\": [\n        \"x\"\n    ]\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "flow mapping with null values",
+    "ref": "PyYAML safe_load and json.dumps",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "{a: , b: ~, c: null}\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n    \"a\": null,\n    \"b\": null,\n    \"c\": null\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "strings that look like other types stay strings when quoted",
+    "ref": "PyYAML safe_load and json.dumps",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "a: '123'\nb: 'true'\nc: 'null'\nd: ''\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n    \"a\": \"123\",\n    \"b\": \"true\",\n    \"c\": \"null\",\n    \"d\": \"\"\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "deep nesting",
+    "ref": "PyYAML safe_load and json.dumps",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "a:\n  b:\n    c:\n      d:\n        - [1, [2, [3]]]\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "{\n    \"a\": {\n        \"b\": {\n            \"c\": {\n                \"d\": [\n                    [\n                        1,\n                        [\n                            2,\n                            [\n                                3\n                            ]\n                        ]\n                    ]\n                ]\n            }\n        }\n    }\n}",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unclosed flow sequence",
+    "ref": "PyYAML safe_load raises ParserError",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "a: [1, 2\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "bad indentation",
+    "ref": "PyYAML safe_load raises ParserError",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "a:\n  b: 1\n c: 2\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "tab as indentation",
+    "ref": "PyYAML safe_load raises ScannerError",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "a:\n\t- b\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "two documents",
+    "ref": "PyYAML safe_load raises ComposerError: expected a single document in the stream",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "a: 1\n---\nb: 2\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "repeated key",
+    "ref": "YAML 1.2 specification 3.2.1.1: mapping keys are unique (PyYAML accepts it, js-yaml rejects it)",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "a: 1\na: 2\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "undefined alias",
+    "ref": "PyYAML safe_load raises ComposerError: found undefined alias",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "a: *missing\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a key that is a collection",
+    "ref": "JSON keys are text: a sequence key has no JSON form (by design)",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "? [1, 2]\n: x\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "two keys that become the same text",
+    "ref": "by design: no key may be lost",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "1: a\n'1': b\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": ".inf has no JSON form",
+    "ref": "JSON has no infinity (CyberChef writes null; here it is refused)",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "a: .inf\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": ".nan has no JSON form",
+    "ref": "JSON has no NaN (CyberChef writes null; here it is refused)",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "a: .nan\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "alias to its own ancestor",
+    "ref": "a cyclic structure has no JSON form (by design)",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "&a [*a]\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "billion laughs: 8 levels of 10 aliases",
+    "ref": "the classic entity-expansion document written with YAML aliases; 10^8 nodes",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "a0: &a0 [x,x,x,x,x,x,x,x,x,x]\na1: &a1 [*a0,*a0,*a0,*a0,*a0,*a0,*a0,*a0,*a0,*a0]\na2: &a2 [*a1,*a1,*a1,*a1,*a1,*a1,*a1,*a1,*a1,*a1]\na3: &a3 [*a2,*a2,*a2,*a2,*a2,*a2,*a2,*a2,*a2,*a2]\na4: &a4 [*a3,*a3,*a3,*a3,*a3,*a3,*a3,*a3,*a3,*a3]\na5: &a5 [*a4,*a4,*a4,*a4,*a4,*a4,*a4,*a4,*a4,*a4]\na6: &a6 [*a5,*a5,*a5,*a5,*a5,*a5,*a5,*a5,*a5,*a5]\na7: &a7 [*a6,*a6,*a6,*a6,*a6,*a6,*a6,*a6,*a6,*a6]\na8: &a8 [*a7,*a7,*a7,*a7,*a7,*a7,*a7,*a7,*a7,*a7]\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_LIMIT_VALUE"
+    }
+  },
+  {
+    "name": "nesting past 512 levels",
+    "ref": "by design: the depth limit of the json words",
+    "op": "yaml:to-json",
+    "params": {
+      "indent": 4
+    },
+    "input": {
+      "value": "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_LIMIT_VALUE"
+    }
+  },
+  {
+    "name": "mapping with nesting and empty containers",
+    "ref": "hand-written to the layout of js-yaml's dump defaults; reads back with PyYAML safe_load to the same value",
+    "op": "yaml:from-json",
+    "params": {},
+    "input": {
+      "value": "{\"a\":1,\"b\":[1,2,{\"c\":3}],\"d\":{\"e\":\"x\"},\"f\":null,\"g\":true,\"h\":[],\"i\":{}}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a: 1\nb:\n  - 1\n  - 2\n  - c: 3\nd:\n  e: x\nf: null\ng: true\nh: []\ni: {}\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "keys keep the order of the JSON text",
+    "ref": "hand-written to the layout of js-yaml's dump defaults; reads back with PyYAML safe_load to the same value",
+    "op": "yaml:from-json",
+    "params": {},
+    "input": {
+      "value": "{\"z\":1,\"a\":2,\"m\":3}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "z: 1\na: 2\nm: 3\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "nested sequences",
+    "ref": "hand-written to the layout of js-yaml's dump defaults; reads back with PyYAML safe_load to the same value",
+    "op": "yaml:from-json",
+    "params": {},
+    "input": {
+      "value": "[[1,2],[3,[4,5]],[],[[]],{}]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "- - 1\n  - 2\n- - 3\n  - - 4\n    - 5\n- []\n- - []\n- {}\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sequence of mappings",
+    "ref": "hand-written to the layout of js-yaml's dump defaults; reads back with PyYAML safe_load to the same value",
+    "op": "yaml:from-json",
+    "params": {},
+    "input": {
+      "value": "[{\"a\":1,\"b\":2},{\"c\":3}]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "- a: 1\n  b: 2\n- c: 3\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "strings that YAML would read as another type are quoted",
+    "ref": "hand-written to the layout of js-yaml's dump defaults; reads back with PyYAML safe_load to the same value",
+    "op": "yaml:from-json",
+    "params": {},
+    "input": {
+      "value": "[\"true\",\"123\",\"null\",\"\",\"1.5\",\"0x1f\",\"yes\",\"No\",\"on\",\"~\",\"2001-01-01\",\"1e3\",\"-\",\"=\",\"<<\"]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "- 'true'\n- '123'\n- 'null'\n- ''\n- '1.5'\n- '0x1f'\n- 'yes'\n- 'No'\n- 'on'\n- '~'\n- '2001-01-01'\n- '1e3'\n- '-'\n- '='\n- '<<'\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "strings with indicators and edge spaces are quoted",
+    "ref": "hand-written to the layout of js-yaml's dump defaults; reads back with PyYAML safe_load to the same value",
+    "op": "yaml:from-json",
+    "params": {},
+    "input": {
+      "value": "[\"a: b\",\"- x\",\"  lead\",\"trail \",\"#c\",\"@a\",\"!x\",\"&a\",\"*a\",\"%a\",\"a #b\",\"a: \",\"[x]\",\"{y}\",\"?\"]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "- 'a: b'\n- '- x'\n- '  lead'\n- 'trail '\n- '#c'\n- '@a'\n- '!x'\n- '&a'\n- '*a'\n- '%a'\n- 'a #b'\n- 'a: '\n- '[x]'\n- '{y}'\n- '?'\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a single quote inside a string, and plain text with spaces",
+    "ref": "hand-written to the layout of js-yaml's dump defaults; reads back with PyYAML safe_load to the same value",
+    "op": "yaml:from-json",
+    "params": {},
+    "input": {
+      "value": "[\"it's\",\"x y\",\"é\",\"a,b\",\"a:b\"]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "- it's\n- x y\n- é\n- a,b\n- a:b\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "quotes inside strings",
+    "ref": "hand-written to the layout of js-yaml's dump defaults; reads back with PyYAML safe_load to the same value",
+    "op": "yaml:from-json",
+    "params": {},
+    "input": {
+      "value": "[\"'q'\",\"\\\"dq\\\"\"]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "- \"'q'\"\n- '\"dq\"'\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "multi-line strings use block scalars",
+    "ref": "hand-written to the layout of js-yaml's dump defaults; reads back with PyYAML safe_load to the same value",
+    "op": "yaml:from-json",
+    "params": {},
+    "input": {
+      "value": "{\"ml\":\"line1\\nline2\\nline3\\n\",\"ml2\":\"a\\n\\nb\",\"ml3\":\"x\\ny\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ml: |\n  line1\n  line2\n  line3\nml2: |-\n  a\n\n  b\nml3: |-\n  x\n  y\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "tab and carriage return are escaped in double quotes",
+    "ref": "hand-written to the layout of js-yaml's dump defaults; reads back with PyYAML safe_load to the same value",
+    "op": "yaml:from-json",
+    "params": {},
+    "input": {
+      "value": "{\"t\":\"tab\\there\",\"cr\":\"a\\rb\",\"c\":\"\\u0001\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "t: \"tab\\there\"\ncr: \"a\\rb\"\nc: \"\\x01\"\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "keys that need quoting",
+    "ref": "hand-written to the layout of js-yaml's dump defaults; reads back with PyYAML safe_load to the same value",
+    "op": "yaml:from-json",
+    "params": {},
+    "input": {
+      "value": "{\"a b\":1,\"1\":2,\"\":3,\"true\":4,\"x:y\":5,\"? q\":7,\"null\":9}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a b: 1\n'1': 2\n'': 3\n'true': 4\nx:y: 5\n'? q': 7\n'null': 9\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "numbers: floats keep their fraction, big integers stay exact",
+    "ref": "hand-written to the layout of js-yaml's dump defaults; reads back with PyYAML safe_load to the same value",
+    "op": "yaml:from-json",
+    "params": {},
+    "input": {
+      "value": "{\"i\":-7,\"z\":0,\"f\":1.5,\"w\":1.0,\"h\":100.0,\"s\":0.000001,\"big\":123456789012345678901234567890}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "i: -7\nz: 0\nf: 1.5\nw: 1.0\nh: 100.0\ns: 0.000001\nbig: 123456789012345678901234567890\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "top-level scalars",
+    "ref": "hand-written to the layout of js-yaml's dump defaults; reads back with PyYAML safe_load to the same value",
+    "op": "yaml:from-json",
+    "params": {},
+    "input": {
+      "value": "5",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "5\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "top-level string",
+    "ref": "hand-written to the layout of js-yaml's dump defaults; reads back with PyYAML safe_load to the same value",
+    "op": "yaml:from-json",
+    "params": {},
+    "input": {
+      "value": "\"scalar\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "scalar\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "top-level null",
+    "ref": "hand-written to the layout of js-yaml's dump defaults; reads back with PyYAML safe_load to the same value",
+    "op": "yaml:from-json",
+    "params": {},
+    "input": {
+      "value": "null",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "null\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "top-level empty string",
+    "ref": "hand-written to the layout of js-yaml's dump defaults; reads back with PyYAML safe_load to the same value",
+    "op": "yaml:from-json",
+    "params": {},
+    "input": {
+      "value": "\"\"",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "''\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "top-level empty list",
+    "ref": "hand-written to the layout of js-yaml's dump defaults; reads back with PyYAML safe_load to the same value",
+    "op": "yaml:from-json",
+    "params": {},
+    "input": {
+      "value": "[]",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "[]\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unicode text stays as it is",
+    "ref": "hand-written to the layout of js-yaml's dump defaults; reads back with PyYAML safe_load to the same value",
+    "op": "yaml:from-json",
+    "params": {},
+    "input": {
+      "value": "{\"emoji\":\"😀 ok\",\"name\":\"café\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "emoji: 😀 ok\nname: café\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "long strings are folded at 80 characters",
+    "ref": "hand-written to the layout of js-yaml's dump defaults; reads back with PyYAML safe_load to the same value",
+    "op": "yaml:from-json",
+    "params": {},
+    "input": {
+      "value": "{\"long\":\"The quick brown fox jumps over the lazy dog and keeps running through the forest until the very end of the line 12345\"}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "long: The quick brown fox jumps over the lazy dog and keeps running through the\n  forest until the very end of the line 12345\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "malformed JSON",
+    "ref": "RFC 8259",
+    "op": "yaml:from-json",
+    "params": {},
+    "input": {
+      "value": "{\"a\":",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "repeated JSON key",
+    "ref": "RFC 8259 leaves it open; refused by design",
+    "op": "yaml:from-json",
+    "params": {},
+    "input": {
+      "value": "{\"a\":1,\"a\":2}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "empty input",
+    "ref": "RFC 8259",
+    "op": "yaml:from-json",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]

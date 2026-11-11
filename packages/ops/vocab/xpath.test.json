@@ -1,0 +1,606 @@
+[
+  {
+    "name": "all titles (elements)",
+    "ref": "lxml (libxml2) XPath 1.0 evaluation and serialisation",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "//book/title",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<library>\n  <book id=\"b1\" lang=\"en\"><title>Dune</title><author>Herbert</author><price>9.99</price></book>\n  <book id=\"b2\" lang=\"fr\"><title>Le Petit Prince</title><author>Saint-Exupery</author><price>5.5</price></book>\n  <book id=\"b3\" lang=\"en\"><title>Neuromancer</title><author>Gibson</author><price>12</price></book>\n  <!-- a comment -->\n  <magazine id=\"m1\"><title>Wired</title></magazine>\n</library>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<title>Dune</title>\n<title>Le Petit Prince</title>\n<title>Neuromancer</title>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "an attribute test and a text step",
+    "ref": "lxml (libxml2) XPath 1.0 evaluation and serialisation",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "//book[@lang='en']/title/text()",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<library>\n  <book id=\"b1\" lang=\"en\"><title>Dune</title><author>Herbert</author><price>9.99</price></book>\n  <book id=\"b2\" lang=\"fr\"><title>Le Petit Prince</title><author>Saint-Exupery</author><price>5.5</price></book>\n  <book id=\"b3\" lang=\"en\"><title>Neuromancer</title><author>Gibson</author><price>12</price></book>\n  <!-- a comment -->\n  <magazine id=\"m1\"><title>Wired</title></magazine>\n</library>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Dune\nNeuromancer",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "attributes are written as name=\"value\"",
+    "ref": "lxml (libxml2) XPath 1.0 evaluation and serialisation",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "//book/@id",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<library>\n  <book id=\"b1\" lang=\"en\"><title>Dune</title><author>Herbert</author><price>9.99</price></book>\n  <book id=\"b2\" lang=\"fr\"><title>Le Petit Prince</title><author>Saint-Exupery</author><price>5.5</price></book>\n  <book id=\"b3\" lang=\"en\"><title>Neuromancer</title><author>Gibson</author><price>12</price></book>\n  <!-- a comment -->\n  <magazine id=\"m1\"><title>Wired</title></magazine>\n</library>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "id=\"b1\"\nid=\"b2\"\nid=\"b3\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a numeric comparison in a predicate",
+    "ref": "lxml (libxml2) XPath 1.0 evaluation and serialisation",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "//book[price>6]/@id",
+      "result-delimiter": ","
+    },
+    "input": {
+      "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<library>\n  <book id=\"b1\" lang=\"en\"><title>Dune</title><author>Herbert</author><price>9.99</price></book>\n  <book id=\"b2\" lang=\"fr\"><title>Le Petit Prince</title><author>Saint-Exupery</author><price>5.5</price></book>\n  <book id=\"b3\" lang=\"en\"><title>Neuromancer</title><author>Gibson</author><price>12</price></book>\n  <!-- a comment -->\n  <magazine id=\"m1\"><title>Wired</title></magazine>\n</library>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "id=\"b1\",id=\"b3\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "position",
+    "ref": "lxml (libxml2) XPath 1.0 evaluation and serialisation",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "//book[2]/title",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<library>\n  <book id=\"b1\" lang=\"en\"><title>Dune</title><author>Herbert</author><price>9.99</price></book>\n  <book id=\"b2\" lang=\"fr\"><title>Le Petit Prince</title><author>Saint-Exupery</author><price>5.5</price></book>\n  <book id=\"b3\" lang=\"en\"><title>Neuromancer</title><author>Gibson</author><price>12</price></book>\n  <!-- a comment -->\n  <magazine id=\"m1\"><title>Wired</title></magazine>\n</library>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<title>Le Petit Prince</title>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "last()",
+    "ref": "lxml (libxml2) XPath 1.0 evaluation and serialisation",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "//book[last()]/@id",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<library>\n  <book id=\"b1\" lang=\"en\"><title>Dune</title><author>Herbert</author><price>9.99</price></book>\n  <book id=\"b2\" lang=\"fr\"><title>Le Petit Prince</title><author>Saint-Exupery</author><price>5.5</price></book>\n  <book id=\"b3\" lang=\"en\"><title>Neuromancer</title><author>Gibson</author><price>12</price></book>\n  <!-- a comment -->\n  <magazine id=\"m1\"><title>Wired</title></magazine>\n</library>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "id=\"b3\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "count() gives a number",
+    "ref": "lxml (libxml2) XPath 1.0 evaluation and serialisation",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "count(//book)",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<library>\n  <book id=\"b1\" lang=\"en\"><title>Dune</title><author>Herbert</author><price>9.99</price></book>\n  <book id=\"b2\" lang=\"fr\"><title>Le Petit Prince</title><author>Saint-Exupery</author><price>5.5</price></book>\n  <book id=\"b3\" lang=\"en\"><title>Neuromancer</title><author>Gibson</author><price>12</price></book>\n  <!-- a comment -->\n  <magazine id=\"m1\"><title>Wired</title></magazine>\n</library>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "3",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "string() of a node",
+    "ref": "lxml (libxml2) XPath 1.0 evaluation and serialisation",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "string(//book[1]/title)",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<library>\n  <book id=\"b1\" lang=\"en\"><title>Dune</title><author>Herbert</author><price>9.99</price></book>\n  <book id=\"b2\" lang=\"fr\"><title>Le Petit Prince</title><author>Saint-Exupery</author><price>5.5</price></book>\n  <book id=\"b3\" lang=\"en\"><title>Neuromancer</title><author>Gibson</author><price>12</price></book>\n  <!-- a comment -->\n  <magazine id=\"m1\"><title>Wired</title></magazine>\n</library>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Dune",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "sum() with a fraction",
+    "ref": "lxml (libxml2) XPath 1.0 evaluation and serialisation",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "sum(//price)",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<library>\n  <book id=\"b1\" lang=\"en\"><title>Dune</title><author>Herbert</author><price>9.99</price></book>\n  <book id=\"b2\" lang=\"fr\"><title>Le Petit Prince</title><author>Saint-Exupery</author><price>5.5</price></book>\n  <book id=\"b3\" lang=\"en\"><title>Neuromancer</title><author>Gibson</author><price>12</price></book>\n  <!-- a comment -->\n  <magazine id=\"m1\"><title>Wired</title></magazine>\n</library>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "27.490000000000002",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a boolean result",
+    "ref": "lxml (libxml2) XPath 1.0 evaluation and serialisation",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "//book[1]/price > 5",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<library>\n  <book id=\"b1\" lang=\"en\"><title>Dune</title><author>Herbert</author><price>9.99</price></book>\n  <book id=\"b2\" lang=\"fr\"><title>Le Petit Prince</title><author>Saint-Exupery</author><price>5.5</price></book>\n  <book id=\"b3\" lang=\"en\"><title>Neuromancer</title><author>Gibson</author><price>12</price></book>\n  <!-- a comment -->\n  <magazine id=\"m1\"><title>Wired</title></magazine>\n</library>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "true",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a boolean false",
+    "ref": "lxml (libxml2) XPath 1.0 evaluation and serialisation",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "boolean(//nothing)",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<library>\n  <book id=\"b1\" lang=\"en\"><title>Dune</title><author>Herbert</author><price>9.99</price></book>\n  <book id=\"b2\" lang=\"fr\"><title>Le Petit Prince</title><author>Saint-Exupery</author><price>5.5</price></book>\n  <book id=\"b3\" lang=\"en\"><title>Neuromancer</title><author>Gibson</author><price>12</price></book>\n  <!-- a comment -->\n  <magazine id=\"m1\"><title>Wired</title></magazine>\n</library>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "false",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a comment node",
+    "ref": "lxml (libxml2) XPath 1.0 evaluation and serialisation",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "//comment()",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<library>\n  <book id=\"b1\" lang=\"en\"><title>Dune</title><author>Herbert</author><price>9.99</price></book>\n  <book id=\"b2\" lang=\"fr\"><title>Le Petit Prince</title><author>Saint-Exupery</author><price>5.5</price></book>\n  <book id=\"b3\" lang=\"en\"><title>Neuromancer</title><author>Gibson</author><price>12</price></book>\n  <!-- a comment -->\n  <magazine id=\"m1\"><title>Wired</title></magazine>\n</library>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<!-- a comment -->",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "whole elements with children",
+    "ref": "lxml (libxml2) XPath 1.0 evaluation and serialisation",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "//magazine",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<library>\n  <book id=\"b1\" lang=\"en\"><title>Dune</title><author>Herbert</author><price>9.99</price></book>\n  <book id=\"b2\" lang=\"fr\"><title>Le Petit Prince</title><author>Saint-Exupery</author><price>5.5</price></book>\n  <book id=\"b3\" lang=\"en\"><title>Neuromancer</title><author>Gibson</author><price>12</price></book>\n  <!-- a comment -->\n  <magazine id=\"m1\"><title>Wired</title></magazine>\n</library>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<magazine id=\"m1\"><title>Wired</title></magazine>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "union in document order",
+    "ref": "lxml (libxml2) XPath 1.0 evaluation and serialisation",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "//magazine | //book[1]",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<library>\n  <book id=\"b1\" lang=\"en\"><title>Dune</title><author>Herbert</author><price>9.99</price></book>\n  <book id=\"b2\" lang=\"fr\"><title>Le Petit Prince</title><author>Saint-Exupery</author><price>5.5</price></book>\n  <book id=\"b3\" lang=\"en\"><title>Neuromancer</title><author>Gibson</author><price>12</price></book>\n  <!-- a comment -->\n  <magazine id=\"m1\"><title>Wired</title></magazine>\n</library>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<book id=\"b1\" lang=\"en\"><title>Dune</title><author>Herbert</author><price>9.99</price></book>\n<magazine id=\"m1\"><title>Wired</title></magazine>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "following-sibling axis",
+    "ref": "lxml (libxml2) XPath 1.0 evaluation and serialisation",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "//book[1]/following-sibling::book/@id",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<library>\n  <book id=\"b1\" lang=\"en\"><title>Dune</title><author>Herbert</author><price>9.99</price></book>\n  <book id=\"b2\" lang=\"fr\"><title>Le Petit Prince</title><author>Saint-Exupery</author><price>5.5</price></book>\n  <book id=\"b3\" lang=\"en\"><title>Neuromancer</title><author>Gibson</author><price>12</price></book>\n  <!-- a comment -->\n  <magazine id=\"m1\"><title>Wired</title></magazine>\n</library>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "id=\"b2\"\nid=\"b3\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ancestor axis",
+    "ref": "lxml (libxml2) XPath 1.0 evaluation and serialisation",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "//title[.='Wired']/ancestor::*/@id | //title[.='Wired']/..",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<library>\n  <book id=\"b1\" lang=\"en\"><title>Dune</title><author>Herbert</author><price>9.99</price></book>\n  <book id=\"b2\" lang=\"fr\"><title>Le Petit Prince</title><author>Saint-Exupery</author><price>5.5</price></book>\n  <book id=\"b3\" lang=\"en\"><title>Neuromancer</title><author>Gibson</author><price>12</price></book>\n  <!-- a comment -->\n  <magazine id=\"m1\"><title>Wired</title></magazine>\n</library>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<magazine id=\"m1\"><title>Wired</title></magazine>\nid=\"m1\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "string functions",
+    "ref": "lxml (libxml2) XPath 1.0 evaluation and serialisation",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "concat(//book[1]/title, ' by ', //book[1]/author)",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<library>\n  <book id=\"b1\" lang=\"en\"><title>Dune</title><author>Herbert</author><price>9.99</price></book>\n  <book id=\"b2\" lang=\"fr\"><title>Le Petit Prince</title><author>Saint-Exupery</author><price>5.5</price></book>\n  <book id=\"b3\" lang=\"en\"><title>Neuromancer</title><author>Gibson</author><price>12</price></book>\n  <!-- a comment -->\n  <magazine id=\"m1\"><title>Wired</title></magazine>\n</library>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Dune by Herbert",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "contains() and starts-with()",
+    "ref": "lxml (libxml2) XPath 1.0 evaluation and serialisation",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "//book[contains(title,'Prince') or starts-with(title,'Neuro')]/@id",
+      "result-delimiter": " "
+    },
+    "input": {
+      "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<library>\n  <book id=\"b1\" lang=\"en\"><title>Dune</title><author>Herbert</author><price>9.99</price></book>\n  <book id=\"b2\" lang=\"fr\"><title>Le Petit Prince</title><author>Saint-Exupery</author><price>5.5</price></book>\n  <book id=\"b3\" lang=\"en\"><title>Neuromancer</title><author>Gibson</author><price>12</price></book>\n  <!-- a comment -->\n  <magazine id=\"m1\"><title>Wired</title></magazine>\n</library>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "id=\"b2\" id=\"b3\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a custom delimiter",
+    "ref": "lxml (libxml2) XPath 1.0 evaluation and serialisation",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "//book/@id",
+      "result-delimiter": ", "
+    },
+    "input": {
+      "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<library>\n  <book id=\"b1\" lang=\"en\"><title>Dune</title><author>Herbert</author><price>9.99</price></book>\n  <book id=\"b2\" lang=\"fr\"><title>Le Petit Prince</title><author>Saint-Exupery</author><price>5.5</price></book>\n  <book id=\"b3\" lang=\"en\"><title>Neuromancer</title><author>Gibson</author><price>12</price></book>\n  <!-- a comment -->\n  <magazine id=\"m1\"><title>Wired</title></magazine>\n</library>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "id=\"b1\", id=\"b2\", id=\"b3\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a path with no match",
+    "ref": "lxml (libxml2) XPath 1.0 evaluation and serialisation",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "//book[@id='none']",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<library>\n  <book id=\"b1\" lang=\"en\"><title>Dune</title><author>Herbert</author><price>9.99</price></book>\n  <book id=\"b2\" lang=\"fr\"><title>Le Petit Prince</title><author>Saint-Exupery</author><price>5.5</price></book>\n  <book id=\"b3\" lang=\"en\"><title>Neuromancer</title><author>Gibson</author><price>12</price></book>\n  <!-- a comment -->\n  <magazine id=\"m1\"><title>Wired</title></magazine>\n</library>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "the root element",
+    "ref": "lxml (libxml2) XPath 1.0 evaluation and serialisation",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "/library/*[1]/@id",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<library>\n  <book id=\"b1\" lang=\"en\"><title>Dune</title><author>Herbert</author><price>9.99</price></book>\n  <book id=\"b2\" lang=\"fr\"><title>Le Petit Prince</title><author>Saint-Exupery</author><price>5.5</price></book>\n  <book id=\"b3\" lang=\"en\"><title>Neuromancer</title><author>Gibson</author><price>12</price></book>\n  <!-- a comment -->\n  <magazine id=\"m1\"><title>Wired</title></magazine>\n</library>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "id=\"b1\"",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "normalize-space and translate",
+    "ref": "lxml (libxml2) XPath 1.0 evaluation and serialisation",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "translate(normalize-space(' a  b '), 'ab', 'AB')",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<library>\n  <book id=\"b1\" lang=\"en\"><title>Dune</title><author>Herbert</author><price>9.99</price></book>\n  <book id=\"b2\" lang=\"fr\"><title>Le Petit Prince</title><author>Saint-Exupery</author><price>5.5</price></book>\n  <book id=\"b3\" lang=\"en\"><title>Neuromancer</title><author>Gibson</author><price>12</price></book>\n  <!-- a comment -->\n  <magazine id=\"m1\"><title>Wired</title></magazine>\n</library>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "A B",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "text with special characters is escaped",
+    "ref": "lxml (libxml2) XPath 1.0 evaluation and serialisation",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "//a/text()",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<r><a>x &amp; &lt;y&gt;</a></r>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "x &amp; &lt;y&gt;",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "an element with escaped content",
+    "ref": "lxml (libxml2) XPath 1.0 evaluation and serialisation",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "//a",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<r><a b=\"1 &amp; 2\">x &amp; y</a></r>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<a b=\"1 &amp; 2\">x &amp; y</a>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "an empty element",
+    "ref": "lxml serialises <b></b> as <b/> too",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "//a | //b",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<r><a/><b></b></r>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<a/>\n<b/>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a name with no prefix matches in any namespace",
+    "ref": "CyberChef's documented behaviour (allowAnyNamespaceForNoPrefix); lxml needs a prefix, so the expected nodes are those of {http://www.w3.org/2005/Atom}title",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "//title",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:x=\"urn:x\"><entry><title>One</title><x:tag>t</x:tag></entry><entry><title>Two</title></entry></feed>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<title xmlns=\"http://www.w3.org/2005/Atom\">One</title>\n<title xmlns=\"http://www.w3.org/2005/Atom\">Two</title>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a prefix declared in the document",
+    "ref": "lxml",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "//x:tag/text()",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:x=\"urn:x\"><entry><title>One</title><x:tag>t</x:tag></entry><entry><title>Two</title></entry></feed>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "t",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "malformed XML: mismatched tag",
+    "ref": "XML 1.0 well-formedness",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "//a",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<a><b></a>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "malformed XML: unclosed tag",
+    "ref": "XML 1.0 well-formedness",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "//a",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<a>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "malformed XML: no root element",
+    "ref": "XML 1.0 well-formedness",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "//a",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "text only",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "empty input",
+    "ref": "XML 1.0: a document has a root element",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "//a",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "malformed XML: two root elements",
+    "ref": "XML 1.0 well-formedness",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "//a",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<a/><b/>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "bad expression: open predicate",
+    "ref": "XPath 1.0 grammar",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "//a[",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<a/>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "bad expression: empty",
+    "ref": "XPath 1.0 grammar",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<a/>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "bad expression: unknown function",
+    "ref": "XPath 1.0 function library",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "nosuchfunction()",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<a/>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "document type entities are not expanded",
+    "ref": "XML 1.0 section 4.4 (declared entities exist); not expanded here by design, the entity is kept as text",
+    "op": "xpath:query",
+    "params": {
+      "xpath": "count(//a)",
+      "result-delimiter": "\\n"
+    },
+    "input": {
+      "value": "<?xml version=\"1.0\"?><!DOCTYPE r [<!ENTITY e \"<a/><a/>\">]><r>&e;</r>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "0",
+      "enc": "utf8"
+    }
+  }
+]

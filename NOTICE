@@ -68,3 +68,31 @@ The public key vocabularies of wave 7 (ECDSA, SM2 and GOST R 34.10 signatures
 and key generation) use the audited @noble/curves library, Copyright (c) 2022
 Paul Miller (https://paulmillr.com), licensed under the MIT License
 (https://github.com/paulmillr/noble-curves).
+
+The yaml vocabulary (YAML to JSON, JSON to YAML) uses the yaml library, Copyright
+Eemeli Aro (https://github.com/eemeli/yaml), licensed under the ISC License.
+
+The jsonpath vocabulary (JPath expression) uses json-p3 and its dependency
+iregexp-check, Copyright (c) James Prior (https://github.com/jg-rp/json-p3),
+licensed under the MIT License. The jsonata vocabulary (Jsonata Query) uses
+jsonata, a project of the JSONata community and IBM
+(https://github.com/jsonata-js/jsonata), licensed under the MIT License.
+
+The xpath vocabulary (XPath expression) uses @xmldom/xmldom, Copyright 2019 -
+present Christopher J. Brody and other contributors, and 2012 - 2017 @jindw and
+other contributors (https://github.com/xmldom/xmldom), and xpath, Copyright (c)
+2018 Cameron McCormack (https://github.com/goto100/xpath), both licensed under
+the MIT License.
+
+The css vocabulary (CSS selector) uses htmlparser2, Copyright 2010, 2011, Chris
+Winberry, and dom-serializer, Copyright (c) 2022 The Cheerio contributors, both
+licensed under the MIT License; css-select, css-what, domhandler, domutils,
+entities, nth-check and domelementtype, Copyright (c) Felix Bohm, licensed under
+the BSD 2-Clause License; and boolbase, Copyright (c) 2014-2015 Felix Boehm,
+licensed under the ISC License (https://github.com/fb55 and
+https://github.com/cheeriojs).
+
+The template vocabulary (Template) renders a subset of the Handlebars template
+language (https://handlebarsjs.com, Copyright (C) 2011-2019 by Yehuda Katz). It
+contains no code of Handlebars; its test vectors were produced by running
+Handlebars 4.7.10, licensed under the MIT License.

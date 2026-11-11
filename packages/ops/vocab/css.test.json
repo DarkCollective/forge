@@ -1,0 +1,593 @@
+[
+  {
+    "name": "type selector",
+    "ref": "lxml.html with cssselect",
+    "op": "css:select",
+    "params": {
+      "css-selector": "h1",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<!DOCTYPE html>\n<html><head><title>Test page</title></head>\n<body>\n<div id=\"main\" class=\"wrap big\">\n  <h1>Heading</h1>\n  <p class=\"intro\">First <b>bold</b> &amp; text</p>\n  <p>Second paragraph<br>after a break</p>\n  <ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>\n  <a href=\"https://example.com/x\" title=\"X\">link x</a>\n  <a href=\"/local/y\">link y</a>\n  <img src=\"pic.png\" alt=\"a picture\">\n</div>\n<div class=\"footer\"><span>f1</span><span>f2</span></div>\n</body></html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<h1>Heading</h1>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "class selector",
+    "ref": "lxml.html with cssselect",
+    "op": "css:select",
+    "params": {
+      "css-selector": "p.intro",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<!DOCTYPE html>\n<html><head><title>Test page</title></head>\n<body>\n<div id=\"main\" class=\"wrap big\">\n  <h1>Heading</h1>\n  <p class=\"intro\">First <b>bold</b> &amp; text</p>\n  <p>Second paragraph<br>after a break</p>\n  <ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>\n  <a href=\"https://example.com/x\" title=\"X\">link x</a>\n  <a href=\"/local/y\">link y</a>\n  <img src=\"pic.png\" alt=\"a picture\">\n</div>\n<div class=\"footer\"><span>f1</span><span>f2</span></div>\n</body></html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<p class=\"intro\">First <b>bold</b> &amp; text</p>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "id selector",
+    "ref": "lxml.html with cssselect",
+    "op": "css:select",
+    "params": {
+      "css-selector": "#list",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<!DOCTYPE html>\n<html><head><title>Test page</title></head>\n<body>\n<div id=\"main\" class=\"wrap big\">\n  <h1>Heading</h1>\n  <p class=\"intro\">First <b>bold</b> &amp; text</p>\n  <p>Second paragraph<br>after a break</p>\n  <ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>\n  <a href=\"https://example.com/x\" title=\"X\">link x</a>\n  <a href=\"/local/y\">link y</a>\n  <img src=\"pic.png\" alt=\"a picture\">\n</div>\n<div class=\"footer\"><span>f1</span><span>f2</span></div>\n</body></html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "descendant combinator",
+    "ref": "lxml.html with cssselect",
+    "op": "css:select",
+    "params": {
+      "css-selector": "div#main li",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<!DOCTYPE html>\n<html><head><title>Test page</title></head>\n<body>\n<div id=\"main\" class=\"wrap big\">\n  <h1>Heading</h1>\n  <p class=\"intro\">First <b>bold</b> &amp; text</p>\n  <p>Second paragraph<br>after a break</p>\n  <ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>\n  <a href=\"https://example.com/x\" title=\"X\">link x</a>\n  <a href=\"/local/y\">link y</a>\n  <img src=\"pic.png\" alt=\"a picture\">\n</div>\n<div class=\"footer\"><span>f1</span><span>f2</span></div>\n</body></html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<li class=\"a\">one</li>\n<li class=\"b a\">two</li>\n<li>three</li>\n<li class=\"a last\">four</li>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "child combinator",
+    "ref": "lxml.html with cssselect",
+    "op": "css:select",
+    "params": {
+      "css-selector": "ul > li",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<!DOCTYPE html>\n<html><head><title>Test page</title></head>\n<body>\n<div id=\"main\" class=\"wrap big\">\n  <h1>Heading</h1>\n  <p class=\"intro\">First <b>bold</b> &amp; text</p>\n  <p>Second paragraph<br>after a break</p>\n  <ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>\n  <a href=\"https://example.com/x\" title=\"X\">link x</a>\n  <a href=\"/local/y\">link y</a>\n  <img src=\"pic.png\" alt=\"a picture\">\n</div>\n<div class=\"footer\"><span>f1</span><span>f2</span></div>\n</body></html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<li class=\"a\">one</li>\n<li class=\"b a\">two</li>\n<li>three</li>\n<li class=\"a last\">four</li>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "adjacent sibling combinator",
+    "ref": "lxml.html with cssselect",
+    "op": "css:select",
+    "params": {
+      "css-selector": "h1 + p",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<!DOCTYPE html>\n<html><head><title>Test page</title></head>\n<body>\n<div id=\"main\" class=\"wrap big\">\n  <h1>Heading</h1>\n  <p class=\"intro\">First <b>bold</b> &amp; text</p>\n  <p>Second paragraph<br>after a break</p>\n  <ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>\n  <a href=\"https://example.com/x\" title=\"X\">link x</a>\n  <a href=\"/local/y\">link y</a>\n  <img src=\"pic.png\" alt=\"a picture\">\n</div>\n<div class=\"footer\"><span>f1</span><span>f2</span></div>\n</body></html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<p class=\"intro\">First <b>bold</b> &amp; text</p>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "general sibling combinator",
+    "ref": "lxml.html with cssselect",
+    "op": "css:select",
+    "params": {
+      "css-selector": "h1 ~ a",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<!DOCTYPE html>\n<html><head><title>Test page</title></head>\n<body>\n<div id=\"main\" class=\"wrap big\">\n  <h1>Heading</h1>\n  <p class=\"intro\">First <b>bold</b> &amp; text</p>\n  <p>Second paragraph<br>after a break</p>\n  <ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>\n  <a href=\"https://example.com/x\" title=\"X\">link x</a>\n  <a href=\"/local/y\">link y</a>\n  <img src=\"pic.png\" alt=\"a picture\">\n</div>\n<div class=\"footer\"><span>f1</span><span>f2</span></div>\n</body></html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<a href=\"https://example.com/x\" title=\"X\">link x</a>\n<a href=\"/local/y\">link y</a>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "attribute presence",
+    "ref": "lxml.html with cssselect",
+    "op": "css:select",
+    "params": {
+      "css-selector": "[title]",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<!DOCTYPE html>\n<html><head><title>Test page</title></head>\n<body>\n<div id=\"main\" class=\"wrap big\">\n  <h1>Heading</h1>\n  <p class=\"intro\">First <b>bold</b> &amp; text</p>\n  <p>Second paragraph<br>after a break</p>\n  <ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>\n  <a href=\"https://example.com/x\" title=\"X\">link x</a>\n  <a href=\"/local/y\">link y</a>\n  <img src=\"pic.png\" alt=\"a picture\">\n</div>\n<div class=\"footer\"><span>f1</span><span>f2</span></div>\n</body></html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<a href=\"https://example.com/x\" title=\"X\">link x</a>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "attribute equals",
+    "ref": "lxml.html with cssselect",
+    "op": "css:select",
+    "params": {
+      "css-selector": "a[href='/local/y']",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<!DOCTYPE html>\n<html><head><title>Test page</title></head>\n<body>\n<div id=\"main\" class=\"wrap big\">\n  <h1>Heading</h1>\n  <p class=\"intro\">First <b>bold</b> &amp; text</p>\n  <p>Second paragraph<br>after a break</p>\n  <ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>\n  <a href=\"https://example.com/x\" title=\"X\">link x</a>\n  <a href=\"/local/y\">link y</a>\n  <img src=\"pic.png\" alt=\"a picture\">\n</div>\n<div class=\"footer\"><span>f1</span><span>f2</span></div>\n</body></html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<a href=\"/local/y\">link y</a>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "attribute prefix",
+    "ref": "lxml.html with cssselect",
+    "op": "css:select",
+    "params": {
+      "css-selector": "a[href^='https']",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<!DOCTYPE html>\n<html><head><title>Test page</title></head>\n<body>\n<div id=\"main\" class=\"wrap big\">\n  <h1>Heading</h1>\n  <p class=\"intro\">First <b>bold</b> &amp; text</p>\n  <p>Second paragraph<br>after a break</p>\n  <ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>\n  <a href=\"https://example.com/x\" title=\"X\">link x</a>\n  <a href=\"/local/y\">link y</a>\n  <img src=\"pic.png\" alt=\"a picture\">\n</div>\n<div class=\"footer\"><span>f1</span><span>f2</span></div>\n</body></html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<a href=\"https://example.com/x\" title=\"X\">link x</a>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "attribute suffix",
+    "ref": "lxml.html with cssselect",
+    "op": "css:select",
+    "params": {
+      "css-selector": "img[src$='.png']",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<!DOCTYPE html>\n<html><head><title>Test page</title></head>\n<body>\n<div id=\"main\" class=\"wrap big\">\n  <h1>Heading</h1>\n  <p class=\"intro\">First <b>bold</b> &amp; text</p>\n  <p>Second paragraph<br>after a break</p>\n  <ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>\n  <a href=\"https://example.com/x\" title=\"X\">link x</a>\n  <a href=\"/local/y\">link y</a>\n  <img src=\"pic.png\" alt=\"a picture\">\n</div>\n<div class=\"footer\"><span>f1</span><span>f2</span></div>\n</body></html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<img src=\"pic.png\" alt=\"a picture\">",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "attribute substring",
+    "ref": "lxml.html with cssselect",
+    "op": "css:select",
+    "params": {
+      "css-selector": "a[href*='example']",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<!DOCTYPE html>\n<html><head><title>Test page</title></head>\n<body>\n<div id=\"main\" class=\"wrap big\">\n  <h1>Heading</h1>\n  <p class=\"intro\">First <b>bold</b> &amp; text</p>\n  <p>Second paragraph<br>after a break</p>\n  <ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>\n  <a href=\"https://example.com/x\" title=\"X\">link x</a>\n  <a href=\"/local/y\">link y</a>\n  <img src=\"pic.png\" alt=\"a picture\">\n</div>\n<div class=\"footer\"><span>f1</span><span>f2</span></div>\n</body></html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<a href=\"https://example.com/x\" title=\"X\">link x</a>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "two classes",
+    "ref": "lxml.html with cssselect",
+    "op": "css:select",
+    "params": {
+      "css-selector": "li.a.last",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<!DOCTYPE html>\n<html><head><title>Test page</title></head>\n<body>\n<div id=\"main\" class=\"wrap big\">\n  <h1>Heading</h1>\n  <p class=\"intro\">First <b>bold</b> &amp; text</p>\n  <p>Second paragraph<br>after a break</p>\n  <ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>\n  <a href=\"https://example.com/x\" title=\"X\">link x</a>\n  <a href=\"/local/y\">link y</a>\n  <img src=\"pic.png\" alt=\"a picture\">\n</div>\n<div class=\"footer\"><span>f1</span><span>f2</span></div>\n</body></html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<li class=\"a last\">four</li>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "selector list",
+    "ref": "lxml.html with cssselect",
+    "op": "css:select",
+    "params": {
+      "css-selector": "h1, img",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<!DOCTYPE html>\n<html><head><title>Test page</title></head>\n<body>\n<div id=\"main\" class=\"wrap big\">\n  <h1>Heading</h1>\n  <p class=\"intro\">First <b>bold</b> &amp; text</p>\n  <p>Second paragraph<br>after a break</p>\n  <ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>\n  <a href=\"https://example.com/x\" title=\"X\">link x</a>\n  <a href=\"/local/y\">link y</a>\n  <img src=\"pic.png\" alt=\"a picture\">\n</div>\n<div class=\"footer\"><span>f1</span><span>f2</span></div>\n</body></html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<h1>Heading</h1>\n<img src=\"pic.png\" alt=\"a picture\">",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "first-child",
+    "ref": "lxml.html with cssselect",
+    "op": "css:select",
+    "params": {
+      "css-selector": "li:first-child",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<!DOCTYPE html>\n<html><head><title>Test page</title></head>\n<body>\n<div id=\"main\" class=\"wrap big\">\n  <h1>Heading</h1>\n  <p class=\"intro\">First <b>bold</b> &amp; text</p>\n  <p>Second paragraph<br>after a break</p>\n  <ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>\n  <a href=\"https://example.com/x\" title=\"X\">link x</a>\n  <a href=\"/local/y\">link y</a>\n  <img src=\"pic.png\" alt=\"a picture\">\n</div>\n<div class=\"footer\"><span>f1</span><span>f2</span></div>\n</body></html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<li class=\"a\">one</li>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "last-child",
+    "ref": "lxml.html with cssselect",
+    "op": "css:select",
+    "params": {
+      "css-selector": "li:last-child",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<!DOCTYPE html>\n<html><head><title>Test page</title></head>\n<body>\n<div id=\"main\" class=\"wrap big\">\n  <h1>Heading</h1>\n  <p class=\"intro\">First <b>bold</b> &amp; text</p>\n  <p>Second paragraph<br>after a break</p>\n  <ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>\n  <a href=\"https://example.com/x\" title=\"X\">link x</a>\n  <a href=\"/local/y\">link y</a>\n  <img src=\"pic.png\" alt=\"a picture\">\n</div>\n<div class=\"footer\"><span>f1</span><span>f2</span></div>\n</body></html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<li class=\"a last\">four</li>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "nth-child(2)",
+    "ref": "lxml.html with cssselect",
+    "op": "css:select",
+    "params": {
+      "css-selector": "li:nth-child(2)",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<!DOCTYPE html>\n<html><head><title>Test page</title></head>\n<body>\n<div id=\"main\" class=\"wrap big\">\n  <h1>Heading</h1>\n  <p class=\"intro\">First <b>bold</b> &amp; text</p>\n  <p>Second paragraph<br>after a break</p>\n  <ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>\n  <a href=\"https://example.com/x\" title=\"X\">link x</a>\n  <a href=\"/local/y\">link y</a>\n  <img src=\"pic.png\" alt=\"a picture\">\n</div>\n<div class=\"footer\"><span>f1</span><span>f2</span></div>\n</body></html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<li class=\"b a\">two</li>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "nth-child(odd)",
+    "ref": "lxml.html with cssselect",
+    "op": "css:select",
+    "params": {
+      "css-selector": "li:nth-child(odd)",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<!DOCTYPE html>\n<html><head><title>Test page</title></head>\n<body>\n<div id=\"main\" class=\"wrap big\">\n  <h1>Heading</h1>\n  <p class=\"intro\">First <b>bold</b> &amp; text</p>\n  <p>Second paragraph<br>after a break</p>\n  <ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>\n  <a href=\"https://example.com/x\" title=\"X\">link x</a>\n  <a href=\"/local/y\">link y</a>\n  <img src=\"pic.png\" alt=\"a picture\">\n</div>\n<div class=\"footer\"><span>f1</span><span>f2</span></div>\n</body></html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<li class=\"a\">one</li>\n<li>three</li>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "nth-child(2n+1)",
+    "ref": "lxml.html with cssselect",
+    "op": "css:select",
+    "params": {
+      "css-selector": "li:nth-child(2n+1)",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<!DOCTYPE html>\n<html><head><title>Test page</title></head>\n<body>\n<div id=\"main\" class=\"wrap big\">\n  <h1>Heading</h1>\n  <p class=\"intro\">First <b>bold</b> &amp; text</p>\n  <p>Second paragraph<br>after a break</p>\n  <ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>\n  <a href=\"https://example.com/x\" title=\"X\">link x</a>\n  <a href=\"/local/y\">link y</a>\n  <img src=\"pic.png\" alt=\"a picture\">\n</div>\n<div class=\"footer\"><span>f1</span><span>f2</span></div>\n</body></html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<li class=\"a\">one</li>\n<li>three</li>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "nth-of-type",
+    "ref": "lxml.html with cssselect",
+    "op": "css:select",
+    "params": {
+      "css-selector": "span:nth-of-type(2)",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<!DOCTYPE html>\n<html><head><title>Test page</title></head>\n<body>\n<div id=\"main\" class=\"wrap big\">\n  <h1>Heading</h1>\n  <p class=\"intro\">First <b>bold</b> &amp; text</p>\n  <p>Second paragraph<br>after a break</p>\n  <ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>\n  <a href=\"https://example.com/x\" title=\"X\">link x</a>\n  <a href=\"/local/y\">link y</a>\n  <img src=\"pic.png\" alt=\"a picture\">\n</div>\n<div class=\"footer\"><span>f1</span><span>f2</span></div>\n</body></html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<span>f2</span>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "only-child is absent",
+    "ref": "lxml.html with cssselect",
+    "op": "css:select",
+    "params": {
+      "css-selector": "li:only-child",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<!DOCTYPE html>\n<html><head><title>Test page</title></head>\n<body>\n<div id=\"main\" class=\"wrap big\">\n  <h1>Heading</h1>\n  <p class=\"intro\">First <b>bold</b> &amp; text</p>\n  <p>Second paragraph<br>after a break</p>\n  <ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>\n  <a href=\"https://example.com/x\" title=\"X\">link x</a>\n  <a href=\"/local/y\">link y</a>\n  <img src=\"pic.png\" alt=\"a picture\">\n</div>\n<div class=\"footer\"><span>f1</span><span>f2</span></div>\n</body></html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "a custom delimiter",
+    "ref": "lxml.html with cssselect",
+    "op": "css:select",
+    "params": {
+      "css-selector": "li",
+      "delimiter": " | "
+    },
+    "input": {
+      "value": "<!DOCTYPE html>\n<html><head><title>Test page</title></head>\n<body>\n<div id=\"main\" class=\"wrap big\">\n  <h1>Heading</h1>\n  <p class=\"intro\">First <b>bold</b> &amp; text</p>\n  <p>Second paragraph<br>after a break</p>\n  <ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>\n  <a href=\"https://example.com/x\" title=\"X\">link x</a>\n  <a href=\"/local/y\">link y</a>\n  <img src=\"pic.png\" alt=\"a picture\">\n</div>\n<div class=\"footer\"><span>f1</span><span>f2</span></div>\n</body></html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<li class=\"a\">one</li> | <li class=\"b a\">two</li> | <li>three</li> | <li class=\"a last\">four</li>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "matches nested inside matches are listed again",
+    "ref": "lxml.html with cssselect",
+    "op": "css:select",
+    "params": {
+      "css-selector": "div",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<div><div><p>x</p></div></div>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<div><div><p>x</p></div></div>\n<div><p>x</p></div>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "void elements and attributes",
+    "ref": "lxml.html with cssselect",
+    "op": "css:select",
+    "params": {
+      "css-selector": "img",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<!DOCTYPE html>\n<html><head><title>Test page</title></head>\n<body>\n<div id=\"main\" class=\"wrap big\">\n  <h1>Heading</h1>\n  <p class=\"intro\">First <b>bold</b> &amp; text</p>\n  <p>Second paragraph<br>after a break</p>\n  <ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>\n  <a href=\"https://example.com/x\" title=\"X\">link x</a>\n  <a href=\"/local/y\">link y</a>\n  <img src=\"pic.png\" alt=\"a picture\">\n</div>\n<div class=\"footer\"><span>f1</span><span>f2</span></div>\n</body></html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<img src=\"pic.png\" alt=\"a picture\">",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "the universal selector below the footer",
+    "ref": "lxml.html with cssselect",
+    "op": "css:select",
+    "params": {
+      "css-selector": ".footer *",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<!DOCTYPE html>\n<html><head><title>Test page</title></head>\n<body>\n<div id=\"main\" class=\"wrap big\">\n  <h1>Heading</h1>\n  <p class=\"intro\">First <b>bold</b> &amp; text</p>\n  <p>Second paragraph<br>after a break</p>\n  <ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>\n  <a href=\"https://example.com/x\" title=\"X\">link x</a>\n  <a href=\"/local/y\">link y</a>\n  <img src=\"pic.png\" alt=\"a picture\">\n</div>\n<div class=\"footer\"><span>f1</span><span>f2</span></div>\n</body></html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<span>f1</span>\n<span>f2</span>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "no match",
+    "ref": "lxml.html with cssselect",
+    "op": "css:select",
+    "params": {
+      "css-selector": "table",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<!DOCTYPE html>\n<html><head><title>Test page</title></head>\n<body>\n<div id=\"main\" class=\"wrap big\">\n  <h1>Heading</h1>\n  <p class=\"intro\">First <b>bold</b> &amp; text</p>\n  <p>Second paragraph<br>after a break</p>\n  <ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>\n  <a href=\"https://example.com/x\" title=\"X\">link x</a>\n  <a href=\"/local/y\">link y</a>\n  <img src=\"pic.png\" alt=\"a picture\">\n</div>\n<div class=\"footer\"><span>f1</span><span>f2</span></div>\n</body></html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "character references are written back as entities",
+    "ref": "lxml.html with cssselect",
+    "op": "css:select",
+    "params": {
+      "css-selector": "p",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<p>a &lt; b &amp; c</p>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<p>a &lt; b &amp; c</p>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "empty selector gives an empty result",
+    "ref": "CyberChef's documented behaviour",
+    "op": "css:select",
+    "params": {
+      "css-selector": "",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<!DOCTYPE html>\n<html><head><title>Test page</title></head>\n<body>\n<div id=\"main\" class=\"wrap big\">\n  <h1>Heading</h1>\n  <p class=\"intro\">First <b>bold</b> &amp; text</p>\n  <p>Second paragraph<br>after a break</p>\n  <ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>\n  <a href=\"https://example.com/x\" title=\"X\">link x</a>\n  <a href=\"/local/y\">link y</a>\n  <img src=\"pic.png\" alt=\"a picture\">\n</div>\n<div class=\"footer\"><span>f1</span><span>f2</span></div>\n</body></html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "empty document gives an empty result",
+    "ref": "CyberChef's documented behaviour",
+    "op": "css:select",
+    "params": {
+      "css-selector": "p",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "unclosed tags are repaired",
+    "ref": "HTML parsing repairs the tree (html5lib/browsers close open elements at the end)",
+    "op": "css:select",
+    "params": {
+      "css-selector": "b",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<p>text <b>bold",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "<b>bold</b>",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "text that is not markup",
+    "ref": "no element",
+    "op": "css:select",
+    "params": {
+      "css-selector": "p",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "just words",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "bad selector: a pseudo-element",
+    "ref": "CSS Selectors level 4 grammar",
+    "op": "css:select",
+    "params": {
+      "css-selector": "p::before",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<!DOCTYPE html>\n<html><head><title>Test page</title></head>\n<body>\n<div id=\"main\" class=\"wrap big\">\n  <h1>Heading</h1>\n  <p class=\"intro\">First <b>bold</b> &amp; text</p>\n  <p>Second paragraph<br>after a break</p>\n  <ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>\n  <a href=\"https://example.com/x\" title=\"X\">link x</a>\n  <a href=\"/local/y\">link y</a>\n  <img src=\"pic.png\" alt=\"a picture\">\n</div>\n<div class=\"footer\"><span>f1</span><span>f2</span></div>\n</body></html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "bad selector: an open attribute bracket",
+    "ref": "CSS Selectors level 4 grammar",
+    "op": "css:select",
+    "params": {
+      "css-selector": "a[href",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<!DOCTYPE html>\n<html><head><title>Test page</title></head>\n<body>\n<div id=\"main\" class=\"wrap big\">\n  <h1>Heading</h1>\n  <p class=\"intro\">First <b>bold</b> &amp; text</p>\n  <p>Second paragraph<br>after a break</p>\n  <ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>\n  <a href=\"https://example.com/x\" title=\"X\">link x</a>\n  <a href=\"/local/y\">link y</a>\n  <img src=\"pic.png\" alt=\"a picture\">\n</div>\n<div class=\"footer\"><span>f1</span><span>f2</span></div>\n</body></html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "bad selector: an unknown pseudo-class",
+    "ref": "CSS Selectors level 4 grammar",
+    "op": "css:select",
+    "params": {
+      "css-selector": "p:nosuchthing",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<!DOCTYPE html>\n<html><head><title>Test page</title></head>\n<body>\n<div id=\"main\" class=\"wrap big\">\n  <h1>Heading</h1>\n  <p class=\"intro\">First <b>bold</b> &amp; text</p>\n  <p>Second paragraph<br>after a break</p>\n  <ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>\n  <a href=\"https://example.com/x\" title=\"X\">link x</a>\n  <a href=\"/local/y\">link y</a>\n  <img src=\"pic.png\" alt=\"a picture\">\n</div>\n<div class=\"footer\"><span>f1</span><span>f2</span></div>\n</body></html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "bad selector: a trailing comma",
+    "ref": "CSS Selectors level 4 grammar",
+    "op": "css:select",
+    "params": {
+      "css-selector": "p,",
+      "delimiter": "\\n"
+    },
+    "input": {
+      "value": "<!DOCTYPE html>\n<html><head><title>Test page</title></head>\n<body>\n<div id=\"main\" class=\"wrap big\">\n  <h1>Heading</h1>\n  <p class=\"intro\">First <b>bold</b> &amp; text</p>\n  <p>Second paragraph<br>after a break</p>\n  <ul id=\"list\"><li class=\"a\">one</li><li class=\"b a\">two</li><li>three</li><li class=\"a last\">four</li></ul>\n  <a href=\"https://example.com/x\" title=\"X\">link x</a>\n  <a href=\"/local/y\">link y</a>\n  <img src=\"pic.png\" alt=\"a picture\">\n</div>\n<div class=\"footer\"><span>f1</span><span>f2</span></div>\n</body></html>",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  }
+]
