@@ -34,6 +34,7 @@ The private primitives, each in `src/prims/<v>.ts`:
 - `charset:_decode`: the WHATWG decoder for an encoding label;
 - `cobs:_starts`: the offsets of the blocks of COBS data;
 - `float:_pack` and `float:_unpack`: decimal text to and from IEEE 754 bytes;
+- `distance:_levenshtein`: the weighted edit distance of two texts over code points (a dynamic programme of length times length cells, which needs a fast mutable array that FL lacks; limited to 100 million cells);
 - `unicode:_normalize`: Unicode normalisation (NFC, NFD, NFKC, NFKD);
 - `aes:_check-key`, `aes:_block-enc`, `aes:_block-dec`, `aes:_crypt` and `aes:_gcm`: AES over the audited `@noble/ciphers` (the block pair also drives `blockmode` for OFB); `aes-kw:_wrap` and `aes-kw:_unwrap`: RFC 3394 key wrap over noble's `aeskw`; `chacha:_crypt`, `salsa20:_crypt` and `xsalsa20:_crypt`: the stream ciphers over noble;
 - the block ciphers without an audited library, each a private single-block pair and a key check, written from the specification: `des`, `triple-des`, `blowfish`, `rc2`, `rc6`, `twofish`, `sm4`, `tea`, `xtea` and `present` have `_check-key`, `_encrypt-block` and `_decrypt-block`; `gost28147` has the same three plus `_crypt-ext` (the whole-message modes with CryptoPro key meshing, which cannot be a block quotation because the key changes between blocks), `_wrap` and `_unwrap` (RFC 4357 key wrap and its IMIT); every mode and the padding come from `blockmode`;
@@ -65,6 +66,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `adler32`          | Adler-32 checksum (RFC 1950) (1 op)                                                                                                                                    |
 | `aes`              | AES encrypt and decrypt (FIPS 197): ECB, CBC, CFB, OFB, CTR and GCM, 128/192/256-bit keys, PKCS#7 or no padding, GCM additional data                                   |
 | `aes-kw`           | AES Key Wrap and Unwrap (RFC 3394), 16/24/32-byte key-encryption key, default IV (2 ops)                                                                               |
+| `alphabet`         | write out ranges such as a-z as a list of characters, with a delimiter choice (1 op)                                                                                   |
 | `analysis`         | entropy (bits per byte), byte-frequency distribution, index of coincidence and chi-squared against English (4 ops)                                                     |
 | `arith`            | exact-decimal arithmetic on a list of numbers and on big integers: Sum to Standard Deviation, Extended GCD, Modular Exponentiation and Inverse (11 ops)                |
 | `argon2`           | Argon2d, Argon2i and Argon2id (RFC 9106): derive, as the encoded PHC string or raw, and compare against an encoded hash (2 ops)                                        |
@@ -88,12 +90,15 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `blowfish`         | Blowfish encrypt and decrypt (Schneier 1993): ECB, CBC, CFB, OFB, CTR, 4 to 56-byte keys, PKCS#7 or no padding                                                         |
 | `bombe`            | Turing-Welchman Bombe for the Enigma I and M3: a crib search for stops, one word for one or many rotor orders (1 op)                                                   |
 | `braille`          | bytes as 8-dot Unicode Braille patterns and back                                                                                                                       |
+| `bytes-slice`      | take or remove a span of bytes, or every nth byte, of the whole input or of each line (4 ops)                                                                          |
 | `caret`            | caret and M- notation as printed by `cat -v`                                                                                                                           |
+| `case`             | swap case, alternating caps, all casings of the letters, and case-insensitive regular expressions to and from (5 ops)                                                  |
 | `chacha`           | ChaCha stream cipher (RFC 8439 and the original 8-byte nonce), 20, 12 or 8 rounds (1 op)                                                                               |
 | `charcode`         | text to and from character codes in a chosen base                                                                                                                      |
 | `charset`          | legacy character sets (single-byte, EBCDIC, UTF-16/32, CJK), with brute force (3 ops)                                                                                  |
 | `ciphersaber2`     | CipherSaber-2 encrypt (random IV in front) and decrypt (2 ops)                                                                                                         |
 | `classical`        | rot (Caesar, ROT13), rot47, rot8000, rot brute force, Atbash, Affine, Vigenère, Bacon, Bifid, Rail Fence, Caesar box, A1Z26, Cetacean, CTX1, LS47, Substitute (26 ops) |
+| `clean`            | remove white space, null bytes and ANSI escape sequences (3 ops)                                                                                                       |
 | `clock`            | the current time: Get Time (1 op, `clock:get-time`); the shared words `clock:now-ms` and `clock:now-s` for other vocabularies (`+time`)                                |
 | `cmac`             | CMAC (SP 800-38B, RFC 4493) over AES or Triple DES (1 op)                                                                                                              |
 | `cobs`             | Consistent Overhead Byte Stuffing encode and decode                                                                                                                    |
@@ -101,6 +106,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `crc`              | CRC checksums: the 171 CyberChef presets and any width from 1 to 82 bits from the Rocksoft model (2 ops)                                                               |
 | `decimal`          | bytes to and from decimal numbers                                                                                                                                      |
 | `des`              | DES encrypt and decrypt (FIPS 46-3): ECB, CBC, CFB, OFB, CTR, 8-byte key, PKCS#7 or no padding                                                                         |
+| `distance`         | Hamming distance in bytes, characters or bits, and the weighted Levenshtein distance of two samples (2 ops)                                                            |
 | `endian`           | swap the byte order of 2, 4 or 8 byte words                                                                                                                            |
 | `enigma`           | Enigma I, M3 and M4 rotor machines, one reciprocal word; also the shared historical rotor, turnover and reflector data (1 op)                                          |
 | `evp`              | OpenSSL EVP_BytesToKey key derivation in FL over MD5, SHA-1 and SHA-2 (1 op)                                                                                           |
@@ -157,6 +163,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `ror13`            | ROR13 API-name hash (1 op)                                                                                                                                             |
 | `salsa20`          | Salsa20/20 stream cipher (eSTREAM), 16 or 32-byte keys, 8-byte nonce (1 op)                                                                                            |
 | `scrypt`           | scrypt (RFC 7914) key derivation (1 op)                                                                                                                                |
+| `search`           | count occurrences (string or regex), fuzzy line matching with scores, and the stretches where samples agree by offset (3 ops)                                          |
 | `set`              | set union, intersection, difference, symmetric difference, Cartesian product and power set on delimited text (6 ops)                                                   |
 | `sha0`             | SHA-0 (1 op)                                                                                                                                                           |
 | `sha1`             | SHA-1 (1 op)                                                                                                                                                           |
@@ -169,6 +176,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `snefru`           | Snefru, 128 or 256 bits, 2, 4 or 8 passes (1 op)                                                                                                                       |
 | `ssdeep`           | ssdeep context triggered piecewise hash (also ctph) and its comparison (2 ops)                                                                                         |
 | `streebog`         | GOST R 34.11-2012, 256 or 512 bits (1 op)                                                                                                                              |
+| `string-escape`    | escape and unescape text as the body of a JavaScript string literal: levels, quotes, JSON, ES6 and hex case (2 ops)                                                    |
 | `tcpip`            | Internet checksum (RFC 1071) (1 op)                                                                                                                                    |
 | `tea`              | TEA encrypt and decrypt: ECB, CBC, CFB, OFB, CTR (2 ops)                                                                                                               |
 | `text`             | split, join, replace, reverse, upper, lower                                                                                                                            |

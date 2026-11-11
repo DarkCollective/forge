@@ -1,0 +1,184 @@
+[
+  {
+    "name": "expand a range, the default delimiter",
+    "ref": "hand-computed: the range runs from the first to the second character by code point",
+    "op": "alphabet:expand",
+    "params": {},
+    "input": {
+      "value": "a-e",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a b c d e",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "expand ranges and letters",
+    "ref": "hand-computed: the range runs from the first to the second character by code point",
+    "op": "alphabet:expand",
+    "params": {
+      "delimiter": "comma"
+    },
+    "input": {
+      "value": "a-cx0-2",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a,b,c,x,0,1,2",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "expand an escaped minus",
+    "ref": "hand-computed: the range runs from the first to the second character by code point; \\- is a plain minus",
+    "op": "alphabet:expand",
+    "params": {
+      "delimiter": "comma"
+    },
+    "input": {
+      "value": "a\\-c",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a,-,c",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "expand a range that starts at a minus",
+    "ref": "hand-computed: the range runs from the first to the second character by code point; U+002D to U+0030",
+    "op": "alphabet:expand",
+    "params": {
+      "delimiter": "none"
+    },
+    "input": {
+      "value": "\\--0",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "-./0",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "expand an escaped backslash as an end of a range",
+    "ref": "hand-computed: the range runs from the first to the second character by code point; U+005C to U+005E",
+    "op": "alphabet:expand",
+    "params": {
+      "delimiter": "none"
+    },
+    "input": {
+      "value": "\\\\-^",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "\\]^",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "expand a trailing minus",
+    "ref": "hand-computed: the range runs from the first to the second character by code point",
+    "op": "alphabet:expand",
+    "params": {
+      "delimiter": "comma"
+    },
+    "input": {
+      "value": "a-",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a,-",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "expand a Greek range",
+    "ref": "hand-computed: the range runs from the first to the second character by code point; U+03B1 to U+03B3",
+    "op": "alphabet:expand",
+    "params": {
+      "delimiter": "space"
+    },
+    "input": {
+      "value": "α-γ",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "α β γ",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "expand an astral range",
+    "ref": "hand-computed: the range runs from the first to the second character by code point; U+1F600 to U+1F602",
+    "op": "alphabet:expand",
+    "params": {
+      "delimiter": "none"
+    },
+    "input": {
+      "value": "😀-😂",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "😀😁😂",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "expand a single-character range",
+    "ref": "hand-computed: the range runs from the first to the second character by code point",
+    "op": "alphabet:expand",
+    "params": {
+      "delimiter": "comma"
+    },
+    "input": {
+      "value": "q-q",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "q",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "expand a backwards range is E_RANGE",
+    "ref": "hand-computed: the range runs from the first to the second character by code point",
+    "op": "alphabet:expand",
+    "params": {},
+    "input": {
+      "value": "z-a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "expand a range of more than 65536 code points is E_RANGE",
+    "ref": "hand-computed: the range runs from the first to the second character by code point",
+    "op": "alphabet:expand",
+    "params": {},
+    "input": {
+      "value": "\u0000-😀",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "expand empty input",
+    "ref": "hand-computed: the range runs from the first to the second character by code point",
+    "op": "alphabet:expand",
+    "params": {},
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "",
+      "enc": "utf8"
+    }
+  }
+]
