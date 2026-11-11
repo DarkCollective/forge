@@ -24,7 +24,6 @@ USING: asn1 base64 md5 sha2 ;
 \ ---- small text helpers ----
 
 \ Lower-case hex octets separated by colons: aa:bb:cc.
-\ util-candidate: hex-octets
 : _octets ( b:bytes -- str )
   b len 0 = [ "" ] [ b bytes>hex 2 util:str-chunks ":" join ] if ;
 
@@ -34,15 +33,11 @@ USING: asn1 base64 md5 sha2 ;
 
 \ Hex octets in lines of per octets, a colon at the end of every line but the last; the lines after the first are
 \ indented by indent spaces.
-\ util-candidate: wrap-octets
 : _wrap ( b:bytes per:int indent:int -- str )
   b len 0 = [ "" ] [
     b bytes>hex per 2 * util:str-chunks [ 2 util:str-chunks ":" join ] map
     ":\n" " " indent util:repeat-str cat join
   ] if ;
-
-: _pad ( s:str w:int -- str )
-  s " " w s len - 0 max util:repeat-str cat ;
 
 \ Every line of the text indented by n spaces.
 : _indent ( s:str n:int -- str )
@@ -60,7 +55,6 @@ USING: asn1 base64 md5 sha2 ;
 #[ 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ] CONSTANT _suspect
 
 \ The text with control characters (below 32, DEL, C1) and the line and paragraph separators written as \xHH or \uHHHH.
-\ util-candidate: safe-text
 : _safe ( s:str -- str )
   s str>bytes _suspect translate #[ 01 ] util:contains-bytes?
   [ s str>codes [ _safe-code ] map "" join ] [ s ] if ;
@@ -69,14 +63,6 @@ USING: asn1 base64 md5 sha2 ;
 \ the zero that only keeps a positive number positive.
 : _strip-zero ( b:bytes -- bytes )
   b len 1 > [ b 0 nth 0 = b 1 nth 127 > and [ b 1 b len slice ] [ b ] if ] [ b ] if ;
-
-\ Bits in the integer n (0 for 0).
-: _byte-bits ( b:int -- int )
-  { 1 2 4 8 16 32 64 128 } [ b <= ] filter len ;
-
-\ util-candidate: bit-length
-: _bit-length ( n:int -- int )
-  n util:int>bytes dup len 0 = [ drop 0 ] [ dup len 1 - 8 * swap 0 nth _byte-bits + ] if ;
 
 : _hex-int ( n:int -- str )
   n 16 int>str-radix ;
@@ -139,7 +125,7 @@ USING: asn1 base64 md5 sha2 ;
 
 \ One line "CN = value": the name padded to w, the whole line indented by n spaces.
 : _dn-line ( pair:list w:int n:int -- str )
-  " " n util:repeat-str pair 0 nth w _pad cat " = " cat pair 1 nth cat ;
+  " " n util:repeat-str pair 0 nth w util:pad-right cat " = " cat pair 1 nth cat ;
 
 : _dn-lines ( pairs:list n:int w:int -- str )
   pairs len 0 = [ " " n util:repeat-str "(empty)" cat ] [
@@ -168,7 +154,7 @@ USING: asn1 base64 md5 sha2 ;
 
 : _rsa-text ( n:int e:int -- str )
   { 2 "Algorithm" "RSA" _kv
-    2 "Length" n _bit-length int>str " bits" cat _kv
+    2 "Length" n util:bit-length int>str " bits" cat _kv
     2 "Modulus" n util:int>bytes 16 18 _wrap _kv
     2 "Exponent" e int>str " (0x" cat e _hex-int cat ")" cat _kv } "\n" join ;
 
@@ -198,7 +184,7 @@ USING: asn1 base64 md5 sha2 ;
 
 : _dsa-lines ( p:int q:int g:int y:int -- str )
   { 2 "Algorithm" "DSA" _kv
-    2 "Length" p _bit-length int>str " bits" cat _kv
+    2 "Length" p util:bit-length int>str " bits" cat _kv
     2 "P" p util:int>bytes 16 18 _wrap _kv
     2 "Q" q util:int>bytes 16 18 _wrap _kv
     2 "G" g util:int>bytes 16 18 _wrap _kv
@@ -873,12 +859,12 @@ USING: asn1 base64 md5 sha2 ;
   n util:int>bytes 16 22 _wrap ;
 
 : _ssh-rsa-lines ( e:int n:int -- str )
-  { "Length" n _bit-length int>str " bits" cat _ssh-kv
+  { "Length" n util:bit-length int>str " bits" cat _ssh-kv
     "Exponent" e int>str " (0x" cat e 16 int>str-radix cat ")" cat _ssh-kv
     "Modulus" n _ssh-num-text _ssh-kv } "\n" join ;
 
 : _ssh-dss-lines ( p:int q:int g:int y:int -- str )
-  { "Length" p _bit-length int>str " bits" cat _ssh-kv
+  { "Length" p util:bit-length int>str " bits" cat _ssh-kv
     "P" p _ssh-num-text _ssh-kv
     "Q" q _ssh-num-text _ssh-kv
     "G" g _ssh-num-text _ssh-kv

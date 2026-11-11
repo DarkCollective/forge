@@ -204,6 +204,10 @@ USING: base64 ;
   "An explicit context tag [n] (constructed) around an element. Shared word." doc
   "context" true n content tlv-tagged ;
 
+: tlv-ec-private ( d:bytes pub:bytes -- bytes )
+  "An ECPrivateKey (RFC 5915) that carries the public point: SEQUENCE { INTEGER 1, OCTET STRING d, [1] BIT STRING pub }, as OpenSSL writes it, without the curve parameters (a PKCS #8 wrapper names the curve). Shared word." doc
+  { 1 tlv-int d tlv-octets 1 pub 0 tlv-bits tlv-explicit } tlv-seq ;
+
 \ ---- PEM ----
 
 : _pem-block ( b:record -- record )

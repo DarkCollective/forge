@@ -1251,3 +1251,101 @@ describe("util:sum", () => {
     expect(await fl("{ 9007199254740991 9007199254740991 } util:sum")).toBe(18014398509481982n);
   });
 });
+
+describe("util:be-int", () => {
+  test("reads n bytes at p as a big-endian integer, the mirror of le-int", async () => {
+    expect(Number(await fl("#[ 01 02 03 04 ] 0 4 util:be-int"))).toBe(0x01020304);
+    expect(Number(await fl("#[ 01 02 03 04 ] 1 2 util:be-int"))).toBe(0x0203);
+    expect(Number(await fl("#[ 01 02 03 04 ] 1 2 util:le-int"))).toBe(0x0302);
+    expect(Number(await fl("#[ ff ] 0 1 util:be-int"))).toBe(255);
+  });
+  test("n of 0 gives 0, and eight bytes are exact", async () => {
+    expect(Number(await fl("#[ 01 02 ] 1 0 util:be-int"))).toBe(0);
+    expect(BigInt((await fl("#[ ff ff ff ff ff ff ff ff ] 0 8 util:be-int")) as bigint)).toBe(
+      2n ** 64n - 1n,
+    );
+  });
+});
+
+describe("util:starts-with-bytes?", () => {
+  test("true for a prefix, also the whole data and the empty prefix; false when shorter or different", async () => {
+    expect(await fl("#[ ff d8 ff e0 ] #[ ff d8 ] util:starts-with-bytes?")).toBe(true);
+    expect(await fl("#[ ff d8 ] #[ ff d8 ] util:starts-with-bytes?")).toBe(true);
+    expect(await fl("#[ ff d8 ] #[ ] util:starts-with-bytes?")).toBe(true);
+    expect(await fl("#[ ] #[ ] util:starts-with-bytes?")).toBe(true);
+    expect(await fl("#[ ff ] #[ ff d8 ] util:starts-with-bytes?")).toBe(false);
+    expect(await fl("#[ d8 ff ] #[ ff d8 ] util:starts-with-bytes?")).toBe(false);
+  });
+});
+
+describe("util:printable-bytes?", () => {
+  test("true only for non-empty bytes of 32 to 126", async () => {
+    expect(await fl("#[ 20 41 7e ] util:printable-bytes?")).toBe(true);
+    expect(await fl("#[ ] util:printable-bytes?")).toBe(false);
+    expect(await fl("#[ 41 1f ] util:printable-bytes?")).toBe(false);
+    expect(await fl("#[ 41 7f ] util:printable-bytes?")).toBe(false);
+    expect(await fl("#[ 41 80 ] util:printable-bytes?")).toBe(false);
+  });
+});
+
+describe("util:name-in-table", () => {
+  const table = '"|1:Blues|2:Classic Rock|1f:Euro|"';
+  test("the name of a key, compared as text", async () => {
+    expect(await fl(`${table} "1" util:name-in-table`)).toBe("Blues");
+    expect(await fl(`${table} "2" util:name-in-table`)).toBe("Classic Rock");
+    expect(await fl(`${table} "1f" util:name-in-table`)).toBe("Euro");
+  });
+  test("the empty string for a key that is not there, also a prefix of a key", async () => {
+    expect(await fl(`${table} "3" util:name-in-table`)).toBe("");
+    expect(await fl(`${table} "f" util:name-in-table`)).toBe("");
+    expect(await fl(`"" "1" util:name-in-table`)).toBe("");
+  });
+});
+
+describe("util:pad-left and util:pad-right", () => {
+  test.each([
+    ["ab", 5, "   ab", "ab   "],
+    ["abcde", 5, "abcde", "abcde"],
+    ["abcdef", 5, "abcdef", "abcdef"],
+    ["", 3, "   ", "   "],
+    ["x", 0, "x", "x"],
+    ["x", -2, "x", "x"],
+  ])("%j to width %i", async (s, w, left, right) => {
+    expect(await value("util:pad-left", [str(s), int(w)])).toBe(left);
+    expect(await value("util:pad-right", [str(s), int(w)])).toBe(right);
+  });
+});
+
+describe("util:bit-length", () => {
+  test.each([
+    [0n, 0],
+    [1n, 1],
+    [2n, 2],
+    [127n, 7],
+    [128n, 8],
+    [255n, 8],
+    [256n, 9],
+    [2n ** 64n, 65],
+    [2n ** 2048n - 1n, 2048],
+  ])("%s has %i bits", async (n, bits) => {
+    expect(await value("util:bit-length", [int(n)])).toBe(bits);
+  });
+});
+
+describe("util:int>b64url", () => {
+  test("big-endian bytes as unpadded Base64url (the JWK form)", async () => {
+    expect(await value("util:int>b64url", [int(65537)])).toBe("AQAB");
+    expect(await value("util:int>b64url", [int(0)])).toBe("");
+    expect(await value("util:int>b64url", [int(255)])).toBe("_w");
+    expect(await value("util:int>b64url", [int(0xfbff)])).toBe("-_8");
+  });
+});
+
+describe("asn1:tlv-ec-private", () => {
+  test("SEQUENCE { INTEGER 1, OCTET STRING d, [1] BIT STRING pub }", async () => {
+    expect(u8(await fl("#[ aa bb ] #[ 04 cc ] asn1:tlv-ec-private"))).toEqual([
+      0x30, 0x0e, 0x02, 0x01, 0x01, 0x04, 0x02, 0xaa, 0xbb, 0xa1, 0x05, 0x03, 0x03, 0x00, 0x04,
+      0xcc,
+    ]);
+  });
+});

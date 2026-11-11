@@ -54,12 +54,10 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ;
 
 \ ---- integers and bytes ----
 
-\ util-candidate: bytes>int
 : _os2ip ( data:bytes -- int )
   data len 0 = [ 0 ] [ data bytes>hex 16 str>int-radix ] if ;
 
 \ The k big-endian bytes of v; E_RANGE when v needs more.
-\ util-candidate: int>bytes-fixed
 : _i2osp ( v:int k:int -- bytes )
   v util:int>bytes
   dup len k > [ "an integer does not fit in " k int>str cat " bytes" cat raise:range ] when
@@ -330,18 +328,13 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ;
 : _pem-private ( key:record -- str )
   "RSA PRIVATE KEY" key _der-private asn1:pem-encode ;
 
-\ JWK (RFC 7517, 7518 section 6.3): Base64url without padding of the big-endian integers.
-\ util-candidate: int>b64url
-: _b64 ( v:int -- str )
-  v util:int>bytes false util:b64url-encode bytes>str ;
-
 : _jwk-public ( key:record -- str )
-  { { "kty" "RSA" } { "n" key "n" get _b64 } { "e" key "e" get _b64 } } >record 0 json:stringify ;
+  { { "kty" "RSA" } { "n" key "n" get util:int>b64url } { "e" key "e" get util:int>b64url } } >record 0 json:stringify ;
 
 : _jwk-private ( key:record -- str )
-  { { "kty" "RSA" } { "n" key "n" get _b64 } { "e" key "e" get _b64 } { "d" key "d" get _b64 }
-    { "p" key "p" get _b64 } { "q" key "q" get _b64 } { "dp" key "dp" get _b64 } { "dq" key "dq" get _b64 }
-    { "qi" key "qi" get _b64 } } >record 0 json:stringify ;
+  { { "kty" "RSA" } { "n" key "n" get util:int>b64url } { "e" key "e" get util:int>b64url } { "d" key "d" get util:int>b64url }
+    { "p" key "p" get util:int>b64url } { "q" key "q" get util:int>b64url } { "dp" key "dp" get util:int>b64url } { "dq" key "dq" get util:int>b64url }
+    { "qi" key "qi" get util:int>b64url } } >record 0 json:stringify ;
 
 \ ---- the RSA functions (RFC 8017 section 5) ----
 

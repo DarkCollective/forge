@@ -43,13 +43,10 @@ USING: asn1 json ;
 : _b64u ( b:bytes -- str )
   b false util:b64url-encode bytes>latin1 ;
 
-: _b64u-int ( n:int -- str )
-  n util:int>bytes _b64u ;
-
 \ ---- PEM to JWK ----
 
 : _pair ( name:str i:int k:record -- list )
-  { name k i asn1:child asn1:node>int _b64u-int } ;
+  { name k i asn1:child asn1:node>int util:int>b64url } ;
 
 \ The members names[i] from the INTEGER children base + i of k, as { name value } pairs.
 : _int-members ( k:record names:list base:int -- list )
@@ -255,13 +252,10 @@ META: from-pem
   dup len row _size <> [ "the d of a " row 0 nth cat " key is " cat row _size int>str cat " bytes" cat _bad ] when
   dup row 0 nth swap jwk:_public expected <> [ "the d of the JWK does not belong to its public key" _bad ] when ;
 
-: _ec-private-inner ( d:bytes point:bytes -- bytes )
-  { 1 asn1:tlv-int d asn1:tlv-octets 1 point 0 asn1:tlv-bits asn1:tlv-explicit } asn1:tlv-seq ;
-
 : _ec-der3 ( jwk:record row:list point:bytes -- bytes )
   "1.2.840.10045.2.1" row 1 nth asn1:tlv-oid _alg-id
   jwk keys "d" util:contains?
-  [ jwk row point _check-d point _ec-private-inner _pkcs8 ]
+  [ jwk row point _check-d point asn1:tlv-ec-private _pkcs8 ]
   [ point _spki ] if ;
 
 : _ec-der2 ( jwk:record row:list x:bytes y:bytes -- bytes )

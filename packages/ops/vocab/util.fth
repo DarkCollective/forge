@@ -533,3 +533,38 @@ IN: util
 : iso-from-ms ( ms:int -- str )
   "The UTC date and time of a Unix time in milliseconds as ISO 8601 text to the millisecond, without the zone letter: 1700000000123 gives 2023-11-14T22:13:20.123 (write Z after it). The year is at least four digits; times before the year 0 are not supported." doc
   ms 86400000 div civil-from-days ms 86400000 mod _stamp-text ;
+
+\ ---- shared by the binary-format and report vocabularies (WP 5.57u) ----
+
+: be-int ( data:bytes p:int n:int -- int )
+  "The n bytes of data at p read as one big-endian unsigned integer (the first byte is the most significant; n of 0 gives 0). The caller has checked that the bytes are there: a read past the end is the slice error (use need-bytes first). The mirror of le-int." doc
+  data p p n + slice 256 digits>int ;
+
+: starts-with-bytes? ( data:bytes prefix:bytes -- bool )
+  "True when data begins with the bytes of prefix; false (not an error) when data is shorter than prefix. Every bytes starts with the empty bytes. The bytes form of starts-with?." doc
+  data len prefix len >= [ data 0 prefix len slice prefix = ] [ false ] if ;
+
+: printable-bytes? ( data:bytes -- bool )
+  "True when data is not empty and every byte is printable ASCII (32 to 126)." doc
+  data len 0 > data [ dup 32 >= swap 126 <= and ] filter len data len = and ;
+
+: name-in-table ( table:str key:str -- str )
+  "The name that a table gives to a key. The table is text of entries between bars, each as key:name, for example |1:Blues|2:Classic Rock| (a leading and a trailing bar); the key is compared as text, so write a number in the form the table uses. The empty string when the key is not there." doc
+  table "|" key cat ":" cat split
+  dup len 2 < [ drop "" ] [ 1 nth "|" split 0 nth ] if ;
+
+: pad-left ( s:str w:int -- str )
+  "The text s with spaces added at the left up to a width of w characters; a text that is w characters or longer is returned as it is (never truncated)." doc
+  " " w s len - 0 max repeat-str s cat ;
+
+: pad-right ( s:str w:int -- str )
+  "The text s with spaces added at the right up to a width of w characters; a text that is w characters or longer is returned as it is (never truncated)." doc
+  s " " w s len - 0 max repeat-str cat ;
+
+: bit-length ( n:int -- int )
+  "The number of bits of a non-negative integer (0 for 0, 1 for 1, 8 for 255, 9 for 256)." doc
+  n 0 = [ 0 ] [ n 2 int>str-radix len ] if ;
+
+: int>b64url ( v:int -- str )
+  "The big-endian bytes of a non-negative integer (none for 0) as Base64url text without padding, the form of the integer members of a JWK (RFC 7518 section 6.3)." doc
+  v int>bytes false b64url-encode bytes>str ;

@@ -178,11 +178,8 @@ USING: lorenz ;
 
 \ ---- the table ----
 
-: _pad ( s:str w:int -- str )
-  " " w s len - util:repeat-str s cat ;
-
 : _cells ( cells:list -- str )
-  cells { 4 6 6 7 7 6 } zip [ dup 0 nth swap 1 nth _pad ] map "  " join ;
+  cells { 4 6 6 7 7 6 } zip [ dup 0 nth swap 1 nth util:pad-left ] map "  " join ;
 
 : _tenth ( s:int -- str )
   s 0 < [ "-" ] [ "" ] if s abs 10 div int>str cat "." cat s abs 10 mod int>str cat ;
