@@ -17,9 +17,18 @@ USING: asn1 ;
   data asn1:oid-encode bytes>hex ;
 
 META: from-hex
+  use-when "You have the hex of an OBJECT IDENTIFIER's content bytes, for example from a certificate dump, and want the dotted number such as 1.2.840.113549.1.1.11." ;
+  inverse to-hex ;
   see-also oid:to-hex asn1-dump:parse ;
+  link "https://en.wikipedia.org/wiki/Object_identifier" "Object identifier on Wikipedia" ;
+  link "https://oid-info.com/" "OID Repository (look up what a number means)" ;
+  link "https://www.itu.int/rec/T-REC-X.690/en" "ITU-T X.690: encoding rules, section 8.19" ;
 ;
 
 META: to-hex
+  use-when "You have a dotted object identifier and want its DER content bytes in hex, for example to search a hex dump for it or to build a certificate by hand." ;
   see-also oid:from-hex asn1-dump:parse ;
+  link "https://en.wikipedia.org/wiki/Object_identifier" "Object identifier on Wikipedia" ;
+  link "https://oid-info.com/" "OID Repository (look up what a number means)" ;
+  link "https://www.itu.int/rec/T-REC-X.690/en" "ITU-T X.690: encoding rules, section 8.19" ;
 ;

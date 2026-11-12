@@ -19,6 +19,10 @@
     "expect": {
       "value": "0c60c80f961f0e71f3a9b524af6012062fe037a6",
       "enc": "hex"
+    },
+    "example": {
+      "title": "One iteration of PBKDF2-HMAC-SHA1 (RFC 6070)",
+      "note": "The password, salt, iterations and hash decide the key. size picks how many bytes you get."
     }
   },
   {
@@ -63,6 +67,10 @@
     "expect": {
       "value": "4b007901b765489abead49d926f721d065a429c1",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The same password and salt with 4096 iterations",
+      "note": "The key is completely different from the one-iteration key. More iterations make every guess slower; for new systems current advice is hundreds of thousands with SHA-256."
     }
   },
   {
@@ -129,6 +137,10 @@
     "expect": {
       "value": "55ac046e56e3089fec1691c22544b605f94185216dde0465e68b9d57c20dacbc49ca9cccf179b645991664b39d77ef317c71b845b1e30bd509112041d3a19783",
       "enc": "hex"
+    },
+    "example": {
+      "title": "PBKDF2-HMAC-SHA-256 with a 64-byte key (RFC 7914)",
+      "note": "SHA-256 gives 32 bytes a block, so 64 bytes take two blocks. The scrypt RFC uses PBKDF2 inside and publishes this vector."
     }
   },
   {

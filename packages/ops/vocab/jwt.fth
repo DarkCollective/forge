@@ -108,19 +108,30 @@ USING: hmac base64 ;
   key alg alg header _extra _compose _sign ;
 
 META: decode
+  use-when "You have a token of three dot-separated parts that starts with eyJ and want to read its claims or header. This does not prove the token is genuine." ;
   param part "payload: the claims; header: the JOSE header." ;
   see-also jwt:verify base64:decode ;
+  link "https://www.rfc-editor.org/rfc/rfc7519" "RFC 7519: JSON Web Token" ;
+  link "https://www.rfc-editor.org/rfc/rfc7515" "RFC 7515: JSON Web Signature" ;
+  link "https://jwt.io/" "jwt.io: token debugger" ;
 ;
 
 META: verify
+  use-when "You have a JWT signed with a shared secret (HS256, HS384 or HS512) and want to check the signature before you trust the claims." ;
+  inverse sign ;
   param key "The shared secret, any length but not empty." ;
   param alg "auto: the HMAC algorithm named in the token's header; or pin HS256, HS384 or HS512." ;
   see-also jwt:sign jwt:decode hmac:digest ;
+  link "https://www.rfc-editor.org/rfc/rfc7519" "RFC 7519: JSON Web Token" ;
+  link "https://www.rfc-editor.org/rfc/rfc7518#section-3.2" "RFC 7518, section 3.2: HMAC signatures" ;
 ;
 
 META: sign
+  use-when "You need a test or hand-made JWT signed with a shared secret (HS256, HS384 or HS512), for example to try an API or to reproduce a token." ;
   param key "The shared secret, any length but not empty." ;
   param alg "The HMAC algorithm: HS256 (SHA-256), HS384 or HS512." ;
   param header "Extra members for the header, as a JSON object. {} (the default) adds none." ;
   see-also jwt:verify jwt:decode hmac:digest ;
+  link "https://www.rfc-editor.org/rfc/rfc7519" "RFC 7519: JSON Web Token" ;
+  link "https://www.rfc-editor.org/rfc/rfc7518#section-3.2" "RFC 7518, section 3.2: HMAC signatures" ;
 ;

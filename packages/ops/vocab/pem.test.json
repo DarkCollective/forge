@@ -11,6 +11,10 @@
     "expect": {
       "value": "302a300506032b6570032100cd6a003368c95bcd51bcfbfdef332874ac96cbaf3c4ad6fc101c944b6f1d4893",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Decode a PEM public key to DER bytes (as hex)",
+      "note": "30 2a 30 05 06 03 2b 65 70 ... is the DER of an Ed25519 public key. Paste it into asn1-dump:parse to see its structure."
     }
   },
   {
@@ -53,6 +57,10 @@
     "expect": {
       "value": "308201de30820185a0030201020214600a0f7db714787bff29ec0cfb252e92f7b2b694300a06082a8648ce3d0403023036310b30090603550406130255533111300f060355040a0c0854657374204f72673114301206035504030c0b6578616d706c652e636f6d301e170d3236313131313139353433395a170d3236313231313139353433395a3036310b30090603550406130255533111300f060355040a0c0854657374204f72673114301206035504030c0b6578616d706c652e636f6d3059301306072a8648ce3d020106082a8648ce3d03010703420004527e03e94eca5485402b679af1ee88c0096d513392cc7440dca423a41d3bff1da57e5de45633af68c8c4d2172fbe87e0588747c8cc80950dff46cb925f7a5df0a371306f301d0603551d0e04160414d6a11fb6ae8c4f20bf454efc16ad1c36425b52f7301f0603551d23041830168014d6a11fb6ae8c4f20bf454efc16ad1c36425b52f7300f0603551d130101ff040530030101ff301c0603551d1104153013820b6578616d706c652e636f6d87040a000001300a06082a8648ce3d040302034700304402203549949f1c1cc9579794f33487bcad31bf426c896f6a8e437c4351342f33eccc022044a6c1f6eb9541875d8a77b8e856cac6fbf9c6b3a5195ff1fc1a337fdac3bd42\n308187020100301306072a8648ce3d020106082a8648ce3d030107046d306b0201010420a4b219d31edf7023fe34e1b41ac0fa94c93af0d8dbdabef5b17b96e90de08b4aa14403420004527e03e94eca5485402b679af1ee88c0096d513392cc7440dca423a41d3bff1da57e5de45633af68c8c4d2172fbe87e0588747c8cc80950dff46cb925f7a5df0",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Two blocks give two lines",
+      "note": "Each block in the text gives one line of hex, in order."
     }
   },
   {
@@ -67,6 +75,10 @@
     "expect": {
       "value": "308201de30820185a0030201020214600a0f7db714787bff29ec0cfb252e92f7b2b694300a06082a8648ce3d0403023036310b30090603550406130255533111300f060355040a0c0854657374204f72673114301206035504030c0b6578616d706c652e636f6d301e170d3236313131313139353433395a170d3236313231313139353433395a3036310b30090603550406130255533111300f060355040a0c0854657374204f72673114301206035504030c0b6578616d706c652e636f6d3059301306072a8648ce3d020106082a8648ce3d03010703420004527e03e94eca5485402b679af1ee88c0096d513392cc7440dca423a41d3bff1da57e5de45633af68c8c4d2172fbe87e0588747c8cc80950dff46cb925f7a5df0a371306f301d0603551d0e04160414d6a11fb6ae8c4f20bf454efc16ad1c36425b52f7301f0603551d23041830168014d6a11fb6ae8c4f20bf454efc16ad1c36425b52f7300f0603551d130101ff040530030101ff301c0603551d1104153013820b6578616d706c652e636f6d87040a000001300a06082a8648ce3d040302034700304402203549949f1c1cc9579794f33487bcad31bf426c896f6a8e437c4351342f33eccc022044a6c1f6eb9541875d8a77b8e856cac6fbf9c6b3a5195ff1fc1a337fdac3bd42",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Text around the block is ignored",
+      "note": "The input is the output of openssl x509 -text, with its report followed by the PEM block. Only the block is decoded."
     }
   },
   {
@@ -241,6 +253,10 @@
     "expect": {
       "value": "-----BEGIN CERTIFICATE-----\nMIIB3jCCAYWgAwIBAgIUYAoPfbcUeHv/KewM+yUukveytpQwCgYIKoZIzj0EAwIw\nNjELMAkGA1UEBhMCVVMxETAPBgNVBAoMCFRlc3QgT3JnMRQwEgYDVQQDDAtleGFt\ncGxlLmNvbTAeFw0yNjExMTExOTU0MzlaFw0yNjEyMTExOTU0MzlaMDYxCzAJBgNV\nBAYTAlVTMREwDwYDVQQKDAhUZXN0IE9yZzEUMBIGA1UEAwwLZXhhbXBsZS5jb20w\nWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARSfgPpTspUhUArZ5rx7ojACW1RM5LM\ndEDcpCOkHTv/HaV+XeRWM69oyMTSFy++h+BYh0fIzICVDf9Gy5Jfel3wo3EwbzAd\nBgNVHQ4EFgQU1qEftq6MTyC/RU78Fq0cNkJbUvcwHwYDVR0jBBgwFoAU1qEftq6M\nTyC/RU78Fq0cNkJbUvcwDwYDVR0TAQH/BAUwAwEB/zAcBgNVHREEFTATggtleGFt\ncGxlLmNvbYcECgAAATAKBggqhkjOPQQDAgNHADBEAiA1SZSfHBzJV5eU8zSHvK0x\nv0JsiW9qjkN8Q1E0LzPszAIgRKbB9uuVQYddine46FbKxvv5xrOlGV/x/Bozf9rD\nvUI=\n-----END CERTIFICATE-----\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Wrap a certificate in PEM (the default label)",
+      "note": "The label CERTIFICATE is the default. The Base64 is cut into lines of 64 characters, as openssl writes it."
     }
   },
   {
@@ -257,6 +273,10 @@
     "expect": {
       "value": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAzWoAM2jJW81RvPv97zModKyWy688Stb8EByUS28dSJM=\n-----END PUBLIC KEY-----\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Label a public key PUBLIC KEY",
+      "note": "Set header to the label the bytes need: PUBLIC KEY, PRIVATE KEY, CERTIFICATE REQUEST and so on."
     }
   },
   {
@@ -433,6 +453,10 @@
     "expect": {
       "value": "-----BEGIN X-----\n3q2+7w==\n-----END X-----\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A short block with your own label",
+      "note": "The hex may have spaces and upper case. Four bytes make 3q2+7w== in Base64, with the padding."
     }
   },
   {

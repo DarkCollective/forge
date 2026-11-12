@@ -13,6 +13,10 @@
     "expect": {
       "value": "{\"iss\":\"joe\",\r\n \"exp\":1300819380,\r\n \"http://example.com/is_root\":true}",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Read the claims of a signed token (RFC 7515 example)",
+      "note": "The middle part is Base64url of the claims, a JSON object. iss is the issuer and exp the expiry as a Unix time. The text is returned exactly as it was signed."
     }
   },
   {
@@ -29,6 +33,10 @@
     "expect": {
       "value": "{\"typ\":\"JWT\",\r\n \"alg\":\"HS256\"}",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Read the header",
+      "note": "part header shows how the token was signed: alg is the algorithm and typ the type."
     }
   },
   {
@@ -45,6 +53,10 @@
     "expect": {
       "value": "{\"iss\":\"joe\",\r\n \"exp\":1300819380,\r\n \"http://example.com/is_root\":true}",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A token with no signature decodes too",
+      "note": "The header says alg none and the last part is empty. Decoding checks nothing, so use jwt:verify before trusting any claim."
     }
   },
   {
@@ -177,6 +189,10 @@
     "expect": {
       "value": "{\"iss\":\"joe\",\r\n \"exp\":1300819380,\r\n \"http://example.com/is_root\":true}",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "RFC 7515 example with the algorithm pinned",
+      "note": "Naming alg means a token cannot pick its own algorithm. The key is the k value of the RFC's JWK, given here as hex."
     }
   },
   {
@@ -197,6 +213,10 @@
     "expect": {
       "value": "{\"sub\":\"1234567890\",\"name\":\"John Doe\",\"iat\":1516239022}",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Check the jwt.io example token",
+      "note": "The secret is your-256-bit-secret. A good signature returns the claims; a bad one is an error. exp and nbf are not examined."
     }
   },
   {
@@ -468,6 +488,10 @@
     "expect": {
       "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Sign a payload with HS256 (the jwt.io example)",
+      "note": "The token is header.payload.signature, each part in Base64url. The payload is signed exactly as written, so spacing matters."
     }
   },
   {
@@ -531,6 +555,10 @@
     "expect": {
       "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImsxIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.7_waepInKUYpi5mFJ12NwiMxGQZQIGsVVDL5BsolGCA",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Add a header member such as kid",
+      "note": "The header parameter is a JSON object merged into the header after alg and typ."
     }
   },
   {

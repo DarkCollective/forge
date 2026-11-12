@@ -1033,5 +1033,37 @@ USING: asn1 base64 md5 sha1 sha2 ;
   data bytes>str input-format _ssh-load _ssh-finish ;
 
 META: parse-ssh-host-key
+  use-when "You have a key line from known_hosts, authorized_keys or a .pub file and want its type and fingerprints, to compare with what ssh-keygen -l prints." ;
   param input-format "How the key is written: auto (a key line, hex or Base64 as found), base64 or hex." ;
+  link "https://www.rfc-editor.org/rfc/rfc4253#section-6.6" "RFC 4253, section 6.6: SSH public key algorithms" ;
+;
+
+META: parse
+  use-when "You have a certificate as PEM, DER hex or Base64 and want to read its subject, issuer, validity dates, key and extensions." ;
+  link "https://www.rfc-editor.org/rfc/rfc5280" "RFC 5280: X.509 certificates and CRLs" ;
+  link "https://en.wikipedia.org/wiki/X.509" "X.509 on Wikipedia" ;
+;
+
+META: parse-bundle
+  use-when "You have a file with several certificates, such as a CA bundle or a certificate chain, and want to read each one in turn." ;
+  link "https://www.rfc-editor.org/rfc/rfc5280" "RFC 5280: X.509 certificates and CRLs" ;
+  link "https://en.wikipedia.org/wiki/X.509" "X.509 on Wikipedia" ;
+;
+
+META: parse-crl
+  use-when "You have a certificate revocation list and want to see who issued it, when it expires and which serial numbers it revokes." ;
+  link "https://www.rfc-editor.org/rfc/rfc5280#section-5" "RFC 5280, section 5: CRL profile" ;
+  link "https://en.wikipedia.org/wiki/Certificate_revocation_list" "Certificate revocation list on Wikipedia" ;
+;
+
+META: parse-csr
+  use-when "You have a certificate signing request and want to check the subject, key and requested extensions before you send it to a CA." ;
+  link "https://www.rfc-editor.org/rfc/rfc2986" "RFC 2986: PKCS #10 certification requests" ;
+  link "https://en.wikipedia.org/wiki/Certificate_signing_request" "Certificate signing request on Wikipedia" ;
+;
+
+META: public-key
+  use-when "You have a certificate and need just its public key as a PEM block, for example to pin it, compare it or check a signature elsewhere." ;
+  link "https://www.rfc-editor.org/rfc/rfc5280#section-4.1.2.7" "RFC 5280, section 4.1.2.7: subject public key info" ;
+  link "https://en.wikipedia.org/wiki/X.509" "X.509 on Wikipedia" ;
 ;

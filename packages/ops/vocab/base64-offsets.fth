@@ -70,8 +70,11 @@ USING: alphabet list ;
   data input-type _input alphabet _alphabet show-variable _go ;
 
 META: show
+  use-when "You want to find a known string inside Base64 text from a larger file, where it may be shifted by one or two bytes and so encode differently." ;
   param alphabet "The Base64 alphabet, with ranges: 64 characters, or 65 with the padding character last." ;
   param show-variable "Keep the characters that depend on the unknown neighbouring bytes, and the padding." ;
   param input-type "How to read the input: as it is, as hex text or as Base64 text." ;
   see-also base64:encode ;
+  link "https://www.rfc-editor.org/rfc/rfc4648#section-4" "RFC 4648, section 4: Base64" ;
+  link "https://en.wikipedia.org/wiki/Base64" "Base64 on Wikipedia" ;
 ;

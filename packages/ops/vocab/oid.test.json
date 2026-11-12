@@ -235,6 +235,10 @@
     "expect": {
       "value": "1.2.840.113549.1.1.11",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Read the algorithm of a certificate signature",
+      "note": "2a864886f70d01010b is the content of the identifier for SHA-256 with RSA. Look the number up in an OID registry to learn its name."
     }
   },
   {
@@ -249,6 +253,10 @@
     "expect": {
       "value": "2a864886f70d01010b",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Encode the identifier for SHA-256 with RSA",
+      "note": "The result has no tag (06) or length: put 06 09 in front to get the whole DER element."
     }
   },
   {
@@ -291,6 +299,10 @@
     "expect": {
       "value": "2.5.4.3",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The common name attribute",
+      "note": "550403 is 2.5.4.3, commonName: the CN in a certificate's subject."
     }
   },
   {
@@ -305,6 +317,10 @@
     "expect": {
       "value": "550403",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The common name attribute",
+      "note": "2.5.4.3 is three bytes: 55 04 03. The first two arcs share one byte (2 x 40 + 5 = 85 = 0x55)."
     }
   },
   {
@@ -347,6 +363,10 @@
     "expect": {
       "value": "1.3.6.1.5.5.7.3.1",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A purpose of a certificate: server authentication",
+      "note": "1.3.6.1.5.5.7.3.1 is serverAuth, the extended key usage that marks a TLS server certificate."
     }
   },
   {
@@ -361,6 +381,10 @@
     "expect": {
       "value": "2b06010505070301",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A purpose of a certificate: server authentication",
+      "note": "1.3.6.1.5.5.7.3.1 becomes 2b06010505070301."
     }
   },
   {

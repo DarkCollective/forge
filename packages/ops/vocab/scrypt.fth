@@ -11,10 +11,13 @@ IN: scrypt
   password salt n r p length _derive ;
 
 META: derive
+  use-when "You have a password, a salt and the N, r and p settings, and need the scrypt key, for example to open a wallet file or to reproduce a stored hash." ;
   param salt "The salt, any length, empty by default." ;
   param n "The cost N, a power of two (CyberChef's Iterations); memory is 128 * N * r bytes, at most 256 MiB." ;
   param r "The block size r (CyberChef's Memory factor)." ;
   param p "The parallelism p (CyberChef's Parallelization factor)." ;
   param length "The length of the derived key in bytes, 1 to 4096." ;
   see-also pbkdf2:derive hex:encode ;
+  link "https://www.rfc-editor.org/rfc/rfc7914" "RFC 7914: the scrypt function" ;
+  link "https://en.wikipedia.org/wiki/Scrypt" "scrypt on Wikipedia" ;
 ;

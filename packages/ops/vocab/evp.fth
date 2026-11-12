@@ -37,9 +37,11 @@ USING: md5 sha1 sha2 ;
   0 size slice ;
 
 META: derive
+  use-when "You have a passphrase and the salt of a file made by openssl enc without -pbkdf2, and need its key and IV, for example to decrypt it with another tool." ;
   param size "The length of the derived key in bytes, 1 to 1024 (CyberChef's 128 bits is 16)." ;
   param iterations "How many times each block is hashed, at least 1 (OpenSSL's default is 1)." ;
   param hash "The hash: sha1, sha256, sha384, sha512 or md5." ;
   param salt "The salt, any length (OpenSSL's is 8 bytes), empty by default." ;
   see-also md5:digest sha2:digest pbkdf2:derive hex:encode ;
+  link "https://www.openssl.org/docs/man3.0/man3/EVP_BytesToKey.html" "OpenSSL manual: EVP_BytesToKey" ;
 ;

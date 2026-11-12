@@ -23,6 +23,10 @@
     "expect": {
       "value": "3cb25f25faacd57a90434f64d0362f2a2d2d0a90cf1a5a4c5db02d56ecc4c5bf34007208d5b887185865",
       "enc": "hex"
+    },
+    "example": {
+      "title": "RFC 5869 test case 1: SHA-256 with salt and info",
+      "note": "The input is the secret. The info string names what the key is for, and different info gives an unrelated key from the same secret. length 42 asks for 42 bytes."
     }
   },
   {
@@ -75,6 +79,10 @@
     "expect": {
       "value": "8da4e775a563c18f715f802a063c5a31b8a11f5c5ee1879ec3454e5f3c738d2d9d201395faa4b61a96c8",
       "enc": "hex"
+    },
+    "example": {
+      "title": "No salt and no info (RFC 5869 test case 3)",
+      "note": "Both extras may be empty and the output still has the full length."
     }
   },
   {
@@ -205,6 +213,10 @@
     "expect": {
       "value": "3cb25f25faacd57a90434f64d0362f2a2d2d0a90cf1a5a4c5db02d56ecc4c5bf34007208d5b887185865",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Expand only, when the input is already a strong key",
+      "note": "Extract mode skip jumps over the first HKDF step and uses the input as the pseudorandom key. Use it when the input came out of an earlier HKDF extract."
     }
   },
   {

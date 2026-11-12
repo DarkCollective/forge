@@ -995,6 +995,81 @@ if (help.catalogue !== catalogue.version) {
 }
 ```
 
+## Writing discovery text
+
+This section is the whole brief for adding help content to an operation. The mechanism is described above ("Examples on vectors", "The help document"); here is what to write and how to check it. A person who meets a cryptic operation should learn from this text when to use it, see it run, find its inverse and know where it is specified.
+
+For each public op of your vocabularies, add four things:
+
+| What                                       | Where                                                                         | Limits                                                                                                              |
+| ------------------------------------------ | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `use-when "…" ;`                           | in `META: <word> … ;` of the `.fth` file (add a block when the word has none) | one line, at most 160 characters                                                                                    |
+| `link "<https url>" "<label>" ;`           | same block, up to 8                                                           | https only, label at most 80                                                                                        |
+| `inverse <word> ;`                         | same block, a word of the same vocabulary                                     | one per word, never across vocabularies                                                                             |
+| `"example": { "title": "…", "note": "…" }` | on an existing vector in `<vocab>.test.json`                                  | at most 3 per op, title at most 80 and unique per op, note optional and at most 400, values at most 2048 characters |
+
+Nothing else changes: no FL code, no new, removed, reordered or altered vectors. META is not hashed, so the hash snapshot must stay identical. Text inside the FL strings must not contain a double quote or a backslash.
+
+### use-when
+
+Answer "when would a person reach for this?", not "what does it do" (`doc` says that). Name what the person has in hand and what they want. Plain British English, one sentence, no marketing words, no em-dashes, no "simply" or "just", and do not start every line with "You have".
+
+Good:
+
+- `bcrypt:compare`: "You have a stored bcrypt hash (it starts with $2a$, $2b$ or $2y$) and a password guess, and want to know whether they match." (a recognisable input and a clear goal)
+- `x509:parse-ssh-host-key`: "You have a key line from known_hosts, authorized_keys or a .pub file and want its type and fingerprints, to compare with what ssh-keygen -l prints." (names the files where the input is found)
+- `jwt:decode`: "You have a token of three dot-separated parts that starts with eyJ and want to read its claims or header. This does not prove the token is genuine." (a way to recognise the input, and the one warning that matters)
+
+Bad:
+
+- "Derives a key with PBKDF2." (says what it does, which `doc` already says)
+- "A powerful and flexible way to inspect certificates." (marketing words, no situation)
+- "Use this to convert hex." (no input, no goal, nothing a newcomer can match against what they hold)
+
+### Examples
+
+An example is a verified vector, so it can never be wrong. Your job is to choose the ones that teach.
+
+- Pick a realistic small input with a recognisable output first. Then one that shows the most important parameter (the cost, the alphabet, the input format, the start offset). A third only if it teaches something new.
+- Skip empty-input, error and huge vectors, and vectors that differ from a chosen one only by a variant (the same certificate again as Base64). An input, parameter or expected value over 2048 characters is refused by the build: check sizes before choosing.
+- The title says what the example shows ("Decode a PEM public key to DER bytes (as hex)"), not the vector's name. The note says what to look at or why the parameter matters, in one to three sentences, and uses only facts you checked in the vector.
+- If no existing vector teaches, do not invent one: report the op as "needs a teaching vector" so a later work package can add one.
+
+Good choices: the RFC's first test case with a plain-text password; the same input with a second parameter value, so the difference is visible; a real object (a root certificate) that a person recognises.
+
+Bad choices: a 64 KiB input; "empty input gives empty output"; the sixth of seven vectors that only vary the key size.
+
+### Links
+
+- Give the primary specification first (`https://www.rfc-editor.org/rfc/rfcNNNN`, with `#section-N` only when you are sure of the number; NIST pages under `https://csrc.nist.gov/`; `https://doi.org/…`), then, where it helps a newcomer, the Wikipedia article.
+- There is no network access in the sandbox, so you cannot check a URL. Link only pages you are sure exist at exactly that address: RFC numbers you can confirm from the `ref` fields of the vectors or the vocabulary's comments, and the root of a well-known site. Do not build deep links from memory. A wrong link is worse than none.
+- Labels say what the page is ("RFC 9106: Argon2 memory-hard hashing"), not "link" or "here".
+- In your report, list every URL with your confidence and the reason.
+
+### Inverse
+
+Declare `inverse` only for a real round trip (encode and decode, encrypt and decrypt, parse and build): applying one after the other gives the input back, at least for the usual case. Declare it on one side, or on both sides consistently; `help.json` makes it symmetric. Operations that are merely related use `see-also`, which already exists. If the round trip loses something (a PEM label, the shape of an old key format), say so in your report so the owner can decide.
+
+### Checklist
+
+1. Read each op's FL source, its `doc` and its vectors before writing. If you are not sure what an op is for, say so in the report; do not guess.
+2. `use-when` is a situation, at most 160 characters, no line break.
+3. At most 3 examples, titles unique, each vector small and a teaching one; no vector added or changed.
+4. Links are https, specific enough to be useful, and certain to exist.
+5. Inverse names a public word of the same vocabulary and is a real round trip.
+6. No em-dashes, no marketing words; plain British English.
+
+### Verify
+
+```sh
+npm run build -w @forge/ops          # fails on any rule violation; prints the help.json size
+npm run -s hash-snapshot -w @forge/ops > /tmp/snap.txt && cmp /tmp/snap.txt <snapshot of the merge base>
+npm run lint && npm run typecheck && npm test
+git diff <base> --stat               # only your .fth and .test.json files
+```
+
+`src/help.test.ts` holds a ratchet: the number of catalogue ops with a `use-when`, and with at least one example, must not fall below the numbers reached so far. A batch that adds content raises the two constants there to its new totals.
+
 ## The hash guard: `hash-snapshot`
 
 `npm run -s hash-snapshot -w @forge/ops` prints one line `qname hash` for every word of every vocabulary (core included) followed by `catalogue.json <sha256>` of `dist/catalogue.json`. Run it on the merge base and on a branch (after `npm run build`) and compare the outputs: a change that must not alter any word, or the catalogue, gives an identical output (LANGUAGE-0.2.md section 15.1). It is a script and a comparison, not a committed file.

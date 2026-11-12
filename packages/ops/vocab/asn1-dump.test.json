@@ -151,6 +151,10 @@
     "expect": {
       "value": "ObjectIdentifier rsaEncryption (1 2 840 113549 1 1 1)\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Name an object identifier",
+      "note": "Known identifiers are shown with their name and arcs, here rsaEncryption (1 2 840 113549 1 1 1)."
     }
   },
   {
@@ -333,6 +337,10 @@
     "expect": {
       "value": "SEQUENCE\n  INTEGER 01\n  OCTETSTRING aabbccdd\n  NULL\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Read a small SEQUENCE",
+      "note": "30 0b says a SEQUENCE of 11 bytes. Its three children are indented below it: an INTEGER, an OCTET STRING and a NULL."
     }
   },
   {
@@ -615,6 +623,10 @@
     "expect": {
       "value": "INTEGER 07\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Start part-way into the data",
+      "note": "start counts hex characters, so 4 skips the two bytes aa bb and shows the INTEGER that follows."
     }
   },
   {

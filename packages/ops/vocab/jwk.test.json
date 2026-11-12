@@ -89,6 +89,10 @@
     "expect": {
       "value": "{\n  \"kty\": \"EC\",\n  \"crv\": \"P-256\",\n  \"x\": \"zQ4LmoZPMnpTPCtFxNaNBE_LIYuNQ83IORiNC1sfdrc\",\n  \"y\": \"FSyjqP8lDI74o3QVbwSjdAOom5egxeZ4y8kADjsrnzo\"\n}",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Convert an EC P-256 public key to a JWK",
+      "note": "kty EC, crv the curve, and x and y the public point in Base64 without padding, using - and _ instead of + and /."
     }
   },
   {
@@ -329,6 +333,10 @@
     "expect": {
       "value": "{\n  \"kty\": \"OKP\",\n  \"crv\": \"Ed25519\",\n  \"x\": \"zEWbM3D2vSV4S0CqNlx7HPDIQ7Cx6mSHpi3aA8cEUUA\"\n}",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "An Ed25519 key becomes an OKP key",
+      "note": "RFC 8037 uses kty OKP for Ed25519 and X25519 keys. There is only an x, the public key itself."
     }
   },
   {
@@ -759,6 +767,10 @@
     "expect": {
       "value": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA11qYAYKxCrfVS/7TyWQHOg7hcvPapiMlrwIaaPcHURo=\n-----END PUBLIC KEY-----\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Convert an Ed25519 public JWK (RFC 8037) to PEM",
+      "note": "The result is a PUBLIC KEY block (SubjectPublicKeyInfo)."
     }
   },
   {
@@ -817,6 +829,10 @@
     "expect": {
       "value": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEMKBCTNIcKUSDii11ySs3526iDZ8A\niTo7Tu6KPAqv7D7gS2XpJFbZiItSs3m9+9Ue6GnvHw/GW2ZZaVtszggXIw==\n-----END PUBLIC KEY-----\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Convert the RFC 7517 example EC key to PEM",
+      "note": "Members such as use and kid are ignored. Only kty, crv, x and y build the key."
     }
   },
   {
@@ -831,6 +847,10 @@
     "expect": {
       "value": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEzQ4LmoZPMnpTPCtFxNaNBE/LIYuN\nQ83IORiNC1sfdrcVLKOo/yUMjvijdBVvBKN0A6ibl6DF5njLyQAOOyufOg==\n-----END PUBLIC KEY-----\n-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAzEWbM3D2vSV4S0CqNlx7HPDIQ7Cx6mSHpi3aA8cEUUA=\n-----END PUBLIC KEY-----\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A JWK Set gives one block per key",
+      "note": "The input is a JWKS, an object with a keys array. Each key becomes its own PEM block."
     }
   },
   {
@@ -1287,6 +1307,10 @@
     "expect": {
       "value": "{\"kty\":\"EC\",\"crv\":\"P-256\",\"x\":\"UrDnclNp7sfsh_58v92Rimda2J_UUWUJOQNa07KI0n8\",\"y\":\"ACdJHaEEWjZuLClGO4i7eL1V8kDqUTQJAayU1oOhERg\",\"kid\":\"6RXpUfonBXM_R8e7Z9C2hc0SyITZBJDXrILTsCubuSE\"}",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Add a key ID (the RFC 7638 thumbprint)",
+      "note": "set-kid adds kid, the SHA-256 thumbprint of the key. Tokens use it to say which key signed them."
     }
   },
   {

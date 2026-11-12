@@ -22,10 +22,17 @@ USING: asn1 ;
   header data hex>bytes asn1:pem-encode ;
 
 META: to-hex
+  use-when "You have a block between -----BEGIN and -----END lines, such as a certificate or key, and want the hex of the DER bytes inside it." ;
   see-also pem:from-hex asn1-dump:parse ;
+  link "https://www.rfc-editor.org/rfc/rfc7468" "RFC 7468: PEM textual encodings" ;
+  link "https://en.wikipedia.org/wiki/Privacy-Enhanced_Mail" "Privacy-Enhanced Mail on Wikipedia" ;
 ;
 
 META: from-hex
+  use-when "You have DER bytes as hex and need a PEM file that openssl and other tools will read, with a label such as CERTIFICATE or PUBLIC KEY." ;
+  inverse to-hex ;
   param header "The label of the block, between BEGIN and END (CERTIFICATE, PUBLIC KEY, PRIVATE KEY, ...)." ;
   see-also pem:to-hex asn1-dump:parse ;
+  link "https://www.rfc-editor.org/rfc/rfc7468" "RFC 7468: PEM textual encodings" ;
+  link "https://en.wikipedia.org/wiki/Privacy-Enhanced_Mail" "Privacy-Enhanced Mail on Wikipedia" ;
 ;

@@ -18,6 +18,7 @@ IN: argon2
   password encoded _verify ;
 
 META: derive
+  use-when "You have a password, a salt and the cost settings, and need the Argon2 hash a system stored, or want to make a new one for a password file." ;
   param salt "The salt, at least 8 bytes (CyberChef's default is the text somesalt)." ;
   param iterations "The time cost t (passes over the memory), 1 to 64." ;
   param memory "The memory cost m in KiB, at most 262,144 (256 MiB)." ;
@@ -26,8 +27,13 @@ META: derive
   param type "argon2i (CyberChef's default), argon2d or argon2id (the choice RFC 9106 recommends)." ;
   param output "encoded: the PHC string (CyberChef's default); raw: the hash bytes (chain hex:encode for hex)." ;
   see-also argon2:compare ;
+  link "https://www.rfc-editor.org/rfc/rfc9106" "RFC 9106: Argon2 memory-hard hashing" ;
+  link "https://en.wikipedia.org/wiki/Argon2" "Argon2 on Wikipedia" ;
 ;
 
 META: compare
+  use-when "You have a stored Argon2 hash string and a password to try, and want a yes or no without working out the salt and cost settings yourself." ;
   param encoded "The encoded hash, as written by argon2:derive." ;
+  link "https://www.rfc-editor.org/rfc/rfc9106" "RFC 9106: Argon2 memory-hard hashing" ;
+  link "https://en.wikipedia.org/wiki/Argon2" "Argon2 on Wikipedia" ;
 ;

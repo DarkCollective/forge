@@ -31,23 +31,31 @@ USING: random ;
   text _parse ;
 
 META: hash
+  use-when "You want a bcrypt hash of a password, for example for a user table or an .htpasswd file, and a fresh random salt is what you want." ;
   param cost "The cost: the number of rounds is 2^cost, 4 to 16 (CyberChef's default is 10)." ;
   param version "The version prefix written into the string: 2b (default), 2a or 2y. The hash is the same." ;
   see-also bcrypt:hash-salted bcrypt:compare bcrypt:parse argon2:derive ;
+  link "https://en.wikipedia.org/wiki/Bcrypt" "bcrypt on Wikipedia" ;
 ;
 
 META: hash-salted
+  use-when "You need the same bcrypt hash every time, for example to reproduce a known hash or to test code, and you can supply the 16-byte salt." ;
   param salt "The 16-byte salt." ;
   param cost "The cost: the number of rounds is 2^cost, 4 to 16." ;
   param version "The version prefix written into the string: 2b (default), 2a or 2y." ;
   see-also bcrypt:hash ;
+  link "https://en.wikipedia.org/wiki/Bcrypt" "bcrypt on Wikipedia" ;
 ;
 
 META: compare
+  use-when "You have a stored bcrypt hash (it starts with $2a$, $2b$ or $2y$) and a password guess, and want to know whether they match." ;
   param encoded "The bcrypt string, as bcrypt:hash writes it." ;
   see-also bcrypt:hash bcrypt:parse ;
+  link "https://en.wikipedia.org/wiki/Bcrypt" "bcrypt on Wikipedia" ;
 ;
 
 META: parse
+  use-when "You have a bcrypt hash and want to read off its cost, its salt and the hash part, without checking a password." ;
   see-also bcrypt:hash bcrypt:compare ;
+  link "https://en.wikipedia.org/wiki/Bcrypt" "bcrypt on Wikipedia" ;
 ;

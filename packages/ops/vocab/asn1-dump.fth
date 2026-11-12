@@ -209,6 +209,9 @@ USING: asn1 ;
   data hex>bytes start 2 div truncate _run ;
 
 META: parse
+  use-when "You have DER or BER data as hex, such as a certificate, key or signature, and want to see its nested structure to find a field or check a format." ;
   param start "The position of the element to show, in hex characters (even), as in CyberChef." ;
   param truncate "Show at most this many hex characters at each end of a long value, with ..(total Nbytes).. between (0: show all)." ;
+  link "https://en.wikipedia.org/wiki/ASN.1" "ASN.1 on Wikipedia" ;
+  link "https://www.itu.int/rec/T-REC-X.690/en" "ITU-T X.690: BER, CER and DER encoding rules" ;
 ;

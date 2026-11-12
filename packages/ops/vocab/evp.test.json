@@ -19,6 +19,10 @@
     "expect": {
       "value": "e7b0971e52ca5cc8d0539fb3412f6316f7ba2e6ee293d9f3457b99436b51ce028d450e2ed75a84a923d4eac9fe49226b",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Key and IV for openssl enc -aes-256-cbc -md md5",
+      "note": "A size of 48 asks for a 32-byte key and a 16-byte IV together: the first 32 bytes are the key, the last 16 the IV. The salt is the 8 bytes after Salted__ at the start of the encrypted file."
     }
   },
   {
@@ -107,6 +111,10 @@
     "expect": {
       "value": "58a775ba4112be3005ae4407ce757d88fda71d40497bb8026ecac54d4e3ffc72",
       "enc": "hex"
+    },
+    "example": {
+      "title": "No salt, as openssl enc -nosalt does",
+      "note": "With an empty salt the same passphrase always gives the same key, which is the reason salts exist. Here 32 bytes are a 16-byte key and a 16-byte IV for AES-128."
     }
   },
   {
@@ -129,6 +137,10 @@
     "expect": {
       "value": "c7836e5eb9062af27e13311636ee58ed51947aecbf5beac2464c49948b7c",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Repeat the hash several times",
+      "note": "iterations hashes each block again that many times. openssl enc uses 1, so keep 1 to match it."
     }
   },
   {

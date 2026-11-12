@@ -72,6 +72,10 @@
     "expect": {
       "value": "$argon2id$v=19$m=65536,t=2,p=1$c29tZXNhbHQ$CTFhFdXPJO1aFaMaO6Mm5c8y7cJHAph8ArZWb2GRPPc",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Hash a password with Argon2id into a PHC string",
+      "note": "The string holds everything needed to check the password later: type, version, memory m in KiB, passes t, lanes p, then the salt and the hash in Base64. Argon2id is the usual choice."
     }
   },
   {
@@ -97,6 +101,10 @@
     "expect": {
       "value": "09316115d5cf24ed5a15a31a3ba326e5cf32edc24702987c02b6566f61913cf7",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The same hash as raw bytes (shown as hex)",
+      "note": "With output raw only the 32-byte hash is returned. It is the last part of the string in the Argon2id example, which writes the same bytes in Base64 (09 31 61 is CTFh)."
     }
   },
   {
@@ -122,6 +130,10 @@
     "expect": {
       "value": "$argon2i$v=19$m=256,t=2,p=1$c29tZXNhbHQ$iekCn0Y3spW+sCcFanM2xBT63UP2sghkUoHLIUpWRS8",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Argon2i with a small memory cost",
+      "note": "m=256 is 256 KiB, which is only good for tests. Real systems use tens of MiB or more, because memory is what makes guessing expensive on graphics cards."
     }
   },
   {
@@ -152,6 +164,10 @@
     },
     "expect": {
       "json": true
+    },
+    "example": {
+      "title": "Check a password against an Argon2id hash",
+      "note": "True means the password gives the same hash. The salt and the cost settings are read from the string itself."
     }
   },
   {
@@ -197,6 +213,10 @@
     },
     "expect": {
       "json": false
+    },
+    "example": {
+      "title": "A wrong password gives false",
+      "note": "Only the first letter differs (Password, not password), and the answer is just false. The result never says what was wrong."
     }
   },
   {

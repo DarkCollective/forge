@@ -42,10 +42,13 @@ USING: hmac ;
   0 length slice ;
 
 META: derive
+  use-when "You have input key material, such as a shared secret, and a context label, and need a new key of a set length from it, as TLS 1.3 and other protocols do." ;
   param salt "The salt for the extract step, any length. Empty by default; used only when extract is with salt." ;
   param info "The context and application information for the expand step, any length. Empty by default." ;
   param hash "The hash of the HMAC; the hmac vocabulary's hashes less the SHA-3 family and Whirlpool-0 and -T." ;
   param extract "with salt: extract with the salt; no salt: with zero bytes; skip: no extract, the input is the PRK." ;
   param length "L, the number of output bytes, at most 255 times the hash length (CyberChef's default is 16)." ;
   see-also hmac:digest pbkdf2:derive hex:encode ;
+  link "https://www.rfc-editor.org/rfc/rfc5869" "RFC 5869: HKDF" ;
+  link "https://en.wikipedia.org/wiki/HKDF" "HKDF on Wikipedia" ;
 ;

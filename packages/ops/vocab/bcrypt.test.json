@@ -144,6 +144,10 @@
     "expect": {
       "value": "$2a$06$If6bvum7DFjUnE9p2uDeDu0YHzrHM6tf.iqN8.yx.jNN1ILEf7h0i",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Reproduce a known bcrypt hash from its salt",
+      "note": "The 16 salt bytes (given as hex) become the 22 characters after $2a$06$ in the result. The 06 is the cost: 2 to the power 6 rounds."
     }
   },
   {
@@ -165,6 +169,10 @@
     "expect": {
       "value": "$2b$06$m0CrhHm10qJ3lXRY.5zDGO3rS2KdeeWLuGmsfGlMfOxih58VYVfxe",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Write the hash with the 2b prefix",
+      "note": "Only the prefix changes. For passwords under 72 bytes the 2a, 2b and 2y versions give the same hash part."
     }
   },
   {
@@ -327,6 +335,10 @@
     },
     "expect": {
       "json": true
+    },
+    "example": {
+      "title": "Check the password abc against a stored hash",
+      "note": "The cost (06) and the salt are read from the hash string, so only the password is needed."
     }
   },
   {
@@ -342,6 +354,10 @@
     },
     "expect": {
       "json": false
+    },
+    "example": {
+      "title": "A wrong password gives false",
+      "note": "abd instead of abc. The answer is only true or false."
     }
   },
   {
@@ -357,6 +373,10 @@
     },
     "expect": {
       "json": true
+    },
+    "example": {
+      "title": "Check an Apache htpasswd -B hash ($2y$)",
+      "note": "htpasswd writes bcrypt hashes with the 2y prefix. The password has a non-ASCII letter, and bcrypt works on its UTF-8 bytes."
     }
   },
   {
@@ -386,6 +406,10 @@
     "expect": {
       "value": "Rounds: 6\nSalt: $2a$06$m0CrhHm10qJ3lXRY.5zDGO\nPassword hash: 3rS2KdeeWLuGmsfGlMfOxih58VYVfxe\nFull hash: $2a$06$m0CrhHm10qJ3lXRY.5zDGO3rS2KdeeWLuGmsfGlMfOxih58VYVfxe",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Split a bcrypt hash into cost, salt and hash",
+      "note": "Rounds is the cost. The salt is the 22 characters after the cost and the password hash is the last 31 characters."
     }
   },
   {

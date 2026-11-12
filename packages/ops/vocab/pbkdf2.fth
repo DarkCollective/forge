@@ -12,9 +12,13 @@ IN: pbkdf2
   password salt size iterations hash _derive ;
 
 META: derive
+  use-when "You have a password and a salt and need the key a system derived from them, for example to decrypt a file or to check a stored hash." ;
   param size "The length of the derived key in bytes, 1 to 1024 (CyberChef's 128 bits is 16)." ;
   param iterations "The iteration count, at least 1. Iterations times the key's hash blocks is capped at 2,000,000." ;
   param hash "The HMAC hash: sha1, sha256, sha384, sha512 or md5." ;
   param salt "The salt, any length, empty by default." ;
   see-also hmac:digest hex:encode ;
+  link "https://www.rfc-editor.org/rfc/rfc8018#section-5.2" "RFC 8018, section 5.2: PBKDF2" ;
+  link "https://www.rfc-editor.org/rfc/rfc6070" "RFC 6070: PBKDF2 test vectors" ;
+  link "https://en.wikipedia.org/wiki/PBKDF2" "PBKDF2 on Wikipedia" ;
 ;

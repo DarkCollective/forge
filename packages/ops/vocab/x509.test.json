@@ -109,6 +109,10 @@
     "expect": {
       "value": "Version:          3 (0x02)\nSerial number:    548287470914013754957800888661577782909121771156 (0x600a0f7db714787bff29ec0cfb252e92f7b2b694)\nAlgorithm ID:     ecdsa-with-SHA256\nValidity\n  Not Before:     2026-11-11 19:54:39 UTC\n  Not After:      2026-12-11 19:54:39 UTC\nIssuer\n  C  = US\n  O  = Test Org\n  CN = example.com\nSubject\n  C  = US\n  O  = Test Org\n  CN = example.com\nFingerprints\n  MD5:            5ce68e7055352074f27da88d74838722\n  SHA1:           c5bfa41a53dc7e4a3295f44ae3d0a8a3f30b1679\n  SHA256:         65786924f6580bca8773a21b2928bf25d37c9f2eacf3d98e4c62f726a5ef174b\nPublic Key\n  Algorithm:      EC\n  Curve Name:     prime256v1\n  Length:         256 bits\n  pub:            04:52:7e:03:e9:4e:ca:54:85:40:2b:67:9a:f1:ee:88:\n                  c0:09:6d:51:33:92:cc:74:40:dc:a4:23:a4:1d:3b:ff:\n                  1d:a5:7e:5d:e4:56:33:af:68:c8:c4:d2:17:2f:be:87:\n                  e0:58:87:47:c8:cc:80:95:0d:ff:46:cb:92:5f:7a:5d:\n                  f0\nCertificate Signature\n  Algorithm:      ecdsa-with-SHA256\n  r:              35:49:94:9f:1c:1c:c9:57:97:94:f3:34:87:bc:ad:31:\n                  bf:42:6c:89:6f:6a:8e:43:7c:43:51:34:2f:33:ec:cc\n  s:              44:a6:c1:f6:eb:95:41:87:5d:8a:77:b8:e8:56:ca:c6:\n                  fb:f9:c6:b3:a5:19:5f:f1:fc:1a:33:7f:da:c3:bd:42\n\nExtensions\n  X509v3 Subject Key Identifier:\n    D6:A1:1F:B6:AE:8C:4F:20:BF:45:4E:FC:16:AD:1C:36:42:5B:52:F7\n  X509v3 Authority Key Identifier:\n    keyid:D6:A1:1F:B6:AE:8C:4F:20:BF:45:4E:FC:16:AD:1C:36:42:5B:52:F7\n  X509v3 Basic Constraints: critical\n    CA:TRUE\n  X509v3 Subject Alternative Name:\n    DNS:example.com\n    IP Address:10.0.0.1",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Read an EC P-256 certificate",
+      "note": "Look at Validity for the dates, Issuer and Subject for who signed and who owns it, and Extensions for the CA flag and key usage. The Fingerprints are what browsers show."
     }
   },
   {
@@ -141,6 +145,10 @@
     "expect": {
       "value": "Version:          3 (0x02)\nSerial number:    688293128661048247889536854316028240393880222687 (0x7890219f208cec218bf5aa5d7e097892debc3bdf)\nAlgorithm ID:     ED25519\nValidity\n  Not Before:     2026-11-11 20:29:54 UTC\n  Not After:      2026-12-11 20:29:54 UTC\nIssuer\n  CN = ed25519 test\nSubject\n  CN = ed25519 test\nFingerprints\n  MD5:            d9ddd6becf9c05667821300584970660\n  SHA1:           8cfda27fe2368439d2627da4f48c0807190c2252\n  SHA256:         fc80820b91813313410553757c17f048c0f0d3b7eade94b9d4ff8ee9039a613a\nPublic Key\n  Algorithm:      ED25519\n  Length:         256 bits\n  pub:            25:53:81:3b:9f:71:f9:7e:56:aa:3e:2e:61:7b:6d:7b:\n                  62:3f:c2:3a:d0:bf:29:c2:03:72:ad:74:2c:04:68:0b\nCertificate Signature\n  Algorithm:      ED25519\n  Signature:      98:a5:99:99:37:05:d4:6f:65:2a:fa:e0:c9:60:92:87:\n                  2e:ab:0e:1d:53:29:10:6b:04:43:6c:ee:0a:e5:e2:f1:\n                  c3:0e:31:46:8e:59:6c:0f:34:ba:6e:4c:be:89:d9:0d:\n                  aa:10:4f:47:27:8f:04:e2:a7:30:03:3a:18:ef:3e:0b\n\nExtensions\n  X509v3 Subject Key Identifier:\n    F5:A9:19:EC:D0:46:6A:A5:A5:B3:98:AA:32:68:09:7E:12:7D:18:34\n  X509v3 Authority Key Identifier:\n    keyid:F5:A9:19:EC:D0:46:6A:A5:A5:B3:98:AA:32:68:09:7E:12:7D:18:34\n  X509v3 Basic Constraints: critical\n    CA:TRUE",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "An Ed25519 certificate",
+      "note": "Self-signed, so the Issuer and the Subject are the same. Basic Constraints marks it as a CA."
     }
   },
   {
@@ -221,6 +229,10 @@
     "expect": {
       "value": "Version:          3 (0x02)\nSerial number:    143266986699090766294700635381230934788665930 (0x066c9fd5749736663f3b0b9ad9e89e7603f24a)\nAlgorithm ID:     ecdsa-with-SHA256\nValidity\n  Not Before:     2015-05-26 00:00:00 UTC\n  Not After:      2040-05-26 00:00:00 UTC\nIssuer\n  C  = US\n  O  = Amazon\n  CN = Amazon Root CA 3\nSubject\n  C  = US\n  O  = Amazon\n  CN = Amazon Root CA 3\nFingerprints\n  MD5:            a0d4ef0bf7b5d849952aecf5c4fc8187\n  SHA1:           0d44dd8c3c8c1a1a58756481e90f2e2affb3d26e\n  SHA256:         18ce6cfe7bf14e60b2e347b8dfe868cb31d02ebb3ada271569f50343b46db3a4\nPublic Key\n  Algorithm:      EC\n  Curve Name:     prime256v1\n  Length:         256 bits\n  pub:            04:29:97:a7:c6:41:7f:c0:0d:9b:e8:01:1b:56:c6:f2:\n                  52:a5:ba:2d:b2:12:e8:d2:2e:d7:fa:c9:c5:d8:aa:6d:\n                  1f:73:81:3b:3b:98:6b:39:7c:33:a5:c5:4e:86:8e:80:\n                  17:68:62:45:57:7d:44:58:1d:b3:37:e5:67:08:eb:66:\n                  de\nCertificate Signature\n  Algorithm:      ecdsa-with-SHA256\n  r:              e0:85:92:a3:17:b7:8d:f9:2b:06:a5:93:ac:1a:98:68:\n                  61:72:fa:e1:a1:d0:fb:1c:78:60:a6:43:99:c5:b8:c4\n  s:              9c:02:ef:f1:94:9c:b3:96:f9:eb:c6:2a:f8:b6:2c:fe:\n                  3a:90:14:16:d7:8c:63:24:48:1c:df:30:7d:d5:68:3b\n\nExtensions\n  X509v3 Basic Constraints: critical\n    CA:TRUE\n  X509v3 Key Usage: critical\n    Digital Signature, Certificate Sign, CRL Sign\n  X509v3 Subject Key Identifier:\n    AB:B6:DB:D7:06:9E:37:AC:30:86:07:91:70:C7:9C:C4:19:B1:78:C0",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A real root certificate: Amazon Root CA 3",
+      "note": "Roots are self-signed too. Not After is 2040, and Key Usage lists Certificate Sign and CRL Sign."
     }
   },
   {
@@ -365,6 +377,10 @@
     "expect": {
       "value": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAJVOBO59x+X5Wqj4uYXtte2I/wjrQvynCA3KtdCwEaAs=\n-----END PUBLIC KEY-----\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Take the public key out of an Ed25519 certificate",
+      "note": "The key is copied unchanged, the same as openssl x509 -pubkey -noout."
     }
   },
   {
@@ -461,6 +477,10 @@
     "expect": {
       "value": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEKZenxkF/wA2b6AEbVsbyUqW6LbIS\n6NIu1/rJxdiqbR9zgTs7mGs5fDOlxU6GjoAXaGJFV31EWB2zN+VnCOtm3g==\n-----END PUBLIC KEY-----\n-----BEGIN PUBLIC KEY-----\nMHYwEAYHKoZIzj0CAQYFK4EEACIDYgAE3afZu4q4C/sLfyHS8L6+c/MzXRq8NOre\nxpu80JX28MzQC7phW1FGfp4tn+6OYwwX7Adw9c+ELkCDnOg/QW07rdOkFFk2eJ0D\nQ+4QE2xy3q6Ip6FrtUPOZ9wj/wMco+I+\n-----END PUBLIC KEY-----\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A bundle gives one key per certificate",
+      "note": "Each certificate in the input adds a PUBLIC KEY block to the output."
     }
   },
   {
@@ -637,6 +657,10 @@
     "expect": {
       "value": "Certificate Revocation List (CRL):\n    Version: 1 (0x0)\n    Signature Algorithm: sha256WithRSAEncryption\n    Issuer:\n        C  = DE\n        O  = CRL CA\n        CN = CRL Test CA\n    Last Update: Wed, 11 Nov 2026 20:50:12 GMT\n    Next Update: Wed, 18 Nov 2026 20:50:12 GMT\nRevoked Certificates:\n    No Revoked Certificates.\nSignature Value:\n        55:e9:56:e7:99:37:06:4a:5d:72:e3:b0:7f:63:18:6c:e5:74:\n        b8:c7:b0:4c:e5:8b:3e:4c:83:ed:88:d8:0f:0e:93:3e:6e:82:\n        3e:dd:af:3e:f4:a7:4c:ba:a6:94:d8:d9:32:98:3d:f0:70:5d:\n        f0:c3:0b:fb:de:3a:b5:4f:56:85:02:1c:b3:6a:eb:d8:a1:75:\n        4b:dd:10:47:72:cc:85:05:2e:9f:87:64:fe:ea:02:fe:f2:3a:\n        ae:cd:34:38:0f:27:97:a0:eb:96:58:4c:3a:a4:d3:a2:8b:26:\n        56:ca:1b:d8:f2:93:3c:67:3f:9c:58:41:47:df:32:c0:90:29:\n        e5:a9:2a:c8:90:87:3e:25:f5:0a:80:13:b0:e0:7e:39:70:18:\n        94:1d:61:19:04:0e:0d:83:70:6c:d9:c9:0b:8c:8e:c9:07:1c:\n        54:75:08:c3:09:09:64:92:1d:33:30:c7:a5:b9:1a:7a:af:a9:\n        33:d9:24:2e:16:cd:a0:38:30:54:0c:19:47:6a:eb:34:fe:20:\n        87:07:42:af:74:c0:35:73:ec:0e:5f:18:5c:14:4f:ac:87:bc:\n        53:e9:48:7c:2b:b3:16:c3:f4:62:58:33:8c:2d:19:5a:e0:3c:\n        d1:71:51:85:71:bb:6f:9e:8f:9b:ab:59:23:19:9c:48:56:c9:\n        40:be:ef:fa",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A CRL that revokes nothing",
+      "note": "Next Update is the date by which a fresh list must be published. This list says No Revoked Certificates."
     }
   },
   {
@@ -653,6 +677,10 @@
     "expect": {
       "value": "Certificate Revocation List (CRL):\n    Version: 1 (0x0)\n    Signature Algorithm: sha256WithRSAEncryption\n    Issuer:\n        C  = DE\n        O  = CRL CA\n        CN = CRL Test CA\n    Last Update: Wed, 11 Nov 2026 20:50:12 GMT\n    Next Update: Wed, 18 Nov 2026 20:50:12 GMT\nRevoked Certificates:\n    Serial Number: 05\n        Revocation Date: Sun, 01 Nov 2026 12:00:00 GMT\nSignature Value:\n        86:a0:18:3f:cc:17:b3:64:28:e4:c5:c9:b9:1e:35:20:b1:db:\n        6c:e8:c6:b6:53:3e:ba:e1:dc:da:13:50:0d:33:6c:71:1c:4f:\n        70:b1:0e:1d:a4:63:32:41:4d:32:ed:37:c7:cb:8b:f7:c6:f7:\n        90:cd:95:e4:62:80:1f:48:99:ab:c4:22:58:c1:f7:74:30:d5:\n        2f:bb:1f:2c:3d:70:b3:42:10:fe:c0:3e:74:7e:71:4e:d6:7a:\n        3a:f2:67:22:10:65:28:db:d2:11:c6:59:66:57:5f:dd:35:75:\n        65:7c:b2:4c:05:8c:0f:98:6c:1d:b3:26:91:af:a5:2b:31:d8:\n        6e:11:f8:b3:6d:4f:c1:81:2a:49:ce:73:6a:85:79:5e:b7:35:\n        e7:c5:5e:93:49:b2:a8:0d:d2:30:8a:e5:8a:00:41:a1:ea:a1:\n        de:f8:e7:d2:0b:56:47:4f:88:23:19:44:0e:ba:78:b5:fe:a2:\n        bc:e1:76:45:39:fd:08:79:ef:a7:79:bf:b1:36:cc:a7:5c:48:\n        33:4a:42:09:80:89:16:b0:2c:c5:47:9a:d8:91:22:a2:61:c7:\n        32:51:7f:2e:c8:6b:5b:7b:3a:a9:9c:5d:96:6e:b6:1e:7c:fd:\n        92:56:23:42:b9:72:43:8e:d6:f5:3f:84:a8:cb:3d:bf:f5:98:\n        c7:df:02:f6",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A CRL with one revoked certificate",
+      "note": "Each revoked entry gives the serial number of the certificate and the date it was revoked."
     }
   },
   {
@@ -685,6 +713,10 @@
     "expect": {
       "value": "Version:          1 (0x00)\nSubject\n  CN = ec csr\nPublic Key\n  Algorithm:      EC\n  Curve Name:     secp384r1\n  Length:         384 bits\n  pub:            04:48:53:86:1d:d4:0e:16:ad:78:22:b9:43:d7:f8:80:\n                  ea:2c:d2:55:45:8b:4e:43:a5:b0:37:c4:6a:48:d7:cc:\n                  21:c5:54:7a:b1:0e:0b:39:20:8d:fa:93:eb:28:c1:43:\n                  41:53:ad:f0:ce:80:53:1e:fb:10:3a:44:7e:4c:13:80:\n                  7e:52:0b:be:7a:1c:2b:04:50:17:1d:33:53:10:e8:46:\n                  3c:48:6d:de:87:be:4f:85:ac:e0:40:39:ec:c0:48:58:\n                  4a\nSignature\n  Algorithm:      ecdsa-with-SHA384\n  r:              90:f0:d4:6f:9f:cd:33:d4:fa:81:11:d7:54:1e:6c:69:\n                  b2:3c:1d:b2:1d:c4:bd:7d:83:0e:9f:4f:2a:ab:82:1c:\n                  d1:83:36:71:47:ee:ed:4e:32:ce:a7:32:a3:22:1f:bb\n  s:              58:e1:3a:97:11:47:ae:0e:69:52:79:41:3f:30:e4:9e:\n                  6c:cc:3f:ee:e6:f6:a9:0c:f8:96:03:e4:06:86:a2:b8:\n                  d0:fa:bf:2c:7a:dd:8f:80:f8:50:03:f7:d5:9c:dd:7e",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Read an EC P-384 request",
+      "note": "The Public Key section gives the curve, which a CA checks against its policy."
     }
   },
   {
@@ -701,6 +733,10 @@
     "expect": {
       "value": "Version:          1 (0x00)\nSubject\n  CN = ed csr\nPublic Key\n  Algorithm:      ED25519\n  Length:         256 bits\n  pub:            fa:c4:5d:33:f7:1f:78:c8:00:9e:58:3d:5a:1a:5d:26:\n                  bb:56:7c:ca:60:a4:97:e6:82:17:f0:83:9c:ea:77:f6\nSignature\n  Algorithm:      ED25519\n  Signature:      99:44:ec:fc:4c:0d:d1:61:f2:e3:6f:05:bc:4f:7b:01:\n                  1b:80:a9:69:44:5b:8c:56:f4:59:16:c3:44:90:25:4a:\n                  d1:56:de:d2:cd:b7:cf:47:48:c3:7b:be:fd:ca:ba:a9:\n                  55:00:5a:b1:35:e8:e9:8b:59:fa:48:2b:91:d1:3d:05",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Read an Ed25519 request",
+      "note": "The request holds a subject, a public key and a signature made with the matching private key. The signature is shown but not checked."
     }
   },
   {
@@ -1537,6 +1573,10 @@
     "expect": {
       "value": "Key type: ssh-rsa\nExponent: 0x010001\nModulus: 0x00cacc2226b343db2f21c2fdc384b512247aff9ad18a97d27178c825ab1c3e2cb2e292968b5cdc392dad6ebf81eba309bd0227046b1d0cfce059da021d86c03c2e8b11adcf7db20756d6a08b28f914ceaec011a74363204552dd953d34dc01b06c79c47121b5fdf3fb701cb8a70e08b9dfc80231de8cde7698774aaaa3cd7b3d6bedc6c758d6547dd912ee1caa605912232a00a11dc5ac4d54624145b9a626fbd9ed048dcda5706abc921be56beb1e35fd43970ef3938439918a505f3a9a38ec4dcbc6059c2ee9cb383beb8871f5b03050bea31ca2cf1f30f8797b367c75a3b4f9ead1b1ae4811efd2e64872d1645176f8a194ec726bf9c4ed0557465c052106b1\nLength: 2048 bits\nComment: my server at home\nFingerprint (MD5): MD5:b3:40:46:c6:9b:30:fa:ac:74:ea:38:ea:fa:1d:2b:ca\nFingerprint (SHA256): SHA256:9JULIXTjNiApgk8WkSCChPCfuPiAwu1rxoXOjqIFizE",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A known_hosts line, with hosts in front",
+      "note": "The host names before the key type, and the comment after the key, are picked out. The fingerprints cover only the key."
     }
   },
   {
@@ -1569,6 +1609,10 @@
     "expect": {
       "value": "Key type: ecdsa-sha2-nistp256\nCurve: nistp256\nPoint: 0x04490ef26bb3e252f255b4526b1eb6cdc5073a6d4fecca85931b0e7741b6b2ffa5edac621556b9f7b83d390aeb9e5afc2fe3178323443c2e65e20cf2803ebd0b50\nLength: 256 bits\nFingerprint (MD5): MD5:90:30:73:93:b9:b4:73:6a:52:d9:68:e8:00:80:37:a5\nFingerprint (SHA256): SHA256:qAYWrbfzUIBfCggnIFXeUmLWzu7sZwRP8yl+87h7yng",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "An ECDSA key on the nistp256 curve",
+      "note": "For ECDSA keys the report gives the curve and the public point."
     }
   },
   {
@@ -1617,6 +1661,10 @@
     "expect": {
       "value": "Key type: ssh-ed25519\nx: 0x5d84be90ff1941a610e17fedcc2b0481f16225d876900ab58b863e9aa00ac96d\nLength: 256 bits\nComment: ed@x\nFingerprint (MD5): MD5:78:3c:4c:49:52:1a:25:c1:7d:29:ca:32:3e:81:b5:9c\nFingerprint (SHA256): SHA256:i1/NM7GUTIHRFdSKIFCRryOjj9EMIagczfd95EwQQMo",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Read an ssh-ed25519 line",
+      "note": "The SHA256 fingerprint is the one ssh shows when you connect to a new host."
     }
   },
   {

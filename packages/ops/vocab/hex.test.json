@@ -11,6 +11,10 @@
     "expect": {
       "value": "666f6f626172",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Encode text as hex",
+      "note": "Two digits for every byte, so six letters give twelve digits."
     }
   },
   {
@@ -41,6 +45,10 @@
     "expect": {
       "value": "66 6f 6f",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Put a space between the bytes",
+      "note": "The delimiter parameter can be none, a space or a colon."
     }
   },
   {
@@ -58,6 +66,10 @@
     "expect": {
       "value": "FF:0A",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Colon-separated upper case, as fingerprints are written",
+      "note": "The input here is the two bytes ff and 0a. Certificate and SSH fingerprints are usually written this way."
     }
   },
   {
@@ -211,6 +223,10 @@
     "expect": {
       "value": "foobar",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Decode hex to text",
+      "note": "Each pair of digits is one byte. 66 6f 6f 62 61 72 spell foobar."
     }
   },
   {
@@ -225,6 +241,10 @@
     "expect": {
       "value": "foo",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "White space between digits is ignored",
+      "note": "Spaces and line breaks, as in a hex dump, do no harm, and upper and lower case may be mixed."
     }
   },
   {
@@ -281,6 +301,10 @@
     "expect": {
       "value": "é",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Hex that holds UTF-8 bytes",
+      "note": "The two bytes c3 a9 are one character in UTF-8, the letter e with an acute accent."
     }
   },
   {

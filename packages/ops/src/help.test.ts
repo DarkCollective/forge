@@ -323,4 +323,17 @@ describe("the bundled help document", () => {
       expect(find(doc, op.inverse).inverse, op.qname).toBe(op.qname);
     }
   });
+
+  // Ratchet: a later batch of discovery text raises these two numbers, never lowers them.
+  const MIN_WITH_USE_WHEN = 29;
+  const MIN_WITH_EXAMPLE = 27;
+
+  test("ratchet: ops with a use-when and ops with an example do not fall", () => {
+    expect(doc.ops.filter((o) => o.useWhen !== null).length).toBeGreaterThanOrEqual(
+      MIN_WITH_USE_WHEN,
+    );
+    expect(doc.ops.filter((o) => o.examples.length > 0).length).toBeGreaterThanOrEqual(
+      MIN_WITH_EXAMPLE,
+    );
+  });
 });

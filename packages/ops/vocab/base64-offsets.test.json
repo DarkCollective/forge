@@ -121,6 +121,10 @@
     "expect": {
       "value": "Offset 0: YWJj\nOffset 1: AGFiYw==\nOffset 2: AABhYmM=",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Show the three alignments of abc",
+      "note": "Offset 0 is the plain encoding. At offsets 1 and 2 the same bytes follow one or two other bytes, so the letters differ."
     }
   },
   {
@@ -139,6 +143,10 @@
     "expect": {
       "value": "YWJj\nFiY\nhYm",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Keep only the characters the data fixes",
+      "note": "With show-variable off, the lines drop the characters that depend on the unknown neighbouring bytes, and the padding. These are the parts to search for."
     }
   },
   {
@@ -193,6 +201,10 @@
     "expect": {
       "value": "Offset 0: SGVsbG8sIFdvcmxkIQ==\nOffset 1: AEhlbGxvLCBXb3JsZCE=\nOffset 2: AABIZWxsbywgV29ybGQh",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Three alignments of Hello, World!",
+      "note": "Search for SGVsbG8s, AEhlbGxv or ABIZWxsb (minus the leading characters that vary) to spot this text in a Base64 blob."
     }
   },
   {

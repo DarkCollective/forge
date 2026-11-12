@@ -205,9 +205,13 @@ USING: asn1 json sha2 ;
   "\n" join ;
 
 META: from-pem
+  use-when "You have a public or private key in PEM and need it as a JSON Web Key, for example for a JWKS endpoint or a JOSE library." ;
   param set-kid "Add kid, the RFC 7638 thumbprint of the key (SHA-256, base64url)." ;
   param indent "Spaces per level in each key's JSON; 0 (the default, CyberChef's) writes compact JSON." ;
   see-also jwk:to-pem pem:to-hex ;
+  link "https://www.rfc-editor.org/rfc/rfc7517" "RFC 7517: JSON Web Key" ;
+  link "https://www.rfc-editor.org/rfc/rfc8037" "RFC 8037: Ed25519 and X25519 keys in JOSE" ;
+  link "https://www.rfc-editor.org/rfc/rfc7638" "RFC 7638: JWK Thumbprint" ;
 ;
 
 \ ---- JWK to PEM ----
@@ -324,5 +328,9 @@ META: from-pem
   [ _key-pem ] map "" join ;
 
 META: to-pem
+  use-when "You have a JSON Web Key or a JWKS and need PEM keys that openssl or a web server can read." ;
+  inverse from-pem ;
   see-also jwk:from-pem pem:from-hex ;
+  link "https://www.rfc-editor.org/rfc/rfc7517" "RFC 7517: JSON Web Key" ;
+  link "https://www.rfc-editor.org/rfc/rfc8037" "RFC 8037: Ed25519 and X25519 keys in JOSE" ;
 ;
