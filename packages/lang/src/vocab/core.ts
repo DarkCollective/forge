@@ -88,6 +88,24 @@ export const CORE_INTRINSIC_WORDS: readonly IntrinsicName[] = Object.freeze([
   ".s",
 ] as const);
 
+/**
+ * The intrinsic words added by FL 0.2 section 10 and 11 (WP 6.8). Kept apart from
+ * `CORE_INTRINSIC_WORDS`, which stays the 28 intrinsics of the v0.1 table (as for `exit`, WP 6.7).
+ */
+export const CORE_INTRINSIC_WORDS_V02: readonly IntrinsicName[] = Object.freeze([
+  "cond",
+  "case",
+  "sort-by",
+  "find",
+  "any?",
+  "all?",
+  "collect",
+  "collect-bytes",
+  "collect-str",
+  "emit",
+  "emit-all",
+] as const);
+
 /** Words supplied by the runtime facade, which has access to the dictionary (spec 13.7, kind R). */
 export const CORE_RUNTIME_WORDS: readonly string[] = Object.freeze([
   "help",

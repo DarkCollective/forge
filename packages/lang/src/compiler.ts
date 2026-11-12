@@ -112,6 +112,17 @@ const INTRINSIC_TABLE: Readonly<Record<IntrinsicName, readonly [string, string]>
   ".": ["any --", "print the display form and a newline"],
   ".s": [".. -- ..", "print the stack without changing it"],
   exit: [".. -- ..", "leave the current word at once"],
+  cond: ["list -- ..", "run the action of the first test quotation that leaves true"],
+  case: ["any list -- ..", "run the action of the first value equal to the key"],
+  "sort-by": ["list quot -- list", "stable sort by the key the quotation computes"],
+  find: ["any quot -- int", "index of the first element the quotation accepts, or -1"],
+  "any?": ["any quot -- bool", "whether the quotation accepts some element"],
+  "all?": ["any quot -- bool", "whether the quotation accepts every element"],
+  collect: ["quot -- list", "run a quotation and return the list of what it emitted"],
+  "collect-bytes": ["quot -- bytes", "run a quotation and return the bytes it emitted"],
+  "collect-str": ["quot -- str", "run a quotation and return the string it emitted"],
+  emit: ["any --", "append one element to the innermost collector"],
+  "emit-all": ["any --", "append every element of a sequence to the innermost collector"],
 };
 
 /** Every intrinsic name, in spec order. */
@@ -279,6 +290,15 @@ function intrinsicInstruction(name: IntrinsicName): Instruction {
     case "loop":
     case "try":
     case "fork":
+    case "cond":
+    case "case":
+    case "sort-by":
+    case "find":
+    case "any?":
+    case "all?":
+    case "collect":
+    case "collect-bytes":
+    case "collect-str":
       return { op: "comb", name: name satisfies CombinatorName };
     case "call":
       return { op: "callq" };
@@ -288,6 +308,10 @@ function intrinsicInstruction(name: IntrinsicName): Instruction {
       return { op: "print", form: "stack" };
     case "exit":
       return { op: "exit", marks: 0 };
+    case "emit":
+      return { op: "emit", all: false };
+    case "emit-all":
+      return { op: "emit", all: true };
   }
 }
 

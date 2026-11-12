@@ -404,10 +404,20 @@ export type CombinatorName =
   | "while"
   | "loop"
   | "try"
-  | "fork";
+  | "fork"
+  | "cond"
+  | "case"
+  | "sort-by"
+  | "find"
+  | "any?"
+  | "all?"
+  | "collect"
+  | "collect-bytes"
+  | "collect-str";
 
 /** Names of intrinsic words (words the compiler lowers to dedicated instructions). */
-export type IntrinsicName = StackWord | CombinatorName | "call" | "." | ".s" | "exit";
+export type IntrinsicName =
+  StackWord | CombinatorName | "call" | "." | ".s" | "exit" | "emit" | "emit-all";
 
 export type Instruction =
   | { readonly op: "lit"; readonly value: Value }
@@ -429,6 +439,7 @@ export type Instruction =
   | { readonly op: "print"; readonly form: "value" | "stack" }
   | { readonly op: "bind"; readonly slot: number }
   | { readonly op: "exit"; readonly marks: number }
+  | { readonly op: "emit"; readonly all: boolean }
   | { readonly op: "ret" };
 
 export type Opcode = Instruction["op"];

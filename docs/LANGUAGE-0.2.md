@@ -1323,7 +1323,7 @@ Total bytes: the `reduce` form meters the sum of all the intermediate lists (qua
 
 **Conformance cases (proposed).**
 
-```fl-proposed
+```fl-test
 # C248 collect builds a list
 @run
 [ 1 emit 2 emit { 3 4 } emit-all ] collect .
@@ -1331,7 +1331,7 @@ Total bytes: the `reduce` form meters the sum of all the intermediate lists (qua
 { 1 2 3 4 }
 ```
 
-```fl-proposed
+```fl-test
 # C249 byte and string collectors
 @run
 [ 255 emit #[ 01 02 ] emit-all ] collect-bytes .
@@ -1341,7 +1341,7 @@ Total bytes: the `reduce` form meters the sum of all the intermediate lists (qua
 hi!
 ```
 
-```fl-proposed
+```fl-test
 # C250 a collector body is stack-neutral
 @run
 [ 1 ] collect
@@ -1349,7 +1349,7 @@ hi!
 E_EFFECT
 ```
 
-```fl-proposed
+```fl-test
 # C251 emit needs a collector
 @run
 1 emit
@@ -1357,7 +1357,7 @@ E_EFFECT
 E_EFFECT
 ```
 
-```fl-proposed
+```fl-test
 # C252 the innermost collector gets the element
 @run
 [ 1 emit [ 2 emit ] collect emit ] collect .
@@ -1365,7 +1365,7 @@ E_EFFECT
 { 1 { 2 } }
 ```
 
-```fl-proposed
+```fl-test
 # C253 a byte must be 0 to 255
 @run
 [ 256 emit ] collect-bytes
@@ -1373,7 +1373,7 @@ E_EFFECT
 E_RANGE
 ```
 
-```fl-proposed
+```fl-test
 # C254 a helper word can emit into its caller's collector
 @unit
 : put2 ( int -- ) dup emit 2 * emit ;
@@ -1383,7 +1383,7 @@ E_RANGE
 { 3 6 4 8 }
 ```
 
-```fl-proposed
+```fl-test
 # C255 building is linear in the allocation meter
 @limits
 maxTotalBytes=2000000
@@ -1393,7 +1393,7 @@ maxTotalBytes=2000000
 20000
 ```
 
-```fl-proposed
+```fl-test
 # C256 the value limit is enforced while the collector grows
 @limits
 maxValueBytes=1000
@@ -1543,7 +1543,7 @@ Why not exit from inside `each` or `map`? That is a non-local return through com
 
 **Conformance cases (proposed).**
 
-```fl-proposed
+```fl-test
 # C257 cond with a default
 @unit
 : kind ( n:int -- str ) { [ n 0 < ] [ "negative" ] [ n 0 = ] [ "zero" ] [ "positive" ] } cond ;
@@ -1555,7 +1555,7 @@ zero
 positive
 ```
 
-```fl-proposed
+```fl-test
 # C258 cond with no match and no default
 @run
 { [ false ] [ 1 ] } cond
@@ -1563,7 +1563,7 @@ positive
 E_RANGE
 ```
 
-```fl-proposed
+```fl-test
 # C259 case compares with = and consumes the key
 @unit
 : digit-name ( n:int -- str ) n { 0 [ "zero" ] 1 [ "one" ] [ "many" ] } case ;
@@ -1579,7 +1579,7 @@ one
 0
 ```
 
-```fl-proposed
+```fl-test
 # C260 case checks the whole list before it matches
 @run
 1 { 1 2 } case
@@ -1617,7 +1617,7 @@ false
 E_TYPE
 ```
 
-```fl-proposed
+```fl-test
 # C264 sort-by is stable
 @run
 { "ccc" "a" "bb" } [ len ] sort-by .
@@ -1627,7 +1627,7 @@ E_TYPE
 { "c" "bb" "aa" }
 ```
 
-```fl-proposed
+```fl-test
 # C265 find
 @run
 { 1 2 3 4 } [ 2 > ] find .
@@ -1641,7 +1641,7 @@ E_TYPE
 1
 ```
 
-```fl-proposed
+```fl-test
 # C266 any? and all? on the empty sequence, and short circuit
 @run
 { } [ true ] any? .
@@ -1693,7 +1693,7 @@ f
 E_EFFECT
 ```
 
-```fl-proposed
+```fl-test
 # C271 a vocabulary's own word shadows a new core word
 @unit
 IN: demo
@@ -1705,7 +1705,7 @@ demo:t .
 mine
 ```
 
-```fl-proposed
+```fl-test
 # C272 an import wins over core
 @unit
 IN: other

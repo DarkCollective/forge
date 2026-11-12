@@ -44,6 +44,8 @@ import {
 } from "./errors.js";
 import { callPrimitive } from "./primitives.js";
 import { DEFAULT_LIMITS } from "./types.js";
+import { Collector, emitOutsideCollect } from "./vm-collect.js";
+import { checkCaseList, checkCondList, sortByKeys } from "./vm-select.js";
 import type {
   CombinatorName,
   CoercionRecord,
@@ -72,6 +74,7 @@ import {
   codePoints,
   coerceTracked,
   display,
+  equals,
   markSecret,
   reprShort,
   runtimeTypeOf,
@@ -92,6 +95,8 @@ const K_LIST = 4;
 const K_MARK = 5;
 
 const EMPTY: readonly Value[] = Object.freeze([]);
+/** Placeholder quotation of a `cond` frame, which takes its quotations from its list. */
+const EMPTY_QUOT = null as unknown as Quotation;
 const NO_ARGS: readonly Value[] = Object.freeze([]);
 const MAX_TIMER = 2 ** 31 - 1;
 const DEFAULT_YIELD_EVERY = 131_072;
@@ -120,7 +125,24 @@ class ActFrame {
 }
 
 /** Combinator state (`times each map mapi filter reduce while loop fork`). */
-type LoopComb = "times" | "each" | "map" | "mapi" | "filter" | "reduce" | "while" | "loop" | "fork";
+type LoopComb =
+  | "times"
+  | "each"
+  | "map"
+  | "mapi"
+  | "filter"
+  | "reduce"
+  | "while"
+  | "loop"
+  | "fork"
+  | "cond"
+  | "sort-by"
+  | "find"
+  | "any?"
+  | "all?"
+  | "collect"
+  | "collect-bytes"
+  | "collect-str";
 
 class LoopFrame {
   readonly k = K_LOOP;
@@ -141,6 +163,9 @@ class LoopFrame {
   forkJoin: string | Uint8Array = "";
   pieces: (string | Uint8Array)[] = [];
   forkOut: (string | Uint8Array)[] = [];
+  /** `collect*`: the accumulator, and the collector frame that was innermost before this one. */
+  coll: Collector | null = null;
+  prevColl: LoopFrame | null = null;
   constructor(
     readonly comb: LoopComb,
     readonly owner: ActFrame,
@@ -391,6 +416,8 @@ class Machine {
   private readonly vars: VarStore;
   private pctx!: PrimitiveContext;
   private segCurrent = "user";
+  /** The innermost active `collect*` frame, or null (LANGUAGE-0.2.md section 10). */
+  private collFrame: LoopFrame | null = null;
 
   constructor(private readonly opts: RunOptions) {
     this.limits = { ...DEFAULT_LIMITS, ...opts.limits };
@@ -468,6 +495,7 @@ class Machine {
     this.pctx = { signal: this.signal, limits: this.limits, scope: seg.scope };
     if (this.maxRet < 1) throw limitError("E_LIMIT_RETURN", "return stack depth", this.maxRet, 1);
     this.rs.length = 0;
+    this.collFrame = null;
     const f = new ActFrame(K_WORD, seg.code, 0, EMPTY, 0, 0, null, false);
     this.rs.push(f);
     this.cur = f;
@@ -617,6 +645,9 @@ class Machine {
           }
           if (this.doRet()) return;
           break;
+        case "emit":
+          this.emitItem(ins.all);
+          break;
         case "dmark":
           this.pushMark(new MarkFrame(K_MARK, ds.length));
           break;
@@ -702,6 +733,7 @@ class Machine {
   /** Unwinds to `tf`, restores its data stack, pushes the error record and runs the handler. */
   private recover(tf: TryFrame, err: ForgeError): void {
     this.rs.length = this.rs.lastIndexOf(tf) + 1;
+    this.collFrame = this.nearestCollector();
     tf.protectedBody = false;
     // The values below the try's floor cannot have been touched, so restoring the snapshot is
     // the same as truncating to the depth recorded at entry.
@@ -711,6 +743,27 @@ class Machine {
     this.loadCur();
     this.ds.push(errorRecord(err));
     this.pushQuot(tf.handler, tf.owner, true);
+  }
+
+  /** The innermost `collect*` frame left on the return stack (after an unwind). */
+  private nearestCollector(): LoopFrame | null {
+    for (let i = this.rs.length - 1; i >= 0; i--) {
+      const f = this.rs[i] as Frame;
+      if (f.k === K_LOOP && f.coll !== null) return f;
+    }
+    return null;
+  }
+
+  /** `emit` and `emit-all`: add the top of the stack to the innermost collector. */
+  private emitItem(all: boolean): void {
+    const ds = this.ds;
+    if (ds.length - this.floor < 1) this.underflow(1);
+    const cf = this.collFrame;
+    if (cf === null) throw emitOutsideCollect();
+    const v = ds[ds.length - 1] as Value;
+    if (all) (cf.coll as Collector).addAll(v);
+    else (cf.coll as Collector).add(v);
+    ds.pop();
   }
 
   private underflow(needed: number): never {
@@ -1290,6 +1343,70 @@ class Machine {
         this.pushQuot(body, cur, true);
         return;
       }
+      case "cond": {
+        if (avail < 1) this.underflow(1);
+        const lf = new LoopFrame("cond", cur, EMPTY_QUOT);
+        lf.list = checkCondList(ds[ds.length - 1] as Value);
+        lf.n = lf.list.length;
+        ds.length -= 1;
+        this.startLoop(lf);
+        return;
+      }
+      case "case": {
+        if (avail < 2) this.underflow(2);
+        const items = checkCaseList(ds[ds.length - 1] as Value);
+        const key = ds[ds.length - 2] as Value;
+        const pairs = items.length >> 1;
+        let action: Value | undefined;
+        for (let i = 0; i < pairs; i++) {
+          this.chargeStep();
+          if (equals(key, items[2 * i] as Value)) {
+            action = items[2 * i + 1];
+            break;
+          }
+        }
+        if (action === undefined && items.length % 2 === 1) action = items[items.length - 1];
+        if (action === undefined) {
+          throw new ForgeError({
+            code: "E_RANGE",
+            message: "case: no value matches and there is no default",
+          });
+        }
+        ds.length -= 2;
+        this.pushQuot((action as Value & { tag: "quot" }).v, cur, false);
+        return;
+      }
+      case "sort-by": {
+        if (avail < 2) this.underflow(2);
+        const lf = new LoopFrame("sort-by", cur, this.peekQuot(0));
+        const l = ds[ds.length - 2] as Value;
+        if (l.tag !== "list") throw typeError("list", l.tag);
+        lf.list = l.v;
+        lf.n = l.v.length;
+        ds.length -= 2;
+        this.startLoop(lf);
+        return;
+      }
+      case "find":
+      case "any?":
+      case "all?": {
+        if (avail < 2) this.underflow(2);
+        const lf = new LoopFrame(name, cur, this.peekQuot(0));
+        this.takeSeq(lf, 1);
+        ds.length -= 2;
+        this.startLoop(lf);
+        return;
+      }
+      case "collect":
+      case "collect-bytes":
+      case "collect-str": {
+        if (avail < 1) this.underflow(1);
+        const lf = new LoopFrame(name, cur, this.peekQuot(0));
+        lf.coll = new Collector(name, this.maxValue);
+        ds.length -= 1;
+        this.startLoop(lf);
+        return;
+      }
       case "fork": {
         if (avail < 4) this.underflow(4);
         const lf = new LoopFrame("fork", cur, this.peekQuot(0));
@@ -1504,6 +1621,75 @@ class Machine {
           this.checkDelta(lf.d, 1);
           if (!this.popBool()) return this.endLoop(lf, null);
         }
+        lf.d = ds.length;
+        return this.iterate(lf);
+      case "cond": {
+        const items = lf.list as readonly Value[];
+        if (returned) {
+          this.checkDelta(lf.d, 1);
+          if (this.popBool()) {
+            const action = items[lf.i + 1] as Value & { tag: "quot" };
+            this.rs.pop();
+            return this.pushQuot(action.v, lf.owner, false);
+          }
+          lf.i += 2;
+        }
+        if (lf.i >= lf.n) {
+          throw new ForgeError({
+            code: "E_RANGE",
+            message: "cond: no test is true and there is no default",
+          });
+        }
+        if (lf.i === lf.n - 1) {
+          this.rs.pop();
+          return this.pushQuot((items[lf.i] as Value & { tag: "quot" }).v, lf.owner, false);
+        }
+        lf.d = ds.length;
+        return this.iterate(lf, (items[lf.i] as Value & { tag: "quot" }).v);
+      }
+      case "sort-by":
+        if (returned) {
+          this.checkDelta(lf.d, 1);
+          lf.outList.push(ds.pop() as Value);
+        }
+        if (lf.i >= lf.n) {
+          const v: Value = { tag: "list", v: sortByKeys(lf.list as readonly Value[], lf.outList) };
+          this.meter(v);
+          return this.endLoop(lf, v);
+        }
+        lf.d = ds.length;
+        ds.push(this.elem(lf, lf.i++));
+        return this.iterate(lf);
+      case "find":
+      case "any?":
+      case "all?":
+        if (returned) {
+          this.checkDelta(lf.d, 1);
+          const hit = this.popBool();
+          if (lf.comb === "all?" ? !hit : hit) {
+            if (lf.comb === "find") return this.endLoop(lf, { tag: "int", v: lf.i - 1 });
+            return this.endLoop(lf, { tag: "bool", v: lf.comb === "any?" });
+          }
+        }
+        if (lf.i >= lf.n) {
+          if (lf.comb === "find") return this.endLoop(lf, { tag: "int", v: -1 });
+          return this.endLoop(lf, { tag: "bool", v: lf.comb === "all?" });
+        }
+        lf.d = ds.length;
+        ds.push(this.elem(lf, lf.i++));
+        return this.iterate(lf);
+      case "collect":
+      case "collect-bytes":
+      case "collect-str":
+        if (returned) {
+          this.checkDelta(lf.d, 0);
+          this.collFrame = lf.prevColl;
+          const v = (lf.coll as Collector).finish();
+          this.meter(v);
+          return this.endLoop(lf, v);
+        }
+        lf.prevColl = this.collFrame;
+        this.collFrame = lf;
         lf.d = ds.length;
         return this.iterate(lf);
       case "fork":

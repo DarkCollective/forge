@@ -2060,7 +2060,7 @@ describe("effect labels", () => {
 
 describe("intrinsic and primitive entry helpers", () => {
   test("one entry per intrinsic name, with valid metadata", () => {
-    expect(INTRINSIC_NAMES).toHaveLength(29);
+    expect(INTRINSIC_NAMES).toHaveLength(40);
     const entries = createIntrinsicEntries();
     expect(entries.map((e) => e.intrinsic)).toEqual([...INTRINSIC_NAMES]);
     for (const e of entries) {
