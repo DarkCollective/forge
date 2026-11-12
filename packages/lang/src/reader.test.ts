@@ -778,6 +778,8 @@ describe("booleans, keywords and names (2.3, 2.11)", () => {
       "IN:",
       "USING:",
       "META:",
+      "CHOICE:",
+      ":>",
       "VOCAB",
       "CONSTANT",
       "VARIABLE",

@@ -239,6 +239,49 @@ describe("buildHelp: examples", () => {
   });
 });
 
+describe("buildHelp: option help of shared choice types", () => {
+  const src = [
+    'CHOICE: pad\n  option pkcs7 "PKCS#7 padding." ;\n  option none ;\n  option zero "Zero padding." ;\n;\n',
+    "CHOICE: plain\n  option a ;\n  option b ;\n;\n",
+    ': enc ( s:str p:choice<pad>=pkcs7 q:choice<plain>=a r:choice<pad>=none -- str ) "enc." doc "Fixture" category s ;\n',
+    ': plain-op ( s:str q:choice<plain>=a -- str ) "plain." doc "Fixture" category s ;\n',
+    FX("bare"),
+  ].join("");
+  const { help, catalogue } = build(src);
+  const doc = help();
+
+  test("an op with option help gets optionDocs per parameter; options without help are omitted", () => {
+    const op = find(doc, "t:enc");
+    expect(op.optionDocs).toEqual({
+      p: { pkcs7: "PKCS#7 padding.", zero: "Zero padding." },
+      r: { pkcs7: "PKCS#7 padding.", zero: "Zero padding." },
+    });
+    expect(Object.keys(op)).toEqual([
+      "qname",
+      "useWhen",
+      "links",
+      "inverse",
+      "optionDocs",
+      "examples",
+    ]);
+  });
+
+  test("ops whose types have no help, and ops without types, are left out", () => {
+    expect(doc.ops.map((o) => o.qname)).toEqual(["t:enc"]);
+  });
+
+  test("the document validates and the catalogue params still carry the plain options", () => {
+    expect(validateHelp(doc), ajv.errorsText(validateHelp.errors)).toBe(true);
+    const enc = catalogue.ops.find((o) => o.qname === "t:enc");
+    expect(enc?.params.map((p) => p.options)).toEqual([
+      ["pkcs7", "none", "zero"],
+      ["a", "b"],
+      ["pkcs7", "none", "zero"],
+    ]);
+    expect(JSON.stringify(enc)).not.toContain("PKCS#7 padding.");
+  });
+});
+
 describe("help.schema.json", () => {
   const good: HelpDoc = {
     format: 1,

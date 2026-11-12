@@ -16,7 +16,14 @@
 import { describe, expect, test } from "vitest";
 import { CORE_VOCAB, createDictionary, isPrivateName, listWords } from "./dictionary.js";
 import { ForgeError } from "./errors.js";
-import type { Dictionary, DictionaryTxn, Scope, WordEntry, WordMeta } from "./types.js";
+import type {
+  ChoiceTypeEntry,
+  Dictionary,
+  DictionaryTxn,
+  Scope,
+  WordEntry,
+  WordMeta,
+} from "./types.js";
 
 function metaOf(tag: string): WordMeta {
   return { name: tag } as unknown as WordMeta;
@@ -550,5 +557,113 @@ describe("spec examples", () => {
     expect(replaced).toBe(f1);
     expect(g.calls).toBe(f1);
     expect(d.resolve("f", scope("user"))).not.toBe(f1);
+  });
+});
+
+describe("shared choice types", () => {
+  function type(vocab: string, name: string, options: string[] = ["a", "b"]): ChoiceTypeEntry {
+    return {
+      qname: `${vocab}:${name}`,
+      name,
+      vocab,
+      options,
+      docs: {},
+      hash: `hash-${vocab}-${name}`,
+      source: { unit: null, text: null, pos: null },
+    };
+  }
+
+  function withTypes(...types: ChoiceTypeEntry[]): Dictionary {
+    const d = createDictionary();
+    const t = d.begin();
+    for (const e of types) t.defineChoice(e);
+    t.commit();
+    return d;
+  }
+
+  test("a defined type is visible in the transaction only until commit, then in the dictionary", () => {
+    const d = createDictionary();
+    const t = d.begin();
+    t.defineChoice(type("v", "t"));
+    expect(t.resolveChoice("t", scope("v")).qname).toBe("v:t");
+    expect(t.vocab("v")?.choices?.get("t")?.qname).toBe("v:t");
+    expect(d.vocab("v")).toBeUndefined();
+    t.commit();
+    expect(d.vocab("v")?.choices?.get("t")?.options).toEqual(["a", "b"]);
+    expect(d.vocab("v")?.words.size).toBe(0);
+  });
+
+  test("rollback discards staged types", () => {
+    const d = createDictionary();
+    const t = d.begin();
+    t.defineChoice(type("v", "t"));
+    t.rollback();
+    expect(d.vocab("v")).toBeUndefined();
+  });
+
+  test("types and words are separate namespaces", () => {
+    const d = createDictionary();
+    const t = d.begin();
+    t.define(word("v", "t"));
+    t.defineChoice(type("v", "t"));
+    t.commit();
+    expect(d.resolve("t", scope("v")).qname).toBe("v:t");
+    expect(d.resolveChoice("t", scope("v")).qname).toBe("v:t");
+    expect(d.vocab("v")?.words.size).toBe(1);
+  });
+
+  test("resolveChoice: own vocabulary first, then imports, never core", () => {
+    const d = withTypes(type("a", "t", ["1"]), type("b", "t", ["2"]), type("b", "only", ["3"]));
+    expect(d.resolveChoice("t", scope("a", "b")).options).toEqual(["1"]);
+    expect(d.resolveChoice("only", scope("a", "b", "core")).options).toEqual(["3"]);
+    const e = codeOf(() => d.resolveChoice("t", scope("c", "a", "b")));
+    expect(e.code).toBe("E_AMBIGUOUS");
+    expect(e.detail.candidates).toEqual(["a:t", "b:t"]);
+    const u = codeOf(() => d.resolveChoice("nope", scope("a", "b")));
+    expect(u.code).toBe("E_UNDEFINED");
+    expect(u.detail.kind).toBe("choice");
+    expect(codeOf(() => d.resolveChoice("t", scope("c"))).code).toBe("E_UNDEFINED");
+  });
+
+  test("a private type is not found through imports", () => {
+    const d = withTypes(type("a", "_p"));
+    expect(d.resolveChoice("_p", scope("a")).qname).toBe("a:_p");
+    expect(codeOf(() => d.resolveChoice("_p", scope("b", "a"))).code).toBe("E_UNDEFINED");
+  });
+
+  test("resolveChoiceQualified: E_NO_VOCAB, E_UNDEFINED, E_PRIVATE", () => {
+    const d = withTypes(type("a", "t"), type("a", "_p"));
+    expect(d.resolveChoiceQualified("a", "t", "b").qname).toBe("a:t");
+    expect(d.resolveChoiceQualified("a", "_p", "a").qname).toBe("a:_p");
+    expect(codeOf(() => d.resolveChoiceQualified("zz", "t", "b")).code).toBe("E_NO_VOCAB");
+    expect(codeOf(() => d.resolveChoiceQualified("a", "nope", "b")).code).toBe("E_UNDEFINED");
+    expect(codeOf(() => d.resolveChoiceQualified("a", "_p", "b")).code).toBe("E_PRIVATE");
+  });
+
+  test("defineChoice: E_REDEFINED in one transaction, allowRedefine, replaced entry, E_READONLY", () => {
+    const d = createDictionary();
+    const t = d.begin();
+    t.defineChoice(type("v", "t"));
+    const again = codeOf(() => t.defineChoice(type("v", "t", ["x"])));
+    expect(again.code).toBe("E_REDEFINED");
+    expect(again.detail.kind).toBe("choice");
+    expect(t.defineChoice(type("v", "t", ["x"]), { allowRedefine: true })?.options).toEqual([
+      "a",
+      "b",
+    ]);
+    t.commit();
+    const t2 = d.begin();
+    expect(t2.defineChoice(type("v", "t", ["y"]))?.options).toEqual(["x"]);
+    t2.commit();
+    expect(d.resolveChoice("t", scope("v")).options).toEqual(["y"]);
+    const t3 = d.begin();
+    expect(codeOf(() => t3.defineChoice(type("core", "t"))).code).toBe("E_READONLY");
+    t3.defineChoice(type("core", "t"), { trusted: true });
+  });
+
+  test("a vocabulary with a staged type is listed before commit", () => {
+    const t = createDictionary().begin();
+    t.defineChoice(type("v", "t"));
+    expect(t.vocabs()).toEqual(["core", "v"]);
   });
 });

@@ -48,7 +48,7 @@
   "additionalProperties": false,
   "$defs": {
     "discovery": {
-      "description": "Discovery metadata (use-when, link, inverse); absent when nothing is set.",
+      "description": "Discovery metadata (use-when, link, inverse, optionDocs); absent when nothing is set.",
       "type": "object",
       "properties": {
         "useWhen": { "type": "string", "maxLength": 160, "pattern": "^[^\\u0000-\\u001f]*$" },
@@ -58,7 +58,17 @@
           "minItems": 1,
           "maxItems": 8
         },
-        "inverse": { "$ref": "#/$defs/qname" }
+        "inverse": { "$ref": "#/$defs/qname" },
+        "optionDocs": {
+          "description": "Parameter name to option to help text, from shared choice types (CHOICE:).",
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": { "type": "string", "maxLength": 200 }
+          }
+        }
       },
       "minProperties": 1,
       "additionalProperties": false

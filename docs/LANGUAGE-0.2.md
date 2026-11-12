@@ -581,7 +581,7 @@ the header becomes `padding:choice<util:padding>="pkcs7"`. The mode list gets th
 
 **Conformance cases (proposed).**
 
-```fl-proposed
+```fl-test
 # C218 a shared choice type expands like an inline choice and carries option help
 @unit
 CHOICE: padding
@@ -603,7 +603,7 @@ user:pad discovery.optionDocs.p.none = "No padding."
 E_PARAM_INVALID detail.param=p
 ```
 
-```fl-proposed
+```fl-test
 # C219 a default must be one of the options
 @unit-fails E_HEADER
 CHOICE: padding
@@ -613,13 +613,13 @@ CHOICE: padding
 : pad ( bytes p:choice<padding>=zero -- bytes ) ;
 ```
 
-```fl-proposed
+```fl-test
 # C220 an unknown type
 @unit-fails E_UNDEFINED
 : pad ( bytes p:choice<nosuch> -- bytes ) ;
 ```
 
-```fl-proposed
+```fl-test
 # C221 a type from another vocabulary is reached by qualification
 @unit
 IN: shared
@@ -634,7 +634,7 @@ IN: app
 app:ask params[0].options = ["yes","no"]
 ```
 
-```fl-proposed
+```fl-test
 # C222 a private type is not visible from another vocabulary
 @unit
 IN: shared
@@ -646,7 +646,7 @@ IN: app
 : ask ( bytes a:choice<shared:_hidden> -- bytes ) ;
 ```
 
-```fl-proposed
+```fl-test
 # C223 a word's hash covers the options of its type
 @unit
 IN: v1
@@ -666,7 +666,7 @@ CHOICE: t
 v1:w v2:w
 ```
 
-```fl-proposed
+```fl-test
 # C224 the help text of an option does not change the hash
 @unit
 IN: v1
@@ -684,7 +684,7 @@ CHOICE: t
 v1:w v2:w
 ```
 
-```fl-proposed
+```fl-test
 # C225 duplicate type in one unit; duplicate option
 @unit-fails E_REDEFINED
 CHOICE: t
@@ -695,7 +695,7 @@ CHOICE: t
 ;
 ```
 
-```fl-proposed
+```fl-test
 # C226 a duplicate option
 @unit-fails E_META
 CHOICE: t
@@ -704,7 +704,7 @@ CHOICE: t
 ;
 ```
 
-```fl-proposed
+```fl-test
 # C227 an inline choice is unchanged
 @unit
 : m ( str c:choice{x|y}=x -- str ) ;

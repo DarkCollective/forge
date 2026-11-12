@@ -35,7 +35,7 @@ import {
 } from "./meta.js";
 import type { ClauseArg, WordMetaInit } from "./meta.js";
 import { DEFAULT_LIMITS } from "./types.js";
-import type { SourcePos, StackEffect, StackSlot, WordMeta } from "./types.js";
+import type { ChoiceTypeEntry, SourcePos, StackEffect, StackSlot, WordMeta } from "./types.js";
 
 const P0: SourcePos = { offset: 0, line: 1, col: 1 };
 
@@ -1624,5 +1624,158 @@ describe("discovery clauses: use-when, link, inverse, helper, checks", () => {
     bad({ inverse: "nocolon" });
     bad({ other: 1 });
     expect(validateSchema({ ...base, discovery: { inverse: "v:w" } })).toBe(true);
+  });
+});
+
+describe("shared choice types: header, hash, builder (LANGUAGE-0.2.md section 4)", () => {
+  const entry = (options: string[]): ChoiceTypeEntry => ({
+    qname: "v:t",
+    name: "t",
+    vocab: "v",
+    options,
+    docs: {},
+    hash: sha256Hex(`{${options.join("|")}}`),
+    source: { unit: null, text: null, pos: null },
+  });
+  const sha256Hex = (s: string): string => createHash("sha256").update(s).digest("hex");
+
+  test("choice<ref> expands to the options of the resolved type", () => {
+    const seen: string[] = [];
+    const resolve = (ref: string, pos: SourcePos): ChoiceTypeEntry => {
+      seen.push(`${ref}@${pos.offset}`);
+      return entry(["pkcs7", "none"]);
+    };
+    const e = parseHeader(
+      "bytes p:choice<v:t>=none q:choice<t> --",
+      P0,
+      "strict",
+      DEFAULT_LIMITS,
+      resolve,
+    );
+    expect(e.text).toBe("( bytes p:choice{pkcs7|none}=none q:choice{pkcs7|none} -- )");
+    expect(e.inputs[1]).toMatchObject({
+      type: "choice",
+      options: ["pkcs7", "none"],
+      default: "none",
+    });
+    expect(seen).toEqual(["v:t@6", "t@25"]);
+  });
+
+  test("the slot is the slot of the inline form", () => {
+    const resolve = (): ChoiceTypeEntry => entry(["a", "b"]);
+    const shared = parseHeader("bytes m:choice<t>=a --", P0, "strict", DEFAULT_LIMITS, resolve);
+    const inline = parseHeader("bytes m:choice{a|b}=a --", P0, "strict");
+    expect(JSON.stringify(shared)).toBe(JSON.stringify(inline));
+  });
+
+  test("a default that is not an option is E_HEADER, as for an inline choice", () => {
+    const resolve = (): ChoiceTypeEntry => entry(["a", "b"]);
+    expect(() =>
+      parseHeader("bytes m:choice<t>=c --", P0, "strict", DEFAULT_LIMITS, resolve),
+    ).toThrow(/default/);
+  });
+
+  test("without a resolver, and for malformed references, choice<…> is E_HEADER", () => {
+    const code = (text: string, withResolver = true): string => {
+      try {
+        parseHeader(
+          text,
+          P0,
+          "strict",
+          DEFAULT_LIMITS,
+          withResolver ? () => entry(["a"]) : undefined,
+        );
+      } catch (e) {
+        return `${(e as ForgeError).code}: ${(e as ForgeError).message}`;
+      }
+      return "ok";
+    };
+    expect(code("bytes m:choice<t> --", false)).toMatch(
+      /^E_HEADER: .*type references need a source unit/,
+    );
+    for (const bad of [
+      "choice<t",
+      "choice<>",
+      "choice<a:b:c>",
+      "choice<:t>",
+      "choice<t>x",
+      "choice<1:t>",
+    ]) {
+      expect(code(`bytes m:${bad} --`), bad).toMatch(/^E_HEADER/);
+    }
+    expect(code("bytes m:choice<t>[1] --")).toMatch(/takes no constraint/);
+    expect(code("bytes m:toggle<t> --")).toMatch(/^E_HEADER/);
+    expect(code("bytes m:choice --")).toMatch(/needs options/);
+  });
+
+  test("a resolver error propagates unchanged", () => {
+    const boom = new ForgeError({
+      code: "E_UNDEFINED",
+      message: "nope",
+      detail: { kind: "choice" },
+    });
+    expect(() =>
+      parseHeader("bytes m:choice<t> --", P0, "strict", DEFAULT_LIMITS, () => {
+        throw boom;
+      }),
+    ).toThrow(boom);
+  });
+
+  test("computeHash: no type lines by default, one sorted line per distinct type hash", () => {
+    expect(computeHash("abc", [])).toBe(sha256Hex("abc\n"));
+    expect(computeHash("abc", [], undefined, undefined, [])).toBe(sha256Hex("abc\n"));
+    expect(computeHash("abc", [{ qname: "v:d", hash: "h" }], undefined, undefined, [])).toBe(
+      sha256Hex("abc\nv:d h"),
+    );
+    expect(computeHash("abc", [], undefined, undefined, ["bb", "aa", "bb"])).toBe(
+      sha256Hex("abc\nchoice aa\nchoice bb"),
+    );
+    expect(computeHash("abc", [{ qname: "v:d", hash: "h" }], undefined, undefined, ["aa"])).toBe(
+      sha256Hex("abc\nv:d h\nchoice aa"),
+    );
+  });
+
+  test("WordMetaBuilder keeps optionDocs of its discovery init and omits them when empty", () => {
+    const effect = strict("bytes m:choice{a|b} --");
+    const docs = { m: { a: "First." } };
+    const withDocs = new WordMetaBuilder({
+      name: "w",
+      vocab: "v",
+      kind: "fl",
+      effect,
+      discovery: { optionDocs: docs },
+    }).build("0".repeat(64));
+    expect(checked(withDocs).discovery).toEqual({ optionDocs: docs });
+    const plain = new WordMetaBuilder({ name: "w", vocab: "v", kind: "fl", effect }).build(
+      "0".repeat(64),
+    );
+    expect("discovery" in checked(plain)).toBe(false);
+    const both = new WordMetaBuilder({
+      name: "w",
+      vocab: "v",
+      kind: "fl",
+      effect,
+      discovery: { optionDocs: docs },
+    });
+    both.clause({ kind: "use-when", text: "Use it." });
+    expect(both.build("0".repeat(64)).discovery).toEqual({ useWhen: "Use it.", optionDocs: docs });
+  });
+
+  test("meta.schema.json accepts optionDocs and rejects malformed ones", () => {
+    const effect = strict("bytes m:choice{a|b} --");
+    const meta = new WordMetaBuilder({
+      name: "w",
+      vocab: "v",
+      kind: "fl",
+      effect,
+      discovery: { optionDocs: { m: { a: "First." } } },
+    }).build("0".repeat(64));
+    const ok = (m: unknown): boolean => validateSchema(JSON.parse(JSON.stringify(m)) as unknown);
+    expect(ok(meta)).toBe(true);
+    const withDiscovery = (d: unknown): unknown => ({ ...meta, discovery: d });
+    expect(ok(withDiscovery({ optionDocs: { m: { a: 1 } } }))).toBe(false);
+    expect(ok(withDiscovery({ optionDocs: { m: { a: "x".repeat(201) } } }))).toBe(false);
+    expect(ok(withDiscovery({ optionDocs: { m: "x" } }))).toBe(false);
+    expect(ok(withDiscovery({ optionDocs: {} }))).toBe(false);
   });
 });

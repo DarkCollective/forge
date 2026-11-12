@@ -164,8 +164,24 @@ export const buildHelp: BuildHelpFn = (
     const links: HelpLink[] = (discovery?.links ?? []).map((l) => ({ url: l.url, label: l.label }));
     const inverse = inverseOf(qname);
     const own = examples.get(qname) ?? [];
-    if (useWhen === null && links.length === 0 && inverse === null && own.length === 0) continue;
-    ops.push({ qname, useWhen, links, inverse, examples: own });
+    const optionDocs = discovery?.optionDocs;
+    if (
+      useWhen === null &&
+      links.length === 0 &&
+      inverse === null &&
+      optionDocs === undefined &&
+      own.length === 0
+    ) {
+      continue;
+    }
+    ops.push({
+      qname,
+      useWhen,
+      links,
+      inverse,
+      ...(optionDocs === undefined ? {} : { optionDocs }),
+      examples: own,
+    });
   }
   ops.sort((a, b) => compareCodePoints(a.qname, b.qname));
   return {

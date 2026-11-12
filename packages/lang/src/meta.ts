@@ -27,6 +27,7 @@ import { ForgeError } from "./errors.js";
 import schema from "./meta.schema.json" with { type: "json" };
 import { DEFAULT_LIMITS } from "./types.js";
 import type {
+  ChoiceResolver,
   Constraint,
   EffectLabel,
   Limits,
@@ -303,6 +304,7 @@ class HeaderParser {
     private readonly pos: SourcePos,
     private readonly mode: "strict" | "lenient",
     private readonly limits: Readonly<Limits>,
+    private readonly resolve?: ChoiceResolver,
   ) {}
 
   /** Source position of the character at `index` in the header text. */
@@ -529,8 +531,12 @@ class HeaderParser {
       if (type !== "choice" && !options.every((o) => ENCODINGS.includes(o))) {
         fail(`encodings must be among ${ENCODINGS.join(", ")}`);
       }
+    } else if (type === "choice" && t[i] === "<") {
+      const r = this.parseChoiceRef(it, i);
+      options = [...r.options];
+      i = r.next;
     } else if (type === "choice") {
-      fail("'choice' needs options: choice{a|b}");
+      fail("'choice' needs options: choice{a|b} or choice<type>");
     } else if (OPTION_TYPES.includes(type)) {
       options = [...DEFAULT_ENCODINGS];
     }
@@ -553,6 +559,26 @@ class HeaderParser {
       ...(options === undefined ? {} : { options }),
       ...(constraint === undefined ? {} : { constraint }),
       ...(def === undefined ? {} : { default: def }),
+    };
+  }
+
+  /** Parses `<type-ref>` of `choice<type-ref>` with `from` at the `<`; the options are the type's own. */
+  private parseChoiceRef(it: Item, from: number): { options: readonly string[]; next: number } {
+    const t = this.text;
+    const fail = (m: string): never => this.fail(m, it.start, it.text);
+    const close = t.indexOf(">", from + 1);
+    if (close < 0 || close >= it.end) fail("unterminated 'choice<': expected '>'");
+    const ref = t.slice(from + 1, close);
+    const colon = ref.indexOf(":");
+    const vocab = colon < 0 ? "" : ref.slice(0, colon);
+    const name = colon < 0 ? ref : ref.slice(colon + 1);
+    if ((colon >= 0 && !isVocabName(vocab)) || !isWordName(name)) {
+      fail(`'${ref}' is not a choice type reference: choice<name> or choice<vocab:name>`);
+    }
+    if (this.resolve === undefined) fail("type references need a source unit");
+    return {
+      options: (this.resolve as ChoiceResolver)(ref, this.posAt(it.start)).options,
+      next: close + 1,
     };
   }
 
@@ -754,8 +780,9 @@ export function parseHeader(
   pos: SourcePos,
   mode: "strict" | "lenient",
   limits: Readonly<Limits> = DEFAULT_LIMITS,
+  resolve?: ChoiceResolver,
 ): StackEffect {
-  return new HeaderParser(text, pos, mode, limits).parse();
+  return new HeaderParser(text, pos, mode, limits, resolve).parse();
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -823,12 +850,14 @@ export class WordMetaBuilder {
   private useWhen: string | undefined;
   private readonly links: MetaLink[] = [];
   private inverse: string | undefined;
+  private readonly optionDocs: Record<string, Record<string, string>>;
   private helper = false;
 
   constructor(private readonly init: WordMetaInit) {
     this.useWhen = init.discovery?.useWhen;
     this.links.push(...(init.discovery?.links ?? []));
     this.inverse = init.discovery?.inverse;
+    this.optionDocs = { ...init.discovery?.optionDocs };
     this.qname = `${init.vocab}:${init.name}`;
     this.exported = !isPrivateName(init.name);
     this.category = init.category ?? null;
@@ -1052,10 +1081,12 @@ export class WordMetaBuilder {
       useWhen?: string;
       links?: readonly MetaLink[];
       inverse?: string;
+      optionDocs?: Readonly<Record<string, Readonly<Record<string, string>>>>;
     } = {};
     if (this.useWhen !== undefined) d.useWhen = this.useWhen;
     if (this.links.length > 0) d.links = this.links.map((l) => ({ url: l.url, label: l.label }));
     if (this.inverse !== undefined) d.inverse = this.inverse;
+    if (Object.keys(this.optionDocs).length > 0) d.optionDocs = this.optionDocs;
     return Object.keys(d).length === 0 ? {} : { discovery: d };
   }
 
@@ -1121,16 +1152,22 @@ export function ownText(parts: {
  * `hex(SHA-256(UTF-8(own + "\n" + lines)))` where `lines` is `<qname> <hash>` for each distinct
  * dependency, sorted by qname in code-point order, joined by `"\n"`. `deps` must not contain the
  * word itself (pass `selfQname` to have it dropped). A word without dependencies hashes `own + "\n"`.
+ * `choiceHashes` are the `ChoiceTypeEntry.hash` values of the shared choice types the header used;
+ * each distinct one adds a line `choice <hash>` (sorted, after the dependency lines).
  */
 export function computeHash(
   own: string,
   deps: readonly { readonly qname: string; readonly hash: string }[],
   selfQname?: string,
   hasher: Sha256Fn = sha256,
+  choiceHashes: readonly string[] = [],
 ): string {
   const lines = deps.filter((d) => d.qname !== selfQname).map((d) => `${d.qname} ${d.hash}`);
   const sorted = [...new Set(lines)].sort(cpCompare);
-  return hasher(`${own}\n${sorted.join("\n")}`);
+  // Shared choice types the header referenced (LANGUAGE-0.2.md section 4): one `choice <typehash>`
+  // line per distinct type hash, after the dependency lines. Absent for a word with no reference.
+  const types = [...new Set(choiceHashes)].sort(cpCompare).map((h) => `choice ${h}`);
+  return hasher(`${own}\n${[...sorted, ...types].join("\n")}`);
 }
 
 // ---------------------------------------------------------------------------------------------

@@ -34,6 +34,13 @@ import {
   rootGenCtx,
 } from "./compiler-locals.js";
 import type { GenCtx } from "./compiler-locals.js";
+import {
+  choiceUse,
+  makeChoiceEntry,
+  makeChoiceResolver,
+  readChoiceForm,
+} from "./compiler-choice.js";
+import type { ChoiceRef } from "./compiler-choice.js";
 import { isPrivateName } from "./dictionary.js";
 import {
   WordMetaBuilder,
@@ -761,6 +768,10 @@ class Compiler {
             this.flush();
             this.metaForm();
             continue;
+          case "CHOICE:":
+            this.flush();
+            this.choiceForm();
+            continue;
           case "PRIMITIVE":
             this.flush();
             this.primitive();
@@ -897,12 +908,15 @@ class Compiler {
       });
     }
     const header = h as Extract<Token, { kind: "header" }>;
+    const choiceRefs: ChoiceRef[] = [];
     const effect = this.locate(
       () =>
         this.ctx.parseHeader(
           header.headerText,
           header.headerTextPos,
           isPrivateName(name) ? "lenient" : "strict",
+          undefined,
+          makeChoiceResolver(this.txn, this.scope, choiceRefs),
         ),
       header.pos,
       qname,
@@ -967,6 +981,14 @@ class Compiler {
     const labels = this.labelsOf(st.deps);
     const deps = [...st.deps];
     const sourceText = this.source.slice(colon.pos.offset, end.end.offset);
+    const chosen = choiceUse(
+      choiceRefs,
+      effect.inputs.map((slot, i) => ({
+        offset:
+          (inItems.length === effect.inputs.length ? inItems[i] : undefined)?.pos.offset ?? -1,
+        name: slot.name,
+      })),
+    );
     const hash = computeHash(
       ownText({
         kind: "fl",
@@ -978,6 +1000,7 @@ class Compiler {
       deps.map((d) => ({ qname: d.qname, hash: d.meta.hash })),
       qname,
       this.ctx.sha256,
+      chosen.hashes,
     );
     const built = new WordMetaBuilder({
       name,
@@ -986,6 +1009,9 @@ class Compiler {
       effect,
       source: { unit: this.ctx.unit, text: sourceText, pos: colon.pos },
       effects: labels,
+      ...(Object.keys(chosen.optionDocs).length > 0
+        ? { discovery: { optionDocs: chosen.optionDocs } }
+        : {}),
     });
     for (const d of decls) built.declare(d.kind, d.text);
     self.meta = built.build(hash);
@@ -1215,6 +1241,45 @@ class Compiler {
       },
       nameTok.pos,
     );
+  }
+
+  // ---- CHOICE: ------------------------------------------------------------------------------
+
+  /** `CHOICE: name option … ;` defines a shared choice type in the current vocabulary (LANGUAGE-0.2.md section 4). */
+  private choiceForm(): void {
+    const kw = this.peek();
+    const form = readChoiceForm({
+      next: () => this.next(),
+      fail: (code, message, pos, word, detail) => this.fail(code, message, pos, word, detail),
+      syntax: (t, expected, word) => this.syntax(t, expected, word),
+      nameOperand: (what) => this.nameOperand(what),
+    });
+    const vocab = this.scope.current;
+    const qname = `${vocab}:${form.nameTok.text}`;
+    this.assertWritable(vocab, form.nameTok.pos, qname);
+    const entry = makeChoiceEntry(
+      vocab,
+      form,
+      { unit: this.ctx.unit, text: this.source.slice(kw.pos.offset, form.end.offset), pos: kw.pos },
+      this.ctx.sha256,
+    );
+    const replaced = this.locate(
+      () =>
+        this.txn.defineChoice(entry, {
+          trusted: this.ctx.trusted,
+          allowRedefine: this.mode === "console",
+        }),
+      form.nameTok.pos,
+      qname,
+    );
+    if (replaced !== undefined) {
+      this.warnings.push({
+        code: "W_REDEFINED",
+        message: `choice type '${qname}' redefines an existing one; earlier words keep the options they copied`,
+        qname,
+        pos: form.nameTok.pos,
+      });
+    }
   }
 
   // ---- PRIMITIVE ----------------------------------------------------------------------------

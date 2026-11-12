@@ -343,6 +343,8 @@ export interface WordDiscovery {
   readonly links?: readonly MetaLink[];
   /** `inverse`: a qualified name in the same vocabulary. */
   readonly inverse?: string;
+  /** Per parameter name, per option, the help of a shared `choice` type. Options without help are omitted. */
+  readonly optionDocs?: Readonly<Record<string, Readonly<Record<string, string>>>>;
 }
 
 export interface WordMeta {
@@ -366,11 +368,22 @@ export interface WordMeta {
   readonly discovery?: WordDiscovery;
 }
 
-/** Header parser (WP 1.8). Throws E_HEADER. `strict` is used for public colon words, `lenient` otherwise. */
+/**
+ * Resolves the `vocab:name` or `name` inside `choice<…>` to a shared choice type (LANGUAGE-0.2.md
+ * section 4). `pos` is the start of the header item. Throws the ForgeError of the failed lookup.
+ */
+export type ChoiceResolver = (ref: string, pos: SourcePos) => ChoiceTypeEntry;
+
+/**
+ * Header parser (WP 1.8). Throws E_HEADER. `strict` is used for public colon words, `lenient` otherwise.
+ * `limits` defaults to `DEFAULT_LIMITS`. Without `resolve`, a `choice<…>` item is E_HEADER.
+ */
 export type HeaderParseFn = (
   text: string,
   pos: SourcePos,
   mode: "strict" | "lenient",
+  limits?: Readonly<Limits>,
+  resolve?: ChoiceResolver,
 ) => StackEffect;
 
 // ---------------------------------------------------------------------------------------------
@@ -511,12 +524,28 @@ export interface VariableWordEntry extends WordEntryBase {
 export type WordEntry =
   FlWordEntry | PrimitiveWordEntry | IntrinsicWordEntry | ConstantWordEntry | VariableWordEntry;
 
+/** A shared choice type (LANGUAGE-0.2.md section 4), the value of `Vocabulary.choices`. */
+export interface ChoiceTypeEntry {
+  /** `vocab:name`. */
+  readonly qname: string;
+  readonly name: string;
+  readonly vocab: string;
+  readonly options: readonly string[];
+  /** Option to help text, only for options that have help. */
+  readonly docs: Readonly<Record<string, string>>;
+  /** SHA-256 (hex) of the canonical option rendering `{a|b|c}`; the only part of a type that enters a word's hash. */
+  readonly hash: string;
+  readonly source: SourceInfo;
+}
+
 export interface Vocabulary {
   readonly name: string;
   /** Only `core` (and trusted loads) may be read-only. */
   readonly readonly: boolean;
   /** All words, including private ones and aliases (aliases map to the same entry). */
   readonly words: ReadonlyMap<string, WordEntry>;
+  /** Shared choice types, in a namespace of their own. Absent or empty when the vocabulary has none. */
+  readonly choices?: ReadonlyMap<string, ChoiceTypeEntry>;
 }
 
 /** Lexical scope of a source unit or console session (spec section 6.1). */
@@ -533,6 +562,10 @@ export interface DictionaryView {
   resolve(name: string, scope: Scope): WordEntry;
   /** `vocab:word` lookup. `from` is the current vocabulary, used for privacy. */
   resolveQualified(vocab: string, name: string, from: string): WordEntry;
+  /** Choice type lookup: current vocabulary, then imports (E_AMBIGUOUS); `core` has none. E_UNDEFINED with `detail.kind = "choice"`. */
+  resolveChoice(name: string, scope: Scope): ChoiceTypeEntry;
+  /** `vocab:name` choice type lookup (E_NO_VOCAB, E_UNDEFINED, E_PRIVATE). */
+  resolveChoiceQualified(vocab: string, name: string, from: string): ChoiceTypeEntry;
 }
 
 /** A staged set of changes; nothing is visible to the committed dictionary until `commit`. */
@@ -548,6 +581,15 @@ export interface DictionaryTxn extends DictionaryView {
     entry: WordEntry,
     opts?: { readonly trusted?: boolean; readonly allowRedefine?: boolean },
   ): WordEntry | undefined;
+  /**
+   * Stage a shared choice type. Same rules as `define`: E_REDEFINED when the type was already defined
+   * in this transaction (unless `allowRedefine`), E_READONLY for `core` unless `trusted`. Returns the
+   * type that was replaced, if any.
+   */
+  defineChoice(
+    entry: ChoiceTypeEntry,
+    opts?: { readonly trusted?: boolean; readonly allowRedefine?: boolean },
+  ): ChoiceTypeEntry | undefined;
   /** Adds an alias name in the same vocabulary for an entry. Throws E_REDEFINED on a collision. */
   alias(entry: WordEntry, aliasName: string): void;
   /** Stage a metadata edit (META:). Applied to the entry only on commit; discarded on rollback. */

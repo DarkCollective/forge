@@ -94,6 +94,65 @@ describe("scanVocab: ordering", () => {
   });
 });
 
+describe("scanVocab: shared choice types in headers", () => {
+  const user = (header: string) => file("a.fth", `IN: a\n: f ( x:bytes ${header} -- bytes ) x ;\n`);
+
+  test("a unit that uses choice<util:padding> comes after util", () => {
+    const r = scanVocab(
+      [
+        user("p:choice<util:padding>=pkcs7"),
+        unit("util", "CHOICE: padding\n  option pkcs7 ;\n  option none ;\n;"),
+      ],
+      [],
+    );
+    expect(r.units.map((u) => u.vocab)).toEqual(["util", "a"]);
+    expect(r.units[1]?.deps).toEqual(["util"]);
+  });
+
+  test("the reference counts in a private word and next to other dependencies", () => {
+    const r = scanVocab(
+      [
+        file("a.fth", "IN: a\n: _f ( x:bytes p:choice<z:t> -- bytes ) x m:g ;\n"),
+        unit("m", ": g ( x:bytes -- bytes ) x ;"),
+        unit("z", "CHOICE: t option a ; ;"),
+      ],
+      [],
+    );
+    expect(r.units.find((u) => u.vocab === "a")?.deps).toEqual(["m", "z"]);
+  });
+
+  test("an unqualified reference or one to the own vocabulary adds no dependency", () => {
+    expect(scanVocab([user("p:choice<t>=a")], []).units[0]?.deps).toEqual([]);
+    expect(scanVocab([user("p:choice<a:t>=a")], []).units[0]?.deps).toEqual([]);
+  });
+
+  test("text that only looks like a reference is ignored: strings, inline choices", () => {
+    const r = scanVocab(
+      [user('p:str="choice<zz:t>" q:choice{"choice<yy:t>"|b}="b"'), unit("zz"), unit("yy")],
+      [],
+    );
+    expect(r.units.find((u) => u.vocab === "a")?.deps).toEqual([]);
+  });
+
+  test("a reference to an unknown vocabulary is an error naming the file", () => {
+    expect(() => scanVocab([user("p:choice<nosuch:t>")], [])).toThrow(
+      "unknown vocabulary 'nosuch' used by a.fth",
+    );
+  });
+
+  test("a cycle through a header reference is reported", () => {
+    expect(() =>
+      scanVocab(
+        [
+          file("a.fth", "IN: a\n: f ( x:bytes p:choice<b:t> -- bytes ) x ;\n"),
+          file("b.fth", "IN: b\n: g ( x:bytes p:choice<a:t> -- bytes ) x ;\n"),
+        ],
+        [],
+      ),
+    ).toThrow("vocabulary dependency cycle: a -> b -> a");
+  });
+});
+
 describe("scanVocab: failures name the file", () => {
   test("a cycle lists the cycle", () => {
     expect(() =>

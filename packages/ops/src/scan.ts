@@ -43,6 +43,17 @@ function tokenise(file: string, source: string): Token[] {
   }
 }
 
+/** A string literal of a header: `"…"` with `\` escapes. */
+const HEADER_STRING = /"(?:[^"\\]|\\.)*"/gs;
+/** The `vocab` of a `name:choice<vocab:type>` reference (LANGUAGE-0.2.md section 4). */
+const CHOICE_REF = /(?<=:)choice<([A-Za-z][A-Za-z0-9_-]{0,63}):[^>\s]*>/g;
+
+/** Vocabularies named by `choice<vocab:name>` references in the raw text of a header. */
+function choiceVocabs(headerText: string): string[] {
+  const code = headerText.replace(HEADER_STRING, '""');
+  return [...code.matchAll(CHOICE_REF)].map((m) => m[1] as string);
+}
+
 interface Parsed {
   /** Vocabularies named by `USING:` forms and `vocab:word` tokens, in no particular order. */
   readonly mentioned: Set<string>;
@@ -55,6 +66,8 @@ function inspect(file: string, vocab: string, tokens: readonly Token[]): Parsed 
     const t = tokens[i] as Token;
     if (t.kind === "qword") {
       mentioned.add(t.vocab);
+    } else if (t.kind === "header") {
+      for (const v of choiceVocabs(t.headerText)) mentioned.add(v);
     } else if (t.kind === "word") {
       switch (t.text) {
         case "IN:": {
