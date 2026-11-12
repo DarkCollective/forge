@@ -28,7 +28,7 @@ export interface ListSection {
   readonly id: string;
   readonly kind: SectionKind;
   readonly title: string;
-  /** Every operation of the section, collapsed or not. */
+  /** Every operation of the section (after the fit filter, if any), collapsed or not. */
   readonly ops: readonly CatalogueOp[];
   /** Index in `ListModel.visible` of the section's first row (only meaningful when not collapsed). */
   readonly start: number;
@@ -42,8 +42,15 @@ export interface ListModel {
   readonly sections: readonly ListSection[];
   /** Rows on screen, in order: the sections' operations, skipping collapsed sections. */
   readonly visible: readonly CatalogueOp[];
-  /** Number of operations matching the query (search mode) or in the catalogue (browse mode). */
+  /** Number of operations matching the query (search mode) or in the catalogue (browse mode), after the filter. */
   readonly total: number;
+  /** Number of those operations the `keep` filter hid (0 with no filter). */
+  readonly hidden: number;
+}
+
+/** Sections that start open in the browse view. Every other section starts collapsed. */
+export function opensByDefault(kind: SectionKind): boolean {
+  return kind === "favourites" || kind === "user";
 }
 
 export const OTHER_TITLE = "Other";
@@ -101,13 +108,19 @@ export function groupByCategory(
 
 /**
  * The whole list for the current query and fold state. With a query: the ranked matches in one
- * section. Without: favourites, then the category groups. `collapsed` holds section ids.
+ * section. Without: favourites, then the category groups.
+ *
+ * `overrides` maps a section id to the user's choice (true = open). A section with no choice follows
+ * `opensByDefault`: Favourites and User words start open, the categories (and "Other") start closed.
+ * `keep`, when given, drops operations it rejects from every section (and from the match count);
+ * browse sections left empty by it are not listed, and `hidden` counts what it removed.
  */
 export function buildListModel(
   ops: readonly CatalogueOp[],
   favourites: readonly string[],
   query: string,
-  collapsed: ReadonlySet<string> = new Set(),
+  overrides: ReadonlyMap<string, boolean> = new Map(),
+  keep?: (op: CatalogueOp) => boolean,
 ): ListModel {
   const raw: {
     id: string;
@@ -117,37 +130,50 @@ export function buildListModel(
     collapsible: boolean;
   }[] = [];
   let mode: "browse" | "search" = "browse";
-  let total = ops.length;
+  let hidden = 0;
+  const filter = (list: CatalogueOp[]): CatalogueOp[] => {
+    if (keep === undefined) return list;
+    const kept = list.filter(keep);
+    hidden += list.length - kept.length;
+    return kept;
+  };
 
   if (query.trim() !== "") {
     mode = "search";
-    const matches = searchOps(ops, query);
-    total = matches.length;
     raw.push({
       id: "results",
       kind: "results",
       title: "Results",
-      ops: matches,
+      ops: filter(searchOps(ops, query)),
       collapsible: false,
     });
   } else {
-    raw.push({
-      id: "favourites",
-      kind: "favourites",
-      title: FAVOURITES_TITLE,
-      ops: favouriteOps(ops, favourites),
-      collapsible: true,
-    });
+    // Favourites are counted in `hidden` only through the category groups, so nothing is counted twice.
+    const favs = favouriteOps(ops, favourites);
+    const favKept = keep === undefined ? favs : favs.filter(keep);
+    if (keep === undefined || favKept.length > 0 || favs.length === 0) {
+      raw.push({
+        id: "favourites",
+        kind: "favourites",
+        title: FAVOURITES_TITLE,
+        ops: favKept,
+        collapsible: true,
+      });
+    }
     for (const group of groupByCategory(ops)) {
       const kind: SectionKind = group.id === "user" ? "user" : "category";
-      raw.push({ id: group.id, kind, title: group.title, ops: group.ops, collapsible: true });
+      const kept = filter(group.ops);
+      if (keep !== undefined && kept.length === 0) continue;
+      raw.push({ id: group.id, kind, title: group.title, ops: kept, collapsible: true });
     }
   }
 
   const sections: ListSection[] = [];
   const visible: CatalogueOp[] = [];
+  let total = 0;
   for (const section of raw) {
-    const isCollapsed = section.collapsible && collapsed.has(section.id);
+    const open = overrides.get(section.id) ?? opensByDefault(section.kind);
+    const isCollapsed = section.collapsible && !open;
     sections.push({
       id: section.id,
       kind: section.kind,
@@ -158,6 +184,7 @@ export function buildListModel(
       collapsible: section.collapsible,
     });
     if (!isCollapsed) visible.push(...section.ops);
+    if (section.kind !== "favourites") total += section.ops.length;
   }
-  return { mode, sections, visible, total };
+  return { mode, sections, visible, total, hidden };
 }

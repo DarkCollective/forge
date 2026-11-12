@@ -39,6 +39,13 @@ function op(qname: string, overrides: Partial<CatalogueOp> = {}): CatalogueOp {
   };
 }
 
+const OPEN_ALL = new Map([
+  ["category:Encoding", true],
+  ["category:Hashing", true],
+  ["category:encoding ", true],
+  ["other", true],
+]);
+
 const OPS: CatalogueOp[] = [
   op("base64:encode", { category: "Encoding", aliases: ["b64"] }),
   op("base64:decode", { category: "Encoding" }),
@@ -107,7 +114,7 @@ describe("buildListModel", () => {
   });
 
   it("numbers the visible rows so that each section starts where the previous one ends", () => {
-    const model = buildListModel(OPS, ["hash:md5"], "");
+    const model = buildListModel(OPS, ["hash:md5"], "", OPEN_ALL);
     expect(model.sections.map((s) => s.start)).toEqual([0, 1, 3, 5, 7, 8]);
     expect(model.visible).toHaveLength(OPS.length + 1);
     expect(model.visible[0]?.qname).toBe("hash:md5");
@@ -115,7 +122,7 @@ describe("buildListModel", () => {
   });
 
   it("leaves the rows of a collapsed section out of the visible list", () => {
-    const model = buildListModel(OPS, [], "", new Set(["category:Encoding"]));
+    const model = buildListModel(OPS, [], "", new Map([...OPEN_ALL, ["category:Encoding", false]]));
     const encoding = model.sections.find((s) => s.id === "category:Encoding");
     expect(encoding?.collapsed).toBe(true);
     expect(encoding?.ops).toHaveLength(2);
@@ -124,8 +131,72 @@ describe("buildListModel", () => {
     expect(hashing?.start).toBe(model.visible.indexOf(hashing!.ops[0]!));
   });
 
+  it("starts the categories and Other closed, and Favourites and User words open", () => {
+    const model = buildListModel(OPS, ["hash:md5"], "");
+    const state = Object.fromEntries(model.sections.map((s) => [s.id, s.collapsed]));
+    expect(state).toEqual({
+      favourites: false,
+      user: false,
+      "category:Encoding": true,
+      "category:Hashing": true,
+      "category:encoding ": true,
+      other: true,
+    });
+    expect(model.visible.map((o) => o.qname)).toEqual([
+      "hash:md5",
+      "user:rot47-classic",
+      "user:shout",
+    ]);
+    expect(model.total).toBe(OPS.length);
+  });
+
+  it("keeps the count of a collapsed section", () => {
+    const model = buildListModel(OPS, [], "");
+    expect(model.sections.find((s) => s.id === "category:Hashing")?.ops).toHaveLength(2);
+  });
+
+  it("lets the user open a category and close Favourites and User words", () => {
+    const overrides = new Map([
+      ["category:Hashing", true],
+      ["favourites", false],
+      ["user", false],
+    ]);
+    const model = buildListModel(OPS, ["hash:md5"], "", overrides);
+    expect(model.visible.map((o) => o.qname)).toEqual(["hash:sha256", "hash:md5"]);
+    expect(model.sections.find((s) => s.id === "favourites")?.collapsed).toBe(true);
+  });
+
+  it("filters every section with keep, drops empty browse sections and counts what it hid", () => {
+    const keep = (o: CatalogueOp): boolean => o.vocab !== "hash";
+    const model = buildListModel(OPS, ["hash:md5"], "", new Map(), keep);
+    expect(model.sections.map((s) => s.id)).toEqual([
+      "user",
+      "category:Encoding",
+      "category:encoding ",
+      "other",
+    ]);
+    expect(model.hidden).toBe(2);
+    expect(model.total).toBe(OPS.length - 2);
+  });
+
+  it("keeps an empty Favourites section (with its hint) when nothing is starred", () => {
+    const model = buildListModel(OPS, [], "", new Map(), () => true);
+    expect(model.sections[0]?.id).toBe("favourites");
+  });
+
+  it("filters search matches and reports how many it hid", () => {
+    const all = buildListModel(OPS, [], "encode");
+    const model = buildListModel(OPS, [], "encode", new Map(), (o) => o.vocab === "hex");
+    expect(model.mode).toBe("search");
+    expect(model.hidden + model.total).toBe(all.total);
+    expect(model.visible.every((o) => o.vocab === "hex")).toBe(true);
+    const none = buildListModel(OPS, [], "encode", new Map(), () => false);
+    expect(none.total).toBe(0);
+    expect(none.hidden).toBe(all.total);
+  });
+
   it("shows one ranked section of matches while a query is active, ignoring favourites", () => {
-    const model = buildListModel(OPS, ["hash:md5"], "encode", new Set(["results"]));
+    const model = buildListModel(OPS, ["hash:md5"], "encode", new Map([["results", false]]));
     expect(model.mode).toBe("search");
     expect(model.sections).toHaveLength(1);
     expect(model.sections[0]?.kind).toBe("results");

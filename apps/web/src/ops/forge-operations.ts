@@ -22,7 +22,12 @@
 //     Enter adds the operation to the recipe, F toggles its favourite, ? shows or pins its help,
 //     Escape closes the help and returns to the search box (Up from the first row does too).
 //     Moving onto a row shows its help.
-//   Group headers are buttons (Tab reaches them, Enter or Space folds the group).
+//   Group headers are buttons (Tab reaches them, Enter or Space folds the group). In the browse view
+//     the categories (and "Other") start folded; Favourites and User words start open. Only the rows of
+//     open groups are in the list, so the arrow keys skip folded groups; with every group folded Down
+//     from the search box lands on the first group header instead.
+//   "Fits the data" (toggle button, Tab reaches it) hides operations that cannot take the data at the
+//     end of the recipe (fit.ts); the others stay addable, merely dimmed and marked with the reason.
 // The row's own star, help and add buttons are pointer and touch shortcuts: they are out of the Tab
 // order, because every one of them has a key above. Dragging a row (pointer) drops it on the recipe.
 //
@@ -37,6 +42,8 @@ import { beginPointerDrag } from "../state/dnd.js";
 import { StoreController } from "../state/store-controller.js";
 import { icons } from "../styles/icons.js";
 import { baseStyles, paneStyles } from "../styles/shared.js";
+import { dataLabel, dataTypeAtEnd, fits, whyNotFit } from "./fit.js";
+import type { DataType } from "./fit.js";
 import { helpFor } from "./help.js";
 import { buildListModel } from "./group.js";
 import type { ListModel, ListSection } from "./group.js";
@@ -81,6 +88,22 @@ export class ForgeOperations extends LitElement {
       }
       .section {
         margin-top: var(--space-2);
+      }
+      .data-type {
+        font-size: var(--text-xs);
+        color: var(--text-muted);
+      }
+      .fit-row {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        padding: 0 var(--space-3) var(--space-2);
+        flex: none;
+        border-bottom: var(--border-width) solid var(--border);
+      }
+      .opt.unfit {
+        color: var(--text-muted);
+        border-inline-start: 0.25rem dashed var(--border-strong);
       }
       .group-head {
         display: flex;
@@ -234,7 +257,18 @@ export class ForgeOperations extends LitElement {
   private readonly favourites = new StoreController(this, store, (s) => s.favourites);
 
   @state() private query = "";
-  @state() private collapsed: ReadonlySet<string> = new Set();
+  private readonly dataType = new StoreController(this, store, (s): DataType =>
+    dataTypeAtEnd({
+      recipe: s.recipe,
+      bake: s.bake,
+      ops: s.catalogue.status === "ready" ? s.catalogue.catalogue.ops : null,
+    }),
+  );
+
+  /** The user's open (true) or closed (false) choice per section id; no entry = the default. */
+  @state() private overrides: ReadonlyMap<string, boolean> = new Map();
+  /** "Fits the data" is on: operations that cannot take the data at the end of the recipe are hidden. */
+  @state() private fitOnly = false;
   /** Index into the visible rows of the row that holds the roving tab stop. */
   @state() private cursor = 0;
   /** Index of the row whose help is shown, or null. */
@@ -255,7 +289,15 @@ export class ForgeOperations extends LitElement {
   private currentModel(): ListModel | null {
     const cat = this.catalogue.value;
     if (cat.status !== "ready") return null;
-    return buildListModel(cat.catalogue.ops, this.favourites.value, this.query, this.collapsed);
+    const data = this.dataType.value;
+    const keep = this.fitOnly ? (op: CatalogueOp) => fits(op.input, data) : undefined;
+    return buildListModel(
+      cat.catalogue.ops,
+      this.favourites.value,
+      this.query,
+      this.overrides,
+      keep,
+    );
   }
 
   protected override updated(): void {
@@ -271,7 +313,16 @@ export class ForgeOperations extends LitElement {
       model !== null && this.helpIndex !== null ? model.visible[this.helpIndex] : undefined;
 
     return html`
-      <header class="pane-head"><h2 tabindex="-1">Operations</h2></header>
+      <header class="pane-head">
+        <h2 tabindex="-1">Operations</h2>
+        ${
+          cat.status === "ready"
+            ? html`<span class="data-type" id="op-data-type"
+                >Data here: ${dataLabel(this.dataType.value)}</span
+              >`
+            : nothing
+        }
+      </header>
       <div class="tools">
         <label class="sr-only" for=${SEARCH_ID}>Search operations</label>
         <input
@@ -286,6 +337,17 @@ export class ForgeOperations extends LitElement {
           @keydown=${this.onSearchKey}
         />
       </div>
+      <div class="fit-row">
+        <button
+          type="button"
+          class="fit-toggle"
+          aria-pressed=${this.fitOnly ? "true" : "false"}
+          aria-describedby="op-data-type"
+          @click=${this.toggleFit}
+        >
+          Fits the data
+        </button>
+      </div>
       <div class="scroll" @focusout=${this.onScrollFocusOut}>
         ${this.renderBody(cat.status, model, cursor)}
       </div>
@@ -298,8 +360,16 @@ export class ForgeOperations extends LitElement {
 
   private statusText(model: ListModel | null): string {
     if (model === null || model.mode !== "search") return "";
+    if (model.total === 0 && model.hidden > 0) return this.hiddenText(model);
     if (model.total === 0) return `No operations match "${this.query.trim()}".`;
     return model.total === 1 ? "1 operation found." : `${model.total} operations found.`;
+  }
+
+  private hiddenText(model: ListModel): string {
+    const n = model.hidden;
+    return n === 1
+      ? "1 match hidden because it does not fit the data"
+      : `${n} matches hidden because they do not fit the data`;
   }
 
   private renderBody(
@@ -320,12 +390,22 @@ export class ForgeOperations extends LitElement {
     }
     if (model === null) return nothing;
     if (model.mode === "search" && model.visible.length === 0) {
+      if (model.hidden > 0) {
+        return html`<p class="empty">
+          ${this.hiddenText(model)}. Turn off "Fits the data" to see them.
+        </p>`;
+      }
       return html`<p class="empty">
         No operations match "${this.query.trim()}". Check the spelling, or clear the search.
       </p>`;
     }
     if (model.mode === "browse" && model.total === 0) {
-      return html`<p class="empty">The catalogue has no operations.</p>`;
+      return model.hidden > 0
+        ? html`<p class="empty">
+            ${model.hidden} operations hidden because they do not fit the data. Turn off "Fits the
+            data" to see them.
+          </p>`
+        : html`<p class="empty">The catalogue has no operations.</p>`;
     }
     return html`<div id=${LIST_ID} role="group" aria-label="Operations">
       ${model.sections.map((section, index) => this.renderSection(section, index, cursor))}
@@ -361,7 +441,7 @@ export class ForgeOperations extends LitElement {
                 class="group-toggle"
                 aria-expanded=${open ? "true" : "false"}
                 aria-controls=${bodyId}
-                @click=${() => this.toggleSection(section.id)}
+                @click=${() => this.toggleSection(section.id, open)}
               >
                 ${open ? icons.chevronDown : icons.chevronRight}
                 <span id=${headId}>${section.title}</span>
@@ -379,6 +459,7 @@ export class ForgeOperations extends LitElement {
   private renderRow(op: CatalogueOp, index: number, cursor: number): TemplateResult {
     const favourite = this.favourites.value.includes(op.qname);
     const showingHelp = this.helpIndex === index;
+    const why = whyNotFit(op.input, this.dataType.value);
     return html`<div
       class="row"
       @pointerenter=${() => this.peekHelp(index)}
@@ -387,7 +468,8 @@ export class ForgeOperations extends LitElement {
       <div
         id=${`op-row-${index}`}
         role="option"
-        class="opt"
+        class=${why === "" ? "opt" : "opt unfit"}
+        data-fit=${why === "" ? "yes" : "no"}
         tabindex=${index === cursor ? "0" : "-1"}
         aria-keyshortcuts="Enter F ?"
         aria-describedby=${showingHelp ? HELP_ID : nothing}
@@ -403,7 +485,13 @@ export class ForgeOperations extends LitElement {
       >
         <span class="name">${op.name}</span>
         <span class="vocab">${op.vocab}</span>
-        ${takesText(op) ? nothing : html`<span class="row-hint">takes ${op.input}</span>`}
+        ${
+          why !== ""
+            ? html`<span class="row-hint">${why}</span>`
+            : takesText(op)
+              ? nothing
+              : html`<span class="row-hint">takes ${op.input}</span>`
+        }
       </div>
       <button
         type="button"
@@ -480,7 +568,10 @@ export class ForgeOperations extends LitElement {
       this.clearQuery();
     } else if ((e.key === "ArrowDown" || e.key === "Enter") && !e.altKey) {
       e.preventDefault();
-      this.focusRow(0);
+      if ((this.currentModel()?.visible.length ?? 0) === 0) {
+        // Every group is folded: the first group header is the next stop.
+        this.renderRoot.querySelector<HTMLElement>(".group-toggle")?.focus();
+      } else this.focusRow(0);
     }
   };
 
@@ -492,12 +583,21 @@ export class ForgeOperations extends LitElement {
     this.searchEl?.focus();
   };
 
-  private toggleSection(id: string): void {
-    const next = new Set(this.collapsed);
-    if (next.has(id)) next.delete(id);
-    else next.add(id);
-    this.collapsed = next;
+  private toggleSection(id: string, wasOpen: boolean): void {
+    const next = new Map(this.overrides);
+    next.set(id, !wasOpen);
+    this.overrides = next;
   }
+
+  private readonly toggleFit = (): void => {
+    this.fitOnly = !this.fitOnly;
+    this.cursor = 0;
+    this.helpIndex = null;
+    this.helpPinned = false;
+    actions.announce(
+      this.fitOnly ? "Showing only operations that fit the data" : "Showing all operations",
+    );
+  };
 
   private add(op: CatalogueOp): void {
     actions.addOp(op.qname);
