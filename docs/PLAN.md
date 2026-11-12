@@ -501,6 +501,11 @@ Language gaps found in wave 7 (candidates for the core, or for a primitive; thos
 ### Phase 6 — Beyond CyberChef
 Magic auto-detection (declarative `checks` in META, depth-limited search). An optional recipe store backend behind `RecipeStore`. A PWA/offline mode. The `@forge/cli`. Recipe diff/swap. **Relix vocabulary** integration as an `relix:` vocab of primitives.
 
+| WP | Scope |
+|---|---|
+| 6.1 | Operations drawer: a type-fit indication for each op against the current data, a "Fits the data" filter, and categories collapsed by default. *In progress, in parallel with 6.2.* |
+| 6.2 | Specification proposal for an additive FL v0.2 wave in `packages/lang` and `packages/ops` ([LANGUAGE-0.2.md](LANGUAGE-0.2.md)): discovery metadata (`use-when`, `link`, `inverse`, a "not an operation" marker, shared `choice` types, a reserved `checks` clause, vector examples and a lazy `help.json`), mid-body locals, memoised zero-input words, linear builders, control and lookup words, maths, promoted `util` words and typed failure words, and a fix for `ForgeError.frames`. Document only; the implementation work packages and the open questions for the owner are in the proposal. |
+
 ## 8. How the orchestration will run
 
 - **Agent mix**: Sonnet-class agents for spec-critical work (1.1, 1.5, 1.6, 2.2, 3.3). Haiku-class agents for well-specified, repetitive WPs (ops with test vectors, coverage-table generation, docs). Each agent gets the spec, the WP's "done" line, and the rule *no commits with attribution, no pushes*.
