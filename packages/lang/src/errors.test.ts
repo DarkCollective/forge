@@ -17,6 +17,7 @@ import { describe, expect, test } from "vitest";
 import {
   ERROR_CODES,
   ForgeError,
+  MAX_FRAMES,
   MAX_SNAPSHOT,
   REDACTED,
   formatErrorMessage,
@@ -85,17 +86,29 @@ describe("ForgeError", () => {
     expect(e.ip).toBe(0);
   });
 
-  test("keeps the top 16 snapshot values and the first 16 frames", () => {
+  test("keeps the top 16 snapshot values and at most 64 frames", () => {
     const stack = Array.from({ length: 20 }, (_, i) => int(i));
-    const frames = Array.from({ length: 20 }, (_, i) => ({ word: `w${i}`, ip: i }));
+    const frames = Array.from({ length: 70 }, (_, i) => ({ word: `w${i}`, ip: i }));
     const e = new ForgeError({ code: "E_USER", message: "m", stackSnapshot: stack, frames });
     expect(MAX_SNAPSHOT).toBe(16);
     expect(e.stackSnapshot).toHaveLength(16);
     expect(e.stackSnapshot[0]).toEqual(int(4));
     expect(e.stackSnapshot[15]).toEqual(int(19));
-    expect(e.frames).toHaveLength(16);
+    expect(MAX_FRAMES).toBe(64);
+    expect(e.frames).toHaveLength(64);
     expect(e.frames[0]?.word).toBe("w0");
-    expect(e.frames[15]?.word).toBe("w15");
+    expect(e.frames[63]?.word).toBe("w63");
+    expect(e.framesSkipped).toBe(0);
+  });
+
+  test("framesSkipped defaults to 0, is in toJSON and survives with()", () => {
+    const plain = new ForgeError({ code: "E_USER", message: "m" });
+    expect(plain.framesSkipped).toBe(0);
+    expect(plain.toJSON().framesSkipped).toBe(0);
+    const e = new ForgeError({ code: "E_USER", message: "m", framesSkipped: 7 });
+    expect(e.toJSON().framesSkipped).toBe(7);
+    expect(e.with({ step: 3 }).framesSkipped).toBe(7);
+    expect(e.with({ framesSkipped: 9 }).framesSkipped).toBe(9);
   });
 
   test("copies its inputs", () => {

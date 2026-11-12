@@ -29,6 +29,7 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json && tsc -p tsconfig.scripts.json && node dist-scripts/catalogue.js",
+    "hash-snapshot": "tsc -p tsconfig.build.json && tsc -p tsconfig.scripts.json && node dist-scripts/hash-snapshot.js",
     "dupes": "tsc -p tsconfig.build.json && tsc -p tsconfig.scripts.json && node dist-scripts/dupes.js",
     "coverage": "tsc -p tsconfig.build.json && tsc -p tsconfig.scripts.json && node dist-scripts/catalogue.js && node dist-scripts/coverage.js",
     "typecheck": "tsc -p tsconfig.json --noEmit"

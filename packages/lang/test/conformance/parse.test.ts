@@ -20,6 +20,8 @@ import {
   hasExpectation,
   KNOWN_DIRECTIVES,
   parseSpec,
+  parseSpecs,
+  loadSpec,
   parseStackIn,
   readSpec,
   scanDirectiveNames,
@@ -91,6 +93,48 @@ describe("spec extraction", () => {
 
   it("recognises the timing tests", () => {
     expect(spec.cases.filter((c) => c.timing).map((c) => c.label)).toEqual(["C106", "C107"]);
+  });
+});
+
+describe("two documents form one suite", () => {
+  const caseText = (id: string, fence = "fl-test"): string =>
+    ["```" + fence, `# ${id} a case`, "@run", "1", "@stack", "1", "```", ""].join("\n");
+
+  it("merges the cases of both documents in order", () => {
+    const merged = parseSpecs([
+      { file: "A.md", text: caseText("C1") },
+      { file: "B.md", text: caseText("C201") },
+    ]);
+    expect(merged.cases.map((c) => c.label)).toEqual(["C1", "C201"]);
+  });
+
+  it("fails clearly on a case id defined in both documents", () => {
+    const docs = [
+      { file: "A.md", text: caseText("C7") },
+      { file: "B.md", text: caseText("C7") },
+    ];
+    expect(() => parseSpecs(docs)).toThrow(SpecParseError);
+    expect(() => parseSpecs(docs)).toThrow(/duplicate case id C7.*A\.md.*B\.md/);
+  });
+
+  it("does not run a block fenced fl-proposed, and picks up fl-test", () => {
+    expect(parseSpec(caseText("C201", "fl-proposed")).cases).toHaveLength(0);
+    expect(parseSpec(caseText("C201", "fl-test")).cases).toHaveLength(1);
+    const merged = parseSpecs([
+      { file: "A.md", text: caseText("C1") },
+      { file: "B.md", text: caseText("C201", "fl-proposed") + caseText("C202") },
+    ]);
+    expect(merged.cases.map((c) => c.label)).toEqual(["C1", "C202"]);
+  });
+
+  it("names the document in a parse error", () => {
+    expect(() => parseSpec("```fl-test\nnot a title\n```\n", "B.md")).toThrow(/^B\.md:/);
+  });
+
+  it("loads the real documents with unique ids", () => {
+    const ids = loadSpec().cases.map((c) => c.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(ids.slice(0, 171)).toEqual(Array.from({ length: 171 }, (_, i) => i + 1));
   });
 });
 

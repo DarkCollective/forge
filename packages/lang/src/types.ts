@@ -210,8 +210,10 @@ export interface ForgeErrorInit {
   readonly pos?: SourcePos | null;
   /** Top (at most 16) data-stack values, bottom to top, default []. */
   readonly stackSnapshot?: readonly Value[];
-  /** Top (at most 16) return-stack word frames, innermost first, default []. */
+  /** Return-stack word frames, innermost first, default []; at most 64 are kept. */
   readonly frames?: readonly ErrorFrame[];
+  /** Frames dropped between the kept innermost and outermost runs. Default 0. */
+  readonly framesSkipped?: number;
   /** Code-specific fields (spec section 11.1), default {}. */
   readonly detail?: Readonly<Record<string, unknown>>;
   readonly cause?: unknown;
@@ -228,6 +230,7 @@ export interface ForgeErrorShape extends Error {
   readonly pos: SourcePos | null;
   readonly stackSnapshot: readonly Value[];
   readonly frames: readonly ErrorFrame[];
+  readonly framesSkipped: number;
   readonly detail: Readonly<Record<string, unknown>>;
   readonly cause?: unknown;
   /** JSON form: all fields, with values replaced by their `.s` reprs. */

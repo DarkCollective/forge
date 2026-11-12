@@ -21,12 +21,15 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import type { Breakpoint, EffectLabel, ErrorCode, Limits, Tag, Value } from "../../src/types.js";
 
-/** Thrown for a malformed block; the message names the spec line and the test. */
+/** The spec file being parsed, for error messages (parsing is synchronous). */
+let currentFile = "LANGUAGE.md";
+
+/** Thrown for a malformed block; the message names the spec file, line and the test. */
 export class SpecParseError extends Error {
   readonly line: number;
   readonly testId: string | null;
   constructor(line: number, testId: string | null, message: string) {
-    super(`LANGUAGE.md:${line}${testId === null ? "" : ` (${testId})`}: ${message}`);
+    super(`${currentFile}:${line}${testId === null ? "" : ` (${testId})`}: ${message}`);
     this.name = "SpecParseError";
     this.line = line;
     this.testId = testId;
@@ -898,13 +901,63 @@ function parseBlock(block: RawBlock, unitNames: ReadonlySet<string>): TestCase {
   };
 }
 
-/** Parses the whole spec text. Throws SpecParseError at the first malformed block. */
-export function parseSpec(markdown: string): Spec {
-  const { tests, units } = extractFences(markdown);
-  const unitText = new Map<string, string>();
-  for (const [name, block] of units) unitText.set(name, block.lines.join("\n") + "\n");
-  const names = new Set(unitText.keys());
-  return { cases: tests.map((b) => parseBlock(b, names)), units: unitText };
+/**
+ * Parses one spec text. Throws SpecParseError at the first malformed block. `file` names the
+ * document in error messages. Blocks fenced `fl-proposed` (or anything but `fl-test`) are ignored.
+ */
+export function parseSpec(markdown: string, file = "LANGUAGE.md"): Spec {
+  const previous = currentFile;
+  currentFile = file;
+  try {
+    const { tests, units } = extractFences(markdown);
+    const unitText = new Map<string, string>();
+    for (const [name, block] of units) unitText.set(name, block.lines.join("\n") + "\n");
+    const names = new Set(unitText.keys());
+    return { cases: tests.map((b) => parseBlock(b, names)), units: unitText };
+  } finally {
+    currentFile = previous;
+  }
+}
+
+/**
+ * Parses several spec documents into one suite (cases in document order). Case ids and unit names
+ * must be unique across the documents; a duplicate fails with a message naming both files.
+ */
+export function parseSpecs(
+  docs: readonly { readonly file: string; readonly text: string }[],
+): Spec {
+  const cases: TestCase[] = [];
+  const units = new Map<string, string>();
+  const caseFile = new Map<number, string>();
+  const unitFile = new Map<string, string>();
+  for (const doc of docs) {
+    const spec = parseSpec(doc.text, doc.file);
+    for (const c of spec.cases) {
+      const other = caseFile.get(c.id);
+      if (other !== undefined) {
+        throw new SpecParseError(
+          0,
+          c.label,
+          `duplicate case id ${c.label}: already defined in ${other}, again in ${doc.file}`,
+        );
+      }
+      caseFile.set(c.id, doc.file);
+      cases.push(c);
+    }
+    for (const [name, text] of spec.units) {
+      const other = unitFile.get(name);
+      if (other !== undefined) {
+        throw new SpecParseError(
+          0,
+          null,
+          `duplicate unit block "${name}": already defined in ${other}, again in ${doc.file}`,
+        );
+      }
+      unitFile.set(name, doc.file);
+      units.set(name, text);
+    }
+  }
+  return { cases, units };
 }
 
 /** Every `@directive` name that appears at the start of a line inside fl-test blocks (raw scan). */
@@ -923,12 +976,27 @@ export function specPath(): string {
   return fileURLToPath(new URL("../../../../docs/LANGUAGE.md", import.meta.url).href);
 }
 
+/** The spec documents that carry `fl-test` blocks, in reading order. */
+export function specDocPaths(): readonly { readonly file: string; readonly path: string }[] {
+  return [
+    { file: "LANGUAGE.md", path: specPath() },
+    {
+      file: "LANGUAGE-0.2.md",
+      path: fileURLToPath(new URL("../../../../docs/LANGUAGE-0.2.md", import.meta.url).href),
+    },
+  ];
+}
+
+/** The text of LANGUAGE.md alone. */
 export function readSpec(): string {
   return readFileSync(specPath(), "utf8");
 }
 
+/** The suite: `fl-test` blocks of LANGUAGE.md and LANGUAGE-0.2.md as one. */
 export function loadSpec(): Spec {
-  return parseSpec(readSpec());
+  return parseSpecs(
+    specDocPaths().map(({ file, path }) => ({ file, text: readFileSync(path, "utf8") })),
+  );
 }
 
 /** True when the case asserts something beyond "succeeds" (spec 16.1 allows the latter, rarely). */

@@ -968,12 +968,33 @@ describe("error context", () => {
     expect(e.frames.map((f) => f.word)).toEqual(["user:f", "user:f", "<console>"]);
   });
 
-  test("the snapshot is the top 16 values and the frames the first 16", async () => {
+  test("the snapshot is the top 16 values and the frames are all of them up to 64", async () => {
     const rt = runtime();
     rt.load(": d ( n:int -- ) n 0 > [ n 1 - recurse ] [ 0 0 div ] if ;");
     const e = failure(await rt.run("1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 20 d"));
     expect(e.stackSnapshot).toHaveLength(16);
-    expect(e.frames).toHaveLength(16);
+    expect(e.frames).toHaveLength(22);
+    expect(e.framesSkipped).toBe(0);
+  });
+
+  test("a 200-deep error keeps the innermost 32 and outermost 32 frames", async () => {
+    const rt = runtime();
+    rt.load(": d ( n:int -- ) n 0 > [ n 1 - recurse ] [ 0 0 div ] if ;");
+    const e = failure(await rt.run("200 d"));
+    expect(e.frames).toHaveLength(64);
+    expect(e.framesSkipped).toBeGreaterThan(0);
+    expect(e.frames[0]?.word).toBe("user:d");
+    expect(e.frames[63]?.word).toBe("<console>");
+    expect(e.toJSON().framesSkipped).toBe(e.framesSkipped);
+  });
+
+  test("the outermost word frame survives a deep error", async () => {
+    const rt = runtime();
+    rt.load(": d ( n:int -- ) n 0 > [ n 1 - recurse ] [ 0 0 div ] if ;");
+    rt.load(": main ( -- ) 150 d ;");
+    const e = failure(await rt.run("main"));
+    expect(e.framesSkipped).toBeGreaterThan(0);
+    expect(e.frames.some((f) => f.word === "user:main")).toBe(true);
   });
 
   test("a non-ForgeError thrown by a hook is E_INTERNAL with a cause", async () => {

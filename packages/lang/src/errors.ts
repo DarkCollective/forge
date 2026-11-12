@@ -40,6 +40,9 @@ export const REDACTED = "<redacted>";
 /** How many stack values and frames an error keeps (spec 11). */
 export const MAX_SNAPSHOT = 16;
 
+/** Most frames a ForgeError keeps: the innermost 32 and the outermost 32 (LANGUAGE-0.2.md section 14). */
+export const MAX_FRAMES = 64;
+
 // Declared as a Record so that the compiler proves the list is exactly the `ErrorCode` union.
 const CODE_TABLE: Record<ErrorCode, true> = {
   E_LEX: true,
@@ -229,11 +232,13 @@ export class ForgeError extends Error implements ForgeErrorShape {
   readonly pos: SourcePos | null;
   readonly stackSnapshot: readonly Value[];
   readonly frames: readonly ErrorFrame[];
+  /** Frames dropped between the kept innermost and outermost runs (0 when none). */
+  readonly framesSkipped: number;
   readonly detail: Readonly<Record<string, unknown>>;
 
   /**
    * Missing fields default as in types.ts. `stackSnapshot` keeps only the top 16 values and
-   * `frames` the first 16; secret values in the snapshot and detail are redacted here, so no
+   * `frames` at most 64 (the innermost 32 and the outermost 32, with `framesSkipped`); secret values in the snapshot and detail are redacted here, so no
    * ForgeError ever holds one.
    */
   constructor(init: ForgeErrorInit) {
@@ -245,7 +250,8 @@ export class ForgeError extends Error implements ForgeErrorShape {
     this.ip = init.ip ?? null;
     this.pos = init.pos ?? null;
     this.stackSnapshot = redactSnapshot(init.stackSnapshot ?? []);
-    this.frames = (init.frames ?? []).slice(0, MAX_SNAPSHOT);
+    this.frames = (init.frames ?? []).slice(0, MAX_FRAMES);
+    this.framesSkipped = init.framesSkipped ?? 0;
     this.detail = redactDetail(init.detail ?? {});
   }
 
@@ -261,6 +267,7 @@ export class ForgeError extends Error implements ForgeErrorShape {
       pos: this.pos,
       stackSnapshot: this.stackSnapshot,
       frames: this.frames,
+      framesSkipped: this.framesSkipped,
       detail: this.detail,
       ...(this.cause !== undefined ? { cause: this.cause } : {}),
       ...patch,
@@ -285,6 +292,7 @@ export class ForgeError extends Error implements ForgeErrorShape {
       pos: this.pos,
       stackSnapshot: this.stackSnapshot.map((v) => reprShort(v)),
       frames: this.frames.map((f) => ({ word: f.word, ip: f.ip })),
+      framesSkipped: this.framesSkipped,
       detail: Object.fromEntries(Object.entries(this.detail).map(([k, v]) => [k, jsonable(v)])),
     };
     if (this.cause !== undefined) {

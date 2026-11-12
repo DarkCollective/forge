@@ -34,7 +34,14 @@
  * every instruction mutates its registers last) and hands catchable ones to the innermost
  * protecting `try`.
  */
-import { ForgeError, isCatchable, redactKeySlots, redactSnapshot, redactValue } from "./errors.js";
+import {
+  ForgeError,
+  MAX_FRAMES,
+  isCatchable,
+  redactKeySlots,
+  redactSnapshot,
+  redactValue,
+} from "./errors.js";
 import { callPrimitive } from "./primitives.js";
 import { DEFAULT_LIMITS } from "./types.js";
 import type {
@@ -642,13 +649,18 @@ class Machine {
     if (!this.started) return err.with({ step: err.step ?? this.steps, stackSnapshot: snapshot });
     const cur = this.cur;
     const ip = this.ip - 1;
-    const frames: ErrorFrame[] = [];
-    for (let i = this.rs.length - 1; i >= 0 && frames.length < 16; i--) {
+    const all: ErrorFrame[] = [];
+    for (let i = this.rs.length - 1; i >= 0; i--) {
       const f = this.rs[i] as Frame;
       if (f.k === K_WORD || f.k === K_QUOT) {
-        frames.push({ word: f.word.qname, ip: f === cur ? ip : f.ip - 1 });
+        all.push({ word: f.word.qname, ip: f === cur ? ip : f.ip - 1 });
       }
     }
+    // Keep the 32 innermost and the 32 outermost frames when there are more than 64.
+    const half = MAX_FRAMES / 2;
+    const frames =
+      all.length <= MAX_FRAMES ? all : [...all.slice(0, half), ...all.slice(all.length - half)];
+    const framesSkipped = all.length - frames.length;
     const qname = cur.word.qname;
     const colon = qname.indexOf(":");
     const wordName = err.word ?? qname;
@@ -661,6 +673,7 @@ class Machine {
       pos: err.pos ?? cur.word.positions[ip] ?? null,
       stackSnapshot: snapshot,
       frames,
+      framesSkipped,
     });
   }
 
