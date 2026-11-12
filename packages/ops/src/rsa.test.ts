@@ -126,7 +126,8 @@ const topBytes = (r: Result) => {
 };
 const topStr = (r: Result) => {
   expect(code(r), message(r)).toBe("ok");
-  return top(r) as string;
+  const v = top(r);
+  return typeof v === "string" ? v : new TextDecoder().decode(v as Uint8Array);
 };
 
 const DIGESTS = ["SHA-1", "MD5", "SHA-256", "SHA-384", "SHA-512"] as const;
@@ -382,6 +383,15 @@ describe("key generation", () => {
       expect(topStr(await verify(sig, pub, MSG, { digest: "SHA-256" }))).toBe("Verified OK");
     },
   );
+
+  test("the DER format is the PKCS#1 private key alone, as bytes (CyberChef's DER format)", async () => {
+    pinStream(1n);
+    const der = topBytes(await generate("1024", "DER"));
+    const priv = GOLDEN_1024.split("\n\n")[1] as string;
+    const body = priv.replace(/-----[A-Z ]+-----/g, "").replace(/\s+/g, "");
+    expect(hex(der)).toBe(hex(Uint8Array.from(atob(body), (c) => c.charCodeAt(0))));
+    expect(der[0]).toBe(0x30);
+  });
 
   test("a source that never gives a prime stops with an error, not a hang", async () => {
     vi.stubGlobal("crypto", { getRandomValues: (a: Uint8Array) => a.fill(0) });

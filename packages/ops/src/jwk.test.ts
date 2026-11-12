@@ -64,7 +64,7 @@ const here = fileURLToPath(import.meta.url).replaceAll("\\", "/");
 const vocabFile = (name: string): string =>
   readFileSync(`${here.slice(0, here.lastIndexOf("/"))}/../vocab/${name}`, "utf8");
 
-const { bytes, int, str } = valueHelpers;
+const { bool, bytes, int, str } = valueHelpers;
 const runtime = assembleRuntime(await loadBundleNode(["jwk"]));
 
 type Result = Awaited<ReturnType<typeof runtime.call>>;
@@ -73,9 +73,10 @@ const out = (r: Result): string => {
   return (r.stack[r.stack.length - 1] as { v: string }).v;
 };
 const code = (r: Result) => (r.ok ? "ok" : r.error.code);
-const fromPem = (text: string | Uint8Array, indent = 0): Promise<Result> =>
+const fromPem = (text: string | Uint8Array, indent = 0, kid = false): Promise<Result> =>
   runtime.call("jwk:from-pem", [
     typeof text === "string" ? str(text) : bytes(text),
+    bool(kid),
     int(indent),
   ] as Value[]);
 const toPem = (text: string): Promise<Result> => runtime.call("jwk:to-pem", [str(text)] as Value[]);
@@ -255,7 +256,9 @@ describe("details", () => {
   test("a certificate's key, several blocks and the indent", async () => {
     const cert = named("from-pem: the key of a P-384 certificate").input.value;
     const two = cert + named("from-pem: P-256 public key (SPKI)").input.value;
-    const arr = JSON.parse(out(await fromPem(two, 2))) as unknown[];
+    const arr = out(await fromPem(two, 2))
+      .split(/\n(?=\{)/)
+      .map((l) => JSON.parse(l) as unknown);
     expect(arr).toHaveLength(2);
     expect(out(await fromPem(cert, 3))).toMatch(/^\{\n {3}"kty"/);
   });
@@ -273,7 +276,9 @@ describe("cost at 64 KiB", () => {
     expect(text.length).toBeGreaterThan(64 * 1024);
     const t = Date.now();
     const r = await fromPem(text, 0);
-    const arr = JSON.parse(out(r)) as unknown[];
+    const arr = out(r)
+      .split("\n")
+      .map((l) => JSON.parse(l) as unknown);
     expect(arr).toHaveLength(380);
     // measured: 277,427 VM steps (about 730 for each key), 0.14 s
     expect(r.ok && r.steps).toBeLessThan(2_000_000);

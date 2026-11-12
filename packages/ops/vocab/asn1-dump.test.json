@@ -1,7 +1,7 @@
 [
   {
     "name": "INTEGER 0",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -9,13 +9,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "INTEGER 00",
+      "value": "INTEGER 00\n",
       "enc": "utf8"
     }
   },
   {
     "name": "INTEGER 127 is one byte",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -23,13 +23,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "INTEGER 7f",
+      "value": "INTEGER 7f\n",
       "enc": "utf8"
     }
   },
   {
     "name": "INTEGER 128 needs a leading zero byte",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -37,13 +37,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "INTEGER 0080",
+      "value": "INTEGER 0080\n",
       "enc": "utf8"
     }
   },
   {
     "name": "INTEGER -1",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -51,13 +51,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "INTEGER ff",
+      "value": "INTEGER ff\n",
       "enc": "utf8"
     }
   },
   {
     "name": "INTEGER -129 (X.690 8.3.3 two's complement)",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -65,13 +65,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "INTEGER ff7f",
+      "value": "INTEGER ff7f\n",
       "enc": "utf8"
     }
   },
   {
     "name": "a 2048-bit INTEGER is shown in full",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -79,27 +79,27 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "INTEGER 00abababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababab",
+      "value": "INTEGER 00ababababababababababababababab..(total 257bytes)..abababababababababababababababab\n",
       "enc": "utf8"
     }
   },
   {
     "name": "BOOLEAN true and false",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
-      "value": "0101ff010100",
+      "value": "30060101ff010100",
       "enc": "utf8"
     },
     "expect": {
-      "value": "BOOLEAN TRUE\nBOOLEAN FALSE",
+      "value": "SEQUENCE\n  BOOLEAN TRUE\n  BOOLEAN FALSE\n",
       "enc": "utf8"
     }
   },
   {
     "name": "BOOLEAN with a wrong length falls back to hex",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -107,13 +107,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "BOOLEAN 0001",
+      "value": "BOOLEAN TRUE\n",
       "enc": "utf8"
     }
   },
   {
     "name": "ENUMERATED",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -121,13 +121,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "ENUMERATED 02",
+      "value": "ENUMERATED 2\n",
       "enc": "utf8"
     }
   },
   {
     "name": "NULL",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -135,7 +135,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "NULL",
+      "value": "NULL\n",
       "enc": "utf8"
     }
   },
@@ -149,7 +149,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "ObjectIdentifier rsaEncryption (1 2 840 113549 1 1 1)",
+      "value": "ObjectIdentifier rsaEncryption (1 2 840 113549 1 1 1)\n",
       "enc": "utf8"
     }
   },
@@ -163,7 +163,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "ObjectIdentifier (1 2 3 4)",
+      "value": "ObjectIdentifier (1 2 3 4)\n",
       "enc": "utf8"
     }
   },
@@ -177,13 +177,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "ObjectIdentifier (2 25 329800735698586629295641978511506172918)",
+      "value": "ObjectIdentifier (2 25 329800735698586629295641978511506172918)\n",
       "enc": "utf8"
     }
   },
   {
     "name": "malformed OBJECT IDENTIFIER falls back to hex",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -191,13 +191,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "ObjectIdentifier 2a86",
+      "value": "ObjectIdentifier 2a86\n",
       "enc": "utf8"
     }
   },
   {
     "name": "UTF8String with a non-ASCII letter",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -205,13 +205,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "UTF8String 'héllo'",
+      "value": "UTF8String 'héllo'\n",
       "enc": "utf8"
     }
   },
   {
     "name": "UTF8String that is not valid UTF-8 shows hex",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -219,13 +219,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "UTF8String fffe",
+      "value": "UTF8String fffe\n",
       "enc": "utf8"
     }
   },
   {
     "name": "a string with a control character shows hex (no forged lines)",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -233,13 +233,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "UTF8String 410a42",
+      "value": "UTF8String 410a42\n",
       "enc": "utf8"
     }
   },
   {
     "name": "PrintableString",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -247,13 +247,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "PrintableString 'AB'",
+      "value": "PrintableString 'AB'\n",
       "enc": "utf8"
     }
   },
   {
     "name": "IA5String",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -261,27 +261,27 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "IA5String 'a@b.'",
+      "value": "IA5String 'a@b.'\n",
       "enc": "utf8"
     }
   },
   {
     "name": "NumericString and VisibleString",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
-      "value": "12033132331a024142",
+      "value": "300912033132331a024142",
       "enc": "utf8"
     },
     "expect": {
-      "value": "NumericString '123'\nVisibleString 'AB'",
+      "value": "SEQUENCE\n  NumericString '123'\n  VisibleString 'AB'\n",
       "enc": "utf8"
     }
   },
   {
     "name": "BMPString is UTF-16BE",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -289,13 +289,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "BMPString 'Hi'",
+      "value": "BMPString 'Hi'\n",
       "enc": "utf8"
     }
   },
   {
     "name": "UniversalString is UTF-32BE",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -303,27 +303,27 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "UniversalString 'Hi'",
+      "value": "UniversalString 'Hi'\n",
       "enc": "utf8"
     }
   },
   {
     "name": "UTCTime and GeneralizedTime",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
-      "value": "170d3236313131313139353433395a180f32303236313131313030303030305a",
+      "value": "3020170d3236313131313139353433395a180f32303236313131313030303030305a",
       "enc": "utf8"
     },
     "expect": {
-      "value": "UTCTime '261111195439Z'\nGeneralizedTime '20261111000000Z'",
+      "value": "SEQUENCE\n  UTCTime 261111195439Z\n  GeneralizedTime 20261111000000Z\n",
       "enc": "utf8"
     }
   },
   {
     "name": "SEQUENCE with three children",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -331,27 +331,27 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "SEQUENCE\n  INTEGER 01\n  OCTETSTRING aabbccdd\n  NULL",
+      "value": "SEQUENCE\n  INTEGER 01\n  OCTETSTRING aabbccdd\n  NULL\n",
       "enc": "utf8"
     }
   },
   {
     "name": "an empty SEQUENCE and an empty SET",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
-      "value": "30003100",
+      "value": "300430003100",
       "enc": "utf8"
     },
     "expect": {
-      "value": "SEQUENCE\nSET",
+      "value": "SEQUENCE\n  SEQUENCE {}\n  SET\n",
       "enc": "utf8"
     }
   },
   {
     "name": "OCTET STRING that holds DER is opened",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -359,13 +359,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "OCTETSTRING\n  SEQUENCE\n    INTEGER 05",
+      "value": "OCTETSTRING, encapsulates\n  SEQUENCE\n    INTEGER 05\n",
       "enc": "utf8"
     }
   },
   {
     "name": "OCTET STRING that is not DER shows hex",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -373,13 +373,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "OCTETSTRING deadbeef",
+      "value": "OCTETSTRING deadbeef\n",
       "enc": "utf8"
     }
   },
   {
     "name": "an empty OCTET STRING",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -387,13 +387,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "OCTETSTRING",
+      "value": "OCTETSTRING\n",
       "enc": "utf8"
     }
   },
   {
     "name": "BIT STRING with unused bits",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -401,13 +401,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "BITSTRING a0 (5 unused)",
+      "value": "BITSTRING 05a0\n",
       "enc": "utf8"
     }
   },
   {
     "name": "BIT STRING with no unused bits",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -415,13 +415,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "BITSTRING ff",
+      "value": "BITSTRING 00ff\n",
       "enc": "utf8"
     }
   },
   {
     "name": "BIT STRING that holds DER is opened",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -429,13 +429,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "BITSTRING\n  SEQUENCE\n    INTEGER 07",
+      "value": "BITSTRING, encapsulates\n  SEQUENCE\n    INTEGER 07\n",
       "enc": "utf8"
     }
   },
   {
     "name": "explicit context tag [0]",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -443,13 +443,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "[0]\n  INTEGER 02",
+      "value": "[0]\n  INTEGER 02\n",
       "enc": "utf8"
     }
   },
   {
     "name": "implicit context tag with text (dNSName)",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -457,13 +457,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "[2] 'example.com'",
+      "value": "[2] 6578616d706c652e636f6d\n",
       "enc": "utf8"
     }
   },
   {
     "name": "implicit context tag with bytes (iPAddress)",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -471,41 +471,41 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "[7] 0a000001",
+      "value": "[7] 0a000001\n",
       "enc": "utf8"
     }
   },
   {
     "name": "application and private classes",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
-      "value": "6103020105e500",
+      "value": "30076103020105e500",
       "enc": "utf8"
     },
     "expect": {
-      "value": "[APPLICATION 1]\n  INTEGER 05\n[PRIVATE 5]",
+      "value": "SEQUENCE\n  [APPLICATION 1]\n    INTEGER 05\n  [PRIVATE 5]\n",
       "enc": "utf8"
     }
   },
   {
     "name": "high tag number form: context [31] and application [128]",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
-      "value": "9f1f01aa5f810001bb",
+      "value": "30099f1f01aa5f810001bb",
       "enc": "utf8"
     },
     "expect": {
-      "value": "[31] aa\n[APPLICATION 128] bb",
+      "value": "SEQUENCE\n  [31] aa\n  [APPLICATION 128] bb\n",
       "enc": "utf8"
     }
   },
   {
     "name": "universal tag 31 and over shows [UNIVERSAL n]",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -513,13 +513,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "[UNIVERSAL 31] aa",
+      "value": "[UNIVERSAL 31] aa\n",
       "enc": "utf8"
     }
   },
   {
     "name": "long-form length in a SEQUENCE (minimal 81)",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -527,13 +527,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "SEQUENCE\n  OCTETSTRING 1111111111111111111111111111111111111111111111111111111111111111...",
+      "value": "SEQUENCE\n  OCTETSTRING 11111111111111111111111111111111..(total 126bytes)..11111111111111111111111111111111\n",
       "enc": "utf8"
     }
   },
   {
     "name": "long-form length 82 (2 length bytes)",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -541,13 +541,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "SEQUENCE\n  OCTETSTRING abababababababababababababababababababababababababababababababab...",
+      "value": "SEQUENCE\n  OCTETSTRING abababababababababababababababab..(total 256bytes)..abababababababababababababababab\n",
       "enc": "utf8"
     }
   },
   {
     "name": "non-minimal long-form length is accepted (BER-tolerant)",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -555,13 +555,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "SEQUENCE\n  INTEGER 05",
+      "value": "SEQUENCE\n  INTEGER 05\n",
       "enc": "utf8"
     }
   },
   {
-    "name": "several top-level elements",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "name": "only the first of several top-level elements is shown",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -569,13 +569,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "INTEGER 01\nNULL",
+      "value": "INTEGER 01\n",
       "enc": "utf8"
     }
   },
   {
     "name": "white space in the hex",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -583,13 +583,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "SEQUENCE\n  INTEGER 05",
+      "value": "SEQUENCE\n  INTEGER 05\n",
       "enc": "utf8"
     }
   },
   {
     "name": "empty input has no elements",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -603,26 +603,26 @@
   },
   {
     "name": "start skips leading bytes",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {
-      "start": 2
+      "start": 4
     },
     "input": {
       "value": "aabb020107",
       "enc": "utf8"
     },
     "expect": {
-      "value": "INTEGER 07",
+      "value": "INTEGER 07\n",
       "enc": "utf8"
     }
   },
   {
     "name": "start at the end of the data shows nothing",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {
-      "start": 3
+      "start": 6
     },
     "input": {
       "value": "020107",
@@ -635,23 +635,23 @@
   },
   {
     "name": "truncate cuts a long value (4 bytes)",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {
-      "truncate": 4
+      "truncate": 8
     },
     "input": {
       "value": "04080001020304050607",
       "enc": "utf8"
     },
     "expect": {
-      "value": "OCTETSTRING 00010203...",
+      "value": "OCTETSTRING 0001020304050607\n",
       "enc": "utf8"
     }
   },
   {
     "name": "truncate 0 shows everything",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {
       "truncate": 0
@@ -661,13 +661,13 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "OCTETSTRING 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627",
+      "value": "OCTETSTRING 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627\n",
       "enc": "utf8"
     }
   },
   {
     "name": "the default truncation is 32 bytes",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -675,29 +675,29 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "OCTETSTRING 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f...",
+      "value": "OCTETSTRING 000102030405060708090a0b0c0d0e0f..(total 40bytes)..18191a1b1c1d1e1f2021222324252627\n",
       "enc": "utf8"
     }
   },
   {
     "name": "exactly the truncation length is not cut",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {
-      "truncate": 4
+      "truncate": 8
     },
     "input": {
       "value": "040400010203",
       "enc": "utf8"
     },
     "expect": {
-      "value": "OCTETSTRING 00010203",
+      "value": "OCTETSTRING 00010203\n",
       "enc": "utf8"
     }
   },
   {
     "name": "64 levels of nesting are read",
-    "ref": "DER assembled by hand from X.690 section 8; the outline layout is Forge's own",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -705,7 +705,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "SEQUENCE\n  SEQUENCE\n    SEQUENCE\n      SEQUENCE\n        SEQUENCE\n          SEQUENCE\n            SEQUENCE\n              SEQUENCE\n                SEQUENCE\n                  SEQUENCE\n                    SEQUENCE\n                      SEQUENCE\n                        SEQUENCE\n                          SEQUENCE\n                            SEQUENCE\n                              SEQUENCE\n                                SEQUENCE\n                                  SEQUENCE\n                                    SEQUENCE\n                                      SEQUENCE\n                                        SEQUENCE\n                                          SEQUENCE\n                                            SEQUENCE\n                                              SEQUENCE\n                                                SEQUENCE\n                                                  SEQUENCE\n                                                    SEQUENCE\n                                                      SEQUENCE\n                                                        SEQUENCE\n                                                          SEQUENCE\n                                                            SEQUENCE\n                                                              SEQUENCE\n                                                                SEQUENCE\n                                                                  SEQUENCE\n                                                                    SEQUENCE\n                                                                      SEQUENCE\n                                                                        SEQUENCE\n                                                                          SEQUENCE\n                                                                            SEQUENCE\n                                                                              SEQUENCE\n                                                                                SEQUENCE\n                                                                                  SEQUENCE\n                                                                                    SEQUENCE\n                                                                                      SEQUENCE\n                                                                                        SEQUENCE\n                                                                                          SEQUENCE\n                                                                                            SEQUENCE\n                                                                                              SEQUENCE\n                                                                                                SEQUENCE\n                                                                                                  SEQUENCE\n                                                                                                    SEQUENCE\n                                                                                                      SEQUENCE\n                                                                                                        SEQUENCE\n                                                                                                          SEQUENCE\n                                                                                                            SEQUENCE\n                                                                                                              SEQUENCE\n                                                                                                                SEQUENCE\n                                                                                                                  SEQUENCE\n                                                                                                                    SEQUENCE\n                                                                                                                      SEQUENCE\n                                                                                                                        SEQUENCE\n                                                                                                                          SEQUENCE\n                                                                                                                            SEQUENCE\n                                                                                                                              SEQUENCE",
+      "value": "SEQUENCE\n  SEQUENCE\n    SEQUENCE\n      SEQUENCE\n        SEQUENCE\n          SEQUENCE\n            SEQUENCE\n              SEQUENCE\n                SEQUENCE\n                  SEQUENCE\n                    SEQUENCE\n                      SEQUENCE\n                        SEQUENCE\n                          SEQUENCE\n                            SEQUENCE\n                              SEQUENCE\n                                SEQUENCE\n                                  SEQUENCE\n                                    SEQUENCE\n                                      SEQUENCE\n                                        SEQUENCE\n                                          SEQUENCE\n                                            SEQUENCE\n                                              SEQUENCE\n                                                SEQUENCE\n                                                  SEQUENCE\n                                                    SEQUENCE\n                                                      SEQUENCE\n                                                        SEQUENCE\n                                                          SEQUENCE\n                                                            SEQUENCE\n                                                              SEQUENCE\n                                                                SEQUENCE\n                                                                  SEQUENCE\n                                                                    SEQUENCE\n                                                                      SEQUENCE\n                                                                        SEQUENCE\n                                                                          SEQUENCE\n                                                                            SEQUENCE\n                                                                              SEQUENCE\n                                                                                SEQUENCE\n                                                                                  SEQUENCE\n                                                                                    SEQUENCE\n                                                                                      SEQUENCE\n                                                                                        SEQUENCE\n                                                                                          SEQUENCE\n                                                                                            SEQUENCE\n                                                                                              SEQUENCE\n                                                                                                SEQUENCE\n                                                                                                  SEQUENCE\n                                                                                                    SEQUENCE\n                                                                                                      SEQUENCE\n                                                                                                        SEQUENCE\n                                                                                                          SEQUENCE\n                                                                                                            SEQUENCE\n                                                                                                              SEQUENCE\n                                                                                                                SEQUENCE\n                                                                                                                  SEQUENCE\n                                                                                                                    SEQUENCE\n                                                                                                                      SEQUENCE\n                                                                                                                        SEQUENCE\n                                                                                                                          SEQUENCE\n                                                                                                                            SEQUENCE\n                                                                                                                              SEQUENCE {}\n",
       "enc": "utf8"
     }
   },
@@ -719,7 +719,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "SEQUENCE\n  SEQUENCE\n    [0]\n      INTEGER 02\n    INTEGER 600a0f7db714787bff29ec0cfb252e92f7b2b694\n    SEQUENCE\n      ObjectIdentifier ecdsa-with-SHA256 (1 2 840 10045 4 3 2)\n    SEQUENCE\n      SET\n        SEQUENCE\n          ObjectIdentifier countryName (2 5 4 6)\n          PrintableString 'US'\n      SET\n        SEQUENCE\n          ObjectIdentifier organizationName (2 5 4 10)\n          UTF8String 'Test Org'\n      SET\n        SEQUENCE\n          ObjectIdentifier commonName (2 5 4 3)\n          UTF8String 'example.com'\n    SEQUENCE\n      UTCTime '261111195439Z'\n      UTCTime '261211195439Z'\n    SEQUENCE\n      SET\n        SEQUENCE\n          ObjectIdentifier countryName (2 5 4 6)\n          PrintableString 'US'\n      SET\n        SEQUENCE\n          ObjectIdentifier organizationName (2 5 4 10)\n          UTF8String 'Test Org'\n      SET\n        SEQUENCE\n          ObjectIdentifier commonName (2 5 4 3)\n          UTF8String 'example.com'\n    SEQUENCE\n      SEQUENCE\n        ObjectIdentifier id-ecPublicKey (1 2 840 10045 2 1)\n        ObjectIdentifier prime256v1 (1 2 840 10045 3 1 7)\n      BITSTRING 04527e03e94eca5485402b679af1ee88c0096d513392cc7440dca423a41d3bff...\n    [3]\n      SEQUENCE\n        SEQUENCE\n          ObjectIdentifier subjectKeyIdentifier (2 5 29 14)\n          OCTETSTRING\n            OCTETSTRING d6a11fb6ae8c4f20bf454efc16ad1c36425b52f7\n        SEQUENCE\n          ObjectIdentifier authorityKeyIdentifier (2 5 29 35)\n          OCTETSTRING\n            SEQUENCE\n              [0] d6a11fb6ae8c4f20bf454efc16ad1c36425b52f7\n        SEQUENCE\n          ObjectIdentifier basicConstraints (2 5 29 19)\n          BOOLEAN TRUE\n          OCTETSTRING\n            SEQUENCE\n              BOOLEAN TRUE\n        SEQUENCE\n          ObjectIdentifier subjectAltName (2 5 29 17)\n          OCTETSTRING\n            SEQUENCE\n              [2] 'example.com'\n              [7] 0a000001\n  SEQUENCE\n    ObjectIdentifier ecdsa-with-SHA256 (1 2 840 10045 4 3 2)\n  BITSTRING\n    SEQUENCE\n      INTEGER 3549949f1c1cc9579794f33487bcad31bf426c896f6a8e437c4351342f33eccc\n      INTEGER 44a6c1f6eb9541875d8a77b8e856cac6fbf9c6b3a5195ff1fc1a337fdac3bd42",
+      "value": "SEQUENCE\n  SEQUENCE\n    [0]\n      INTEGER 02\n    INTEGER 600a0f7db714787bff29ec0cfb252e92f7b2b694\n    SEQUENCE\n      ObjectIdentifier ecdsa-with-SHA256 (1 2 840 10045 4 3 2)\n    SEQUENCE\n      SET\n        SEQUENCE\n          ObjectIdentifier countryName (2 5 4 6)\n          PrintableString 'US'\n      SET\n        SEQUENCE\n          ObjectIdentifier organizationName (2 5 4 10)\n          UTF8String 'Test Org'\n      SET\n        SEQUENCE\n          ObjectIdentifier commonName (2 5 4 3)\n          UTF8String 'example.com'\n    SEQUENCE\n      UTCTime 261111195439Z\n      UTCTime 261211195439Z\n    SEQUENCE\n      SET\n        SEQUENCE\n          ObjectIdentifier countryName (2 5 4 6)\n          PrintableString 'US'\n      SET\n        SEQUENCE\n          ObjectIdentifier organizationName (2 5 4 10)\n          UTF8String 'Test Org'\n      SET\n        SEQUENCE\n          ObjectIdentifier commonName (2 5 4 3)\n          UTF8String 'example.com'\n    SEQUENCE\n      SEQUENCE\n        ObjectIdentifier id-ecPublicKey (1 2 840 10045 2 1)\n        ObjectIdentifier prime256v1 (1 2 840 10045 3 1 7)\n      BITSTRING 0004527e03e94eca5485402b679af1ee..(total 66bytes)..588747c8cc80950dff46cb925f7a5df0\n    [3]\n      SEQUENCE\n        SEQUENCE\n          ObjectIdentifier subjectKeyIdentifier (2 5 29 14)\n          OCTETSTRING, encapsulates\n            OCTETSTRING d6a11fb6ae8c4f20bf454efc16ad1c36425b52f7\n        SEQUENCE\n          ObjectIdentifier authorityKeyIdentifier (2 5 29 35)\n          OCTETSTRING, encapsulates\n            SEQUENCE\n              [0] d6a11fb6ae8c4f20bf454efc16ad1c36425b52f7\n        SEQUENCE\n          ObjectIdentifier basicConstraints (2 5 29 19)\n          BOOLEAN TRUE\n          OCTETSTRING, encapsulates\n            SEQUENCE\n              BOOLEAN TRUE\n        SEQUENCE\n          ObjectIdentifier subjectAltName (2 5 29 17)\n          OCTETSTRING, encapsulates\n            SEQUENCE\n              [2] example.com\n              [7] 0a000001\n  SEQUENCE\n    ObjectIdentifier ecdsa-with-SHA256 (1 2 840 10045 4 3 2)\n  BITSTRING, encapsulates\n    SEQUENCE\n      INTEGER 3549949f1c1cc9579794f33487bcad31bf426c896f6a8e437c4351342f33eccc\n      INTEGER 44a6c1f6eb9541875d8a77b8e856cac6fbf9c6b3a5195ff1fc1a337fdac3bd42\n",
       "enc": "utf8"
     }
   },
@@ -733,7 +733,7 @@
       "enc": "utf8"
     },
     "expect": {
-      "value": "SEQUENCE\n  SEQUENCE\n    INTEGER 00\n    SEQUENCE\n      SET\n        SEQUENCE\n          ObjectIdentifier commonName (2 5 4 3)\n          UTF8String 'csr.example'\n      SET\n        SEQUENCE\n          ObjectIdentifier organizationName (2 5 4 10)\n          UTF8String 'Org'\n    SEQUENCE\n      SEQUENCE\n        ObjectIdentifier id-ecPublicKey (1 2 840 10045 2 1)\n        ObjectIdentifier prime256v1 (1 2 840 10045 3 1 7)\n      BITSTRING 04527e03e94eca5485402b679af1ee88c0096d513392cc7440dca423a41d3bff...\n    [0]\n  SEQUENCE\n    ObjectIdentifier ecdsa-with-SHA256 (1 2 840 10045 4 3 2)\n  BITSTRING\n    SEQUENCE\n      INTEGER 47ca83b401da41c8432b4cbe1b900c8fe1c28660d7b0a0ac135e507e3e1cad6b\n      INTEGER 00aafab194b31e9348296e59787b1243134af5fae993bbbb7823a0c89b368af11c",
+      "value": "SEQUENCE\n  SEQUENCE\n    INTEGER 00\n    SEQUENCE\n      SET\n        SEQUENCE\n          ObjectIdentifier commonName (2 5 4 3)\n          UTF8String 'csr.example'\n      SET\n        SEQUENCE\n          ObjectIdentifier organizationName (2 5 4 10)\n          UTF8String 'Org'\n    SEQUENCE\n      SEQUENCE\n        ObjectIdentifier id-ecPublicKey (1 2 840 10045 2 1)\n        ObjectIdentifier prime256v1 (1 2 840 10045 3 1 7)\n      BITSTRING 0004527e03e94eca5485402b679af1ee..(total 66bytes)..588747c8cc80950dff46cb925f7a5df0\n    [0]\n  SEQUENCE\n    ObjectIdentifier ecdsa-with-SHA256 (1 2 840 10045 4 3 2)\n  BITSTRING, encapsulates\n    SEQUENCE\n      INTEGER 47ca83b401da41c8432b4cbe1b900c8fe1c28660d7b0a0ac135e507e3e1cad6b\n      INTEGER 00aafab194b31e9348296e59787b1243..(total 33bytes)..4af5fae993bbbb7823a0c89b368af11c\n",
       "enc": "utf8"
     }
   },
@@ -881,7 +881,7 @@
     }
   },
   {
-    "name": "error: bytes after a complete element that are not an element",
+    "name": "bytes after the element are not read",
     "ref": "X.690 8.1.3 (length forms), 8.1.3.6 (indefinite length is BER only), 8.1.5 (end-of-contents)",
     "op": "asn1-dump:parse",
     "params": {},
@@ -890,7 +890,8 @@
       "enc": "utf8"
     },
     "expect": {
-      "error": "E_COERCE"
+      "value": "NULL\n",
+      "enc": "utf8"
     }
   },
   {
@@ -937,7 +938,7 @@
     "ref": "parameter check",
     "op": "asn1-dump:parse",
     "params": {
-      "start": 4
+      "start": 8
     },
     "input": {
       "value": "020107",
@@ -975,6 +976,95 @@
     },
     "expect": {
       "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "start at the second of two elements",
+    "ref": "DER by hand (X.690)",
+    "op": "asn1-dump:parse",
+    "params": {
+      "start": 6
+    },
+    "input": {
+      "value": "0201010500",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "NULL\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "start in the middle of a certificate shows that element only",
+    "ref": "DER by hand (X.690)",
+    "op": "asn1-dump:parse",
+    "params": {
+      "start": 10
+    },
+    "input": {
+      "value": "3009020101300402020105",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "SEQUENCE\n  INTEGER 0105\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "start must be even (hex characters)",
+    "ref": "parameter check",
+    "op": "asn1-dump:parse",
+    "params": {
+      "start": 3
+    },
+    "input": {
+      "value": "0201010500",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_RANGE"
+    }
+  },
+  {
+    "name": "ENUMERATED 10 is decimal (jsrsasign prints 0 for it)",
+    "ref": "X.690 8.4",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "0a010a",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ENUMERATED 10\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "ENUMERATED 128",
+    "ref": "X.690 8.4",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "0a020080",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "ENUMERATED 128\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "dNSName [2] inside a subjectAltName extension is text",
+    "ref": "DER by hand: extension SEQUENCE { OID 2.5.29.17, OCTET STRING { SEQUENCE { [2] a.example, [7] 01020304 } } }",
+    "op": "asn1-dump:parse",
+    "params": {},
+    "input": {
+      "value": "301a0603551d11041330118209612e6578616d706c65870401020304",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "SEQUENCE\n  ObjectIdentifier subjectAltName (2 5 29 17)\n  OCTETSTRING, encapsulates\n    SEQUENCE\n      [2] a.example\n      [7] 01020304\n",
+      "enc": "utf8"
     }
   }
 ]

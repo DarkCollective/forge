@@ -117,7 +117,7 @@ describe("a key blob cut short is never accepted", () => {
   for (const [name, type] of KEYS) {
     test(`${type}: every cut point`, async () => {
       const blob = blobOf(name);
-      expect(out(await parse(b64(blob)))).toContain(`Key type:             ${type}\n`);
+      expect(out(await parse(b64(blob)))).toContain(`Key type: ${type}\n`);
       const bad: string[] = [];
       for (let n = 0; n < blob.length; n++) {
         const c = code(await parse(b64(blob.slice(0, n))));
@@ -187,8 +187,8 @@ describe("hostile lengths", () => {
     const t = Date.now();
     const r = await parse(b64(rsa(8000)));
     const text = out(r);
-    expect(text).toContain("Length:               64000 bits");
-    expect(text).toContain("Exponent:             65537 (0x10001)");
+    expect(text).toContain("Length: 64000 bits");
+    expect(text).toContain("Exponent: 0x010001");
     // measured: 651,577 VM steps (the 8,000-byte modulus is written as 500 lines of octets)
     expect(r.ok && r.steps).toBeLessThan(3_000_000);
     expect(Date.now() - t).toBeLessThan(20_000);
@@ -204,7 +204,7 @@ describe("hostile lengths", () => {
     const t = Date.now();
     const r = await parse(`ssh-ed25519 ${b64(blob)} ${comment}`);
     const text = out(r);
-    expect(text).toContain("Comment:              c\\x01dc\\x01d");
+    expect(text).toContain("Comment: c\\x01dc\\x01d");
     // measured: 2,268,180 VM steps on the slow path (about 35 a character, 64,000 characters, 10,000 of them escaped);
     // a comment without control characters costs a few steps
     expect(r.ok && r.steps).toBeLessThan(3_000_000);

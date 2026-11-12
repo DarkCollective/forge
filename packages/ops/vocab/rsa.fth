@@ -618,10 +618,13 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ecdsa ;
 : _public-out ( key:record format:str -- bytes )
   format "PEM" = [ key _pem-public str>bytes ] [ format "DER" = [ key _der-public ] [ key _jwk-public str>bytes ] if ] if ;
 
-: generate-key-pair ( bytes size:choice{1024|2048|4096}="2048" format:choice{PEM|JWK}="PEM" -- str )
-  "A new RSA key pair (Generate RSA Key Pair): size bits (1024, 2048 or 4096), public exponent 65537, two probable primes of size/2 bits with their top two bits set (so the modulus has exactly size bits), found by trial division by the primes below 65536 and 13 rounds of Miller-Rabin (base 2 and 12 random bases; far beyond the 2^-100 error that FIPS 186-5 asks for), and a distance of more than 2^(size/2 - 100) between them. The result is the public key as a PUBLIC KEY (SubjectPublicKeyInfo) PEM block followed by the private key as an RSA PRIVATE KEY (PKCS#1) PEM block, the order and the formats of CyberChef, but with line feeds where CyberChef (node-forge) writes CRLF; with the JWK format, the public key and then the private key as one line of JSON each. The input is ignored. All random bytes come from the host's cryptographic random generator (the word carries the +random effect), so the output differs on every call. The search is random, so the time varies: 1024 bits take about 0.04 s, 2048 bits 0.25 s and 4096 bits 1.8 s on average (the slowest of twelve runs was 3.4 s), far inside the 30 second limit; a search that does not end after 200 pools of candidates stops with an error." doc
+: _generate-out ( key:record format:str -- bytes )
+  format "DER" = [ key _der-private ] [ key format _key-pair-text str>bytes ] if ;
+
+: generate-key-pair ( bytes size:choice{1024|2048|4096}="2048" format:choice{PEM|JWK|DER}="PEM" -- bytes )
+  "A new RSA key pair (Generate RSA Key Pair): size bits (1024, 2048 or 4096), public exponent 65537, two probable primes of size/2 bits with their top two bits set (so the modulus has exactly size bits), found by trial division by the primes below 65536 and 13 rounds of Miller-Rabin (base 2 and 12 random bases; far beyond the 2^-100 error that FIPS 186-5 asks for), and a distance of more than 2^(size/2 - 100) between them. The result is the public key as a PUBLIC KEY (SubjectPublicKeyInfo) PEM block followed by the private key as an RSA PRIVATE KEY (PKCS#1) PEM block, the order and the formats of CyberChef, but with line feeds where CyberChef (node-forge) writes CRLF; with the JWK format (CyberChef's JSON, which is a node-forge BigInteger dump, here a real JWK), the public key and then the private key as one line of JSON each; with DER the private key alone as its PKCS#1 DER bytes, as CyberChef's DER format. The input is ignored. All random bytes come from the host's cryptographic random generator (the word carries the +random effect), so the output differs on every call. The search is random, so the time varies: 1024 bits take about 0.04 s, 2048 bits 0.25 s and 4096 bits 1.8 s on average (the slowest of twelve runs was 3.4 s), far inside the 30 second limit; a search that does not end after 200 pools of candidates stops with an error." doc
   "Public Key" category
-  drop size str>int _generate format _key-pair-text ;
+  drop size str>int _generate format _generate-out ;
 
 : sign ( data:bytes key:str password:str="" digest:choice{SHA-1|MD5|SHA-256|SHA-384|SHA-512}="SHA-1" scheme:choice{RSASSA-PKCS1-V1_5|RSASSA-PSS}="RSASSA-PKCS1-V1_5" salt-length:int=-1 -- bytes )
   "The RSA signature (RSA Sign) of the input bytes under a PEM private key, as raw bytes of the length of the modulus. The digest is hashed first (SHA-1 by default, as in CyberChef). The scheme is RSASSA-PKCS1-v1_5 (what CyberChef does, and deterministic) or RSASSA-PSS (random salt of salt-length bytes, -1 for the digest length; MGF1 with the same digest). The key is a PEM block of kind RSA PRIVATE KEY (PKCS#1), PRIVATE KEY (PKCS#8) or ENCRYPTED PRIVATE KEY, or the legacy encrypted PEM with Proc-Type and DEK-Info headers; the password decrypts an encrypted key (AES-CBC, Triple DES or DES, PBKDF2 with SHA-1 or SHA-2, or OpenSSL's MD5 key derivation). Of several blocks the first private key is used. A key that is not RSA (an EC key) or has no PEM block, a missing password and a key too small for the digest are E_RANGE; a damaged key or a wrong password is E_COERCE. PSS signatures differ on every call (the word carries +random)." doc
@@ -721,7 +724,7 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ecdsa ;
 
 META: generate-key-pair
   param size "The key size in bits: 1024, 2048 or 4096." ;
-  param format "PEM: the public key (PUBLIC KEY) then the private key (RSA PRIVATE KEY); JWK: one line of JSON each." ;
+  param format "PEM: the public key (PUBLIC KEY) then the private key (RSA PRIVATE KEY); JWK: one line of JSON each; DER: the private key (PKCS#1) as bytes." ;
   see-also rsa:public-key rsa:sign rsa:encrypt pem:to-hex prime:generate ;
 ;
 
