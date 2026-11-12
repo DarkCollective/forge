@@ -19,9 +19,10 @@
 // Keyboard (documented here and in the shortcuts dialog):
 //   Search box: type to filter; Down or Enter moves into the list; Escape clears the search.
 //   List (roving focus, role listbox): Up/Down move, Home/End first/last, PageUp/PageDown by 10,
-//     Enter adds the operation to the recipe, F toggles its favourite, ? shows or pins its help,
-//     Escape closes the help and returns to the search box (Up from the first row does too).
-//     Moving onto a row shows its help.
+//     Enter adds the operation to the recipe, F toggles its favourite, ? opens its full help (a
+//     dialog: use-when line, examples with Try it, inverse, links; WP 6.13),
+//     Escape hides the quick help and returns to the search box (Up from the first row does too).
+//     Moving onto a row shows its quick help (a tooltip, text only).
 //   Group headers are buttons (Tab reaches them, Enter or Space folds the group). In the browse view
 //     the categories (and "Other") start folded; Favourites and User words start open. Only the rows of
 //     open groups are in the list, so the arrow keys skip folded groups; with every group folded Down
@@ -45,6 +46,9 @@ import { baseStyles, paneStyles } from "../styles/shared.js";
 import { dataLabel, dataTypeAtEnd, fits, whyNotFit } from "./fit.js";
 import type { DataType } from "./fit.js";
 import { helpFor } from "./help.js";
+import { helpLoader } from "./help-loader.js";
+import "./forge-op-help.js";
+import type { ForgeOpHelp } from "./forge-op-help.js";
 import { buildListModel } from "./group.js";
 import type { ListModel, ListSection } from "./group.js";
 
@@ -273,11 +277,10 @@ export class ForgeOperations extends LitElement {
   @state() private cursor = 0;
   /** Index of the row whose help is shown, or null. */
   @state() private helpIndex: number | null = null;
-  /** True when the help was pinned with `?` and hover or focus must not dismiss it. */
-  @state() private helpPinned = false;
 
   @query(`#${SEARCH_ID}`) private readonly searchEl!: HTMLInputElement | null;
   @query(`#${HELP_ID}`) private readonly helpEl!: HTMLElement | null;
+  @query("forge-op-help") private readonly dialogEl!: ForgeOpHelp | null;
   @query(".scroll") private readonly scrollEl!: HTMLElement | null;
 
   /** Move focus to the pane's main control (called by the shell's pane shortcuts). */
@@ -355,6 +358,7 @@ export class ForgeOperations extends LitElement {
       <div id=${HELP_ID} popover="manual" role="tooltip" class="help">
         ${helpOp === undefined ? nothing : this.renderHelp(helpOp)}
       </div>
+      <forge-op-help></forge-op-help>
     `;
   }
 
@@ -509,10 +513,9 @@ export class ForgeOperations extends LitElement {
         class="icon"
         tabindex="-1"
         aria-hidden="true"
-        aria-expanded=${showingHelp ? "true" : "false"}
-        aria-controls=${HELP_ID}
+        aria-haspopup="dialog"
         aria-label=${`Help for ${op.qname}`}
-        @click=${() => this.toggleHelp(index)}
+        @click=${() => this.openHelp(op)}
       >
         ?
       </button>
@@ -531,8 +534,12 @@ export class ForgeOperations extends LitElement {
 
   private renderHelp(op: CatalogueOp): TemplateResult {
     const h = helpFor(op);
+    const cat = this.catalogue.value;
+    const extra =
+      cat.status === "ready" ? helpLoader.cached(cat.catalogue)?.get(op.qname) : undefined;
     return html`
       <p><code>${h.qname}</code></p>
+      ${extra?.useWhen ? html`<p><span class="label">Use this when:</span> ${extra.useWhen}</p>` : nothing}
       ${h.effect === "" ? nothing : html`<p><code>${h.effect}</code></p>`}
       ${h.doc === null || h.doc === "" ? nothing : html`<p>${h.doc}</p>`}
       <p class="muted">${h.signature}</p>
@@ -550,6 +557,7 @@ export class ForgeOperations extends LitElement {
               )}
             </dl>`
       }
+      <p class="muted">Press ? for examples, links and the full help.</p>
     `;
   }
 
@@ -559,7 +567,6 @@ export class ForgeOperations extends LitElement {
     this.query = (e.target as HTMLInputElement).value;
     this.cursor = 0;
     this.helpIndex = null;
-    this.helpPinned = false;
   };
 
   private readonly onSearchKey = (e: KeyboardEvent): void => {
@@ -579,7 +586,6 @@ export class ForgeOperations extends LitElement {
     this.query = "";
     this.cursor = 0;
     this.helpIndex = null;
-    this.helpPinned = false;
     this.searchEl?.focus();
   };
 
@@ -593,7 +599,6 @@ export class ForgeOperations extends LitElement {
     this.fitOnly = !this.fitOnly;
     this.cursor = 0;
     this.helpIndex = null;
-    this.helpPinned = false;
     actions.announce(
       this.fitOnly ? "Showing only operations that fit the data" : "Showing all operations",
     );
@@ -613,21 +618,22 @@ export class ForgeOperations extends LitElement {
   }
 
   private peekHelp(index: number): void {
-    if (!this.helpPinned) this.helpIndex = index;
+    this.helpIndex = index;
   }
 
   private leaveHelp(index: number): void {
-    if (!this.helpPinned && this.helpIndex === index) this.helpIndex = null;
+    if (this.helpIndex === index && !this.rowHasFocus(index)) this.helpIndex = null;
   }
 
-  private toggleHelp(index: number): void {
-    if (this.helpPinned && this.helpIndex === index) {
-      this.helpPinned = false;
-      this.helpIndex = null;
-    } else {
-      this.helpIndex = index;
-      this.helpPinned = true;
-    }
+  private rowHasFocus(index: number): boolean {
+    const row = this.renderRoot.querySelector(`#op-row-${index}`);
+    return row !== null && row === this.shadowRoot?.activeElement;
+  }
+
+  /** Open the full help dialog (the quick tooltip goes away). */
+  private openHelp(op: CatalogueOp): void {
+    this.helpIndex = null;
+    this.dialogEl?.show(op);
   }
 
   private onRowFocus(index: number): void {
@@ -640,7 +646,6 @@ export class ForgeOperations extends LitElement {
     const next = e.relatedTarget;
     if (next instanceof Node && this.scrollEl?.contains(next)) return;
     this.helpIndex = null;
-    this.helpPinned = false;
   }
 
   private focusRow(index: number): void {
@@ -693,13 +698,12 @@ export class ForgeOperations extends LitElement {
         break;
       case "?":
         e.preventDefault();
-        this.toggleHelp(index);
+        this.openHelp(op);
         break;
       case "Escape":
         // Leaves the list for the search box (closing any help); a second Escape clears the search.
         e.preventDefault();
         this.helpIndex = null;
-        this.helpPinned = false;
         this.searchEl?.focus();
         break;
       default:

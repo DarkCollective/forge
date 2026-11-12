@@ -39,6 +39,10 @@
     "expect": {
       "value": "Zm8=",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Padding with =",
+      "note": "Input that is not a multiple of three bytes is padded with = to a multiple of four characters."
     }
   },
   {
@@ -95,6 +99,10 @@
     "expect": {
       "value": "Zm9vYmFy",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Encode plain text",
+      "note": "Every three bytes of input become four characters of output."
     }
   },
   {
@@ -127,6 +135,10 @@
     "expect": {
       "value": "Zm8",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Leave the padding out",
+      "note": "Some formats, such as JWT, leave the = signs out; turn padding off for them."
     }
   },
   {
@@ -348,6 +360,10 @@
     "expect": {
       "value": "foobar",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Decode plain text",
+      "note": "The reverse of encoding: four characters give back three bytes."
     }
   },
   {
@@ -434,6 +450,10 @@
     "expect": {
       "value": "fbff",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decode the URL-safe alphabet",
+      "note": "Text taken from a URL or a JWT uses - and _ instead of + and /, so choose the url alphabet. The result is shown as hex because it is not text."
     }
   },
   {
@@ -491,6 +511,10 @@
     },
     "expect": {
       "error": "E_COERCE"
+    },
+    "example": {
+      "title": "Why a decode fails",
+      "note": "The same text as above, read with the standard alphabet, is refused because - and _ are not in it."
     }
   },
   {
