@@ -1185,7 +1185,7 @@ MEMO: _table ( -- record )
 
 **Conformance cases (proposed).** (Caching itself is not observable without step counts, so it is a unit test in `vm.test.ts` with an evaluation counter, plus a `warm()` test in `runtime.test.ts`.)
 
-```fl-proposed
+```fl-test
 # C239 a memoised word returns its value on every call
 @unit
 MEMO: squares ( -- list ) 0 5 range [ dup * ] map ;
@@ -1196,26 +1196,26 @@ squares . squares len .
 5
 ```
 
-```fl-proposed
+```fl-test
 # C240 a memo word takes no input
 @unit-fails E_HEADER
 MEMO: f ( int -- int ) 1 ;
 ```
 
-```fl-proposed
+```fl-test
 # C241 a memo word may not read a variable
 @unit-fails E_FORBIDDEN
 0 VARIABLE counter
 MEMO: f ( -- int ) counter ;
 ```
 
-```fl-proposed
+```fl-test
 # C242 a memo word may not call a clock word
 @unit-fails E_FORBIDDEN
 MEMO: f ( -- int ) fx:now ;
 ```
 
-```fl-proposed
+```fl-test
 # C243 a failing body fails at the first use, not at load
 @unit
 MEMO: bad ( -- int ) 1 0 div ;
@@ -1225,7 +1225,7 @@ bad
 E_DIV_ZERO
 ```
 
-```fl-proposed
+```fl-test
 # C244 the build is charged to the run and is bounded by its limits
 @limits
 maxSteps=1000
@@ -1237,13 +1237,13 @@ spin
 E_LIMIT_STEPS
 ```
 
-```fl-proposed
+```fl-test
 # C245 no recurse in a memo word
 @unit-fails E_SYNTAX
 MEMO: f ( -- int ) recurse ;
 ```
 
-```fl-proposed
+```fl-test
 # C246 the output is checked like any word's
 @unit
 MEMO: f ( -- int ) "x" ;
@@ -1253,7 +1253,7 @@ f
 E_TYPE detail.where=output
 ```
 
-```fl-proposed
+```fl-test
 # C247 a memo word has a metadata record like any word
 @unit
 MEMO: t ( -- list ) { 1 2 } ;

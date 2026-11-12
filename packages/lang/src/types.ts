@@ -453,6 +453,7 @@ export type Instruction =
   | { readonly op: "bind"; readonly slot: number }
   | { readonly op: "exit"; readonly marks: number }
   | { readonly op: "emit"; readonly all: boolean }
+  | { readonly op: "memo"; readonly entry: FlWordEntry }
   | { readonly op: "ret" };
 
 export type Opcode = Instruction["op"];
@@ -476,6 +477,12 @@ export interface CompiledWord {
   readonly effects: readonly EffectLabel[];
   /** Distinct entries the body references, in order of first reference, excluding the word itself. Feeds `hash`. */
   readonly deps: readonly WordEntry[];
+  /**
+   * True if the body reads a variable, calls a session word (`help`, `see`, `words`, `vocabs`,
+   * `current-vocab`) or prints, directly or through a callee. Set only when true; internal to the
+   * compiler and never part of `WordMeta` (LANGUAGE-0.2.md section 9).
+   */
+  readonly stateful?: boolean;
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -494,6 +501,26 @@ export interface FlWordEntry extends WordEntryBase {
   readonly kind: "fl";
   /** Null while the word is still being compiled (for `recurse`). */
   code: CompiledWord | null;
+  /** Set for a `MEMO:` word (LANGUAGE-0.2.md section 9): the cache of its value. */
+  readonly memo?: MemoSlot;
+}
+
+/** The per-runtime budget of cached memo bytes, shared by every memo slot of one runtime. */
+export interface MemoBudget {
+  readonly cap: number;
+  used: number;
+}
+
+/**
+ * The cache of one `MEMO:` word entry. `value` is undefined until the first successful, cacheable
+ * evaluation; `bytes` is then its `sizeOf`. A redefinition creates a new entry, hence a new slot.
+ */
+export interface MemoSlot {
+  value?: Value;
+  bytes: number;
+  /** Creation serial: `warm()` evaluates memo words in this (definition) order. */
+  readonly seq: number;
+  readonly budget: MemoBudget;
 }
 
 export interface PrimitiveWordEntry extends WordEntryBase {
@@ -805,6 +832,18 @@ export interface RuntimeOptions {
   readonly primitives?: readonly PrimitiveDef[];
   /** Override limits for every run of this runtime. */
   readonly limits?: Partial<Limits>;
+  /** Limits of `warm()`, merged over the runtime limits. Default `{ maxSteps: 2_000_000, maxMillis: 5_000 }`. */
+  readonly memoLimits?: Partial<Limits>;
+  /** Cap on the total size of cached `MEMO:` values of this runtime, in bytes. Default 268_435_456 (256 MiB). */
+  readonly memoCacheBytes?: number;
+}
+
+/** Result of `ForgeRuntime.warm` (LANGUAGE-0.2.md section 9). */
+export interface WarmReport {
+  /** Qualified names that are now cached, in the order they were evaluated. */
+  readonly built: readonly string[];
+  /** Words that could not be cached: a language error, a limit, or a value too large for the cache. */
+  readonly failed: readonly { readonly qname: string; readonly error: ForgeErrorShape }[];
 }
 
 /** The public runtime facade (runtime.ts). */
@@ -824,6 +863,8 @@ export interface ForgeRuntime {
   setCurrentVocab(name: string): void;
   getScope(): Scope;
   setUsing(names: readonly string[]): void;
+  /** Evaluate the `MEMO:` words of this runtime (or the listed ones) now, each in its own run. Never rejects for language errors. */
+  warm(options?: { readonly words?: readonly string[] }): Promise<WarmReport>;
 }
 
 export type CreateRuntimeFn = (options?: RuntimeOptions) => ForgeRuntime;
@@ -854,6 +895,8 @@ export interface CompileContext {
   readonly unit: string | null;
   readonly trusted: boolean;
   readonly limits: Readonly<Limits>;
+  /** Cache budget given to the `MEMO:` words this compile defines; default: a private budget of 256 MiB. */
+  readonly memoBudget?: MemoBudget;
 }
 
 /** Result of compiling; nothing is visible in the dictionary until `txn.commit()`. */

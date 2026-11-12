@@ -779,6 +779,7 @@ describe("booleans, keywords and names (2.3, 2.11)", () => {
       "USING:",
       "META:",
       "CHOICE:",
+      "MEMO:",
       ":>",
       "VOCAB",
       "CONSTANT",
@@ -799,6 +800,15 @@ describe("booleans, keywords and names (2.3, 2.11)", () => {
     lexAt("  :>:", 1, 3);
     lexAt("  >:>", 1, 3);
     expect(one("a:>")).toMatchObject({ kind: "qword", vocab: "a", name: ">" });
+  });
+
+  test("MEMO: is a keyword token and its name is followed by a header (LANGUAGE-0.2.md section 9)", () => {
+    expect(kinds("MEMO: t ( -- int ) 1 ;")).toEqual(["word", "word", "header", "int", "word"]);
+    expect(kinds("MEMO: t ( a ) 1")).toEqual(["word", "word", "header", "int"]);
+    // Without the name directly before the paren, the parenthesis is a comment as ever.
+    expect(kinds("MEMO: ( -- int ) 1")).toEqual(["word", "int"]);
+    // Glued to a name it is a qualified name, as before.
+    expect(one("MEMO:foo")).toMatchObject({ kind: "qword", vocab: "MEMO", name: "foo" });
   });
 
   test("qualified names", () => {

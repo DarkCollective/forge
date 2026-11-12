@@ -41,6 +41,14 @@ import {
   readChoiceForm,
 } from "./compiler-choice.js";
 import type { ChoiceRef } from "./compiler-choice.js";
+import {
+  firstImpurity,
+  firstUse,
+  isStateful,
+  memoHeaderProblem,
+  newMemoBudget,
+  newMemoSlot,
+} from "./compiler-memo.js";
 import { isPrivateName } from "./dictionary.js";
 import {
   WordMetaBuilder,
@@ -241,6 +249,8 @@ interface BodyState {
   readonly locals: Map<string, number>;
   /** The scopes of the names bound by `:>`; shares `locals`. */
   readonly scopes: LocalScopes;
+  /** True in the body of a `MEMO:` word, where `recurse` is not allowed. */
+  readonly memo?: true;
   /** Distinct entries referenced, in order of first reference (never the word itself). */
   readonly deps: Set<WordEntry>;
 }
@@ -325,7 +335,7 @@ function intrinsicInstruction(name: IntrinsicName): Instruction {
 function wordInstruction(entry: WordEntry): Instruction {
   switch (entry.kind) {
     case "fl":
-      return { op: "call", entry };
+      return entry.memo === undefined ? { op: "call", entry } : { op: "memo", entry };
     case "primitive":
       return { op: "prim", entry };
     case "constant":
@@ -739,7 +749,11 @@ class Compiler {
         switch (t.text) {
           case ":":
             this.flush();
-            this.colon();
+            this.colon(false);
+            continue;
+          case "MEMO:":
+            this.flush();
+            this.colon(true);
             continue;
           case "IN:":
             this.flush();
@@ -892,9 +906,10 @@ class Compiler {
 
   // ---- colon definitions --------------------------------------------------------------------
 
-  private colon(): void {
+  /** `: name header body ;`, or `MEMO: name header body ;` (LANGUAGE-0.2.md section 9) when `memo`. */
+  private colon(memo: boolean): void {
     const colon = this.next();
-    const nameTok = this.nameOperand("':'");
+    const nameTok = this.nameOperand(memo ? "'MEMO:'" : "':'");
     const name = nameTok.text;
     const vocab = this.scope.current;
     const qname = `${vocab}:${name}`;
@@ -921,6 +936,15 @@ class Compiler {
       header.pos,
       qname,
     );
+
+    if (memo) {
+      const problem = memoHeaderProblem(effect);
+      if (problem !== null) {
+        this.fail("E_HEADER", `${problem}: ( ${effect.text} )`, header.pos, qname, {
+          expected: "( -- T )",
+        });
+      }
+    }
 
     // Locals: named inputs, in declaration order (spec 7).
     const locals = new Map<string, number>();
@@ -968,9 +992,24 @@ class Compiler {
       }
     }
 
-    const self: FlWordEntry = { kind: "fl", qname, name, vocab, meta: probe.build(""), code: null };
+    const self: FlWordEntry = {
+      kind: "fl",
+      qname,
+      name,
+      vocab,
+      meta: probe.build(""),
+      code: null,
+      ...(memo ? { memo: newMemoSlot(this.ctx.memoBudget ?? newMemoBudget()) } : {}),
+    };
     const scopes = new LocalScopes(locals, localNames.length);
-    const st: BodyState = { word: qname, self, locals, scopes, deps: new Set() };
+    const st: BodyState = {
+      word: qname,
+      self,
+      locals,
+      scopes,
+      deps: new Set(),
+      ...(memo ? { memo: true as const } : {}),
+    };
     const { items: body, end } = this.parseSeq(st, "semi", 0);
     localNames.push(...scopes.bound);
 
@@ -980,6 +1019,20 @@ class Compiler {
 
     const labels = this.labelsOf(st.deps);
     const deps = [...st.deps];
+    if (memo) {
+      const bad = firstImpurity(deps);
+      if (bad !== null) {
+        const what = bad.why === "state" || bad.why === "output" ? bad.why : `effect ${bad.why}`;
+        this.fail(
+          "E_FORBIDDEN",
+          `${qname} is a MEMO: word and cannot use ${bad.entry.qname} (${what})`,
+          firstUse(body, bad.entry) ?? nameTok.pos,
+          qname,
+          { effect: bad.why, word: bad.entry.qname },
+        );
+      }
+    }
+    const stateful = isStateful(deps);
     const sourceText = this.source.slice(colon.pos.offset, end.end.offset);
     const chosen = choiceUse(
       choiceRefs,
@@ -1026,6 +1079,7 @@ class Compiler {
       positions: em.positions,
       effects: labels,
       deps,
+      ...(stateful ? { stateful: true } : {}),
     };
     this.defineEntry(self, nameTok.pos);
   }
@@ -1146,6 +1200,15 @@ class Compiler {
     if (t.text === "recurse") {
       if (st.self === null) {
         return this.syntax(t, "'recurse' only inside a colon definition", st.word);
+      }
+      if (st.memo === true) {
+        return this.fail(
+          "E_SYNTAX",
+          "'recurse' is not allowed inside a MEMO: word",
+          t.pos,
+          st.word,
+          { expected: "a call by name" },
+        );
       }
       return { k: "recurse", pos: t.pos };
     }

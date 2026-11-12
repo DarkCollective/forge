@@ -24,6 +24,8 @@
  * `PrimitiveContext`.
  */
 import { compile, createIntrinsicEntries, createPrimitiveEntry } from "./compiler.js";
+import { DEFAULT_MEMO_CACHE_BYTES, DEFAULT_MEMO_LIMITS, newMemoBudget } from "./compiler-memo.js";
+import { warmMemo } from "./runtime-memo.js";
 import { createDictionary, listWords } from "./dictionary.js";
 import { ForgeError } from "./errors.js";
 import { isVocabName, parseHeader, renderHelp, renderSee } from "./meta.js";
@@ -106,6 +108,12 @@ export function createRuntime(options: RuntimeOptions = {}): ForgeRuntime {
   const dictionary = createDictionary();
   const registry = createPrimitiveRegistry(parseHeader);
   const baseLimits: Readonly<Limits> = { ...DEFAULT_LIMITS, ...options.limits };
+  const cacheBytes = options.memoCacheBytes ?? DEFAULT_MEMO_CACHE_BYTES;
+  if (typeof cacheBytes !== "number" || !(cacheBytes >= 0)) {
+    throw new TypeError("createRuntime: memoCacheBytes must be a number of bytes, 0 or more");
+  }
+  // One budget for every MEMO: word this runtime compiles (LANGUAGE-0.2.md section 9).
+  const memoBudget = newMemoBudget(cacheBytes);
 
   const resolveName = (name: string, scope: Scope): WordEntry => {
     const i = name.indexOf(":");
@@ -164,6 +172,7 @@ export function createRuntime(options: RuntimeOptions = {}): ForgeRuntime {
         unit: null,
         trusted: false,
         limits,
+        memoBudget,
       });
     } catch (e) {
       if (e instanceof ForgeError) return e;
@@ -198,6 +207,7 @@ export function createRuntime(options: RuntimeOptions = {}): ForgeRuntime {
         unit: opts.unit ?? null,
         trusted: opts.trusted === true,
         limits,
+        memoBudget,
       });
       result.txn.commit();
       return { defined: result.defined, warnings: result.warnings, scope: result.scope };
@@ -294,6 +304,20 @@ export function createRuntime(options: RuntimeOptions = {}): ForgeRuntime {
       }
       scope = { current: scope.current, using: [...names] };
     },
+
+    warm(opts: { readonly words?: readonly string[] } = {}) {
+      return warmMemo(
+        {
+          dictionary,
+          resolve: resolveName,
+          segmentEffect: parseHeader("-- ..", { offset: 0, line: 1, col: 1 }, "lenient"),
+          limits: limitsFor({ ...DEFAULT_MEMO_LIMITS, ...options.memoLimits }),
+          scope: { current: scope.current, using: [...scope.using] },
+          execute: (segments, limits) => execute(segments, {}, limits),
+        },
+        opts.words,
+      );
+    },
   };
   // The prelude (docs/LANGUAGE-0.2.md section 13): FL words of `core`, loaded as one trusted unit.
   // It is compiled under the default limits, never the caller's, so that a small `maxSourceChars`
@@ -314,6 +338,7 @@ export function createRuntime(options: RuntimeOptions = {}): ForgeRuntime {
       unit: null,
       trusted: true,
       limits: DEFAULT_LIMITS,
+      memoBudget,
     },
   );
   prelude.txn.commit();

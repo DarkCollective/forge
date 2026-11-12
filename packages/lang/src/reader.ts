@@ -53,6 +53,7 @@ const COLON_KEYWORDS: ReadonlySet<string> = new Set([
   "META:",
   ":>",
   "CHOICE:",
+  "MEMO:",
 ]);
 const MAX_WORD_NAME = 128;
 
@@ -312,7 +313,7 @@ export function read(source: string, opts?: ReadOptions): Token[] {
         a !== undefined &&
         b !== undefined &&
         a.kind === "word" &&
-        a.text === ":" &&
+        (a.text === ":" || a.text === "MEMO:") &&
         (b.kind === "word" || b.kind === "qword");
       const close = findClose(j, isHeader);
       if (close < 0) {

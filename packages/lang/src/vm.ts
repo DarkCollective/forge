@@ -45,12 +45,15 @@ import {
 import { callPrimitive } from "./primitives.js";
 import { DEFAULT_LIMITS } from "./types.js";
 import { Collector, emitOutsideCollect } from "./vm-collect.js";
+import { retainMemo } from "./vm-memo.js";
+import type { MemoBuild } from "./vm-memo.js";
 import { checkCaseList, checkCondList, sortByKeys } from "./vm-select.js";
 import type {
   CombinatorName,
   CoercionRecord,
   CompiledWord,
   ConsoleSegment,
+  MemoSlot,
   EffectLabel,
   ErrorCode,
   ErrorFrame,
@@ -122,6 +125,8 @@ class ActFrame {
     this.code = word.code;
     this.ip = ip;
   }
+  /** Set on the frame of a `MEMO:` word being built; its result is cached at `ret`. */
+  memo: MemoBuild | null = null;
 }
 
 /** Combinator state (`times each map mapi filter reduce while loop fork`). */
@@ -565,6 +570,9 @@ class Machine {
         case "call":
           this.doCall(ins.entry);
           break;
+        case "memo":
+          this.doMemo(ins.entry);
+          break;
         case "ret":
           if (this.doRet()) return;
           break;
@@ -750,6 +758,8 @@ class Machine {
     for (let i = this.rs.length - 1; i >= 0; i--) {
       const f = this.rs[i] as Frame;
       if (f.k === K_LOOP && f.coll !== null) return f;
+      // A memo build hides the collectors of its callers.
+      if (f.k === K_WORD && f.memo !== null) return null;
     }
     return null;
   }
@@ -1118,6 +1128,36 @@ class Machine {
     this.loadCur();
   }
 
+  /**
+   * `memo` (LANGUAGE-0.2.md section 9): pushes the cached value of a `MEMO:` word, or, on the first
+   * use, calls its body in this run (same limits, steps and deadline) and caches the result at `ret`.
+   */
+  private doMemo(entry: FlWordEntry): void {
+    const slot = entry.memo as MemoSlot;
+    const hit = slot.value;
+    if (hit !== undefined) {
+      // The value exists already, so nothing is metered; but a value built under a larger limit
+      // must not exceed this run's per-value limit.
+      if (slot.bytes > this.maxValue) {
+        throw limitError("E_LIMIT_VALUE", "value size", this.maxValue, slot.bytes);
+      }
+      this.ds.push(hit);
+      if (this.ds.length > this.maxData) this.dataLimit();
+      return;
+    }
+    this.doCall(entry);
+    // The body cannot emit into the caller's collector: a hit would not repeat the emission.
+    this.cur.memo = { entry, savedCollector: this.collFrame };
+    this.collFrame = null;
+  }
+
+  /** The body of a memo word returned its checked result: cache it and leave the caller's collector. */
+  private memoDone(f: ActFrame): void {
+    const build = f.memo as MemoBuild;
+    this.collFrame = build.savedCollector as LoopFrame | null;
+    retainMemo(build.entry.memo as MemoSlot, this.ds[this.ds.length - 1] as Value);
+  }
+
   /** `ret`. Returns true when the segment's own frame returned. */
   private doRet(): boolean {
     const f = this.cur;
@@ -1143,6 +1183,7 @@ class Machine {
           }
         }
       }
+      if (f.memo !== null) this.memoDone(f);
     }
     if (rs[rs.length - 1] !== f) throw internalError("return stack out of balance");
     rs.pop();
