@@ -45,6 +45,7 @@ import type {
   WordMeta,
 } from "./types.js";
 import { bool, bytes, int, num, str } from "./values.js";
+import { CORE_INTRINSIC_WORDS } from "./vocab/core.js";
 
 // ---------------------------------------------------------------------------------------------
 // Harness: a dictionary with hand-made `core` and `fx` entries
@@ -2061,6 +2062,8 @@ describe("effect labels", () => {
 describe("intrinsic and primitive entry helpers", () => {
   test("one entry per intrinsic name, with valid metadata", () => {
     expect(INTRINSIC_NAMES).toHaveLength(40);
+    // the intrinsics of the table of docs/LANGUAGE.md section 13 (vocab/core.test.ts parses it)
+    expect([...INTRINSIC_NAMES].sort()).toEqual([...CORE_INTRINSIC_WORDS].sort());
     const entries = createIntrinsicEntries();
     expect(entries.map((e) => e.intrinsic)).toEqual([...INTRINSIC_NAMES]);
     for (const e of entries) {

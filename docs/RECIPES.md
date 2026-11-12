@@ -1,7 +1,7 @@
 # Recipes, operations and the bake host: Phase 2 specification, v1
 
 Status: draft v1 (2026-11-09). Normative for Phase 2 (PLAN §7: WPs 2.1 to 2.5, Gate 2). It builds on
-[LANGUAGE.md](LANGUAGE.md) (FL v0.1, frozen) and the principles in [PLAN.md](PLAN.md) §1, §3.6, §4, §5 and §10.
+[LANGUAGE.md](LANGUAGE.md) (FL v0.2, which is additive over the v0.1 that this document was written against) and the principles in [PLAN.md](PLAN.md) §1, §3.6, §4, §5 and §10.
 Type contracts: `packages/ops/src/types.ts`, `packages/recipe/src/types.ts`, `packages/worker/src/types.ts`.
 
 > **Supersedes.** This document replaces LANGUAGE.md §14 ("Recipe compilation"), which is now a pointer here. Where the two
@@ -69,7 +69,7 @@ compile without loading any operation code.
 | R9 | The **catalogue is derived from the loaded runtime's `WordMeta`**, with the op rule in §2.2. Its `version` is a content id (16 hex digits of SHA-256), never bumped by hand. | No hand-maintained registry. One metadata record per word (PLAN §1). |
 | R10 | Vocabulary sources are **found by pattern** (`vocab/*.fth`, `src/prims/*.ts`), never listed. Node reads the file system; Vite uses `import.meta.glob`; both feed one scanner. **No Vite plugin is needed in v1.** A build script writes `dist/catalogue.json`. The Node loader is `loadBundleNode` (`@forge/ops/node`), the Vite loader `loadBundleVite` (`@forge/ops/vite`); the `@forge/ops` main entry has neither, so it stays free of `node:fs`. | Parallel WPs add files without touching a shared file. The same logic runs in Node tests, worker threads and the browser. |
 | R11 | **Regexes use ECMAScript `RegExp` (always the `u` flag), with a hard time box: the Worker is killed by the watchdog.** There is no in-VM time-boxing in v1; untrusted recipes that use a regex run only on a baker with `hardKill`. Whether an op uses a regex is **computed from the loaded runtime** (`CatalogueOp.needsHardKill`), not listed by hand. All regex code goes through one seam (`regex-engine.ts`) so Phase 5 can swap in a bounded engine. | A synchronous `RegExp.test` cannot be interrupted (LANGUAGE §10.7). Linting for catastrophic patterns is unreliable and rejects legitimate ones. |
-| R12 | Errors are attributed to recipe steps from **`ForgeError.frames`** and the step→ip map; coercions by VM step ordering. Progress, timing and breakpoints use `RunOptions.breakpoints` at each step's first instruction and the instruction after its last. | Negligible overhead (one hook call per step start/end, none per instruction); no instrumentation words in the compiled FL. |
+| R12 | Errors are attributed to recipe steps from **`ForgeError.frames`** (which keeps the outermost frames, where the recipe word is, LANGUAGE §11) and the step→ip map; coercions by VM step ordering. Progress, timing and breakpoints use `RunOptions.breakpoints` at each step's first instruction and the instruction after its last. | Negligible overhead (one hook call per step start/end, none per instruction); no instrumentation words in the compiled FL. |
 | R13 | Share fragment: `#v=1&r=<m><payload>&i=<m><payload>&ie=<enc>`; `<m>` is `1` (deflate-raw) or `0` (stored); payload is base64url without padding. Limits on length and **inflated** size. | Short links stay short; a hostile fragment cannot expand without bound. |
 | R14 | One bake at a time per `Baker`. Cancellation = `AbortController` (message) plus a per-bake `SharedArrayBuffer` flag when `crossOriginIsolated`; the **client watchdog terminates the Worker** after a grace period. | VM polling cannot stop a synchronous primitive (LANGUAGE §10.7); only termination can. |
 | R15 | Bakes default to `trust: "untrusted"` with `UNTRUSTED_LIMITS`. Callers can only lower limits. | PLAN §5. Tests and the CLI opt into `"trusted"`. |
@@ -100,11 +100,11 @@ A vocabulary needs at least one of the two. The vocabulary name is the file name
 
 ### 2.2 What makes an FL word an operation
 
-`WordMeta.op` is true for a public colon word or primitive outside `core` with at least one input (LANGUAGE §5.7).
+`WordMeta.op` is true for a public colon word or primitive outside `core` with at least one input, unless it is marked `helper` (LANGUAGE §5.7, §5.9).
 **A word is listed in the catalogue** (it is an *op* as far as recipes and the UI are concerned) iff all of these hold:
 
-1. `meta.op` is true, and `meta.exported` is true (so it is public).
-2. `meta.vocab` is not in `INTERNAL_VOCABS` (`["recipe", "bake"]`).
+1. `meta.op` is true, and `meta.exported` is true (so it is public). A word marked `helper` in its `META:` block (LANGUAGE §5.9) has `meta.op` false although it is public and has inputs, so it is not an op: a shared word can be public, callable from every vocabulary and absent from the catalogue.
+2. `meta.vocab` is not in `INTERNAL_VOCABS` (`recipe`, `bake`, `util`, `blockmode`, `random`, `list`, `json`, `asn1`; `packages/ops/src/types.ts`).
 3. `meta.kind` is `"fl"` or `"primitive"`.
 4. Every parameter has a type in `UI_PARAM_TYPES`: `bytes str int num number bool choice toggle regex charset key`.
    (No `any list quot record file` parameters.)
@@ -165,7 +165,7 @@ Rules:
   `CompiledWord.deps` (transitively, FL words only), is a regex-engine primitive (`isRegexPrimitive(qname)`, §4.1).
 - `version` is the first 16 hex digits of `sha256(JSON.stringify(ops))` (the `sha256` exported by `@forge/lang`, UTF-8).
   Changing any op's name, doc, signature or hash changes it. Recipes record it as `catalogue` (§3.1).
-- The catalogue does **not** contain source text or `source`. It is a projection of `WordMeta`, not a copy.
+- The catalogue does **not** contain source text or `source`. It is a projection of `WordMeta`, not a copy. In particular it carries no `discovery` metadata (`use-when`, `link`, `inverse`, option help): those, and the examples, are in the separate help document (§2.7), so that the catalogue, which every page loads and whose `version` every recipe records, does not grow and its `version` does not change when help text does. A shared `choice<…>` type (LANGUAGE §5.12) is expanded in `effect` and `params`, which are therefore identical to those of a word with the same inline `choice{…}` list.
 
 `buildCatalogue(runtime, { bundleVocabs?, warn? }): Catalogue` algorithm: for each vocabulary in `runtime.dictionary.vocabs()` other
 than `core` and `INTERNAL_VOCABS` (these are skipped outright, never inspected); for each name in `listWords(runtime.dictionary, vocab)`; let
@@ -279,7 +279,7 @@ any other op).
 4. reaches other vocabularies by `USING:` or `vocab:word` only, never by loading order assumptions;
 5. gives every public word a header, and (outside internal vocabularies) a `doc` and a `category`; `buildCatalogue`
    throws for a bundle op that lacks either (and only warns for user vocabularies);
-6. uses `META:` for `param` help, `alias` and `see-also`.
+6. uses `META:` for `param` help, `alias` and `see-also`, and for the discovery clauses `use-when`, `link`, `inverse` and `helper` (LANGUAGE §5.9). `inverse` names a word of the same vocabulary only, because a `META:` clause is token text like any other and a cross-vocabulary `inverse` would create the dependency cycles that `see-also` already causes; `checks` is reserved.
 
 **Primitive modules.** `src/prims/<vocab>.ts` has `export const primitives: readonly PrimitiveDef[]`. Every def has
 `vocab` equal to the file name. Rules:
@@ -299,8 +299,8 @@ any other op).
 1. For each `*.fth`: strip nothing; call `read(source)` from `@forge/lang` (a lexical error fails the scan with the
    file name). Check the rules above that are checkable from tokens (1, 2, and that every `qword`/`USING:` vocabulary
    exists).
-2. `deps(unit)` = (names listed in `USING:` forms) ∪ (the `vocab` of every `qword` token), minus `core` and the unit's own
-   vocabulary, sorted by code point. A dependency MUST be a vocabulary that has a `.fth` or a primitive module,
+2. `deps(unit)` = (names listed in `USING:` forms) ∪ (the `vocab` of every `qword` token) ∪ (the `vocab` of every qualified shared-type reference `name:choice<vocab:type>` found in a `header` token), minus `core` and the unit's own
+   vocabulary, sorted by code point. A header is one raw token, so the scanner reads those references out of the header text (string literals removed first); an unqualified `choice<type>` names the unit's own vocabulary or one of its `USING:` vocabularies and adds nothing. A dependency MUST be a vocabulary that has a `.fth` or a primitive module,
    else the scan fails (`unknown vocabulary 'x' used by y.fth`).
 3. Order the units by dependency (Kahn's algorithm, ties broken by vocabulary name in code-point order). A cycle fails
    the scan and the message lists the cycle.
@@ -338,7 +338,7 @@ references them. **The Baker always requests `recipe`** in addition to what the 
 `assembleRuntime(bundle, options?)`:
 
 1. `rt = createRuntime({ primitives: bundle.primitives, limits: options.limits })`. This binds every primitive into
-   its vocabulary (creating it) and `core`.
+   its vocabulary (creating it) and `core` (the FL prelude of LANGUAGE §13.8 included).
 2. For each `unit` of `bundle.units`, in order: `rt.load(unit.source, { unit: unit.name, trusted: false })`. A
    `ForgeError` is rethrown with the unit name prefixed to the message; assembly is all-or-nothing from the caller's
    point of view.
@@ -358,12 +358,65 @@ loads user units.
 `npm run build -w @forge/ops` = `tsc -p tsconfig.build.json`, then `tsc -p tsconfig.scripts.json`, then
 `node dist-scripts/catalogue.js`, which: creates `createNodeProvider()`, calls `loadBundleNode("all")`, `assembleRuntime`,
 `buildCatalogue`, validates the result against `catalogue.schema.json`, and writes `dist/catalogue.json` and a copy of the
-schema. Failures (scan errors, a `.fth` that does not compile, schema violations) fail the build with a message that
-names the file. `package.json` exports `.`, `./node`, `./vite`, `./catalogue.json` and `./catalogue.schema.json`; `files` is
+schema; then `node dist-scripts/help.js`, which writes the help document (§2.7). Failures (scan errors, a `.fth` that does not compile, schema violations) fail the build with a message that
+names the file. `package.json` exports `.`, `./node`, `./vite`, `./catalogue.json`, `./catalogue.schema.json`, `./help.json` and `./help.schema.json`; `files` is
 `["dist", "src", "vocab"]`.
 
 The UI imports the catalogue as an asset (`import url from "@forge/ops/catalogue.json?url"`, fetched lazily; allowed by
 `connect-src 'self'`, PLAN §10) and lists ops from it without loading any vocabulary code.
+
+### 2.7 The help document
+
+`dist/help.json` holds what a help page knows about an operation and the operations list does not need: a "use when" line, links to the standard or article that defines the format, the op that undoes it, the help of the options of a shared `choice` type, and worked examples chosen from the test vectors. It is a second file, loaded lazily, because `catalogue.json` is read at start-up and its `version` is stored in every recipe (§2.3, `catalogue`): bulk added to it would cost every page load and invalidate every stored recipe. The catalogue is **not** changed by the help document: `CatalogueOp`, `Catalogue.format` (1) and `Catalogue.version` are exactly what they would be without it.
+
+**Shape.** Types: `HelpDoc`, `HelpOp`, `HelpExample`, `HelpLink` and `VectorFile` in `packages/ops/src/types.ts`; schema `packages/ops/src/help.schema.json` (draft 2020-12, `$id: urn:forge:schema:help:1`, `additionalProperties: false` throughout, copied to `dist/`).
+
+```jsonc
+{
+  "format": 1,                       // HELP_FORMAT
+  "catalogue": "dc2ccf85cbd779d4",   // Catalogue.version this document was built against
+  "version": "2f3d67907b65cdc0",     // first 16 hex digits of SHA-256 over JSON.stringify(ops)
+  "ops": [                           // sorted by qname; only ops that have something to say
+    {
+      "qname": "base64:decode",
+      "useWhen": "Text that looks like letters, digits, plus and slash, ending in = signs.",   // or null
+      "links": [ { "url": "https://www.rfc-editor.org/rfc/rfc4648#section-4", "label": "RFC 4648, section 4" } ],
+      "inverse": "base64:encode",    // after the symmetric closure, or null
+      "optionDocs": { "padding": { "none": "No padding." } },   // omitted when empty
+      "examples": [
+        {
+          "title": "Decode plain text",
+          "note": "…",                // or null
+          "ref": "RFC 4648 §10",      // the vector's ref, or null
+          "params": {},               // the vector's params as written; omitted ones take the catalogue defaults
+          "input": { "value": "Zm9vYmFy", "enc": "utf8" },
+          "expect": { "value": "foobar", "enc": "utf8" }   // as written: a value, an { error } or a { json }
+        }
+      ]
+    }
+  ]
+}
+```
+
+(The values shown are illustrative; the key order inside a `HelpOp` is the order above, so the file is deterministic and `version` is a content id like the catalogue's.)
+
+**`buildHelp(runtime, catalogue, vectorFiles): HelpDoc`** (`packages/ops/src/help.ts`, pure; the caller reads the vector files) throws an `Error` that names the file and vector index, or the words, on a violation:
+
+1. The catalogue MUST have been built from this runtime (the catalogue is rebuilt and its `version` compared), else the build fails.
+2. For each catalogue op, `useWhen`, `links` and `optionDocs` are copied from `runtime.meta(qname).discovery`.
+3. `inverse` is the **symmetric closure** of the declared `inverse` clauses of catalogue ops (LANGUAGE §5.9). A declared target that is not a catalogue op is an error (`a: inverse b is not an operation`). If `A` declares `B` and `B` declares nothing, `B` gets `A`; if `B` declares `A` too, nothing changes; if `B` declares some `C` other than `A`, or two words declare the same target that declares nothing, the build fails and names the words. Declarations win over implied entries; a word that declares itself keeps itself.
+4. `examples` come from the vectors that carry the `example` key (§9.1), grouped by the canonical op (an alias is resolved through the catalogue). Rules: the vector's `op` is a catalogue op; `title` is a non-empty string; at most **3** examples per op; titles unique within an op; `input.value`, each encoded parameter value and `expect.value` at most **2048** code points. Order is the order in the vector files.
+5. An op is kept iff it has a `useWhen`, a link, an `inverse`, `optionDocs` or an example. The ops are sorted by `qname` in code-point order.
+
+**Build.** `scripts/help.ts` (compiled to `dist-scripts/help.js`, run by `npm run build -w @forge/ops` after the catalogue step) loads the whole bundle, builds the catalogue, reads `vocab/*.test.json`, runs `buildHelp`, validates the result against `help.schema.json` with Ajv, fails above the size budget `HELP_MAX_BYTES` (1 572 864 bytes, 1.5 MiB raw) and writes `dist/help.json` and `dist/help.schema.json`. `@forge/ops/help.json` and `@forge/ops/help.schema.json` are in `exports`; the main entry exports `buildHelp`, `HELP_FORMAT`, `HELP_MAX_BYTES` and the types. At the time of writing the file has 135 operations and about 283 KB.
+
+**Lazy load and the catalogue-version rule.** A consumer must not import the document at start-up. The web app makes a dynamic `import("@forge/ops/help.json")` the first time the help dialog opens (its own chunk), caches the load, does not cache a failure, and applies **the catalogue-version rule** (`apps/web/src/ops/help-data.ts`; UI.md, the operations help dialog). `help.catalogue` is the version of the catalogue the document was built against, and the catalogue the pane shows can differ from it for one benign reason: user words (vocabulary `user`) change the version of the whole catalogue but not one bundled op. So:
+
+- the versions are equal: every op of the document that the catalogue has is used;
+- they differ and the catalogue has no user words: the document belongs to another build and is ignored altogether (wrong examples are worse than none);
+- they differ and the catalogue has user words: the version of the bundled catalogue (the static file the app loaded at start) is read; if it equals `help.catalogue` the document is used for every op that is not a user word, otherwise (or if it cannot be read) it is ignored.
+
+A user word never gets help from the document, whatever its name. Help from user units is not built into `help.json` at all: it is built from the bundle only, so the `link` clauses of a user's own words never reach it.
 
 ---
 
@@ -1123,7 +1176,7 @@ recipe word (for an error raised inside a callee, the instruction that called it
 frames of their lexical word, with their own `ip`). It returns the `path` of the **deepest** enabled step whose
 `[startIp, endIp)` contains that `ip` (the last in document order among those that contain it), or `null` if none.
 
-If `null` (the frame list is capped at 16 entries, or the `ip` is in the prologue/epilogue), the Baker falls back to the
+If `null` (the `ip` is in the prologue/epilogue; the frame list no longer loses the recipe word, because `ForgeError.frames` keeps the 32 innermost and the 32 outermost frames, LANGUAGE §11, and the recipe word is always among the outermost), the Baker falls back to the
 path of the most recently *started* step. Observed behaviour this relies on (verified against `@forge/lang`):
 an entry error such as `E_PARAM_INVALID` reports `word` = the callee but `frames[0]` = the recipe word at the calling
 `ip`; an error inside a callee has `frames[0]` = the callee and the recipe frame next.
@@ -1649,6 +1702,15 @@ test failure once it has an op.
               "additionalProperties": false
             }
           ]
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string", "minLength": 1, "maxLength": 80 },
+            "note": { "type": "string", "maxLength": 400 }
+          },
+          "required": ["title"],
+          "additionalProperties": false
         }
       },
       "required": ["op", "params", "input", "expect"],
@@ -1658,7 +1720,7 @@ test failure once it has an op.
 }
 ```
 
-A vector is `{ name?, ref?, op, params, input, expect }`:
+A vector is `{ name?, ref?, op, params, input, expect, example? }`:
 
 - `op`: canonical qualified name. `params`: the recipe `params` object (§3.4): omitted parameters take the defaults.
 - `input`: `{ value, enc }` decoded to the bytes given to the recipe.
@@ -1676,6 +1738,7 @@ A vector is `{ name?, ref?, op, params, input, expect }`:
     `record` as an object of the rendered values and, when truncated, an extra key `"$truncated"` with the same count; `other` as `{"$other": "<repr>"}`. Record key order does not matter when comparing, and
     a JSON `1` matches both `int 1` and `num 1.0` (the vector cannot tell them apart; give the op a distinguishing vector if it matters).
 - `ref`: where the value comes from (a standard, an RFC section, a published test vector, or `"hand-computed"`).
+- `example` (optional): `{ title, note? }` marks the vector as a worked example for the op's help page (§2.7). `title` is required, 1 to 80 characters, plain text; `note` is optional, up to 400 characters. An example is an ordinary vector in every other respect: the runner (§9.3) reads the fields it knows by name and ignores the key, so an example is correct by construction and never written separately. Rules, enforced by `buildHelp` at build time and by `vocab/vectors.test.ts` on the files: at most **3** examples per op; titles unique within an op; `input.value`, each encoded parameter value and `expect.value` at most 2048 characters (so `help.json` stays small; big cases stay plain vectors); the vector's `op` is a catalogue op (an alias is accepted); the order is the order in the file. An error vector (`expect: { "error": … }`) may be an example (the title says so), and `ref` is carried to the help page as the source line of the example.
 
 ### 9.2 Authoring rules
 
@@ -1684,6 +1747,7 @@ A vector is `{ name?, ref?, op, params, input, expect }`:
 2. Every op in the catalogue has at least one vector. An op that can fail has at least one error vector for each way it fails.
 3. Include the empty input, a non-ASCII input (UTF-8 multi-byte), and binary input (bytes that are not valid UTF-8) wherever the op's input type allows.
 4. The names `name` and `ref` are for humans and reports; they do not affect the result.
+5. An example is **chosen from the vectors**, never written separately: mark an existing vector with `example` and pick vectors that teach (a clear title, a note that says what to look at). Adding or changing `example` never changes a hash or the catalogue.
 
 ### 9.3 The runner
 
@@ -1906,7 +1970,7 @@ Integration order: 2.1 and 2.2 first, then 2.3, then 2.4, then 2.5, then Gate 2.
 
 ```
 packages/ops
-  package.json            exports: ".", "./node", "./vite", "./catalogue.json", "./catalogue.schema.json"; files: dist, src, vocab
+  package.json            exports: ".", "./node", "./vite", "./catalogue.json", "./catalogue.schema.json", "./help.json", "./help.schema.json"; files: dist, src, vocab
   tsconfig.json  tsconfig.build.json  tsconfig.scripts.json
   vocab/
     base64.fth  base64.test.json
@@ -1920,9 +1984,9 @@ packages/ops
     index.ts  types.ts                   (types.ts exists)
     scan.ts  bundle.ts  catalogue.ts  regex-engine.ts
     sources-node.ts  sources-vite.ts  ambient.d.ts
-    catalogue.schema.json
+    catalogue.schema.json  help.ts  help.schema.json
     prims/ base64.ts  hex.ts  regex.ts  recipe.ts   (+ base64.test.ts … beside the sources)
-  scripts/catalogue.ts                   (compiled to dist-scripts/catalogue.js)
+  scripts/catalogue.ts  scripts/help.ts  scripts/hash-snapshot.ts   (compiled to dist-scripts/*.js)
 
 packages/recipe
   package.json            depends on @forge/lang only
@@ -1978,12 +2042,13 @@ aliases in each `types.ts` (a WP implements a function with exactly that type). 
 
 | export | signature |
 |---|---|
-| `CATALOGUE_FORMAT`, `INTERNAL_VOCABS`, `UI_PARAM_TYPES` | consts (`types.ts`) |
+| `CATALOGUE_FORMAT`, `INTERNAL_VOCABS`, `UI_PARAM_TYPES`, `HELP_FORMAT`, `HELP_MAX_BYTES` | consts (`types.ts`) |
 | `scanVocab` | `(files: readonly SourceFile[], primitiveVocabs: readonly string[]) => ScanResult` (throws `Error` naming the file) |
 | `createBundleLoader` | `(provider: VocabSourceProvider) => LoadBundleFn`, where `LoadBundleFn = (names?: readonly string[] \| "all") => Promise<VocabBundle>` |
 | `assembleRuntime` | `(bundle: VocabBundle, options?: AssembleOptions) => ForgeRuntime` (throws `ForgeError`; `E_READONLY` for a unit defining into a bundle/internal vocabulary) |
 | `buildCatalogue` | `(runtime: ForgeRuntime, options?: BuildCatalogueOptions) => Catalogue` |
 | `isCatalogueOp` | `(meta: WordMeta) => boolean` |
+| `buildHelp` | `(runtime: ForgeRuntime, catalogue: Catalogue, vectorFiles: readonly VectorFile[]) => HelpDoc` (throws `Error` on a content violation, §2.7) |
 | `markRegexPrimitive`, `isRegexPrimitive` | `(def: PrimitiveDef) => PrimitiveDef`, `(qname: string) => boolean` |
 | `execAll`, `REGEX_LIMITS` | `(pattern: string, flags: string, text: string) => RegexMatch[]`, `RegexLimits` |
 
@@ -2048,7 +2113,7 @@ Each package has:
 - `tsconfig.json`: `include: ["src", "test", "scripts"]` (type-checks sources, tests and scripts together; `noEmit`; the `rootDir` of the
   current ops file is dropped);
 - `tsconfig.build.json`: emits `dist` from `src` only (`rootDir: src`, tests excluded, as today);
-- `tsconfig.scripts.json` (`ops`: `scripts/catalogue.ts`; `worker`: `scripts/*.ts` if any are TypeScript) compiled to `dist-scripts`, as `@forge/lang` does;
+- `tsconfig.scripts.json` (`ops`: `scripts/*.ts` (catalogue, help, hash-snapshot); `worker`: `scripts/*.ts` if any are TypeScript) compiled to `dist-scripts`, as `@forge/lang` does;
 - `@forge/worker/harness/tsconfig.json`: `lib` with `DOM`, `types: ["vite/client"]`.
 
 `@forge/ops` `package.json` `files` is `["dist", "src", "vocab"]` (already applied); `@forge/recipe` and `@forge/worker` ship `["dist"]`.

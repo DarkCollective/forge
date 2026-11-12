@@ -21,13 +21,7 @@ import { ForgeError } from "./errors.js";
 import { definePrimitive } from "./primitives.js";
 import { createRuntime } from "./runtime.js";
 import type { ForgeRuntime, PrimitiveDef, RunOptions, RunResult, Value } from "./types.js";
-import {
-  CORE_INTRINSIC_WORDS,
-  CORE_INTRINSIC_WORDS_V02,
-  CORE_PRIMITIVES,
-  CORE_PRIMITIVES_V02,
-  CORE_RUNTIME_WORDS,
-} from "./vocab/core.js";
+import { CORE_INTRINSIC_WORDS, CORE_PRIMITIVES, CORE_RUNTIME_WORDS } from "./vocab/core.js";
 import { PRELUDE_WORDS } from "./vocab/prelude.js";
 import { bytes, int, repr, str } from "./values.js";
 
@@ -78,17 +72,14 @@ describe("createRuntime", () => {
     expect(rt.dictionary.vocabs()).toEqual(["core", "user"]);
     expect(listWords(rt.dictionary, "user")).toEqual([]);
     const core = listWords(rt.dictionary, "core");
-    // 102 words of the v0.1 table + 21 primitives of FL 0.2 (has-key? sort, 17 maths and str>num,
-    // fail-coerce fail-range) + 20 prelude words + the intrinsic `exit` (WP 6.7) + 11 intrinsics of WP 6.8.
+    // The 155 words of the tables of docs/LANGUAGE.md section 13 (the single source, parsed by
+    // vocab/core.test.ts): 40 intrinsic, 90 primitive, 5 runtime-supplied and 20 prelude words.
     expect(core).toHaveLength(155);
     const expected = new Set([
       ...CORE_INTRINSIC_WORDS,
       ...CORE_PRIMITIVES.map((d) => d.name),
-      ...CORE_PRIMITIVES_V02.map((d) => d.name),
       ...CORE_RUNTIME_WORDS,
       ...PRELUDE_WORDS,
-      ...CORE_INTRINSIC_WORDS_V02,
-      "exit",
     ]);
     expect(new Set(core)).toEqual(expected);
     expect(rt.getScope()).toEqual({ current: "user", using: [] });
@@ -101,6 +92,7 @@ describe("createRuntime", () => {
       names.map((n) => rt.lookup(`core:${n}`).kind);
     expect(new Set(kinds(CORE_INTRINSIC_WORDS))).toEqual(new Set(["intrinsic"]));
     expect(new Set(kinds(CORE_RUNTIME_WORDS))).toEqual(new Set(["primitive"]));
+    expect(new Set(kinds(PRELUDE_WORDS))).toEqual(new Set(["fl"]));
     expect(rt.lookup("+").kind).toBe("primitive");
   });
 

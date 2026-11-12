@@ -976,23 +976,21 @@ export function specPath(): string {
   return fileURLToPath(new URL("../../../../docs/LANGUAGE.md", import.meta.url).href);
 }
 
-/** The spec documents that carry `fl-test` blocks, in reading order. */
+/**
+ * The spec documents that carry `fl-test` blocks, in reading order. Since WP 6.11 this is
+ * LANGUAGE.md alone (the cases of the v0.2 additions were folded into it); `parseSpecs` still reads
+ * several documents, for a later wave that stages its cases in a document of its own.
+ */
 export function specDocPaths(): readonly { readonly file: string; readonly path: string }[] {
-  return [
-    { file: "LANGUAGE.md", path: specPath() },
-    {
-      file: "LANGUAGE-0.2.md",
-      path: fileURLToPath(new URL("../../../../docs/LANGUAGE-0.2.md", import.meta.url).href),
-    },
-  ];
+  return [{ file: "LANGUAGE.md", path: specPath() }];
 }
 
-/** The text of LANGUAGE.md alone. */
+/** The text of LANGUAGE.md. */
 export function readSpec(): string {
   return readFileSync(specPath(), "utf8");
 }
 
-/** The suite: `fl-test` blocks of LANGUAGE.md and LANGUAGE-0.2.md as one. */
+/** The suite: the `fl-test` blocks of the documents of `specDocPaths()` as one. */
 export function loadSpec(): Spec {
   return parseSpecs(
     specDocPaths().map(({ file, path }) => ({ file, text: readFileSync(path, "utf8") })),

@@ -26,11 +26,11 @@ import { bool, bytes, int, list, num, record, repr, str } from "../values.js";
 import {
   CORE_INTRINSIC_WORDS,
   CORE_PRIMITIVES,
-  CORE_PRIMITIVES_V02,
   CORE_RUNTIME_WORDS,
   registerCorePrimitives,
 } from "./core.js";
 import { NUMERIC_PRIMITIVES } from "./numeric.js";
+import { PRELUDE_WORDS } from "./prelude.js";
 
 const registry = createPrimitiveRegistry(parseHeader);
 registerCorePrimitives(registry);
@@ -117,6 +117,7 @@ const MAX_SAFE = Number.MAX_SAFE_INTEGER;
 // ---------------------------------------------------------------------------------------------
 
 describe("the core table", () => {
+  // The tables of docs/LANGUAGE.md section 13 are the single source: names, kinds and effects.
   const doc = readFileSync(
     fileURLToPath(import.meta.url).replace(/\/packages\/lang\/src\/vocab\/[^/]*$/, "") +
       "/docs/LANGUAGE.md",
@@ -125,37 +126,41 @@ describe("the core table", () => {
   const section = doc.slice(doc.indexOf("## 13. The `core` vocabulary"), doc.indexOf("## 14."));
   const rows: { names: string[]; kind: string; effect: string }[] = [];
   for (const line of section.split("\n")) {
-    const m = /^\| ((?:`[^`]+` ?)+)\| ([IPR]) \| `([^`]*)` \|/.exec(line);
+    const m = /^\| ((?:`[^`]+` ?)+)\| ([IPRF]) \| `([^`]*)` \|/.exec(line);
     if (m === null) continue;
     const names = [...(m[1] as string).matchAll(/`([^`]+)`/g)].map((x) => x[1] as string);
     for (const name of names)
       rows.push({ names: [name], kind: m[2] as string, effect: m[3] as string });
   }
+  const namesOf = (kind: string): string[] =>
+    rows.filter((r) => r.kind === kind).map((r) => r.names[0] as string);
 
-  test("section 13 declares 102 words: 28 intrinsic, 69 primitive, 5 runtime-supplied", () => {
-    expect(rows).toHaveLength(102);
-    expect(rows.filter((r) => r.kind === "I")).toHaveLength(28);
-    expect(rows.filter((r) => r.kind === "P")).toHaveLength(69);
+  test("section 13 declares 155 words: 40 intrinsic, 90 primitive, 5 runtime-supplied, 20 prelude", () => {
+    expect(rows).toHaveLength(155);
+    expect(rows.filter((r) => r.kind === "I")).toHaveLength(40);
+    expect(rows.filter((r) => r.kind === "P")).toHaveLength(90);
     expect(rows.filter((r) => r.kind === "R")).toHaveLength(5);
+    expect(rows.filter((r) => r.kind === "F")).toHaveLength(20);
+    expect(section).toContain("Total: **155** words");
   });
 
-  test("primitives + intrinsics + runtime-supplied words equal the table exactly", () => {
+  test("primitives + intrinsics + runtime-supplied + prelude words equal the table exactly", () => {
     const all = [
       ...CORE_PRIMITIVES.map((d) => d.name),
       ...CORE_INTRINSIC_WORDS,
       ...CORE_RUNTIME_WORDS,
+      ...PRELUDE_WORDS,
     ];
-    expect(all).toHaveLength(102);
-    expect(new Set(all).size).toBe(102);
+    expect(all).toHaveLength(155);
+    expect(new Set(all).size).toBe(155);
     expect([...all].sort()).toEqual(rows.map((r) => r.names[0] as string).sort());
   });
 
   test("each list matches the kind column of the table", () => {
-    const names = (kind: string): string[] =>
-      rows.filter((r) => r.kind === kind).map((r) => r.names[0] as string);
-    expect(CORE_PRIMITIVES.map((d) => d.name).sort()).toEqual(names("P").sort());
-    expect([...CORE_INTRINSIC_WORDS].sort()).toEqual(names("I").sort());
-    expect([...CORE_RUNTIME_WORDS].sort()).toEqual(names("R").sort());
+    expect(CORE_PRIMITIVES.map((d) => d.name).sort()).toEqual(namesOf("P").sort());
+    expect([...CORE_INTRINSIC_WORDS].sort()).toEqual(namesOf("I").sort());
+    expect([...CORE_RUNTIME_WORDS].sort()).toEqual(namesOf("R").sort());
+    expect([...PRELUDE_WORDS].sort()).toEqual(namesOf("F").sort());
   });
 
   test("every primitive has the exact effect string of the table, a doc and a category", () => {
@@ -165,14 +170,26 @@ describe("the core table", () => {
       expect(def?.effect).toBe(row.effect);
       expect(def?.doc ?? "").not.toBe("");
       expect(def?.category ?? "").not.toBe("");
-      expect(def?.effects).toBeUndefined(); // v0.1 core has no labelled word (spec 10.10)
+      expect(def?.effects).toBeUndefined(); // core has no labelled word (spec 10.10)
+    }
+  });
+
+  test("every intrinsic, runtime-supplied and prelude word has the effect text of the table", () => {
+    const rt = createRuntime();
+    for (const row of rows.filter((r) => r.kind !== "P")) {
+      const name = row.names[0] as string;
+      const meta = rt.meta(`core:${name}`);
+      expect(meta.effect.text, name).toBe(row.effect);
+      expect(meta.kind, name).toBe(
+        row.kind === "I" ? "intrinsic" : row.kind === "R" ? "primitive" : "fl",
+      );
     }
   });
 
   test("registerCorePrimitives registers into vocabulary core, once", () => {
     // the 69 words of the v0.1 table plus the 21 primitives of FL 0.2
-    expect(registry.list("core")).toHaveLength(69 + CORE_PRIMITIVES_V02.length);
-    expect(CORE_PRIMITIVES_V02).toHaveLength(21);
+    expect(registry.list("core")).toHaveLength(90);
+    expect(CORE_PRIMITIVES).toHaveLength(90);
     expect(() => registerCorePrimitives(registry)).toThrowError(/already registered/);
   });
 });
@@ -1302,9 +1319,6 @@ describe("fail-coerce and fail-range", () => {
 
 test("every core primitive is exercised by this file or by numeric.test.ts", () => {
   const numeric = new Set(NUMERIC_PRIMITIVES.map((d) => d.name));
-  const expected = [
-    ...CORE_PRIMITIVES.map((d) => d.name),
-    ...CORE_PRIMITIVES_V02.map((d) => d.name).filter((n) => !numeric.has(n)),
-  ];
+  const expected = CORE_PRIMITIVES.map((d) => d.name).filter((n) => !numeric.has(n));
   expect([...tested].sort()).toEqual(expected.sort());
 });

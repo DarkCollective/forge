@@ -56,7 +56,7 @@ import {
 
 type Int = number | bigint;
 
-/** Intrinsic words (compiled to dedicated instructions by the compiler and the VM). */
+/** The 40 intrinsic words of `core` (compiled to dedicated instructions by the compiler and the VM), as in spec section 13. */
 export const CORE_INTRINSIC_WORDS: readonly IntrinsicName[] = Object.freeze([
   "dup",
   "drop",
@@ -86,13 +86,8 @@ export const CORE_INTRINSIC_WORDS: readonly IntrinsicName[] = Object.freeze([
   "fork",
   ".",
   ".s",
-] as const);
-
-/**
- * The intrinsic words added by FL 0.2 section 10 and 11 (WP 6.8). Kept apart from
- * `CORE_INTRINSIC_WORDS`, which stays the 28 intrinsics of the v0.1 table (as for `exit`, WP 6.7).
- */
-export const CORE_INTRINSIC_WORDS_V02: readonly IntrinsicName[] = Object.freeze([
+  // FL 0.2 (spec sections 8 and 13.6): exit, selection and search, collectors
+  "exit",
   "cond",
   "case",
   "sort-by",
@@ -477,8 +472,8 @@ function comparison(name: string, doc: string, test: (c: -1 | 0 | 1) => boolean)
   return core(name, CMP, "comparison", doc, (a: Value, b: Value) => test(order(a, b)));
 }
 
-/** The 69 `core` words of kind P, in the order of spec section 13. */
-export const CORE_PRIMITIVES: readonly PrimitiveDef[] = Object.freeze([
+/** The 69 `core` words of kind P of the v0.1 table, in the order of spec section 13. */
+const CORE_PRIMITIVES_V01: readonly PrimitiveDef[] = Object.freeze([
   // 13.2 arithmetic and comparison
   core(
     "+",
@@ -1175,11 +1170,10 @@ function sortClass(v: Value): "number" | "str" | "bytes" {
 }
 
 /**
- * The `core` words added by FL 0.2 (docs/LANGUAGE-0.2.md sections 11 to 13), kind P: `has-key?`,
- * `sort`, the maths words with `str>num`, and the typed failure words. `CORE_PRIMITIVES` stays the
- * 69 words of the v0.1 table.
+ * The 21 `core` words of kind P added by FL 0.2 (spec sections 13.2 to 13.6): `has-key?`, `sort`,
+ * the maths words with `str>num`, and the typed failure words.
  */
-export const CORE_PRIMITIVES_V02: readonly PrimitiveDef[] = Object.freeze([
+const CORE_PRIMITIVES_V02: readonly PrimitiveDef[] = Object.freeze([
   core(
     "has-key?",
     "( record key:str -- bool )",
@@ -1230,8 +1224,13 @@ export const CORE_PRIMITIVES_V02: readonly PrimitiveDef[] = Object.freeze([
   ),
 ]);
 
+/** The 90 `core` words of kind P: the 69 of the v0.1 table followed by the 21 added by FL 0.2. */
+export const CORE_PRIMITIVES: readonly PrimitiveDef[] = Object.freeze([
+  ...CORE_PRIMITIVES_V01,
+  ...CORE_PRIMITIVES_V02,
+]);
+
 /** Registers every primitive of `core` kind P into a registry. */
 export function registerCorePrimitives(registry: PrimitiveRegistry): void {
   for (const def of CORE_PRIMITIVES) registry.define(def);
-  for (const def of CORE_PRIMITIVES_V02) registry.define(def);
 }
