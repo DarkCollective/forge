@@ -410,7 +410,7 @@ Language gaps found in wave 5 (candidates for the core, or for a primitive):
 - Regexes are capped at 1024 characters; the regex engine has no lazy or possessive quantifiers (hostile inputs were checked under 5 ms).
 - `\f` is not a valid FL string escape.
 - One `getRandomValues` call per shuffle swap (about 0.3 s for 65,536); pooled draws would be faster.
-- The web smoke test treats text containing a tab as non-showable (hex view), so several ops use spaces instead of tabs in reports.
+- The web smoke test treats text containing a tab as non-showable (hex view), so several ops use spaces instead of tabs in reports. Fixed in WP 5.59e: the smoke test now treats tabs as text, as the output pane does, so ops may use tabs in reports.
 - The e2e port 4783 was fixed with `reuseExistingServer`, so parallel worktrees served each other's builds (fixed in 5.38a with `FORGE_E2E_PORT`); the worker vectors test needed a longer timeout (5.38a).
 
 **Wave 6 ✅** *Done 2026-11-11 (wave 6: compression and archives). 363 ops in 155 vocabularies; CyberChef coverage 198 covered, 140 redesigned, 5 dropped, 163 not yet of 506. 4,488 op vectors in 155 files and 5,977 unit tests; `npm run gate4:browser -w @forge/worker` passes in Node and in Chromium Web Workers, with and without cross-origin isolation, `npm run gate2:browser -w @forge/worker` passes in all four combinations, and the e2e suite has 193 tests passing.*
