@@ -317,6 +317,22 @@ META: good
       expect(bigger.params.map((p) => p.type)).toEqual(["number", "choice", "key", "bool"]);
     });
 
+    test("a public word marked helper with typed parameters is absent from the catalogue", () => {
+      const helperSource = `IN: t
+: viahelper ( s:str n:int=1 -- str ) "A helper." doc "Fixture" category s ;
+: viaop ( s:str n:int=1 -- str ) "An op." doc "Fixture" category s ;
+META: viahelper
+  helper ;
+;
+`;
+      const hrt = assembleRuntime(empty, units(helperSource));
+      const meta = hrt.meta("t:viahelper");
+      expect(meta.exported).toBe(true);
+      expect(meta.op).toBe(false);
+      expect(meta.params.map((p) => p.type)).toEqual(["int"]);
+      expect(buildCatalogue(hrt).ops.map((o) => o.qname)).toEqual(["t:viaop"]);
+    });
+
     test("an alias resolves to the canonical entry only", () => {
       expect(rt.meta("t:well").qname).toBe("t:good");
       expect(cat.ops.filter((o) => o.name === "well")).toEqual([]);

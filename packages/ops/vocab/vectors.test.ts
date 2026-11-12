@@ -28,6 +28,30 @@ const vectorFiles = readdirSync(here)
   .filter((f) => f.endsWith(".test.json"))
   .sort();
 
+const base = {
+  op: "base64:encode",
+  params: {},
+  input: { value: "foobar", enc: "utf8" },
+  expect: { value: "Zm9vYmFy", enc: "utf8" },
+};
+
+describe("the example key of a vector (LANGUAGE-0.2.md section 6)", () => {
+  test("a file with an example validates, with and without a note", () => {
+    expect(validate([{ ...base, example: { title: "Encode plain text" } }])).toBe(true);
+    expect(validate([{ ...base, example: { title: "Encode", note: "Pads with =." } }])).toBe(true);
+  });
+
+  test("an example without a title, with an empty or long title, or with another key fails", () => {
+    expect(validate([{ ...base, example: { note: "x" } }])).toBe(false);
+    expect(validate([{ ...base, example: {} }])).toBe(false);
+    expect(validate([{ ...base, example: { title: "" } }])).toBe(false);
+    expect(validate([{ ...base, example: { title: "x".repeat(81) } }])).toBe(false);
+    expect(validate([{ ...base, example: { title: "T", note: "x".repeat(401) } }])).toBe(false);
+    expect(validate([{ ...base, example: { title: "T", other: 1 } }])).toBe(false);
+    expect(validate([{ ...base, example: "T" }])).toBe(false);
+  });
+});
+
 describe("operation test vector files", () => {
   test("at least one vector file exists", () => {
     expect(vectorFiles.length).toBeGreaterThan(0);
@@ -41,6 +65,31 @@ describe("operation test vector files", () => {
       const ok = validate(data);
       expect(validate.errors ?? []).toEqual([]);
       expect(ok).toBe(true);
+    });
+
+    test(`${file} has at most 3 examples per op, with distinct titles, each within 2048 characters`, () => {
+      type Vector = {
+        op: string;
+        params: Record<string, unknown>;
+        input: { value: string };
+        expect: { value?: string };
+        example?: { title: string };
+      };
+      const data = JSON.parse(readFileSync(join(here, file), "utf8")) as Vector[];
+      const titles = new Map<string, string[]>();
+      for (const v of data) {
+        if (v.example === undefined) continue;
+        titles.set(v.op, [...(titles.get(v.op) ?? []), v.example.title]);
+        const values = [v.input.value, v.expect.value];
+        for (const p of Object.values(v.params)) {
+          if (typeof p === "object" && p !== null) values.push((p as { value?: string }).value);
+        }
+        for (const x of values) expect([...(x ?? "")].length).toBeLessThanOrEqual(2048);
+      }
+      for (const [op, list] of titles) {
+        expect(list.length, `${op} has too many examples`).toBeLessThanOrEqual(3);
+        expect(new Set(list).size, `${op} repeats an example title`).toBe(list.length);
+      }
     });
 
     test(`${file} holds only vectors of the vocabulary "${vocab}"`, () => {

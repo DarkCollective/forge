@@ -20,7 +20,9 @@
       "default": "./dist/sources-vite.js"
     },
     "./catalogue.json": "./dist/catalogue.json",
-    "./catalogue.schema.json": "./dist/catalogue.schema.json"
+    "./catalogue.schema.json": "./dist/catalogue.schema.json",
+    "./help.json": "./dist/help.json",
+    "./help.schema.json": "./dist/help.schema.json"
   },
   "files": [
     "dist",
@@ -28,7 +30,7 @@
     "vocab"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && tsc -p tsconfig.scripts.json && node dist-scripts/catalogue.js",
+    "build": "tsc -p tsconfig.build.json && tsc -p tsconfig.scripts.json && node dist-scripts/catalogue.js && node dist-scripts/help.js",
     "hash-snapshot": "tsc -p tsconfig.build.json && tsc -p tsconfig.scripts.json && node dist-scripts/hash-snapshot.js",
     "dupes": "tsc -p tsconfig.build.json && tsc -p tsconfig.scripts.json && node dist-scripts/dupes.js",
     "coverage": "tsc -p tsconfig.build.json && tsc -p tsconfig.scripts.json && node dist-scripts/catalogue.js && node dist-scripts/coverage.js",

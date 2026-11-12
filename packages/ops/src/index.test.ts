@@ -20,11 +20,14 @@ describe("the main entry (RECIPES 11.5)", () => {
   test("exports exactly the documented values", () => {
     expect(Object.keys(ops).sort()).toEqual([
       "CATALOGUE_FORMAT",
+      "HELP_FORMAT",
+      "HELP_MAX_BYTES",
       "INTERNAL_VOCABS",
       "REGEX_LIMITS",
       "UI_PARAM_TYPES",
       "assembleRuntime",
       "buildCatalogue",
+      "buildHelp",
       "createBundleLoader",
       "execAll",
       "isCatalogueOp",

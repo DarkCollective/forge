@@ -8,6 +8,7 @@ The package holds:
 - `src/prims/` the few TypeScript primitives that FL cannot replace;
 - `src/` the loaders (Node fs provider and Vite `import.meta.glob`), the dependency scan, and the catalogue builder;
 - `dist/catalogue.json` the catalogue, derived from the vocabularies at build time (`npm run build`). Nothing is registered by hand.
+- `dist/help.json` the lazily loaded help document (examples, `use-when`, links, inverses), built next to it. See "The help document".
 
 ## Layout per vocabulary
 
@@ -959,6 +960,44 @@ npm run gate4:browser -w @forge/worker
 ```
 
 Multi-step recipes that cross vocabularies (for example `text:split` into `text:join`) are tested in `packages/worker/test/phase4-recipes.test.ts`, because a single-op vector cannot feed a list into another op.
+
+### Examples on vectors
+
+A vector can be shown as a worked example on the op's help page by giving it an optional `example` key (LANGUAGE-0.2.md section 6):
+
+```json
+{
+  "op": "base64:encode",
+  "params": {},
+  "input": { "value": "foobar", "enc": "utf8" },
+  "expect": { "value": "Zm9vYmFy", "enc": "utf8" },
+  "example": {
+    "title": "Encode plain text",
+    "note": "Four characters of output for every three bytes of input."
+  }
+}
+```
+
+`title` is required (1 to 80 characters); `note` is optional (up to 400). The vector is otherwise an ordinary vector and the runner ignores the key, so an example is correct by construction. Rules, enforced by `src/help.ts` (at build time) and `vocab/vectors.test.ts` (on the files): at most **3** examples per op; titles unique within an op; the input, each encoded parameter and the expected value at most **2048** characters; the vector's `op` must be a catalogue op (an alias is accepted); the order is the order in the file. An error vector (`expect: { "error": ... }`) may be an example.
+
+## The help document: `dist/help.json`
+
+`npm run build -w @forge/ops` writes `dist/help.json` next to `dist/catalogue.json` (`scripts/help.ts`, `buildHelp` in `src/help.ts`), validated against `help.schema.json` (also copied to `dist/`). Both are exported: `@forge/ops/help.json` and `@forge/ops/help.schema.json`. The catalogue is **not** changed by it: `CatalogueOp`, `catalogue.json` and its `version` are the same with or without help.
+
+It holds, for each op that has any of them: `useWhen` (the `use-when` clause), `links` (the `link` clauses), `inverse` (the `inverse` clause after the symmetric closure: if `A` declares `B`, `B` gets `A`; two different declarations that clash, or a target that is not a catalogue op, fail the build), and `examples` (the vectors marked with `example`). Ops with nothing to say are absent. The document has `format` (1), `catalogue` (the `version` of the catalogue it was built against) and its own `version` (a content id). `optionDocs` (parameter to option to help) is reserved in the schema and not produced yet. The build fails if the file is over 1.5 MiB.
+
+The web app must load it lazily, after the user opens help, never in the start-up bundle:
+
+```ts
+const help = (await import("@forge/ops/help.json")).default as HelpDoc; // type from "@forge/ops"
+if (help.catalogue !== catalogue.version) {
+  /* built for another catalogue: ignore it */
+}
+```
+
+## The hash guard: `hash-snapshot`
+
+`npm run -s hash-snapshot -w @forge/ops` prints one line `qname hash` for every word of every vocabulary (core included) followed by `catalogue.json <sha256>` of `dist/catalogue.json`. Run it on the merge base and on a branch (after `npm run build`) and compare the outputs: a change that must not alter any word, or the catalogue, gives an identical output (LANGUAGE-0.2.md section 15.1). It is a script and a comparison, not a committed file.
 
 ## The CyberChef coverage table
 

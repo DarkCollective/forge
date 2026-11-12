@@ -17,8 +17,15 @@
 // @forge/ops main entry: no node:fs and no import.meta.glob. The loaders are `@forge/ops/node`
 // and `@forge/ops/vite` (RECIPES.md R10, R24).
 export type * from "./types.js";
-export { CATALOGUE_FORMAT, INTERNAL_VOCABS, UI_PARAM_TYPES } from "./types.js";
+export {
+  CATALOGUE_FORMAT,
+  HELP_FORMAT,
+  HELP_MAX_BYTES,
+  INTERNAL_VOCABS,
+  UI_PARAM_TYPES,
+} from "./types.js";
 export { scanVocab } from "./scan.js";
 export { assembleRuntime, createBundleLoader } from "./bundle.js";
 export { buildCatalogue, isCatalogueOp } from "./catalogue.js";
+export { buildHelp } from "./help.js";
 export { REGEX_LIMITS, execAll, isRegexPrimitive, markRegexPrimitive } from "./regex-engine.js";

@@ -143,6 +143,70 @@ export type BuildCatalogueFn = (
   options?: BuildCatalogueOptions,
 ) => Catalogue;
 
+// ---------------------------------------------------------------------------------------------
+// The help document (LANGUAGE-0.2.md section 7): `dist/help.json`, loaded lazily, never part of the
+// catalogue. `Catalogue` and `CatalogueOp` do not change.
+
+/** Version of the help JSON format (`HelpDoc.format`). */
+export const HELP_FORMAT = 1 as const;
+
+/** Raw size budget of `dist/help.json` (1.5 MiB); the build fails above it. */
+export const HELP_MAX_BYTES = 1_572_864;
+
+export interface HelpLink {
+  readonly url: string;
+  readonly label: string | null;
+}
+
+/** One example: a test vector chosen with the `example` key (section 6). */
+export interface HelpExample {
+  readonly title: string;
+  readonly note: string | null;
+  /** The vector's `ref`, or null. */
+  readonly ref: string | null;
+  /** The vector's `params`, as written (omitted parameters take the catalogue defaults). */
+  readonly params: Readonly<Record<string, unknown>>;
+  readonly input: { readonly value: string; readonly enc: string };
+  /** The vector's `expect`, as written: a value, an `{ error }` or a `{ json }`. */
+  readonly expect: unknown;
+}
+
+/** What the help page knows about one op. Ops with nothing to say are absent from the document. */
+export interface HelpOp {
+  readonly qname: string;
+  readonly useWhen: string | null;
+  readonly links: readonly HelpLink[];
+  /** After the symmetric closure of `inverse`. */
+  readonly inverse: string | null;
+  /** Parameter to option to help. Omitted when empty (filled by a later package). */
+  readonly optionDocs?: Readonly<Record<string, Readonly<Record<string, string>>>>;
+  readonly examples: readonly HelpExample[];
+}
+
+/** The help document (`dist/help.json`). */
+export interface HelpDoc {
+  readonly format: typeof HELP_FORMAT;
+  /** `Catalogue.version` of the catalogue this document was built against. */
+  readonly catalogue: string;
+  /** First 16 hex digits of SHA-256 over `JSON.stringify(ops)`. */
+  readonly version: string;
+  /** Sorted by `qname` in code-point order. */
+  readonly ops: readonly HelpOp[];
+}
+
+/** The parsed content of one `vocab/<v>.test.json`. */
+export interface VectorFile {
+  readonly vocab: string;
+  readonly vectors: readonly unknown[];
+}
+
+/** `buildHelp(runtime, catalogue, vectorFiles)`: derive the help document. Throws `Error` on a content violation. */
+export type BuildHelpFn = (
+  runtime: ForgeRuntime,
+  catalogue: Catalogue,
+  vectorFiles: readonly VectorFile[],
+) => HelpDoc;
+
 /** `isCatalogueOp(meta)`: rules 1 to 6 of RECIPES.md section 2.2 (not the internal-vocabulary rule's warning behaviour). */
 export type IsCatalogueOpFn = (meta: WordMeta) => boolean;
 
