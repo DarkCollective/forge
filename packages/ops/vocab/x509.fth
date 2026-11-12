@@ -19,7 +19,7 @@
 \ not read as its type is shown as hex, with the reason, and does not fail the report.
 IN: x509
 
-USING: asn1 base64 md5 sha2 ;
+USING: asn1 base64 md5 sha1 sha2 ;
 
 \ ---- small text helpers ----
 
@@ -640,13 +640,20 @@ USING: asn1 base64 md5 sha2 ;
   v "universal" 16 "Validity" asn1:expect
   { 2 "Not Before" v 0 asn1:child _time _kv 2 "Not After" v 1 asn1:child _time _kv } "\n" join ;
 
-: _tbs-report ( tbs:record sig:str -- str )
+: _fingerprints ( der:bytes -- str )
+  { "Fingerprints"
+    2 "MD5" der md5:digest bytes>hex _kv
+    2 "SHA1" der sha1:digest bytes>hex _kv
+    2 "SHA256" der "256" sha2:digest bytes>hex _kv } "\n" join ;
+
+: _tbs-report ( tbs:record sig:str fp:str -- str )
   { 0 "Version" tbs _version-text _kv
     0 "Serial number" tbs 0 _tbs-field _serial-text _kv
     0 "Algorithm ID" tbs 1 _tbs-field _alg-title _kv
     "Validity" tbs 3 _tbs-field _validity-text
     "Issuer" tbs 2 _tbs-field 2 _dn
     "Subject" tbs 4 _tbs-field 2 _dn
+    fp
     "Public Key" tbs 5 _tbs-field _pk-text
     "Certificate Signature" sig
     ""
@@ -659,7 +666,7 @@ USING: asn1 base64 md5 sha2 ;
   dup 0 asn1:child
   dup "universal" 16 "TBSCertificate" asn1:expect
   swap dup 1 asn1:child swap 2 asn1:child _sig-section
-  _tbs-report ;
+  der _fingerprints _tbs-report ;
 
 \ ---- the operations ----
 
@@ -703,15 +710,57 @@ USING: asn1 base64 md5 sha2 ;
 : _crl-base ( tbs:record -- int )
   tbs 0 asn1:child "universal" 2 asn1:is? [ 1 ] [ 0 ] if ;
 
+\ "2 (0x1)": the 1-based version and the value in the DER, as CyberChef writes it (no padding).
 : _crl-version ( tbs:record -- str )
-  tbs _crl-base 1 = [ tbs 0 asn1:child asn1:node>int ] [ 0 ] if _ver-text ;
+  tbs _crl-base 1 = [ tbs 0 asn1:child asn1:node>int ] [ 0 ] if
+  dup 1 + int>str " (0x" cat swap 16 int>str-radix cat ")" cat ;
+
+\ ---- dates as RFC 1123 (Wed, 11 Nov 2026 22:55:51 GMT), the form CyberChef's CRL report uses ----
+
+: _dow2 ( yy:int m:int d:int -- int )
+  yy yy 4 div + yy 100 div - yy 400 div + { 0 3 2 5 0 3 5 1 4 6 2 4 } m 1 - nth + d + 7 mod ;
+
+\ The day of the week, 0 for Sunday (Sakamoto's method).
+: _dow ( y:int m:int d:int -- int )
+  y m 3 < [ 1 ] [ 0 ] if - m d _dow2 ;
+
+: _gmt2 ( t:str y:int m:int d:int -- str )
+  { "Sun" "Mon" "Tue" "Wed" "Thu" "Fri" "Sat" } y m d _dow nth ", " cat
+  t 8 10 slice cat " " cat
+  { "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec" } m 1 - nth cat " " cat
+  t 0 4 slice cat " " cat t 11 19 slice cat " GMT" cat ;
+
+\ The text "YYYY-MM-DD HH:MM:SS UTC" of _time as RFC 1123 text; anything else as it is.
+: _gmt ( t:str -- str )
+  t len 23 = not [ t ] [
+    t 5 7 slice str>int dup 1 < over 12 > or
+    [ drop t ] [ t t 0 4 slice str>int rot t 8 10 slice str>int _gmt2 ] if ] if ;
+
+: _time-gmt ( node:record -- str )
+  node _time _gmt ;
+
+\ ---- extensions at a given indent: the name at n spaces, the value 4 further ----
+
+: _ext-at2 ( oid:str crit:bool val:bytes n:int -- str )
+  " " n util:repeat-str oid _oid-title cat ":" cat crit [ " critical" cat ] when
+  oid val _ext-body
+  dup len 0 = [ drop ] [ n 4 + _indent "\n" swap cat cat ] if ;
+
+: _ext-at ( ext:record n:int -- str )
+  ext "universal" 16 "an Extension" asn1:expect
+  ext asn1:children len dup 2 < swap 3 > or [ "an Extension has 2 or 3 fields" raise:coerce ] when
+  ext 0 asn1:child asn1:node>oid
+  ext asn1:children len 3 = [ ext 1 asn1:child asn1:node>bool ] [ false ] if
+  ext _ext-value n _ext-at2 ;
 
 : _revoked ( e:record -- str )
   e "universal" 16 "a revoked certificate entry" asn1:expect
-  { 2 "Serial number" e 0 asn1:child _serial-text _kv
-    4 "Revocation date" e 1 asn1:child _time _kv } "\n" join
+  "    Serial Number: " e 0 asn1:child dup "universal" 2 "the serial number (INTEGER)" asn1:expect
+  "value" get bytes>hex upper cat "\n" cat
+  "        Revocation Date: " e 1 asn1:child _time-gmt cat cat
   e asn1:children len 2 > [
-    "\n" cat e 2 asn1:child asn1:children [ _ext ] map "\n" join 2 _indent cat ] when ;
+    "\n        CRL entry extensions:\n" cat
+    e 2 asn1:child asn1:children [ 12 _ext-at ] map "\n" join cat ] when ;
 
 \ The nodes of a TBSCertList after the issuer and thisUpdate: [nextUpdate] [revoked] [[0] extensions].
 : _crl-rest ( tbs:record -- list )
@@ -721,28 +770,35 @@ USING: asn1 base64 md5 sha2 ;
 
 : _crl-next ( rest:list -- str )
   rest [ dup "universal" 23 asn1:is? swap "universal" 24 asn1:is? or ] filter
-  dup len 0 = [ drop "" ] [ 0 nth 0 "Next Update" rot _time _kv ] if ;
+  dup len 0 = [ drop "" ] [ 0 nth _time-gmt "    Next Update: " swap cat ] if ;
 
 : _crl-revoked ( rest:list -- str )
   rest [ "universal" 16 asn1:is? ] filter
-  dup len 0 = [ drop "Revoked Certificates: none" ] [
-    0 nth asn1:children
-    dup len int>str "Revoked Certificates (" swap cat ")" cat "\n" cat
-    swap [ _revoked ] map "\n" join cat ] if ;
+  dup len 0 = [ drop "    No Revoked Certificates." ] [
+    0 nth asn1:children [ _revoked ] map "\n" join ] if ;
 
 : _crl-extensions ( rest:list -- list )
   rest [ 0 asn1:context? ] filter
   dup len 0 = [ drop { } ] [ 0 nth 0 asn1:child asn1:children ] if ;
 
-: _crl-lines ( tbs:record rest:list sig:str -- str )
-  { 0 "Version" tbs _crl-version _kv
-    0 "Algorithm ID" tbs tbs _crl-base asn1:child _alg-title _kv
-    "Issuer" tbs tbs _crl-base 1 + asn1:child 2 _dn
-    0 "Last Update" tbs tbs _crl-base 2 + asn1:child _time _kv
+: _crl-ext-block ( exts:list -- str )
+  exts len 0 = [ "" ] [ "    CRL extensions:\n" exts [ 8 _ext-at ] map "\n" join cat ] if ;
+
+\ The layout of CyberChef's Parse X.509 CRL (the shape of openssl crl -text), indented with spaces where CyberChef
+\ mixes in tabs.
+: _crl-lines ( tbs:record rest:list sig:bytes -- str )
+  { "Certificate Revocation List (CRL):"
+    "    Version: " tbs _crl-version cat
+    "    Signature Algorithm: " tbs tbs _crl-base asn1:child _alg-title cat
+    "    Issuer:"
+    tbs tbs _crl-base 1 + asn1:child 8 _dn
+    "    Last Update: " tbs tbs _crl-base 2 + asn1:child _time-gmt cat
     rest _crl-next
-    rest _crl-extensions dup len 0 = [ drop "" ] [ "Extensions" _ext-section ] if
+    rest _crl-extensions _crl-ext-block
+    "Revoked Certificates:"
     rest _crl-revoked
-    "Signature" sig }
+    "Signature Value:"
+    "        " sig 18 8 _wrap cat }
   [ len 0 > ] filter "\n" join ;
 
 : _crl-report ( der:bytes -- str )
@@ -750,7 +806,7 @@ USING: asn1 base64 md5 sha2 ;
   dup "universal" 16 "CertificateList" asn1:expect
   dup 0 asn1:child
   dup "universal" 16 "TBSCertList" asn1:expect
-  swap dup 1 asn1:child swap 2 asn1:child _sig-section
+  swap 2 asn1:child asn1:node>bits drop
   over _crl-rest swap _crl-lines ;
 
 : parse-crl ( data:bytes input-format:choice{pem|der-hex|base64|raw}="pem" -- str )
@@ -813,9 +869,9 @@ USING: asn1 base64 md5 sha2 ;
 \ section 6.6 and RFC 5656 (a string is a 32-bit length and the bytes; an mpint is a string with a signed big-endian
 \ number). The words are prefixed _ssh.
 
-\ One line "Label:   value": the label and a colon padded so that the values start at column 22.
+\ One line "Label: value", the layout of CyberChef's Parse SSH Host Key.
 : _ssh-kv ( label:str value:str -- str )
-  label ":" cat " " 21 label len - 1 max util:repeat-str cat value cat ;
+  label ": " cat value cat ;
 
 \ ---- reading the blob ----
 
@@ -854,21 +910,26 @@ USING: asn1 base64 md5 sha2 ;
   b len 0 = [ 0 ] [ b asn1:der>int ] if ;
 
 \ ---- the fields of each key type ----
+\ The labels and the 0x hex of the fields as they are in the key blob (an mpint with its leading 00) are CyberChef's;
+\ the Length lines are an addition.
 
-: _ssh-num-text ( n:int -- str )
-  n util:int>bytes 16 22 _wrap ;
+: _ssh-hex ( b:bytes -- str )
+  "0x" b bytes>hex cat ;
 
-: _ssh-rsa-lines ( e:int n:int -- str )
-  { "Length" n util:bit-length int>str " bits" cat _ssh-kv
-    "Exponent" e int>str " (0x" cat e 16 int>str-radix cat ")" cat _ssh-kv
-    "Modulus" n _ssh-num-text _ssh-kv } "\n" join ;
+: _ssh-bits ( b:bytes -- str )
+  "Length" b _ssh-mpint util:bit-length int>str " bits" cat _ssh-kv ;
 
-: _ssh-dss-lines ( p:int q:int g:int y:int -- str )
-  { "Length" p util:bit-length int>str " bits" cat _ssh-kv
-    "P" p _ssh-num-text _ssh-kv
-    "Q" q _ssh-num-text _ssh-kv
-    "G" g _ssh-num-text _ssh-kv
-    "Y (public)" y _ssh-num-text _ssh-kv } "\n" join ;
+: _ssh-rsa-lines ( e:bytes n:bytes -- str )
+  { "Exponent" e _ssh-hex _ssh-kv
+    "Modulus" n _ssh-hex _ssh-kv
+    n _ssh-bits } "\n" join ;
+
+: _ssh-dss-lines ( p:bytes q:bytes g:bytes y:bytes -- str )
+  { "p" p _ssh-hex _ssh-kv
+    "q" q _ssh-hex _ssh-kv
+    "g" g _ssh-hex _ssh-kv
+    "y" y _ssh-hex _ssh-kv
+    p _ssh-bits } "\n" join ;
 
 \ The field size by curve identifier (nistp521 is 521 bits), else from the uncompressed point.
 : _ssh-curve-bits ( id:str point:bytes -- int )
@@ -876,12 +937,13 @@ USING: asn1 base64 md5 sha2 ;
 
 : _ssh-ecdsa-lines ( id:str point:bytes -- str )
   { "Curve" id _safe _ssh-kv
-    "Length" id point _ssh-curve-bits int>str " bits" cat _ssh-kv
-    "Public point" point 16 22 _wrap _ssh-kv } "\n" join ;
+    "Point" point _ssh-hex _ssh-kv
+    "Length" id point _ssh-curve-bits int>str " bits" cat _ssh-kv } "\n" join ;
 
 : _ssh-ed-lines ( type:str key:bytes -- str )
-  { type "ssh-ed25519" = type "sk-ssh-ed25519@openssh.com" = or [ "Length" "256 bits" _ssh-kv ] [ "" ] if
-    "Public key" key 16 22 _wrap _ssh-kv } [ len 0 > ] filter "\n" join ;
+  { "x" key _ssh-hex _ssh-kv
+    type "ssh-ed25519" = type "sk-ssh-ed25519@openssh.com" = or [ "Length" "256 bits" _ssh-kv ] [ "" ] if }
+  [ len 0 > ] filter "\n" join ;
 
 \ RFC 5656: the curve identifier is the end of the key type (ecdsa-sha2-nistp256 and nistp256).
 : _ssh-check-curve ( type:str id:str -- )
@@ -892,8 +954,8 @@ USING: asn1 base64 md5 sha2 ;
   "Application" b bytes>latin1 _safe _ssh-kv ;
 
 : _ssh-details ( type:str f:list -- str )
-  type "ssh-rsa" = [ f 1 nth _ssh-mpint f 2 nth _ssh-mpint _ssh-rsa-lines ] [
-  type "ssh-dss" = [ f 1 nth _ssh-mpint f 2 nth _ssh-mpint f 3 nth _ssh-mpint f 4 nth _ssh-mpint _ssh-dss-lines ] [
+  type "ssh-rsa" = [ f 1 nth f 2 nth _ssh-rsa-lines ] [
+  type "ssh-dss" = [ f 1 nth f 2 nth f 3 nth f 4 nth _ssh-dss-lines ] [
   type "ecdsa-sha2-" util:starts-with? [
     type f 1 nth bytes>latin1 _ssh-check-curve f 1 nth bytes>latin1 f 2 nth _ssh-ecdsa-lines ] [
   type "sk-ecdsa-sha2-nistp256@openssh.com" = [
@@ -908,10 +970,10 @@ USING: asn1 base64 md5 sha2 ;
 
 : _ssh-render ( blob:bytes comment:str type:str f:list -- str )
   { "Key type" type _safe _ssh-kv
+    type f _ssh-details
     comment len 0 = [ "" ] [ "Comment" comment _safe _ssh-kv ] if
     "Fingerprint (MD5)" "MD5:" blob md5:digest _octets cat _ssh-kv
-    "Fingerprint (SHA256)" "SHA256:" blob _ssh-sha256 cat _ssh-kv
-    type f _ssh-details } [ len 0 > ] filter "\n" join ;
+    "Fingerprint (SHA256)" "SHA256:" blob _ssh-sha256 cat _ssh-kv } [ len 0 > ] filter "\n" join ;
 
 \ ---- the input ----
 

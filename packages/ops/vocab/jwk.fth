@@ -9,7 +9,7 @@
 \ members of the objects are written in the order of RFC 7518 (kty, n, e, d, p, q, dp, dq, qi; kty, crv, x, y, d).
 IN: jwk
 
-USING: asn1 json ;
+USING: asn1 json sha2 ;
 
 \ crv oid size kind. The curves of JWK that have a PEM form.
 "P-256 1.2.840.10045.3.1.7 32 EC\nP-384 1.3.132.0.34 48 EC\nP-521 1.3.132.0.35 66 EC\nsecp256k1 1.3.132.0.10 32 EC\nEd25519 1.3.101.112 32 OKP\nX25519 1.3.101.110 32 OKP\nEd448 1.3.101.113 57 OKP\nX448 1.3.101.111 56 OKP" CONSTANT _curves
@@ -181,17 +181,32 @@ USING: asn1 json ;
 : _key-block? ( b:record -- bool )
   b "label" get dup "EC PARAMETERS" = swap "DH PARAMETERS" = or not ;
 
-: from-pem ( data:str indent:int=2 -- str )
-  "Convert PEM keys to JSON Web Keys (PEM to JWK, RFC 7517). The input is PEM text with PUBLIC KEY (SubjectPublicKeyInfo), PRIVATE KEY (PKCS #8), RSA PRIVATE KEY and RSA PUBLIC KEY (PKCS #1), EC PRIVATE KEY (SEC 1, with its curve) blocks, or CERTIFICATE blocks (the key of the certificate). RSA keys give kty, n, e (and d, p, q, dp, dq, qi for a private key); EC keys on P-256, P-384, P-521 and secp256k1 give kty, crv, x, y (and d); Ed25519, X25519, Ed448 and X448 keys give kty OKP, crv, x (and d, RFC 8037). Numbers and keys are base64url without padding, the coordinates and the private key at the full size of the curve. A private key that carries no public key (every OKP key, and an EC key written without it) has it derived. The output is the JWK as JSON text when the input holds one key and a JSON array when it holds several; indent is the spaces per level (default 2; 0 gives compact text; CyberChef writes 4). Encrypted keys, compressed EC points, multi-prime RSA keys, other algorithms and other PEM labels (EC PARAMETERS excepted) are E_COERCE; no key block is E_COERCE." doc
+: _thumb-members ( jwk:record -- record )
+  jwk "kty" get "RSA" =
+  [ { { "e" jwk "e" get } { "kty" "RSA" } { "n" jwk "n" get } } >record ] [
+  jwk "kty" get "EC" =
+  [ { { "crv" jwk "crv" get } { "kty" "EC" } { "x" jwk "x" get } { "y" jwk "y" get } } >record ]
+  [ { { "crv" jwk "crv" get } { "kty" "OKP" } { "x" jwk "x" get } } >record ] if ] if ;
+
+\ The JWK Thumbprint of RFC 7638: SHA-256 of the required members in lexicographic order as compact JSON, in
+\ base64url without padding.
+: _thumbprint ( jwk:record -- str )
+  jwk _thumb-members json:compact str>bytes "256" sha2:digest _b64u ;
+
+: _with-kid ( jwk:record -- record )
+  jwk "kid" jwk _thumbprint put ;
+
+: from-pem ( data:str set-kid:bool=false indent:int=0 -- str )
+  "Convert PEM keys to JSON Web Keys (PEM to JWK, RFC 7517). The input is PEM text with PUBLIC KEY (SubjectPublicKeyInfo), PRIVATE KEY (PKCS #8), RSA PRIVATE KEY and RSA PUBLIC KEY (PKCS #1), EC PRIVATE KEY (SEC 1, with its curve) blocks, or CERTIFICATE blocks (the key of the certificate). RSA keys give kty, n, e (and d, p, q, dp, dq, qi for a private key); EC keys on P-256, P-384, P-521 and secp256k1 give kty, crv, x, y (and d); Ed25519, X25519, Ed448 and X448 keys give kty OKP, crv, x (and d, RFC 8037). Numbers and keys are base64url without padding, the coordinates and the private key at the full size of the curve. A private key that carries no public key (every OKP key, and an EC key written without it) has it derived. As in CyberChef each key is one line of compact JSON and several keys are several lines; set-kid adds the kid member, the RFC 7638 JWK Thumbprint (SHA-256, base64url) of the key, as CyberChef's option does. indent (Forge's addition, default 0 for CyberChef's compact text) is the spaces per level within each key's JSON. Encrypted keys, compressed EC points, multi-prime RSA keys, other algorithms and other PEM labels (EC PARAMETERS excepted) are E_COERCE; no key block is E_COERCE." doc
   "Public Key" category
   data str>bytes asn1:pem-decode [ _key-block? ] filter
   dup len 0 = [ "no PEM key block (-----BEGIN ...-----) found in the input" _bad ] when
-  [ _block-jwk ] map
-  dup len 1 = [ 0 nth ] when
-  indent json:stringify ;
+  [ _block-jwk set-kid [ _with-kid ] when indent json:stringify ] map
+  "\n" join ;
 
 META: from-pem
-  param indent "Spaces per level in the JSON; 0 writes compact JSON." ;
+  param set-kid "Add kid, the RFC 7638 thumbprint of the key (SHA-256, base64url)." ;
+  param indent "Spaces per level in each key's JSON; 0 (the default, CyberChef's) writes compact JSON." ;
   see-also jwk:to-pem pem:to-hex ;
 ;
 

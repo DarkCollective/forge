@@ -600,7 +600,7 @@ describe("the ops", () => {
     const dump = (await val("asn1-dump:parse", str(back as string), int(0), int(32))) as string;
     expect(dump.split("\n")[0]).toBe("SEQUENCE");
     expect(dump).toContain("ObjectIdentifier ecdsa-with-SHA256 (1 2 840 10045 4 3 2)");
-    expect(dump).toContain("[2] 'example.com'");
+    expect(dump).toContain("[2] example.com");
     expect(dump).toContain("[7] 0a000001");
   });
 });
@@ -626,8 +626,11 @@ describe("cost (61 KB of DER: 4,000 elements)", () => {
     },
     async () => {
       const r = await call("asn1-dump:parse", str(toHex(big)), int(0), int(32));
-      expect(r.ok && r.steps).toBeLessThan(2_000_000);
-      expect(top(r).v as string).toContain("OCTETSTRING " + "07".repeat(32) + "...");
+      if (!r.ok) throw new Error(r.error.code + r.error.message);
+      expect(r.steps).toBeLessThan(2_000_000);
+      expect(top(r).v as string).toContain(
+        "OCTETSTRING " + "07".repeat(16) + "..(total 40bytes).." + "07".repeat(16),
+      );
     },
   );
 

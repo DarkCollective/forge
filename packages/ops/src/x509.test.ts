@@ -285,7 +285,7 @@ describe("cost at 64 KiB", () => {
     const t = Date.now();
     const r = await op("parse-crl", crl, "raw");
     const report = out(r);
-    expect(report).toContain("Revoked Certificates (3000)");
+    expect(report.match(/Serial Number: /g)).toHaveLength(3000);
     // measured: 2,339,524 VM steps (about 780 for each entry), 0.7 s; the 10 million step default allows about 12,000 entries
     expect(r.ok && r.steps).toBeLessThan(6_000_000);
     expect(Date.now() - t).toBeLessThan(30_000);

@@ -1767,7 +1767,7 @@
     "ref": "the choice is PEM or JWK",
     "op": "rsa:generate-key-pair",
     "params": {
-      "format": "DER"
+      "format": "XML"
     },
     "input": {
       "value": "",
