@@ -45,7 +45,7 @@ const VOCAB_NAME = /^[A-Za-z][A-Za-z0-9_-]{0,63}$/;
 /** The ASCII symbol characters allowed in word names. */
 const SYMBOLS = "!$%&*+,./<=>?@^|~";
 /** Tokens that are `word` tokens by rule 9 even though they contain `:`. */
-const COLON_KEYWORDS: ReadonlySet<string> = new Set([":", ";", "IN:", "USING:", "META:"]);
+const COLON_KEYWORDS: ReadonlySet<string> = new Set([":", ";", "IN:", "USING:", "META:", ":>"]);
 const MAX_WORD_NAME = 128;
 
 const CH_TAB = 0x09;

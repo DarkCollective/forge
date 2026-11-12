@@ -78,14 +78,15 @@ describe("createRuntime", () => {
     expect(listWords(rt.dictionary, "user")).toEqual([]);
     const core = listWords(rt.dictionary, "core");
     // 102 words of the v0.1 table + 21 primitives of FL 0.2 (has-key? sort, 17 maths and str>num,
-    // fail-coerce fail-range) + 20 prelude words.
-    expect(core).toHaveLength(143);
+    // fail-coerce fail-range) + 20 prelude words + the intrinsic `exit` (WP 6.7).
+    expect(core).toHaveLength(144);
     const expected = new Set([
       ...CORE_INTRINSIC_WORDS,
       ...CORE_PRIMITIVES.map((d) => d.name),
       ...CORE_PRIMITIVES_V02.map((d) => d.name),
       ...CORE_RUNTIME_WORDS,
       ...PRELUDE_WORDS,
+      "exit",
     ]);
     expect(new Set(core)).toEqual(expected);
     expect(rt.getScope()).toEqual({ current: "user", using: [] });
@@ -499,7 +500,7 @@ describe("runtime-supplied words", () => {
     );
     expect(await out(rt, '"zed" words .')).toBe('{ "a" "b" "ｚ" "😀" }\n');
     expect(await out(rt, "vocabs .")).toBe('{ "core" "user" "zed" }\n');
-    expect(await out(rt, '"core" words len .')).toBe("143\n");
+    expect(await out(rt, '"core" words len .')).toBe("144\n");
     expect(await out(rt, '"user" words .')).toBe("{ }\n");
     expect(failure(await rt.run('"nosuch" words')).code).toBe("E_NO_VOCAB");
   });

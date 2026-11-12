@@ -1689,3 +1689,135 @@ describe("internal invariants", () => {
     expect(taken.stack).toHaveLength(0);
   });
 });
+
+// ---------------------------------------------------------------------------------------------
+// Mid-body locals `:>` and `exit` (LANGUAGE-0.2.md sections 8 and 11.5)
+// ---------------------------------------------------------------------------------------------
+
+describe(":> mid-body locals", () => {
+  test("bound names read back; header locals, anonymous inputs and bound locals mix", async () => {
+    expect(await out(": sq ( int -- int ) :> x x x * ; 7 sq .")).toBe("49\n");
+    expect(await out(": f ( -- int ) 1 2 :> b :> a a 10 * b + ; f .")).toBe("12\n");
+    // `int` in the middle stays on the stack in its place; `t` is bound after the header locals.
+    expect(await out(": _f ( a:int int b:int -- int int ) :> t a b + t ; 1 10 100 _f . .")).toBe(
+      "10\n101\n",
+    );
+  });
+
+  test("each call has its own locals, also under recursion", async () => {
+    const src = ": fact ( n:int -- int ) n 2 < [ 1 ] [ n 1 - recurse :> r n r * ] if ; 6 fact .";
+    expect(await out(src)).toBe("720\n");
+  });
+
+  test("bind is one step and pops like any word", async () => {
+    const rt = runtime();
+    await rt.run(": f ( int -- int ) :> x x ; : g ( a:int -- int ) a ;");
+    const f = await rt.run("5 f");
+    const g = await rt.run("5 g");
+    if (!f.ok || !g.ok) throw new Error("run failed");
+    expect(f.steps - g.steps).toBe(1);
+    expect(await codeOf(": h ( -- int ) :> x x ; h", {}, rt)).toBe("E_STACK_UNDERFLOW");
+  });
+
+  test("a quotation bound to a name can be called twice; the captured locals stay intact", async () => {
+    const src = ": f ( -- int ) 5 :> a [ 1 :> b a b + ] :> q q call q call + ; f .";
+    expect(await out(src)).toBe("12\n");
+  });
+
+  test("closures from a map body capture the locals of their own run", async () => {
+    const src = `
+      : mk ( n:int -- list ) 0 n range [ :> i [ i ] ] map ;
+      3 mk [ call ] map .`;
+    expect(await out(src)).toBe("{ 0 1 2 }\n");
+  });
+
+  test("closures from a map body that binds in a lowered branch also have their own run", async () => {
+    const src = `
+      : mk ( -- list ) 0 3 range [ :> i true [ i 10 * :> j [ j ] ] when ] map ;
+      mk [ call ] map .`;
+    expect(await out(src)).toBe("{ 0 10 20 }\n");
+  });
+
+  test("closures from a while body (not lowered) capture the locals of their own iteration", async () => {
+    const src = `
+      : mk ( -- list ) { } 0 [ dup 3 < ] [ :> n :> acc acc [ n ] append n 1 + ] while drop ;
+      mk [ call ] map .`;
+    expect(await out(src)).toBe("{ 0 1 2 }\n");
+  });
+
+  test("closures from a loop body (not lowered) capture the locals of their own iteration", async () => {
+    const src = `
+      : mk ( -- list ) { } 0 [ :> n :> acc acc [ n ] append n 1 + dup 3 < ] loop drop ;
+      mk [ call ] map .`;
+    expect(await out(src)).toBe("{ 0 1 2 }\n");
+  });
+
+  test("closures from a loop body that binds only in a nested lowered branch", async () => {
+    const src = `
+      : mk ( -- list ) { } 0 [ :> n :> acc acc true [ n 100 + :> m [ m ] ] when append n 1 + dup 3 < ] loop drop ;
+      mk [ call ] map .`;
+    expect(await out(src)).toBe("{ 100 101 102 }\n");
+  });
+
+  test("times, each, filter, reduce and try bodies that bind", async () => {
+    expect(await out(": f ( -- ) 3 [ 1 :> x x . ] times ; f")).toBe("1\n1\n1\n");
+    expect(await out(": f ( -- ) { 1 2 } [ :> x x 10 * . ] each ; f")).toBe("10\n20\n");
+    expect(await out(": f ( -- list ) 0 5 range [ :> x x 2 mod 0 = ] filter ; f .")).toBe(
+      "{ 0 2 4 }\n",
+    );
+    expect(await out(": f ( -- int ) 0 4 range 0 [ :> x :> acc acc x + ] reduce ; f .")).toBe(
+      "6\n",
+    );
+    expect(await out(": f ( -- int ) [ 1 0 div ] [ :> e 7 :> y y ] try ; f .")).toBe("7\n");
+  });
+
+  test("a bind in a lowered if/when/unless runs once per activation", async () => {
+    const src = `
+      : f ( b:bool -- int ) b [ 1 :> x x ] [ 2 :> y y ] if ;
+      true f . false f .`;
+    expect(await out(src)).toBe("1\n2\n");
+  });
+});
+
+describe("exit", () => {
+  test("leaves the word at once; the caller continues", async () => {
+    const src = `
+      : sign ( n:int -- str ) n 0 < [ "negative" exit ] when n 0 = [ "zero" exit ] when "positive" ;
+      -5 sign . 0 sign . 7 sign . "end" .`;
+    expect(await out(src)).toBe("negative\nzero\npositive\nend\n");
+  });
+
+  test("runs the exit check of a normal return", async () => {
+    expect(await codeOf(": f ( -- int ) 1 2 exit ; f")).toBe("E_EFFECT");
+    expect(await codeOf(": f ( -- int ) exit ; f")).toBe("E_EFFECT");
+    expect(await codeOf(': f ( -- int ) "x" exit ; f')).toBe("E_TYPE");
+  });
+
+  test("pops the marks of every lowered loop it leaves, at any nesting", async () => {
+    const src = `
+      : scan ( n:int -- int ) 0 [ true ] [ [ true ] [ 1 + dup n = [ exit ] when ] while ] while ;
+      : run ( -- int ) 5000 [ 3 scan drop ] times 3 scan ;
+      run .`;
+    // A leaked mark would grow the return stack by one frame per call.
+    expect(await out(src, { limits: { maxReturnDepth: 20, maxSteps: 1e9 } })).toBe("3\n");
+  });
+
+  test("exit from the condition of a while and from a loop body", async () => {
+    expect(await out(": f ( -- int ) 0 [ 1 + dup 5 = [ exit ] when true ] [ ] while ; f .")).toBe(
+      "5\n",
+    );
+    expect(await out(": f ( -- int ) 0 [ 1 + dup 3 = [ exit ] when true ] loop ; f .")).toBe("3\n");
+  });
+
+  test("exit inside a word called from a quotation leaves only that word", async () => {
+    const src = `
+      : half ( n:int -- int ) n 0 = [ 0 exit ] when n 2 div ;
+      { 0 4 9 } [ half ] map .`;
+    expect(await out(src)).toBe("{ 0 2 4 }\n");
+  });
+
+  test("an exit inside try's body word is not caught as an error", async () => {
+    const src = ": f ( -- int ) 1 exit ; [ f ] [ drop 0 ] try .";
+    expect(await out(src)).toBe("1\n");
+  });
+});

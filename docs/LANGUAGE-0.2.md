@@ -1030,7 +1030,7 @@ After (one word, no helpers):
 
 **Conformance cases (proposed).**
 
-```fl-proposed
+```fl-test
 # C229 a mid-body binding names the top of the stack
 @unit
 : sq ( int -- int ) :> x x x * ;
@@ -1040,7 +1040,7 @@ After (one word, no helpers):
 49
 ```
 
-```fl-proposed
+```fl-test
 # C230 the upper value is bound first
 @unit
 : f ( -- int ) 1 2 :> b :> a a 10 * b + ;
@@ -1050,19 +1050,19 @@ f .
 12
 ```
 
-```fl-proposed
+```fl-test
 # C231 the scope ends with the enclosing quotation
 @unit-fails E_UNDEFINED
 : h ( int -- int ) [ :> y y ] call y ;
 ```
 
-```fl-proposed
+```fl-test
 # C232 a name already visible as a local is a redefinition
 @unit-fails E_REDEFINED
 : f ( a:int -- int ) 1 :> a a ;
 ```
 
-```fl-proposed
+```fl-test
 # C233 a bound name that hides a word warns
 @unit
 : f ( int -- int ) :> len len ;
@@ -1070,7 +1070,7 @@ f .
 W_SHADOW
 ```
 
-```fl-proposed
+```fl-test
 # C234 every run of a quotation has its own bound locals
 @unit
 : mk ( n:int -- list ) 0 n range [ :> i [ i ] ] map ;
@@ -1080,7 +1080,7 @@ W_SHADOW
 { 0 1 2 }
 ```
 
-```fl-proposed
+```fl-test
 # C235 a binding needs a definition
 @run
 1 :> x x
@@ -1088,7 +1088,7 @@ W_SHADOW
 E_SYNTAX
 ```
 
-```fl-proposed
+```fl-test
 # C236 a binding pops the stack like any word
 @unit
 : f ( -- int ) :> x x ;
@@ -1098,13 +1098,13 @@ f
 E_STACK_UNDERFLOW
 ```
 
-```fl-proposed
+```fl-test
 # C237 not inside a list literal
 @unit-fails E_SYNTAX
 : f ( -- list ) 1 { :> x x } ;
 ```
 
-```fl-proposed
+```fl-test
 # C238 a reserved word cannot be bound
 @unit-fails E_NAME
 : f ( int -- int ) :> recurse ;
@@ -1655,7 +1655,7 @@ true
 true
 ```
 
-```fl-proposed
+```fl-test
 # C267 exit leaves the word at once
 @unit
 : sign ( n:int -- str ) n 0 < [ "negative" exit ] when n 0 = [ "zero" exit ] when "positive" ;
@@ -1667,7 +1667,7 @@ zero
 positive
 ```
 
-```fl-proposed
+```fl-test
 # C268 exit from a lowered loop pops its marks
 @unit
 : first-over ( limit:int -- int ) 0 [ true ] [ dup limit > [ exit ] when 1 + ] while ;
@@ -1677,13 +1677,13 @@ positive
 4
 ```
 
-```fl-proposed
+```fl-test
 # C269 exit is not allowed in an each body
 @unit-fails E_SYNTAX
 : f ( list -- ) [ drop exit ] each ;
 ```
 
-```fl-proposed
+```fl-test
 # C270 exit still runs the exit check
 @unit
 : f ( -- int ) 1 2 exit ;

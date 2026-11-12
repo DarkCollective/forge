@@ -23,6 +23,17 @@
  * lowered to jumps by looking at neighbouring items (spec section 8).
  */
 import { ForgeError } from "./errors.js";
+import {
+  LocalScopes,
+  exitInstruction,
+  listGenCtx,
+  loopGenCtx,
+  lowerPlan,
+  quotGenCtx,
+  quotInstruction,
+  rootGenCtx,
+} from "./compiler-locals.js";
+import type { GenCtx } from "./compiler-locals.js";
 import { isPrivateName } from "./dictionary.js";
 import {
   WordMetaBuilder,
@@ -100,6 +111,7 @@ const INTRINSIC_TABLE: Readonly<Record<IntrinsicName, readonly [string, string]>
   fork: ["any any any quot -- any", "split, transform each piece, join (str or bytes data)"],
   ".": ["any --", "print the display form and a newline"],
   ".s": [".. -- ..", "print the stack without changing it"],
+  exit: [".. -- ..", "leave the current word at once"],
 };
 
 /** Every intrinsic name, in spec order. */
@@ -190,8 +202,9 @@ export function createPrimitiveEntry(
 // Parsed items
 // ---------------------------------------------------------------------------------------------
 
-type Item =
+export type Item =
   | { readonly k: "lit"; readonly value: Value; readonly pos: SourcePos }
+  | { readonly k: "bind"; readonly slot: number; readonly pos: SourcePos }
   | { readonly k: "local"; readonly slot: number; readonly pos: SourcePos }
   | { readonly k: "word"; readonly entry: WordEntry; readonly pos: SourcePos }
   | { readonly k: "recurse"; readonly pos: SourcePos }
@@ -207,7 +220,9 @@ interface BodyState {
   /** Qualified name for error context, or `<console>`. */
   readonly word: string;
   readonly self: FlWordEntry | null;
-  readonly locals: ReadonlyMap<string, number>;
+  readonly locals: Map<string, number>;
+  /** The scopes of the names bound by `:>`; shares `locals`. */
+  readonly scopes: LocalScopes;
   /** Distinct entries referenced, in order of first reference (never the word itself). */
   readonly deps: Set<WordEntry>;
 }
@@ -234,12 +249,6 @@ class Emitter {
   get here(): number {
     return this.code.length;
   }
-}
-
-function intrinsicOf(item: Item | undefined): IntrinsicName | undefined {
-  return item !== undefined && item.k === "word" && item.entry.kind === "intrinsic"
-    ? item.entry.intrinsic
-    : undefined;
 }
 
 function intrinsicInstruction(name: IntrinsicName): Instruction {
@@ -277,6 +286,8 @@ function intrinsicInstruction(name: IntrinsicName): Instruction {
       return { op: "print", form: "value" };
     case ".s":
       return { op: "print", form: "stack" };
+    case "exit":
+      return { op: "exit", marks: 0 };
   }
 }
 
@@ -297,75 +308,80 @@ function wordInstruction(entry: WordEntry): Instruction {
 
 /**
  * Tries to lower a combinator whose quotation arguments are literal quotations starting at
- * `items[i]` (spec 8, "Lowering"). Returns the number of items consumed, or 0.
+ * `items[i]` (spec 8, "Lowering"). Returns the number of items consumed, or 0. `lowerPlan` decides
+ * whether the shape applies (it declines `while` and `loop` bodies that bind a local).
  */
-function lower(em: Emitter, items: readonly Item[], i: number, self: FlWordEntry | null): number {
-  const a = items[i];
-  if (a === undefined || a.k !== "quot") return 0;
-  const b = items[i + 1];
-  const c = items[i + 2];
-  if (b !== undefined && b.k === "quot" && c !== undefined) {
-    const third = intrinsicOf(c);
-    if (third === "if") {
+function lower(
+  em: Emitter,
+  items: readonly Item[],
+  i: number,
+  self: FlWordEntry | null,
+  gx: GenCtx,
+): number {
+  const plan = lowerPlan(items, i);
+  if (plan === null) return 0;
+  const a = items[i] as Item & { readonly k: "quot" };
+  const b = items[i + 1] as Item;
+  const c = items[i + 2] as Item;
+  switch (plan.shape) {
+    case "if": {
       // cond [ A ] [ B ] if  ->  jumpf L1 ; A ; jump L2 ; L1: B ; L2:
       const jf = em.emit({ op: "jumpf", target: 0 }, c.pos);
-      genItems(em, a.items, self);
+      genItems(em, a.items, self, gx);
       const j = em.emit({ op: "jump", target: 0 }, c.pos);
       em.patch(jf, { op: "jumpf", target: em.here });
-      genItems(em, b.items, self);
+      genItems(em, (b as Item & { readonly k: "quot" }).items, self, gx);
       em.patch(j, { op: "jump", target: em.here });
       return 3;
     }
-    if (third === "while") {
+    case "while": {
       // [ C ] [ B ] while  ->  L0: dmark ; C ; dcheck 1 ; jumpf L1 ; dmark ; B ; dcheck 0 ; jump L0 ; L1:
+      const lx = loopGenCtx(gx);
       const l0 = em.here;
       em.emit({ op: "dmark" }, c.pos);
-      genItems(em, a.items, self);
+      genItems(em, a.items, self, lx);
       em.emit({ op: "dcheck", delta: 1 }, c.pos);
       const jf = em.emit({ op: "jumpf", target: 0 }, c.pos);
       em.emit({ op: "dmark" }, c.pos);
-      genItems(em, b.items, self);
+      genItems(em, (b as Item & { readonly k: "quot" }).items, self, lx);
       em.emit({ op: "dcheck", delta: 0 }, c.pos);
       em.emit({ op: "jump", target: l0 }, c.pos);
       em.patch(jf, { op: "jumpf", target: em.here });
       return 3;
     }
+    case "when": {
+      const jf = em.emit({ op: "jumpf", target: 0 }, b.pos);
+      genItems(em, a.items, self, gx);
+      em.patch(jf, { op: "jumpf", target: em.here });
+      return 2;
+    }
+    case "unless": {
+      // jumpf L1 ; jump L2 ; L1: A ; L2:
+      const jf = em.emit({ op: "jumpf", target: 0 }, b.pos);
+      const j = em.emit({ op: "jump", target: 0 }, b.pos);
+      em.patch(jf, { op: "jumpf", target: em.here });
+      genItems(em, a.items, self, gx);
+      em.patch(j, { op: "jump", target: em.here });
+      return 2;
+    }
+    case "loop": {
+      // [ B ] loop  ->  L0: dmark ; B ; dcheck 1 ; jumpf L1 ; jump L0 ; L1:
+      const l0 = em.here;
+      em.emit({ op: "dmark" }, b.pos);
+      genItems(em, a.items, self, loopGenCtx(gx));
+      em.emit({ op: "dcheck", delta: 1 }, b.pos);
+      const jf = em.emit({ op: "jumpf", target: 0 }, b.pos);
+      em.emit({ op: "jump", target: l0 }, b.pos);
+      em.patch(jf, { op: "jumpf", target: em.here });
+      return 2;
+    }
   }
-  const second = intrinsicOf(b);
-  if (b === undefined || second === undefined) return 0;
-  if (second === "when") {
-    const jf = em.emit({ op: "jumpf", target: 0 }, b.pos);
-    genItems(em, a.items, self);
-    em.patch(jf, { op: "jumpf", target: em.here });
-    return 2;
-  }
-  if (second === "unless") {
-    // jumpf L1 ; jump L2 ; L1: A ; L2:
-    const jf = em.emit({ op: "jumpf", target: 0 }, b.pos);
-    const j = em.emit({ op: "jump", target: 0 }, b.pos);
-    em.patch(jf, { op: "jumpf", target: em.here });
-    genItems(em, a.items, self);
-    em.patch(j, { op: "jump", target: em.here });
-    return 2;
-  }
-  if (second === "loop") {
-    // [ B ] loop  ->  L0: dmark ; B ; dcheck 1 ; jumpf L1 ; jump L0 ; L1:
-    const l0 = em.here;
-    em.emit({ op: "dmark" }, b.pos);
-    genItems(em, a.items, self);
-    em.emit({ op: "dcheck", delta: 1 }, b.pos);
-    const jf = em.emit({ op: "jumpf", target: 0 }, b.pos);
-    em.emit({ op: "jump", target: l0 }, b.pos);
-    em.patch(jf, { op: "jumpf", target: em.here });
-    return 2;
-  }
-  return 0;
 }
 
-function genItems(em: Emitter, items: readonly Item[], self: FlWordEntry | null): void {
+function genItems(em: Emitter, items: readonly Item[], self: FlWordEntry | null, gx: GenCtx): void {
   let i = 0;
   while (i < items.length) {
-    const used = lower(em, items, i, self);
+    const used = lower(em, items, i, self, gx);
     if (used > 0) {
       i += used;
       continue;
@@ -379,8 +395,17 @@ function genItems(em: Emitter, items: readonly Item[], self: FlWordEntry | null)
       case "local":
         em.emit({ op: "local", slot: it.slot }, it.pos);
         break;
+      case "bind":
+        gx.frame.binds = true;
+        em.emit({ op: "bind", slot: it.slot }, it.pos);
+        break;
       case "word":
-        em.emit(wordInstruction(it.entry), it.pos);
+        em.emit(
+          it.entry.kind === "intrinsic" && it.entry.intrinsic === "exit"
+            ? exitInstruction(gx, it.pos)
+            : wordInstruction(it.entry),
+          it.pos,
+        );
         break;
       case "recurse":
         // `self` is non-null: the parser only produces `recurse` inside a colon definition.
@@ -388,14 +413,15 @@ function genItems(em: Emitter, items: readonly Item[], self: FlWordEntry | null)
         break;
       case "quot": {
         const q = em.emit({ op: "quot", end: 0 }, it.pos);
-        genItems(em, it.items, self);
+        const qx = quotGenCtx(gx);
+        genItems(em, it.items, self, qx);
         em.emit({ op: "ret" }, it.endPos);
-        em.patch(q, { op: "quot", end: em.here });
+        em.patch(q, quotInstruction(em.here, qx));
         break;
       }
       case "list":
         em.emit({ op: "listOpen" }, it.pos);
-        genItems(em, it.items, self);
+        genItems(em, it.items, self, listGenCtx(gx));
         em.emit({ op: "listClose" }, it.endPos);
         break;
     }
@@ -755,9 +781,16 @@ class Compiler {
 
   private consoleItem(): void {
     if (this.seg === null) {
+      const locals = new Map<string, number>();
       this.seg = {
         items: [],
-        st: { word: CONSOLE_WORD, self: null, locals: new Map(), deps: new Set() },
+        st: {
+          word: CONSOLE_WORD,
+          self: null,
+          locals,
+          scopes: new LocalScopes(locals, 0),
+          deps: new Set(),
+        },
         end: this.peek().pos,
       };
     }
@@ -770,7 +803,7 @@ class Compiler {
     if (seg === null) return;
     this.seg = null;
     const em = new Emitter();
-    genItems(em, seg.items, null);
+    genItems(em, seg.items, null, rootGenCtx(CONSOLE_WORD, this.scope.current, false));
     em.emit({ op: "ret" }, seg.end);
     const code: CompiledWord = {
       qname: CONSOLE_WORD,
@@ -898,11 +931,13 @@ class Compiler {
     }
 
     const self: FlWordEntry = { kind: "fl", qname, name, vocab, meta: probe.build(""), code: null };
-    const st: BodyState = { word: qname, self, locals, deps: new Set() };
+    const scopes = new LocalScopes(locals, localNames.length);
+    const st: BodyState = { word: qname, self, locals, scopes, deps: new Set() };
     const { items: body, end } = this.parseSeq(st, "semi", 0);
+    localNames.push(...scopes.bound);
 
     const em = new Emitter();
-    genItems(em, body, self);
+    genItems(em, body, self, rootGenCtx(qname, vocab, true));
     em.emit({ op: "ret" }, end.pos);
 
     const labels = this.labelsOf(st.deps);
@@ -1015,7 +1050,9 @@ class Compiler {
           });
         }
         const isQuot = t.kind === "lbracket";
+        st.scopes.enter(isQuot);
         const { items, end } = this.parseSeq(st, isQuot ? "rbracket" : "rbrace", depth + 1);
+        st.scopes.leave();
         return { k: isQuot ? "quot" : "list", items, pos: t.pos, endPos: end.pos };
       }
       default:
@@ -1024,7 +1061,38 @@ class Compiler {
     }
   }
 
+  /** `:> name` (LANGUAGE-0.2.md section 8): binds the top of the stack to a new local. */
+  private bindItem(t: WordToken, st: BodyState): Item {
+    if (st.self === null) {
+      return this.syntax(t, "':>' only inside a colon definition", st.word);
+    }
+    if (st.scopes.inList) {
+      return this.syntax(t, "':>' not inside a { } list literal", st.word);
+    }
+    const n = this.next();
+    if (n.kind !== "word") this.syntax(n, "a local name after ':>'", st.word);
+    const name = n.text;
+    if (isReservedWord(name) || !isWordName(name)) {
+      this.fail("E_NAME", `'${name}' is not a valid local name`, n.pos, st.word, { name });
+    }
+    if (st.locals.has(name)) {
+      this.fail("E_REDEFINED", `local '${name}' is already defined in ${st.word}`, n.pos, st.word, {
+        name,
+      });
+    }
+    if (this.isVisible(name)) {
+      this.warnings.push({
+        code: "W_SHADOW",
+        message: `local '${name}' shadows a word of the same name in ${st.word}`,
+        qname: st.word,
+        pos: n.pos,
+      });
+    }
+    return { k: "bind", slot: st.scopes.declare(name), pos: t.pos };
+  }
+
   private wordItem(t: WordToken, st: BodyState): Item {
+    if (t.text === ":>") return this.bindItem(t, st);
     if (t.text === "recurse") {
       if (st.self === null) {
         return this.syntax(t, "'recurse' only inside a colon definition", st.word);

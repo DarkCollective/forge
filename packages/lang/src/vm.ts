@@ -570,7 +570,10 @@ class Machine {
         case "quot":
           ds.push({
             tag: "quot",
-            v: { code: this.cur.word, start: this.ip, env: this.locals },
+            v:
+              ins.own === true
+                ? { code: this.cur.word, start: this.ip, env: this.locals, own: true }
+                : { code: this.cur.word, start: this.ip, env: this.locals },
           });
           if (ds.length > this.maxData) this.dataLimit();
           this.ip = ins.end;
@@ -603,6 +606,17 @@ class Machine {
           this.vars.set(e.varId, v);
           break;
         }
+        case "bind":
+          if (ds.length - this.floor < 1) this.underflow(1);
+          (this.locals as Value[])[ins.slot] = ds.pop() as Value;
+          break;
+        case "exit":
+          for (let k = ins.marks; k > 0; k--) {
+            const m = this.rs.pop();
+            if (m === undefined || m.k !== K_MARK) throw internalError("exit without dmark");
+          }
+          if (this.doRet()) return;
+          break;
         case "dmark":
           this.pushMark(new MarkFrame(K_MARK, ds.length));
           break;
@@ -1034,7 +1048,7 @@ class Machine {
     let locals: readonly Value[] = EMPTY;
     if (word.nlocals > 0) {
       const made = new Array<Value>(word.nlocals);
-      for (let j = 0; j < made.length; j++) {
+      for (let j = 0; j < word.namedInputs.length; j++) {
         made[j] = ds[start + (word.namedInputs[j] as number)] as Value;
       }
       locals = made;
@@ -1165,7 +1179,9 @@ class Machine {
   /** Pushes an activation of `q`. The caller's ip must already be saved. */
   private pushQuot(q: Quotation, caller: ActFrame, driven: boolean): void {
     if (this.rs.length >= this.maxRet) this.retLimit();
-    const f = new ActFrame(K_QUOT, q.code, q.start, q.env, 0, 0, caller, driven);
+    // A quotation that binds a local runs on a copy of its environment (LANGUAGE-0.2.md section 8).
+    const env = q.own === true ? q.env.slice() : q.env;
+    const f = new ActFrame(K_QUOT, q.code, q.start, env, 0, 0, caller, driven);
     this.rs.push(f);
     this.cur = f;
     this.loadCur();

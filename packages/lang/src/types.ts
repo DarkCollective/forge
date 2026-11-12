@@ -126,6 +126,8 @@ export interface Quotation {
   readonly code: CompiledWord;
   readonly start: number;
   readonly env: readonly Value[];
+  /** Set when the quotation contains `:>`: every call starts from a copy of `env` (LANGUAGE-0.2 section 8). */
+  readonly own?: true;
 }
 
 /**
@@ -405,7 +407,7 @@ export type CombinatorName =
   | "fork";
 
 /** Names of intrinsic words (words the compiler lowers to dedicated instructions). */
-export type IntrinsicName = StackWord | CombinatorName | "call" | "." | ".s";
+export type IntrinsicName = StackWord | CombinatorName | "call" | "." | ".s" | "exit";
 
 export type Instruction =
   | { readonly op: "lit"; readonly value: Value }
@@ -417,7 +419,7 @@ export type Instruction =
   | { readonly op: "varSet"; readonly entry: VariableWordEntry }
   | { readonly op: "jump"; readonly target: number }
   | { readonly op: "jumpf"; readonly target: number }
-  | { readonly op: "quot"; readonly end: number }
+  | { readonly op: "quot"; readonly end: number; readonly own?: true }
   | { readonly op: "callq" }
   | { readonly op: "comb"; readonly name: CombinatorName }
   | { readonly op: "dmark" }
@@ -425,6 +427,8 @@ export type Instruction =
   | { readonly op: "listOpen" }
   | { readonly op: "listClose" }
   | { readonly op: "print"; readonly form: "value" | "stack" }
+  | { readonly op: "bind"; readonly slot: number }
+  | { readonly op: "exit"; readonly marks: number }
   | { readonly op: "ret" };
 
 export type Opcode = Instruction["op"];
@@ -434,12 +438,13 @@ export interface CompiledWord {
   /** Qualified name, or `<console>` for console code. */
   readonly qname: string;
   readonly effect: StackEffect;
-  /** Names of the locals, in slot order. */
+  /** Names of the locals, in slot order: the header locals, then the names bound by `:>`. */
   readonly localNames: readonly string[];
   /** For each local slot, the index of the input that supplies it. */
   readonly namedInputs: readonly number[];
   /** Indices of the anonymous inputs (they stay on the stack), ascending. */
   readonly anonInputs: readonly number[];
+  /** Header locals plus bound slots; `namedInputs.length` of them are filled from the inputs. */
   readonly nlocals: number;
   readonly code: readonly Instruction[];
   /** `positions[i]` is the source position of `code[i]`. */

@@ -788,6 +788,17 @@ describe("booleans, keywords and names (2.3, 2.11)", () => {
     }
   });
 
+  test(":> is a standalone keyword token (LANGUAGE-0.2.md section 8)", () => {
+    expect(one(":>")).toMatchObject({ kind: "word", text: ":>" });
+    expect(kinds("1 :> x")).toEqual(["int", "word", "word"]);
+    expect(kinds("[ :> x ]")).toEqual(["lbracket", "word", "word", "rbracket"]);
+    // Glued to other characters it is still a bad qualified name, as before, and `a:>` is unchanged.
+    lexAt("  :>x", 1, 3);
+    lexAt("  :>:", 1, 3);
+    lexAt("  >:>", 1, 3);
+    expect(one("a:>")).toMatchObject({ kind: "qword", vocab: "a", name: ">" });
+  });
+
   test("qualified names", () => {
     expect(one("core:dup")).toMatchObject({
       kind: "qword",

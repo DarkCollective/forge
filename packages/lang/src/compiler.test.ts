@@ -227,7 +227,11 @@ function ops(code: CompiledWord | readonly Instruction[]): string[] {
       case "jumpf":
         return `${i.op} ${i.target}`;
       case "quot":
-        return `quot ${i.end}`;
+        return `quot ${i.end}${i.own === true ? " own" : ""}`;
+      case "bind":
+        return `bind ${i.slot}`;
+      case "exit":
+        return `exit ${i.marks}`;
       case "comb":
         return `comb ${i.name}`;
       case "dcheck":
@@ -2056,7 +2060,7 @@ describe("effect labels", () => {
 
 describe("intrinsic and primitive entry helpers", () => {
   test("one entry per intrinsic name, with valid metadata", () => {
-    expect(INTRINSIC_NAMES).toHaveLength(28);
+    expect(INTRINSIC_NAMES).toHaveLength(29);
     const entries = createIntrinsicEntries();
     expect(entries.map((e) => e.intrinsic)).toEqual([...INTRINSIC_NAMES]);
     for (const e of entries) {
@@ -2228,5 +2232,297 @@ describe("the compiled word shape", () => {
     expect((env.code("user:h").code[0] as Extract<Instruction, { op: "call" }>).entry).toBe(
       env.entry("user:f"),
     );
+  });
+});
+
+// ---------------------------------------------------------------------------------------------
+// Mid-body locals `:>` and `exit` (LANGUAGE-0.2.md sections 8 and 11.5)
+// ---------------------------------------------------------------------------------------------
+
+describe(":> mid-body locals", () => {
+  test("a bound slot follows the header locals; nlocals and localNames include it", () => {
+    const env = new Env();
+    env.load(": f ( a:int -- int ) a 1 + :> b b b * ;");
+    const w = env.code("user:f");
+    expect(w.localNames).toEqual(["a", "b"]);
+    expect(w.namedInputs).toEqual([0]);
+    expect(w.nlocals).toBe(2);
+    expect(ops(w)).toEqual([
+      "local 0",
+      "lit 1",
+      "prim core:+",
+      "bind 1",
+      "local 1",
+      "local 1",
+      "prim core:*",
+      "ret",
+    ]);
+  });
+
+  test("an anonymous input and a bound local: slots start at 0", () => {
+    const env = new Env();
+    env.load(": f ( int -- int ) :> x x ;");
+    const w = env.code("user:f");
+    expect(w.localNames).toEqual(["x"]);
+    expect(w.namedInputs).toEqual([]);
+    expect(w.anonInputs).toEqual([0]);
+    expect(w.nlocals).toBe(1);
+  });
+
+  test("the upper value is bound first; every :> gets a fresh slot", () => {
+    const env = new Env();
+    env.load(": f ( -- int ) 1 2 :> b :> a a b ;");
+    const w = env.code("user:f");
+    expect(w.localNames).toEqual(["b", "a"]);
+    expect(ops(w)).toEqual(["lit 1", "lit 2", "bind 0", "bind 1", "local 1", "local 0", "ret"]);
+  });
+
+  test("sibling scopes reuse a name but never a slot", () => {
+    const env = new Env();
+    env.load(": f ( -- int ) 1 [ :> x x ] call 2 [ :> x x ] call + ;");
+    const w = env.code("user:f");
+    expect(w.localNames).toEqual(["x", "x"]);
+    expect(w.nlocals).toBe(2);
+    expect(ops(w).filter((o) => o.startsWith("bind"))).toEqual(["bind 0", "bind 1"]);
+  });
+
+  test("the name ends with its innermost enclosing body", () => {
+    const env = new Env();
+    expect(fails(env, ": h ( int -- int ) [ :> y y ] call y ;").code).toBe("E_UNDEFINED");
+    // A name bound in the word body stays visible in later quotations.
+    env.load(": g ( int -- int ) :> y [ y ] call ;");
+    // A name bound in a lowered branch is scoped to that branch.
+    expect(fails(env, ": k ( b:bool -- int ) b [ 1 :> z ] when z ;").code).toBe("E_UNDEFINED");
+    // After the scope, the name resolves to a word again.
+    const r = env.compile(
+      ": m ( int -- int ) [ :> len len ] call drop 1 ; : n ( any -- int ) len ;",
+    );
+    r.txn.rollback();
+  });
+
+  test("only a quotation that binds directly (or in a part lowered into it) is own", () => {
+    const env = new Env();
+    env.load(`
+      : plain ( -- ) [ 1 drop ] drop ;
+      : own1 ( -- ) [ :> i [ i ] ] drop ;
+      : own2 ( -- ) [ [ :> j ] when ] drop ;
+      : inner ( -- ) [ 1 [ :> k ] map ] drop ;
+    `);
+    const quots = (q: string): string[] => ops(env.code(q)).filter((o) => o.startsWith("quot"));
+    // Words and quotations that do not bind keep the plain instruction, with no extra key.
+    for (const ins of env.code("user:plain").code) {
+      if (ins.op === "quot") expect(Object.keys(ins)).toEqual(["op", "end"]);
+    }
+    expect(quots("user:plain")).toEqual(["quot 4"]);
+    expect(quots("user:own1")).toEqual(["quot 6 own", "quot 5"]);
+    // The `when` branch is lowered into the quotation, so the quotation binds.
+    expect(quots("user:own2")[0]).toMatch(/ own$/);
+    // `map`'s quotation binds; the outer one only contains it.
+    const inner = quots("user:inner");
+    expect(inner[0]).not.toMatch(/ own$/);
+    expect(inner[1]).toMatch(/ own$/);
+  });
+
+  test("while and loop are not lowered when a quotation they run binds a local", () => {
+    const env = new Env();
+    env.load(`
+      : lowered ( -- ) [ true ] [ 1 drop ] while [ true ] loop ;
+      : w1 ( -- ) [ true ] [ 1 :> x ] while ;
+      : w2 ( -- ) [ 1 :> x true ] [ 1 drop ] while ;
+      : l1 ( -- ) [ 1 :> x true ] loop ;
+      : l2 ( -- ) [ true [ 1 :> x ] when ] loop ;
+      : ok ( -- ) [ true ] [ 1 [ :> x ] map drop ] while ;
+      : cond ( b:bool -- ) b [ 1 :> x ] when b [ 1 :> y ] [ 2 :> z ] if ;
+    `);
+    const has = (q: string, op: string): boolean => ops(env.code(q)).includes(op);
+    expect(has("user:lowered", "dmark")).toBe(true);
+    for (const q of ["user:w1", "user:w2", "user:l1", "user:l2"]) {
+      expect(has(q, "dmark")).toBe(false);
+      expect(ops(env.code(q)).some((o) => o === "comb while" || o === "comb loop")).toBe(true);
+    }
+    expect(ops(env.code("user:w1")).filter((o) => o.endsWith(" own"))).toHaveLength(1);
+    // A binding in a nested quotation of another combinator is that quotation's own business.
+    expect(has("user:ok", "dmark")).toBe(true);
+    // if, when and unless stay lowered.
+    expect(ops(env.code("user:cond")).some((o) => o.startsWith("quot"))).toBe(false);
+  });
+
+  test("a deep nest of while loops compiles in linear time (the lowering decision is cached)", () => {
+    const env = new Env();
+    let body = "1 drop";
+    for (let i = 0; i < 200; i++) body = `[ true ] [ ${body} ] while`;
+    const t = performance.now();
+    env.load(`: deep ( -- ) ${body} ;`);
+    expect(performance.now() - t).toBeLessThan(2000);
+  });
+
+  test("errors", () => {
+    const env = new Env();
+    // Outside a definition (console), and inside a list literal at any depth.
+    expect(fails(env, "1 :> x x", "console").code).toBe("E_SYNTAX");
+    expect(fails(env, ": f ( -- list ) 1 { :> x x } ;").code).toBe("E_SYNTAX");
+    expect(fails(env, ": f ( -- list ) 1 { [ :> x x ] call } ;").code).toBe("E_SYNTAX");
+    // A quotation inside a console segment cannot bind either.
+    expect(fails(env, "1 [ :> x x ] call", "console").code).toBe("E_SYNTAX");
+    // Names: reserved words and non-words.
+    for (const bad of ["recurse", "VARIABLE", ";", "IN:", ":>"]) {
+      expect(fails(env, `: f ( int -- int ) :> ${bad} ;`).code, bad).toBe("E_NAME");
+    }
+    for (const bad of ["5", '"s"', "a:b", "[", "true", "0xff"]) {
+      expect(fails(env, `: f ( int -- int ) :> ${bad} 1 ;`).code, bad).toBe("E_SYNTAX");
+    }
+    expect(fails(env, ": f ( int -- int ) :>").code).toBe("E_SYNTAX");
+  });
+
+  test("redefinition of a visible local is E_REDEFINED with the name; the error points at the name", () => {
+    const env = new Env();
+    const e1 = fails(env, ": f ( a:int -- int ) 1 :> a a ;");
+    expect(e1.code).toBe("E_REDEFINED");
+    expect(e1.detail).toMatchObject({ name: "a" });
+    at(e1, 1, 27);
+    expect(fails(env, ": f ( -- int ) 1 :> a 2 :> a a ;").code).toBe("E_REDEFINED");
+    // A nested quotation sees the outer binding, so it cannot rebind it.
+    expect(fails(env, ": f ( -- int ) 1 :> a [ 2 :> a a ] call ;").code).toBe("E_REDEFINED");
+    // Once the inner scope has closed, the name is free again.
+    env.compile(": f ( -- int ) [ 1 :> a a ] call 2 :> a a + ;").txn.rollback();
+  });
+
+  test("a bound name that hides a word emits W_SHADOW at the name; a plain name does not", () => {
+    const env = new Env();
+    const r = env.compile(": f ( int -- int ) :> len len ;");
+    expect(r.warnings).toHaveLength(1);
+    expect(r.warnings[0]).toMatchObject({ code: "W_SHADOW", qname: "user:f" });
+    expect(r.warnings[0]?.pos).toMatchObject({ line: 1, col: 23 });
+    r.txn.rollback();
+    const q = env.compile(": f ( int -- int ) :> total total ;");
+    expect(q.warnings).toEqual([]);
+    q.txn.rollback();
+  });
+
+  test("a failed compile leaves nothing behind", () => {
+    const env = new Env();
+    fails(env, ": f ( -- int ) 1 :> x ; : g ( -- int ) [ :> y ] y ;");
+    expect(env.dictionary.vocab("user")?.words.has("f") ?? false).toBe(false);
+  });
+
+  test("the hash covers the :> text", () => {
+    const env = new Env();
+    env.load(": a ( int -- int ) :> x x ; : b ( int -- int ) :> y y ;");
+    expect(env.entry("user:a").meta.source.text).toContain(":> x");
+    expect(env.entry("user:a").meta.hash).not.toBe(env.entry("user:b").meta.hash);
+  });
+});
+
+describe("code of words without :> or exit is unchanged", () => {
+  // The whole-bundle comparison against the base was a one-off check (WP 6.7 report); this pins
+  // the properties it relies on: no new instruction, no new key, nlocals equal to the header locals.
+  test("every lowering shape and nesting compiles to the instruction forms of v0.1", () => {
+    const env = new Env();
+    env.load(`
+      : a ( x:int y:bool -- int )
+        y [ x ] [ x 1 + ] if y [ 1 drop ] when y [ 2 drop ] unless
+        [ true ] [ [ true ] loop ] while [ [ 1 [ x ] call drop ] map ] drop
+        { x [ x ] call } drop x ;
+      : b ( n:int -- int ) n 0 = [ 1 ] [ n 1 - recurse ] if ;
+    `);
+    const allowed: Record<string, readonly string[]> = {
+      lit: ["op", "value"],
+      local: ["op", "slot"],
+      stack: ["op", "word"],
+      call: ["op", "entry"],
+      prim: ["op", "entry"],
+      varGet: ["op", "entry"],
+      varSet: ["op", "entry"],
+      jump: ["op", "target"],
+      jumpf: ["op", "target"],
+      quot: ["op", "end"],
+      callq: ["op"],
+      comb: ["op", "name"],
+      dmark: ["op"],
+      dcheck: ["op", "delta"],
+      listOpen: ["op"],
+      listClose: ["op"],
+      print: ["op", "form"],
+      ret: ["op"],
+    };
+    for (const q of ["user:a", "user:b"]) {
+      const w = env.code(q);
+      expect(w.nlocals).toBe(w.namedInputs.length);
+      expect(w.localNames).toHaveLength(w.namedInputs.length);
+      for (const ins of w.code) expect(Object.keys(ins), ins.op).toEqual(allowed[ins.op]);
+    }
+  });
+});
+
+describe("exit", () => {
+  test("in the word body it compiles to exit 0", () => {
+    const env = new Env();
+    env.load(': f ( -- str ) "a" exit ;');
+    expect(ops(env.code("user:f"))).toEqual(['lit "a"', "exit 0", "ret"]);
+  });
+
+  test("inside lowered if, when and unless it stays a jump with no marks", () => {
+    const env = new Env();
+    env.load(`
+      : f ( b:bool -- int ) b [ 1 exit ] when b [ 2 exit ] unless b [ 3 exit ] [ 4 exit ] if 5 ;
+    `);
+    const exits = ops(env.code("user:f")).filter((o) => o.startsWith("exit"));
+    expect(exits).toEqual(["exit 0", "exit 0", "exit 0", "exit 0"]);
+  });
+
+  test("inside lowered while and loop it carries the number of open dmark frames", () => {
+    const env = new Env();
+    env.load(`
+      : f ( -- int ) 0 [ true ] [ exit ] while ;
+      : g ( -- int ) 0 [ exit true ] [ 1 drop ] while ;
+      : h ( -- int ) 0 [ [ exit ] when true ] loop ;
+      : n ( -- int ) 0 [ true ] [ [ true ] [ [ true ] when exit ] while exit ] while ;
+      : e ( b:bool -- int ) 0 [ b ] [ b [ exit ] [ 1 drop ] if ] while ;
+    `);
+    const exits = (q: string): string[] => ops(env.code(q)).filter((o) => o.startsWith("exit"));
+    expect(exits("user:f")).toEqual(["exit 1"]);
+    expect(exits("user:g")).toEqual(["exit 1"]);
+    expect(exits("user:h")).toEqual(["exit 1"]);
+    expect(exits("user:n")).toEqual(["exit 2", "exit 1"]);
+    expect(exits("user:e")).toEqual(["exit 1"]);
+  });
+
+  test("is E_SYNTAX at the exit token in any other quotation", () => {
+    const env = new Env();
+    const e = fails(env, ": f ( list -- ) [ drop exit ] each ;");
+    expect(e.code).toBe("E_SYNTAX");
+    at(e, 1, 24);
+    expect(e.word).toBe("user:f");
+    for (const src of [
+      ": f ( list -- list ) [ exit ] map ;",
+      ": f ( -- ) [ exit ] [ 1 drop ] try ;",
+      ": f ( -- ) [ exit ] drop ;",
+      ": f ( -- ) [ exit ] call ;",
+      // A lowered quotation inside a quotation that is not lowered is still not the word body.
+      ": f ( list -- list ) [ dup [ exit ] when ] map ;",
+      ": f ( -- ) [ true ] [ [ exit ] each ] while ;",
+      // In a list literal, even when the surrounding quotation would be lowered.
+      ": f ( -- list ) 1 { exit } ;",
+      ": f ( b:bool -- list ) b [ { exit } drop ] when 1 ;",
+      ": f ( b:bool -- list ) 1 { b [ exit ] when } ;",
+      // The branches of while and loop are lowered only when they do not bind.
+      ": f ( -- ) [ true ] [ 1 :> x exit ] while ;",
+      ": f ( -- ) [ 1 :> x exit true ] loop ;",
+    ]) {
+      expect(fails(env, src).code, src).toBe("E_SYNTAX");
+    }
+  });
+
+  test("is E_SYNTAX in console code", () => {
+    const env = new Env();
+    expect(fails(env, "1 exit", "console").code).toBe("E_SYNTAX");
+    expect(fails(env, "true [ exit ] when", "console").code).toBe("E_SYNTAX");
+  });
+
+  test("a vocabulary's own exit shadows the core word", () => {
+    const env = new Env();
+    env.load(': exit ( -- str ) "mine" ; : f ( -- str ) [ exit ] call ;');
+    expect(ops(env.code("user:f"))).toContain("call user:exit");
+    expect(ops(env.code("user:f"))).not.toContain("exit 0");
   });
 });
