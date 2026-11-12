@@ -11,6 +11,8 @@ IN: keccak
   size _hash ;
 
 META: digest
+  use-when "You need the original Keccak value, as Ethereum uses for Keccak-256, not the SHA-3 value of the same size, which differs." ;
   param size "The output size in bits: 224, 256, 384 or 512." ;
   see-also shake:digest ;
+  link "https://en.wikipedia.org/wiki/Keccak" "Keccak on Wikipedia" ;
 ;

@@ -11,5 +11,7 @@ IN: sha2
   size _hash ;
 
 META: digest
+  use-when "You need a SHA-2 digest of the size a format or standard names, such as SHA-256, the usual choice for new work." ;
   param size "The variant: 224, 256, 384, 512, 512/224 or 512/256 (SHA-512 truncated)." ;
+  link "https://en.wikipedia.org/wiki/SHA-2" "SHA-2 on Wikipedia" ;
 ;

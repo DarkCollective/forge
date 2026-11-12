@@ -25,6 +25,10 @@
     "expect": {
       "value": "a9993e364706816aba3e25717850c26c9cd0d89d",
       "enc": "hex"
+    },
+    "example": {
+      "title": "SHA-1 of abc, from the FIPS 180-4 examples",
+      "note": "The 20-byte digest of abc is one of the FIPS 180-4 example values."
     }
   },
   {
@@ -53,6 +57,10 @@
     "expect": {
       "value": "c12252ceda8be8994d5fa0290a47231c1d16aae3",
       "enc": "hex"
+    },
+    "example": {
+      "title": "SHA-1 of the words message digest",
+      "note": "The 14-character text gives 20 bytes, the same length as the digest of abc."
     }
   }
 ]

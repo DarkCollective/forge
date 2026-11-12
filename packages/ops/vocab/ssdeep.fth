@@ -26,6 +26,7 @@ IN: ssdeep
   data 3 data len _guess _hash ;
 
 META: digest
+  use-when "You have two files or texts that may be nearly the same, such as an edited document, and want fuzzy hashes to compare with ssdeep:compare. Not cryptographic." ;
   alias ctph ;
 ;
 
@@ -117,6 +118,7 @@ META: digest
   hash _parse _unpack other _parse _unpack _cmp ;
 
 META: compare
+  use-when "You have two ssdeep hashes, as blocksize:hash:hash text, and want a similarity score from 0 to 100 to see how alike the inputs are." ;
   param other "The second ssdeep hash, as blocksize:hash:hash text." ;
   alias compare-ctph ;
   see-also ssdeep:digest ;

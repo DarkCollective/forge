@@ -10,5 +10,7 @@ IN: sha1
   _hash ;
 
 META: digest
+  use-when "You need to reproduce a SHA-1 value that a format or tool already holds, such as a Git object name, to compare it. SHA-1 is broken, so not for new signatures." ;
   see-also sha2:digest ;
+  link "https://en.wikipedia.org/wiki/SHA-1" "SHA-1 on Wikipedia" ;
 ;

@@ -8,3 +8,7 @@ IN: sm3
   "The SM3 digest (GB/T 32905-2016) of the input as 32 raw bytes. Chain hex:encode for hex text. Only the standard 64 rounds and the full 256-bit output exist." doc
   "Hashing" category
   _hash ;
+
+META: digest
+  use-when "You need an SM3 digest, the Chinese standard GB/T 32905-2016, to match a value from a system that uses it, such as Chinese national cryptography." ;
+;

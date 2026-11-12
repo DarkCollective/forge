@@ -31,6 +31,10 @@
     "expect": {
       "value": "5881092dd818bf5cf8a3ddb793fbcba7",
       "enc": "hex"
+    },
+    "example": {
+      "title": "SHAKE128 of abc, 16 bytes",
+      "note": "The length is in bytes: this gives 16 bytes, and a longer output for the same input starts with these same bytes."
     }
   },
   {
@@ -99,6 +103,10 @@
     "expect": {
       "value": "483366601360a8771c6863080cc4114d8db44530f8f1e1ee4f94ea37e78b5739d5a15bef186a5386c75744c0527e1faa9f8726e462a12a4feb06bd8801e751e4",
       "enc": "hex"
+    },
+    "example": {
+      "title": "SHAKE256 of abc, 64 bytes",
+      "note": "SHAKE256 with 64 bytes is the default, so this is the value the word gives for abc with no parameters."
     }
   },
   {

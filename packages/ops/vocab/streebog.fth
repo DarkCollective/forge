@@ -11,5 +11,8 @@ IN: streebog
   size _hash ;
 
 META: digest
+  use-when "You need a Streebog digest of 256 or 512 bits, the Russian standard GOST R 34.11-2012 that replaced GOST R 34.11-94, to match a value." ;
   param size "The output size in bits: 256 or 512." ;
+  link "https://www.rfc-editor.org/rfc/rfc6986" "RFC 6986: the Streebog hash" ;
+  link "https://en.wikipedia.org/wiki/Streebog" "Streebog on Wikipedia" ;
 ;

@@ -320,6 +320,10 @@
     "expect": {
       "value": "6103721ccd8ad565d68e90b0f8906163",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Snefru-128 of 123456789 and a newline",
+      "note": "The input ends with a newline character, which is part of the data. With the default eight passes this gives a digest starting 6103721c."
     }
   },
   {
@@ -422,6 +426,10 @@
     "expect": {
       "value": "e699784944ed68a1c762ea1e90c77967",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The same input with two passes",
+      "note": "Two passes give a digest starting e6997849 for the same input, where eight passes give one starting 6103721c."
     }
   },
   {

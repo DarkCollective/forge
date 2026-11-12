@@ -15,6 +15,10 @@
     "expect": {
       "value": "10111",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Even parity at the end of 1011",
+      "note": "1011 has three 1 bits, so the added bit is 1, which makes the count even: 10111."
     }
   },
   {
@@ -123,6 +127,10 @@
     "expect": {
       "value": "10111,00000,11110",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Each block gets its own parity bit",
+      "note": "The delimiter splits the text at each comma, so 1011, 0000 and 1111 each get one bit, and the commas stay."
     }
   },
   {
@@ -195,6 +203,10 @@
     "expect": {
       "value": "1011",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Remove the even parity bit at the end",
+      "note": "The last bit of 10111 is the parity bit, so it is removed and 1011 is left. With no delimiter the whole text is one block."
     }
   },
   {
@@ -251,6 +263,10 @@
     },
     "expect": {
       "error": "E_COERCE"
+    },
+    "example": {
+      "title": "A block with the wrong parity is an error",
+      "note": "For the even mode, 1011 needs a 1 at the end, but this input ends in 0, so verify rejects it with E_COERCE."
     }
   },
   {

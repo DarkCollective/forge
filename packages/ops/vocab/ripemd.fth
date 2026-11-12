@@ -11,5 +11,7 @@ USING: ripemd160 ;
   size "160" = [ ripemd160:digest ] [ size _hash ] if ;
 
 META: digest
+  use-when "You need a RIPEMD digest of 128, 160, 256 or 320 bits to match a value. Choose the size the value has, since each size is a different hash." ;
   param size "The variant: 128, 160, 256 or 320." ;
+  link "https://en.wikipedia.org/wiki/RIPEMD" "RIPEMD on Wikipedia" ;
 ;

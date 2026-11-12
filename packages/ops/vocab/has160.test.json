@@ -39,6 +39,10 @@
     "expect": {
       "value": "975e810488cf2a3d49838478124afce4b1c78804",
       "enc": "hex"
+    },
+    "example": {
+      "title": "HAS-160 of abc",
+      "note": "The digest is 20 bytes. The vectors are the R1 set of TTAS.KO-12.0011, which the R2 revision keeps."
     }
   },
   {
@@ -67,6 +71,10 @@
     "expect": {
       "value": "596185c9ab6703d0d0dbb98702bc0f5729cd1d3c",
       "enc": "hex"
+    },
+    "example": {
+      "title": "HAS-160 of the lower-case alphabet",
+      "note": "The 26-letter input gives 20 bytes, the same size as the three-letter abc: the output length does not depend on the input."
     }
   },
   {

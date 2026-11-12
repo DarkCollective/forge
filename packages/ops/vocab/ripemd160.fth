@@ -11,5 +11,7 @@ IN: ripemd160
   _hash ;
 
 META: digest
+  use-when "You need a RIPEMD-160 digest, as Bitcoin uses it in address derivation, or a value from another system that names it." ;
   see-also sha1:digest md5:digest ;
+  link "https://en.wikipedia.org/wiki/RIPEMD" "RIPEMD on Wikipedia" ;
 ;

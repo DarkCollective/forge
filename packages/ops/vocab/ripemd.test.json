@@ -45,6 +45,10 @@
     "expect": {
       "value": "c14a12199c66e4ba84636b0f69144c77",
       "enc": "hex"
+    },
+    "example": {
+      "title": "RIPEMD-128 of abc",
+      "note": "The 16-byte digest of abc at the 128-bit size, from the RIPEMD test values."
     }
   },
   {
@@ -173,6 +177,10 @@
     "expect": {
       "value": "afbd6e228b9d8cbbcef5ca2d03e6dba10ac0bc7dcbe4680e1e42d2e975459b65",
       "enc": "hex"
+    },
+    "example": {
+      "title": "RIPEMD-256 of abc",
+      "note": "The 32-byte value at the 256-bit size. The 128-bit value of abc above is a different digest."
     }
   },
   {

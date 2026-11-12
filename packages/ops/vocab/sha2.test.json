@@ -107,6 +107,10 @@
     "expect": {
       "value": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
       "enc": "hex"
+    },
+    "example": {
+      "title": "SHA-256 of abc, from FIPS 180-4",
+      "note": "The 32-byte digest of abc is one of the FIPS 180-4 example values. The size parameter is needed, because the default is 512."
     }
   },
   {
@@ -235,6 +239,10 @@
     "expect": {
       "value": "ddaf35a193617abacc417349ae20413112e6fa4e89a97ea20a9eeee64b55d39a2192992a274fc1a836ba3c23a3feebbd454d4423643ce80e2a9ac94fa54ca49f",
       "enc": "hex"
+    },
+    "example": {
+      "title": "SHA-512 of abc",
+      "note": "512 is the default size, so no size parameter gives this 64-byte value."
     }
   },
   {

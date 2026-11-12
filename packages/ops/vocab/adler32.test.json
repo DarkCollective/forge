@@ -11,6 +11,10 @@
     "expect": {
       "value": "091e01de",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Adler-32 of 123456789, the zlib test value",
+      "note": "Nine ASCII digits give 091e01de, the value zlib produces for them (checked against Python's zlib.adler32)."
     }
   },
   {
@@ -25,6 +29,10 @@
     "expect": {
       "value": "11e60398",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Adler-32 of the word Wikipedia",
+      "note": "The four bytes hold the second sum b in the high 16 bits and the first sum a in the low 16 bits."
     }
   },
   {

@@ -39,6 +39,10 @@
     "expect": {
       "value": "b88e497ae8e6fb641b87ef622eb8f2fca0ed95383f7ffebe167acf1099ba764f",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Ascon-Hash256 of eight bytes from a known-answer test",
+      "note": "The input is the eight bytes 00 to 07, and the digest is 32 bytes: Count 9 of the Ascon-C known-answer file."
     }
   },
   {
@@ -105,6 +109,10 @@
     "expect": {
       "value": "e5be5b6dfb7b0e3eae00a070791947a8",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Ascon-Mac of one byte under the test key",
+      "note": "The key is the 16 bytes 00 to 0f and the input is the single byte 10; the tag is 16 bytes."
     }
   },
   {
@@ -278,6 +286,10 @@
     "expect": {
       "value": "e8dd576aba1cd3e6fc704de02aedb79588",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Encrypt one byte: the output carries a 16-byte tag",
+      "note": "The input is the single byte 20 with no associated data. The output is 17 bytes: one ciphertext byte followed by the 16-byte tag."
     }
   },
   {
@@ -305,6 +317,10 @@
     "expect": {
       "value": "20",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decrypt the one-byte example back to its byte",
+      "note": "The input is 17 bytes, one ciphertext byte and the tag, and the output is the single byte 20 that the encrypt example started from."
     }
   },
   {
@@ -386,6 +402,10 @@
     "expect": {
       "value": "6373ebb28be97c9bac090cf399c13ef13abfc0d209e8f4844c90814d13f32c59",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Associated data is authenticated but not written out",
+      "note": "The 16 bytes of input and the 16 bytes of associated data give 32 bytes out: 16 bytes of ciphertext and the tag."
     }
   },
   {
@@ -493,6 +513,10 @@
     },
     "expect": {
       "error": "E_COERCE"
+    },
+    "example": {
+      "title": "A changed tag byte is refused",
+      "note": "The last byte is 89 here, where the encrypt output ends in 88. The tag does not verify, so the error is E_COERCE and no plaintext is returned."
     }
   },
   {

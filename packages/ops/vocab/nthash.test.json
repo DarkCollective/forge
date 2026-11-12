@@ -11,6 +11,10 @@
     "expect": {
       "value": "a4f49c406510bdcab6824ee7c30fd852",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The NT hash of Password, the specification's example",
+      "note": "The spec's example password Password gives a digest starting a4f49c40. The NT hash is the MD4 of the text as UTF-16LE: 16 bytes."
     }
   },
   {
@@ -25,6 +29,10 @@
     "expect": {
       "value": "8846f7eaee8fb117ad06bdd830b7586c",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Lower case gives a different NT hash",
+      "note": "password gives a digest starting 8846f7ea, not the value of Password. The NT hash is case-sensitive, unlike the LM hash."
     }
   },
   {

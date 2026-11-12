@@ -39,6 +39,10 @@
     "expect": {
       "value": "02080042",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Two bytes show the rotation",
+      "note": "The first byte is rotated 13 bits before the second is added, which gives 02080042 for the two letters AB."
     }
   },
   {
@@ -53,6 +57,10 @@
     "expect": {
       "value": "74776072",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The loop applied to LoadLibraryA and its zero byte",
+      "note": "This is the plain loop over the name and its terminating zero. A stub hash also mixes in the module hash, so it is not this value."
     }
   }
 ]

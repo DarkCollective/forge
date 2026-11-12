@@ -8,3 +8,7 @@ IN: has160
   "The HAS-160 digest (TTAS.KO-12.0011/R2) of the input as 20 raw bytes. Chain hex:encode for hex text. Only the standard 80 steps exist." doc
   "Hashing" category
   _hash ;
+
+META: digest
+  use-when "You need a HAS-160 digest, the Korean standard that KCDSA signatures use, to match a value from a Korean system." ;
+;

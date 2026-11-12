@@ -62,3 +62,7 @@ IN: hash-analysis
   dup len 0 = [ "the hash is empty" raise:coerce ] when
   dup [ util:hex-digit? not ] filter len 0 > [ "the hash is not hex text" raise:coerce ] when
   len _report ;
+
+META: analyse
+  use-when "You have a hex digest of unknown origin and want to see which hash functions have a digest of its length, before you check it with a tool." ;
+;

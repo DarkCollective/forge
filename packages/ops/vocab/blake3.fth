@@ -11,6 +11,7 @@ IN: blake3
   length key _hash ;
 
 META: digest
+  use-when "You need a BLAKE3 value, with a length of your choice or a 32-byte key, to match one from a system that names BLAKE3." ;
   param length "The output length in bytes, 1 to 65536 (32 by default)." ;
   param key "The 32-byte key for the keyed mode. Empty (the default) for the unkeyed hash." ;
 ;

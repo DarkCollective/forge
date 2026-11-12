@@ -9,3 +9,7 @@ IN: whirlpool
   "The Whirlpool digest (ISO/IEC 10118-3, final version) of the input as 64 raw bytes. Chain hex:encode for hex text. Only the standard 10 rounds exist." doc
   "Hashing" category
   _hash ;
+
+META: digest
+  use-when "You need a Whirlpool digest, the 512-bit ISO/IEC 10118-3 standard, to match a value from a system that names it." ;
+;

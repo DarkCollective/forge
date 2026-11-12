@@ -8,3 +8,8 @@ IN: sha0
   "The SHA-0 digest (FIPS 180, 1993: SHA-1 without the rotation in the message schedule) of the input as 20 raw bytes. Chain hex:encode for hex text. Only the standard 80 rounds exist. SHA-0 is broken: do not use it for security." doc
   "Hashing" category
   _hash ;
+
+META: digest
+  use-when "You have a SHA-0 value from the 1993 standard, which was withdrawn after a flaw was found, and want to reproduce it. Do not use it for security." ;
+  link "https://en.wikipedia.org/wiki/SHA-1" "SHA-1 on Wikipedia, which compares it with SHA-0" ;
+;

@@ -25,6 +25,10 @@
     "expect": {
       "value": "e52cac67419a9a224a3b108f3fa6cb6d",
       "enc": "hex"
+    },
+    "example": {
+      "title": "A lower-case password is folded to upper case",
+      "note": "The text password is upper-cased before hashing, so the digest, which starts e52cac67, matches that of the upper-case input PASSWORD."
     }
   },
   {
@@ -53,6 +57,10 @@
     "expect": {
       "value": "e52cac67419a9a224a3b108f3fa6cb6d",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The LM hash of PASSWORD",
+      "note": "PASSWORD gives a digest starting e52cac67, the same value as the lower-case password: the LM hash does not see the case."
     }
   }
 ]

@@ -10,5 +10,8 @@ IN: md5
   _hash ;
 
 META: digest
+  use-when "You have an MD5 value from a download page, file format or old API and want to check the data against it. MD5 is broken for security." ;
   see-also sha1:digest sha2:digest ;
+  link "https://www.rfc-editor.org/rfc/rfc1321" "RFC 1321: the MD5 algorithm" ;
+  link "https://en.wikipedia.org/wiki/MD5" "MD5 on Wikipedia" ;
 ;

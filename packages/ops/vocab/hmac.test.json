@@ -37,6 +37,10 @@
     "expect": {
       "value": "750c783e6ab0b503eaa86e310a5db738",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The same key and message with MD5",
+      "note": "HMAC-MD5 gives 16 bytes for the same key and message, half the length of the SHA-256 tag above."
     }
   },
   {
@@ -97,6 +101,10 @@
     "expect": {
       "value": "6b1ab7fe4bd7bf8f0b62e6ce61b9d0cd",
       "enc": "hex"
+    },
+    "example": {
+      "title": "A key longer than the hash block",
+      "note": "The key is 80 bytes, longer than the block of the hash, so the key is hashed first."
     }
   },
   {
@@ -397,6 +405,10 @@
     "expect": {
       "value": "5bdcc146bf60754e6a042426089575c75a003f089d2739839dec58b964ec3843",
       "enc": "hex"
+    },
+    "example": {
+      "title": "HMAC-SHA-256 with the key Jefe, from RFC 4231",
+      "note": "The key is the four letters Jefe and the message is 28 bytes. The tag is 32 bytes, as long as the SHA-256 digest."
     }
   },
   {

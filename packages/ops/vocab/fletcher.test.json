@@ -13,6 +13,10 @@
     "expect": {
       "value": "c8f0",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Fletcher-16 of abcde",
+      "note": "The two-byte result c8f0 is the value the Wikipedia article on Fletcher's checksum gives for abcde."
     }
   },
   {
@@ -61,6 +65,10 @@
     "expect": {
       "value": "f04fc729",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The same letters with a 32-bit sum",
+      "note": "Fletcher-32 of abcde gives four bytes, f04fc729, from the same five letters."
     }
   },
   {

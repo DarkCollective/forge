@@ -13,6 +13,10 @@
     "expect": {
       "value": "3",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The check digit for 7992739871",
+      "note": "The digit is 3. Appended, it gives 79927398713, which passes luhn:validate."
     }
   },
   {
@@ -93,6 +97,10 @@
     "expect": {
       "value": "b",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A hexadecimal check digit",
+      "note": "With radix 16 the check digit is one hex character, b here, and the input may be in upper or lower case."
     }
   },
   {
@@ -186,6 +194,10 @@
     },
     "expect": {
       "json": true
+    },
+    "example": {
+      "title": "A number that passes the Luhn test",
+      "note": "79927398713 passes, so the result is true. The last digit is the check digit."
     }
   },
   {
@@ -201,6 +213,10 @@
     },
     "expect": {
       "json": false
+    },
+    "example": {
+      "title": "The same number with a wrong last digit",
+      "note": "Changing the last digit to 0 gives 79927398710, which fails, so the result is false."
     }
   },
   {

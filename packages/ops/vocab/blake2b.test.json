@@ -17,6 +17,10 @@
     "expect": {
       "value": "ba80a53f981c4d0d6a2797b69f12f6e94c212f14685ac4b74b12bb6fdbffa2d17d87c5392aab792dc252d5de4533cc9518d38aa8dbf1925ab92386edd4009923",
       "enc": "hex"
+    },
+    "example": {
+      "title": "BLAKE2b-512 of abc, from RFC 7693",
+      "note": "The 64-byte output is the value RFC 7693 appendix A gives for abc. The size parameter defaults to 64."
     }
   },
   {
@@ -77,6 +81,10 @@
     "expect": {
       "value": "bddd813c634239723171ef3fee98579b94964e3bb1cb3e427262c8c068d52319",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The same input at 32 bytes is a different value",
+      "note": "The output size is part of the hash: this 32-byte digest does not start with the 64-byte value above."
     }
   },
   {
@@ -117,6 +125,10 @@
     "expect": {
       "value": "a9f9ff5c38d7eda4899ab27d41b93372",
       "enc": "hex"
+    },
+    "example": {
+      "title": "A keyed digest with a 64-byte key",
+      "note": "The key is the 64 bytes 00 to 3f, the longest key BLAKE2b accepts, and the output is 16 bytes."
     }
   },
   {

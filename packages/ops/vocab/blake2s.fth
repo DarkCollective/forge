@@ -11,7 +11,9 @@ IN: blake2s
   size key _hash ;
 
 META: digest
+  use-when "You need a BLAKE2s digest of 16, 20 or 32 bytes, or a keyed BLAKE2s value, to match one from a library or protocol that names it." ;
   param size "The output size in bytes: 16, 20 or 32 (CyberChef's 128, 160 and 256 bits)." ;
   param key "The MAC key, up to 32 bytes. Empty (the default) for the unkeyed hash." ;
   see-also blake2b:digest ;
+  link "https://www.rfc-editor.org/rfc/rfc7693" "RFC 7693: the BLAKE2 hash functions" ;
 ;

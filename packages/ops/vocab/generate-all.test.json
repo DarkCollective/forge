@@ -14,6 +14,10 @@
     "expect": {
       "value": "SHA2 224:     23097d223405d8228642a477bda255b32aadbce4bda0b3f7e36c9da7\nSHA2 512/224: 4634270f707b6a54daae7530460842e20e37ed265ceee9a43e8924aa\nSHA3 224:     e642824c3f8cf24ad09234ee7d3c766fc9a3a5168d0c94ad73b46fdf\nKeccak 224:   c30411768506ebe1c2871b1ee2e87d38df342317300a9b97a95ec6a8\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The 224-bit digests of abc, one per line",
+      "note": "Each line gives the name as the report prints it (SHA2 224, SHA2 512/224, SHA3 224, Keccak 224), then the digest in hex."
     }
   },
   {
@@ -48,6 +52,10 @@
     "expect": {
       "value": "CRC-3/GSM:                4\nCRC-3/ROHC:               6\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The 3-bit CRCs of 123456789, one per line",
+      "note": "Each line gives the name, then the value in hex. A 3-bit CRC takes one hex digit, so CRC-3/GSM shows 4."
     }
   },
   {

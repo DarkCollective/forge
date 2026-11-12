@@ -77,6 +77,10 @@
     "expect": {
       "value": "3a985da74fe225b2045c172d6bd390bd855f086e3e9d525b46bfe24511431532",
       "enc": "hex"
+    },
+    "example": {
+      "title": "SHA3-256 of abc",
+      "note": "The 32-byte digest of abc. The keccak vocabulary gives a different value for the same input, because its padding differs."
     }
   },
   {
@@ -205,6 +209,10 @@
     "expect": {
       "value": "bc22345e4bd3f792a341cf18ac0789f1c9c966712a501b19d1b6632ccd408ec5",
       "enc": "hex"
+    },
+    "example": {
+      "title": "SHA3-256 of three bytes from a known-answer set",
+      "note": "The three input bytes 1f 87 7c come from a short-message test set, and the output is 32 bytes."
     }
   },
   {

@@ -74,7 +74,11 @@ USING: md2 md4 md5 sha0 sha1 sha2 sha3 ripemd ripemd160 has160 whirlpool snefru 
   key alg _key-block alg _mac ;
 
 META: digest
+  use-when "You have a shared secret key and a message, and need the HMAC value that a protocol or API names, to check it or to make one for a test." ;
   param alg "The hash: md2, md4, md5, sha0, sha1, the SHA-2 and SHA-3 sizes, ripemd128/160/256/320, has160, whirlpool or snefru (128 bits, 8 passes)." ;
   param key "The key, of any length (a key longer than the block size is hashed first). Empty by default." ;
   see-also md5:digest sha2:digest sha3:digest ;
+  link "https://www.rfc-editor.org/rfc/rfc2104" "RFC 2104: HMAC" ;
+  link "https://www.rfc-editor.org/rfc/rfc4231" "RFC 4231: HMAC with SHA-2 test cases" ;
+  link "https://en.wikipedia.org/wiki/HMAC" "HMAC on Wikipedia" ;
 ;

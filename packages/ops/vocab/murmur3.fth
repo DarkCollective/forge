@@ -54,5 +54,7 @@ IN: murmur3
   data seed _blocks data swap _tail data len bxor _fmix 4 util:int>be-bytes ;
 
 META: digest
+  use-when "You have text or bytes and need a MurmurHash3 value for a hash table or partition key, to match one from a system that names Murmur3. Not for security." ;
   param seed "The 32-bit seed, 0 to 4294967295." ;
+  link "https://en.wikipedia.org/wiki/MurmurHash" "MurmurHash on Wikipedia" ;
 ;

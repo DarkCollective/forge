@@ -13,6 +13,10 @@
     "expect": {
       "value": "0404040c",
       "enc": "hex"
+    },
+    "example": {
+      "title": "XOR of eight letters in 4-byte blocks",
+      "note": "The two 4-byte blocks are xored column by column, which gives four bytes: 0404040c."
     }
   },
   {
@@ -29,6 +33,10 @@
     "expect": {
       "value": "626f05",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The last block is padded with zeros",
+      "note": "Eight bytes in blocks of 3 leave two bytes in the last block. It is padded with a zero, so the result is still three bytes."
     }
   },
   {

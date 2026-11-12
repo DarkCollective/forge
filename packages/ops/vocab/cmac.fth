@@ -11,7 +11,9 @@ IN: cmac
   data key algorithm _mac ;
 
 META: digest
+  use-when "You have a block-cipher key, AES or Triple DES, and a message, and need the CMAC tag that a standard or protocol names for them." ;
   param key "The MAC key: 16, 24 or 32 bytes for AES, 16 or 24 bytes for Triple DES." ;
   param algorithm "The block cipher: AES (default, as CyberChef) or TDES (Triple DES)." ;
   see-also hmac:digest hex:encode ;
+  link "https://www.rfc-editor.org/rfc/rfc4493" "RFC 4493: AES-CMAC" ;
 ;

@@ -9,3 +9,7 @@ IN: nthash
   "The NT hash of a password: the MD4 digest of the text encoded as UTF-16LE (MS-NLMP NTOWFv1), 16 raw bytes. Chain hex:encode for hex text. Do not use it to store passwords." doc
   "Hashing" category
   text "utf-16le" charset:encode md4:digest ;
+
+META: digest
+  use-when "You have a Windows password and want its NT hash, the value NTLM uses, to compare with a stored NT hash. Do not use it to store passwords." ;
+;

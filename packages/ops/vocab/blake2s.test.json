@@ -17,6 +17,10 @@
     "expect": {
       "value": "508c5e8c327c14e2e1a72ba34eeb452f37458b209ed63a294d999b4c86675982",
       "enc": "hex"
+    },
+    "example": {
+      "title": "BLAKE2s-256 of abc, from RFC 7693",
+      "note": "The 32-byte output is the value RFC 7693 appendix A gives for abc. 32 is the default size."
     }
   },
   {
@@ -77,6 +81,10 @@
     "expect": {
       "value": "a120dbd782f5e524252ba9e77e69301b",
       "enc": "hex"
+    },
+    "example": {
+      "title": "BLAKE2s-128 of the words message digest",
+      "note": "Asking for 16 bytes gives a 16-byte value, half the length of the default 32-byte digest."
     }
   },
   {

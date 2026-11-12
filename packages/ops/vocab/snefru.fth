@@ -11,6 +11,8 @@ IN: snefru
   size rounds _hash ;
 
 META: digest
+  use-when "You have a Snefru value from an old tool, with its size and number of passes, and want to reproduce it. Eight passes is the recommended setting." ;
   param size "The output size in bits: 128 or 256." ;
   param rounds "The number of passes: 2, 4 or 8." ;
+  link "https://en.wikipedia.org/wiki/Snefru" "Snefru on Wikipedia" ;
 ;

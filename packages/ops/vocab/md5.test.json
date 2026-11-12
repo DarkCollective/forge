@@ -39,6 +39,10 @@
     "expect": {
       "value": "900150983cd24fb0d6963f7d28e17f72",
       "enc": "hex"
+    },
+    "example": {
+      "title": "MD5 of abc, from RFC 1321",
+      "note": "The 16-byte digest of abc is the value in the RFC 1321 appendix A.5 test suite."
     }
   },
   {
@@ -53,6 +57,10 @@
     "expect": {
       "value": "f96b697d7cb7938d525a2f31aaf161d0",
       "enc": "hex"
+    },
+    "example": {
+      "title": "MD5 of the words message digest",
+      "note": "The same suite gives a digest starting f96b697d for these fourteen characters."
     }
   },
   {

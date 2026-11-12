@@ -11,6 +11,10 @@
     "expect": {
       "value": "3:AXGBicFlgVNhBGcL6wCrFQEv:AXGHsNhxLsr2C",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A fuzzy hash of a short text",
+      "note": "The result is text, not bytes: a block size, then two hash parts, separated by colons."
     }
   },
   {
@@ -25,6 +29,10 @@
     "expect": {
       "value": "3:AXGBicFlIHBGcL6wCrFQEv:AXGH6xLsr2C",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The same text with one word in capitals",
+      "note": "This text differs from the one above only in the capitals of one word, CTPH for Ctph. Its hash has the same block size, 3."
     }
   },
   {
@@ -54,6 +62,10 @@
     },
     "expect": {
       "json": 22
+    },
+    "example": {
+      "title": "Score a pair of hashes from similar texts",
+      "note": "The hashes of the two README texts score 22. The score is 0 to 100, and the next example shows the top of the scale."
     }
   },
   {
@@ -69,6 +81,10 @@
     },
     "expect": {
       "json": 100
+    },
+    "example": {
+      "title": "Identical hashes score 100",
+      "note": "A hash compared with an identical copy of itself gives 100."
     }
   },
   {

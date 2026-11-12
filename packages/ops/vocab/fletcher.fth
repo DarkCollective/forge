@@ -32,6 +32,8 @@ IN: fletcher
   data size str>int _fletcher ;
 
 META: checksum
+  use-when "You have a format that stores a Fletcher checksum of 8, 16, 32 or 64 bits and want to recompute it to find accidental damage." ;
   param size "Checksum size in bits: 8, 16, 32 or 64." ;
   see-also crc:checksum ;
+  link "https://en.wikipedia.org/wiki/Fletcher%27s_checksum" "Fletcher's checksum on Wikipedia" ;
 ;

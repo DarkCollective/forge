@@ -11,6 +11,8 @@ IN: shake
   variant length _hash ;
 
 META: digest
+  use-when "You need an extendable-output hash of a chosen length, SHAKE128 or SHAKE256, for example to derive a value of an odd size that a format requires." ;
   param variant "The security strength: 128 for SHAKE128, 256 for SHAKE256." ;
   param length "The output length in bytes (1 to 65536)." ;
+  link "https://en.wikipedia.org/wiki/SHA-3" "SHA-3 on Wikipedia, which covers SHAKE" ;
 ;

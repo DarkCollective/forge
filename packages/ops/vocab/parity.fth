@@ -49,16 +49,22 @@ IN: parity
   bits delimiter [ mode position verify _decode-block ] _blocks ;
 
 META: encode
+  use-when "You have a string of 0 and 1 digits, such as bits from an old serial link, and need a parity bit added to each block so the count of 1 bits is even or odd." ;
+  inverse decode ;
   param mode "even: the total number of 1 bits becomes even. odd: it becomes odd." ;
   param position "Put the parity bit at the start or at the end of each block." ;
   param delimiter "Separates blocks that each get a parity bit. Empty: the whole input is one block." ;
   see-also parity:decode ;
+  link "https://en.wikipedia.org/wiki/Parity_bit" "Parity bit on Wikipedia" ;
 ;
 
 META: decode
+  use-when "You have bits with a parity bit on each block, from an old serial or tape format, and want the data bits back, with the parity checked." ;
+  inverse encode ;
   param mode "The parity the data was encoded with: even or odd." ;
   param position "Where the parity bit is: at the start or at the end of each block." ;
   param delimiter "Separates the blocks. Empty: the whole input is one block." ;
   param verify "Check each block's parity and fail on a mismatch." ;
   see-also parity:encode ;
+  link "https://en.wikipedia.org/wiki/Parity_bit" "Parity bit on Wikipedia" ;
 ;

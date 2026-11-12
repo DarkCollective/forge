@@ -13,5 +13,6 @@ IN: ror13
   4 util:int>be-bytes ;
 
 META: hash
+  use-when "You are reading shellcode or malware that hashes API names with ROR13, and want the value this loop gives for a name, to match it against a constant." ;
   see-also adler32:checksum hex:encode ;
 ;

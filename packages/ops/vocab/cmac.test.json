@@ -37,6 +37,10 @@
     "expect": {
       "value": "070a16b46b4d4144f79bdd9dd04a287c",
       "enc": "hex"
+    },
+    "example": {
+      "title": "AES-128 CMAC of sixteen bytes",
+      "note": "The key and the message are 16 bytes each, and the tag is 16 bytes."
     }
   },
   {
@@ -277,6 +281,10 @@
     "expect": {
       "value": "8e8f293136283797",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Triple DES gives an 8-byte tag",
+      "note": "The key is 24 bytes and the input 8 bytes. The tag is 8 bytes, half the length of the AES tag above."
     }
   },
   {

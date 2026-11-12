@@ -12,5 +12,7 @@ IN: lmhash
   text upper "iso-8859-1" charset:encode _hash ;
 
 META: digest
+  use-when "You have a LAN Manager hash from an old Windows store and want to reproduce it from a password, to compare them. Do not use it to store passwords." ;
   see-also nthash:digest hex:encode ;
+  link "https://en.wikipedia.org/wiki/LAN_Manager" "LAN Manager on Wikipedia" ;
 ;

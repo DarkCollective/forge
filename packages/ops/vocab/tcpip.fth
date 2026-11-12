@@ -13,5 +13,8 @@ IN: tcpip
   65535 swap - 2 util:int>be-bytes ;
 
 META: checksum
+  use-when "You are building or checking an IPv4, TCP, UDP or ICMP header and need its Internet checksum, or want to verify one with its field in place." ;
   see-also xor-checksum:checksum ;
+  link "https://www.rfc-editor.org/rfc/rfc1071" "RFC 1071: computing the Internet checksum" ;
+  link "https://en.wikipedia.org/wiki/Internet_checksum" "Internet checksum on Wikipedia" ;
 ;

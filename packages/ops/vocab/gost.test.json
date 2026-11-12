@@ -61,6 +61,10 @@
     "expect": {
       "value": "f3134348c44fb1b2a277729e2285ebb5cb5e0f29c975bc753b70497c06a4d51d",
       "enc": "hex"
+    },
+    "example": {
+      "title": "abc with the test S-box set",
+      "note": "The test parameter set of RFC 5831 gives a digest starting f3134348 for abc. The CryptoPro set gives a different digest, in the next example."
     }
   },
   {
@@ -107,6 +111,10 @@
     "expect": {
       "value": "b285056dbf18d7392d7677369524dd14747459ed8143997e163b2986f92fd42c",
       "enc": "hex"
+    },
+    "example": {
+      "title": "abc with the CryptoPro S-box set",
+      "note": "This is the default set: with no parameter the same text gives a digest starting b285056d. The test set gives a different value."
     }
   },
   {

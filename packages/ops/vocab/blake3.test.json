@@ -37,6 +37,10 @@
     "expect": {
       "value": "2d3adedff11b61f14c886e35afa036736dcd87a74d27b5c1510225d0f592e213",
       "enc": "hex"
+    },
+    "example": {
+      "title": "BLAKE3 of one zero byte",
+      "note": "The input is the single byte 00, one of the BLAKE3 test vectors. The default output is 32 bytes."
     }
   },
   {
@@ -77,6 +81,10 @@
     "expect": {
       "value": "92b2b75604ed3c761f9d6f62392c8a9227ad0ea3f09573e783f1498a4ed60d26",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The keyed mode with a 32-byte key",
+      "note": "The key is the 32-byte phrase whats the Elvish word for friend, which switches on keyed mode. The input is empty."
     }
   },
   {

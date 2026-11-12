@@ -11,5 +11,9 @@ IN: gost
   sbox _hash ;
 
 META: digest
+  use-when "You need a GOST R 34.11-94 digest, the Russian standard that Streebog replaced, to match a value. Choose the S-box set that the value names." ;
   param sbox "The substitution box: test (the RFC 5831 test parameters) or cryptopro (id-GostR3411-94-CryptoProParamSet)." ;
+  link "https://www.rfc-editor.org/rfc/rfc5831" "RFC 5831: GOST R 34.11-94 with test parameters" ;
+  link "https://www.rfc-editor.org/rfc/rfc4357" "RFC 4357: GOST parameter sets, CryptoPro included" ;
+  link "https://en.wikipedia.org/wiki/GOST_(hash_function)" "GOST hash function on Wikipedia" ;
 ;

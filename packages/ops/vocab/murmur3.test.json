@@ -71,6 +71,10 @@
     "expect": {
       "value": "c0363e43",
       "enc": "hex"
+    },
+    "example": {
+      "title": "MurmurHash3 of Hello, world! with seed 0",
+      "note": "The 32-bit value is shown in the usual hex order: the four bytes are c0 36 3e 43."
     }
   },
   {
@@ -131,6 +135,10 @@
     "expect": {
       "value": "24884cba",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The same text with a non-zero seed",
+      "note": "The seed 2538058380, which is 0x9747b28c, gives 24884cba here, where seed 0 gives c0363e43 for the same text."
     }
   },
   {

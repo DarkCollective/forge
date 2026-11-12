@@ -13,6 +13,10 @@
     "expect": {
       "value": "1b54d01a4af5b9d5cc3d86d68d285462b19abc2475222f35c085122be4ba1ffa00ad30f8767b3a82384c6574f024c311e2a481332b08ef7f41797891c1646f48",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Streebog-512 of the same message",
+      "note": "The same 63-byte message at 512 bits gives 64 bytes, a different value from the 256-bit digest above."
     }
   },
   {
@@ -43,6 +47,10 @@
     "expect": {
       "value": "9d151eefd8590b89daa6ba6cb74af9275dd051026bb149a452fd84e5e57b5500",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Streebog-256 of the RFC 6986 example message",
+      "note": "The 63-byte message is the first example in RFC 6986 section 10.1, and the digest here is 32 bytes."
     }
   },
   {

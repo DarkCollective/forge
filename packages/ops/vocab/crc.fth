@@ -44,6 +44,7 @@ IN: crc
   _with ;
 
 META: custom
+  use-when "You have a CRC described by its width, polynomial and reflection settings, as a datasheet or spec gives it, rather than by a preset name." ;
   param width "Register width in bits, 1 to 82." ;
   param poly "Generator polynomial without its top bit, big-endian hex (up to 11 bytes)." ;
   param init "Initial register value, hex." ;
@@ -51,9 +52,12 @@ META: custom
   param refout "Reflect the register before xorout." ;
   param xorout "Value xored into the final register, hex." ;
   see-also crc:checksum ;
+  link "https://en.wikipedia.org/wiki/Cyclic_redundancy_check" "Cyclic redundancy check on Wikipedia" ;
 ;
 
 META: checksum
+  use-when "You have data with a CRC field named by its preset, such as CRC-32, and want to recompute it. It catches accidental damage, not tampering." ;
   param algorithm "The preset, named as in CyberChef and the reveng catalogue." ;
   see-also crc:custom ;
+  link "https://en.wikipedia.org/wiki/Cyclic_redundancy_check" "Cyclic redundancy check on Wikipedia" ;
 ;

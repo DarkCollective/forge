@@ -11,5 +11,8 @@ IN: adler32
   data _adler 4 util:int>be-bytes ;
 
 META: checksum
+  use-when "You have the uncompressed data of a zlib stream and want its Adler-32 value, to compare with the stored check. It finds accidental damage, not tampering." ;
   see-also fletcher:checksum ;
+  link "https://www.rfc-editor.org/rfc/rfc1950" "RFC 1950: the zlib data format" ;
+  link "https://en.wikipedia.org/wiki/Adler-32" "Adler-32 on Wikipedia" ;
 ;

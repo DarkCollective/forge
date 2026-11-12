@@ -39,6 +39,10 @@
     "expect": {
       "value": "a448017aaf21d8525fc10ae87aa6729d",
       "enc": "hex"
+    },
+    "example": {
+      "title": "MD4 of abc, from RFC 1320",
+      "note": "The 16-byte digest of abc is the value in the RFC 1320 appendix A.5 test suite."
     }
   },
   {

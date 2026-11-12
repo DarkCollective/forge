@@ -39,6 +39,10 @@
     "expect": {
       "value": "8eb208f7e05d987a9b044a8e98c6b087f15a0bfc",
       "enc": "hex"
+    },
+    "example": {
+      "title": "RIPEMD-160 of abc",
+      "note": "The 20-byte digest of abc, from the RIPEMD-160 paper's test vectors."
     }
   },
   {

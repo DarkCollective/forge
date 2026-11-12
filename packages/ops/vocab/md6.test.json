@@ -33,6 +33,10 @@
     "expect": {
       "value": "230637d4e6845cf0d092b558e87625f03881dd53a7439da34cf3b94ed0d8b2c5",
       "enc": "hex"
+    },
+    "example": {
+      "title": "MD6-256 of abc at the default levels",
+      "note": "The 32-byte digest at 64 levels is the value in the MD6 report appendix and in the Wikipedia examples."
     }
   },
   {
@@ -51,6 +55,10 @@
     "expect": {
       "value": "977592608c45c9923340338450fdcccc21a68888e1e6350e133c5186cd9736ee",
       "enc": "hex"
+    },
+    "example": {
+      "title": "A 43-character sentence at the same settings",
+      "note": "The sentence The quick brown fox jumps over the lazy dog gives its own 32-byte value at the same size and levels."
     }
   },
   {

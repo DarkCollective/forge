@@ -121,12 +121,14 @@ USING: hex md2 md4 md5 md6 sha0 sha1 sha2 sha3 keccak shake ripemd has160 whirlp
   data "Fletcher-64" 64 [ "64" fletcher:checksum ] length names 26 _h cat ;
 
 META: hashes
+  use-when "You have one input and want its digest under many hash functions at once, to see which of them gives the value you hold." ;
   param length "Show only the digests with this many bits, or all of them." ;
   param names "Put the algorithm name before each digest." ;
   see-also generate-all:checksums hash-analysis:analyse ;
 ;
 
 META: checksums
+  use-when "You have one input and want its value under every CRC preset, and the Adler and Fletcher sums, at once, to see which checksum it matches." ;
   param length "Show only the checksums with this many bits, or all of them." ;
   param names "Put the checksum name before each value." ;
   see-also generate-all:hashes ;

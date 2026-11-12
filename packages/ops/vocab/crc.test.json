@@ -1661,6 +1661,10 @@
     "expect": {
       "value": "4b37",
       "enc": "hex"
+    },
+    "example": {
+      "title": "CRC-16/MODBUS, a two-byte check",
+      "note": "The same nine digits give 4b37, two bytes: the check value of the MODBUS preset in the reveng catalogue."
     }
   },
   {
@@ -2397,6 +2401,10 @@
     "expect": {
       "value": "cbf43926",
       "enc": "hex"
+    },
+    "example": {
+      "title": "CRC-32 of 123456789, the check value",
+      "note": "The preset CRC-32/ISO-HDLC gives cbf43926 for the nine ASCII digits 123456789. The output is four bytes."
     }
   },
   {
@@ -2841,6 +2849,10 @@
     "expect": {
       "value": "31c3",
       "enc": "hex"
+    },
+    "example": {
+      "title": "CRC-16/XMODEM written out as parameters",
+      "note": "The polynomial 1021 and initial value 0000, with no reflection, give 31c3: the value the CRC-16/XMODEM preset gives too."
     }
   },
   {
@@ -2931,6 +2943,10 @@
     "expect": {
       "value": "0daf",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Input and output reflection can differ",
+      "note": "Here the output is reflected and the input is not. The result 0daf is the value of the CRC-12/UMTS preset."
     }
   }
 ]

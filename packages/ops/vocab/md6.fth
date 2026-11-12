@@ -10,7 +10,9 @@ IN: md6
   size levels key _hash ;
 
 META: digest
+  use-when "You need an MD6 value with a chosen size and tree height, to match a value that names MD6, a SHA-3 competition candidate that few systems use." ;
   param size "The digest length in bits, a multiple of 8 from 8 to 512." ;
   param levels "The number of parallel tree levels L (0 to 64) before the mode turns sequential." ;
   param key "An optional key, UTF-8 text of at most 64 bytes." ;
+  link "https://en.wikipedia.org/wiki/MD6" "MD6 on Wikipedia" ;
 ;

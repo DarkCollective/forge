@@ -25,6 +25,10 @@
     "expect": {
       "value": "b861",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The checksum of an IPv4 header with a zero field",
+      "note": "The header has zeros in its checksum field. The result b861 is the value to write into that field."
     }
   },
   {
@@ -39,6 +43,10 @@
     "expect": {
       "value": "0000",
       "enc": "hex"
+    },
+    "example": {
+      "title": "A header with its checksum verifies to zero",
+      "note": "With b861 in the field, the same header sums to 0000, which is how a receiver checks it."
     }
   },
   {

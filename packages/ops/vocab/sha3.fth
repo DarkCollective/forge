@@ -10,6 +10,8 @@ IN: sha3
   size _hash ;
 
 META: digest
+  use-when "You need a SHA-3 digest, the FIPS 202 standard, of a size a format names, such as SHA3-256. For Ethereum's Keccak-256, use keccak." ;
   param size "The output size in bits: 224, 256, 384 or 512." ;
   see-also keccak:digest shake:digest ;
+  link "https://en.wikipedia.org/wiki/SHA-3" "SHA-3 on Wikipedia" ;
 ;

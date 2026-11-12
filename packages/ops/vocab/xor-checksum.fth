@@ -14,6 +14,7 @@ IN: xor-checksum
   0 blocksize range [ data swap blocksize _column ] map list>bytes ;
 
 META: checksum
+  use-when "You have a format with a simple XOR check over blocks of a set size and want to recompute it. It is weaker than a CRC for finding damage." ;
   param blocksize "The block size in bytes, which is also the size of the result." ;
   see-also bits:xor ;
 ;
