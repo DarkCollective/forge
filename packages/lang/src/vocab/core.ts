@@ -27,6 +27,7 @@
 import { ForgeError } from "../errors.js";
 import { CORE_VOCAB } from "../dictionary.js";
 import { definePrimitive } from "../primitives.js";
+import { NUMERIC_PRIMITIVES } from "./numeric.js";
 import type {
   EffectLabel,
   IntrinsicName,
@@ -1141,7 +1142,78 @@ export const CORE_PRIMITIVES: readonly PrimitiveDef[] = Object.freeze([
   }),
 ]);
 
+/** The ordering class of a value for `sort`: numbers compare with numbers, and so on. */
+function sortClass(v: Value): "number" | "str" | "bytes" {
+  switch (v.tag) {
+    case "int":
+    case "num":
+      return "number";
+    case "str":
+    case "bytes":
+      return v.tag;
+    default:
+      throw typeError("number, str or bytes", v.tag, undefined, { word: "sort" });
+  }
+}
+
+/**
+ * The `core` words added by FL 0.2 (docs/LANGUAGE-0.2.md sections 11 to 13), kind P: `has-key?`,
+ * `sort`, the maths words with `str>num`, and the typed failure words. `CORE_PRIMITIVES` stays the
+ * 69 words of the v0.1 table.
+ */
+export const CORE_PRIMITIVES_V02: readonly PrimitiveDef[] = Object.freeze([
+  core(
+    "has-key?",
+    "( record key:str -- bool )",
+    "record",
+    "True when the record has the key.",
+    (rec: ReadonlyMap<string, Value>, key: string) => rec.has(key),
+  ),
+  core(
+    "sort",
+    "( list -- list )",
+    "sequence",
+    "A new list, stably ascending: all numbers, all strings (code point order) or all bytes " +
+      "(lexicographic). Any other mixture or tag is E_TYPE.",
+    (items: readonly Value[]) => {
+      if (items.length < 2) return items.slice();
+      const first = sortClass(items[0] as Value);
+      for (let i = 1; i < items.length; i++) {
+        const c = sortClass(items[i] as Value);
+        if (c !== first) {
+          throw typeError(first, (items[i] as Value).tag, undefined, { index: i, word: "sort" });
+        }
+      }
+      return items.slice().sort(order);
+    },
+  ),
+  ...NUMERIC_PRIMITIVES,
+  core(
+    "fail-coerce",
+    "( reason:str -- )",
+    "control",
+    "Raise E_COERCE: the data cannot be read as the format. The same error as raise:coerce.",
+    (reason: string) => {
+      throw new ForgeError({
+        code: "E_COERCE",
+        message: `cannot convert str to bytes: ${reason}`,
+        detail: { from: "str", to: "bytes", reason },
+      });
+    },
+  ),
+  core(
+    "fail-range",
+    "( reason:str -- )",
+    "control",
+    "Raise E_RANGE with the reason as the message: an argument has a bad value. The same error as raise:range.",
+    (reason: string) => {
+      throw new ForgeError({ code: "E_RANGE", message: reason, detail: {} });
+    },
+  ),
+]);
+
 /** Registers every primitive of `core` kind P into a registry. */
 export function registerCorePrimitives(registry: PrimitiveRegistry): void {
   for (const def of CORE_PRIMITIVES) registry.define(def);
+  for (const def of CORE_PRIMITIVES_V02) registry.define(def);
 }

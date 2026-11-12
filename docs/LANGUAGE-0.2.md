@@ -1587,7 +1587,7 @@ one
 E_TYPE
 ```
 
-```fl-proposed
+```fl-test
 # C261 has-key?
 @run
 { { "a" 1 } } >record "a" has-key? .
@@ -1597,7 +1597,7 @@ true
 false
 ```
 
-```fl-proposed
+```fl-test
 # C262 sort numbers and strings
 @run
 { 3 1.5 2 } sort .
@@ -1609,7 +1609,7 @@ false
 { }
 ```
 
-```fl-proposed
+```fl-test
 # C263 sort refuses a mixture
 @run
 { 1 "a" } sort
@@ -1773,7 +1773,7 @@ and the private primitive `analysis:_log2` and the coordinates helpers `coords:_
 
 **Conformance cases (proposed).**
 
-```fl-proposed
+```fl-test
 # C273 exact values
 @run
 0 exp . 1 ln . 8 log2 . 100 log10 . 0 sin . 0 cos . 0 atan .
@@ -1787,7 +1787,7 @@ and the private primitive `analysis:_log2` and the coordinates helpers `coords:_
 0.0
 ```
 
-```fl-proposed
+```fl-test
 # C274 atan2 takes y then x
 @run
 1 1 atan2 .
@@ -1797,7 +1797,7 @@ and the private primitive `analysis:_log2` and the coordinates helpers `coords:_
 true
 ```
 
-```fl-proposed
+```fl-test
 # C275 domain errors are E_RANGE
 @run
 0 ln
@@ -1805,7 +1805,7 @@ true
 E_RANGE
 ```
 
-```fl-proposed
+```fl-test
 # C276 a float result must be finite
 @run
 1000 exp
@@ -1813,7 +1813,7 @@ E_RANGE
 E_RANGE
 ```
 
-```fl-proposed
+```fl-test
 # C277 asin domain
 @run
 2 asin
@@ -1821,7 +1821,7 @@ E_RANGE
 E_RANGE
 ```
 
-```fl-proposed
+```fl-test
 # C278 str>num
 @run
 "1.5e3" str>num .
@@ -1833,7 +1833,7 @@ E_RANGE
 0.25
 ```
 
-```fl-proposed
+```fl-test
 # C279 str>num is strict
 @run
 " 1" str>num
@@ -1841,7 +1841,7 @@ E_RANGE
 E_COERCE
 ```
 
-```fl-proposed
+```fl-test
 # C280 str>num refuses non-finite and non-decimal text
 @run
 "1e999" str>num
@@ -1920,7 +1920,7 @@ and `1 2 util:between?`/`USING: util ; … between?` become `between?` anywhere.
 
 **Conformance cases (proposed).**
 
-```fl-proposed
+```fl-test
 # C281 fail-range and fail-coerce raise the typed errors
 @run
 [ "bad" fail-range ] [ "code" get ] try .
@@ -1930,15 +1930,15 @@ E_RANGE
 E_COERCE
 ```
 
-```fl-proposed
+```fl-test
 # C282 fail-coerce carries the reason
 @run
-"bad bytes" fail-coerce
+"bad-bytes" fail-coerce
 @error
-E_COERCE detail.reason=bad bytes
+E_COERCE detail.reason=bad-bytes
 ```
 
-```fl-proposed
+```fl-test
 # C283 promoted words behave as their util twins
 @run
 5 1 10 between? . 11 1 10 between? .
@@ -1957,7 +1957,7 @@ ab
 4
 ```
 
-```fl-proposed
+```fl-test
 # C284 check-int-range raises E_RANGE with the documented message
 @run
 12 0 9 "the level" check-int-range
@@ -1965,7 +1965,7 @@ ab
 E_RANGE
 ```
 
-```fl-proposed
+```fl-test
 # C285 a vocabulary's own word shadows a promoted word
 @unit
 IN: demo

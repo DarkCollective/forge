@@ -20,14 +20,17 @@ import { ForgeError } from "../errors.js";
 import { parseHeader } from "../meta.js";
 import { callPrimitive, createPrimitiveRegistry } from "../primitives.js";
 import type { ErrorCode, Limits, PrimitiveContext, Value } from "../types.js";
+import { createRuntime } from "../runtime.js";
 import { DEFAULT_LIMITS } from "../types.js";
 import { bool, bytes, int, list, num, record, repr, str } from "../values.js";
 import {
   CORE_INTRINSIC_WORDS,
   CORE_PRIMITIVES,
+  CORE_PRIMITIVES_V02,
   CORE_RUNTIME_WORDS,
   registerCorePrimitives,
 } from "./core.js";
+import { NUMERIC_PRIMITIVES } from "./numeric.js";
 
 const registry = createPrimitiveRegistry(parseHeader);
 registerCorePrimitives(registry);
@@ -167,7 +170,9 @@ describe("the core table", () => {
   });
 
   test("registerCorePrimitives registers into vocabulary core, once", () => {
-    expect(registry.list("core")).toHaveLength(69);
+    // the 69 words of the v0.1 table plus the 21 primitives of FL 0.2
+    expect(registry.list("core")).toHaveLength(69 + CORE_PRIMITIVES_V02.length);
+    expect(CORE_PRIMITIVES_V02).toHaveLength(21);
     expect(() => registerCorePrimitives(registry)).toThrowError(/already registered/);
   });
 });
@@ -1182,6 +1187,124 @@ describe("conformance (section 16), primitives only", () => {
   });
 });
 
-test("every core primitive is exercised by this file", () => {
-  expect([...tested].sort()).toEqual(CORE_PRIMITIVES.map((d) => d.name).sort());
+describe("has-key?", () => {
+  const rec = R(["a", I(1)], ["b", L()]);
+  test("true for a present key, false for an absent one", () => {
+    expect(run("has-key?", [rec, S("a")])).toBe("true");
+    expect(run("has-key?", [rec, S("b")])).toBe("true");
+    expect(run("has-key?", [rec, S("c")])).toBe("false");
+    expect(run("has-key?", [R(), S("")])).toBe("false");
+    expect(run("has-key?", [R(["", I(0)]), S("")])).toBe("true");
+  });
+  test("a non-record or a non-string key is E_TYPE", async () => {
+    const rt = createRuntime();
+    for (const src of ['{ } "a" has-key?', '{ { "a" 1 } } >record 1 has-key?']) {
+      const r = await rt.run(src);
+      expect(!r.ok && r.error.code, src).toBe("E_TYPE");
+    }
+  });
+  test("C261 has-key?", async () => {
+    const rt = createRuntime();
+    const r = await rt.run(
+      '{ { "a" 1 } } >record "a" has-key? . { { "a" 1 } } >record "b" has-key? .',
+    );
+    expect(r.ok && r.output).toBe("true\nfalse\n");
+  });
+});
+
+describe("sort", () => {
+  test("numbers, int and num mixed and exact, bigint included", () => {
+    expect(run("sort", [L(I(3), N(1.5), I(2))])).toBe("{ 1.5 2 3 }");
+    expect(run("sort", [L(I(2), N(2), I(1))])).toBe("{ 1 2 2.0 }");
+    expect(run("sort", [L(big(2n ** 70n), I(5), N(-0.5), I(-5))])).toBe(
+      `{ -5 -0.5 5 ${String(2n ** 70n)} }`,
+    );
+  });
+  test("strings in code point order, bytes lexicographically", () => {
+    expect(run("sort", [L(S("b"), S("a"), S("ab"), S(""))])).toBe('{ "" "a" "ab" "b" }');
+    expect(run("sort", [L(S("\u{1F600}"), S("\uFF5A"))])).toBe('{ "\uFF5A" "\u{1F600}" }');
+    const out = callWith("sort", [L(B(2), B(1, 5), B(1), B())])[0] as Extract<
+      Value,
+      { tag: "list" }
+    >;
+    expect(out.v.map((x) => Array.from((x as { v: Uint8Array }).v))).toEqual([
+      [],
+      [1],
+      [1, 5],
+      [2],
+    ]);
+  });
+  test("the empty and one-element lists are always valid", () => {
+    expect(run("sort", [L()])).toBe("{ }");
+    expect(run("sort", [L(R())])).toBe(`{ ${repr(R())} }`);
+    expect(run("sort", [L(T)])).toBe("{ true }");
+  });
+  test("it is stable", () => {
+    const out = callWith("sort", [L(I(1), N(1), I(1))])[0] as Value;
+    expect(repr(out)).toBe("{ 1 1.0 1 }");
+  });
+  test("a new list: the input is not changed", () => {
+    const input = L(I(3), I(1), I(2));
+    const out = callWith("sort", [input])[0] as Value;
+    expect(out).not.toBe(input);
+    expect(repr(input)).toBe("{ 3 1 2 }");
+  });
+  test("a mixture, or any other tag in a list of two or more, is E_TYPE", () => {
+    expect(codeOf("sort", [L(I(1), S("a"))])).toBe("E_TYPE");
+    expect(codeOf("sort", [L(S("a"), B(1))])).toBe("E_TYPE");
+    expect(codeOf("sort", [L(B(1), I(1))])).toBe("E_TYPE");
+    expect(codeOf("sort", [L(T, F)])).toBe("E_TYPE");
+    expect(codeOf("sort", [L(L(), L())])).toBe("E_TYPE");
+    expect(codeOf("sort", [L(R(), R())])).toBe("E_TYPE");
+    expect(codeOf("sort", [L(I(1), I(2), T)])).toBe("E_TYPE");
+    expect(codeOf("sort", [S("ab")])).toBe("E_TYPE");
+  });
+  test("C262 and C263", async () => {
+    const rt = createRuntime();
+    const a = await rt.run('{ 3 1.5 2 } sort . { "b" "a" "ab" } sort . { } sort .');
+    expect(a.ok && a.output).toBe('{ 1.5 2 3 }\n{ "a" "ab" "b" }\n{ }\n');
+    const b = await rt.run('{ 1 "a" } sort');
+    expect(!b.ok && b.error.code).toBe("E_TYPE");
+  });
+});
+
+describe("fail-coerce and fail-range", () => {
+  test("fail-coerce raises E_COERCE with the message and detail of raise:coerce", () => {
+    const e = errorOf("fail-coerce", [S("bad bytes")]);
+    expect(e.code).toBe("E_COERCE");
+    expect(e.message).toBe("cannot convert str to bytes: bad bytes");
+    expect(e.detail).toEqual({ from: "str", to: "bytes", reason: "bad bytes" });
+  });
+  test("fail-range raises E_RANGE with the reason as the message and an empty detail", () => {
+    const e = errorOf("fail-range", [S("bad value")]);
+    expect(e.code).toBe("E_RANGE");
+    expect(e.message).toBe("bad value");
+    expect(e.detail).toEqual({});
+  });
+  test("a non-string reason is E_TYPE", async () => {
+    const rt = createRuntime();
+    for (const src of ["1 fail-range", "1 fail-coerce"]) {
+      const r = await rt.run(src);
+      expect(!r.ok && r.error.code, src).toBe("E_TYPE");
+    }
+  });
+  test("C281 and C282", async () => {
+    const rt = createRuntime();
+    const a = await rt.run(
+      '[ "bad" fail-range ] [ "code" get ] try . [ "bad" fail-coerce ] [ "code" get ] try .',
+    );
+    expect(a.ok && a.output).toBe("E_RANGE\nE_COERCE\n");
+    const b = await rt.run('"bad-bytes" fail-coerce');
+    expect(!b.ok && b.error.code).toBe("E_COERCE");
+    expect(!b.ok && b.error.detail).toMatchObject({ reason: "bad-bytes" });
+  });
+});
+
+test("every core primitive is exercised by this file or by numeric.test.ts", () => {
+  const numeric = new Set(NUMERIC_PRIMITIVES.map((d) => d.name));
+  const expected = [
+    ...CORE_PRIMITIVES.map((d) => d.name),
+    ...CORE_PRIMITIVES_V02.map((d) => d.name).filter((n) => !numeric.has(n)),
+  ];
+  expect([...tested].sort()).toEqual(expected.sort());
 });

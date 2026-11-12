@@ -49,6 +49,7 @@ import type {
   WordMeta,
 } from "./types.js";
 import { registerCorePrimitives } from "./vocab/core.js";
+import { PRELUDE_SOURCE } from "./vocab/prelude.js";
 import { runVm } from "./vm.js";
 
 // The package builds against ES2022 only; this is the host global the facade needs.
@@ -294,5 +295,27 @@ export function createRuntime(options: RuntimeOptions = {}): ForgeRuntime {
       scope = { current: scope.current, using: [...names] };
     },
   };
+  // The prelude (docs/LANGUAGE-0.2.md section 13): FL words of `core`, loaded as one trusted unit.
+  // It is compiled under the default limits, never the caller's, so that a small `maxSourceChars`
+  // or `maxIntBits` cannot stop the runtime from being built.
+  const prelude = compile(
+    read(PRELUDE_SOURCE, {
+      maxSourceChars: DEFAULT_LIMITS.maxSourceChars,
+      maxIntBits: DEFAULT_LIMITS.maxIntBits,
+    }),
+    PRELUDE_SOURCE,
+    {
+      mode: "unit",
+      dictionary,
+      registry,
+      parseHeader,
+      sha256,
+      scope: { current: USER_VOCAB, using: [] },
+      unit: null,
+      trusted: true,
+      limits: DEFAULT_LIMITS,
+    },
+  );
+  prelude.txn.commit();
   return runtime;
 }
