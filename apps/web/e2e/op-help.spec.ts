@@ -86,6 +86,25 @@ test("Try it passes the example's parameters and shows hex results", async ({ pa
   await expect(cards(page).first()).toContainText("url");
 });
 
+test("Try it carries byte, choice and number parameters and a hex input (hkdf:derive)", async ({
+  page,
+}) => {
+  await openApp(page);
+  await openHelp(page, "hkdf:derive");
+  await tryIt(page, "RFC 5869 test case 1: SHA-256 with salt and info").click();
+  await expect(dialog(page)).toBeHidden();
+  await expect(cards(page)).toHaveCount(1);
+  // The input is in the example's own encoding, not re-read as text.
+  await expect(input(page)).toHaveAttribute("aria-label", /Hex/);
+  await expect(input(page)).toHaveValue(Array(22).fill("0b").join(" "));
+  // No validation issue on the card, and the 42 bytes of RFC 5869 test case 1 are the output.
+  await expect(page.locator("forge-recipe [role=alert]")).toHaveCount(0);
+  const out = page.locator("forge-output");
+  await expect(out.locator(".pill.stale")).toHaveCount(0);
+  await expect(out).toContainText(/3c\s*b2\s*5f\s*25\s*fa\s*ac\s*d5\s*7a/i);
+  await expect(out).toContainText(/58\s*65/i);
+});
+
 test("Try it with existing work asks first and loses nothing", async ({ page }) => {
   await openApp(page);
   await page.keyboard.press("Alt+1");
@@ -126,7 +145,36 @@ test("Try it with existing work asks first and loses nothing", async ({ page }) 
 
 test("an operation with no help data shows the old help only", async ({ page }) => {
   await openApp(page);
-  await openHelp(page, "hex:encode");
+  // A user word never gets help from the document, whatever its name, so this stays true however much
+  // bundled content the document covers. Make one the way persist.spec.ts does.
+  await page.keyboard.press("Alt+1");
+  await opSearch(page).fill("hex:encode");
+  await page.keyboard.press("Enter");
+  await page.keyboard.press("Enter");
+  await expect(cards(page)).toHaveCount(1);
+  await page.getByRole("button", { name: "Save", exact: true }).click();
+  await page.locator("#save-name").fill("tohex");
+  await page.getByRole("button", { name: "Save", exact: true }).last().click();
+  await expect(page.locator("#save-name")).toHaveCount(0);
+  await page.getByRole("button", { name: "Open", exact: true }).click();
+  await page.getByRole("button", { name: "Promote tohex to a word" }).click();
+  await page.locator("#word-name").fill("tohex");
+  await page.locator("#word-doc").fill("Hex encodes the input");
+  await page.getByRole("button", { name: "Add word" }).click();
+  await page.keyboard.press("Escape");
+  await expect(async () => {
+    await page.keyboard.press("Alt+1");
+    await opSearch(page).fill("tohex");
+    await expect(page.locator("forge-operations [role=option]").first()).toContainText("tohex", {
+      timeout: 1000,
+    });
+  }).toPass({ timeout: 20_000 });
+  await page.keyboard.press("Enter");
+  await page.keyboard.press("?");
+  await expect(dialog(page)).toBeVisible();
+  await expect(dialog(page).locator("h2")).toHaveText(/tohex/);
+  // Wait for the help document to finish loading, so the absences below are not just "not yet".
+  await expect(dialog(page)).not.toContainText("Loading examples");
   await expect(dialog(page).getByRole("heading", { name: "Parameters" })).toBeVisible();
   await expect(dialog(page).getByRole("heading", { name: "Use this when" })).toHaveCount(0);
   await expect(dialog(page).getByRole("heading", { name: "Examples" })).toHaveCount(0);

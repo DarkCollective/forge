@@ -29,7 +29,6 @@ import { LitElement, css, html, nothing } from "lit";
 import type { TemplateResult } from "lit";
 import { customElement, query, state } from "lit/decorators.js";
 import type { CatalogueOp, HelpExample, HelpOp } from "@forge/ops";
-import { EMPTY_RECIPE } from "../state/actions.js";
 import { actions, store } from "../state/app.js";
 import { StoreController } from "../state/store-controller.js";
 import { icons } from "../styles/icons.js";
@@ -38,8 +37,6 @@ import { helpFor } from "./help.js";
 import type { HelpState } from "./help-data.js";
 import { helpLoader } from "./help-loader.js";
 import {
-  exampleInput,
-  exampleStep,
   exampleTabName,
   planInput,
   viewExpect,
@@ -48,6 +45,7 @@ import {
   viewValue,
 } from "./help-view.js";
 import type { ValueView } from "./help-view.js";
+import { planTryIt } from "./try-it.js";
 
 @customElement("forge-op-help")
 export class ForgeOpHelp extends LitElement {
@@ -530,7 +528,7 @@ export class ForgeOpHelp extends LitElement {
   private tryIt(ex: HelpExample): void {
     const op = this.op;
     if (op === null) return;
-    const bytes = exampleInput(ex);
+    const bytes = planTryIt(op.qname, ex);
     if (!bytes.ok) {
       this.confirming = null;
       this.problem = `This example's input could not be read: ${bytes.message}`;
@@ -552,7 +550,7 @@ export class ForgeOpHelp extends LitElement {
       tab = actions.addInput(plan.name, bytes.bytes);
     }
     actions.setInputEncoding(tab, bytes.encoding);
-    actions.setRecipe({ ...EMPTY_RECIPE, steps: [exampleStep(op.qname, ex)] });
+    actions.setRecipe(bytes.recipe);
     if (store.get().ui.compact) actions.setCompactTab("output");
     this.close();
     const issues = store.get().issues.length;
