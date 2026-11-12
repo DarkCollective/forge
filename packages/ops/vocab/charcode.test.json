@@ -21,7 +21,11 @@
     "op": "charcode:encode",
     "params": {},
     "input": { "value": "é", "enc": "utf8" },
-    "expect": { "value": "e9", "enc": "utf8" }
+    "expect": { "value": "e9", "enc": "utf8" },
+    "example": {
+      "title": "One number for é",
+      "note": "é is one code point, e9, even though its UTF-8 form is two bytes."
+    }
   },
   {
     "name": "encode euro sign, three UTF-8 bytes",
@@ -37,7 +41,11 @@
     "op": "charcode:encode",
     "params": {},
     "input": { "value": "😀", "enc": "utf8" },
-    "expect": { "value": "1f600", "enc": "utf8" }
+    "expect": { "value": "1f600", "enc": "utf8" },
+    "example": {
+      "title": "One number for an emoji",
+      "note": "The grinning face is one number, 1f600, not the two UTF-16 units a JavaScript string would use."
+    }
   },
   {
     "name": "encode base 2",
@@ -61,7 +69,11 @@
     "op": "charcode:encode",
     "params": { "base": 36, "delimiter": "comma" },
     "input": { "value": "Z,", "enc": "utf8" },
-    "expect": { "value": "2i,18", "enc": "utf8" }
+    "expect": { "value": "2i,18", "enc": "utf8" },
+    "example": {
+      "title": "Base 36 with lower-case digits",
+      "note": "Z is code point 90, written 2i in base 36 with the comma as delimiter."
+    }
   },
   {
     "name": "decode hex numbers",
@@ -85,7 +97,11 @@
     "op": "charcode:decode",
     "params": {},
     "input": { "value": "1F600", "enc": "utf8" },
-    "expect": { "value": "😀", "enc": "utf8" }
+    "expect": { "value": "😀", "enc": "utf8" },
+    "example": {
+      "title": "Upper-case hex digits",
+      "note": "Hex digits may be upper or lower case, so 1F600 is the grinning face."
+    }
   },
   {
     "name": "decode decimal numbers with comma",
@@ -93,7 +109,11 @@
     "op": "charcode:decode",
     "params": { "base": 10 },
     "input": { "value": "65,66", "enc": "utf8" },
-    "expect": { "value": "AB", "enc": "utf8" }
+    "expect": { "value": "AB", "enc": "utf8" },
+    "example": {
+      "title": "Decimal numbers",
+      "note": "With base 10 the numbers 65 and 66 are the letters A and B."
+    }
   },
   {
     "name": "decode leading zeros",
@@ -141,7 +161,11 @@
     "op": "charcode:decode",
     "params": {},
     "input": { "value": "110000", "enc": "utf8" },
-    "expect": { "error": "E_COERCE" }
+    "expect": { "error": "E_COERCE" },
+    "example": {
+      "title": "Above the last code point",
+      "note": "110000 is above the largest code point, 10FFFF, so it is an error with E_COERCE."
+    }
   },
   {
     "name": "decode error: surrogate code point",

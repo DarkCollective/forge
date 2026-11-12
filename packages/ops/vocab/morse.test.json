@@ -5,7 +5,11 @@
     "op": "morse:encode",
     "params": {},
     "input": { "value": "SOS", "enc": "utf8" },
-    "expect": { "value": "... --- ...", "enc": "utf8" }
+    "expect": { "value": "... --- ...", "enc": "utf8" },
+    "example": {
+      "title": "Encode SOS",
+      "note": "Each letter is a group of dots and dashes: S is three dots and O is three dashes."
+    }
   },
   {
     "name": "encode is case-insensitive",
@@ -21,7 +25,11 @@
     "op": "morse:encode",
     "params": { "word-separator": "slash" },
     "input": { "value": "HELLO WORLD", "enc": "utf8" },
-    "expect": { "value": ".... . .-.. .-.. --- / .-- --- .-. .-.. -..", "enc": "utf8" }
+    "expect": { "value": ".... . .-.. .-.. --- / .-- --- .-. .-.. -..", "enc": "utf8" },
+    "example": {
+      "title": "Words separated by a slash",
+      "note": "With word-separator slash the two words are split by a slash with a space either side, and the letters by one space."
+    }
   },
   {
     "name": "encode two words with newline separator",
@@ -37,7 +45,11 @@
     "op": "morse:encode",
     "params": {},
     "input": { "value": "A  B", "enc": "utf8" },
-    "expect": { "value": ".- / -...", "enc": "utf8" }
+    "expect": { "value": ".- / -...", "enc": "utf8" },
+    "example": {
+      "title": "A run of spaces is one word break",
+      "note": "Several spaces in the input give one word break, shown as a slash."
+    }
   },
   {
     "name": "encode empty input",
@@ -91,7 +103,11 @@
     "op": "morse:decode",
     "params": {},
     "input": { "value": "... --- ...", "enc": "utf8" },
-    "expect": { "value": "SOS", "enc": "utf8" }
+    "expect": { "value": "SOS", "enc": "utf8" },
+    "example": {
+      "title": "Decode SOS",
+      "note": "The reverse of the encode example: the dots and dashes come back as upper-case letters."
+    }
   },
   {
     "name": "decode slash-separated words",
@@ -107,7 +123,11 @@
     "op": "morse:decode",
     "params": {},
     "input": { "value": "... ---\n.-", "enc": "utf8" },
-    "expect": { "value": "SO A", "enc": "utf8" }
+    "expect": { "value": "SO A", "enc": "utf8" },
+    "example": {
+      "title": "A newline separates words",
+      "note": "A line break is a word break as well as a slash, so the two groups become separate words."
+    }
   },
   {
     "name": "decode CRLF line break separates words",
@@ -155,7 +175,11 @@
     "op": "morse:decode",
     "params": {},
     "input": { "value": ".......", "enc": "utf8" },
-    "expect": { "error": "E_COERCE" }
+    "expect": { "error": "E_COERCE" },
+    "example": {
+      "title": "Unknown code is refused",
+      "note": "Seven dots is not the code of any character, so it is an error with E_COERCE."
+    }
   },
   {
     "name": "decode error: letter in the code",

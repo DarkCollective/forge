@@ -11,6 +11,10 @@
     "expect": {
       "value": "3ff0000000000000",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The bytes of 1",
+      "note": "1 in binary64 is the eight bytes 3f f0 00 00 00 00 00 00."
     }
   },
   {
@@ -97,6 +101,10 @@
     "expect": {
       "value": "182d4454fb210940",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Little-endian byte order",
+      "note": "With endian little the bytes of pi come out reversed, so the output ends with 40 instead of starting with it."
     }
   },
   {
@@ -113,6 +121,10 @@
     "expect": {
       "value": "3dcccccd",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Four bytes for single precision",
+      "note": "0.1 as binary32 is 3dcccccd, four bytes instead of eight, rounded to the nearest binary32 value."
     }
   },
   {
@@ -344,6 +356,10 @@
     "expect": {
       "value": "0.1",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Shortest text for a single-precision number",
+      "note": "3dcccccd is read back as 0.1: the shortest text that reads as the same binary32 number."
     }
   },
   {
@@ -377,6 +393,10 @@
     "expect": {
       "value": "1",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Little-endian bytes",
+      "note": "With endian little the bytes 00 00 80 3f are 1 in binary32."
     }
   },
   {
@@ -434,6 +454,10 @@
     },
     "expect": {
       "error": "E_COERCE"
+    },
+    "example": {
+      "title": "A partial number is refused",
+      "note": "Nine bytes do not make whole binary64 numbers, so the data is refused with E_COERCE."
     }
   },
   {

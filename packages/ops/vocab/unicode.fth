@@ -48,6 +48,9 @@ IN: unicode
   str>codes format case "upper" = scope _escape ;
 
 META: escape
+  use-when "You need text with non-ASCII characters written as Unicode escape codes, for a source file, a log or a bug report." ;
+  link "https://en.wikipedia.org/wiki/UTF-16" "UTF-16 on Wikipedia" ;
+  inverse unescape ;
   param format "u: \\uXXXX. U+: U+XXXX. %u: %uXXXX. x{}: \\x{X}. html: &#xX;." ;
   param case "Case of the hex digits." ;
   param scope "non-ascii: escape only code points above 0x7F. all: escape every code point." ;
@@ -187,6 +190,9 @@ META: escape
   form _normalize ;
 
 META: normalize
+  use-when "You have text that looks the same but is stored differently, such as é as one character or as e plus an accent, and need one form to compare or search." ;
+  link "https://www.unicode.org/reports/tr15/" "UAX #15: Unicode Normalization Forms" ;
+  link "https://en.wikipedia.org/wiki/Unicode_equivalence" "Unicode equivalence on Wikipedia" ;
   param form "nfc: canonical composition. nfd: canonical decomposition. nfkc, nfkd: with compatibility mappings." ;
 ;
 
@@ -214,3 +220,13 @@ META: normalize
   "Replace typographic characters by ASCII: the single quotes U+2018 U+2019 U+201A U+201B by ', the double quotes U+201C U+201D U+201E U+201F by \", EN DASH U+2013 by -, EM DASH U+2014 by --, HORIZONTAL ELLIPSIS U+2026 by ... and NO-BREAK SPACE U+00A0 by a space. Everything else is unchanged." doc
   "Text" category
   _smart-pairs swap [ _apply ] reduce ;
+
+META: unescape
+  use-when "You have text with Unicode escape codes or numeric references, such as U+1F600 or &#233;, from a source file or a log, and want the characters they stand for." ;
+  link "https://en.wikipedia.org/wiki/UTF-16" "UTF-16 on Wikipedia" ;
+  inverse escape ;
+;
+
+META: smart-to-ascii
+  use-when "You have text copied from a word processor or web page with curly quotes, dashes or an ellipsis, and need plain ASCII punctuation." ;
+;

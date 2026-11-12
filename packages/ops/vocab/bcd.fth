@@ -101,6 +101,9 @@ IN: bcd
   if ;
 
 META: encode
+  use-when "You have decimal digits and need them as binary-coded decimal bytes, for example a packed number in a mainframe or COBOL record, or a code such as excess-3." ;
+  link "https://en.wikipedia.org/wiki/Binary-coded_decimal" "Binary-coded decimal on Wikipedia" ;
+  inverse decode ;
   param scheme "The digit code: 8421, 7421, 4221 or excess-3." ;
   param packed "Two digits per byte (otherwise one digit per byte)." ;
   param signed "Accept a leading + or - and add a sign nibble (C plus, D minus)." ;
@@ -166,6 +169,9 @@ META: encode
   if ;
 
 META: decode
+  use-when "You have binary-coded decimal bytes, such as a packed number from a mainframe or COBOL record, and want the digits they stand for." ;
+  link "https://en.wikipedia.org/wiki/Binary-coded_decimal" "Binary-coded decimal on Wikipedia" ;
+  inverse encode ;
   param scheme "The digit code: 8421, 7421, 4221 or excess-3." ;
   param packed "Two digits per byte (otherwise one digit per byte)." ;
   param signed "The data ends in a sign nibble (C plus, D minus; A to F accepted)." ;

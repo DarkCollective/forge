@@ -27,11 +27,17 @@ IN: base62
   alphabet _alphabet 254 255 util:decode-table 62 util:symbols>bytes ;
 
 META: encode
+  use-when "You need bytes as a short string of letters and digits for a URL or an ID, and the other side uses the same alphabet, since Base62 has no formal standard." ;
+  link "https://en.wikipedia.org/wiki/Base62" "Base62 on Wikipedia" ;
+  inverse decode ;
   param alphabet "The alphabet: standard (0-9 A-Z a-z) or inverted (0-9 a-z A-Z)." ;
   see-also base62:decode base58:encode ;
 ;
 
 META: decode
+  use-when "You have a string of letters and digits, such as a short URL ID, and want the bytes behind it. Base62 has no formal standard, so the alphabet must match." ;
+  link "https://en.wikipedia.org/wiki/Base62" "Base62 on Wikipedia" ;
+  inverse encode ;
   param alphabet "The alphabet of the text: standard (0-9 A-Z a-z) or inverted (0-9 a-z A-Z)." ;
   see-also base62:encode base58:decode ;
 ;

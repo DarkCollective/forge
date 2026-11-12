@@ -11,6 +11,10 @@
     "expect": {
       "value": "0101",
       "enc": "hex"
+    },
+    "example": {
+      "title": "A zero byte is replaced",
+      "note": "The output has no zero byte: each code byte says how far to the next zero."
     }
   },
   {
@@ -53,6 +57,10 @@
     "expect": {
       "value": "0311220233",
       "enc": "hex"
+    },
+    "example": {
+      "title": "A code byte counts the data after it",
+      "note": "Code 03 says two data bytes follow (11 22). Code 02 stands for the zero that came between 22 and 33."
     }
   },
   {
@@ -179,6 +187,10 @@
     "expect": {
       "value": "03c3a9",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Data with no zeros",
+      "note": "The two bytes of é need no zero, so a single code 03 is written in front of them."
     }
   },
   {
@@ -249,6 +261,10 @@
     "expect": {
       "value": "11220033",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decode a packet with a zero",
+      "note": "The code 02 gives back the zero that stood before 33, so 11 22 00 33 comes back."
     }
   },
   {
@@ -402,6 +418,10 @@
     },
     "expect": {
       "error": "E_COERCE"
+    },
+    "example": {
+      "title": "A zero byte is refused",
+      "note": "A zero byte is never valid inside COBS data, so 010100 with its trailing zero is an error with E_COERCE."
     }
   },
   {
@@ -428,6 +448,10 @@
     },
     "expect": {
       "error": "E_COERCE"
+    },
+    "example": {
+      "title": "A block that is cut short",
+      "note": "Code 03 says two more bytes must follow; only one does, so the data is refused with E_COERCE."
     }
   },
   {

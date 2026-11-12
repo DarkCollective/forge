@@ -95,6 +95,10 @@
     "expect": {
       "value": "MZXW6YTBOI======",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Encode foobar with padding",
+      "note": "Six bytes become ten characters, and six = signs pad the text to a multiple of eight."
     }
   },
   {
@@ -305,6 +309,10 @@
     "expect": {
       "value": "foobar",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Decode a padded value",
+      "note": "The reverse of the encode example: the = signs are read and the six bytes of foobar come back."
     }
   },
   {
@@ -433,6 +441,10 @@
     "expect": {
       "value": "MY",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Encode one byte without padding",
+      "note": "Without padding the output is MY instead of MY======. Decoding accepts either form."
     }
   },
   {
@@ -639,6 +651,10 @@
     "expect": {
       "value": "000020NVG1VG1VGGL8======",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Use the extended hex alphabet",
+      "note": "The hex alphabet is 0 to 9 then A to V, so the output starts with 0 here, where the standard alphabet in the example above gives A."
     }
   },
   {
@@ -683,6 +699,10 @@
     "expect": {
       "value": "foobar",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Spaces and line breaks are skipped",
+      "note": "White space in the text is ignored, so a value copied from a wrapped line decodes as usual."
     }
   },
   {
@@ -728,6 +748,10 @@
     },
     "expect": {
       "error": "E_COERCE"
+    },
+    "example": {
+      "title": "Lower case is refused",
+      "note": "The text must be upper case: mzxw6ytb is an error, although it has the same letters as MZXW6YTB."
     }
   },
   {

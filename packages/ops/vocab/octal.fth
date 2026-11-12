@@ -14,10 +14,16 @@ IN: octal
   8 "an octal byte is 0 to 377" util:numbers>bytes ;
 
 META: encode
+  use-when "You want bytes written as octal numbers from 0 to 377, for example to match the three-digit octal escapes that some languages use in strings." ;
+  link "https://en.wikipedia.org/wiki/Octal" "Octal on Wikipedia" ;
+  inverse decode ;
   param delimiter "What to put between the numbers: a space, a comma or a newline." ;
   see-also octal:decode decimal:encode ;
 ;
 
 META: decode
+  use-when "You have octal numbers from 0 to 377, separated by spaces or commas, and want the bytes they stand for." ;
+  link "https://en.wikipedia.org/wiki/Octal" "Octal on Wikipedia" ;
+  inverse encode ;
   see-also octal:encode decimal:decode ;
 ;

@@ -59,6 +59,9 @@ IN: hexdump
   width case "upper" = ascii _encode ;
 
 META: encode
+  use-when "You want a readable hex and ASCII listing of some bytes, in the layout xxd prints, to inspect a file or a packet." ;
+  link "https://en.wikipedia.org/wiki/Hex_dump" "Hex dump on Wikipedia" ;
+  inverse decode ;
   param width "Bytes per line, 1 to 64." ;
   param case "Case of the hex digits (the offset is always lowercase)." ;
   param ascii "Add the ASCII column." ;
@@ -112,6 +115,9 @@ META: encode
   [ _line-bytes ] map #[ ] bjoin ;
 
 META: decode
+  use-when "You have a hex dump from xxd or hexdump -C, or a listing in this layout, and want the bytes back." ;
+  link "https://en.wikipedia.org/wiki/Hex_dump" "Hex dump on Wikipedia" ;
+  inverse encode ;
   see-also hexdump:encode ;
 ;
 

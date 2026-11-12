@@ -11,6 +11,10 @@
     "expect": {
       "value": "ff",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Decimal 255 to hex",
+      "note": "With the defaults the input is decimal and the output hex: 255 is ff."
     }
   },
   {
@@ -147,6 +151,10 @@
     "expect": {
       "value": "1295",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Base 36 uses letters",
+      "note": "Base 36 uses the digits 0 to 9 and then the letters a to z, so zz is 1295."
     }
   },
   {
@@ -181,6 +189,10 @@
     "expect": {
       "value": "100000000000000000000000000000000000000000000003039",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A long number converts exactly",
+      "note": "The conversion uses big integers, so a long decimal number gives its exact hex value with no rounding."
     }
   },
   {

@@ -105,12 +105,18 @@ IN: bech32
   dup _check-chars bytes>latin1 lower latin1>bytes part _parse ;
 
 META: encode
+  use-when "You need bytes as a bech32 string with a readable prefix, such as a Bitcoin SegWit address (bc1...), where a checksum catches typing errors." ;
+  link "https://en.wikipedia.org/wiki/Bech32" "Bech32 on Wikipedia" ;
+  inverse decode ;
   param hrp "The human-readable part, 1 to 83 printable ASCII characters (lower-cased)." ;
   param variant "bech32 (BIP-173) or bech32m (BIP-350)." ;
   see-also bech32:decode base32:encode ;
 ;
 
 META: decode
+  use-when "You have a bech32 or bech32m string, such as a bc1... address, and want its data bytes, or its prefix with part hrp. The checksum is checked." ;
+  link "https://en.wikipedia.org/wiki/Bech32" "Bech32 on Wikipedia" ;
+  inverse encode ;
   param part "What to return: the data bytes, or the human-readable part." ;
   see-also bech32:encode base32:decode ;
 ;

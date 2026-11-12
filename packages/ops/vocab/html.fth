@@ -2372,11 +2372,17 @@ zwnj;=200c" ;
   "&" split dup len 1 = [ 0 nth ] [ _decode-pieces ] if ;
 
 META: encode
+  use-when "You have text that must go inside HTML, such as a value to show on a web page, and want the characters that would break the markup escaped." ;
+  link "https://html.spec.whatwg.org/" "HTML Living Standard (WHATWG)" ;
+  inverse decode ;
   param scope "minimal: & < > \" '. non-ascii: those plus every code point above 0x7E. all: every code point." ;
   param format "named: the five named entities, decimal references otherwise. decimal or hex: numeric references only." ;
   see-also html:decode ;
 ;
 
 META: decode
+  use-when "You have HTML text with character references such as &amp; or &#233; and want the characters they stand for. This decodes text, not an attribute value." ;
+  link "https://html.spec.whatwg.org/" "HTML Living Standard (WHATWG)" ;
+  inverse encode ;
   see-also html:encode ;
 ;

@@ -25,6 +25,10 @@
     "expect": {
       "value": "101 102",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Two letters in octal",
+      "note": "A is 101 and B is 102 in octal, which are 65 and 66 in decimal."
     }
   },
   {
@@ -55,6 +59,10 @@
     "expect": {
       "value": "0,377,10",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Numbers with a comma",
+      "note": "The largest byte, ff, is 377 in octal, and the byte 08 is 10."
     }
   },
   {
@@ -85,6 +93,10 @@
     "expect": {
       "value": "303 251",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Text as its bytes",
+      "note": "The letter é is the two bytes 303 and 251 in octal, so the output has two numbers."
     }
   },
   {
@@ -113,6 +125,10 @@
     "expect": {
       "value": "ABC",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Commas and spaces both separate",
+      "note": "The commas and the spaces in 101,102 , 103 are all separators, so the result is ABC."
     }
   },
   {
@@ -155,6 +171,10 @@
     "expect": {
       "value": "4107",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Leading zeros",
+      "note": "0101 is 65 and 007 is 7, so the output is the bytes 41 and 07."
     }
   },
   {
@@ -182,6 +202,10 @@
     },
     "expect": {
       "error": "E_COERCE"
+    },
+    "example": {
+      "title": "Above a byte is refused",
+      "note": "400 is 256, one more than a byte holds, so it is an error with E_COERCE."
     }
   },
   {

@@ -319,6 +319,10 @@
     "expect": {
       "value": "1111111111",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Leading zero bytes become 1s",
+      "note": "Each leading zero byte becomes a leading 1 in the bitcoin alphabet, so ten zero bytes give ten 1s."
     }
   },
   {
@@ -375,6 +379,10 @@
     "expect": {
       "value": "2NEpo7TZRRrLZSi2U",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Encode the text Hello World!",
+      "note": "Twelve bytes of text become seventeen characters, with no padding."
     }
   },
   {
@@ -389,6 +397,10 @@
     "expect": {
       "value": "48656c6c6f20576f726c6421",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decode the text Hello World!",
+      "note": "The reverse of the encode example: the twelve bytes come back as hex."
     }
   },
   {
@@ -529,6 +541,10 @@
     "expect": {
       "value": "2F",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Use the Flickr alphabet",
+      "note": "The byte 61 (the letter a) is 2g with the bitcoin alphabet and 2F with flickr. Only the characters change."
     }
   },
   {
@@ -963,6 +979,10 @@
     "expect": {
       "value": "Hello World!",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "White space is skipped",
+      "note": "Spaces and tabs in the text are ignored, so a value copied with stray spaces decodes as usual."
     }
   },
   {
@@ -978,6 +998,10 @@
     },
     "expect": {
       "error": "E_COERCE"
+    },
+    "example": {
+      "title": "Look-alike characters are refused",
+      "note": "The digit 0 and the letters O, I and l are not in the bitcoin alphabet, so text with them is refused with E_COERCE."
     }
   },
   {

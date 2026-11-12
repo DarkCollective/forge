@@ -27,6 +27,10 @@
     "expect": {
       "value": "GET |0D 0A 00|",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Binary bytes as a hex section",
+      "note": "The CR, LF and NUL bytes become the section |0D 0A 00|, and the text around them stays as it is."
     }
   },
   {
@@ -41,6 +45,10 @@
     "expect": {
       "value": "a|7C|b|22 3B 5C|c",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Characters that rules need in hex",
+      "note": "The pipe, the double quote, the semicolon and the backslash are written in hex, so they do not end or change the rule text."
     }
   },
   {
@@ -57,6 +65,10 @@
     "expect": {
       "value": "|41 42|",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Every byte in one hex section",
+      "note": "With scope all, AB is written as one hex section, |41 42|, even though both bytes are letters."
     }
   },
   {
@@ -143,6 +155,10 @@
     "expect": {
       "value": "474554200d0a00",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Text and hex sections together",
+      "note": "The literal text GET is read as its bytes, and the hex section |0D 0A 00| adds three more."
     }
   },
   {
@@ -199,6 +215,10 @@
     "expect": {
       "value": ";\"\\",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Escapes in literal text",
+      "note": "The escapes stand for a semicolon, a double quote and a backslash."
     }
   },
   {
@@ -226,6 +246,10 @@
     },
     "expect": {
       "error": "E_COERCE"
+    },
+    "example": {
+      "title": "An unclosed hex section is refused",
+      "note": "A section that starts with a pipe must end with another pipe, so abc|41 is an error with E_COERCE."
     }
   },
   {

@@ -11,6 +11,10 @@
     "expect": {
       "value": "1234",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Pack two digits into each byte",
+      "note": "Each byte holds two digits, so the four digits 1234 give the two bytes 12 and 34."
     }
   },
   {
@@ -87,6 +91,10 @@
     "expect": {
       "value": "3456789abc",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The excess-3 code",
+      "note": "Each digit is stored as its value plus 3, so 0 is 3 and 9 is c, as the output 3456789abc shows for the digits 0 to 9."
     }
   },
   {
@@ -152,6 +160,10 @@
     "expect": {
       "value": "123d",
       "enc": "hex"
+    },
+    "example": {
+      "title": "A minus sign in the last nibble",
+      "note": "With signed on, the last nibble is the sign: D for minus, so -123 gives 123d. Plus is C."
     }
   },
   {
@@ -298,6 +310,10 @@
     "expect": {
       "value": "1234",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Decode packed digits",
+      "note": "The reverse of the first encode example: each byte gives two digits."
     }
   },
   {
@@ -406,6 +422,10 @@
     "expect": {
       "value": "-123",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Read a minus sign",
+      "note": "With signed on, the last nibble D reads as minus, so 123d gives -123. The C in 123c would read as plus."
     }
   },
   {
@@ -484,6 +504,10 @@
     },
     "expect": {
       "error": "E_COERCE"
+    },
+    "example": {
+      "title": "A nibble that is not a digit is refused",
+      "note": "A nibble that is not a digit of the scheme, here A, is an error with E_COERCE rather than a guess."
     }
   },
   {

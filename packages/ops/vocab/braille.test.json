@@ -11,6 +11,10 @@
     "expect": {
       "value": "⠀⠁⣿⡁",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Encode a few bytes as patterns",
+      "note": "The byte 00 is the blank pattern and ff is the full pattern, so the output has one symbol per byte."
     }
   },
   {
@@ -53,6 +57,10 @@
     "expect": {
       "value": "⣿⣾⢀",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Bytes that are not text",
+      "note": "Any byte can be written, even one that is not valid UTF-8, so ff fe 80 gives three patterns."
     }
   },
   {
@@ -67,6 +75,10 @@
     "expect": {
       "value": "0001ff41",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Read four patterns as bytes",
+      "note": "Each pattern is one byte: the blank pattern is 00 and the full pattern is ff."
     }
   },
   {
@@ -109,6 +121,10 @@
     "expect": {
       "value": "é",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Patterns that give text",
+      "note": "The two patterns decode to the bytes C3 and A9, which read as the text é."
     }
   },
   {
@@ -122,6 +138,10 @@
     },
     "expect": {
       "error": "E_COERCE"
+    },
+    "example": {
+      "title": "Only Braille patterns are accepted",
+      "note": "A letter such as a is outside U+2800 to U+28FF, so it is refused with E_COERCE."
     }
   },
   {

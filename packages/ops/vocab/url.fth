@@ -22,9 +22,17 @@ IN: url
   bytes>latin1 plus-as-space [ "+" split " " join ] when "%" "a percent sign must be followed by two hex digits" util:hex-unescape ;
 
 META: encode
+  use-when "You have a value, such as a query parameter or a path segment, that contains spaces, slashes or non-ASCII characters and must be written safely in a URL." ;
+  link "https://www.rfc-editor.org/rfc/rfc3986" "RFC 3986: Uniform Resource Identifier (URI) syntax" ;
+  link "https://en.wikipedia.org/wiki/Percent-encoding" "Percent-encoding on Wikipedia" ;
+  inverse decode ;
   param mode "component: encode everything but the RFC 3986 unreserved characters. all: encode every byte." ;
 ;
 
 META: decode
+  use-when "You have a percent-encoded part of a URL, such as a query value with %20 or %C3%A9, and want the text it stands for." ;
+  link "https://www.rfc-editor.org/rfc/rfc3986" "RFC 3986: Uniform Resource Identifier (URI) syntax" ;
+  link "https://en.wikipedia.org/wiki/Percent-encoding" "Percent-encoding on Wikipedia" ;
+  inverse encode ;
   param plus-as-space "Read + as a space (form encoding) rather than a literal plus." ;
 ;

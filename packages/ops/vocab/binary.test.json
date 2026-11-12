@@ -13,7 +13,11 @@
     "op": "binary:encode",
     "params": {},
     "input": { "value": "AB", "enc": "utf8" },
-    "expect": { "value": "01000001 01000010", "enc": "utf8" }
+    "expect": { "value": "01000001 01000010", "enc": "utf8" },
+    "example": {
+      "title": "Eight digits for each byte",
+      "note": "Each byte is eight digits, most significant bit first: A is 01000001 and B is 01000010."
+    }
   },
   {
     "name": "encode empty input",
@@ -45,7 +49,11 @@
     "op": "binary:encode",
     "params": { "delimiter": "none" },
     "input": { "value": "AB", "enc": "utf8" },
-    "expect": { "value": "0100000101000010", "enc": "utf8" }
+    "expect": { "value": "0100000101000010", "enc": "utf8" },
+    "example": {
+      "title": "No delimiter",
+      "note": "With the delimiter set to none, the digits of both bytes run together as 0100000101000010."
+    }
   },
   {
     "name": "encode binary bytes 00 ff, no delimiter",
@@ -61,7 +69,11 @@
     "op": "binary:encode",
     "params": { "delimiter": "comma" },
     "input": { "value": "é", "enc": "utf8" },
-    "expect": { "value": "11000011,10101001", "enc": "utf8" }
+    "expect": { "value": "11000011,10101001", "enc": "utf8" },
+    "example": {
+      "title": "Text as its bytes",
+      "note": "The letter é is two bytes, C3 and A9, so it gives two groups: 11000011 and 10101001."
+    }
   },
   {
     "name": "decode one byte",
@@ -93,7 +105,11 @@
     "op": "binary:decode",
     "params": {},
     "input": { "value": "0100 0001\n0100\t0010", "enc": "utf8" },
-    "expect": { "value": "AB", "enc": "utf8" }
+    "expect": { "value": "AB", "enc": "utf8" },
+    "example": {
+      "title": "Spaces, tabs and line breaks are skipped",
+      "note": "Only the digits count: the spaces, tab and line break in this text are ignored."
+    }
   },
   {
     "name": "decode empty input",
@@ -117,7 +133,11 @@
     "op": "binary:decode",
     "params": {},
     "input": { "value": "11000011 10101001", "enc": "utf8" },
-    "expect": { "value": "é", "enc": "utf8" }
+    "expect": { "value": "é", "enc": "utf8" },
+    "example": {
+      "title": "Bits that make text",
+      "note": "The two groups 11000011 and 10101001 are the bytes C3 and A9, which read as the text é."
+    }
   },
   {
     "name": "decode 00000000 to 0x00",
@@ -133,7 +153,11 @@
     "op": "binary:decode",
     "params": {},
     "input": { "value": "0100000", "enc": "utf8" },
-    "expect": { "error": "E_COERCE" }
+    "expect": { "error": "E_COERCE" },
+    "example": {
+      "title": "A partial byte is refused",
+      "note": "The number of digits must be a multiple of eight: seven digits is an error with E_COERCE."
+    }
   },
   {
     "name": "decode error: fifteen digits across two bytes",

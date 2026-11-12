@@ -22,5 +22,14 @@ IN: bigint
   util:strip-space _parse _be ;
 
 META: to-bytes
+  use-when "You have a whole number in decimal and need its unsigned big-endian bytes, for example for a field in a binary format. Negative numbers are refused." ;
+  link "https://en.wikipedia.org/wiki/Endianness" "Endianness on Wikipedia" ;
+  inverse from-bytes ;
   see-also bigint:from-bytes ;
+;
+
+META: from-bytes
+  use-when "You have a big-endian number as bytes, such as a key, a hash or a field from a binary format, and want its value in decimal." ;
+  link "https://en.wikipedia.org/wiki/Endianness" "Endianness on Wikipedia" ;
+  inverse to-bytes ;
 ;

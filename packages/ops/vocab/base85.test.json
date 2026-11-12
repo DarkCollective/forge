@@ -25,6 +25,10 @@
     "expect": {
       "value": "9jqo^",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Encode four bytes",
+      "note": "Four bytes become five characters: 4D 61 6E 20 is Man, which gives 9jqo^."
     }
   },
   {
@@ -263,6 +267,10 @@
     "expect": {
       "value": "z",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Zero bytes shorten to z",
+      "note": "Ascii85 writes a group of four zero bytes as the single letter z. Z85 does not do this (see the 00000 example)."
     }
   },
   {
@@ -333,6 +341,10 @@
     "expect": {
       "value": "4d616e200000000073757265",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decode a z shortcut",
+      "note": "z stands for four zero bytes, here in the middle of the data. It is not allowed inside a group."
     }
   },
   {
@@ -407,6 +419,10 @@
     "expect": {
       "value": "Man ",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Delimiters are read",
+      "note": "The <~ and ~> delimiters are accepted on input, so the text decodes to Man with or without them, as in the example without delimiters."
     }
   },
   {
@@ -549,6 +565,10 @@
     "expect": {
       "value": "HelloWorld",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Encode 8 bytes as Z85",
+      "note": "With variant z85 the eight bytes give HelloWorld, the test frame of ZeroMQ RFC 32."
     }
   },
   {
@@ -565,6 +585,10 @@
     "expect": {
       "value": "864fd26fb559f75b",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decode Z85 text",
+      "note": "Choose variant z85 for Z85 text. The bytes are the ones the encode example started from."
     }
   },
   {

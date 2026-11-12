@@ -11,6 +11,10 @@
     "expect": {
       "value": "00000000: 4865 6c6c 6f2c 2077 6f72 6c64 210a       Hello, world!.",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The default layout",
+      "note": "Each line has an 8-digit offset, the bytes as hex in pairs, and the ASCII column, where a byte that is not printable shows as a full stop."
     }
   },
   {
@@ -61,6 +65,10 @@
     "expect": {
       "value": "00000000: 4865 6c6c 6f2c 2077\n00000008: 6f72 6c64 210a 00ff\n00000010: 7f20 7e",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Without the ASCII column",
+      "note": "With ascii off the text column is left out, so each line ends with its hex bytes."
     }
   },
   {
@@ -89,6 +97,10 @@
     "expect": {
       "value": "00000000: c3a9                                     ..",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Non-ASCII bytes as full stops",
+      "note": "The two bytes of é show as two full stops in the ASCII column, because they are not printable ASCII."
     }
   },
   {
@@ -210,6 +222,10 @@
     "expect": {
       "value": "48656c6c6f2c20776f726c64210a",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Read an xxd dump back",
+      "note": "The reverse of the default layout: the offsets and the ASCII column are ignored, and the hex comes back as bytes."
     }
   },
   {
@@ -294,6 +310,10 @@
     "expect": {
       "value": "48656c6c6f2c20776f726c64210a00ff7f207e",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The hexdump -C layout",
+      "note": "The layout of hexdump -C, with bars around the text column and a final offset line, is read as well."
     }
   },
   {
@@ -336,6 +356,10 @@
     "expect": {
       "value": "48656c6c6f",
       "enc": "hex"
+    },
+    "example": {
+      "title": "A layout with no ASCII column",
+      "note": "A listing with the offsets and the hex only decodes in the same way."
     }
   },
   {

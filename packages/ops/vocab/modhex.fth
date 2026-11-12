@@ -27,10 +27,16 @@ IN: modhex
   bytes>latin1 lower latin1>bytes _table util:check-symbols [ 254 <> ] filter _pack ;
 
 META: encode
+  use-when "You have bytes or hex digits and need them as ModHex letters, for example to write the public ID of a YubiKey." ;
+  link "https://www.yubico.com/" "Yubico, the makers of the YubiKey" ;
+  inverse decode ;
   param delimiter "What to put between the bytes: nothing or a space." ;
   see-also modhex:decode hex:encode ;
 ;
 
 META: decode
+  use-when "You have ModHex letters, such as the part of a YubiKey one-time password that is ModHex, and want the bytes they stand for." ;
+  link "https://www.yubico.com/" "Yubico, the makers of the YubiKey" ;
+  inverse encode ;
   see-also modhex:encode hex:decode ;
 ;

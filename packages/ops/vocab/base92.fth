@@ -75,9 +75,13 @@ IN: base92
   dup "~" str>bytes = [ drop #[ ] ] [ _table util:check-symbols _units ] if ;
 
 META: encode
+  use-when "You have binary data and need printable text in the base92 format, for example to write a base92 string that another tool will read." ;
+  inverse decode ;
   see-also base92:decode base85:encode ;
 ;
 
 META: decode
+  use-when "You have base92 text, such as one made by another base92 tool, and want the bytes it stands for." ;
+  inverse encode ;
   see-also base92:encode base85:decode ;
 ;

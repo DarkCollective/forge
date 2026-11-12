@@ -32,9 +32,15 @@ IN: base58
   alphabet _alphabet _table 58 util:symbols>bytes ;
 
 META: encode
+  use-when "You have bytes and want short text without the look-alike characters 0, O, I and l, for example an identifier that people will read aloud or type." ;
+  link "https://en.wikipedia.org/wiki/Base58" "Base58 on Wikipedia" ;
+  inverse decode ;
   param alphabet "The alphabet: bitcoin, flickr or ripple." ;
 ;
 
 META: decode
+  use-when "You have base58 text, such as a Bitcoin address or a short ID, and want its bytes. This does not check a Base58Check checksum." ;
+  link "https://en.wikipedia.org/wiki/Base58" "Base58 on Wikipedia" ;
+  inverse encode ;
   param alphabet "The alphabet of the text: bitcoin, flickr or ripple." ;
 ;

@@ -11,6 +11,10 @@
     "expect": {
       "value": "&lt;a href=&quot;x&quot;&gt;",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Escape a tag and its quotes",
+      "note": "The angle brackets and the double quotes become named references, so the text shows as a tag without being one."
     }
   },
   {
@@ -25,6 +29,10 @@
     "expect": {
       "value": "Tom &amp; Jerry&apos;s",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Ampersand and apostrophe",
+      "note": "The ampersand and the apostrophe are escaped too: Tom &amp; Jerry&apos;s."
     }
   },
   {
@@ -115,6 +123,10 @@
     "expect": {
       "value": "&#233;&lt;",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Non-ASCII as decimal references",
+      "note": "With scope non-ascii, é becomes &#233; (decimal), while the less-than sign stays a named reference."
     }
   },
   {
@@ -241,6 +253,10 @@
     "expect": {
       "value": "ABC",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Decimal and hex numeric references",
+      "note": "Both forms work, and the x may be upper or lower case, so &#X43; is C."
     }
   },
   {
@@ -493,6 +509,10 @@
     "expect": {
       "value": "© 2024 ®",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Legacy names need no semicolon",
+      "note": "&copy and &reg work without the semicolon, because they are among the older names."
     }
   },
   {
@@ -521,6 +541,10 @@
     "expect": {
       "value": "&euro €",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A newer name needs its semicolon",
+      "note": "Without the semicolon &euro stays as written; with it, &euro; gives the euro sign."
     }
   },
   {

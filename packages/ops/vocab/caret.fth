@@ -59,3 +59,15 @@ IN: caret
   "Encodings" category
   dup str>codes [ 127 > ] filter len 0 > [ "caret notation is ASCII text" raise:coerce ] when
   _carets _metas latin1>bytes ;
+
+META: encode
+  use-when "You have a file or terminal output with hidden control characters and want to see them as text, in the form that cat -v prints." ;
+  link "https://en.wikipedia.org/wiki/Caret_notation" "Caret notation on Wikipedia" ;
+  inverse decode ;
+;
+
+META: decode
+  use-when "You have text copied from cat -v output, with ^ and M- marks, and want the bytes it stands for." ;
+  link "https://en.wikipedia.org/wiki/Caret_notation" "Caret notation on Wikipedia" ;
+  inverse encode ;
+;

@@ -29,11 +29,17 @@ IN: float
   size str>int 8 div endian "little" = _numbers ;
 
 META: encode
+  use-when "You have decimal numbers and need their IEEE 754 bytes, for example to write a float field into a binary file or to see the bit pattern of a value." ;
+  link "https://en.wikipedia.org/wiki/IEEE_754" "IEEE 754 on Wikipedia" ;
+  inverse decode ;
   param size "Bits per number: 32 (binary32) or 64 (binary64)." ;
   param endian "Byte order of each number." ;
 ;
 
 META: decode
+  use-when "You have IEEE 754 bytes, such as a float field from a binary file or a sensor record, and want the decimal numbers they hold." ;
+  link "https://en.wikipedia.org/wiki/IEEE_754" "IEEE 754 on Wikipedia" ;
+  inverse encode ;
   param size "Bits per number: 32 (binary32) or 64 (binary64)." ;
   param endian "Byte order of each number." ;
   see-also float:encode ;

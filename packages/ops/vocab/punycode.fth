@@ -84,6 +84,11 @@ IN: punycode
   mode "label" = [ str>codes _encode-label ] [ "." split [ _encode-dom-label ] map "." join ] if ;
 
 META: encode
+  use-when "You have a domain name or label with non-ASCII letters, such as a German or Japanese name, and need the xn-- form that DNS accepts." ;
+  link "https://www.rfc-editor.org/rfc/rfc3492" "RFC 3492: Punycode" ;
+  link "https://www.rfc-editor.org/rfc/rfc3490" "RFC 3490: IDNA, internationalised domain names in applications" ;
+  link "https://en.wikipedia.org/wiki/Punycode" "Punycode on Wikipedia" ;
+  inverse decode ;
   param mode "label: raw Punycode of the whole text. domain: per dot-separated label, with the xn-- prefix on labels that need it." ;
 ;
 
@@ -147,5 +152,10 @@ META: encode
   mode "label" = [ str>codes _decode-label ] [ "." split [ _decode-dom-label ] map "." join ] if ;
 
 META: decode
+  use-when "You have an xn-- name from a DNS record or an address bar, and want the Unicode name it stands for." ;
+  link "https://www.rfc-editor.org/rfc/rfc3492" "RFC 3492: Punycode" ;
+  link "https://www.rfc-editor.org/rfc/rfc3490" "RFC 3490: IDNA, internationalised domain names in applications" ;
+  link "https://en.wikipedia.org/wiki/Punycode" "Punycode on Wikipedia" ;
+  inverse encode ;
   param mode "label: the whole text is raw Punycode. domain: decode each xn-- label of a dotted name." ;
 ;

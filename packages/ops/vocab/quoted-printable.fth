@@ -95,3 +95,17 @@ IN: quoted-printable
   "Decode Quoted-Printable (RFC 2045 section 6.7). =XX (either case of the hex digits) is a byte; = followed by a line break (CRLF or LF) is a soft break and is removed; = as the very last character is also removed. Space and tab before a line break or at the end of the data are transport padding and are deleted. All other bytes, including 8-bit bytes, stand for themselves; CRLF and LF line breaks are kept. An = followed by anything else (not two hex digits, or a single character) is E_COERCE." doc
   "Encodings" category
   bytes>latin1 "\n" split _dec-lines ;
+
+META: encode
+  use-when "You have text or bytes that must go in an email body or MIME part that carries only 7-bit ASCII lines." ;
+  link "https://www.rfc-editor.org/rfc/rfc2045" "RFC 2045, section 6.7: Quoted-Printable" ;
+  link "https://en.wikipedia.org/wiki/Quoted-printable" "Quoted-printable on Wikipedia" ;
+  inverse decode ;
+;
+
+META: decode
+  use-when "You have quoted-printable text from an email source, with =3D or =C3=A9 codes and soft line breaks, and want the original bytes." ;
+  link "https://www.rfc-editor.org/rfc/rfc2045" "RFC 2045, section 6.7: Quoted-Printable" ;
+  link "https://en.wikipedia.org/wiki/Quoted-printable" "Quoted-printable on Wikipedia" ;
+  inverse encode ;
+;

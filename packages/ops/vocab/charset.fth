@@ -988,17 +988,27 @@ F8FF 00D2 00DA 00DB 00D9 0131 02C6 02DC 00AF 02D8 02D9 02DA 00B8 02DD 02DB 02C7"
   data 0 data len sample min slice _brute-all ;
 
 META: decode
+  use-when "You have bytes in a legacy character set, such as an EBCDIC mainframe file or a Windows code page, and want to read them as text." ;
+  link "https://encoding.spec.whatwg.org/" "WHATWG Encoding Standard" ;
+  link "https://en.wikipedia.org/wiki/EBCDIC" "EBCDIC on Wikipedia" ;
+  inverse encode ;
   param encoding "A WHATWG encoding label, iso-8859-1 (true ISO 8859-1) or an EBCDIC code page ibmNNN (037, 273, 277, 278, 280, 284, 285, 297, 500, 875, 1026, 1047, 1140-1149)." ;
   param strict "Raise an error on bytes that are not valid in the encoding. Off: replace them with U+FFFD." ;
   see-also charset:encode charset:brute ;
 ;
 
 META: encode
+  use-when "You have text and need it in a legacy character set, such as an EBCDIC code page or a Windows code page, for a system that cannot read Unicode." ;
+  link "https://encoding.spec.whatwg.org/" "WHATWG Encoding Standard" ;
+  link "https://en.wikipedia.org/wiki/Character_encoding" "Character encoding on Wikipedia" ;
+  inverse decode ;
   param encoding "The character set to encode into: a single-byte WHATWG encoding, iso-8859-1, an EBCDIC code page (see charset:decode), utf-8, utf-16le or utf-16be." ;
   see-also charset:decode ;
 ;
 
 META: brute
+  use-when "You have bytes of unknown encoding and want to see them under each legacy character set, to pick the one that reads as text." ;
+  link "https://encoding.spec.whatwg.org/" "WHATWG Encoding Standard" ;
   param sample "Decode only this many bytes from the start of the input, so that the result stays small for large inputs." ;
   see-also charset:decode ;
 ;

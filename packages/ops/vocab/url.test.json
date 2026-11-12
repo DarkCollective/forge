@@ -13,7 +13,11 @@
     "op": "url:encode",
     "params": {},
     "input": { "value": "a b", "enc": "utf8" },
-    "expect": { "value": "a%20b", "enc": "utf8" }
+    "expect": { "value": "a%20b", "enc": "utf8" },
+    "example": {
+      "title": "A space as %20",
+      "note": "A space is written as %20, and the letters and digits stay as they are."
+    }
   },
   {
     "name": "encode slash as %2F (component)",
@@ -37,7 +41,11 @@
     "op": "url:encode",
     "params": { "mode": "component" },
     "input": { "value": "é", "enc": "utf8" },
-    "expect": { "value": "%C3%A9", "enc": "utf8" }
+    "expect": { "value": "%C3%A9", "enc": "utf8" },
+    "example": {
+      "title": "Non-ASCII as UTF-8 percent codes",
+      "note": "The letter é is the two bytes C3 and A9, written as %C3%A9 in upper-case hex."
+    }
   },
   {
     "name": "encode A-umlaut and slash (component)",
@@ -61,7 +69,11 @@
     "op": "url:encode",
     "params": { "mode": "all" },
     "input": { "value": "A b", "enc": "utf8" },
-    "expect": { "value": "%41%20%62", "enc": "utf8" }
+    "expect": { "value": "%41%20%62", "enc": "utf8" },
+    "example": {
+      "title": "Mode all encodes every byte",
+      "note": "With mode all even the letters become codes, so A b becomes %41%20%62."
+    }
   },
   {
     "name": "encode all mode, tilde and hyphen also encoded",
@@ -93,7 +105,11 @@
     "op": "url:decode",
     "params": { "plus-as-space": true },
     "input": { "value": "a+b", "enc": "utf8" },
-    "expect": { "value": "a b", "enc": "utf8" }
+    "expect": { "value": "a b", "enc": "utf8" },
+    "example": {
+      "title": "Plus as a space in form data",
+      "note": "With plus-as-space on, + becomes a space, as in a submitted HTML form, so a+b gives a b."
+    }
   },
   {
     "name": "decode keeps plus by default",
@@ -117,7 +133,11 @@
     "op": "url:decode",
     "params": {},
     "input": { "value": "%C3%A9", "enc": "utf8" },
-    "expect": { "value": "é", "enc": "utf8" }
+    "expect": { "value": "é", "enc": "utf8" },
+    "example": {
+      "title": "UTF-8 sequences give text",
+      "note": "The codes %C3%A9 are the two bytes of é, which read as the text é."
+    }
   },
   {
     "name": "decode tilde written as %7E",
@@ -157,7 +177,11 @@
     "op": "url:decode",
     "params": {},
     "input": { "value": "100%2", "enc": "utf8" },
-    "expect": { "error": "E_COERCE" }
+    "expect": { "error": "E_COERCE" },
+    "example": {
+      "title": "A percent sign needs two digits",
+      "note": "100%2 is an error with E_COERCE, because the percent sign needs two hex digits after it."
+    }
   },
   {
     "name": "decode error: non-hex digits after percent",

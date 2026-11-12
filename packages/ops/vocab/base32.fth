@@ -74,10 +74,20 @@ IN: base32
   alphabet _alphabet _table _decode ;
 
 META: encode
+  use-when "You have bytes or text and need them as Base32 letters and digits, for example a two-factor authenticator secret, which is usually written this way." ;
+  link "https://www.rfc-editor.org/rfc/rfc4648#section-6" "RFC 4648, section 6: Base32" ;
+  link "https://www.rfc-editor.org/rfc/rfc4648#section-7" "RFC 4648, section 7: Base32 with the extended hex alphabet" ;
+  link "https://en.wikipedia.org/wiki/Base32" "Base32 on Wikipedia" ;
+  inverse decode ;
   param alphabet "The alphabet: standard (A-Z 2-7) or hex (0-9 A-V, base32hex)." ;
   param padding "Append = padding to a multiple of eight characters." ;
 ;
 
 META: decode
+  use-when "You have upper-case Base32 text, such as an authenticator secret, and want the bytes or text it stands for." ;
+  link "https://www.rfc-editor.org/rfc/rfc4648#section-6" "RFC 4648, section 6: Base32" ;
+  link "https://www.rfc-editor.org/rfc/rfc4648#section-7" "RFC 4648, section 7: Base32 with the extended hex alphabet" ;
+  link "https://en.wikipedia.org/wiki/Base32" "Base32 on Wikipedia" ;
+  inverse encode ;
   param alphabet "The alphabet of the text: standard (A-Z 2-7) or hex (0-9 A-V, base32hex)." ;
 ;

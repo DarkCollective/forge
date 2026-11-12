@@ -68,5 +68,14 @@ IN: morse
   _breaks " " split _decode-table _decode-tokens " " split [ len 0 > ] filter " " join ;
 
 META: encode
+  use-when "You have plain text and want it as Morse code, dots and dashes with a space between letters and a slash between words." ;
+  link "https://en.wikipedia.org/wiki/Morse_code" "Morse code on Wikipedia" ;
+  inverse decode ;
   param word-separator "What to put between words: \" / \" or a newline." ;
+;
+
+META: decode
+  use-when "You have Morse code, dots and dashes, and want the text it spells." ;
+  link "https://en.wikipedia.org/wiki/Morse_code" "Morse code on Wikipedia" ;
+  inverse encode ;
 ;

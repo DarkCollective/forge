@@ -25,6 +25,10 @@
     "expect": {
       "value": "\\uD83D\\uDE00",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A character above U+FFFF as two escapes",
+      "note": "The grinning face is above U+FFFF, so the u form writes it as the pair \\uD83D\\uDE00."
     }
   },
   {
@@ -117,6 +121,10 @@
     "expect": {
       "value": "U+0000E9B",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Six digits before a hex digit",
+      "note": "When a hex digit follows, the U+ form uses six digits: é before B gives U+0000E9B, so the B is not read as part of the code."
     }
   },
   {
@@ -133,6 +141,10 @@
     "expect": {
       "value": "%u00E9%uD83D%uDE00",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The %u form",
+      "note": "%u00E9 and %uD83D%uDE00 are the escape form that JavaScript escape writes for the same text."
     }
   },
   {
@@ -197,6 +209,10 @@
     "expect": {
       "value": "é😀x",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Escapes back to characters",
+      "note": "The escape for é and the surrogate pair for the grinning face each read back as one character."
     }
   },
   {
@@ -295,6 +311,10 @@
     "expect": {
       "value": "\\uD83Dx \\uDE00",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A lone surrogate is left as written",
+      "note": "A high surrogate with no low surrogate after it has no character to become, so it stays as written."
     }
   },
   {
@@ -323,6 +343,10 @@
     "expect": {
       "value": "\\u0041",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Decoded text is not read again",
+      "note": "\\u005C is a backslash, and the text it makes is not read again, so \\u005Cu0041 comes out as \\u0041."
     }
   },
   {
@@ -623,6 +647,10 @@
     "expect": {
       "value": "ﬁ",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The canonical form keeps the ligature",
+      "note": "The fi ligature is kept by nfc, which is the default form."
     }
   },
   {
@@ -655,6 +683,10 @@
     "expect": {
       "value": "fi",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The compatibility form splits the ligature",
+      "note": "With nfkc the fi ligature becomes two letters, fi, as in the nfc example above."
     }
   },
   {
@@ -843,6 +875,10 @@
     "expect": {
       "value": "é",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Compose a letter and its accent",
+      "note": "The letter e followed by a combining acute accent becomes one é under the default nfc."
     }
   },
   {
@@ -857,6 +893,10 @@
     "expect": {
       "value": "'a'",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Curly single quotes become straight ones",
+      "note": "The left and right single quotes both become the straight apostrophe, so ‘a’ gives 'a'."
     }
   },
   {
@@ -927,6 +967,10 @@
     "expect": {
       "value": "a--b",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "An em dash becomes two hyphens",
+      "note": "The em dash becomes two hyphens, not one."
     }
   },
   {
@@ -941,6 +985,10 @@
     "expect": {
       "value": "wait...",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "An ellipsis becomes three dots",
+      "note": "The horizontal ellipsis character becomes three full stops."
     }
   },
   {

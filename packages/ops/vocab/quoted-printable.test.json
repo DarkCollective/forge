@@ -11,6 +11,10 @@
     "expect": {
       "value": "hello=3Dworld",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "An equals sign as =3D",
+      "note": "Every equals sign is written as =3D, so a reader can tell it from a soft line break."
     }
   },
   {
@@ -25,6 +29,10 @@
     "expect": {
       "value": "caf=C3=A9",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Accents as hex codes",
+      "note": "The letter é is the two bytes C3 and A9, written as =C3=A9."
     }
   },
   {
@@ -123,6 +131,10 @@
     "expect": {
       "value": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\r\nAA",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Long lines are cut with soft breaks",
+      "note": "A line longer than 76 characters is cut after 75, with an equals sign at the end of the line."
     }
   },
   {
@@ -207,6 +219,10 @@
     "expect": {
       "value": "foobarbaz",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Soft line breaks are joined",
+      "note": "An equals sign at the end of a line joins it to the next, so foo=, bar= and baz decode to foobarbaz."
     }
   },
   {
@@ -235,6 +251,10 @@
     "expect": {
       "value": "café",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Hex codes give UTF-8 bytes",
+      "note": "=C3=A9 are the two bytes of é, which read as the text café."
     }
   },
   {
@@ -318,6 +338,10 @@
     },
     "expect": {
       "error": "E_COERCE"
+    },
+    "example": {
+      "title": "An equals sign needs two digits",
+      "note": "An equals sign must be followed by two hex digits, so a=4 is an error with E_COERCE."
     }
   },
   {

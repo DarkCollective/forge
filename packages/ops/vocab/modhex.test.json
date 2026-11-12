@@ -11,6 +11,10 @@
     "expect": {
       "value": "cbdefghijklnrtuv",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Each hex digit has its own letter",
+      "note": "Digit 0 is c and digit f is v, so the sixteen digits give sixteen letters."
     }
   },
   {
@@ -81,6 +85,10 @@
     "expect": {
       "value": "fbfd",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Two bytes as four letters",
+      "note": "Each byte is two letters, so AB (41 42) gives fbfd."
     }
   },
   {
@@ -97,6 +105,10 @@
     "expect": {
       "value": "fb fd",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Spaces between the bytes",
+      "note": "With the delimiter set to space, the two bytes read fb fd."
     }
   },
   {
@@ -111,6 +123,10 @@
     "expect": {
       "value": "AB",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Spaces between letter pairs",
+      "note": "White space is skipped, so fb fd decodes to AB."
     }
   },
   {
@@ -166,6 +182,10 @@
     },
     "expect": {
       "error": "E_COERCE"
+    },
+    "example": {
+      "title": "A letter outside the alphabet",
+      "note": "The letter a is not a ModHex letter, so ca is an error with E_COERCE."
     }
   },
   {
@@ -179,6 +199,10 @@
     },
     "expect": {
       "error": "E_COERCE"
+    },
+    "example": {
+      "title": "An odd number of letters",
+      "note": "Each byte needs two letters, so cbd is an error with E_COERCE."
     }
   },
   {

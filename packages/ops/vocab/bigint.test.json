@@ -11,6 +11,10 @@
     "expect": {
       "value": "256",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Read two bytes as one number",
+      "note": "The bytes 01 then 00 give 256: the first byte is the most significant."
     }
   },
   {
@@ -53,6 +57,10 @@
     "expect": {
       "value": "255",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Leading zero bytes add nothing",
+      "note": "The bytes 00 00 ff are the same number as ff, which is 255."
     }
   },
   {
@@ -95,6 +103,10 @@
     "expect": {
       "value": "50089",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Text is read as its bytes",
+      "note": "The letter é is the two UTF-8 bytes C3 and A9, so it gives the number 50089."
     }
   },
   {
@@ -123,6 +135,10 @@
     "expect": {
       "value": "0100",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Use as few bytes as possible",
+      "note": "256 needs two bytes, 01 and 00, and no more."
     }
   },
   {
@@ -137,6 +153,10 @@
     "expect": {
       "value": "00",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Zero is one zero byte",
+      "note": "Zero gives the single byte 00, not an empty result."
     }
   },
   {
@@ -178,6 +198,10 @@
     },
     "expect": {
       "error": "E_COERCE"
+    },
+    "example": {
+      "title": "A minus sign is refused",
+      "note": "The number must be unsigned: -1 is an error with E_COERCE."
     }
   },
   {

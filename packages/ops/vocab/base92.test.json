@@ -95,6 +95,10 @@
     "expect": {
       "value": "Fc_$aOTdKnsM*k",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Encode hello world",
+      "note": "Eleven bytes become fourteen characters."
     }
   },
   {
@@ -109,6 +113,10 @@
     "expect": {
       "value": "68656c6c6f20776f726c64",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decode hello world",
+      "note": "The reverse of the encode example: the eleven bytes come back as hex."
     }
   },
   {
@@ -235,6 +243,10 @@
     "expect": {
       "value": "!!-A&8!sCv']9EA)",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Thirteen bytes give sixteen characters",
+      "note": "Each 13 bits take two characters, so 13 bytes (104 bits) fill exactly eight pairs with no partial group."
     }
   },
   {
@@ -263,6 +275,10 @@
     "expect": {
       "value": "~",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Empty input is a tilde",
+      "note": "The empty string encodes as ~, so the output is never empty."
     }
   },
   {
@@ -304,6 +320,10 @@
     },
     "expect": {
       "error": "E_COERCE"
+    },
+    "example": {
+      "title": "Quote and backtick are refused",
+      "note": "The double quote and the backtick are not in the base92 alphabet, so a text with either is refused with E_COERCE."
     }
   },
   {

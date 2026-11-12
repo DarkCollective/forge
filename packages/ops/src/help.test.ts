@@ -368,8 +368,8 @@ describe("the bundled help document", () => {
   });
 
   // Ratchet: a later batch of discovery text raises these two numbers, never lowers them.
-  const MIN_WITH_USE_WHEN = 29;
-  const MIN_WITH_EXAMPLE = 27;
+  const MIN_WITH_USE_WHEN = 88;
+  const MIN_WITH_EXAMPLE = 87;
 
   test("ratchet: ops with a use-when and ops with an example do not fall", () => {
     expect(doc.ops.filter((o) => o.useWhen !== null).length).toBeGreaterThanOrEqual(

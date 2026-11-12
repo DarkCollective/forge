@@ -13,7 +13,11 @@
     "op": "decimal:encode",
     "params": {},
     "input": { "value": "AB", "enc": "utf8" },
-    "expect": { "value": "65 66", "enc": "utf8" }
+    "expect": { "value": "65 66", "enc": "utf8" },
+    "example": {
+      "title": "Each letter as a number",
+      "note": "A is 65 and B is 66, the byte values of the two letters."
+    }
   },
   {
     "name": "encode empty input",
@@ -29,7 +33,11 @@
     "op": "decimal:encode",
     "params": { "delimiter": "comma" },
     "input": { "value": "00ff0a", "enc": "hex" },
-    "expect": { "value": "0,255,10", "enc": "utf8" }
+    "expect": { "value": "0,255,10", "enc": "utf8" },
+    "example": {
+      "title": "Numbers with a comma",
+      "note": "The bytes 00, ff and 0a are 0, 255 and 10, so 255 is the largest byte."
+    }
   },
   {
     "name": "encode bytes 0a 0d with newline",
@@ -45,7 +53,11 @@
     "op": "decimal:encode",
     "params": { "delimiter": "comma" },
     "input": { "value": "é", "enc": "utf8" },
-    "expect": { "value": "195,169", "enc": "utf8" }
+    "expect": { "value": "195,169", "enc": "utf8" },
+    "example": {
+      "title": "Text as its bytes",
+      "note": "The letter é is two bytes, so it gives two numbers: 195 and 169."
+    }
   },
   {
     "name": "encode non-UTF-8 bytes ff 00 with space",
@@ -69,7 +81,11 @@
     "op": "decimal:decode",
     "params": {},
     "input": { "value": "65,66", "enc": "utf8" },
-    "expect": { "value": "AB", "enc": "utf8" }
+    "expect": { "value": "AB", "enc": "utf8" },
+    "example": {
+      "title": "Letters from their numbers",
+      "note": "65 and 66 are the byte values of A and B, so the result is AB."
+    }
   },
   {
     "name": "decode newline separated numbers",
@@ -85,7 +101,11 @@
     "op": "decimal:decode",
     "params": {},
     "input": { "value": " 0 ,\n007 ", "enc": "utf8" },
-    "expect": { "value": "0007", "enc": "hex" }
+    "expect": { "value": "0007", "enc": "hex" },
+    "example": {
+      "title": "Leading zeros",
+      "note": "0 is one byte and 007 is one byte with the value 7, so the output is 00 then 07."
+    }
   },
   {
     "name": "decode empty input",
@@ -101,7 +121,11 @@
     "op": "decimal:decode",
     "params": {},
     "input": { "value": "256", "enc": "utf8" },
-    "expect": { "error": "E_COERCE" }
+    "expect": { "error": "E_COERCE" },
+    "example": {
+      "title": "256 is too big for a byte",
+      "note": "A byte is 0 to 255, so 256 is an error with E_COERCE."
+    }
   },
   {
     "name": "decode error: a very large number",

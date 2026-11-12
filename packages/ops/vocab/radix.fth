@@ -10,6 +10,8 @@ IN: radix
   [ util:space? not ] filter from str>int-radix to int>str-radix ;
 
 META: convert
+  use-when "You have a whole number written in one base, such as hex or binary, and want it written in another, for example a hex value in decimal." ;
+  link "https://en.wikipedia.org/wiki/Radix" "Radix on Wikipedia" ;
   param from "The base of the input text, 2 to 36 (digits 0-9 then a-z)." ;
   param to "The base of the result, 2 to 36." ;
 ;

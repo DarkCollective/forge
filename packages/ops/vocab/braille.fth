@@ -20,3 +20,13 @@ IN: braille
   dup [ _outside? ] filter len 0 >
   [ "not a Braille pattern (U+2800 to U+28FF)" raise:coerce ] when
   [ 10240 - ] map list>bytes ;
+
+META: encode
+  inverse decode ;
+;
+
+META: decode
+  use-when "You have text made of Braille pattern symbols (U+2800 to U+28FF) and want the bytes behind them." ;
+  link "https://en.wikipedia.org/wiki/Braille" "Braille on Wikipedia" ;
+  inverse encode ;
+;

@@ -164,6 +164,10 @@
     "expect": {
       "value": "a1lqfn3a",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The bech32m variant",
+      "note": "For empty data and the prefix a, bech32m gives a1lqfn3a where bech32 gives a12uel5l (see the bech32 example above). Only the checksum differs."
     }
   },
   {
@@ -315,6 +319,10 @@
     "expect": {
       "value": "a12uel5l",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The prefix is written in lower case",
+      "note": "An upper-case prefix A is written as a, so the output is a12uel5l."
     }
   },
   {
@@ -835,6 +843,10 @@
     "expect": {
       "value": "bc1qqqsyqcyq5rqwzqfpg9scrgwpugpzysnt4wzqr",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A string with the prefix bc",
+      "note": "The prefix bc, the 1 separator, 32 characters for the 20 bytes and six characters of checksum give the shape of a Bitcoin address."
     }
   },
   {
@@ -849,6 +861,10 @@
     "expect": {
       "value": "000102030405060708090a0b0c0d0e0f10111213",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decode a string to its bytes",
+      "note": "The reverse of the 20 byte example: the bytes come back as hex, and the checksum is checked on the way."
     }
   },
   {
@@ -896,6 +912,10 @@
     "expect": {
       "value": "abcdef",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Read only the prefix",
+      "note": "With part hrp the prefix abcdef comes back as text, and the data after the 1 is not returned."
     }
   },
   {
@@ -941,6 +961,10 @@
     },
     "expect": {
       "error": "E_COERCE"
+    },
+    "example": {
+      "title": "A wrong checksum is refused",
+      "note": "Changing one character in the checksum part is enough for the string to be refused with E_COERCE."
     }
   },
   {

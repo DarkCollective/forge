@@ -53,5 +53,14 @@ IN: cobs
   dup _starts _decode ;
 
 META: decode
+  use-when "You have a COBS-encoded packet, without its trailing zero, and want the original bytes back." ;
+  link "https://en.wikipedia.org/wiki/Consistent_Overhead_Byte_Stuffing" "Consistent Overhead Byte Stuffing on Wikipedia" ;
+  inverse encode ;
   see-also cobs:encode ;
+;
+
+META: encode
+  use-when "You are sending binary data in a packet and need no zero bytes inside it, so that a zero can mark the end of each packet." ;
+  link "https://en.wikipedia.org/wiki/Consistent_Overhead_Byte_Stuffing" "Consistent Overhead Byte Stuffing on Wikipedia" ;
+  inverse decode ;
 ;

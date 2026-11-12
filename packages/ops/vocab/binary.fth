@@ -27,5 +27,14 @@ IN: binary
   bytes>list [ util:space-or-comma? not ] filter [ _bit ] map _bits-bytes ;
 
 META: encode
+  use-when "You want to see the bits of some bytes as 0 and 1 digits, for example to check a flag byte or a bit mask." ;
+  link "https://en.wikipedia.org/wiki/Binary_number" "Binary number on Wikipedia" ;
+  inverse decode ;
   param delimiter "What to put between the bytes: a space, nothing, a comma or a newline." ;
+;
+
+META: decode
+  use-when "You have a string of 0 and 1 digits, such as a bit pattern copied from a specification, and want the bytes it stands for." ;
+  link "https://en.wikipedia.org/wiki/Binary_number" "Binary number on Wikipedia" ;
+  inverse encode ;
 ;

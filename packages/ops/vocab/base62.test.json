@@ -67,6 +67,10 @@
     "expect": {
       "value": "73XpUgyMwkGr29M",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Encode the text Hello World",
+      "note": "Eleven bytes of text become fifteen letters and digits, with no punctuation."
     }
   },
   {
@@ -81,6 +85,10 @@
     "expect": {
       "value": "48656c6c6f20576f726c64",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decode the text Hello World",
+      "note": "The reverse of the encode example, with the standard alphabet."
     }
   },
   {
@@ -97,6 +105,10 @@
     "expect": {
       "value": "73xPuGYmWKgR29m",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Use the inverted alphabet",
+      "note": "The inverted alphabet lists the digits, then the lower-case letters, then the capitals, so the same bytes give 73xPuGYmWKgR29m instead of 73XpUgyMwkGr29M."
     }
   },
   {
@@ -127,6 +139,10 @@
     "expect": {
       "value": "001Z",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Leading zero bytes are kept",
+      "note": "Each leading zero byte becomes a leading 0, so 000061 gives 001Z."
     }
   },
   {
@@ -344,6 +360,10 @@
     },
     "expect": {
       "error": "E_COERCE"
+    },
+    "example": {
+      "title": "Punctuation is refused",
+      "note": "Only letters and digits are in the alphabet, so a hyphen in the text is an error with E_COERCE rather than skipped."
     }
   },
   {

@@ -93,6 +93,10 @@
     "expect": {
       "value": "Hello, World!",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Read EBCDIC text as Unicode",
+      "note": "These bytes are Hello, World! in code page ibm037, where the letters are not in ASCII order."
     }
   },
   {
@@ -157,6 +161,10 @@
     "expect": {
       "value": "¢!|¬]",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The same bytes in two code pages",
+      "note": "The bytes 4A 5A 4F 5F BB read as cent, !, |, not sign and ] in ibm037, so the code page must be known."
     }
   },
   {
@@ -1326,6 +1334,10 @@
     "expect": {
       "value": "A�B",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Non-strict decoding keeps the rest",
+      "note": "With strict off the invalid byte FF becomes U+FFFD, the replacement character, and the A and B around it are kept."
     }
   },
   {
@@ -1526,6 +1538,10 @@
     "expect": {
       "value": "c8859393966b40e6969993845a",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Hello, World! as EBCDIC",
+      "note": "The same text as the decode example, written in code page ibm037 as c8859393966b40e6969993845a."
     }
   },
   {
@@ -1750,6 +1766,10 @@
     "expect": {
       "value": "e980",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Euro sign in Windows-1252",
+      "note": "In windows-1252 the e-acute is e9 and the euro sign is 80, so the output is e980."
     }
   },
   {
@@ -1957,6 +1977,10 @@
     },
     "expect": {
       "error": "E_COERCE"
+    },
+    "example": {
+      "title": "A character the code page lacks",
+      "note": "The euro sign is not in code page 037, so encoding it is an error with E_COERCE."
     }
   },
   {
@@ -2260,6 +2284,10 @@
           "text": "Z"
         }
       ]
+    },
+    "example": {
+      "title": "One byte in every encoding",
+      "note": "The single byte E9 reads as é in iso-8859-1 and as щ in ibm866, and each reading is in the list."
     }
   },
   {
@@ -2768,6 +2796,10 @@
           "text": "Hi"
         }
       ]
+    },
+    "example": {
+      "title": "ASCII text in every encoding",
+      "note": "The first reading, utf-8, gives Hi, and the other encodings follow in a fixed order."
     }
   },
   {
@@ -2984,6 +3016,10 @@
           "text": "ﾁ"
         }
       ]
+    },
+    "example": {
+      "title": "Limit the sample",
+      "note": "With sample 1 only the first byte, C1, is decoded, so each text in the list is one character."
     }
   },
   {

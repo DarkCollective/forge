@@ -61,9 +61,15 @@ IN: base45
   _table util:check-symbols _dec ;
 
 META: encode
+  use-when "You need to put binary data in a QR code that uses the alphanumeric mode, such as a digital health certificate, and want text the code will hold." ;
+  link "https://www.rfc-editor.org/rfc/rfc9285" "RFC 9285: Base45 data encoding" ;
+  inverse decode ;
   see-also base45:decode base32:encode ;
 ;
 
 META: decode
+  use-when "You have Base45 text, such as the content of a QR code, and want the bytes it stands for." ;
+  link "https://www.rfc-editor.org/rfc/rfc9285" "RFC 9285: Base45 data encoding" ;
+  inverse encode ;
   see-also base45:encode base32:decode ;
 ;

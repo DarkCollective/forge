@@ -91,10 +91,16 @@ IN: base85
   [ _strip-delims _expand-z _a85-str _table util:check-symbols true _finish ] if ;
 
 META: encode
+  use-when "You have binary data and need printable text for a PostScript or PDF file (ASCII85), or for a ZeroMQ message (Z85)." ;
+  link "https://en.wikipedia.org/wiki/Ascii85" "Ascii85 on Wikipedia" ;
+  inverse decode ;
   param variant "ascii85 (Adobe, digits ! to u) or z85 (ZeroMQ RFC 32)." ;
   param delimiters "Wrap the output in <~ and ~> (ascii85 only; ignored for z85)." ;
 ;
 
 META: decode
+  use-when "You have ASCII85 text, such as a block inside a PostScript or PDF file, or Z85 text, and want the bytes it stands for." ;
+  link "https://en.wikipedia.org/wiki/Ascii85" "Ascii85 on Wikipedia" ;
+  inverse encode ;
   param variant "ascii85 (Adobe, digits ! to u) or z85 (ZeroMQ RFC 32)." ;
 ;

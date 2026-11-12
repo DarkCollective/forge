@@ -39,6 +39,10 @@
     "expect": {
       "value": "M-CM-)",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "UTF-8 bytes shown with M-",
+      "note": "The letter é is two bytes, C3 and A9, shown as M-C and M-) (M- marks a byte above 127)."
     }
   },
   {
@@ -53,6 +57,10 @@
     "expect": {
       "value": "^A^B^_",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Control bytes as ^ letters",
+      "note": "Bytes 01 to 1f become ^A to ^_, the letter being the byte plus 64."
     }
   },
   {
@@ -67,6 +75,10 @@
     "expect": {
       "value": "M-^@M-^_M- M-~",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Bytes above 127 with M-",
+      "note": "M- marks a byte with the high bit set: 80 is M- then ^@, the notation of 00."
     }
   },
   {
@@ -109,6 +121,10 @@
     "expect": {
       "value": "é",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "M- marks bytes above 127",
+      "note": "M-C and M-) together give C3 and A9, which read as é."
     }
   },
   {
@@ -151,6 +167,10 @@
     "expect": {
       "value": "0d2d",
       "enc": "hex"
+    },
+    "example": {
+      "title": "^M is a carriage return",
+      "note": "The ^M is the carriage return, 0d, and the hyphen after it is a plain character, not an M- mark."
     }
   },
   {
@@ -178,6 +198,10 @@
     },
     "expect": {
       "error": "E_COERCE"
+    },
+    "example": {
+      "title": "Not every letter follows a caret",
+      "note": "A caret is only read before a capital letter or a few symbols, so ^a is an error with E_COERCE."
     }
   },
   {

@@ -109,6 +109,10 @@
     "expect": {
       "value": "Proprostnemluvesky-uyb24dma41a",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Label mode writes the ASCII letters first",
+      "note": "The ASCII letters come first, then a hyphen and a code for the rest of the label."
     }
   },
   {
@@ -125,6 +129,10 @@
     "expect": {
       "value": "Pročprostěnemluvíčesky",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Decode the Czech label",
+      "note": "The reverse of the Czech encode example: the ASCII letters and the code give the label back."
     }
   },
   {
@@ -621,6 +629,10 @@
     "expect": {
       "value": "e28h",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "An emoji in a label",
+      "note": "With no ASCII letters the output is only the code, here e28h for the grinning face."
     }
   },
   {
@@ -683,6 +695,10 @@
     "expect": {
       "value": "xn--bcher-kva.example.xn--mnchen-3ya",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Only the non-ASCII labels change",
+      "note": "The labels bücher and münchen get an xn-- prefix; example is ASCII, so it is written as it is."
     }
   },
   {
@@ -699,6 +715,10 @@
     "expect": {
       "value": "bücher.example.münchen",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "xn-- in any case",
+      "note": "Labels that start with xn-- are decoded in any case, and the other labels are kept as they are."
     }
   },
   {
@@ -785,6 +805,10 @@
     },
     "expect": {
       "error": "E_COERCE"
+    },
+    "example": {
+      "title": "A character that is not a Punycode digit",
+      "note": "The code may use only letters and digits, so an exclamation mark in ab-! is an error with E_COERCE."
     }
   },
   {

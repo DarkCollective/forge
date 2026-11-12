@@ -24,10 +24,16 @@ IN: charcode
   util:number-tokens [ base _cp-value ] map codes>str ;
 
 META: encode
+  use-when "You have text and want the Unicode code point of each character as numbers, such as 1f600 for an emoji, to look up or compare." ;
+  link "https://en.wikipedia.org/wiki/Code_point" "Code point on Wikipedia" ;
+  inverse decode ;
   param base "The number base, 2 to 36." ;
   param delimiter "What to put between the numbers: a space, a comma or a newline." ;
 ;
 
 META: decode
+  use-when "You have Unicode code points as numbers, such as 48 69 or 1F600 from a table, and want the characters they stand for." ;
+  link "https://en.wikipedia.org/wiki/Code_point" "Code point on Wikipedia" ;
+  inverse encode ;
   param base "The number base, 2 to 36." ;
 ;

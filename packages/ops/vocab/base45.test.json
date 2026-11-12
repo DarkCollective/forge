@@ -11,6 +11,10 @@
     "expect": {
       "value": "BB8",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Encode two bytes",
+      "note": "Two bytes become three characters. This is one of the RFC's examples."
     }
   },
   {
@@ -39,6 +43,10 @@
     "expect": {
       "value": "%69 VD92EX0",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Text with a space in the output",
+      "note": "The alphabet includes the space, so the output of Hello!! contains one."
     }
   },
   {
@@ -53,6 +61,10 @@
     "expect": {
       "value": "Hello!!",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Decode text with a space",
+      "note": "The space is one of the 45 characters, so it is read as a digit and not skipped."
     }
   },
   {
@@ -342,6 +354,10 @@
     },
     "expect": {
       "error": "E_COERCE"
+    },
+    "example": {
+      "title": "A line break is an error",
+      "note": "Only the space is in the alphabet, so a line break in the text is refused with E_COERCE rather than skipped."
     }
   }
 ]

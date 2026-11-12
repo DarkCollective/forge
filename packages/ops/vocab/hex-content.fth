@@ -20,6 +20,9 @@ IN: hex-content
   bytes>list [ scope _piece ] map "" join "||" split " " join ;
 
 META: encode
+  use-when "You are writing the content option of a Snort or Suricata rule and have bytes that need hex sections, such as a binary signature." ;
+  link "https://www.snort.org/" "Snort, the intrusion detection project" ;
+  inverse decode ;
   param scope "non-printable: hex only where a rule needs it. all: a single hex section for the whole input." ;
 ;
 
@@ -42,3 +45,9 @@ META: encode
   "Read Snort/Suricata content text. Text outside | is UTF-8 literal (with \\\\, \\\" and \\; unescaped); a |...| section holds hex digit pairs, with or without white space. An unclosed |, odd digits or a non-hex character is E_COERCE." doc
   "Encodings" category
   "|" split _parts>bytes ;
+
+META: decode
+  use-when "You have the content text of a Snort or Suricata rule, with |hex| sections, and want the bytes it matches." ;
+  link "https://www.snort.org/" "Snort, the intrusion detection project" ;
+  inverse encode ;
+;
