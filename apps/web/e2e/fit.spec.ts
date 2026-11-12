@@ -154,7 +154,7 @@ test("operations that do not fit are dimmed, explained and still addable", async
   const join = option(page, "text:join");
   await expect(join).toBeVisible();
   await expect(join).toHaveAttribute("data-fit", "no");
-  await expect(join).toContainText("needs a list, the data here is bytes");
+  await expect(join).toContainText("needs a list");
   // Text coerces to and from bytes (LANGUAGE.md section 4.2), so text:split does fit bytes.
   await opSearch(page).fill("text split");
   await expect(option(page, "text:split")).toHaveAttribute("data-fit", "yes");

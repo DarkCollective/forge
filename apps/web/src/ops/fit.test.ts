@@ -201,9 +201,9 @@ describe("labels and reasons", () => {
   });
 
   it("says why an operation does not fit", () => {
-    expect(whyNotFit("list", "str")).toBe("needs a list, the data here is text");
-    expect(whyNotFit("bytes", "list")).toBe("needs bytes, the data here is a list");
-    expect(whyNotFit("choice", "list")).toBe("needs text, the data here is a list");
+    expect(whyNotFit("list", "str")).toBe("needs a list");
+    expect(whyNotFit("bytes", "list")).toBe("needs bytes");
+    expect(whyNotFit("choice", "list")).toBe("needs text");
   });
 
   it("says nothing when it fits", () => {

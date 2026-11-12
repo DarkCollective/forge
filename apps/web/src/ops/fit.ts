@@ -172,10 +172,10 @@ function withArticle(type: ValueType | "number"): string {
   return type === "bytes" || type === "str" || type === "bool" ? noun : `a ${noun}`;
 }
 
-/** Why an operation does not fit, for example "needs a list, the data here is text". Empty when it fits. */
+/** Why an operation does not fit, for example "needs a list" (the pane header says what the data is). Empty when it fits. */
 export function whyNotFit(opInput: ParamType, data: DataType): string {
   if (fits(opInput, data)) return "";
   const want = runtimeType(opInput);
   if (want === "any" || data === "unknown") return "";
-  return `needs ${withArticle(want)}, the data here is ${withArticle(data)}`;
+  return `needs ${withArticle(want)}`;
 }
