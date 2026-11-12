@@ -1409,3 +1409,220 @@ describe("meta.schema.json", () => {
     reject((m) => ((m.source as { pos: unknown }).pos = undefined));
   });
 });
+
+describe("discovery clauses: use-when, link, inverse, helper, checks", () => {
+  const H = "0".repeat(64);
+  const pos = { offset: 3, line: 2, col: 4 };
+  const n = (text: string): { type: "name"; text: string } => ({ type: "name", text });
+  const s = (value: string): { type: "str"; value: string } => ({ type: "str", value });
+
+  test("no discovery member without the clauses (JSON of existing words is unchanged)", () => {
+    const m = rotBuilder().build(H);
+    expect("discovery" in m).toBe(false);
+    expect(JSON.stringify(m)).not.toContain("discovery");
+  });
+
+  test("use-when and link are stored and validate against the schema", () => {
+    const b = rotBuilder();
+    b.clauseFromArgs("use-when", [s("Shifted letters.")]);
+    b.clauseFromArgs("link", [s("https://www.rfc-editor.org/rfc/rfc4648#section-4"), s("RFC")]);
+    b.clauseFromArgs("link", [s("https://en.wikipedia.org/wiki/Base64")]);
+    b.clauseFromArgs("inverse", [n("rot")]);
+    const m = checked(b.build(H));
+    expect(m.discovery).toStrictEqual({
+      useWhen: "Shifted letters.",
+      links: [
+        { url: "https://www.rfc-editor.org/rfc/rfc4648#section-4", label: "RFC" },
+        { url: "https://en.wikipedia.org/wiki/Base64", label: null },
+      ],
+      inverse: "classical:rot",
+    });
+  });
+
+  test("use-when errors", () => {
+    const bad = (t: string): ForgeError =>
+      metaError(() => rotBuilder().clauseFromArgs("use-when", [s(t)], pos));
+    for (const t of ["a\nb", "a\rb", "a\u0001b", " x", "x ", "x".repeat(161)]) {
+      const e = bad(t);
+      expect(e.code).toBe("E_META");
+      expect(e.detail.clause).toBe("use-when");
+    }
+    rotBuilder().clauseFromArgs("use-when", [s("x".repeat(160))]);
+    const b = rotBuilder();
+    b.clauseFromArgs("use-when", [s("one")]);
+    expect(metaError(() => b.clauseFromArgs("use-when", [s("two")])).code).toBe("E_META");
+    for (const args of [[], [s("a"), s("b")], [n("x")]]) {
+      expect(metaError(() => rotBuilder().clauseFromArgs("use-when", args)).code).toBe("E_META");
+    }
+  });
+
+  test("link URL grammar", () => {
+    const ok = [
+      "https://example.com",
+      "https://a.b-c.example.org:8443/p/q?x=1&y=%2F#frag",
+      "https://example.com?x",
+      "https://xn--bcher-kva.example/",
+    ];
+    for (const u of ok) rotBuilder().clauseFromArgs("link", [s(u)]);
+    const bad = [
+      "http://example.com/a",
+      "https://user@example.com/a",
+      "https://192.168.0.1/a",
+      "https://localhost/a",
+      "https://example.com:0/",
+      "https://example.com:65536/",
+      "https://example.com:/",
+      "https://-a.example.com/",
+      "https://a-.example.com/",
+      "https://example..com/",
+      "https://example.com/a b",
+      "https://example.com/a<b",
+      "https://example.com/a\\b",
+      "https://example.com/a|b",
+      "https://example.com/%zz",
+      "https://example.com/é",
+      "https://example.com\u0000",
+      "javascript:alert(1)",
+      "",
+      `https://example.com/${"a".repeat(300)}`,
+    ];
+    for (const u of bad) {
+      const e = metaError(() => rotBuilder().clauseFromArgs("link", [s(u)], pos));
+      expect(e.code, u).toBe("E_META");
+      expect(e.detail.clause).toBe("link");
+      expect(typeof e.detail.reason).toBe("string");
+    }
+    expect(
+      metaError(() => rotBuilder().clauseFromArgs("link", [s(`https://e.com/${"a".repeat(287)}`)]))
+        .code,
+    ).toBe("E_META");
+    rotBuilder().clauseFromArgs("link", [s(`https://e.com/${"a".repeat(286)}`)]);
+  });
+
+  test("link label, arity, repeats and the cap of eight", () => {
+    for (const label of ["a\nb", "x".repeat(81)]) {
+      expect(
+        metaError(() => rotBuilder().clauseFromArgs("link", [s("https://a.example/"), s(label)]))
+          .code,
+      ).toBe("E_META");
+    }
+    rotBuilder().clauseFromArgs("link", [s("https://a.example/"), s("x".repeat(80))]);
+    for (const args of [[], [s("https://a.example/"), s("l"), s("m")], [n("x")]]) {
+      expect(metaError(() => rotBuilder().clauseFromArgs("link", args)).code).toBe("E_META");
+    }
+    const b = rotBuilder();
+    b.clauseFromArgs("link", [s("https://a.example/1")]);
+    expect(
+      metaError(() => b.clauseFromArgs("link", [s("https://a.example/1"), s("again")])).code,
+    ).toBe("E_META");
+    for (let i = 2; i <= 8; i++) b.clauseFromArgs("link", [s(`https://a.example/${i}`)]);
+    const e = metaError(() => b.clauseFromArgs("link", [s("https://a.example/9")]));
+    expect(e.code).toBe("E_META");
+    expect(e.detail.clause).toBe("link");
+    expect(b.build(H).discovery?.links).toHaveLength(8);
+  });
+
+  test("inverse: qualification, same vocabulary only, singular, arity", () => {
+    const b = rotBuilder();
+    b.clauseFromArgs("inverse", [n("atbash")]);
+    expect(b.build(H).discovery).toStrictEqual({ inverse: "classical:atbash" });
+    const q = rotBuilder();
+    q.clauseFromArgs("inverse", [n("classical:atbash")]);
+    expect(q.build(H).discovery?.inverse).toBe("classical:atbash");
+    expect(metaError(() => rotBuilder().clauseFromArgs("inverse", [n("other:x")])).code).toBe(
+      "E_META",
+    );
+    expect(metaError(() => b.clauseFromArgs("inverse", [n("x")])).code).toBe("E_META");
+    for (const args of [[], [n("a"), n("b")], [s("a")]]) {
+      expect(metaError(() => rotBuilder().clauseFromArgs("inverse", args)).code).toBe("E_META");
+    }
+    expect(metaError(() => rotBuilder().clauseFromArgs("inverse", [n("a:b:c")])).code).toBe(
+      "E_META",
+    );
+  });
+
+  test("helper sets op to false, is idempotent, takes no argument", () => {
+    const b = rotBuilder();
+    expect(rotBuilder().build(H).op).toBe(true);
+    b.clauseFromArgs("helper", []);
+    b.clauseFromArgs("helper", []);
+    const m = checked(b.build(H));
+    expect(m.op).toBe(false);
+    expect(m.exported).toBe(true);
+    expect("discovery" in m).toBe(false);
+    expect(metaError(() => rotBuilder().clauseFromArgs("helper", [n("x")])).code).toBe("E_META");
+  });
+
+  test("checks is reserved", () => {
+    const e = metaError(() => rotBuilder().clauseFromArgs("checks", [n("input"), n("utf8")], pos));
+    expect(e.code).toBe("E_META");
+    expect(e.message).toContain("`checks` is reserved for a later release");
+    expect(e.detail).toStrictEqual({ clause: "checks" });
+    expect(e.pos).toBe(pos);
+  });
+
+  test("the clauses are refused on a private word", () => {
+    const priv = (): WordMetaBuilder => rotBuilder({ name: "_rot" });
+    for (const [k, a] of [
+      ["use-when", [s("x")]],
+      ["link", [s("https://a.example/")]],
+      ["inverse", [n("x")]],
+      ["helper", []],
+    ] as const) {
+      expect(metaError(() => priv().clauseFromArgs(k, a)).code, k).toBe("E_META");
+    }
+  });
+
+  test("a builder seeded with earlier discovery keeps it and enforces the rules", () => {
+    const b = rotBuilder({
+      discovery: { useWhen: "u", links: [{ url: "https://a.example/", label: null }] },
+    });
+    expect(metaError(() => b.clauseFromArgs("use-when", [s("v")])).code).toBe("E_META");
+    expect(metaError(() => b.clauseFromArgs("link", [s("https://a.example/")])).code).toBe(
+      "E_META",
+    );
+    b.clauseFromArgs("link", [s("https://b.example/")]);
+    expect(b.build(H).discovery?.links).toHaveLength(2);
+  });
+
+  test("renderHelp: use when and links lines only for words that set them", () => {
+    const plain = rotBuilder().build(H);
+    const b = rotBuilder();
+    b.clause({ kind: "category", text: "Ciphers" });
+    b.clause({ kind: "alias", names: ["r"] });
+    b.clause({ kind: "use-when", text: "You have shifted text." });
+    b.clauseFromArgs("link", [s("https://a.example/x"), s("A")]);
+    b.clauseFromArgs("link", [s("https://b.example/")]);
+    b.clause({ kind: "param", name: "amount", text: "How far." });
+    const lines = renderHelp(b.build(H)).split("\n");
+    expect(lines).toContain("use when: You have shifted text.");
+    expect(lines).toContain("links: https://a.example/x (A), https://b.example/");
+    expect(lines.indexOf("use when: You have shifted text.")).toBe(
+      lines.indexOf("category: Ciphers") + 1,
+    );
+    expect(lines.indexOf("links: https://a.example/x (A), https://b.example/")).toBeLessThan(
+      lines.indexOf("parameters:"),
+    );
+    expect(renderHelp(plain)).not.toContain("use when");
+    expect(renderHelp(plain)).not.toContain("links:");
+  });
+
+  test("the schema rejects a malformed discovery member", () => {
+    const base = JSON.parse(JSON.stringify(rotBuilder().build(H))) as Record<string, unknown>;
+    const bad = (d: unknown): void => {
+      expect(validateSchema({ ...base, discovery: d }), JSON.stringify(d)).toBe(false);
+    };
+    bad({});
+    bad({ useWhen: "x".repeat(161) });
+    bad({ useWhen: "a\nb" });
+    bad({ links: [] });
+    bad({ links: [{ url: "http://a.example/", label: null }] });
+    bad({ links: [{ url: "https://a.example/", label: null, extra: 1 }] });
+    bad({
+      links: Array.from({ length: 9 }, (_, i) => ({ url: `https://a.example/${i}`, label: null })),
+    });
+    bad({ inverse: "nocolon" });
+    bad({ other: 1 });
+    expect(validateSchema({ ...base, discovery: { inverse: "v:w" } })).toBe(true);
+  });
+});

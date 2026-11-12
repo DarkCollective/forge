@@ -24,7 +24,8 @@
     },
     "version": { "type": "string", "maxLength": 200 },
     "hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
-    "source": { "$ref": "#/$defs/source" }
+    "source": { "$ref": "#/$defs/source" },
+    "discovery": { "$ref": "#/$defs/discovery" }
   },
   "required": [
     "name",
@@ -46,6 +47,39 @@
   ],
   "additionalProperties": false,
   "$defs": {
+    "discovery": {
+      "description": "Discovery metadata (use-when, link, inverse); absent when nothing is set.",
+      "type": "object",
+      "properties": {
+        "useWhen": { "type": "string", "maxLength": 160, "pattern": "^[^\\u0000-\\u001f]*$" },
+        "links": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/link" },
+          "minItems": 1,
+          "maxItems": 8
+        },
+        "inverse": { "$ref": "#/$defs/qname" }
+      },
+      "minProperties": 1,
+      "additionalProperties": false
+    },
+    "link": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "maxLength": 300,
+          "pattern": "^https://[A-Za-z0-9][A-Za-z0-9.-]*\\.[A-Za-z0-9-]*[A-Za-z][A-Za-z0-9-]*(?::[0-9]{1,5})?(?:[/?#][A-Za-z0-9\\-._~:/?#@!$&'()*+,;=%]*)?$"
+        },
+        "label": {
+          "type": ["string", "null"],
+          "maxLength": 80,
+          "pattern": "^[^\\u0000-\\u001f]*$"
+        }
+      },
+      "required": ["url", "label"],
+      "additionalProperties": false
+    },
     "wordName": {
       "description": "word-name of section 2.11: 1 to 128 code points, no ':'.",
       "type": "string",

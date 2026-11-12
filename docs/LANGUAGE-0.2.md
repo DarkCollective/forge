@@ -197,7 +197,7 @@ META: decode
 
 **Conformance cases (proposed).**
 
-```fl-proposed
+```fl-test
 # C201 use-when and link surface in the metadata
 @unit
 : f ( bytes -- bytes ) ;
@@ -213,7 +213,7 @@ user:f discovery.links[0].label = "RFC 4648"
 user:f discovery.links[1].label = null
 ```
 
-```fl-proposed
+```fl-test
 # C202 a link must be https
 @unit-fails E_META
 : f ( bytes -- bytes ) ;
@@ -222,7 +222,7 @@ META: f
 ;
 ```
 
-```fl-proposed
+```fl-test
 # C203 no user-info, no spaces, no address literals
 @unit-fails E_META
 : f ( bytes -- bytes ) ;
@@ -231,7 +231,7 @@ META: f
 ;
 ```
 
-```fl-proposed
+```fl-test
 # C204 a host needs a letter in its last label
 @unit-fails E_META
 : f ( bytes -- bytes ) ;
@@ -240,7 +240,7 @@ META: f
 ;
 ```
 
-```fl-proposed
+```fl-test
 # C205 use-when is one line
 @unit-fails E_META
 : f ( bytes -- bytes ) ;
@@ -249,7 +249,7 @@ META: f
 ;
 ```
 
-```fl-proposed
+```fl-test
 # C206 use-when may be set once
 @unit-fails E_META
 : f ( bytes -- bytes ) ;
@@ -259,7 +259,7 @@ META: f
 ;
 ```
 
-```fl-proposed
+```fl-test
 # C207 more than eight links
 @unit-fails E_META
 : f ( bytes -- bytes ) ;
@@ -270,7 +270,7 @@ META: f
 ;
 ```
 
-```fl-proposed
+```fl-test
 # C208 the new clauses do not change the hash
 @unit
 IN: v1
@@ -337,7 +337,7 @@ META: decode
 
 **Conformance cases (proposed).**
 
-```fl-proposed
+```fl-test
 # C209 inverse is stored as declared, not made symmetric by the language
 @unit
 : enc ( bytes -- bytes ) ;
@@ -349,7 +349,7 @@ META: enc
 user:enc discovery.inverse = "user:dec"
 ```
 
-```fl-proposed
+```fl-test
 # C210 inverse may come before the target is defined
 @unit
 : a ( bytes -- bytes ) ;
@@ -361,7 +361,7 @@ META: a
 user:a discovery.inverse = "user:b"
 ```
 
-```fl-proposed
+```fl-test
 # C211 inverse must exist by the end of the unit
 @unit-fails E_META
 : a ( bytes -- bytes ) ;
@@ -370,7 +370,7 @@ META: a
 ;
 ```
 
-```fl-proposed
+```fl-test
 # C212 inverse stays inside the vocabulary
 @unit
 IN: other
@@ -383,7 +383,7 @@ META: a
 ;
 ```
 
-```fl-proposed
+```fl-test
 # C213 a word may be its own inverse; an alias resolves to the canonical word
 @unit
 : flip ( bytes -- bytes ) ;
@@ -395,7 +395,7 @@ META: flip
 user:flip discovery.inverse = "user:flip"
 ```
 
-```fl-proposed
+```fl-test
 # C214 inverse is singular
 @unit-fails E_META
 : a ( bytes -- bytes ) ;
@@ -450,7 +450,7 @@ The word is callable as `mac:hex-block` from every vocabulary and is absent from
 
 **Conformance cases (proposed).**
 
-```fl-proposed
+```fl-test
 # C215 helper makes a public word with inputs a non-operation
 @unit
 : shared ( bytes n:int -- bytes ) ;
@@ -462,7 +462,7 @@ user:shared op = false
 user:shared exported = true
 ```
 
-```fl-proposed
+```fl-test
 # C216 a helper is still callable from another vocabulary
 @unit
 IN: lib
@@ -479,7 +479,7 @@ app:four .
 4
 ```
 
-```fl-proposed
+```fl-test
 # C217 helper takes no argument
 @unit-fails E_META
 : f ( bytes n:int -- bytes ) ;
@@ -774,7 +774,7 @@ Limits to apply when it is built: at most 8 checks per word, each argument at mo
 
 **Conformance case (proposed).**
 
-```fl-proposed
+```fl-test
 # C228 checks is reserved
 @unit-fails E_META
 : f ( bytes -- bytes ) ;

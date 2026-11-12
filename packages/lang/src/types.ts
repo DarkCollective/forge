@@ -324,6 +324,25 @@ export interface SourceInfo {
 }
 
 /** The JSON-serialisable metadata record of a word (spec section 12). */
+/** A `link` clause: an https URL and an optional label (LANGUAGE-0.2.md section 1). */
+export interface MetaLink {
+  readonly url: string;
+  readonly label: string | null;
+}
+
+/**
+ * Discovery metadata (`use-when`, `link`, `inverse`). Absent from `WordMeta` when nothing is set;
+ * each member is omitted when unset.
+ */
+export interface WordDiscovery {
+  /** `use-when`. */
+  readonly useWhen?: string;
+  /** `link` clauses, in order. Omitted when empty. */
+  readonly links?: readonly MetaLink[];
+  /** `inverse`: a qualified name in the same vocabulary. */
+  readonly inverse?: string;
+}
+
 export interface WordMeta {
   readonly name: string;
   readonly vocab: string;
@@ -341,6 +360,8 @@ export interface WordMeta {
   readonly version: string;
   readonly hash: string;
   readonly source: SourceInfo;
+  /** Discovery metadata; omitted (not `{}`) when empty. */
+  readonly discovery?: WordDiscovery;
 }
 
 /** Header parser (WP 1.8). Throws E_HEADER. `strict` is used for public colon words, `lenient` otherwise. */

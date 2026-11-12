@@ -30,6 +30,7 @@ import type {
   Constraint,
   EffectLabel,
   Limits,
+  MetaLink,
   ParamDefault,
   ParamSpec,
   ParamType,
@@ -39,6 +40,7 @@ import type {
   StackEffect,
   StackSlot,
   Value,
+  WordDiscovery,
   WordKind,
   WordMeta,
 } from "./types.js";
@@ -58,6 +60,7 @@ import {
 } from "./values.js";
 import { isPrivateName } from "./dictionary.js";
 import { sha256 } from "./sha256.js";
+import { LINKS_MAX, checkLinkLabel, checkLinkUrl, checkUseWhen } from "./meta-discovery.js";
 
 /** The JSON Schema (draft 2020-12) of `WordMeta` (`meta.schema.json`). */
 export const WORD_META_SCHEMA: Readonly<Record<string, unknown>> = schema;
@@ -763,7 +766,11 @@ export function parseHeader(
 export type MetaClause =
   | { readonly kind: "doc" | "category" | "version"; readonly text: string }
   | { readonly kind: "param"; readonly name: string; readonly text: string }
-  | { readonly kind: "alias" | "see-also"; readonly names: readonly string[] };
+  | { readonly kind: "alias" | "see-also"; readonly names: readonly string[] }
+  | { readonly kind: "use-when"; readonly text: string }
+  | { readonly kind: "link"; readonly url: string; readonly label: string | null }
+  | { readonly kind: "inverse"; readonly name: string }
+  | { readonly kind: "helper" };
 
 /** One argument token of a clause as the compiler sees it: a string literal or a (possibly qualified) word. */
 export type ClauseArg =
@@ -787,6 +794,8 @@ export interface WordMetaInit {
   readonly version?: string;
   /** Default: none. Sorted and deduplicated by `build`. */
   readonly effects?: readonly EffectLabel[];
+  /** Already-set discovery metadata (a second META: block for the same word starts from it). */
+  readonly discovery?: WordDiscovery;
   /** True if `name` is already defined in the vocabulary (alias collision, E_REDEFINED). */
   readonly isNameTaken?: (name: string) => boolean;
 }
@@ -811,8 +820,15 @@ export class WordMetaBuilder {
   private readonly paramDocs = new Map<string, string>();
   private readonly aliases: string[] = [];
   private readonly seeAlso: string[] = [];
+  private useWhen: string | undefined;
+  private readonly links: MetaLink[] = [];
+  private inverse: string | undefined;
+  private helper = false;
 
   constructor(private readonly init: WordMetaInit) {
+    this.useWhen = init.discovery?.useWhen;
+    this.links.push(...(init.discovery?.links ?? []));
+    this.inverse = init.discovery?.inverse;
     this.qname = `${init.vocab}:${init.name}`;
     this.exported = !isPrivateName(init.name);
     this.category = init.category ?? null;
@@ -917,6 +933,50 @@ export class WordMetaBuilder {
           if (!this.seeAlso.includes(q)) this.seeAlso.push(q);
         }
         return;
+      case "use-when": {
+        if (this.useWhen !== undefined) {
+          throw this.err("E_META", "'use-when' is already set", pos, { clause: "use-when" });
+        }
+        const why = checkUseWhen(c.text);
+        if (why !== undefined) throw this.err("E_META", why, pos, { clause: "use-when" });
+        this.useWhen = c.text;
+        return;
+      }
+      case "link": {
+        const bad = (why: string): ForgeError =>
+          this.err("E_META", why, pos, { clause: "link", reason: why });
+        const why = checkLinkUrl(c.url) ?? (c.label === null ? undefined : checkLinkLabel(c.label));
+        if (why !== undefined) throw bad(why);
+        if (this.links.some((l) => l.url === c.url)) throw bad("the link URL is already listed");
+        if (this.links.length >= LINKS_MAX) throw bad(`more than ${LINKS_MAX} links`);
+        this.links.push({ url: c.url, label: c.label });
+        return;
+      }
+      case "inverse": {
+        if (this.inverse !== undefined) {
+          throw this.err("E_META", "'inverse' is already set", pos, { clause: "inverse" });
+        }
+        const q = this.qualify(c.name);
+        if (q === undefined) {
+          throw this.err("E_META", `'${c.name}' is not a valid word name`, pos, {
+            clause: "inverse",
+            name: c.name,
+          });
+        }
+        if (!q.startsWith(`${this.init.vocab}:`)) {
+          throw this.err(
+            "E_META",
+            `'inverse' must name a word of vocabulary '${this.init.vocab}'`,
+            pos,
+            { clause: "inverse", name: c.name },
+          );
+        }
+        this.inverse = q;
+        return;
+      }
+      case "helper":
+        this.helper = true;
+        return;
     }
   }
 
@@ -956,9 +1016,47 @@ export class WordMetaBuilder {
       case "see-also":
         if (names.length === 0 || strs.length !== 0) bad("takes one or more names");
         return this.clause({ kind: keyword, names: texts }, pos);
+      case "use-when":
+        if (strs.length !== 1 || args.length !== 1) bad("takes exactly one string");
+        return this.clause({ kind: "use-when", text: (strs[0] as { value: string }).value }, pos);
+      case "link":
+        if (strs.length < 1 || strs.length > 2 || args.length !== strs.length) {
+          bad("takes a URL string and an optional label string");
+        }
+        return this.clause(
+          {
+            kind: "link",
+            url: (strs[0] as { value: string }).value,
+            label: strs.length === 2 ? (strs[1] as { value: string }).value : null,
+          },
+          pos,
+        );
+      case "inverse":
+        if (names.length !== 1 || args.length !== 1) bad("takes exactly one name");
+        return this.clause({ kind: "inverse", name: texts[0] as string }, pos);
+      case "helper":
+        if (args.length !== 0) bad("takes no arguments");
+        return this.clause({ kind: "helper" }, pos);
+      case "checks":
+        throw this.err("E_META", "`checks` is reserved for a later release", pos, {
+          clause: "checks",
+        });
       default:
         return bad("is not a known clause");
     }
+  }
+
+  /** `{ discovery }` when any discovery member is set, else nothing (the key stays absent). */
+  private discoveryMember(): { discovery: WordDiscovery } | Record<string, never> {
+    const d: {
+      useWhen?: string;
+      links?: readonly MetaLink[];
+      inverse?: string;
+    } = {};
+    if (this.useWhen !== undefined) d.useWhen = this.useWhen;
+    if (this.links.length > 0) d.links = this.links.map((l) => ({ url: l.url, label: l.label }));
+    if (this.inverse !== undefined) d.inverse = this.inverse;
+    return Object.keys(d).length === 0 ? {} : { discovery: d };
   }
 
   /** The finished record. `hash` comes from `computeHash`. */
@@ -980,7 +1078,9 @@ export class WordMetaBuilder {
       qname: this.qname,
       kind: init.kind,
       exported: this.exported,
-      op: init.op ?? (this.exported && init.vocab !== "core" && init.effect.inputs.length >= 1),
+      op: this.helper
+        ? false
+        : (init.op ?? (this.exported && init.vocab !== "core" && init.effect.inputs.length >= 1)),
       effect: { ...init.effect, inputs },
       params,
       category: this.category,
@@ -991,6 +1091,7 @@ export class WordMetaBuilder {
       version: this.version,
       hash,
       source: init.source ?? { unit: null, text: null, pos: null },
+      ...this.discoveryMember(),
     };
   }
 }
@@ -1041,8 +1142,14 @@ export function renderHelp(meta: WordMeta): string {
   const lines = [`${meta.qname}  ${meta.effect.text}`];
   if (meta.doc !== null && meta.doc !== "") lines.push(meta.doc);
   if (meta.category !== null && meta.category !== "") lines.push(`category: ${meta.category}`);
+  const d = meta.discovery;
+  if (d?.useWhen !== undefined && d.useWhen !== "") lines.push(`use when: ${d.useWhen}`);
   if (meta.aliases.length > 0) lines.push(`aliases: ${meta.aliases.join(", ")}`);
   if (meta.seeAlso.length > 0) lines.push(`see also: ${meta.seeAlso.join(", ")}`);
+  if (d?.links !== undefined && d.links.length > 0) {
+    const shown = d.links.map((l) => (l.label === null ? l.url : `${l.url} (${l.label})`));
+    lines.push(`links: ${shown.join(", ")}`);
+  }
   if (meta.effects.length > 0) lines.push(`effects: ${meta.effects.join(", ")}`);
   if (meta.params.length > 0) {
     lines.push("parameters:");

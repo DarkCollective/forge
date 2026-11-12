@@ -1396,6 +1396,101 @@ describe("redefinition, read-only and untrusted", () => {
   });
 });
 
+describe("META: discovery clauses", () => {
+  test("use-when and link are stored; a second block adds links and cannot reset use-when", () => {
+    const env = new Env();
+    env.load(`
+      : f ( int -- int ) ;
+      META: f use-when "Reach for it." ; link "https://a.example/1" "One" ; ;
+      META: f link "https://a.example/2" ; ;
+    `);
+    const m = env.entry("user:f").meta;
+    expect(m.discovery).toStrictEqual({
+      useWhen: "Reach for it.",
+      links: [
+        { url: "https://a.example/1", label: "One" },
+        { url: "https://a.example/2", label: null },
+      ],
+    });
+    expectValidMeta(m);
+    expect(fails(env, 'META: f use-when "again" ; ;').code).toBe("E_META");
+    expect(fails(env, 'META: f link "https://a.example/2" ; ;').code).toBe("E_META");
+  });
+
+  test("a word without the clauses has no discovery member", () => {
+    const env = new Env();
+    env.load(': f ( int -- int ) ; META: f doc "d" ; ;');
+    expect("discovery" in env.entry("user:f").meta).toBe(false);
+  });
+
+  test("inverse is checked at the end of the unit, with the clause position", () => {
+    const env = new Env();
+    const e = fails(env, ": a ( int -- int ) ;\nMETA: a\n  inverse nosuch ;\n;");
+    expect(e).toMatchObject({ code: "E_META", word: "user:a" });
+    expect(e.detail).toStrictEqual({ clause: "inverse", name: "user:nosuch" });
+    at(e, 3, 3);
+    // a private target is not acceptable
+    expect(
+      fails(env, ": a ( int -- int ) ; : _p ( int -- int ) ; META: a inverse _p ; ;").code,
+    ).toBe("E_META");
+    // a failed unit leaves nothing behind
+    expect(env.dictionary.vocab("user")?.words.has("a") ?? false).toBe(false);
+  });
+
+  test("inverse: forward reference, alias resolved to canonical, self, earlier unit", () => {
+    const env = new Env();
+    env.load(`
+      : a ( int -- int ) ;
+      META: a inverse b ; ;
+      : b ( int -- int ) ;
+      : flip ( int -- int ) ;
+      META: flip alias flop ; inverse flop ; ;
+    `);
+    expect(env.entry("user:a").meta.discovery?.inverse).toBe("user:b");
+    expect(env.entry("user:flip").meta.discovery?.inverse).toBe("user:flip");
+    // the target may be committed already
+    env.load("META: b inverse a ; ;");
+    expect(env.entry("user:b").meta.discovery?.inverse).toBe("user:a");
+    // and an alias committed earlier still resolves to the canonical name
+    env.load(": c ( int -- int ) ; META: c inverse flop ; ;");
+    expect(env.entry("user:c").meta.discovery?.inverse).toBe("user:flip");
+    // console mode: checked before commit
+    expect(fails(env, "META: c inverse zzz ; ;", "console").code).toBe("E_META");
+    expect(env.entry("user:c").meta.discovery?.inverse).toBe("user:flip");
+  });
+
+  test("inverse in another vocabulary is E_META at the clause", () => {
+    const env = new Env();
+    env.load("IN: other : b ( int -- int ) ;");
+    const e = fails(env, "IN: user : a ( int -- int ) ; META: a inverse other:b ; ;");
+    expect(e.code).toBe("E_META");
+    expect(e.detail.clause).toBe("inverse");
+  });
+
+  test("helper: op false, still public and callable; META: on a later block keeps it", () => {
+    const env = new Env();
+    env.load(`
+      IN: lib
+      : twice ( int -- int ) 2 * ;
+      META: twice helper ; ;
+      META: twice doc "later" ; ;
+      : plain ( int -- int ) ;
+    `);
+    const m = env.entry("lib:twice").meta;
+    expect(m).toMatchObject({ op: false, exported: true, doc: "later" });
+    expect("discovery" in m).toBe(false);
+    expect(env.entry("lib:plain").meta.op).toBe(true);
+    expect(fails(env, "META: twice helper x ; ;").code).toBe("E_META");
+  });
+
+  test("checks is reserved", () => {
+    const env = new Env();
+    const e = fails(env, ": f ( int -- int ) ; META: f checks input utf8 ; ;");
+    expect(e.code).toBe("E_META");
+    expect(e.message).toContain("`checks` is reserved for a later release");
+  });
+});
+
 describe("META:", () => {
   test("E_META for an undefined word, a private word, bad clauses", () => {
     const env = new Env();

@@ -60,6 +60,7 @@ import type {
   StackWord,
   Token,
   Value,
+  WordDiscovery,
   WordEntry,
   WordMeta,
 } from "./types.js";
@@ -507,6 +508,8 @@ class Compiler {
   private readonly claimed = new Set<string>();
   /** Latest staged metadata of entries edited by META: in this input. */
   private readonly pendingMeta = new Map<WordEntry, WordMeta>();
+  /** Position of the latest `inverse` clause of each entry edited by META: in this input. */
+  private readonly inversePos = new Map<WordEntry, SourcePos>();
   private seg: { items: Item[]; st: BodyState; end: SourcePos } | null = null;
   private consoleEffect: StackEffect | null = null;
 
@@ -530,6 +533,7 @@ class Compiler {
   run(): CompileResult {
     try {
       this.program();
+      this.checkInverses();
     } catch (e) {
       this.txn.rollback();
       throw e;
@@ -1152,6 +1156,39 @@ class Compiler {
 
   // ---- META: --------------------------------------------------------------------------------
 
+  /**
+   * End-of-unit pass for `inverse` (LANGUAGE-0.2.md section 2): the target must be a public word
+   * of the same vocabulary, defined in this transaction or already committed. An alias is stored
+   * as its canonical qualified name.
+   */
+  private checkInverses(): void {
+    for (const [entry, meta] of this.pendingMeta) {
+      const inv = meta.discovery?.inverse;
+      const pos = this.inversePos.get(entry);
+      if (inv === undefined || pos === undefined) continue;
+      const cut = inv.indexOf(":");
+      const vocab = inv.slice(0, cut);
+      const name = inv.slice(cut + 1);
+      const target = isPrivateName(name) ? undefined : this.txn.vocab(vocab)?.words.get(name);
+      if (target === undefined) {
+        this.fail(
+          "E_META",
+          `${meta.qname}: 'inverse' names '${inv}', which is not a public word of '${vocab}'`,
+          pos,
+          meta.qname,
+          { clause: "inverse", name: inv },
+        );
+      }
+      if (target.qname === inv) continue;
+      const fixed: WordMeta = {
+        ...meta,
+        discovery: { ...(meta.discovery as WordDiscovery), inverse: target.qname },
+      };
+      this.txn.stageMeta(entry, fixed);
+      this.pendingMeta.set(entry, fixed);
+    }
+  }
+
   private metaForm(): void {
     this.next();
     const nameTok = this.next();
@@ -1195,6 +1232,7 @@ class Compiler {
       // "1" is also the default, so an explicit earlier "1" cannot be told apart and stays settable.
       version: base.version === "1" ? undefined : base.version,
       effects: base.effects,
+      ...(base.discovery === undefined ? {} : { discovery: base.discovery }),
       isNameTaken: (n) => this.txn.vocab(base.vocab)?.words.has(n) === true,
     });
     for (const p of base.params) {
@@ -1226,6 +1264,7 @@ class Compiler {
         }
       }
       builder.clauseFromArgs(kw.text, args, kw.pos);
+      if (kw.text === "inverse") this.inversePos.set(entry, kw.pos);
     }
 
     const built = builder.build(base.hash);
