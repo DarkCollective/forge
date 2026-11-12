@@ -48,11 +48,13 @@ const catalogue = JSON.parse(
 ) as CatalogueView;
 
 /**
- * Output text the pane shows as text: not blank, short, and without control characters other than line feeds.
+ * Output text the pane shows as text: not blank, short, and without control characters other than line feeds, tabs and carriage returns.
+ * The pane itself shows any valid utf8 as text (chooseView); the other controls are kept out of the smoke test
+ * only because they do not render predictably in the DOM.
  * `toHaveText` compares with collapsed white space, so edge white space and line breaks do not matter.
  */
 function showable(s: string): boolean {
-  return s.trim().length > 0 && s.length <= 400 && !/\p{C}/u.test(s.replaceAll("\n", ""));
+  return s.trim().length > 0 && s.length <= 400 && !/\p{C}/u.test(s.replace(/[\n\t\r]/g, ""));
 }
 
 /** The text the output pane shows for the expectation, or null when it is not plain text: the pane shows bytes that are valid utf8 as text. */
