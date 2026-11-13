@@ -686,7 +686,7 @@
     },
     "example": {
       "title": "A timestamp as a readable date in UTC",
-      "note": "The default text gives the weekday, date, time and UTC, with no fraction for whole seconds."
+      "note": "The default text gives the weekday, date, time and UTC, with no fraction for whole seconds. It is for reading, and datetime:to-unix does not accept it; the format YYYY-MM-DD HH:mm:ss gives a text that datetime:to-unix reads back (with show-parsed off) to the same number."
     }
   },
   {

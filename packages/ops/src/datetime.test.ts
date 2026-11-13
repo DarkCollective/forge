@@ -644,3 +644,50 @@ describe("limits", () => {
     expect(top(r)).toBe("1794400496");
   });
 });
+
+describe("from-unix and to-unix are not a declared inverse: only some formats round-trip", () => {
+  const toUnix = async (text: string) => {
+    const r = await runtime.call("datetime:to-unix", [
+      str(text),
+      str("seconds"),
+      str(INTL),
+      str("YYYY-MM-DD HH:mm:ss"),
+      str("UTC"),
+      bool(false),
+    ]);
+    return r.ok ? top(r) : r.error.code;
+  };
+  const fromUnix = async (seconds: string, format: string) =>
+    top(
+      await runtime.call("datetime:from-unix", [
+        str(seconds),
+        str("seconds"),
+        str("UTC"),
+        str(format),
+      ]),
+    );
+
+  test("the default text is for reading: to-unix with its defaults does not accept it", async () => {
+    const text = await fromUnix("1794400496", "");
+    expect(text).toBe("Wed 11 November 2026 12:34:56 UTC");
+    expect(await toUnix(text as string)).toBe("E_COERCE");
+  });
+
+  test.each(["1794400496", "0", "-86400", "1700000000"])(
+    "the format YYYY-MM-DD HH:mm:ss reads back to %s",
+    async (seconds) => {
+      expect(await toUnix((await fromUnix(seconds, "YYYY-MM-DD HH:mm:ss")) as string)).toBe(
+        seconds,
+      );
+    },
+  );
+
+  test("each names the other in see-also", () => {
+    const ops = buildCatalogue(runtime).ops;
+    for (const q of ["datetime:from-unix", "datetime:to-unix"]) {
+      expect(ops.find((o) => o.qname === q)?.seeAlso).toContain(
+        q === "datetime:from-unix" ? "datetime:to-unix" : "datetime:from-unix",
+      );
+    }
+  });
+});

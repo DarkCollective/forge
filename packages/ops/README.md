@@ -1010,9 +1010,11 @@ For each public op of your vocabularies, add four things:
 
 Nothing else changes: no FL code, no new, removed, reordered or altered vectors. META is not hashed, so the hash snapshot must stay identical. Text inside the FL strings must not contain a double quote or a backslash.
 
+Put the `META: <word> … ;` block AFTER the definition of the word (and after the definitions of the words it calls, if it names them). A block placed before the definition fails the build with "undefined word".
+
 ### use-when
 
-Answer "when would a person reach for this?", not "what does it do" (`doc` says that). Name what the person has in hand and what they want. Plain British English, one sentence, no marketing words, no em-dashes, no "simply" or "just", and do not start every line with "You have".
+Answer "when would a person reach for this?", not "what does it do" (`doc` says that). Name what the person has in hand and what they want. Plain British English, no marketing words, no em-dashes, no "simply" or "just". A use-when is a complete sentence addressed to the reader ("You have … and want …", "You want …"), never a fragment such as "Decoding base64 text". Starting with "You have" is fine, because it names what the person holds; vary the wording only where another opening is clearer.
 
 Good:
 
@@ -1031,7 +1033,8 @@ Bad:
 An example is a verified vector, so it can never be wrong. Your job is to choose the ones that teach.
 
 - Pick a realistic small input with a recognisable output first. Then one that shows the most important parameter (the cost, the alphabet, the input format, the start offset). A third only if it teaches something new.
-- Skip empty-input, error and huge vectors, and vectors that differ from a chosen one only by a variant (the same certificate again as Base64). An input, parameter or expected value over 2048 characters is refused by the build: check sizes before choosing.
+- Skip empty-input, error and huge vectors, and vectors that differ from a chosen one only by a variant (the same certificate again as Base64). The 2048-character cap applies to the input, to each encoded parameter and to the expected value; one over the cap is refused by the build, so check sizes before choosing.
+- A nondeterministic op (`+random` or `+time`) usually has no example, because its vectors cannot hold a fixed output. Do not add one just to have one.
 - The title says what the example shows ("Decode a PEM public key to DER bytes (as hex)"), not the vector's name. The note says what to look at or why the parameter matters, in one to three sentences, and uses only facts you checked in the vector.
 - If no existing vector teaches, do not invent one: report the op as "needs a teaching vector" so a later work package can add one.
 
@@ -1042,13 +1045,15 @@ Bad choices: a 64 KiB input; "empty input gives empty output"; the sixth of seve
 ### Links
 
 - Give the primary specification first (`https://www.rfc-editor.org/rfc/rfcNNNN`, with `#section-N` only when you are sure of the number; NIST pages under `https://csrc.nist.gov/`; `https://doi.org/…`), then, where it helps a newcomer, the Wikipedia article.
-- There is no network access in the sandbox, so you cannot check a URL. Link only pages you are sure exist at exactly that address: RFC numbers you can confirm from the `ref` fields of the vectors or the vocabulary's comments, and the root of a well-known site. Do not build deep links from memory. A wrong link is worse than none.
+- There is no network access in the sandbox, so you cannot check a URL. Link only pages you are certain exist at exactly that address: an RFC that the repository itself cites (in the `ref` fields of the vectors or the vocabulary's comments), a Wikipedia article whose title is stable and that you know well, or the home page of a well-known project. Anything else is left out. Do not build deep links from memory. A wrong link is worse than none, and an op with no link is fine.
 - Labels say what the page is ("RFC 9106: Argon2 memory-hard hashing"), not "link" or "here".
 - In your report, list every URL with your confidence and the reason.
 
 ### Inverse
 
-Declare `inverse` only for a real round trip (encode and decode, encrypt and decrypt, parse and build): applying one after the other gives the input back, at least for the usual case. Declare it on one side, or on both sides consistently; `help.json` makes it symmetric. Operations that are merely related use `see-also`, which already exists. If the round trip loses something (a PEM label, the shape of an old key format), say so in your report so the owner can decide.
+Declare `inverse` only for a real round trip (encode and decode, encrypt and decrypt, parse and build): applying one after the other gives the input back, at least for the usual case. Declare it on one side, or on both sides consistently; `help.json` makes it symmetric. Operations that are merely related use `see-also`, which already exists. An op that is its own inverse (a XOR with the same key, ROT13, a byte reversal) says so in its `use-when` or an example note and declares no `inverse`, because the clause names a different word. If the round trip loses something (a PEM label, the shape of an old key format), say so in your report so the owner can decide.
+
+**Lossy pairs.** A pair that loses a little still counts when the second op undoes the first for ordinary input: declare it, and put the loss in the `note` of an example (for example that the PEM label is not kept). A pair does not count when the output of one op is a different kind of thing from the input of the other, such as a report, a listing or a wrapper: `zip:unzip` and `tar:untar` give a list of entries, not the archive bytes, and `flask-session:verify` gives a `{"valid":…,"payload":…}` result, not the signed cookie. Those use `see-also`. The same goes for a pair whose default output cannot be read back with the other op's defaults: `datetime:from-unix` writes `Wed 11 November 2026 12:34:56 UTC`, which `datetime:to-unix` does not read, so the pair uses `see-also`, and an example note of `from-unix` says which format (`YYYY-MM-DD HH:mm:ss`) does round-trip (the `use-when` is limited to 160 characters and keeps to the situation). Settle each pair by trying it: write the round trip as a test or run it once, and record the answer in your report.
 
 ### Checklist
 
@@ -1056,7 +1061,7 @@ Declare `inverse` only for a real round trip (encode and decode, encrypt and dec
 2. `use-when` is a situation, at most 160 characters, no line break.
 3. At most 3 examples, titles unique, each vector small and a teaching one; no vector added or changed.
 4. Links are https, specific enough to be useful, and certain to exist.
-5. Inverse names a public word of the same vocabulary and is a real round trip.
+5. Inverse names a public word of the same vocabulary and is a real round trip (a self-inverse op declares none).
 6. No em-dashes, no marketing words; plain British English.
 
 ### Verify
@@ -1068,7 +1073,7 @@ npm run lint && npm run typecheck && npm test
 git diff <base> --stat               # only your .fth and .test.json files
 ```
 
-`src/help.test.ts` holds a ratchet: the number of catalogue ops with a `use-when`, and with at least one example, must not fall below the numbers reached so far. A batch that adds content raises the two constants there to its new totals.
+`src/help.test.ts` holds a ratchet: the number of catalogue ops with at least one example must not fall below the number reached so far, and a batch that adds examples raises the constant there to its new total. Every catalogue op must have a non-empty `use-when`, so a new op cannot ship without one, and every `see-also` must name a catalogue op.
 
 ## The hash guard: `hash-snapshot`
 

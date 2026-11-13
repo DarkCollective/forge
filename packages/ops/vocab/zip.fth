@@ -255,7 +255,6 @@ META: unzip
   use-when "You have a zip archive that is not encrypted, and want to list its entries and read their contents." ;
   param verify "Check each entry's size and CRC-32 against the directory (CyberChef's Verify result); off, damaged data is returned anyway." ;
   see-also zip:entry zip:zip deflate:inflate ;
-  inverse zip ;
   link "https://en.wikipedia.org/wiki/ZIP_(file_format)" "ZIP file format on Wikipedia" ;
 ;
 
@@ -277,6 +276,5 @@ META: zip
   param mtime "The modification time in Unix seconds, 1980 to 2107 (0 means 1980-01-01 00:00:00 and keeps the output the same on every run)." ;
   param mode "The Unix permission bits (0 to 4095; 420 is 0644), stored when os is unix." ;
   see-also zip:unzip zip:entry deflate:deflate ;
-  inverse unzip ;
   link "https://en.wikipedia.org/wiki/ZIP_(file_format)" "ZIP file format on Wikipedia" ;
 ;

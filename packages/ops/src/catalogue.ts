@@ -17,15 +17,11 @@
 /*
  * The catalogue (RECIPES.md section 2.3): a projection of the loaded runtime's `WordMeta`.
  */
-import { CORE_VOCAB, listWords, sha256 } from "@forge/lang";
+import { CORE_VOCAB, cpCompare, listWords, sha256 } from "@forge/lang";
 import type { ForgeRuntime, WordEntry, WordMeta } from "@forge/lang";
 import { isRegexPrimitive } from "./regex-engine.js";
 import { CATALOGUE_FORMAT, INTERNAL_VOCABS, UI_PARAM_TYPES } from "./types.js";
 import type { BuildCatalogueFn, CatalogueOp, IsCatalogueOpFn } from "./types.js";
-
-function compareCodePoints(a: string, b: string): number {
-  return a < b ? -1 : a > b ? 1 : 0;
-}
 
 /**
  * Rules 1 to 6 of RECIPES.md section 2.2 for a word reached by its canonical name. (An alias is
@@ -93,8 +89,8 @@ export const buildCatalogue: BuildCatalogueFn = (runtime, options = {}) => {
       });
     }
   }
-  ops.sort((a, b) => compareCodePoints(a.qname, b.qname));
-  const vocabs = [...new Set(ops.map((op) => op.vocab))].sort(compareCodePoints);
+  ops.sort((a, b) => cpCompare(a.qname, b.qname));
+  const vocabs = [...new Set(ops.map((op) => op.vocab))].sort(cpCompare);
   return {
     format: CATALOGUE_FORMAT,
     version: sha256(JSON.stringify(ops)).slice(0, 16),

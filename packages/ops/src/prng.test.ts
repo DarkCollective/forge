@@ -124,7 +124,9 @@ describe("prng:integers", () => {
     for (const x of (await gen(1, 6, draws, "space")).split(" ")) counts[Number(x) - 1]!++;
     const expected = draws / 6;
     const chi = counts.reduce((s, c) => s + (c - expected) ** 2 / expected, 0);
-    expect(chi).toBeLessThan(25);
+    // 6 faces give 5 degrees of freedom. P(chi-squared > 40) = 1.5e-7 for a fair source (the old
+    // bound of 25 had 1.4e-4, about one run in 7,000).
+    expect(chi).toBeLessThan(40);
   });
 
   test("65,536 integers fit the default limits", async () => {

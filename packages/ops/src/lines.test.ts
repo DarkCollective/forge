@@ -502,3 +502,23 @@ describe("the cost at 64 KiB with the default limits", () => {
     }
   });
 });
+
+describe("add-numbers and remove-numbers are a round trip (the declared inverse)", () => {
+  test.each([
+    "a\nb\nc",
+    "1 apple\n2 pear",
+    "  indented\n\ttabbed",
+    "x\n\ny",
+    "a\n",
+    "",
+    "12:30 start\n- item\n1) one",
+    "a\r\nb",
+    Array.from({ length: 12 }, (_, i) => `line ${i}`).join("\n"),
+  ])("%j", async (data) => {
+    const numbered = text(
+      await runtime.call("lines:add-numbers", [str(data), str("newline"), int(0)]),
+    );
+    const back = text(await runtime.call("lines:remove-numbers", [str(numbered), str("newline")]));
+    expect(back).toBe(data);
+  });
+});

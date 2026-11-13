@@ -380,9 +380,61 @@ describe("the bundled help document", () => {
     }
   });
 
+  test("pairs whose output is a different kind of thing, or does not read back, declare no inverse", () => {
+    for (const q of [
+      "zip:zip",
+      "zip:unzip",
+      "tar:tar",
+      "tar:untar",
+      "flask-session:sign",
+      "flask-session:verify",
+      "datetime:from-unix",
+      "datetime:to-unix",
+    ])
+      expect(find(doc, q).inverse, q).toBeNull();
+  });
+
+  // Names a see-also clause may use although they are not catalogue operations. Each entry needs a
+  // reason; the list is meant to be empty. "clean:remove-whitespace" points at the helper word
+  // util:strip-space, which is not an operation, so the help page would link to nothing. The clause
+  // sits in vocab/clean.fth, which the work package that added this test did not own; delete this
+  // entry together with that clause.
+  const SEE_ALSO_EXCEPTIONS = new Set(["clean:remove-whitespace -> util:strip-space"]);
+
+  test("every see-also names a catalogue operation (or a listed exception)", () => {
+    const ops = new Set(catalogue.ops.map((o) => o.qname));
+    const dangling: string[] = [];
+    for (const op of catalogue.ops)
+      for (const target of op.seeAlso) {
+        const pair = `${op.qname} -> ${target}`;
+        if (!ops.has(target) && !SEE_ALSO_EXCEPTIONS.has(pair)) dangling.push(pair);
+      }
+    expect(
+      dangling,
+      `see-also clauses naming something that is not an operation: ${dangling.join("; ")}`,
+    ).toEqual([]);
+    // an exception that is no longer needed must be removed
+    const stale = [...SEE_ALSO_EXCEPTIONS].filter((pair) => {
+      const [from, to] = pair.split(" -> ") as [string, string];
+      const op = catalogue.ops.find((o) => o.qname === from);
+      return op === undefined || !op.seeAlso.includes(to) || ops.has(to);
+    });
+    expect(stale, "these see-also exceptions are no longer needed").toEqual([]);
+  });
+
   // Ratchet: a later batch of discovery text raises these two numbers, never lowers them.
-  const MIN_WITH_USE_WHEN = 276;
-  const MIN_WITH_EXAMPLE = 267;
+  const MIN_WITH_USE_WHEN = 458;
+  const MIN_WITH_EXAMPLE = 441;
+
+  test("every catalogue operation has a non-empty use-when", () => {
+    const missing = catalogue.ops
+      .map((o) => o.qname)
+      .filter((q) => (find(doc, q).useWhen ?? "").trim() === "");
+    expect(
+      missing,
+      `these operations have no use-when (add a use-when clause to their META: block): ${missing.join(", ")}`,
+    ).toEqual([]);
+  });
 
   test("ratchet: ops with a use-when and ops with an example do not fall", () => {
     expect(doc.ops.filter((o) => o.useWhen !== null).length).toBeGreaterThanOrEqual(

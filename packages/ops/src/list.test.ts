@@ -210,7 +210,9 @@ describe("list:shuffle", () => {
     expect(counts.size).toBe(6);
     const expected = draws / 6;
     const chi = [...counts.values()].reduce((s, c) => s + (c - expected) ** 2 / expected, 0);
-    expect(chi).toBeLessThan(25);
+    // 6 permutations give 5 degrees of freedom. P(chi-squared > 40) = 1.5e-7 for a fair shuffle (the
+    // old bound of 25 had 1.4e-4, about one run in 7,000).
+    expect(chi).toBeLessThan(40);
   });
 
   test("a pinned source gives the Fisher-Yates result", async () => {

@@ -58,7 +58,7 @@ META: defang-url
   param escape-http "Write http as hxxp (any letter case)." ;
   param escape-slashes "Write :// as [://]." ;
   param process "valid-domains-and-full-urls: URLs, then domain names; only-full-urls: URLs; everything: the whole input." ;
-  see-also defang:fang-url defang:defang-ip extract:urls ;
+  see-also defang:fang-url extract:urls ;
   inverse fang-url ;
 ;
 

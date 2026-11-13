@@ -101,7 +101,6 @@ META: verify
   param algorithm "The digest of the signature: sha1 (Flask's default) or sha256." ;
   param timestamp "Include the signing time in the result." ;
   see-also flask-session:sign flask-session:decode hmac:digest ;
-  inverse sign ;
 ;
 
 META: sign

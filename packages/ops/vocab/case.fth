@@ -27,7 +27,7 @@ USING: util ;
     _k 1 + _k! ] if ;
 
 : alternating ( data:str first:choice{lower|upper}="lower" -- str )
-  "Alternate the case of the letters: the first letter is lower case (or upper case with first set to upper), the next the other case, and so on. Characters without case are kept and do not count, so Hello, World becomes hElLo, wOrLd. CyberChef's Alternating Caps starts with a lower case letter too." doc
+  "Alternate the case of the letters: the first letter is lower case (or upper case with first set to upper), the next the other case, and so on. Characters without case are kept and do not count, so the alternation carries on across them and Hello, World! becomes hElLo, WoRlD! (the W is the sixth letter, so it is upper case). CyberChef's Alternating Caps starts with a lower case letter too." doc
   "Text" category
   0 _k!
   data str>codes [ util:cp>str first "upper" = _alt-ch ] map "" join ;

@@ -116,3 +116,73 @@ describe("every help example works through Try it", () => {
     },
   );
 });
+
+// Line endings (WP 6.16). Try it used to put the input through the editor's text conversion, which turns
+// CR LF and a lone CR into LF, so an example whose input has CR LF line breaks baked a different input from
+// the vector's. The guard above could not tell, because it only compared with the example's own `expect`
+// and the old examples did not depend on the line ending.
+describe("Try it keeps the line endings of an example input", () => {
+  const bytesOf = (value: string, enc: string) => {
+    const plan = planTryIt("text:upper", { params: {}, input: { value, enc } } as never);
+    if (!plan.ok) throw new Error(plan.message);
+    return plan;
+  };
+
+  test("utf8 and latin1 text keep CR LF, a lone CR and LF byte for byte", () => {
+    const text = "a\r\nb\rc\nd\r\n";
+    const want = [0x61, 13, 10, 0x62, 13, 0x63, 10, 0x64, 13, 10];
+    expect([...bytesOf(text, "utf8").bytes]).toEqual(want);
+    expect([...bytesOf(text, "latin1").bytes]).toEqual(want);
+  });
+
+  test("the input tab is told the line ending the text uses", () => {
+    expect(bytesOf("a\r\nb\r\n", "utf8").eol).toBe("crlf");
+    expect(bytesOf("a\rb\r", "utf8").eol).toBe("cr");
+    expect(bytesOf("a\nb\n", "utf8").eol).toBe("lf");
+    expect(bytesOf("no breaks", "utf8").eol).toBe("lf");
+    expect(bytesOf("0d0a", "hex").eol).toBe("lf");
+  });
+
+  test(
+    "every csv vector input with CR LF bakes to the vector's own expected result",
+    { timeout: 120_000 },
+    async () => {
+      const file = JSON.parse(
+        readFileSync(
+          new URL("../../../../packages/ops/vocab/csv.test.json", import.meta.url),
+          "utf8",
+        ),
+      ) as (OpTestVector & { params: Record<string, unknown> })[];
+      // includes "Quoted cells keep commas and line breaks": a quoted cell with CR LF inside it
+      const withCrlf = file.filter(
+        (v) => v.op === "csv:to-json" && "value" in v.input && v.input.value.includes("\r\n"),
+      );
+      expect(withCrlf.length).toBeGreaterThan(5);
+      const plans = withCrlf.map((v) => {
+        const plan = planTryIt(v.op, v as never);
+        if (!plan.ok) throw new Error(plan.message);
+        expect(plan.bytes.includes(13)).toBe(true);
+        return plan;
+      });
+      const real = createInProcessBaker({ loadBundle: loadBundleNode });
+      await real.init({ vocabs: "all" });
+      let next = 0;
+      const baker: Baker = {
+        ...real,
+        bake: (_recipe, _input, options) => {
+          const plan = plans[next++];
+          if (plan === undefined) throw new Error("more bakes than vectors");
+          return real.bake(plan.recipe, plan.bytes, options);
+        },
+      };
+      const report = await runOpVectors({
+        baker,
+        catalogue,
+        files: { "csv.json": withCrlf.map((v) => ({ ...v, params: {} })) as OpTestVector[] },
+      });
+      await real.dispose();
+      expect(report.failures.map((f) => f.message)).toEqual([]);
+      expect(report.passed).toBe(withCrlf.length);
+    },
+  );
+});

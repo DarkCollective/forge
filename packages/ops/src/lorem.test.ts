@@ -138,7 +138,8 @@ describe("structure", () => {
   test("words: n lower-case words with a capital first", async () => {
     const w = (await text(500, "words", false)).split(" ");
     expect(w).toHaveLength(500);
-    expect(w[0]).toMatch(/^[A-Z][a-z]+$/);
+    // The word list has one-letter words ("a"), so the capitalised first word may be a single letter.
+    expect(w[0]).toMatch(/^[A-Z][a-z]*$/);
     expect(w.slice(1).every((x) => WORDS.has(x))).toBe(true);
   });
 
@@ -155,7 +156,9 @@ describe("structure", () => {
     expect(counts.size).toBe(182);
     const e = 20000 / 182;
     const chi = [...counts.values()].reduce((a, o) => a + (o - e) ** 2 / e, 0);
-    expect(chi).toBeLessThan(182 + 6 * Math.sqrt(2 * 181)); // mean 181, six standard deviations
+    // 181 degrees of freedom, mean 181. The bound is six standard deviations above the mean, 295.2;
+    // P(chi-squared > 295.2) = 1.7e-7 for a fair source, so a false failure is rarer than one in a million.
+    expect(chi).toBeLessThan(182 + 6 * Math.sqrt(2 * 181));
   });
 
   test("two calls differ", async () => {

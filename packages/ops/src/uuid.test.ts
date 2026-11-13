@@ -218,15 +218,21 @@ describe("random and time-based UUIDs", () => {
 
   test("the bits are spread: each hex digit of v4 is roughly uniform", async () => {
     const counts = new Array<number>(16).fill(0);
-    for (let i = 0; i < 100; i++) {
-      const s =
-        (top(await gen("v4")) as string).replaceAll("-", "").slice(0, 12) +
-        (top(await gen("v4")) as string).replaceAll("-", "").slice(16);
-      for (const c of s) counts[parseInt(c, 16)]!++;
+    // Hex digits 0-11 and 17-31 of the 32 are random; digit 12 is the version and digit 16 is the
+    // variant (8 to b only), so both are left out. (The test used to include digit 16, which pushed
+    // the statistic up and made it fail by chance.)
+    for (let i = 0; i < 200; i++) {
+      const hex = (top(await gen("v4")) as string).replaceAll("-", "");
+      for (const c of hex.slice(0, 12) + hex.slice(17)) counts[parseInt(c, 16)]!++;
     }
     const n = counts.reduce((a, b) => a + b, 0);
     const chi = counts.reduce((a, c) => a + (c - n / 16) ** 2 / (n / 16), 0);
-    expect(chi).toBeLessThan(45); // 15 degrees of freedom: a loose bound
+    // 16 digit values give 15 degrees of freedom. P(chi-squared > 60) = 2.5e-7 for a fair
+    // generator, so a false failure is about one run in four million. (The old bound of 45 had
+    // 7.7e-5, about one run in 13,000, and the variant digit made it worse.) A broken generator is
+    // far over the bound: with 5,400 digits, one digit 50 percent too common scores about 90, and
+    // a generator that never uses half of the digits scores about 5,400.
+    expect(chi).toBeLessThan(60);
   });
 });
 

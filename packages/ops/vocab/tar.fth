@@ -147,7 +147,6 @@ META: untar
   use-when "You have a tar archive, or a .tar.gz once it has been gunzipped, and want to list its files and read their contents." ;
   param verify "Check each header's checksum; off, a damaged header is read anyway." ;
   see-also tar:entry tar:tar zip:unzip ;
-  inverse tar ;
   link "https://en.wikipedia.org/wiki/Tar_(computing)" "Tar on Wikipedia" ;
 ;
 
@@ -167,6 +166,5 @@ META: tar
   param uid "The owner's user id (0 to 2097151)." ;
   param gid "The owner's group id (0 to 2097151)." ;
   see-also tar:untar tar:entry ;
-  inverse untar ;
   link "https://en.wikipedia.org/wiki/Tar_(computing)" "Tar on Wikipedia" ;
 ;

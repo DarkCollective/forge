@@ -680,7 +680,7 @@ META: parse
   param preset "A known format to read the date and time with, or Custom to use the format string." ;
   param format "The format string for the preset Custom, in moment.js-style tokens (YYYY MM DD HH mm ss SSS Z A and so on; [text] is copied as it is)." ;
   param zone "Where the time was read: UTC, a fixed offset like +09:00, or an IANA time zone like Asia/Tokyo." ;
-  see-also datetime:translate datetime:to-unix datetime:zones ;
+  see-also datetime:translate datetime:to-unix ;
 ;
 
 META: translate
@@ -693,12 +693,11 @@ META: translate
   param out-preset "A known format to write the date and time in, or Custom to use the output format string." ;
   param out-format "The output format string for the preset Custom, in moment.js-style tokens." ;
   param out-zone "The time zone to write the time in: UTC, a fixed offset like +09:00, or an IANA time zone." ;
-  see-also datetime:parse datetime:delta datetime:zones ;
+  see-also datetime:parse datetime:delta ;
 ;
 
 META: from-unix
   use-when "You have a Unix timestamp, such as a number from a log or an API, and want it written as a readable date and time, in UTC or another zone." ;
-  inverse to-unix ;
   link "https://en.wikipedia.org/wiki/Unix_time" "Unix time on Wikipedia" ;
   param unit "What the number counts: seconds, milliseconds, microseconds or nanoseconds since 1970-01-01T00:00:00Z." ;
   param zone "The time zone to write the time in: UTC, a fixed offset like +09:00, or an IANA time zone." ;
@@ -708,7 +707,6 @@ META: from-unix
 
 META: to-unix
   use-when "You have a date and time as text, such as 2026-11-11 12:34:56, and want its Unix timestamp, the whole seconds since 1970, to store or compare." ;
-  inverse from-unix ;
   link "https://en.wikipedia.org/wiki/Unix_time" "Unix time on Wikipedia" ;
   param unit "What to count since 1970-01-01T00:00:00Z: seconds, milliseconds, microseconds or nanoseconds." ;
   param preset "A known format to read the date and time with, or Custom to use the format string." ;

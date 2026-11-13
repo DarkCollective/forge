@@ -227,6 +227,19 @@ describe("version follows content", () => {
   });
 });
 
+describe("ops are sorted by code point, not by UTF-16 code unit", () => {
+  // U+FF5E is one UTF-16 unit (0xFF5E) and U+10000 is the pair D800 DC00, so the string `<` puts the
+  // non-BMP name first, while code point order puts it last.
+  const fx = (name: string) => `: ${name} ( s:str -- str ) "d." doc "C" category s ;\n`;
+  const cat = buildCatalogue(
+    assembleRuntime(empty, units(`IN: t\n${fx("a\uFF5E")}${fx("a\u{10000}")}${fx("a")}`)),
+  );
+
+  test("a name with a non-BMP character comes after one with U+FF5E", () => {
+    expect(cat.ops.map((o) => o.qname)).toEqual(["t:a", "t:a\uFF5E", "t:a\u{10000}"]);
+  });
+});
+
 describe("rules of RECIPES 2.2", () => {
   const meta = (name: string): WordMeta => real.meta(name);
 
