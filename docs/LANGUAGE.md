@@ -1,6 +1,6 @@
 # FL language specification, v0.2
 
-Status: **v0.2** (WP 6.11). v0.1 was frozen for Phase 1 implementation (WP 1.1) and was the source of truth for WPs 1.2 to 1.9; this document is now the single, final reference for FL v0.2. v0.2 is an additive wave, proposed in [LANGUAGE-0.2.md](LANGUAGE-0.2.md) and implemented by WPs 6.3 to 6.10: no program, token, header or word hash that was valid in v0.1 changed meaning. It adds the `META:` clauses `use-when`, `link`, `inverse` and `helper` (and reserves `checks`), shared `choice` types (`CHOICE:`, `choice<…>`), mid-body locals (`:>`), memoised zero-input words (`MEMO:`), the collectors and the control and lookup words, the maths words, a strict `str>num`, the typed failure words, twenty promoted `util` words, and a fix that keeps the outermost error frames. Where this document and the proposal differ, this document describes what the code does. [Appendix A](#appendix-a-changes-in-v02) lists every change for editor-plugin authors. The TypeScript type contracts that go with this document are in [`packages/lang/src/types.ts`](../packages/lang/src/types.ts). Where this document and PLAN.md disagree, PLAN.md §9 decisions and §3 design choices win, and the disagreement is a bug in this document. Where this document is silent, the behaviour is unspecified and implementers must ask rather than guess.
+Status: **v0.2** (WP 6.11). v0.1 was frozen for Phase 1 implementation (WP 1.1) and was the source of truth for WPs 1.2 to 1.9; this document is now the single, final reference for FL v0.2. v0.2 is an additive wave, proposed in [LANGUAGE-0.2.md](LANGUAGE-0.2.md) and implemented by WPs 6.3 to 6.10: no program, token, header or word hash that was valid in v0.1 changed meaning. It adds the `META:` clauses `use-when`, `link`, `inverse`, `helper`, `checks` and `expects`, shared `choice` types (`CHOICE:`, `choice<…>`), mid-body locals (`:>`), memoised zero-input words (`MEMO:`), the collectors and the control and lookup words, the maths words, a strict `str>num`, the typed failure words, twenty promoted `util` words, and a fix that keeps the outermost error frames. Where this document and the proposal differ, this document describes what the code does. [Appendix A](#appendix-a-changes-in-v02) lists every change for editor-plugin authors. The TypeScript type contracts that go with this document are in [`packages/lang/src/types.ts`](../packages/lang/src/types.ts). Where this document and PLAN.md disagree, PLAN.md §9 decisions and §3 design choices win, and the disagreement is a bug in this document. Where this document is silent, the behaviour is unspecified and implementers must ask rather than guess.
 
 The key words MUST, MUST NOT, SHOULD and MAY are used as in RFC 2119. "Error `E_X`" means a `ForgeError` with that `code` (§11).
 
@@ -376,7 +376,16 @@ meta-clause  = "doc" , string , ";"
              | "link" , string , [ string ] , ";"
              | "inverse" , ( qname | word-name ) , ";"
              | "helper" , ";"
-             | "checks" , { ? any tokens ? } , ";" ;                (* reserved: E_META, §5.9 *)
+             | "expects" , string , ";"
+             | "checks" , scope , test , ";" ;                      (* §5.9 *)
+scope        = "input" | "output" ;
+test         = "regex" , string
+             | "charset" , string , [ share ]
+             | "entropy" , number , number
+             | "magic-bytes" , ( string , [ int ] | "format" , string )
+             | "printable" , [ share ]
+             | "utf8" | "binary" ;
+share        = number ;                                             (* above 0, at most 1 *)
 choice-form  = "CHOICE:" , word-name , { choice-clause } , ";" ;
 choice-clause = "option" , option-text , [ string ] , ";" ;
 option-text  = word | int | string ;                                (* a bare word or integer is the option as written; §5.12 *)
@@ -555,10 +564,30 @@ META: rot
 | `link` | `<url> [<label>]`, strings | repeatable, in order; at most **8** per word; a URL that occurs twice on one word (compared as written) is `E_META`. The URL is at most **300** code points and follows the grammar below; the label is optional, at most **80** code points, one line without control characters |
 | `inverse` | one name | singular; see "`inverse`" below |
 | `helper` | none | marks a public word as **not an operation**; see below |
-| `checks` | (reserved) | **reserved for a later release**: any `checks` clause is `E_META` with the message "`checks` is reserved for a later release" and `detail.clause = "checks"`, whatever follows it. Tooling should treat it as a reserved keyword |
+| `expects` | one string | singular. A short name of the data the word expects (`gzip data`), for a UI to show beside what the data looks like. The `use-when` text rules with a limit of **64** code points: one line, no control character, not empty or white space only, no leading or trailing white space. Plain text only |
+| `checks` | `<scope> <test> <arguments>` | repeatable, accumulates in order; at most **8** per word over all `META:` blocks. A declarative test on the word's data, see "`checks` and `expects`" below. Besides strings, the arguments are words and numbers: this is the one clause in which a number token is allowed |
 
-- A singular field (`doc`, `category`, `version`, `use-when`, `inverse`) may be set **once** across the leading declarations and all `META:` blocks of a word; a second set is `E_META`. `param` docs likewise once per parameter. `alias`, `see-also` and `link` accumulate. A second `META:` block for the same word starts from everything the earlier blocks collected, `discovery` included.
-- Unknown clause words are `E_META`, as is a clause with the wrong arity or a token of the wrong kind (a number or a bool in a clause, a string where a name is expected). String lengths are bounded as in the table (`E_META`). A `META:` block on a private word is `E_META`; on a `core` word it is `E_READONLY`.
+**`checks` and `expects`.** Content facts about a word's data, for tools that reason about it (the Operations pane's type fit, Magic). They are data: strings and numbers, never FL, and a user word's checks have the same limits as a bundled word's. The clauses are validated here; what a test means on real data is decided by the evaluator that reads them (`@forge/ops/checks`), not by the language, and a check never changes how a word runs. `checks` and `expects` are not part of a word's hashed source, so they never change `meta.hash`.
+
+`checks <scope> <test> <arguments> ;`: the scope is `input` (the data the word receives) or `output` (the data it returns); anything else is `E_META`. Each string argument is at most **1024** code points (`E_META` over it). A numeric argument is an integer or float literal of §2.4 and §2.5. The tests:
+
+| test | arguments | stored as | rule |
+|---|---|---|---|
+| `regex` | `"<pattern>"` | `{ kind: "regex", pattern }` | a non-empty pattern of at most `limits.maxRegexLength` (1024) code points that is valid for `new RegExp(pattern, "u")`; the evaluator reads the data as Latin-1 text, as for a regex parameter |
+| `charset` | `"<alphabet>" [<share>]` | `{ kind: "charset", alphabet, min }` | the data is made of the characters of the alphabet: at least `share` of its characters belong to it (default **1**, all of them). The alphabet lists characters; `x-y` (a character, `-`, a character) is the range of code points `x` to `y`, so `A-Za-z0-9+/=` is Base64; a `-` first, last or after a range is itself; the alphabet is not empty and a range is not empty (`z-a` is `E_META`) |
+| `entropy` | `<min> <max>` | `{ kind: "entropy", min, max }` | Shannon entropy in bits per byte lies between `min` and `max`; `0 <= min <= max <= 8` |
+| `magic-bytes` | `"<hex>" [<offset>]` | `{ kind: "magic-bytes", hex, offset }` | the data holds these bytes at `offset` (default 0). The hex string is one or more whole bytes (an even number of hex digits, upper or lower case, stored in lower case); `offset` is an integer from 0 to 4095, and `offset` plus the length of the signature is at most **4096** (the evaluator reads a prefix of 4 KiB) |
+| `magic-bytes` | `format "<id>"` | `{ kind: "magic-bytes", format }` | the data matches the named signature `<id>`, a row of the Detect File Type table of `@forge/ops` (the one copy of the signatures, so masked and multi-part signatures work). Here the id is only checked for its syntax: lower-case letters and digits in parts joined by single hyphens, 1 to 64 characters. That the id is in the table is checked where the table is, by a test of the bundled vocabularies, not by `META:` |
+| `printable` | `[<share>]` | `{ kind: "printable", min }` | at least `share` of the data is printable text: graphic characters, space, tab and line breaks (default **0.9**) |
+| `utf8` | none | `{ kind: "utf8" }` | the whole data is well-formed UTF-8 |
+| `binary` | none | `{ kind: "binary" }` | the negation of `utf8`: the data is **not** well-formed UTF-8. For an operation that expects binary data and has no signature. Allowed for either scope, used on `input` in practice |
+
+A `<share>` is a number above 0 and at most 1, and the stored `min` is always present (the default is written out). The two forms of `magic-bytes` are told apart by the first argument (`format`, a bare word, or a string). A wrong number or kind of arguments, a number out of range, a bad pattern and a ninth check are `E_META` with `detail.clause = "checks"`; all but the ninth also carry `detail.reason`. How several checks combine (checks of one scope all have to hold, three-valued results, prefix limits) belongs to the evaluator and is described in PLAN.md ("Magic and content checks").
+
+`expects "<what>" ;` sets the name the word has for the data it expects. A tool may fall back to the name of the word's named signature when a word has none.
+
+- A singular field (`doc`, `category`, `version`, `use-when`, `expects`, `inverse`) may be set **once** across the leading declarations and all `META:` blocks of a word; a second set is `E_META`. `param` docs likewise once per parameter. `alias`, `see-also`, `link` and `checks` accumulate. A second `META:` block for the same word starts from everything the earlier blocks collected, `discovery` included.
+- Unknown clause words are `E_META`, as is a clause with the wrong arity or a token of the wrong kind (a number or a bool in a clause other than `checks`, a string where a name is expected). String lengths are bounded as in the table (`E_META`). A `META:` block on a private word is `E_META`; on a `core` word it is `E_READONLY`.
 - `META:` may follow the definition at any distance in the same unit, or appear in a later unit.
 
 **`link` URLs.** The URL grammar is a syntax check: nothing is fetched and no host list applies. A UI decides how to show a link (it MUST use `rel="noopener noreferrer"`, show the host, and treat links of non-bundle units as untrusted). `link` is accepted in every unit.
@@ -1031,7 +1060,7 @@ For cases that would otherwise have no assigned code: `recurse` outside a colon 
 | `E_TOPLEVEL` | executable code in a source unit (§9) | |
 | `E_NAME` | invalid or reserved name in a defining position (§2.11), including a `CHOICE:` type name with `<` or `>` and a `:>` name that is reserved or not a word name | `name` |
 | `E_HEADER` | missing or malformed header; static header violations (§5.4, §5.5); a `MEMO:` header that is not `( -- T )` (§5.13); a malformed `choice<…>` reference, or one in an anonymous input, an output or a primitive's header (§5.4) | `item`, or `expected` for `MEMO:` |
-| `E_META` | malformed or conflicting `META:` clause, or `META:` for an undefined/private word (§5.9): a repeated singular clause, a `use-when` or `link` that breaks its rule (for `link`, also `reason`), an `inverse` outside the vocabulary or without a public target (also `name`), `checks` (reserved), an unknown clause; a bad `option` clause or an empty block in `CHOICE:` (§5.12, `clause: "option"`) | `clause`, `reason?`, `name?` |
+| `E_META` | malformed or conflicting `META:` clause, or `META:` for an undefined/private word (§5.9): a repeated singular clause, a `use-when` or `link` that breaks its rule (for `link`, also `reason`), an `inverse` outside the vocabulary or without a public target (also `name`), a `checks` or `expects` that breaks its rule (for `checks`, also `reason`; more than eight checks), an unknown clause; a bad `option` clause or an empty block in `CHOICE:` (§5.12, `clause: "option"`) | `clause`, `reason?`, `name?` |
 | `E_UNDEFINED` | name not found (§6); a `choice<…>` reference to a type that does not exist (§6.8) | `name`, `vocab?`, `kind?` (`"choice"` for a type) |
 | `E_AMBIGUOUS` | unqualified name (or `choice<name>`) found in two or more `USING:` vocabularies | `name`, `candidates: string[]`, `kind?` |
 | `E_PRIVATE` | reference to a private word (or private choice type) from outside its vocabulary | `name`, `kind?` |
@@ -1092,7 +1121,7 @@ A **slot** (`StackSlot`) is `{ name: string \| null, type: ParamType, options?: 
 
 `Constraint` is `{ min?: number; max?: number; oneOf?: number[]; minLength?: number; maxLength?: number; lengthOneOf?: number[]; pattern?: string }` (numeric value constraints use `min/max/oneOf`; length constraints use the `…Length` fields; both are exact finite numbers). `ParamDefault` is `number | string | boolean | { value: string; enc: string }`: for `toggle`/`key` the `{ value, enc }` form is used, with `enc` the first-listed encoding; `bytes` defaults are hex strings. `options` lists `choice` options or `toggle`/`key` encodings.
 
-`WordDiscovery` is `{ useWhen?: string; links?: MetaLink[]; inverse?: string; optionDocs?: Record<string, Record<string, string>> }` with `MetaLink = { url: string; label: string | null }`. Every member is omitted when unset (`links` when empty). `useWhen`, `links` and `inverse` come from the `use-when`, `link` and `inverse` clauses (§5.9; `inverse` is a qualified name in the word's own vocabulary, as declared, never made symmetric here). `optionDocs` maps a parameter name to its options to their help, from the shared choice types the header used (§5.12).
+`WordDiscovery` is `{ useWhen?: string; links?: MetaLink[]; inverse?: string; checks?: MagicCheck[]; expects?: string; optionDocs?: Record<string, Record<string, string>> }` with `MetaLink = { url: string; label: string | null }` and `MagicCheck = { scope: "input" | "output"; test: MagicTest }`, where `MagicTest` is the union of the stored forms of the table in §5.9. Every member is omitted when unset (`links` and `checks` when empty). `useWhen`, `links`, `inverse`, `checks` and `expects` come from the `use-when`, `link`, `inverse`, `checks` and `expects` clauses (§5.9; `inverse` is a qualified name in the word's own vocabulary, as declared, never made symmetric here). `optionDocs` maps a parameter name to its options to their help, from the shared choice types the header used (§5.12).
 
 `meta.schema.json` (WP 1.8) is a JSON Schema (draft 2020-12) for exactly this record with `additionalProperties: false` everywhere (its `$defs/discovery` bounds `useWhen` at 160 code points without control characters, `links` at 1 to 8 items, and each option help at 200), string length bounds as in §5.9, and `qname`/`vocab`/`name` patterns from §2.11. Every `WordMeta` produced by the runtime MUST validate against it.
 
@@ -3811,17 +3840,557 @@ user:m params[0].options = ["x","y"]
 : f ( -- int ) CHOICE: kind option a ; ;
 ```
 
-#### FL v0.2: the reserved `checks` clause
+#### FL v0.2: the `checks` and `expects` clauses
 
-Section 5.9.
+Section 5.9. C228 and C289 to C339.
 
 ```fl-test
-# C228 checks is reserved
+# C228 checks and expects surface in the metadata
+@unit
+: f ( bytes -- bytes ) ;
+META: f
+  expects "gzip data" ;
+  checks input magic-bytes "1f8b" ;
+  checks output utf8 ;
+;
+@meta
+user:f discovery.expects = "gzip data"
+user:f discovery.checks[0].scope = "input"
+user:f discovery.checks[0].test.kind = "magic-bytes"
+user:f discovery.checks[0].test.hex = "1f8b"
+user:f discovery.checks[0].test.offset = 0
+user:f discovery.checks[1].scope = "output"
+user:f discovery.checks[1].test.kind = "utf8"
+```
+
+```fl-test
+# C289 each test of checks is stored with its arguments
+@unit
+: f ( bytes -- bytes ) ;
+META: f
+  checks input regex "^[A-Za-z0-9+/]+={0,2}$" ;
+  checks input charset "A-Za-z0-9+/=" 0.95 ;
+  checks input charset "01" ;
+  checks input entropy 7.2 8 ;
+  checks input magic-bytes "FFD8FF" ;
+  checks input magic-bytes "7573746172" 257 ;
+  checks input printable 0.8 ;
+  checks input printable ;
+;
+@meta
+user:f discovery.checks[0].test = {"kind":"regex","pattern":"^[A-Za-z0-9+/]+={0,2}$"}
+user:f discovery.checks[1].test = {"kind":"charset","alphabet":"A-Za-z0-9+/=","min":0.95}
+user:f discovery.checks[2].test = {"kind":"charset","alphabet":"01","min":1}
+user:f discovery.checks[3].test = {"kind":"entropy","min":7.2,"max":8}
+user:f discovery.checks[4].test = {"kind":"magic-bytes","hex":"ffd8ff","offset":0}
+user:f discovery.checks[5].test = {"kind":"magic-bytes","hex":"7573746172","offset":257}
+user:f discovery.checks[6].test = {"kind":"printable","min":0.8}
+user:f discovery.checks[7].test = {"kind":"printable","min":0.9}
+```
+
+```fl-test
+# C290 magic-bytes takes a named signature, utf8 and binary take nothing
+@unit
+: f ( bytes -- bytes ) ;
+META: f
+  checks input magic-bytes format "gzip" ;
+  checks input magic-bytes format "7z" ;
+  checks input utf8 ;
+  checks input binary ;
+  checks output binary ;
+;
+@meta
+user:f discovery.checks[0].test = {"kind":"magic-bytes","format":"gzip"}
+user:f discovery.checks[1].test.format = "7z"
+user:f discovery.checks[2].test = {"kind":"utf8"}
+user:f discovery.checks[3].test = {"kind":"binary"}
+user:f discovery.checks[4].scope = "output"
+user:f discovery.checks[4].test = {"kind":"binary"}
+```
+
+```fl-test
+# C291 a repeated checks clause accumulates in order, across META blocks
+@unit
+: f ( bytes -- bytes ) ;
+META: f
+  checks input utf8 ;
+  checks input printable ;
+;
+META: f
+  checks output regex "x" ;
+;
+@meta
+user:f discovery.checks[0].test.kind = "utf8"
+user:f discovery.checks[1].test.kind = "printable"
+user:f discovery.checks[2].scope = "output"
+user:f discovery.checks[2].test.pattern = "x"
+```
+
+```fl-test
+# C292 a word may have eight checks
+@unit
+: f ( bytes -- bytes ) ;
+META: f
+  checks input utf8 ;
+  checks input utf8 ;
+  checks input utf8 ;
+  checks input utf8 ;
+  checks input utf8 ;
+  checks input utf8 ;
+  checks input utf8 ;
+  checks input utf8 ;
+;
+@meta
+user:f discovery.checks[7].test.kind = "utf8"
+```
+
+```fl-test
+# C293 a ninth check is E_META
 @unit-fails E_META
 : f ( bytes -- bytes ) ;
 META: f
   checks input utf8 ;
+  checks input utf8 ;
+  checks input utf8 ;
+  checks input utf8 ;
+  checks input utf8 ;
+  checks input utf8 ;
+  checks input utf8 ;
+  checks input utf8 ;
+  checks input utf8 ;
 ;
+```
+
+```fl-test
+# C294 a check scope is input or output
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks both utf8 ;
+;
+```
+
+```fl-test
+# C295 a check test must be known
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input zip ;
+;
+```
+
+```fl-test
+# C296 a check needs a scope and a test
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input ;
+;
+```
+
+```fl-test
+# C297 a regex must be a valid u-flag pattern
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input regex "(" ;
+;
+```
+
+```fl-test
+# C298 a regex of 1024 code points is accepted
+@unit
+: f ( bytes -- bytes ) ;
+META: f
+  checks input regex "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" ;
+;
+@meta
+user:f discovery.checks[0].test.kind = "regex"
+```
+
+```fl-test
+# C299 a regex over 1024 code points is E_META
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input regex "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" ;
+;
+```
+
+```fl-test
+# C300 a regex must not be empty
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input regex "" ;
+;
+```
+
+```fl-test
+# C301 a regex needs a string
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input regex x ;
+;
+```
+
+```fl-test
+# C302 a charset alphabet of 1024 code points is accepted
+@unit
+: f ( bytes -- bytes ) ;
+META: f
+  checks input charset "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" ;
+;
+@meta
+user:f discovery.checks[0].test.min = 1
+```
+
+```fl-test
+# C303 a charset alphabet over 1024 code points is E_META
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input charset "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" ;
+;
+```
+
+```fl-test
+# C304 a charset alphabet must not be empty
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input charset "" ;
+;
+```
+
+```fl-test
+# C305 a charset range must not be empty
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input charset "z-a" ;
+;
+```
+
+```fl-test
+# C306 a charset share is above 0
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input charset "ab" 0 ;
+;
+```
+
+```fl-test
+# C307 a charset share is at most 1
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input charset "ab" 1.5 ;
+;
+```
+
+```fl-test
+# C308 a charset share is a number
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input charset "ab" most ;
+;
+```
+
+```fl-test
+# C309 an entropy range is within 0 and 8 bits
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input entropy 7 9 ;
+;
+```
+
+```fl-test
+# C310 an entropy minimum is not above the maximum
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input entropy 6 5 ;
+;
+```
+
+```fl-test
+# C311 an entropy needs both bounds
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input entropy 6 ;
+;
+```
+
+```fl-test
+# C312 a printable share is at most 1
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input printable 2 ;
+;
+```
+
+```fl-test
+# C313 a printable share is above 0
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input printable 0 ;
+;
+```
+
+```fl-test
+# C314 a magic-bytes hex string is whole bytes
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input magic-bytes "1f8" ;
+;
+```
+
+```fl-test
+# C315 a magic-bytes hex string is hex
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input magic-bytes "zz" ;
+;
+```
+
+```fl-test
+# C316 a magic-bytes hex string must not be empty
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input magic-bytes "" ;
+;
+```
+
+```fl-test
+# C317 a magic-bytes hex string of 1024 code points is accepted
+@unit
+: f ( bytes -- bytes ) ;
+META: f
+  checks input magic-bytes "abababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababab" ;
+;
+@meta
+user:f discovery.checks[0].test.offset = 0
+```
+
+```fl-test
+# C318 a magic-bytes hex string over 1024 code points is E_META
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input magic-bytes "ababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababab" ;
+;
+```
+
+```fl-test
+# C319 a magic-bytes offset is at most 4095
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input magic-bytes "ab" 4096 ;
+;
+```
+
+```fl-test
+# C320 a magic-bytes offset is not negative
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input magic-bytes "ab" -1 ;
+;
+```
+
+```fl-test
+# C321 a magic-bytes offset is an integer
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input magic-bytes "ab" 1.5 ;
+;
+```
+
+```fl-test
+# C322 a magic-bytes signature ends within the first 4096 bytes
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input magic-bytes "abcd" 4095 ;
+;
+```
+
+```fl-test
+# C323 a magic-bytes signature may end at byte 4096
+@unit
+: f ( bytes -- bytes ) ;
+META: f
+  checks input magic-bytes "abcd" 4094 ;
+;
+@meta
+user:f discovery.checks[0].test.offset = 4094
+```
+
+```fl-test
+# C324 a format id is lower-kebab
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input magic-bytes format "Gzip" ;
+;
+```
+
+```fl-test
+# C325 a format id must not be empty
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input magic-bytes format "" ;
+;
+```
+
+```fl-test
+# C326 a format id has no double hyphen
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input magic-bytes format "a--b" ;
+;
+```
+
+```fl-test
+# C327 a format id needs its string
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input magic-bytes format ;
+;
+```
+
+```fl-test
+# C328 a format form takes no offset
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input magic-bytes format "gzip" 3 ;
+;
+```
+
+```fl-test
+# C329 utf8 takes no arguments
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input utf8 1 ;
+;
+```
+
+```fl-test
+# C330 binary takes no arguments
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  checks input binary "x" ;
+;
+```
+
+```fl-test
+# C331 expects of 64 code points is accepted
+@unit
+: f ( bytes -- bytes ) ;
+META: f
+  expects "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" ;
+;
+@meta
+user:f discovery.expects = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+```
+
+```fl-test
+# C332 expects over 64 code points is E_META
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  expects "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" ;
+;
+```
+
+```fl-test
+# C333 expects may be set once
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  expects "gzip data" ;
+  expects "zlib data" ;
+;
+```
+
+```fl-test
+# C334 expects may not be empty
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  expects "" ;
+;
+```
+
+```fl-test
+# C335 expects is one line
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  expects "gzip\ndata" ;
+;
+```
+
+```fl-test
+# C336 expects has no leading space
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  expects " gzip data" ;
+;
+```
+
+```fl-test
+# C337 expects takes one string
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  expects "a" "b" ;
+;
+```
+
+```fl-test
+# C338 a private word may not have checks
+@unit-fails E_META
+: _f ( bytes -- bytes ) ;
+META: _f
+  checks input utf8 ;
+;
+```
+
+```fl-test
+# C339 checks and expects do not change the hash
+@unit
+IN: v1
+: w ( bytes -- bytes ) ;
+META: w
+  expects "gzip data" ;
+  checks input magic-bytes format "gzip" ;
+;
+@unit
+IN: v2
+: w ( bytes -- bytes ) ;
+@hash-eq
+v1:w v2:w
 ```
 
 #### FL v0.2: mid-body locals (`:>`)
@@ -4461,7 +5030,7 @@ Decisions the plan did not fix. D1 to D49 are final for v0.1; D50 to D68 were ta
 | D50 | v0.2 adds no error code. Every new token or form (`:>`, `CHOICE:`, `MEMO:`, `choice<…>`, the new `META:` clauses) was `E_LEX`, `E_HEADER` or `E_META` in v0.1. `RESERVED_WORDS` gained `MEMO:` and `CHOICE:` (only), so that they are `E_SYNTAX` inside a body like the other defining keywords; neither was ever a valid name. | No v0.1 program can change meaning. |
 | D51 | Discovery metadata (`use-when`, `link`, `inverse`, `optionDocs`) lives in an optional `WordMeta.discovery`, omitted when empty. | The JSON of a word without it is byte-identical to v0.1. |
 | D52 | `inverse` names one public word of the **same vocabulary**, checked at the end of the unit; the runtime stores only the declared direction and `buildHelp` computes the symmetric closure. | No cross-vocabulary dependency cycles in the scanner; `META:` edits only its own word. |
-| D53 | `helper ;` sets `WordMeta.op` to `false`; `INTERNAL_VOCABS` is unchanged; `checks` is reserved (D63). | The smallest way to be public but not an operation. |
+| D53 | `helper ;` sets `WordMeta.op` to `false`; `INTERNAL_VOCABS` is unchanged. | The smallest way to be public but not an operation. |
 | D54 | Shared `choice` types are expanded at compile time, live in a namespace of their own, and a word's hash gains a `choice <typehash>` line only when its header uses one. A type name may not contain `<` or `>`. | Pins notice a changed option list; every other hash is untouched. |
 | D55 | `help.json` is a separate, lazily loaded build output; `catalogue.json`, `CatalogueOp` and `Catalogue.format` do not change. | A lean start-up and stable `catalogue` versions in stored recipes. |
 | D56 | `:>` binds one name. A quotation that contains one (transitively through parts lowered inline) is marked `own` and starts every call from a fresh copy of its environment. A `while` or `loop` that contains one is not lowered. | Closures stay correct without mutable shared slots. |
@@ -4471,7 +5040,7 @@ Decisions the plan did not fix. D1 to D49 are final for v0.1; D50 to D68 were ta
 | D60 | The transcendental words follow the host `Math`; `str>num` is strict and returns `num`. | Smallest implementation; the non-guarantee is documented (§3.2). |
 | D61 | Twenty `util` words are promoted into `core` as an FL prelude (verbatim `util` bodies, `raise:range` replaced by `fail-range`), compiled under the default limits, never the caller's; `util` and `raise` stay unchanged; `fail-coerce` and `fail-range` raise the errors of `raise:coerce` and `raise:range`. The hash covers text and callees, not the vocabulary, so a promoted word can equal its `util` twin. `createRuntime` is about 1.7 ms slower (accepted). | No behaviour change; equivalence by construction. |
 | D62 | `ForgeError.frames` keeps the word and quotation frames: all of them up to 64, otherwise the 32 innermost and the 32 outermost, and reports `framesSkipped`. | Recipe step attribution needs the outermost frames. |
-| D63 | `checks` is a reserved `META:` clause (`E_META`, "reserved for a later release"); its shape is fixed in the proposal only. | Phase 6 Magic needs no further grammar change. |
+| D63 | `checks` (declarative tests on a word's input and output) and `expects` (the name of the data it expects) are `META:` clauses of WP 6.22, stored in `WordDiscovery` and never in a word hash or the catalogue; `checks` has the tests `regex`, `charset`, `entropy`, `magic-bytes` (a hex signature, or `format "<id>"` for a named one), `printable`, `utf8` and `binary`, at most 8 per word, and is the only clause that takes number tokens. `@forge/ops` extracts them into a lazily loaded `checks.json`. | The content facts of an operation have one source, with the limits of any other untrusted text. |
 | D64 | The cases of a feature that did not exist yet were staged in LANGUAGE-0.2.md under an `fl-proposed` fence and numbered C201 and up; they are now in §16 under their numbers, and the harness reads this document only. | The harness ran only what existed. |
 | D65 | `use-when` is one line of at most 160 code points; at most 8 `link` clauses of an `https` URL (at most 300 code points) and an optional label (80); `link` is accepted in every unit and the UI treats non-bundle links as untrusted. | Short enough for a list row; navigation only, never a load. |
 | D66 | A cached `MEMO:` value is checked against the using run's `maxValueBytes`; the cache keeps the `secret` mark of a value. | A small-limit run cannot be handed a value it could not have built. |
@@ -4482,7 +5051,7 @@ Decisions the plan did not fix. D1 to D49 are final for v0.1; D50 to D68 were ta
 
 The v0.1 list, without what v0.2 added (floating-point transcendental functions, `exit`):
 
-Forward declarations and mutual recursion, `ALSO`/`ONLY`/`PREVIOUS`, user parsing words, tail calls, mutable locals, a record literal, a `file` constructor, a `checks` clause for Magic (Phase 6; **reserved** in v0.2, §5.9, but not implemented), per-word unit tests in `META`.
+Forward declarations and mutual recursion, `ALSO`/`ONLY`/`PREVIOUS`, user parsing words, tail calls, mutable locals, a record literal, a `file` constructor, per-word unit tests in `META`.
 
 Also left out of v0.2 on purpose (they stay in TOOLKIT.md §11 and the PLAN gap lists): breaking fixes (the `reduce` argument order, `/` beyond 2^53, header-constraint error codes, `runtime.call` defaults); the mutable buffer, 32-bit word intrinsics and the kernel tier; the `ext` tag, tagged literals and generic words; friend visibility for private words; a value mapping for `choice` options (option help only); a null value; a general non-local `exit` or early return out of `each`/`map`; and the adoption of the new forms in the existing vocabularies (the corpus still uses `raise:`, `util:`, inline `choice{…}` lists and helper chains; a migration changes hashes and the catalogue version, so it is a separate decision).
 
@@ -4525,7 +5094,8 @@ Three differences can be observed by existing code: a local (header or `:>` name
 | `META:` `link` | `link "https://…" ["label"] ;` | §5.9 |
 | `META:` `inverse` | `inverse name ;` (same vocabulary only) | §5.9 |
 | `META:` `helper` | `helper ;` | §5.9 |
-| `META:` `checks` | reserved: any use is `E_META` | §5.9 |
+| `META:` `expects` | `expects "text" ;` | §5.9 |
+| `META:` `checks` | `checks <input\|output> <test> <arguments> ;`, tests `regex "re"`, `charset "alphabet" [share]`, `entropy min max`, `magic-bytes "hex" [offset]`, `magic-bytes format "id"`, `printable [share]`, `utf8`, `binary` | §5.9 |
 
 ### A.4 Words added to `core` (53)
 
@@ -4549,7 +5119,7 @@ The old `util:` and `raise:` forms stay valid. Completion data for `core` is the
 | `use-when`, `link` (§5.9) | In a `META:` block: `use-when <string> ;` and `link <string> [<string>] ;`. The first `link` string is an `https` URL (grammar in §5.9): highlight it as a link and optionally validate it. Both strings are plain text. |
 | `inverse` (§5.9) | `inverse <name> ;`, one name, qualified only with the current vocabulary. Complete from the public words of the current vocabulary; go to definition. The target may be defined later in the unit. |
 | `helper` (§5.9) | `helper ;`, no arguments. A word with it is public but not an operation. |
-| `checks` (§5.9) | Reserved `META:` clause name: highlight as a reserved keyword; offer no completion for its arguments. |
+| `checks`, `expects` (§5.9) | In a `META:` block: `checks <scope> <test> <arguments> ;` and `expects <string> ;`. Highlight both as clause keywords. After `checks`, complete the scope (`input`, `output`), then the test names; `format` after `magic-bytes` is a keyword. Numbers are valid here, and only here, in a `META:` clause. Check the argument rules of the §5.9 table (counts, ranges, the 1024, 64 and 8 limits); the id after `format` is checked for syntax only, and its existence belongs to the signature table. |
 | `CHOICE:` (§5.12) | A top-level block that starts at `CHOICE:`, whose clauses `option <word \| integer \| string> [<string>] ;` each end at `;`, and which ends at the empty `;` (the shape of `META:`). The clause keyword `option` is meaningful only inside it. The type name is a word name without `<` or `>`; a leading `_` makes it private. Folding and structure view treat it like `META:`. |
 | `choice<name>` (§5.4, §6.8) | A header type next to `choice{…}`, valid only as the type of a named input: name completion over choice types (public ones of the current vocabulary and the `USING:` vocabularies, `vocab:name` for others), go to definition to the `CHOICE:` block, an unknown or ambiguous name reported. Header scanning must not break on `<` and `>`. The `=default` after it is one of the type's options. |
 | `:>` (§7.1) | `:>` followed by one word **declares a local** named by that word, visible from the next token to the end of the enclosing `[ … ]` or definition body. References resolve as locals (go to definition, rename, highlighting like a header parameter). A duplicate of a visible local is an error; `:>` is invalid inside `{ … }` (however deeply) and outside a definition. |
@@ -4569,7 +5139,7 @@ Work through this list for a lexer, parser, highlighter or completion source:
 - [ ] Defining forms: `MEMO:` like `:`; `CHOICE:` as a block with `option` clauses ending at an empty `;` (§5.12, §5.13).
 - [ ] Body items: `:>` followed by one word binds a local (§7.1); locals scoped to the enclosing body or quotation; invalid in `{ }` and at the console.
 - [ ] Header types: `choice<name>` and `choice<vocab:name>` (§5.4).
-- [ ] `META:` clauses: `use-when`, `link`, `inverse`, `helper`; `checks` reserved (§5.9); the `link` URL grammar.
+- [ ] `META:` clauses: `use-when`, `link`, `inverse`, `helper`, `expects`, `checks` (§5.9); the `link` URL grammar; a number token is valid inside `checks` only.
 - [ ] Core words: the 53 words of §A.4, with the effects of §13 for signature help.
 - [ ] Diagnostics worth mirroring: `exit` placement (§8); `emit` outside a collector is a run-time error only; `MEMO:` header shape and purity (§5.13); `:>` duplicate local, name rules (§7.1).
 - [ ] Do not treat `option`, `inverse`, `helper`, `link`, `use-when` or `checks` as reserved words outside their blocks: they are ordinary names.

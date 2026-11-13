@@ -59,6 +59,20 @@
           "maxItems": 8
         },
         "inverse": { "$ref": "#/$defs/qname" },
+        "checks": {
+          "description": "checks clauses, in order (LANGUAGE.md section 5.9).",
+          "type": "array",
+          "items": { "$ref": "#/$defs/check" },
+          "minItems": 1,
+          "maxItems": 8
+        },
+        "expects": {
+          "description": "expects: a short name of the data the word expects.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[^\\u0000-\\u001f]*$"
+        },
         "optionDocs": {
           "description": "Parameter name to option to help text, from shared choice types (CHOICE:).",
           "type": "object",
@@ -72,6 +86,89 @@
       },
       "minProperties": 1,
       "additionalProperties": false
+    },
+    "check": {
+      "type": "object",
+      "properties": {
+        "scope": { "enum": ["input", "output"] },
+        "test": { "$ref": "#/$defs/magicTest" }
+      },
+      "required": ["scope", "test"],
+      "additionalProperties": false
+    },
+    "share": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+    "magicTest": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": { "const": "regex" },
+            "pattern": { "type": "string", "minLength": 1, "maxLength": 1024 }
+          },
+          "required": ["kind", "pattern"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": { "const": "charset" },
+            "alphabet": { "type": "string", "minLength": 1, "maxLength": 1024 },
+            "min": { "$ref": "#/$defs/share" }
+          },
+          "required": ["kind", "alphabet", "min"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": { "const": "entropy" },
+            "min": { "type": "number", "minimum": 0, "maximum": 8 },
+            "max": { "type": "number", "minimum": 0, "maximum": 8 }
+          },
+          "required": ["kind", "min", "max"],
+          "additionalProperties": false
+        },
+        {
+          "description": "magic-bytes, hex form: a signature of whole bytes at an offset within the first 4 KiB.",
+          "type": "object",
+          "properties": {
+            "kind": { "const": "magic-bytes" },
+            "hex": { "type": "string", "maxLength": 1024, "pattern": "^(?:[0-9a-f]{2})+$" },
+            "offset": { "type": "integer", "minimum": 0, "maximum": 4095 }
+          },
+          "required": ["kind", "hex", "offset"],
+          "additionalProperties": false
+        },
+        {
+          "description": "magic-bytes, named form: the id of a row of the Detect File Type table.",
+          "type": "object",
+          "properties": {
+            "kind": { "const": "magic-bytes" },
+            "format": {
+              "type": "string",
+              "maxLength": 64,
+              "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+            }
+          },
+          "required": ["kind", "format"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": { "const": "printable" },
+            "min": { "$ref": "#/$defs/share" }
+          },
+          "required": ["kind", "min"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": { "kind": { "enum": ["utf8", "binary"] } },
+          "required": ["kind"],
+          "additionalProperties": false
+        }
+      ]
     },
     "link": {
       "type": "object",

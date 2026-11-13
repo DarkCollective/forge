@@ -34,6 +34,7 @@ import type {
   EffectLabel,
   ForgeRuntime,
   Limits,
+  MagicCheck,
   ParamSpec,
   ParamType,
   PrimitiveDef,
@@ -193,6 +194,39 @@ export interface HelpDoc {
   /** Sorted by `qname` in code-point order. */
   readonly ops: readonly HelpOp[];
 }
+
+// ---------------------------------------------------------------------------------------------
+// The checks document (LANGUAGE.md section 5.9, PLAN.md "Magic and content checks"):
+// `dist/checks.json`, loaded lazily, never part of the catalogue. `Catalogue`, `CatalogueOp`, the
+// catalogue `version` and every word hash are unchanged by it.
+
+/** Version of the checks JSON format (`ChecksDoc.format`). */
+export const CHECKS_FORMAT = 1 as const;
+
+/** Raw size budget of `dist/checks.json` (512 KiB); the build fails above it. */
+export const CHECKS_MAX_BYTES = 524_288;
+
+/** What one op declares: its `checks` (in order) and its `expects` name. */
+export interface ChecksOp {
+  /** The `expects` clause, or null. */
+  readonly expects: string | null;
+  /** The `checks` clauses, in order; empty when there are none. */
+  readonly checks: readonly MagicCheck[];
+}
+
+/** The checks document (`dist/checks.json`). */
+export interface ChecksDoc {
+  readonly format: typeof CHECKS_FORMAT;
+  /** `Catalogue.version` of the catalogue this document was built against. */
+  readonly catalogue: string;
+  /** First 16 hex digits of SHA-256 over `JSON.stringify(ops)`. */
+  readonly version: string;
+  /** Keyed by `qname`, in code-point order; only ops with a clause are present. */
+  readonly ops: Readonly<Record<string, ChecksOp>>;
+}
+
+/** `buildChecks(runtime, catalogue)`: derive the checks document. Throws `Error` if the catalogue is not from this runtime. */
+export type BuildChecksFn = (runtime: ForgeRuntime, catalogue: Catalogue) => ChecksDoc;
 
 /** The parsed content of one `vocab/<v>.test.json`. */
 export interface VectorFile {

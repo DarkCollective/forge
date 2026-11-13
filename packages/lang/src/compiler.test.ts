@@ -1523,11 +1523,21 @@ describe("META: discovery clauses", () => {
     expect(fails(env, "META: twice helper x ; ;").code).toBe("E_META");
   });
 
-  test("checks is reserved", () => {
+  test("checks and expects compile, and numbers are read in a checks clause only", () => {
     const env = new Env();
-    const e = fails(env, ": f ( int -- int ) ; META: f checks input utf8 ; ;");
-    expect(e.code).toBe("E_META");
-    expect(e.message).toContain("`checks` is reserved for a later release");
+    env.load(
+      ': f ( int -- int ) ; META: f checks input charset "ab" 0.5 ; checks output entropy 1 7.5 ; checks input magic-bytes "ab" 0x10 ; expects "a thing" ; ;',
+    );
+    expect(env.entry("user:f").meta.discovery).toStrictEqual({
+      checks: [
+        { scope: "input", test: { kind: "charset", alphabet: "ab", min: 0.5 } },
+        { scope: "output", test: { kind: "entropy", min: 1, max: 7.5 } },
+        { scope: "input", test: { kind: "magic-bytes", hex: "ab", offset: 16 } },
+      ],
+      expects: "a thing",
+    });
+    expect(fails(env, "META: f checks input entropy 1 9 ; ;").code).toBe("E_META");
+    expect(fails(env, "META: f use-when 1 ; ;").code).toBe("E_META");
   });
 });
 

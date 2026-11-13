@@ -333,7 +333,28 @@ export interface MetaLink {
 }
 
 /**
- * Discovery metadata (`use-when`, `link`, `inverse`). Absent from `WordMeta` when nothing is set;
+ * One test of a `checks` clause (LANGUAGE.md section 5.9). `magic-bytes` has two forms: a hex
+ * signature at an offset, or the id of a named signature (`format`). `charset` and `printable`
+ * take the minimum share (above 0, at most 1); `entropy` is in bits per byte (0 to 8).
+ */
+export type MagicTest =
+  | { readonly kind: "regex"; readonly pattern: string }
+  | { readonly kind: "charset"; readonly alphabet: string; readonly min: number }
+  | { readonly kind: "entropy"; readonly min: number; readonly max: number }
+  | { readonly kind: "magic-bytes"; readonly hex: string; readonly offset: number }
+  | { readonly kind: "magic-bytes"; readonly format: string }
+  | { readonly kind: "printable"; readonly min: number }
+  | { readonly kind: "utf8" }
+  | { readonly kind: "binary" };
+
+/** A `checks` clause: a test on the word's input or on its output. */
+export interface MagicCheck {
+  readonly scope: "input" | "output";
+  readonly test: MagicTest;
+}
+
+/**
+ * Discovery metadata (`use-when`, `link`, `inverse`, `checks`, `expects`). Absent from `WordMeta` when nothing is set;
  * each member is omitted when unset.
  */
 export interface WordDiscovery {
@@ -343,6 +364,10 @@ export interface WordDiscovery {
   readonly links?: readonly MetaLink[];
   /** `inverse`: a qualified name in the same vocabulary. */
   readonly inverse?: string;
+  /** `checks` clauses, in order, at most 8. Omitted when empty. */
+  readonly checks?: readonly MagicCheck[];
+  /** `expects`: a short name of the data the word expects, at most 64 code points. */
+  readonly expects?: string;
   /** Per parameter name, per option, the help of a shared `choice` type. Options without help are omitted. */
   readonly optionDocs?: Readonly<Record<string, Readonly<Record<string, string>>>>;
 }

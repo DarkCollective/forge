@@ -31,6 +31,7 @@ import type {
   Constraint,
   EffectLabel,
   Limits,
+  MagicCheck,
   MetaLink,
   ParamDefault,
   ParamSpec,
@@ -61,6 +62,7 @@ import {
 } from "./values.js";
 import { isPrivateName } from "./dictionary.js";
 import { sha256 } from "./sha256.js";
+import { CHECKS_MAX, checkExpects, parseCheck } from "./meta-checks.js";
 import { LINKS_MAX, checkLinkLabel, checkLinkUrl, checkUseWhen } from "./meta-discovery.js";
 
 /** The JSON Schema (draft 2020-12) of `WordMeta` (`meta.schema.json`). */
@@ -799,6 +801,8 @@ export type MetaClause =
   | { readonly kind: "use-when"; readonly text: string }
   | { readonly kind: "link"; readonly url: string; readonly label: string | null }
   | { readonly kind: "inverse"; readonly name: string }
+  | { readonly kind: "checks"; readonly check: MagicCheck }
+  | { readonly kind: "expects"; readonly text: string }
   | { readonly kind: "helper" };
 
 /** One argument token of a clause as the compiler sees it: a string literal or a (possibly qualified) word. */
@@ -825,6 +829,8 @@ export interface WordMetaInit {
   readonly effects?: readonly EffectLabel[];
   /** Already-set discovery metadata (a second META: block for the same word starts from it). */
   readonly discovery?: WordDiscovery;
+  /** Limit for the length of a `checks` regex. Default: `DEFAULT_LIMITS`. */
+  readonly limits?: Pick<Limits, "maxRegexLength">;
   /** True if `name` is already defined in the vocabulary (alias collision, E_REDEFINED). */
   readonly isNameTaken?: (name: string) => boolean;
 }
@@ -852,6 +858,8 @@ export class WordMetaBuilder {
   private useWhen: string | undefined;
   private readonly links: MetaLink[] = [];
   private inverse: string | undefined;
+  private readonly checks: MagicCheck[] = [];
+  private expects: string | undefined;
   private readonly optionDocs: Record<string, Record<string, string>>;
   private helper = false;
 
@@ -859,6 +867,8 @@ export class WordMetaBuilder {
     this.useWhen = init.discovery?.useWhen;
     this.links.push(...(init.discovery?.links ?? []));
     this.inverse = init.discovery?.inverse;
+    this.checks.push(...(init.discovery?.checks ?? []));
+    this.expects = init.discovery?.expects;
     this.optionDocs = { ...init.discovery?.optionDocs };
     this.qname = `${init.vocab}:${init.name}`;
     this.exported = !isPrivateName(init.name);
@@ -1005,6 +1015,21 @@ export class WordMetaBuilder {
         this.inverse = q;
         return;
       }
+      case "checks":
+        if (this.checks.length >= CHECKS_MAX) {
+          throw this.err("E_META", `more than ${CHECKS_MAX} checks`, pos, { clause: "checks" });
+        }
+        this.checks.push(c.check);
+        return;
+      case "expects": {
+        if (this.expects !== undefined) {
+          throw this.err("E_META", "'expects' is already set", pos, { clause: "expects" });
+        }
+        const why = checkExpects(c.text);
+        if (why !== undefined) throw this.err("E_META", why, pos, { clause: "expects" });
+        this.expects = c.text;
+        return;
+      }
       case "helper":
         this.helper = true;
         return;
@@ -1068,10 +1093,20 @@ export class WordMetaBuilder {
       case "helper":
         if (args.length !== 0) bad("takes no arguments");
         return this.clause({ kind: "helper" }, pos);
-      case "checks":
-        throw this.err("E_META", "`checks` is reserved for a later release", pos, {
-          clause: "checks",
-        });
+      case "checks": {
+        const max = this.init.limits?.maxRegexLength ?? DEFAULT_LIMITS.maxRegexLength;
+        const parsed = parseCheck(args, max);
+        if ("error" in parsed) {
+          throw this.err("E_META", `META: clause 'checks' ${parsed.error}`, pos, {
+            clause: "checks",
+            reason: parsed.error,
+          });
+        }
+        return this.clause({ kind: "checks", check: parsed }, pos);
+      }
+      case "expects":
+        if (strs.length !== 1 || args.length !== 1) bad("takes exactly one string");
+        return this.clause({ kind: "expects", text: (strs[0] as { value: string }).value }, pos);
       default:
         return bad("is not a known clause");
     }
@@ -1083,11 +1118,15 @@ export class WordMetaBuilder {
       useWhen?: string;
       links?: readonly MetaLink[];
       inverse?: string;
+      checks?: readonly MagicCheck[];
+      expects?: string;
       optionDocs?: Readonly<Record<string, Readonly<Record<string, string>>>>;
     } = {};
     if (this.useWhen !== undefined) d.useWhen = this.useWhen;
     if (this.links.length > 0) d.links = this.links.map((l) => ({ url: l.url, label: l.label }));
     if (this.inverse !== undefined) d.inverse = this.inverse;
+    if (this.checks.length > 0) d.checks = [...this.checks];
+    if (this.expects !== undefined) d.expects = this.expects;
     if (Object.keys(this.optionDocs).length > 0) d.optionDocs = this.optionDocs;
     return Object.keys(d).length === 0 ? {} : { discovery: d };
   }
