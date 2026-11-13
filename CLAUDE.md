@@ -33,3 +33,7 @@ For any development work in this repo (features, fixes, phases, work packages):
 - `packages/*` hold frozen Phase 1–2 contracts. Change them only to fix a bug, without changing
   exports or types.
 - The web app runs under a strict CSP: see docs/UI.md §4.
+- FL source (`.fth`, `.fl`) follows the FL style guide, `docs/FL-STYLE.md` in the forge-plugin
+  repository (checked out next to this one: `../forge-plugin/docs/FL-STYLE.md`). The IntelliJ
+  plugin's formatter applies it and a test keeps the two in agreement; new and edited FL code
+  should already be in that style. Prefer `cond`/`case` to nested `if` chains in new code.
