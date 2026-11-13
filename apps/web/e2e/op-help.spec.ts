@@ -222,11 +222,20 @@ test("the help dialog is accessible", async ({ page }) => {
   await openApp(page);
   await openHelp(page, "base64:decode");
   const run = async (): Promise<void> => {
-    await page.evaluate(async () => {
-      await Promise.all(document.getAnimations().map((a) => a.finished));
-    });
-    const v = (await new AxeBuilder({ page }).withTags(TAGS).analyze()).violations;
-    expect(v.map((x) => `${x.id}: ${x.nodes[0]?.target.join(" ")}`)).toEqual([]);
+    type Violation = Awaited<ReturnType<AxeBuilder["analyze"]>>["violations"][number];
+    let violations: Violation[] = [];
+    // A theme switch starts colour transitions, and axe measures contrast on the colours in flight. When the only
+    // findings are contrast ones, look again after the transitions have ended: a real failure is still there.
+    for (let attempt = 0; attempt < 6; attempt++) {
+      await page.evaluate(async () => {
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+        await Promise.all(document.getAnimations().map((a) => a.finished));
+      });
+      violations = (await new AxeBuilder({ page }).withTags(TAGS).analyze()).violations;
+      if (violations.length === 0 || violations.some((v) => v.id !== "color-contrast")) break;
+      await page.waitForTimeout(300);
+    }
+    expect(violations.map((x) => `${x.id}: ${x.nodes[0]?.target.join(" ")}`)).toEqual([]);
   };
   await run();
   await page.keyboard.press("Escape");
