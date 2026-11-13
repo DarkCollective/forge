@@ -139,6 +139,16 @@ describe("createBundleLoader", () => {
     await expect(createBundleLoader(fake(files))(["core"])).rejects.toThrow(/unknown vocabulary/);
   });
 
+  test("the loaded vocabularies are in code point order, and a non-BMP name never gets that far (WP 6.18)", async () => {
+    // The sort is cpCompare. Every name in it was checked against the scanned vocabularies, which
+    // isVocabName limits to ASCII, so code point order and code unit order cannot differ here.
+    const bundle = await createBundleLoader(fake(files))("all");
+    expect(bundle.vocabs).toEqual([...bundle.vocabs].sort());
+    await expect(createBundleLoader(fake(files))(["\u{1d4d0}"])).rejects.toThrow(
+      /unknown vocabulary/,
+    );
+  });
+
   test("a primitive module must export a primitives array", async () => {
     const provider = fake(files, { p: {} as unknown as PrimitiveModule });
     await expect(createBundleLoader(provider)(["p"])).rejects.toThrow(

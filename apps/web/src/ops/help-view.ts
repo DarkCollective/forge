@@ -18,7 +18,14 @@
 // renders every string as text.
 import type { Step } from "@forge/recipe";
 import type { HelpExample, HelpLink } from "@forge/ops";
-import { base64ToBytes, decodeUtf8Strict, hexToBytes, textToBytes } from "../io/codec.js";
+import {
+  base64ToBytes,
+  decodeUtf8Strict,
+  findLoneSurrogate,
+  hexToBytes,
+  latin1ToBytes,
+  textToBytes,
+} from "../io/codec.js";
 import type { EncodingName } from "../io/codec.js";
 import type { InputTab } from "../state/types.js";
 
@@ -37,6 +44,35 @@ export interface ValueView {
   /** For a hex or base64 value that is readable UTF-8 text: that text. Otherwise null. */
   readonly reading: string | null;
   readonly empty: boolean;
+  /**
+   * For text with a CR in it: which line breaks it has, so the `\r` escapes are not a puzzle ("Line breaks:
+   * CR LF; each CR is shown as \r before the break"). Null when there is no CR (a plain LF needs no note).
+   */
+  readonly lineBreaks: string | null;
+}
+
+/** What the line breaks of `text` are, when it has a CR; null otherwise. */
+export function describeLineBreaks(text: string): string | null {
+  let crlf = 0;
+  let cr = 0;
+  let lf = 0;
+  for (let i = 0; i < text.length; i++) {
+    const c = text.charCodeAt(i);
+    if (c === 13) {
+      if (text.charCodeAt(i + 1) === 10) {
+        crlf++;
+        i++;
+      } else cr++;
+    } else if (c === 10) lf++;
+  }
+  if (crlf + cr === 0) return null;
+  const kinds = [
+    crlf > 0 ? "CR LF" : null,
+    cr > 0 ? "CR alone" : null,
+    lf > 0 ? "LF alone" : null,
+  ].filter((k): k is string => k !== null);
+  const which = kinds.length === 1 ? kinds[0] : `mixed (${kinds.join(", ")})`;
+  return `Line breaks: ${which}. Each CR is shown as \\r.`;
 }
 
 // C0 controls except line feed, DEL, C1 controls, line and paragraph separators, zero-width and
@@ -85,7 +121,8 @@ export function viewValue(value: string, enc: string): ValueView {
       if (readable !== null) reading = cutAt(readable).text;
     }
   }
-  return { text: shown.text, label, cut: shown.cut, reading, empty: value === "" };
+  const lineBreaks = enc === "utf8" || enc === "latin1" ? describeLineBreaks(value) : null;
+  return { text: shown.text, label, cut: shown.cut, reading, empty: value === "", lineBreaks };
 }
 
 export type ExpectView =
@@ -172,10 +209,28 @@ export type BytesResult =
 
 const ENCODINGS: readonly string[] = ["utf8", "hex", "latin1", "base64"];
 
-/** The example's input as bytes, and the encoding the input tab should show them in. */
+/**
+ * The example's input as bytes, and the encoding the input tab should show them in. The one place that
+ * encodes an example input, used by Try it (try-it.ts) and the reference pages' links. Text goes in byte
+ * for byte: the editor's own conversion (`textToBytes`) turns every CR LF and lone CR into LF, which is
+ * right for typing but wrong for an example whose input has CR LF line breaks (a CSV file, a PEM block, an
+ * HTTP message) and whose expected output depends on them. Hex and base64 text has no line endings and
+ * goes through the shared reader.
+ */
 export function exampleInput(example: Pick<HelpExample, "input">): BytesResult {
   const { value, enc } = example.input;
   if (!ENCODINGS.includes(enc)) return { ok: false, message: `unknown encoding ${enc}` };
+  if (enc === "utf8") {
+    const lone = findLoneSurrogate(value);
+    if (lone >= 0) return { ok: false, message: `unpaired surrogate at position ${lone + 1}` };
+    return { ok: true, bytes: new TextEncoder().encode(value), encoding: "utf8" };
+  }
+  if (enc === "latin1") {
+    const r = latin1ToBytes(value);
+    return r.ok
+      ? { ok: true, bytes: r.bytes, encoding: "latin1" }
+      : { ok: false, message: r.message };
+  }
   const encoding = enc as EncodingName;
   const r = textToBytes(value, encoding, "lf");
   return r.ok ? { ok: true, bytes: r.bytes, encoding } : { ok: false, message: r.message };

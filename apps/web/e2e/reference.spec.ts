@@ -279,6 +279,31 @@ test("Open in Forge on a text result shows exactly the expected text", async ({ 
   await expectOutput(page, "foobar");
 });
 
+test("Open in Forge on a CR LF example bakes the same bytes as Try it (WP 6.18)", async ({
+  page,
+}) => {
+  await page.goto("/ops/csv/to-json/");
+  await page
+    .getByRole("link", {
+      name: /^Open in Forge \(csv:to-json: Rows read as objects keyed by the header/,
+    })
+    .click();
+  await expect(page.getByText(/\d+ operations/)).toBeVisible();
+  // The link carries the bytes exactly, so the result is the example's expected one. It carries no line
+  // ending setting (see build.test.ts), so this test deliberately does not assert the tab's setting.
+  await expectOutput(
+    page,
+    JSON.stringify(
+      [
+        { name: "Ada", age: "36" },
+        { name: "Alan", age: "41" },
+      ],
+      null,
+      2,
+    ),
+  );
+});
+
 test("the sitemap lists the pages and keeps the existing entries", async ({ request }) => {
   const xml = await (await request.get("/sitemap.xml")).text();
   for (const p of [

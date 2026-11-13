@@ -38,17 +38,11 @@ import type { DialogId } from "../state/types.js";
 import { helpFor } from "./help.js";
 import type { HelpState } from "./help-data.js";
 import { helpLoader } from "./help-loader.js";
-import {
-  exampleTabName,
-  planInput,
-  viewExpect,
-  viewLink,
-  viewParams,
-  viewValue,
-} from "./help-view.js";
+import { exampleTabName, viewExpect, viewLink, viewParams, viewValue } from "./help-view.js";
 import type { ValueView } from "./help-view.js";
 import { planTryIt } from "./try-it.js";
-import { opPath } from "../pages/slug.js";
+import { applyTryIt } from "./try-it-apply.js";
+import { hasReferencePage, opPath } from "../pages/slug.js";
 
 @customElement("forge-op-help")
 export class ForgeOpHelp extends ForgeDialog {
@@ -308,10 +302,14 @@ export class ForgeOpHelp extends ForgeDialog {
       }
       ${h.aliases === "" ? nothing : html`<p><span class="label">Aliases:</span> ${h.aliases}</p>`}
       ${h.seeAlso === "" ? nothing : html`<p><span class="label">See also:</span> ${h.seeAlso}</p>`}
-      <p>
-        <a href=${opPath(op)} target="_blank" rel="noopener">Reference page</a>
-        <span class="muted">(opens in a new tab)</span>
-      </p>
+      ${
+        hasReferencePage(op)
+          ? html`<p>
+              <a href=${opPath(op)} target="_blank" rel="noopener">Reference page</a>
+              <span class="muted">(opens in a new tab)</span>
+            </p>`
+          : nothing
+      }
     `;
   }
 
@@ -338,6 +336,7 @@ export class ForgeOpHelp extends ForgeDialog {
   private renderValue(v: ValueView): TemplateResult {
     return html`<pre>${v.empty ? "(empty)" : v.text}</pre>
       ${v.cut === null ? nothing : html`<p class="reading">${v.cut}</p>`}
+      ${v.lineBreaks === null ? nothing : html`<p class="reading">${v.lineBreaks}</p>`}
       ${v.reading === null ? nothing : html`<p class="reading">As text: ${v.reading}</p>`}`;
   }
 
@@ -509,19 +508,7 @@ export class ForgeOpHelp extends ForgeDialog {
     const s = store.get();
     const hadWork = s.recipe.steps.length > 0;
     const name = exampleTabName(ex.title);
-    const plan = planInput(s.inputs, s.activeInputId, name, bytes.bytes);
-    let tab: string;
-    if (plan.kind === "fill") {
-      tab = plan.id;
-      actions.setInputBytes(tab, bytes.bytes);
-    } else if (plan.kind === "select") {
-      tab = plan.id;
-      actions.selectInput(tab);
-    } else {
-      tab = actions.addInput(plan.name, bytes.bytes);
-    }
-    actions.setInputEncoding(tab, bytes.encoding);
-    actions.setRecipe(bytes.recipe);
+    const { plan } = applyTryIt(actions, s.inputs, s.activeInputId, name, bytes);
     if (store.get().ui.compact) actions.setCompactTab("output");
     const issues = store.get().issues.length;
     const where =

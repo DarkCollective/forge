@@ -19,19 +19,15 @@
  * names of the primitive modules. It checks what can be checked from tokens and orders the units
  * so that a unit comes after every unit it depends on.
  */
-import { CORE_VOCAB, isVocabName, read } from "@forge/lang";
+import { CORE_VOCAB, cpCompare, isVocabName, read } from "@forge/lang";
 import type { Token } from "@forge/lang";
 import type { ScanVocabFn, VocabUnit } from "./types.js";
 
 const USER_VOCAB = "user";
 const FTH_SUFFIX = ".fth";
 
-function compareCodePoints(a: string, b: string): number {
-  return a < b ? -1 : a > b ? 1 : 0;
-}
-
 function sorted(names: Iterable<string>): string[] {
-  return [...names].sort(compareCodePoints);
+  return [...names].sort(cpCompare);
 }
 
 function tokenise(file: string, source: string): Token[] {

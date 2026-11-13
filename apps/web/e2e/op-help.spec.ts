@@ -178,9 +178,8 @@ test("an operation with no help data shows the old help only", async ({ page }) 
   await expect(dialog(page).getByRole("heading", { name: "Parameters" })).toBeVisible();
   await expect(dialog(page).getByRole("heading", { name: "Use this when" })).toHaveCount(0);
   await expect(dialog(page).getByRole("heading", { name: "Examples" })).toHaveCount(0);
-  // No outside links; the one link is the op's own reference page (WP 6.17).
-  await expect(dialog(page).getByRole("link")).toHaveCount(1);
-  await expect(dialog(page).getByRole("link", { name: /Reference page/ })).toHaveCount(1);
+  // A user word has no reference page (pages exist for the bundled catalogue only), so no links at all.
+  await expect(dialog(page).getByRole("link")).toHaveCount(0);
   await expect(dialog(page).getByRole("alert")).toHaveCount(0);
 });
 
@@ -268,4 +267,36 @@ test.describe("compact layout", () => {
     );
     await expectOutput(page, "foobar");
   });
+});
+
+test("Try it on an example with CR LF input sets the tab's line ending", async ({ page }) => {
+  await openApp(page);
+  await openHelp(page, "csv:to-json");
+  await tryIt(page, "Rows read as objects keyed by the header").click();
+  await expect(dialog(page)).toBeHidden();
+  // The input tab shows CR LF, not the default LF, so a later edit keeps the line breaks.
+  await expect(page.locator("forge-input").getByLabel("Line ending")).toHaveValue("crlf");
+  await expectOutput(
+    page,
+    JSON.stringify(
+      [
+        { name: "Ada", age: "36" },
+        { name: "Alan", age: "41" },
+      ],
+      null,
+      2,
+    ),
+  );
+});
+
+test("a bundled op links to its reference page, which exists", async ({ page, request }) => {
+  await openApp(page);
+  await openHelp(page, "base64:decode");
+  // base64:decode also has outside links; the same-origin one is the op's own page (WP 6.17).
+  const own = dialog(page).locator('a[href^="/"]');
+  await expect(own).toHaveCount(1);
+  await expect(own).toHaveText("Reference page");
+  const href = (await own.getAttribute("href")) as string;
+  expect(href).toBe("/ops/base64/decode/");
+  expect((await request.get(href)).status()).toBe(200);
 });

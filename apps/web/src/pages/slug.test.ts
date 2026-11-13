@@ -21,6 +21,7 @@ import {
   categoryId,
   fileOfPath,
   opPath,
+  hasReferencePage,
   slugSegment,
   unslugSegment,
 } from "./slug.js";
@@ -130,5 +131,13 @@ describe("categoryId", () => {
     expect(categoryId("  !! ")).toBe("other");
     const cats = [...new Set(catalogue.ops.map((o) => o.category ?? "Other"))];
     expect(new Set(cats.map(categoryId)).size).toBe(cats.length);
+  });
+});
+
+describe("hasReferencePage (WP 6.18)", () => {
+  test("every bundled op has a page, a user word has none", () => {
+    expect(catalogue.ops.every((op) => hasReferencePage(op))).toBe(true);
+    expect(hasReferencePage({ vocab: "user" })).toBe(false);
+    expect(hasReferencePage({ vocab: "base64" })).toBe(true);
   });
 });

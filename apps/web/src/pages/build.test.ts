@@ -25,6 +25,7 @@ import {
   fillTemplate,
 } from "./build.js";
 import type { ReferencePage } from "./build.js";
+import { planTryIt } from "../ops/try-it.js";
 import { h } from "./html.js";
 import { opPath } from "./slug.js";
 
@@ -169,6 +170,43 @@ describe("real pages", () => {
     expect(step.op).toBe("pbkdf2:derive");
     expect(step.params.iterations).toBe(1);
     expect(new TextDecoder().decode(decoded.input)).toBe("password");
+  });
+
+  test("a CR LF input is shown with its escapes and a note naming the line breaks (WP 6.18)", () => {
+    const op = catalogue.ops.find((o) => o.qname === "csv:to-json") as CatalogueOp;
+    const page = pages.find((p) => p.path === opPath(op))?.html ?? "";
+    expect(page).toContain("name,age\\r\nAda,36\\r\nAlan,41\\r\n");
+    expect(page).toContain("Line breaks: CR LF. Each CR is shown as \\r.");
+    // An example without a CR has no such note.
+    const b64 =
+      pages.find((p) => p.path === opPath({ vocab: "base64", name: "decode" }))?.html ?? "";
+    expect(b64).not.toContain("Line breaks:");
+  });
+
+  test("an Open in Forge link carries the CR LF input byte for byte and the encoding, but no line ending (WP 6.18)", async () => {
+    // Pins the current behaviour. The bytes are exact (the same as Try it bakes) and the share format
+    // has no line-ending field, so the app has to infer the tab's line ending when it opens a link.
+    // Today it does not (state/actions.ts `loadDocument` leaves the tab's `eol` as it was), so a CR LF
+    // example opened from a reference page shows LF where Try it shows CR LF. Reported to the owner:
+    // the fix is in state/ or bake/ (infer with `detectEol` there), not in the share format.
+    const op = catalogue.ops.find((o) => o.qname === "csv:to-json") as CatalogueOp;
+    const entry = help.ops.find((o) => o.qname === "csv:to-json") as HelpOp;
+    const index = entry.examples.findIndex((e) => e.input.value.includes("\r\n"));
+    expect(index).toBeGreaterThanOrEqual(0);
+    const ex = entry.examples[index] as HelpOp["examples"][number];
+    const page = pages.find((p) => p.path === opPath(op))?.html ?? "";
+    const link = hrefs(page).filter((u) => u.startsWith("/#v=1"))[index] as string;
+    const decoded = await decodeShare(link.slice(2), { catalogue });
+    expect(decoded.ok).toBe(true);
+    if (!decoded.ok) return;
+    expect(Array.from(decoded.input ?? [])).toEqual(
+      Array.from(new TextEncoder().encode(ex.input.value)),
+    );
+    expect(decoded.inputEncoding).toBe("utf8");
+    expect(Object.keys(decoded).filter((k) => /eol|line/i.test(k))).toEqual([]);
+    // The same plan the dialog uses says CR LF, so the dialog and a link differ only in that setting.
+    const plan = planTryIt("csv:to-json", ex);
+    expect(plan.ok && plan.eol).toBe("crlf");
   });
 
   test("every example of the help document has a link, or says why not", () => {

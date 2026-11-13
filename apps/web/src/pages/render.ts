@@ -112,6 +112,7 @@ function category(op: CatalogueOp): string {
 function valueBlock(value: ValueView): SafeHtml {
   return h`<pre class="value">${value.empty ? "(empty)" : value.text}</pre>
               <p class="value-meta">Written as ${value.label}.${value.cut === null ? "" : ` ${value.cut}`}</p>
+              ${value.lineBreaks === null ? empty : h`<p class="value-meta">${value.lineBreaks}</p>`}
               ${value.reading === null ? empty : h`<p class="value-meta">Read as text: <code>${value.reading}</code></p>`}`;
 }
 

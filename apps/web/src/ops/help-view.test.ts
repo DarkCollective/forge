@@ -16,6 +16,7 @@
 import { describe, expect, test } from "vitest";
 import {
   SHOW_LIMIT,
+  describeLineBreaks,
   exampleInput,
   exampleStep,
   exampleTabName,
@@ -128,5 +129,32 @@ describe("Try it", () => {
   });
   test("tab names are short", () => {
     expect(exampleTabName("x".repeat(200))).toHaveLength(80);
+  });
+});
+
+describe("CR LF in an example (WP 6.18)", () => {
+  test("the input is encoded byte for byte, not normalised to LF", () => {
+    const r = exampleInput({ input: { value: "a\r\nb\rc\n", enc: "utf8" } });
+    expect(r).toEqual({
+      ok: true,
+      bytes: new Uint8Array([97, 13, 10, 98, 13, 99, 10]),
+      encoding: "utf8",
+    });
+    const l = exampleInput({ input: { value: "\r\n\xe9", enc: "latin1" } });
+    expect(l).toEqual({ ok: true, bytes: new Uint8Array([13, 10, 0xe9]), encoding: "latin1" });
+    expect(exampleInput({ input: { value: "\ud800", enc: "utf8" } }).ok).toBe(false);
+  });
+  test("a CR is shown as an escape and the view says which line breaks the text has", () => {
+    const v = viewValue("name,age\r\nAda,36\r\n", "utf8");
+    expect(v.text).toBe("name,age\\r\nAda,36\\r\n");
+    expect(v.lineBreaks).toBe("Line breaks: CR LF. Each CR is shown as \\r.");
+    expect(viewValue("a\nb", "utf8").lineBreaks).toBeNull();
+    expect(viewValue("0d0a", "hex").lineBreaks).toBeNull();
+  });
+  test("lone CR and mixed endings are named", () => {
+    expect(describeLineBreaks("a\rb")).toBe("Line breaks: CR alone. Each CR is shown as \\r.");
+    expect(describeLineBreaks("a\r\nb\n")).toBe(
+      "Line breaks: mixed (CR LF, LF alone). Each CR is shown as \\r.",
+    );
   });
 });

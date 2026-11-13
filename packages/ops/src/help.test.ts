@@ -395,11 +395,8 @@ describe("the bundled help document", () => {
   });
 
   // Names a see-also clause may use although they are not catalogue operations. Each entry needs a
-  // reason; the list is meant to be empty. "clean:remove-whitespace" points at the helper word
-  // util:strip-space, which is not an operation, so the help page would link to nothing. The clause
-  // sits in vocab/clean.fth, which the work package that added this test did not own; delete this
-  // entry together with that clause.
-  const SEE_ALSO_EXCEPTIONS = new Set(["clean:remove-whitespace -> util:strip-space"]);
+  // reason; the list is meant to be empty.
+  const SEE_ALSO_EXCEPTIONS = new Set<string>();
 
   test("every see-also names a catalogue operation (or a listed exception)", () => {
     const ops = new Set(catalogue.ops.map((o) => o.qname));

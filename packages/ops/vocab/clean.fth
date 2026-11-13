@@ -39,7 +39,6 @@ META: remove-whitespace
   param tabs "Delete tabs (U+0009)." ;
   param form-feeds "Delete form feeds (U+000C)." ;
   param full-stops "Delete full stops (U+002E)." ;
-  see-also util:strip-space ;
 ;
 
 META: remove-null-bytes

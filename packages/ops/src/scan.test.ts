@@ -51,6 +51,16 @@ describe("scanVocab: ordering", () => {
     expect(r.units.map((u) => u.vocab)).toEqual(["Beta", "alpha", "b2", "zeta"]);
   });
 
+  test("vocabulary names are ASCII, so code point order and code unit order cannot differ (WP 6.18)", () => {
+    // The comparator is cpCompare. A name above the BMP (where the two orders differ) never reaches it:
+    // both a unit's name and a primitive module's name are checked with isVocabName first.
+    expect(() => scanVocab([file("\u{1d4d0}.fth", "IN: \u{1d4d0}\n")], [])).toThrow(
+      /not a usable vocabulary name/,
+    );
+    expect(() => scanVocab([], ["\u{1d4d0}"])).toThrow(/not a usable vocabulary name/);
+    expect(() => scanVocab([], ["\uff21"])).toThrow(/not a usable vocabulary name/);
+  });
+
   test("the order does not depend on the order of the files", () => {
     const files = [unit("a", "", "USING: c ;"), unit("b"), unit("c", "", "USING: b ;")];
     const forward = scanVocab(files, []).units.map((u) => u.vocab);

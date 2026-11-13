@@ -69,6 +69,17 @@ export function opPath(op: Pick<CatalogueOp, "vocab" | "name">): string {
   return `/ops/${slugSegment(op.vocab)}/${slugSegment(op.name)}/`;
 }
 
+/**
+ * Does the op have a static reference page? The build makes one page for every operation of the bundled
+ * catalogue and none for a user word (vocabulary `user`, which exists only in the browser that defined it).
+ * So the rule is "is it a bundled op": a user word has no page (its link would be a 404), every other op
+ * has one, whether or not the help document applies to it (the catalogue-version rule of help-data.ts
+ * only decides the examples and links, not the page).
+ */
+export function hasReferencePage(op: Pick<CatalogueOp, "vocab">): boolean {
+  return op.vocab !== "user";
+}
+
 /** The file inside dist for a URL path: /ops/x/y/ to ops/x/y/index.html. */
 export function fileOfPath(path: string): string {
   return `${path.slice(1)}index.html`;

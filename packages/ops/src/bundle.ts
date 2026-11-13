@@ -17,7 +17,7 @@
 /*
  * Bundle loading and runtime assembly (RECIPES.md sections 2.4 and 2.5).
  */
-import { CORE_VOCAB, ForgeError, createRuntime, read } from "@forge/lang";
+import { CORE_VOCAB, ForgeError, cpCompare, createRuntime, read } from "@forge/lang";
 import type { ForgeRuntime, PrimitiveDef } from "@forge/lang";
 import { scanVocab } from "./scan.js";
 import { INTERNAL_VOCABS } from "./types.js";
@@ -28,10 +28,6 @@ import type {
   ScanResult,
   VocabBundle,
 } from "./types.js";
-
-function compareCodePoints(a: string, b: string): number {
-  return a < b ? -1 : a > b ? 1 : 0;
-}
 
 /**
  * `loadBundle` over a provider. The first call lists the sources, scans and checks them (a failure
@@ -62,7 +58,7 @@ export const createBundleLoader: CreateBundleLoaderFn = (provider) => {
       const unit = units.find((u) => u.vocab === name);
       if (unit !== undefined) queue.push(...unit.deps);
     }
-    const vocabs = [...wanted].sort(compareCodePoints);
+    const vocabs = [...wanted].sort(cpCompare);
     const available = provider.primitiveLoaders();
     const primitives: PrimitiveDef[] = [];
     for (const vocab of vocabs) {
