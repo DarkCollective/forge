@@ -18,12 +18,20 @@ IN: bzip2
   data verify _decompress ;
 
 META: compress
+  use-when "You have bytes and need a bzip2 stream, for example to pass to a tool that reads .bz2 files." ;
   param block-size "The block size in hundreds of kilobytes, 1 to 9 (900 kB by default)." ;
   param work-factor "CyberChef's work factor, 0 to 250. Accepted and ignored: Forge has one sorting method." ;
   see-also bzip2:decompress deflate:gzip ;
+  inverse decompress ;
+  link "https://sourceware.org/bzip2/" "bzip2 home page" ;
+  link "https://en.wikipedia.org/wiki/Bzip2" "Bzip2 on Wikipedia" ;
 ;
 
 META: decompress
+  use-when "You have a bzip2 file or stream, starting with the letters BZh, and want the data inside." ;
   param verify "Check the CRC-32 of each block and of the stream; off, a damaged checksum is ignored and the data is still returned." ;
   see-also bzip2:compress deflate:gunzip ;
+  inverse compress ;
+  link "https://sourceware.org/bzip2/" "bzip2 home page" ;
+  link "https://en.wikipedia.org/wiki/Bzip2" "Bzip2 on Wikipedia" ;
 ;

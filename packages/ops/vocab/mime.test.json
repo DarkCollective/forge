@@ -11,6 +11,10 @@
     "expect": {
       "value": "Café",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Read a Q-encoded word as UTF-8",
+      "note": "In Q form =C3 and =A9 are the two UTF-8 bytes of the letter e with an acute accent, so the word reads Café."
     }
   },
   {
@@ -25,6 +29,10 @@
     "expect": {
       "value": "Café",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The same word in base64 form",
+      "note": "B means base64. Q2Fmw6k= holds the same UTF-8 bytes as the Q form above."
     }
   },
   {

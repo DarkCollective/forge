@@ -45,6 +45,7 @@ IN: mac
   "\n" join ;
 
 META: format
+  use-when "You have a MAC address written one way, such as a switch's dotted form, and want it in the other common notations." ;
   param output-case "Which letter case to show: both (lower then upper), upper or lower." ;
   param no-delimiter "Show the plain twelve digits." ;
   param dash-delimiter "Show 00-1a-2b-3c-4d-5e." ;
@@ -52,4 +53,5 @@ META: format
   param cisco-style "Show the Cisco notation 001a.2b3c.4d5e." ;
   param ipv6-interface-id "Show the modified EUI-64 interface identifier for an IPv6 address." ;
   see-also extract:mac-addresses ip:transition ;
+  link "https://en.wikipedia.org/wiki/MAC_address" "MAC address on Wikipedia" ;
 ;

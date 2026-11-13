@@ -95,6 +95,10 @@
     "expect": {
       "value": "8001",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The first byte of 128 has the high bit set",
+      "note": "The low seven bits of 128 are zero, so the first byte is 80 with its high bit set, and the second byte is 01."
     }
   },
   {
@@ -109,6 +113,10 @@
     "expect": {
       "value": "128",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The high bit marks a byte that is not last",
+      "note": "The top bit of 80 says another byte follows, and 01 is the last byte, giving 128."
     }
   },
   {
@@ -151,6 +159,10 @@
     "expect": {
       "value": "ac02",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Encode 300 as two bytes",
+      "note": "The number is written seven bits at a time, least significant first, so 300 becomes ac 02."
     }
   },
   {
@@ -165,6 +177,10 @@
     "expect": {
       "value": "300",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A two-byte varint",
+      "note": "The low seven bits of ac are 44, and the next byte adds 2 times 128, so the value is 300."
     }
   },
   {

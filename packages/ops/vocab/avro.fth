@@ -30,6 +30,9 @@ USING: json deflate ;
   force-valid-json [ indent json:stringify ] [ [ 0 json:stringify "\n" cat ] map "" join ] if ;
 
 META: to-json
+  use-when "You have an Avro object container file, which starts with the bytes Obj and 01, and want its records as JSON text." ;
   param force-valid-json "Write the records as one JSON array; off writes one line of JSON per record." ;
   param indent "Spaces per level of the array; 0 writes compact JSON. Not used when force-valid-json is off." ;
+  link "https://avro.apache.org/" "Apache Avro project" ;
+  link "https://en.wikipedia.org/wiki/Apache_Avro" "Apache Avro on Wikipedia" ;
 ;

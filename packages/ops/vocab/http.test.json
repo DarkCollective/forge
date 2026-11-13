@@ -11,6 +11,10 @@
     "expect": {
       "value": "57696b69706564696120696e200d0a0d0a6368756e6b732e",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Three chunks with a chunk extension",
+      "note": "Each chunk starts with its size in hex text, and the part after a semicolon is an extension that is skipped."
     }
   },
   {
@@ -345,6 +349,10 @@
     "expect": {
       "value": "68656c6c6f",
       "enc": "hex"
+    },
+    "example": {
+      "title": "A response with its headers removed",
+      "note": "Everything up to the empty line is dropped, so only the body hello is left."
     }
   },
   {

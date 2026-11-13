@@ -13,9 +13,12 @@ USING: json ;
   data format amf:_decode indent json:stringify ;
 
 META: decode
+  use-when "You have the bytes of an AMF0 or AMF3 value from a Flash or Flex remoting message and want to read it as JSON." ;
   param format "AMF0 or AMF3: the format of the value." ;
   param indent "Spaces per level; 0 writes compact JSON." ;
   see-also amf:encode ;
+  inverse encode ;
+  link "https://en.wikipedia.org/wiki/Action_Message_Format" "Action Message Format on Wikipedia" ;
 ;
 
 : encode ( data:str format:choice{AMF0|AMF3}=AMF3 -- bytes )
@@ -24,6 +27,9 @@ META: decode
   data json:parse format amf:_encode ;
 
 META: encode
+  use-when "You have JSON data and need it as AMF0 or AMF3 bytes, for example to build a test message for a Flash or Flex remoting service." ;
   param format "AMF0 or AMF3: the format to write." ;
   see-also amf:decode ;
+  inverse decode ;
+  link "https://en.wikipedia.org/wiki/Action_Message_Format" "Action Message Format on Wikipedia" ;
 ;

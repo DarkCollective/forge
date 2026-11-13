@@ -40,8 +40,11 @@ IN: varint
   zigzag _value dup _size _bytes ;
 
 META: encode
+  use-when "You have a whole number and need its protobuf varint bytes, for example to build a length prefix or a test message." ;
   param zigzag "Treat the number as signed and write its ZigZag form, as protobuf sint32 and sint64 do (an addition to CyberChef)." ;
   see-also varint:decode ;
+  inverse decode ;
+  link "https://en.wikipedia.org/wiki/Variable-length_quantity" "Variable-length quantity on Wikipedia" ;
 ;
 
 \ ---- decode ----
@@ -77,6 +80,9 @@ META: encode
   data swap zigzag _decode2 ;
 
 META: decode
+  use-when "You have protobuf varint bytes, such as a length prefix or a field key, and want the number they stand for." ;
   param zigzag "Read the value as a ZigZag-encoded signed integer, as protobuf sint32 and sint64 are written (an addition to CyberChef)." ;
   see-also varint:encode ;
+  inverse encode ;
+  link "https://en.wikipedia.org/wiki/Variable-length_quantity" "Variable-length quantity on Wikipedia" ;
 ;

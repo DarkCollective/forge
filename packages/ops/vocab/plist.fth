@@ -10,4 +10,6 @@ IN: plist
   data plist:_view ;
 
 META: view
+  use-when "You have an Apple property list, a .plist file in XML or in binary form starting with bplist00, and want to read its keys and values." ;
+  link "https://en.wikipedia.org/wiki/Property_list" "Property list on Wikipedia" ;
 ;

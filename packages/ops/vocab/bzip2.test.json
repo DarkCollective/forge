@@ -11,6 +11,10 @@
     "expect": {
       "value": "",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decompress the empty stream",
+      "note": "The 14-byte empty stream gives no bytes."
     }
   },
   {
@@ -39,6 +43,10 @@
     "expect": {
       "value": "68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f20627a697032",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decompress a stream of text",
+      "note": "The header BZh9 gives the block size, and with verify on each block checksum must match before the text is returned."
     }
   },
   {
@@ -208,6 +216,10 @@
     "expect": {
       "value": "425a683917724538509000000000",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Compress empty input",
+      "note": "The empty input gives a 14-byte stream that holds no blocks."
     }
   },
   {
@@ -240,6 +252,10 @@
     "expect": {
       "value": "425a683931415926535981b02d8b00000004002000200021184682ee48a70a12103605b160",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Compress one byte to a BZh9 stream",
+      "note": "The stream starts BZh9: the letters BZh, then the block size 9, and the rest codes the one byte."
     }
   },
   {

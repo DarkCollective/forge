@@ -11,6 +11,10 @@
     "expect": {
       "value": "Protocol:\thttps:\nAuth:\t\tuser:p@ss\nHostname:\texample.com\nPort:\t\t8080\nPath name:\t/a/b%20c\nArguments:\n\tx    = 1,2\n\ty    = two words\n\tflag\n\te   \nHash:\t\t#frag\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Split a full URL into its parts",
+      "note": "The user part is shown decoded, the host in lower case, and each query argument on a line of its own."
     }
   },
   {
@@ -25,6 +29,10 @@
     "expect": {
       "value": "Protocol:\thttp:\nHostname:\texample.com\nPath name:\t/\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A URL with only a host",
+      "note": "With no path, the path name is shown as a single slash."
     }
   },
   {

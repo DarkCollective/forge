@@ -11,6 +11,10 @@
     "expect": {
       "value": "Browser\n    Name: Chrome\n    Version: 120.0.0.0\nDevice\n    Model: unknown\n    Type: unknown\n    Vendor: unknown\nEngine\n    Name: Blink\n    Version: 120.0.0.0\nOS\n    Name: Windows\n    Version: 10\nCPU\n    Architecture: amd64",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A Chrome user agent on Windows 10",
+      "note": "NT 10.0 is shown as Windows 10, and a part the rules do not find, such as the device model, is shown as unknown."
     }
   },
   {
@@ -53,6 +57,10 @@
     "expect": {
       "value": "Browser\n    Name: Safari\n    Version: 17.1\nDevice\n    Model: Macintosh\n    Type: unknown\n    Vendor: Apple\nEngine\n    Name: WebKit\n    Version: 605.1.15\nOS\n    Name: macOS\n    Version: 10.15.7\nCPU\n    Architecture: unknown",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Safari on macOS, with its WebKit engine",
+      "note": "The Macintosh model is shown as the device, and the engine is WebKit."
     }
   },
   {

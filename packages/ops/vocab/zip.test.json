@@ -41,6 +41,10 @@
           }
         }
       ]
+    },
+    "example": {
+      "title": "List the entries of a zip archive",
+      "note": "Each entry gives its name, size, whether it is a directory, its time and its Unix mode."
     }
   },
   {
@@ -57,6 +61,10 @@
     "expect": {
       "value": "0b30557a9fc4e90e33587da2c7ec11365b80a5caef14395e83a8cdf2173c6186abd0f51a3f6489aed3f81d42678cb1d6fb20456a8fb4d9fe23486d92b7dc01264b7095badf04294e7398bde2072c51769bc0e50a2f54799ec3e80d32577ca1c6eb10355a7fa4c9ee13385d82a7ccf1163b6085aacff4193e6388add2f71c41668bb0d5fa1f44698eb3d8fd22476c91b6db00254a6f94b9de03284d7297bce1062b50759abfe4092e53789dc2e70c31567ba0c5ea0f34597ea3c8ed12375c81a6cbf0153a5f84a9cef3183d6287acd1f61b40658aafd4f91e43688db2d7fc21466b90b5daff24496e93b8dd02274c7196bbe0052a4f7499bee3082d52779cc1e60b30557a9fc4e90e33587da2c7ec11365b80a5caef14395e83a8cdf2173c6186abd0f51a3f6489aed3f81d42",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Read one entry by its name",
+      "note": "The name must match the entry as unzip lists it, folder part included, such as dir/b.bin."
     }
   },
   {
@@ -88,6 +96,10 @@
     },
     "expect": {
       "error": "E_RANGE"
+    },
+    "example": {
+      "title": "A name that is not in the archive",
+      "note": "nope.txt is not in the archive, so the op stops with E_RANGE and lists the first entries it does have."
     }
   },
   {
@@ -162,6 +174,10 @@
           }
         }
       ]
+    },
+    "example": {
+      "title": "A non-ASCII file name",
+      "note": "The name is kept as UTF-8, so a folder and file name with accents comes back unchanged."
     }
   },
   {
@@ -389,6 +405,10 @@
     "expect": {
       "value": "504b03040a00000000000000210075061e562d0000002d0000000800000066696c652e74787468656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c6174650a504b010214000a00000000000000210075061e562d0000002d00000008000000000000000000000000000000000066696c652e747874504b0506000000000100010036000000530000000000",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Store a file in a zip without compression",
+      "note": "With method store the bytes go in unchanged, so the archive holds the text as it is plus its headers."
     }
   },
   {
@@ -409,6 +429,10 @@
     "expect": {
       "value": "504b03040a0000000000aab16e5775061e562d0000002d000000090000006469722f612e74787468656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c6174650a504b010214030a0000000000aab16e5775061e562d0000002d000000090000000000000000000000ed81000000006469722f612e747874504b0506000000000100010037000000540000000000",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Set the Unix name, time and mode",
+      "note": "Mode 493 is 0755 in octal, the permission bits a Unix host records for the entry."
     }
   },
   {

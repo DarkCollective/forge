@@ -11,6 +11,10 @@
     "expect": {
       "value": "68656c6c6f2068656c6c6f2068656c6c6f20776f726c64",
       "enc": "hex"
+    },
+    "example": {
+      "title": "A stream whose size is unknown",
+      "note": "Eight ff bytes mean the size is unknown, so the end marker in the data shows where the output stops."
     }
   },
   {
@@ -67,6 +71,10 @@
     "expect": {
       "value": "68656c6c6f2068656c6c6f2068656c6c6f20776f726c64",
       "enc": "hex"
+    },
+    "example": {
+      "title": "A header that gives the size",
+      "note": "The size field holds 23, so the decoder knows how much output to expect."
     }
   },
   {
@@ -383,6 +391,10 @@
     "expect": {
       "value": "5d00100000170000000000000000341949ee8de950960806f6e8929579b3ffff0e740000",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The 13-byte header of an LZMA file",
+      "note": "The byte 5d is the properties byte, the next four bytes are the dictionary size, and the eight after them give the length, 23 here."
     }
   },
   {

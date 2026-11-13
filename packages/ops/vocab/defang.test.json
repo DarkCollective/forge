@@ -11,6 +11,10 @@
     "expect": {
       "value": "Visit hxxp[://]example[.]com/a[.]b?x=1, or hxxpS[://]Evil[.]Example[.]org:8080/p. Also www[.]foo[.]co[.]uk and 1.2.3.4",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Defang a URL and a domain in one text",
+      "note": "Dots become [.], http becomes hxxp and :// becomes [://], so the link cannot be followed by accident."
     }
   },
   {
@@ -27,6 +31,10 @@
     "expect": {
       "value": "Visit hxxp[://]example[.]com/a and example.org",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Leave bare domains alone with only-full-urls",
+      "note": "With only-full-urls a bare domain such as example.org is left as it is."
     }
   },
   {
@@ -170,6 +178,10 @@
     "expect": {
       "value": "https://example.com/a.b",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Restore all three escapes",
+      "note": "[.] becomes a dot, hxxp becomes http and [://] becomes ://, so the original address is back."
     }
   },
   {
@@ -187,6 +199,10 @@
     "expect": {
       "value": "hxxp[://]example.com",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Restore only the dots",
+      "note": "With restore-http and restore-slashes off, only the [.] escapes change, and hxxp and [://] stay."
     }
   },
   {

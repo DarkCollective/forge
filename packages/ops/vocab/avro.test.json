@@ -14,6 +14,10 @@
     "expect": {
       "value": "{\"id\":1,\"name\":\"a\",\"score\":null,\"tags\":[\"x\",\"y\"],\"attrs\":{\"k\":1},\"kind\":\"B\",\"raw\":{\"type\":\"Buffer\",\"data\":[0,255]},\"fx\":{\"type\":\"Buffer\",\"data\":[97,98,99,100]},\"f\":0.10000000149011612,\"ok\":true,\"next\":null}\n{\"id\":-9007199254740993123,\"name\":\"é\",\"score\":2.5,\"tags\":[],\"attrs\":{},\"kind\":\"C\",\"raw\":{\"type\":\"Buffer\",\"data\":[]},\"fx\":{\"type\":\"Buffer\",\"data\":[1,2,3,4]},\"f\":-1.5,\"ok\":false,\"next\":{\"id\":2,\"name\":\"n\",\"score\":null,\"tags\":[],\"attrs\":{},\"kind\":\"A\",\"raw\":{\"type\":\"Buffer\",\"data\":[122]},\"fx\":{\"type\":\"Buffer\",\"data\":[0,0,0,0]},\"f\":3.0,\"ok\":true,\"next\":null}}\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Records written one line each",
+      "note": "With force-valid-json off each record is one line of compact JSON; the default writes one array instead."
     }
   },
   {
@@ -252,6 +256,10 @@
     "expect": {
       "value": "{\"type\":\"Buffer\",\"data\":[]}\n{\"type\":\"Buffer\",\"data\":[0,1,254]}\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Bytes come out as a Buffer object",
+      "note": "A bytes value is written as an object with type Buffer and its byte values, so binary data is kept exact."
     }
   },
   {

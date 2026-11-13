@@ -53,6 +53,10 @@
     "expect": {
       "value": "48656c6c6f2c2042726f746c69212048656c6c6f2c2042726f746c69212048656c6c6f2c20466f7267652e0a",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decompress a small Brotli stream",
+      "note": "The brotli command made this stream at its highest quality, 11, and the output is the short text it holds."
     }
   },
   {

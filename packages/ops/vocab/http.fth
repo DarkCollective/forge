@@ -32,9 +32,14 @@ IN: http
   data _dechunk ;
 
 META: strip-headers
+  use-when "You have a raw HTTP request or response with its headers and body together, and want only the body bytes." ;
   see-also http:dechunk ;
+  link "https://www.rfc-editor.org/rfc/rfc9112" "RFC 9112: HTTP/1.1" ;
 ;
 
 META: dechunk
+  use-when "You have a chunked HTTP body, with hex sizes before its pieces and a zero at the end, and want the joined content." ;
   see-also http:strip-headers ;
+  link "https://www.rfc-editor.org/rfc/rfc9112#section-7.1" "RFC 9112, section 7.1: chunked transfer coding" ;
+  link "https://en.wikipedia.org/wiki/Chunked_transfer_encoding" "Chunked transfer encoding on Wikipedia" ;
 ;

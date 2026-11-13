@@ -37,8 +37,10 @@ USING: deflate crc ;
   ] if ;
 
 META: generate
+  use-when "You have text, such as a web address or Wi-Fi details, and want a QR code image to scan with a phone or to print." ;
   param format "svg for an SVG document, text for lines of block characters, png for a 1-bit PNG image." ;
   param module-size "The side of one module in pixels (SVG and PNG)." ;
   param margin "The white border around the code in modules." ;
   param error-correction "The share of the codewords that can be restored: L (7%), M (15%), Q (25%) or H (30%)." ;
+  link "https://en.wikipedia.org/wiki/QR_code" "QR code on Wikipedia" ;
 ;

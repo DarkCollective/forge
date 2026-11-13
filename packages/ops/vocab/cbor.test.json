@@ -77,6 +77,10 @@
     "expect": {
       "value": "24",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A number of 24 takes an extra byte",
+      "note": "Numbers up to 23 fit in the first byte. Here 18 says that one more byte holds the value 24."
     }
   },
   {
@@ -1341,6 +1345,10 @@
     "expect": {
       "value": "\"2013-03-21T20:04:00.123Z\"",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A date tag as ISO 8601 text",
+      "note": "Tag 1 holds seconds since 1970 as a number, and the output shows it as an ISO 8601 date with milliseconds."
     }
   },
   {
@@ -1705,6 +1713,10 @@
     "expect": {
       "value": "17",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Numbers up to 23 fit in one byte",
+      "note": "23 is written as the single byte 17, which holds its value, with no extra bytes."
     }
   },
   {
@@ -1753,6 +1765,10 @@
     "expect": {
       "value": "190100",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Two bytes after the initial byte",
+      "note": "The 19 marker says a two-byte number follows, and 01 00 is 256 in big-endian order."
     }
   },
   {

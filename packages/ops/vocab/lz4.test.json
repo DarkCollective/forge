@@ -11,6 +11,10 @@
     "expect": {
       "value": "68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206c7a34206672616d65",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decompress an LZ4 frame of text",
+      "note": "With verify on, the header, block and content checksums must all agree before the text is returned."
     }
   },
   {
@@ -333,6 +337,10 @@
     "expect": {
       "value": "04224d186470b90f0000006868656c6c6f2006005068656c6c6f00000000f26b940b",
       "enc": "hex"
+    },
+    "example": {
+      "title": "An LZ4 frame of short text",
+      "note": "The frame starts 04 22 4d 18, the LZ4 magic number, followed by the frame header."
     }
   },
   {
@@ -388,6 +396,10 @@
     },
     "expect": {
       "error": "E_RANGE"
+    },
+    "example": {
+      "title": "A level above 9 is refused",
+      "note": "Level 10 is outside 0 to 9, so the op stops with E_RANGE."
     }
   }
 ]

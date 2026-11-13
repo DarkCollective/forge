@@ -148,5 +148,8 @@ IN: uri
     _report ] if ;
 
 META: parse
+  use-when "You have a URL and want its scheme, user, host, port, path, query arguments and fragment set out one per line." ;
   see-also url:decode extract:urls defang:defang-url ;
+  link "https://www.rfc-editor.org/rfc/rfc3986" "RFC 3986: URI generic syntax" ;
+  link "https://en.wikipedia.org/wiki/Uniform_Resource_Identifier" "Uniform Resource Identifier on Wikipedia" ;
 ;

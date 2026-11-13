@@ -193,5 +193,7 @@ IN: user-agent
   data _clean _report ;
 
 META: parse
+  use-when "You have a User-Agent string from a web server log and want the browser, device, engine and operating system it names." ;
   see-also extract:urls uri:parse ;
+  link "https://en.wikipedia.org/wiki/User_agent" "User agent on Wikipedia" ;
 ;

@@ -493,6 +493,10 @@
     "expect": {
       "value": "(a:1,b:2)",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Keys are written in sorted order",
+      "note": "The keys come out sorted, so a is written before b even though the input has b first."
     }
   },
   {
@@ -509,6 +513,10 @@
     "expect": {
       "value": "(a:(b:!(1,2,(c:!n))))",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Objects, lists and null in Rison form",
+      "note": "Objects use parentheses, lists use !( and ), and null is !n."
     }
   },
   {
@@ -1725,6 +1733,10 @@
     "expect": {
       "value": "{\"a\":1,\"b\":[1]}",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Read the members of an object without parentheses",
+      "note": "In o-rison mode a:1,b:!(1) is read as an object with a set to 1 and b set to the list 1."
     }
   },
   {
@@ -1776,6 +1788,10 @@
     "expect": {
       "value": "{\"x y\":true}",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A quoted key can hold a space",
+      "note": "Single quotes let a key contain a space, and !t is the literal true."
     }
   },
   {

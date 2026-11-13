@@ -63,9 +63,13 @@ USING: packets md5 sha2 hex base64 list ;
   dup "," join output-format _ja3-out ;
 
 META: ja3
+  use-when "You have a TLS ClientHello from a packet capture, as hex, Base64 or raw bytes, and want its JA3 hash to compare with known clients." ;
   param input-format "How the input is written: hex text (any white space is ignored), Base64 text or raw bytes." ;
   param output-format "The MD5 hash of the JA3 string, the JA3 string, or both with the five fields." ;
   see-also fingerprint:ja3s fingerprint:ja4 packets:parse-tls ;
+  link "https://github.com/salesforce/ja3" "JA3 on GitHub (Salesforce)" ;
+  link "https://www.rfc-editor.org/rfc/rfc8446" "RFC 8446: TLS 1.3" ;
+  link "https://en.wikipedia.org/wiki/Transport_Layer_Security" "Transport Layer Security on Wikipedia" ;
 ;
 
 \ ---- JA3S: version,cipher,extensions ----
@@ -90,9 +94,12 @@ META: ja3
   dup "," join output-format _ja3s-out ;
 
 META: ja3s
+  use-when "You have a TLS ServerHello from a packet capture and want its JA3S fingerprint, to pair with the JA3 of the client that connected." ;
   param input-format "How the input is written: hex text (any white space is ignored), Base64 text or raw bytes." ;
   param output-format "The MD5 hash of the JA3S string, the JA3S string, or both with the three fields." ;
   see-also fingerprint:ja3 fingerprint:ja4s packets:parse-tls ;
+  link "https://github.com/salesforce/ja3" "JA3 on GitHub (Salesforce)" ;
+  link "https://www.rfc-editor.org/rfc/rfc5246" "RFC 5246: TLS 1.2" ;
 ;
 
 \ ---- JA4 and JA4S (FoxIO) ----
@@ -193,10 +200,13 @@ META: ja3s
   data input-format 1 "ClientHello" _hello transport _proto _ja4-parts output-format _ja4-out ;
 
 META: ja4
+  use-when "You have a TLS ClientHello from a capture and want its JA4 fingerprint, which keeps readable parts, to compare clients across captures." ;
   param input-format "How the input is written: hex text (any white space is ignored), Base64 text or raw bytes." ;
   param output-format "JA4 (hashed, sorted), JA4_o (hashed, original order), JA4_r (not hashed, sorted), JA4_ro (not hashed, original order) or all four." ;
   param transport "The first character of the fingerprint: t for a hello sent over TCP, q for one carried by QUIC." ;
   see-also fingerprint:ja4s fingerprint:ja3 packets:parse-tls ;
+  link "https://github.com/FoxIO-LLC/ja4" "JA4 on GitHub (FoxIO)" ;
+  link "https://en.wikipedia.org/wiki/Transport_Layer_Security" "Transport Layer Security on Wikipedia" ;
 ;
 
 \ ---- JA4S ----
@@ -220,8 +230,10 @@ META: ja4
   data input-format 2 "ServerHello" _hello transport _proto output-format _ja4s-run ;
 
 META: ja4s
+  use-when "You have a TLS ServerHello from a capture and want its JA4S fingerprint, to pair with the JA4 of the client that connected." ;
   param input-format "How the input is written: hex text (any white space is ignored), Base64 text or raw bytes." ;
   param output-format "JA4S, JA4S_r (the extension list not hashed), or both." ;
   param transport "The first character of the fingerprint: t for a hello sent over TCP, q for one carried by QUIC." ;
   see-also fingerprint:ja4 fingerprint:ja3s packets:parse-tls ;
+  link "https://github.com/FoxIO-LLC/ja4" "JA4 on GitHub (FoxIO)" ;
 ;

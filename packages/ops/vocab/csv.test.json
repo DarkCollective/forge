@@ -16,6 +16,10 @@
     "expect": {
       "value": "[\n  {\n    \"name\": \"Ada\",\n    \"age\": \"36\"\n  },\n  {\n    \"name\": \"Alan\",\n    \"age\": \"41\"\n  }\n]",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Rows read as objects keyed by the header",
+      "note": "Every value comes out as text, so 36 is written as a string in the output."
     }
   },
   {
@@ -130,6 +134,10 @@
     "expect": {
       "value": "[\n  {\n    \"a\": \"\",\n    \"b\": \"\",\n    \"c\": \"x\"\n  }\n]",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "An empty cell is the empty string",
+      "note": "Both an empty cell and a quoted empty cell come back as an empty string."
     }
   },
   {
@@ -481,6 +489,10 @@
     "expect": {
       "value": "name,age\r\nAda,36\r\nAlan,41\r\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Objects become rows under one header",
+      "note": "The keys of the objects make the header row, and each object is one row in that column order."
     }
   },
   {
@@ -532,6 +544,10 @@
     "expect": {
       "value": "a,b,c\r\n\"x,y\",\"say \"\"hi\"\"\",\"l1\nl2\"\r\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Commas, quotes and line breaks are quoted",
+      "note": "A cell with a comma, a quote or a line break is wrapped in quotes, and a quote inside it is doubled."
     }
   },
   {

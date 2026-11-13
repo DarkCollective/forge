@@ -13,6 +13,10 @@
     "expect": {
       "value": "{\n    \"name\": \"Ada\",\n    \"age\": 36,\n    \"ratio\": 2.5,\n    \"active\": true,\n    \"nothing\": null,\n    \"tilde\": null,\n    \"empty\": null,\n    \"list\": [\n        1,\n        2,\n        3\n    ],\n    \"nested\": {\n        \"a\": 1,\n        \"b\": [\n            \"x\",\n            \"y\"\n        ]\n    }\n}",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A mapping of scalars as JSON",
+      "note": "Strings, numbers, true and null keep their JSON types, and the layout follows the indent parameter."
     }
   },
   {
@@ -61,6 +65,10 @@
     "expect": {
       "value": "[\n    {\n        \"id\": 1,\n        \"tags\": [\n            \"a\",\n            \"b\"\n        ]\n    },\n    {\n        \"id\": 2,\n        \"tags\": []\n    }\n]",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A sequence of mappings as an array of objects",
+      "note": "Each dash starts a new object, and the keys indented under it belong to that object."
     }
   },
   {
@@ -558,6 +566,10 @@
     "expect": {
       "value": "a: 1\nb:\n  - 1\n  - 2\n  - c: 3\nd:\n  e: x\nf: null\ng: true\nh: []\ni: {}\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A nested object written as block YAML",
+      "note": "Keys keep their order, and each nested mapping or list is indented by two spaces."
     }
   },
   {
@@ -614,6 +626,10 @@
     "expect": {
       "value": "- 'true'\n- '123'\n- 'null'\n- ''\n- '1.5'\n- '0x1f'\n- 'yes'\n- 'No'\n- 'on'\n- '~'\n- '2001-01-01'\n- '1e3'\n- '-'\n- '='\n- '<<'\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Strings that look like numbers or yes are quoted",
+      "note": "Text such as 123, null, yes or 0x1f is written in single quotes, so it stays text when a YAML reader parses it."
     }
   },
   {

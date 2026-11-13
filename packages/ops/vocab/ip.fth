@@ -244,10 +244,12 @@ USING: defang ;
   dup 0 nth _bits-of include-network-info enumerate allow-large _parse-range ;
 
 META: parse-range
+  use-when "You have an IP range in CIDR or hyphen form, such as 10.0.0.0/30, and want its network, mask, first and last addresses and count." ;
   param include-network-info "Start with the network information (network, prefix length, mask, range, count)." ;
   param enumerate "List every address of an IPv4 range, one per line (IPv6 ranges are never listed)." ;
   param allow-large "Allow listing more than 65,536 addresses (never more than 1,048,576)." ;
   see-also ip:group ip:parse-ipv6 ;
+  link "https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing" "Classless Inter-Domain Routing on Wikipedia" ;
 ;
 
 \ ---- Parse IPv6 address ----
@@ -456,7 +458,10 @@ META: parse-range
   swap _v6 swap _report ;
 
 META: parse-ipv6
+  use-when "You have an IPv6 address and want its full and short forms and the kind of address it is, such as a Teredo or 6to4 address." ;
   see-also ip:transition ip:parse-range ;
+  link "https://www.rfc-editor.org/rfc/rfc4291" "RFC 4291: IPv6 addressing architecture" ;
+  link "https://en.wikipedia.org/wiki/IPv6_address" "IPv6 address on Wikipedia" ;
 ;
 
 \ ---- IPv6 Transition Addresses ----
@@ -522,9 +527,12 @@ META: parse-ipv6
   [ ignore-ranges remove-headers _t-line ] map "" join ;
 
 META: transition
+  use-when "You have an IPv4 address and need its IPv6 forms, such as 6to4 or NAT64, or an IPv6 transition address and want the IPv4 address in it." ;
   param ignore-ranges "Skip the lines that contain a / (ranges)." ;
   param remove-headers "Leave out the labels (6to4: and so on) so the values can be copied." ;
   see-also ip:parse-ipv6 ip:change-format ;
+  link "https://www.rfc-editor.org/rfc/rfc3056" "RFC 3056: connecting IPv6 domains via IPv4 clouds (6to4)" ;
+  link "https://www.rfc-editor.org/rfc/rfc6052" "RFC 6052: IPv6 addressing of IPv4/IPv6 translators" ;
 ;
 
 \ ---- Change IP format ----
@@ -553,9 +561,11 @@ META: transition
   [ input-format _read-ip output-format _write-ip ] map "\n" join ;
 
 META: change-format
+  use-when "You have IPv4 addresses in decimal, hex or octal form, as in a log or a firewall rule, and want them in another form, such as dotted." ;
   param input-format "How the addresses are written in the input." ;
   param output-format "How to write them." ;
   see-also ip:transition ip:parse-range ;
+  link "https://en.wikipedia.org/wiki/IPv4" "IPv4 on Wikipedia" ;
 ;
 
 \ ---- Group IP addresses ----
@@ -599,10 +609,12 @@ META: change-format
   ] if ;
 
 META: group
+  use-when "You have a list of IP addresses, one per line, and want to see which subnets hold them." ;
   param delimiter "What separates the addresses in the input." ;
   param cidr "The prefix length of the subnets (0 to 32 for IPv4, up to 128 for IPv6)." ;
   param only-subnets "List only the networks, not the addresses in them." ;
   see-also ip:parse-range ip:change-format ;
+  link "https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing" "Classless Inter-Domain Routing on Wikipedia" ;
 ;
 
 \ ---- Defang IP Addresses ----
@@ -642,5 +654,6 @@ META: group
   _v4-defang-pattern "$1[.]$2[.]$3[.]$4$5" "" regex:replace ;
 
 META: defang
+  use-when "You have a report or log with IP addresses in it and want them written so that they cannot be clicked or auto-linked." ;
   see-also defang:defang-url ip:parse-range extract:ip-addresses ;
 ;

@@ -14,6 +14,10 @@
     "expect": {
       "value": "3.5",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Read an AMF0 number as a double",
+      "note": "The 00 marker says a number follows, and the eight bytes after it are a big-endian double, here 3.5."
     }
   },
   {
@@ -167,6 +171,10 @@
     "expect": {
       "value": "\"hello\"",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Read an AMF0 string as JSON text",
+      "note": "The 02 marker says a string follows, then 0005 is its length in bytes and hello is the text."
     }
   },
   {
@@ -842,6 +850,10 @@
     "expect": {
       "value": "004045000000000000",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Every number is a double in AMF0",
+      "note": "AMF0 has no integer type, so 42 is the 00 marker and the eight bytes of a double, 40 45 00 00 00 00 00 00."
     }
   },
   {
@@ -954,6 +966,10 @@
     "expect": {
       "value": "02000568656c6c6f",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Write text as an AMF0 string",
+      "note": "The text goes in as a 02 marker, a two-byte length of 0005 and the UTF-8 bytes of hello."
     }
   },
   {

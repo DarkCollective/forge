@@ -46,11 +46,19 @@ IN: netbios
   name bytes>list [ offset _nibble ] map _pairs _unpad ;
 
 META: encode
+  use-when "You have a NetBIOS name and need its encoded form as it appears in a NetBIOS name query packet." ;
   param offset "Added to each half byte: 65 (the letter A) in RFC 1001." ;
   see-also netbios:decode ;
+  inverse decode ;
+  link "https://www.rfc-editor.org/rfc/rfc1001" "RFC 1001: NetBIOS over TCP/UDP, concepts and methods" ;
+  link "https://en.wikipedia.org/wiki/NetBIOS" "NetBIOS on Wikipedia" ;
 ;
 
 META: decode
+  use-when "You have a 32-letter NetBIOS name from a capture or log, in its first-level encoded form, and want the name it stands for." ;
   param offset "Subtracted from each byte: 65 (the letter A) in RFC 1001." ;
   see-also netbios:encode ;
+  inverse encode ;
+  link "https://www.rfc-editor.org/rfc/rfc1001" "RFC 1001: NetBIOS over TCP/UDP, concepts and methods" ;
+  link "https://en.wikipedia.org/wiki/NetBIOS" "NetBIOS on Wikipedia" ;
 ;

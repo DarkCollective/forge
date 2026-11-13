@@ -13,8 +13,10 @@ USING: json ;
   data tag-bytes length-bytes ber tlv:_parse indent json:stringify ;
 
 META: parse
+  use-when "You have tag-length-value bytes, such as EMV card data or a binary record, and want each element listed with its tag, length and value." ;
   param tag-bytes "How many bytes the tag of an element has; 0 for length-value data." ;
   param length-bytes "How many bytes the length of an element has (little-endian); not used with BER lengths." ;
   param ber "Read the length in the BER/DER form (short form below 128, long form 128 plus a byte count)." ;
   param indent "Spaces per level; 0 writes compact JSON." ;
+  link "https://en.wikipedia.org/wiki/Type-length-value" "Type-length-value on Wikipedia" ;
 ;

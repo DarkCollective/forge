@@ -93,6 +93,10 @@
     "expect": {
       "value": "hello hello hello hello world, hello lzstring",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Read a Base64 lz-string value",
+      "note": "The value is Base64 text, so the format must be base64, as it was for compress."
     }
   },
   {
@@ -109,6 +113,10 @@
     "expect": {
       "value": "425955774e6d443241456f546371334567377041546d414a67476d664e47414634444f414c68674a59423241356b41",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The URI-safe form for links",
+      "note": "The uri format gives plain ASCII that can sit in a web address without escaping."
     }
   },
   {
@@ -141,6 +149,10 @@
     "expect": {
       "value": "3184306609700403f046053013950b472870d32a178370007b50407600990000",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Non-ASCII text in the default form",
+      "note": "Accented letters, Chinese characters and an emoji survive, because the default form stores 16-bit code units."
     }
   },
   {

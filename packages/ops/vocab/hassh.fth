@@ -92,9 +92,12 @@ USING: md5 hex base64 ;
   dup ";" join output-format "Client to Server" _out ;
 
 META: client
+  use-when "You have an SSH client's KEXINIT packet from a capture, as hex, Base64 or raw bytes, and want its HASSH fingerprint." ;
   param input-format "How the input is written: hex text (any white space is ignored), Base64 text or raw bytes." ;
   param output-format "The MD5 hash of the HASSH string, the HASSH string, or both with the four lists." ;
   see-also hassh:server ;
+  link "https://www.rfc-editor.org/rfc/rfc4253" "RFC 4253: SSH transport layer protocol" ;
+  link "https://github.com/salesforce/hassh" "HASSH on GitHub (Salesforce)" ;
 ;
 
 : server ( data:bytes input-format:choice{hex|base64|raw}="hex" output-format:choice{hash|string|full}="hash" -- str )
@@ -104,7 +107,10 @@ META: client
   dup ";" join output-format "Server to Client" _out ;
 
 META: server
+  use-when "You have an SSH server's KEXINIT packet from a capture and want its HASSHServer fingerprint, to compare with known servers." ;
   param input-format "How the input is written: hex text (any white space is ignored), Base64 text or raw bytes." ;
   param output-format "The MD5 hash of the HASSH string, the HASSH string, or both with the four lists." ;
   see-also hassh:client ;
+  link "https://www.rfc-editor.org/rfc/rfc4253" "RFC 4253: SSH transport layer protocol" ;
+  link "https://github.com/salesforce/hassh" "HASSH on GitHub (Salesforce)" ;
 ;

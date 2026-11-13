@@ -11,6 +11,10 @@
     "expect": {
       "value": "{\n    \"1\": 150\n}",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Read field 1, a varint of 150",
+      "note": "The key 08 means field 1 with a varint value, and the value bytes 96 01 are 150."
     }
   },
   {
@@ -25,6 +29,10 @@
     "expect": {
       "value": "{\n    \"2\": \"testing\"\n}",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A length-delimited field read as text",
+      "note": "The key 12 is field 2 with a length, 07 is the length, and the seven bytes after it read as the text testing."
     }
   },
   {

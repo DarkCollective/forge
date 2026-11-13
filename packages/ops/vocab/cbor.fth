@@ -13,8 +13,12 @@ USING: json ;
   data cbor:_decode indent json:stringify ;
 
 META: decode
+  use-when "You have one CBOR data item, as bytes from a COSE, WebAuthn or IoT message, and want it as JSON text." ;
   param indent "Spaces per level; 0 writes compact JSON." ;
   see-also cbor:encode ;
+  inverse encode ;
+  link "https://www.rfc-editor.org/rfc/rfc8949" "RFC 8949: CBOR" ;
+  link "https://en.wikipedia.org/wiki/CBOR" "CBOR on Wikipedia" ;
 ;
 
 : encode ( data:str typed-objects:bool=false -- bytes )
@@ -23,6 +27,10 @@ META: decode
   data json:parse typed-objects cbor:_encode ;
 
 META: encode
+  use-when "You have JSON data and need it as CBOR bytes, for example to build a test message for a COSE or IoT receiver." ;
   param typed-objects "Write {\"type\":\"Buffer\",\"data\":[...]} as a byte string, {\"tag\":N,\"contents\":V} as a tag and {\"simple\":N} as a simple value, instead of as maps." ;
   see-also cbor:decode ;
+  inverse decode ;
+  link "https://www.rfc-editor.org/rfc/rfc8949" "RFC 8949: CBOR" ;
+  link "https://en.wikipedia.org/wiki/CBOR" "CBOR on Wikipedia" ;
 ;

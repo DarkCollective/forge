@@ -39,6 +39,10 @@
     "expect": {
       "value": "plist => {\n\ta => {\n\t\tb => {\n\t\t\tc => [\n\t\t\t\t0 => 1\n\t\t\t\t1 => [\n\t\t\t\t\t0 => 2\n\t\t\t\t\t1 => [\n\t\t\t\t\t\t0 => 3\n\t\t\t\t\t]\n\t\t\t\t]\n\t\t\t]\n\t\t}\n\t}\n}\n/plist\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Nested dictionaries and arrays as an outline",
+      "note": "Each level is one tab further in, and an array item is shown with its index, counting from 0."
     }
   },
   {
@@ -53,6 +57,10 @@
     "expect": {
       "value": "plist => {\n\ta => {\n\t\tb => {\n\t\t\tc => [\n\t\t\t\t0 => 1\n\t\t\t\t1 => [\n\t\t\t\t\t0 => 2\n\t\t\t\t\t1 => [\n\t\t\t\t\t\t0 => 3\n\t\t\t\t\t]\n\t\t\t\t]\n\t\t\t]\n\t\t}\n\t}\n}\n/plist\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The binary form of the same nested list",
+      "note": "A binary list gives the same outline as its XML form, so the two can be compared."
     }
   },
   {

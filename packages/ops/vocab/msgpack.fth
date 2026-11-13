@@ -13,8 +13,12 @@ USING: json ;
   data msgpack:_decode indent json:stringify ;
 
 META: decode
+  use-when "You have MessagePack bytes from a cache, a message queue or an RPC call, and want to read them as JSON." ;
   param indent "Spaces per level; 0 writes compact JSON." ;
   see-also msgpack:encode ;
+  inverse encode ;
+  link "https://msgpack.org/" "MessagePack home page" ;
+  link "https://en.wikipedia.org/wiki/MessagePack" "MessagePack on Wikipedia" ;
 ;
 
 : encode ( data:str typed-objects:bool=false -- bytes )
@@ -23,6 +27,10 @@ META: decode
   data json:parse typed-objects msgpack:_encode ;
 
 META: encode
+  use-when "You have JSON data and need MessagePack bytes, for example to send a test payload to a service that expects MessagePack." ;
   param typed-objects "Write {\"type\":\"Buffer\",\"data\":[...]} as bin, {\"ext\":N,\"data\":...} as an extension and {\"timestamp\":\"...\"} as a timestamp, instead of as maps." ;
   see-also msgpack:decode ;
+  inverse decode ;
+  link "https://msgpack.org/" "MessagePack home page" ;
+  link "https://en.wikipedia.org/wiki/MessagePack" "MessagePack on Wikipedia" ;
 ;

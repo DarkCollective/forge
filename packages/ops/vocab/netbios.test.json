@@ -13,6 +13,10 @@
     "expect": {
       "value": "FEGIGFCAEOGFHEECEJEPFDCAGOGBGNGF",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The RFC 1001 name encoded",
+      "note": "Each byte of the padded 16-byte name becomes two letters from A to P, so the output has 32 letters."
     }
   },
   {
@@ -29,6 +33,10 @@
     "expect": {
       "value": "The NetBIOS name",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Decode the RFC 1001 example name",
+      "note": "Each pair of letters gives one byte, and the trailing spaces of the padding are removed."
     }
   },
   {
@@ -43,6 +51,10 @@
     "expect": {
       "value": "EGFCEFEECACACACACACACACACACACACA",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A short name is padded with spaces",
+      "note": "FRED is padded with spaces to 16 bytes before it is encoded, so the output is 32 letters, most of them for the padding."
     }
   },
   {
@@ -131,6 +143,10 @@
     "expect": {
       "value": "FRED",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A name encoded with offset 97",
+      "note": "The letters are lower case here, so the offset is 97 and the letters run from a to p."
     }
   },
   {

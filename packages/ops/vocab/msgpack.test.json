@@ -573,6 +573,10 @@
     "expect": {
       "value": "\"é€😀\"",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A string of mixed UTF-8 characters",
+      "note": "The byte a9 starts a string of nine bytes: the letter e with an acute accent, a euro sign and an emoji."
     }
   },
   {
@@ -669,6 +673,10 @@
     "expect": {
       "value": "{\"a\":1}",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A map with one key",
+      "note": "The byte 81 starts a map of one pair, a1 61 is the key a, and 01 is its value."
     }
   },
   {
@@ -1436,6 +1444,10 @@
     "expect": {
       "value": "cc80",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The smallest format that holds 128",
+      "note": "128 does not fit a positive fixint, which stops at 127, so it is written as cc 80: a uint 8 marker and the byte."
     }
   },
   {
@@ -1484,6 +1496,10 @@
     "expect": {
       "value": "cdffff",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Sixteen-bit numbers use the cd marker",
+      "note": "A number up to 65535 is written with cd and two bytes, big-endian: 65535 is cd ff ff."
     }
   },
   {

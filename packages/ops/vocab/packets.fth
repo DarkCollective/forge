@@ -743,41 +743,61 @@ USING: tcpip hex ;
   [ _record-text ] mapi "\n\n" join ;
 
 META: parse-ethernet
+  use-when "You have an Ethernet frame from a capture, as raw bytes or hex, and want its MAC addresses, VLAN tags and EtherType." ;
   param format "How the input is written: hex text (any white space is ignored) or raw bytes." ;
   see-also packets:parse-ipv4 packets:parse-tcp packets:parse-udp ;
+  link "https://en.wikipedia.org/wiki/Ethernet_frame" "Ethernet frame on Wikipedia" ;
 ;
 
 META: parse-ipv4
+  use-when "You have an IPv4 header in hex or raw bytes from a capture and want its fields, such as the addresses, TTL and protocol, decoded." ;
   param format "How the input is written: hex text (any white space is ignored) or raw bytes." ;
   see-also packets:strip-ipv4 packets:parse-tcp packets:parse-udp packets:parse-ethernet ;
+  link "https://www.rfc-editor.org/rfc/rfc791" "RFC 791: Internet Protocol" ;
+  link "https://en.wikipedia.org/wiki/IPv4" "IPv4 on Wikipedia" ;
 ;
 
 META: strip-ipv4
+  use-when "You have an IPv4 datagram and want only the payload after its header, such as the TCP segment inside it." ;
   param format "How the input is written: hex text (any white space is ignored) or raw bytes." ;
   see-also packets:parse-ipv4 packets:strip-tcp packets:strip-udp ;
+  link "https://www.rfc-editor.org/rfc/rfc791" "RFC 791: Internet Protocol" ;
 ;
 
 META: parse-tcp
+  use-when "You have a TCP segment from a capture, as hex or raw bytes, and want its ports, sequence numbers, flags and options." ;
   param format "How the input is written: hex text (any white space is ignored) or raw bytes." ;
   see-also packets:strip-tcp packets:parse-ipv4 packets:parse-tls ;
+  link "https://www.rfc-editor.org/rfc/rfc9293" "RFC 9293: Transmission Control Protocol" ;
+  link "https://en.wikipedia.org/wiki/Transmission_Control_Protocol" "Transmission Control Protocol on Wikipedia" ;
 ;
 
 META: strip-tcp
+  use-when "You have a TCP segment and want only its data, such as an HTTP request sent over TCP, without the header and options." ;
   param format "How the input is written: hex text (any white space is ignored) or raw bytes." ;
   see-also packets:parse-tcp packets:strip-ipv4 http:strip-headers ;
+  link "https://www.rfc-editor.org/rfc/rfc9293" "RFC 9293: Transmission Control Protocol" ;
 ;
 
 META: parse-udp
+  use-when "You have a UDP datagram from a capture, such as a DNS query, and want its ports, length and payload." ;
   param format "How the input is written: hex text (any white space is ignored) or raw bytes." ;
   see-also packets:strip-udp packets:parse-ipv4 ;
+  link "https://www.rfc-editor.org/rfc/rfc768" "RFC 768: User Datagram Protocol" ;
+  link "https://en.wikipedia.org/wiki/User_Datagram_Protocol" "User Datagram Protocol on Wikipedia" ;
 ;
 
 META: strip-udp
+  use-when "You have a UDP datagram and want only its payload, without the 8-byte header." ;
   param format "How the input is written: hex text (any white space is ignored) or raw bytes." ;
   see-also packets:parse-udp packets:strip-ipv4 ;
+  link "https://www.rfc-editor.org/rfc/rfc768" "RFC 768: User Datagram Protocol" ;
 ;
 
 META: parse-tls
+  use-when "You have TLS records from a capture, as raw bytes or hex, and want the handshake messages, versions, cipher suites and extensions, such as the server name." ;
   param format "How the input is written: hex text (any white space is ignored) or raw bytes." ;
   see-also packets:parse-tcp ;
+  link "https://www.rfc-editor.org/rfc/rfc8446" "RFC 8446: TLS 1.3" ;
+  link "https://en.wikipedia.org/wiki/Transport_Layer_Security" "Transport Layer Security on Wikipedia" ;
 ;

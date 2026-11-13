@@ -35,11 +35,15 @@ USING: json list ;
   indent json:stringify ;
 
 META: to-json
+  use-when "You have CSV text from a spreadsheet or an export, with a header row, and want each row as a JSON object keyed by the headers." ;
   param cell-delimiter "The characters that end a cell; each one counts. Escapes like \\t are read." ;
   param row-delimiter "The characters that end a row; each one counts, and a CR followed by an LF is one. Escapes like \\r\\n are read." ;
   param format "An array of objects keyed by the header row, or an array of arrays of the rows as they are." ;
   param indent "Spaces per level; 0 writes compact JSON." ;
   see-also csv:from-json ;
+  inverse from-json ;
+  link "https://www.rfc-editor.org/rfc/rfc4180" "RFC 4180: CSV format" ;
+  link "https://en.wikipedia.org/wiki/Comma-separated_values" "Comma-separated values on Wikipedia" ;
 ;
 
 \ ---- JSON to CSV ----
@@ -98,7 +102,11 @@ META: to-json
   data json:parse _table cell-delimiter row-delimiter csv:_write ;
 
 META: from-json
+  use-when "You have JSON text as an array of objects, such as an export from an API, and need CSV for a spreadsheet." ;
   param cell-delimiter "The text put between the cells. Escapes like \\t are read." ;
   param row-delimiter "The text put between the rows. Escapes like \\r\\n are read." ;
   see-also csv:to-json ;
+  inverse to-json ;
+  link "https://www.rfc-editor.org/rfc/rfc4180" "RFC 4180: CSV format" ;
+  link "https://en.wikipedia.org/wiki/Comma-separated_values" "Comma-separated values on Wikipedia" ;
 ;

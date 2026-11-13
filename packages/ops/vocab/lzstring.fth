@@ -16,11 +16,17 @@ IN: lzstring
   data format _decompress ;
 
 META: compress
+  use-when "You have text and want it in the lz-string form that web apps use, for example to keep a compressed value in a URL or in storage." ;
   param format "default: the 16-bit units as big-endian byte pairs; utf16: compressToUTF16 (UTF-8); base64: compressToBase64; uri: compressToEncodedURIComponent. CyberChef offers default, UTF16 and Base64." ;
   see-also lzstring:decompress ;
+  inverse decompress ;
+  link "https://github.com/pieroxy/lz-string" "lz-string on GitHub" ;
 ;
 
 META: decompress
+  use-when "You have an lz-string value from a web app's URL or storage, and want the text it stands for." ;
   param format "The format compress wrote: default, utf16, base64 or uri." ;
   see-also lzstring:compress ;
+  inverse compress ;
+  link "https://github.com/pieroxy/lz-string" "lz-string on GitHub" ;
 ;

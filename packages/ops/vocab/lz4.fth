@@ -104,6 +104,7 @@ IN: lz4
   data 0 verify _frames ;
 
 META: compress
+  use-when "You have bytes and need an LZ4 frame, for example to store data for an lz4 tool or a service that reads LZ4." ;
   param level "The compression level: 0 stores, 1 to 9 compress (1 fastest and the default; 9 searches 256 candidates per position). CyberChef's LZ4 Compress has no parameters." ;
   param block-size "The largest block: 64KB, 256KB, 1MB or 4MB (lz4js and the lz4 command default to 4MB)." ;
   param independent "Independent blocks (the default): each block decodes alone. Off lets a block refer back into the 64 KB before it (smaller, like lz4 -BD)." ;
@@ -111,9 +112,14 @@ META: compress
   param content-checksum "Add the XXH32 of the whole input at the end (on by default, as lz4js and lz4 write it)." ;
   param content-size "Store the input length in the header (lz4 --content-size)." ;
   see-also lz4:decompress lzstring:compress deflate:gzip ;
+  inverse decompress ;
+  link "https://lz4.org/" "LZ4 home page" ;
 ;
 
 META: decompress
+  use-when "You have an LZ4 frame, starting with 04 22 4d 18, and want the bytes it holds." ;
   param verify "Check the header checksum, the block and content checksums and the content size; off, damaged checksums are ignored and the data is still returned." ;
   see-also lz4:compress deflate:gunzip ;
+  inverse compress ;
+  link "https://lz4.org/" "LZ4 home page" ;
 ;

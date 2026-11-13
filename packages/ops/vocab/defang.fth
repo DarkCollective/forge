@@ -53,11 +53,13 @@ IN: defang
     [ _domain-pattern "i" [ escape-dots escape-http escape-slashes _defang-one ] _map-matches ] when ] if ;
 
 META: defang-url
+  use-when "You have a URL or a domain copied from a phishing mail or a log, and want to write it so that it cannot be clicked by mistake." ;
   param escape-dots "Write every . as [.]." ;
   param escape-http "Write http as hxxp (any letter case)." ;
   param escape-slashes "Write :// as [://]." ;
   param process "valid-domains-and-full-urls: URLs, then domain names; only-full-urls: URLs; everything: the whole input." ;
   see-also defang:fang-url defang:defang-ip extract:urls ;
+  inverse fang-url ;
 ;
 
 : fang-url ( data:str restore-dots:bool=true restore-http:bool=true restore-slashes:bool=true -- str )
@@ -69,8 +71,10 @@ META: defang-url
   restore-slashes [ "[://]" split "://" join ] when ;
 
 META: fang-url
+  use-when "You have a defanged URL, with [.] and hxxp in it, from a report or a chat, and want the live form back." ;
   param restore-dots "Write [.] as ." ;
   param restore-http "Write hxxp as http." ;
   param restore-slashes "Write [://] as ://." ;
   see-also defang:defang-url ;
+  inverse defang-url ;
 ;

@@ -11,6 +11,10 @@
     "expect": {
       "value": "Source port: 51234\nDestination port: 443\nSequence number: 2864434397\nAcknowledgement number: 0\nData offset: 10 (40 bytes)\nReserved bits: 0\nFlags: 0x002 (SYN)\n  NS: 0 (Not set)\n  CWR: 0 (Not set)\n  ECE: 0 (Not set)\n  URG: 0 (Not set)\n  ACK: 0 (Not set)\n  PSH: 0 (Not set)\n  RST: 0 (Not set)\n  SYN: 1 (Set)\n  FIN: 0 (Not set)\nWindow size: 64240\nChecksum: 0x1234\nUrgent pointer: 0x0000\nOptions:\n  Maximum Segment Size (2): 1460\n  SACK Permitted (4)\n  Timestamps (8): TSval 305441741, TSecr 0\n  No-Operation (1)\n  Window Scale (3): shift 7 (multiplier 128)",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A SYN with its options decoded",
+      "note": "The options give the maximum segment size, the window scale and SACK permitted, and each option is named."
     }
   },
   {
@@ -25,6 +29,10 @@
     "expect": {
       "value": "Source port: 443\nDestination port: 51234\nSequence number: 1000\nAcknowledgement number: 2864434398\nData offset: 8 (32 bytes)\nReserved bits: 0\nFlags: 0x012 (ACK, SYN)\n  NS: 0 (Not set)\n  CWR: 0 (Not set)\n  ECE: 0 (Not set)\n  URG: 0 (Not set)\n  ACK: 1 (Set)\n  PSH: 0 (Not set)\n  RST: 0 (Not set)\n  SYN: 1 (Set)\n  FIN: 0 (Not set)\nWindow size: 65160\nChecksum: 0x1234\nUrgent pointer: 0x0000\nOptions:\n  Maximum Segment Size (2): 1380\n  No-Operation (1)\n  Window Scale (3): shift 8 (multiplier 256)\n  SACK Permitted (4)\n  No-Operation (1)\n  No-Operation (1)",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The reply to a SYN",
+      "note": "The ports are swapped in the reply, and its flags show ACK and SYN together."
     }
   },
   {
@@ -155,6 +163,10 @@
     "expect": {
       "value": "474554202f20485454502f312e310d0a486f73743a20610d0a0d0a",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Drop the header and its options, keep the data",
+      "note": "The data offset 8 means a 32-byte header with options, and the bytes after it start with GET."
     }
   },
   {
@@ -333,6 +345,10 @@
     "expect": {
       "value": "Source port: 53124\nDestination port: 53\nLength: 37 bytes\nChecksum: 0x9a3c\nPayload (29 bytes): 1a2b01000001000000000000076578616d706c6503636f6d0000010001",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A DNS query in a UDP datagram",
+      "note": "Port 53 is DNS, and the length field counts the 8-byte header together with the payload."
     }
   },
   {
@@ -421,6 +437,10 @@
     "expect": {
       "value": "1a2b01000001000000000000076578616d706c6503636f6d0000010001",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The payload of a DNS query datagram",
+      "note": "The eight header bytes are dropped, and what remains is the DNS message, which starts with the ID 1a2b."
     }
   },
   {
@@ -537,6 +557,10 @@
     "expect": {
       "value": "Version: 4\nInternet Header Length (IHL): 5 (20 bytes)\nDifferentiated Services Code Point (DSCP): 0\nExplicit Congestion Notification (ECN): 0\nTotal length: 60 bytes\nIdentification: 0x1c46 (7238)\nFlags: 0x02\n  Reserved bit: 0 (Not set)\n  Don't fragment: 1 (Set)\n  More fragments: 0 (Not set)\nFragment offset: 0 (0 bytes)\nTime-To-Live: 64\nProtocol: 6 (TCP)\nHeader checksum: 0xb262 (correct)\nSource IP address: 172.16.254.1\nDestination IP address: 192.0.2.1",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A TCP SYN header, field by field",
+      "note": "The header length of 5 means 20 bytes with no options, and the protocol byte 6 is TCP."
     }
   },
   {
@@ -551,6 +575,10 @@
     "expect": {
       "value": "Version: 4\nInternet Header Length (IHL): 5 (20 bytes)\nDifferentiated Services Code Point (DSCP): 46\nExplicit Congestion Notification (ECN): 0\nTotal length: 57 bytes\nIdentification: 0xbeef (48879)\nFlags: 0x00\n  Reserved bit: 0 (Not set)\n  Don't fragment: 0 (Not set)\n  More fragments: 0 (Not set)\nFragment offset: 0 (0 bytes)\nTime-To-Live: 128\nProtocol: 17 (UDP)\nHeader checksum: 0x6705 (correct)\nSource IP address: 10.0.0.7\nDestination IP address: 10.0.0.1",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "DSCP and ECN in the second byte",
+      "note": "The second byte, b8, holds DSCP 46, which is expedited forwarding (EF)."
     }
   },
   {
@@ -811,6 +839,10 @@
     "expect": {
       "value": "c82201bbaabbccdd00000000a002faf012340000020405b40402080a1234abcd0000000001030307",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The TCP segment inside an IPv4 datagram",
+      "note": "The header is 20 bytes here, as IHL 5 says, so the output starts with the TCP ports."
     }
   },
   {
@@ -827,6 +859,10 @@
     "expect": {
       "value": "cf84003500259a3c1a2b01000001000000000000076578616d706c6503636f6d0000010001",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Padding after the datagram is dropped",
+      "note": "Bytes after the total length, such as Ethernet padding, are not part of the payload and are removed."
     }
   },
   {
@@ -984,6 +1020,10 @@
     "expect": {
       "value": "Source MAC: de:ad:be:ef:00:01\nDestination MAC: 00:1a:2b:3c:4d:5e\nEtherType: 0x0800 (IPv4)\nPayload (60 bytes): 4500003c1c4640004006b262ac10fe01c0000201c82201bbaabbccdd00000000a002faf012340000020405b40402080a1234abcd0000000001030307",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "An IPv4 frame over Ethernet II",
+      "note": "The EtherType 0x0800 says the payload is IPv4, and the MAC addresses are written with colons."
     }
   },
   {
@@ -1000,6 +1040,10 @@
     "expect": {
       "value": "Source MAC: de:ad:be:ef:00:01\nDestination MAC: ff:ff:ff:ff:ff:ff\nEtherType: 0x0806 (ARP)\nPayload (46 bytes): 0001080006040001deadbeef0001c0a8010a000000000000c0a80101000000000000000000000000000000000000",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A broadcast ARP request",
+      "note": "The destination ff:ff:ff:ff:ff:ff is the broadcast address, and EtherType 0x0806 names ARP."
     }
   },
   {
@@ -1443,6 +1487,10 @@
     "expect": {
       "value": "Record 1\n  Content type: Handshake (22)\n  Version: TLS 1.0 (0x0301)\n  Length: 177\n  Handshake: client_hello (1), length 173\n    Version: TLS 1.2 (0x0303)\n    Random: 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f\n    Session ID: (empty)\n    Cipher suites (1):\n      TLS_AES_128_GCM_SHA256 (0x1301)\n    Compression methods (1): null (0)\n    Extensions (3):\n      server_name (0), length 30\n        Server name: a.example, b.example\n      supported_groups (10), length 14\n        Supported groups: x25519 (0x001d), SecP256r1MLKEM768 (0x11eb), X25519MLKEM768 (0x11ec), ffdhe2048 (0x0100), X25519Kyber768Draft00 (0x6399), unknown (0x0063)\n      key_share (51), length 74\n        Key shares:\n          x25519 (0x001d), key exchange length 32\n          secp256r1 (0x0017), key exchange length 32",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A ClientHello with two server names",
+      "note": "The server_name extension lists the host names a.example and b.example, and each key share is shown with its group name."
     }
   },
   {

@@ -17,9 +17,11 @@ IN: xpress
   data _huffman ;
 
 META: decompress
+  use-when "You have XPRESS plain LZ77 data from the Windows compression API, described in MS-XCA, and want the bytes it holds." ;
   see-also xpress:huffman-decompress lznt1:decompress ;
 ;
 
 META: huffman-decompress
+  use-when "You have XPRESS LZ77 with Huffman data from the Windows compression API, with its code table in front, and want the bytes it holds." ;
   see-also xpress:decompress lznt1:decompress ;
 ;

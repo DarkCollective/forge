@@ -13,7 +13,10 @@ USING: json ;
   data show-types protobuf:_decode indent json:stringify ;
 
 META: decode
+  use-when "You have Protocol Buffers bytes from a capture or log but no .proto schema, and want the fields by number as JSON." ;
   param show-types "Write each key as field #N: and the wire type (VarInt, 64-Bit, L-delim or 32-Bit) instead of the bare field number." ;
   param indent "Spaces per level; 0 writes compact JSON." ;
   see-also varint:decode varint:encode ;
+  link "https://protobuf.dev/" "Protocol Buffers documentation" ;
+  link "https://en.wikipedia.org/wiki/Protocol_Buffers" "Protocol Buffers on Wikipedia" ;
 ;

@@ -13,8 +13,10 @@ USING: json ;
   data json:parse mode "uri" = [ "rison" rison:_encode rison:_quote ] [ mode rison:_encode ] if ;
 
 META: encode
+  use-when "You have JSON data and need it as Rison, for example to put a value into a Kibana style URL." ;
   param mode "rison for any value, o-rison for an object without its parentheses, a-rison for an array without !( and ), uri for any value quoted for a URI." ;
   see-also rison:decode ;
+  inverse decode ;
 ;
 
 : decode ( data:str mode:choice{rison|o-rison|a-rison}=rison indent:int=4 -- str )
@@ -23,7 +25,9 @@ META: encode
   data mode rison:_decode indent json:stringify ;
 
 META: decode
+  use-when "You have Rison text from a URL or a Kibana style link, such as (a:1,b:'x'), and want the JSON it stands for." ;
   param mode "rison for any value, o-rison for the members of an object, a-rison for the items of an array." ;
   param indent "Spaces per level; 0 writes compact JSON." ;
   see-also rison:encode ;
+  inverse encode ;
 ;

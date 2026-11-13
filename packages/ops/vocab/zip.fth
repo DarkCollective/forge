@@ -252,17 +252,23 @@ USING: crc deflate ;
   _assemble ;
 
 META: unzip
+  use-when "You have a zip archive that is not encrypted, and want to list its entries and read their contents." ;
   param verify "Check each entry's size and CRC-32 against the directory (CyberChef's Verify result); off, damaged data is returned anyway." ;
   see-also zip:entry zip:zip deflate:inflate ;
+  inverse zip ;
+  link "https://en.wikipedia.org/wiki/ZIP_(file_format)" "ZIP file format on Wikipedia" ;
 ;
 
 META: entry
+  use-when "You have a zip archive and want one file from it, found by its exact name, without listing the whole archive." ;
   param name "The entry's name as unzip lists it, for example docs/readme.txt." ;
   param verify "Check the entry's size and CRC-32 against the directory." ;
   see-also zip:unzip zip:zip ;
+  link "https://en.wikipedia.org/wiki/ZIP_(file_format)" "ZIP file format on Wikipedia" ;
 ;
 
 META: zip
+  use-when "You have bytes and need a zip file that holds them as one named file, for a recipient or tool that expects a zip." ;
   param filename "The name the file gets inside the archive (UTF-8)." ;
   param comment "A comment stored with the file (UTF-8); empty stores none." ;
   param method "deflate compresses; store keeps the bytes as they are (CyberChef's None (Store))." ;
@@ -271,4 +277,6 @@ META: zip
   param mtime "The modification time in Unix seconds, 1980 to 2107 (0 means 1980-01-01 00:00:00 and keeps the output the same on every run)." ;
   param mode "The Unix permission bits (0 to 4095; 420 is 0644), stored when os is unix." ;
   see-also zip:unzip zip:entry deflate:deflate ;
+  inverse unzip ;
+  link "https://en.wikipedia.org/wiki/ZIP_(file_format)" "ZIP file format on Wikipedia" ;
 ;

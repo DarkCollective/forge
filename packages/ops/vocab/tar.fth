@@ -144,21 +144,29 @@ IN: tar
   1024 util:zero-bytes cat ;
 
 META: untar
+  use-when "You have a tar archive, or a .tar.gz once it has been gunzipped, and want to list its files and read their contents." ;
   param verify "Check each header's checksum; off, a damaged header is read anyway." ;
   see-also tar:entry tar:tar zip:unzip ;
+  inverse tar ;
+  link "https://en.wikipedia.org/wiki/Tar_(computing)" "Tar on Wikipedia" ;
 ;
 
 META: entry
+  use-when "You have a tar archive and want one file from it, found by its exact name." ;
   param name "The file's name as untar lists it, for example docs/readme.txt." ;
   param verify "Check each header's checksum." ;
   see-also tar:untar tar:tar ;
+  link "https://en.wikipedia.org/wiki/Tar_(computing)" "Tar on Wikipedia" ;
 ;
 
 META: tar
+  use-when "You have bytes and need a tar archive holding them as one file with a given name, for example to pass to a tool that reads tar." ;
   param filename "The name of the file in the archive (UTF-8, up to 255 bytes)." ;
   param mode "The permission bits, 0 to 4095 (436 is 0664)." ;
   param mtime "The modification time in Unix seconds; 0 keeps the output the same on every run." ;
   param uid "The owner's user id (0 to 2097151)." ;
   param gid "The owner's group id (0 to 2097151)." ;
   see-also tar:untar tar:entry ;
+  inverse untar ;
+  link "https://en.wikipedia.org/wiki/Tar_(computing)" "Tar on Wikipedia" ;
 ;

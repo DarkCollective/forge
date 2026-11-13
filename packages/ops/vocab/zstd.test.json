@@ -53,6 +53,10 @@
     "expect": {
       "value": "48656c6c6f2c205a7374616e64617264212048656c6c6f2c205a7374616e64617264212048656c6c6f2c20466f7267652e0a",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decompress a small Zstandard frame",
+      "note": "The magic bytes 28 b5 2f fd start every Zstandard frame, and this one holds short repeated text."
     }
   },
   {

@@ -111,6 +111,10 @@
     "expect": {
       "value": "68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c617465",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Start reading at byte 3",
+      "note": "The three bytes before the stream are skipped, and the bytes after the stream are ignored."
     }
   },
   {
@@ -181,6 +185,10 @@
     "expect": {
       "value": "012c00d3ff68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c617465",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Level 0 stores the bytes in a block",
+      "note": "Level 0 writes a stored block: 01 marks the final block and 2c 00 gives its length of 44 bytes."
     }
   },
   {
@@ -213,6 +221,10 @@
     "expect": {
       "value": "cb48cdc9c957c024cbf38b725274a09c94d4b49cc4925400",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Repeated text at level 1",
+      "note": "The output is shorter than the input, because the repeated hello words are sent as back-references."
     }
   },
   {
@@ -317,6 +329,10 @@
     "expect": {
       "value": "68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c617465",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Inflate a zlib stream made at level 6",
+      "note": "The header 78 9c is the usual default, and the Adler-32 trailer at the end is checked."
     }
   },
   {
@@ -488,6 +504,10 @@
     "expect": {
       "value": "7801010000ffff00000001",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Empty input still has a header and a checksum",
+      "note": "The header 78 01 starts the zlib stream, the stored block is empty, and 00 00 00 01 is the Adler-32 of empty input."
     }
   },
   {
@@ -579,6 +599,10 @@
     "expect": {
       "value": "68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c617465",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Read a gzip member made at level 6",
+      "note": "The data starts with 1f 8b, the gzip magic number, and with verify on the CRC-32 and length in the trailer are checked."
     }
   },
   {
@@ -820,6 +844,10 @@
     "expect": {
       "value": "1f8b081a00f1536504ff612e747874006300ea02012c00d3ff68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c6174651926a8a22c000000",
       "enc": "hex"
+    },
+    "example": {
+      "title": "A gzip header with name, comment and CRC",
+      "note": "The file name a.txt and the comment c are each stored with a zero byte after them, and the header CRC-16 follows."
     }
   },
   {
@@ -852,6 +880,10 @@
     "expect": {
       "value": "1f8b08000000000004ffcb48cdc9c957c024cbf38b725274a09c94d4b49cc49254001926a8a22c000000",
       "enc": "hex"
+    },
+    "example": {
+      "title": "A gzip file with a zero time",
+      "note": "The modification time is zero, so the output is the same on every run."
     }
   },
   {

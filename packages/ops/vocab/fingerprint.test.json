@@ -14,6 +14,10 @@
     "expect": {
       "value": "5a1edc7f170af1014fc65c994878e63c",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The JA3 hash of an OpenSSL ClientHello",
+      "note": "The hash is the MD5 of the JA3 string, written as 32 lower-case hex digits."
     }
   },
   {
@@ -31,6 +35,10 @@
     "expect": {
       "value": "771,4866-4867-4865-49196-49200-159-52393-52392-52394-49195-49199-158-49188-49192-107-49187-49191-103-49162-49172-57-49161-49171-51-157-156-61-60-53-47-255,0-11-10-35-16-22-23-13-43-45-51,29-23-30-25-24-256-257-258-259-260,0-1-2",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The JA3 string behind the hash",
+      "note": "Five fields separated by commas: the version, cipher suites, extensions, curves and point formats, with GREASE values removed."
     }
   },
   {
@@ -674,6 +682,10 @@
     "expect": {
       "value": "abade5a4a7f42baf54766e5d108283b6",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The JA3S hash of a TLS 1.2 server reply",
+      "note": "The fingerprint covers the server version, the cipher suite the server chose and its extensions, not the certificate."
     }
   },
   {
@@ -691,6 +703,10 @@
     "expect": {
       "value": "771,49196,65281-11-35-23",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The three fields of a JA3S string",
+      "note": "771 is the version in decimal, 49196 the cipher suite the server chose, and the last field lists the extensions."
     }
   },
   {
@@ -958,6 +974,10 @@
     "expect": {
       "value": "JA4:    t13d3111h2_e8f1e7e78f70_1f22a2ca17c4\nJA4_o:  t13d3111h2_d7c3e2abb617_b9298c291afa\nJA4_r:  t13d3111h2_002f,0033,0035,0039,003c,003d,0067,006b,009c,009d,009e,009f,00ff,1301,1302,1303,c009,c00a,c013,c014,c023,c024,c027,c028,c02b,c02c,c02f,c030,cca8,cca9,ccaa_000a,000b,000d,0016,0017,0023,002b,002d,0033_0403,0503,0603,0807,0808,0809,080a,080b,0804,0805,0806,0401,0501,0601,0303,0301,0302,0402,0502,0602\nJA4_ro: t13d3111h2_1302,1303,1301,c02c,c030,009f,cca9,cca8,ccaa,c02b,c02f,009e,c024,c028,006b,c023,c027,0067,c00a,c014,0039,c009,c013,0033,009d,009c,003d,003c,0035,002f,00ff_0000,000b,000a,0023,0010,0016,0017,000d,002b,002d,0033_0403,0503,0603,0807,0808,0809,080a,080b,0804,0805,0806,0401,0501,0601,0303,0301,0302,0402,0502,0602",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "All the JA4 variants at once",
+      "note": "The all format lists JA4, JA4_o, JA4_r and JA4_ro, where the _o and _r forms keep the original order or leave the text unhashed."
     }
   },
   {
@@ -975,6 +995,10 @@
     "expect": {
       "value": "t13d3111h2_e8f1e7e78f70_1f22a2ca17c4",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The JA4 fingerprint of an OpenSSL TLS 1.3 client",
+      "note": "The fingerprint has three parts joined by underscores: the protocol and version, a hash of the cipher suites, and a hash of the extensions."
     }
   },
   {
@@ -1666,6 +1690,10 @@
     "expect": {
       "value": "JA4S:   t120400_c02c_12a20535f9be\nJA4S_r: t120400_c02c_ff01,000b,0023,0017",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "JA4S and its unhashed form",
+      "note": "The first part gives the transport, version, extension count and ALPN, the second the chosen cipher suite as four hex digits."
     }
   },
   {
