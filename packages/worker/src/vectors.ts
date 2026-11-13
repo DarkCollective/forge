@@ -105,6 +105,8 @@ export const runOpVectors: RunOpVectorsFn = async ({ baker, catalogue, files }) 
   for (const file of Object.keys(files).sort()) {
     const vectors = files[file] ?? [];
     for (const [index, vector] of vectors.entries()) {
+      // A check pair is not an op vector (RECIPES.md section 9.1): it is neither run nor counted.
+      if ("checks" in vector) continue;
       total++;
       const label = vector.name ?? vector.op;
       const fail = (message: string): void => {

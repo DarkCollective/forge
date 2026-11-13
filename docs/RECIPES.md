@@ -1657,7 +1657,7 @@ test failure once it has an op.
   "$id": "urn:forge:schema:op-vectors:1",
   "title": "Forge operation test vectors, one file per vocabulary",
   "type": "array",
-  "items": { "$ref": "#/$defs/vector" },
+  "items": { "oneOf": [{ "$ref": "#/$defs/vector" }, { "$ref": "#/$defs/checkPair" }] },
   "$defs": {
     "encoded": {
       "type": "object",
@@ -1666,6 +1666,19 @@ test failure once it has an op.
         "enc": { "enum": ["utf8", "hex", "latin1", "base64"] }
       },
       "required": ["value", "enc"],
+      "additionalProperties": false
+    },
+    "checkPair": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 200 },
+        "ref": { "type": "string", "maxLength": 200 },
+        "op": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,63}:[^\\s:]{1,128}$" },
+        "checks": { "enum": ["input", "output"] },
+        "data": { "$ref": "#/$defs/encoded" },
+        "expect": { "enum": ["pass", "fail", "unknown"] }
+      },
+      "required": ["op", "checks", "data", "expect"],
       "additionalProperties": false
     },
     "vector": {
@@ -1739,6 +1752,13 @@ A vector is `{ name?, ref?, op, params, input, expect, example? }`:
     a JSON `1` matches both `int 1` and `num 1.0` (the vector cannot tell them apart; give the op a distinguishing vector if it matters).
 - `ref`: where the value comes from (a standard, an RFC section, a published test vector, or `"hand-computed"`).
 - `example` (optional): `{ title, note? }` marks the vector as a worked example for the op's help page (§2.7). `title` is required, 1 to 80 characters, plain text; `note` is optional, up to 400 characters. An example is an ordinary vector in every other respect: the runner (§9.3) reads the fields it knows by name and ignores the key, so an example is correct by construction and never written separately. Rules, enforced by `buildHelp` at build time and by `vocab/vectors.test.ts` on the files: at most **3** examples per op; titles unique within an op; `input.value`, each encoded parameter value and `expect.value` at most 2048 characters (so `help.json` stays small; big cases stay plain vectors); the vector's `op` is a catalogue op (an alias is accepted); the order is the order in the file. An error vector (`expect: { "error": … }`) may be an example (the title says so), and `ref` is carried to the help page as the source line of the example.
+
+**Check pairs.** An array may also hold entries that test an op's `checks` clauses (LANGUAGE.md section 5.9) instead of running the op: `{ name?, ref?, op, checks, data, expect }`. `checks` is `"input"` or `"output"` (the scope), `data` is `{ value, enc }` as for an input, and `expect` is `"pass"`, `"fail"` or `"unknown"`, the result of `evaluateChecks` for the op's checks of that scope on those bytes. An entry with a `checks` key is a pair; it has no `params`, `input` or `example`, and the runner (§9.3) skips it: it is not run, not counted and does not cover its op. `packages/ops/src/checks-pairs.test.ts` evaluates every pair and requires, for each op with `input` checks, at least one `pass` and one `fail` input pair, and for each op with `output` checks at least one `pass` output pair; a pair naming an op with no checks in its scope is an error.
+
+```json
+{ "name": "gunzip input: a gzip header passes", "op": "gzip:gunzip", "checks": "input",
+  "data": { "value": "1f8b0800", "enc": "hex" }, "expect": "pass" }
+```
 
 ### 9.2 Authoring rules
 

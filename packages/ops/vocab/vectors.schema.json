@@ -3,7 +3,7 @@
   "$id": "urn:forge:schema:op-vectors:1",
   "title": "Forge operation test vectors, one file per vocabulary",
   "type": "array",
-  "items": { "$ref": "#/$defs/vector" },
+  "items": { "oneOf": [{ "$ref": "#/$defs/vector" }, { "$ref": "#/$defs/checkPair" }] },
   "$defs": {
     "encoded": {
       "type": "object",
@@ -12,6 +12,19 @@
         "enc": { "enum": ["utf8", "hex", "latin1", "base64"] }
       },
       "required": ["value", "enc"],
+      "additionalProperties": false
+    },
+    "checkPair": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 200 },
+        "ref": { "type": "string", "maxLength": 200 },
+        "op": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,63}:[^\\s:]{1,128}$" },
+        "checks": { "enum": ["input", "output"] },
+        "data": { "$ref": "#/$defs/encoded" },
+        "expect": { "enum": ["pass", "fail", "unknown"] }
+      },
+      "required": ["op", "checks", "data", "expect"],
       "additionalProperties": false
     },
     "vector": {
