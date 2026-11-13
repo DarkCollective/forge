@@ -20,3 +20,5 @@ export { CheckView, dataView, isCheckView, isPrintableCodePoint } from "./data.j
 export type { Utf8Validity } from "./data.js";
 export { evaluateChecks, evaluateTest, expectedName, scoreChecks } from "./evaluate.js";
 export type { CheckEvaluation, CheckResult, CheckScope } from "./evaluate.js";
+export { GENERIC_IDS, identifyData } from "./identify.js";
+export type { Certainty, Identification } from "./identify.js";
