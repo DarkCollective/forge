@@ -21,8 +21,10 @@
  * src/asn1-oids.ts). FL has no per-vocabulary constants, so a table of this size in FL would be rebuilt
  * on every call.
  *
- * One row per file type: category, name, extensions (the first is used to name a carved file), MIME
- * type, a description, the magic bytes, and optionally an `end` (the name of an end finder in
+ * One row per file type: a stable `id` (lower-kebab-case, unique; a `magic-bytes format "<id>"` check
+ * names it, so an id is never reused for another row), a `displayName` (a short name of the data, such as
+ * "gzip data"), category, name, extensions (the first is used to name a carved file), MIME type, a
+ * description, the magic bytes, and optionally an `end` (the name of an end finder in
  * prims/filetype.ts, which gives the length of the file for Extract Files), a `verify` (a name of a
  * check on the data that the magic alone cannot do) and `weak` (a signature short enough to occur by
  * chance in any data: Scan for Embedded Files ignores these when "ignore common byte sequences" is on).
@@ -57,6 +59,10 @@ export interface MagicPart {
 }
 
 export interface FileSig {
+  /** The stable id (lower-kebab-case, unique): what a `magic-bytes format "<id>"` check names. */
+  readonly id: string;
+  /** A short name of the data, for the pane and for `expects` ("gzip data", "PNG image"). */
+  readonly displayName: string;
   readonly category: Category;
   readonly name: string;
   readonly extensions: string;
@@ -77,6 +83,8 @@ interface Options {
 }
 
 type Row = readonly [
+  id: string,
+  displayName: string,
   category: Category,
   name: string,
   extensions: string,
@@ -97,6 +105,8 @@ const M: Category = "Miscellaneous";
 const ROWS: readonly Row[] = [
   // ---- Images ----
   [
+    "png",
+    "PNG image",
     I,
     "Portable Network Graphics image",
     "png",
@@ -106,6 +116,8 @@ const ROWS: readonly Row[] = [
     { end: "png" },
   ],
   [
+    "jpeg",
+    "JPEG image",
     I,
     "JPEG image",
     "jpg,jpeg,jpe,jfif",
@@ -115,6 +127,8 @@ const ROWS: readonly Row[] = [
     { end: "jpeg" },
   ],
   [
+    "gif-87a",
+    "GIF image",
     I,
     "Graphics Interchange Format (87a)",
     "gif",
@@ -124,6 +138,8 @@ const ROWS: readonly Row[] = [
     { end: "gif" },
   ],
   [
+    "gif-89a",
+    "GIF image",
     I,
     "Graphics Interchange Format (89a)",
     "gif",
@@ -133,6 +149,8 @@ const ROWS: readonly Row[] = [
     { end: "gif" },
   ],
   [
+    "bmp",
+    "BMP image",
     I,
     "Windows Bitmap",
     "bmp,dib",
@@ -142,6 +160,8 @@ const ROWS: readonly Row[] = [
     { end: "bmp" },
   ],
   [
+    "tiff-le",
+    "TIFF image",
     I,
     "Tagged Image File Format (little endian)",
     "tif,tiff",
@@ -150,6 +170,8 @@ const ROWS: readonly Row[] = [
     "49 49 2A 00",
   ],
   [
+    "tiff-be",
+    "TIFF image",
     I,
     "Tagged Image File Format (big endian)",
     "tif,tiff",
@@ -158,6 +180,8 @@ const ROWS: readonly Row[] = [
     "4D 4D 00 2A",
   ],
   [
+    "bigtiff-le",
+    "BigTIFF image",
     I,
     "BigTIFF (little endian)",
     "tif,tiff",
@@ -166,6 +190,8 @@ const ROWS: readonly Row[] = [
     "49 49 2B 00 08 00 00 00",
   ],
   [
+    "bigtiff-be",
+    "BigTIFF image",
     I,
     "BigTIFF (big endian)",
     "tif,tiff",
@@ -174,6 +200,8 @@ const ROWS: readonly Row[] = [
     "4D 4D 00 2B 00 08 00 00",
   ],
   [
+    "webp",
+    "WebP image",
     I,
     "WebP image",
     "webp",
@@ -183,6 +211,8 @@ const ROWS: readonly Row[] = [
     { end: "riff" },
   ],
   [
+    "ico",
+    "Windows icon",
     I,
     "Windows icon",
     "ico",
@@ -192,6 +222,8 @@ const ROWS: readonly Row[] = [
     { end: "ico", weak: true },
   ],
   [
+    "cur",
+    "Windows cursor",
     I,
     "Windows cursor",
     "cur",
@@ -201,6 +233,8 @@ const ROWS: readonly Row[] = [
     { weak: true },
   ],
   [
+    "psd",
+    "Photoshop image",
     I,
     "Adobe Photoshop document",
     "psd",
@@ -209,6 +243,8 @@ const ROWS: readonly Row[] = [
     "'8BPS' 00 01",
   ],
   [
+    "psb",
+    "Photoshop large document",
     I,
     "Adobe Photoshop large document",
     "psb",
@@ -216,8 +252,19 @@ const ROWS: readonly Row[] = [
     "Photoshop large document, version 2",
     "'8BPS' 00 02",
   ],
-  [I, "JPEG 2000", "jp2", "image/jp2", "JPEG 2000 image", "00 00 00 0C 6A 50 20 20 0D 0A 87 0A"],
   [
+    "jp2",
+    "JPEG 2000 image",
+    I,
+    "JPEG 2000",
+    "jp2",
+    "image/jp2",
+    "JPEG 2000 image",
+    "00 00 00 0C 6A 50 20 20 0D 0A 87 0A",
+  ],
+  [
+    "jxl-codestream",
+    "JPEG XL image",
     I,
     "JPEG XL (codestream)",
     "jxl",
@@ -227,6 +274,8 @@ const ROWS: readonly Row[] = [
     { weak: true },
   ],
   [
+    "jxl-container",
+    "JPEG XL image",
     I,
     "JPEG XL (container)",
     "jxl",
@@ -235,6 +284,8 @@ const ROWS: readonly Row[] = [
     "00 00 00 0C 4A 58 4C 20 0D 0A 87 0A",
   ],
   [
+    "heic",
+    "HEIC image",
     I,
     "High Efficiency Image File",
     "heic,heif",
@@ -243,6 +294,8 @@ const ROWS: readonly Row[] = [
     "@4 'ftypheic'",
   ],
   [
+    "heic-heix",
+    "HEIC image",
     I,
     "High Efficiency Image File (extended)",
     "heic,heif",
@@ -251,6 +304,8 @@ const ROWS: readonly Row[] = [
     "@4 'ftypheix'",
   ],
   [
+    "heic-hevc",
+    "HEIC image",
     I,
     "High Efficiency Image File (HEVC)",
     "heic,heif",
@@ -259,6 +314,8 @@ const ROWS: readonly Row[] = [
     "@4 'ftyphevc'",
   ],
   [
+    "heif-mif1",
+    "HEIF image",
     I,
     "High Efficiency Image File (mif1)",
     "heif,heic",
@@ -267,6 +324,8 @@ const ROWS: readonly Row[] = [
     "@4 'ftypmif1'",
   ],
   [
+    "avif",
+    "AVIF image",
     I,
     "AV1 Image File Format",
     "avif",
@@ -274,15 +333,81 @@ const ROWS: readonly Row[] = [
     "AVIF image (ISO base media)",
     "@4 'ftypavif'",
   ],
-  [I, "DirectDraw Surface", "dds", "image/vnd.ms-dds", "DDS texture", "'DDS ' 7C 00 00 00"],
-  [I, "GIMP image", "xcf", "image/x-xcf", "GIMP XCF image", "'gimp xcf '"],
-  [I, "Apple icon image", "icns", "image/icns", "macOS icon", "'icns'", { weak: true }],
-  [I, "Windows Metafile", "wmf", "image/wmf", "Placeable WMF", "D7 CD C6 9A"],
-  [I, "Enhanced Metafile", "emf", "image/emf", "EMF vector image", "01 00 00 00 @40 20 45 4D 46"],
-  [I, "OpenEXR image", "exr", "image/x-exr", "OpenEXR image", "76 2F 31 01"],
-  [I, "Radiance HDR image", "hdr", "image/vnd.radiance", "Radiance RGBE image", "'#?RADIANCE'"],
-  [I, "Flexible Image Transport System", "fits", "image/fits", "FITS image", "'SIMPLE  ='"],
   [
+    "dds",
+    "DDS texture",
+    I,
+    "DirectDraw Surface",
+    "dds",
+    "image/vnd.ms-dds",
+    "DDS texture",
+    "'DDS ' 7C 00 00 00",
+  ],
+  ["xcf", "GIMP image", I, "GIMP image", "xcf", "image/x-xcf", "GIMP XCF image", "'gimp xcf '"],
+  [
+    "icns",
+    "Apple icon image",
+    I,
+    "Apple icon image",
+    "icns",
+    "image/icns",
+    "macOS icon",
+    "'icns'",
+    { weak: true },
+  ],
+  [
+    "wmf",
+    "Windows metafile",
+    I,
+    "Windows Metafile",
+    "wmf",
+    "image/wmf",
+    "Placeable WMF",
+    "D7 CD C6 9A",
+  ],
+  [
+    "emf",
+    "Enhanced metafile",
+    I,
+    "Enhanced Metafile",
+    "emf",
+    "image/emf",
+    "EMF vector image",
+    "01 00 00 00 @40 20 45 4D 46",
+  ],
+  [
+    "exr",
+    "OpenEXR image",
+    I,
+    "OpenEXR image",
+    "exr",
+    "image/x-exr",
+    "OpenEXR image",
+    "76 2F 31 01",
+  ],
+  [
+    "radiance-hdr",
+    "Radiance HDR image",
+    I,
+    "Radiance HDR image",
+    "hdr",
+    "image/vnd.radiance",
+    "Radiance RGBE image",
+    "'#?RADIANCE'",
+  ],
+  [
+    "fits",
+    "FITS image",
+    I,
+    "Flexible Image Transport System",
+    "fits",
+    "image/fits",
+    "FITS image",
+    "'SIMPLE  ='",
+  ],
+  [
+    "djvu",
+    "DjVu document",
     I,
     "DjVu document",
     "djvu,djv",
@@ -293,6 +418,8 @@ const ROWS: readonly Row[] = [
 
   // ---- Video ----
   [
+    "mp4-isom",
+    "MP4 video",
     V,
     "MP4 video (ISO base media)",
     "mp4",
@@ -302,6 +429,8 @@ const ROWS: readonly Row[] = [
     { end: "mp4" },
   ],
   [
+    "mp4-iso2",
+    "MP4 video",
     V,
     "MP4 video (ISO base media 2)",
     "mp4",
@@ -311,6 +440,8 @@ const ROWS: readonly Row[] = [
     { end: "mp4" },
   ],
   [
+    "mp4-mp41",
+    "MP4 video",
     V,
     "MP4 video (version 1)",
     "mp4",
@@ -320,6 +451,8 @@ const ROWS: readonly Row[] = [
     { end: "mp4" },
   ],
   [
+    "mp4-mp42",
+    "MP4 video",
     V,
     "MP4 video (version 2)",
     "mp4",
@@ -329,6 +462,8 @@ const ROWS: readonly Row[] = [
     { end: "mp4" },
   ],
   [
+    "mp4-avc1",
+    "MP4 video",
     V,
     "MP4 video (AVC)",
     "mp4",
@@ -338,6 +473,8 @@ const ROWS: readonly Row[] = [
     { end: "mp4" },
   ],
   [
+    "mp4-dash",
+    "MP4 video",
     V,
     "MP4 video (DASH)",
     "mp4",
@@ -347,6 +484,8 @@ const ROWS: readonly Row[] = [
     { end: "mp4" },
   ],
   [
+    "m4v",
+    "M4V video",
     V,
     "iTunes video",
     "m4v",
@@ -356,6 +495,8 @@ const ROWS: readonly Row[] = [
     { end: "mp4" },
   ],
   [
+    "quicktime",
+    "QuickTime movie",
     V,
     "Apple QuickTime movie",
     "mov,qt",
@@ -364,9 +505,31 @@ const ROWS: readonly Row[] = [
     "@4 'ftypqt  '",
     { end: "mp4" },
   ],
-  [V, "3GPP multimedia", "3gp", "video/3gpp", "3GPP file", "@4 'ftyp3gp'", { end: "mp4" }],
-  [V, "3GPP2 multimedia", "3g2", "video/3gpp2", "3GPP2 file", "@4 'ftyp3g2'", { end: "mp4" }],
   [
+    "3gp",
+    "3GPP video",
+    V,
+    "3GPP multimedia",
+    "3gp",
+    "video/3gpp",
+    "3GPP file",
+    "@4 'ftyp3gp'",
+    { end: "mp4" },
+  ],
+  [
+    "3g2",
+    "3GPP2 video",
+    V,
+    "3GPP2 multimedia",
+    "3g2",
+    "video/3gpp2",
+    "3GPP2 file",
+    "@4 'ftyp3g2'",
+    { end: "mp4" },
+  ],
+  [
+    "f4v",
+    "F4V video",
     V,
     "Adobe Flash video (MP4)",
     "f4v",
@@ -376,6 +539,8 @@ const ROWS: readonly Row[] = [
     { end: "mp4" },
   ],
   [
+    "avi",
+    "AVI video",
     V,
     "Audio Video Interleave",
     "avi",
@@ -385,6 +550,8 @@ const ROWS: readonly Row[] = [
     { end: "riff" },
   ],
   [
+    "matroska",
+    "Matroska or WebM video",
     V,
     "Matroska / WebM (EBML)",
     "mkv,webm,mka",
@@ -393,8 +560,19 @@ const ROWS: readonly Row[] = [
     "1A 45 DF A3",
     { end: "ebml" },
   ],
-  [V, "Flash Video", "flv", "video/x-flv", "FLV video", "'FLV' 01 @5 00 00 00 09"],
   [
+    "flv",
+    "FLV video",
+    V,
+    "Flash Video",
+    "flv",
+    "video/x-flv",
+    "FLV video",
+    "'FLV' 01 @5 00 00 00 09",
+  ],
+  [
+    "asf",
+    "Windows Media (ASF)",
     V,
     "Windows Media (ASF)",
     "wmv,wma,asf",
@@ -402,8 +580,19 @@ const ROWS: readonly Row[] = [
     "Advanced Systems Format container",
     "30 26 B2 75 8E 66 CF 11 A6 D9 00 AA 00 62 CE 6C",
   ],
-  [V, "MPEG program stream", "mpg,mpeg", "video/mpeg", "MPEG-PS, pack header", "00 00 01 BA"],
   [
+    "mpeg-ps",
+    "MPEG program stream",
+    V,
+    "MPEG program stream",
+    "mpg,mpeg",
+    "video/mpeg",
+    "MPEG-PS, pack header",
+    "00 00 01 BA",
+  ],
+  [
+    "mpeg-video",
+    "MPEG video stream",
     V,
     "MPEG video elementary stream",
     "mpg,mpeg",
@@ -413,6 +602,8 @@ const ROWS: readonly Row[] = [
     { weak: true },
   ],
   [
+    "mpeg-ts",
+    "MPEG transport stream",
     V,
     "MPEG transport stream",
     "ts,m2ts",
@@ -422,6 +613,8 @@ const ROWS: readonly Row[] = [
     { weak: true },
   ],
   [
+    "swf",
+    "Flash SWF",
     V,
     "Shockwave Flash",
     "swf",
@@ -431,6 +624,8 @@ const ROWS: readonly Row[] = [
     { weak: true },
   ],
   [
+    "swf-zlib",
+    "Flash SWF (zlib)",
     V,
     "Shockwave Flash (zlib)",
     "swf",
@@ -440,6 +635,8 @@ const ROWS: readonly Row[] = [
     { weak: true },
   ],
   [
+    "swf-lzma",
+    "Flash SWF (LZMA)",
     V,
     "Shockwave Flash (LZMA)",
     "swf",
@@ -448,10 +645,21 @@ const ROWS: readonly Row[] = [
     "'ZWS' ??",
     { weak: true },
   ],
-  [V, "RealMedia", "rm,rmvb", "application/vnd.rn-realmedia", "RealMedia", "'.RMF'"],
+  [
+    "realmedia",
+    "RealMedia",
+    V,
+    "RealMedia",
+    "rm,rmvb",
+    "application/vnd.rn-realmedia",
+    "RealMedia",
+    "'.RMF'",
+  ],
 
   // ---- Audio ----
   [
+    "mp3-id3",
+    "MP3 audio",
     A,
     "MP3 audio with an ID3v2 tag",
     "mp3",
@@ -460,6 +668,8 @@ const ROWS: readonly Row[] = [
     "'ID3' ?? ?? ?? @6 00&80 00&80 00&80 00&80",
   ],
   [
+    "mp3-mpeg1",
+    "MP3 audio",
     A,
     "MP3 audio (MPEG-1 layer 3 frame)",
     "mp3",
@@ -469,6 +679,8 @@ const ROWS: readonly Row[] = [
     { weak: true },
   ],
   [
+    "mp3-mpeg2",
+    "MP3 audio",
     A,
     "MP3 audio (MPEG-2 layer 3 frame)",
     "mp3",
@@ -477,8 +689,20 @@ const ROWS: readonly Row[] = [
     "FF F2&FE",
     { weak: true },
   ],
-  [A, "AAC audio (ADTS)", "aac", "audio/aac", "AAC audio in ADTS frames", "FF F1", { weak: true }],
   [
+    "aac-adts",
+    "AAC audio",
+    A,
+    "AAC audio (ADTS)",
+    "aac",
+    "audio/aac",
+    "AAC audio in ADTS frames",
+    "FF F1",
+    { weak: true },
+  ],
+  [
+    "aac-adts-mpeg2",
+    "AAC audio",
     A,
     "AAC audio (ADTS, MPEG-2)",
     "aac",
@@ -487,8 +711,19 @@ const ROWS: readonly Row[] = [
     "FF F9",
     { weak: true },
   ],
-  [A, "Free Lossless Audio Codec", "flac", "audio/flac", "FLAC audio", "'fLaC'"],
   [
+    "flac",
+    "FLAC audio",
+    A,
+    "Free Lossless Audio Codec",
+    "flac",
+    "audio/flac",
+    "FLAC audio",
+    "'fLaC'",
+  ],
+  [
+    "ogg",
+    "Ogg data",
     A,
     "Ogg container",
     "ogg,oga,ogv,opus,spx",
@@ -498,6 +733,8 @@ const ROWS: readonly Row[] = [
     { end: "ogg" },
   ],
   [
+    "wav",
+    "WAV audio",
     A,
     "Waveform Audio",
     "wav",
@@ -506,8 +743,19 @@ const ROWS: readonly Row[] = [
     "'RIFF' @8 'WAVE'",
     { end: "riff" },
   ],
-  [A, "Audio Interchange File Format", "aiff,aif", "audio/aiff", "AIFF audio", "'FORM' @8 'AIFF'"],
   [
+    "aiff",
+    "AIFF audio",
+    A,
+    "Audio Interchange File Format",
+    "aiff,aif",
+    "audio/aiff",
+    "AIFF audio",
+    "'FORM' @8 'AIFF'",
+  ],
+  [
+    "aifc",
+    "AIFF-C audio",
     A,
     "Audio Interchange File Format (compressed)",
     "aifc",
@@ -515,9 +763,29 @@ const ROWS: readonly Row[] = [
     "AIFF-C audio",
     "'FORM' @8 'AIFC'",
   ],
-  [A, "Standard MIDI file", "mid,midi", "audio/midi", "MIDI file", "'MThd' 00 00 00 06"],
-  [A, "Adaptive Multi-Rate audio", "amr", "audio/amr", "AMR narrow-band audio", "'#!AMR' 0A"],
   [
+    "midi",
+    "MIDI file",
+    A,
+    "Standard MIDI file",
+    "mid,midi",
+    "audio/midi",
+    "MIDI file",
+    "'MThd' 00 00 00 06",
+  ],
+  [
+    "amr",
+    "AMR audio",
+    A,
+    "Adaptive Multi-Rate audio",
+    "amr",
+    "audio/amr",
+    "AMR narrow-band audio",
+    "'#!AMR' 0A",
+  ],
+  [
+    "m4a",
+    "M4A audio",
     A,
     "Apple MPEG-4 audio",
     "m4a",
@@ -526,16 +794,55 @@ const ROWS: readonly Row[] = [
     "@4 'ftypM4A '",
     { end: "mp4" },
   ],
-  [A, "Monkey's Audio", "ape", "audio/x-ape", "Monkey's Audio", "'MAC '"],
-  [A, "WavPack", "wv", "audio/x-wavpack", "WavPack audio", "'wvpk'"],
-  [A, "Musepack", "mpc", "audio/x-musepack", "Musepack SV8", "'MPCK'"],
-  [A, "Core Audio Format", "caf", "audio/x-caf", "Apple CAF audio", "'caff' 00 01"],
-  [A, "Sun / NeXT audio", "au,snd", "audio/basic", "AU audio", "'.snd'"],
-  [A, "Dolby Digital (AC-3)", "ac3", "audio/ac3", "AC-3 audio", "0B 77", { weak: true }],
-  [A, "DSD Stream File", "dsf", "audio/x-dsf", "DSF audio", "'DSD ' 1C 00 00 00"],
+  ["ape", "Monkey's Audio", A, "Monkey's Audio", "ape", "audio/x-ape", "Monkey's Audio", "'MAC '"],
+  ["wavpack", "WavPack audio", A, "WavPack", "wv", "audio/x-wavpack", "WavPack audio", "'wvpk'"],
+  [
+    "musepack",
+    "Musepack audio",
+    A,
+    "Musepack",
+    "mpc",
+    "audio/x-musepack",
+    "Musepack SV8",
+    "'MPCK'",
+  ],
+  [
+    "caf",
+    "CAF audio",
+    A,
+    "Core Audio Format",
+    "caf",
+    "audio/x-caf",
+    "Apple CAF audio",
+    "'caff' 00 01",
+  ],
+  ["au", "AU audio", A, "Sun / NeXT audio", "au,snd", "audio/basic", "AU audio", "'.snd'"],
+  [
+    "ac3",
+    "AC-3 audio",
+    A,
+    "Dolby Digital (AC-3)",
+    "ac3",
+    "audio/ac3",
+    "AC-3 audio",
+    "0B 77",
+    { weak: true },
+  ],
+  [
+    "dsf",
+    "DSF audio",
+    A,
+    "DSD Stream File",
+    "dsf",
+    "audio/x-dsf",
+    "DSF audio",
+    "'DSD ' 1C 00 00 00",
+  ],
 
   // ---- Documents ----
   [
+    "pdf",
+    "PDF document",
     D,
     "Portable Document Format",
     "pdf",
@@ -544,10 +851,40 @@ const ROWS: readonly Row[] = [
     "'%PDF-'",
     { end: "pdf" },
   ],
-  [D, "PostScript", "ps,eps", "application/postscript", "PostScript document", "'%!PS'"],
-  [D, "DOS EPS binary", "eps", "application/postscript", "EPS with a binary header", "C5 D0 D3 C6"],
-  [D, "Rich Text Format", "rtf", "application/rtf", "RTF document", "'{\\rtf'", { end: "rtf" }],
   [
+    "postscript",
+    "PostScript document",
+    D,
+    "PostScript",
+    "ps,eps",
+    "application/postscript",
+    "PostScript document",
+    "'%!PS'",
+  ],
+  [
+    "eps-dos",
+    "EPS image",
+    D,
+    "DOS EPS binary",
+    "eps",
+    "application/postscript",
+    "EPS with a binary header",
+    "C5 D0 D3 C6",
+  ],
+  [
+    "rtf",
+    "RTF document",
+    D,
+    "Rich Text Format",
+    "rtf",
+    "application/rtf",
+    "RTF document",
+    "'{\\rtf'",
+    { end: "rtf" },
+  ],
+  [
+    "ole2",
+    "OLE2 compound document",
     D,
     "Microsoft Office document (OLE2)",
     "doc,xls,ppt,msi,msg",
@@ -556,6 +893,8 @@ const ROWS: readonly Row[] = [
     "D0 CF 11 E0 A1 B1 1A E1",
   ],
   [
+    "ooxml",
+    "Office Open XML document",
     D,
     "Office Open XML document",
     "docx,xlsx,pptx",
@@ -565,6 +904,8 @@ const ROWS: readonly Row[] = [
     { end: "zip" },
   ],
   [
+    "odt",
+    "ODT document",
     D,
     "OpenDocument text",
     "odt",
@@ -574,6 +915,8 @@ const ROWS: readonly Row[] = [
     { end: "zip" },
   ],
   [
+    "ods",
+    "ODS spreadsheet",
     D,
     "OpenDocument spreadsheet",
     "ods",
@@ -583,6 +926,8 @@ const ROWS: readonly Row[] = [
     { end: "zip" },
   ],
   [
+    "odp",
+    "ODP presentation",
     D,
     "OpenDocument presentation",
     "odp",
@@ -592,6 +937,8 @@ const ROWS: readonly Row[] = [
     { end: "zip" },
   ],
   [
+    "epub",
+    "EPUB e-book",
     D,
     "EPUB e-book",
     "epub",
@@ -600,11 +947,50 @@ const ROWS: readonly Row[] = [
     "'PK' 03 04 @30 'mimetypeapplication/epub+zip'",
     { end: "zip" },
   ],
-  [D, "XML document", "xml", "application/xml", "XML declaration", "'<?xml '", { weak: true }],
-  [D, "Microsoft Word 2.0", "doc", "application/msword", "Word for Windows 2.0", "DB A5 2D 00"],
-  [D, "WordPerfect document", "wpd", "application/vnd.wordperfect", "WordPerfect", "FF 'WPC'"],
-  [D, "Windows Help", "hlp", "application/winhlp", "WinHelp file", "3F 5F 03 00"],
   [
+    "xml",
+    "XML document",
+    D,
+    "XML document",
+    "xml",
+    "application/xml",
+    "XML declaration",
+    "'<?xml '",
+    { weak: true },
+  ],
+  [
+    "word-2",
+    "Word 2.0 document",
+    D,
+    "Microsoft Word 2.0",
+    "doc",
+    "application/msword",
+    "Word for Windows 2.0",
+    "DB A5 2D 00",
+  ],
+  [
+    "wordperfect",
+    "WordPerfect document",
+    D,
+    "WordPerfect document",
+    "wpd",
+    "application/vnd.wordperfect",
+    "WordPerfect",
+    "FF 'WPC'",
+  ],
+  [
+    "winhelp",
+    "WinHelp file",
+    D,
+    "Windows Help",
+    "hlp",
+    "application/winhlp",
+    "WinHelp file",
+    "3F 5F 03 00",
+  ],
+  [
+    "chm",
+    "CHM help file",
     D,
     "Compiled HTML Help",
     "chm",
@@ -615,6 +1001,8 @@ const ROWS: readonly Row[] = [
 
   // ---- Applications ----
   [
+    "elf",
+    "ELF executable",
     P,
     "Executable and Linkable Format",
     "elf,so,o,bin",
@@ -624,6 +1012,8 @@ const ROWS: readonly Row[] = [
     { end: "elf" },
   ],
   [
+    "pe",
+    "PE executable",
     P,
     "Windows executable (PE)",
     "exe,dll,sys,scr",
@@ -633,6 +1023,8 @@ const ROWS: readonly Row[] = [
     { end: "pe", verify: "pe", weak: true },
   ],
   [
+    "dos-mz",
+    "DOS executable",
     P,
     "DOS executable (MZ)",
     "exe,com",
@@ -642,6 +1034,8 @@ const ROWS: readonly Row[] = [
     { verify: "dos", weak: true },
   ],
   [
+    "macho-32-le",
+    "Mach-O object",
     P,
     "Mach-O 32-bit (little endian)",
     "macho,dylib,o",
@@ -650,6 +1044,8 @@ const ROWS: readonly Row[] = [
     "CE FA ED FE",
   ],
   [
+    "macho-64-le",
+    "Mach-O 64-bit object",
     P,
     "Mach-O 64-bit (little endian)",
     "macho,dylib,o",
@@ -658,6 +1054,8 @@ const ROWS: readonly Row[] = [
     "CF FA ED FE",
   ],
   [
+    "macho-32-be",
+    "Mach-O object",
     P,
     "Mach-O 32-bit (big endian)",
     "macho,dylib,o",
@@ -666,6 +1064,8 @@ const ROWS: readonly Row[] = [
     "FE ED FA CE",
   ],
   [
+    "macho-64-be",
+    "Mach-O 64-bit object",
     P,
     "Mach-O 64-bit (big endian)",
     "macho,dylib,o",
@@ -674,6 +1074,8 @@ const ROWS: readonly Row[] = [
     "FE ED FA CF",
   ],
   [
+    "macho-fat",
+    "Mach-O universal binary",
     P,
     "Mach-O universal binary",
     "macho",
@@ -683,6 +1085,8 @@ const ROWS: readonly Row[] = [
     { verify: "fat" },
   ],
   [
+    "java-class",
+    "Java class",
     P,
     "Java class file",
     "class",
@@ -692,6 +1096,8 @@ const ROWS: readonly Row[] = [
     { verify: "class" },
   ],
   [
+    "dex",
+    "Dalvik executable",
     P,
     "Dalvik executable",
     "dex",
@@ -701,6 +1107,8 @@ const ROWS: readonly Row[] = [
     { end: "dex" },
   ],
   [
+    "odex",
+    "Optimized Dalvik executable",
     P,
     "Optimized Dalvik executable",
     "odex",
@@ -709,6 +1117,8 @@ const ROWS: readonly Row[] = [
     "'dey' 0A ?? ?? ?? 00",
   ],
   [
+    "wasm",
+    "WebAssembly module",
     P,
     "WebAssembly module",
     "wasm",
@@ -717,6 +1127,8 @@ const ROWS: readonly Row[] = [
     "00 'asm' 01 00 00 00",
   ],
   [
+    "shebang",
+    "script with an interpreter line",
     P,
     "Script with a shebang",
     "sh",
@@ -725,11 +1137,31 @@ const ROWS: readonly Row[] = [
     "'#!/'",
     { weak: true },
   ],
-  [P, "Lua bytecode", "luac", "application/x-lua-bytecode", "Compiled Lua", "1B 'Lua'"],
-  [P, "Windows Minidump", "dmp", "application/x-dmp", "Minidump crash file", "'MDMP' 93 A7"],
+  [
+    "lua-bytecode",
+    "Lua bytecode",
+    P,
+    "Lua bytecode",
+    "luac",
+    "application/x-lua-bytecode",
+    "Compiled Lua",
+    "1B 'Lua'",
+  ],
+  [
+    "minidump",
+    "Windows minidump",
+    P,
+    "Windows Minidump",
+    "dmp",
+    "application/x-dmp",
+    "Minidump crash file",
+    "'MDMP' 93 A7",
+  ],
 
   // ---- Archives ----
   [
+    "zip",
+    "ZIP archive",
     Z,
     "ZIP archive",
     "zip",
@@ -739,6 +1171,8 @@ const ROWS: readonly Row[] = [
     { end: "zip" },
   ],
   [
+    "zip-empty",
+    "empty ZIP archive",
     Z,
     "ZIP archive (empty)",
     "zip",
@@ -748,6 +1182,8 @@ const ROWS: readonly Row[] = [
     { end: "zip-empty" },
   ],
   [
+    "jar",
+    "JAR archive",
     Z,
     "Java archive",
     "jar",
@@ -757,6 +1193,8 @@ const ROWS: readonly Row[] = [
     { end: "zip" },
   ],
   [
+    "rar4",
+    "RAR archive",
     Z,
     "RAR archive (version 1.5 to 4)",
     "rar",
@@ -765,6 +1203,8 @@ const ROWS: readonly Row[] = [
     "'Rar!' 1A 07 00",
   ],
   [
+    "rar5",
+    "RAR 5 archive",
     Z,
     "RAR archive (version 5)",
     "rar",
@@ -773,6 +1213,8 @@ const ROWS: readonly Row[] = [
     "'Rar!' 1A 07 01 00",
   ],
   [
+    "7z",
+    "7-Zip archive",
     Z,
     "7-Zip archive",
     "7z",
@@ -782,6 +1224,8 @@ const ROWS: readonly Row[] = [
     { end: "7z" },
   ],
   [
+    "gzip",
+    "gzip data",
     Z,
     "GZIP compressed file",
     "gz,tgz",
@@ -791,6 +1235,8 @@ const ROWS: readonly Row[] = [
     { end: "gzip" },
   ],
   [
+    "bzip2",
+    "bzip2 data",
     Z,
     "bzip2 compressed file",
     "bz2,tbz2",
@@ -798,8 +1244,19 @@ const ROWS: readonly Row[] = [
     "bzip2 stream",
     "'BZh' 3? 31 41 59 26 53 59",
   ],
-  [Z, "XZ compressed file", "xz,txz", "application/x-xz", "xz stream", "FD '7zXZ' 00"],
   [
+    "xz",
+    "XZ data",
+    Z,
+    "XZ compressed file",
+    "xz,txz",
+    "application/x-xz",
+    "xz stream",
+    "FD '7zXZ' 00",
+  ],
+  [
+    "zstd",
+    "Zstandard data",
     Z,
     "Zstandard compressed file",
     "zst",
@@ -808,9 +1265,11 @@ const ROWS: readonly Row[] = [
     "28 B5 2F FD",
     { end: "zstd" },
   ],
-  [Z, "LZ4 frame", "lz4", "application/x-lz4", "LZ4 frame", "04 22 4D 18"],
-  [Z, "lzip compressed file", "lz", "application/x-lzip", "lzip", "'LZIP'"],
+  ["lz4", "LZ4 data", Z, "LZ4 frame", "lz4", "application/x-lz4", "LZ4 frame", "04 22 4D 18"],
+  ["lzip", "lzip data", Z, "lzip compressed file", "lz", "application/x-lzip", "lzip", "'LZIP'"],
   [
+    "tar",
+    "tar archive",
     Z,
     "tar archive",
     "tar",
@@ -820,6 +1279,8 @@ const ROWS: readonly Row[] = [
     { end: "tar" },
   ],
   [
+    "compress",
+    "compress data",
     Z,
     "UNIX compress",
     "Z",
@@ -829,6 +1290,8 @@ const ROWS: readonly Row[] = [
     { weak: true },
   ],
   [
+    "lzh",
+    "LHA archive",
     Z,
     "LHA / LZH archive",
     "lzh,lha",
@@ -836,10 +1299,39 @@ const ROWS: readonly Row[] = [
     "LHA archive",
     "@2 '-lh' ?? '-'",
   ],
-  [Z, "cpio archive (new ASCII)", "cpio", "application/x-cpio", "cpio, newc format", "'070701'"],
-  [Z, "cpio archive (new CRC)", "cpio", "application/x-cpio", "cpio, crc format", "'070702'"],
-  [Z, "cpio archive (old ASCII)", "cpio", "application/x-cpio", "cpio, odc format", "'070707'"],
   [
+    "cpio-newc",
+    "cpio archive",
+    Z,
+    "cpio archive (new ASCII)",
+    "cpio",
+    "application/x-cpio",
+    "cpio, newc format",
+    "'070701'",
+  ],
+  [
+    "cpio-crc",
+    "cpio archive",
+    Z,
+    "cpio archive (new CRC)",
+    "cpio",
+    "application/x-cpio",
+    "cpio, crc format",
+    "'070702'",
+  ],
+  [
+    "cpio-odc",
+    "cpio archive",
+    Z,
+    "cpio archive (old ASCII)",
+    "cpio",
+    "application/x-cpio",
+    "cpio, odc format",
+    "'070707'",
+  ],
+  [
+    "ar",
+    "ar archive",
     Z,
     "ar archive",
     "a,deb,lib",
@@ -847,8 +1339,10 @@ const ROWS: readonly Row[] = [
     "Unix ar (and Debian packages)",
     "'!<arch>' 0A",
   ],
-  [Z, "RPM package", "rpm", "application/x-rpm", "RPM", "ED AB EE DB"],
+  ["rpm", "RPM package", Z, "RPM package", "rpm", "application/x-rpm", "RPM", "ED AB EE DB"],
   [
+    "cab",
+    "CAB archive",
     Z,
     "Microsoft Cabinet",
     "cab",
@@ -858,6 +1352,8 @@ const ROWS: readonly Row[] = [
     { end: "cab" },
   ],
   [
+    "iso9660",
+    "ISO 9660 image",
     Z,
     "ISO 9660 image",
     "iso",
@@ -865,11 +1361,50 @@ const ROWS: readonly Row[] = [
     "ISO 9660 volume descriptor at 0x8001",
     "@32769 'CD001'",
   ],
-  [Z, "SquashFS", "squashfs,sqfs", "application/x-squashfs", "SquashFS image", "'hsqs'"],
-  [Z, "XAR archive", "xar,pkg", "application/x-xar", "eXtensible ARchive", "'xar!'"],
-  [Z, "ARJ archive", "arj", "application/x-arj", "ARJ", "60 EA", { weak: true }],
-  [Z, "Windows Imaging Format", "wim", "application/x-ms-wim", "WIM image", "'MSWIM' 00 00 00"],
   [
+    "squashfs",
+    "SquashFS image",
+    Z,
+    "SquashFS",
+    "squashfs,sqfs",
+    "application/x-squashfs",
+    "SquashFS image",
+    "'hsqs'",
+  ],
+  [
+    "xar",
+    "XAR archive",
+    Z,
+    "XAR archive",
+    "xar,pkg",
+    "application/x-xar",
+    "eXtensible ARchive",
+    "'xar!'",
+  ],
+  [
+    "arj",
+    "ARJ archive",
+    Z,
+    "ARJ archive",
+    "arj",
+    "application/x-arj",
+    "ARJ",
+    "60 EA",
+    { weak: true },
+  ],
+  [
+    "wim",
+    "WIM image",
+    Z,
+    "Windows Imaging Format",
+    "wim",
+    "application/x-ms-wim",
+    "WIM image",
+    "'MSWIM' 00 00 00",
+  ],
+  [
+    "zlib-default",
+    "zlib data",
     Z,
     "zlib stream (default compression)",
     "zlib",
@@ -879,6 +1414,8 @@ const ROWS: readonly Row[] = [
     { weak: true },
   ],
   [
+    "zlib-best",
+    "zlib data",
     Z,
     "zlib stream (best compression)",
     "zlib",
@@ -890,6 +1427,8 @@ const ROWS: readonly Row[] = [
 
   // ---- Miscellaneous ----
   [
+    "sqlite",
+    "SQLite 3 database",
     M,
     "SQLite 3 database",
     "sqlite,db",
@@ -899,6 +1438,8 @@ const ROWS: readonly Row[] = [
     { end: "sqlite" },
   ],
   [
+    "pcap-le",
+    "pcap capture",
     M,
     "pcap capture (little endian)",
     "pcap",
@@ -908,6 +1449,8 @@ const ROWS: readonly Row[] = [
     { end: "pcap-le" },
   ],
   [
+    "pcap-be",
+    "pcap capture",
     M,
     "pcap capture (big endian)",
     "pcap",
@@ -917,6 +1460,8 @@ const ROWS: readonly Row[] = [
     { end: "pcap-be" },
   ],
   [
+    "pcap-nano-le",
+    "pcap capture",
     M,
     "pcap capture (nanosecond, little endian)",
     "pcap",
@@ -926,6 +1471,8 @@ const ROWS: readonly Row[] = [
     { end: "pcap-le" },
   ],
   [
+    "pcap-nano-be",
+    "pcap capture",
     M,
     "pcap capture (nanosecond, big endian)",
     "pcap",
@@ -935,6 +1482,8 @@ const ROWS: readonly Row[] = [
     { end: "pcap-be" },
   ],
   [
+    "pcapng-le",
+    "pcapng capture",
     M,
     "pcapng capture (little endian)",
     "pcapng",
@@ -944,6 +1493,8 @@ const ROWS: readonly Row[] = [
     { end: "pcapng-le" },
   ],
   [
+    "pcapng-be",
+    "pcapng capture",
     M,
     "pcapng capture (big endian)",
     "pcapng",
@@ -953,6 +1504,8 @@ const ROWS: readonly Row[] = [
     { end: "pcapng-be" },
   ],
   [
+    "bplist",
+    "binary property list",
     M,
     "Apple binary property list",
     "plist,bplist",
@@ -961,6 +1514,8 @@ const ROWS: readonly Row[] = [
     "'bplist00'",
   ],
   [
+    "der-long",
+    "DER certificate",
     M,
     "DER certificate (long lengths)",
     "der,cer,crt",
@@ -970,6 +1525,8 @@ const ROWS: readonly Row[] = [
     { end: "der" },
   ],
   [
+    "der-mixed",
+    "DER certificate",
     M,
     "DER certificate (mixed lengths)",
     "der,cer,crt",
@@ -979,6 +1536,8 @@ const ROWS: readonly Row[] = [
     { end: "der" },
   ],
   [
+    "der-short",
+    "DER certificate",
     M,
     "DER certificate (short lengths)",
     "der,cer,crt",
@@ -988,6 +1547,8 @@ const ROWS: readonly Row[] = [
     { end: "der" },
   ],
   [
+    "pem",
+    "PEM data",
     M,
     "PEM encoded data",
     "pem",
@@ -997,6 +1558,8 @@ const ROWS: readonly Row[] = [
     { end: "pem" },
   ],
   [
+    "lnk",
+    "Windows shortcut",
     M,
     "Windows shortcut",
     "lnk",
@@ -1005,6 +1568,8 @@ const ROWS: readonly Row[] = [
     "4C 00 00 00 01 14 02 00 00 00 00 00 C0 00 00 00 00 00 00 46",
   ],
   [
+    "openssh-key",
+    "OpenSSH private key",
     M,
     "OpenSSH private key",
     "key",
@@ -1012,8 +1577,19 @@ const ROWS: readonly Row[] = [
     "openssh-key-v1",
     "'openssh-key-v1' 00",
   ],
-  [M, "Java KeyStore", "jks", "application/x-java-keystore", "JKS", "FE ED FE ED"],
   [
+    "jks",
+    "Java KeyStore",
+    M,
+    "Java KeyStore",
+    "jks",
+    "application/x-java-keystore",
+    "JKS",
+    "FE ED FE ED",
+  ],
+  [
+    "kdbx",
+    "KeePass 2 database",
     M,
     "KeePass database (KDBX)",
     "kdbx",
@@ -1022,6 +1598,8 @@ const ROWS: readonly Row[] = [
     "03 D9 A2 9A 67 FB 4B B5",
   ],
   [
+    "kdb",
+    "KeePass 1 database",
     M,
     "KeePass database (KDB)",
     "kdb",
@@ -1029,16 +1607,82 @@ const ROWS: readonly Row[] = [
     "KeePass 1.x",
     "03 D9 A2 9A 65 FB 4B B5",
   ],
-  [M, "LUKS encrypted volume", "luks", "application/x-luks", "LUKS header", "'LUKS' BA BE"],
-  [M, "Windows registry hive", "dat,hiv", "application/x-ms-registry", "regf hive", "'regf'"],
-  [M, "Windows event log (EVTX)", "evtx", "application/x-ms-evtx", "ElfFile", "'ElfFile' 00"],
-  [M, "Windows prefetch", "pf", "application/x-ms-prefetch", "SCCA prefetch file", "@4 'SCCA'"],
-  [M, "TrueType font", "ttf", "font/ttf", "TrueType font", "00 01 00 00 00", { weak: true }],
-  [M, "OpenType font", "otf", "font/otf", "OpenType font with CFF outlines", "'OTTO' 00"],
-  [M, "TrueType collection", "ttc", "font/collection", "Font collection", "'ttcf'"],
-  [M, "Web Open Font Format", "woff", "font/woff", "WOFF", "'wOFF'"],
-  [M, "Web Open Font Format 2", "woff2", "font/woff2", "WOFF2", "'wOF2'"],
   [
+    "luks",
+    "LUKS volume",
+    M,
+    "LUKS encrypted volume",
+    "luks",
+    "application/x-luks",
+    "LUKS header",
+    "'LUKS' BA BE",
+  ],
+  [
+    "regf",
+    "Windows registry hive",
+    M,
+    "Windows registry hive",
+    "dat,hiv",
+    "application/x-ms-registry",
+    "regf hive",
+    "'regf'",
+  ],
+  [
+    "evtx",
+    "Windows event log",
+    M,
+    "Windows event log (EVTX)",
+    "evtx",
+    "application/x-ms-evtx",
+    "ElfFile",
+    "'ElfFile' 00",
+  ],
+  [
+    "prefetch",
+    "Windows prefetch file",
+    M,
+    "Windows prefetch",
+    "pf",
+    "application/x-ms-prefetch",
+    "SCCA prefetch file",
+    "@4 'SCCA'",
+  ],
+  [
+    "ttf",
+    "TrueType font",
+    M,
+    "TrueType font",
+    "ttf",
+    "font/ttf",
+    "TrueType font",
+    "00 01 00 00 00",
+    { weak: true },
+  ],
+  [
+    "otf",
+    "OpenType font",
+    M,
+    "OpenType font",
+    "otf",
+    "font/otf",
+    "OpenType font with CFF outlines",
+    "'OTTO' 00",
+  ],
+  [
+    "ttc",
+    "TrueType collection",
+    M,
+    "TrueType collection",
+    "ttc",
+    "font/collection",
+    "Font collection",
+    "'ttcf'",
+  ],
+  ["woff", "WOFF font", M, "Web Open Font Format", "woff", "font/woff", "WOFF", "'wOFF'"],
+  ["woff2", "WOFF2 font", M, "Web Open Font Format 2", "woff2", "font/woff2", "WOFF2", "'wOF2'"],
+  [
+    "git-pack",
+    "Git packfile",
     M,
     "Git pack file",
     "pack",
@@ -1046,10 +1690,39 @@ const ROWS: readonly Row[] = [
     "Git packfile, version 2",
     "'PACK' 00 00 00 02",
   ],
-  [M, "VirtualBox VHD", "vhd", "application/x-vhd", "Hard disk footer cookie", "'conectix'"],
-  [M, "VMware disk", "vmdk", "application/x-vmdk", "Sparse extent", "'KDMV'"],
-  [M, "QEMU QCOW image", "qcow2,qcow", "application/x-qemu-disk", "QCOW", "'QFI' FB"],
   [
+    "vhd",
+    "VirtualBox VHD disk",
+    M,
+    "VirtualBox VHD",
+    "vhd",
+    "application/x-vhd",
+    "Hard disk footer cookie",
+    "'conectix'",
+  ],
+  [
+    "vmdk",
+    "VMware disk",
+    M,
+    "VMware disk",
+    "vmdk",
+    "application/x-vmdk",
+    "Sparse extent",
+    "'KDMV'",
+  ],
+  [
+    "qcow",
+    "QCOW disk image",
+    M,
+    "QEMU QCOW image",
+    "qcow2,qcow",
+    "application/x-qemu-disk",
+    "QCOW",
+    "'QFI' FB",
+  ],
+  [
+    "krb5-ccache",
+    "Kerberos credential cache",
     M,
     "Kerberos credential cache",
     "ccache",
@@ -1058,7 +1731,7 @@ const ROWS: readonly Row[] = [
     "05 04",
     { weak: true },
   ],
-  [M, "NES ROM", "nes", "application/x-nes-rom", "iNES", "'NES' 1A"],
+  ["nes", "NES ROM", M, "NES ROM", "nes", "application/x-nes-rom", "iNES", "'NES' 1A"],
 ];
 
 /** Compiles the magic text of a row into parts. Exported for the tests. */
@@ -1125,11 +1798,15 @@ function anchorOf(parts: readonly MagicPart[]): { offset: number; bytes: Uint8Ar
 
 /** The compiled table, in the order of the rows. */
 export const FILE_SIGNATURES: readonly FileSig[] = ROWS.map((row) => {
-  const [category, name, extensions, mime, description, magic, options] = row;
+  const [id, displayName, category, name, extensions, mime, description, magic, options] = row;
+  if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(id))
+    throw new Error(`file signature id ${id} is not kebab-case`);
   const parts = compileMagic(magic);
   const anchor = anchorOf(parts);
   if (anchor.bytes.length === 0) throw new Error(`file signature ${name} has no exact byte`);
   return {
+    id,
+    displayName,
     category,
     name,
     extensions,
@@ -1142,3 +1819,17 @@ export const FILE_SIGNATURES: readonly FileSig[] = ROWS.map((row) => {
     anchor,
   };
 });
+
+/** The ids of the table, in table order. */
+export const SIGNATURE_IDS: readonly string[] = FILE_SIGNATURES.map((s) => s.id);
+
+const SIGNATURES_BY_ID: ReadonlyMap<string, FileSig> = new Map(
+  FILE_SIGNATURES.map((s) => [s.id, s] as const),
+);
+if (SIGNATURES_BY_ID.size !== FILE_SIGNATURES.length)
+  throw new Error("file signature ids are not unique");
+
+/** The row of the table with this id, or undefined when there is none. */
+export function signatureById(id: string): FileSig | undefined {
+  return SIGNATURES_BY_ID.get(id);
+}
