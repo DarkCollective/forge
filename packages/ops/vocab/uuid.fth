@@ -93,6 +93,9 @@ USING: random clock md5 sha1 ;
   version namespace _version-bytes _text ;
 
 META: generate
+  use-when "You need an ID for a record, or one derived from a name so it is always the same, and want a UUID: random (v4), or from a namespace and name (v3 or v5)." ;
+  link "https://www.rfc-editor.org/rfc/rfc9562" "RFC 9562: Universally Unique IDentifiers" ;
+  link "https://en.wikipedia.org/wiki/Universally_unique_identifier" "Universally unique identifier on Wikipedia" ;
   param version "v1: Gregorian time. v3: MD5 of a namespace and a name. v4: random. v5: SHA-1 of a namespace and a name. v6: Gregorian time, sortable. v7: Unix time, sortable. nil: all zeros. max: all ones." ;
   param namespace "For v3 and v5: any UUID as text (the default is the one CyberChef has), or dns, url, oid, x500 (the namespaces of RFC 9562)." ;
   param name "For v3 and v5: the name to hash, as UTF-8 text; empty uses the input." ;
@@ -155,5 +158,8 @@ META: generate
   text _parse _report ;
 
 META: analyse
+  use-when "You have a UUID from a log, a database or an API and want its version and variant, and the creation time when it is a version 1, 6 or 7 UUID." ;
+  link "https://www.rfc-editor.org/rfc/rfc9562" "RFC 9562: Universally Unique IDentifiers" ;
+  link "https://en.wikipedia.org/wiki/Universally_unique_identifier" "Universally unique identifier on Wikipedia" ;
   see-also uuid:generate ;
 ;

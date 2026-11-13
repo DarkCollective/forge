@@ -26,6 +26,8 @@ IN: endian
   width pad _fit width _words ;
 
 META: swap
+  use-when "You have binary data from a big-endian or little-endian system, such as 32-bit integers, and want each word reversed. Applying it again gives the input back." ;
+  link "https://en.wikipedia.org/wiki/Endianness" "Endianness on Wikipedia" ;
   param width "The size of a word in bytes: 2, 4 or 8." ;
   param pad "Zero-pad a final partial word at the end instead of raising an error." ;
 ;

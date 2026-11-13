@@ -675,6 +675,8 @@ IN: datetime
   display-total util:total-text ;
 
 META: parse
+  use-when "You have a date and time as text in a known layout, such as a log stamp, and want it broken down into weekday, zone offset, ISO week and similar facts." ;
+  link "https://en.wikipedia.org/wiki/ISO_8601" "ISO 8601 on Wikipedia" ;
   param preset "A known format to read the date and time with, or Custom to use the format string." ;
   param format "The format string for the preset Custom, in moment.js-style tokens (YYYY MM DD HH mm ss SSS Z A and so on; [text] is copied as it is)." ;
   param zone "Where the time was read: UTC, a fixed offset like +09:00, or an IANA time zone like Asia/Tokyo." ;
@@ -682,6 +684,9 @@ META: parse
 ;
 
 META: translate
+  use-when "You have a date and time in one format or time zone, such as a log stamp in UTC, and want it written in another format or zone, such as Tokyo time in ISO form." ;
+  link "https://en.wikipedia.org/wiki/ISO_8601" "ISO 8601 on Wikipedia" ;
+  link "https://en.wikipedia.org/wiki/Tz_database" "Tz database on Wikipedia" ;
   param in-preset "A known format to read the date and time with, or Custom to use the input format string." ;
   param in-format "The input format string for the preset Custom, in moment.js-style tokens." ;
   param in-zone "Where the time was read: UTC, a fixed offset like +09:00, or an IANA time zone like Asia/Tokyo." ;
@@ -692,6 +697,9 @@ META: translate
 ;
 
 META: from-unix
+  use-when "You have a Unix timestamp, such as a number from a log or an API, and want it written as a readable date and time, in UTC or another zone." ;
+  inverse to-unix ;
+  link "https://en.wikipedia.org/wiki/Unix_time" "Unix time on Wikipedia" ;
   param unit "What the number counts: seconds, milliseconds, microseconds or nanoseconds since 1970-01-01T00:00:00Z." ;
   param zone "The time zone to write the time in: UTC, a fixed offset like +09:00, or an IANA time zone." ;
   param format "The output format string, in moment.js-style tokens. Empty (the default) gives ddd D MMMM YYYY HH:mm:ss z for seconds and ddd D MMMM YYYY HH:mm:ss.SSS z for the finer units, as CyberChef does." ;
@@ -699,6 +707,9 @@ META: from-unix
 ;
 
 META: to-unix
+  use-when "You have a date and time as text, such as 2026-11-11 12:34:56, and want its Unix timestamp, the whole seconds since 1970, to store or compare." ;
+  inverse from-unix ;
+  link "https://en.wikipedia.org/wiki/Unix_time" "Unix time on Wikipedia" ;
   param unit "What to count since 1970-01-01T00:00:00Z: seconds, milliseconds, microseconds or nanoseconds." ;
   param preset "A known format to read the date and time with, or Custom to use the format string." ;
   param format "The format string for the preset Custom, in moment.js-style tokens." ;
@@ -708,18 +719,25 @@ META: to-unix
 ;
 
 META: filetime-to-unix
+  use-when "You have a Windows file time, as decimal digits or hex from a file or registry record, and want the Unix timestamp it stands for." ;
+  inverse unix-to-filetime ;
+  link "https://en.wikipedia.org/wiki/Unix_time" "Unix time on Wikipedia" ;
   param input "How the file time is written: decimal digits, hex digits (hex-be), or hex bytes in little-endian order (hex-le)." ;
   param unit "The unit of the Unix timestamp to give." ;
   see-also datetime:unix-to-filetime datetime:from-unix ;
 ;
 
 META: unix-to-filetime
+  use-when "You have a Unix timestamp and need it as a Windows file time, in decimal or hex, to match a value in a Windows file or registry record." ;
+  inverse filetime-to-unix ;
+  link "https://en.wikipedia.org/wiki/Unix_time" "Unix time on Wikipedia" ;
   param unit "The unit of the Unix timestamp that is given." ;
   param output "How to write the file time: decimal digits, 16 hex digits (hex-be), or the 8 bytes in little-endian order (hex-le)." ;
   see-also datetime:filetime-to-unix datetime:to-unix ;
 ;
 
 META: delta
+  use-when "You have a date and time and want to move it forward or back by days, hours, minutes or seconds, for example to find a deadline a set time later." ;
   param preset "A known format to read and write the date and time with, or Custom to use the format string." ;
   param format "The format string for the preset Custom, in moment.js-style tokens." ;
   param zone "The time zone of the date and time: UTC, a fixed offset like +09:00, or an IANA time zone." ;
@@ -733,6 +751,8 @@ META: delta
 ;
 
 META: extract-dates
+  use-when "You have text, such as an e-mail or a document, and want the dates it mentions, listed one per line in the order they appear." ;
+  link "https://en.wikipedia.org/wiki/ISO_8601" "ISO 8601 on Wikipedia" ;
   param display-total "Write the number of dates found on the first line." ;
   param sort "List the dates in code point order." ;
   param unique "List each date once." ;

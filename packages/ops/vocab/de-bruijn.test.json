@@ -31,6 +31,10 @@
     "expect": {
       "value": "0011",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Every two-bit word once in a cycle",
+      "note": "The sequence 0011 is read cyclically, so the words 00, 01, 11 and 10 each appear exactly once."
     }
   },
   {
@@ -99,6 +103,10 @@
     "expect": {
       "value": "001021122",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Three symbols give nine characters",
+      "note": "Over three symbols every two-symbol word appears once, so the sequence has nine characters."
     }
   },
   {

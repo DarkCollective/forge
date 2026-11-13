@@ -39,6 +39,10 @@
     "expect": {
       "value": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00 \n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              EXEC (Executable file)\n  Machine:                           RISC-V\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          248 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         3\n  Size of section headers:           64 (bytes)\n  Number of section headers:         2\n  Section header string table index: 1\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  LOAD           0x000040 0x0000000000001000 0x0000000000001000 0x000010 0x000010 R E 0x1000\n  LOAD           0x000100 0x0000000000002000 0x0000000000002000 0x000004 0x00000c RW  0x1000\n  DYNAMIC        0x000100 0x0000000000002000 0x0000000000002000 0x000004 0x000004 RW  0x8\n\nSection Headers:\n  [Nr] Name              Type            Address          Off    Size   ES Flg Lk Inf Al\n  [ 0]                   NULL            0000000000000000 000000 000000 00      0   0  0\n  [ 1] .shstrtab         STRTAB          0000000000000000 0000e8 00000b 00      0   0  1\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A RISC-V executable",
+      "note": "The Type line says EXEC, and the Machine line names RISC-V, so the file runs on that architecture."
     }
   },
   {
@@ -67,6 +71,10 @@
     "expect": {
       "value": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00 \n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Position-Independent Executable file)\n  Machine:                           Advanced Micro Devices X86-64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          0 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         2\n  Size of section headers:           64 (bytes)\n  Number of section headers:         0\n  Section header string table index: 0\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  DYNAMIC        0x0000b0 0x0000000000000000 0x0000000000000000 0x000020 0x000020 RW  0x8\n  INTERP         0x0000d0 0x0000000000000000 0x0000000000000000 0x00000b 0x00000b R   0x1\n      [Requesting program interpreter: /lib/ld.so]\n\nThere are no sections in this file.\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A position-independent shared object",
+      "note": "The Type line says DYN, a position-independent executable, and the machine is x86-64."
     }
   },
   {

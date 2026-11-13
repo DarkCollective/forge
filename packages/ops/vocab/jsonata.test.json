@@ -125,6 +125,10 @@
     "expect": {
       "value": "\"077 7700 1234\"",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A filter picks the matching phone number",
+      "note": "Phone[type='mobile'] keeps only the phone whose type is mobile, and .number then reads its number."
     }
   },
   {
@@ -221,6 +225,10 @@
     "expect": {
       "value": "{\"name\":\"Fred\",\"years\":28}",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "An object constructor builds a new object",
+      "note": "The keys name and years are the ones written in the query, and the values are read from FirstName and Age."
     }
   },
   {

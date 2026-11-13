@@ -14,6 +14,10 @@
     "expect": {
       "value": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "One sentence is the fixed opening",
+      "note": "The output is the opening sentence of the placeholder text, which is the same on every call."
     }
   },
   {
@@ -31,6 +35,10 @@
     "expect": {
       "value": "Lorem ipsum dolor sit amet",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The first five words",
+      "note": "Words are counted from the start, and the first five of the opening are Lorem ipsum dolor sit amet."
     }
   },
   {

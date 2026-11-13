@@ -15,6 +15,10 @@
     "expect": {
       "value": "1609.344",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "One mile in metres",
+      "note": "The result is 1609.344, exact at this many decimal places."
     }
   },
   {
@@ -159,6 +163,10 @@
     "expect": {
       "value": "3.281",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Rounding the result to three decimal places",
+      "note": "The digits parameter cuts the result to 3, so one metre in feet gives 3.281."
     }
   },
   {
@@ -303,6 +311,10 @@
     "expect": {
       "value": "4046.8564224",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "One acre in square metres",
+      "note": "The digits parameter sets the decimal places: this exact product gives 4046.8564224."
     }
   },
   {
@@ -393,6 +405,10 @@
     "expect": {
       "value": "0.45359237",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "One pound in kilograms",
+      "note": "A pound is 0.45359237 kilograms, the exact definition used by this conversion."
     }
   },
   {
@@ -573,6 +589,10 @@
     "expect": {
       "value": "96.56064",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Sixty miles per hour in kilometres per hour",
+      "note": "The result is 96.56064 kilometres per hour."
     }
   },
   {
@@ -645,6 +665,10 @@
     "expect": {
       "value": "1024",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A kibibyte is 1024 bytes",
+      "note": "The binary prefix kibi gives 1024 bytes."
     }
   },
   {
@@ -663,6 +687,10 @@
     "expect": {
       "value": "1000",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A megabyte is 1000 kilobytes",
+      "note": "The decimal prefixes mega and kilo give 1000, the reverse of the binary result above."
     }
   },
   {

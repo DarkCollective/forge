@@ -51,6 +51,10 @@
     "expect": {
       "value": "u4pruydqqvj",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A point written as a geohash",
+      "note": "The precision parameter sets the number of characters: eleven here, and five gives the prefix u4pru."
     }
   },
   {
@@ -105,6 +109,10 @@
     "expect": {
       "value": "48° 51' 23.760\" N, 2° 21' 7.920\" E",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Decimal degrees written as degrees, minutes and seconds",
+      "note": "The seconds keep three decimals because the precision is 3, and N and E are the hemisphere letters."
     }
   },
   {
@@ -734,6 +742,10 @@
     "expect": {
       "value": "111319.491",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A different radius changes the distance",
+      "note": "With the WGS 84 equatorial radius of 6378.137 km, one degree of longitude gives 111319.491 metres, more than the 111194.927 of the mean radius."
     }
   },
   {
@@ -750,6 +762,10 @@
     "expect": {
       "value": "343556.060",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Paris to London in metres",
+      "note": "Each position is on its own line, and the result is the great-circle distance in metres to the millimetre."
     }
   },
   {

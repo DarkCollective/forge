@@ -57,6 +57,9 @@ IN: extract
   display-total sort unique _finish ;
 
 META: strings
+  use-when "You have a binary file, or bytes from memory, and want the readable text in it, like the Unix strings command, to find names, paths or messages." ;
+  link "https://en.wikipedia.org/wiki/ASCII" "ASCII on Wikipedia" ;
+  link "https://en.wikipedia.org/wiki/UTF-16" "UTF-16 on Wikipedia" ;
   param encoding "single: one byte per character. utf16le and utf16be: two. all: all three." ;
   param min-length "How many characters a run needs to count as a string." ;
   param match "alphanumeric: letters, digits, space and common punctuation only (the default). printable: any character from space to tilde." ;
@@ -112,6 +115,10 @@ META: strings
   display-total sort unique _finish ;
 
 META: ip-addresses
+  use-when "You have a log, a capture or a config file and want the IP addresses in it, one per line, optionally without the private and loopback ones." ;
+  link "https://www.rfc-editor.org/rfc/rfc4291" "RFC 4291: IPv6 addressing architecture" ;
+  link "https://www.rfc-editor.org/rfc/rfc1918" "RFC 1918: private IPv4 address ranges" ;
+  link "https://en.wikipedia.org/wiki/IP_address" "IP address on Wikipedia" ;
   param ipv4 "Find IPv4 addresses." ;
   param ipv6 "Find IPv6 addresses." ;
   param remove-local "Leave out the private and loopback IPv4 addresses." ;
@@ -132,6 +139,8 @@ META: ip-addresses
   display-total sort unique _finish ;
 
 META: emails
+  use-when "You have text or a binary dump and want the e-mail addresses in it, one per line, for example the contacts in a log or a copied mail header." ;
+  link "https://en.wikipedia.org/wiki/Email_address" "Email address on Wikipedia" ;
   param display-total "Put Total found: N and a blank line in front of the output." ;
   param sort "Sort the addresses by code point." ;
   param unique "Keep each address once, in the order of first appearance." ;
@@ -149,6 +158,8 @@ META: emails
   display-total sort unique _finish ;
 
 META: mac-addresses
+  use-when "You have a log, a capture or a device listing and want the MAC addresses in it, one per line, whichever notation they are written in." ;
+  link "https://en.wikipedia.org/wiki/MAC_address" "MAC address on Wikipedia" ;
   param display-total "Put Total found: N and a blank line in front of the output." ;
   param sort "Sort the addresses by code point." ;
   param unique "Keep each address once, in the order of first appearance." ;
@@ -166,6 +177,8 @@ META: mac-addresses
   display-total sort unique _finish ;
 
 META: urls
+  use-when "You have a web page, a log or any text and want every URL in it, one per line, to check the links or see where traffic was sent." ;
+  link "https://en.wikipedia.org/wiki/URL" "URL on Wikipedia" ;
   param display-total "Put Total found: N and a blank line in front of the output." ;
   param sort "Sort the URLs by code point." ;
   param unique "Keep each URL once, in the order of first appearance." ;
@@ -187,6 +200,8 @@ META: urls
   display-total sort unique _finish ;
 
 META: domains
+  use-when "You have text, a log or a file dump and want the domain names in it, one per line, for example the hosts that a page or a log refers to." ;
+  link "https://en.wikipedia.org/wiki/Domain_name" "Domain name on Wikipedia" ;
   param display-total "Put Total found: N and a blank line in front of the output." ;
   param sort "Sort the names by code point." ;
   param unique "Keep each name once, in the order of first appearance." ;
@@ -223,6 +238,8 @@ META: domains
   display-total sort unique _finish ;
 
 META: file-paths
+  use-when "You have a log, a script or a memory dump and want the file paths in it, Windows or UNIX style, one per line, to see which files it mentions." ;
+  link "https://en.wikipedia.org/wiki/Path_(computing)" "Path (computing) on Wikipedia" ;
   param windows "Find Windows paths (C:\\dir\\file)." ;
   param unix "Find UNIX paths (/dir/file)." ;
   param display-total "Put Total found: N and a blank line in front of the output." ;
@@ -256,6 +273,9 @@ META: file-paths
   display-total sort unique _finish ;
 
 META: hashes
+  use-when "You have text or a dump with hash values in it, such as SHA-1 or MD5 digests, and want them listed one per line, for example to check them against a list." ;
+  link "https://www.rfc-editor.org/rfc/rfc1321" "RFC 1321: the MD5 message-digest algorithm" ;
+  link "https://en.wikipedia.org/wiki/Cryptographic_hash_function" "Cryptographic hash function on Wikipedia" ;
   param length "How many hex digits a hash has (32 MD5, 40 SHA-1, 64 SHA-256, 128 SHA-512)." ;
   param all "Ignore length and find every usual digest size instead." ;
   param display-total "Put Total found: N and a blank line in front of the output." ;

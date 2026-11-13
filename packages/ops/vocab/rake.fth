@@ -138,6 +138,7 @@ IN: rake
   if ;
 
 META: keywords
+  use-when "You have a text, such as an article or a set of notes, and want its key phrases, ranked by a score, to see what it is mainly about." ;
   param max-words "The longest phrase to keep, in words (1 to 30)." ;
   param stop-words "Words that end a phrase, separated by white space or commas. Empty uses the built-in English list." ;
   param limit "How many phrases to output (0 for all of them)." ;

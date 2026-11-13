@@ -14,6 +14,10 @@
     "expect": {
       "value": "a,b,c,d",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Union of two lists with a shared item",
+      "note": "Items in both lists appear once in the result, so b and c are written once each."
     }
   },
   {
@@ -218,6 +222,10 @@
     "expect": {
       "value": "z,y,x,w,v",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Items keep the order of first appearance",
+      "note": "z, y and x come from the first list, so they come first; w and v follow from the second."
     }
   },
   {
@@ -235,6 +243,10 @@
     "expect": {
       "value": "b,c",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Items in both lists",
+      "note": "Only b and c are in both lists, and they keep the order of the first list."
     }
   },
   {
@@ -388,6 +400,10 @@
     "expect": {
       "value": "c",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Items in every one of three lists",
+      "note": "Only c is in all three lists; a and b miss one of them, and d misses the second."
     }
   },
   {
@@ -456,6 +472,10 @@
     "expect": {
       "value": "a",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Items of the first list missing from the second",
+      "note": "a is the only item of the first list that the second list does not have."
     }
   },
   {
@@ -609,6 +629,10 @@
     "expect": {
       "value": "a",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Items missing from both of two later lists",
+      "note": "b, c and d each appear in a later list, so only a is left."
     }
   },
   {
@@ -677,6 +701,10 @@
     "expect": {
       "value": "a,d",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Items in exactly one of two lists",
+      "note": "a and d are in one list each. b and c are in both, so they are left out."
     }
   },
   {
@@ -830,6 +858,10 @@
     "expect": {
       "value": "a,e,c,f",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Items in an odd number of three lists",
+      "note": "c is in all three lists, an odd number, so it stays. d is in two lists and is left out."
     }
   },
   {
@@ -1043,6 +1075,10 @@
     "expect": {
       "value": "(1,a),(1,b),(1,c),(2,a),(2,b),(2,c)",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Every pair from two lists",
+      "note": "All the pairs starting with 1 come first, then those starting with 2, each paired with every item of the second list."
     }
   },
   {
@@ -1245,6 +1281,10 @@
     "expect": {
       "value": "\n2\n1\n1,2\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The four subsets of a two-item list",
+      "note": "The subsets are empty, 2, 1 and 1,2, each ended by a line feed, the subset delimiter."
     }
   },
   {

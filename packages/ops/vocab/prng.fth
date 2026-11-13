@@ -20,11 +20,13 @@ USING: random util ;
   0 count range [ drop min max random:between int>str ] map delimiter util:delimiter join ;
 
 META: bytes
+  use-when "You need random bytes, for example a test key or a salt, drawn from a cryptographic random source." ;
   param length "How many random bytes (0 to 1,048,576)." ;
   see-also hex:encode base64:encode ;
 ;
 
 META: integers
+  use-when "You need random whole numbers within a range, for example to pick test cases, drawn from a cryptographic random source." ;
   param min "The smallest value that can come out (may be negative)." ;
   param max "The largest value that can come out (included)." ;
   param count "How many integers (1 to 65,536)." ;

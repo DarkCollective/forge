@@ -249,42 +249,54 @@ IN: arith
   _sd _fmt ;
 
 META: sum
+  use-when "You have a list of numbers, one per line or cut by a delimiter, and want their exact total, without the rounding noise that binary floats add." ;
   param delimiter "The text between the numbers." ;
   see-also arith:mean ;
 ;
 
 META: subtract
+  use-when "You have a starting number and a list of amounts to take away, one per line, and want what is left after each one." ;
   param delimiter "The text between the numbers." ;
   see-also arith:sum ;
 ;
 
 META: multiply
+  use-when "You have a list of factors, one per line, and want their exact product, even for decimals such as 0.1 and for integers too large for a calculator." ;
   param delimiter "The text between the numbers." ;
   see-also arith:sum ;
 ;
 
 META: divide
+  use-when "You have a number and a list of divisors, one per line, and want the quotient rounded to 20 decimal places, for example a share of a total." ;
   param delimiter "The text between the numbers." ;
   see-also arith:mod ;
 ;
 
 META: mod
+  use-when "You have a list of whole numbers, one per line, and want the remainder of each on division by a modulus, for example 2 to test whether each is odd." ;
+  link "https://en.wikipedia.org/wiki/Modular_arithmetic" "Modular arithmetic on Wikipedia" ;
   param modulus "The number every input number is divided by (2 by default); a decimal of any size." ;
   param delimiter "The text between the numbers." ;
   see-also arith:divide ;
 ;
 
 META: mean
+  use-when "You have a list of numbers, one per line, and want their exact average." ;
+  link "https://en.wikipedia.org/wiki/Arithmetic_mean" "Arithmetic mean on Wikipedia" ;
   param delimiter "The text between the numbers." ;
   see-also arith:median arith:standard-deviation ;
 ;
 
 META: median
+  use-when "You have a list of numbers, one per line, and want the middle value, which one very large number does not pull up as it does the mean." ;
+  link "https://en.wikipedia.org/wiki/Median" "Median on Wikipedia" ;
   param delimiter "The text between the numbers." ;
   see-also arith:mean ;
 ;
 
 META: standard-deviation
+  use-when "You have a list of measurements and want how far they spread from their mean, as a population of all of them or as a sample of a few." ;
+  link "https://en.wikipedia.org/wiki/Standard_deviation" "Standard deviation on Wikipedia" ;
   param kind "population divides by n, sample by n - 1." ;
   param delimiter "The text between the numbers." ;
   see-also arith:mean ;
@@ -334,17 +346,23 @@ META: standard-deviation
   data "the input" _int modulus "the modulus" _int invmod int>str ;
 
 META: ext-gcd
+  use-when "You have two whole numbers and want their greatest common divisor, with the coefficients x and y that write it as a times x plus b times y." ;
+  link "https://en.wikipedia.org/wiki/Extended_Euclidean_algorithm" "Extended Euclidean algorithm on Wikipedia" ;
   param b "The second integer (the input is the first)." ;
   see-also arith:mod-inverse ;
 ;
 
 META: mod-pow
+  use-when "You have a base, an exponent and a modulus, too large for a calculator, and want the remainder of the power, as in RSA and Diffie-Hellman arithmetic." ;
+  link "https://en.wikipedia.org/wiki/Modular_exponentiation" "Modular exponentiation on Wikipedia" ;
   param exponent "The exponent, a non-negative integer." ;
   param modulus "The modulus, an integer of 1 or more." ;
   see-also arith:mod-inverse ;
 ;
 
 META: mod-inverse
+  use-when "You have a number and a modulus, and want the number that undoes it under that modulus, its modular inverse, if one exists." ;
+  link "https://en.wikipedia.org/wiki/Modular_multiplicative_inverse" "Modular multiplicative inverse on Wikipedia" ;
   param modulus "The modulus, an integer of 1 or more." ;
   see-also arith:ext-gcd arith:mod-pow ;
 ;

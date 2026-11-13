@@ -543,6 +543,11 @@ IN: coords
   dup 0 nth "auto" _parse rot 1 nth "auto" _parse radius _hav ;
 
 META: convert
+  use-when "You have a position as latitude and longitude, or as a geohash, UTM or MGRS grid reference, and want it written in another co-ordinate format." ;
+  link "https://en.wikipedia.org/wiki/Geographic_coordinate_system" "Geographic coordinate system on Wikipedia" ;
+  link "https://en.wikipedia.org/wiki/Geohash" "Geohash on Wikipedia" ;
+  link "https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system" "Universal Transverse Mercator coordinate system on Wikipedia" ;
+  link "https://en.wikipedia.org/wiki/Military_Grid_Reference_System" "Military Grid Reference System on Wikipedia" ;
   param from "The format of the input, or auto to detect it." ;
   param to "The format to write." ;
   param precision "Decimals of degrees, minutes or seconds; the characters of a geohash (1 to 12)." ;
@@ -550,6 +555,8 @@ META: convert
 ;
 
 META: haversine
+  use-when "You have two positions, one per line, and want the straight-line distance between them over the earth's surface, in metres." ;
+  link "https://en.wikipedia.org/wiki/Haversine_formula" "Haversine formula on Wikipedia" ;
   param radius "The radius of the sphere in kilometres." ;
   see-also coords:convert units:convert-distance ;
 ;

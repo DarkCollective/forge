@@ -154,6 +154,7 @@ IN: lines
   delimiter util:delimiter join ;
 
 META: sort
+  use-when "You have a list of lines or items and want them sorted by text, by number, by IP address, by hex value or by length." ;
   param delimiter "What separates the pieces to sort, and joins them again." ;
   param reverse "Reverse the order after sorting." ;
   param order "How to compare the pieces." ;
@@ -168,6 +169,8 @@ META: sort
   data delimiter util:delimiter split list:shuffle delimiter util:delimiter join ;
 
 META: shuffle
+  use-when "You have lines and want them in a random order, for example to deal out a random test set, from a cryptographic random source." ;
+  link "https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle" "Fisher-Yates shuffle on Wikipedia" ;
   param delimiter "What separates the pieces to shuffle, and joins them again." ;
   see-also lines:sort ;
 ;
@@ -207,6 +210,7 @@ META: shuffle
   data delimiter util:delimiter split show-count _unique delimiter util:delimiter join ;
 
 META: unique
+  use-when "You have a list of lines with repeats and want each one once, in its first place, optionally with a count of how often each occurred." ;
   param delimiter "What separates the pieces, and joins them again." ;
   param show-count "Write the number of times each piece occurs in front of it." ;
   see-also lines:sort ;
@@ -224,6 +228,7 @@ META: unique
   delimiter util:delimiter join ;
 
 META: head
+  use-when "You have a long list of lines and want only the first few, such as the top of a file or the first ten results." ;
   param delimiter "What separates the pieces, and joins them again." ;
   param number "How many pieces to keep from the start; negative drops that many from the end." ;
   see-also lines:tail ;
@@ -239,6 +244,7 @@ META: head
   delimiter util:delimiter join ;
 
 META: tail
+  use-when "You have a long list of lines and want only the last few, such as the most recent entries of a log." ;
   param delimiter "What separates the pieces, and joins them again." ;
   param number "How many pieces to keep from the end; negative drops that many from the start." ;
   see-also lines:head ;
@@ -262,6 +268,7 @@ META: tail
   delimiter util:delimiter join ;
 
 META: add-numbers
+  use-when "You have lines of text and want each one numbered from 1, right-aligned, for example to refer to lines in a review or a listing." ;
   param delimiter "What separates the pieces, and joins them again." ;
   param offset "Added to every number (the first line is 1 plus the offset)." ;
   see-also lines:remove-numbers ;
@@ -275,6 +282,8 @@ META: add-numbers
   delimiter util:delimiter join ;
 
 META: remove-numbers
+  use-when "You have numbered lines, such as the output of add-numbers or a numbered listing, and want the numbers taken off the front of each line." ;
+  inverse add-numbers ;
   param delimiter "What separates the pieces, and joins them again." ;
   see-also lines:add-numbers ;
 ;
@@ -294,6 +303,7 @@ META: remove-numbers
   delimiter util:delimiter join ;
 
 META: pad
+  use-when "You have lines that must have a fixed width or a prefix, such as zeros before numbers, and want each one padded with a character." ;
   param delimiter "What separates the pieces, and joins them again." ;
   param position "Add the padding in front of the piece (start) or behind it (end)." ;
   param length "How many characters of padding to add to every piece." ;
@@ -310,6 +320,8 @@ META: pad
   delimiter util:delimiter join ;
 
 META: wrap
+  use-when "You have lines of text that are too long for a screen or a fixed-width field, and want each cut into pieces no longer than a width." ;
+  link "https://en.wikipedia.org/wiki/Word_wrap" "Word wrap on Wikipedia" ;
   param delimiter "What separates the lines, and is put where a line is cut." ;
   param width "The most characters on a line." ;
 ;
@@ -411,6 +423,9 @@ META: wrap
   if ;
 
 META: to-table
+  use-when "You have comma- or semicolon-separated rows of text and want them laid out as a table, as ASCII art or as Markdown, for a note or a report." ;
+  link "https://en.wikipedia.org/wiki/Comma-separated_values" "Comma-separated values on Wikipedia" ;
+  link "https://en.wikipedia.org/wiki/Markdown" "Markdown on Wikipedia" ;
   param cell-delimiter "What separates the cells of a row." ;
   param row-delimiter "What separates the rows. newline also accepts a carriage return before the line feed." ;
   param first-row-header "ascii: draw a rule under the first row. markdown always treats the first row as the header." ;
@@ -450,6 +465,7 @@ META: to-table
   "\n" join ;
 
 META: file-tree
+  use-when "You have a list of file paths, one per line, and want them drawn as a tree, to see the folder structure at a glance." ;
   param delimiter "What separates the paths in the input." ;
   param separator "What separates the parts of a path." ;
 ;
@@ -464,6 +480,8 @@ META: file-tree
   delimiter util:delimiter join ;
 
 META: filter
+  use-when "You have lines of text and want to keep only those that match a regular expression, or only those that do not, to pull out the entries you need from a log." ;
+  link "https://en.wikipedia.org/wiki/Regular_expression" "Regular expression on Wikipedia" ;
   param delimiter "What separates the pieces, and joins them again." ;
   param pattern "The regular expression to look for in each piece." ;
   param flags "Any of i (ignore case), m (multi-line), s (dot matches line breaks)." ;

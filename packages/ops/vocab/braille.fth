@@ -22,6 +22,7 @@ IN: braille
   [ 10240 - ] map list>bytes ;
 
 META: encode
+  use-when "You have bytes and want each one written as a single Braille pattern symbol, a lossless form that decode reads back." ;
   inverse decode ;
 ;
 

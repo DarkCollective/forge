@@ -28,6 +28,10 @@
     },
     "expect": {
       "json": true
+    },
+    "example": {
+      "title": "The i flag ignores case",
+      "note": "The pattern ^h matches Hello only when the i flag is set, because H is a capital letter without it."
     }
   },
   {
@@ -59,6 +63,10 @@
     },
     "expect": {
       "json": true
+    },
+    "example": {
+      "title": "The m flag lets ^ match after a line break",
+      "note": "In a two-line text the pattern ^b matches only with the m flag, which makes ^ match at the start of each line."
     }
   },
   {
@@ -257,6 +265,10 @@
           "groups": []
         }
       ]
+    },
+    "example": {
+      "title": "Each match with its position",
+      "note": "The positions count code points from zero, and the end is exclusive: 1 is at 1 to 2 and 22 at 3 to 5."
     }
   },
   {
@@ -391,6 +403,10 @@
           "groups": ["2", ""]
         }
       ]
+    },
+    "example": {
+      "title": "A group that does not match is an empty string",
+      "note": "The optional second group took no part in the matches, so its entry in groups is an empty string."
     }
   },
   {
@@ -514,6 +530,10 @@
     "expect": {
       "value": "Smith, John",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Swap two words with groups",
+      "note": "The first group is copied after the second, so John Smith becomes Smith, John."
     }
   },
   {
@@ -531,6 +551,10 @@
     "expect": {
       "value": "a[--$]b",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Replacement tokens for the whole match and a dollar sign",
+      "note": "The dollar and ampersand tokens copy the match and a literal dollar sign, so a-b becomes a[--$]b."
     }
   },
   {
@@ -666,6 +690,10 @@
     },
     "expect": {
       "json": ["a", "b", "c"]
+    },
+    "example": {
+      "title": "Split on runs of digits",
+      "note": "Each run of digits, however long, is one separator, so a1b22c gives a, b and c."
     }
   },
   {
@@ -681,6 +709,10 @@
     },
     "expect": {
       "json": ["a", "b", "", "c"]
+    },
+    "example": {
+      "title": "Two separators in a row leave an empty piece",
+      "note": "Between the two commas of a,b,,c the piece is empty and is kept."
     }
   },
   {

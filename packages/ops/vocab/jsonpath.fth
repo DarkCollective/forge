@@ -14,6 +14,9 @@ USING: json string-escape ;
   result-delimiter string-escape:unescape join ;
 
 META: query
+  use-when "You have a block of JSON and want the values at a path in it, such as every author in a list of books, using a JSONPath query like $.store.book[*].author." ;
+  link "https://www.rfc-editor.org/rfc/rfc9535" "RFC 9535: JSONPath" ;
+  link "https://en.wikipedia.org/wiki/JSON" "JSON on Wikipedia" ;
   param query "The JSONPath query, for example $.store.book[*].author or $..book[?@.price<10]. An empty query is E_COERCE." ;
   param result-delimiter "The text put between the matches. Escapes like \\n are read." ;
 ;

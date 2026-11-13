@@ -31,6 +31,10 @@
     },
     "expect": {
       "json": 2
+    },
+    "example": {
+      "title": "Count occurrences without overlap",
+      "note": "aa occurs twice in aaaa, because the second match starts after the first one ends."
     }
   },
   {
@@ -116,6 +120,10 @@
     },
     "expect": {
       "json": 3
+    },
+    "example": {
+      "title": "Count regex matches of digit runs",
+      "note": "The pattern is a regular expression here, so each run of digits counts once: 1, 22 and 333 give 3."
     }
   },
   {
@@ -256,6 +264,10 @@
     "expect": {
       "value": "13 0,2 a_b\n12 0,1 ab\n6 1,2 xab",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Rank the lines that match, best first",
+      "note": "Each line shows its score, then the positions the query letters matched, then the line itself."
     }
   },
   {
@@ -313,6 +325,10 @@
     "expect": {
       "value": "12 0,1 ab",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Lines without the letters in order are left out",
+      "note": "ba has the letters in the wrong order, and zz has neither, so only ab is kept."
     }
   },
   {
@@ -425,6 +441,10 @@
     "expect": {
       "value": "0 2 ab\n3 4 defg",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Find where three samples agree",
+      "note": "Each line gives the start offset, the length and the shared text, here ab at 0 and defg at 3."
     }
   },
   {
@@ -510,6 +530,10 @@
     "expect": {
       "value": "0 3 abc",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Stop at the end of the shortest sample",
+      "note": "Nothing past the end of the shorter sample is reported, so the last three letters of abcdef are ignored."
     }
   },
   {

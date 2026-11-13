@@ -59,6 +59,10 @@
     "expect": {
       "value": "Date: Sunday 3rd January 2021\nTime: 06:07:08\nPeriod: AM\nTimezone: UTC\nUTC offset: +0000\n\nDaylight Saving Time: false\nLeap year: false\nDays in this month: 31\n\nDay of year: 3\nWeek number: 53\nQuarter: 1",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A date in ISO week 53 of the year before",
+      "note": "The Week number line is the ISO week, 53 here, because 3 January 2021 falls in week 53 of 2020."
     }
   },
   {
@@ -127,6 +131,10 @@
     "expect": {
       "value": "Date: Wednesday 11th November 2026\nTime: 12:34:56\nPeriod: PM\nTimezone: UTC\nUTC offset: +0000\n\nDaylight Saving Time: false\nLeap year: false\nDays in this month: 30\n\nDay of year: 315\nWeek number: 46\nQuarter: 4",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A Unix timestamp read as a date",
+      "note": "With the UNIX timestamp preset the number is read as seconds since 1970, and the date, time and week facts follow."
     }
   },
   {
@@ -275,6 +283,10 @@
     "expect": {
       "value": "Wednesday 11th November 2026 21:34:56 +09:00",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "UTC time written as Tokyo time",
+      "note": "The same instant is written with the +09:00 offset of Tokyo, nine hours ahead of 12:34:56 UTC."
     }
   },
   {
@@ -437,6 +449,10 @@
     "expect": {
       "value": "2026-11-11 08:09:00",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Text around the date is skipped",
+      "note": "The words on and at are ignored, and the fields are read from the custom input format."
     }
   },
   {
@@ -667,6 +683,10 @@
     "expect": {
       "value": "Wed 11 November 2026 12:34:56 UTC",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A timestamp as a readable date in UTC",
+      "note": "The default text gives the weekday, date, time and UTC, with no fraction for whole seconds."
     }
   },
   {
@@ -797,6 +817,10 @@
     "expect": {
       "value": "2026-11-11 21:34:56 +09:00",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The same timestamp in Tokyo",
+      "note": "With the zone Asia/Tokyo and a format ending in Z, the same instant reads 21:34:56 +09:00."
     }
   },
   {
@@ -917,6 +941,10 @@
     "expect": {
       "value": "1794400496",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "An ISO 8601 text with T and Z",
+      "note": "The default preset reads the T and the Z, and gives the same number as the same time written with a space."
     }
   },
   {
@@ -1019,6 +1047,10 @@
     "expect": {
       "value": "1794400496",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A Tokyo wall clock time",
+      "note": "Reading 21:34:56 in Asia/Tokyo gives the same timestamp as 12:34:56 in UTC, because Tokyo is nine hours ahead."
     }
   },
   {
@@ -1124,6 +1156,10 @@
     "expect": {
       "value": "1794400496",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A decimal Windows file time",
+      "note": "The file time counts 100-nanosecond ticks from 1601, and this value gives 1794400496 seconds since 1970."
     }
   },
   {
@@ -1220,6 +1256,10 @@
     "expect": {
       "value": "1794400496",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The same time as little-endian hex",
+      "note": "The eight bytes in memory order, as hex-le, give the same timestamp as the decimal value."
     }
   },
   {
@@ -1332,6 +1372,10 @@
     "expect": {
       "value": "134388740960000000",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A Unix timestamp as a Windows file time",
+      "note": "The output counts 100-nanosecond intervals since 1601, so it is the file time for the same moment as above."
     }
   },
   {
@@ -1394,6 +1438,10 @@
     "expect": {
       "value": "1dd71d90ebb9800",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The same file time as hex",
+      "note": "The hex form has no leading zeros, so it is shorter than the 18 decimal digits."
     }
   },
   {
@@ -1518,6 +1566,10 @@
     "expect": {
       "value": "2024-02-29 12:00:00",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Adding a day into a leap day",
+      "note": "2024 is a leap year, so one day after 28 February is 29 February."
     }
   },
   {
@@ -1553,6 +1605,10 @@
     "expect": {
       "value": "2026-11-10 11:00:00",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A negative amount goes back in time",
+      "note": "Minus 25 hours from 12:00 on 11 November gives 11:00 on 10 November."
     }
   },
   {
@@ -1661,6 +1717,10 @@
     "expect": {
       "value": "1999-12-31\n3/4/2021\n04/13/2022\n13.04.2022\n2022 5 6",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Dates in several styles, found in order",
+      "note": "1999-12-31, 3/4/2021, 04/13/2022, 13.04.2022 and 2022 5 6 are found, while 1/1/1899 is not, since 1899 is before 1900."
     }
   },
   {
@@ -1694,6 +1754,10 @@
     "expect": {
       "value": "2022-01-02\n2021-12-31",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Repeated dates keep their first place",
+      "note": "The second 2022-01-02 is dropped, and the first one stays where it first appeared."
     }
   },
   {

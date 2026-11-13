@@ -11,6 +11,10 @@
     "expect": {
       "value": "Found 44 tags.\n\nMake: TestCam\nModel: Model X1\nOrientation: 6\nXResolution: 72\nYResolution: 72\nResolutionUnit: 2\nSoftware: forge-test 1.0\nDateTime: 2024:05:06 07:08:09\nCopyright: (c) nobody\nXPTitle: Titel \u00fc\nExposureTime: 0.004\nFNumber: 2.8\nISOSpeedRatings: 200\nSensitivityType: 1, 2, 3\nExifVersion: 0232\nDateTimeOriginal: 2024:05:06 07:08:09\nComponentsConfiguration: 01020300\nShutterSpeedValue: -3.5\nApertureValue: 8\nExposureBiasValue: -0.333333\nMaxApertureValue: 0/0\nSubjectDistance: double:400c000000000000\nFocalLength: 35\nMakerNote: [39 bytes, not decoded]\nUserComment: hello comment\nExifImageWidth: 8\nExifImageHeight: 6\nLensSpecification: 24, 70, 2.8, 2.8\nGamma: float:40100000\nInteropIndex: R98\nInteropVersion: 0100\nGPSVersionID: 2, 3, 0, 0\nGPSLatitudeRef: N\nGPSLatitude: 51, 28, 40.12\nGPSLongitudeRef: W\nGPSLongitude: 0, 7, 30\nGPSAltitudeRef: 0\nGPSAltitude: 123.4\nGPSTimeStamp: 12, 30, 5\nGPSDateStamp: 2024:05:06\nThumbnail:Compression: 6\nThumbnail:XResolution: 72\nThumbnail:JpegIFOffset: 1000\nThumbnail:JpegIFByteCount: 500",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The Exif tags of a JPEG photo",
+      "note": "The report starts with the number of tags, then one Name: value line for each tag, such as Make, Model and Software."
     }
   },
   {
@@ -81,6 +85,10 @@
     "expect": {
       "value": "Found 0 tags.\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A JPEG with no Exif block",
+      "note": "The report still comes out, with Found 0 tags, so a photo with no metadata does not raise an error."
     }
   },
   {

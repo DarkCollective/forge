@@ -456,5 +456,7 @@ IN: elf
   data _context _report ;
 
 META: info
+  use-when "You have an ELF file as hex or bytes and want its headers, segments, sections and symbols, in readelf style, without running it." ;
+  link "https://en.wikipedia.org/wiki/Executable_and_Linkable_Format" "Executable and Linkable Format on Wikipedia" ;
   see-also filetype:detect filetype:scan ;
 ;

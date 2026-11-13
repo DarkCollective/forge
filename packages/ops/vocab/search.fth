@@ -138,6 +138,8 @@ USING: util list ;
   min-run _run-rows ;
 
 META: count
+  use-when "You have a text and a string or regular expression, and want to know how many times it occurs, for example how often a word or a byte pattern appears." ;
+  link "https://en.wikipedia.org/wiki/Regular_expression" "Regular expression on Wikipedia" ;
   param pattern "The text to count, or a regular expression in regex mode." ;
   param mode "string counts exact text, extended reads the escapes (\\n, \\t, \\x41) of the pattern first, regex counts matches of an ECMAScript regular expression." ;
   param ignore-case "Treat upper and lower case as the same." ;
@@ -145,6 +147,8 @@ META: count
 ;
 
 META: fuzzy
+  use-when "You have a list of lines, such as file names or commands, and a few letters of the one you want, and need the lines holding those letters in order, best first." ;
+  link "https://en.wikipedia.org/wiki/Approximate_string_matching" "Approximate string matching on Wikipedia" ;
   param query "The characters to look for, in order." ;
   param case-sensitive "Match upper and lower case as different characters." ;
   param best-first "Order the rows by falling score instead of keeping the input order." ;
@@ -153,6 +157,7 @@ META: fuzzy
 ;
 
 META: offsets
+  use-when "You have two or more versions of the same data, such as two ciphertexts or captures, and want the stretches where they agree at the same positions." ;
   param delimiter "What separates the samples. It is text, not a pattern; the default is a blank line (two line feeds)." ;
   param min-run "The shortest stretch to report, in characters." ;
   see-also distance:hamming ;

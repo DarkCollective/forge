@@ -12,5 +12,7 @@ USING: json ;
   data json:parse query jsonata:_query json:compact ;
 
 META: query
+  use-when "You have a block of JSON and want to pick out or reshape values with a JSONata expression, for example a filtered list or a total written as one line." ;
+  link "https://en.wikipedia.org/wiki/JSON" "JSON on Wikipedia" ;
   param query "The JSONata expression. The default, string, selects the field named string; it is CyberChef's default." ;
 ;

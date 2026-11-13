@@ -33,6 +33,10 @@
     "expect": {
       "value": "2ed6657d-e927-568b-95e1-2665a8aea6a2",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A v5 UUID is fixed by its namespace and name",
+      "note": "The same namespace and name always give this UUID, as RFC 9562 appendix A.4 shows for www.example.com."
     }
   },
   {
@@ -157,6 +161,10 @@
     "expect": {
       "value": "00000000-0000-0000-0000-000000000000",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The nil UUID is all zeros",
+      "note": "Version nil needs no input and always gives the all-zero UUID, which some systems use as a placeholder."
     }
   },
   {
@@ -264,6 +272,10 @@
     "expect": {
       "value": "Version: 7 (Unix time and random)\nVariant: RFC 9562 (RFC 4122)\nTimestamp: 2022-02-22T19:22:22.000Z",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A version 7 UUID shows its creation time",
+      "note": "Version 7 carries a Unix millisecond timestamp, which the report shows in UTC."
     }
   },
   {
@@ -362,6 +374,10 @@
     "expect": {
       "value": "Variant: Microsoft (reserved)",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A non-RFC variant gets a short report",
+      "note": "For the Microsoft variant the report gives only the variant line, with no version."
     }
   },
   {

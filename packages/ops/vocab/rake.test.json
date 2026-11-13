@@ -15,6 +15,10 @@
     "expect": {
       "value": "8.67: minimal generating sets\n8.50: linear diophantine equations\n7.67: minimal supporting set\n4.67: minimal set\n4.50: linear constraints\n4.00: natural numbers\n4.00: nonstrict inequations\n4.00: strict inequations\n4.00: upper bounds\n3.67: mixed types\n3.50: corresponding algorithms\n3.17: considered types\n2.00: set\n1.67: types\n1.50: algorithms\n1.50: considered\n1.00: compatibility\n1.00: components\n1.00: constructing\n1.00: construction\n1.00: criteria\n1.00: solutions\n1.00: solving\n1.00: system\n1.00: systems",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Key phrases ranked by score",
+      "note": "Each line is the score, a colon, then the phrase, with the highest score first and phrases of at most three words."
     }
   },
   {
@@ -141,6 +145,10 @@
     "expect": {
       "value": "15.00: over the lazy dog\n5.00: the quick",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Custom stop words replace the built-in list",
+      "note": "With fox and jumps as the only stop words, the phrase over the lazy dog keeps its small words and scores highest."
     }
   },
   {

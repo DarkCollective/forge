@@ -81,6 +81,10 @@
     "expect": {
       "value": "Container: Ogg\nCodec: Opus\nDuration: 0.150 s\nSample rate: 48000 Hz (input; Opus decodes at 48000 Hz)\nChannels: 2\nEncoder vendor: Lavf60.16.100\nTags:\n  encoder: Lavc60.31.102 libopus\n  title: Tone \u00fc\n  artist: Tester\n  album: Lab\n  date: 2024\n  TRACKNUMBER: 2/9\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "An Ogg Opus stereo file, read without decoding",
+      "note": "The sample rate line gives the input rate and says that Opus decodes at 48000 Hz."
     }
   },
   {

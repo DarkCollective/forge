@@ -130,6 +130,8 @@ IN: units
   value from to _data digits _convert ;
 
 META: convert-distance
+  use-when "You have a length in one unit, such as miles or inches, and want it in another, such as metres or feet." ;
+  link "https://en.wikipedia.org/wiki/Conversion_of_units" "Conversion of units on Wikipedia" ;
   param from "The unit the value is in." ;
   param to "The unit to convert to." ;
   param digits "How many digits to keep after the decimal point (0 to 60)." ;
@@ -137,6 +139,8 @@ META: convert-distance
 ;
 
 META: convert-area
+  use-when "You have an area in one unit, such as acres or square miles, and want it in another, such as square metres or hectares." ;
+  link "https://en.wikipedia.org/wiki/Conversion_of_units" "Conversion of units on Wikipedia" ;
   param from "The unit the value is in." ;
   param to "The unit to convert to." ;
   param digits "How many digits to keep after the decimal point (0 to 60)." ;
@@ -144,6 +148,8 @@ META: convert-area
 ;
 
 META: convert-mass
+  use-when "You have a mass in one unit, such as pounds or ounces, and want it in another, such as kilograms or grams." ;
+  link "https://en.wikipedia.org/wiki/Conversion_of_units" "Conversion of units on Wikipedia" ;
   param from "The unit the value is in." ;
   param to "The unit to convert to." ;
   param digits "How many digits to keep after the decimal point (0 to 60)." ;
@@ -151,6 +157,8 @@ META: convert-mass
 ;
 
 META: convert-speed
+  use-when "You have a speed in one unit, such as knots or miles per hour, and want it in another, such as kilometres per hour or metres per second." ;
+  link "https://en.wikipedia.org/wiki/Conversion_of_units" "Conversion of units on Wikipedia" ;
   param from "The unit the value is in." ;
   param to "The unit to convert to." ;
   param digits "How many digits to keep after the decimal point (0 to 60)." ;
@@ -158,6 +166,8 @@ META: convert-speed
 ;
 
 META: convert-data
+  use-when "You have an amount of data in one unit, such as kibibytes, and want it in bytes, bits or another unit, with decimal and binary prefixes kept apart." ;
+  link "https://en.wikipedia.org/wiki/Binary_prefix" "Binary prefix on Wikipedia" ;
   param from "The unit the value is in." ;
   param to "The unit to convert to." ;
   param digits "How many digits to keep after the decimal point (0 to 60)." ;

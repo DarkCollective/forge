@@ -307,5 +307,7 @@ IN: exif
     _all-lines "Found " over len int>str cat " tags.\n\n" cat swap "\n" join cat ] if ;
 
 META: extract
+  use-when "You have a JPEG, PNG, WebP or TIFF photo as hex or bytes and want its camera, date and GPS details, without decoding the image." ;
+  link "https://en.wikipedia.org/wiki/Exif" "Exif on Wikipedia" ;
   see-also filetype:detect ;
 ;

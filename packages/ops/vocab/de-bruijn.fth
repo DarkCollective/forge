@@ -47,6 +47,8 @@ IN: de-bruijn
   k n _words ;
 
 META: generate
+  use-when "You need a sequence of symbols that holds every short word over an alphabet exactly once, for example as a test pattern or a cyclic counter." ;
+  link "https://en.wikipedia.org/wiki/De_Bruijn_sequence" "De Bruijn sequence on Wikipedia" ;
   param k "The size of the alphabet, 2 to 36." ;
   param n "The length of the words that must each appear once, 1 to 16." ;
 ;

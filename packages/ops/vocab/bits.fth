@@ -87,55 +87,83 @@ IN: bits
   [ data swap key-length _candidate ] map ;
 
 META: xor
+  use-when "You have bytes and a repeating key, and want them XOR-ed with it, as in a simple cipher. Applying the same key again gives the input back." ;
+  link "https://en.wikipedia.org/wiki/Exclusive_or" "Exclusive or on Wikipedia" ;
+  link "https://en.wikipedia.org/wiki/XOR_cipher" "XOR cipher on Wikipedia" ;
   param key "The key; it repeats over the data. One to 4096 bytes." ;
   see-also bits:and bits:or bits:add bits:not ;
 ;
 
 META: and
+  use-when "You have bytes and a mask, and want only the bits set in the mask kept, for example the low nibble with a key of 0f." ;
+  link "https://en.wikipedia.org/wiki/Bitwise_operation" "Bitwise operation on Wikipedia" ;
   param key "The key; it repeats over the data. One to 4096 bytes." ;
   see-also bits:or bits:xor bits:not ;
 ;
 
 META: or
+  use-when "You have bytes and a mask, and want the bits set in the mask forced on in every byte, for example the top bit with a key of 80." ;
+  link "https://en.wikipedia.org/wiki/Bitwise_operation" "Bitwise operation on Wikipedia" ;
   param key "The key; it repeats over the data. One to 4096 bytes." ;
   see-also bits:and bits:xor bits:not ;
 ;
 
 META: add
+  use-when "You have bytes and a key, and want the key added to each byte modulo 256, as in a simple additive cipher." ;
+  inverse sub ;
+  link "https://en.wikipedia.org/wiki/Modular_arithmetic" "Modular arithmetic on Wikipedia" ;
   param key "The key; it repeats over the data. One to 4096 bytes." ;
   see-also bits:sub bits:xor ;
 ;
 
 META: sub
+  use-when "You have bytes that a key was added to modulo 256, and want the key taken away from each one to undo it." ;
+  inverse add ;
+  link "https://en.wikipedia.org/wiki/Modular_arithmetic" "Modular arithmetic on Wikipedia" ;
   param key "The key; it repeats over the data. One to 4096 bytes." ;
   see-also bits:add bits:xor ;
 ;
 
 META: not
+  use-when "You have bytes whose bits need flipping, such as a complemented value, and want every bit inverted. Applying it twice gives the input back." ;
+  link "https://en.wikipedia.org/wiki/Bitwise_operation" "Bitwise operation on Wikipedia" ;
   see-also bits:xor bits:and ;
 ;
 
 META: shift-left
+  use-when "You have bytes, such as a packed field, and want each one moved up by some bits, with zeros coming in at the bottom and the top bits lost." ;
+  link "https://en.wikipedia.org/wiki/Bitwise_operation" "Bitwise operation on Wikipedia" ;
   param amount "How many bit positions to shift, 1 to 7." ;
   see-also bits:shift-right bits:rotate-left ;
 ;
 
 META: shift-right
+  use-when "You have bytes, such as a packed field, and want each one moved down by some bits, with zeros coming in at the top and the low bits lost." ;
+  link "https://en.wikipedia.org/wiki/Bitwise_operation" "Bitwise operation on Wikipedia" ;
   param amount "How many bit positions to shift, 1 to 7." ;
   see-also bits:shift-left bits:rotate-right ;
 ;
 
 META: rotate-left
+  use-when "You have bytes and want their bits rotated left within each byte, so bits that leave the top come back at the bottom." ;
+  inverse rotate-right ;
+  link "https://en.wikipedia.org/wiki/Bitwise_operation" "Bitwise operation on Wikipedia" ;
   param amount "How many bit positions to rotate, 1 to 7." ;
   see-also bits:rotate-right bits:shift-left ;
 ;
 
 META: rotate-right
+  use-when "You have bytes and want their bits rotated right within each byte, so bits that leave the bottom come back at the top." ;
+  inverse rotate-left ;
+  link "https://en.wikipedia.org/wiki/Bitwise_operation" "Bitwise operation on Wikipedia" ;
   param amount "How many bit positions to rotate, 1 to 7." ;
   see-also bits:rotate-left bits:shift-right ;
 ;
 
 META: xor-brute
+  use-when "You have bytes that may be XOR-ed with a one- or two-byte key, and a word you expect in the plaintext (a crib), and want every key that makes that word appear." ;
+  link "https://en.wikipedia.org/wiki/XOR_cipher" "XOR cipher on Wikipedia" ;
+  link "https://en.wikipedia.org/wiki/Brute-force_search" "Brute-force search on Wikipedia" ;
   param key-length "Length of the keys to try: 1 byte (256 keys) or 2 bytes (65 536 keys)." ;
   param crib "Text expected in the output (matched as UTF-8 bytes). Empty keeps every candidate." ;
   see-also bits:xor ;

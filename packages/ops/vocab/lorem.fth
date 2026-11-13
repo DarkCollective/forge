@@ -91,6 +91,8 @@ veritatis vero vitae voluptas voluptate voluptatem voluptates voluptatibus volup
   ] if ] if ] if ;
 
 META: generate
+  use-when "You need placeholder text of a set length, in paragraphs, sentences, words or bytes, to fill a layout or a test." ;
+  link "https://en.wikipedia.org/wiki/Lorem_ipsum" "Lorem ipsum on Wikipedia" ;
   param length "How many paragraphs, sentences, words or bytes." ;
   param unit "paragraphs, sentences, words or bytes: what length counts." ;
   param opening "Start with the traditional Lorem ipsum dolor sit amet, consectetur adipiscing elit." ;

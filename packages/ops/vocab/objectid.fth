@@ -17,4 +17,6 @@ IN: objectid
   0 8 slice 16 str>int-radix _iso ;
 
 META: timestamp
+  use-when "You have a MongoDB ObjectID, 24 hex digits, and want the time the document was created, read from the id itself." ;
+  link "https://en.wikipedia.org/wiki/Unix_time" "Unix time on Wikipedia" ;
 ;

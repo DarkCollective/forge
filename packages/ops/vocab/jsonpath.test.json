@@ -14,6 +14,10 @@
     "expect": {
       "value": "\"Nigel Rees\"\n\"Evelyn Waugh\"\n\"Herman Melville\"\n\"J. R. R. Tolkien\"",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Every author in a book list",
+      "note": "$ is the root, .store.book[*] visits each book and .author reads its author. Each match is on its own line."
     }
   },
   {
@@ -201,6 +205,10 @@
     "expect": {
       "value": "{\"category\":\"reference\",\"author\":\"Nigel Rees\",\"title\":\"Sayings of the Century\",\"price\":8.95}\n{\"category\":\"fiction\",\"author\":\"Herman Melville\",\"title\":\"Moby Dick\",\"isbn\":\"0-553-21311-3\",\"price\":8.99}",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A filter keeps the books under a price",
+      "note": "[?@.price<10] keeps only the books whose price is below 10, where @ stands for the book being tested."
     }
   },
   {

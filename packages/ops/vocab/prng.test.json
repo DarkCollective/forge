@@ -78,6 +78,10 @@
     "expect": {
       "value": "7,7,7",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A range of size one is deterministic",
+      "note": "With the minimum and maximum both 7, every value is 7 whatever the random source gives, so the output is 7,7,7."
     }
   },
   {

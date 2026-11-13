@@ -92,6 +92,10 @@
     "expect": {
       "value": "0102010201",
       "enc": "hex"
+    },
+    "example": {
+      "title": "A key repeats over longer data",
+      "note": "The two-byte key 0102 is written again and again over the five zero bytes, giving 0102010201."
     }
   },
   {
@@ -111,6 +115,10 @@
     "expect": {
       "value": "000302",
       "enc": "hex"
+    },
+    "example": {
+      "title": "A key given as text",
+      "note": "The key a is the single byte 0x61, so each letter of abc is XOR-ed with it and the result is 000302."
     }
   },
   {
@@ -223,6 +231,10 @@
     "expect": {
       "value": "0f000c",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Masking keeps only the bits in the key",
+      "note": "The key 0f keeps the low nibble of a byte and f0 keeps the high one, so ff0f3c becomes 0f000c."
     }
   },
   {
@@ -336,6 +348,10 @@
     "expect": {
       "value": "8f0fff",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Setting bits with an OR mask",
+      "note": "Every bit set in 0f is forced on: 80 becomes 8f, 01 becomes 0f and f0 becomes ff."
     }
   },
   {
@@ -430,6 +446,10 @@
     "expect": {
       "value": "000281",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Addition wraps past 255",
+      "note": "Each byte plus 1 wraps round after 255, so ff becomes 00, 01 becomes 02 and 80 becomes 81."
     }
   },
   {
@@ -524,6 +544,10 @@
     "expect": {
       "value": "ff007f",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Subtraction wraps below zero",
+      "note": "Taking 1 from 00 wraps to ff, so 00 01 80 becomes ff 00 7f. Subtracting the key undoes adding it."
     }
   },
   {
@@ -613,6 +637,10 @@
     "expect": {
       "value": "ff00f0",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Every bit is flipped",
+      "note": "00 becomes ff, ff becomes 00 and 0f becomes f0, so applying not twice gives the input back."
     }
   },
   {
@@ -685,6 +713,10 @@
     "expect": {
       "value": "fe0086",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Bits shifted off the top are lost",
+      "note": "Shifting ff left by one gives fe, since the top bit falls off, and c3 becomes 86."
     }
   },
   {
@@ -807,6 +839,10 @@
     "expect": {
       "value": "0a",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Bits shifted off the bottom are lost",
+      "note": "Shifting ab right by four gives 0a: the low nibble falls off and the high nibble moves down."
     }
   },
   {
@@ -913,6 +949,10 @@
     "expect": {
       "value": "ba",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Rotating four bits swaps the nibbles",
+      "note": "Rotating ab left by four gives ba, where a shift would give b0."
     }
   },
   {
@@ -1035,6 +1075,10 @@
     "expect": {
       "value": "01",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Bits that fall off the bottom return at the top",
+      "note": "Rotating 80 right by seven gives 01: the single set bit comes back at the bottom."
     }
   },
   {
@@ -1118,6 +1162,10 @@
           }
         }
       ]
+    },
+    "example": {
+      "title": "Find the one-byte key that makes a crib appear",
+      "note": "HI XOR-ed with 20 gives hi, so 20 is the only key listed for the crib hi."
     }
   },
   {
@@ -1162,6 +1210,10 @@
           }
         }
       ]
+    },
+    "example": {
+      "title": "A non-ASCII crib is matched as UTF-8 bytes",
+      "note": "The crib é is matched as its two UTF-8 bytes, c3 and a9, which the key ff produces from 3c and 56."
     }
   },
   {

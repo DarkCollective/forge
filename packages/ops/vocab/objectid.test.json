@@ -11,6 +11,10 @@
     "expect": {
       "value": "2012-10-17T21:13:27.000Z",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The creation time of a sample ObjectID",
+      "note": "The first four bytes, 507f1f77, are seconds since 1970, and give 2012-10-17 21:13:27 UTC."
     }
   },
   {
@@ -67,6 +71,10 @@
     "expect": {
       "value": "2024-02-29T00:00:00.000Z",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "An ObjectID made on a leap day",
+      "note": "The first eight hex digits give the seconds since 1970, and the result is midnight UTC on 29 February 2024."
     }
   },
   {

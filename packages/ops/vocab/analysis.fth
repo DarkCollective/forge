@@ -59,6 +59,11 @@ IN: analysis
   "Analysis" category
   data bytes>latin1 _counts data len _entropy ;
 
+META: entropy
+  use-when "You have a block of bytes, such as a file or a packed blob, and want to know how random it looks, from 0 for one repeated byte to 8 for fully random." ;
+  link "https://en.wikipedia.org/wiki/Entropy_(information_theory)" "Entropy (information theory) on Wikipedia" ;
+;
+
 : frequency ( data:bytes -- list )
   "One record per byte value present: byte, count and percent of the input, sorted by count (descending) then byte." doc
   "Analysis" category
@@ -67,6 +72,11 @@ IN: analysis
   [ dup 1 nth 256 * swap 0 nth swap - ] map
   _sort-keys
   data len _rows ;
+
+META: frequency
+  use-when "You have bytes or text of unknown origin and want to see which byte values occur most often, for example to find the common letters of a substitution cipher." ;
+  link "https://en.wikipedia.org/wiki/Frequency_analysis" "Frequency analysis on Wikipedia" ;
+;
 
 \ ---------------------------------------------------------------------------------------------
 \ Index of coincidence and chi-squared
@@ -100,6 +110,8 @@ IN: analysis
   data bytes>latin1 _counts scope "letters" = _scope normalise _ioc ;
 
 META: index-of-coincidence
+  use-when "You have a text in letters, often a ciphertext, and want its index of coincidence, to tell English-like letters from random ones or from a repeating-key cipher." ;
+  link "https://en.wikipedia.org/wiki/Index_of_coincidence" "Index of coincidence on Wikipedia" ;
   param scope "letters: only A to Z, either case (26 symbols). bytes: all 256 byte values." ;
   param normalise "Multiply by the number of symbols, so that 1 is the value for uniform random symbols." ;
   see-also analysis:chi-squared analysis:entropy analysis:frequency ;
@@ -138,6 +150,8 @@ META: index-of-coincidence
   if ;
 
 META: chi-squared
+  use-when "You have a candidate decryption or any text and want to score how far its letter frequencies are from English, where a small score means English-like." ;
+  link "https://en.wikipedia.org/wiki/Chi-squared_test" "Chi-squared test on Wikipedia" ;
   param reference "uniform: all 256 byte values equally likely. english: the 26 letters at English frequencies (other bytes ignored)." ;
   see-also analysis:index-of-coincidence analysis:entropy analysis:frequency ;
 ;

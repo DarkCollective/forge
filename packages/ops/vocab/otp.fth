@@ -48,6 +48,8 @@ USING: hmac base32 url random clock ;
   secret key-size _secret name algorithm digits counter _hotp-report ;
 
 META: hotp
+  use-when "You have a Base32 secret and a counter, and want the HOTP password it gives for that counter, to check an authenticator or a server." ;
+  link "https://www.rfc-editor.org/rfc/rfc4226" "RFC 4226: HOTP one-time password algorithm" ;
   param name "The label of the account in the URI (percent-encoded there)." ;
   param algorithm "The HMAC hash: sha1 (the RFC and the default of authenticator apps), sha256 or sha512." ;
   param digits "The length of the password, 1 to 10 decimal digits (apps use 6 to 8)." ;
@@ -75,6 +77,9 @@ META: hotp
   secret key-size _secret name algorithm digits period epoch time _totp-report ;
 
 META: totp
+  use-when "You have a Base32 secret and want the TOTP password for a given time, or for now, to compare with an authenticator app or a test vector." ;
+  link "https://www.rfc-editor.org/rfc/rfc6238" "RFC 6238: TOTP time-based one-time password" ;
+  link "https://en.wikipedia.org/wiki/Time-based_one-time_password" "Time-based one-time password on Wikipedia" ;
   param name "The label of the account in the URI (percent-encoded there)." ;
   param algorithm "The HMAC hash: sha1 (the RFC and the default of authenticator apps), sha256 or sha512." ;
   param digits "The length of the password, 1 to 10 decimal digits (apps use 6 to 8)." ;

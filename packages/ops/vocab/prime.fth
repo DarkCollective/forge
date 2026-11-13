@@ -72,6 +72,8 @@ USING: random ;
   size unit _range count format delimiter _batch ;
 
 META: generate
+  use-when "You need a random prime of a given size, for example to test big-number code, drawn from a cryptographic random source." ;
+  link "https://en.wikipedia.org/wiki/Prime_number" "Prime number on Wikipedia" ;
   param size "The size of each prime: a number of bits (2 to 2048) or of decimal digits (1 to 616), see unit." ;
   param unit "bits: the prime has exactly that many bits. digits: exactly that many decimal digits." ;
   param count "How many primes (1 to 100)." ;

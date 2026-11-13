@@ -429,5 +429,7 @@ IN: id3
   _both ;
 
 META: extract
+  use-when "You have an MP3 or other audio file as bytes or hex and want its ID3 tags, such as title, artist and album, as readable text." ;
+  link "https://en.wikipedia.org/wiki/ID3" "ID3 on Wikipedia" ;
   see-also exif:extract ;
 ;

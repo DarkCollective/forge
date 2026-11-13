@@ -11,6 +11,10 @@
     "expect": {
       "value": "File type:   Portable Network Graphics image\nExtension:   png\nMIME type:   image/png\nDescription: PNG image\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A PNG image from its first bytes",
+      "note": "The data begins with the PNG signature, so the report names a Portable Network Graphics image with extension png."
     }
   },
   {
@@ -109,6 +113,10 @@
     "expect": {
       "value": "File type:   ZIP archive\nExtension:   zip\nMIME type:   application/zip\nDescription: ZIP archive (also JAR, APK, OOXML and ODF)\n\nFile type:   Java archive\nExtension:   jar\nMIME type:   application/java-archive\nDescription: JAR (a ZIP that starts with META-INF)\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "ZIP and JAR share a signature",
+      "note": "The same bytes are listed as a ZIP archive and as a Java archive, because the signature alone cannot tell them apart."
     }
   },
   {
@@ -153,6 +161,10 @@
     "expect": {
       "value": "Scanning data for 'magic bytes' which may indicate embedded files. The following results may be false positives and should not be treated as reliable. Any sufficiently long file is likely to contain these magic bytes coincidentally.\n\nOffset 4 (0x4):\n  File type:   Portable Network Graphics image\n  Extension:   png\n  MIME type:   image/png\n  Description: PNG image\n\nOffset 83 (0x53):\n  File type:   GZIP compressed file\n  Extension:   gz,tgz\n  MIME type:   application/gzip\n  Description: gzip stream (deflate)\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Find a PNG and a gzip stream in junk",
+      "note": "Each hit gives its offset in the data, here 4 for the PNG and 83 for the gzip stream, and the report warns that such matches can be coincidences."
     }
   },
   {
@@ -217,6 +229,10 @@
           }
         }
       ]
+    },
+    "example": {
+      "title": "Cut a PNG and a gzip file out of junk",
+      "note": "Each file is named after its offset, and the PNG at offset 4 is 77 bytes long."
     }
   },
   {
@@ -280,6 +296,10 @@
     "expect": {
       "value": "1f8b08000000000002ff2bc94855282ccd4cce56482aca2fcf5348cbaf5028a1b21800c685af2a64000000",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The second file by its position",
+      "note": "Index 1 counts from zero, so it is the second file found, the gzip stream at offset 83, given as bytes."
     }
   },
   {

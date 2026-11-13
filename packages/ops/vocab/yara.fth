@@ -60,6 +60,8 @@ IN: yara
   [ show-strings show-string-lengths show-metadata show-counts _rule ] map "" join ;
 
 META: scan
+  use-when "You have a file or bytes and a set of YARA rules, and want to know which rules match and where their strings occur, to triage suspicious data." ;
+  link "https://en.wikipedia.org/wiki/YARA" "YARA on Wikipedia" ;
   param rules "YARA rules in the supported subset, one or more rules." ;
   param show-strings "Show each match of each matched string: offset and the bytes." ;
   param show-string-lengths "Show the length of each match." ;

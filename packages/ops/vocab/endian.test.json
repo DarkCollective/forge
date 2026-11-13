@@ -11,6 +11,10 @@
     "expect": {
       "value": "0403020108070605",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Reverse the bytes of each four-byte word",
+      "note": "Each group of four bytes is reversed on its own, so 01020304 becomes 04030201 and the next word is handled the same way."
     }
   },
   {
@@ -119,6 +123,10 @@
     "expect": {
       "value": "02010003",
       "enc": "hex"
+    },
+    "example": {
+      "title": "A partial last word is padded with zeros",
+      "note": "With pad on, the three bytes 010203 are padded to two words, and the zero byte comes out at the start of the last word: 02010003."
     }
   },
   {

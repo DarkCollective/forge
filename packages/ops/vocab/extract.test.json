@@ -41,6 +41,10 @@
     "expect": {
       "value": "hello\nwor\nworld!",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A minimum length of three keeps short runs",
+      "note": "The same input with a minimum of three also gives the three-character run wor, between hello and world!."
     }
   },
   {
@@ -85,6 +89,10 @@
     "expect": {
       "value": "hi!you",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Text stored as UTF-16 little endian",
+      "note": "Each letter is followed by a zero byte, and the zero bytes are removed from the output."
     }
   },
   {
@@ -497,6 +505,10 @@
     "expect": {
       "value": "8.8.8.8\n172.32.1.1\n169.254.0.1\n172.15.0.1",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Private and loopback addresses can be dropped",
+      "note": "The 10, 172.16 to 172.31, 192.168 and 127 addresses are removed, but 169.254.0.1 (link-local) and 172.15.0.1 stay."
     }
   },
   {
@@ -539,6 +551,10 @@
     "expect": {
       "value": "::1\nfe80::1\n2001:DB8::ff00:42:8329\n1::2\n1:2:3:4:5:6:7:8\n::ffff:1.2.3.4\n64:ff9b::1.2.3.4\n1::",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "IPv6 addresses with the double colon",
+      "note": "The double colon can stand alone or at either end, as in ::1 and 1::, and is kept in the output."
     }
   },
   {
@@ -662,6 +678,10 @@
     "expect": {
       "value": "bob.smith+x@example.co.uk\na@b.c",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Plain addresses, with a full stop left out",
+      "note": "A full stop after an address is not part of it, so the address is written without it."
     }
   },
   {
@@ -680,6 +700,10 @@
     "expect": {
       "value": "Total found: 2\n\na@x.org\nb@x.org",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Unique, sorted addresses with a total",
+      "note": "The total comes first, then a blank line, then each address once, in order."
     }
   },
   {
@@ -734,6 +758,10 @@
     "expect": {
       "value": "00:1A:2b:3c:4d:5e\n00-11-22-33-44-55\n0011.2233.4455",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Colon, hyphen and dotted notations",
+      "note": "All three notations are found, and each is written as it appears, in its own letter case."
     }
   },
   {
@@ -770,6 +798,10 @@
     "expect": {
       "value": "00:00:00:00:00:01\naa:bb:cc:dd:ee:ff",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Unique and sorted addresses",
+      "note": "Duplicates are removed and the rest are sorted, so 00:00:00:00:00:01 comes before aa:bb:cc:dd:ee:ff."
     }
   },
   {
@@ -788,6 +820,10 @@
     "expect": {
       "value": "http://example.com/a/b?x=1#f\nhttps://user@host.org:8080/p(1)\nftp://1.2.3.4/x\nhttp://a.com/\nhttp://q.org/z",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Schemes, ports, queries and fragments are kept",
+      "note": "The whole address is written, including the port after the host, and the query and fragment after the path."
     }
   },
   {
@@ -806,6 +842,10 @@
     "expect": {
       "value": "http://a.com/x\nhttp://b.org/y_(z)",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A closing bracket outside the URL is left out",
+      "note": "The closing bracket around a link is dropped, but a pair of brackets inside the URL is kept."
     }
   },
   {
@@ -878,6 +918,10 @@
     "expect": {
       "value": "www.example.com\nsub.test.org\nfile.txt\na-b.co",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Names are found by their shape, not by a list",
+      "note": "file.txt is listed too, because the top-level label is not checked against a list of real domains."
     }
   },
   {
@@ -952,6 +996,10 @@
     "expect": {
       "value": "C:\\Program Files\\App\\app.exe\n/etc/passwd\n/usr/local/bin/",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Windows and UNIX paths in one list",
+      "note": "A Windows folder name may hold a single space, as in Program Files, and a UNIX path ends at white space."
     }
   },
   {
@@ -1052,6 +1100,10 @@
     "expect": {
       "value": "Total found: 2\n\n/a/y\n/b/x",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Unique, sorted paths with a total",
+      "note": "The total comes first, then a blank line, then each path once, in order."
     }
   },
   {
@@ -1072,6 +1124,10 @@
     "expect": {
       "value": "da39a3ee5e6b4b0d3255bfef95601890afd80709\nDA39A3EE5E6B4B0D3255BFEF95601890AFD80709",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "SHA-1 sized values in either case",
+      "note": "The 40-digit values are found in lower and upper case alike, and each is written as it appears."
     }
   },
   {
@@ -1152,6 +1208,10 @@
     "expect": {
       "value": "cafe\ndeadbeef\n0123456789abcdef\nd41d8cd98f00b204e9800998ecf8427e\nda39a3ee5e6b4b0d3255bfef95601890afd80709",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Every usual digest size in one list",
+      "note": "With all the length is ignored, and each size is listed in turn, shortest first."
     }
   },
   {
@@ -1269,6 +1329,10 @@
     "expect": {
       "value": "_dmarc.example.com\na.example.com",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The underscore option keeps a leading underscore",
+      "note": "With underscore on, the name _dmarc.example.com is found, which the default rejects."
     }
   },
   {

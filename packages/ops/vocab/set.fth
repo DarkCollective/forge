@@ -89,36 +89,47 @@ IN: set
   if ;
 
 META: union
+  use-when "You have two or more lists of items, separated by a blank line, and want one list of every item they contain, each item once." ;
+  link "https://en.wikipedia.org/wiki/Union_(set_theory)" "Union (set theory) on Wikipedia" ;
   param sample-delimiter "The text between the sets." ;
   param item-delimiter "The text between the items of a set." ;
   see-also set:intersection ;
 ;
 
 META: intersection
+  use-when "You have two or more lists of items and want only the items that appear in every one of them." ;
+  link "https://en.wikipedia.org/wiki/Intersection_(set_theory)" "Intersection (set theory) on Wikipedia" ;
   param sample-delimiter "The text between the sets." ;
   param item-delimiter "The text between the items of a set." ;
   see-also set:union ;
 ;
 
 META: difference
+  use-when "You have two or more lists of items and want the items of the first that are missing from all the others, for example words in one list that the rest lack." ;
   param sample-delimiter "The text between the sets." ;
   param item-delimiter "The text between the items of a set." ;
   see-also set:symmetric-difference ;
 ;
 
 META: symmetric-difference
+  use-when "You have two or more lists of items and want the items that are in only one of them, the ones that differ, for example between two versions of a list." ;
+  link "https://en.wikipedia.org/wiki/Symmetric_difference" "Symmetric difference on Wikipedia" ;
   param sample-delimiter "The text between the sets." ;
   param item-delimiter "The text between the items of a set." ;
   see-also set:difference ;
 ;
 
 META: cartesian-product
+  use-when "You have two lists of items and want every pair with one item from each, for example every combination of a size and a colour to try." ;
+  link "https://en.wikipedia.org/wiki/Cartesian_product" "Cartesian product on Wikipedia" ;
   param sample-delimiter "The text between the two sets." ;
   param item-delimiter "The text between the items of a set and between the pairs of the result." ;
   see-also set:power-set ;
 ;
 
 META: power-set
+  use-when "You have a list of items and want every subset of it, for example every combination of options to try, including the empty one." ;
+  link "https://en.wikipedia.org/wiki/Power_set" "Power set on Wikipedia" ;
   param item-delimiter "The text between the items of the set and inside a subset." ;
   param subset-delimiter "The text between the subsets of the result." ;
   see-also set:cartesian-product ;

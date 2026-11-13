@@ -125,6 +125,7 @@ IN: diff
   by ignore-whitespace context _diff-samples ;
 
 META: compare
+  use-when "You have two versions of a text, such as an old and a new draft, and want the changes marked by character, word or line." ;
   param sample-delimiter "The text that separates the two samples in the input." ;
   param by "Compare lines, words or single characters (characters by default, as CyberChef does)." ;
   param ignore-whitespace "Treat differences in white space as no difference." ;

@@ -190,4 +190,8 @@ IN: colour
   data [ util:space? ] util:trim-start [ util:space? ] util:trim-end lower _parse-colour _report ;
 
 META: parse
+  use-when "You have a colour from CSS or a design file, as hex, rgb, hsl or cmyk text, and want it in every other notation, to use it in another tool." ;
+  link "https://en.wikipedia.org/wiki/RGB_color_model" "RGB color model on Wikipedia" ;
+  link "https://en.wikipedia.org/wiki/HSL_and_HSV" "HSL and HSV on Wikipedia" ;
+  link "https://en.wikipedia.org/wiki/CMYK_color_model" "CMYK color model on Wikipedia" ;
 ;

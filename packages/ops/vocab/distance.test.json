@@ -14,6 +14,10 @@
     },
     "expect": {
       "json": 3
+    },
+    "example": {
+      "title": "Count the differing letters of two words",
+      "note": "karolin and kathrin differ in three places, so the distance is 3."
     }
   },
   {
@@ -48,6 +52,10 @@
     },
     "expect": {
       "json": 37
+    },
+    "example": {
+      "title": "Count differing bits instead of bytes",
+      "note": "With unit bit the same kind of pair gives the number of differing bits, here 37."
     }
   },
   {
@@ -236,6 +244,10 @@
     },
     "expect": {
       "json": 3
+    },
+    "example": {
+      "title": "Turn kitten into sitting in three edits",
+      "note": "With all edits costing one, the distance is the number of edits needed."
     }
   },
   {
@@ -362,6 +374,10 @@
     },
     "expect": {
       "json": 5
+    },
+    "example": {
+      "title": "A dearer substitution changes the distance",
+      "note": "With a substitution cost of 2 the same pair gives 5, so the cost parameters change the answer."
     }
   },
   {

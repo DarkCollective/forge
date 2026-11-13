@@ -11,6 +11,10 @@
     "expect": {
       "value": "ID3v2.2.0 tag: 197 bytes, 8 frames\n  TT2 (Title/songname/content description): Title22\n  TP1 (Lead performer(s)/Soloist(s)): Artist22\n  TAL (Album/Movie/Show title): Album22\n  TRK (Track number/Position in set): 1\n  TYE (Year): 2001\n  COM (Comments): [eng] comment22\n  PIC (Attached picture): PNG, Cover (front), 79 bytes\n  TCO (Content type): Pop\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "ID3v2.2 frames have three-letter names",
+      "note": "TT2 is the title, TP1 the artist and TAL the album, each written with its name and value."
     }
   },
   {
@@ -53,6 +57,10 @@
     "expect": {
       "value": "ID3v1.1 tag\n  Title: Song\n  Artist: Band\n  Album: Disc\n  Year: 1999\n  Comment: a comment\n  Track: 7\n  Genre: Rock (17)\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "An ID3v1 tag at the end of the data",
+      "note": "The tag is read from the last 128 bytes, and its genre is shown as a name with its number, Rock (17)."
     }
   },
   {

@@ -13,6 +13,10 @@
     "expect": {
       "value": "URI: otpauth://hotp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=6&counter=0\n\nPassword: 755224",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The RFC 4226 test value at counter 0",
+      "note": "The secret is the RFC 4226 test key, and counter 0 gives the password 755224."
     }
   },
   {
@@ -191,6 +195,10 @@
     "expect": {
       "value": "URI: otpauth://hotp/Example%20Corp%3Aalice%40example.com?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=8&counter=1\n\nPassword: 94287082",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A name in the URI and eight digits",
+      "note": "The name is percent-encoded in the otpauth URI, and the password has the eight digits asked for."
     }
   },
   {
@@ -303,6 +311,10 @@
     "expect": {
       "value": "URI: otpauth://totp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=8&period=30\n\nPassword: 94287082",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The RFC 6238 test value at time 59",
+      "note": "With the SHA-1 test key and eight digits, time 59 gives the password 94287082."
     }
   },
   {
@@ -357,6 +369,10 @@
     "expect": {
       "value": "URI: otpauth://totp/Account?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&algorithm=SHA1&digits=8&period=30\n\nPassword: 07081804",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A password with a leading zero",
+      "note": "At time 1111111109 the password is 07081804, and the leading zero is kept because the password has eight digits."
     }
   },
   {

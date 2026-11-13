@@ -16,6 +16,10 @@
     "expect": {
       "value": "--- sample 1\n+++ sample 2\n@@ -1,4 +1,4 @@\n a\n-b\n+B\n c\n d",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A changed line in unified style",
+      "note": "Lines starting with a minus sign are in sample 1 only, and lines starting with a plus sign are in sample 2 only."
     }
   },
   {
@@ -30,6 +34,10 @@
     "expect": {
       "value": "x\n[-y-]{+z+}",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Changed characters, marked in place",
+      "note": "The old y is shown in square brackets with a minus sign and the new z in braces with a plus sign."
     }
   },
   {

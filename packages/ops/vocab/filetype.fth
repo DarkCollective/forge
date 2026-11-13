@@ -69,6 +69,8 @@ IN: filetype
   index nth "data" get ;
 
 META: detect
+  use-when "You have a file or blob of unknown type, as hex or bytes, and want its type from the signature (magic bytes) at its start, with its usual extensions." ;
+  link "https://en.wikipedia.org/wiki/List_of_file_signatures" "List of file signatures on Wikipedia" ;
   param images "Look for image formats." ;
   param video "Look for video formats." ;
   param audio "Look for audio formats." ;
@@ -80,6 +82,8 @@ META: detect
 ;
 
 META: scan
+  use-when "You have a blob that may hide other files inside it, and want every offset where a known file signature (magic bytes) appears, to look for embedded files." ;
+  link "https://en.wikipedia.org/wiki/List_of_file_signatures" "List of file signatures on Wikipedia" ;
   param images "Look for image formats." ;
   param video "Look for video formats." ;
   param audio "Look for audio formats." ;
@@ -92,6 +96,8 @@ META: scan
 ;
 
 META: extract
+  use-when "You have a blob with files embedded in it, such as a PNG or gzip inside a firmware image, and want those files cut out, each up to where it ends." ;
+  link "https://en.wikipedia.org/wiki/List_of_file_signatures" "List of file signatures on Wikipedia" ;
   param images "Look for image formats." ;
   param video "Look for video formats." ;
   param audio "Look for audio formats." ;
@@ -104,6 +110,8 @@ META: extract
 ;
 
 META: entry
+  use-when "You have a blob with embedded files and want one of the files Extract Files finds, by its number in the list, as bytes to save or inspect." ;
+  link "https://en.wikipedia.org/wiki/List_of_file_signatures" "List of file signatures on Wikipedia" ;
   param index "Which of the extracted files to return (0 is the first)." ;
   param images "Look for image formats." ;
   param video "Look for video formats." ;

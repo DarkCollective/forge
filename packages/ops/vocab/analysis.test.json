@@ -23,6 +23,10 @@
     },
     "expect": {
       "json": 2
+    },
+    "example": {
+      "title": "Four distinct bytes, each seen once, give two bits",
+      "note": "Two bits is the number of bits needed to label four different things."
     }
   },
   {
@@ -75,6 +79,10 @@
     },
     "expect": {
       "json": 8
+    },
+    "example": {
+      "title": "All 256 byte values give the maximum of eight bits",
+      "note": "Every byte value appears once, so the bytes are spread evenly, and eight bits per byte is the most possible."
     }
   },
   {
@@ -149,6 +157,10 @@
           "percent": 25
         }
       ]
+    },
+    "example": {
+      "title": "The most common byte comes first",
+      "note": "Bytes are written as numbers, so 97 is the letter a. The list is sorted by count, highest first."
     }
   },
   {
@@ -210,6 +222,10 @@
           "percent": 50
         }
       ]
+    },
+    "example": {
+      "title": "Non-ASCII text is counted in bytes, not letters",
+      "note": "The letter é is two bytes in UTF-8 (195 and 169), so each one is counted separately."
     }
   },
   {
@@ -311,6 +327,10 @@
     },
     "expect": {
       "json": 0.3333333333333333
+    },
+    "example": {
+      "title": "Two pairs of equal letters give one third",
+      "note": "Only letters count, and the result is the chance that two letters drawn without replacement match."
     }
   },
   {
@@ -393,6 +413,10 @@
     },
     "expect": {
       "json": 0.07885304659498207
+    },
+    "example": {
+      "title": "English prose gives about 0.079 over its letters",
+      "note": "Spaces and punctuation are ignored,, and only letters are counted."
     }
   },
   {
@@ -568,6 +592,10 @@
     },
     "expect": {
       "json": 66.11833457144783
+    },
+    "example": {
+      "title": "English text scores low against English frequencies",
+      "note": "Only letters count, in either case. Compare with the shifted copy in the next example."
     }
   },
   {
@@ -583,6 +611,10 @@
     },
     "expect": {
       "json": 1907.2360109747012
+    },
+    "example": {
+      "title": "The same text shifted by 3 scores much higher",
+      "note": "Shifting every letter by three moves the frequencies away from English: the score rises from about 66 to about 1907."
     }
   },
   {

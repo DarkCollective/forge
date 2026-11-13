@@ -15,6 +15,10 @@
     "expect": {
       "value": "10\n9\nA\nB\na\nb\nc",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Upper case sorts before lower case",
+      "note": "Sorting is by code point, so the capital letters A and B come before a, b and c, and the digits come first."
     }
   },
   {
@@ -137,6 +141,10 @@
     "expect": {
       "value": "1.05\n1.10\n1.9",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Numbers compare by value",
+      "note": "Numeric order reads 1.10 as 1.1, so it comes before 1.9."
     }
   },
   {
@@ -431,6 +439,10 @@
     "expect": {
       "value": "a\nb\nc",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Keep the first of each line",
+      "note": "a, b and c each appear once, in the place where they first appeared."
     }
   },
   {
@@ -462,6 +474,10 @@
     "expect": {
       "value": "3 a\n2 b\n1 c",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Counts in order of first appearance",
+      "note": "Each output line is the count, a space and the line, so a appears three times."
     }
   },
   {
@@ -580,6 +596,10 @@
     "expect": {
       "value": "1\n2",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The first two lines",
+      "note": "Lines three and four are dropped."
     }
   },
   {
@@ -597,6 +617,10 @@
     "expect": {
       "value": "1\n2\n3",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A negative count drops from the end",
+      "note": "Minus one keeps all but the last line."
     }
   },
   {
@@ -696,6 +720,10 @@
     "expect": {
       "value": "3\n4",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The last two lines",
+      "note": "Only the last two of the four lines are kept."
     }
   },
   {
@@ -713,6 +741,10 @@
     "expect": {
       "value": "2\n3\n4",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A negative count drops from the start",
+      "note": "Minus one drops the first line and keeps the rest."
     }
   },
   {
@@ -831,6 +863,10 @@
     "expect": {
       "value": " 1 a\n 2 b\n 3 c\n 4 d\n 5 e\n 6 f\n 7 g\n 8 h\n 9 i\n10 j",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Numbers right-aligned to the longest",
+      "note": "The numbers 1 to 9 get a leading space, so 10 lines up with them."
     }
   },
   {
@@ -848,6 +884,10 @@
     "expect": {
       "value": "10 a\n11 b\n12 c",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Start the count at another number",
+      "note": "With an offset of 9 the numbers start at 10, and the width follows the largest number."
     }
   },
   {
@@ -948,6 +988,10 @@
     "expect": {
       "value": "a\n b\n c\n| d\ne\nf\ng\nh",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Several kinds of separator after the number",
+      "note": "A number and one separator after it are removed from the front of each line, so 3 | d keeps its bar and becomes | d."
     }
   },
   {
@@ -1028,6 +1072,10 @@
     "expect": {
       "value": "a\nb\nj",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Undoes add-numbers",
+      "note": "Lines numbered by add-numbers come back as they were, here a, b and j."
     }
   },
   {
@@ -1063,6 +1111,10 @@
     "expect": {
       "value": "     a\n     bbb\n     ccccccc",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Pad at the start with spaces",
+      "note": "Five characters of padding go in front of each line, so a becomes five spaces followed by a."
     }
   },
   {
@@ -1115,6 +1167,10 @@
     "expect": {
       "value": "0007\n00042",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Zeros before numbers",
+      "note": "Three zeros go in front of each number, so 7 becomes 0007."
     }
   },
   {
@@ -1225,6 +1281,10 @@
     "expect": {
       "value": "abcd\nefgh\nij",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Cut at the width",
+      "note": "abcdefghij is cut into pieces of four, with ij left over on the last line."
     }
   },
   {
@@ -1276,6 +1336,10 @@
     "expect": {
       "value": "abc\ndef",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "An exact multiple gives no empty line",
+      "note": "abcdef with width 3 gives two lines, and no empty third line follows."
     }
   },
   {
@@ -1362,6 +1426,10 @@
     "expect": {
       "value": "banana",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Keep the lines that match",
+      "note": "Only banana contains an, so only that line is kept."
     }
   },
   {
@@ -1400,6 +1468,10 @@
     "expect": {
       "value": "Apple\nabc",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Case-insensitive with the i flag",
+      "note": "With the i flag the pattern ^a also matches Apple, so both matching lines are kept."
     }
   },
   {
@@ -1532,6 +1604,10 @@
     "expect": {
       "value": "+---+----+\n| a | b  |\n| 1 | 22 |\n+---+----+\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "An ASCII table",
+      "note": "Each cell is padded to the widest entry in its column, with a border of plus signs and dashes."
     }
   },
   {
@@ -1584,6 +1660,10 @@
     "expect": {
       "value": "| a | b  |\n| - | -- |\n| 1 | 22 |\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A Markdown table with a header",
+      "note": "The first row becomes the header, and a dashed line separates it from the data."
     }
   },
   {
@@ -1847,6 +1927,10 @@
     "expect": {
       "value": "a\n|---b\n|---c\nd",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Nested paths become branches",
+      "note": "a/b and a/c make one a branch with two children, and d is a second top-level entry."
     }
   },
   {
@@ -1963,6 +2047,10 @@
     "expect": {
       "value": "a\n|---b\n|   |---c\n|---d\ne",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A bar continues past a branch with more entries",
+      "note": "The vertical bar runs beside the folder a while it still has entries below it, so the structure stays readable."
     }
   },
   {

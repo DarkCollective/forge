@@ -11,6 +11,10 @@
     "expect": {
       "value": "Textual representation: -rwxr-xr-x\nOctal representation:   0755\n\n +---------+-------+-------+-------+\n |         | User  | Group | Other |\n +---------+-------+-------+-------+\n |    Read |   X   |   X   |   X   |\n +---------+-------+-------+-------+\n |   Write |   X   |       |       |\n +---------+-------+-------+-------+\n | Execute |   X   |   X   |   X   |\n +---------+-------+-------+-------+",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Explain 755 permission by permission",
+      "note": "The output gives the textual form, the octal form and a table of read, write and execute for user, group and other."
     }
   },
   {
@@ -25,6 +29,10 @@
     "expect": {
       "value": "Textual representation: -rwsr-xr-t\nOctal representation:   5755\nFile type: Regular file\nThe setuid flag is set\nThe sticky bit is set\n\n +---------+-------+-------+-------+\n |         | User  | Group | Other |\n +---------+-------+-------+-------+\n |    Read |   X   |   X   |   X   |\n +---------+-------+-------+-------+\n |   Write |   X   |       |       |\n +---------+-------+-------+-------+\n | Execute |   X   |   X   |   X   |\n +---------+-------+-------+-------+",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Setuid and sticky bits are listed",
+      "note": "The mode -rwsr-xr-t has the setuid flag and the sticky bit, shown on their own lines, and the octal form is 5755."
     }
   },
   {
@@ -69,6 +77,10 @@
     "expect": {
       "value": "rwsr-xr-x",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A leading 4 sets setuid",
+      "note": "The octal 4755 becomes rwsr-xr-x, where the s in the user execute place is the setuid bit."
     }
   },
   {
@@ -117,6 +129,10 @@
     "expect": {
       "value": "0755",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Symbolic to octal, keeping the leading zero",
+      "note": "-rwxr-xr-x becomes 0755: the file type dash is not part of the octal mode, and the leading zero is written."
     }
   },
   {

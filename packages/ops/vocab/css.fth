@@ -13,6 +13,8 @@ USING: string-escape ;
   delimiter string-escape:unescape join ;
 
 META: select
+  use-when "You have an HTML page as text and want the elements that match a CSS selector, such as every item in a list, written out as HTML." ;
+  link "https://en.wikipedia.org/wiki/CSS" "CSS on Wikipedia" ;
   param css-selector "The CSS selector, for example div.content > a[href^='https']." ;
   param delimiter "The text put between the matches. Escapes like \\n are read." ;
 ;

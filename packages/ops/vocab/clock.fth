@@ -25,5 +25,7 @@ IN: clock
   int>str ;
 
 META: get-time
+  use-when "You want the current time as a Unix timestamp, in seconds or a finer unit, for example to stamp a record or a log line by hand." ;
+  link "https://en.wikipedia.org/wiki/Unix_time" "Unix time on Wikipedia" ;
   param unit "The unit to count the time since the Unix epoch in." ;
 ;

@@ -13,6 +13,10 @@
     "expect": {
       "value": "Hello World!",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A variable is filled in from the data",
+      "note": "{{name}} is replaced by the name field of the JSON, and the text around it is copied unchanged."
     }
   },
   {
@@ -61,6 +65,10 @@
     "expect": {
       "value": "<b>&\"'`=</b>|<b>&\"'`=</b>",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Triple braces print a value without escaping",
+      "note": "The same HTML value is printed raw with triple braces and with {{& html}}, where a double brace escapes it."
     }
   },
   {

@@ -11,6 +11,10 @@
     "expect": {
       "value": "Hex:  #ff8000\nRGB:  rgb(255, 128, 0)\nRGBA: rgba(255, 128, 0, 1)\nHSL:  hsl(30, 100%, 50%)\nHSLA: hsla(30, 100%, 50%, 1)\nCMYK: cmyk(0%, 50%, 100%, 0%)",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A six-digit hex colour in every notation",
+      "note": "The output has one line each for hex, RGB, RGBA, HSL, HSLA and CMYK, with the channels rounded to whole numbers."
     }
   },
   {
@@ -25,6 +29,10 @@
     "expect": {
       "value": "Hex:  #ff8800\nRGB:  rgb(255, 136, 0)\nRGBA: rgba(255, 136, 0, 1)\nHSL:  hsl(32, 100%, 50%)\nHSLA: hsla(32, 100%, 50%, 1)\nCMYK: cmyk(0%, 47%, 100%, 0%)",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A short hex colour without the hash",
+      "note": "F80 is read as ff8800, and its other notations come out with the same channel values, rounded where needed."
     }
   },
   {

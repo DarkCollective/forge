@@ -28,5 +28,8 @@ USING: id3 ;
   swap dup "tags" get _tag-lines swap "id3" get [ data _id3-block ] [ "" ] if cat cat ;
 
 META: extract
+  use-when "You have an audio file (MP3, FLAC, Ogg, M4A or WAV) as bytes or hex and want its codec, length, sample rate and tags, without decoding the sound." ;
+  link "https://en.wikipedia.org/wiki/ID3" "ID3 on Wikipedia" ;
+  link "https://en.wikipedia.org/wiki/FLAC" "FLAC on Wikipedia" ;
   see-also id3:extract exif:extract filetype:detect ;
 ;

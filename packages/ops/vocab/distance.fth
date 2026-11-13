@@ -56,6 +56,8 @@ USING: util ;
   data delimiter _two dup 0 nth swap 1 nth insertion deletion substitution _levenshtein ;
 
 META: hamming
+  use-when "You have two strings or byte values of equal length, such as two hashes or a message and a corrupted copy, and want the number of positions where they differ." ;
+  link "https://en.wikipedia.org/wiki/Hamming_distance" "Hamming distance on Wikipedia" ;
   param delimiter "What separates the two samples. It is text, not a pattern; the default is a blank line (two line feeds)." ;
   param unit "Count differing bytes, characters (code points) or bits." ;
   param format "raw reads each sample as text, hex as hexadecimal bytes." ;
@@ -63,6 +65,8 @@ META: hamming
 ;
 
 META: levenshtein
+  use-when "You have two words or short texts and want the fewest insertions, deletions and substitutions that turn one into the other, for spelling or fuzzy matching." ;
+  link "https://en.wikipedia.org/wiki/Levenshtein_distance" "Levenshtein distance on Wikipedia" ;
   param delimiter "What separates the two samples. It is text, not a pattern; the default is a line feed." ;
   param insertion "The cost of inserting one character." ;
   param deletion "The cost of deleting one character." ;

@@ -13,6 +13,10 @@
     "expect": {
       "value": "0.3",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Add decimals without rounding noise",
+      "note": "Decimal arithmetic is exact, so 0.1 plus 0.2 gives 0.3 with no trailing digits."
     }
   },
   {
@@ -29,6 +33,10 @@
     "expect": {
       "value": "-296.5",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A comma list with signs and exponents",
+      "note": "Each number may have a sign, a decimal point or an exponent: here 1, 2.5 and -3e2 (-300) total -296.5."
     }
   },
   {
@@ -237,6 +245,10 @@
     "expect": {
       "value": "6.75",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The first number is the start",
+      "note": "Each later number is taken from the result so far, so 10 minus 0.25 minus 3 is 6.75."
     }
   },
   {
@@ -365,6 +377,10 @@
     "expect": {
       "value": "0.001",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Decimals multiply exactly",
+      "note": "Three factors of 0.1 give 0.001 exactly, with no trailing digits."
     }
   },
   {
@@ -445,6 +461,10 @@
     "expect": {
       "value": "0.33333333333333333333",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A quotient rounded at 20 places",
+      "note": "One divided by three is 0.33333333333333333333, rounded at the 20th decimal place."
     }
   },
   {
@@ -525,6 +545,10 @@
     "expect": {
       "value": "0.11111111111111111111",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Each division is rounded in turn",
+      "note": "The result of the first division is rounded before the next one, so 1 / 3 / 3 gives 0.11111111111111111111."
     }
   },
   {
@@ -653,6 +677,10 @@
     "expect": {
       "value": "0 1 1",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Remainders of a list on division by 3",
+      "note": "Each number is reduced on its own: 15 gives 0, 4 gives 1 and 7 gives 1."
     }
   },
   {
@@ -669,6 +697,10 @@
     "expect": {
       "value": "-1 1 2",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A negative number keeps its sign",
+      "note": "The remainder takes the sign of the number, so -7 mod 3 is -1, not 2."
     }
   },
   {
@@ -812,6 +844,10 @@
     "expect": {
       "value": "2.33333333333333333333",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The average of 1, 2 and 4",
+      "note": "The sum is 7 and there are three numbers, so the quotient repeats and is rounded at 20 places."
     }
   },
   {
@@ -908,6 +944,10 @@
     "expect": {
       "value": "2.75",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Even count: the mean of the two middle numbers",
+      "note": "Sorted, the middle two are 2.5 and 3, and their mean is 2.75."
     }
   },
   {
@@ -1021,6 +1061,10 @@
     "expect": {
       "value": "2",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Population standard deviation of eight values",
+      "note": "Population divides by the count, 8, and gives exactly 2 for these values."
     }
   },
   {
@@ -1038,6 +1082,10 @@
     "expect": {
       "value": "2.13808993529939507748",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The same values as a sample",
+      "note": "A sample divides by one less than the count, 7, so the result is larger: about 2.138."
     }
   },
   {
@@ -1563,6 +1611,10 @@
     "expect": {
       "value": "gcd: 2\n\nBezout coefficients:\nx = -9\ny = 47\n\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "GCD of 240 and 46 with its coefficients",
+      "note": "The gcd is 2, and 240 times -9 plus 46 times 47 gives 2: the report lists -9 and 47."
     }
   },
   {
@@ -1627,6 +1679,10 @@
     "expect": {
       "value": "gcd: 1\n\nBezout coefficients:\nx = -367\ny = 2\n\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Coprime numbers, and an inverse in the x coefficient",
+      "note": "17 and 3120 have a gcd of 1, and -367 modulo 3120 is 2753, the inverse from the mod-inverse example."
     }
   },
   {
@@ -1817,6 +1873,10 @@
     "expect": {
       "value": "445",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A small power modulo 497",
+      "note": "Four to the thirteenth power, reduced modulo 497, is 445, without computing the huge power first."
     }
   },
   {
@@ -1885,6 +1945,10 @@
     "expect": {
       "value": "560583526",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A large RSA public exponent",
+      "note": "65537, the usual RSA public exponent, applied to 123456789 modulo 1000000007."
     }
   },
   {
@@ -2015,6 +2079,10 @@
     "expect": {
       "value": "4",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The inverse of 3 modulo 11 is 4",
+      "note": "Three times four is 12, one more than a multiple of 11, so 4 undoes 3 in this modulus."
     }
   },
   {
@@ -2031,6 +2099,10 @@
     "expect": {
       "value": "2753",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The inverse of 17 modulo 3120",
+      "note": "Seventeen times 2753 is 46801, which is one more than 15 times 3120."
     }
   },
   {

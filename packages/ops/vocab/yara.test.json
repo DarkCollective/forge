@@ -14,6 +14,10 @@
     "expect": {
       "value": "Input matches rule \"demo\".\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The rule name when a rule matches",
+      "note": "Without any show option the report names only the rule that matched the input."
     }
   },
   {
@@ -67,6 +71,10 @@
     "expect": {
       "value": "Rule \"demo\" matches:\nPos 3, identifier $a, data: \"abc\"\nPos 7, identifier $a, data: \"abc\"\nPos 3, identifier $b, data: \"abc\"\nPos 7, identifier $b, data: \"abc\"\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Each string occurrence with its position",
+      "note": "The rule has the strings abc and a wildcard hex pattern, and each one is listed at its positions 3 and 7 in the input."
     }
   },
   {
