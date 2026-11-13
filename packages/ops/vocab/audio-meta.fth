@@ -29,6 +29,14 @@ USING: id3 ;
 
 META: extract
   use-when "You have an audio file (MP3, FLAC, Ogg, M4A or WAV) as bytes or hex and want its codec, length, sample rate and tags, without decoding the sound." ;
+  checks input magic-bytes format "mp3-id3" ;
+  checks input magic-bytes format "mp3-mpeg1" ;
+  checks input magic-bytes format "mp3-mpeg2" ;
+  checks input magic-bytes format "flac" ;
+  checks input magic-bytes format "ogg" ;
+  checks input magic-bytes format "wav" ;
+  checks input magic-bytes "66747970" 4 ;
+  expects "MP3, FLAC, Ogg, WAV or M4A audio" ;
   link "https://en.wikipedia.org/wiki/ID3" "ID3 on Wikipedia" ;
   link "https://en.wikipedia.org/wiki/FLAC" "FLAC on Wikipedia" ;
   see-also id3:extract exif:extract filetype:detect ;

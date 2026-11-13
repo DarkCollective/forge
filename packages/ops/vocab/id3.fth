@@ -430,6 +430,13 @@ IN: id3
 
 META: extract
   use-when "You have an MP3 or other audio file as bytes or hex and want its ID3 tags, such as title, artist and album, as readable text." ;
+  checks input magic-bytes "494433" ;
+  checks input magic-bytes format "mp3-mpeg1" ;
+  checks input magic-bytes format "mp3-mpeg2" ;
+  checks input magic-bytes "ffe2" ;
+  checks input magic-bytes "ffe3" ;
+  checks input magic-bytes "544147" ;
+  expects "MP3 or other audio with an ID3 tag" ;
   link "https://en.wikipedia.org/wiki/ID3" "ID3 on Wikipedia" ;
   see-also exif:extract ;
 ;

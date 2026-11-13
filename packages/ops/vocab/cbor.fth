@@ -14,6 +14,8 @@ USING: json ;
 
 META: decode
   use-when "You have one CBOR data item, as bytes from a COSE, WebAuthn or IoT message, and want it as JSON text." ;
+  checks input binary ;
+  expects "CBOR data" ;
   param indent "Spaces per level; 0 writes compact JSON." ;
   see-also cbor:encode ;
   inverse encode ;

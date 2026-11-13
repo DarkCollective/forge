@@ -308,6 +308,12 @@ IN: exif
 
 META: extract
   use-when "You have a JPEG, PNG, WebP or TIFF photo as hex or bytes and want its camera, date and GPS details, without decoding the image." ;
+  checks input magic-bytes format "jpeg" ;
+  checks input magic-bytes format "png" ;
+  checks input magic-bytes format "webp" ;
+  checks input magic-bytes format "tiff-le" ;
+  checks input magic-bytes format "tiff-be" ;
+  expects "JPEG, PNG, WebP or TIFF image" ;
   link "https://en.wikipedia.org/wiki/Exif" "Exif on Wikipedia" ;
   see-also filetype:detect ;
 ;
