@@ -48,6 +48,7 @@ IN: gost28147
   key ukm sbox wrapping _unwrap ;
 
 META: encrypt
+  use-when "You have a 32-byte GOST 28147-89 key and data from a system that uses the 1989 Soviet standard cipher. Use it for existing data only." ;
   param key "The GOST 28147-89 key: 32 bytes." ;
   param iv "The initialisation vector (synchro message): 8 bytes for CBC, CFB, OFB and CTR (empty means zeros). Ignored for ECB." ;
   param mode "The mode of operation: CBC, CFB (CFB-64), OFB, CTR (GOST gamma) or ECB (no IV; leaks patterns)." ;
@@ -55,9 +56,12 @@ META: encrypt
   param sbox "The substitution table: E-TEST (id-Gost28147-89-TestParamSet), E-A, E-B, E-C, E-D (CryptoPro A to D), E-Z (TC26 Z), D-TEST or D-A (the digest sets of RFC 4357 section 11.2)." ;
   param meshing "CP applies the CryptoPro key meshing (a new key every 1024 bytes); NO does not." ;
   see-also gost28147:decrypt gost28147:wrap-key gost:digest hex:encode ;
+  inverse decrypt ;
+  link "https://www.rfc-editor.org/rfc/rfc5830" "RFC 5830: GOST 28147-89 algorithms" ;
 ;
 
 META: decrypt
+  use-when "You have GOST 28147-89 ciphertext from an older system, with its key, IV, S-box and mode, and you want the plaintext back. Use it for existing data only." ;
   param key "The key used to encrypt." ;
   param iv "The initialisation vector used to encrypt (empty means zeros)." ;
   param mode "The mode of operation used to encrypt." ;
@@ -65,20 +69,28 @@ META: decrypt
   param sbox "The substitution table used to encrypt." ;
   param meshing "Whether the CryptoPro key meshing was used to encrypt." ;
   see-also gost28147:encrypt hex:decode ;
+  inverse encrypt ;
+  link "https://www.rfc-editor.org/rfc/rfc5830" "RFC 5830: GOST 28147-89 algorithms" ;
 ;
 
 META: wrap-key
+  use-when "You have a 32-byte content key to protect with a 32-byte key-encryption key and an 8-byte UKM, in the RFC 4357 wrap used for GOST key exchange." ;
   param key "The key encryption key (KEK): 32 bytes." ;
   param ukm "The user key material: 8 bytes, unique for each wrapped key." ;
   param sbox "The substitution table." ;
   param wrapping "NO is the plain wrap of RFC 4357 section 6.1; CP is the CryptoPro wrap of section 6.3 (KEK diversification by the UKM)." ;
   see-also gost28147:unwrap-key gost28147:encrypt ;
+  inverse unwrap-key ;
+  link "https://www.rfc-editor.org/rfc/rfc4357" "RFC 4357: GOST key wrapping" ;
 ;
 
 META: unwrap-key
+  use-when "You have a GOST 28147-89 wrapped key with its UKM and key-encryption key, and you want the content key back. The MAC check catches a damaged key." ;
   param key "The key encryption key (KEK): 32 bytes." ;
   param ukm "The user key material used to wrap." ;
   param sbox "The substitution table used to wrap." ;
   param wrapping "NO or CP, as used to wrap." ;
   see-also gost28147:wrap-key gost28147:decrypt ;
+  inverse wrap-key ;
+  link "https://www.rfc-editor.org/rfc/rfc4357" "RFC 4357: GOST key wrapping" ;
 ;

@@ -12,7 +12,10 @@ IN: rc4
   key drop _crypt ;
 
 META: crypt
+  use-when "You have RC4 data and its key from an old protocol or file. RC4 is broken, so use it only for existing data. The same word decrypts." ;
   param key "The RC4 key: 1 to 256 bytes." ;
   param drop "How many key stream bytes to discard before encrypting (RC4-drop). 0 is plain RC4; CyberChef's RC4 Drop discards 192 dwords, which is 768 bytes." ;
   see-also hex:encode ;
+  link "https://en.wikipedia.org/wiki/RC4" "RC4 on Wikipedia" ;
+  link "https://www.rfc-editor.org/rfc/rfc6229" "RFC 6229: RC4 test vectors" ;
 ;

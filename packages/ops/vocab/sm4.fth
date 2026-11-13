@@ -20,17 +20,21 @@ USING: blockmode ;
   mode "CTR32" blockmode:ctr-as iv 16 padding "pkcs7" = [ key _encrypt-block ] [ key _decrypt-block ] blockmode:decrypt ;
 
 META: encrypt
+  use-when "You have an SM4 key of 16 bytes and data from a system built on the Chinese standard GB/T 32907-2016, and you need the output in ECB, CBC, CFB, OFB or CTR." ;
   param key "The SM4 key: 16 bytes." ;
   param iv "The initialisation vector: 16 bytes for CBC, CFB, OFB and CTR. Ignored for ECB." ;
   param mode "The mode of operation: CBC, CFB (CFB-128), OFB, CTR or ECB (no IV; leaks patterns)." ;
   param padding "PKCS#7 padding, or none (the input must then be whole 16-byte blocks). Applies to CBC and ECB only." ;
   see-also sm4:decrypt hex:encode ;
+  inverse decrypt ;
 ;
 
 META: decrypt
+  use-when "You have SM4 ciphertext with its key, IV and mode, from a system built on GB/T 32907-2016, and you want the plaintext back." ;
   param key "The SM4 key: 16 bytes." ;
   param iv "The initialisation vector used to encrypt." ;
   param mode "The mode of operation used to encrypt." ;
   param padding "PKCS#7 padding, or none. Applies to CBC and ECB only." ;
   see-also sm4:encrypt hex:decode ;
+  inverse encrypt ;
 ;

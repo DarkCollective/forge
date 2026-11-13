@@ -20,6 +20,10 @@
     "expect": {
       "value": "# bombe: crib UEDAUSGANGBAERWAL at offset 7, model I, reflector B, rings AAA, check on\n# menu: 15 edges between 13 letters, 3 closures, test letter A\nrotors V I II  positions PSA  steckers AZ BQ CD ET JW KX LV MR SY  crib UEDAUSGAhGBAErWAL\n# rotor orders: 1\n# stops: 1",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Search one rotor order for a 15-letter crib",
+      "note": "The output is a report: the crib, its offset and the stops found for this rotor order. The rotors are V, I and II, with reflector B."
     }
   },
   {
@@ -89,6 +93,10 @@
     "expect": {
       "value": "# bombe: crib TERVORHERSAGE at offset 3, model I, reflector B, rings AAA, check on\n# menu: 10 edges between 9 letters, 2 closures, test letter R\nrotors II I V  positions DTD  steckers AE BT FL GS HI KV NO  crib TERVORsERcoGE\nrotors II I V  positions JYX  steckers AI BR CO DQ EM GK JT VW  crib TERVORlERurGE\nrotors II I V  positions MWH  steckers EJ HL IX KT MQ OZ PR  crib TERVORuERrfGE\nrotors II I V  positions PSR  steckers AR DG EZ IN KV LP OX QT  crib TERVORpERmbGE\n# rotor orders: 1\n# stops: 4\n# limit reached: more stops may exist, raise the limit to see them",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Keep only the stops with no contradiction",
+      "note": "With check on, a stop is kept only when it has no contradiction. Check off lists every stop the test register shows."
     }
   },
   {
@@ -204,6 +212,10 @@
     "expect": {
       "value": "# bombe: crib UEDAUSGANGBAERWAL at offset 7, model I, reflector B, rings AAA, check on\n# menu: 15 edges between 13 letters, 3 closures, test letter A\nrotors V I II  positions PSA  steckers AZ BQ CD ET JW KX LV MR SY  crib UEDAUSGAhGBAErWAL\n# rotor orders: 24\n# stops: 1",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Search four rotors in all 24 orders",
+      "note": "Four rotors are named, so every order of three of them is searched. The true order in this vector is V I II."
     }
   },
   {

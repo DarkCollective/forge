@@ -95,6 +95,10 @@
     "expect": {
       "value": "6ad73f66083e47629de339306b2d5ec846290b0c30eae339",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Encrypt in CBC with the E-TEST S-box and an IV",
+      "note": "The IV is eight bytes. This vector uses the E-TEST S-box and no key meshing, the CryptoPro option."
     }
   },
   {
@@ -359,6 +363,10 @@
     "expect": {
       "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473030303",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decrypt E-A in CBC with the same IV",
+      "note": "The S-box must be the one used to encrypt; this vector uses E-A and no meshing."
     }
   },
   {
@@ -751,6 +759,10 @@
     "expect": {
       "value": "6ad73f66083e47629de339306b2d5ec846290b0c30eae339",
       "enc": "hex"
+    },
+    "example": {
+      "title": "PKCS#7 padding in CBC",
+      "note": "The padding adds bytes until the input is whole 8-byte blocks, so the output length is a multiple of eight."
     }
   },
   {
@@ -816,6 +828,10 @@
     "expect": {
       "value": "3546ae8458ec5a30bd5cbe3e1a28de324d4d00c527d8d71620fc8e8c8cfd685644c4c9ae",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Wrap a content key with the plain RFC 4357 method (NO)",
+      "note": "The 32-byte content key and the 8-byte UKM give a 36-byte output: the encrypted key followed by its MAC. Unwrap it with the same key, UKM and S-box."
     }
   },
   {
@@ -841,6 +857,10 @@
     "expect": {
       "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f71635547392b1d0ef0e2d4c6b8aa9c8",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Unwrap the NO example back to the content key",
+      "note": "The output is the 32-byte content key that the wrap example started from. The UKM and S-box must match the wrap."
     }
   },
   {
@@ -866,6 +886,10 @@
     "expect": {
       "value": "2dc428b693138285dc15b38757b021a7c21cbbcb36f656d84e1c3820e30f40072856fbf2",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The same key wrapped with the CryptoPro method (CP)",
+      "note": "The same content key and UKM give a different output, because the CryptoPro wrap diversifies the key-encryption key with the UKM first."
     }
   },
   {
@@ -1015,6 +1039,10 @@
     },
     "expect": {
       "error": "E_COERCE"
+    },
+    "example": {
+      "title": "A damaged MAC is an error",
+      "note": "A damaged MAC makes the check fail, so no key is returned. The error is E_COERCE."
     }
   },
   {

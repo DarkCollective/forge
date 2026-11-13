@@ -148,6 +148,10 @@
     "expect": {
       "value": "I9WANDERED9LONELY9AS9A9CLOUD9THAT9FLOATS9ON9HIGH9OER9VALES9AND9HILLS",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Gil Hayward's test sentence, enciphered on the SZ40",
+      "note": "The plain text is the test sentence, with the wheels set in full. The output is ITA2 characters in Bletchley Park notation."
     }
   },
   {
@@ -337,6 +341,10 @@
     "expect": {
       "value": "NFR889SCHERENFERNROHREN955QR889Z55955K88SF55L889ALS3NFCHTSEFERUNG9FUER9JAD9NN99FUER9JARFUPSERCXWEI8A",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "BREAM setting with the P5 attachment",
+      "note": "The same message as the plain BREAM example, with the P5 attachment on. The text output is the same as that example's."
     }
   },
   {
@@ -396,6 +404,10 @@
     "expect": {
       "value": "JSKNWQSHY9WCHZYJYVZTMXEUGOF9XXU5TTYC/Q5VOWJQ4VBPSAOOO39/LKIHJWMOXR3X558T3THHY9WJVAU3YI/O39XA5TDP5EN/",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "With P5 the intercept comes back from the plain text",
+      "note": "Enciphering the plain text of the BREAM P5 decryption example gives back that intercept."
     }
   },
   {
@@ -455,6 +467,10 @@
     "expect": {
       "value": "IF I SAID BLETCHLEY PARK, ENIGMA AND AL",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "ZMUG setting on an SZ42b, with text output",
+      "note": "The intercept is deciphered to ordinary text, and the shift characters are followed as the message sent them."
     }
   },
   {

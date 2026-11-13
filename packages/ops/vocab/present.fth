@@ -18,17 +18,21 @@ IN: present
   mode iv 8 padding "pkcs7" = [ key _encrypt-block ] [ key _decrypt-block ] blockmode:decrypt ;
 
 META: encrypt
+  use-when "You need PRESENT, the 64-bit lightweight block cipher of ISO/IEC 29192-2, with an 80 or 128-bit key, for a device or a test vector." ;
   param key "The PRESENT key: 10 bytes (80 bits) or 16 bytes (128 bits)." ;
   param iv "The initialisation vector: 8 bytes for CBC, CFB, OFB and CTR. Ignored for ECB." ;
   param mode "The mode of operation: CBC, CFB (CFB-64), OFB, CTR or ECB (no IV; leaks patterns)." ;
   param padding "PKCS#7 padding, or none (the input must then be whole 8-byte blocks). Applies to CBC and ECB only." ;
   see-also present:decrypt hex:encode ;
+  inverse decrypt ;
 ;
 
 META: decrypt
+  use-when "You have PRESENT ciphertext in 64-bit blocks with its key, from a device or a test vector, and you want the plaintext back." ;
   param key "The PRESENT key used to encrypt." ;
   param iv "The initialisation vector used to encrypt." ;
   param mode "The mode of operation used to encrypt." ;
   param padding "PKCS#7 padding, or none. Applies to CBC and ECB only." ;
   see-also present:encrypt hex:decode ;
+  inverse encrypt ;
 ;

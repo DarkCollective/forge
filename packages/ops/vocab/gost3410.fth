@@ -52,19 +52,28 @@ USING: streebog random ;
   curve data util:strip-space hex>bytes "private key" curve _size curve _exact _public-key bytes>hex ;
 
 META: sign
+  use-when "You have a GOST R 34.10-2012 private key in hex and a message, and you need a signature for a Russian standard test or protocol." ;
   param private-key "The private key d as hex, as wide as the curve: 32 bytes (64 hex digits) or 64 bytes." ;
   param curve "The parameter set: cryptopro-a, cryptopro-b, cryptopro-c, tc26-512-a, or the RFC 7091 test curves test-256 and test-512." ;
   see-also gost3410:verify gost3410:public-key streebog:digest ;
+  link "https://www.rfc-editor.org/rfc/rfc7091" "RFC 7091: GOST R 34.10-2012 signatures" ;
+  link "https://www.rfc-editor.org/rfc/rfc6986" "RFC 6986: the Streebog hash" ;
 ;
 
 META: verify
+  use-when "You have a GOST R 34.10-2012 signature (r then s, in hex), the public point and the message, and you want to check that the signature is genuine." ;
   param public-key "The public point x || y as hex (128 hex digits for a 256-bit curve, 256 for a 512-bit one)." ;
   param curve "The parameter set the key is on." ;
   param message "The signed message, read as UTF-8 text, hex, Base64 or Latin-1." ;
   see-also gost3410:sign gost3410:public-key ;
+  inverse sign ;
+  link "https://www.rfc-editor.org/rfc/rfc7091" "RFC 7091: GOST R 34.10-2012 signatures" ;
+  link "https://www.rfc-editor.org/rfc/rfc6986" "RFC 6986: the Streebog hash" ;
 ;
 
 META: public-key
+  use-when "You have a GOST R 34.10-2012 private key in hex and need the public point x then y, to check signatures or to publish the key." ;
   param curve "The parameter set." ;
   see-also gost3410:sign gost3410:verify ;
+  link "https://www.rfc-editor.org/rfc/rfc7091" "RFC 7091: GOST R 34.10-2012 signatures" ;
 ;

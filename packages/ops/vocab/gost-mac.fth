@@ -25,17 +25,23 @@ IN: gost-mac
   [ "The signature matches" ] [ "The signature does not match" ] if ;
 
 META: sign
+  use-when "You have a 32-byte GOST 28147-89 key and a message, and you need the IMIT MAC that a Russian protocol or standard names, to compare or to make a test value." ;
   param key "The 256-bit key (32 bytes)." ;
   param iv "The initial register, 8 bytes; empty is eight zero bytes." ;
   param sbox "The S-box set: E-TEST, E-A, E-B, E-C, E-D, E-Z, D-TEST or D-A." ;
   param mac-length "The MAC length in bits: 8 to 64 in steps of 8." ;
   see-also gost-mac:verify gost28147:encrypt hex:encode ;
+  link "https://www.rfc-editor.org/rfc/rfc5830" "RFC 5830: GOST 28147-89 algorithms" ;
+  link "https://www.rfc-editor.org/rfc/rfc4357" "RFC 4357: GOST key wrapping" ;
 ;
 
 META: verify
+  use-when "You have a GOST 28147-89 IMIT MAC from a message, with the key, IV and S-box it was made with, and you want to check whether the MAC matches." ;
   param key "The 256-bit key (32 bytes)." ;
   param iv "The initial register, 8 bytes; empty is eight zero bytes." ;
   param mac "The MAC to check, 1 to 8 bytes (hex by default)." ;
   param sbox "The S-box set." ;
   see-also gost-mac:sign gost28147:encrypt ;
+  inverse sign ;
+  link "https://www.rfc-editor.org/rfc/rfc5830" "RFC 5830: GOST 28147-89 algorithms" ;
 ;

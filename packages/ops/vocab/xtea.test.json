@@ -18,6 +18,10 @@
     "expect": {
       "value": "497df3d072612cb5",
       "enc": "hex"
+    },
+    "example": {
+      "title": "XTEA known answer: ABCDEFGH under key 00 to 0f",
+      "note": "The key is the bytes 00 to 0f and the block is the text ABCDEFGH, with 32 cycles, which is the standard 64 rounds."
     }
   },
   {
@@ -39,6 +43,10 @@
     "expect": {
       "value": "4142434445464748",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decrypt the known answer back to ABCDEFGH",
+      "note": "The output is the text ABCDEFGH that the first encrypt example started from."
     }
   },
   {
@@ -84,6 +92,10 @@
     "expect": {
       "value": "0ca2ae20fa9940037b79cf76cb9b1bbda7d8d5a933cd6f76",
       "enc": "hex"
+    },
+    "example": {
+      "title": "CBC with PKCS#7 padding on a 21-byte input",
+      "note": "The input is padded to whole 8-byte blocks, and the IV is the eight bytes 'defghijk'."
     }
   },
   {
@@ -108,6 +120,10 @@
     "expect": {
       "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decrypt CBC and remove the PKCS#7 padding",
+      "note": "The output is the 21-byte text with its padding taken off, the input of the CBC encrypt example."
     }
   },
   {

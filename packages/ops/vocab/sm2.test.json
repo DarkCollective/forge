@@ -14,6 +14,10 @@
     "expect": {
       "value": "encryption standard",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The GB/T 32918.5-2017 annex example, in C1C3C2 order",
+      "note": "The message is 'encryption standard', the example in the standard's annex, and the ciphertext parts are in the C1C3C2 order."
     }
   },
   {
@@ -99,6 +103,10 @@
     "expect": {
       "value": "61",
       "enc": "hex"
+    },
+    "example": {
+      "title": "A ciphertext made by OpenSSL 3.0",
+      "note": "The ciphertext was made by openssl pkeyutl with an SM2 key and holds one byte. Its parts are in C1C3C2 order."
     }
   },
   {

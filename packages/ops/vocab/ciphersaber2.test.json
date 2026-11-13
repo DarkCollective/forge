@@ -16,6 +16,10 @@
     "expect": {
       "value": "48656c6c6f2c20436970686572536162657221",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decrypt a CipherSaber-2 message with the default 20 rounds",
+      "note": "The first ten bytes are the IV. The output is the text Hello, CipherSaber!, with the same passphrase and the default rounds."
     }
   },
   {
@@ -36,6 +40,10 @@
     "expect": {
       "value": "48656c6c6f2c20436970686572536162657221",
       "enc": "hex"
+    },
+    "example": {
+      "title": "CipherSaber-1: the same message with one round",
+      "note": "With rounds set to 1 the key setup runs once instead of 20 times, which is CipherSaber-1. The output is the same text."
     }
   },
   {

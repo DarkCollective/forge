@@ -17,6 +17,10 @@
     "expect": {
       "value": "hello",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Decrypt the specification's token with a text key",
+      "note": "The key is 32 bytes written as url-safe base64 text, the form Fernet libraries print. The token decrypts to the word hello."
     }
   },
   {
@@ -37,6 +41,10 @@
     "expect": {
       "value": "hello",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The same token with the key as 32 raw bytes in hex",
+      "note": "The key is the same secret written as 64 hex digits, so the output is hello again."
     }
   },
   {

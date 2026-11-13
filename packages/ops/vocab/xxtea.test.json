@@ -35,6 +35,10 @@
     "expect": {
       "value": "0000000000000000",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decrypt eight zero bytes under a zero key",
+      "note": "The output is the eight zero bytes that the first encrypt example started from."
     }
   },
   {
@@ -54,6 +58,10 @@
     "expect": {
       "value": "431420e102850488bdaca43e9d120835e5dbe067977a1c488b5c4fc0",
       "enc": "hex"
+    },
+    "example": {
+      "title": "A 21-byte input: the output is 28 bytes",
+      "note": "The 21 bytes are padded to 24, then the length word adds four bytes, so the output is 28 bytes."
     }
   },
   {
@@ -73,6 +81,10 @@
     "expect": {
       "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decrypt the 21-byte example back to its input",
+      "note": "The stored length word gives back the 21 bytes, with the padding removed."
     }
   },
   {
@@ -92,6 +104,10 @@
     "expect": {
       "value": "453511d3e9fe1085",
       "enc": "hex"
+    },
+    "example": {
+      "title": "A one-byte input under a one-byte key",
+      "note": "The key is zero-padded to 16 bytes. The one-byte input is padded to a word and its length is added, so the output is eight bytes."
     }
   },
   {

@@ -20,17 +20,23 @@ USING: blockmode ;
   mode "CTRLE" blockmode:ctr-as iv 16 padding "pkcs7" = [ key _encrypt-block ] [ key _decrypt-block ] blockmode:decrypt ;
 
 META: encrypt
+  use-when "You have a Twofish key of 16, 24 or 32 bytes from an AES-candidate test or an older file format, and you need the output in a usual mode." ;
   param key "The Twofish key: 16, 24 or 32 bytes." ;
   param iv "The initialisation vector: 16 bytes for CBC, CFB, OFB and CTR. Ignored for ECB." ;
   param mode "The mode of operation: CBC, CFB (CFB-128), OFB, CTR or ECB (no IV; leaks patterns)." ;
   param padding "PKCS#7 padding, or none (the input must then be whole 16-byte blocks). Applies to CBC and ECB only." ;
   see-also twofish:decrypt hex:encode ;
+  inverse decrypt ;
+  link "https://en.wikipedia.org/wiki/Twofish" "Twofish on Wikipedia" ;
 ;
 
 META: decrypt
+  use-when "You have Twofish ciphertext with its key and mode, from a test or an older file format, and you need the plaintext." ;
   param key "The Twofish key: 16, 24 or 32 bytes." ;
   param iv "The initialisation vector used to encrypt." ;
   param mode "The mode of operation used to encrypt." ;
   param padding "PKCS#7 padding, or none. Applies to CBC and ECB only." ;
   see-also twofish:encrypt hex:decode ;
+  inverse encrypt ;
+  link "https://en.wikipedia.org/wiki/Twofish" "Twofish on Wikipedia" ;
 ;

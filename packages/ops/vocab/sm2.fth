@@ -108,16 +108,20 @@ USING: sm3 random ;
   data hex>bytes private-key "Private Key" _coord input-format _decrypt ;
 
 META: encrypt
+  use-when "You have an SM2 public key as its X and Y coordinates (32 bytes each, in hex) and a message, for the key's owner to decrypt the ciphertext." ;
   param public-key-x "The X coordinate of the public key: 32 bytes as hex." ;
   param public-key-y "The Y coordinate of the public key: 32 bytes as hex." ;
   param output-format "The order of the parts: C1C3C2 (the standard's) or C1C2C3." ;
   param curve "The curve: sm2p256v1, the only one." ;
   see-also sm2:decrypt sm3:digest ;
+  inverse decrypt ;
 ;
 
 META: decrypt
+  use-when "You have an SM2 ciphertext in hex and its 32-byte private key, and you want the plaintext. SM2 is the Chinese national public-key standard." ;
   param private-key "The private key: 32 bytes as hex." ;
   param input-format "The order of the parts of the ciphertext: C1C3C2 or C1C2C3." ;
   param curve "The curve: sm2p256v1, the only one." ;
   see-also sm2:encrypt sm3:digest ;
+  inverse encrypt ;
 ;

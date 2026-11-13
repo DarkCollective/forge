@@ -22,6 +22,7 @@ USING: blockmode util ;
   mode "CTRLE" blockmode:ctr-as iv word-size 2 div util:iv-or-zeros word-size 2 div padding "pkcs7" = [ key word-size rounds _encrypt-block ] [ key word-size rounds _decrypt-block ] blockmode:decrypt ;
 
 META: encrypt
+  use-when "You have an RC6 key of 16 to 32 bytes from a test or an older system, and you need RC6-w/r output. RC6 was an AES finalist, not a standard for new data." ;
   param key "The RC6 key: at most 255 bytes (16, 24 or 32 for the AES submission)." ;
   param iv "The initialisation vector: one block (word-size / 2 bytes) for CBC, CFB, OFB and CTR; empty means zeros. Ignored for ECB." ;
   param mode "The mode of operation: CBC, CFB (full-block), OFB, CTR or ECB (no IV; leaks patterns)." ;
@@ -29,9 +30,12 @@ META: encrypt
   param word-size "The word size w in bits, a multiple of 8 from 8 to 256; 32 is the standard." ;
   param rounds "The number of rounds r, 1 to 255; 20 is the standard for w = 32." ;
   see-also rc6:decrypt hex:encode ;
+  inverse decrypt ;
+  link "https://en.wikipedia.org/wiki/RC6" "RC6 on Wikipedia" ;
 ;
 
 META: decrypt
+  use-when "You have RC6 ciphertext with its key, word size and round count, from a test or an older system, and you want to read the existing data." ;
   param key "The RC6 key: at most 255 bytes." ;
   param iv "The initialisation vector used to encrypt; empty means zeros." ;
   param mode "The mode of operation used to encrypt." ;
@@ -39,4 +43,6 @@ META: decrypt
   param word-size "The word size w used to encrypt." ;
   param rounds "The number of rounds used to encrypt." ;
   see-also rc6:encrypt hex:decode ;
+  inverse encrypt ;
+  link "https://en.wikipedia.org/wiki/RC6" "RC6 on Wikipedia" ;
 ;

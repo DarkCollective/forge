@@ -357,6 +357,7 @@ true VARIABLE _check
   data crib rot _go ;
 
 META: search
+  use-when "You have an Enigma message and a crib, a guess at plaintext at a known offset, and you want the rotor start positions the crib allows. It is a study tool." ;
   param crib "The known plaintext, letters only (other characters are ignored), written as it appears in the message. Each letter must differ from the ciphertext letter at its place." ;
   param offset "Where the crib starts in the ciphertext, counted in letters from 0." ;
   param model "I: Enigma I, rotors I to V, reflectors A, B, C. M3: rotors I to VIII, reflectors B, C. (The M4 is not supported.)" ;
@@ -366,4 +367,6 @@ META: search
   param check "on: keep a stop only when it has no contradiction and the ciphertext, deciphered with its position and steckers, gives the crib. off: list every stop as the test register shows it." ;
   param limit "The most stops to list. Each costs about 130,000 VM steps (it is deciphered with enigma:encrypt), so more than about 30 need a trusted run. A crib with no loop gives a stop nearly everywhere." ;
   see-also enigma:encrypt ;
+  link "https://en.wikipedia.org/wiki/Bombe" "Bombe on Wikipedia" ;
+  link "https://en.wikipedia.org/wiki/Enigma_machine" "Enigma machine on Wikipedia" ;
 ;

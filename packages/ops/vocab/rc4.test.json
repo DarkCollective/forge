@@ -16,6 +16,10 @@
     "expect": {
       "value": "bbf316e8d940af0ad3",
       "enc": "hex"
+    },
+    "example": {
+      "title": "RC4 with the key Key and the text Plaintext",
+      "note": "The key and the text are the Wikipedia test pair. The output is the text XORed with the key stream, in hex."
     }
   },
   {
@@ -92,6 +96,10 @@
     "expect": {
       "value": "506c61696e74657874",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decrypting is the same word",
+      "note": "The ciphertext of the first example goes back in, and the text Plaintext comes out in hex."
     }
   },
   {
@@ -112,6 +120,10 @@
     "expect": {
       "value": "857047028b192029fd",
       "enc": "hex"
+    },
+    "example": {
+      "title": "RC4-drop with 768 bytes discarded",
+      "note": "The same key and text as the first example, with the first 768 key-stream bytes thrown away. The output is different."
     }
   },
   {

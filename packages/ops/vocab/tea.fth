@@ -18,17 +18,23 @@ IN: tea
   dup len 0 = [ ] [ mode iv 8 util:iv-or-zeros 8 padding "pkcs7" = [ key _encrypt-block ] [ key _decrypt-block ] blockmode:decrypt ] if ;
 
 META: encrypt
+  use-when "You have a 16-byte TEA key and data from an old system that uses the Tiny Encryption Algorithm. TEA is weak, so use it for existing data only." ;
   param key "The TEA key: 16 bytes." ;
   param iv "The initialisation vector: 8 bytes for CBC, CFB, OFB and CTR (empty means zeros). Ignored for ECB." ;
   param mode "The mode of operation: CBC, CFB (CFB-64), OFB, CTR or ECB (no IV; leaks patterns)." ;
   param padding "PKCS#7 padding, or none (the input must then be whole 8-byte blocks). Applies to CBC and ECB only." ;
   see-also tea:decrypt xtea:encrypt hex:encode ;
+  inverse decrypt ;
+  link "https://en.wikipedia.org/wiki/Tiny_Encryption_Algorithm" "Tiny Encryption Algorithm on Wikipedia" ;
 ;
 
 META: decrypt
+  use-when "You have TEA ciphertext with its key, IV and mode, from an old system, and you want the plaintext. Use it for reading existing data only." ;
   param key "The TEA key used to encrypt." ;
   param iv "The initialisation vector used to encrypt (empty means zeros)." ;
   param mode "The mode of operation used to encrypt." ;
   param padding "PKCS#7 padding, or none. Applies to CBC and ECB only." ;
   see-also tea:encrypt xtea:decrypt hex:decode ;
+  inverse encrypt ;
+  link "https://en.wikipedia.org/wiki/Tiny_Encryption_Algorithm" "Tiny Encryption Algorithm on Wikipedia" ;
 ;

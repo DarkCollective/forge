@@ -118,6 +118,10 @@
     "expect": {
       "value": "KRKRALLEXXFOLGENDESISTSOFORTBEKANNTZUGEBENXXICHH",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Decipher the first lines of an M4 message",
+      "note": "The M4 has four rotors: Beta comes first, then V, VI and VIII, with the thin reflector C-thin."
     }
   },
   {
@@ -217,6 +221,10 @@
     "expect": {
       "value": "BDZGO",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Enigma I's first test: AAAAA enciphers to BDZGO",
+      "note": "Rotors I, II and III, reflector B, and all ring and start settings at A. This is the widely published first test of Enigma I."
     }
   },
   {
@@ -313,6 +321,10 @@
     "expect": {
       "value": "NJYOWSWAYW",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Ring settings BUL and start QWE",
+      "note": "The ring settings are B, U and L and the start is Q, W, E. The text HELLOWORLD gives NJYOWSWAYW."
     }
   },
   {

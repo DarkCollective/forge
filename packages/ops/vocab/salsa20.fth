@@ -10,8 +10,11 @@ IN: salsa20
   key nonce counter _crypt ;
 
 META: encrypt
+  use-when "You have a Salsa20 key of 16 or 32 bytes and an 8-byte nonce from an older protocol or test, and you need the key stream applied. Never reuse a nonce." ;
   param key "The Salsa20 key: 16 or 32 bytes (128 or 256 bits)." ;
   param nonce "The 8-byte nonce. Never reuse a nonce under one key." ;
   param counter "The 64-bit block counter of the first block, from 0." ;
   see-also hex:encode ;
+  link "https://en.wikipedia.org/wiki/Salsa20" "Salsa20 on Wikipedia" ;
+  link "https://en.wikipedia.org/wiki/Stream_cipher" "Stream cipher on Wikipedia" ;
 ;

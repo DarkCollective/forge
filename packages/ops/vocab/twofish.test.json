@@ -22,6 +22,10 @@
     "expect": {
       "value": "9f589f5cf6122c32b6bfec2f2ae8c35a",
       "enc": "hex"
+    },
+    "example": {
+      "title": "ECB with a 128-bit key, intermediate value I=1",
+      "note": "The key and the block are zero bytes. This is intermediate value I=1 of the Twofish submission's ECB test file."
     }
   },
   {
@@ -47,6 +51,10 @@
     "expect": {
       "value": "00000000000000000000000000000000",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decrypt intermediate value I=1 back to zeros",
+      "note": "The output is the zero block that the first 128-bit encrypt example started from."
     }
   },
   {
@@ -322,6 +330,10 @@
     "expect": {
       "value": "57ff739d4dc92c1bd7fc01700cc8216f",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The same zero block with a 256-bit key",
+      "note": "The key is 32 zero bytes, the largest key Twofish takes, and the output differs from the 128-bit example."
     }
   },
   {
@@ -347,6 +359,10 @@
     "expect": {
       "value": "00000000000000000000000000000000",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decrypt the 256-bit intermediate value back to zeros",
+      "note": "The output is the zero block of the 256-bit encrypt example."
     }
   },
   {

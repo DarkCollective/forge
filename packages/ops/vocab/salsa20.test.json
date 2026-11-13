@@ -21,6 +21,10 @@
     "expect": {
       "value": "e3be8fdd8beca2e3ea8ef9475b29a6e7003951e1097a5c38d23b7a5fad9f6844b22c97559e2723c7cbbd3fe4fc8d9a0744652a83e72a9c461876af4d7ef1a117",
       "enc": "hex"
+    },
+    "example": {
+      "title": "eSTREAM test vector: 256-bit key, set 1, vector 0",
+      "note": "The input is 64 zero bytes, so the output is the key stream for the key that starts with 80 and is otherwise zero."
     }
   },
   {
@@ -45,6 +49,10 @@
     "expect": {
       "value": "4dfa5e481da23ea09a31022050859936da52fcee218005164f267cb65f5cfd7f2b4f97e0ff16924a52df269515110a07f9e460bc65ef95da58f740b7d1dbb0aa",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The same vector with a 128-bit key",
+      "note": "The key is 16 bytes here, the other size Salsa20 takes. The output is different from the 256-bit example."
     }
   },
   {

@@ -60,6 +60,10 @@
     "expect": {
       "value": "3fa40e8a984d4815",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Encrypt 'Now is t' in ECB with the FIPS 81 key",
+      "note": "The input is the eight bytes of the text 'Now is t', one block, so no padding is needed."
     }
   },
   {
@@ -81,6 +85,10 @@
     "expect": {
       "value": "4e6f772069732074",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decrypt the ECB block back to 'Now is t'",
+      "note": "Decrypting the ECB output of the text 'Now is t' gives back its eight bytes."
     }
   },
   {
@@ -408,6 +416,10 @@
     "expect": {
       "value": "e5c7cdde872bf27c43e934008c389c0f683788499a7c05f6",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Encrypt 'Now is the time for all ' in CBC with an IV",
+      "note": "The text is 24 bytes, three blocks, with the IV from the FIPS 81 appendix. The IV is the second parameter, and the output depends on it."
     }
   },
   {
@@ -433,6 +445,10 @@
     "expect": {
       "value": "4e6f77206973207468652074696d6520666f7220616c6c20",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decrypt CBC with its IV back to the 24-byte text",
+      "note": "The IV must be the one used to encrypt. The output is 'Now is the time for all '."
     }
   },
   {

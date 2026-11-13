@@ -18,6 +18,10 @@
     "expect": {
       "value": "5579c1387b228445",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Encrypt an all-zero block with an 80-bit key",
+      "note": "Both the 10-byte key and the 8-byte block are zero. The vector comes from the CHES 2007 paper's appendix."
     }
   },
   {
@@ -39,6 +43,10 @@
     "expect": {
       "value": "0000000000000000",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decrypt the 80-bit example back to zeros",
+      "note": "The input is the output of the 80-bit encrypt example, and the output is the all-zero block that started it."
     }
   },
   {
@@ -186,6 +194,10 @@
     "expect": {
       "value": "96db702a2e6900af",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The 128-bit key form, with an all-zero key and block",
+      "note": "The key is 16 bytes, the other size PRESENT takes. The block is still eight bytes, and the output differs from the 80-bit example."
     }
   },
   {
@@ -228,6 +240,10 @@
     "expect": {
       "value": "ffffffffffffffff",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decrypt with a 128-bit key of all ones",
+      "note": "The 16-byte key is all ff bytes. The output is eight bytes of ff."
     }
   },
   {

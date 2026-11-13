@@ -89,19 +89,23 @@ USING: hmac base64 clock deflate ;
   key salt algorithm timestamp dup 0 = [ drop clock:now-s ] when _sign ;
 
 META: decode
+  use-when "You have a Flask session cookie and want its payload without a key. Nothing is checked, so the contents may be forged; use verify to check them." ;
   param timestamp "Also return the signing time (Unix seconds): {\"payload\":...,\"timestamp\":N}." ;
   see-also flask-session:verify flask-session:sign base64:decode ;
 ;
 
 META: verify
+  use-when "You have a Flask session cookie, the SECRET_KEY and the digest the app uses, and you want to know whether the cookie is genuine and read its payload." ;
   param key "The Flask SECRET_KEY, any length but not empty." ;
   param salt "The salt of the serializer; Flask's session uses cookie-session. Empty means the default." ;
   param algorithm "The digest of the signature: sha1 (Flask's default) or sha256." ;
   param timestamp "Include the signing time in the result." ;
   see-also flask-session:sign flask-session:decode hmac:digest ;
+  inverse sign ;
 ;
 
 META: sign
+  use-when "You have the JSON of a Flask session and the app's SECRET_KEY, and you need the signed cookie that Flask would send, for a test or to reproduce a cookie." ;
   param key "The Flask SECRET_KEY, any length but not empty." ;
   param salt "The salt of the serializer; Flask's session uses cookie-session. Empty means the default." ;
   param algorithm "The digest of the signature: sha1 (Flask's default) or sha256." ;

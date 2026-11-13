@@ -23,6 +23,10 @@
     "expect": {
       "value": "ebb773f993278eff",
       "enc": "hex"
+    },
+    "example": {
+      "title": "RFC 2268 test vector 1 with 63 effective key bits",
+      "note": "The key is 8 zero bytes, but the effective-bits parameter says only 63 of its 64 bits are used."
     }
   },
   {
@@ -49,6 +53,10 @@
     "expect": {
       "value": "0000000000000000",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decrypt RFC 2268 vector 1 back to zeros",
+      "note": "The output is the 8 zero bytes that the first encrypt example started from."
     }
   },
   {
@@ -439,6 +447,10 @@
     "expect": {
       "value": "fae76067bf187b87cf6bedaa636df7b1bfda436bb3739a0a",
       "enc": "hex"
+    },
+    "example": {
+      "title": "CBC with the default 128 effective bits (OpenSSL)",
+      "note": "The IV is eight bytes and the input is whole blocks, so there is no padding. The vector was made with openssl enc -rc2-cbc."
     }
   },
   {
@@ -465,6 +477,10 @@
     "expect": {
       "value": "4e6f77206973207468652074696d6520666f7220616c6c20",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decrypt CBC with the default 128 effective bits",
+      "note": "The IV must be the one used to encrypt. The output is the 24-byte text 'Now is the time for all ', with no padding."
     }
   },
   {

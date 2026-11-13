@@ -20,13 +20,19 @@ USING: random ;
   swap key swap rounds _crypt ;
 
 META: encrypt
+  use-when "You need a CipherSaber-2 message for an existing CipherSaber user, with a passphrase. The format is built on RC4, so it is not for new protection." ;
   param key "The CipherSaber key (up to 246 bytes by the specification; longer keys work but are not CipherSaber)." ;
   param rounds "How many times the RC4 key setup is repeated (default 20, the CipherSaber-2 value; 1 is CipherSaber-1)." ;
   see-also ciphersaber2:decrypt rc4:crypt hex:encode ;
+  inverse decrypt ;
+  link "https://en.wikipedia.org/wiki/RC4" "RC4 on Wikipedia" ;
 ;
 
 META: decrypt
+  use-when "You have a CipherSaber-2 message, which starts with its IV, and its passphrase, and you want the text. The format is RC4-based, so use it to read old messages." ;
   param key "The key used to encrypt." ;
   param rounds "The round count used to encrypt." ;
   see-also ciphersaber2:encrypt rc4:crypt hex:decode ;
+  inverse encrypt ;
+  link "https://en.wikipedia.org/wiki/RC4" "RC4 on Wikipedia" ;
 ;

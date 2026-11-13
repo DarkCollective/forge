@@ -15,11 +15,15 @@ IN: xxtea
   key _decrypt ;
 
 META: encrypt
+  use-when "You have an XXTEA key of up to 16 bytes and data from a system that uses the corrected block TEA, and you need its output. Use it for existing data only." ;
   param key "The XXTEA key: up to 16 bytes, zero-padded." ;
   see-also xxtea:decrypt tea:encrypt hex:encode ;
+  inverse decrypt ;
 ;
 
 META: decrypt
+  use-when "You have XXTEA ciphertext of whole 32-bit words with its key, and you want the plaintext. A wrong key usually shows up as an error." ;
   param key "The key used to encrypt." ;
   see-also xxtea:encrypt hex:decode ;
+  inverse encrypt ;
 ;

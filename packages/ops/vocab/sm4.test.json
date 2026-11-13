@@ -22,6 +22,10 @@
     "expect": {
       "value": "681edf34d206965e86b3e94f536e4246",
       "enc": "hex"
+    },
+    "example": {
+      "title": "GB/T 32907-2016 example 1 in ECB",
+      "note": "The key and the plaintext are the same 16 bytes, 0123456789abcdeffedcba9876543210, as in the standard's example 1."
     }
   },
   {
@@ -47,6 +51,10 @@
     "expect": {
       "value": "0123456789abcdeffedcba9876543210",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decrypt example 1 back to its plaintext",
+      "note": "The output is the 16 bytes 0123456789abcdeffedcba9876543210 that the first example encrypted."
     }
   },
   {
@@ -122,6 +130,10 @@
     "expect": {
       "value": "784626c834ab18614677eb2074f2c5575146022d81cd18fef9bc1a1fd3a64d61",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Two blocks in CBC with a 16-byte IV",
+      "note": "The IV is 16 bytes, one block. The input is two blocks with padding none, so the output is the same length."
     }
   },
   {
@@ -147,6 +159,10 @@
     "expect": {
       "value": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e51",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decrypt two CBC blocks with the IV",
+      "note": "The IV must be the one used to encrypt. The output is the 32-byte input of the CBC encrypt example."
     }
   },
   {

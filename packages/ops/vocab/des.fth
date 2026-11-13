@@ -21,17 +21,24 @@ USING: blockmode ;
   mode "CTR32" blockmode:ctr-as iv 8 padding "pkcs7" = [ key _encrypt-block ] [ key _decrypt-block ] blockmode:decrypt ;
 
 META: encrypt
+  use-when "You have a DES key of 8 bytes and data from an old protocol or file, and you need to reproduce its output. DES is broken, so use it for existing data only." ;
   param key "The DES key: 8 bytes (the least significant bit of each byte is a parity bit and is ignored)." ;
   param iv "The initialisation vector: 8 bytes for CBC, CFB, OFB and CTR. Ignored for ECB." ;
   param mode "The mode of operation: CBC, CFB (CFB-64), OFB, CTR or ECB (no IV; leaks patterns)." ;
   param padding "PKCS#7 padding, or none (the input must then be whole 8-byte blocks). Applies to CBC and ECB only." ;
   see-also des:decrypt hex:encode ;
+  inverse decrypt ;
+  link "https://en.wikipedia.org/wiki/Data_Encryption_Standard" "Data Encryption Standard on Wikipedia" ;
+  link "https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation" "Block cipher mode of operation on Wikipedia" ;
 ;
 
 META: decrypt
+  use-when "You have DES ciphertext from an old system, with its key, IV and mode, and you want the plaintext. DES is broken, so use it for existing data only." ;
   param key "The DES key: 8 bytes." ;
   param iv "The initialisation vector used to encrypt." ;
   param mode "The mode of operation used to encrypt." ;
   param padding "PKCS#7 padding, or none. Applies to CBC and ECB only." ;
   see-also des:encrypt hex:decode ;
+  inverse encrypt ;
+  link "https://en.wikipedia.org/wiki/Data_Encryption_Standard" "Data Encryption Standard on Wikipedia" ;
 ;

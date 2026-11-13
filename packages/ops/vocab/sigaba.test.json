@@ -13,6 +13,10 @@
     "expect": {
       "value": "IRDGJZJSDGQQOBPJPQZNMFDBZOHBDAGC",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Encipher ZERO ONE TWO with the zeroised machine",
+      "note": "The machine is zeroised: every rotor at zero, with the default wirings. Forge's default wirings are not the historical ones."
     }
   },
   {
@@ -29,6 +33,10 @@
     "expect": {
       "value": "XERO ONE TWO THREE FOUR FIVE SIX",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Decipher gives XERO: Z enciphers as X",
+      "note": "A SIGABA enciphers a space as Z and Z as X, so the Z of ZERO comes back as X. Plan for that in any message that contains a Z."
     }
   },
   {

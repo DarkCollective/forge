@@ -22,6 +22,10 @@
     "expect": {
       "value": "eyJ1c2VyIjoiYWRtaW4iLCJyb2xlIjoiZWRpdG9yIn0.ZVPxAA.EMj9sWlqrOaM5slFnW5cWDEoCx8",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Sign a session with SHA-1 and a pinned timestamp",
+      "note": "The timestamp is fixed at 1700000000 so the output is repeatable; left at 0, the clock is used. SHA-1 is Flask's default digest."
     }
   },
   {
@@ -47,6 +51,10 @@
     "expect": {
       "value": "eyJ1c2VyIjoiYWRtaW4iLCJyb2xlIjoiZWRpdG9yIn0.ZVPxAA.zzhW5psWjy-cfmM8WbpufHwIHIaU2ZyGlPfm7EZsNn0",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The same session signed with SHA-256",
+      "note": "The payload and timestamp parts match the SHA-1 example. Only the signature at the end differs, and it is longer."
     }
   },
   {
@@ -236,6 +244,10 @@
     "expect": {
       "value": "{\"user\":\"admin\",\"role\":\"editor\"}",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Read the payload of a signed session cookie",
+      "note": "The payload is the first part of the cookie, base64url JSON. No key is needed, and the signature is not checked."
     }
   },
   {
@@ -339,6 +351,10 @@
     "expect": {
       "value": "{\"valid\":true,\"payload\":{\"user\":\"admin\",\"role\":\"editor\"}}",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Verify a session cookie without a timestamp",
+      "note": "The result is a JSON object with valid set to true and the payload. Set timestamp to add the signing time to the result."
     }
   },
   {
@@ -511,6 +527,10 @@
     },
     "expect": {
       "error": "E_COERCE"
+    },
+    "example": {
+      "title": "A cookie checked with the wrong digest is an error",
+      "note": "The cookie was signed with SHA-1 but checked with SHA-256. That is E_COERCE, not a result with valid set to false."
     }
   },
   {
@@ -599,6 +619,10 @@
     "expect": {
       "value": "{\"cart\":[\"apple\",\"apple\",\"apple\",\"apple\",\"banana\",\"banana\",\"banana\",\"banana\"],\"user\":\"admin\",\"role\":\"editor\"}",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A cookie with a leading dot is zlib-compressed",
+      "note": "A leading dot means the payload was compressed with zlib before it was encoded. The output is the decompressed JSON."
     }
   },
   {

@@ -16,6 +16,10 @@
     "expect": {
       "value": "1fa68b0a8112b447aef34bd8fb5a7b829d3e862371d2cfe5",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Wrap 128-bit key data with a 128-bit key-encryption key",
+      "note": "The output is 8 bytes longer than the key data, because the wrap adds an integrity block. The default IV is used, so the same key data and key-encryption key always give the same output."
     }
   },
   {
@@ -35,6 +39,10 @@
     "expect": {
       "value": "96778b25ae6ca435f92b5b97c050aed2468ab8a17ad84e5d",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The same key data under a 192-bit key-encryption key",
+      "note": "The key data is unchanged but the wrapped output differs, because the key-encryption key differs."
     }
   },
   {
@@ -130,6 +138,10 @@
     "expect": {
       "value": "00112233445566778899aabbccddeeff",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Unwrap the RFC 3394 example back to its key data",
+      "note": "The output is the 16-byte key data 00112233445566778899aabbccddeeff that the wrap example started from."
     }
   },
   {
@@ -297,6 +309,10 @@
     },
     "expect": {
       "error": "E_COERCE"
+    },
+    "example": {
+      "title": "A changed byte fails the integrity check",
+      "note": "One byte of the wrapped data is changed, so the RFC 3394 check fails. The error is E_COERCE and no key data is returned."
     }
   },
   {

@@ -74,12 +74,18 @@ USING: aes hmac base64 random clock ;
   key ttl ttl 0 > [ clock:now-s ] [ 0 ] if _open ;
 
 META: encrypt
+  use-when "You want a Fernet token, a url-safe base64 string that a Fernet library can read, made with a 32-byte key for a test or an interchange." ;
   param key "The Fernet key: 32 bytes, or their url-safe base64 text (43 or 44 characters)." ;
   see-also fernet:decrypt aes:encrypt hmac:digest ;
+  inverse decrypt ;
+  link "https://github.com/fernet/spec" "Fernet specification (github.com/fernet/spec)" ;
 ;
 
 META: decrypt
+  use-when "You have a Fernet token, which starts gAAAAA, and its key, and you want the message. The HMAC is checked before anything is decrypted." ;
   param key "The Fernet key the token was made with." ;
   param ttl "Maximum token age in seconds; 0 means no time check." ;
   see-also fernet:encrypt aes:decrypt hmac:digest ;
+  inverse encrypt ;
+  link "https://github.com/fernet/spec" "Fernet specification (github.com/fernet/spec)" ;
 ;

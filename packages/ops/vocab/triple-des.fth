@@ -20,17 +20,25 @@ USING: blockmode ;
   mode "CTR32" blockmode:ctr-as iv 8 padding "pkcs7" = [ key _encrypt-block ] [ key _decrypt-block ] blockmode:decrypt ;
 
 META: encrypt
+  use-when "You have a Triple DES key of 16 or 24 bytes and data from a legacy or payment system that still uses 3DES, and you need the output. Use AES for new data." ;
   param key "The Triple DES key: 24 bytes (K1, K2, K3), or 16 bytes (K1, K2, with K3 = K1)." ;
   param iv "The initialisation vector: 8 bytes for CBC, CFB, OFB and CTR. Ignored for ECB." ;
   param mode "The mode of operation: CBC, CFB (CFB-64), OFB, CTR or ECB (no IV; leaks patterns)." ;
   param padding "PKCS#7 padding, or none (the input must then be whole 8-byte blocks). Applies to CBC and ECB only." ;
   see-also triple-des:decrypt des:encrypt hex:encode ;
+  inverse decrypt ;
+  link "https://en.wikipedia.org/wiki/Triple_DES" "Triple DES on Wikipedia" ;
+  link "https://en.wikipedia.org/wiki/Data_Encryption_Standard" "Data Encryption Standard on Wikipedia" ;
 ;
 
 META: decrypt
+  use-when "You have Triple DES ciphertext with its key and mode from a legacy or payment system, and you want the plaintext. Use it for existing data only." ;
   param key "The Triple DES key: 24 bytes, or 16 bytes (K3 = K1)." ;
   param iv "The initialisation vector used to encrypt." ;
   param mode "The mode of operation used to encrypt." ;
   param padding "PKCS#7 padding, or none. Applies to CBC and ECB only." ;
   see-also triple-des:encrypt hex:decode ;
+  inverse encrypt ;
+  link "https://en.wikipedia.org/wiki/Triple_DES" "Triple DES on Wikipedia" ;
+  link "https://en.wikipedia.org/wiki/Data_Encryption_Standard" "Data Encryption Standard on Wikipedia" ;
 ;

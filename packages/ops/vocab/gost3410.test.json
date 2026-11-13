@@ -13,6 +13,10 @@
     "expect": {
       "value": "6d789f4a41d6d8422fbba7f6cfd15d8cb9d41c2004f62729de6e9e498c8f11fe12ee8ebd17fc22c484e5bd8599c56f7ba82ecab8d1f2c1fb7b49b834aa582f05",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The same operation on the RFC 7091 test curve test-256",
+      "note": "The curve is a 256-bit test curve, so the coordinates are the same size as for CryptoPro A: 32 bytes each."
     }
   },
   {
@@ -34,6 +38,10 @@
     "expect": {
       "value": "Verified OK",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Verify a signature on the RFC 7091 test curve test-256",
+      "note": "The same message, signed on test-256, one of the RFC 7091 test curves. The public key is 128 hex digits, x then y."
     }
   },
   {
@@ -213,6 +221,10 @@
     "expect": {
       "value": "ed213bd6be94d9ca2a8a9f627198991b23ef4bf116fb56daa08ba78d5faa0c1e41ea12b0cc09ce79a2ce9a60ea32a34cf94479b2de7ed9cebed2697fcf53d884",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The public point of a CryptoPro A private key",
+      "note": "The input is the private key as 64 hex digits. The output is x then y in lower-case hex, 128 digits in all."
     }
   },
   {
@@ -234,6 +246,10 @@
     "expect": {
       "value": "Verified OK",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Verify a CryptoPro A signature of the message sample",
+      "note": "The message is the hex 73616d706c65, which is the text sample. The curve is the default, cryptopro-a, so it need not be named."
     }
   },
   {

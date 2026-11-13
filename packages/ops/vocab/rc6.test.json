@@ -78,6 +78,10 @@
     "expect": {
       "value": "524e192f4715c6231f51f6367ea43f18",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The RC6 paper's 128-bit key vector in ECB",
+      "note": "The key is 16 bytes and the block is 16 bytes. Word size 32 and 20 rounds are the standard RC6-32/20 values."
     }
   },
   {
@@ -105,6 +109,10 @@
     "expect": {
       "value": "02132435465768798a9bacbdcedfe0f1",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decrypt the 128-bit key block back to its input",
+      "note": "The output is the 16-byte block that the first RC6 encrypt example started from."
     }
   },
   {
@@ -294,6 +302,10 @@
     "expect": {
       "value": "c8241816f0d7e48920ad16a1674e5d48",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The same block with a 256-bit key",
+      "note": "The input is the same 16-byte block as the first example, with a 32-byte key. The output is different."
     }
   },
   {
@@ -321,6 +333,10 @@
     "expect": {
       "value": "02132435465768798a9bacbdcedfe0f1",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decrypt the 256-bit key block",
+      "note": "The output is the block that the 256-bit encrypt example started from."
     }
   },
   {

@@ -65,6 +65,10 @@
     "expect": {
       "value": "246ea87c4f982ee3a1ddb84d3f08e72113db50ba42c2bec533af3734b0ebc0db796115c1b3878661d9cb21b8831c907b11ca4cd1c07f8716a1fd5b03617cc00edb661a05d9e5e2b0659d14d991748e8f9fb92e8b0b1fcc90a940c884eb62b2faafa53ec824a48abd84c2877da6f3e90dd7e7ac268bb42f465588080c28e31744",
       "enc": "hex"
+    },
+    "example": {
+      "title": "A SHA-256 signature with a 1024-bit key",
+      "note": "The digest is SHA-256 here. PKCS #1 v1.5 signatures are deterministic, so the same key and message always give the same value."
     }
   },
   {
@@ -167,6 +171,10 @@
     "expect": {
       "value": "246ea87c4f982ee3a1ddb84d3f08e72113db50ba42c2bec533af3734b0ebc0db796115c1b3878661d9cb21b8831c907b11ca4cd1c07f8716a1fd5b03617cc00edb661a05d9e5e2b0659d14d991748e8f9fb92e8b0b1fcc90a940c884eb62b2faafa53ec824a48abd84c2877da6f3e90dd7e7ac268bb42f465588080c28e31744",
       "enc": "hex"
+    },
+    "example": {
+      "title": "An encrypted PKCS #8 key needs its password",
+      "note": "The key is an ENCRYPTED PRIVATE KEY block, and the password parameter opens it. Without the password the sign is an error."
     }
   },
   {
@@ -439,6 +447,10 @@
     "expect": {
       "value": "Verified OK",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A SHA-256 signature from openssl checks out",
+      "note": "The signature was made by openssl dgst with SHA-256. When it matches, the result is the text Verified OK."
     }
   },
   {
@@ -544,6 +556,10 @@
     "expect": {
       "value": "Verification Failure",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A changed message fails the check",
+      "note": "The result is the text Verification Failure, not an error, when the message differs from the one signed."
     }
   },
   {
@@ -710,6 +726,10 @@
     "expect": {
       "value": "Verified OK",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A PSS signature with a 32-byte salt",
+      "note": "The scheme is RSASSA-PSS. The salt length is part of the check, and the signer's length here is 32 bytes."
     }
   },
   {
@@ -1141,6 +1161,10 @@
     "expect": {
       "value": "attack at dawn",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Decrypt an RSA-OAEP ciphertext with SHA-1, the default digest",
+      "note": "The digest sets the hash of the OAEP label and of MGF1. The ciphertext was made by openssl with SHA-1, and the output is the text attack at dawn."
     }
   },
   {
@@ -1295,6 +1319,10 @@
     "expect": {
       "value": "attack at dawn",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Decrypt an RSAES-PKCS1-V1_5 ciphertext",
+      "note": "The scheme must match the padding the sender used. This vector uses the older PKCS #1 v1.5 padding, so the scheme is set to it."
     }
   },
   {
@@ -1327,6 +1355,10 @@
     "expect": {
       "value": "8d8168cfb495b0a3f4bc18998b01fedb4a0827246ff7420e05be7845c47aabe7fbdc53c27dc7c06fca9c7dfefbfc5311771d264c1a90e714c5659309d2dc742ee408e72f0cc88a9d6a4489bca50f05bfcd0f99c8c7829f10f5fe6e4c6cfb8ec15398a59fc8a5b300daf4008a100f3b8c5d86d46e94866d639ec28f4fbfb797fd",
       "enc": "hex"
+    },
+    "example": {
+      "title": "RAW encryption: the message as a number, with no padding",
+      "note": "RAW applies no padding, so the 128-byte message is read as a number and raised to the public exponent. The output is 128 bytes, the length of the modulus."
     }
   },
   {
@@ -1361,6 +1393,10 @@
     "expect": {
       "value": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000161747461636b206174206461776e",
       "enc": "hex"
+    },
+    "example": {
+      "title": "RAW decryption gives back the message",
+      "note": "The output is the 128-byte message of the RAW encrypt example, byte for byte."
     }
   },
   {
@@ -1410,6 +1446,10 @@
     "expect": {
       "value": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
       "enc": "hex"
+    },
+    "example": {
+      "title": "RAW of the empty message is zero",
+      "note": "The empty message is the number zero, and zero to the public exponent is zero, so the output is 128 zero bytes."
     }
   },
   {
@@ -1533,6 +1573,10 @@
     "expect": {
       "value": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9JaaVS4wTGJqEKtdqPA5eshzj\ngZz0LH/MtGlTogD9gt6IzFk4pGBFDE1V7YtnQF0WY9q5vXnKD/MGJsX3avJmq5Hm\nvdpzTy8Us+IIQOMzoAZIAwr7sdX1HcXCVfYpRh6Ue/zcww8CQiDb38qt+jz+TEPU\nVabywyBg3oeKr4fLHwIDAQAB\n-----END PUBLIC KEY-----\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The public key of a PKCS #1 RSA private key",
+      "note": "The input is an RSA PRIVATE KEY block, and the output is a PUBLIC KEY block with the same modulus."
     }
   },
   {
@@ -1579,6 +1623,10 @@
     "expect": {
       "value": "{\"kty\":\"RSA\",\"n\":\"vSWmlUuMExiahCrXajwOXrIc44Gc9Cx_zLRpU6IA_YLeiMxZOKRgRQxNVe2LZ0BdFmPaub15yg_zBibF92ryZquR5r3ac08vFLPiCEDjM6AGSAMK-7HV9R3FwlX2KUYelHv83MMPAkIg29_Krfo8_kxD1FWm8sMgYN6Hiq-Hyx8\",\"e\":\"AQAB\"}",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The public key as a JWK",
+      "note": "The output is one line of JSON with kty set to RSA and the modulus n and exponent e in Base64url."
     }
   },
   {

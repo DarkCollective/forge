@@ -153,6 +153,7 @@ IN: sigaba
   mode "decrypt" = cipher-rotors control-rotors index-rotors cipher-positions control-positions index-positions wirings index-wirings other _machine ;
 
 META: crypt
+  use-when "You have a SIGABA (ECM Mark II) message and its cipher, control and index rotor banks, and you want to encipher or decipher it. It is a historical study cipher." ;
   param mode "encrypt, or decrypt (the machine is not reciprocal: decryption runs the cipher rotors backwards)." ;
   param cipher-rotors "Five rotors 0 to 9, left to right, e.g. 0 1R 2 3 4R (R: inserted reversed). Together with control-rotors they use 0 to 9 once each." ;
   param control-rotors "Five rotors 0 to 9, left to right, e.g. 5 6 7R 8 9. Only the middle three step: C2 fast, C3 medium, C1 slow; the end rotors never step." ;
@@ -164,4 +165,5 @@ META: crypt
   param index-wirings "Five index wirings of 10 digits each, separated by spaces: contact 0 maps to the first digit. Empty: Forge's default set (not historical)." ;
   param other "drop: ignore bytes that are not letters or spaces. error: raise E_COERCE. Decrypting always skips white space." ;
   see-also classical:vigenere-encrypt ;
+  link "https://en.wikipedia.org/wiki/SIGABA" "SIGABA on Wikipedia" ;
 ;

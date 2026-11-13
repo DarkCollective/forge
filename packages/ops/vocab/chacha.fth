@@ -11,9 +11,13 @@ IN: chacha
   key nonce counter rounds _crypt ;
 
 META: encrypt
+  use-when "You have a 32-byte key and a 12-byte nonce from an RFC 8439 protocol, and you need the keystream applied. ChaCha20 is used in TLS and SSH. Never reuse a nonce." ;
   param key "The ChaCha key: 32 bytes (RFC 8439), or 16 or 32 bytes with an 8-byte nonce." ;
   param nonce "The nonce: 12 bytes (RFC 8439) or 8 bytes (the original layout). Never reuse a nonce under one key." ;
   param counter "The block counter of the first block, from 0. Four bytes with a 12-byte nonce, eight with an 8-byte one." ;
   param rounds "The round count: 20 (the standard), 12 or 8. Reduced rounds need the 12-byte nonce." ;
   see-also hex:encode ;
+  link "https://www.rfc-editor.org/rfc/rfc8439" "RFC 8439: ChaCha20 and Poly1305" ;
+  link "https://en.wikipedia.org/wiki/ChaCha20-Poly1305" "ChaCha20-Poly1305 on Wikipedia" ;
+  link "https://en.wikipedia.org/wiki/Stream_cipher" "Stream cipher on Wikipedia" ;
 ;

@@ -165,6 +165,7 @@ IN: enigma
   [ [ _byte ] map ] if ;
 
 META: encrypt
+  use-when "You have Enigma traffic with its settings (rotors, rings, positions and plugboard) and want the text. It is a historical machine, used for study and puzzles." ;
   param model "I: Enigma I (rotors I to V, reflectors A, B, C). M3: Kriegsmarine, rotors I to VIII, reflectors B, C. M4: four rotors, Beta or Gamma first, rotors I to VIII, thin reflectors." ;
   param rotors "Rotor names, left to right, separated by spaces: I to VIII, and Beta or Gamma as the first rotor of the M4. Three names, four for the M4." ;
   param reflector "Reflector (Umkehrwalze): A, B or C for Enigma I, B or C for M3, B-thin or C-thin for M4." ;
@@ -174,4 +175,6 @@ META: encrypt
   param others "keep: bytes that are not letters pass through unchanged. remove: they are dropped." ;
   alias decrypt ;
   see-also typex:encrypt ;
+  link "https://en.wikipedia.org/wiki/Enigma_machine" "Enigma machine on Wikipedia" ;
+  link "https://www.cryptomuseum.com/" "Crypto Museum website" ;
 ;

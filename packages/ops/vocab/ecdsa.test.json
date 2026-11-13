@@ -15,6 +15,10 @@
     "expect": {
       "value": "3045022100f83c0674987e9506ce7aa9a54740b5db0bd1458c7a411caeab72ca07112e4c100220184aa2cdfc743660168872a65e4ef3ee9a2e8fe4da20c594fb7c988d33f16873",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The default DER form of a P-256 signature",
+      "note": "asn1-hex is the default output: a DER SEQUENCE holding the two integers r and s."
     }
   },
   {
@@ -555,6 +559,10 @@
     "expect": {
       "value": "efd48b2aacb6a8fd1140dd9cd45e81d69d2c877b56aaf991c34d0ea84eaf3716f7cb1c942d657c41d436c7a1b6e29f65f3e900dbb9aff4064dc4ab2f843acda8",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The RFC 6979 A.2.5 signature of sample on P-256",
+      "note": "Deterministic: this key and message always give this signature. The output here is the p1363 form, r then s as hex."
     }
   },
   {
@@ -758,6 +766,10 @@
     "expect": {
       "value": "Verified OK",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Verify with the format detected automatically",
+      "note": "The signature is hex and starts with 30, so auto reads it as DER (asn1-hex). The result is the text Verified OK."
     }
   },
   {
@@ -846,6 +858,10 @@
     "expect": {
       "value": "Verification Failure",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A changed message fails the check",
+      "note": "The message is not the one signed, and the result is Verification Failure, not an error."
     }
   },
   {
@@ -2026,6 +2042,10 @@
     "expect": {
       "value": "3045022100f83c0674987e9506ce7aa9a54740b5db0bd1458c7a411caeab72ca07112e4c100220184aa2cdfc743660168872a65e4ef3ee9a2e8fe4da20c594fb7c988d33f16873",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Convert a P-256 r then s signature to DER",
+      "note": "The input is r and s, 32 bytes each, in hex. The output is the DER SEQUENCE holding the same two integers."
     }
   },
   {
@@ -2434,6 +2454,10 @@
     "expect": {
       "value": "004b403a1b4f045c6f35f89a6b5127e35323f88f37b801ac2713e8106a9066285524904901f6acf790befd7a43ae66d6f1d939a09f7f3e45ac43a3b7ec69c8fe",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "DER to r then s pads a short r with zeros",
+      "note": "A short r is padded to 32 bytes in the p1363 form. The DER input leaves it short."
     }
   },
   {
@@ -2729,6 +2753,10 @@
     "expect": {
       "value": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEV7H/d/aJZe7uSg2oUSkPTpqXyPo4\n0o/+ywZoh2dEl6dbQ+zDukt/h7HrpGgSrHJYgEBW9pnA20EKFINw1qJbMA==\n-----END PUBLIC KEY-----\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The public key of a P-256 SEC1 private key",
+      "note": "The input is an EC PRIVATE KEY block (SEC1), and the output is a PUBLIC KEY block for the same key."
     }
   },
   {
@@ -2785,6 +2813,10 @@
     "expect": {
       "value": "-----BEGIN PUBLIC KEY-----\nMIGbMBAGByqGSM49AgEGBSuBBAAjA4GGAAQAMM0FNBq47CwOuTY/BNp6HgcnqoKR\nNh/2xI7hvUF+u+ozkgv75KbQGFA0HZSPYtyBts068A9uEA6nO4IjMROHMFIBdUK0\nhqKl6nmlrZfKnG7AMzqTFz2I7o+FF4eA/1S5j/UdkHM/utPmBejGtuNbekhk7XHw\nCoxGVAMPn/uYEGq/I8M=\n-----END PUBLIC KEY-----\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The public key of a P-521 key",
+      "note": "The same operation on a P-521 key. The output is longer, as the curve's coordinates are longer."
     }
   },
   {

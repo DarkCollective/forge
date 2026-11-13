@@ -33,19 +33,26 @@ USING: blockmode ;
   [ key iv mode padding "pkcs7" = true _crypt ] if ] if ;
 
 META: encrypt
+  use-when "You have a 16, 24 or 32 byte AES key and data from a protocol or file that uses AES, such as TLS or archives. Never reuse an IV or nonce." ;
   param key "The AES key: 16, 24 or 32 bytes (AES-128, -192 or -256)." ;
   param iv "The initialisation vector or nonce: 16 bytes for CBC, CFB, OFB and CTR, at least 8 for GCM (12 recommended). Ignored for ECB." ;
   param mode "The mode of operation: CBC, CFB (CFB-128), OFB, CTR, GCM (authenticated) or ECB (no IV; leaks patterns)." ;
   param padding "PKCS#7 padding, or none (the input must then be whole blocks). Applies to CBC and ECB only." ;
   param aad "GCM additional authenticated data, covered by the tag but not encrypted. Unused by the other modes." ;
   see-also aes:decrypt hex:encode ;
+  inverse decrypt ;
+  link "https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation" "Block cipher mode of operation on Wikipedia" ;
+  link "https://en.wikipedia.org/wiki/Galois/Counter_Mode" "Galois/Counter Mode on Wikipedia" ;
 ;
 
 META: decrypt
+  use-when "You have AES ciphertext with its key, IV or nonce, mode and any GCM data, and you want the plaintext back." ;
   param key "The AES key: 16, 24 or 32 bytes (AES-128, -192 or -256)." ;
   param iv "The initialisation vector or nonce used to encrypt." ;
   param mode "The mode of operation used to encrypt." ;
   param padding "PKCS#7 padding, or none. Applies to CBC and ECB only." ;
   param aad "GCM additional authenticated data; it must be the same as when encrypting." ;
   see-also aes:encrypt hex:decode ;
+  inverse encrypt ;
+  link "https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation" "Block cipher mode of operation on Wikipedia" ;
 ;

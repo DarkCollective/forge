@@ -21,6 +21,10 @@
     "expect": {
       "value": "b15754f036a5d6ecf56b45261c4af70288e8d815c59c0c397b696c4789c68aa7f416a1c3700cd451da68d1881673d696",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The key stream of the RFC's all-zero key",
+      "note": "The input is 48 zero bytes, so the output is the key stream for the all-zero key, with no IV (RFC 4503 appendix A.1)."
     }
   },
   {
@@ -117,6 +121,10 @@
     "expect": {
       "value": "1fcd4eb9580012e2e0dccc9222017d6da75f4e10d12125017b2499ffed936f2eebc112c393e738392356bdd012029ba7",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The same key with an 8-byte IV (RFC 4503 appendix A.2)",
+      "note": "The IV is set up with the key before the stream starts, so the output differs from the example without an IV."
     }
   },
   {

@@ -22,19 +22,27 @@ USING: blockmode ;
   mode iv 8 padding "pkcs7" = [ key effective-bits _encrypt-block ] [ key effective-bits _decrypt-block ] blockmode:decrypt ;
 
 META: encrypt
+  use-when "You have RC2 data from an older protocol or file, with its key, effective key bits and mode. RC2 is weak, so use it for existing data only." ;
   param key "The RC2 key: 1 to 128 bytes." ;
   param iv "The initialisation vector: 8 bytes for CBC. Ignored for ECB." ;
   param mode "The mode of operation: CBC or ECB (no IV; leaks patterns)." ;
   param padding "PKCS#7 padding, or none (the input must then be whole 8-byte blocks)." ;
   param effective-bits "The effective key length in bits (T1 of RFC 2268), 1 to 1024." ;
   see-also rc2:decrypt hex:encode ;
+  inverse decrypt ;
+  link "https://www.rfc-editor.org/rfc/rfc2268" "RFC 2268: the RC2 cipher" ;
+  link "https://en.wikipedia.org/wiki/RC2" "RC2 on Wikipedia" ;
 ;
 
 META: decrypt
+  use-when "You have RC2 ciphertext from an old system, with its key, IV and effective key bits, and you want the plaintext. RC2 is weak, so use it for existing data only." ;
   param key "The RC2 key: 1 to 128 bytes." ;
   param iv "The initialisation vector used to encrypt." ;
   param mode "The mode of operation used to encrypt." ;
   param padding "PKCS#7 padding, or none." ;
   param effective-bits "The effective key length in bits used to encrypt." ;
   see-also rc2:encrypt hex:decode ;
+  inverse encrypt ;
+  link "https://www.rfc-editor.org/rfc/rfc2268" "RFC 2268: the RC2 cipher" ;
+  link "https://en.wikipedia.org/wiki/RC2" "RC2 on Wikipedia" ;
 ;

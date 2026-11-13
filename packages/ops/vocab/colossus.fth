@@ -250,6 +250,7 @@ USING: lorenz ;
   top set-total _colossus ;
 
 META: count
+  use-when "You have a Lorenz ciphertext in ITA2 and want to test chi wheel start positions with the 1+2 break-in, as Colossus did. It is a study tool for puzzles." ;
   param wheel-a "The first chi wheel whose start position is searched, 1 to 5." ;
   param wheel-b "The second chi wheel searched, 1 to 5, not the same as wheel-a." ;
   param condition "Terms joined by +: z1..z5, dz1..dz5 (ciphertext), x1..x5, dx1..dx5 (chi cells). Empty means dz+dz+dx+dx of the two wheels." ;
@@ -268,4 +269,6 @@ META: count
   param top "How many settings to list at most, 1 to 100." ;
   param set-total "List only settings whose count is at least this (the set total of a Colossus run); 0 lists all." ;
   see-also lorenz:encrypt lorenz:decrypt ;
+  link "https://en.wikipedia.org/wiki/Colossus_computer" "Colossus computer on Wikipedia" ;
+  link "https://en.wikipedia.org/wiki/Lorenz_cipher" "Lorenz cipher on Wikipedia" ;
 ;

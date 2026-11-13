@@ -329,32 +329,45 @@ USING: asn1 json random md5 sha1 sha2 ;
   over swap _public-key _public-pem ;
 
 META: generate-key-pair
+  use-when "You need a fresh ECDSA key pair on P-256, P-384 or P-521, in PEM, DER or JWK form, for a test or a new signing key." ;
   param curve "The curve: P-256, P-384 or P-521." ;
   param format "PEM (public key, then PKCS #8 private key), DER (the private scalar as hex, CyberChef's name) or JWK." ;
   see-also ecdsa:sign ecdsa:public-key ;
+  link "https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm" "ECDSA on Wikipedia" ;
 ;
 
 META: sign
+  use-when "You have an EC private key in PEM on P-256, P-384, P-521 or secp256k1 and a message, and you need an ECDSA signature in DER, r then s, JWS or JSON form." ;
   param private-key "The private key as PEM: SEC1 (EC PRIVATE KEY) or PKCS #8 (PRIVATE KEY)." ;
   param digest "The hash applied to the input before signing: sha256, sha384, sha512, sha1 or md5." ;
   param format "asn1-hex (DER), p1363-hex (r then s), jws (URL-safe Base64 of r then s) or raw-json." ;
   see-also ecdsa:verify ecdsa:convert-signature ;
+  link "https://www.rfc-editor.org/rfc/rfc6979" "RFC 6979: deterministic DSA and ECDSA" ;
+  link "https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm" "ECDSA on Wikipedia" ;
 ;
 
 META: verify
+  use-when "You have an ECDSA signature, the message and the PEM public key, and you want to check the signature. Auto reads the format the signer used." ;
   param input-format "The signature format, or auto to detect it." ;
   param digest "The hash applied to the message: sha256, sha384, sha512, sha1 or md5." ;
   param public-key "The public key as PEM (PUBLIC KEY)." ;
   param message "The signed message, read as UTF-8 text, hex, Base64 or Latin-1." ;
   see-also ecdsa:sign ecdsa:convert-signature ;
+  inverse sign ;
+  link "https://www.rfc-editor.org/rfc/rfc7518" "RFC 7518: JSON Web Algorithms (JWS ECDSA)" ;
+  link "https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm" "ECDSA on Wikipedia" ;
 ;
 
 META: convert-signature
+  use-when "You have an ECDSA signature in one form (DER hex, r then s hex, JWS or JSON) and a system that wants another form, and you need the conversion." ;
   param input-format "The format of the signature, or auto to detect it." ;
   param output-format "asn1-hex, p1363-hex, jws or raw-json." ;
   see-also ecdsa:sign ecdsa:verify ;
+  link "https://www.rfc-editor.org/rfc/rfc7518" "RFC 7518: JSON Web Algorithms (JWS ECDSA)" ;
 ;
 
 META: public-key
+  use-when "You have an EC private key in PEM, SEC1 or PKCS #8, and you want its public key as a PUBLIC KEY PEM, to share it or to check signatures." ;
   see-also ecdsa:generate-key-pair ecdsa:sign ;
+  link "https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm" "ECDSA on Wikipedia" ;
 ;

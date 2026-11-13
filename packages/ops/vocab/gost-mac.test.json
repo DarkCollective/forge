@@ -17,6 +17,10 @@
     "expect": {
       "value": "189c60d3",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Sign 'The quick brown fox' with the default 32-bit MAC",
+      "note": "The default MAC length is 32 bits and the default S-box is E-TEST. The IV is zero here."
     }
   },
   {
@@ -412,6 +416,10 @@
     "expect": {
       "value": "3427209a92",
       "enc": "hex"
+    },
+    "example": {
+      "title": "A 40-bit MAC is the start of the longer MAC",
+      "note": "The MAC is cut to 40 bits, five bytes, for the same message and key. A shorter MAC is the start of the longer one."
     }
   },
   {
@@ -502,6 +510,10 @@
     "expect": {
       "value": "The signature matches",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A MAC that matches: the result says so",
+      "note": "The result is the text 'The signature matches'. The MAC here is four bytes, so the comparison is on 32 bits."
     }
   },
   {
@@ -586,6 +598,10 @@
     "expect": {
       "value": "The signature does not match",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A MAC that differs in one digit does not match",
+      "note": "The result is the text 'The signature does not match', not an error. Only one hex digit differs from the matching example."
     }
   },
   {

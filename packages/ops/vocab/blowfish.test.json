@@ -522,6 +522,10 @@
     "expect": {
       "value": "6b77b4d63006dee605b156e27403979358deb9e7154616d959f1652bd5ff92cc",
       "enc": "hex"
+    },
+    "example": {
+      "title": "CBC over Eric Young's chaining text",
+      "note": "The input is the 29 characters 7654321 Now is the time for, with zero bytes after them to make 32 bytes, four 8-byte blocks. Padding is none, so nothing is added."
     }
   },
   {
@@ -547,6 +551,10 @@
     "expect": {
       "value": "37363534333231204e6f77206973207468652074696d6520666f722000000000",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decrypt the chaining text back to its 32 bytes",
+      "note": "The output is the 29 characters of the chaining text followed by zero bytes, the same 32 bytes the encrypt example started from."
     }
   },
   {
@@ -672,6 +680,10 @@
     "expect": {
       "value": "4d4a388b3e166b70a531947cbcf800d7",
       "enc": "hex"
+    },
+    "example": {
+      "title": "CBC with PKCS#7 padding, made with OpenSSL",
+      "note": "The 13-byte input gets three bytes of PKCS#7 padding, so the output is 16 bytes, two 8-byte blocks. The vector was made with openssl enc -bf-cbc."
     }
   },
   {
@@ -697,6 +709,10 @@
     "expect": {
       "value": "000102030405060708090a0b0c",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decrypt CBC with PKCS#7 and remove the padding",
+      "note": "The 16-byte ciphertext gives back the 13 bytes 00 to 0c; the padding bytes are taken off."
     }
   },
   {

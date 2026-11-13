@@ -10,8 +10,11 @@ IN: rabbit
   key iv endianness "Little" = _crypt ;
 
 META: crypt
+  use-when "You have a 16-byte Rabbit key and data from an RFC 4503 system, and you need the key stream applied to it. For new designs, use ChaCha20 or AES-GCM." ;
   param key "The Rabbit key: 16 bytes." ;
   param iv "The initialisation vector: 8 bytes, or empty for none." ;
   param endianness "Big follows RFC 4503 (the test vectors of its appendix A); Little is the byte order of Crypto++." ;
   see-also hex:encode ;
+  link "https://www.rfc-editor.org/rfc/rfc4503" "RFC 4503: the Rabbit stream cipher" ;
+  link "https://en.wikipedia.org/wiki/Stream_cipher" "Stream cipher on Wikipedia" ;
 ;

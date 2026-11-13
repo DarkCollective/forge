@@ -15,11 +15,18 @@ IN: aes-kw
   kek _unwrap ;
 
 META: wrap
+  use-when "You have a key to protect and a 16, 24 or 32 byte key-encryption key, and you need the RFC 3394 wrapped form to store or send the key." ;
   param kek "The key-encryption key: 16, 24 or 32 bytes (AES-128, -192 or -256)." ;
   see-also aes-kw:unwrap hex:encode ;
+  inverse unwrap ;
+  link "https://www.rfc-editor.org/rfc/rfc3394" "RFC 3394: AES Key Wrap" ;
+  link "https://en.wikipedia.org/wiki/Advanced_Encryption_Standard" "Advanced Encryption Standard on Wikipedia" ;
 ;
 
 META: unwrap
+  use-when "You have RFC 3394 wrapped key data and the key-encryption key that wrapped it, and you want the original key back. A wrong key fails the check." ;
   param kek "The key-encryption key that wrapped the key: 16, 24 or 32 bytes." ;
   see-also aes-kw:wrap hex:decode ;
+  inverse wrap ;
+  link "https://www.rfc-editor.org/rfc/rfc3394" "RFC 3394: AES Key Wrap" ;
 ;

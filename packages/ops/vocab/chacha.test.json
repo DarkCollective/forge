@@ -47,6 +47,10 @@
     "expect": {
       "value": "6e2e359a2568f98041ba0728dd0d6981",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The sunscreen text with counter 1 (RFC 8439 section 2.4.2)",
+      "note": "The input is the RFC's sunscreen text. The counter starts at 1, not 0, which the RFC uses for this example."
     }
   },
   {
@@ -72,6 +76,10 @@
     "expect": {
       "value": "76b8e0ada0f13d90405d6ae55386bd28bdd219b8a08ded1aa836efcc8b770dc7da41597c5157488d7724e03fb8d84a376a43b8f41518a11cc387b669b2ee6586",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The 8-byte nonce layout of the original ChaCha",
+      "note": "With an 8-byte nonce the counter is eight bytes. The input is 64 zero bytes, so the output is the keystream itself."
     }
   },
   {

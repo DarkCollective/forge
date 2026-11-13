@@ -747,6 +747,10 @@
     "expect": {
       "value": "e353779c1079aeb82708942dbe77181a",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Encrypt one block of text with AES-128 in CBC (RFC 3602)",
+      "note": "The message is 16 bytes, exactly one block, so padding is none. CBC also needs the IV, the second parameter that the output depends on."
     }
   },
   {
@@ -771,6 +775,10 @@
     "expect": {
       "value": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decrypt two CBC blocks back to the bytes 00 to 1f (RFC 3602)",
+      "note": "The output is the 32 bytes 00 to 1f that the RFC's case 2 encrypted. The IV must be the one used to encrypt."
     }
   },
   {
@@ -1072,6 +1080,10 @@
     "expect": {
       "value": "0388dace60b6a392f328c2b971b2fe78ab6e47d42cec13bdf53a67b21257bddf",
       "enc": "hex"
+    },
+    "example": {
+      "title": "GCM with a 16-byte input: the tag follows the ciphertext",
+      "note": "The output is 32 bytes: 16 of ciphertext, then the 16-byte authentication tag. The all-zero IV is for the test only; GCM needs a unique IV for each message."
     }
   },
   {
@@ -1144,6 +1156,10 @@
     "expect": {
       "value": "d9313225f88406e5a55909c5aff5269a86a7a9531534f7da2e4c303d8a318a721c3c0c95956809532fcf0e2449a6b525b16aedf5aa0de657ba637b391aafd255",
       "enc": "hex"
+    },
+    "example": {
+      "title": "GCM decryption checks the tag and returns the plaintext",
+      "note": "The input is 64 bytes of ciphertext followed by the 16-byte tag, and the output is the 64-byte plaintext. A changed tag gives E_COERCE, not garbage."
     }
   },
   {
@@ -1172,6 +1188,10 @@
     "expect": {
       "value": "42831ec2217774244b7221b784d0d49ce3aa212f2c02a4e035c17e2329aca12e21d514b25466931c7d8f6a5aac84aa051ba30b396a0aac973d58e0915bc94fbc3221a5db94fae95ae7121a47",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Additional data is authenticated but not written out",
+      "note": "The aad is covered by the tag and not encrypted, so the output is the 60-byte ciphertext and the 16-byte tag. Decryption must be given the same aad."
     }
   },
   {

@@ -18,6 +18,10 @@
     "expect": {
       "value": "41ea3a0a94baa940",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The all-zero known answer in ECB",
+      "note": "The key and the block are all zero bytes. The output is the known answer that other test suites cite for TEA."
     }
   },
   {
@@ -39,6 +43,10 @@
     "expect": {
       "value": "0000000000000000",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decrypt the all-zero known answer back to zeros",
+      "note": "The input is the known-answer block and the output is the all-zero block that the first example started from."
     }
   },
   {
@@ -63,6 +71,10 @@
     "expect": {
       "value": "193ce7e8cfa4e73aa546a7b94f63a33c6eb06bb83c6aa513",
       "enc": "hex"
+    },
+    "example": {
+      "title": "CBC with PKCS#7 padding on a 21-byte input",
+      "note": "The input is padded to whole 8-byte blocks, and the IV is the eight bytes 'defghijk'."
     }
   },
   {
@@ -87,6 +99,10 @@
     "expect": {
       "value": "0726456483a2c1e0ff1e3d5c7b9ab9d8f716355473",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decrypt CBC and remove the PKCS#7 padding",
+      "note": "The output is the 21-byte input of the CBC example, with the padding taken off."
     }
   },
   {

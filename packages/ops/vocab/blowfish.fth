@@ -20,17 +20,24 @@ USING: blockmode ;
   mode "CTR32" blockmode:ctr-as iv 8 padding "pkcs7" = [ key _encrypt-block ] [ key _decrypt-block ] blockmode:decrypt ;
 
 META: encrypt
+  use-when "You need Blowfish output to match an older system that uses a 4 to 56 byte key. Its 64-bit block is small, so use AES for new data." ;
   param key "The Blowfish key: 4 to 56 bytes." ;
   param iv "The initialisation vector: 8 bytes for CBC, CFB, OFB and CTR. Ignored for ECB." ;
   param mode "The mode of operation: CBC, CFB (CFB-64), OFB, CTR or ECB (no IV; leaks patterns)." ;
   param padding "PKCS#7 padding, or none (the input must then be whole 8-byte blocks). Applies to CBC and ECB only." ;
   see-also blowfish:decrypt hex:encode ;
+  inverse decrypt ;
+  link "https://en.wikipedia.org/wiki/Blowfish_(cipher)" "Blowfish on Wikipedia" ;
+  link "https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation" "Block cipher mode of operation on Wikipedia" ;
 ;
 
 META: decrypt
+  use-when "You have Blowfish ciphertext from an older system, with its key, IV and mode, and you want the plaintext. Use it to read existing data, not for new data." ;
   param key "The Blowfish key: 4 to 56 bytes." ;
   param iv "The initialisation vector used to encrypt." ;
   param mode "The mode of operation used to encrypt." ;
   param padding "PKCS#7 padding, or none. Applies to CBC and ECB only." ;
   see-also blowfish:encrypt hex:decode ;
+  inverse encrypt ;
+  link "https://en.wikipedia.org/wiki/Blowfish_(cipher)" "Blowfish on Wikipedia" ;
 ;

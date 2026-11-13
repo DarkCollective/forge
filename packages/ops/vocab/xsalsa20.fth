@@ -10,8 +10,10 @@ IN: xsalsa20
   key nonce counter _crypt ;
 
 META: encrypt
+  use-when "You have a 32-byte key and a 24-byte nonce from a NaCl or libsodium style system (secretbox), and you need the XSalsa20 key stream applied to data." ;
   param key "The XSalsa20 key: 32 bytes (256 bits)." ;
   param nonce "The 24-byte nonce, long enough to pick at random. Never reuse a nonce under one key." ;
   param counter "The 64-bit block counter of the first block, from 0." ;
   see-also hex:encode ;
+  link "https://en.wikipedia.org/wiki/Salsa20" "Salsa20 on Wikipedia" ;
 ;

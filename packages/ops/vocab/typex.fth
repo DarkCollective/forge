@@ -194,6 +194,7 @@ IN: typex
   [ [ _byte ] map ] if ;
 
 META: encrypt
+  use-when "You want to encipher or decipher a message the way a Typex-style five-rotor machine does, with your own wirings. The default wirings are examples, not history." ;
   param rotor-1 "Wiring of the leftmost rotor, the slow moving one: 26 letters, a permutation of A to Z. The default is an example, not historical." ;
   param rotor-2 "Wiring of the middle moving rotor, a permutation of A to Z. The default is an example, not historical." ;
   param rotor-3 "Wiring of the fast moving rotor, a permutation of A to Z. The default is an example, not historical." ;
@@ -208,4 +209,5 @@ META: encrypt
   param plugboard "Entry wiring, as CyberChef takes it: 26 letters, a permutation; a letter c enters as minus its value, mod 26. Empty: the identity wiring, which still swaps B and Z, C and Y and so on." ;
   param others "keep: bytes that are not letters pass through unchanged. remove: they are dropped." ;
   alias decrypt ;
+  link "https://en.wikipedia.org/wiki/Typex" "Typex on Wikipedia" ;
 ;

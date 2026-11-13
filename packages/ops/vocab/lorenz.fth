@@ -281,6 +281,7 @@ IN: lorenz
   input output shifts false _lorenz ;
 
 META: encrypt
+  use-when "You have Lorenz (Tunny) plaintext and the wheel settings, and you want the ITA2 output that the SZ40 or SZ42 machine made. It is a historical study cipher." ;
   param model "SZ40: no limitation. SZ42a: limitation chi2 one back. SZ42b: chi2 and psi1' one back." ;
   param p5 "Add the P5 attachment (plain text impulse 5, two back) to the limitation: SZ42a or SZ42b only." ;
   param pattern "Published wheel patterns KH, ZMUG or BREAM, or custom (all twelve patterns below are then required)." ;
@@ -313,6 +314,8 @@ META: encrypt
   param mu61-start "Cell of mu61 at the first character, 1 to 61." ;
   alias tunny ;
   see-also lorenz:decrypt ;
+  inverse decrypt ;
+  link "https://en.wikipedia.org/wiki/Lorenz_cipher" "Lorenz cipher on Wikipedia" ;
 ;
 
 : decrypt ( data:str model:choice{SZ40|SZ42a|SZ42b}=SZ42a p5:bool=false pattern:choice{KH|ZMUG|BREAM|custom}=KH input:choice{ita2|text}=ita2 output:choice{text|ita2}=text shifts:choice{auto|double}=auto chi1:str[0|41,/[x.]*/]="" chi2:str[0|31,/[x.]*/]="" chi3:str[0|29,/[x.]*/]="" chi4:str[0|26,/[x.]*/]="" chi5:str[0|23,/[x.]*/]="" psi1:str[0|43,/[x.]*/]="" psi2:str[0|47,/[x.]*/]="" psi3:str[0|51,/[x.]*/]="" psi4:str[0|53,/[x.]*/]="" psi5:str[0|59,/[x.]*/]="" mu37:str[0|37,/[x.]*/]="" mu61:str[0|61,/[x.]*/]="" chi1-start:int[1..41]=1 chi2-start:int[1..31]=1 chi3-start:int[1..29]=1 chi4-start:int[1..26]=1 chi5-start:int[1..23]=1 psi1-start:int[1..43]=1 psi2-start:int[1..47]=1 psi3-start:int[1..51]=1 psi4-start:int[1..53]=1 psi5-start:int[1..59]=1 mu37-start:int[1..37]=1 mu61-start:int[1..61]=1 -- str )
@@ -324,6 +327,7 @@ META: encrypt
   input output shifts true _lorenz ;
 
 META: decrypt
+  use-when "You have a Lorenz intercept in ITA2, with its wheel settings and model, and you want the plain text back. It is a historical study cipher for puzzles." ;
   param model "SZ40: no limitation. SZ42a: limitation chi2 one back. SZ42b: chi2 and psi1' one back." ;
   param p5 "The message was enciphered with the P5 attachment: SZ42a or SZ42b only." ;
   param pattern "Published wheel patterns KH, ZMUG or BREAM, or custom (all twelve patterns below are then required)." ;
@@ -356,4 +360,6 @@ META: decrypt
   param mu61-start "Cell of mu61 at the first character, 1 to 61." ;
   alias untunny ;
   see-also lorenz:encrypt ;
+  inverse encrypt ;
+  link "https://en.wikipedia.org/wiki/Lorenz_cipher" "Lorenz cipher on Wikipedia" ;
 ;

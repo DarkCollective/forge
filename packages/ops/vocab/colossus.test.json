@@ -97,6 +97,10 @@
     "expect": {
       "value": "colossus: z1+x1+z2+x2 = dot, chi1 x chi2, 1271 settings, 400 positions compared\nrank    chi1    chi2    count     bias   sigma\n   1      28       6      233       66     3.3\n   2      40      10      233       66     3.3\n   3      21      30      231       62     3.1",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Undifferenced terms instead of the 1+2 break-in",
+      "note": "The condition z1+x1+z2+x2 is not the differenced break-in. The first line of the report names the condition used."
     }
   },
   {
@@ -117,6 +121,10 @@
     "expect": {
       "value": "colossus: dz1+dx1+dz2+dx2+dz3+dx3 = dot, chi2 x chi3, 899 settings, 399 positions compared\nrank    chi2    chi3    count     bias   sigma\n   1       5      10      235       71     3.6\n   2      17      21      235       71     3.6\n   3      19      11      230       61     3.1",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A known wheel in the sum, with its start position given",
+      "note": "Chi 1 is not searched: its start position 31 is given. Chi 2 and chi 3 are searched."
     }
   },
   {
@@ -141,6 +149,10 @@
     "expect": {
       "value": "colossus: dz4+dz5+dx4+dx5 = dot, chi4 x chi5, 598 settings, 149 positions compared\nrank    chi4    chi5    count     bias   sigma\n   1       4       8       91       33     2.7\n   2       9       2       91       33     2.7",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Custom chi patterns, with lower-case ciphertext and white space",
+      "note": "Custom patterns replace the published ones for the chi wheels, and lower-case letters and white space in the ciphertext are accepted. Wheels 4 and 5 are searched."
     }
   },
   {

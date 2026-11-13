@@ -22,6 +22,10 @@
     "expect": {
       "value": "a826fd8ce53b855fcce21c8112256fe668d5c05dd9b6b900",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The NIST TDEA example: three different keys in ECB",
+      "note": "Three different 8-byte keys, K1, K2 and K3, as in the NIST example. The 8-byte block is encrypted under them in turn."
     }
   },
   {
@@ -47,6 +51,10 @@
     "expect": {
       "value": "54686520717566636b2062726f776e20666f78206a756d70",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decrypt the NIST TDEA example back to its text",
+      "note": "The output is the plain text that the three-key encrypt example started from."
     }
   },
   {
@@ -122,6 +130,10 @@
     "expect": {
       "value": "b7835779ee26acb75d2731a8d9b401623dd3fc69a08cc6d9",
       "enc": "hex"
+    },
+    "example": {
+      "title": "A 16-byte key: K3 is taken to be K1",
+      "note": "The 16-byte key holds K1 and K2, and K3 is K1: the two-key form. The output equals the three-key result with K3 set to K1."
     }
   },
   {
@@ -147,6 +159,10 @@
     "expect": {
       "value": "4e6f77206973207468652074696d6520666f7220616c6c20",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Decrypt the two-key example to 'Now is the time for all '",
+      "note": "The 16-byte key holds K1 and K2, with K3 equal to K1. The output is the text 'Now is the time for all '."
     }
   },
   {

@@ -723,46 +723,67 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ecdsa ;
   format "JWK" = [ #[ 0a ] bjoin ] [ #[ ] bjoin ] if ;
 
 META: generate-key-pair
+  use-when "You need a fresh RSA key pair in PEM, DER or JWK form for a test or a new key. 2048 bits is the usual choice." ;
   param size "The key size in bits: 1024, 2048 or 4096." ;
   param format "PEM: the public key (PUBLIC KEY) then the private key (RSA PRIVATE KEY); JWK: one line of JSON each; DER: the private key (PKCS#1) as bytes." ;
   see-also rsa:public-key rsa:sign rsa:encrypt pem:to-hex prime:generate ;
+  link "https://www.rfc-editor.org/rfc/rfc8017" "RFC 8017: PKCS #1 RSA cryptography" ;
+  link "https://en.wikipedia.org/wiki/RSA_cryptosystem" "RSA cryptosystem on Wikipedia" ;
 ;
 
 META: sign
+  use-when "You have an RSA private key in PEM, plain or encrypted, and a message, and you need a PKCS #1 v1.5 or PSS signature that a verifier can check." ;
   param key "The PEM private key: RSA PRIVATE KEY, PRIVATE KEY, ENCRYPTED PRIVATE KEY or an old-style encrypted PEM." ;
   param password "The password of an encrypted key (empty when the key is not encrypted)." ;
   param digest "The message digest: SHA-1, MD5, SHA-256, SHA-384 or SHA-512." ;
   param scheme "RSASSA-PKCS1-V1_5 (deterministic, CyberChef's) or RSASSA-PSS (randomised)." ;
   param salt-length "RSASSA-PSS only: the salt size in bytes; -1 is the digest length." ;
   see-also rsa:verify rsa:decrypt rsa:generate-key-pair ;
+  link "https://www.rfc-editor.org/rfc/rfc8017" "RFC 8017: PKCS #1 RSA cryptography" ;
+  link "https://en.wikipedia.org/wiki/RSA_cryptosystem" "RSA cryptosystem on Wikipedia" ;
 ;
 
 META: verify
+  use-when "You have an RSA public key in PEM, a message and a signature, and you want to know whether the signature was made with the matching private key." ;
   param key "The PEM public key: PUBLIC KEY or RSA PUBLIC KEY." ;
   param message "The message that was signed (UTF-8 text unless the encoding says otherwise)." ;
   param digest "The message digest: SHA-1, MD5, SHA-256, SHA-384 or SHA-512." ;
   param scheme "RSASSA-PKCS1-V1_5 or RSASSA-PSS." ;
   param salt-length "RSASSA-PSS only: the salt size the signature must have; -1 accepts any." ;
   see-also rsa:sign rsa:encrypt ;
+  inverse sign ;
+  link "https://www.rfc-editor.org/rfc/rfc8017" "RFC 8017: PKCS #1 RSA cryptography" ;
+  link "https://en.wikipedia.org/wiki/RSA_cryptosystem" "RSA cryptosystem on Wikipedia" ;
 ;
 
 META: encrypt
+  use-when "You have an RSA public key in PEM and a short message, for the key's owner to decrypt. Use RSA-OAEP unless a protocol names another scheme." ;
   param key "The PEM public key: PUBLIC KEY or RSA PUBLIC KEY." ;
   param scheme "RSA-OAEP, RSAES-PKCS1-V1_5 or RAW (no padding)." ;
   param digest "RSA-OAEP only: the digest of the label hash and of MGF1." ;
   see-also rsa:decrypt rsa:verify ;
+  inverse decrypt ;
+  link "https://www.rfc-editor.org/rfc/rfc8017" "RFC 8017: PKCS #1 RSA cryptography" ;
+  link "https://en.wikipedia.org/wiki/RSA_cryptosystem" "RSA cryptosystem on Wikipedia" ;
 ;
 
 META: decrypt
+  use-when "You have RSA ciphertext and the PEM private key (or its password), from a protocol that encrypted to your key, and you want the plaintext." ;
   param key "The PEM private key: RSA PRIVATE KEY, PRIVATE KEY, ENCRYPTED PRIVATE KEY or an old-style encrypted PEM." ;
   param password "The password of an encrypted key (empty when the key is not encrypted)." ;
   param scheme "RSA-OAEP, RSAES-PKCS1-V1_5 or RAW (no padding)." ;
   param digest "RSA-OAEP only: the digest of the label hash and of MGF1." ;
   see-also rsa:encrypt rsa:sign ;
+  inverse encrypt ;
+  link "https://www.rfc-editor.org/rfc/rfc8017" "RFC 8017: PKCS #1 RSA cryptography" ;
+  link "https://en.wikipedia.org/wiki/RSA_cryptosystem" "RSA cryptosystem on Wikipedia" ;
 ;
 
 META: public-key
+  use-when "You have one or more RSA or EC private keys in PEM and want their public keys as PEM, DER or JWK, to share them or to check signatures." ;
   param format "PEM (PUBLIC KEY blocks), DER (the bytes) or JWK (one line of JSON per key)." ;
   param password "The password of an encrypted key (empty when the key is not encrypted)." ;
   see-also rsa:generate-key-pair ecdsa:public-key pem:to-hex asn1-dump:parse ;
+  link "https://www.rfc-editor.org/rfc/rfc7517" "RFC 7517: JSON Web Key" ;
+  link "https://www.rfc-editor.org/rfc/rfc8017" "RFC 8017: PKCS #1 RSA cryptography" ;
 ;

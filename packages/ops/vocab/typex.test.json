@@ -11,6 +11,10 @@
     "expect": {
       "value": "MYVMNTIWEJ",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The example rotors with all defaults: HELLOWORLD",
+      "note": "The default wirings are examples made for Forge, not the real Typex wirings, so the output is not a historical value."
     }
   },
   {
@@ -139,6 +143,10 @@
     "expect": {
       "value": "WFOIKPZWVQB",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Rotors 2 and 4 fitted back to front",
+      "note": "The reversed parameter fits rotors 2 and 4 back to front. The input BACKTOFRONT gives WFOIKPZWVQB."
     }
   },
   {
