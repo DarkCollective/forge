@@ -24,3 +24,10 @@ export const pageInputs: Record<string, string> = {
   accessibility: "./pages/accessibility/index.html",
   notFound: "./pages/404/index.html",
 };
+
+// The template of the generated operation reference pages (UI.md section 8.2). It is built like a page,
+// so its stylesheets and script get hashed names, but it is not one: vite.reference.ts fills it in for
+// each operation under dist/ops/ and removes it. Kept apart from pageInputs because it is not moved.
+export const referenceTemplateInput: Record<string, string> = {
+  opsTemplate: "./pages/ops/template/index.html",
+};

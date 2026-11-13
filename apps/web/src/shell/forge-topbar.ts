@@ -32,6 +32,7 @@ const THEME_LABELS: readonly { id: ThemePreference; label: string }[] = [
 ];
 
 const SITE_LINKS: readonly MenuItem[] = [
+  { id: "operations", label: "Operations", href: "/ops/" },
   { id: "about", label: "About Forge", href: "/about/" },
   { id: "privacy", label: "Privacy", href: "/privacy/" },
   { id: "terms", label: "Terms", href: "/terms/" },

@@ -48,6 +48,7 @@ import {
 } from "./help-view.js";
 import type { ValueView } from "./help-view.js";
 import { planTryIt } from "./try-it.js";
+import { opPath } from "../pages/slug.js";
 
 @customElement("forge-op-help")
 export class ForgeOpHelp extends ForgeDialog {
@@ -307,6 +308,10 @@ export class ForgeOpHelp extends ForgeDialog {
       }
       ${h.aliases === "" ? nothing : html`<p><span class="label">Aliases:</span> ${h.aliases}</p>`}
       ${h.seeAlso === "" ? nothing : html`<p><span class="label">See also:</span> ${h.seeAlso}</p>`}
+      <p>
+        <a href=${opPath(op)} target="_blank" rel="noopener">Reference page</a>
+        <span class="muted">(opens in a new tab)</span>
+      </p>
     `;
   }
 

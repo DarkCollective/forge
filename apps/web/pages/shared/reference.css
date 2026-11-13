@@ -1,0 +1,187 @@
+/*
+ * Copyright 2026 Darkcollective, LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/*
+ * Styles of the generated operation reference pages (UI.md section 8.2), added to pages.css. Colours,
+ * sizes and fonts come from tokens.css only, so light, dark, contrast and forced colours apply.
+ * No overflow containers: long values wrap, so nothing needs horizontal scrolling at 320 px.
+ */
+
+.page.ref {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-4) var(--space-6);
+}
+
+.ref h1 code {
+  padding: 0;
+  background: none;
+  font-size: inherit;
+  overflow-wrap: anywhere;
+}
+
+.ref .crumbs {
+  margin: 0 0 var(--space-2);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.ref .use-when {
+  padding: var(--space-2) var(--space-3);
+  border-inline-start: 0.25rem solid var(--accent);
+  border-radius: var(--radius-s);
+  background: var(--accent-soft);
+  font-size: var(--text-lg);
+}
+
+.ref p,
+.ref li,
+.ref dd {
+  overflow-wrap: anywhere;
+}
+
+.ref ul.plain {
+  list-style: none;
+  padding-left: 0;
+}
+
+.ref ul.options {
+  margin-top: var(--space-1);
+}
+
+.ref .value-meta {
+  margin: var(--space-1) 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.ref .type {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-normal);
+}
+
+.ref pre.value {
+  margin: var(--space-1) 0;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-s);
+  background: var(--surface-2);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.ref .error-out {
+  font-weight: var(--weight-bold);
+}
+
+.ref dl.params dt {
+  margin-top: var(--space-4);
+  font-weight: var(--weight-bold);
+}
+
+.ref dl.params dd {
+  margin: var(--space-1) 0 0 var(--space-4);
+}
+
+.ref .example {
+  margin: var(--space-4) 0;
+  padding: var(--space-3) var(--space-4);
+  border: var(--border-width) solid var(--border);
+  border-radius: var(--radius-m);
+  background: var(--surface);
+}
+
+.ref .example h3 {
+  margin-top: 0;
+}
+
+.ref .example dl {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-1) 0;
+  margin: var(--space-2) 0;
+}
+
+.ref .example dt {
+  margin-top: var(--space-2);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.ref .example dd {
+  margin: 0;
+  min-width: 0;
+}
+
+@media (min-width: 40rem) {
+  .ref .example dl {
+    grid-template-columns: 7rem minmax(0, 1fr);
+    gap: var(--space-2) var(--space-3);
+  }
+
+  .ref .example dt {
+    margin-top: 0;
+    padding-top: var(--space-1);
+  }
+}
+
+.ref .ext {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+/* The index: a jump list of categories, then one list per category */
+
+.ref .categories ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+}
+
+.ref .categories a {
+  display: inline-block;
+  padding-block: var(--space-1);
+}
+
+.ref ul.op-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.ref ul.op-list li {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+  padding: var(--space-2) 0;
+  border-bottom: var(--border-width) solid var(--border);
+}
+
+.ref .op-list__text {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.ref .op-list a {
+  align-self: flex-start;
+  padding-block: var(--space-1);
+}
+
+.ref h2 {
+  scroll-margin-top: var(--space-3);
+}

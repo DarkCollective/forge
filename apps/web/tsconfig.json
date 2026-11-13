@@ -13,6 +13,7 @@
     "playwright.config.ts",
     "vite.config.ts",
     "vite.pages.ts",
+    "vite.reference.ts",
     "vitest.config.ts"
   ]
 }

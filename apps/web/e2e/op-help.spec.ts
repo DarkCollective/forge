@@ -178,7 +178,9 @@ test("an operation with no help data shows the old help only", async ({ page }) 
   await expect(dialog(page).getByRole("heading", { name: "Parameters" })).toBeVisible();
   await expect(dialog(page).getByRole("heading", { name: "Use this when" })).toHaveCount(0);
   await expect(dialog(page).getByRole("heading", { name: "Examples" })).toHaveCount(0);
-  await expect(dialog(page).getByRole("link")).toHaveCount(0);
+  // No outside links; the one link is the op's own reference page (WP 6.17).
+  await expect(dialog(page).getByRole("link")).toHaveCount(1);
+  await expect(dialog(page).getByRole("link", { name: /Reference page/ })).toHaveCount(1);
   await expect(dialog(page).getByRole("alert")).toHaveCount(0);
 });
 
