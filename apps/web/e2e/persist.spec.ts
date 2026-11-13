@@ -41,6 +41,36 @@ test("save, reload, open", async ({ page }) => {
   await expectOutput(page, "4869");
 });
 
+test("a saved recipe with CR LF input opens with CR LF and an edit keeps the line breaks (WP 6.19)", async ({
+  page,
+}) => {
+  await openApp(page);
+  await addOpByKeyboard(page, "hex encode");
+  const eol = page.locator("forge-input").getByLabel("Line ending");
+  await eol.selectOption("crlf");
+  await page.keyboard.press("Alt+3");
+  await page.keyboard.type("a\nb\n");
+  await expectOutput(page, "610d0a620d0a");
+  await page.getByRole("button", { name: "Save", exact: true }).click();
+  await page.locator("#save-name").fill("e2e crlf recipe");
+  await page.locator("#save-input").check();
+  await page.getByRole("button", { name: "Save", exact: true }).last().click();
+  await expect(page.locator("#save-name")).toHaveCount(0);
+
+  await page.goto("/about/");
+  await page.goto("/");
+  await expect(page.getByText(/\d+ operations/)).toBeVisible();
+  await page.getByRole("button", { name: "Open", exact: true }).click();
+  await page.getByRole("button", { name: "Open e2e crlf recipe" }).click();
+  await expect(cards(page)).toHaveCount(1);
+  await expectOutput(page, "610d0a620d0a");
+  await expect(eol).toHaveValue("crlf");
+  await input(page).click();
+  await page.keyboard.press("Control+End");
+  await page.keyboard.type("c");
+  await expectOutput(page, "610d0a620d0a63");
+});
+
 test("promote a recipe to a user word, find it under User words and bake the same", async ({
   page,
 }) => {

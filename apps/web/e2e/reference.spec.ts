@@ -290,7 +290,8 @@ test("Open in Forge on a CR LF example bakes the same bytes as Try it (WP 6.18)"
     .click();
   await expect(page.getByText(/\d+ operations/)).toBeVisible();
   // The link carries the bytes exactly, so the result is the example's expected one. It carries no line
-  // ending setting (see build.test.ts), so this test deliberately does not assert the tab's setting.
+  // ending setting (see build.test.ts); the app infers it from the bytes when the link is opened.
+  await expect(page.locator("forge-input").getByLabel("Line ending")).toHaveValue("crlf");
   await expectOutput(
     page,
     JSON.stringify(

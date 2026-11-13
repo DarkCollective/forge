@@ -68,6 +68,32 @@ export function detectEol(text: string): EolName {
   return "lf";
 }
 
+/**
+ * The line ending a tab should show `bytes` with: the most common one (a tie goes to LF) for the text
+ * encodings, LF when there is none. Bytes that are not well-formed UTF-8 in a utf8 tab, and the hex and
+ * base64 views, get LF (the editor shows no lines there). CR (13) and LF (10) are the same bytes in UTF-8
+ * and Latin-1, so the count runs on the bytes.
+ */
+export function inferEol(bytes: Uint8Array, encoding: EncodingName): EolName {
+  if (encoding !== "utf8" && encoding !== "latin1") return "lf";
+  if (encoding === "utf8" && decodeUtf8Strict(bytes) === null) return "lf";
+  let lf = 0;
+  let crlf = 0;
+  let cr = 0;
+  for (let i = 0; i < bytes.length; i++) {
+    const c = bytes[i];
+    if (c === 13) {
+      if (bytes[i + 1] === 10) {
+        crlf++;
+        i++;
+      } else cr++;
+    } else if (c === 10) lf++;
+  }
+  if (crlf > lf && crlf >= cr) return "crlf";
+  if (cr > lf && cr > crlf) return "cr";
+  return "lf";
+}
+
 // ---- strict UTF-8 --------------------------------------------------------------------------------
 
 /** Strict UTF-8 decoding (a BOM is kept as U+FEFF, not dropped). Null when the bytes are not well formed. */

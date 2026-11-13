@@ -98,6 +98,68 @@ describe("recipe actions", () => {
     expect(s.inputs[0]?.encoding).toBe("hex");
   });
 
+  it("loadDocument sets the tab's line ending from the input bytes (WP 6.19)", () => {
+    const { store, actions } = setup();
+    const bytes = (t: string): Uint8Array => new TextEncoder().encode(t);
+    const doc = { forge: 1, steps: [] } as never;
+    const tab = (): { eol: string; encoding: string; bytes: Uint8Array } => store.get().inputs[0]!;
+    actions.loadDocument({ recipe: doc, input: bytes("a\r\nb\r\nc") });
+    expect(tab().eol).toBe("crlf");
+    actions.loadDocument({ recipe: doc, input: bytes("a\rb\rc") });
+    expect(tab().eol).toBe("cr");
+    // Mixed: most common wins, a tie goes to LF.
+    actions.loadDocument({ recipe: doc, input: bytes("a\r\nb\r\nc\n") });
+    expect(tab().eol).toBe("crlf");
+    actions.loadDocument({ recipe: doc, input: bytes("a\r\nb\n") });
+    expect(tab().eol).toBe("lf");
+    // No breaks and empty: LF (also resets a previous CR LF).
+    actions.loadDocument({ recipe: doc, input: bytes("a\r\nb\r\n") });
+    actions.loadDocument({ recipe: doc, input: bytes("plain") });
+    expect(tab().eol).toBe("lf");
+    actions.loadDocument({ recipe: doc, input: bytes("a\r\nb\r\n") });
+    actions.loadDocument({ recipe: doc, input: new Uint8Array() });
+    expect(tab().eol).toBe("lf");
+    // Not valid UTF-8 in a utf8 tab: LF. Valid in latin1: counted. Hex view: LF.
+    const bad = new Uint8Array([0xff, 13, 10, 13, 10]);
+    actions.loadDocument({ recipe: doc, input: bad });
+    expect(tab().eol).toBe("lf");
+    actions.loadDocument({ recipe: doc, input: bad, inputEncoding: "latin1" });
+    expect(tab().eol).toBe("crlf");
+    actions.loadDocument({ recipe: doc, input: bytes("a\r\nb\r\n"), inputEncoding: "hex" });
+    expect(tab().eol).toBe("lf");
+    expect(tab().encoding).toBe("hex");
+  });
+
+  it("loadDocument without an input leaves the tab's bytes, encoding and line ending alone (WP 6.19)", () => {
+    const { store, actions } = setup();
+    const id = store.get().activeInputId;
+    actions.setInputBytes(id, new TextEncoder().encode("a\r\nb"));
+    actions.setInputEol(id, "cr");
+    actions.setInputEncoding(id, "latin1");
+    actions.loadDocument({ recipe: { forge: 1, steps: [] } as never });
+    const t = store.get().inputs[0]!;
+    expect(t.eol).toBe("cr");
+    expect(t.encoding).toBe("latin1");
+    expect(Array.from(t.bytes)).toEqual(Array.from(new TextEncoder().encode("a\r\nb")));
+  });
+
+  it("loadDocument infers from the given encoding, or the tab's when none is given (WP 6.19)", () => {
+    const { store, actions } = setup();
+    const id = store.get().activeInputId;
+    actions.setInputEncoding(id, "hex");
+    actions.loadDocument({
+      recipe: { forge: 1, steps: [] } as never,
+      input: new TextEncoder().encode("a\r\nb\r\n"),
+    });
+    expect(store.get().inputs[0]!.eol).toBe("lf");
+    actions.setInputEncoding(id, "utf8");
+    actions.loadDocument({
+      recipe: { forge: 1, steps: [] } as never,
+      input: new TextEncoder().encode("a\r\nb\r\n"),
+    });
+    expect(store.get().inputs[0]!.eol).toBe("crlf");
+  });
+
   it("marks a finished bake stale when the recipe or input changes", () => {
     const { store, actions } = setup();
     actions.setBake({ status: "done", result: { ok: true } as never });

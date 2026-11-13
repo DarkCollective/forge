@@ -25,6 +25,7 @@ import {
   bytesToText,
   countUtf8Chars,
   detectEol,
+  inferEol,
   formatBytes,
   hexDumpRows,
   hexDumpText,
@@ -256,5 +257,30 @@ describe("hex dump", () => {
   it("makes a text dump", () => {
     expect(hexDumpText(Uint8Array.of(0x41, 0x42))).toMatch(/^00000000 {2}41 42 +\|AB\|$/);
     expect(bytesToHex(Uint8Array.of(1, 255), ":")).toBe("01:ff");
+  });
+});
+
+describe("inferEol (WP 6.19)", () => {
+  const b = (t: string): Uint8Array => new TextEncoder().encode(t);
+  it("uses the most common ending, a tie goes to LF", () => {
+    expect(inferEol(b("a\r\nb\r\nc"), "utf8")).toBe("crlf");
+    expect(inferEol(b("a\rb\rc"), "utf8")).toBe("cr");
+    expect(inferEol(b("a\nb\r\nc"), "utf8")).toBe("lf");
+    expect(inferEol(b("a\r\nb\nc\n"), "latin1")).toBe("lf");
+    expect(inferEol(b("a\r\nb\r\nc\n"), "latin1")).toBe("crlf");
+    expect(inferEol(b("a\rb\r\nc\n"), "utf8")).toBe("lf");
+  });
+  it("agrees with detectEol on text", () => {
+    for (const t of ["", "x", "a\r", "a\r\n\r\r", "\r\n\n\r\n", "\n\n\r"]) {
+      expect(inferEol(b(t), "utf8")).toBe(detectEol(t));
+    }
+  });
+  it("is LF for empty input, no breaks, invalid UTF-8 and the hex and base64 views", () => {
+    expect(inferEol(new Uint8Array(), "utf8")).toBe("lf");
+    expect(inferEol(b("plain"), "utf8")).toBe("lf");
+    expect(inferEol(new Uint8Array([0xff, 13, 10, 13, 10]), "utf8")).toBe("lf");
+    expect(inferEol(new Uint8Array([0xff, 13, 10, 13, 10]), "latin1")).toBe("crlf");
+    expect(inferEol(b("a\r\nb\r\n"), "hex")).toBe("lf");
+    expect(inferEol(b("a\r\nb\r\n"), "base64")).toBe("lf");
   });
 });

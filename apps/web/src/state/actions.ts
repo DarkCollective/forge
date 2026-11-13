@@ -19,6 +19,7 @@
 import type { Catalogue } from "@forge/ops";
 import { validateRecipe } from "@forge/recipe";
 import type { EncodingName } from "@forge/lang";
+import { inferEol } from "../io/codec.js";
 import type { Recipe, Step } from "@forge/recipe";
 import { DEFAULT_LAYOUT, clamp, loadLayout, saveLayout } from "./layout.js";
 import type { LayoutState } from "./layout.js";
@@ -231,7 +232,8 @@ export function createActions(store: AppStore, persist = true) {
     },
     /**
      * Replace the whole document (a share link, a saved recipe, "new"). Resets history and the dirty
-     * flag, and optionally the input of the active tab.
+     * flag, and optionally the input of the active tab. A given input also sets the tab's line ending from
+     * its bytes (`inferEol`, the rule a loaded file gets); without an input the tab is left alone.
      */
     loadDocument(doc: {
       recipe: Recipe;
@@ -240,6 +242,8 @@ export function createActions(store: AppStore, persist = true) {
       savedId?: string | null;
     }): void {
       const s = get();
+      const encoding =
+        doc.inputEncoding ?? s.inputs.find((t) => t.id === s.activeInputId)?.encoding ?? "utf8";
       const inputs =
         doc.input === undefined
           ? s.inputs
@@ -248,7 +252,8 @@ export function createActions(store: AppStore, persist = true) {
                 ? {
                     ...t,
                     bytes: doc.input as Uint8Array,
-                    encoding: doc.inputEncoding ?? t.encoding,
+                    encoding,
+                    eol: inferEol(doc.input as Uint8Array, encoding),
                   }
                 : t,
             );
