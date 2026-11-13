@@ -940,7 +940,7 @@ class Compiler {
     if (memo) {
       const problem = memoHeaderProblem(effect);
       if (problem !== null) {
-        this.fail("E_HEADER", `${problem}: ( ${effect.text} )`, header.pos, qname, {
+        this.fail("E_HEADER", `${problem}: ${effect.text}`, header.pos, qname, {
           expected: "( -- T )",
         });
       }

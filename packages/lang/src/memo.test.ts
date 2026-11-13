@@ -69,6 +69,12 @@ describe("MEMO: headers and purity", () => {
     expect(rt.lookup("user:_p").kind).toBe("fl");
   });
 
+  test("the header error shows the effect once, with a single pair of parentheses", () => {
+    const e = loadFails("MEMO: f ( int -- int ) 1 ;");
+    expect(e.code).toBe("E_HEADER");
+    expect(e.message).toBe("a MEMO: word takes no input: ( int -- int )");
+  });
+
   test("effects, variables, session words, output are E_FORBIDDEN with detail.effect", () => {
     const cases: [string, string][] = [
       ["fx:rand", "+random"],
@@ -225,8 +231,13 @@ describe("MEMO: caching", () => {
     expect(ticks - before).toBe(2); // m2 and m3 rebuilt, m1 served
     const w = await rt.warm();
     expect(w.built).toEqual(["user:m1"]);
-    expect(w.failed.map((f) => f.qname)).toEqual(["user:huge", "user:m2", "user:m3"]);
-    expect(w.failed[0]?.error.code).toBe("E_LIMIT_TOTAL");
+    // built without error but not kept: reported as uncached, not as failed
+    expect(w.failed).toEqual([]);
+    expect(w.uncached).toEqual([
+      { qname: "user:huge", reason: "too-large" },
+      { qname: "user:m2", reason: "too-large" },
+      { qname: "user:m3", reason: "too-large" },
+    ]);
   });
 
   test("memoCacheBytes 0 caches nothing; bad values are rejected", async () => {
@@ -377,6 +388,19 @@ describe("warm()", () => {
     expect(again.failed.map((f) => f.error.code)).toEqual(["E_UNDEFINED", "E_TYPE", "E_DIV_ZERO"]);
   });
 
+  test("a value that holds a quotation is uncached with its own reason, not a failure", async () => {
+    const rt = make();
+    rt.load(
+      "MEMO: q ( -- list ) { [ 1 ] } ;\nMEMO: ok1 ( -- int ) 7 ;\nMEMO: bad ( -- int ) 1 0 div ;",
+    );
+    const w = await rt.warm();
+    expect(w.built).toEqual(["user:ok1"]);
+    expect(w.uncached).toEqual([{ qname: "user:q", reason: "contains-quot" }]);
+    expect(w.failed.map((f) => [f.qname, f.error.code])).toEqual([["user:bad", "E_DIV_ZERO"]]);
+    // the word still works, and is built again on each use
+    expect((await ok(rt, "q len")).stack).toEqual([{ tag: "int", v: 1 }]);
+  });
+
   test("memoLimits bound a build; defaults are 2M steps and 5 s", async () => {
     const rt = make({ memoLimits: { maxSteps: 300 } });
     rt.load("MEMO: slow ( -- int ) 1000 [ ] times 1 ;\nMEMO: fast ( -- int ) 1 ;");
@@ -388,6 +412,6 @@ describe("warm()", () => {
     r2.load("MEMO: mid ( -- int ) 100000 [ ] times 1 ;");
     expect((await r2.warm()).built).toEqual(["user:mid"]);
     // a runtime with no memo words warms to an empty report
-    expect(await make().warm()).toEqual({ built: [], failed: [] });
+    expect(await make().warm()).toEqual({ built: [], failed: [], uncached: [] });
   });
 });

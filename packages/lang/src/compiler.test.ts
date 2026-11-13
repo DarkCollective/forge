@@ -24,7 +24,7 @@ import {
 } from "./compiler.js";
 import { createDictionary } from "./dictionary.js";
 import { ForgeError } from "./errors.js";
-import { WORD_META_SCHEMA, computeHash, parseHeader } from "./meta.js";
+import { WORD_META_SCHEMA, computeHash, isWordName, parseHeader } from "./meta.js";
 import { read } from "./reader.js";
 import { sha256 } from "./sha256.js";
 import { DEFAULT_LIMITS } from "./types.js";
@@ -1136,6 +1136,11 @@ describe("E_SYNTAX", () => {
     ["META: with a reserved name", "META: IN:", "unit"],
     ["IN: keyword in a body", ": f ( -- ) IN: ;", "unit"],
     ["CONSTANT keyword in a body", ": f ( -- ) CONSTANT ;", "unit"],
+    ["MEMO: keyword in a body", ": f ( -- int ) MEMO: g ( -- int ) 1 ; 2 ;", "unit"],
+    ["CHOICE: keyword in a body", ": f ( -- ) CHOICE: g option a ; ;", "unit"],
+    ["MEMO: keyword in a quotation", ": f ( -- ) [ MEMO: ] ;", "unit"],
+    ["CHOICE: keyword in a list literal", ": f ( -- ) { CHOICE: } ;", "unit"],
+    ["MEMO: keyword in a memo body", "MEMO: m ( -- int ) MEMO: ;", "unit"],
     ["recurse at the console", "recurse", "console"],
     ["3 4 + CONSTANT at the console", "3 4 + CONSTANT seven", "console"],
     ["stray ; at the console", "1 ;", "console"],
@@ -1148,6 +1153,36 @@ describe("E_SYNTAX", () => {
     expect(e.code).toBe("E_SYNTAX");
     expect(e.pos).not.toBeNull();
     expect(e.stackSnapshot).toEqual([]);
+  });
+
+  test("MEMO: and CHOICE: in a body are reserved like the other defining keywords", () => {
+    const env = new Env();
+    for (const kw of [":", "IN:", "USING:", "META:", "MEMO:", "CHOICE:"]) {
+      const e = fails(env, `: f ( -- ) ${kw} ;`);
+      expect(e.code, kw).toBe("E_SYNTAX");
+      expect(e.message, kw).toBe(`unexpected '${kw}'; expected a word (not a defining keyword)`);
+      expect(e.word, kw).toBe("user:f");
+    }
+  });
+
+  test("reserving MEMO: and CHOICE: breaks nothing: no name can contain ':'", () => {
+    const env = new Env();
+    // A qualified name that merely starts with the keyword stays a qualified name.
+    expect(fails(env, ": f ( -- ) MEMO:foo ;").code).toBe("E_NO_VOCAB");
+    expect(fails(env, ": f ( -- ) CHOICE:foo ;").code).toBe("E_NO_VOCAB");
+    // They were never valid names, so the name checks give the same answer as before.
+    for (const kw of ["MEMO:", "CHOICE:"]) {
+      expect(fails(env, `: ${kw} ( -- int ) 1 ;`).code).toBe("E_NAME");
+      expect(fails(env, `: f ( int -- int ) :> ${kw} 1 ;`).code).toBe("E_NAME");
+      expect(isWordName(kw)).toBe(false);
+    }
+    // Ordinary words that begin or end like the keywords still compile.
+    expect(() =>
+      env.compile(": memo ( -- int ) 1 ; : choice ( -- int ) memo ; : MEMO ( -- int ) 2 ;"),
+    ).not.toThrow();
+    // `:>` is unchanged: a bind in a body, an error elsewhere.
+    expect(() => env.compile(": g ( int -- int ) :> x x ;")).not.toThrow();
+    expect(fails(env, ": f ( -- int ) :> ;").code).toBe("E_NAME");
   });
 
   test("positions: missing ; is reported at end of input, stray tokens at themselves", () => {

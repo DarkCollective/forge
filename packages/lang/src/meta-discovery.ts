@@ -36,6 +36,7 @@ function oneLine(text: string, what: string): string | undefined {
 export function checkUseWhen(text: string): string | undefined {
   const line = oneLine(text, "use-when");
   if (line !== undefined) return line;
+  if (/^\s*$/u.test(text)) return "use-when must not be empty or only white space";
   if (/^\s|\s$/u.test(text)) return "use-when must not start or end with a space";
   if (cpLength(text) > USE_WHEN_MAX) return `use-when is longer than ${USE_WHEN_MAX} code points`;
   return undefined;

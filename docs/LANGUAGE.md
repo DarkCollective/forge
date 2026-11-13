@@ -202,7 +202,7 @@ qname       = vocab-name , ":" , word-name ;
 - Rule 10: a token containing `:` that is not one of the keywords of rule 9 is a **qualified name** and MUST have exactly one `:`, with a `vocab-name` before it and a `word-name` after it. Anything else (`a:b:c`, `:x`, `x:`, `a b:c` is two tokens) is `E_LEX`. The `qword` token carries `vocab` and `name`.
 - **A word whose name contains `:` cannot be defined** (decision D2). This removes every ambiguity between `vocab:word`, the keywords `:`, `;`, `IN:`, `USING:`, `META:`, `CHOICE:`, `MEMO:`, `:>`, and header items `name:type`. The three keywords added in v0.2 are recognised only as whole standalone tokens: `MEMO:foo` and `CHOICE:foo` remain the qualified names `MEMO:foo` and `CHOICE:foo` (a lookup of vocabulary `MEMO` or `CHOICE`), and `:>x` is `E_LEX` (bad qualified name), as `:x` always was. Before v0.2 the three spellings `:>`, `CHOICE:` and `MEMO:` were all `E_LEX`.
 - Names starting with `_` are **private** (§5.7).
-- **Reserved words** (cannot be defined as words, constants, variables or aliases, and cannot be parameter names): `: ; IN: USING: META: VOCAB CONSTANT VARIABLE PRIMITIVE recurse true false`. Attempting to define one is `E_NAME`. The v0.2 keywords `:>`, `CHOICE:` and `MEMO:` are not in this list (it is unchanged from v0.1, so no program that used a name from it changes), but none of them is a valid word name either, so defining one is `E_NAME` as well.
+- **Reserved words** (cannot be defined as words, constants, variables or aliases, and cannot be parameter names): `: ; IN: USING: META: MEMO: CHOICE: VOCAB CONSTANT VARIABLE PRIMITIVE recurse true false`. Attempting to define one is `E_NAME`. `MEMO:` and `CHOICE:` were added to the list after v0.2 first shipped: neither contains a valid word name (a name never contains `:`), so no program that was valid changes, and the only visible effect is that either keyword inside a body is `E_SYNTAX` like `IN:` (§5.1) instead of `E_UNDEFINED`. The keyword `:>` is not in the list, because the body reader handles it before any name check: `:>` is a bind (§7.1), and as an operand of a defining form or of another `:>` it is `E_NAME` as it always was, since it is not a valid word name.
 
 ### 2.12 Token kinds
 
@@ -384,7 +384,7 @@ option-text  = word | int | string ;                                (* a bare wo
 
 (Here `word`, `qword`, `int`, … name token kinds; `vocab-name`, `word-name`, `qname` are the §2.11 productions, and a `vocab-name` / `word-name` position accepts an unqualified `word` token whose text matches.)
 
-A definition cannot nest inside another definition, quotation or list literal: a `:` there is `E_SYNTAX`. (`IN:`, `USING:` and the other reserved words are `E_SYNTAX` there too. `MEMO:` and `CHOICE:` are not in the reserved list, so inside a body they are read as word names and fail as any unknown name does, `E_UNDEFINED`.) Unbalanced `[ ]` / `{ }` or a missing `;` is `E_SYNTAX` at the offending token (or at `eof`).
+A definition cannot nest inside another definition, quotation or list literal: a `:` there is `E_SYNTAX`. (`IN:`, `USING:`, `META:`, `MEMO:`, `CHOICE:` and the other reserved words are `E_SYNTAX` there too, with the message "unexpected 'MEMO:'; expected a word (not a defining keyword)".) Unbalanced `[ ]` / `{ }` or a missing `;` is `E_SYNTAX` at the offending token (or at `eof`).
 
 ### 5.2 Colon definitions
 
@@ -551,7 +551,7 @@ META: rot
 | `param` | `<pname> <string>` | help text for that parameter, at most 200 code points; the parameter MUST exist (`E_META` otherwise); once per parameter |
 | `alias` | one or more names | additional names in the same vocabulary; each MUST be a valid unreserved word name that is not already defined in that vocabulary (`E_REDEFINED`; `E_NAME` for a bad name); an alias resolves to the **same** `WordEntry`; accumulates |
 | `see-also` | one or more names | unqualified names are qualified with the current vocabulary; they are not required to exist; accumulates |
-| `use-when` | one string | singular. One line of plain text for a "reach for this when…" list: no control character (U+0000 to U+001F, so no line break or tab), no leading or trailing white space, at most **160** code points. Plain text only: a UI MUST NOT render it as HTML or Markdown |
+| `use-when` | one string | singular. One line of plain text for a "reach for this when…" list: not empty, no control character (U+0000 to U+001F, so no line break or tab), no leading or trailing white space (so not white space alone either), at most **160** code points. An empty or white-space-only text is `E_META` with `detail.clause = "use-when"` (an empty one used to be accepted, and `help` then left the line out). Plain text only: a UI MUST NOT render it as HTML or Markdown |
 | `link` | `<url> [<label>]`, strings | repeatable, in order; at most **8** per word; a URL that occurs twice on one word (compared as written) is `E_META`. The URL is at most **300** code points and follows the grammar below; the label is optional, at most **80** code points, one line without control characters |
 | `inverse` | one name | singular; see "`inverse`" below |
 | `helper` | none | marks a public word as **not an operation**; see below |
@@ -987,7 +987,7 @@ A primitive may declare `effects: ("+async" | "+random" | "+time")[]`. A colon w
 
 `RuntimeOptions` (v0.2 additions): `memoLimits?: Partial<Limits>`, the limits of `warm()` (default `{ maxSteps: 2 000 000, maxMillis: 5 000 }`, merged over the runtime limits), and `memoCacheBytes?: number`, the cap on the cached `MEMO:` values of this runtime (default 268 435 456; a negative or non-numeric value is a `TypeError`, §5.13).
 
-**`warm(options?: { words?: string[] }): Promise<WarmReport>`** evaluates the `MEMO:` words of the runtime, or only the listed ones (names resolved in the session scope), in definition order, each in its own run under `memoLimits`. It is the explicit "load budget": a host calls it after assembling the runtime if it wants the cost up front; nothing requires it. A word that is already cached counts as built. `WarmReport` is `{ built: string[], failed: { qname: string, error: ForgeError }[] }`: `built` lists the qualified names now cached, in the order they were evaluated; `failed` lists, with the error, every word that could not be cached, which is a language error or a limit of its build (a build that does not fit is reported, not thrown), a name that does not resolve (`E_UNDEFINED`, …) or is not a memo word (`E_TYPE`), and a word whose value was built but not cached because it does not fit the cache or holds a quotation (`E_LIMIT_TOTAL`, message "was not cached").
+**`warm(options?: { words?: string[] }): Promise<WarmReport>`** evaluates the `MEMO:` words of the runtime, or only the listed ones (names resolved in the session scope), in definition order, each in its own run under `memoLimits`. It is the explicit "load budget": a host calls it after assembling the runtime if it wants the cost up front; nothing requires it. A word that is already cached counts as built. `WarmReport` is `{ built: string[], failed: { qname: string, error: ForgeError }[], uncached: { qname: string, reason: "too-large" | "contains-quot" }[] }`: `built` lists the qualified names now cached, in the order they were evaluated; `failed` lists, with the error, every word that could not be built, which is a language error or a limit of its build (a build that does not fit is reported, not thrown), or a name that does not resolve (`E_UNDEFINED`, …) or is not a memo word (`E_TYPE`); `uncached` lists, in evaluation order, the words whose value was built without error but not kept in the cache, with the reason: `too-large` when the value does not fit what is left of `memoCacheBytes`, `contains-quot` when it holds a quotation anywhere inside it (the size is tested first, as in §5.13). Such a word is neither built nor failed, and no limit was hit: it works, and is built again each time it is used. (Before this report had `uncached` these words were listed under `failed` with `E_LIMIT_TOTAL`, "was not cached"; `E_LIMIT_TOTAL` is no longer produced by `warm`.) The three lists are disjoint.
 
 The **prelude** (§13.8) is compiled and committed inside `createRuntime`, as one trusted unit, **under the default limits and never the caller's**, so that a small `maxSourceChars` or `maxIntBits` in `RuntimeOptions.limits` cannot stop a runtime from being built. It makes `createRuntime` about 1.7 ms slower (the 1 ms target of the proposal was not met and the cost was accepted).
 
@@ -1020,14 +1020,14 @@ A `bytes` value that is bound to a `key`-typed input slot (§5.6) is marked **se
 
 ### 11.0 Malformed forms: which code
 
-For cases that would otherwise have no assigned code: `recurse` outside a colon definition is `E_SYNTAX` at the console and `E_TOPLEVEL` in a unit; `IN:`, `VOCAB` or `USING:` followed by a token that is not a valid `vocab-name` is `E_NAME`; a missing operand (`IN:` at end of input, `CONSTANT` with nothing after it) is `E_SYNTAX`; `CONSTANT`/`VARIABLE`/`:`/alias with an invalid or reserved name (including a `bool` or `qword` token in the name position) is `E_NAME`; a stray `;`, `]` or `}` is `E_SYNTAX`; `META:` with a missing word name is `E_SYNTAX`. For the v0.2 forms: `:>` outside a definition or inside a `{ }` list literal, `:>` followed by a token that is not a word, and `exit` where it cannot compile to a jump are `E_SYNTAX` (an invalid or reserved name after `:>` is `E_NAME`); `CHOICE:` or `MEMO:` with a missing name is `E_SYNTAX` at the end of input and `E_NAME` otherwise; a `CHOICE:` block with a structural fault is `E_SYNTAX` and with a bad `option` clause is `E_META` (§5.12); `recurse` in a `MEMO:` body is `E_SYNTAX`.
+For cases that would otherwise have no assigned code: `recurse` outside a colon definition is `E_SYNTAX` at the console and `E_TOPLEVEL` in a unit; `IN:`, `VOCAB` or `USING:` followed by a token that is not a valid `vocab-name` is `E_NAME`; a missing operand (`IN:` at end of input, `CONSTANT` with nothing after it) is `E_SYNTAX`; `CONSTANT`/`VARIABLE`/`:`/alias with an invalid or reserved name (including a `bool` or `qword` token in the name position) is `E_NAME`; a stray `;`, `]` or `}` is `E_SYNTAX`; `META:` with a missing word name is `E_SYNTAX`. For the v0.2 forms: `:>` outside a definition or inside a `{ }` list literal, `:>` followed by a token that is not a word, and `exit` where it cannot compile to a jump are `E_SYNTAX` (an invalid or reserved name after `:>` is `E_NAME`); `CHOICE:` or `MEMO:` with a missing name is `E_SYNTAX` at the end of input and `E_NAME` otherwise, and either keyword inside a definition body, quotation or list literal is `E_SYNTAX` (§5.1); a `CHOICE:` block with a structural fault is `E_SYNTAX` and with a bad `option` clause is `E_META` (§5.12); `recurse` in a `MEMO:` body is `E_SYNTAX`.
 
 ### 11.1 Error codes
 
 | code | when raised | `detail` |
 |---|---|---|
 | `E_LEX` | lexical error: unterminated string/comment/header/byte array, bad escape, malformed number, bad char literal, bad byte element, invalid character in a token, bad qualified name, a Zs/Zl/Zp/Cf character inside a token | |
-| `E_SYNTAX` | structural error: unexpected token, missing `;`, unbalanced `[ ]` `{ }`, nested `:`, `VOCAB` in a unit, bad operand of `CONSTANT`/`VARIABLE`, stray `;`; a malformed `CHOICE:` block (§5.12); `:>` outside a definition, in a `{ }` list or without a name (§7.1); `exit` where it cannot compile to a jump (§8); `recurse` in a `MEMO:` body (§5.13) | `expected` |
+| `E_SYNTAX` | structural error: unexpected token, missing `;`, unbalanced `[ ]` `{ }`, nested `:`, `VOCAB` in a unit, bad operand of `CONSTANT`/`VARIABLE`, stray `;`; a malformed `CHOICE:` block (§5.12); `MEMO:` or `CHOICE:` inside a body (§5.1); `:>` outside a definition, in a `{ }` list or without a name (§7.1); `exit` where it cannot compile to a jump (§8); `recurse` in a `MEMO:` body (§5.13) | `expected` |
 | `E_TOPLEVEL` | executable code in a source unit (§9) | |
 | `E_NAME` | invalid or reserved name in a defining position (§2.11), including a `CHOICE:` type name with `<` or `>` and a `:>` name that is reserved or not a word name | `name` |
 | `E_HEADER` | missing or malformed header; static header violations (§5.4, §5.5); a `MEMO:` header that is not `( -- T )` (§5.13); a malformed `choice<…>` reference, or one in an anonymous input, an output or a primitive's header (§5.4) | `item`, or `expected` for `MEMO:` |
@@ -1575,7 +1575,7 @@ demo:squares .                  \ { 0 1 4 9 16 }       (built once per runtime)
 
 ### 16.1 Test block format
 
-Every test is a fenced block with info string `fl-test`. The cases C01 to C171 are the v0.1 suite and C201 to C285 cover the additions of v0.2 (the numbers C172 to C200 are unused); the harness (`packages/lang/test/conformance/parse.ts`) reads this document only, and each case must occur once. A block with another info string (for example `fl-proposed`, used to stage the cases of a feature that does not exist yet) is ignored. The first line is `# C<number> <title>`. Lines starting with `@` begin a section; section content is every following line up to the next `@` line (a single trailing newline is dropped). A test needs at least one `@use`, `@unit` or `@run` section. Sections:
+Every test is a fenced block with info string `fl-test`. The cases C01 to C171 are the v0.1 suite and C201 to C288 cover the additions of v0.2 (the numbers C172 to C200 are unused); the harness (`packages/lang/test/conformance/parse.ts`) reads this document only, and each case must occur once. A block with another info string (for example `fl-proposed`, used to stage the cases of a feature that does not exist yet) is ignored. The first line is `# C<number> <title>`. Lines starting with `@` begin a section; section content is every following line up to the next `@` line (a single trailing newline is dropped). A test needs at least one `@use`, `@unit` or `@run` section. Sections:
 
 | section | meaning |
 |---|---|
@@ -3661,6 +3661,15 @@ META: f
 ;
 ```
 
+```fl-test
+# C288 use-when may not be empty
+@unit-fails E_META
+: f ( bytes -- bytes ) ;
+META: f
+  use-when "" ;
+;
+```
+
 #### FL v0.2: shared choice types (`CHOICE:`)
 
 Section 5.12.
@@ -3794,6 +3803,12 @@ CHOICE: t
 : m ( str c:choice{x|y}=x -- str ) ;
 @meta
 user:m params[0].options = ["x","y"]
+```
+
+```fl-test
+# C287 CHOICE: inside a body is a keyword, not a word
+@unit-fails E_SYNTAX
+: f ( -- int ) CHOICE: kind option a ; ;
 ```
 
 #### FL v0.2: the reserved `checks` clause
@@ -3973,6 +3988,12 @@ MEMO: t ( -- list ) { 1 2 } ;
 user:t kind = "fl"
 user:t effect.text = "( -- list )"
 user:t op = false
+```
+
+```fl-test
+# C286 MEMO: inside a body is a keyword, not a word
+@unit-fails E_SYNTAX
+: f ( -- int ) MEMO: g ( -- int ) 1 ; 2 ;
 ```
 
 #### FL v0.2: collectors (`collect`, `emit`)
@@ -4437,7 +4458,7 @@ Decisions the plan did not fix. D1 to D49 are final for v0.1; D50 to D68 were ta
 | D47 | Console compile errors roll back scope changes; each console segment records its scope. | An erroring line has no effect; `current-vocab` is predictable mid-line. |
 | D48 | Unicode Zs/Zl/Zp/Cf characters in a token are `E_LEX`. | No invisible look-alike separators or name characters. |
 | D49 | The Forth words `2dup` and `2drop` are named `dup2` and `drop2`. | A word may not start with a digit (§2.11), so the Forth names cannot be lexed. |
-| D50 | v0.2 adds no reserved word and no error code. Every new token or form (`:>`, `CHOICE:`, `MEMO:`, `choice<…>`, the new `META:` clauses) was `E_LEX`, `E_HEADER` or `E_META` in v0.1, and `RESERVED_WORDS` is unchanged. | No v0.1 program can change meaning. |
+| D50 | v0.2 adds no error code. Every new token or form (`:>`, `CHOICE:`, `MEMO:`, `choice<…>`, the new `META:` clauses) was `E_LEX`, `E_HEADER` or `E_META` in v0.1. `RESERVED_WORDS` gained `MEMO:` and `CHOICE:` (only), so that they are `E_SYNTAX` inside a body like the other defining keywords; neither was ever a valid name. | No v0.1 program can change meaning. |
 | D51 | Discovery metadata (`use-when`, `link`, `inverse`, `optionDocs`) lives in an optional `WordMeta.discovery`, omitted when empty. | The JSON of a word without it is byte-identical to v0.1. |
 | D52 | `inverse` names one public word of the **same vocabulary**, checked at the end of the unit; the runtime stores only the declared direction and `buildHelp` computes the symmetric closure. | No cross-vocabulary dependency cycles in the scanner; `META:` edits only its own word. |
 | D53 | `helper ;` sets `WordMeta.op` to `false`; `INTERNAL_VOCABS` is unchanged; `checks` is reserved (D63). | The smallest way to be public but not an operation. |
@@ -4474,7 +4495,7 @@ This appendix lists every new token, form, clause and word of v0.2 with the sect
 ### A.1 What did not change
 
 - **No valid v0.1 token, header or program changed meaning.** Every new spelling was `E_LEX`, `E_HEADER` or `E_META` in v0.1 (`:>`, `CHOICE:` and `MEMO:` were all "bad qualified name"; `choice<` was a header error; the new clause names were unknown clauses).
-- **The reserved words are unchanged** (§2.11): `: ; IN: USING: META: VOCAB CONSTANT VARIABLE PRIMITIVE recurse true false`. The new keywords are not reserved words, but none is a valid name either.
+- **No valid v0.1 name is reserved by v0.2.** The reserved words (§2.11) are `: ; IN: USING: META: MEMO: CHOICE: VOCAB CONSTANT VARIABLE PRIMITIVE recurse true false`. `MEMO:` and `CHOICE:` are the only additions, and neither is a valid name. `:>` is a keyword but not in the list; none of the three is a valid name.
 - **No error code was added**: the list is the 34 codes of §11.1.
 - **No word hash changed.** A word that does not use a shared choice type hashes as before (§12.4); `META:` is not hashed.
 - **`catalogue.json` is byte-identical** for an unchanged bundle ([RECIPES.md](RECIPES.md) §2.3, §2.7).

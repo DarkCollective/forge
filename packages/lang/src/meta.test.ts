@@ -122,6 +122,9 @@ describe("names", () => {
   test("reserved and private", () => {
     expect(RESERVED_WORDS).toContain("recurse");
     expect(isReservedWord("true")).toBe(true);
+    expect(isReservedWord("MEMO:")).toBe(true);
+    expect(isReservedWord("CHOICE:")).toBe(true);
+    expect(isReservedWord(":>")).toBe(false);
     expect(isReservedWord("rot")).toBe(false);
     expect(isPrivateName("_x")).toBe(true);
     expect(isPrivateName("x")).toBe(false);
@@ -1442,12 +1445,15 @@ describe("discovery clauses: use-when, link, inverse, helper, checks", () => {
   test("use-when errors", () => {
     const bad = (t: string): ForgeError =>
       metaError(() => rotBuilder().clauseFromArgs("use-when", [s(t)], pos));
-    for (const t of ["a\nb", "a\rb", "a\u0001b", " x", "x ", "x".repeat(161)]) {
+    for (const t of ["a\nb", "a\rb", "a\u0001b", " x", "x ", "x".repeat(161), "", " ", "\u00a0 "]) {
       const e = bad(t);
       expect(e.code).toBe("E_META");
       expect(e.detail.clause).toBe("use-when");
     }
+    expect(bad("").message).toContain("use-when must not be empty or only white space");
+    expect(bad("   ").message).toContain("use-when must not be empty or only white space");
     rotBuilder().clauseFromArgs("use-when", [s("x".repeat(160))]);
+    rotBuilder().clauseFromArgs("use-when", [s("x")]);
     const b = rotBuilder();
     b.clauseFromArgs("use-when", [s("one")]);
     expect(metaError(() => b.clauseFromArgs("use-when", [s("two")])).code).toBe("E_META");

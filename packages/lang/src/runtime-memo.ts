@@ -19,6 +19,7 @@
  * only code is the `memo` instruction.
  */
 import { ForgeError } from "./errors.js";
+import { sizeOf } from "./values.js";
 import type {
   CompiledWord,
   ConsoleSegment,
@@ -28,6 +29,8 @@ import type {
   RunResult,
   Scope,
   StackEffect,
+  UncachedReason,
+  Value,
   WarmReport,
   WordEntry,
 } from "./types.js";
@@ -68,6 +71,7 @@ export async function warmMemo(
 ): Promise<WarmReport> {
   const built: string[] = [];
   const failed: { qname: string; error: ForgeError }[] = [];
+  const uncached: { qname: string; reason: UncachedReason }[] = [];
   const targets: { qname: string; entry: FlWordEntry }[] = [];
   if (words === undefined) {
     for (const entry of memoEntries(host.dictionary)) targets.push({ qname: entry.qname, entry });
@@ -88,6 +92,7 @@ export async function warmMemo(
   }
   for (const { qname, entry } of targets) {
     const slot = entry.memo as NonNullable<FlWordEntry["memo"]>;
+    let built1: Value | undefined;
     if (slot.value === undefined) {
       const code: CompiledWord = {
         qname: "<console>",
@@ -106,22 +111,18 @@ export async function warmMemo(
         failed.push({ qname, error: r.error as ForgeError });
         continue;
       }
+      built1 = r.stack[r.stack.length - 1];
     }
     if (slot.value === undefined) {
-      failed.push({
-        qname,
-        error: new ForgeError({
-          code: "E_LIMIT_TOTAL",
-          message: `the value of '${qname}' was not cached: it does not fit the memo cache or holds a quotation`,
-          word: qname,
-          detail: { word: qname },
-        }),
-      });
+      // The build succeeded; the value was not kept. `retainMemo` tests the size first, so a value
+      // that fits what is left of the budget was refused for the quotation it holds.
+      const fits = built1 !== undefined && sizeOf(built1) <= slot.budget.cap - slot.budget.used;
+      uncached.push({ qname, reason: fits ? "contains-quot" : "too-large" });
     } else {
       built.push(qname);
     }
   }
-  return { built, failed };
+  return { built, failed, uncached };
 }
 
 const ZERO = Object.freeze({ offset: 0, line: 1, col: 1 });

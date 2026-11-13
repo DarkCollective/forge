@@ -842,9 +842,17 @@ export interface RuntimeOptions {
 export interface WarmReport {
   /** Qualified names that are now cached, in the order they were evaluated. */
   readonly built: readonly string[];
-  /** Words that could not be cached: a language error, a limit, or a value too large for the cache. */
+  /** Words that could not be built: a language error or a limit of the build, or a name that is not a memo word. */
   readonly failed: readonly { readonly qname: string; readonly error: ForgeErrorShape }[];
+  /**
+   * Words whose value was built without error but not cached, because it does not fit what is left
+   * of the cache (`too-large`) or holds a quotation (`contains-quot`). Each is built again on use.
+   */
+  readonly uncached: readonly { readonly qname: string; readonly reason: UncachedReason }[];
 }
+
+/** Why a value that was built successfully is not kept in the cache of its memo word. */
+export type UncachedReason = "too-large" | "contains-quot";
 
 /** The public runtime facade (runtime.ts). */
 export interface ForgeRuntime {

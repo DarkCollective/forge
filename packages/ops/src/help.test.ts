@@ -147,6 +147,19 @@ describe("buildHelp: use-when, links and the inverse closure", () => {
     expect(validateHelp(doc), ajv.errorsText(validateHelp.errors)).toBe(true);
   });
 
+  test("ops are sorted by code point, not by UTF-16 code unit (a non-BMP name sorts last)", () => {
+    // U+FF21 is one UTF-16 unit (0xFF21); U+10000 is the pair 0xD800 0xDC00. By code point the
+    // fullwidth letter comes first; by UTF-16 unit the pair would.
+    const names = ["\u{10000}x", "\uFF21", "b", "a"];
+    const src = names
+      .map((n) => FX(n) + `META: ${n} use-when "Reach for ${n.length}." ; ;\n`)
+      .join("");
+    const sorted = build(src)
+      .help()
+      .ops.map((o) => o.qname);
+    expect(sorted).toEqual(["t:a", "t:b", "t:\uFF21", "t:\u{10000}x"]);
+  });
+
   test("a catalogue from another runtime is refused", () => {
     const a = build(FX("a"));
     const other = build(FX("a", "dup drop "));

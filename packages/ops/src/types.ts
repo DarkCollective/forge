@@ -178,7 +178,7 @@ export interface HelpOp {
   readonly links: readonly HelpLink[];
   /** After the symmetric closure of `inverse`. */
   readonly inverse: string | null;
-  /** Parameter to option to help. Omitted when empty (filled by a later package). */
+  /** Parameter to option to help, from the shared choice types the word's header uses. Omitted when empty. */
   readonly optionDocs?: Readonly<Record<string, Readonly<Record<string, string>>>>;
   readonly examples: readonly HelpExample[];
 }

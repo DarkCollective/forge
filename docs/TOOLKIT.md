@@ -449,29 +449,31 @@ The coverage table marks these ops `pack:media` or `pack:code`. Lowest priority 
 
 **Principle.** Every proposal carries a corpus number. The measuring scripts are kept as `npm run corpus-stats -w @forge/ops`, so each change reports before and after (private single-use helpers, shuffle density, primitive count and TypeScript lines, zero-input table rebuilds).
 
+**Status.** FL v0.2 has shipped part of this section. Items marked **(done)** are in [LANGUAGE.md](LANGUAGE.md) (see its [Appendix A](LANGUAGE.md#appendix-a-changes-in-v02)) and are no longer proposals; everything else is still future work.
+
 ### 11.1 Group L-A: prelude and core words (additive)
 
-- Promote the generic `util` words: the trim family, `starts-with`/`ends-with`, `contains`, `repeat`, `zero-pad`, `cp>str`, `between?`, `index-of`, `sum`, `tdiv`, `ceil-div`, `int>be-bytes`, `count-leading`, character predicates.
-- Maths: `ln exp log2 sin cos tan atan2 …`, `str>num`, float bit packing.
-- Typed failure words in core, replacing 253 qualified `raise:` calls.
-- `sort`, `sort-by`, `has-key?`, `find`, `any?`, `all?`, `first`, `second`, `last`, `divmod`, a `case`/`cond` combinator.
+- Promote the generic `util` words: the trim family, `starts-with`/`ends-with`, `contains`, `repeat`, `zero-pad`, `cp>str`, `between?`, `index-of`, `sum`, `tdiv`, `ceil-div`, `int>be-bytes`, `count-leading`, character predicates. (**done** for twenty words, LANGUAGE.md A.4 and §13.8; `index-of`, `tdiv` and `zero-pad` of this list were not promoted, and the old `util:` forms stay valid.)
+- Maths: `ln exp log2 sin cos tan atan2 …`, `str>num`, float bit packing. (**done** for the maths words and `str>num`, LANGUAGE.md A.4; float bit packing is not done.)
+- Typed failure words in core, replacing 253 qualified `raise:` calls. (**done** for the words, `fail-coerce` and `fail-range`, LANGUAGE.md A.4; the 253 existing `raise:` calls were not rewritten and stay valid.)
+- `sort`, `sort-by`, `has-key?`, `find`, `any?`, `all?`, `first`, `second`, `last`, `divmod`, a `case`/`cond` combinator. (**done** for `sort`, `sort-by`, `has-key?`, `find`, `any?`, `all?`, `case` and `cond`, LANGUAGE.md A.4; `first`, `second`, `last` and `divmod` are not in v0.2.)
 - JSON parse and serialise.
 
 ### 11.2 Group L-B: defining forms
 
-- Mid-body local binding (a new token, since `{ }` is the list literal).
-- Computed load-time constants and memoised zero-input words, run under a load budget.
-- Shared named `choice` types with an optional value mapping.
-- A "public but not an op" marker, and friend visibility for private words. This removes the `cmac` and `lmhash` primitives and the internal-vocabulary workaround.
+- Mid-body local binding (a new token, since `{ }` is the list literal). (**done**: `:>`, LANGUAGE.md §7.1 and A.2.)
+- Computed load-time constants and memoised zero-input words, run under a load budget. (**done** for memoised zero-input words, `MEMO:` and `warm()`, LANGUAGE.md §5.13 and §10.13; computed load-time constants are not: a `MEMO:` word is evaluated on first use or by `warm()`.)
+- Shared named `choice` types with an optional value mapping. (**done** for the shared types, `CHOICE:` and `choice<…>`, LANGUAGE.md §5.12; the value mapping is not.)
+- A "public but not an op" marker, and friend visibility for private words. This removes the `cmac` and `lmhash` primitives and the internal-vocabulary workaround. (**done** for the marker, `helper` in `META:`, LANGUAGE.md §5.9; friend visibility is not, and the primitives and internal vocabularies are still there.)
 - Forward declarations and mutual recursion.
-- `exit` (early return).
+- `exit` (early return). (**done**: LANGUAGE.md §8 and A.4.)
 - `VARIABLE` with any initial value, and re-entrancy.
 - A record literal.
 
 ### 11.3 Group L-C: data and performance
 
 - An indexable mutable buffer (byte or int array) with defined aliasing rules.
-- A linear list or bytes builder.
+- A linear list or bytes builder. (**done**: the collectors `collect`, `collect-bytes`, `collect-str`, `emit` and `emit-all`, LANGUAGE.md §8 and A.4.)
 - 32-bit word intrinsics and bulk word operations.
 - Cost-weighted step accounting (`charge`).
 - **The main lever for goal 5: spike L0**, an ahead-of-time **kernel tier**. Compile a restricted, statically typed subset of FL words (fixed-width integers, buffers, loops, no escaping quotations) to JavaScript **at build time**, for trusted bundle vocabularies. The FL text stays the single source and the interpreter stays the reference: every kernel word is tested against the interpreted run. Never at run time, and never for user code (UI.md §4 rule 5: no `eval`).
@@ -501,21 +503,21 @@ The `ext` tag, generic words, tagged literals, `charge` and new effect labels (�
 
 ### 11.6 Proposal table
 
-Sizes are relative. "Revisits" lists LANGUAGE.md decisions or sections touched (§17 decision ids D3, D4, D5, D6, D10, D11, D18, D31, D44; §5.7 public and private words; §13 core vocabulary; §17.1 items left out of v0.1).
+Sizes are relative. "Revisits" lists LANGUAGE.md decisions or sections touched (§17 decision ids D3, D4, D5, D6, D10, D11, D18, D31, D44; §5.7 public and private words; §13 core vocabulary; §17.1 items deliberately left out, as that list stands after v0.2).
 
 | Proposal | Corpus evidence | Unlocks | Kind | Size | Revisits |
 |---|---|---|---|---|---|
-| Promote `util` words to core | 37 words used by 3+ vocabularies; `between?` 59 calls | Fewer duplicate helpers | Additive | S | §13 |
-| Maths, `str>num`, float bits | 7 missing core maths and IEEE primitives | 7 primitives to FL | Additive | M | §13, §17.1 |
-| Typed failure words | 253 qualified `raise:` calls | Shorter error paths | Additive | S | §13 |
-| `sort`, `has-key?`, `find`, `case` | 3 sort/shuffle primitives; 234 else-if chains (96 at depth 3+); 12 `try` for control flow | Flatter code; 3 primitives to FL | Additive | M | §13 |
+| Promote `util` words to core (**done** for 20 words, LANGUAGE.md A.4) | 37 words used by 3+ vocabularies; `between?` 59 calls | Fewer duplicate helpers | Additive | S | §13 |
+| Maths, `str>num`, float bits (maths and `str>num` **done**, LANGUAGE.md A.4; float bits open) | 7 missing core maths and IEEE primitives | 7 primitives to FL | Additive | M | §13, §17.1 |
+| Typed failure words (words **done**, LANGUAGE.md A.4; the `raise:` calls not rewritten) | 253 qualified `raise:` calls | Shorter error paths | Additive | S | §13 |
+| `sort`, `has-key?`, `find`, `case` (**done**, LANGUAGE.md A.4) | 3 sort/shuffle primitives; 234 else-if chains (96 at depth 3+); 12 `try` for control flow | Flatter code; 3 primitives to FL | Additive | M | §13 |
 | JSON parse and serialise | Wave 4 gap | Data words, Relix bridge | Additive | M | §13 |
-| Mid-body local binding | 84 closure-binding helpers; 221 single-use helpers; 984 private words called once | Fewer helpers | Additive | M | D10, §5.7 |
-| Load-time and memoised constants | 101 zero-input constants; 22 rebuild tables per call; 3 `CONSTANT`s | Cheaper tables | Additive | M | D4 |
-| Shared `choice` types | 237 headers, 116 distinct lists, 70% copies | Fewer copies | Additive | S | D3 |
-| "Public not an op", friend visibility | `cmac`, `lmhash`; six internal vocabularies in code | Cross-vocabulary reuse | Additive | M | §5.7 |
-| Forward declarations, `exit`, any `VARIABLE` initial value, record literal | 106 `VARIABLE`s, 89 in five machine simulations | Simpler state machines | Additive | M | D6, D31, D10, §17.1 |
-| Mutable buffer, linear builder | 9 stateful-loop primitives (727 code lines) | Those primitives to FL | Additive | L | D44, D18 |
+| Mid-body local binding (**done**, LANGUAGE.md A.2) | 84 closure-binding helpers; 221 single-use helpers; 984 private words called once | Fewer helpers | Additive | M | D10, §5.7 |
+| Load-time and memoised constants (memoised **done**, LANGUAGE.md §5.13; load-time open) | 101 zero-input constants; 22 rebuild tables per call; 3 `CONSTANT`s | Cheaper tables | Additive | M | D4 |
+| Shared `choice` types (**done** without value mapping, LANGUAGE.md §5.12) | 237 headers, 116 distinct lists, 70% copies | Fewer copies | Additive | S | D3 |
+| "Public not an op" (**done**, `helper`, LANGUAGE.md §5.9), friend visibility (open) | `cmac`, `lmhash`; six internal vocabularies in code | Cross-vocabulary reuse | Additive | M | §5.7 |
+| Forward declarations, `exit` (**done**, LANGUAGE.md §8), any `VARIABLE` initial value, record literal | 106 `VARIABLE`s, 89 in five machine simulations | Simpler state machines | Additive | M | D6, D31, D10, §17.1 |
+| Mutable buffer (open), linear builder (**done** as collectors, LANGUAGE.md §8) | 9 stateful-loop primitives (727 code lines) | Those primitives to FL | Additive | L | D44, D18 |
 | 32-bit word intrinsics, `charge` | TEA 478 steps per byte; SHA-1 186 | Cost-weighted limits | Additive | M | D44 |
 | Kernel tier (L0) | 53 cipher and hash cores, 3,626 lines (57% of primitive code) | Cores to FL, if L0 passes | Additive | L | D5, D44 |
 | `ext` tag, tagged literals, generic words | Three clients (symbolic, tables, matrices) | Packs, T8 | Additive | L | D11, §17.1 |

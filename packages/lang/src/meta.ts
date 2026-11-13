@@ -77,6 +77,8 @@ export const RESERVED_WORDS: readonly string[] = [
   "IN:",
   "USING:",
   "META:",
+  "MEMO:",
+  "CHOICE:",
   "VOCAB",
   "CONSTANT",
   "VARIABLE",

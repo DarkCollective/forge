@@ -20,7 +20,7 @@
  * Pure: the caller reads the vector files. Content violations throw an `Error` that names the file
  * and the vector index (or the words).
  */
-import { sha256 } from "@forge/lang";
+import { cpCompare, sha256 } from "@forge/lang";
 import type { ForgeRuntime } from "@forge/lang";
 import { buildCatalogue } from "./catalogue.js";
 import { HELP_FORMAT } from "./types.js";
@@ -38,10 +38,6 @@ import type {
 export const MAX_EXAMPLES_PER_OP = 3;
 /** At most this many code points in an example's input, parameter or expected value. */
 export const MAX_EXAMPLE_VALUE = 2048;
-
-function compareCodePoints(a: string, b: string): number {
-  return a < b ? -1 : a > b ? 1 : 0;
-}
 
 function isObject(x: unknown): x is Record<string, unknown> {
   return typeof x === "object" && x !== null && !Array.isArray(x);
@@ -183,7 +179,7 @@ export const buildHelp: BuildHelpFn = (
       examples: own,
     });
   }
-  ops.sort((a, b) => compareCodePoints(a.qname, b.qname));
+  ops.sort((a, b) => cpCompare(a.qname, b.qname));
   return {
     format: HELP_FORMAT,
     catalogue: catalogue.version,

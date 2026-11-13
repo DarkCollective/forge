@@ -46,7 +46,7 @@ Two framings keep the scope honest. First, a CAS is open-ended: "supported" mean
 
 ## 2. Gap analysis
 
-| HP 48 feature | FL v0.1 today | Gap |
+| HP 48 feature | FL today (v0.2) | Gap |
 |---|---|---|
 | Algebraic objects | Nine tags (`bytes str int num bool list quot record file`, LANGUAGE §3.1; `Value` in `packages/lang/src/types.ts`). | No expression tag. Expressions can be encoded as `record`/`list` trees (Stage A) or get a registered tag (B1). |
 | Names as values (an unbound name evaluates to itself) | Names are compile-time words; an unknown name is `E_UNDEFINED` (§6.2 step 5) and there are no forward references (D6). A name is never a runtime value. | Symbols must be created explicitly (`"x" sym:var`) or parsed from text. A literal syntax needs a reader change (B3). |
@@ -470,6 +470,6 @@ IDs use the prefix S to avoid collisions with LANGUAGE.md's D-numbers and PLAN �
 5. **Branch cuts for complex functions.** Principal values for `ln`, `pow`, `sqrt`, `asin`, `acos`, `atan` need an explicit table with vectors (and a decision on signed zero, which `num` keeps, LANGUAGE §3.3).
 6. **Matrices.** Timing (S.17 or later) and whether vectors are a separate type or a one-column matrix.
 7. **Property-test library.** fast-check (named in PLAN §6, not currently a dependency) or the seeded in-repo generator alone.
-8. **A dedicated error code for dimension mismatch** (`E_UNITS`)? v0.1 has none and adding codes is a Stage B change; Stage A uses `E_TYPE` with `detail.dimension`.
+8. **A dedicated error code for dimension mismatch** (`E_UNITS`)? FL has none (v0.2 added no error code) and adding codes is a Stage B change; Stage A uses `E_TYPE` with `detail.dimension`.
 9. **Exact `/` spelling in core** (a new `//`) versus only `sym:/`. Decided at the gate (B4).
 10. **How much integration and solving is "enough".** The rule sets of S.4 to S.7 are a list the owner may widen or narrow before the WPs start (for instance partial fractions, trigonometric substitutions, cubic and quartic radicals).
