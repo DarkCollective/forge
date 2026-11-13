@@ -11,6 +11,10 @@
     "expect": {
       "value": "abcd.",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Remove spaces, tabs and line breaks",
+      "note": "The default removes spaces, tabs, carriage returns, line feeds and form feeds, and the full stop stays, so the result is abcd."
     }
   },
   {
@@ -27,6 +31,10 @@
     "expect": {
       "value": "abc",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Full stops removed too",
+      "note": "With full-stops turned on the full stops go as well, so a.b. c becomes abc."
     }
   },
   {
@@ -47,6 +55,10 @@
     "expect": {
       "value": "a bc\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Only tabs removed",
+      "note": "With only the tabs option on, the space and the line feed stay and only the tab is removed."
     }
   },
   {
@@ -103,6 +115,10 @@
     "expect": {
       "value": "414243",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Zero bytes removed from among letters",
+      "note": "The 00 bytes between and after the letters go, and ABC is left."
     }
   },
   {
@@ -131,6 +147,10 @@
     "expect": {
       "value": "ff0102",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Other bytes stay",
+      "note": "Only zero bytes go, so ff, 01 and 02 stay in place."
     }
   },
   {
@@ -159,6 +179,10 @@
     "expect": {
       "value": "red plain",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Colour codes",
+      "note": "The colour codes around red are removed, and the text red plain remains."
     }
   },
   {
@@ -173,6 +197,10 @@
     "expect": {
       "value": "abcd",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Cursor and erase codes",
+      "note": "The cursor hide, cursor position and erase line codes are removed too, which leaves abcd."
     }
   },
   {
@@ -215,6 +243,10 @@
     "expect": {
       "value": "textlink",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A window title and a hyperlink",
+      "note": "A window title and a hyperlink are both string sequences, so they are removed, and the words text and link remain."
     }
   },
   {

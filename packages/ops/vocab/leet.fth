@@ -32,6 +32,8 @@ IN: leet
   [ style _symbols style _letters _table ] if _apply ;
 
 META: convert
+  use-when "You want to write text in leet speak, such as a 4 for an a, or read a leet-written text back, though the reading is only a best guess." ;
+  link "https://en.wikipedia.org/wiki/Leet" "Leet on Wikipedia" ;
   param direction "to: letters to leet characters. from: leet characters to letters." ;
   param style "basic: six letters, all digits (as CyberChef). extended: nine more, with symbols." ;
 ;

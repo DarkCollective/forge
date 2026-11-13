@@ -32,6 +32,7 @@ USING: util ;
   "" "" regex:replace ;
 
 META: remove-whitespace
+  use-when "You have pasted text full of spaces, tabs or line breaks that you want gone, for example to get a compact token or to compare two strings." ;
   param spaces "Delete spaces (U+0020)." ;
   param carriage-returns "Delete carriage returns (U+000D)." ;
   param line-feeds "Delete line feeds (U+000A)." ;
@@ -42,9 +43,13 @@ META: remove-whitespace
 ;
 
 META: remove-null-bytes
+  use-when "You have data with zero bytes scattered through it, from a bad export or from UTF-16 text read as bytes, and want the rest of the data." ;
+  link "https://en.wikipedia.org/wiki/Null_character" "Null character on Wikipedia" ;
   see-also clean:remove-whitespace ;
 ;
 
 META: remove-ansi
+  use-when "You have text copied from a terminal, with colour and cursor codes that show as junk, and want only the words." ;
+  link "https://en.wikipedia.org/wiki/ANSI_escape_code" "ANSI escape code on Wikipedia" ;
   see-also clean:remove-null-bytes ;
 ;

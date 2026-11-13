@@ -11,6 +11,10 @@
     "expect": {
       "value": "hELLO, wORLD!",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Swap every letter's case",
+      "note": "Hello, World! becomes hELLO, wORLD!, and the comma, the space and the exclamation mark are unchanged."
     }
   },
   {
@@ -39,6 +43,10 @@
     "expect": {
       "value": "STRASSE",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A sharp s becomes SS",
+      "note": "The German sharp s has no single capital, so straße becomes STRASSE."
     }
   },
   {
@@ -69,6 +77,10 @@
     "expect": {
       "value": "hElLo, WoRlD!",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Starting with lower case",
+      "note": "Spaces and punctuation do not count, so the letters alternate across the words and Hello, World! becomes hElLo, WoRlD!."
     }
   },
   {
@@ -101,6 +113,10 @@
     "expect": {
       "value": "a1B2c3",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Digits do not count",
+      "note": "The digits stay as they are and do not use up a turn, so a1b2c3 becomes a1B2c3."
     }
   },
   {
@@ -133,6 +149,10 @@
     "expect": {
       "value": "ab\nAb\naB\nAB",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Each letter in both cases, one per line",
+      "note": "ab has two letters, so four items come out: ab, Ab, aB and AB, with the newline as the delimiter."
     }
   },
   {
@@ -149,6 +169,10 @@
     "expect": {
       "value": "a1b,A1b,a1B,A1B",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A comma as the delimiter",
+      "note": "Only the letters a and b change, so the 1 stays in every item and the four items are joined by commas."
     }
   },
   {
@@ -212,6 +236,10 @@
     },
     "expect": {
       "error": "E_RANGE"
+    },
+    "example": {
+      "title": "More than twelve letters is refused",
+      "note": "Thirteen letters would give 8,192 combinations, and the limit is twelve letters or 4,096 combinations."
     }
   },
   {
@@ -226,6 +254,10 @@
     "expect": {
       "value": "[aA][bB][cC]",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Each letter gets both cases",
+      "note": "Each letter becomes a bracket of its two cases, lower case first, so abc becomes [aA][bB][cC]."
     }
   },
   {
@@ -254,6 +286,10 @@
     "expect": {
       "value": "[a-c_A-C]\\d+",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Letter ranges inside a class",
+      "note": "In a class the other case of each letter and range is added, so [a-c_] also matches A to C, and the rest is copied."
     }
   },
   {
@@ -324,6 +360,10 @@
     "expect": {
       "value": "^[aA]{2,3}|[bB]+$",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Quantifiers and anchors are kept",
+      "note": "The quantifier {2,3}, the anchors and the alternation stay as they are, and only the letters change."
     }
   },
   {
@@ -352,6 +392,10 @@
     "expect": {
       "value": "abc",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Two-letter classes folded back",
+      "note": "[aA] is written as a and [bB] as b, so the pattern [aA][bB]c becomes abc."
     }
   },
   {
@@ -380,6 +424,10 @@
     "expect": {
       "value": "[a-z0-9]",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Both cases in a bigger class",
+      "note": "In a class, the upper-case copy of a letter is dropped when the lower-case one is there, so [a-zA-Z0-9] becomes [a-z0-9]."
     }
   },
   {

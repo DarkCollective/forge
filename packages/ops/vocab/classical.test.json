@@ -11,6 +11,10 @@
     "expect": {
       "value": "5572797962",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Hello becomes Uryyb with the default 13",
+      "note": "The default amount is 13, which is ROT13. Applying ROT13 to Uryyb gives Hello again, so applying it twice gives the text back."
     }
   },
   {
@@ -107,6 +111,10 @@
     "expect": {
       "value": "47646b6b6e",
       "enc": "hex"
+    },
+    "example": {
+      "title": "An amount of 25 shifts each letter back",
+      "note": "A shift of 25 moves H to G, so Hello becomes Gdkkn. An amount of 1 undoes it."
     }
   },
   {
@@ -341,6 +349,10 @@
     "expect": {
       "value": "77363d3d405b202840433d3550",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Hello, World! turned into symbols",
+      "note": "Each printable character moves 47 places along the codes from ! to ~, so Hello, World! becomes w6==@[ (@C=5P."
     }
   },
   {
@@ -397,6 +409,10 @@
     "expect": {
       "value": "48656c6c6f2c20576f726c6421",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The same op reads it back",
+      "note": "Applying rot47 to w6==@[ (@C=5P gives Hello, World! again, because 47 plus 47 is 94, the whole printable range."
     }
   },
   {
@@ -453,6 +469,10 @@
     "expect": {
       "value": "53766f6f6c",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Hello becomes Svool",
+      "note": "A and Z swap, and so do B and Y, so H becomes S and the output is Svool. Upper and lower case are kept."
     }
   },
   {
@@ -481,6 +501,10 @@
     "expect": {
       "value": "48656c6c6f2c20576f726c642120313233",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Applying it again gives the text back",
+      "note": "Svool, Dliow! 123 is the atbash of Hello, World! 123, and atbash is its own inverse, so it gives the original back."
     }
   },
   {
@@ -540,6 +564,10 @@
     "expect": {
       "value": "IHHWVC SWFRCP",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Multiply by 5 and add 8",
+      "note": "Each letter x becomes 5x + 8 modulo 26, so A (0) becomes I (8) and F becomes H. Spaces and the case of letters pass through."
     }
   },
   {
@@ -557,6 +585,10 @@
     "expect": {
       "value": "AFFINE CIPHER",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Undo the same a and b",
+      "note": "With a of 5 and b of 8, IHHWVC SWFRCP gives back AFFINE CIPHER. The decryption multiplies by the inverse of 5 modulo 26, which is 21."
     }
   },
   {
@@ -602,6 +634,10 @@
     "expect": {
       "value": "41666363782c20427873637921203432",
       "enc": "hex"
+    },
+    "example": {
+      "title": "A different multiplier and shift",
+      "note": "The multiplier 7 and shift 3 give other letters, and the digits 4 and 2 pass through unchanged."
     }
   },
   {
@@ -619,6 +655,10 @@
     "expect": {
       "value": "Hello, World! 42",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Decrypt the seven and three example",
+      "note": "This is the output of the vector above, decrypted with the same a and b, which gives back Hello, World! 42."
     }
   },
   {
@@ -1029,6 +1069,10 @@
     "expect": {
       "value": "LXFOPVEFRNHR",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The classic LEMON example",
+      "note": "Each letter is shifted by the key letter at its place, so the key LEMON repeats across ATTACKATDAWN and gives LXFOPVEFRNHR."
     }
   },
   {
@@ -1045,6 +1089,10 @@
     "expect": {
       "value": "ATTACKATDAWN",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Undo the LEMON example",
+      "note": "With the same key, LXFOPVEFRNHR is read back as ATTACKATDAWN."
     }
   },
   {
@@ -1061,6 +1109,10 @@
     "expect": {
       "value": "4c78666f707620656620526e687221",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Mixed case in the message and the key",
+      "note": "The key is read without regard to case and the message keeps its own, so Lemon gives the same letters as LEMON."
     }
   },
   {
@@ -1077,6 +1129,10 @@
     "expect": {
       "value": "Attack at Dawn!",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Punctuation does not use up a key letter",
+      "note": "The space and the exclamation mark pass through without using a key letter, so the key stays in step and gives back Attack at Dawn!"
     }
   },
   {
@@ -1125,6 +1181,10 @@
     "expect": {
       "value": "61626320414243",
       "enc": "hex"
+    },
+    "example": {
+      "title": "A one-letter key is a Caesar shift",
+      "note": "With d as the key every letter moves by 3, so xyz XYZ becomes abc ABC, and the space is kept."
     }
   },
   {
@@ -1373,6 +1433,10 @@
     "expect": {
       "value": "AABBB AABAA ABABA ABABA ABBAB",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Each letter as five A and B symbols",
+      "note": "A is 0 and B is 1, so H, which is 7, is written 00111 and shows as AABBB."
     }
   },
   {
@@ -1403,6 +1467,10 @@
     "expect": {
       "value": "HELLO",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Groups of five read as letters",
+      "note": "Each group is a five-digit binary number with A for 0 and B for 1, and it names a letter: AABBB is H."
     }
   },
   {
@@ -1417,6 +1485,10 @@
     "expect": {
       "value": "ABAAA ABAAA BAABB BAABB",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "I and J share a code",
+      "note": "In the classic alphabet I and J have one code, and so do U and V, so IJUV gives two repeated groups."
     }
   },
   {
@@ -1431,6 +1503,10 @@
     "expect": {
       "value": "IU",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "I and J, U and V share codes",
+      "note": "ABAAA is the code for I and J, and BAABB is the code for U and V, so the output is IU."
     }
   },
   {
@@ -1461,6 +1537,10 @@
     "expect": {
       "value": "4142414142204241424141204241424142",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The complete alphabet gives every letter a code",
+      "note": "With the complete alphabet J, U and V each get their own group, so the three letters give three different codes."
     }
   },
   {
@@ -1477,6 +1557,10 @@
     "expect": {
       "value": "JUV",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Complete alphabet reads J, U and V",
+      "note": "With the complete alphabet the same kind of groups read as J, U and V, each with its own code."
     }
   },
   {
@@ -1702,6 +1786,10 @@
     "expect": {
       "value": "UAEOLWRINS",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The classic FLEEATONCE example",
+      "note": "The key fills the 5 by 5 square row by row. It has every letter except J, and FLEEATONCE comes out as UAEOLWRINS."
     }
   },
   {
@@ -1718,6 +1806,10 @@
     "expect": {
       "value": "FLEEATONCE",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Undo the classic example",
+      "note": "With the same 25-letter key, UAEOLWRINS gives back FLEEATONCE, in capitals with no spaces."
     }
   },
   {
@@ -1734,6 +1826,10 @@
     "expect": {
       "value": "52464e564b42544147524452474154505a",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Spaces are dropped from the message",
+      "note": "Only the letters of Defend the east wall are used, so the spaces do not appear in the output."
     }
   },
   {
@@ -1750,6 +1846,10 @@
     "expect": {
       "value": "DEFENDTHEEASTWALL",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The keyword decrypts the message",
+      "note": "The ciphertext from the encryption example above, read with Keyword, gives DEFENDTHEEASTWALL with no word breaks."
     }
   },
   {
@@ -1995,6 +2095,10 @@
     "expect": {
       "value": "WECRLTEERDSOEEFEAOCAIVDEN",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The classic three-rail example",
+      "note": "The letters zigzag down and up across three rails, then the rails are read one after another, giving WECRLTEERDSOEEFEAOCAIVDEN."
     }
   },
   {
@@ -2012,6 +2116,10 @@
     "expect": {
       "value": "WEAREDISCOVEREDFLEEATONCE",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Undo the three-rail example",
+      "note": "The same three rails turn WECRLTEERDSOEEFEAOCAIVDEN back into WEAREDISCOVEREDFLEEATONCE."
     }
   },
   {
@@ -2060,6 +2168,10 @@
     "expect": {
       "value": "74616e4174207477616b20616364",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The offset moves the start of the zigzag",
+      "note": "An offset of 5 starts the zigzag five steps along, so the same message on four rails comes out in a different order."
     }
   },
   {
@@ -2077,6 +2189,10 @@
     "expect": {
       "value": "Attack at dawn",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Decrypt with the same offset",
+      "note": "Four rails with an offset of 5 return Attack at dawn, so both settings must match the encryption."
     }
   },
   {
@@ -2468,6 +2584,10 @@
     "expect": {
       "value": "8 5 12 12 15",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Each letter as its place in the alphabet",
+      "note": "H is the eighth letter and E the fifth, so HELLO becomes 8 5 12 12 15. The numbers are joined by spaces, the default delimiter."
     }
   },
   {
@@ -2498,6 +2618,10 @@
     "expect": {
       "value": "8,5,12,12,15,23,15,18,12,4",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Punctuation and spaces are dropped",
+      "note": "Only the letters are counted: the comma, the spaces and the exclamation mark are gone. Here the numbers are joined by commas."
     }
   },
   {
@@ -2570,6 +2694,10 @@
     "expect": {
       "value": "HELLO",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Numbers back to letters",
+      "note": "Each number from 1 to 26 becomes one capital letter, so 8 5 12 12 15 reads HELLO."
     }
   },
   {
@@ -2584,6 +2712,10 @@
     "expect": {
       "value": "HELLOA",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Any non-digit separates two numbers",
+      "note": "Commas, spaces, a dash and a line break all separate numbers, so the output has one letter for each number: HELLOA."
     }
   },
   {
@@ -2598,6 +2730,10 @@
     "expect": {
       "value": "HAZ",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A leading zero is read as the same number",
+      "note": "08 is H, 01 is A and 26 is Z. The leading zero does no harm."
     }
   },
   {
@@ -2734,6 +2870,10 @@
     "expect": {
       "value": "53656c6c6f20444c494f57",
       "enc": "hex"
+    },
+    "example": {
+      "title": "The default alphabets are reversed",
+      "note": "With the default alphabets A becomes Z and so on, so H becomes S. Lower-case letters are not in the list and pass through, so Hello WORLD becomes Sello DLIOW."
     }
   },
   {
@@ -2751,6 +2891,10 @@
     "expect": {
       "value": "787879797a7a2064",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Your own alphabets",
+      "note": "Each a becomes x, each b becomes y and each c becomes z, and the space is in neither list, so it stays."
     }
   },
   {
@@ -2959,6 +3103,10 @@
     "expect": {
       "value": "414447424548434649",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Write in rows, read in columns",
+      "note": "With a height of 3, ABC, DEF and GHI are the rows, and the columns ADG, BEH and CFI are read in turn."
     }
   },
   {
@@ -2991,6 +3139,10 @@
     "expect": {
       "value": "41454942464a43474448",
       "enc": "hex"
+    },
+    "example": {
+      "title": "A short last row",
+      "note": "Ten bytes in a box of height 3 give four columns. The last row holds only I and J, so the short columns are not padded."
     }
   },
   {
@@ -3007,6 +3159,10 @@
     "expect": {
       "value": "4142434445464748494a",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Read the columns and write the rows",
+      "note": "With the same height of 3, AEIBFJCGDH is read back into rows, which gives ABCDEFGHIJ."
     }
   },
   {
@@ -3039,6 +3195,10 @@
     "expect": {
       "value": "54686520717569636b2062726f776e20666f78",
       "enc": "hex"
+    },
+    "example": {
+      "title": "A phrase with the height of 4",
+      "note": "With a height of 4, Tub hirfecoo kwxq n gives back The quick brown fox."
     }
   },
   {
@@ -3274,6 +3434,10 @@
     "expect": {
       "value": "籝籱籮 籫籾籽籵籮类 籭籲籭 籲籽簪",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "English text as rare CJK characters",
+      "note": "The letters and the exclamation mark change, but the spaces stay, so the output keeps the same word breaks."
     }
   },
   {
@@ -3288,6 +3452,10 @@
     "expect": {
       "value": "The butler did it!",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Applying it again gives the text back",
+      "note": "ROT8000 is its own inverse, so the output of the example above goes back to The butler did it!"
     }
   },
   {
@@ -3380,6 +3548,10 @@
           }
         }
       ]
+    },
+    "example": {
+      "title": "Keep only the candidate with a crib",
+      "note": "Only the shift that gives Hello is kept, here 13. Each record holds the shift as a number and the output as bytes."
     }
   },
   {
@@ -3567,6 +3739,10 @@
           }
         }
       ]
+    },
+    "example": {
+      "title": "The same crib on rot47",
+      "note": "With the variant rot47, the crib keeps only shift 47, the one that turns the input back into Hello."
     }
   },
   {
@@ -4179,6 +4355,10 @@
           }
         }
       ]
+    },
+    "example": {
+      "title": "Printable-only drops stray bytes",
+      "note": "The bytes 01, 00 and ff are removed before the search, so the only candidate is shift 13 of Hello."
     }
   },
   {
@@ -4230,6 +4410,10 @@
     "expect": {
       "value": "EEEEEEEEEeeEeEEEEEEEEEEEEeeEEeEeEEEEEEEEEeeEeeEEEEEEEEEEEeeEeeEEEEEEEEEEEeeEeeee",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Sixteen symbols for each letter",
+      "note": "Each letter of hello is one UTF-16 unit of sixteen bits, so the 80 symbols are five groups of sixteen. E is 0 and e is 1."
     }
   },
   {
@@ -4244,6 +4428,10 @@
     "expect": {
       "value": "hello",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Read sixteen symbols at a time",
+      "note": "Sixteen symbols make one UTF-16 unit, so the 80 symbols here give the five letters of hello."
     }
   },
   {
@@ -4314,6 +4502,10 @@
     "expect": {
       "value": "EEEEEEEEEeeEEEEeeeEeeEEEEEeeeeEeeeEeeeeEEEEEEEEEEEEEEEEEEeeEEEeE",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "An emoji takes two UTF-16 units",
+      "note": "The emoji in a😀b is two units, so it takes 32 symbols, and the whole output is 64 symbols long."
     }
   },
   {
@@ -4328,6 +4520,10 @@
     "expect": {
       "value": "a😀b",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A pair of units decodes to one emoji",
+      "note": "The 64 symbols are a, one emoji written as two units, and b, and the emoji comes back whole."
     }
   },
   {
@@ -4423,6 +4619,10 @@
     "expect": {
       "value": "NFHALEBBMHGCLEBBMDGGKMAJNOHLLKBP",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A password as 32 letters",
+      "note": "Each byte of the UTF-16 little-endian text becomes two letters from A to P, so the eight characters of password give 32 letters."
     }
   },
   {
@@ -4437,6 +4637,10 @@
     "expect": {
       "value": "password",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Undo the password obfuscation",
+      "note": "Each pair of letters gives one byte, and the bytes are read as UTF-16 little-endian text, which gives password back."
     }
   },
   {
@@ -4507,6 +4711,10 @@
     "expect": {
       "value": "EMOJHBAMKJNC",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Non-ASCII text as UTF-16 bytes",
+      "note": "The e with an acute accent is one unit and the emoji is a pair of units, so the six bytes become twelve letters."
     }
   },
   {
@@ -4521,6 +4729,10 @@
     "expect": {
       "value": "é😀",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Emoji come back from their bytes",
+      "note": "The six bytes of EMOJHBAMKJNC are read back as the accented e and the emoji."
     }
   },
   {
@@ -4606,6 +4818,10 @@
     "expect": {
       "value": "mjawexrk*?arzi1i/:svv:8wk'?,d!d.o!5is1h+gngn,g3+j9r9lu*n'v8d",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "With a nonce and a signature",
+      "note": "The output is longer than the 33-character message, because it carries the nonce and the signature, which decryption checks."
     }
   },
   {
@@ -4624,6 +4840,10 @@
     "expect": {
       "value": "conflagrate_the_rose_bush_at_six!",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Nonce length and signature",
+      "note": "The first ten letters are the nonce and are removed, the signature peace-vector-3 is checked, and then the message is returned."
     }
   },
   {
@@ -4656,6 +4876,10 @@
     "expect": {
       "value": "conflagrate_the_rose_bush_at_six!",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "No nonce and no signature",
+      "note": "With no nonce and no signature the whole ciphertext is the message, so it decrypts to the original line."
     }
   },
   {
@@ -4672,6 +4896,10 @@
     "expect": {
       "value": "gbr1mlv3-q7",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A short password and no nonce",
+      "note": "Without a nonce or a signature the output has the same length as the message: hello_world gives eleven characters."
     }
   },
   {

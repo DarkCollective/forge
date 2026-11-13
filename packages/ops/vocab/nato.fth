@@ -29,6 +29,9 @@ IN: nato
   str>codes [ digits _token ] map delimiter util:delimiter join ;
 
 META: encode
+  use-when "You need to spell out a code, a serial number or a call sign over a bad phone line, and want each letter or digit given its NATO word." ;
+  inverse decode ;
+  link "https://en.wikipedia.org/wiki/NATO_phonetic_alphabet" "NATO phonetic alphabet on Wikipedia" ;
   param digits "plain: Zero, One, Two ... Nine. icao: Zero, Wun, Too, Tree, Fower, Fife, Six, Seven, Ait, Niner." ;
   param delimiter "The text between the words." ;
   see-also nato:decode morse:encode ;
@@ -53,3 +56,9 @@ META: encode
   "Read text spelled with the ICAO spelling alphabet back: the input is split at the delimiter, and each word (in any case, with spaces around it ignored) becomes its character, a letter in upper case or a digit. Both digit spellings are understood, and so are the variants Alpha, Juliet, Xray, Whisky and Nine. A slash becomes a space. A token that is not a word is kept as it is, and empty tokens are dropped, so decode reads encode's output back except for the case of letters (and a slash or a delimiter that was in the text)." doc
   "Language" category
   delimiter util:delimiter split [ len 0 > ] filter _pairs >record _chars ;
+
+META: decode
+  use-when "You have text spelled with NATO words such as Alfa and Bravo, and want the letters and digits they stand for." ;
+  inverse encode ;
+  link "https://en.wikipedia.org/wiki/NATO_phonetic_alphabet" "NATO phonetic alphabet on Wikipedia" ;
+;

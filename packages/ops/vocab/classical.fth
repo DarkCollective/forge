@@ -17,6 +17,9 @@ IN: classical
   [ amount _rot-code ] map ;
 
 META: rot
+  use-when "You have a text that looks like scrambled letters, such as a spoiler or a puzzle, and want to try a fixed shift of its letters. ROT13 is the default shift." ;
+  link "https://en.wikipedia.org/wiki/ROT13" "ROT13 on Wikipedia" ;
+  link "https://en.wikipedia.org/wiki/Caesar_cipher" "Caesar cipher on Wikipedia" ;
   param amount "Shift (13 = ROT13)" ;
   alias rot13 ;
   see-also classical:atbash ;
@@ -42,6 +45,7 @@ META: rot
   [ 47 _rot47-code ] map ;
 
 META: rot47
+  use-when "You have printable text that looks like a row of symbols and may be ROT47 scrambled, as in a puzzle, and want it read. Applying it twice gives the text back." ;
   see-also classical:rot ;
 ;
 
@@ -61,6 +65,8 @@ META: rot47
   [ _atbash-code ] map ;
 
 META: atbash
+  use-when "You have a puzzle text whose alphabet runs backwards, with A written for Z and B for Y, and want it read. Applying it twice gives the text back." ;
+  link "https://en.wikipedia.org/wiki/Atbash" "Atbash on Wikipedia" ;
   see-also classical:rot classical:substitute ;
 ;
 
@@ -86,6 +92,9 @@ META: atbash
   a b _affine ;
 
 META: affine-encrypt
+  use-when "You have a puzzle message and the multiplier a and shift b of an affine cipher, and want it enciphered for a CTF challenge or a lesson." ;
+  inverse affine-decrypt ;
+  link "https://en.wikipedia.org/wiki/Affine_cipher" "Affine cipher on Wikipedia" ;
   param a "Multiplier; must be coprime to 26 (1, 3, 5, 7, 9, 11, 15, 17, 19, 21, 23 or 25)." ;
   param b "Shift, 0 to 25." ;
   see-also classical:affine-decrypt classical:rot ;
@@ -97,6 +106,9 @@ META: affine-encrypt
   a 26 invmod dup b * neg _affine ;
 
 META: affine-decrypt
+  use-when "You have affine ciphertext and the multiplier a and shift b that made it, and want the plaintext back, as in a puzzle or a lesson." ;
+  inverse affine-encrypt ;
+  link "https://en.wikipedia.org/wiki/Affine_cipher" "Affine cipher on Wikipedia" ;
   param a "Multiplier used to encrypt; must be coprime to 26." ;
   param b "Shift used to encrypt, 0 to 25." ;
   see-also classical:affine-encrypt ;
@@ -123,6 +135,9 @@ META: affine-decrypt
   key str>bytes 1 _vigenere ;
 
 META: vigenere-encrypt
+  use-when "You have a message and a keyword and want it enciphered with the Vigenere cipher, for a puzzle or a CTF challenge. The keyword repeats over the letters." ;
+  inverse vigenere-decrypt ;
+  link "https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher" "Vigenere cipher on Wikipedia" ;
   param key "Key letters A to Z (either case), 1 to 256 of them." ;
   see-also classical:vigenere-decrypt classical:rot ;
 ;
@@ -133,6 +148,9 @@ META: vigenere-encrypt
   key str>bytes -1 _vigenere ;
 
 META: vigenere-decrypt
+  use-when "You have Vigenere ciphertext and its keyword, as in a puzzle or a lesson, and want the plaintext back. The keyword is case-insensitive." ;
+  inverse vigenere-encrypt ;
+  link "https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher" "Vigenere cipher on Wikipedia" ;
   param key "Key letters A to Z (either case), 1 to 256 of them." ;
   see-also classical:vigenere-encrypt ;
 ;
@@ -162,6 +180,9 @@ META: vigenere-decrypt
   alphabet "classic" = _bacon-encode ;
 
 META: bacon-encode
+  use-when "You want to write a message as groups of five A and B symbols, one group for each letter, as in a puzzle or an old hiding method." ;
+  inverse bacon-decode ;
+  link "https://en.wikipedia.org/wiki/Bacon's_cipher" "Bacon's cipher on Wikipedia" ;
   param alphabet "classic: 24 letters (I=J, U=V). complete: 26 letters." ;
   see-also classical:bacon-decode ;
 ;
@@ -195,6 +216,9 @@ META: bacon-encode
   alphabet "classic" = _bacon-groups ;
 
 META: bacon-decode
+  use-when "You have a text of A and B symbols in groups of five, as Bacon's cipher writes letters, and want the message that it hides." ;
+  inverse bacon-encode ;
+  link "https://en.wikipedia.org/wiki/Bacon's_cipher" "Bacon's cipher on Wikipedia" ;
   param alphabet "classic: 24 letters (I=J, U=V). complete: 26 letters." ;
   see-also classical:bacon-encode ;
 ;
@@ -251,6 +275,9 @@ META: bacon-decode
   core:rot swap translate swap _bifid-enc ;
 
 META: bifid-encrypt
+  use-when "You have a message and a keyword and want Bifid ciphertext, made with a 5 by 5 square, for a puzzle or a CTF challenge. The output is capital letters only." ;
+  inverse bifid-decrypt ;
+  link "https://en.wikipedia.org/wiki/Bifid_cipher" "Bifid cipher on Wikipedia" ;
   param key "Keyword of letters (J counts as I); empty for the plain alphabet square." ;
   see-also classical:bifid-decrypt ;
 ;
@@ -262,6 +289,9 @@ META: bifid-encrypt
   core:rot swap translate swap _bifid-dec ;
 
 META: bifid-decrypt
+  use-when "You have Bifid ciphertext from a puzzle and its keyword, and want the message back in capital letters. Spaces and punctuation are not restored." ;
+  inverse bifid-encrypt ;
+  link "https://en.wikipedia.org/wiki/Bifid_cipher" "Bifid cipher on Wikipedia" ;
   param key "Keyword used to encrypt (J counts as I); empty for the plain alphabet square." ;
   see-also classical:bifid-encrypt ;
 ;
@@ -335,6 +365,9 @@ META: bifid-decrypt
   rails offset _rf-encrypt ;
 
 META: rail-fence-encrypt
+  use-when "You have a message and a number of rails, and want it scrambled in a zigzag across the rails, as in a puzzle or a school cipher lesson." ;
+  inverse rail-fence-decrypt ;
+  link "https://en.wikipedia.org/wiki/Rail_fence_cipher" "Rail fence cipher on Wikipedia" ;
   param rails "Number of rails, 2 to 1000." ;
   param offset "Steps into the zigzag at which the first byte sits." ;
   see-also classical:rail-fence-decrypt ;
@@ -346,6 +379,9 @@ META: rail-fence-encrypt
   rails offset _rf-decrypt ;
 
 META: rail-fence-decrypt
+  use-when "You have rail fence ciphertext, with the number of rails and offset that made it, and want the plaintext back, as in a puzzle or a lesson." ;
+  inverse rail-fence-encrypt ;
+  link "https://en.wikipedia.org/wiki/Rail_fence_cipher" "Rail fence cipher on Wikipedia" ;
   param rails "Number of rails, 2 to 1000." ;
   param offset "Steps into the zigzag at which the first byte sits." ;
   see-also classical:rail-fence-encrypt ;
@@ -364,6 +400,8 @@ META: rail-fence-decrypt
   join ;
 
 META: a1z26-encode
+  use-when "You have plain letters, such as a word in a puzzle, and want each one written as its place in the alphabet, from 1 for A to 26 for Z." ;
+  inverse a1z26-decode ;
   param delimiter "Put this between the numbers: space, comma or dash." ;
   see-also classical:a1z26-decode ;
 ;
@@ -379,6 +417,8 @@ META: a1z26-encode
   map list>bytes bytes>str ;
 
 META: a1z26-decode
+  use-when "You have numbers from 1 to 26, separated by spaces, commas or dashes, and want the letters they stand for, as in an alphabet puzzle." ;
+  inverse a1z26-encode ;
   see-also classical:a1z26-encode ;
 ;
 
@@ -411,6 +451,8 @@ META: a1z26-decode
   plaintext str>bytes ciphertext str>bytes _substitute ;
 
 META: substitute
+  use-when "You know the two alphabets of a substitution puzzle, with each letter swapped for another, and want the swaps made throughout a text." ;
+  link "https://en.wikipedia.org/wiki/Substitution_cipher" "Substitution cipher on Wikipedia" ;
   param plaintext "The characters to replace (printable ASCII, none repeated)." ;
   param ciphertext "Their replacements, in the same order and of the same length." ;
   see-also classical:atbash classical:rot ;
@@ -446,6 +488,7 @@ META: substitute
   variant "rot47" = crib _rot-brute ;
 
 META: rot-brute
+  use-when "You have a text in a shifted alphabet and do not know the shift, so you want every candidate. Pick the line that reads as English, or give a crib." ;
   param variant "rot: letters (shifts 1 to 25). rot47: printable ASCII (shifts 1 to 93)." ;
   param crib "Text expected in the output (matched as UTF-8 bytes). Empty keeps every candidate." ;
   param printable-only "Drop bytes that are not printable ASCII (tab, line feed and carriage return are kept) before shifting." ;
@@ -508,6 +551,7 @@ META: rot-brute
   str>codes [ _r8-char ] map codes>str ;
 
 META: rot8000
+  use-when "You want to turn text into a row of rare CJK characters for a puzzle or a joke, or read such a row. Applying it twice gives the text back." ;
   see-also classical:rot classical:rot47 ;
 ;
 
@@ -556,6 +600,9 @@ META: rot8000
   height _cb-encrypt ;
 
 META: caesar-box-encrypt
+  use-when "You have a message and a box height, and want it scrambled as a Caesar box, a column transposition written in rows and read in columns, for a puzzle." ;
+  inverse caesar-box-decrypt ;
+  link "https://en.wikipedia.org/wiki/Transposition_cipher" "Transposition cipher on Wikipedia" ;
   param height "Number of rows of the box, 1 to 65536." ;
   see-also classical:caesar-box-decrypt classical:rail-fence-encrypt ;
 ;
@@ -566,6 +613,9 @@ META: caesar-box-encrypt
   height _cb-decrypt ;
 
 META: caesar-box-decrypt
+  use-when "You have text written in a Caesar box and know its height, and want the original order of its letters back, as in a puzzle." ;
+  inverse caesar-box-encrypt ;
+  link "https://en.wikipedia.org/wiki/Transposition_cipher" "Transposition cipher on Wikipedia" ;
   param height "Number of rows of the box used to encrypt, 1 to 65536." ;
   see-also classical:caesar-box-encrypt ;
 ;
@@ -639,6 +689,9 @@ META: caesar-box-decrypt
   _text>be 0 256 range [ _cet-bits ] map _cet-encode ;
 
 META: cetacean-encode
+  use-when "You want text written as a row of E and e symbols, for a puzzle or a CTF challenge, with each UTF-16 code unit written as sixteen symbols." ;
+  inverse cetacean-decode ;
+  link "https://en.wikipedia.org/wiki/UTF-16" "UTF-16 on Wikipedia" ;
   see-also classical:cetacean-decode ;
 ;
 
@@ -665,6 +718,9 @@ META: cetacean-encode
   _cet-pack false _utf16>str ;
 
 META: cetacean-decode
+  use-when "You have a long run of E and e symbols, sixteen for each character, and want the text they stand for, as in a puzzle." ;
+  inverse cetacean-encode ;
+  link "https://en.wikipedia.org/wiki/UTF-16" "UTF-16 on Wikipedia" ;
   see-also classical:cetacean-encode ;
 ;
 
@@ -695,6 +751,9 @@ META: cetacean-decode
   _text>be _swap16 _ctx-chain bytes>hex str>bytes _ctx-table translate bytes>str ;
 
 META: ctx1-encode
+  use-when "You want the Citrix CTX1 obfuscated form of a password, for example to check a stored value in a CTF challenge. It is obfuscation, not encryption." ;
+  inverse ctx1-decode ;
+  link "https://en.wikipedia.org/wiki/UTF-16" "UTF-16 on Wikipedia" ;
   see-also classical:ctx1-decode ;
 ;
 
@@ -723,6 +782,9 @@ META: ctx1-encode
   _ctx-unpair _ctx-unchain true _utf16>str ;
 
 META: ctx1-decode
+  use-when "You have a string of letters from A to P, such as an obfuscated password from a Citrix setting, and want the text that it hides." ;
+  inverse ctx1-encode ;
+  link "https://en.wikipedia.org/wiki/UTF-16" "UTF-16 on Wikipedia" ;
   see-also classical:ctx1-encode ;
 ;
 
@@ -814,6 +876,8 @@ META: ctx1-decode
   password _ls-key-of false _ls-run ;
 
 META: ls47-encrypt
+  use-when "You want to encipher a message with the LS47 hand cipher, using a password, a nonce and an optional signature, for a puzzle or an exercise." ;
+  inverse ls47-decrypt ;
   param password "Makes the board: letters of the LS47 alphabet, 1 to 4096 of them." ;
   param nonce "Letters put in front of the text, so the same text encrypts differently. Empty for none." ;
   param signature "Appended as --- plus these letters, so a changed message can be noticed. Empty for none." ;
@@ -841,6 +905,8 @@ META: ls47-encrypt
   nonce-length signature _ls-strip ;
 
 META: ls47-decrypt
+  use-when "You have an LS47 message, with the password, nonce length and any signature used to make it, and want the plaintext back, as in a puzzle." ;
+  inverse ls47-encrypt ;
   param password "The password used to encrypt." ;
   param nonce-length "How many nonce letters were put in front of the text." ;
   param signature "The signature used to encrypt (checked and removed). Empty for none." ;

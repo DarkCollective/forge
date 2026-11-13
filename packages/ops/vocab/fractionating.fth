@@ -41,6 +41,9 @@ IN: fractionating
   key str>bytes [ util:upper-merge-i ] map _fr-alpha util:keyed-alphabet util:square-positions _fr-digits ;
 
 META: polybius-encrypt
+  use-when "You have a message and want each letter written as two digits from 1 to 5, its row and column in a 5 by 5 Polybius square, for a puzzle or a lesson." ;
+  inverse polybius-decrypt ;
+  link "https://en.wikipedia.org/wiki/Polybius_square" "Polybius square on Wikipedia" ;
   param key "Keyword of letters (either case; repeats dropped); empty for the plain square." ;
   see-also fractionating:polybius-decrypt ;
 ;
@@ -55,6 +58,9 @@ META: polybius-encrypt
   key str>bytes [ util:upper-merge-i ] map _fr-alpha util:keyed-alphabet _fr-decode ;
 
 META: polybius-decrypt
+  use-when "You have pairs of digits from 1 to 5 that name the letters of a Polybius square, with the key that was used, and want the letters back, for a puzzle." ;
+  inverse polybius-encrypt ;
+  link "https://en.wikipedia.org/wiki/Polybius_square" "Polybius square on Wikipedia" ;
   param key "Keyword used to encrypt; empty for the plain square." ;
   see-also fractionating:polybius-encrypt ;
 ;
@@ -90,6 +96,9 @@ META: polybius-decrypt
   _nh-sums [ int>str ] map " " join str>bytes ;
 
 META: nihilist-encrypt
+  use-when "You have a message and a key, and want Nihilist numbers, each the sum of two square cells, for a puzzle or a lesson on how the cipher works." ;
+  inverse nihilist-decrypt ;
+  link "https://en.wikipedia.org/wiki/Nihilist_cipher" "Nihilist cipher on Wikipedia" ;
   param key "Nihilist key: letters (either case), repeated over the data." ;
   param square "Keyword of the Polybius square (letters, either case; repeats dropped); empty for the plain square." ;
   see-also fractionating:nihilist-decrypt ;
@@ -104,6 +113,9 @@ META: nihilist-encrypt
   _nh-decrypt ;
 
 META: nihilist-decrypt
+  use-when "You have a row of Nihilist numbers with the key and square they were made with, and want the letters back, for a puzzle or a lesson." ;
+  inverse nihilist-encrypt ;
+  link "https://en.wikipedia.org/wiki/Nihilist_cipher" "Nihilist cipher on Wikipedia" ;
   param key "Nihilist key used to encrypt (letters, either case)." ;
   param square "Keyword of the Polybius square used to encrypt; empty for the plain square." ;
   see-also fractionating:nihilist-encrypt ;
@@ -162,6 +174,9 @@ META: nihilist-decrypt
   trkey "" transposition:columnar-encrypt ;
 
 META: adfgx-encrypt
+  use-when "You have a message, a square key and a transposition key, and want ADFGX or ADFGVX ciphertext, as the German army used in 1918, for a CTF challenge." ;
+  inverse adfgx-decrypt ;
+  link "https://en.wikipedia.org/wiki/ADFGVX_cipher" "ADFGVX cipher on Wikipedia" ;
   param key "Keyword of the square (letters, or letters and digits for adfgvx, repeats dropped); it fills the square first." ;
   param trkey "Keyword of the transposition: its letters give the column order." ;
   param variant "adfgx (5 by 5, letters) or adfgvx (6 by 6, letters and digits)." ;
@@ -176,6 +191,9 @@ META: adfgx-encrypt
   key variant _adf-decode ;
 
 META: adfgx-decrypt
+  use-when "You have ADFGX or ADFGVX ciphertext with its two keys and variant, and want the plaintext back, for a puzzle or to read a historical text." ;
+  inverse adfgx-encrypt ;
+  link "https://en.wikipedia.org/wiki/ADFGVX_cipher" "ADFGVX cipher on Wikipedia" ;
   param key "Keyword of the square used to encrypt (same as adfgx-encrypt)." ;
   param trkey "Keyword of the transposition used to encrypt." ;
   param variant "adfgx or adfgvx, as used to encrypt." ;
@@ -243,6 +261,9 @@ META: adfgx-decrypt
   period [ _tr-enc-block ] _tr-blocks ;
 
 META: trifid-encrypt
+  use-when "You have a message and a key and want Trifid ciphertext, which uses a 27-symbol cube and mixes the coordinates in blocks, for a puzzle or a lesson." ;
+  inverse trifid-decrypt ;
+  link "https://en.wikipedia.org/wiki/Trifid_cipher" "Trifid cipher on Wikipedia" ;
   param key "Keyword of the cube (letters, either case; repeats dropped); empty for the plain cube." ;
   param period "The block size: the number of letters whose coordinates are read together." ;
   see-also fractionating:trifid-decrypt ;
@@ -256,6 +277,9 @@ META: trifid-encrypt
   period [ _tr-dec-block ] _tr-blocks ;
 
 META: trifid-decrypt
+  use-when "You have Trifid ciphertext with the key and period it was made with, and want the letters back, for a puzzle or a lesson." ;
+  inverse trifid-encrypt ;
+  link "https://en.wikipedia.org/wiki/Trifid_cipher" "Trifid cipher on Wikipedia" ;
   param key "Keyword of the cube used to encrypt (letters, either case); empty for the plain cube." ;
   param period "The block size used to encrypt." ;
   see-also fractionating:trifid-encrypt ;

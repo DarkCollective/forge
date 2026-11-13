@@ -13,6 +13,10 @@
     "expect": {
       "value": "EVLNACDTESEAROFODEECWIREE",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The classic ZEBRAS example",
+      "note": "The columns are read out in alphabetical order of their key letters, so the column under A comes first and gives EVLN."
     }
   },
   {
@@ -29,6 +33,10 @@
     "expect": {
       "value": "WEAREDISCOVEREDFLEEATONCE",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Undo the ZEBRAS example",
+      "note": "The same key puts the columns back in order, so EVLNACDTESEAROFODEECWIREE gives WEAREDISCOVEREDFLEEATONCE."
     }
   },
   {
@@ -46,6 +54,10 @@
     "expect": {
       "value": "EVLNZACDTZESEAZROFOZDEECZWIREE",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A pad letter fills the last row",
+      "note": "The Z pad fills the short last row. The Z stays in the output, because decryption does not remove it."
     }
   },
   {
@@ -78,6 +90,10 @@
     "expect": {
       "value": "BFDHAECG",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A repeated key letter",
+      "note": "The key KEYE has two Es. The column under the left E is read first, so ABCDEFGH becomes BFDHAECG."
     }
   },
   {

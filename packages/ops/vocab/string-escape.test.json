@@ -17,6 +17,10 @@
     "expect": {
       "value": "It\\'s\\t\"\\xe9\"\\\\\\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Quotes, tabs, line breaks and accents",
+      "note": "The single quote gets a backslash, the tab and line feed become their short escapes, and the accented e becomes \\xe9. Double quotes are left alone."
     }
   },
   {
@@ -37,6 +41,10 @@
     "expect": {
       "value": "It's \\\"x\\\"",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The double quote option",
+      "note": "With the double quote chosen, the double quotes get a backslash and the single quote is left alone."
     }
   },
   {
@@ -177,6 +185,10 @@
     "expect": {
       "value": "\\x61\\xe9\\n",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Level everything escapes all characters",
+      "note": "At the everything level even plain letters are written as escapes, so the a becomes \\x61 and the newline is \\n."
     }
   },
   {
@@ -285,6 +297,10 @@
     "expect": {
       "value": "ABC😀",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Hex and Unicode escapes",
+      "note": "Two hex digits, four hex digits, or braces with up to six digits each give one character, so the escapes spell ABC and an emoji."
     }
   },
   {
@@ -299,6 +315,10 @@
     "expect": {
       "value": "😀 😀",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A surrogate pair makes one emoji",
+      "note": "A high and a low surrogate escape in a row make one character, so the two pairs here give two emoji."
     }
   },
   {
@@ -327,6 +347,10 @@
     "expect": {
       "value": "\\q \\x4 \\u12 \\8",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Bad escapes are kept as written",
+      "note": "An escape that is not valid, such as an unknown letter or a hex escape with too few digits, stays in the output as it was typed."
     }
   },
   {

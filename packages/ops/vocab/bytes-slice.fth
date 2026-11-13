@@ -63,6 +63,7 @@ USING: util ;
   if ;
 
 META: take
+  use-when "You have binary data and know where the part you want starts and how long it is, such as a field in a packet, and want only that part." ;
   param start "The offset of the first byte to keep; 0 is the first byte of the data." ;
   param length "How many bytes to keep." ;
   param each-line "Apply to every line separately instead of to the whole input." ;
@@ -70,6 +71,7 @@ META: take
 ;
 
 META: remove
+  use-when "You have binary data with a span of bytes you want to drop, such as a header at a known offset, and want the rest of the data in order." ;
   param start "The offset of the first byte to remove; 0 is the first byte of the data." ;
   param length "How many bytes to remove." ;
   param each-line "Apply to every line separately instead of to the whole input." ;
@@ -77,6 +79,7 @@ META: remove
 ;
 
 META: take-nth
+  use-when "You have data with a value in every nth byte, such as one channel of interleaved samples, and want only those bytes in order." ;
   param n "Keep one byte in every n (1 keeps them all)." ;
   param start "The offset of the first byte to keep." ;
   param each-line "Apply to every line separately instead of to the whole input." ;
@@ -84,6 +87,7 @@ META: take-nth
 ;
 
 META: remove-nth
+  use-when "You have data where every nth byte is padding or noise, such as a zero every fourth byte, and want the other bytes in order." ;
   param n "Remove one byte in every n (1 removes them all)." ;
   param start "The offset of the first byte to remove." ;
   param each-line "Apply to every line separately instead of to the whole input." ;

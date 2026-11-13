@@ -32,6 +32,9 @@ IN: diacritics
   strokes [ _strokes swap [ _replace ] reduce ] when ;
 
 META: remove
+  use-when "You have names or words with accents, such as Crème Brûlée, and want plain letters for a search or a comparison, without the marks." ;
+  link "https://en.wikipedia.org/wiki/Diacritic" "Diacritic on Wikipedia" ;
+  link "https://en.wikipedia.org/wiki/Combining_character" "Combining character on Wikipedia" ;
   param strokes "Also turn the letters with a stroke (o with stroke, d with stroke, l with stroke and so on) into plain letters." ;
   see-also unicode:normalize ;
 ;

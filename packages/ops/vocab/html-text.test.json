@@ -11,6 +11,10 @@
     "expect": {
       "value": "Hello world!",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Tags removed, text kept",
+      "note": "The bold tag goes and its text stays, and the paragraph tags leave plain text, so Hello world! remains."
     }
   },
   {
@@ -39,6 +43,10 @@
     "expect": {
       "value": "abc",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Script and style content removed",
+      "note": "Script and style elements go with their content, so only the letters a, b and c are left."
     }
   },
   {
@@ -165,6 +173,10 @@
     "expect": {
       "value": "<script>alert(1)</script>",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Decoded text is not a tag",
+      "note": "Entities are decoded after the tags are removed, so the escaped script tags come out as text, not as a tag."
     }
   },
   {

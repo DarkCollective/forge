@@ -13,6 +13,10 @@
     "expect": {
       "value": "2315313134",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The default square",
+      "note": "H is in row 2 and column 3, so it becomes 23, and E becomes 15. The output has only digits."
     }
   },
   {
@@ -29,6 +33,10 @@
     "expect": {
       "value": "HELLO",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Digit pairs back to letters",
+      "note": "Each pair gives a row and a column, so 23 is H and 15 is E, and 2315313134 reads HELLO."
     }
   },
   {
@@ -45,6 +53,10 @@
     "expect": {
       "value": "2312433151315451",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A key first in the square",
+      "note": "With the key POLYBIUSCIPHER the first letter S becomes 23, where the default square would give 43."
     }
   },
   {
@@ -61,6 +73,10 @@
     "expect": {
       "value": "SOMETEXT",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The same key is needed",
+      "note": "With the key POLYBIUSCIPHER the pairs read SOMETEXT, so the key must match the one used for encryption."
     }
   },
   {
@@ -77,6 +93,10 @@
     "expect": {
       "value": "241132",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "J is read as I",
+      "note": "J shares a cell with I, so J gives 24 as I does, and JAM becomes 241132."
     }
   },
   {
@@ -124,6 +144,10 @@
     "expect": {
       "value": "37 106 62 36 67 47 86 26 104 53 62 77 27 55 57 66 55 36 54 27",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A keyed square and a repeating key",
+      "note": "The square is keyed by ZEBRAS and the key RUSSIAN repeats over the letters. The spaces are dropped and the sums are joined by spaces."
     }
   },
   {
@@ -141,6 +165,10 @@
     "expect": {
       "value": "DYNAMITEWINTERPALACE",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Undo the keyed example",
+      "note": "The key is taken off each number and the rest are read as square cells, giving DYNAMITEWINTERPALACE with no spaces."
     }
   },
   {
@@ -157,6 +185,10 @@
     "expect": {
       "value": "34 26 42 42 45",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Cell numbers added together",
+      "note": "H is in row 2 and column 3, so 23, and the key letter A is 11. Their sum, 34, is the first number of the output."
     }
   },
   {
@@ -206,6 +238,10 @@
     "expect": {
       "value": "FAXDFADDDGDGFFFAFAXAFAFX",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "ADFGX with a square and a transposition key",
+      "note": "Each letter becomes two of the labels A, D, F, G and X, then the pairs are rearranged by the key CARGO. The 12 letters give 24 labels."
     }
   },
   {
@@ -224,6 +260,10 @@
     "expect": {
       "value": "ATTACKATONCE",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Undo the ADFGX example",
+      "note": "The transposition is undone first, then each pair of labels names a cell, so FAXDFADDDGDGFFFAFAXAFAFX gives ATTACKATONCE again."
     }
   },
   {
@@ -259,6 +299,10 @@
     "expect": {
       "value": "DGDDDAGDDGAFADDFDADVDVFAADVX",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "ADFGVX also labels the digits",
+      "note": "The 6 by 6 square holds the digits too, so 1200 gets labels and the labels include V. Fourteen letters and digits give 28 labels."
     }
   },
   {
@@ -277,6 +321,10 @@
     "expect": {
       "value": "ATTACKAT1200AM",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "ADFGVX with the 6 by 6 square",
+      "note": "With the variant adfgvx and its own square, the pairs read back as ATTACKAT1200AM, digits included."
     }
   },
   {
@@ -345,6 +393,10 @@
     "expect": {
       "value": "FMJFVOISSUFTFPUFEQQC",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A French proverb in a keyed cube",
+      "note": "Only the letters are kept, so the spaces, the hyphen and the apostrophe are dropped from aide-toi, le ciel t'aidera."
     }
   },
   {
@@ -362,6 +414,10 @@
     "expect": {
       "value": "AIDETOILECIELTAIDERA",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Undo the French example",
+      "note": "With the same key and period 5, FMJFVOISSUFTFPUFEQQC gives back the letters of the proverb, without spaces or punctuation."
     }
   },
   {
@@ -376,6 +432,10 @@
     "expect": {
       "value": "AABKTAF+F",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The 27th symbol is a plus sign",
+      "note": "With no key the cube runs A to Z and then plus, so a plus sign can appear in the output, as it does here."
     }
   },
   {
@@ -390,6 +450,10 @@
     "expect": {
       "value": "ABCDEFGHI",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The plus sign reads back as the 27th symbol",
+      "note": "Decrypting AABKTAF+F with no key gives ABCDEFGHI, so the plus sign is read as the 27th symbol."
     }
   },
   {

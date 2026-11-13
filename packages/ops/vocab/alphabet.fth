@@ -40,6 +40,7 @@ USING: util ;
   delimiter util:delimiter _join-all ;
 
 META: expand
+  use-when "You have a range such as a-z or 0-9 from a settings box, and want every character in it written out, for example as a charset for a brute-force run." ;
   param delimiter "What is written between the characters." ;
   see-also charcode:encode ;
 ;

@@ -17,6 +17,8 @@ IN: unicode-format
   underline strikethrough _marks _decorate ;
 
 META: decorate
+  use-when "You want underlined or struck-through text in a place that accepts only plain text, such as a chat box or a bio, where HTML styling is not available." ;
+  link "https://en.wikipedia.org/wiki/Combining_character" "Combining character on Wikipedia" ;
   param underline "Underline: put U+0332 after each character." ;
   param strikethrough "Strikethrough: put U+0336 after each character." ;
 ;

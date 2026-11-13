@@ -71,6 +71,8 @@ IN: polyalphabetic
   data key str>bytes [ 31 band 1 - ] map [ _pa-reflect ] _pa-stream ;
 
 META: beaufort
+  use-when "You have a message and a keyword and want a Beaufort cipher, a Vigenere variant that subtracts the key, for a puzzle. The same word decrypts it." ;
+  link "https://en.wikipedia.org/wiki/Beaufort_cipher" "Beaufort cipher on Wikipedia" ;
   param key "Key letters A to Z (either case), 1 to 256 of them." ;
   see-also polyalphabetic:beaufort ;
 ;
@@ -81,6 +83,9 @@ META: beaufort
   data key str>bytes [ 31 band 1 - ] map false _pa-autokey ;
 
 META: vigenere-autokey-encrypt
+  use-when "You have a message and a short primer key, and want an autokey cipher, in which the message itself extends the key, for a puzzle or a lesson." ;
+  inverse vigenere-autokey-decrypt ;
+  link "https://en.wikipedia.org/wiki/Autokey_cipher" "Autokey cipher on Wikipedia" ;
   param key "Primer: key letters A to Z (either case), 1 to 256 of them." ;
   see-also polyalphabetic:vigenere-autokey-decrypt ;
 ;
@@ -91,6 +96,9 @@ META: vigenere-autokey-encrypt
   data key str>bytes [ 31 band 1 - ] map true _pa-autokey ;
 
 META: vigenere-autokey-decrypt
+  use-when "You have autokey ciphertext and its primer key, and want the plaintext back, as in a puzzle or a lesson." ;
+  inverse vigenere-autokey-encrypt ;
+  link "https://en.wikipedia.org/wiki/Autokey_cipher" "Autokey cipher on Wikipedia" ;
   param key "Primer used to encrypt: key letters A to Z (either case), 1 to 256 of them." ;
   see-also polyalphabetic:vigenere-autokey-encrypt ;
 ;
@@ -101,6 +109,8 @@ META: vigenere-autokey-decrypt
   data key str>bytes [ 48 - ] map [ _pa-shift ] _pa-stream ;
 
 META: gronsfeld-encrypt
+  use-when "You have a message and a key of digits, and want a Gronsfeld cipher, a Vigenere cipher whose key is numbers, for a puzzle or a CTF challenge." ;
+  inverse gronsfeld-decrypt ;
   param key "Key digits 0 to 9, 1 to 256 of them." ;
   see-also polyalphabetic:gronsfeld-decrypt ;
 ;
@@ -111,6 +121,8 @@ META: gronsfeld-encrypt
   data key str>bytes [ 48 - ] map [ neg _pa-shift ] _pa-stream ;
 
 META: gronsfeld-decrypt
+  use-when "You have Gronsfeld ciphertext with its digit key, and want the plaintext back, as in a puzzle or a lesson." ;
+  inverse gronsfeld-encrypt ;
   param key "Key digits used to encrypt, 0 to 9, 1 to 256 of them." ;
   see-also polyalphabetic:gronsfeld-encrypt ;
 ;
@@ -134,5 +146,6 @@ META: gronsfeld-decrypt
   data key str>bytes [ 31 band 1 - ] map [ _porta-letter ] _pa-stream ;
 
 META: porta
+  use-when "You have a message and a key of letters, and want a Porta cipher, a reciprocal cipher for a puzzle or a lesson. The same word decrypts it." ;
   param key "Key letters A to Z (either case), 1 to 256 of them; each pair AB, CD, ... selects one alphabet." ;
 ;

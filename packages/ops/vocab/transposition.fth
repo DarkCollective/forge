@@ -75,6 +75,9 @@ IN: transposition
   key len _columns ;
 
 META: columnar-encrypt
+  use-when "You have a message and a keyword, and want it scrambled by a columnar transposition, which keeps every letter and changes only their order, for a puzzle." ;
+  inverse columnar-decrypt ;
+  link "https://en.wikipedia.org/wiki/Transposition_cipher" "Transposition cipher on Wikipedia" ;
   param key "Keyword of letters (either case); its letters give the column order." ;
   param pad "A pad letter to fill the last row, or empty for none." ;
   see-also transposition:columnar-decrypt ;
@@ -86,6 +89,9 @@ META: columnar-encrypt
   data key upper str>codes _key-values _column-ranks key len data len _decrypt-bytes ;
 
 META: columnar-decrypt
+  use-when "You have columnar transposition ciphertext and its keyword, and want the letters back in their original order, as in a puzzle or a lesson." ;
+  inverse columnar-encrypt ;
+  link "https://en.wikipedia.org/wiki/Transposition_cipher" "Transposition cipher on Wikipedia" ;
   param key "Keyword used to encrypt (either case)." ;
   see-also transposition:columnar-encrypt ;
 ;

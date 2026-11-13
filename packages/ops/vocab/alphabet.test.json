@@ -11,6 +11,10 @@
     "expect": {
       "value": "abcde",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A range written out",
+      "note": "a-e is the range from a to e by code point, so the five letters come out with no gap between them."
     }
   },
   {
@@ -27,6 +31,10 @@
     "expect": {
       "value": "a,b,c,x,0,1,2",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Ranges and single characters together",
+      "note": "a-c and 0-2 are ranges, and the x between them is an ordinary character, so the list is a, b, c, x, 0, 1, 2."
     }
   },
   {
@@ -43,6 +51,10 @@
     "expect": {
       "value": "a,-,c",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A backslash makes a minus plain",
+      "note": "The backslash in front of the minus stops it reading as a range, so the escaped minus gives a, the minus sign and c."
     }
   },
   {

@@ -23,5 +23,7 @@ IN: html-text
   [ util:space? ] util:trim-start [ util:space? ] util:trim-end ;
 
 META: to-text
+  use-when "You have an HTML page or snippet and want only its readable text, such as the words of an email, without the tags." ;
+  link "https://en.wikipedia.org/wiki/HTML" "HTML on Wikipedia" ;
   see-also html:decode regex:replace ;
 ;

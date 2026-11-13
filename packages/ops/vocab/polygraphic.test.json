@@ -13,6 +13,10 @@
     "expect": {
       "value": "BMODZBXDNABEKUDMUIXMMOUVIF",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The classic Hide the gold example",
+      "note": "The keyword playfairexample fills the square. The two Es of tree are split by a filler X, and the decrypted text keeps it."
     }
   },
   {
@@ -29,6 +33,10 @@
     "expect": {
       "value": "HIDETHEGOLDINTHETREXESTUMP",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Filler letters stay in the output",
+      "note": "The X in TREXES is the filler from tree, and it stays because decryption does not remove fillers."
     }
   },
   {
@@ -45,6 +53,10 @@
     "expect": {
       "value": "IBSUPMNA",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A doubled letter gets a filler",
+      "note": "The two Ls in balloon are split by an X, so the output has eight letters in four pairs."
     }
   },
   {
@@ -93,6 +105,10 @@
     "expect": {
       "value": "FYNFNEHWBXAFFOKHMD",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Two keyed squares",
+      "note": "The first keyword fills the top right square and the second the bottom left. HELP ME OBIWAN KENOBI comes out as FYNFNEHWBXAFFOKHMD."
     }
   },
   {
@@ -110,6 +126,10 @@
     "expect": {
       "value": "HELPMEOBIWANKENOBI",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Decrypt with the same two keys",
+      "note": "The text has no doubled letters, so no filler appears. The spaces are dropped and the output is HELPMEOBIWANKENOBI."
     }
   },
   {
@@ -128,6 +148,10 @@
     "expect": {
       "value": "POH",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A 3 by 3 key written as nine letters",
+      "note": "The letters of GYBNQKURP fill the matrix, with A as 0, and ACT becomes POH."
     }
   },
   {
@@ -163,6 +187,10 @@
     "expect": {
       "value": "ACT",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The inverse matrix undoes the key",
+      "note": "POH is multiplied by the inverse of the key matrix, which gives ACT again."
     }
   },
   {
@@ -181,6 +209,10 @@
     "expect": {
       "value": "POH",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The same key written as numbers",
+      "note": "The numbers 6 24 1 13 16 10 20 17 15 are the same matrix as GYBNQKURP, so ACT again becomes POH."
     }
   },
   {

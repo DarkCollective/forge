@@ -15,6 +15,10 @@
     "expect": {
       "value": "020304",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Three bytes from offset 2",
+      "note": "Offset 2 is the third byte, counting from 0, so the three bytes 02, 03 and 04 are kept."
     }
   },
   {
@@ -87,6 +91,10 @@
     "expect": {
       "value": "01020a040a06",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Each line on its own",
+      "note": "Each line is cut from offset 1 for up to two bytes, so a short line keeps only what it has, and the line feeds stay between the pieces."
     }
   },
   {
@@ -105,6 +113,10 @@
     "expect": {
       "value": "0001050607",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Remove three bytes from offset 2",
+      "note": "The bytes 02, 03 and 04 are removed, and everything else stays in order."
     }
   },
   {
@@ -159,6 +171,10 @@
     "expect": {
       "value": "00020a030a05",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Remove from each line",
+      "note": "The byte at offset 1 is removed from each line separately, and the line feeds stay where they were."
     }
   },
   {
@@ -177,6 +193,10 @@
     "expect": {
       "value": "010407",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Every third byte from offset 1",
+      "note": "Starting at offset 1 and stepping by 3 gives the bytes 01, 04 and 07."
     }
   },
   {
@@ -231,6 +251,10 @@
     "expect": {
       "value": "00020a030a05",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Each line counted from its own start",
+      "note": "With each-line set, each line is counted from its own first byte, so the first byte of every line is kept."
     }
   },
   {
@@ -249,6 +273,10 @@
     "expect": {
       "value": "0002030506",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Every third byte from offset 1 is removed",
+      "note": "Bytes 01, 04 and 07 are dropped, and the other five stay in order."
     }
   },
   {
@@ -285,6 +313,10 @@
     "expect": {
       "value": "010a040a06",
       "enc": "hex"
+    },
+    "example": {
+      "title": "Every second byte of each line",
+      "note": "With each-line set, the byte at offset 0 and then every second byte are removed from each line."
     }
   },
   {

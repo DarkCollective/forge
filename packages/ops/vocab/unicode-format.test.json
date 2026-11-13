@@ -14,6 +14,10 @@
     "expect": {
       "value": "a̲b̲c̲",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Underline",
+      "note": "Each character is followed by a combining low line (U+0332), so abc shows as underlined letters wherever Unicode text is shown."
     }
   },
   {
@@ -31,6 +35,10 @@
     "expect": {
       "value": "a̶b̶c̶",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Strikethrough",
+      "note": "The combining long stroke overlay after each character gives a strikethrough."
     }
   },
   {
@@ -48,6 +56,10 @@
     "expect": {
       "value": "a̶̲b̶̲",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Both, with the strike first",
+      "note": "With both options on, the strikethrough mark goes after each character first, then the underline."
     }
   },
   {

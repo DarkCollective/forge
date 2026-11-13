@@ -25,6 +25,10 @@
     "expect": {
       "value": "Alfa Bravo Charlie",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Letters as NATO words",
+      "note": "Each letter becomes its word, so ABC becomes Alfa Bravo Charlie, joined by spaces."
     }
   },
   {
@@ -55,6 +59,10 @@
     "expect": {
       "value": "Zero Wun Too Tree Fower Fife Six Seven Ait Niner",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Digits as ICAO pronounces them",
+      "note": "With digits set to icao, the digits are spelt as the ICAO pronounces them, so 1 is Wun and 9 is Niner."
     }
   },
   {
@@ -69,6 +77,10 @@
     "expect": {
       "value": "Hotel Echo Lima Lima Oscar / Whiskey Oscar Romeo Lima Delta / Four Two !",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A space becomes a slash",
+      "note": "A space becomes a slash so that the words stay apart, the digits are spelt out, and the exclamation mark is kept as it is."
     }
   },
   {
@@ -172,6 +184,10 @@
     "expect": {
       "value": "HEL",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Words in any case",
+      "note": "Each word is matched without regard to case, so hotel, ECHO and Lima give HEL."
     }
   },
   {
@@ -200,6 +216,10 @@
     "expect": {
       "value": "1234589",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "ICAO digit words",
+      "note": "Wun, Too, Tree, Fower, Fife, Ait and Niner read as 1, 2, 3, 4, 5, 8 and 9."
     }
   },
   {
@@ -228,6 +248,10 @@
     "expect": {
       "value": "HELLO 42!",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Words back to text",
+      "note": "Hotel Echo Lima Lima Oscar reads HELLO, the slash becomes a space, and Four Two ! reads 42 followed by the exclamation mark."
     }
   },
   {

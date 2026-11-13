@@ -31,6 +31,10 @@
     "expect": {
       "value": "483610572",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The extended style",
+      "note": "The extended style also changes b, g, z and more, so abegiostz becomes 483610572."
     }
   },
   {
@@ -48,6 +52,10 @@
     "expect": {
       "value": "L337 5p34k",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Basic leet speak",
+      "note": "With the basic style a becomes 4, e becomes 3, i becomes 1, o becomes 0, s becomes 5 and t becomes 7, so Leet speak becomes L337 5p34k."
     }
   },
   {
@@ -197,6 +205,10 @@
     "expect": {
       "value": "8 6 2 a",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Reading back is only a guess",
+      "note": "From reads every 4 as an a, so the real digit 4 in 8 6 2 4 becomes a letter, which is why reading back is a best guess."
     }
   }
 ]

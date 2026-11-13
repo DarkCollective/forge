@@ -158,23 +158,34 @@ USING: util ;
   pattern _pieces [ _piece-from ] map "" join ;
 
 META: swap-case
+  use-when "You have text with the case the wrong way round, such as a caps-lock mistake, and want each letter's case swapped." ;
+  link "https://en.wikipedia.org/wiki/Letter_case" "Letter case on Wikipedia" ;
   see-also case:alternating text:upper text:lower ;
 ;
 
 META: alternating
+  use-when "You want text in alternating upper and lower case, as in a mocking meme, and have plain text to change." ;
+  link "https://en.wikipedia.org/wiki/Letter_case" "Letter case on Wikipedia" ;
   param first "Whether the first letter is lower case (the default) or upper case." ;
   see-also case:swap-case ;
 ;
 
 META: all-casings
+  use-when "You have a word and want every upper and lower case version of it, for example to list the case variants of a password guess." ;
   param delimiter "What is written between the combinations: a line feed by default." ;
   see-also case:swap-case ;
 ;
 
 META: to-insensitive-regex
+  use-when "You have a regular expression and want it to match the text whatever its case, for example in a search box that ignores case." ;
+  inverse from-insensitive-regex ;
+  link "https://en.wikipedia.org/wiki/Regular_expression" "Regular expression on Wikipedia" ;
   see-also case:from-insensitive-regex regex:test ;
 ;
 
 META: from-insensitive-regex
+  use-when "You have a regular expression that spells out both cases in brackets, such as [aA], and want the short form that you would write by hand." ;
+  inverse to-insensitive-regex ;
+  link "https://en.wikipedia.org/wiki/Regular_expression" "Regular expression on Wikipedia" ;
   see-also case:to-insensitive-regex ;
 ;

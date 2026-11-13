@@ -13,6 +13,10 @@
     "expect": {
       "value": "qnxepvytwtwp",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Lower case in, lower case out",
+      "note": "Lower-case input gives lower-case output, with the same primer key."
     }
   },
   {
@@ -29,6 +33,10 @@
     "expect": {
       "value": "QNXEPVYTWTWP",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The primer, then the message",
+      "note": "The primer QUEENLY is the start of the key, and each later key letter is a letter of the message, so the output starts QNXEP."
     }
   },
   {
@@ -45,6 +53,10 @@
     "expect": {
       "value": "ATTACKATDAWN",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Each recovered letter joins the key",
+      "note": "Each plaintext letter joins the key as it is found, so QNXEPVYTWTWP gives back ATTACKATDAWN from the primer QUEENLY."
     }
   },
   {
@@ -61,6 +73,10 @@
     "expect": {
       "value": "Duxbhn bx efzo",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Digits as the key",
+      "note": "Each digit shifts the letter in its place, so A moved by 3 gives D, and the output is Duxbhn bx efzo."
     }
   },
   {
@@ -77,6 +93,10 @@
     "expect": {
       "value": "Attack at dawn",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Undo the digit shifts",
+      "note": "With the key 31415 the shifts are taken back, so Duxbhn bx efzo reads Attack at dawn again."
     }
   },
   {
@@ -93,6 +113,10 @@
     "expect": {
       "value": "abc DEF",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A single digit is a Caesar shift",
+      "note": "With the key 3 every letter moves by 3, and the space passes through without using a digit."
     }
   },
   {
@@ -109,6 +133,10 @@
     "expect": {
       "value": "LLTOLBETLNPR",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Subtract the key letter",
+      "note": "Each letter is the key letter minus the message letter, modulo 26, so A under L gives L and the output is LLTOLBETLNPR."
     }
   },
   {
@@ -125,6 +153,10 @@
     "expect": {
       "value": "ATTACKATDAWN",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The same word gives the message back",
+      "note": "Beaufort is its own inverse: the output above goes back through the same key to ATTACKATDAWN."
     }
   },
   {
@@ -172,6 +204,10 @@
     "expect": {
       "value": "SYNNJSCVRNRLAHUTUKUCVRYRLANY",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A longer keyword",
+      "note": "Porta is reciprocal, so the same key applied to the output gives the message back, and one word both enciphers and deciphers."
     }
   },
   {
@@ -204,6 +240,10 @@
     "expect": {
       "value": "NOPQRSTUVWXYZABCDEFGHIJKLM",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Each key pair picks an alphabet",
+      "note": "The key AB uses the first pair, so the alphabet A to Z comes out as N to Z followed by A to M."
     }
   },
   {
@@ -236,6 +276,10 @@
     "expect": {
       "value": "Uryyb, Jbeyq!",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A key of A gives ROT13",
+      "note": "The key A makes the pair AB, which swaps the two halves of the alphabet, so Hello, World! becomes Uryyb, Jbeyq!, as ROT13 gives."
     }
   },
   {

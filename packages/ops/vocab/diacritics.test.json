@@ -11,6 +11,10 @@
     "expect": {
       "value": "Creme Brulee",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Accents off a French name",
+      "note": "The accents and the cedilla are removed, so Crème Brûlée becomes Creme Brulee."
     }
   },
   {
@@ -113,6 +117,10 @@
     "expect": {
       "value": "Orsted ore Dorde D d Lodz h T t i",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Strokes removed when asked",
+      "note": "With strokes on, a letter with a stroke becomes its base letter: the O with a stroke becomes O, the D with a stroke becomes D, and the dotless i becomes i."
     }
   },
   {
@@ -129,6 +137,10 @@
     "expect": {
       "value": "Ørsted Łodz ı",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Strokes stay by default",
+      "note": "With strokes left off, the letters with a stroke, such as the O with a stroke and L with a stroke, keep their marks, while the accented letters lose theirs."
     }
   },
   {

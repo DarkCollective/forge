@@ -11,6 +11,10 @@
     "expect": {
       "value": "STRASSE",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A sharp s becomes SS",
+      "note": "The German sharp s becomes two capital letters, so straße gives STRASSE."
     }
   },
   {
@@ -25,6 +29,10 @@
     "expect": {
       "value": "ÀÉ",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Accented letters",
+      "note": "The accents are kept when the letters are made upper case, so àé gives ÀÉ."
     }
   },
   {
@@ -81,6 +89,10 @@
     "expect": {
       "value": "àb",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Upper to lower case",
+      "note": "The capital À and B become à and b, so ÀB reads àb."
     }
   },
   {
@@ -95,6 +107,10 @@
     "expect": {
       "value": "i̇",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "One capital can become two characters",
+      "note": "The capital I with a dot becomes a lower-case i followed by a combining dot, so the output is two characters long."
     }
   },
   {
@@ -137,6 +153,10 @@
     "expect": {
       "value": "b😀a",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "An emoji stays whole",
+      "note": "The emoji is one code point, so a😀b reverses to b😀a."
     }
   },
   {
@@ -151,6 +171,10 @@
     "expect": {
       "value": "́e",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "A separate accent moves",
+      "note": "The é here is an e followed by a combining accent, so reversing puts the accent in front of the e."
     }
   },
   {
@@ -165,6 +189,10 @@
     "expect": {
       "value": "eßürG",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Reverse the letters of a word",
+      "note": "Grüße reads eßürG backwards, and the ü stays whole because it is one code point."
     }
   },
   {
@@ -249,6 +277,10 @@
     "expect": {
       "value": "aXcaXc",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Every match is replaced",
+      "note": "With the default setting every b is replaced, so abcabc becomes aXcaXc."
     }
   },
   {
@@ -267,6 +299,10 @@
     "expect": {
       "value": "aXcabc",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "Only the first match",
+      "note": "With all set to false only the first b is replaced, and the rest of the text is unchanged."
     }
   },
   {
@@ -301,6 +337,10 @@
     "expect": {
       "value": "b$&$$b",
       "enc": "utf8"
+    },
+    "example": {
+      "title": "The replacement is literal",
+      "note": "Dollar signs in the replacement are written as they are, so $& is not a pattern and the output is b$&$$b."
     }
   },
   {
@@ -484,6 +524,10 @@
     },
     "expect": {
       "json": ["a", "b", "c"]
+    },
+    "example": {
+      "title": "Split at line breaks by default",
+      "note": "The default separator is a line feed, so the three lines become three list items."
     }
   },
   {
@@ -499,6 +543,10 @@
     },
     "expect": {
       "json": ["a", "b", "", "c"]
+    },
+    "example": {
+      "title": "Empty items are kept",
+      "note": "Two commas in a row give an empty item, so a,b,,c gives four items."
     }
   },
   {
@@ -570,6 +618,10 @@
     },
     "expect": {
       "json": ["a1b"]
+    },
+    "example": {
+      "title": "The separator is not a pattern",
+      "note": "The separator \\d is taken literally, so nothing is split and the whole text stays as one item."
     }
   },
   {

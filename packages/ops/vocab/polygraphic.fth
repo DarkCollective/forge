@@ -91,6 +91,9 @@ IN: polygraphic
   key str>bytes [ omit _pl-norm ] map omit _pl-alpha util:keyed-alphabet 1 _pl-pairs ;
 
 META: playfair-encrypt
+  use-when "You have a message and a keyword and want Playfair ciphertext, which works on pairs of letters, as in a puzzle or a CTF challenge." ;
+  inverse playfair-decrypt ;
+  link "https://en.wikipedia.org/wiki/Playfair_cipher" "Playfair cipher on Wikipedia" ;
   param key "Keyword of letters (either case; repeats are dropped); empty for the plain square." ;
   param omit "j: J is merged into I (the usual rule). i: I is merged into J." ;
   param filler "The letter put between doubled letters and after an odd last letter." ;
@@ -105,6 +108,9 @@ META: playfair-encrypt
   key str>bytes [ omit _pl-norm ] map omit _pl-alpha util:keyed-alphabet -1 _pl-pairs ;
 
 META: playfair-decrypt
+  use-when "You have Playfair ciphertext with its keyword, and want the pairs of letters back, as in a puzzle. Filler letters are not removed, so read the output with care." ;
+  inverse playfair-encrypt ;
+  link "https://en.wikipedia.org/wiki/Playfair_cipher" "Playfair cipher on Wikipedia" ;
   param key "Keyword used to encrypt; empty for the plain square." ;
   param omit "Must match the choice used to encrypt." ;
   see-also polygraphic:playfair-encrypt ;
@@ -138,6 +144,8 @@ META: playfair-decrypt
   _fs-pairs ;
 
 META: four-square-encrypt
+  use-when "You have a message and two keywords and want four-square ciphertext, which uses two keyed squares for each pair of letters, for a puzzle or a lesson." ;
+  inverse four-square-decrypt ;
   param key1 "Keyword for the top right square (either case); empty for the plain alphabet." ;
   param key2 "Keyword for the bottom left square; empty for the plain alphabet." ;
   param filler "The letter put between doubled letters and after an odd last letter." ;
@@ -155,6 +163,8 @@ META: four-square-encrypt
   _fs-pairs ;
 
 META: four-square-decrypt
+  use-when "You have four-square ciphertext with its two keywords, and want the plaintext letters back, as in a puzzle or a lesson." ;
+  inverse four-square-encrypt ;
   param key1 "Keyword used to encrypt (top right square)." ;
   param key2 "Keyword used to encrypt (bottom left square)." ;
   see-also polygraphic:four-square-encrypt ;
@@ -263,6 +273,9 @@ META: four-square-decrypt
   _hill-encrypt-with ;
 
 META: hill-encrypt
+  use-when "You have a message and a 2 by 2 or 3 by 3 key matrix, and want Hill ciphertext, which mixes letters in blocks, for a puzzle or a CTF challenge." ;
+  inverse hill-decrypt ;
+  link "https://en.wikipedia.org/wiki/Hill_cipher" "Hill cipher on Wikipedia" ;
   param key "The matrix: 4 or 9 values, as letters or numbers 0 to 25." ;
   param format "letters: A = 0 to Z = 25. numbers: decimal values 0 to 25." ;
   param pad "The letter that pads the last block." ;
@@ -277,6 +290,9 @@ META: hill-encrypt
   _hill-decrypt-with ;
 
 META: hill-decrypt
+  use-when "You have Hill ciphertext with its key matrix, and want the letters back. Padding letters are not removed, so check the end of the output." ;
+  inverse hill-encrypt ;
+  link "https://en.wikipedia.org/wiki/Hill_cipher" "Hill cipher on Wikipedia" ;
   param key "The matrix used to encrypt." ;
   param format "letters or numbers, as for hill-encrypt." ;
   see-also polygraphic:hill-encrypt ;

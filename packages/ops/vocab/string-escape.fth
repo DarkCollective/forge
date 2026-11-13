@@ -129,6 +129,8 @@ USING: util ;
   [ dup "groups" get swap "text" get _unesc ] map "" join ;
 
 META: escape
+  use-when "You have text that must sit inside a JavaScript string literal, with quotes, line breaks or non-ASCII characters, and want it written safely as escapes." ;
+  inverse unescape ;
   param level "special writes every character beyond ASCII with an escape, everything writes every character, minimal only what a string literal needs." ;
   param quote "Which quote gets a backslash: single ('), double (\") or backtick (`). With json it is also the quote put around the result." ;
   param json "Produce JSON-style escapes (\\uHHHH, no \\x, no \\0) and put the chosen quote around the result, as CyberChef does." ;
@@ -138,5 +140,7 @@ META: escape
 ;
 
 META: unescape
+  use-when "You have a string copied from JavaScript source or a log, with escapes such as a newline or a Unicode escape, and want the real characters." ;
+  inverse escape ;
   see-also string-escape:escape ;
 ;
