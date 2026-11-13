@@ -131,6 +131,46 @@ describe("ui actions", () => {
     expect(store.get().ui.compactTab).toBe("recipe");
   });
 
+  it("openOpHelp opens the help dialog for a known op, navigates, and closeDialog clears it", () => {
+    const { store, actions } = setup();
+    const op = (qname: string) => ({ qname, aliases: [] });
+    actions.setCatalogue({
+      format: 1,
+      version: "0".repeat(16),
+      vocabs: [],
+      ops: [op("a:a"), op("b:b")] as never,
+    });
+    actions.openOpHelp("a:a");
+    expect(store.get().ui.dialog).toBe("op-help");
+    expect(store.get().ui.helpOp).toBe("a:a");
+    actions.openOpHelp("b:b");
+    expect(store.get().ui.helpOp).toBe("b:b");
+    actions.closeDialog();
+    expect(store.get().ui.dialog).toBeNull();
+    expect(store.get().ui.helpOp).toBeNull();
+  });
+
+  it("openOpHelp ignores unknown names, odd values and a missing catalogue", () => {
+    const { store, actions } = setup();
+    actions.openOpHelp("a:a");
+    expect(store.get().ui.dialog).toBeNull();
+    actions.setCatalogue({ format: 1, version: "0".repeat(16), vocabs: [], ops: [] });
+    actions.openOpHelp("a:a");
+    actions.openOpHelp("");
+    actions.openOpHelp(undefined as never);
+    expect(store.get().ui.dialog).toBeNull();
+    expect(store.get().ui.helpOp).toBeNull();
+    // the generic opener cannot open it without an op
+    actions.openDialog("op-help");
+    expect(store.get().ui.dialog).toBeNull();
+  });
+
+  it("opening another dialog drops the help op", () => {
+    const { store, actions } = setup();
+    actions.openDialog("share");
+    expect(store.get().ui).toMatchObject({ dialog: "share", helpOp: null });
+  });
+
   it("announce changes the id every time", () => {
     const { store, actions } = setup();
     actions.announce("x");

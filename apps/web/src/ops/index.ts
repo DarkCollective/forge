@@ -15,6 +15,7 @@
  */
 import type { Feature } from "../state/feature.js";
 import "./forge-operations.js";
+import "./forge-op-help.js";
 
 /** Entry of the "ops" work package: import its elements, export its `feature`. */
 export const feature: Feature = { name: "ops" };

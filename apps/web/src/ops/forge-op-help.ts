@@ -17,22 +17,24 @@
 // document has it, "Use this when", worked examples with a Try it button, the inverse operation and
 // links to outside references.
 //
-// Container: a modal <dialog> (showModal), not the hover popover. The popover is a tooltip that goes
-// away when the pointer or focus leaves, so it cannot hold buttons or links; a side panel would take
-// room from the three working panes and would not exist in the compact layout. The dialog gives a
-// focus trap, Escape, an inert background and focus return for free, scrolls on its own, and at 390 px
-// it is the whole screen. It is a separate element, not a ForgeDialog subclass, because ForgeDialog is
-// opened through the global DialogId in state/types.ts, which this package may not extend.
+// Container: the shared dialog system (WP 6.13b). This is a `ForgeDialog` with the id "op-help": it is
+// open while `ui.dialog === "op-help"` and shows the operation `ui.helpOp`, so frame, title, close
+// button, focus trap, Escape, backdrop and focus return are the same as in every other dialog.
+// Navigating to the inverse's help is `actions.openOpHelp(other)` while open; only the one-step Back
+// target (`previous`) is local to this element and is forgotten when the dialog closes.
+// A modal dialog rather than the hover popover (which cannot hold buttons or links) or a side panel
+// (which would take room from the working panes and does not exist in the compact layout).
 //
 // Everything is rendered as text. Links are plain https anchors (viewLink checks again).
-import { LitElement, css, html, nothing } from "lit";
-import type { TemplateResult } from "lit";
-import { customElement, query, state } from "lit/decorators.js";
+import { css, html, nothing } from "lit";
+import type { CSSResultGroup, TemplateResult } from "lit";
+import { customElement, state } from "lit/decorators.js";
 import type { CatalogueOp, HelpExample, HelpOp } from "@forge/ops";
 import { actions, store } from "../state/app.js";
 import { StoreController } from "../state/store-controller.js";
 import { icons } from "../styles/icons.js";
-import { baseStyles } from "../styles/shared.js";
+import { ForgeDialog } from "../shell/forge-dialog.js";
+import type { DialogId } from "../state/types.js";
 import { helpFor } from "./help.js";
 import type { HelpState } from "./help-data.js";
 import { helpLoader } from "./help-loader.js";
@@ -48,45 +50,20 @@ import type { ValueView } from "./help-view.js";
 import { planTryIt } from "./try-it.js";
 
 @customElement("forge-op-help")
-export class ForgeOpHelp extends LitElement {
-  static override styles = [
-    baseStyles,
+export class ForgeOpHelp extends ForgeDialog {
+  static override styles: CSSResultGroup = [
+    ForgeDialog.styles,
     css`
       dialog {
         width: min(44rem, calc(100vw - 2 * var(--space-4)));
-        max-height: calc(100vh - 2 * var(--space-5));
         max-height: calc(100dvh - 2 * var(--space-5));
-        padding: 0;
-        border: var(--border-width) solid var(--border-strong);
-        border-radius: var(--radius-l);
-        background: var(--surface);
-        color: var(--text);
-        box-shadow: var(--shadow-pop);
-        overflow: hidden;
-      }
-      dialog[open] {
-        display: flex;
-        flex-direction: column;
-      }
-      dialog::backdrop {
-        background: rgb(0 0 0 / 0.5);
-      }
-      header {
-        display: flex;
-        align-items: center;
-        gap: var(--space-3);
-        padding: var(--space-3) var(--space-4);
-        border-bottom: var(--border-width) solid var(--border);
       }
       header h2 {
-        font-size: var(--text-lg);
-        margin-inline-end: auto;
         font-family: var(--font-mono);
         overflow-wrap: anywhere;
       }
       .body {
         padding: var(--space-3) var(--space-4) var(--space-4);
-        overflow: auto;
         font-size: var(--text-sm);
         line-height: var(--leading-body);
       }
@@ -210,42 +187,42 @@ export class ForgeOpHelp extends LitElement {
     `,
   ];
 
+  protected readonly dialogId: DialogId = "op-help";
+  protected override readonly closeLabel = "Close help";
+  protected override readonly headingFocusable = true;
+
   private readonly catalogue = new StoreController(this, store, (s) => s.catalogue);
   private readonly steps = new StoreController(this, store, (s) => s.recipe.steps.length);
+  private readonly helpOp = new StoreController(this, store, (s) => s.ui.helpOp);
 
-  @state() private op: CatalogueOp | null = null;
-  @state() private previous: CatalogueOp | null = null;
+  @state() private previous: string | null = null;
   @state() private help: HelpState = { status: "idle" };
   @state() private confirming: number | null = null;
   @state() private problem: string | null = null;
 
-  @query("dialog") private readonly dialogEl!: HTMLDialogElement | null;
-  @query("h2") private readonly headingEl!: HTMLElement | null;
+  /** The operation the last update was prepared for (null while closed), to notice a change. */
+  private shown: string | null = null;
 
-  /** True while the dialog is open. */
-  get isOpen(): boolean {
-    return this.dialogEl?.open === true;
+  protected override get heading(): string {
+    return this.helpOp.value ?? "";
   }
 
-  /** Open the help of `op`; focus returns to whatever had it when the dialog closes. */
-  show(op: CatalogueOp): void {
-    this.previous = null;
-    this.setOp(op);
-    void this.updateComplete.then(() => {
-      const dialog = this.dialogEl;
-      if (dialog && !dialog.open) dialog.showModal();
-    });
+  /** The operation being shown, or null while closed or when the catalogue does not have it. */
+  private get op(): CatalogueOp | null {
+    const qname = this.helpOp.value;
+    const cat = this.catalogue.value;
+    if (qname === null || cat.status !== "ready") return null;
+    return cat.catalogue.ops.find((o) => o.qname === qname) ?? null;
   }
 
-  close(): void {
-    this.dialogEl?.close();
-  }
-
-  private setOp(op: CatalogueOp): void {
-    this.op = op;
+  protected override willUpdate(): void {
+    const qname = this.isOpen ? this.helpOp.value : null;
+    if (qname === this.shown) return;
+    this.shown = qname;
     this.confirming = null;
     this.problem = null;
-    void this.loadHelp();
+    if (qname === null) this.previous = null;
+    else void this.loadHelp();
   }
 
   private async loadHelp(): Promise<void> {
@@ -265,29 +242,12 @@ export class ForgeOpHelp extends LitElement {
     }
   }
 
-  protected override render() {
+  protected override renderBody(): TemplateResult {
     const op = this.op;
-    return html`<dialog aria-labelledby="op-help-title" @close=${this.onClose}>
-      <header>
-        <h2 id="op-help-title" tabindex="-1">${op?.qname ?? ""}</h2>
-        <button
-          type="button"
-          class="ghost icon"
-          aria-label="Close help"
-          @click=${() => this.close()}
-        >
-          ${icons.close}
-        </button>
-      </header>
-      <div class="body">${op === null ? nothing : this.renderBody(op)}</div>
-    </dialog>`;
+    return op === null ? html`${nothing}` : this.renderOp(op);
   }
 
-  private readonly onClose = (): void => {
-    this.confirming = null;
-  };
-
-  private renderBody(op: CatalogueOp): TemplateResult {
+  private renderOp(op: CatalogueOp): TemplateResult {
     const h = helpFor(op);
     const entry: HelpOp | undefined =
       this.help.status === "ready" ? this.help.index.get(op.qname) : undefined;
@@ -296,9 +256,7 @@ export class ForgeOpHelp extends LitElement {
         this.previous === null
           ? nothing
           : html`<p>
-              <button type="button" @click=${() => this.back()}>
-                Back to ${this.previous.qname}
-              </button>
+              <button type="button" @click=${() => this.back()}>Back to ${this.previous}</button>
             </p>`
       }
       ${this.problem === null ? nothing : html`<p class="problem" role="alert">${this.problem}</p>`}
@@ -476,8 +434,8 @@ export class ForgeOpHelp extends LitElement {
   // ---- actions ---------------------------------------------------------------------------------
 
   private follow(target: CatalogueOp): void {
-    this.previous = this.op;
-    this.setOp(target);
+    this.previous = this.helpOp.value;
+    actions.openOpHelp(target.qname);
     this.focusHeading();
   }
 
@@ -485,21 +443,29 @@ export class ForgeOpHelp extends LitElement {
     const previous = this.previous;
     if (previous === null) return;
     this.previous = null;
-    this.setOp(previous);
+    actions.openOpHelp(previous);
     this.focusHeading();
   }
 
   private focusHeading(): void {
     void this.updateComplete.then(() => {
-      this.headingEl?.focus();
+      this.renderRoot.querySelector<HTMLElement>("h2")?.focus();
       this.renderRoot.querySelector(".body")?.scrollTo({ top: 0 });
     });
   }
 
+  /**
+   * Close the dialog, then say `text`. The live region is inert while a modal dialog is open, so the
+   * announcement waits until this element has updated (and so closed its native dialog).
+   */
+  private closeThenAnnounce(text: string): void {
+    actions.closeDialog();
+    void this.updateComplete.then(() => actions.announce(text));
+  }
+
   private addInverse(target: CatalogueOp): void {
     actions.addOp(target.qname);
-    this.close();
-    actions.announce(`Added ${target.qname} to the recipe`);
+    this.closeThenAnnounce(`Added ${target.qname} to the recipe`);
   }
 
   private requestTry(ex: HelpExample, index: number): void {
@@ -552,7 +518,6 @@ export class ForgeOpHelp extends LitElement {
     actions.setInputEncoding(tab, bytes.encoding);
     actions.setRecipe(bytes.recipe);
     if (store.get().ui.compact) actions.setCompactTab("output");
-    this.close();
     const issues = store.get().issues.length;
     const where =
       plan.kind === "new"
@@ -560,7 +525,7 @@ export class ForgeOpHelp extends LitElement {
         : plan.kind === "select"
           ? ` Its input is in the tab "${name}".`
           : "";
-    actions.announce(
+    this.closeThenAnnounce(
       `Loaded the example "${ex.title}": ${op.qname} is now the only step.${where}` +
         (hadWork ? " Undo brings your previous recipe back." : "") +
         (issues > 0 ? ` The recipe has ${issues} ${issues === 1 ? "issue" : "issues"}.` : ""),

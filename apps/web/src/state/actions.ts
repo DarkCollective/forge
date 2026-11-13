@@ -87,6 +87,7 @@ export function createAppStore(options: CreateAppStoreOptions = {}): AppStore {
     layout: options.layout ?? loadLayout(),
     ui: {
       dialog: null,
+      helpOp: null,
       consoleOpen: false,
       compact: options.compact ?? false,
       compactTab: "recipe",
@@ -326,10 +327,23 @@ export function createActions(store: AppStore, persist = true) {
 
     // ---- ui -----------------------------------------------------------------------------------
     openDialog(dialog: DialogId): void {
-      store.set({ ui: { ...get().ui, dialog } });
+      // "op-help" needs an operation: open it with `openOpHelp`.
+      if (dialog === "op-help") return;
+      store.set({ ui: { ...get().ui, dialog, helpOp: null } });
+    },
+    /**
+     * Open the help dialog for `qname`, or, while it is open, show the help of another operation in
+     * it. Ignored unless the catalogue is ready and has that operation (the name may come from
+     * anywhere, so it is checked rather than trusted).
+     */
+    openOpHelp(qname: string): void {
+      const cat = get().catalogue;
+      if (typeof qname !== "string" || qname === "" || cat.status !== "ready") return;
+      if (!cat.catalogue.ops.some((o) => o.qname === qname)) return;
+      store.set({ ui: { ...get().ui, dialog: "op-help", helpOp: qname } });
     },
     closeDialog(): void {
-      store.set({ ui: { ...get().ui, dialog: null } });
+      store.set({ ui: { ...get().ui, dialog: null, helpOp: null } });
     },
     setConsoleOpen(open: boolean): void {
       const ui = get().ui;

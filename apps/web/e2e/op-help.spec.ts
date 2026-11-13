@@ -201,10 +201,18 @@ test("the inverse can be added or followed", async ({ page }) => {
   await openHelp(page, "base64:decode");
   await dialog(page).getByRole("button", { name: "Show help for base64:encode" }).click();
   await expect(dialog(page).locator("h2")).toHaveText("base64:encode");
+  await expect(dialog(page).locator("h2")).toBeFocused();
   await dialog(page).getByRole("button", { name: "Back to base64:decode" }).click();
   await expect(dialog(page).locator("h2")).toHaveText("base64:decode");
+  await expect(dialog(page).locator("h2")).toBeFocused();
+  // Transient UI state: nothing about the open help reaches the URL.
+  expect(page.url()).not.toContain("help");
   await dialog(page).getByRole("button", { name: "Add base64:encode to the recipe" }).click();
   await expect(dialog(page)).toBeHidden();
+  // The announcement is made after the dialog has closed (the live region is inert behind a modal).
+  await expect(
+    page.locator("[role=status]").filter({ hasText: "Added base64:encode to the recipe" }),
+  ).toHaveCount(1);
   await expect(cards(page)).toHaveCount(1);
   await expect(cards(page).first()).toContainText("encode");
 });

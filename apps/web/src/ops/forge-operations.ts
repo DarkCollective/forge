@@ -47,8 +47,6 @@ import { dataLabel, dataTypeAtEnd, fits, whyNotFit } from "./fit.js";
 import type { DataType } from "./fit.js";
 import { helpFor } from "./help.js";
 import { helpLoader } from "./help-loader.js";
-import "./forge-op-help.js";
-import type { ForgeOpHelp } from "./forge-op-help.js";
 import { buildListModel } from "./group.js";
 import type { ListModel, ListSection } from "./group.js";
 
@@ -280,7 +278,6 @@ export class ForgeOperations extends LitElement {
 
   @query(`#${SEARCH_ID}`) private readonly searchEl!: HTMLInputElement | null;
   @query(`#${HELP_ID}`) private readonly helpEl!: HTMLElement | null;
-  @query("forge-op-help") private readonly dialogEl!: ForgeOpHelp | null;
   @query(".scroll") private readonly scrollEl!: HTMLElement | null;
 
   /** Move focus to the pane's main control (called by the shell's pane shortcuts). */
@@ -358,7 +355,6 @@ export class ForgeOperations extends LitElement {
       <div id=${HELP_ID} popover="manual" role="tooltip" class="help">
         ${helpOp === undefined ? nothing : this.renderHelp(helpOp)}
       </div>
-      <forge-op-help></forge-op-help>
     `;
   }
 
@@ -630,10 +626,10 @@ export class ForgeOperations extends LitElement {
     return row !== null && row === this.shadowRoot?.activeElement;
   }
 
-  /** Open the full help dialog (the quick tooltip goes away). */
+  /** Open the full help dialog (the shared "op-help" dialog; the quick tooltip goes away). */
   private openHelp(op: CatalogueOp): void {
     this.helpIndex = null;
-    this.dialogEl?.show(op);
+    actions.openOpHelp(op.qname);
   }
 
   private onRowFocus(index: number): void {

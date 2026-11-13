@@ -505,6 +505,7 @@ export class ForgeApp extends LitElement {
         <forge-open-dialog></forge-open-dialog>
         <forge-fl-dialog></forge-fl-dialog>
         <forge-shortcuts-dialog></forge-shortcuts-dialog>
+        <forge-op-help></forge-op-help>
       </div>
     `;
   }

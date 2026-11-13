@@ -25,7 +25,7 @@ export type ThemePreference = "system" | "light" | "dark" | "contrast";
 export type ResolvedTheme = "light" | "dark" | "contrast";
 
 export type PaneId = "ops" | "recipe" | "input" | "output" | "console";
-export type DialogId = "share" | "save" | "open" | "fl" | "shortcuts";
+export type DialogId = "share" | "save" | "open" | "fl" | "shortcuts" | "op-help";
 
 /** Line ending shown and produced by the text editor of an input tab. */
 export type EolName = "lf" | "crlf" | "cr";
@@ -93,6 +93,11 @@ export interface HistoryState {
 
 export interface UiState {
   readonly dialog: DialogId | null;
+  /**
+   * Qualified name of the operation the "op-help" dialog shows, or null. Transient: set by
+   * `openOpHelp`, cleared when any dialog closes, never persisted and never put in a share link.
+   */
+  readonly helpOp: string | null;
   readonly consoleOpen: boolean;
   /** True below COMPACT_BREAKPOINT_PX: one pane at a time, chosen by `compactTab`. */
   readonly compact: boolean;

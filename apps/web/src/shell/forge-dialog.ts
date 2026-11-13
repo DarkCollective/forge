@@ -75,6 +75,12 @@ export abstract class ForgeDialog extends LitElement {
   /** True for a dialog with no focusable content that can scroll: the body then takes a tab stop. */
   protected readonly scrollableBody: boolean = false;
 
+  /** Accessible name of the close button (default "Close"). */
+  protected readonly closeLabel: string = "Close";
+
+  /** True when the heading takes programmatic focus (tabindex -1), for a dialog that changes its content in place. */
+  protected readonly headingFocusable: boolean = false;
+
   protected readonly current = new StoreController(this, store, (s) => s.ui.dialog);
 
   protected get isOpen(): boolean {
@@ -96,11 +102,11 @@ export abstract class ForgeDialog extends LitElement {
     const titleId = `${this.dialogId}-title`;
     return html`<dialog aria-labelledby=${titleId} @close=${this.onClose} @cancel=${this.onClose}>
       <header>
-        <h2 id=${titleId}>${this.heading}</h2>
+        <h2 id=${titleId} tabindex=${this.headingFocusable ? "-1" : nothing}>${this.heading}</h2>
         <button
           type="button"
           class="ghost icon"
-          aria-label="Close"
+          aria-label=${this.closeLabel}
           @click=${() => actions.closeDialog()}
         >
           ${icons.close}
