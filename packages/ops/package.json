@@ -11,6 +11,10 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
+    "./checks": {
+      "types": "./dist/checks/index.d.ts",
+      "default": "./dist/checks/index.js"
+    },
     "./node": {
       "types": "./dist/sources-node.d.ts",
       "default": "./dist/sources-node.js"
