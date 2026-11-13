@@ -87,6 +87,11 @@
   --link: #0a58ca;
   --selection: #f3c9a8;
   --drop: #0a58ca;
+  /* Type fit marks in the Operations pane (WP 6.21): they follow the status colours of each theme,
+     which are at least 3:1 against the surfaces (UI.md section 1.6). Shape carries the meaning too. */
+  --fit-yes: var(--ok);
+  --fit-converts: var(--warn);
+  --fit-no: var(--danger);
   color-scheme: light;
 }
 

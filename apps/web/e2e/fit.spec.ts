@@ -24,6 +24,7 @@ import {
   addOpByKeyboard,
   cards,
   expectOutput,
+  input,
   opSearch,
   tabTo,
 } from "./fixtures";
@@ -149,13 +150,13 @@ test("User words start open while categories stay closed", async ({ page }) => {
 
 test("operations that do not fit are dimmed, explained and still addable", async ({ page }) => {
   await openApp(page);
-  await expect(dataLine(page)).toHaveText("Data here: bytes");
+  await expect(dataLine(page)).toHaveText("Data here: bytes (valid text)");
   await opSearch(page).fill("text join");
   const join = option(page, "text:join");
   await expect(join).toBeVisible();
   await expect(join).toHaveAttribute("data-fit", "no");
   await expect(join).toContainText("needs a list");
-  // Text coerces to and from bytes (LANGUAGE.md section 4.2), so text:split does fit bytes.
+  // The (empty) input is valid UTF-8, so the bytes-to-text conversion is certain: text:split is green.
   await opSearch(page).fill("text split");
   await expect(option(page, "text:split")).toHaveAttribute("data-fit", "yes");
   await opSearch(page).fill("text join");
@@ -219,6 +220,70 @@ test("Fits the data hides what does not fit, in browse and in search, and follow
   await expect(option(page, "hex:encode")).toHaveAttribute("data-fit", "no");
 });
 
+test("valid text input: text operations are green, a conversion is amber, the toggle hides only red", async ({
+  page,
+}) => {
+  await openApp(page);
+  await input(page).fill("hello");
+  await expect(dataLine(page)).toHaveText("Data here: bytes (valid text)");
+  await opSearch(page).fill("text split");
+  await expect(option(page, "text:split")).toHaveAttribute("data-fit", "yes");
+  await opSearch(page).fill("text join");
+  await expect(option(page, "text:join")).toHaveAttribute("data-fit", "no");
+
+  // After an operation that leaves text, an operation that takes bytes needs a conversion: amber.
+  await addOpByKeyboard(page, "hex encode");
+  await expect(dataLine(page)).toHaveText("Data here: text");
+  await opSearch(page).fill("hex:encode");
+  const encode = option(page, "hex:encode");
+  await expect(encode).toHaveAttribute("data-fit", "converts");
+  await expect(encode).toContainText("converts to bytes");
+  await expect(encode.locator("svg.mark.converts")).toHaveAttribute("aria-hidden", "true");
+
+  // The toggle hides red rows only: amber and green stay.
+  await fitToggle(page).click();
+  await expect(option(page, "hex:encode")).toBeVisible();
+  await opSearch(page).fill("text split");
+  await expect(option(page, "text:split")).toHaveAttribute("data-fit", "yes");
+  await opSearch(page).fill("text join");
+  await expect(option(page, "text:join")).toHaveCount(0);
+});
+
+test("a list result: most operations are red and hidden by the toggle, Join is green", async ({
+  page,
+}) => {
+  await openApp(page);
+  await input(page).fill("a,b,c");
+  await addOpByKeyboard(page, "text split");
+  await expect(dataLine(page)).toHaveText("Data here: list");
+  await opSearch(page).fill("text join");
+  await expect(option(page, "text:join")).toHaveAttribute("data-fit", "yes");
+  await opSearch(page).fill("hex:encode");
+  await expect(option(page, "hex:encode")).toHaveAttribute("data-fit", "no");
+  await expect(option(page, "hex:encode")).toContainText("needs bytes");
+  await fitToggle(page).click();
+  await expect(option(page, "hex:encode")).toHaveCount(0);
+  await opSearch(page).fill("text join");
+  await expect(option(page, "text:join")).toBeVisible();
+});
+
+test("bytes that are not valid UTF-8: text operations are red with a hint", async ({ page }) => {
+  await openApp(page);
+  await input(page).fill("ff fe");
+  await addOpByKeyboard(page, "hex decode");
+  await expect(dataLine(page)).toHaveText("Data here: bytes");
+  await opSearch(page).fill("text split");
+  const split = option(page, "text:split");
+  await expect(split).toHaveAttribute("data-fit", "no");
+  await expect(split).toContainText("needs valid text");
+  await expect(split.locator("svg.mark.no")).toHaveAttribute("aria-hidden", "true");
+  // The toggle hides it; a bytes operation stays.
+  await fitToggle(page).click();
+  await expect(option(page, "text:split")).toHaveCount(0);
+  await opSearch(page).fill("hex:encode");
+  await expect(option(page, "hex:encode")).toHaveAttribute("data-fit", "yes");
+});
+
 for (const [label, id] of [
   ["Light", "light"],
   ["Dark", "dark"],
@@ -229,8 +294,13 @@ for (const [label, id] of [
     await page.getByRole("button", { name: /^Theme/ }).click();
     await page.getByRole("menuitemradio", { name: label }).click();
     await expect(page.locator("html")).toHaveAttribute("data-theme", id);
+    // Text data: red (needs a list), green and amber (needs bytes) rows are all on screen.
+    await addOpByKeyboard(page, "hex encode");
+    await expect(dataLine(page)).toHaveText("Data here: text");
     await opSearch(page).fill("text");
     await expect(option(page, "text:join")).toHaveAttribute("data-fit", "no");
+    await expect(ops(page).locator("[data-fit=converts]").first()).toBeVisible();
+    await expect(ops(page).locator("[data-fit=yes]").first()).toBeVisible();
     for (const pressed of [false, true]) {
       if (pressed) await fitToggle(page).click();
       let violations: string[] = [];

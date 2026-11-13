@@ -27,8 +27,12 @@
 //     the categories (and "Other") start folded; Favourites and User words start open. Only the rows of
 //     open groups are in the list, so the arrow keys skip folded groups; with every group folded Down
 //     from the search box lands on the first group header instead.
-//   "Fits the data" (toggle button, Tab reaches it) hides operations that cannot take the data at the
-//     end of the recipe (fit.ts); the others stay addable, merely dimmed and marked with the reason.
+//   Type fit (fit.ts, WP 6.21) is a traffic light on every row: a filled disc (fits as is), a
+//     half-filled disc plus a hint such as "text only if valid UTF-8" (a conversion happens and may
+//     fail), a cross plus a dimmed row with the reason such as "needs a list" (cannot take the data).
+//     `data-fit` is yes, converts or no. The marks are decorative; the hints are in the accessible name.
+//   "Fits the data" (toggle button, Tab reaches it) hides only the red operations (cannot take the data
+//     at the end of the recipe); amber and green stay. Red rows stay addable when shown.
 // The row's own star, help and add buttons are pointer and touch shortcuts: they are out of the Tab
 // order, because every one of them has a key above. Dragging a row (pointer) drops it on the recipe.
 //
@@ -43,8 +47,8 @@ import { beginPointerDrag } from "../state/dnd.js";
 import { StoreController } from "../state/store-controller.js";
 import { icons } from "../styles/icons.js";
 import { baseStyles, paneStyles } from "../styles/shared.js";
-import { dataLabel, dataTypeAtEnd, fits, whyNotFit } from "./fit.js";
-import type { DataType } from "./fit.js";
+import { convertHint, dataFactsAtEnd, dataLine, fitLevel, sameFacts, whyNotFit } from "./fit.js";
+import type { DataFacts, FitLevel } from "./fit.js";
 import { helpFor } from "./help.js";
 import { helpLoader } from "./help-loader.js";
 import { buildListModel } from "./group.js";
@@ -57,6 +61,21 @@ const PAGE_STEP = 10;
 
 const starIcon = (filled: boolean): TemplateResult =>
   svg`<svg viewBox="0 0 24 24" fill="${filled ? "currentColor" : "none"}" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg>`;
+
+/**
+ * The mark of a fit level, decorative (the hint text carries the meaning). The shapes differ, so colour
+ * is never the only signal: a filled disc (fits), a half-filled disc (converts), a cross (no).
+ */
+const fitMark = (level: FitLevel): TemplateResult => {
+  switch (level) {
+    case "fits":
+      return svg`<svg class="mark fits" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><circle cx="6" cy="6" r="4.5" fill="currentColor"/></svg>`;
+    case "converts":
+      return svg`<svg class="mark converts" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><circle cx="6" cy="6" r="4.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M6 1.5a4.5 4.5 0 0 0 0 9z" fill="currentColor"/></svg>`;
+    case "no":
+      return svg`<svg class="mark no" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M2.5 2.5l7 7m0-7l-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
+  }
+};
 
 /** Inputs that every operation of the library accepts without a conversion step. */
 function takesText(op: CatalogueOp): boolean {
@@ -106,6 +125,21 @@ export class ForgeOperations extends LitElement {
       .opt.unfit {
         color: var(--text-muted);
         border-inline-start: 0.25rem dashed var(--border-strong);
+      }
+      .mark {
+        flex: none;
+        align-self: center;
+        width: 0.75rem;
+        height: 0.75rem;
+      }
+      .mark.fits {
+        color: var(--fit-yes);
+      }
+      .mark.converts {
+        color: var(--fit-converts);
+      }
+      .mark.no {
+        color: var(--fit-no);
       }
       .group-head {
         display: flex;
@@ -259,12 +293,17 @@ export class ForgeOperations extends LitElement {
   private readonly favourites = new StoreController(this, store, (s) => s.favourites);
 
   @state() private query = "";
-  private readonly dataType = new StoreController(this, store, (s): DataType =>
-    dataTypeAtEnd({
-      recipe: s.recipe,
-      bake: s.bake,
-      ops: s.catalogue.status === "ready" ? s.catalogue.catalogue.ops : null,
-    }),
+  private readonly dataFacts = new StoreController(
+    this,
+    store,
+    (s): DataFacts =>
+      dataFactsAtEnd({
+        recipe: s.recipe,
+        bake: s.bake,
+        ops: s.catalogue.status === "ready" ? s.catalogue.catalogue.ops : null,
+        inputBytes: s.inputs.find((t) => t.id === s.activeInputId)?.bytes,
+      }),
+    sameFacts,
   );
 
   /** The user's open (true) or closed (false) choice per section id; no entry = the default. */
@@ -289,8 +328,10 @@ export class ForgeOperations extends LitElement {
   private currentModel(): ListModel | null {
     const cat = this.catalogue.value;
     if (cat.status !== "ready") return null;
-    const data = this.dataType.value;
-    const keep = this.fitOnly ? (op: CatalogueOp) => fits(op.input, data) : undefined;
+    const { type, utf8 } = this.dataFacts.value;
+    const keep = this.fitOnly
+      ? (op: CatalogueOp) => fitLevel(op.input, type, utf8) !== "no"
+      : undefined;
     return buildListModel(
       cat.catalogue.ops,
       this.favourites.value,
@@ -318,7 +359,7 @@ export class ForgeOperations extends LitElement {
         ${
           cat.status === "ready"
             ? html`<span class="data-type" id="op-data-type"
-                >Data here: ${dataLabel(this.dataType.value)}</span
+                >Data here: ${dataLine(this.dataFacts.value)}</span
               >`
             : nothing
         }
@@ -459,7 +500,15 @@ export class ForgeOperations extends LitElement {
   private renderRow(op: CatalogueOp, index: number, cursor: number): TemplateResult {
     const favourite = this.favourites.value.includes(op.qname);
     const showingHelp = this.helpIndex === index;
-    const why = whyNotFit(op.input, this.dataType.value);
+    const { type, utf8 } = this.dataFacts.value;
+    const level = fitLevel(op.input, type, utf8);
+    const why = whyNotFit(op.input, type, utf8);
+    const converts = convertHint(op.input, type, utf8);
+    const dataFit = level === "fits" ? "yes" : level;
+    let hint: TemplateResult | typeof nothing = nothing;
+    if (why !== "") hint = html`<span class="row-hint">${why}</span>`;
+    else if (converts !== "") hint = html`<span class="row-hint">${converts}</span>`;
+    else if (!takesText(op)) hint = html`<span class="row-hint">takes ${op.input}</span>`;
     return html`<div
       class="row"
       @pointerenter=${() => this.peekHelp(index)}
@@ -468,8 +517,8 @@ export class ForgeOperations extends LitElement {
       <div
         id=${`op-row-${index}`}
         role="option"
-        class=${why === "" ? "opt" : "opt unfit"}
-        data-fit=${why === "" ? "yes" : "no"}
+        class=${level === "no" ? "opt unfit" : "opt"}
+        data-fit=${dataFit}
         tabindex=${index === cursor ? "0" : "-1"}
         aria-keyshortcuts="Enter F ?"
         aria-describedby=${showingHelp ? HELP_ID : nothing}
@@ -483,15 +532,10 @@ export class ForgeOperations extends LitElement {
         }}
         @pointerdown=${(e: PointerEvent) => beginPointerDrag(e, { type: "op", op: op.qname }, op.name)}
       >
+        ${fitMark(level)}
         <span class="name">${op.name}</span>
         <span class="vocab">${op.vocab}</span>
-        ${
-          why !== ""
-            ? html`<span class="row-hint">${why}</span>`
-            : takesText(op)
-              ? nothing
-              : html`<span class="row-hint">takes ${op.input}</span>`
-        }
+        ${hint}
       </div>
       <button
         type="button"
