@@ -776,5 +776,35 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "input: JSON text is valid UTF-8",
+    "op": "jsonata:query",
+    "checks": "input",
+    "data": {
+      "value": "{\"a\":1}",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "input: gzip bytes are not text",
+    "op": "jsonata:query",
+    "checks": "input",
+    "data": {
+      "value": "1f8b0800",
+      "enc": "hex"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "output: the result is valid UTF-8",
+    "op": "jsonata:query",
+    "checks": "output",
+    "data": {
+      "value": "1",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

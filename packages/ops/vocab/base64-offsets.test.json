@@ -630,5 +630,15 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "output: the offsets text is valid UTF-8",
+    "op": "base64-offsets:show",
+    "checks": "output",
+    "data": {
+      "value": "Offset 0: YWJj\nOffset 1: AGFiYw==\nOffset 2: AABhYmM=",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

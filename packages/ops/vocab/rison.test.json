@@ -2325,5 +2325,75 @@
       "value": "!(!n,'x:y')",
       "enc": "utf8"
     }
+  },
+  {
+    "name": "input: JSON text is valid UTF-8",
+    "op": "rison:encode",
+    "checks": "input",
+    "data": {
+      "value": "{\"a\":1}",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "input: gzip bytes are not text",
+    "op": "rison:encode",
+    "checks": "input",
+    "data": {
+      "value": "1f8b0800",
+      "enc": "hex"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "output: the Rison text is valid UTF-8",
+    "op": "rison:encode",
+    "checks": "output",
+    "data": {
+      "value": "(a:1)",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "input: Rison text is valid UTF-8",
+    "op": "rison:decode",
+    "checks": "input",
+    "data": {
+      "value": "(a:1,b:'x')",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "input: gzip bytes are not text",
+    "op": "rison:decode",
+    "checks": "input",
+    "data": {
+      "value": "1f8b0800",
+      "enc": "hex"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "output: the JSON text is valid UTF-8",
+    "op": "rison:decode",
+    "checks": "output",
+    "data": {
+      "value": "{\n    \"a\": 1,\n    \"b\": \"x\"\n}",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "output: control bytes are not printable text",
+    "op": "rison:decode",
+    "checks": "output",
+    "data": {
+      "value": "0102030405060708",
+      "enc": "hex"
+    },
+    "expect": "fail"
   }
 ]

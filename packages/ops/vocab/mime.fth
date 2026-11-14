@@ -128,6 +128,10 @@ USING: charset base64 util raise ;
 
 META: decode
   use-when "You have a mail header with encoded words such as =?UTF-8?Q?...?= in its Subject or From line, and want the readable text." ;
+  expects "mail header text" ;
+  checks input utf8 ;
+  checks output utf8 ;
+  checks output printable ;
   link "https://www.rfc-editor.org/rfc/rfc2047" "RFC 2047: encoded words in mail headers" ;
   link "https://en.wikipedia.org/wiki/MIME" "MIME on Wikipedia" ;
 ;

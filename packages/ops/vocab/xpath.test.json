@@ -610,5 +610,35 @@
       "value": "0",
       "enc": "utf8"
     }
+  },
+  {
+    "name": "input: XML text is valid UTF-8",
+    "op": "xpath:query",
+    "checks": "input",
+    "data": {
+      "value": "<library><book><title>Dune</title></book></library>",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "input: gzip bytes are not text",
+    "op": "xpath:query",
+    "checks": "input",
+    "data": {
+      "value": "1f8b0800",
+      "enc": "hex"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "output: the result is valid UTF-8",
+    "op": "xpath:query",
+    "checks": "output",
+    "data": {
+      "value": "<title>Dune</title>",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

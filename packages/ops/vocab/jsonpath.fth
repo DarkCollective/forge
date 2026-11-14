@@ -19,4 +19,7 @@ META: query
   link "https://en.wikipedia.org/wiki/JSON" "JSON on Wikipedia" ;
   param query "The JSONPath query, for example $.store.book[*].author or $..book[?@.price<10]. An empty query is E_COERCE." ;
   param result-delimiter "The text put between the matches. Escapes like \\n are read." ;
+  expects "JSON text" ;
+  checks input utf8 ;
+  checks output utf8 ;
 ;

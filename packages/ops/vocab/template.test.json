@@ -888,5 +888,35 @@
       "value": "<hi &amp; bye>",
       "enc": "utf8"
     }
+  },
+  {
+    "name": "input: JSON text is valid UTF-8",
+    "op": "template:render",
+    "checks": "input",
+    "data": {
+      "value": "{\"name\":\"World\"}",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "input: gzip bytes are not text",
+    "op": "template:render",
+    "checks": "input",
+    "data": {
+      "value": "1f8b0800",
+      "enc": "hex"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "output: the rendered text is valid UTF-8",
+    "op": "template:render",
+    "checks": "output",
+    "data": {
+      "value": "Hello World!",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

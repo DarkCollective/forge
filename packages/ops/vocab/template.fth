@@ -15,4 +15,7 @@ USING: json ;
 META: render
   use-when "You have a JSON document and a text template with {{name}} placeholders, and want the template filled in from the document, as a Handlebars report." ;
   param template "The template, for example Hello {{name}}! {{#each items}}{{@index}}: {{this}} {{/each}}" ;
+  expects "JSON text" ;
+  checks input utf8 ;
+  checks output utf8 ;
 ;

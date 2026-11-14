@@ -155,7 +155,11 @@ describe("Try it keeps the line endings of an example input", () => {
       ) as (OpTestVector & { params: Record<string, unknown> })[];
       // includes "Quoted cells keep commas and line breaks": a quoted cell with CR LF inside it
       const withCrlf = file.filter(
-        (v) => v.op === "csv:to-json" && "value" in v.input && v.input.value.includes("\r\n"),
+        (v) =>
+          !("checks" in v) &&
+          v.op === "csv:to-json" &&
+          "value" in v.input &&
+          v.input.value.includes("\r\n"),
       );
       expect(withCrlf.length).toBeGreaterThan(5);
       const plans = withCrlf.map((v) => {

@@ -18,4 +18,7 @@ META: query
   link "https://en.wikipedia.org/wiki/XML" "XML on Wikipedia" ;
   param xpath "The XPath 1.0 expression, for example //book[price>10]/title." ;
   param result-delimiter "The text put between the results. Escapes like \\n are read." ;
+  expects "XML text" ;
+  checks input utf8 ;
+  checks output utf8 ;
 ;

@@ -14,6 +14,10 @@ USING: json ;
 META: to-json
   use-when "You have YAML text, such as a Kubernetes manifest or a CI configuration, and want it as JSON." ;
   param indent "Spaces per level; 0 writes compact JSON." ;
+  expects "YAML text" ;
+  checks input utf8 ;
+  checks output utf8 ;
+  checks output printable ;
   see-also yaml:from-json ;
   inverse from-json ;
   link "https://yaml.org/" "YAML home page" ;
@@ -27,6 +31,9 @@ META: to-json
 
 META: from-json
   use-when "You have JSON data, such as an API response or a settings object, and want the same data as YAML for a config file." ;
+  expects "JSON text" ;
+  checks input utf8 ;
+  checks output utf8 ;
   see-also yaml:to-json ;
   inverse to-json ;
   link "https://yaml.org/" "YAML home page" ;

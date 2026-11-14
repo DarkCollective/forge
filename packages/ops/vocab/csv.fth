@@ -40,6 +40,10 @@ META: to-json
   param row-delimiter "The characters that end a row; each one counts, and a CR followed by an LF is one. Escapes like \\r\\n are read." ;
   param format "An array of objects keyed by the header row, or an array of arrays of the rows as they are." ;
   param indent "Spaces per level; 0 writes compact JSON." ;
+  expects "CSV text" ;
+  checks input utf8 ;
+  checks output utf8 ;
+  checks output printable ;
   see-also csv:from-json ;
   inverse from-json ;
   link "https://www.rfc-editor.org/rfc/rfc4180" "RFC 4180: CSV format" ;
@@ -96,6 +100,8 @@ META: to-json
     ] if
   ] if ;
 
+\ The input check (see META) is a regex: a table is a JSON object or array after white space, and json:parse starts no
+\ other value that way. Its second alternative keeps a long run of white space that fills the 4 KiB prefix from being read as a failure.
 : from-json ( data:str cell-delimiter:str="," row-delimiter:str="\\r\\n" -- str )
   "Write JSON text as CSV (RFC 4180), as CyberChef's JSON to CSV does. The input is an array of objects, an array of arrays, or one object (one row). For objects the first row is the header, the keys of all the objects in order of first appearance (CyberChef takes the keys of the first object), and an object without a key gives an empty cell; for arrays there is no header row. A string is written as it is, null as an empty cell (CyberChef writes the word null), and a number, true, false, an array or an object as its JSON text (CyberChef: a nested value makes it flatten the keys to a.b names). A cell is quoted when it holds the cell or the row delimiter, a double quote, a CR or an LF. The cell and row delimiters are used as written (both read the escapes \\r \\n \\t \\\\ and \\xHH; the default row delimiter is CRLF), and a row delimiter follows every row, the last one too, as CyberChef writes it. An empty array gives empty text (CyberChef fails). Anything else, an array that mixes objects and arrays or holds other values, a repeated key, or text that is not JSON is E_COERCE." doc
   "Data format" category
@@ -105,6 +111,10 @@ META: from-json
   use-when "You have JSON text as an array of objects, such as an export from an API, and need CSV for a spreadsheet." ;
   param cell-delimiter "The text put between the cells. Escapes like \\t are read." ;
   param row-delimiter "The text put between the rows. Escapes like \\r\\n are read." ;
+  expects "JSON text" ;
+  checks input regex "^(?:\\s*[\\[{]|\\s{1000})" ;
+  checks input utf8 ;
+  checks output utf8 ;
   see-also csv:to-json ;
   inverse to-json ;
   link "https://www.rfc-editor.org/rfc/rfc4180" "RFC 4180: CSV format" ;
