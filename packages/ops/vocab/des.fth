@@ -41,4 +41,6 @@ META: decrypt
   see-also des:encrypt hex:decode ;
   inverse encrypt ;
   link "https://en.wikipedia.org/wiki/Data_Encryption_Standard" "Data Encryption Standard on Wikipedia" ;
+  checks input binary ;
+  expects "encrypted data" ;
 ;

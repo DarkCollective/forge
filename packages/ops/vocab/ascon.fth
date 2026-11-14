@@ -50,6 +50,8 @@ META: decrypt
   param nonce "The 16-byte nonce used to encrypt." ;
   param ad "The associated data used to encrypt." ;
   see-also ascon:encrypt hex:decode ;
+  checks input binary ;
+  expects "encrypted data" ;
 ;
 
 META: hash

@@ -424,5 +424,45 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "parse input: real data",
+    "op": "bcrypt:parse",
+    "checks": "input",
+    "data": {
+      "value": "$2a$06$m0CrhHm10qJ3lXRY.5zDGO3rS2KdeeWLuGmsfGlMfOxih58VYVfxe",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "parse input: plain text",
+    "op": "bcrypt:parse",
+    "checks": "input",
+    "data": {
+      "value": "hello world",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "hash output",
+    "op": "bcrypt:hash",
+    "checks": "output",
+    "data": {
+      "value": "$2a$06$m0CrhHm10qJ3lXRY.5zDGO3rS2KdeeWLuy5xVd2L/uxIwumIHSjSG",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "hash-salted output",
+    "op": "bcrypt:hash-salted",
+    "checks": "output",
+    "data": {
+      "value": "$2a$05$CCCCCCCCCCCCCCCCCCCCC.E5YPO9kmyuRGyh0XouQYb4YMJKvyOeW",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

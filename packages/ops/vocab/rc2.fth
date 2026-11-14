@@ -45,4 +45,6 @@ META: decrypt
   inverse encrypt ;
   link "https://www.rfc-editor.org/rfc/rfc2268" "RFC 2268: the RC2 cipher" ;
   link "https://en.wikipedia.org/wiki/RC2" "RC2 on Wikipedia" ;
+  checks input binary ;
+  expects "encrypted data" ;
 ;

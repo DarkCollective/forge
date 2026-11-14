@@ -887,5 +887,65 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "sign output",
+    "op": "gost3410:sign",
+    "checks": "output",
+    "data": {
+      "value": "0d1eee5f3cb8afca1221b00654768ff0649a4e9edeb8b8f4a193bb99fd7a86458e22a7af7925f126c3cd9cdfe5f889af3b374e0ce32d328df99c065dd7c4e0",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "verify input: real data",
+    "op": "gost3410:verify",
+    "checks": "input",
+    "data": {
+      "value": "0d1eee5f3cb8afca1221b00654768ff0649a4e9edeb8b8f4a193bb99fd7a86458e22a7af7925f126c3cd9cdfe5f889af3b374e0ce32d328df99c065dd7c4e0",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "verify input: plain text",
+    "op": "gost3410:verify",
+    "checks": "input",
+    "data": {
+      "value": "hello world, not hex digits",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "public-key input: real data",
+    "op": "gost3410:public-key",
+    "checks": "input",
+    "data": {
+      "value": "1b2049c56f8fcec6ce00ee1eba62e1093fada9403a90b5ceeae822983632e9cb",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "public-key input: plain text",
+    "op": "gost3410:public-key",
+    "checks": "input",
+    "data": {
+      "value": "hello world, not hex digits",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "public-key output",
+    "op": "gost3410:public-key",
+    "checks": "output",
+    "data": {
+      "value": "6d789f4a41d6d8422fbba7f6cfd15d8cb9d41c2004f62729de6e9e498c8f11fe12ee8ebd17fc22c484e5bd8599c56f7ba82ecab8d1f2c1fb7b49b834aa582f05",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

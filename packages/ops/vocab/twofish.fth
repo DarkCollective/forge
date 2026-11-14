@@ -39,4 +39,6 @@ META: decrypt
   see-also twofish:encrypt hex:decode ;
   inverse encrypt ;
   link "https://en.wikipedia.org/wiki/Twofish" "Twofish on Wikipedia" ;
+  checks input binary ;
+  expects "encrypted data" ;
 ;

@@ -26,4 +26,6 @@ META: decrypt
   param key "The key used to encrypt." ;
   see-also xxtea:encrypt hex:decode ;
   inverse encrypt ;
+  checks input binary ;
+  expects "encrypted data" ;
 ;

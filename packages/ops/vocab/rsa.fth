@@ -777,6 +777,8 @@ META: decrypt
   inverse encrypt ;
   link "https://www.rfc-editor.org/rfc/rfc8017" "RFC 8017: PKCS #1 RSA cryptography" ;
   link "https://en.wikipedia.org/wiki/RSA_cryptosystem" "RSA cryptosystem on Wikipedia" ;
+  checks input binary ;
+  expects "encrypted data" ;
 ;
 
 META: public-key
@@ -786,4 +788,6 @@ META: public-key
   see-also rsa:generate-key-pair ecdsa:public-key pem:to-hex asn1-dump:parse ;
   link "https://www.rfc-editor.org/rfc/rfc7517" "RFC 7517: JSON Web Key" ;
   link "https://www.rfc-editor.org/rfc/rfc8017" "RFC 8017: PKCS #1 RSA cryptography" ;
+  checks input regex "-----BEGIN " ;
+  expects "PEM private key" ;
 ;

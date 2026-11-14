@@ -35,4 +35,6 @@ META: decrypt
   see-also ciphersaber2:encrypt rc4:crypt hex:decode ;
   inverse encrypt ;
   link "https://en.wikipedia.org/wiki/RC4" "RC4 on Wikipedia" ;
+  checks input binary ;
+  expects "encrypted data" ;
 ;

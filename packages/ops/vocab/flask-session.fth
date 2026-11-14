@@ -92,6 +92,8 @@ META: decode
   use-when "You have a Flask session cookie and want its payload without a key. Nothing is checked, so the contents may be forged; use verify to check them." ;
   param timestamp "Also return the signing time (Unix seconds): {\"payload\":...,\"timestamp\":N}." ;
   see-also flask-session:verify flask-session:sign base64:decode ;
+  checks input regex "^\\s*\\.?[\\sA-Za-z0-9_=-]+\\.[\\sA-Za-z0-9_=-]+\\.[\\sA-Za-z0-9_=-]+$" ;
+  expects "Flask session cookie" ;
 ;
 
 META: verify
@@ -101,6 +103,9 @@ META: verify
   param algorithm "The digest of the signature: sha1 (Flask's default) or sha256." ;
   param timestamp "Include the signing time in the result." ;
   see-also flask-session:sign flask-session:decode hmac:digest ;
+  checks input regex "^\\s*\\.?[\\sA-Za-z0-9_=-]+\\.[\\sA-Za-z0-9_=-]+\\.[\\sA-Za-z0-9_=-]+$" ;
+  expects "Flask session cookie" ;
+  checks output regex "^\\{\"valid\":true" ;
 ;
 
 META: sign
@@ -110,4 +115,5 @@ META: sign
   param algorithm "The digest of the signature: sha1 (Flask's default) or sha256." ;
   param timestamp "The signing time in Unix seconds; 0 (the default) uses the clock." ;
   see-also flask-session:verify flask-session:decode hmac:digest ;
+  checks output regex "^[A-Za-z0-9_=-]+\\.[A-Za-z0-9_=-]+\\.[A-Za-z0-9_=-]+$" ;
 ;

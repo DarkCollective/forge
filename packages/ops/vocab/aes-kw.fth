@@ -29,4 +29,6 @@ META: unwrap
   see-also aes-kw:wrap hex:decode ;
   inverse wrap ;
   link "https://www.rfc-editor.org/rfc/rfc3394" "RFC 3394: AES Key Wrap" ;
+  checks input binary ;
+  expects "wrapped key data" ;
 ;

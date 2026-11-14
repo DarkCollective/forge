@@ -41,4 +41,6 @@ META: decrypt
   inverse encrypt ;
   link "https://en.wikipedia.org/wiki/Triple_DES" "Triple DES on Wikipedia" ;
   link "https://en.wikipedia.org/wiki/Data_Encryption_Standard" "Data Encryption Standard on Wikipedia" ;
+  checks input binary ;
+  expects "encrypted data" ;
 ;

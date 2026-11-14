@@ -370,4 +370,7 @@ META: public-key
   use-when "You have an EC private key in PEM, SEC1 or PKCS #8, and you want its public key as a PUBLIC KEY PEM, to share it or to check signatures." ;
   see-also ecdsa:generate-key-pair ecdsa:sign ;
   link "https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm" "ECDSA on Wikipedia" ;
+  checks input regex "-----BEGIN " ;
+  expects "EC private key in PEM" ;
+  checks output regex "^-----BEGIN PUBLIC KEY-----" ;
 ;

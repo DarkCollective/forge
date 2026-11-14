@@ -753,5 +753,65 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "decode input: real data",
+    "op": "flask-session:decode",
+    "checks": "input",
+    "data": {
+      "value": "eyJhIjoxfQ._w.yCIeAUPA7NPKbzNdPQaVbI1nqOc",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "decode input: plain text",
+    "op": "flask-session:decode",
+    "checks": "input",
+    "data": {
+      "value": "hello world",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "verify input: real data",
+    "op": "flask-session:verify",
+    "checks": "input",
+    "data": {
+      "value": "eyJ1c2VyIjoiYWRtaW4iLCJyb2xlIjoiZWRpdG9yIn0.ZVPxAA.EMj9sWlqrOaM5slFnW5cWDEoCx8",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "verify input: plain text",
+    "op": "flask-session:verify",
+    "checks": "input",
+    "data": {
+      "value": "hello world",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "verify output",
+    "op": "flask-session:verify",
+    "checks": "output",
+    "data": {
+      "value": "{\"valid\":true,\"payload\":{\"user\":\"admin\",\"role\":\"editor\"}}",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "sign output",
+    "op": "flask-session:sign",
+    "checks": "output",
+    "data": {
+      "value": "eyJhIjoxfQ._w.yCIeAUPA7NPKbzNdPQaVbI1nqOc",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

@@ -2968,5 +2968,35 @@
     "expect": {
       "error": "E_RECIPE_INVALID"
     }
+  },
+  {
+    "name": "public-key input: real data",
+    "op": "ecdsa:public-key",
+    "checks": "input",
+    "data": {
+      "value": "-----BEGIN EC PRIVATE KEY-----\nMHQCAQEEIC7Mc4cMCS+rg1uE2RSYsHwN8BQrQXGJvueuIpOi0SbBoAcGBSuBBAAK\noUQDQgAEDHv+EgIPqgr7qX4B64my/1Czqiv9cQHfzGU5VjxueT5Zlf35+aIj+sKf\nKO1fTAdZ3ErBinPvDfehZG2jfwaAMg==\n-----END EC PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "public-key input: plain text",
+    "op": "ecdsa:public-key",
+    "checks": "input",
+    "data": {
+      "value": "hello world",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "public-key output",
+    "op": "ecdsa:public-key",
+    "checks": "output",
+    "data": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEDHv+EgIPqgr7qX4B64my/1Czqiv9cQHf\nzGU5VjxueT5Zlf35+aIj+sKfKO1fTAdZ3ErBinPvDfehZG2jfwaAMg==\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

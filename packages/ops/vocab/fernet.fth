@@ -79,6 +79,7 @@ META: encrypt
   see-also fernet:decrypt aes:encrypt hmac:digest ;
   inverse decrypt ;
   link "https://github.com/fernet/spec" "Fernet specification (github.com/fernet/spec)" ;
+  checks output regex "^gA[A-Za-z0-9_=-]+$" ;
 ;
 
 META: decrypt
@@ -88,4 +89,6 @@ META: decrypt
   see-also fernet:encrypt aes:decrypt hmac:digest ;
   inverse encrypt ;
   link "https://github.com/fernet/spec" "Fernet specification (github.com/fernet/spec)" ;
+  checks input regex "^\\s*gA[\\sA-Za-z0-9_=-]*$" ;
+  expects "Fernet token" ;
 ;

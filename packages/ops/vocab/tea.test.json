@@ -231,5 +231,25 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "decrypt input: real data",
+    "op": "tea:decrypt",
+    "checks": "input",
+    "data": {
+      "value": "2be8d0557494202fe15070ad8d142e4181df72f1e0",
+      "enc": "hex"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "decrypt input: plain text",
+    "op": "tea:decrypt",
+    "checks": "input",
+    "data": {
+      "value": "The quick brown fox jumps over the lazy dog.",
+      "enc": "utf8"
+    },
+    "expect": "fail"
   }
 ]

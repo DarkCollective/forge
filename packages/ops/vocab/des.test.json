@@ -864,5 +864,25 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "decrypt input: real data",
+    "op": "des:decrypt",
+    "checks": "input",
+    "data": {
+      "value": "d93de8af2b1216c3e8f4af5ab32f1a76",
+      "enc": "hex"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "decrypt input: plain text",
+    "op": "des:decrypt",
+    "checks": "input",
+    "data": {
+      "value": "The quick brown fox jumps over the lazy dog.",
+      "enc": "utf8"
+    },
+    "expect": "fail"
   }
 ]

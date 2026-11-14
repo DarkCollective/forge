@@ -26,6 +26,9 @@ META: to-hex
   see-also pem:from-hex asn1-dump:parse ;
   link "https://www.rfc-editor.org/rfc/rfc7468" "RFC 7468: PEM textual encodings" ;
   link "https://en.wikipedia.org/wiki/Privacy-Enhanced_Mail" "Privacy-Enhanced Mail on Wikipedia" ;
+  checks input regex "-----BEGIN " ;
+  expects "PEM text" ;
+  checks output charset "0-9a-f\n" ;
 ;
 
 META: from-hex
@@ -35,4 +38,7 @@ META: from-hex
   see-also pem:to-hex asn1-dump:parse ;
   link "https://www.rfc-editor.org/rfc/rfc7468" "RFC 7468: PEM textual encodings" ;
   link "https://en.wikipedia.org/wiki/Privacy-Enhanced_Mail" "Privacy-Enhanced Mail on Wikipedia" ;
+  checks input regex "^[0-9a-fA-F\\s]+$" ;
+  expects "hex digits" ;
+  checks output regex "^-----BEGIN " ;
 ;

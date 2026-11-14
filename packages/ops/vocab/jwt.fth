@@ -114,6 +114,9 @@ META: decode
   link "https://www.rfc-editor.org/rfc/rfc7519" "RFC 7519: JSON Web Token" ;
   link "https://www.rfc-editor.org/rfc/rfc7515" "RFC 7515: JSON Web Signature" ;
   link "https://jwt.io/" "jwt.io: token debugger" ;
+  checks input regex "^\\s*[\\sA-Za-z0-9_=-]+\\.[\\sA-Za-z0-9_=-]+\\.[\\sA-Za-z0-9_=-]*$" ;
+  expects "JWT" ;
+  checks output regex "^\\s*\\{" ;
 ;
 
 META: verify
@@ -124,6 +127,9 @@ META: verify
   see-also jwt:sign jwt:decode hmac:digest ;
   link "https://www.rfc-editor.org/rfc/rfc7519" "RFC 7519: JSON Web Token" ;
   link "https://www.rfc-editor.org/rfc/rfc7518#section-3.2" "RFC 7518, section 3.2: HMAC signatures" ;
+  checks input regex "^\\s*[\\sA-Za-z0-9_=-]+\\.[\\sA-Za-z0-9_=-]+\\.[\\sA-Za-z0-9_=-]+$" ;
+  expects "JWT" ;
+  checks output regex "^\\s*\\{" ;
 ;
 
 META: sign
@@ -134,4 +140,5 @@ META: sign
   see-also jwt:verify jwt:decode hmac:digest ;
   link "https://www.rfc-editor.org/rfc/rfc7519" "RFC 7519: JSON Web Token" ;
   link "https://www.rfc-editor.org/rfc/rfc7518#section-3.2" "RFC 7518, section 3.2: HMAC signatures" ;
+  checks output regex "^[A-Za-z0-9_=-]+\\.[A-Za-z0-9_=-]+\\.[A-Za-z0-9_=-]+$" ;
 ;

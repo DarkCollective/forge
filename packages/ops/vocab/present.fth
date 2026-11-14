@@ -35,4 +35,6 @@ META: decrypt
   param padding "PKCS#7 padding, or none. Applies to CBC and ECB only." ;
   see-also present:encrypt hex:decode ;
   inverse encrypt ;
+  checks input binary ;
+  expects "encrypted data" ;
 ;

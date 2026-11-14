@@ -40,4 +40,6 @@ META: decrypt
   see-also blowfish:encrypt hex:decode ;
   inverse encrypt ;
   link "https://en.wikipedia.org/wiki/Blowfish_(cipher)" "Blowfish on Wikipedia" ;
+  checks input binary ;
+  expects "encrypted data" ;
 ;

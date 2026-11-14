@@ -214,4 +214,6 @@ META: parse
   param truncate "Show at most this many hex characters at each end of a long value, with ..(total Nbytes).. between (0: show all)." ;
   link "https://en.wikipedia.org/wiki/ASN.1" "ASN.1 on Wikipedia" ;
   link "https://www.itu.int/rec/T-REC-X.690/en" "ITU-T X.690: BER, CER and DER encoding rules" ;
+  checks input regex "^[0-9a-fA-F\\s]+$" ;
+  expects "ASN.1 DER as hex" ;
 ;

@@ -40,4 +40,6 @@ META: decrypt
   inverse encrypt ;
   link "https://en.wikipedia.org/wiki/XTEA" "XTEA on Wikipedia" ;
   link "https://en.wikipedia.org/wiki/Tiny_Encryption_Algorithm" "Tiny Encryption Algorithm on Wikipedia" ;
+  checks input binary ;
+  expects "encrypted data" ;
 ;

@@ -36,6 +36,7 @@ META: hash
   param version "The version prefix written into the string: 2b (default), 2a or 2y. The hash is the same." ;
   see-also bcrypt:hash-salted bcrypt:compare bcrypt:parse argon2:derive ;
   link "https://en.wikipedia.org/wiki/Bcrypt" "bcrypt on Wikipedia" ;
+  checks output regex "^\\$2[aby]\\$[0-9]{2}\\$[./A-Za-z0-9]{53}$" ;
 ;
 
 META: hash-salted
@@ -45,6 +46,7 @@ META: hash-salted
   param version "The version prefix written into the string: 2b (default), 2a or 2y." ;
   see-also bcrypt:hash ;
   link "https://en.wikipedia.org/wiki/Bcrypt" "bcrypt on Wikipedia" ;
+  checks output regex "^\\$2[aby]\\$[0-9]{2}\\$[./A-Za-z0-9]{53}$" ;
 ;
 
 META: compare
@@ -58,4 +60,6 @@ META: parse
   use-when "You have a bcrypt hash and want to read off its cost, its salt and the hash part, without checking a password." ;
   see-also bcrypt:hash bcrypt:compare ;
   link "https://en.wikipedia.org/wiki/Bcrypt" "bcrypt on Wikipedia" ;
+  checks input regex "^\\$2[aby]\\$" ;
+  expects "bcrypt hash" ;
 ;

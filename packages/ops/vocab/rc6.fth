@@ -45,4 +45,6 @@ META: decrypt
   see-also rc6:encrypt hex:decode ;
   inverse encrypt ;
   link "https://en.wikipedia.org/wiki/RC6" "RC6 on Wikipedia" ;
+  checks input binary ;
+  expects "encrypted data" ;
 ;

@@ -682,5 +682,75 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "decode input: real data",
+    "op": "jwt:decode",
+    "checks": "input",
+    "data": {
+      "value": "eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "decode input: plain text",
+    "op": "jwt:decode",
+    "checks": "input",
+    "data": {
+      "value": "hello world",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "decode output",
+    "op": "jwt:decode",
+    "checks": "output",
+    "data": {
+      "value": "{\"alg\":\"none\"}",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "verify input: real data",
+    "op": "jwt:verify",
+    "checks": "input",
+    "data": {
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "verify input: plain text",
+    "op": "jwt:verify",
+    "checks": "input",
+    "data": {
+      "value": "hello world",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "verify output",
+    "op": "jwt:verify",
+    "checks": "output",
+    "data": {
+      "value": "{\"sub\":\"1234567890\",\"name\":\"John Doe\",\"iat\":1516239022}",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "sign output",
+    "op": "jwt:sign",
+    "checks": "output",
+    "data": {
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.Et9HFtf9R3GEMA0IICOfFMVXY7kkTX1wr4qCyhIf58U",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

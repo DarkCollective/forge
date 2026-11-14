@@ -37,4 +37,6 @@ META: decrypt
   see-also tea:encrypt xtea:decrypt hex:decode ;
   inverse encrypt ;
   link "https://en.wikipedia.org/wiki/Tiny_Encryption_Algorithm" "Tiny Encryption Algorithm on Wikipedia" ;
+  checks input binary ;
+  expects "encrypted data" ;
 ;

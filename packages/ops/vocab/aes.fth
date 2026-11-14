@@ -55,4 +55,6 @@ META: decrypt
   see-also aes:encrypt hex:decode ;
   inverse encrypt ;
   link "https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation" "Block cipher mode of operation on Wikipedia" ;
+  checks input binary ;
+  expects "encrypted data" ;
 ;

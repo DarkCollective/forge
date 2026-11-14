@@ -1924,5 +1924,15 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "public-key output",
+    "op": "x509:public-key",
+    "checks": "output",
+    "data": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

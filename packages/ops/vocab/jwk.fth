@@ -212,6 +212,9 @@ META: from-pem
   link "https://www.rfc-editor.org/rfc/rfc7517" "RFC 7517: JSON Web Key" ;
   link "https://www.rfc-editor.org/rfc/rfc8037" "RFC 8037: Ed25519 and X25519 keys in JOSE" ;
   link "https://www.rfc-editor.org/rfc/rfc7638" "RFC 7638: JWK Thumbprint" ;
+  checks input regex "-----BEGIN " ;
+  expects "PEM key or certificate" ;
+  checks output regex "^\\{" ;
 ;
 
 \ ---- JWK to PEM ----
@@ -333,4 +336,7 @@ META: to-pem
   see-also jwk:from-pem pem:from-hex ;
   link "https://www.rfc-editor.org/rfc/rfc7517" "RFC 7517: JSON Web Key" ;
   link "https://www.rfc-editor.org/rfc/rfc8037" "RFC 8037: Ed25519 and X25519 keys in JOSE" ;
+  checks input regex "^\\s*[\\[{]" ;
+  expects "JSON Web Key" ;
+  checks output regex "^-----BEGIN " ;
 ;

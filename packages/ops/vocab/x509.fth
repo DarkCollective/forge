@@ -1066,4 +1066,5 @@ META: public-key
   use-when "You have a certificate and need just its public key as a PEM block, for example to pin it, compare it or check a signature elsewhere." ;
   link "https://www.rfc-editor.org/rfc/rfc5280#section-4.1.2.7" "RFC 5280, section 4.1.2.7: subject public key info" ;
   link "https://en.wikipedia.org/wiki/X.509" "X.509 on Wikipedia" ;
+  checks output regex "^-----BEGIN PUBLIC KEY-----" ;
 ;

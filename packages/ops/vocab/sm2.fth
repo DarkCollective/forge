@@ -115,6 +115,7 @@ META: encrypt
   param curve "The curve: sm2p256v1, the only one." ;
   see-also sm2:decrypt sm3:digest ;
   inverse decrypt ;
+  checks output charset "0-9a-f" ;
 ;
 
 META: decrypt
@@ -124,4 +125,6 @@ META: decrypt
   param curve "The curve: sm2p256v1, the only one." ;
   see-also sm2:encrypt sm3:digest ;
   inverse encrypt ;
+  checks input regex "^[0-9a-fA-F\\s]+$" ;
+  expects "SM2 ciphertext as hex" ;
 ;

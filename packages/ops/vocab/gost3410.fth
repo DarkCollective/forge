@@ -58,6 +58,7 @@ META: sign
   see-also gost3410:verify gost3410:public-key streebog:digest ;
   link "https://www.rfc-editor.org/rfc/rfc7091" "RFC 7091: GOST R 34.10-2012 signatures" ;
   link "https://www.rfc-editor.org/rfc/rfc6986" "RFC 6986: the Streebog hash" ;
+  checks output charset "0-9a-f" ;
 ;
 
 META: verify
@@ -69,6 +70,8 @@ META: verify
   inverse sign ;
   link "https://www.rfc-editor.org/rfc/rfc7091" "RFC 7091: GOST R 34.10-2012 signatures" ;
   link "https://www.rfc-editor.org/rfc/rfc6986" "RFC 6986: the Streebog hash" ;
+  checks input regex "^[0-9a-fA-F\\s]+$" ;
+  expects "signature as hex" ;
 ;
 
 META: public-key
@@ -76,4 +79,7 @@ META: public-key
   param curve "The parameter set." ;
   see-also gost3410:sign gost3410:verify ;
   link "https://www.rfc-editor.org/rfc/rfc7091" "RFC 7091: GOST R 34.10-2012 signatures" ;
+  checks input regex "^[0-9a-fA-F\\s]+$" ;
+  expects "private key as hex" ;
+  checks output charset "0-9a-f" ;
 ;

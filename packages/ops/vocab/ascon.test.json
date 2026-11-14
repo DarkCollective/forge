@@ -588,5 +588,25 @@
     "expect": {
       "error": "E_RANGE"
     }
+  },
+  {
+    "name": "decrypt input: real data",
+    "op": "ascon:decrypt",
+    "checks": "input",
+    "data": {
+      "value": "4f9c278211bec9316bf68f46ee8b2ec6",
+      "enc": "hex"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "decrypt input: plain text",
+    "op": "ascon:decrypt",
+    "checks": "input",
+    "data": {
+      "value": "The quick brown fox jumps over the lazy dog.",
+      "enc": "utf8"
+    },
+    "expect": "fail"
   }
 ]

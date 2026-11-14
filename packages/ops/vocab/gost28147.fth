@@ -71,6 +71,8 @@ META: decrypt
   see-also gost28147:encrypt hex:decode ;
   inverse encrypt ;
   link "https://www.rfc-editor.org/rfc/rfc5830" "RFC 5830: GOST 28147-89 algorithms" ;
+  checks input binary ;
+  expects "encrypted data" ;
 ;
 
 META: wrap-key
@@ -93,4 +95,6 @@ META: unwrap-key
   see-also gost28147:wrap-key gost28147:decrypt ;
   inverse wrap-key ;
   link "https://www.rfc-editor.org/rfc/rfc4357" "RFC 4357: GOST key wrapping" ;
+  checks input binary ;
+  expects "wrapped key data" ;
 ;

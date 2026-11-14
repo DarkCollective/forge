@@ -1110,5 +1110,45 @@
     "expect": {
       "error": "E_RANGE"
     }
+  },
+  {
+    "name": "decrypt input: real data",
+    "op": "gost28147:decrypt",
+    "checks": "input",
+    "data": {
+      "value": "6d644a0bbcd0029251553335e4b9da3448747c576f",
+      "enc": "hex"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "decrypt input: plain text",
+    "op": "gost28147:decrypt",
+    "checks": "input",
+    "data": {
+      "value": "The quick brown fox jumps over the lazy dog.",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "unwrap-key input: real data",
+    "op": "gost28147:unwrap-key",
+    "checks": "input",
+    "data": {
+      "value": "3546ae8458ec5a30bd5cbe3e1a28de324d4d00c527d8d71620fc8e8c8cfd685644c4c9ae",
+      "enc": "hex"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "unwrap-key input: plain text",
+    "op": "gost28147:unwrap-key",
+    "checks": "input",
+    "data": {
+      "value": "The quick brown fox jumps over the lazy dog.",
+      "enc": "utf8"
+    },
+    "expect": "fail"
   }
 ]
