@@ -76,8 +76,8 @@ describe("the Node provider", () => {
   test("finds the primitive modules by pattern, and none of the tests or declarations", async () => {
     const loaders = createNodeProvider().primitiveLoaders();
     expect(Object.keys(loaders).sort()).toEqual(PRIMS);
-    const mod = await (loaders.hex as () => Promise<{ primitives: unknown[] }>)();
-    expect(mod.primitives).toHaveLength(2);
+    const mod = await (loaders.json as () => Promise<{ primitives: unknown[] }>)();
+    expect(mod.primitives).toHaveLength(4);
   });
 
   test("a root without vocab or prims directories is empty", async () => {
@@ -170,8 +170,8 @@ describe("the Vite provider (under Vitest, which applies import.meta.glob)", () 
     expect(viaVite.version).toBe(viaNode.version);
   });
 
-  test("hex alone does not import the other primitive modules", async () => {
-    const bundle = await createBundleLoader(createViteProvider())(["hex"]);
-    expect(bundle.primitives.map((p) => p.vocab)).toEqual(["hex", "hex"]);
+  test("json alone does not import the other primitive modules", async () => {
+    const bundle = await createBundleLoader(createViteProvider())(["json"]);
+    expect(bundle.primitives.map((p) => p.vocab)).toEqual(["json", "json", "json", "json"]);
   });
 });

@@ -111,6 +111,7 @@ META: encode
   param hrp "The human-readable part, 1 to 83 printable ASCII characters (lower-cased)." ;
   param variant "bech32 (BIP-173) or bech32m (BIP-350)." ;
   see-also bech32:decode base32:encode ;
+  checks output charset "!-~" ;
 ;
 
 META: decode
@@ -119,4 +120,6 @@ META: decode
   inverse encode ;
   param part "What to return: the data bytes, or the human-readable part." ;
   see-also bech32:encode base32:decode ;
+  checks input charset "!-~" ;
+  expects "Bech32 string" ;
 ;

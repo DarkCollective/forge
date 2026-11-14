@@ -69,12 +69,12 @@ describe("12.1 the Gate recipe", () => {
     );
     expect(ops).toEqual([
       "lit",
-      "prim base64:decode",
+      "call base64:decode",
       "lit",
       "call classical:rot",
       "lit",
       "lit",
-      "prim hex:encode",
+      "call hex:encode",
       "ret",
     ]);
     expect(entry.code.positions.map((p) => p.line)).toEqual([3, 3, 4, 4, 5, 5, 5, 6]);

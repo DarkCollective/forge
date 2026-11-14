@@ -78,10 +78,13 @@ META: encode
   use-when "You have binary data and need printable text in the base92 format, for example to write a base92 string that another tool will read." ;
   inverse decode ;
   see-also base92:decode base85:encode ;
+  checks output charset "!-~" ;
 ;
 
 META: decode
   use-when "You have base92 text, such as one made by another base92 tool, and want the bytes it stands for." ;
   inverse encode ;
   see-also base92:encode base85:decode ;
+  checks input charset "!-~ \t\n\x0b\x0c\r" ;
+  expects "Base92 text" ;
 ;

@@ -225,6 +225,7 @@ META: unescape
   use-when "You have text with Unicode escape codes or numeric references, such as U+1F600 or &#233;, from a source file or a log, and want the characters they stand for." ;
   link "https://en.wikipedia.org/wiki/UTF-16" "UTF-16 on Wikipedia" ;
   inverse escape ;
+  checks output utf8 ;
 ;
 
 META: smart-to-ascii

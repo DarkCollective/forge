@@ -36,6 +36,7 @@ META: encode
   link "https://en.wikipedia.org/wiki/Base58" "Base58 on Wikipedia" ;
   inverse decode ;
   param alphabet "The alphabet: bitcoin, flickr or ripple." ;
+  checks output charset "1-9A-HJ-NP-Za-km-z" ;
 ;
 
 META: decode
@@ -43,4 +44,6 @@ META: decode
   link "https://en.wikipedia.org/wiki/Base58" "Base58 on Wikipedia" ;
   inverse encode ;
   param alphabet "The alphabet of the text: bitcoin, flickr or ripple." ;
+  checks input charset "1-9A-HJ-NP-Za-km-z \t\n\x0b\x0c\r" ;
+  expects "Base58 text" ;
 ;

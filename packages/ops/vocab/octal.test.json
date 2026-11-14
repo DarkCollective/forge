@@ -261,5 +261,35 @@
     "expect": {
       "error": "E_RECIPE_INVALID"
     }
+  },
+  {
+    "name": "octal:decode input checks: matching text",
+    "op": "octal:decode",
+    "checks": "input",
+    "data": {
+      "value": "110 145 154",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "octal:decode input checks: other text",
+    "op": "octal:decode",
+    "checks": "input",
+    "data": {
+      "value": "89 9a",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "octal:encode output checks: typical result",
+    "op": "octal:encode",
+    "checks": "output",
+    "data": {
+      "value": "110 145 154",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

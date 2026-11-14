@@ -903,5 +903,35 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "base32:decode input checks: matching text",
+    "op": "base32:decode",
+    "checks": "input",
+    "data": {
+      "value": "MZXW6YTBOI======",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "base32:decode input checks: other text",
+    "op": "base32:decode",
+    "checks": "input",
+    "data": {
+      "value": "mzxw6ytboi",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "base32:encode output checks: typical result",
+    "op": "base32:encode",
+    "checks": "output",
+    "data": {
+      "value": "MZXW6YTBOI======",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

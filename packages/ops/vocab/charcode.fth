@@ -29,6 +29,7 @@ META: encode
   inverse decode ;
   param base "The number base, 2 to 36." ;
   param delimiter "What to put between the numbers: a space, a comma or a newline." ;
+  checks output charset "0-9a-z ,\n" ;
 ;
 
 META: decode
@@ -36,4 +37,7 @@ META: decode
   link "https://en.wikipedia.org/wiki/Code_point" "Code point on Wikipedia" ;
   inverse encode ;
   param base "The number base, 2 to 36." ;
+  checks input charset "0-9A-Za-z, \t\n\x0b\x0c\r" ;
+  expects "code point numbers" ;
+  checks output utf8 ;
 ;

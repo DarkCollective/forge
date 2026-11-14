@@ -169,5 +169,35 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "braille:decode input checks: matching text",
+    "op": "braille:decode",
+    "checks": "input",
+    "data": {
+      "value": "⠁⠃",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "braille:decode input checks: other text",
+    "op": "braille:decode",
+    "checks": "input",
+    "data": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "braille:encode output checks: typical result",
+    "op": "braille:encode",
+    "checks": "output",
+    "data": {
+      "value": "⠁⠃",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

@@ -32,6 +32,7 @@ META: encode
   inverse decode ;
   param delimiter "What to put between the bytes: nothing or a space." ;
   see-also modhex:decode hex:encode ;
+  checks output charset "cbdefghijklnrtuv " ;
 ;
 
 META: decode
@@ -39,4 +40,6 @@ META: decode
   link "https://www.yubico.com/" "Yubico, the makers of the YubiKey" ;
   inverse encode ;
   see-also modhex:encode hex:decode ;
+  checks input charset "cbdefghijklnrtuvCBDEFGHIJKLNRTUV \t\n\x0b\x0c\r" ;
+  expects "ModHex text" ;
 ;

@@ -158,4 +158,5 @@ META: decode
   link "https://en.wikipedia.org/wiki/Punycode" "Punycode on Wikipedia" ;
   inverse encode ;
   param mode "label: the whole text is raw Punycode. domain: decode each xn-- label of a dotted name." ;
+  checks output utf8 ;
 ;

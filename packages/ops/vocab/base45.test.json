@@ -359,5 +359,35 @@
       "title": "A line break is an error",
       "note": "Only the space is in the alphabet, so a line break in the text is refused with E_COERCE rather than skipped."
     }
+  },
+  {
+    "name": "base45:decode input checks: matching text",
+    "op": "base45:decode",
+    "checks": "input",
+    "data": {
+      "value": "QED8WEX0",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "base45:decode input checks: other text",
+    "op": "base45:decode",
+    "checks": "input",
+    "data": {
+      "value": "hello",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "base45:encode output checks: typical result",
+    "op": "base45:encode",
+    "checks": "output",
+    "data": {
+      "value": "QED8WEX0",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

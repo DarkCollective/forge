@@ -182,5 +182,45 @@
     "params": {},
     "input": { "value": "-41", "enc": "utf8" },
     "expect": { "error": "E_COERCE" }
+  },
+  {
+    "name": "charcode:decode input checks: matching text",
+    "op": "charcode:decode",
+    "checks": "input",
+    "data": {
+      "value": "48 65 6c",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "charcode:decode input checks: other text",
+    "op": "charcode:decode",
+    "checks": "input",
+    "data": {
+      "value": "48 65 !!",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "charcode:decode output checks: typical result",
+    "op": "charcode:decode",
+    "checks": "output",
+    "data": {
+      "value": "Hi",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "charcode:encode output checks: typical result",
+    "op": "charcode:encode",
+    "checks": "output",
+    "data": {
+      "value": "48 65 6c",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

@@ -65,6 +65,7 @@ META: encode
   link "https://www.rfc-editor.org/rfc/rfc9285" "RFC 9285: Base45 data encoding" ;
   inverse decode ;
   see-also base45:decode base32:encode ;
+  checks output charset "0-9A-Z $%*+./:-" ;
 ;
 
 META: decode
@@ -72,4 +73,6 @@ META: decode
   link "https://www.rfc-editor.org/rfc/rfc9285" "RFC 9285: Base45 data encoding" ;
   inverse encode ;
   see-also base45:encode base32:decode ;
+  checks input charset "0-9A-Z $%*+./:-" ;
+  expects "Base45 text" ;
 ;

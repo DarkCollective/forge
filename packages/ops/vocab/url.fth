@@ -27,6 +27,7 @@ META: encode
   link "https://en.wikipedia.org/wiki/Percent-encoding" "Percent-encoding on Wikipedia" ;
   inverse decode ;
   param mode "component: encode everything but the RFC 3986 unreserved characters. all: encode every byte." ;
+  checks output charset "A-Za-z0-9%._~-" ;
 ;
 
 META: decode

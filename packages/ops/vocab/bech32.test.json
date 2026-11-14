@@ -1198,5 +1198,35 @@
     "expect": {
       "error": "E_RECIPE_INVALID"
     }
+  },
+  {
+    "name": "bech32:decode input checks: matching text",
+    "op": "bech32:decode",
+    "checks": "input",
+    "data": {
+      "value": "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "bech32:decode input checks: other text",
+    "op": "bech32:decode",
+    "checks": "input",
+    "data": {
+      "value": "hello world",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "bech32:encode output checks: typical result",
+    "op": "bech32:encode",
+    "checks": "output",
+    "data": {
+      "value": "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

@@ -182,5 +182,35 @@
     "params": {},
     "input": { "value": "é", "enc": "utf8" },
     "expect": { "error": "E_COERCE" }
+  },
+  {
+    "name": "binary:decode input checks: matching text",
+    "op": "binary:decode",
+    "checks": "input",
+    "data": {
+      "value": "01001000 01101001",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "binary:decode input checks: other text",
+    "op": "binary:decode",
+    "checks": "input",
+    "data": {
+      "value": "hello",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "binary:encode output checks: typical result",
+    "op": "binary:encode",
+    "checks": "output",
+    "data": {
+      "value": "01001000 01101001",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

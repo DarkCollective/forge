@@ -26,10 +26,13 @@ META: to-bytes
   link "https://en.wikipedia.org/wiki/Endianness" "Endianness on Wikipedia" ;
   inverse from-bytes ;
   see-also bigint:from-bytes ;
+  checks input charset "0-9 \t\n\x0b\x0c\r" ;
+  expects "decimal digits" ;
 ;
 
 META: from-bytes
   use-when "You have a big-endian number as bytes, such as a key, a hash or a field from a binary format, and want its value in decimal." ;
   link "https://en.wikipedia.org/wiki/Endianness" "Endianness on Wikipedia" ;
   inverse to-bytes ;
+  checks output charset "0-9" ;
 ;

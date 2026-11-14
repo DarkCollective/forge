@@ -633,5 +633,35 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "base64:decode input checks: matching text",
+    "op": "base64:decode",
+    "checks": "input",
+    "data": {
+      "value": "Zm9vYmFy",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "base64:decode input checks: other text",
+    "op": "base64:decode",
+    "checks": "input",
+    "data": {
+      "value": "Hello, World!",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "base64:encode output checks: typical result",
+    "op": "base64:encode",
+    "checks": "output",
+    "data": {
+      "value": "Zm9vYmFy",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

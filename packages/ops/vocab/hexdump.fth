@@ -65,6 +65,7 @@ META: encode
   param width "Bytes per line, 1 to 64." ;
   param case "Case of the hex digits (the offset is always lowercase)." ;
   param ascii "Add the ASCII column." ;
+  checks output charset "\t\n\r\x20-\x7e" ;
 ;
 
 \ ---- decode ----
@@ -119,5 +120,7 @@ META: decode
   link "https://en.wikipedia.org/wiki/Hex_dump" "Hex dump on Wikipedia" ;
   inverse encode ;
   see-also hexdump:encode ;
+  checks input charset "\t\n\r\x20-\x7e" ;
+  expects "hex dump" ;
 ;
 

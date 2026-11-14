@@ -390,5 +390,35 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "base92:decode input checks: matching text",
+    "op": "base92:decode",
+    "checks": "input",
+    "data": {
+      "value": "Fs$Rp",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "base92:decode input checks: other text",
+    "op": "base92:decode",
+    "checks": "input",
+    "data": {
+      "value": "héllo",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "base92:encode output checks: typical result",
+    "op": "base92:encode",
+    "checks": "output",
+    "data": {
+      "value": "Fs$Rp",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

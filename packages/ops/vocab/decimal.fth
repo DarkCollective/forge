@@ -18,10 +18,13 @@ META: encode
   link "https://en.wikipedia.org/wiki/ASCII" "ASCII on Wikipedia" ;
   inverse decode ;
   param delimiter "What to put between the numbers: a space, a comma or a newline." ;
+  checks output charset "0-9 ,\n" ;
 ;
 
 META: decode
   use-when "You have decimal numbers from 0 to 255, separated by spaces or commas, and want the bytes they stand for." ;
   link "https://en.wikipedia.org/wiki/ASCII" "ASCII on Wikipedia" ;
   inverse encode ;
+  checks input charset "0-9, \t\n\x0b\x0c\r" ;
+  expects "decimal byte values" ;
 ;

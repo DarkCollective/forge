@@ -166,5 +166,35 @@
     "params": {},
     "input": { "value": "é", "enc": "utf8" },
     "expect": { "error": "E_COERCE" }
+  },
+  {
+    "name": "decimal:decode input checks: matching text",
+    "op": "decimal:decode",
+    "checks": "input",
+    "data": {
+      "value": "72, 101, 108",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "decimal:decode input checks: other text",
+    "op": "decimal:decode",
+    "checks": "input",
+    "data": {
+      "value": "abc",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "decimal:encode output checks: typical result",
+    "op": "decimal:encode",
+    "checks": "output",
+    "data": {
+      "value": "72 101 108",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

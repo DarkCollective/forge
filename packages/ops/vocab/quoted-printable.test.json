@@ -382,5 +382,15 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "quoted-printable:encode output checks: typical result",
+    "op": "quoted-printable:encode",
+    "checks": "output",
+    "data": {
+      "value": "caf=C3=A9",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

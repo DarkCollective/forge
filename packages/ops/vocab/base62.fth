@@ -32,6 +32,7 @@ META: encode
   inverse decode ;
   param alphabet "The alphabet: standard (0-9 A-Z a-z) or inverted (0-9 a-z A-Z)." ;
   see-also base62:decode base58:encode ;
+  checks output charset "0-9A-Za-z" ;
 ;
 
 META: decode
@@ -40,4 +41,6 @@ META: decode
   inverse encode ;
   param alphabet "The alphabet of the text: standard (0-9 A-Z a-z) or inverted (0-9 a-z A-Z)." ;
   see-also base62:encode base58:decode ;
+  checks input charset "0-9A-Za-z \t\n\x0b\x0c\r" ;
+  expects "Base62 text" ;
 ;

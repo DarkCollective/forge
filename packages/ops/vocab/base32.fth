@@ -81,6 +81,7 @@ META: encode
   inverse decode ;
   param alphabet "The alphabet: standard (A-Z 2-7) or hex (0-9 A-V, base32hex)." ;
   param padding "Append = padding to a multiple of eight characters." ;
+  checks output charset "A-Z0-9=" ;
 ;
 
 META: decode
@@ -90,4 +91,6 @@ META: decode
   link "https://en.wikipedia.org/wiki/Base32" "Base32 on Wikipedia" ;
   inverse encode ;
   param alphabet "The alphabet of the text: standard (A-Z 2-7) or hex (0-9 A-V, base32hex)." ;
+  checks input charset "A-Z0-9= \t\n\x0b\x0c\r" ;
+  expects "Base32 text" ;
 ;

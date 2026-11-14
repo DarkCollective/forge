@@ -72,10 +72,14 @@ META: encode
   link "https://en.wikipedia.org/wiki/Morse_code" "Morse code on Wikipedia" ;
   inverse decode ;
   param word-separator "What to put between words: \" / \" or a newline." ;
+  checks output charset "./ \n-" ;
 ;
 
 META: decode
   use-when "You have Morse code, dots and dashes, and want the text it spells." ;
   link "https://en.wikipedia.org/wiki/Morse_code" "Morse code on Wikipedia" ;
   inverse encode ;
+  checks input charset "./ \t\n\x0b\x0c\r-" ;
+  expects "Morse code" ;
+  checks output utf8 ;
 ;

@@ -2385,4 +2385,5 @@ META: decode
   link "https://html.spec.whatwg.org/" "HTML Living Standard (WHATWG)" ;
   inverse encode ;
   see-also html:encode ;
+  checks output utf8 ;
 ;

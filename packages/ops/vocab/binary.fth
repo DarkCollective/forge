@@ -31,10 +31,13 @@ META: encode
   link "https://en.wikipedia.org/wiki/Binary_number" "Binary number on Wikipedia" ;
   inverse decode ;
   param delimiter "What to put between the bytes: a space, nothing, a comma or a newline." ;
+  checks output charset "01 ,\n" ;
 ;
 
 META: decode
   use-when "You have a string of 0 and 1 digits, such as a bit pattern copied from a specification, and want the bytes it stands for." ;
   link "https://en.wikipedia.org/wiki/Binary_number" "Binary number on Wikipedia" ;
   inverse encode ;
+  checks input charset "01, \t\n\x0b\x0c\r" ;
+  expects "binary digits" ;
 ;

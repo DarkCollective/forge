@@ -101,6 +101,7 @@ META: encode
   link "https://www.rfc-editor.org/rfc/rfc2045" "RFC 2045, section 6.7: Quoted-Printable" ;
   link "https://en.wikipedia.org/wiki/Quoted-printable" "Quoted-printable on Wikipedia" ;
   inverse decode ;
+  checks output charset "\t\n\r\x20-\x7e" ;
 ;
 
 META: decode

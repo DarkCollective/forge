@@ -393,5 +393,35 @@
     "expect": {
       "error": "E_RECIPE_INVALID"
     }
+  },
+  {
+    "name": "base62:decode input checks: matching text",
+    "op": "base62:decode",
+    "checks": "input",
+    "data": {
+      "value": "T8dgcjRGkZ3aysdN",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "base62:decode input checks: other text",
+    "op": "base62:decode",
+    "checks": "input",
+    "data": {
+      "value": "a+b/c=",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "base62:encode output checks: typical result",
+    "op": "base62:encode",
+    "checks": "output",
+    "data": {
+      "value": "T8dgcjRGkZ3aysdN",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

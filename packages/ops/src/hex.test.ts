@@ -15,9 +15,8 @@
  */
 import { valueHelpers } from "@forge/lang";
 import { describe, expect, test } from "vitest";
-import { assembleRuntime } from "../bundle.js";
-import { loadBundleNode } from "../sources-node.js";
-import { primitives } from "./hex.js";
+import { assembleRuntime } from "./bundle.js";
+import { loadBundleNode } from "./sources-node.js";
 
 const { bytes, str } = valueHelpers;
 const runtime = assembleRuntime(await loadBundleNode(["hex"]));
@@ -65,7 +64,19 @@ describe("hex:encode", () => {
     const small = assembleRuntime(await loadBundleNode(["hex"]), { limits: { maxValueBytes: 10 } });
     const r = await small.call("hex:encode", [bytes(ascii("abc")), str("none"), str("lower")]);
     expect(r.ok).toBe(false);
-    if (!r.ok) expect(r.error.detail.limit).toBe("maxValueBytes");
+    if (!r.ok) expect(r.error.code).toBe("E_LIMIT_VALUE");
+  });
+
+  test("64 KiB takes far fewer steps than the default limit of 10 million", async () => {
+    const data = new Uint8Array(65536).map((_, i) => (i * 131 + (i >> 8)) & 255);
+    for (const delimiter of ["none", "space", "colon"]) {
+      const r = await encode(data, delimiter, "upper");
+      expect(r.ok).toBe(true);
+      expect(r.steps).toBeLessThan(1_000_000);
+    }
+    const back = await decode(ascii(String(top(await encode(data, "space")).v)));
+    expect(top(back).v).toEqual(data);
+    expect(back.steps).toBeLessThan(1000);
   });
 });
 
@@ -89,9 +100,9 @@ describe("hex:decode", () => {
   test.each([
     ["6", "odd"],
     ["666", "odd"],
-    ["zz", "not a hex digit"],
-    ["6g", "not a hex digit"],
-    ["0x66", "not a hex digit"],
+    ["zz", "non-hex"],
+    ["6g", "non-hex"],
+    ["0x66", "non-hex"],
   ])("%j is E_COERCE", async (input, why) => {
     const r = await decode(ascii(input));
     expect(r.ok).toBe(false);
@@ -99,7 +110,7 @@ describe("hex:decode", () => {
       expect(r.error.code).toBe("E_COERCE");
       expect(r.error.detail.from).toBe("str");
       expect(r.error.detail.to).toBe("bytes");
-      expect(String(r.error.detail.reason)).toContain(why);
+      expect(r.error.message).toContain(why);
     }
   });
 
@@ -118,11 +129,11 @@ describe("hex:decode", () => {
 });
 
 describe("module", () => {
-  test("defines both words with doc and category", () => {
-    expect(primitives.map((p) => `${p.vocab}:${p.name}`)).toEqual(["hex:decode", "hex:encode"]);
-    for (const p of primitives) {
-      expect(p.doc).toBeTruthy();
-      expect(p.category).toBe("Encodings");
+  test("both words are in the vocabulary with doc and category", () => {
+    for (const name of ["hex:decode", "hex:encode"]) {
+      const meta = runtime.meta(name);
+      expect(meta.doc).toBeTruthy();
+      expect(meta.category).toBe("Encodings");
     }
   });
 

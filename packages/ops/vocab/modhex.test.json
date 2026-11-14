@@ -219,5 +219,35 @@
     "expect": {
       "error": "E_RECIPE_INVALID"
     }
+  },
+  {
+    "name": "modhex:decode input checks: matching text",
+    "op": "modhex:decode",
+    "checks": "input",
+    "data": {
+      "value": "hhhhhhhh",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "modhex:decode input checks: other text",
+    "op": "modhex:decode",
+    "checks": "input",
+    "data": {
+      "value": "xyz",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "modhex:encode output checks: typical result",
+    "op": "modhex:encode",
+    "checks": "output",
+    "data": {
+      "value": "hh hh",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

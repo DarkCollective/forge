@@ -103,4 +103,6 @@ META: decode
   link "https://en.wikipedia.org/wiki/Ascii85" "Ascii85 on Wikipedia" ;
   inverse encode ;
   param variant "ascii85 (Adobe, digits ! to u) or z85 (ZeroMQ RFC 32)." ;
+  checks input charset "!-~ \t\n\x0b\x0c\r" ;
+  expects "Ascii85 or Z85 text" ;
 ;

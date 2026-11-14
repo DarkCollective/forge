@@ -14,4 +14,7 @@ META: convert
   link "https://en.wikipedia.org/wiki/Radix" "Radix on Wikipedia" ;
   param from "The base of the input text, 2 to 36 (digits 0-9 then a-z)." ;
   param to "The base of the result, 2 to 36." ;
+  checks input charset "0-9A-Za-z \t\n\x0b\x0c\r-" ;
+  expects "integer text" ;
+  checks output charset "0-9a-z-" ;
 ;

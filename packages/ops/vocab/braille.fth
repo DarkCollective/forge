@@ -24,10 +24,13 @@ IN: braille
 META: encode
   use-when "You have bytes and want each one written as a single Braille pattern symbol, a lossless form that decode reads back." ;
   inverse decode ;
+  checks output charset "\u{2800}-\u{28FF}" ;
 ;
 
 META: decode
   use-when "You have text made of Braille pattern symbols (U+2800 to U+28FF) and want the bytes behind them." ;
   link "https://en.wikipedia.org/wiki/Braille" "Braille on Wikipedia" ;
   inverse encode ;
+  checks input charset "\u{2800}-\u{28FF} \t\n\x0b\x0c\r" ;
+  expects "Braille patterns" ;
 ;

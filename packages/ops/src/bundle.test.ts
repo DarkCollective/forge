@@ -193,11 +193,11 @@ describe("createBundleLoader", () => {
 });
 
 describe("assembleRuntime", () => {
-  const bundle = async (): Promise<VocabBundle> => loadBundleNode(["hex", "text"]);
+  const bundle = async (): Promise<VocabBundle> => loadBundleNode(["hex", "json", "text"]);
 
   test("binds the primitives and loads the units", async () => {
     const rt = assembleRuntime(await bundle());
-    expect(rt.meta("hex:encode").kind).toBe("primitive");
+    expect(rt.meta("json:parse").kind).toBe("primitive");
     expect(rt.meta("text:upper").kind).toBe("fl");
     expect(rt.meta("text:upper").source.unit).toBe("text.fth");
   });
