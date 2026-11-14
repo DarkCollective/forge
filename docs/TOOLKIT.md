@@ -119,6 +119,8 @@ A table of 10,000 rows by 10 integer columns costs about **4.08 MB** as a list o
 | Own cipher and hash cores | 53 in 25 files (3,626 code lines, 57% of primitive code) | Written in TypeScript because FL is too slow at 64 KiB |
 | Other | 10 | `cmac` and `lmhash` exist only because private words are not callable across vocabularies; base64 and hex were never ported |
 
+*Dated note (2026-11-14):* the table above is the measure at the time of the survey and is kept as it was. Since then the analysis `log2`, the coords maths, the list `sort`, `sort-by` and `shuffle`, `cmac`, `lmhash` and the `hex` primitive have moved to FL. `base64` is now FL with two private helpers (`_sextets`, `_unsextets`).
+
 **Measured FL cost:** TEA 478 VM steps per byte (about 31 M steps at 64 KiB, three times the 10 M budget); SHA-1 186 steps per byte (about 12.2 M); RC4 in today's FL 80 steps per byte (5.25 M, passes).
 
 **Conclusion.** Syntax features alone would move about 8 to 12 of the 119 primitives (10 to 14% of primitive code). The cipher and hash cores need a performance mechanism, not syntax. The evidence for that mechanism is thin: two measured ciphers and one hash.
@@ -593,7 +595,7 @@ Parallel, time-boxed, throwaway code. Each ends in a written result and an owner
 | L10 | Generic arithmetic and generic words | `packages/lang/src/compiler.ts`, `dictionary.ts`, `vm.ts` | X1, L9 | So | Plain numbers bit-identical to v0.1; step overhead measured |
 | L11 | Kernel tier (only if L0 passes) | `packages/lang/src/kernel/*` | L7, L0 | So | Every kernel word equals the interpreted run |
 | L12 | Codemod over the 161 `.fth` files | `packages/ops/vocab/*.fth` | L2 to L10 | So | All 4,488 vectors pass unchanged; catalogue version bumped; run at a wave boundary |
-| L13 | Move primitives to FL (the 7 + 3 + 9 made possible by L2 and L7; the cipher and hash cores only if L11 passes) | `packages/ops/prims/*`, `vocab/*` | L12, L11 | Ha | Vectors unchanged; corpus-stats report shows the change in primitive count and lines |
+| L13 | Move primitives to FL (the 7 + 3 + 9 made possible by L2 and L7; the cipher and hash cores only if L11 passes) | `packages/ops/prims/*`, `vocab/*` | L12, L11 | Ha | Vectors unchanged; corpus-stats report shows the change in primitive count and lines. Dated note (2026-11-14): the analysis `log2`, the coords maths, the list `sort`, `sort-by` and `shuffle`, `cmac`, `lmhash` and the `hex` primitive are now FL, and `base64` is FL with two private helpers (`_sextets`, `_unsextets`). |
 
 L10 needs the `ext` tag (X1), so X1 is built inside Phase T2 although it appears in the T3 table; the gate for T2 covers it.
 
