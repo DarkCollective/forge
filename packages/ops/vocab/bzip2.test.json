@@ -302,5 +302,35 @@
     "expect": {
       "error": "E_RANGE"
     }
+  },
+  {
+    "name": "bzip2:decompress: input check, real data",
+    "op": "bzip2:decompress",
+    "checks": "input",
+    "data": {
+      "value": "425a683131415926535981b02d8b00000004002000200021184682ee48a70a12103605b160",
+      "enc": "hex"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "bzip2:decompress: input check, plain text",
+    "op": "bzip2:decompress",
+    "checks": "input",
+    "data": {
+      "value": "This is plain text, not any compressed or archive format at all.",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "bzip2:compress: output check, real output",
+    "op": "bzip2:compress",
+    "checks": "output",
+    "data": {
+      "value": "425a683917724538509000000000",
+      "enc": "hex"
+    },
+    "expect": "pass"
   }
 ]

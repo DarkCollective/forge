@@ -11,6 +11,8 @@ IN: brotli
 
 META: decompress
   use-when "You have Brotli bytes, such as an HTTP body with Content-Encoding br or a .br file, and want the original data." ;
+  checks input binary ;
+  expects "Brotli data" ;
   see-also deflate:inflate zstd:decompress ;
   link "https://www.rfc-editor.org/rfc/rfc7932" "RFC 7932: Brotli compressed data format" ;
   link "https://en.wikipedia.org/wiki/Brotli" "Brotli on Wikipedia" ;

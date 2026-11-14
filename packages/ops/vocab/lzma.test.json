@@ -538,5 +538,25 @@
     "expect": {
       "error": "E_RANGE"
     }
+  },
+  {
+    "name": "lzma:decompress: input check, real data",
+    "op": "lzma:decompress",
+    "checks": "input",
+    "data": {
+      "value": "5d00000400ffffffffffffffff00341949db855c67843f493ead1bc922f91ffffd482000",
+      "enc": "hex"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "lzma:decompress: input check, plain text",
+    "op": "lzma:decompress",
+    "checks": "input",
+    "data": {
+      "value": "This is plain text, not any compressed or archive format at all.",
+      "enc": "utf8"
+    },
+    "expect": "fail"
   }
 ]

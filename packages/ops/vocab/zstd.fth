@@ -13,6 +13,8 @@ IN: zstd
 META: decompress
   use-when "You have Zstandard data, starting with the bytes 28 b5 2f fd, and want the bytes it holds." ;
   param verify "Check each frame's content checksum (XXH64); off, the checksum is skipped and corrupt content may come out unnoticed." ;
+  checks input magic-bytes format "zstd" ;
+  checks input magic-bytes "502a4d18" ;
   see-also deflate:gunzip deflate:inflate ;
   link "https://www.rfc-editor.org/rfc/rfc8878" "RFC 8878: Zstandard compression" ;
   link "https://en.wikipedia.org/wiki/Zstandard" "Zstandard on Wikipedia" ;

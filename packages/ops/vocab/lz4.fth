@@ -111,6 +111,7 @@ META: compress
   param block-checksum "Add an XXH32 after every block (lz4 -BX)." ;
   param content-checksum "Add the XXH32 of the whole input at the end (on by default, as lz4js and lz4 write it)." ;
   param content-size "Store the input length in the header (lz4 --content-size)." ;
+  checks output magic-bytes format "lz4" ;
   see-also lz4:decompress lzstring:compress deflate:gzip ;
   inverse decompress ;
   link "https://lz4.org/" "LZ4 home page" ;
@@ -119,6 +120,9 @@ META: compress
 META: decompress
   use-when "You have an LZ4 frame, starting with 04 22 4d 18, and want the bytes it holds." ;
   param verify "Check the header checksum, the block and content checksums and the content size; off, damaged checksums are ignored and the data is still returned." ;
+  checks input magic-bytes format "lz4" ;
+  checks input magic-bytes "02214c18" ;
+  checks input magic-bytes "502a4d18" ;
   see-also lz4:compress deflate:gunzip ;
   inverse compress ;
   link "https://lz4.org/" "LZ4 home page" ;

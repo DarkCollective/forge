@@ -165,6 +165,7 @@ META: tar
   param mtime "The modification time in Unix seconds; 0 keeps the output the same on every run." ;
   param uid "The owner's user id (0 to 2097151)." ;
   param gid "The owner's group id (0 to 2097151)." ;
+  checks output magic-bytes format "tar" ;
   see-also tar:untar tar:entry ;
   link "https://en.wikipedia.org/wiki/Tar_(computing)" "Tar on Wikipedia" ;
 ;

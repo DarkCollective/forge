@@ -401,5 +401,35 @@
       "title": "A level above 9 is refused",
       "note": "Level 10 is outside 0 to 9, so the op stops with E_RANGE."
     }
+  },
+  {
+    "name": "lz4:decompress: input check, real data",
+    "op": "lz4:decompress",
+    "checks": "input",
+    "data": {
+      "value": "04224d186440a71c0000006e68656c6c6f20060063776f726c642c1900906c7a34206672616d650000000056b391b8",
+      "enc": "hex"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "lz4:decompress: input check, plain text",
+    "op": "lz4:decompress",
+    "checks": "input",
+    "data": {
+      "value": "This is plain text, not any compressed or archive format at all.",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "lz4:compress: output check, real output",
+    "op": "lz4:compress",
+    "checks": "output",
+    "data": {
+      "value": "04224d186470b90f0000006868656c6c6f2006005068656c6c6f00000000f26b940b",
+      "enc": "hex"
+    },
+    "expect": "pass"
   }
 ]

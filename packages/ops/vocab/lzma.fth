@@ -43,6 +43,8 @@ META: compress
 
 META: decompress
   use-when "You have an LZMA file in the .lzma format, starting with its 13-byte header, and want the data inside." ;
+  checks input binary ;
+  expects "LZMA data (.lzma)" ;
   see-also lzma:compress deflate:inflate ;
   inverse compress ;
   link "https://en.wikipedia.org/wiki/LZMA" "LZMA on Wikipedia" ;
