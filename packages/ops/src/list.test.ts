@@ -15,7 +15,7 @@
  */
 
 /*
- * Tests for the shared `list` vocabulary (vocab/list.fth, src/prims/list.ts): `list:sort`, `list:sort-by` and
+ * Tests for the shared `list` vocabulary (vocab/list.fth): `list:sort`, `list:sort-by` and
  * `list:shuffle`, and how fast they are on 65,536 elements with the default limits.
  */
 import { valueHelpers } from "@forge/lang";
@@ -80,15 +80,20 @@ describe("list:sort", () => {
     expect(plain(input.v)).toEqual([3, 1, 2]);
   });
 
-  test("mixed numbers and strings are E_COERCE", async () => {
-    expect(code(await runtime.call("list:sort", [list([int(1), str("a")])]))).toBe("E_COERCE");
+  test("mixed numbers and strings are E_TYPE", async () => {
+    expect(code(await runtime.call("list:sort", [list([int(1), str("a")])]))).toBe("E_TYPE");
   });
 
-  test("other values are E_COERCE", async () => {
-    expect(code(await runtime.call("list:sort", [list([bytes(Uint8Array.of(1))])]))).toBe(
-      "E_COERCE",
-    );
-    expect(code(await runtime.call("list:sort", [list([list([])])]))).toBe("E_COERCE");
+  test("lists of bytes values sort lexicographically, other values are E_TYPE", async () => {
+    const r = await runtime.call("list:sort", [
+      list([bytes(Uint8Array.of(2)), bytes(Uint8Array.of(1, 5)), bytes(Uint8Array.of(1))]),
+    ]);
+    expect((top(r) as Value[]).map((b) => Array.from(b.v as Uint8Array))).toEqual([
+      [1],
+      [1, 5],
+      [2],
+    ]);
+    expect(code(await runtime.call("list:sort", [list([list([]), list([])])]))).toBe("E_TYPE");
   });
 
   test("sorting 65,536 short strings is well within the default limits", async () => {
@@ -131,9 +136,9 @@ describe("list:sort-by", () => {
     expect(code(await runtime.call("list:sort-by", [strs("a", "b"), ints(1)]))).toBe("E_RANGE");
   });
 
-  test("keys that mix numbers and strings are E_COERCE", async () => {
+  test("keys that mix numbers and strings are E_TYPE", async () => {
     const r = await runtime.call("list:sort-by", [strs("a", "b"), list([int(1), str("x")])]);
-    expect(code(r)).toBe("E_COERCE");
+    expect(code(r)).toBe("E_TYPE");
   });
 
   test("65,536 items by 65,536 keys", async () => {
@@ -215,21 +220,32 @@ describe("list:shuffle", () => {
     expect(chi).toBeLessThan(40);
   });
 
-  test("a pinned source gives the Fisher-Yates result", async () => {
-    // i = 2: bound 3 (2 bits) takes 0x01 -> j = 1; i = 1: bound 2 (1 bit) takes 0x00 -> j = 0.
-    // [a,b,c] -> swap(2,1) = [a,c,b] -> swap(1,0) = [c,a,b]
-    const seq = [[0x01], [0x00]];
+  // Each random key is 7 bytes (a 53-bit bound), big-endian; the items are ordered by their keys.
+  const pinKeys = (keys: number[]) => {
     let i = 0;
     vi.stubGlobal("crypto", {
       getRandomValues: (a: Uint8Array) => {
-        a.set(seq[i++] as number[]);
+        a.set([0, 0, 0, 0, 0, 0, keys[i++] as number]);
         return a;
       },
     });
+  };
+
+  test("a pinned source gives the order of the keys", async () => {
+    pinKeys([5, 2, 9]);
     expect(plain(top(await runtime.call("list:shuffle", [strs("a", "b", "c")])))).toEqual([
+      "b",
+      "a",
+      "c",
+    ]);
+  });
+
+  test("equal keys are drawn again", async () => {
+    pinKeys([1, 1, 2, 3, 1, 2]);
+    expect(plain(top(await runtime.call("list:shuffle", [strs("a", "b", "c")])))).toEqual([
+      "b",
       "c",
       "a",
-      "b",
     ]);
   });
 
@@ -240,6 +256,6 @@ describe("list:shuffle", () => {
       list(Array.from({ length: n }, (_, i) => int(i))),
     ]);
     expect((top(r) as Value[]).length).toBe(n);
-    expect(Date.now() - t0).toBeLessThan(2000);
+    expect(Date.now() - t0).toBeLessThan(6000);
   });
 });

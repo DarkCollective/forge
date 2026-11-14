@@ -2,8 +2,8 @@
 \ coords: co-ordinate formats and the great-circle distance. Latitude and longitude are held as whole
 \ numbers of 10^-12 degree ("pico-degrees"), so the decimal, degrees-minutes and geohash formats
 \ convert exactly; only the map projection (UTM, and MGRS which is built on it) uses floating point,
-\ with the Kruger series of Karney (2011) on the WGS 84 ellipsoid. The trigonometric functions the
-\ core lacks come from two private primitives (src/prims/coords.ts).
+\ with the Kruger series of Karney (2011) on the WGS 84 ellipsoid. The trigonometric functions are the
+\ core words; the core has no inverse hyperbolic functions, so _asinh and _atanh are written below.
 IN: coords
 
 \ ---- constants ----
@@ -232,9 +232,17 @@ IN: coords
 
 : _hyp ( x:num -- num ) x x * 1.0 + sqrt ;
 
+\ Inverse hyperbolic sine, ln(|x| + sqrt(x^2 + 1)) with the sign of x (odd, so no cancellation for x < 0).
+: _asinh ( x:num -- num )
+  x abs dup _hyp + ln
+  x 0.0 < [ neg ] when ;
+
+\ Inverse hyperbolic tangent, ln((1 + x) / (1 - x)) / 2, for |x| < 1.
+: _atanh ( x:num -- num ) 1.0 x + 1.0 x - / ln 2.0 / ;
+
 \ sinh(e atanh(e tau / sqrt(1 + tau^2))) for tau = tan(latitude).
 : _sigma ( tau:num -- num )
-  _e tau * tau _hyp / "atanh" _math _e * "sinh" _math ;
+  _e tau * tau _hyp / _atanh _e * sinh ;
 
 : _tp ( tau:num sigma:num -- num )
   tau sigma _hyp * sigma tau _hyp * - ;
@@ -243,14 +251,14 @@ IN: coords
 : _tau-prime ( tau:num -- num ) tau tau _sigma _tp ;
 
 : _fwd2 ( tp:num lam:num -- num num )
-  tp lam "cos" _math _atan2
-  lam "sin" _math tp tp * lam "cos" _math dup * + sqrt / "asinh" _math ;
+  tp lam cos atan2
+  lam sin tp tp * lam cos dup * + sqrt / _asinh ;
 
 : _xi-term ( a:num k:num x:num y:num -- num )
-  a k x * "sin" _math * k y * "cosh" _math * ;
+  a k x * sin * k y * cosh * ;
 
 : _eta-term ( a:num k:num x:num y:num -- num )
-  a k x * "cos" _math * k y * "sinh" _math * ;
+  a k x * cos * k y * sinh * ;
 
 : _xi-sum ( x:num y:num coefs:list -- num )
   coefs [ 1 + 2 * int>num x y _xi-term ] mapi 0.0 [ + ] reduce ;
@@ -268,7 +276,7 @@ IN: coords
 \ Latitude and longitude from the central meridian, in radians, to the (easting, northing) of the
 \ zone (false easting 500 km, no false northing).
 : _project ( phi:num lam:num -- num num )
-  phi "tan" _math _tau-prime lam _fwd2 _alpha-coefs _series _series-fwd _to-en ;
+  phi tan _tau-prime lam _fwd2 _alpha-coefs _series _series-fwd _to-en ;
 
 \ xi' and eta' from xi and eta (Karney eq. 15 and 16).
 : _inv-prime ( xi:num eta:num -- num num )
@@ -276,11 +284,11 @@ IN: coords
   eta xi eta _beta-coefs _series _eta-sum - ;
 
 : _chi-lam ( xi:num eta:num -- num num )
-  xi "sin" _math eta "cosh" _math / "asin" _math
-  eta "sinh" _math xi "cos" _math _atan2 ;
+  xi sin eta cosh / asin
+  eta sinh xi cos atan2 ;
 
 : _delta-sum ( chi:num coefs:list -- num )
-  coefs [ 1 + 2 * int>num chi * "sin" _math * ] mapi 0.0 [ + ] reduce ;
+  coefs [ 1 + 2 * int>num chi * sin * ] mapi 0.0 [ + ] reduce ;
 
 \ The (easting, northing) in the northern frame to latitude and longitude from the central
 \ meridian, in radians.
@@ -514,12 +522,12 @@ IN: coords
 : _sq ( x:num -- num ) x x * ;
 
 : _hav-a ( p1:num p2:num dl:num -- num )
-  p1 p2 - 2.0 / "sin" _math _sq
-  p1 "cos" _math p2 "cos" _math * dl 2.0 / "sin" _math _sq * + ;
+  p1 p2 - 2.0 / sin _sq
+  p1 cos p2 cos * dl 2.0 / sin _sq * + ;
 
 \ The central angle from the haversine a.
 : _hav-c ( a:num -- num )
-  a 1.0 min 0.0 max sqrt 1.0 a - 0.0 max sqrt _atan2 2.0 * ;
+  a 1.0 min 0.0 max sqrt 1.0 a - 0.0 max sqrt atan2 2.0 * ;
 
 : _hav ( lat1:int lon1:int lat2:int lon2:int radius:num -- str )
   lat1 _rad lat2 _rad lon2 lon1 - _rad _hav-a _hav-c radius 1000000.0 * * round 3 _fixed ;

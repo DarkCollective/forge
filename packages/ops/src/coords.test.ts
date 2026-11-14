@@ -14,7 +14,7 @@
  * limitations under the License.
 
 /*
- * Tests for the `coords` vocabulary (vocab/coords.fth, primitives in prims/coords.ts). Known
+ * Tests for the `coords` vocabulary (vocab/coords.fth). Known
  * answers are in vocab/coords.test.json. These compare with independent references: the textbook
  * floating-point geohash bisection, Snyder's (1987) transverse Mercator series for UTM (forward,
  * and as a check of the inverse), and the haversine formula in plain floating point; they also
@@ -24,7 +24,6 @@ import { valueHelpers } from "@forge/lang";
 import { describe, expect, test } from "vitest";
 import { assembleRuntime } from "./bundle.js";
 import { loadBundleNode } from "./sources-node.js";
-import { primitives } from "./prims/coords.js";
 
 const { str, int, num } = valueHelpers;
 const runtime = assembleRuntime(await loadBundleNode(["coords", "raise"]));
@@ -132,15 +131,6 @@ const parseDd = (s: string): [number, number] => {
   const [a, b] = s.split(",").map(Number) as [number, number];
   return [a, b];
 };
-
-describe("the primitives", () => {
-  test("two private helpers", () => {
-    expect(primitives.map((p) => `${p.vocab}:${p.name}`)).toEqual([
-      "coords:_math",
-      "coords:_atan2",
-    ]);
-  });
-});
 
 describe("geohash", () => {
   test("encoding agrees with the textbook bisection", async () => {
