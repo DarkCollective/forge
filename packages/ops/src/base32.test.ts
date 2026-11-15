@@ -22,7 +22,7 @@ import { loadBundleNode } from "./sources-node.js";
 // The operations are FL (vocab/base32.fth); the conformance vectors cover the known answers. These
 // tests cover round trips, the size of the work, and the one private primitive.
 const { bytes, str, bool } = valueHelpers;
-const runtime = assembleRuntime(await loadBundleNode(["base32", "raise"]));
+const runtime = assembleRuntime(await loadBundleNode(["base32"]));
 
 function encode(data: Uint8Array, alphabet = "standard", padding = true) {
   return runtime.call("base32:encode", [bytes(data), str(alphabet), bool(padding)]);

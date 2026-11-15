@@ -21,7 +21,7 @@ import { loadBundleNode } from "./sources-node.js";
 
 // bytes-slice is FL (vocab/bytes-slice.fth); these tests drive its public words through the runtime.
 const { bool, bytes, int } = valueHelpers;
-const runtime = assembleRuntime(await loadBundleNode(["bytes-slice", "raise"]));
+const runtime = assembleRuntime(await loadBundleNode(["bytes-slice"]));
 
 function top(r: { stack: readonly Value[] }): { v: unknown } {
   return r.stack[r.stack.length - 1] as { v: unknown };

@@ -22,7 +22,7 @@ import { loadBundleNode } from "./sources-node.js";
 // base45 is FL (vocab/base45.fth); the conformance vectors cover the RFC 9285 examples. These tests
 // cover round trips, the size of the work and the error codes.
 const { bytes } = valueHelpers;
-const runtime = assembleRuntime(await loadBundleNode(["base45", "raise"]));
+const runtime = assembleRuntime(await loadBundleNode(["base45"]));
 
 function ascii(s: string): Uint8Array {
   return Uint8Array.from(s, (c) => c.charCodeAt(0));

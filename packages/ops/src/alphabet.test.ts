@@ -21,7 +21,7 @@ import { loadBundleNode } from "./sources-node.js";
 
 // alphabet is FL (vocab/alphabet.fth); these tests drive its public word through the runtime.
 const { str } = valueHelpers;
-const runtime = assembleRuntime(await loadBundleNode(["alphabet", "raise"]));
+const runtime = assembleRuntime(await loadBundleNode(["alphabet"]));
 
 type Result = { ok: boolean; stack: readonly Value[]; error?: { code: string } };
 function top(r: Result): { v: unknown } {

@@ -21,7 +21,7 @@ import { loadBundleNode } from "./sources-node.js";
 
 // octal is FL (vocab/octal.fth); these tests drive its public words through the runtime.
 const { bytes, str } = valueHelpers;
-const runtime = assembleRuntime(await loadBundleNode(["octal", "raise"]));
+const runtime = assembleRuntime(await loadBundleNode(["octal"]));
 
 function ascii(s: string): Uint8Array {
   return Uint8Array.from(s, (c) => c.charCodeAt(0));

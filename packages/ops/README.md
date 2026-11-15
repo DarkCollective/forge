@@ -88,14 +88,9 @@ The private primitives, each in `src/prims/<v>.ts`:
 - `bombe:_search`: the Bombe test over the 17,576 start positions of one rotor order;
 - the hashing primitives, one per digest vocabulary and always `_hash` (`sha2:_hash`, `md6:_hash`, `snefru:_hash`, and so on; BLAKE2, BLAKE3, Keccak, SHA-3, SHAKE, SHA-1, MD5, RIPEMD-160 over `@noble/hashes`, the others written from their specifications), plus `ssdeep:_pieces` (one pass of the rolling hash) and `generate-all:_crcs` (many CRC presets at once, for speed only; see "Justified exceptions").
 
-The public primitives are the `regex` word and `raise:coerce` and `raise:range`.
+The one public primitive is the `regex` word.
 
-FL's own `fail` raises only `E_USER`. Typed errors come from the internal `raise` vocabulary:
-
-- `raise:coerce ( reason:str -- )` raises `E_COERCE`, for data that cannot be decoded;
-- `raise:range ( reason:str -- )` raises `E_RANGE`, for a bad argument.
-
-Use it with `USING: raise` or the qualified names. The words have no outputs, so they are not catalogue ops.
+Typed errors come from the core words `fail-coerce ( reason:str -- )`, which raises `E_COERCE` for data that cannot be decoded, and `fail-range ( reason:str -- )`, which raises `E_RANGE` for a bad argument. (The `raise` vocabulary of v0.1, which had the same two words as primitives, was removed on 2026-11-15.)
 
 ## Vocabularies
 
@@ -307,7 +302,7 @@ Use it with `USING: raise` or the qualified names. The words have no outputs, so
 | `zip`              | zip archives: Zip writes one file (stored or deflate), Unzip lists records (name, size, dir, mtime, mode, data), zip:entry takes one entry by name; CRC-32 checked (3 ops)                         |
 | `zstd`             | Zstandard decompression (RFC 8878) on fzstd, beyond CyberChef: every frame, concatenated and skippable frames, the XXH64 checksum checked by default; no dictionaries, no compression (1 op)       |
 
-Eight internal vocabularies are not part of the catalogue as ops: `recipe` (the words recipes compile to), `raise` (typed errors, above), `util` (shared helpers, below), `blockmode` (the shared block cipher modes and PKCS#7 padding; see "Cipher conventions"), `random` (the shared host-CSPRNG words), `list` (the shared sort, shuffle and unique words), `json` (the shared JSON reader and writer; see "JSON values") and `asn1` (the shared DER reader and writer, object identifiers and PEM of wave 7); `random` and `list` are described in "Wave 5 conventions", `asn1` in "Wave 7 conventions".
+Seven internal vocabularies are not part of the catalogue as ops: `recipe` (the words recipes compile to), `util` (shared helpers, below), `blockmode` (the shared block cipher modes and PKCS#7 padding; see "Cipher conventions"), `random` (the shared host-CSPRNG words), `list` (the shared sort, shuffle and unique words), `json` (the shared JSON reader and writer; see "JSON values") and `asn1` (the shared DER reader and writer, object identifiers and PEM of wave 7); `random` and `list` are described in "Wave 5 conventions", `asn1` in "Wave 7 conventions".
 
 ## The `util` vocabulary
 
@@ -493,8 +488,6 @@ blockmode:decrypt ( data:bytes mode:str iv:bytes bs:int padding:bool enc:quot de
 The block function is a quotation, so the key schedule is whatever the primitive does per call; a primitive that expands the key on every call (as `aes:_block-enc` does) is fine for the sizes here, and one that caches the last key is faster. The block quotations are called once per block, and the layer checks the IV length (`E_RANGE`), the mode name (`E_RANGE`), whole blocks and padding (`E_COERCE`).
 
 **Why FL.** FL first applies (see above). The layer was measured driving a block primitive at 64 KiB: a CBC encryption through `blockmode:encrypt` takes about 98,500 VM steps (CBC decryption 103 thousand, ECB 70 thousand, CFB and OFB 98 thousand, CTR 1.07 million for its counter arithmetic), against the default limit of 10 million and the untrusted bake budget of 5 million. The loops use `map` over the list of blocks and one `VARIABLE` for the chaining value, so they are linear in the length. The layer is therefore FL, and only the block primitives are TypeScript. `src/blockmode.test.ts` drives it with a trivial XOR block cipher (known answers by hand) and with raw AES blocks, and holds the result byte-identical to noble's own ECB, CBC, CFB and CTR and to `aes:encrypt`; AES uses the layer itself for OFB, which noble lacks.
-
-A pitfall for FL authors: do not write `USING: raise` in a vocabulary that also uses the core word `range`, because `raise:range` would then hide it. Call the raise words qualified (`raise:range`, `raise:coerce`).
 
 ## Wave 5 conventions
 

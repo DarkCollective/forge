@@ -21,7 +21,7 @@ import { loadBundleNode } from "./sources-node.js";
 
 // search is FL (vocab/search.fth); these tests drive its public words through the runtime.
 const { bool, int, str } = valueHelpers;
-const runtime = assembleRuntime(await loadBundleNode(["search", "raise"]));
+const runtime = assembleRuntime(await loadBundleNode(["search"]));
 
 type Result = { ok: boolean; stack: readonly Value[]; steps?: number; error?: { code: string } };
 function top(r: Result): { v: unknown } {

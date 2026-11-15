@@ -24,7 +24,7 @@ import { assembleRuntime } from "./bundle.js";
 import { loadBundleNode } from "./sources-node.js";
 
 const { str } = valueHelpers;
-const runtime = assembleRuntime(await loadBundleNode(["file-mode", "raise"]));
+const runtime = assembleRuntime(await loadBundleNode(["file-mode"]));
 
 const convert = async (data: string, to: string) => {
   const r = await runtime.call("file-mode:convert", [str(data), str(to)]);

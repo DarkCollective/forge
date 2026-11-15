@@ -24,7 +24,7 @@ import { loadBundleNode } from "./sources-node.js";
 // with known chi settings through lorenz and check that the true setting comes out on top, and
 // cover the size of the work and the parameters.
 const { str, int, bool } = valueHelpers;
-const runtime = assembleRuntime(await loadBundleNode(["lorenz", "colossus", "raise"]));
+const runtime = assembleRuntime(await loadBundleNode(["lorenz", "colossus"]));
 
 const CHI = [41, 31, 29, 26, 23];
 

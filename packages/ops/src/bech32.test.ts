@@ -22,7 +22,7 @@ import { loadBundleNode } from "./sources-node.js";
 // bech32 is FL (vocab/bech32.fth); the vectors are the BIP-173 and BIP-350 ones. These tests cover
 // round trips, the size limits and the error codes.
 const { bytes, str } = valueHelpers;
-const runtime = assembleRuntime(await loadBundleNode(["bech32", "raise"]));
+const runtime = assembleRuntime(await loadBundleNode(["bech32"]));
 
 function ascii(s: string): Uint8Array {
   return Uint8Array.from(s, (c) => c.charCodeAt(0));

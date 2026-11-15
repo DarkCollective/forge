@@ -51,17 +51,17 @@ MEMO: _table ( -- bytes )
   v i 3 * nth v i 3 * 1 + nth 45 * + v i 3 * 2 + nth 2025 * + ;
 
 : _two ( n:int -- bytes )
-  n 65535 > [ "a group of three characters is more than 65535" raise:coerce ] when
+  n 65535 > [ "a group of three characters is more than 65535" fail-coerce ] when
   [ n 256 div emit n 256 mod emit ] collect-bytes ;
 
 \ The byte of the last two digits.
 : _one ( v:bytes -- bytes )
   v v len 2 - nth v v len 1 - nth 45 * + :> n
-  n 255 > [ "a group of two characters is more than 255" raise:coerce ] when
+  n 255 > [ "a group of two characters is more than 255" fail-coerce ] when
   [ n emit ] collect-bytes ;
 
 : _dec ( v:bytes -- bytes )
-  v len 3 mod 1 = [ "a length of that kind cannot be Base45 text" raise:coerce ] when
+  v len 3 mod 1 = [ "a length of that kind cannot be Base45 text" fail-coerce ] when
   [
     0 v len 3 div range [ v swap _triple _two emit-all ] each
     v len 3 mod 2 = [ v _one emit-all ] when

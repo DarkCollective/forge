@@ -36,14 +36,6 @@ async function value(qname: string, args: Value[]): Promise<unknown> {
   return (top(r) as { v: unknown }).v;
 }
 
-describe("util:space?", () => {
-  test("true exactly for 9 to 13 and 32", async () => {
-    for (let b = 0; b < 256; b++) {
-      expect(await value("util:space?", [int(b)])).toBe((b >= 9 && b <= 13) || b === 32);
-    }
-  });
-});
-
 describe("util:space-or-comma?", () => {
   test("true for white space and the comma only", async () => {
     for (let b = 0; b < 256; b++) {
@@ -182,29 +174,6 @@ describe("util:int>be-bytes", () => {
   });
 });
 
-describe("util:digits>int", () => {
-  const fold = async (digits: number[], radix: number) =>
-    await value("util:digits>int", [valueHelpers.bytes(Uint8Array.from(digits)), int(radix)]);
-
-  test("no digits is 0", async () => {
-    expect(Number(await fold([], 58))).toBe(0);
-  });
-
-  test("most significant digit first", async () => {
-    expect(Number(await fold([1, 2, 3], 10))).toBe(123);
-    expect(Number(await fold([1, 0, 1], 2))).toBe(5);
-    expect(Number(await fold([84, 84, 84, 84, 84], 85))).toBe(4437053124);
-  });
-
-  test("leading zero digits do not change the value", async () => {
-    expect(Number(await fold([0, 0, 7], 58))).toBe(7);
-  });
-
-  test("grows past 64 bits", async () => {
-    expect(BigInt((await fold(Array(12).fill(57), 58)) as bigint | number)).toBe(58n ** 12n - 1n);
-  });
-});
-
 // ---- the words promoted at the close-out of Phase 5 wave 1 ----
 
 const bytesV = (...xs: number[]): Value => valueHelpers.bytes(Uint8Array.from(xs));
@@ -224,75 +193,6 @@ async function failure(qname: string, args: Value[]): Promise<{ code: string; me
   if (r.ok) throw new Error("expected a failure");
   return { code: r.error.code, message: r.error.message };
 }
-
-describe("util:cp>str", () => {
-  test.each([
-    [0, "\0"],
-    [65, "A"],
-    [233, "é"],
-    [0x2800, "⠀"],
-    [0x1f600, "\u{1f600}"],
-  ])("%i", async (cp, expected) => {
-    expect(await value("util:cp>str", [int(cp)])).toBe(expected);
-  });
-
-  test("a surrogate or a value over 0x10FFFF is an error", async () => {
-    expect((await runtime.call("util:cp>str", [int(0xd800)])).ok).toBe(false);
-    expect((await runtime.call("util:cp>str", [int(0x110000)])).ok).toBe(false);
-  });
-});
-
-describe("digit predicates", () => {
-  test("dec-digit? and hex-digit? agree with the definition for every byte", async () => {
-    for (let c = 0; c < 256; c++) {
-      const ch = String.fromCharCode(c);
-      expect(await value("util:dec-digit?", [int(c)])).toBe(/[0-9]/.test(ch));
-      expect(await value("util:hex-digit?", [int(c)])).toBe(/[0-9a-fA-F]/.test(ch));
-    }
-  });
-
-  test("a code above 255 is not a digit", async () => {
-    expect(await value("util:hex-digit?", [int(0xff10)])).toBe(false);
-  });
-});
-
-describe("util:between?", () => {
-  test.each([
-    [5, 5, 9, true],
-    [9, 5, 9, true],
-    [4, 5, 9, false],
-    [10, 5, 9, false],
-    [7, 9, 5, false],
-  ])("%i in %i..%i is %s", async (n, lo, hi, expected) => {
-    expect(await value("util:between?", [int(n), int(lo), int(hi)])).toBe(expected);
-  });
-});
-
-describe("util:check-int-range", () => {
-  const check = (n: number, lo: number, hi: number) =>
-    runtime.call("util:check-int-range", [int(n), int(lo), int(hi), str("the level")]);
-
-  test.each([
-    [0, 0, 9],
-    [5, 0, 9],
-    [9, 0, 9],
-  ])("%i in %i to %i leaves the stack alone", async (n, lo, hi) => {
-    const r = await check(n, lo, hi);
-    expect(r.ok).toBe(true);
-  });
-
-  test("below the lower bound is E_RANGE with the message", async () => {
-    const r = await check(-1, 0, 9);
-    expect(r.ok ? "ok" : r.error.code).toBe("E_RANGE");
-    expect(r.ok ? "" : r.error.message).toBe("the level must be 0 to 9, not -1");
-  });
-
-  test("above the upper bound is E_RANGE with the message", async () => {
-    const r = await check(10, 0, 9);
-    expect(r.ok ? "ok" : r.error.code).toBe("E_RANGE");
-    expect(r.ok ? "" : r.error.message).toBe("the level must be 0 to 9, not 10");
-  });
-});
 
 describe("util:byte>hex and util:pad-hex", () => {
   test("byte>hex is two upper-case digits", async () => {
@@ -314,46 +214,6 @@ describe("util:byte>hex and util:pad-hex", () => {
     [0x123456789, 8, "123456789"],
   ])("pad-hex %i to %i digits is %s", async (v, n, expected) => {
     expect(await value("util:pad-hex", [int(v), int(n)])).toBe(expected);
-  });
-});
-
-describe("util:starts-with? and util:ends-with?", () => {
-  test.each([
-    ["abc", "a", true, false],
-    ["abc", "abc", true, true],
-    ["abc", "c", false, true],
-    ["abc", "bc", false, true],
-    ["abc", "ab", true, false],
-    ["abc", "", true, true],
-    ["", "", true, true],
-    ["", "a", false, false],
-    ["ab", "abc", false, false],
-    ["\u{1f600}x", "\u{1f600}", true, false],
-  ])("%j with %j", async (s, p, starts, ends) => {
-    expect(await value("util:starts-with?", [str(s), str(p)])).toBe(starts);
-    expect(await value("util:ends-with?", [str(s), str(p)])).toBe(ends);
-  });
-});
-
-describe("util:strip-space", () => {
-  test("removes ASCII white space everywhere and nothing else", async () => {
-    expect(await value("util:strip-space", [str(" a b\tc\r\nd\u000be\u000cf ")])).toBe("abcdef");
-    expect(await value("util:strip-space", [str("")])).toBe("");
-    expect(await value("util:strip-space", [str(" \n ")])).toBe("");
-    expect(await value("util:strip-space", [str("a b")])).toBe("a b");
-  });
-});
-
-describe("util:repeat-str and util:zero-bytes", () => {
-  test("repeat-str", async () => {
-    expect(await value("util:repeat-str", [str("ab"), int(3)])).toBe("ababab");
-    expect(await value("util:repeat-str", [str("ab"), int(0)])).toBe("");
-    expect(await value("util:repeat-str", [str(""), int(5)])).toBe("");
-  });
-
-  test("zero-bytes", async () => {
-    expect(u8(await value("util:zero-bytes", [int(0)]))).toEqual([]);
-    expect(u8(await value("util:zero-bytes", [int(4)]))).toEqual([0, 0, 0, 0]);
   });
 });
 
@@ -411,32 +271,6 @@ describe("util:b64url-encode and util:b64url-decode", () => {
     const r = await runtime.call("util:b64url-decode", [bytes(new TextEncoder().encode("a+b/"))]);
     expect(r.ok).toBe(false);
     if (!r.ok) expect(r.error.code).toBe("E_COERCE");
-  });
-});
-
-describe("util:count-leading, util:trim-start and util:trim-end", () => {
-  test("count-leading on bytes, lists and the empty sequence", async () => {
-    expect(await fl("#[ 00 00 01 00 ] [ 0 = ] util:count-leading")).toBe(2);
-    expect(await fl("#[ 01 00 ] [ 0 = ] util:count-leading")).toBe(0);
-    expect(await fl("#[ 00 00 ] [ 0 = ] util:count-leading")).toBe(2);
-    expect(await fl("#[ ] [ 0 = ] util:count-leading")).toBe(0);
-    expect(await fl("{ 1 2 3 10 2 } [ 5 < ] util:count-leading")).toBe(3);
-  });
-
-  test("trim-start and trim-end remove only the matching edge characters", async () => {
-    expect(await fl('"  ab  " [ 32 = ] util:trim-start')).toBe("ab  ");
-    expect(await fl('"  ab  " [ 32 = ] util:trim-end')).toBe("  ab");
-    expect(await fl('"a b" [ 32 = ] util:trim-start')).toBe("a b");
-    expect(await fl('"a b" [ 32 = ] util:trim-end')).toBe("a b");
-    expect(await fl('"    " [ 32 = ] util:trim-start')).toBe("");
-    expect(await fl('"    " [ 32 = ] util:trim-end')).toBe("");
-    expect(await fl('"" [ 32 = ] util:trim-end')).toBe("");
-    expect(await fl('" \\t x \\t " [ dup 32 = swap 9 = or ] util:trim-end')).toBe(" \t x");
-  });
-
-  test("a code point above U+FFFF counts as one character", async () => {
-    expect(await fl('"\\u{1F600}\\u{1F600}a" [ 128512 = ] util:trim-start')).toBe("a");
-    expect(await fl('"a\\u{1F600}" [ 128512 = ] util:trim-end')).toBe("a");
   });
 });
 
@@ -1152,15 +986,6 @@ describe("util:round-div", () => {
   });
 });
 
-describe("util:contains?", () => {
-  test("finds an element equal to x", async () => {
-    expect(await fl('{ "a" "b" } "b" util:contains?')).toBe(true);
-    expect(await fl('{ "a" "b" } "c" util:contains?')).toBe(false);
-    expect(await fl('{ } "a" util:contains?')).toBe(false);
-    expect(await fl("{ 1 2 3 } 3 util:contains?")).toBe(true);
-  });
-});
-
 describe("util:match-texts", () => {
   test("the text of every match, in order, and none when nothing matches", async () => {
     expect(await fl('"a1 b22 c333" "\\\\d+" "" util:match-texts " " join')).toBe("1 22 333");
@@ -1230,25 +1055,6 @@ describe("util calendar words", () => {
         new Date(ms).toISOString().replace("Z", ""),
       );
     }
-  });
-});
-
-describe("util:ceil-div", () => {
-  test("rounds up, and gives 0 for 0", async () => {
-    expect(await value("util:ceil-div", [int(0), int(4)])).toBe(0);
-    expect(await value("util:ceil-div", [int(1), int(4)])).toBe(1);
-    expect(await value("util:ceil-div", [int(4), int(4)])).toBe(1);
-    expect(await value("util:ceil-div", [int(5), int(4)])).toBe(2);
-    expect(await value("util:ceil-div", [int(7), int(1)])).toBe(7);
-  });
-});
-
-describe("util:sum", () => {
-  test("the sum of a list of integers, 0 when empty, exact beyond 2^53", async () => {
-    expect(await value("util:sum", [listV()])).toBe(0);
-    expect(await value("util:sum", [listV(1, 2, 3, 4)])).toBe(10);
-    expect(await value("util:sum", [listV(-5, 5, 7)])).toBe(7);
-    expect(await fl("{ 9007199254740991 9007199254740991 } util:sum")).toBe(18014398509481982n);
   });
 });
 

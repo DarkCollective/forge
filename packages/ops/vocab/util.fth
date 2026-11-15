@@ -155,94 +155,15 @@ CHOICE: sha3-size
 \ body (the same text as the core word): a call through a wrapper costs about three more interpreter steps, and these
 \ words run once per character or byte in many ops, so a wrapper would push large inputs over the step limit.
 
-: space? ( b:int -- bool )
-  "True for ASCII white space: tab, line feed, vertical tab, form feed, carriage return (9 to 13) and space (32)." doc
-  b 32 = b 9 >= b 13 <= and or ;
-
-: between? ( n:int lo:int hi:int -- bool )
-  "True when lo <= n <= hi (both ends included)." doc
-  n lo >= n hi <= and ;
-
-: check-int-range ( n:int lo:int hi:int what:str -- )
-  "Raises E_RANGE unless lo <= n <= hi (both ends included). The message is what, then must be lo to hi, not n: 12 checked against 0 9 for the compression level gives the compression level must be 0 to 9, not 12." doc
-  n lo hi what core:check-int-range ;
-
-: cp>str ( cp:int -- str )
-  "The one-character string of a code point (0 to 0x10FFFF, not a surrogate: anything else is the error codes>str raises)." doc
-  { cp } codes>str ;
-
 : int>be-bytes ( v:int n:int -- bytes )
   "The low n bytes of v, most significant first (big-endian); higher bytes are dropped and an n of 0 gives no bytes." doc
   0 n range [ n 1 - swap - 8 * v swap shr 255 band ] map list>bytes ;
-
-: digits>int ( vals:bytes radix:int -- int )
-  "The integer whose digits are the elements of vals, most significant digit first, in the given radix: a positional fold. Digits are not checked against the radix. Large inputs are bounded by the integer limit (E_LIMIT_VALUE)." doc
-  vals 0 [ swap radix * + ] reduce ;
-
-: ceil-div ( n:int d:int -- int )
-  "n divided by d, rounded up: the number of groups of d needed for n items (0 for n = 0). d must be positive and n non-negative." doc
-  n d core:ceil-div ;
-
-: sum ( xs:list -- int )
-  "The sum of a list of integers (0 for the empty list). For a list of floats write the fold yourself." doc
-  xs core:sum ;
-
-: dec-digit? ( c:int -- bool )
-  "True for the ASCII decimal digits 0 to 9 (codes 48 to 57)." doc
-  c 48 57 between? ;
-
-: hex-digit? ( c:int -- bool )
-  "True for an ASCII hexadecimal digit: 0 to 9, A to F or a to f." doc
-  c 48 >= c 57 <= and c 65 >= c 70 <= and or c 97 >= c 102 <= and or ;
-
-: repeat-str ( s:str n:int -- str )
-  "The text s repeated n times (the empty string for 0)." doc
-  0 n range [ drop s ] map "" join ;
 
 : pad-hex ( v:int n:int -- str )
   "The lower-case hex digits of a non-negative integer, left-padded with zeros to at least n digits (never truncated)." doc
   v 16 int>str-radix dup len n <
   [ n over len - dup 16 <= [ "0000000000000000" swap 0 swap slice ] [ "0" swap repeat-str ] if swap cat ]
   when ;
-
-: contains? ( items:list x:any -- bool )
-  "True when some element of the list equals x (a linear search; an empty list has nothing)." doc
-  items [ x = ] filter len 0 > ;
-
-: starts-with? ( s:str prefix:str -- bool )
-  "True when s begins with prefix; false (not an error) when s is shorter than prefix. Every string starts with the empty string." doc
-  s len prefix len >= [ s 0 prefix len slice prefix = ] [ false ] if ;
-
-: ends-with? ( s:str suffix:str -- bool )
-  "True when s ends with suffix; false (not an error) when s is shorter than suffix." doc
-  s len suffix len >= [ s s len suffix len - s len slice suffix = ] [ false ] if ;
-
-: strip-space ( s:str -- str )
-  "The text without any of its ASCII white space characters (see space?), wherever they are." doc
-  s str>codes [ space? not ] filter codes>str ;
-
-\ Fold step of count-leading: acc >= 0 is still counting, acc < 0 is -(count) - 1 once pred failed.
-: _lead-step ( acc:int c:int pred:quot -- int )
-  acc 0 < [ acc ] [ c pred call [ acc 1 + ] [ acc neg 1 - ] if ] if ;
-
-: count-leading ( items pred:quot -- int )
-  "The number of elements at the start of items (a list, bytes or the like) for which pred ( element -- bool ) holds, stopping at the first that fails. Zero for an empty sequence." doc
-  items 0 [ pred _lead-step ] reduce
-  dup 0 < [ neg 1 - ] when ;
-
-: trim-start ( s:str pred:quot -- str )
-  "The text without its leading characters whose code satisfies pred ( code:int -- bool )." doc
-  0 [ dup s len < [ dup s swap dup 1 + slice str>codes 0 nth pred call ] [ false ] if ] [ 1 + ] while
-  s swap s len slice ;
-
-: trim-end ( s:str pred:quot -- str )
-  "The text without its trailing characters whose code satisfies pred ( code:int -- bool )." doc
-  s 0 s len s str>codes rev pred count-leading - slice ;
-
-: zero-bytes ( n:int -- bytes )
-  "n zero bytes (none for 0)." doc
-  0 n range [ drop 0 ] map list>bytes ;
-
 \ ---- characters and text ----
 
 : u16 ( b:bytes i:int big-endian:bool -- int )

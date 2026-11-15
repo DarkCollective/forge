@@ -24,7 +24,7 @@ import { assembleRuntime } from "./bundle.js";
 import { loadBundleNode } from "./sources-node.js";
 
 const { str, bool } = valueHelpers;
-const runtime = assembleRuntime(await loadBundleNode(["parity", "raise"]));
+const runtime = assembleRuntime(await loadBundleNode(["parity"]));
 
 async function text(word: string, args: Parameters<typeof runtime.call>[1]) {
   const r = await runtime.call(word, args);

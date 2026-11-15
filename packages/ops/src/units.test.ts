@@ -24,7 +24,7 @@ import { assembleRuntime } from "./bundle.js";
 import { loadBundleNode } from "./sources-node.js";
 
 const { str, int } = valueHelpers;
-const runtime = assembleRuntime(await loadBundleNode(["units", "raise"]));
+const runtime = assembleRuntime(await loadBundleNode(["units"]));
 
 type Result = Awaited<ReturnType<typeof runtime.call>>;
 const code = (r: Result) => (r.ok ? "ok" : r.error.code);

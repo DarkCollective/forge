@@ -25,7 +25,7 @@ import { assembleRuntime } from "./bundle.js";
 import { loadBundleNode } from "./sources-node.js";
 
 const { str, int } = valueHelpers;
-const runtime = assembleRuntime(await loadBundleNode(["luhn", "raise"]));
+const runtime = assembleRuntime(await loadBundleNode(["luhn"]));
 
 /** The Luhn mod N check character, as on Wikipedia ("Luhn mod N algorithm"). */
 function reference(digits: string, n: number): string {

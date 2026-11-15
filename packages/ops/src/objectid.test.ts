@@ -24,7 +24,7 @@ import { assembleRuntime } from "./bundle.js";
 import { loadBundleNode } from "./sources-node.js";
 
 const { str } = valueHelpers;
-const runtime = assembleRuntime(await loadBundleNode(["objectid", "raise"]));
+const runtime = assembleRuntime(await loadBundleNode(["objectid"]));
 
 const stamp = async (secs: number, rest = "000000000000000000") => {
   const r = await runtime.call("objectid:timestamp", [
