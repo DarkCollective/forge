@@ -10,7 +10,7 @@ IN: unicode
 
 \ v in hex, left-padded with zeros to at least n digits.
 : _hex ( v:int n:int up:bool -- str )
-  v n util:pad-hex up [ upper ] when ;
+  v n pad-hex up [ upper ] when ;
 
 \ A UTF-16 code unit as pre + 4 hex digits.
 : _unit ( v:int pre:str up:bool -- str )
@@ -25,19 +25,21 @@ IN: unicode
 
 \ nh says the next character is a hex digit, so U+ gets 6 digits to keep the number unambiguous.
 : _esc ( c:int format:str up:bool nh:bool -- str )
-  format "u" = [ c "\\u" up _utf16 ]
-  [ format "%u" = [ c "%u" up _utf16 ]
-    [ format "U+" = [ "U+" c nh [ 6 ] [ 4 ] if up _hex cat ]
-      [ format "x{}" = [ "\\x{" c 2 up _hex cat "}" cat ]
-        [ "&#x" c 1 up _hex cat ";" cat ] if ] if ] if ] if ;
+  format {
+    "u" [ c "\\u" up _utf16 ]
+    "%u" [ c "%u" up _utf16 ]
+    "U+" [ "U+" c nh [ 6 ] [ 4 ] if up _hex cat ]
+    "x{}" [ "\\x{" c 2 up _hex cat "}" cat ]
+    [ "&#x" c 1 up _hex cat ";" cat ]
+  } case ;
 
 : _hex-next? ( cps:list j:int -- bool )
-  j cps len < [ cps j nth util:hex-digit? ] [ false ] if ;
+  j cps len < [ cps j nth hex-digit? ] [ false ] if ;
 
 : _piece ( c:int i:int cps:list format:str up:bool scope:str -- str )
   scope "all" = c 127 > or
   [ c format up cps i 1 + _hex-next? _esc ]
-  [ c util:cp>str ] if ;
+  [ c cp>str ] if ;
 
 : _escape ( cps:list format:str up:bool scope:str -- str )
   cps [ cps format up scope _piece ] mapi "" join ;
@@ -49,33 +51,36 @@ IN: unicode
 
 META: escape
   use-when "You need text with non-ASCII characters written as Unicode escape codes, for a source file, a log or a bug report." ;
-  link "https://en.wikipedia.org/wiki/UTF-16" "UTF-16 on Wikipedia" ;
-  inverse unescape ;
   param format "u: \\uXXXX. U+: U+XXXX. %u: %uXXXX. x{}: \\x{X}. html: &#xX;." ;
   param case "Case of the hex digits." ;
   param scope "non-ascii: escape only code points above 0x7F. all: escape every code point." ;
+  inverse unescape ;
+  link "https://en.wikipedia.org/wiki/UTF-16" "UTF-16 on Wikipedia" ;
 ;
 
 \ ---- unescape ----
 
 \ Number of leading characters of s (at most max) for which pred holds.
 : _run ( s:str max:int pred:quot -- int )
-  s str>codes dup len max min 0 swap slice pred util:count-leading ;
+  s str>codes dup len max min 0 swap slice pred count-leading ;
 
 : _valid-cp? ( v:int -- bool )
   v 1114111 <= v 55296 >= v 57343 <= and not and ;
 
 \ The value of the 4 hex digits after the u that starts s, or -1.
 : _u-unit ( s:str -- int )
-  s len 5 >= [ s 0 1 slice "u" = ] [ false ] if
-  [ s 1 2 slice "-" = [ -1 ] [ [ s 1 5 slice 16 str>int-radix ] [ drop -1 ] try ] if ]
-  [ -1 ] if ;
+  {
+    [ s len 5 < ] [ -1 ]
+    [ s 0 1 slice "u" = not ] [ -1 ]
+    [ s 1 5 slice str>codes [ hex-digit? ] all? ] [ s 1 5 slice 16 str>int-radix ]
+    [ -1 ]
+  } cond ;
 
 : _high? ( v:int -- bool )
-  v 55296 56319 util:between? ;
+  v 55296 56319 between? ;
 
 : _low? ( v:int -- bool )
-  v 56320 57343 util:between? ;
+  v 56320 57343 between? ;
 
 \ The pair of two units as a code point.
 : _pair ( hi:int lo:int -- int )
@@ -84,74 +89,84 @@ META: escape
 \ A parser takes ( piece prev next ) and gives ( decoded rest ok ): piece is the text after an
 \ introducer, prev and next the neighbouring pieces. ok false means piece is not an escape.
 : _u-parse2 ( v:int piece:str prev:str next:str -- str str bool )
-  v 0 <
-  [ "" piece false ]
-  [ v _high?
-    [ piece len 5 = next _u-unit _low? and
-      [ v next _u-unit _pair util:cp>str "" true ] [ "" piece false ] if ]
-    [ v _low?
-      [ prev len 5 = prev _u-unit _high? and
-        [ "" piece 5 piece len slice true ] [ "" piece false ] if ]
-      [ v util:cp>str piece 5 piece len slice true ] if ] if ] if ;
+  {
+    [ v 0 < ] [ "" piece false ]
+    [ v _high? ] [
+      piece len 5 = next _u-unit _low? and
+      [ v next _u-unit _pair cp>str "" true ] [ "" piece false ] if
+    ]
+    [ v _low? ] [
+      prev len 5 = prev _u-unit _high? and
+      [ "" piece 5 piece len slice true ] [ "" piece false ] if
+    ]
+    [ v cp>str piece 5 piece len slice true ]
+  } cond ;
 
 : _u-parse ( piece:str prev:str next:str -- str str bool )
   piece _u-unit piece prev next _u-parse2 ;
 
 : _x-emit ( v:int piece:str cut:int -- str str bool )
-  v _valid-cp? [ v util:cp>str piece cut piece len slice true ] [ "" piece false ] if ;
+  v _valid-cp? [ v cp>str piece cut piece len slice true ] [ "" piece false ] if ;
 
 \ k is the number of hex digits after the x{ of piece.
 : _x-parse2 ( piece:str k:int -- str str bool )
-  k 0 > piece len 3 k + >= and
-  [ piece 2 k + 3 k + slice "}" =
-    [ piece 2 2 k + slice 16 str>int-radix piece 3 k + _x-emit ]
-    [ "" piece false ] if ]
-  [ "" piece false ] if ;
+  {
+    [ k 0 > piece len 3 k + >= and not ] [ "" piece false ]
+    [ piece 2 k + 3 k + slice "}" = ] [ piece 2 2 k + slice 16 str>int-radix piece 3 k + _x-emit ]
+    [ "" piece false ]
+  } cond ;
 
 : _x-parse ( piece:str -- str str bool )
   piece len 3 >= [ piece 0 2 slice "x{" = ] [ false ] if
-  [ piece piece 2 piece len slice 8 [ util:hex-digit? ] _run _x-parse2 ]
+  [ piece piece 2 piece len slice 8 [ hex-digit? ] _run _x-parse2 ]
   [ "" piece false ] if ;
 
 : _bs-parse ( piece:str prev:str next:str -- str str bool )
-  piece len 0 = [ "" piece false ]
-  [ piece 0 1 slice "u" = [ piece prev next _u-parse ] [ piece _x-parse ] if ] if ;
+  {
+    [ piece len 0 = ] [ "" piece false ]
+    [ piece 0 1 slice "u" = ] [ piece prev next _u-parse ]
+    [ piece _x-parse ]
+  } cond ;
 
 \ The longest run of 4 to k hex digits at the start of s that is a valid code point, else 0.
 : _pick ( s:str k:int -- int )
-  k 4 < [ 0 ]
-  [ s 0 k slice 16 str>int-radix _valid-cp? [ k ] [ s k 1 - recurse ] if ] if ;
+  {
+    [ k 4 < ] [ 0 ]
+    [ s 0 k slice 16 str>int-radix _valid-cp? ] [ k ]
+    [ s k 1 - recurse ]
+  } cond ;
 
 : _plus-emit ( piece:str k:int -- str str bool )
   k 0 = [ "" piece false ]
-  [ piece 0 k slice 16 str>int-radix util:cp>str piece k piece len slice true ] if ;
+  [ piece 0 k slice 16 str>int-radix cp>str piece k piece len slice true ] if ;
 
 : _plus-parse ( piece:str prev:str next:str -- str str bool )
-  piece dup piece 6 [ util:hex-digit? ] _run _pick _plus-emit ;
+  piece dup piece 6 [ hex-digit? ] _run _pick _plus-emit ;
 
 \ A numeric reference body: digits from start in the radix, then a ;.
-: _ref-emit ( v:int piece:str cut:int -- str str bool )
-  v _valid-cp? [ v util:cp>str piece cut piece len slice true ] [ "" piece false ] if ;
-
 : _ref2 ( piece:str start:int radix:int k:int -- str str bool )
-  k 0 > piece len start k + 1 + >= and
-  [ piece start k + start k + 1 + slice ";" =
-    [ piece start start k + slice radix str>int-radix piece start k + 1 + _ref-emit ]
-    [ "" piece false ] if ]
-  [ "" piece false ] if ;
+  {
+    [ k 0 > piece len start k + 1 + >= and not ] [ "" piece false ]
+    [ piece start k + start k + 1 + slice ";" = ] [ piece start start k + slice radix str>int-radix piece start k + 1 + _x-emit ]
+    [ "" piece false ]
+  } cond ;
 
 : _html-parse ( piece:str prev:str next:str -- str str bool )
-  piece len 0 = [ "" piece false ]
-  [ piece 0 1 slice lower "x" =
-    [ piece 1 16 piece 1 piece len slice 8 [ util:hex-digit? ] _run _ref2 ]
-    [ piece 0 10 piece 8 [ util:dec-digit? ] _run _ref2 ] if ] if ;
+  {
+    [ piece len 0 = ] [ "" piece false ]
+    [ piece 0 1 slice lower "x" = ] [ piece 1 16 piece 1 piece len slice 8 [ hex-digit? ] _run _ref2 ]
+    [ piece 0 10 piece 8 [ dec-digit? ] _run _ref2 ]
+  } cond ;
 
 \ One level of unescaping: cut text at intro, give each piece to parse with its neighbours, and
 \ run next over all the text that is not part of an escape (so decoded characters are never read
 \ again, and an escape never contains the introducer of another form).
 : _finish ( decoded:str rest:str ok:bool piece:str intro:str next:any -- str )
-  ok [ rest len 0 = [ decoded ] [ decoded rest next call cat ] if ]
-  [ intro piece next call cat ] if ;
+  {
+    [ ok not ] [ intro piece next call cat ]
+    [ rest len 0 = ] [ decoded ]
+    [ decoded rest next call cat ]
+  } cond ;
 
 : _emit-piece ( piece:str i:int parts:list intro:str parse:any next:any -- str )
   i 0 =
@@ -182,6 +197,13 @@ META: escape
   "Encodings" category
   "\\" [ _bs-parse ] [ _l-pct ] _level ;
 
+META: unescape
+  use-when "You have text with Unicode escape codes or numeric references, such as U+1F600 or &#233;, from a source file or a log, and want the characters they stand for." ;
+  inverse escape ;
+  link "https://en.wikipedia.org/wiki/UTF-16" "UTF-16 on Wikipedia" ;
+  checks output utf8 ;
+;
+
 \ ---- normalisation ----
 
 : normalize ( str form:choice{nfc|nfd|nfkc|nfkd}=nfc -- str )
@@ -199,7 +221,7 @@ META: normalize
 \ ---- smart characters ----
 
 \ { character replacement } pairs; names are those of the Unicode character database.
-: _smart-pairs ( -- list )
+MEMO: _smart-pairs ( -- list )
   { { "\u{2018}" "'" }     \ LEFT SINGLE QUOTATION MARK
     { "\u{2019}" "'" }     \ RIGHT SINGLE QUOTATION MARK
     { "\u{201A}" "'" }     \ SINGLE LOW-9 QUOTATION MARK
@@ -220,13 +242,6 @@ META: normalize
   "Replace typographic characters by ASCII: the single quotes U+2018 U+2019 U+201A U+201B by ', the double quotes U+201C U+201D U+201E U+201F by \", EN DASH U+2013 by -, EM DASH U+2014 by --, HORIZONTAL ELLIPSIS U+2026 by ... and NO-BREAK SPACE U+00A0 by a space. Everything else is unchanged." doc
   "Text" category
   _smart-pairs swap [ _apply ] reduce ;
-
-META: unescape
-  use-when "You have text with Unicode escape codes or numeric references, such as U+1F600 or &#233;, from a source file or a log, and want the characters they stand for." ;
-  link "https://en.wikipedia.org/wiki/UTF-16" "UTF-16 on Wikipedia" ;
-  inverse escape ;
-  checks output utf8 ;
-;
 
 META: smart-to-ascii
   use-when "You have text copied from a word processor or web page with curly quotes, dashes or an ellipsis, and need plain ASCII punctuation." ;

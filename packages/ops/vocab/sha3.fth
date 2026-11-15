@@ -4,7 +4,7 @@
 \ (src/prims/sha3.ts) over the audited @noble/hashes library; the parameter and the metadata are FL.
 IN: sha3
 
-: digest ( bytes size:choice{"224"|"256"|"384"|"512"}="512" -- bytes )
+: digest ( bytes size:choice<util:sha3-size>="512" -- bytes )
   "The SHA3 digest (FIPS 202) of the input as raw bytes: 28, 32, 48 or 64 bytes by size. Chain hex:encode for hex text. This is SHA-3 with the FIPS 202 domain padding; original Keccak padding is the keccak vocabulary." doc
   "Hashing" category
   size _hash ;

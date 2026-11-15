@@ -12,6 +12,16 @@ IN: gost3410
 
 USING: streebog random ;
 
+\ The parameter set of the curve: the 256-bit CryptoPro sets, the 512-bit TC26 set and the RFC 7091 test curves.
+CHOICE: gost-curve
+  option cryptopro-a "The 256-bit CryptoPro set A (RFC 4357)." ;
+  option cryptopro-b "The 256-bit CryptoPro set B (RFC 4357)." ;
+  option cryptopro-c "The 256-bit CryptoPro set C (RFC 4357)." ;
+  option tc26-512-a "The 512-bit TC26 set A (RFC 7836)." ;
+  option test-256 "The 256-bit test curve of RFC 7091." ;
+  option test-512 "The 512-bit test curve of RFC 7091." ;
+;
+
 \ The Streebog digest that goes with the curve: 256 bits for a 32-byte curve, 512 for a 64-byte one.
 : _digest ( data:bytes curve:str -- bytes )
   curve _size 32 = [ data "256" streebog:digest ] [ data "512" streebog:digest ] if ;
@@ -19,37 +29,37 @@ USING: streebog random ;
 \ v as bytes that must be exactly n bytes (the numbers of the curve are as wide as it, a public point twice as wide).
 : _exact ( v:bytes what:str n:int curve:str -- bytes )
   v len n <> [
-    "the " what cat " must be " cat n int>str cat " bytes (" cat n 2 * int>str cat " hex digits) for the curve " cat curve cat raise:range ] when
+    "the " what cat " must be " cat n int>str cat " bytes (" cat n 2 * int>str cat " hex digits) for the curve " cat curve cat fail-range ] when
   v ;
 
 \ A random nonce k from 1 to q - 1, as wide as the curve.
 : _random-k ( curve:str -- bytes )
-  1 curve _order 1 - random:between curve _size util:int>be-bytes ;
+  1 curve _order 1 - random:between curve _size int>be-bytes ;
 
 \ The signature r || s as hex; the nonce is replaced (as the standard asks) when r or s is 0.
 : _sign-digest ( curve:str d:bytes digest:bytes -- str )
   curve d digest curve _random-k _sign
   dup len 0 = [ drop curve d digest recurse ] [ bytes>hex ] if ;
 
-: sign ( data:bytes private-key:bytes="" curve:choice{cryptopro-a|cryptopro-b|cryptopro-c|tc26-512-a|test-256|test-512}="cryptopro-a" -- str )
+: sign ( data:bytes private-key:bytes="" curve:choice<gost-curve>="cryptopro-a" -- str )
   "Sign the input with a GOST R 34.10-2012 private key (RFC 7091). The input is hashed with Streebog (256 bits for the 256-bit curves, 512 bits for the 512-bit ones) and the signature is r followed by s, big-endian, each as wide as the curve (32 or 64 bytes), as lower-case hex. The private key is hex, as wide as the curve, from 1 to the order minus 1 (E_RANGE otherwise). k is random from the host's cryptographic generator (never Math.random; the word carries the +random effect), so the signature differs on every call and any verifier accepts all of them. The curves: cryptopro-a, cryptopro-b, cryptopro-c (the 256-bit CryptoPro sets of RFC 4357), tc26-512-a (the 512-bit set A of RFC 7836) and the RFC 7091 test curves test-256 and test-512." doc
   "Public Key" category
   curve private-key "private key" curve _size curve _exact
   data curve _digest _sign-digest ;
 
-: verify ( signature:str public-key:bytes="" curve:choice{cryptopro-a|cryptopro-b|cryptopro-c|tc26-512-a|test-256|test-512}="cryptopro-a" message:toggle{utf8|hex|base64|latin1}="" -- str )
+: verify ( signature:str public-key:bytes="" curve:choice<gost-curve>="cryptopro-a" message:toggle{utf8|hex|base64|latin1}="" -- str )
   "Verify a GOST R 34.10-2012 signature (RFC 7091) of a message. The input is the signature r || s as hex (white space is ignored); the public key is the point x || y as hex, as wide as the curve twice (E_RANGE otherwise; a point not on the curve is E_COERCE); the message is read as UTF-8 text, hex, Base64 or Latin-1 per the toggle and hashed with Streebog as sign does. The answer is Verified OK or Verification Failure; a signature of the wrong length or with r or s outside 1 to the order minus 1 is a failure, not an error." doc
   "Public Key" category
   curve public-key "public key" curve _size 2 * curve _exact
   message curve _digest
-  signature util:strip-space hex>bytes
+  signature strip-space hex>bytes
   _verify
   [ "Verified OK" ] [ "Verification Failure" ] if ;
 
-: public-key ( data:str curve:choice{cryptopro-a|cryptopro-b|cryptopro-c|tc26-512-a|test-256|test-512}="cryptopro-a" -- str )
+: public-key ( data:str curve:choice<gost-curve>="cryptopro-a" -- str )
   "The public key of a GOST R 34.10-2012 private key: the point x followed by y, big-endian, each as wide as the curve, as lower-case hex. The input is the private key as hex, as wide as the curve (E_RANGE otherwise)." doc
   "Public Key" category
-  curve data util:strip-space hex>bytes "private key" curve _size curve _exact _public-key bytes>hex ;
+  curve data strip-space hex>bytes "private key" curve _size curve _exact _public-key bytes>hex ;
 
 META: sign
   use-when "You have a GOST R 34.10-2012 private key in hex and a message, and you need a signature for a Russian standard test or protocol." ;
@@ -66,8 +76,8 @@ META: verify
   param public-key "The public point x || y as hex (128 hex digits for a 256-bit curve, 256 for a 512-bit one)." ;
   param curve "The parameter set the key is on." ;
   param message "The signed message, read as UTF-8 text, hex, Base64 or Latin-1." ;
-  see-also gost3410:sign gost3410:public-key ;
   inverse sign ;
+  see-also gost3410:sign gost3410:public-key ;
   link "https://www.rfc-editor.org/rfc/rfc7091" "RFC 7091: GOST R 34.10-2012 signatures" ;
   link "https://www.rfc-editor.org/rfc/rfc6986" "RFC 6986: the Streebog hash" ;
   checks input regex "^[0-9a-fA-F\\s]+$" ;

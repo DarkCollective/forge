@@ -44,7 +44,7 @@ IN: uri
   [ order ks vs _run-of ] map ;
 
 : _arg-line ( run:list width:int -- str )
-  "\t" run 1 nth cat " " width run 1 nth len - util:repeat-str cat
+  "\t" run 1 nth cat " " width run 1 nth len - repeat-str cat
   run 2 nth dup len 0 > [ " = " swap cat cat ] [ drop ] if "\n" cat ;
 
 : _lines ( sorted:list width:int -- str )
@@ -55,12 +55,14 @@ IN: uri
   runs [ 1 nth len ] map 0 [ max ] reduce
   _lines ;
 
-: _arguments2 ( ks:list vs:list -- str )
-  0 ks len range ks list:sort-by ks vs _runs _args-text ;
-
 : _arguments ( query:str -- str )
-  query "&" split [ len 0 > ] filter
-  dup len 0 = [ drop "" ] [ dup [ _key ] map swap [ _val ] map _arguments2 ] if ;
+  query "&" split [ len 0 > ] filter :> pieces
+  pieces len 0 =
+  [ "" ]
+  [ pieces [ _key ] map :> ks
+    pieces [ _val ] map :> vs
+    0 ks len range ks list:sort-by ks vs _runs _args-text ]
+  if ;
 
 \ ---- the parts of a URI ----
 
@@ -87,7 +89,7 @@ IN: uri
   s _noquery s _scheme dup len 0 = [ drop 0 ] [ len 1 + ] if s _noquery len slice ;
 
 : _has-authority? ( s:str -- bool )
-  s _after-scheme "//" util:starts-with? ;
+  s _after-scheme "//" starts-with? ;
 
 \ The authority, between // and the next / (empty when the URI has none).
 : _authority ( s:str -- str )
@@ -110,9 +112,9 @@ IN: uri
 : _host-port ( hp:str -- str str )
   hp "^\\[([^\\]]*)\\](?::(.*))?$" "" regex:find-all
   dup len 0 > not [ drop hp "^([^:]*)(?::(.*))?$" "" regex:find-all ] when
-  dup len 0 = [ "not a host and port" hp cat raise:coerce ] when
+  dup len 0 = [ "not a host and port" hp cat fail-coerce ] when
   0 nth "groups" get dup 0 nth lower swap 1 nth
-  dup "^[0-9]*$" "" regex:test not [ "the port is not a number: " swap cat raise:coerce ] when ;
+  dup "^[0-9]*$" "" regex:test not [ "the port is not a number: " swap cat fail-coerce ] when ;
 
 : _line ( label:str value:str -- str )
   label value cat "\n" cat value len 0 = [ drop "" ] when ;
@@ -124,7 +126,7 @@ IN: uri
 : _path-name ( s:str host:str -- str )
   s _path
   dup len 0 =
-  [ host len 0 > s _scheme lower { "http" "https" "ftp" "gopher" "file" "ws" "wss" } swap util:contains? and
+  [ host len 0 > s _scheme lower { "http" "https" "ftp" "gopher" "file" "ws" "wss" } swap contains? and
     [ drop "/" ] when ] when ;
 
 : _query-text ( s:str -- str )
@@ -142,10 +144,13 @@ IN: uri
 : parse ( data:str -- str )
   "The parts of a URI (RFC 3986) in CyberChef's layout, one per line and only those that are there: Protocol (the scheme and a colon, lower case), Auth (the user information before the last @, percent-decoded), Hostname (lower case, without the brackets of an IPv6 address), Port, Path name, Arguments (the query: one line per argument, the names padded to the longest, = and the value decoded as URLSearchParams does, + as a space and %XX as UTF-8; an argument given twice shows its values joined by a comma; one without a value shows only its name) and Hash (the fragment with its #). White space around the URI is dropped, and empty input gives empty output. The authority is read when the part after the scheme starts with //; a URI without one (mailto:a@b.example, a path alone) has no host. A port that is not digits is E_COERCE. For http, https, ftp, gopher, file, ws and wss with a host and no path the path is /. This is the RFC 3986 reading with the output of Node's legacy url.parse that CyberChef prints; escapes in the path are not changed, as that parser would for spaces." doc
   "Networking" category
-  data "^\\s+" "" "" regex:replace rev "^\\s+" "" "" regex:replace rev
-  dup len 0 = [ drop "" ] [
-    dup _authority dup len 0 = [ drop "" "" ] [ _hostport _host-port ] if
-    _report ] if ;
+  data "^\\s+" "" "" regex:replace rev "^\\s+" "" "" regex:replace rev :> s
+  s len 0 =
+  [ "" ]
+  [ s _authority :> a
+    a len 0 = [ "" "" ] [ a _hostport _host-port ] if :> port :> host
+    s host port _report ]
+  if ;
 
 META: parse
   use-when "You have a URL and want its scheme, user, host, port, path, query arguments and fragment set out one per line." ;

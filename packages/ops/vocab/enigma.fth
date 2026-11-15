@@ -66,18 +66,24 @@ IN: enigma
 \ ---- model checks ----
 
 : _names-for ( model:str first:bool -- list )
-  model "I" = [ { "I" "II" "III" "IV" "V" } ]
-  [ model "M3" = [ { "I" "II" "III" "IV" "V" "VI" "VII" "VIII" } ]
-    [ first [ { "BETA" "GAMMA" } ] [ { "I" "II" "III" "IV" "V" "VI" "VII" "VIII" } ] if ] if ] if ;
+  {
+    [ model "I" = ] [ { "I" "II" "III" "IV" "V" } ]
+    [ model "M4" = first and ] [ { "BETA" "GAMMA" } ]
+    [ { "I" "II" "III" "IV" "V" "VI" "VII" "VIII" } ]
+  } cond ;
 
 : _check-rotor ( name:str model:str idx:int -- )
   model idx 0 = model "M4" = and _names-for [ name = ] filter len 0 =
-  [ "rotors: " name cat " is not available as rotor " cat idx 1 + int>str cat " of model " cat model cat raise:range ] when ;
+  [ "rotors: " name cat " is not available as rotor " cat idx 1 + int>str cat " of model " cat model cat fail-range ] when ;
 
 : _check-reflector ( refl:str model:str -- )
-  model "I" = [ { "A" "B" "C" } ] [ model "M3" = [ { "B" "C" } ] [ { "B-thin" "C-thin" } ] if ] if
+  {
+    [ model "I" = ] [ { "A" "B" "C" } ]
+    [ model "M3" = ] [ { "B" "C" } ]
+    [ { "B-thin" "C-thin" } ]
+  } cond
   [ refl = ] filter len 0 =
-  [ "reflector " refl cat " does not fit model " cat model cat raise:range ] when ;
+  [ "reflector " refl cat " does not fit model " cat model cat fail-range ] when ;
 
 \ ---- the tables ----
 
@@ -117,7 +123,7 @@ IN: enigma
   refl model _check-reflector
   rotors upper util:number-tokens dup " " join _names!
   len _n <>
-  [ "rotors: " _n int>str cat " rotors are needed for model " cat model cat raise:range ] when
+  [ "rotors: " _n int>str cat " rotors are needed for model " cat model cat fail-range ] when
   _names " " split 0 [ over model swap _check-rotor 1 + ] reduce drop
   rings _n "rings" util:letter-settings _rings!
   pos _n "positions" util:letter-settings _pos!
@@ -156,7 +162,7 @@ IN: enigma
   [ drop ]
   [ nip _press 65 + ] if ;
 
-: encrypt ( bytes model:choice{I|M3|M4}=I rotors:str[1..64]="I II III" reflector:choice{A|B|C|B-thin|C-thin}=B rings:str[1..32]="AAA" positions:str[1..32]="AAA" plugboard:str[0..128]="" others:choice{keep|remove}=keep -- bytes )
+: encrypt ( bytes model:choice{I|M3|M4}=I rotors:str[1..64]="I II III" reflector:choice{A|B|C|B-thin|C-thin}=B rings:str[1..32]="AAA" positions:str[1..32]="AAA" plugboard:str[0..128]="" others:choice<util:other-chars>=keep -- bytes )
   "Enigma rotor machine (Enigma I, M3 or M4). Each letter A to Z, in either case, is enciphered and written as an upper-case letter; the machine is reciprocal, so the same word deciphers with the same settings. Rotors, rings and positions go left to right as on the machine: three rotors (I, M3) or four (M4: Beta or Gamma first). Rings and positions are letters (BUL, B U L) or numbers 1 to 26 (2 21 12). The plugboard is pairs of letters (AB CD EF). Other bytes are kept as they are, or dropped with others=remove. Settings that do not fit the model are E_RANGE." doc
   "Cipher machines" category
   model rotors reflector rings positions plugboard _setup

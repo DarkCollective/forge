@@ -12,11 +12,21 @@ IN: sm2
 
 USING: sm3 random ;
 
+\ The order of the parts of a ciphertext.
+CHOICE: ciphertext-order
+  option C1C3C2 "C1, C3, C2: the order of the current standard (GB/T 32918.4-2017)." ;
+  option C1C2C3 "C1, C2, C3: the order of the 2010 draft." ;
+;
+
+CHOICE: curve
+  option sm2p256v1 "The recommended 256-bit curve (GB/T 32918.5-2017), the only one." ;
+;
+
 \ ---- the key derivation function ----
 
 \ The blocks 1 to n of the KDF, each SM3(z || counter as 32 bits big-endian), joined.
 : _kdf-blocks ( z:bytes n:int -- bytes )
-  1 n 1 + range [ z swap 4 util:int>be-bytes cat sm3:digest ] map #[ ] bjoin ;
+  1 n 1 + range [ z swap 4 int>be-bytes cat sm3:digest ] map #[ ] bjoin ;
 
 \ klen bytes of key material for the shared point bytes z = x2 || y2.
 : _kdf ( z:bytes klen:int -- bytes )
@@ -29,7 +39,7 @@ USING: sm3 random ;
 \ ---- keys ----
 
 : _coord ( v:bytes what:str -- bytes )
-  v len 32 <> [ "Invalid " what cat " - ensure it is 32 bytes in size and in hex" cat raise:range ] when
+  v len 32 <> [ "Invalid " what cat " - ensure it is 32 bytes in size and in hex" cat fail-range ] when
   v ;
 
 : _public-point ( px:bytes py:bytes -- bytes )
@@ -52,8 +62,8 @@ USING: sm3 random ;
 \ ---- encrypt ----
 
 : _finish ( msg:bytes c1:bytes p2:bytes format:str -- bytes )
-  p2 1 65 slice msg len _kdf
-  dup _zero-key? [ drop #[ ] ] [ c1 swap msg swap _c2 msg p2 _c3 format _layout ] if ;
+  p2 1 65 slice msg len _kdf :> t
+  t _zero-key? [ #[ ] ] [ c1 msg t _c2 msg p2 _c3 format _layout ] if ;
 
 \ The ciphertext of the message for the public point, with the scalar k (the public word supplies a random one): C1
 \ as x || y, then C3 and C2 in the order of format. Empty when the key material is all zero (k is then unusable).
@@ -61,13 +71,13 @@ USING: sm3 random ;
   msg k _mul-base 1 65 slice pub k _mul format _finish ;
 
 : _random-k ( -- bytes )
-  1 _order 1 - random:between 32 util:int>be-bytes ;
+  1 _order 1 - random:between 32 int>be-bytes ;
 
 : _encrypt-random ( msg:bytes pub:bytes format:str -- bytes )
   msg pub _random-k format _encrypt-k
   dup len 0 = [ drop msg pub format recurse ] when ;
 
-: encrypt ( data:bytes public-key-x:bytes="" public-key-y:bytes="" output-format:choice{C1C3C2|C1C2C3}="C1C3C2" curve:choice{sm2p256v1}="sm2p256v1" -- str )
+: encrypt ( data:bytes public-key-x:bytes="" public-key-y:bytes="" output-format:choice<ciphertext-order>="C1C3C2" curve:choice<curve>="sm2p256v1" -- str )
   "Encrypt the input with an SM2 public key (GB/T 32918.4, CyberChef's SM2 Encrypt) on the curve sm2p256v1. The public key is its two coordinates X and Y, 32 bytes each as hex (E_RANGE otherwise); a point that is not on the curve is E_COERCE. The output is hex text, lower case: C1 (the point k*G as x then y, 64 bytes, without the 04 byte of the uncompressed form, as CyberChef writes it), then C3 (the SM3 check, 32 bytes) and C2 (the message xor the key stream, as long as the message) for C1C3C2, or C2 then C3 for C1C2C3. k is random from the host's cryptographic generator (never Math.random; the word carries the +random effect), so the output differs on every call. The input may be empty." doc
   "Public Key" category
   data public-key-x public-key-y _public-point output-format _encrypt-random bytes>hex ;
@@ -77,32 +87,31 @@ USING: sm3 random ;
 \ C1 as the 65-byte point and the rest of the ciphertext. C1 may be written with or without the 04 byte; the 65 bytes
 \ are taken as C1 when the first byte is 04 and they are a point on the curve, else C1 is x || y.
 : _c1-split ( ct:bytes -- bytes bytes )
-  ct len 96 < [ "the SM2 ciphertext is too short: C1 and C3 alone are 96 bytes" raise:coerce ] when
+  ct len 96 < [ "the SM2 ciphertext is too short: C1 and C3 alone are 96 bytes" fail-coerce ] when
   ct len 97 >= ct 0 nth 4 = and
   [ ct 0 65 slice _valid-point ] [ false ] if
   [ ct 0 65 slice ct 65 ct len slice ] [ #[ 04 ] ct 0 64 slice cat ct 64 ct len slice ] if ;
 
 \ C2 and C3 from what follows C1.
 : _unlayout ( rest:bytes format:str -- bytes bytes )
-  rest len 32 < [ "the SM2 ciphertext is too short: C3 is 32 bytes" raise:coerce ] when
+  rest len 32 < [ "the SM2 ciphertext is too short: C3 is 32 bytes" fail-coerce ] when
   format "C1C3C2" = [ rest 32 rest len slice rest 0 32 slice ]
   [ rest 0 rest len 32 - slice rest rest len 32 - rest len slice ] if ;
 
 : _open ( c1:bytes c2:bytes c3:bytes d:bytes -- bytes )
-  c1 d _mul
-  dup 1 65 slice c2 len _kdf
-  dup _zero-key? [ "the SM2 key material is all zero (a ciphertext of a bad k)" raise:coerce ] when
-  c2 swap _c2
-  dup2 swap _c3
-  c3 <> [ "Decryption Error -- Computed Hashes Do Not Match" raise:coerce ] when
-  nip ;
+  c1 d _mul :> p2
+  p2 1 65 slice c2 len _kdf :> t
+  t _zero-key? [ "the SM2 key material is all zero (a ciphertext of a bad k)" fail-coerce ] when
+  c2 t _c2 :> msg
+  msg p2 _c3 c3 <> [ "Decryption Error -- Computed Hashes Do Not Match" fail-coerce ] when
+  msg ;
 
 : _decrypt ( ct:bytes d:bytes format:str -- bytes )
   ct _c1-split
   format _unlayout
   d _open ;
 
-: decrypt ( data:str private-key:bytes="" input-format:choice{C1C3C2|C1C2C3}="C1C3C2" curve:choice{sm2p256v1}="sm2p256v1" -- bytes )
+: decrypt ( data:str private-key:bytes="" input-format:choice<ciphertext-order>="C1C3C2" curve:choice<curve>="sm2p256v1" -- bytes )
   "Decrypt an SM2 ciphertext with the private key (GB/T 32918.4, CyberChef's SM2 Decrypt) on the curve sm2p256v1. The input is the ciphertext as hex text (white space is ignored) in the order named: C1C3C2 or C1C2C3. C1 may be x || y (64 bytes, as CyberChef writes it) or the uncompressed point with its 04 byte (65 bytes, as other SM2 libraries write it). The private key is 32 bytes as hex. A ciphertext that is cut short, whose C1 is not a point on the curve, or whose C3 check does not match (a wrong key, a wrong order or damaged data) is E_COERCE; a key outside 1 to the order minus 1 is E_RANGE. The output is the message as bytes." doc
   "Public Key" category
   data hex>bytes private-key "Private Key" _coord input-format _decrypt ;

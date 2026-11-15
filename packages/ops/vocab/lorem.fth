@@ -9,7 +9,7 @@ IN: lorem
 
 USING: random ;
 
-: _list ( -- list )
+MEMO: _list ( -- list )
   "a ab accusamus accusantium ad adipisci alias aliquam aliquid amet animi aperiam architecto
 asperiores aspernatur assumenda at atque aut autem beatae blanditiis commodi consectetur consequatur
 consequuntur corporis corrupti culpa cum cumque cupiditate debitis delectus deleniti deserunt dicta
@@ -29,7 +29,7 @@ veritatis vero vitae voluptas voluptate voluptatem voluptates voluptatibus volup
 : _opening ( -- str )
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit." ;
 
-: _opening-words ( -- list )
+MEMO: _opening-words ( -- list )
   "lorem ipsum dolor sit amet consectetur adipiscing elit" " " split ;
 
 : _pick ( words:list -- str )
@@ -76,19 +76,20 @@ veritatis vero vitae voluptas voluptate voluptatem voluptates voluptatibus volup
   0 n slice ;
 
 : _check ( length:int unit:str -- )
-  unit "paragraphs" = length 500 > and [ "at most 500 paragraphs" raise:range ] when
-  unit "sentences" = length 5000 > and [ "at most 5,000 sentences" raise:range ] when ;
+  unit "paragraphs" = length 500 > and [ "at most 500 paragraphs" fail-range ] when
+  unit "sentences" = length 5000 > and [ "at most 5,000 sentences" fail-range ] when ;
 
 : generate ( bytes length:int[1..65536]=3 unit:choice{paragraphs|sentences|words|bytes}="paragraphs" opening:bool=true -- str )
   "Placeholder text, Lorem ipsum: length paragraphs (at most 500; 3 to 8 sentences each, separated by a blank line), sentences (at most 5,000), words (at most 65,536; lower case, space-separated, no punctuation, the first with a capital) or bytes (at most 65,536; running text cut to exactly that many bytes, all of it ASCII). The words are Latin from Cicero's De finibus, chosen at random from the host's cryptographic random generator (never Math.random), so the output differs on every call (the word carries the +random effect). With opening true the text starts with the traditional Lorem ipsum dolor sit amet, consectetur adipiscing elit., which is the one fixed part of the output. The input is ignored." doc
   "Generators" category
   drop
   length unit _check
-  unit "paragraphs" = [ _list length opening _paragraphs ] [
-  unit "sentences" = [ _list length opening _sentences ] [
-  unit "words" = [ _list length opening _words ] [
-  _list length opening _bytes
-  ] if ] if ] if ;
+  unit {
+    "paragraphs" [ _list length opening _paragraphs ]
+    "sentences" [ _list length opening _sentences ]
+    "words" [ _list length opening _words ]
+    [ _list length opening _bytes ]
+  } case ;
 
 META: generate
   use-when "You need placeholder text of a set length, in paragraphs, sentences, words or bytes, to fill a layout or a test." ;

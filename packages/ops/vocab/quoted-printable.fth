@@ -12,7 +12,7 @@
 \     CRLF, after at most 75 characters, never inside an =XX.
 \ Decoding rules: see decode. The words are FL and need no primitive; the soft-break loop keeps
 \ its position in a variable because a cut point depends on the previous one. E_COERCE comes from
-\ the raise vocabulary (raise:coerce).
+\ util:hex-unescape.
 IN: quoted-printable
 
 0 VARIABLE _pos
@@ -20,15 +20,22 @@ IN: quoted-printable
 
 \ One byte of a line; last says it is the last byte of its line (trailing white space is encoded).
 : _token ( b:int last:bool -- str )
-  b 61 <> b 33 >= and b 126 <= and [ b util:cp>str ]
-  [ b 32 = b 9 = or last not and [ b util:cp>str ] [ "=" b util:byte>hex cat ] if ] if ;
+  {
+    [ b 61 <> b 33 >= and b 126 <= and ] [ b cp>str ]
+    [ b 32 = b 9 = or last not and ] [ b cp>str ]
+    [ "=" b util:byte>hex cat ]
+  } cond ;
 
 : _tokens ( line:bytes -- str )
   line bytes>list [ line len 1 - = _token ] mapi "" join ;
 
 \ The end of the next soft-broken chunk: k, moved back so that it does not fall inside an =XX.
 : _cut ( enc:bytes k:int -- int )
-  enc k 1 - nth 61 = [ k 1 - ] [ enc k 2 - nth 61 = [ k 2 - ] [ k ] if ] if ;
+  {
+    [ enc k 1 - nth 61 = ] [ k 1 - ]
+    [ enc k 2 - nth 61 = ] [ k 2 - ]
+    [ k ]
+  } cond ;
 
 : _emit ( enc:bytes k:int -- )
   _acc enc _pos k slice bytes>latin1 cat "=\r\n" cat _acc!
@@ -42,10 +49,14 @@ IN: quoted-printable
 
 \ The line break after line piece p: CRLF if it ended in CR, else LF; none after the last piece.
 : _term ( p:str has:bool -- str )
-  has [ p "\r" util:ends-with? [ "\r\n" ] [ "\n" ] if ] [ "" ] if ;
+  {
+    [ has p "\r" ends-with? and ] [ "\r\n" ]
+    [ has ] [ "\n" ]
+    [ "" ]
+  } cond ;
 
 : _core ( p:str has:bool -- str )
-  has p "\r" util:ends-with? and [ p 0 p len 1 - slice ] [ p ] if ;
+  has p "\r" ends-with? and [ p 0 p len 1 - slice ] [ p ] if ;
 
 : _enc-line2 ( p:str has:bool -- str )
   p has _core latin1>bytes _tokens str>bytes _wrap p has _term cat ;
@@ -67,20 +78,25 @@ IN: quoted-printable
   c 32 = c 9 = or ;
 
 : _rtrim ( s:str -- str )
-  s [ _ws? ] util:trim-end ;
+  s [ _ws? ] trim-end ;
 
 : _unescape ( s:str -- bytes )
   s "=" "= must be followed by two hex digits or a line break" util:hex-unescape ;
 
 \ The line body: CR before a line break and trailing white space removed.
 : _body ( p:str has:bool -- str )
-  has p "\r" util:ends-with? and [ p 0 p len 1 - slice _rtrim ] [ p _rtrim ] if ;
+  has p "\r" ends-with? and [ p 0 p len 1 - slice _rtrim ] [ p _rtrim ] if ;
 
 \ A soft line break: the body without its final =, and no line break.
 : _dec-line3 ( b:str p:str has:bool -- bytes )
-  b "=" util:ends-with?
+  b "=" ends-with?
   [ b 0 b len 1 - slice _unescape ]
-  [ b _unescape has [ p "\r" util:ends-with? [ #[ 0d 0a ] ] [ #[ 0a ] ] if ] [ #[ ] ] if cat ] if ;
+  [ b _unescape
+    {
+      [ has p "\r" ends-with? and ] [ #[ 0d 0a ] ]
+      [ has ] [ #[ 0a ] ]
+      [ #[ ] ]
+    } cond cat ] if ;
 
 : _dec-line2 ( p:str has:bool -- bytes )
   p has _body p has _dec-line3 ;

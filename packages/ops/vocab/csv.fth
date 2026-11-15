@@ -12,12 +12,14 @@ USING: json list ;
 
 \ A header must not repeat a name: the objects would silently lose a column.
 : _check-header ( header:list -- )
-  header list:unique len header len <> [ "the header row repeats a column name, so the objects would lose a column" raise:coerce ] when ;
+  header list:unique len header len <>
+  [ "the header row repeats a column name, so the objects would lose a column" fail-coerce ] when ;
 
 \ Row n of the CSV (counting the header as row 1) as an object keyed by the header.
 : _record ( row:list n:int header:list -- record )
   row len header len <> [
-    "CSV row " n 1 + int>str cat " has " cat row len int>str cat " cells but the header has " cat header len int>str cat raise:coerce
+    "CSV row " n 1 + int>str cat " has " cat row len int>str cat
+    " cells but the header has " cat header len int>str cat fail-coerce
   ] when
   header row zip >record ;
 
@@ -61,11 +63,11 @@ META: to-json
   v type "record" = v json:null? not and ;
 
 : _need-all ( items:list pred:quot what:str -- )
-  items pred filter len items len <> [ "a JSON array to convert must hold only " what cat raise:coerce ] when ;
+  items pred filter len items len <> [ "a JSON array to convert must hold only " what cat fail-coerce ] when ;
 
 \ The cell of key k in an object, or an empty cell when it has no such key.
 : _field ( r:any k:str -- str )
-  r keys k util:contains? [ r k get _cell ] [ "" ] if ;
+  r keys k contains? [ r k get _cell ] [ "" ] if ;
 
 : _dict-row ( r:any header:list -- list )
   r keys header = [ header [ r swap get _cell ] map ] [ header [ r swap _field ] map ] if ;
@@ -77,7 +79,7 @@ META: to-json
 
 : _dicts-out ( items:list -- list )
   items [ _object? ] "objects" _need-all
-  items items [ keys ] map util:list-flatten list:unique _dict-table ;
+  items [ items [ keys emit-all ] each ] collect list:unique _dict-table ;
 
 : _arrays-out ( items:list -- list )
   items [ type "list" = ] "arrays" _need-all
@@ -85,20 +87,19 @@ META: to-json
 
 \ The rows of a JSON array: of objects (with a header row) or of arrays.
 : _items-table ( items:list -- list )
-  items len 0 = [ { } ] [
-    items 0 nth _object? [ items _dicts-out ] [
-      items 0 nth type "list" = [ items _arrays-out ] [
-        "a JSON array to convert must hold objects or arrays" raise:coerce { }
-      ] if
-    ] if
-  ] if ;
+  {
+    [ items len 0 = ] [ { } ]
+    [ items 0 nth _object? ] [ items _dicts-out ]
+    [ items 0 nth type "list" = ] [ items _arrays-out ]
+    [ "a JSON array to convert must hold objects or arrays" fail-coerce ]
+  } cond ;
 
 : _table ( v:any -- list )
-  v _object? [ { } v append _dicts-out ] [
-    v type "list" = [ v _items-table ] [
-      "the JSON to convert must be an array of objects, an array of arrays, or one object" raise:coerce { }
-    ] if
-  ] if ;
+  {
+    [ v _object? ] [ { } v append _dicts-out ]
+    [ v type "list" = ] [ v _items-table ]
+    [ "the JSON to convert must be an array of objects, an array of arrays, or one object" fail-coerce ]
+  } cond ;
 
 \ The input check (see META) is a regex: a table is a JSON object or array after white space, and json:parse starts no
 \ other value that way. Its second alternative keeps a long run of white space that fills the 4 KiB prefix from being read as a failure.

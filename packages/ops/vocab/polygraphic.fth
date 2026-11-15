@@ -4,9 +4,19 @@
 \ into I, or I into J, as the omit choice says).
 IN: polygraphic
 
-\ ---------------------------------------------------------------------------------------------
-\ Letters and grids (private helpers)
-\ ---------------------------------------------------------------------------------------------
+\ Which letter of the 5x5 square is merged into its neighbour.
+CHOICE: merged-letter
+  option j "J is merged into I (the usual rule)." ;
+  option i "I is merged into J." ;
+;
+
+\ How the values of a Hill key matrix are written.
+CHOICE: hill-key-format
+  option letters "Letters A to Z (either case), A = 0 to Z = 25." ;
+  option numbers "Decimal numbers 0 to 25, separated by white space or commas." ;
+;
+
+\ ---- letters and grids (private helpers) ----
 
 \ The upper-case code of a letter, with J merged into I (omit j) or I into J (omit i).
 : _pl-norm ( c:int omit:str -- int )
@@ -18,22 +28,19 @@ IN: polygraphic
 : _pl-alpha ( omit:str -- bytes )
   omit "j" = [ "ABCDEFGHIKLMNOPQRSTUVWXYZ" ] [ "ABCDEFGHJKLMNOPQRSTUVWXYZ" ] if str>bytes ;
 
-\ ---------------------------------------------------------------------------------------------
-\ Digraphs (Playfair and four-square): doubled letters are split with the filler, an odd last letter
-\ takes the filler. A VARIABLE holds the letter waiting for its partner (-1 for none).
-\ ---------------------------------------------------------------------------------------------
+\ ---- digraphs (Playfair and four-square) ----
+\ Doubled letters are split with the filler, an odd last letter takes the filler. A VARIABLE holds the letter
+\ waiting for its partner (-1 for none).
 
 -1 VARIABLE _pl-pend
 
 \ c ( int ) is the next letter: it either completes the pending pair or starts a new one.
 : _pl-step ( c:int filler:int -- bytes )
-  _pl-pend 0 <
-  [ c _pl-pend! #[ ] ]
-  [ _pl-pend c =
-    [ { _pl-pend filler } list>bytes c _pl-pend! ]
+  {
+    [ _pl-pend 0 < ] [ c _pl-pend! #[ ] ]
+    [ _pl-pend c = ] [ { _pl-pend filler } list>bytes c _pl-pend! ]
     [ { _pl-pend c } list>bytes -1 _pl-pend! ]
-    if ]
-  if ;
+  } cond ;
 
 \ The letters (upper case, merged) as digraphs: a bytes of even length.
 : _pl-digraphs ( letters:bytes filler:int -- bytes )
@@ -41,9 +48,8 @@ IN: polygraphic
   letters bytes>list [ filler _pl-step ] map #[ ] bjoin
   _pl-pend 0 >= [ { _pl-pend filler } list>bytes cat ] when ;
 
-\ ---------------------------------------------------------------------------------------------
-\ Playfair geometry: a cell is an index 0 to 24 in the square (row = i div 5, column = i mod 5).
-\ ---------------------------------------------------------------------------------------------
+\ ---- Playfair geometry ----
+\ A cell is an index 0 to 24 in the square (row = i div 5, column = i mod 5).
 
 \ The cell in the same row as i and the column of i moved by mode (+1 encrypt, -1 decrypt).
 : _pl-row ( i:int mode:int -- int )
@@ -59,13 +65,11 @@ IN: polygraphic
 
 \ The two letters of a Playfair pair (ia, ib are cells of the pair's letters).
 : _pl-out ( ia:int ib:int grid:bytes mode:int -- bytes )
-  ia 5 div ib 5 div =
-  [ { grid ia mode _pl-row nth grid ib mode _pl-row nth } list>bytes ]
-  [ ia 5 mod ib 5 mod =
-    [ { grid ia mode _pl-col nth grid ib mode _pl-col nth } list>bytes ]
+  {
+    [ ia 5 div ib 5 div = ] [ { grid ia mode _pl-row nth grid ib mode _pl-row nth } list>bytes ]
+    [ ia 5 mod ib 5 mod = ] [ { grid ia mode _pl-col nth grid ib mode _pl-col nth } list>bytes ]
     [ { grid ia ib _pl-cross nth grid ib ia _pl-cross nth } list>bytes ]
-    if ]
-  if ;
+  } cond ;
 
 \ The pair i of pairs (bytes, two letters each) as Playfair output.
 : _pl-pair ( i:int pairs:bytes grid:bytes pos:bytes mode:int -- bytes )
@@ -80,11 +84,9 @@ IN: polygraphic
 : _pl-pairs ( pairs:bytes grid:bytes mode:int -- bytes )
   pairs grid grid util:square-positions mode _pl-pairs-with ;
 
-\ ---------------------------------------------------------------------------------------------
-\ Playfair
-\ ---------------------------------------------------------------------------------------------
+\ ---- Playfair ----
 
-: playfair-encrypt ( data:bytes key:str[0..25,/[A-Za-z]*/]="" omit:choice{j|i}="j" filler:str[1..1,/[A-Za-z]/]="X" -- bytes )
+: playfair-encrypt ( data:bytes key:str[0..25,/[A-Za-z]*/]="" omit:choice<merged-letter>="j" filler:str[1..1,/[A-Za-z]/]="X" -- bytes )
   "Playfair cipher on a 5x5 square built from the keyword (without repeats) and then the rest of the alphabet, with one letter omitted (j: J is merged into I; i: I is merged into J). Only letters take part, taken as upper case with the merge applied; other bytes are dropped. Doubled letters get the filler between them (a pair of the filler itself stays as it is), and an odd last letter gets the filler. Pairs in the same row or column move one step along it; other pairs swap columns. The output is upper-case letters." doc
   "Classical ciphers" category
   data [ util:letter? ] filter [ omit _pl-norm ] map filler str>bytes 0 nth 223 band _pl-digraphs
@@ -100,11 +102,11 @@ META: playfair-encrypt
   see-also classical:bifid-encrypt polygraphic:playfair-decrypt ;
 ;
 
-: playfair-decrypt ( data:bytes key:str[0..25,/[A-Za-z]*/]="" omit:choice{j|i}="j" -- bytes )
+: playfair-decrypt ( data:bytes key:str[0..25,/[A-Za-z]*/]="" omit:choice<merged-letter>="j" -- bytes )
   "Undo Playfair with the same key and omit choice. The input is read as digraphs of letters (other bytes are dropped; an odd count of letters is E_COERCE). No filler is removed: the output is the digraphs' letters as they were encrypted, filler letters included." doc
   "Classical ciphers" category
   data [ util:letter? ] filter [ omit _pl-norm ] map dup len 2 mod 0 =
-  [ ] [ drop "playfair-decrypt: the letters must come in pairs" raise:coerce ] if
+  [ drop "playfair-decrypt: the letters must come in pairs" fail-coerce ] unless
   key str>bytes [ omit _pl-norm ] map omit _pl-alpha util:keyed-alphabet -1 _pl-pairs ;
 
 META: playfair-decrypt
@@ -116,10 +118,9 @@ META: playfair-decrypt
   see-also polygraphic:playfair-encrypt ;
 ;
 
-\ ---------------------------------------------------------------------------------------------
-\ Four-square: plain square (top left, bottom right) and two keyed squares (top right from key1,
-\ bottom left from key2). Pair (a, b) becomes (TR[row a, column b], BL[row b, column a]).
-\ ---------------------------------------------------------------------------------------------
+\ ---- four-square ----
+\ Plain square (top left, bottom right) and two keyed squares (top right from key1, bottom left from key2).
+\ Pair (a, b) becomes (TR[row a, column b], BL[row b, column a]).
 
 \ The two output letters of a four-square pair, given the cells of its letters in the two squares.
 : _fs-out ( ia:int ib:int g1:bytes g2:bytes -- bytes )
@@ -156,7 +157,7 @@ META: four-square-encrypt
   "Undo four-square with the same keys: each pair (a', b') is read back through the top right and bottom left squares to the plain letters. The input is read as letters in pairs (other bytes dropped; an odd count is E_COERCE). No filler is removed." doc
   "Classical ciphers" category
   data [ util:letter? ] filter [ "j" _pl-norm ] map dup len 2 mod 0 =
-  [ ] [ drop "four-square-decrypt: the letters must come in pairs" raise:coerce ] if
+  [ drop "four-square-decrypt: the letters must come in pairs" fail-coerce ] unless
   key1 str>bytes [ "j" _pl-norm ] map "j" _pl-alpha util:keyed-alphabet util:square-positions
   key2 str>bytes [ "j" _pl-norm ] map "j" _pl-alpha util:keyed-alphabet util:square-positions
   "j" _pl-alpha dup
@@ -170,9 +171,8 @@ META: four-square-decrypt
   see-also polygraphic:four-square-encrypt ;
 ;
 
-\ ---------------------------------------------------------------------------------------------
-\ Hill: the key is a 2x2 or 3x3 matrix mod 26 (letters A = 0 .. Z = 25, or numbers 0 to 25).
-\ ---------------------------------------------------------------------------------------------
+\ ---- Hill ----
+\ The key is a 2x2 or 3x3 matrix mod 26 (letters A = 0 .. Z = 25, or numbers 0 to 25).
 
 \ Entry k of a matrix given as bytes.
 : _hget ( m:bytes k:int -- int )
@@ -190,8 +190,7 @@ META: four-square-decrypt
 
 \ The key must be invertible mod 26 (its determinant coprime to 26), else E_RANGE.
 : _hill-check ( k:bytes n:int -- )
-  k n _hill-det 26 gcd 1 =
-  [ ] [ "hill: the key matrix is not invertible mod 26" raise:range ] if ;
+  k n _hill-det 26 gcd 1 = [ "hill: the key matrix is not invertible mod 26" fail-range ] unless ;
 
 \ Scales a list of entries by s mod 26, as bytes.
 : _hill-scale ( vals:list s:int -- bytes )
@@ -244,10 +243,10 @@ META: four-square-decrypt
 
 \ A key of 4 values (2x2) or 9 values (3x3), each 0 to 25, as bytes.
 : _hill-key ( key:str format:str -- bytes )
-  key format _hill-vals
-  dup len 4 = [ ] [ dup len 9 = [ ] [ drop "hill: the key must have 4 values (2x2) or 9 values (3x3)" raise:range ] if ] if
-  dup [ dup 0 < over 25 > or [ "hill: key values must be between 0 and 25" raise:range ] when drop ] each
-  list>bytes ;
+  key format _hill-vals :> vals
+  vals len 4 = vals len 9 = or [ "hill: the key must have 4 values (2x2) or 9 values (3x3)" fail-range ] unless
+  vals [ dup 0 < over 25 > or [ "hill: key values must be between 0 and 25" fail-range ] when drop ] each
+  vals list>bytes ;
 
 : _hill-size ( k:bytes -- int )
   k len 4 = [ 2 ] [ 3 ] if ;
@@ -258,13 +257,14 @@ META: four-square-decrypt
 
 \ v must be whole blocks (E_COERCE otherwise); it is returned unchanged.
 : _hill-pad-check ( v:bytes n:int -- bytes )
-  v len n mod 0 = [ v ] [ "hill-decrypt: the letters must make whole blocks" raise:coerce ] if ;
+  v len n mod 0 = [ "hill-decrypt: the letters must make whole blocks" fail-coerce ] unless
+  v ;
 
 : _hill-decrypt-with ( v:bytes k:bytes n:int -- bytes )
   k n _hill-check
   v n _hill-pad-check k n _hill-inverse n _hill-apply [ 65 + ] map ;
 
-: hill-encrypt ( data:bytes key:str[1..200] format:choice{letters|numbers}="letters" pad:str[1..1,/[A-Za-z]/]="X" -- bytes )
+: hill-encrypt ( data:bytes key:str[1..200] format:choice<hill-key-format>="letters" pad:str[1..1,/[A-Za-z]/]="X" -- bytes )
   "Hill cipher: the key is a 2x2 (4 values) or 3x3 (9 values) matrix mod 26, given as letters (A = 0 to Z = 25) or as numbers 0 to 25 separated by white space or commas. The key must be invertible mod 26 (E_RANGE otherwise). The letters of the data (other bytes dropped, taken as upper case) are cut into blocks of 2 or 3 and multiplied by the matrix; the last block is padded with the pad letter. The output is upper-case letters." doc
   "Classical ciphers" category
   data [ util:letter? ] filter [ 223 band 65 - ] map
@@ -282,7 +282,7 @@ META: hill-encrypt
   see-also polygraphic:hill-decrypt ;
 ;
 
-: hill-decrypt ( data:bytes key:str[1..200] format:choice{letters|numbers}="letters" -- bytes )
+: hill-decrypt ( data:bytes key:str[1..200] format:choice<hill-key-format>="letters" -- bytes )
   "Undo the Hill cipher with the same matrix: the letters are cut into blocks and multiplied by the inverse matrix mod 26. The letters must make whole blocks (E_COERCE otherwise). No padding is removed." doc
   "Classical ciphers" category
   data [ util:letter? ] filter [ 223 band 65 - ] map

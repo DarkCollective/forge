@@ -18,38 +18,61 @@ IN: rsa
 
 USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ecdsa ;
 
+\ The digest of a signature, of the OAEP label hash and of MGF1.
+CHOICE: digest-name
+  option SHA-1 ;
+  option MD5 ;
+  option SHA-256 ;
+  option SHA-384 ;
+  option SHA-512 ;
+;
+
+CHOICE: signature-scheme
+  option RSASSA-PKCS1-V1_5 "RSASSA-PKCS1-v1_5 (RFC 8017 section 8.2), deterministic." ;
+  option RSASSA-PSS "RSASSA-PSS (RFC 8017 section 8.1), randomised." ;
+;
+
+CHOICE: encryption-scheme
+  option RSA-OAEP "RSAES-OAEP (RFC 8017 section 7.1), with an empty label." ;
+  option RSAES-PKCS1-V1_5 "RSAES-PKCS1-v1_5 (RFC 8017 section 7.2)." ;
+  option RAW "Textbook RSA: no padding." ;
+;
+
 \ ---- digests ----
 
 : _hlen ( alg:str -- int )
-  alg "MD5" = [ 16 ] [
-  alg "SHA-1" = [ 20 ] [
-  alg "SHA-256" = [ 32 ] [
-  alg "SHA-384" = [ 48 ] [
-  alg "SHA-512" = [ 64 ] [
-  "the digest must be SHA-1, MD5, SHA-256, SHA-384 or SHA-512" raise:range 0
-  ] if ] if ] if ] if ] if ;
+  alg {
+    "MD5" [ 16 ]
+    "SHA-1" [ 20 ]
+    "SHA-256" [ 32 ]
+    "SHA-384" [ 48 ]
+    "SHA-512" [ 64 ]
+    [ "the digest must be SHA-1, MD5, SHA-256, SHA-384 or SHA-512" fail-range ]
+  } case ;
 
 : _digest ( data:bytes alg:str -- bytes )
-  alg "MD5" = [ data md5:digest ] [
-  alg "SHA-1" = [ data sha1:digest ] [
-  alg "SHA-256" = [ data "256" sha2:digest ] [
-  alg "SHA-384" = [ data "384" sha2:digest ] [
-  alg "SHA-512" = [ data "512" sha2:digest ] [
-  "the digest must be SHA-1, MD5, SHA-256, SHA-384 or SHA-512" raise:range #[ ]
-  ] if ] if ] if ] if ] if ;
+  alg {
+    "MD5" [ data md5:digest ]
+    "SHA-1" [ data sha1:digest ]
+    "SHA-256" [ data "256" sha2:digest ]
+    "SHA-384" [ data "384" sha2:digest ]
+    "SHA-512" [ data "512" sha2:digest ]
+    [ "the digest must be SHA-1, MD5, SHA-256, SHA-384 or SHA-512" fail-range ]
+  } case ;
 
 \ The OID of the digest in a DigestInfo (RFC 8017 section 9.2, note 1).
 : _hash-oid ( alg:str -- str )
-  alg "MD5" = [ "1.2.840.113549.2.5" ] [
-  alg "SHA-1" = [ "1.3.14.3.2.26" ] [
-  alg "SHA-256" = [ "2.16.840.1.101.3.4.2.1" ] [
-  alg "SHA-384" = [ "2.16.840.1.101.3.4.2.2" ] [
-  "2.16.840.1.101.3.4.2.3"
-  ] if ] if ] if ] if ;
+  alg {
+    "MD5" [ "1.2.840.113549.2.5" ]
+    "SHA-1" [ "1.3.14.3.2.26" ]
+    "SHA-256" [ "2.16.840.1.101.3.4.2.1" ]
+    "SHA-384" [ "2.16.840.1.101.3.4.2.2" ]
+    [ "2.16.840.1.101.3.4.2.3" ]
+  } case ;
 
 \ MGF1 (RFC 8017 appendix B.2.1): n bytes of Hash(seed || counter) for the counters 0, 1, ...
 : _mgf1 ( seed:bytes n:int alg:str -- bytes )
-  0 n alg _hlen util:ceil-div range [ 4 util:int>be-bytes seed swap cat alg _digest ] map
+  0 n alg _hlen ceil-div range [ 4 int>be-bytes seed swap cat alg _digest ] map
   #[ ] bjoin 0 n slice ;
 
 \ ---- integers and bytes ----
@@ -60,8 +83,8 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ecdsa ;
 \ The k big-endian bytes of v; E_RANGE when v needs more.
 : _i2osp ( v:int k:int -- bytes )
   v util:int>bytes
-  dup len k > [ "an integer does not fit in " k int>str cat " bytes" cat raise:range ] when
-  k over len - util:zero-bytes swap cat ;
+  dup len k > [ "an integer does not fit in " k int>str cat " bytes" cat fail-range ] when
+  k over len - zero-bytes swap cat ;
 
 \ The number of bytes and of bits of the modulus.
 : _k ( n:int -- int )
@@ -71,7 +94,7 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ecdsa ;
   n 2 int>str-radix len ;
 
 : _fail ( -- )
-  "decryption error" raise:coerce ;
+  "decryption error" fail-coerce ;
 
 \ ---- keys: reading ----
 
@@ -83,7 +106,7 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ecdsa ;
   oid _rsa-oid <> [
     "the key is not an RSA key: its algorithm is " oid asn1:oid-label cat
     oid "1.2.840.10045.2.1" = [ " (use the ecdsa words for elliptic curve keys)" cat ] when
-    raise:range ] when ;
+    fail-range ] when ;
 
 \ The AlgorithmIdentifier of a key names rsaEncryption (its parameters are NULL or absent).
 : _check-alg ( alg:record -- )
@@ -96,11 +119,11 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ecdsa ;
 : _count ( node:record n:int what:str -- )
   node "universal" 16 what asn1:expect
   node asn1:children len n <> [
-    what " has " cat node asn1:children len int>str cat " elements, not " cat n int>str cat raise:coerce ] when ;
+    what " has " cat node asn1:children len int>str cat " elements, not " cat n int>str cat fail-coerce ] when ;
 
 : _make-public ( n:int e:int -- record )
-  n 3 < [ "the RSA modulus is too small" raise:coerce ] when
-  e 3 < [ "the RSA public exponent is too small" raise:coerce ] when
+  n 3 < [ "the RSA modulus is too small" fail-coerce ] when
+  e 3 < [ "the RSA public exponent is too small" fail-coerce ] when
   { { "n" n } { "e" e } } >record ;
 
 \ { n e } of an RSAPublicKey SEQUENCE.
@@ -112,32 +135,32 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ecdsa ;
 : _spki-public ( seq:record -- record )
   seq 2 "a SubjectPublicKeyInfo" _count
   seq 0 asn1:child _check-alg
-  seq 1 asn1:child asn1:node>bits 0 <> [ "the public key BIT STRING has unused bits" raise:coerce ] when
+  seq 1 asn1:child asn1:node>bits 0 <> [ "the public key BIT STRING has unused bits" fail-coerce ] when
   asn1:parse _pkcs1-public ;
 
 : _public-der ( der:bytes -- record )
   der asn1:parse
-  dup asn1:children len 0 = [ "the public key SEQUENCE is empty" raise:coerce ] when
+  dup asn1:children len 0 = [ "the public key SEQUENCE is empty" fail-coerce ] when
   dup 0 asn1:child "universal" 16 asn1:is? [ _spki-public ] [ _pkcs1-public ] if ;
 
 : _make-private ( n:int e:int d:int p:int q:int dp:int dq:int qi:int -- record )
-  n 3 < e 3 < or d 1 < or [ "the RSA private key is damaged (modulus, exponents)" raise:coerce ] when
-  p 0 > q 0 > and [ p q * n <> [ "the RSA private key is damaged (p times q is not the modulus)" raise:coerce ] when ] when
+  n 3 < e 3 < or d 1 < or [ "the RSA private key is damaged (modulus, exponents)" fail-coerce ] when
+  p 0 > q 0 > and [ p q * n <> [ "the RSA private key is damaged (p times q is not the modulus)" fail-coerce ] when ] when
   { { "n" n } { "e" e } { "d" d } { "p" p } { "q" q } { "dp" dp } { "dq" dq } { "qi" qi } } >record ;
 
 \ The key of an RSAPrivateKey SEQUENCE (version 0; 1 is multi-prime, which is not supported).
 : _pkcs1-private ( seq:record -- record )
   seq "universal" 16 "an RSAPrivateKey" asn1:expect
-  seq asn1:children len 9 < [ "an RSAPrivateKey needs 9 INTEGERs" raise:coerce ] when
-  seq 0 _int-at dup 1 = [ "multi-prime RSA keys are not supported" raise:range ] when
-  0 <> [ "an RSAPrivateKey must have version 0" raise:coerce ] when
+  seq asn1:children len 9 < [ "an RSAPrivateKey needs 9 INTEGERs" fail-coerce ] when
+  seq 0 _int-at dup 1 = [ "multi-prime RSA keys are not supported" fail-range ] when
+  0 <> [ "an RSAPrivateKey must have version 0" fail-coerce ] when
   seq 1 _int-at seq 2 _int-at seq 3 _int-at seq 4 _int-at seq 5 _int-at seq 6 _int-at seq 7 _int-at seq 8 _int-at
   _make-private ;
 
 \ The key of a PKCS#8 PrivateKeyInfo SEQUENCE.
 : _pkcs8-private ( seq:record -- record )
   seq "universal" 16 "a PrivateKeyInfo" asn1:expect
-  seq asn1:children len 3 < [ "a PrivateKeyInfo needs a version, an algorithm and a key" raise:coerce ] when
+  seq asn1:children len 3 < [ "a PrivateKeyInfo needs a version, an algorithm and a key" fail-coerce ] when
   seq 1 asn1:child _check-alg
   seq 2 asn1:child dup "universal" 4 "an OCTET STRING" asn1:expect
   "value" get asn1:parse _pkcs1-private ;
@@ -149,17 +172,19 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ecdsa ;
 
 \ ---- keys: finding the PEM block ----
 
+\ The error of a PEM text without the block that was expected: no block at all, or the labels that were found.
+: _no-block ( blocks:list what:str -- )
+  blocks len 0 =
+  [ "no PEM block found: " what cat " is expected (-----BEGIN ...-----)" cat fail-range ]
+  [ blocks [ "label" get ] map ", " join
+    "the PEM text has no " what cat " (found: " cat swap cat ")" cat
+    blocks [ "label" get "EC PRIVATE KEY" = ] filter len 0 > [ " (use the ecdsa words for elliptic curve keys)" cat ] when
+    fail-range ] if ;
+
 \ The first block whose label is in labels. None is E_RANGE, naming what was expected and the labels found.
 : _find-block ( blocks:list labels:list what:str -- record )
-  blocks [ "label" get labels swap util:contains? ] filter
-  dup len 0 = [
-    blocks len 0 =
-    [ "no PEM block found: " what cat " is expected (-----BEGIN ...-----)" cat raise:range ]
-    [ blocks [ "label" get ] map ", " join
-      "the PEM text has no " what cat " (found: " cat swap cat ")" cat
-      blocks [ "label" get "EC PRIVATE KEY" = ] filter len 0 > [ " (use the ecdsa words for elliptic curve keys)" cat ] when
-      raise:range ] if ] when
-  0 nth ;
+  blocks [ "label" get labels swap contains? ] filter :> found
+  found len 0 > [ found 0 nth ] [ blocks what _no-block ] if ;
 
 : _public-key ( pem:str -- record )
   pem str>bytes asn1:pem-decode { "PUBLIC KEY" "RSA PUBLIC KEY" } "PUBLIC KEY or RSA PUBLIC KEY block" _find-block
@@ -168,16 +193,18 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ecdsa ;
 \ ---- keys: encrypted private keys ----
 
 : _no-password ( password:str -- )
-  password len 0 = [ "the private key is encrypted: give its password" raise:range ] when ;
+  password len 0 = [ "the private key is encrypted: give its password" fail-range ] when ;
 
 : _bad-password ( -- )
-  "cannot decrypt the private key: the password is wrong or the key is damaged" raise:coerce ;
+  "cannot decrypt the private key: the password is wrong or the key is damaged" fail-coerce ;
 
 \ ( data key iv kind:str -- bytes ): CBC with PKCS#7 padding for aes, 3des or des.
 : _cbc-decrypt ( data:bytes key:bytes iv:bytes kind:str -- bytes )
-  kind "aes" = [ data key iv "CBC" "pkcs7" #[ ] aes:decrypt ] [
-  kind "3des" = [ data key iv "CBC" "pkcs7" triple-des:decrypt ]
-  [ data key iv "CBC" "pkcs7" des:decrypt ] if ] if ;
+  kind {
+    "aes" [ data key iv "CBC" "pkcs7" #[ ] aes:decrypt ]
+    "3des" [ data key iv "CBC" "pkcs7" triple-des:decrypt ]
+    [ data key iv "CBC" "pkcs7" des:decrypt ]
+  } case ;
 
 \ The decrypted DER must be a SEQUENCE; anything else means a wrong password.
 : _check-plain ( plain:bytes -- bytes )
@@ -185,30 +212,35 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ecdsa ;
   plain 0 nth 48 <> [ _bad-password ] when
   plain ;
 
-
 \ The key size in bytes of a legacy DEK-Info cipher name.
 : _dek-size ( name:str -- int )
-  name "AES-128-CBC" = [ 16 ] [
-  name "AES-192-CBC" = [ 24 ] [
-  name "AES-256-CBC" = [ 32 ] [
-  name "DES-EDE3-CBC" = [ 24 ] [
-  name "DES-CBC" = [ 8 ]
-  [ "the encrypted key uses an unsupported cipher: " name cat raise:range 0 ] if ] if ] if ] if ] if ;
+  name {
+    "AES-128-CBC" [ 16 ]
+    "AES-192-CBC" [ 24 ]
+    "AES-256-CBC" [ 32 ]
+    "DES-EDE3-CBC" [ 24 ]
+    "DES-CBC" [ 8 ]
+    [ "the encrypted key uses an unsupported cipher: " name cat fail-range ]
+  } case ;
 
 : _dek-kind ( name:str -- str )
-  name "AES" util:starts-with? [ "aes" ] [ name "DES-EDE3-CBC" = [ "3des" ] [ "des" ] if ] if ;
+  {
+    [ name "AES" starts-with? ] [ "aes" ]
+    [ name "DES-EDE3-CBC" = ] [ "3des" ]
+    [ "des" ]
+  } cond ;
 
 \ The DER of a legacy encrypted PEM body. The key is OpenSSL's EVP_BytesToKey over MD5 with the first 8 bytes of
 \ the IV as the salt and one iteration.
 : _legacy-open ( data:bytes password:str name:str iv:bytes -- bytes )
-  iv len name "AES" util:starts-with? [ 16 ] [ 8 ] if <> [ "the DEK-Info IV has the wrong length" raise:coerce ] when
+  iv len name "AES" starts-with? [ 16 ] [ 8 ] if <> [ "the DEK-Info IV has the wrong length" fail-coerce ] when
   [ data password str>bytes name _dek-size 1 "md5" iv 0 8 slice evp:derive iv name _dek-kind _cbc-decrypt _check-plain ]
   [ drop _bad-password #[ ] ] try ;
 
 : _legacy-decrypt ( block:record password:str -- bytes )
   password _no-password
-  block "headers" get "DEK-Info" get util:strip-space "," split
-  dup len 2 <> [ "the DEK-Info header is not cipher,IV" raise:coerce ] when
+  block "headers" get "DEK-Info" get strip-space "," split
+  dup len 2 <> [ "the DEK-Info header is not cipher,IV" fail-coerce ] when
   block "data" get password rot dup 0 nth upper swap 1 nth hex>bytes _legacy-open ;
 
 \ ---- PKCS#8 EncryptedPrivateKeyInfo with PBES2 (RFC 8018 appendix A.4) ----
@@ -231,22 +263,30 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ecdsa ;
 
 \ The key size in bytes of a PBES2 cipher OID.
 : _pbes2-size ( oid:str -- int )
-  oid "2.16.840.1.101.3.4.1.2" = [ 16 ] [
-  oid "2.16.840.1.101.3.4.1.22" = [ 24 ] [
-  oid "2.16.840.1.101.3.4.1.42" = [ 32 ] [
-  oid "1.2.840.113549.3.7" = [ 24 ] [
-  oid "1.3.14.3.2.7" = [ 8 ]
-  [ "the encrypted key uses an unsupported cipher: " oid asn1:oid-label cat raise:range 0 ] if ] if ] if ] if ] if ;
+  oid {
+    "2.16.840.1.101.3.4.1.2" [ 16 ]
+    "2.16.840.1.101.3.4.1.22" [ 24 ]
+    "2.16.840.1.101.3.4.1.42" [ 32 ]
+    "1.2.840.113549.3.7" [ 24 ]
+    "1.3.14.3.2.7" [ 8 ]
+    [ "the encrypted key uses an unsupported cipher: " oid asn1:oid-label cat fail-range ]
+  } case ;
 
 : _pbes2-kind ( oid:str -- str )
-  oid "1.2.840.113549.3.7" = [ "3des" ] [ oid "1.3.14.3.2.7" = [ "des" ] [ "aes" ] if ] if ;
+  oid {
+    "1.2.840.113549.3.7" [ "3des" ]
+    "1.3.14.3.2.7" [ "des" ]
+    [ "aes" ]
+  } case ;
 
 : _pbes2-hash ( oid:str -- str )
-  oid "1.2.840.113549.2.7" = [ "sha1" ] [
-  oid "1.2.840.113549.2.9" = [ "sha256" ] [
-  oid "1.2.840.113549.2.10" = [ "sha384" ] [
-  oid "1.2.840.113549.2.11" = [ "sha512" ]
-  [ "the encrypted key uses an unsupported PBKDF2 hash: " oid asn1:oid-label cat raise:range "" ] if ] if ] if ] if ;
+  oid {
+    "1.2.840.113549.2.7" [ "sha1" ]
+    "1.2.840.113549.2.9" [ "sha256" ]
+    "1.2.840.113549.2.10" [ "sha384" ]
+    "1.2.840.113549.2.11" [ "sha512" ]
+    [ "the encrypted key uses an unsupported PBKDF2 hash: " oid asn1:oid-label cat fail-range ]
+  } case ;
 
 \ The PRF of PBKDF2-params: the first SEQUENCE after the salt and the iteration count (an optional key length may
 \ stand between), else hmacWithSHA1.
@@ -264,20 +304,20 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ecdsa ;
   root 1 asn1:child "universal" 4 "the encrypted data" asn1:expect
   root _alg 2 "an AlgorithmIdentifier" _count
   root _alg 0 asn1:child asn1:node>oid dup "1.2.840.113549.1.5.13" <> [
-    "the encrypted key uses an unsupported scheme: " swap asn1:oid-label cat raise:range ] [ drop ] if
+    "the encrypted key uses an unsupported scheme: " swap asn1:oid-label cat fail-range ] [ drop ] if
   root _scheme 2 "PBES2-params" _count
   root _kdf 2 "the key derivation function" _count
   root _kdf 0 asn1:child asn1:node>oid dup "1.2.840.113549.1.5.12" <> [
-    "the encrypted key uses an unsupported key derivation: " swap asn1:oid-label cat raise:range ] [ drop ] if
+    "the encrypted key uses an unsupported key derivation: " swap asn1:oid-label cat fail-range ] [ drop ] if
   root _kdfp "universal" 16 "PBKDF2-params" asn1:expect
-  root _kdfp asn1:children len 2 < [ "PBKDF2-params needs a salt and an iteration count" raise:coerce ] when
+  root _kdfp asn1:children len 2 < [ "PBKDF2-params needs a salt and an iteration count" fail-coerce ] when
   root _kdfp 0 asn1:child "universal" 4 "the PBKDF2 salt" asn1:expect
   root _enc 2 "the encryption scheme" _count
   root _enc 1 asn1:child "universal" 4 "the IV" asn1:expect
   root _pbes2-oid _pbes2-size drop
   root _pbes2-prf drop
   root _enc 1 asn1:child "value" get len root _pbes2-oid _pbes2-kind "aes" = [ 16 ] [ 8 ] if <> [
-    "the IV of the encrypted key has the wrong length" raise:coerce ] when ;
+    "the IV of the encrypted key has the wrong length" fail-coerce ] when ;
 
 \ The DER inside an EncryptedPrivateKeyInfo (the root node), with the password.
 : _pbes2-open ( root:record password:str -- bytes )
@@ -293,10 +333,11 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ecdsa ;
 
 \ The DER of the private key in a PEM block, decrypted when it is encrypted.
 : _block-der ( block:record password:str -- bytes )
-  block "label" get "ENCRYPTED PRIVATE KEY" =
-  [ block "data" get asn1:parse password _pbes2-open ]
-  [ block "headers" get keys "DEK-Info" util:contains?
-    [ block password _legacy-decrypt ] [ block "data" get ] if ] if ;
+  {
+    [ block "label" get "ENCRYPTED PRIVATE KEY" = ] [ block "data" get asn1:parse password _pbes2-open ]
+    [ block "headers" get keys "DEK-Info" contains? ] [ block password _legacy-decrypt ]
+    [ block "data" get ]
+  } cond ;
 
 : _private-key ( pem:str password:str -- record )
   pem str>bytes asn1:pem-decode { "RSA PRIVATE KEY" "PRIVATE KEY" "ENCRYPTED PRIVATE KEY" }
@@ -355,20 +396,21 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ecdsa ;
 : _priv-op ( c:int key:record -- int )
   key "p" get 0 > key "q" get 0 > and
   [ c key _crt ] [ c key "d" get key "n" get powmod ] if
-  dup key _pub-op c <> [ "the RSA private key is damaged (the private operation did not invert the public one)" raise:coerce ] when ;
+  dup key _pub-op c <> [ "the RSA private key is damaged (the private operation did not invert the public one)" fail-coerce ] when ;
 
 \ ---- RSAES-PKCS1-v1_5 (RFC 8017 section 7.2) ----
 
 \ n random bytes, none of them zero.
 : _nonzero ( n:int -- bytes )
-  n 0 = [ #[ ] ] [
-    n random:bytes-of 0 util:drop-byte
-    dup len n < [ n over len - recurse cat ] [ 0 n slice ] if ] if ;
+  n 0 = [ #[ ] ]
+  [ n random:bytes-of 0 util:drop-byte :> b
+    b len n < [ b n b len - recurse cat ] [ b 0 n slice ] if ]
+  if ;
 
 : _too-long ( size:int limit:int what:str -- )
   size limit > [
     "the message is " size int>str cat " bytes; a key of this size encrypts at most " cat limit 0 max int>str cat
-    " bytes with " cat what cat raise:range ] when ;
+    " bytes with " cat what cat fail-range ] when ;
 
 : _v15-enc-em ( data:bytes k:int -- bytes )
   data len k 11 - "RSAES-PKCS1-V1_5" _too-long
@@ -377,7 +419,7 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ecdsa ;
 : _v15-dec-em ( em:bytes k:int -- bytes )
   k 11 < [ _fail ] when
   em 0 nth 0 <> em 1 nth 2 <> or [ _fail ] when
-  em 2 k slice [ 0 <> ] util:count-leading
+  em 2 k slice [ 0 <> ] count-leading
   dup 8 < over 2 + k >= or [ _fail ] when
   3 + em swap k slice ;
 
@@ -397,7 +439,7 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ecdsa ;
 : _oaep-enc-em ( data:bytes k:int alg:str -- bytes )
   data len k alg _oaep-max "RSAES-OAEP" _too-long
   #[ ] alg _digest
-  k alg _oaep-max data len - util:zero-bytes cat #[ 01 ] cat data cat
+  k alg _oaep-max data len - zero-bytes cat #[ 01 ] cat data cat
   alg _hlen random:bytes-of alg _oaep-pack ;
 
 : _oaep-db ( mdb:bytes seed:bytes alg:str -- bytes )
@@ -409,7 +451,7 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ecdsa ;
 
 \ The message after the zero bytes and the 01 of PS || 01 || M.
 : _oaep-msg ( rest:bytes -- bytes )
-  rest [ 0 = ] util:count-leading
+  rest [ 0 = ] count-leading
   dup rest len >= [ _fail ] when
   rest over nth 1 <> [ _fail ] when
   1 + rest swap rest len slice ;
@@ -429,29 +471,33 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ecdsa ;
 \ ---- raw RSA ----
 
 : _raw-enc-em ( data:bytes k:int -- bytes )
-  data len k > [ "the message is " data len int>str cat " bytes, longer than the " cat k int>str cat "-byte key" cat raise:range ] when
+  data len k > [ "the message is " data len int>str cat " bytes, longer than the " cat k int>str cat "-byte key" cat fail-range ] when
   data ;
 
 \ ---- encrypt and decrypt ----
 
 \ The k bytes that go through the public operation: the encoded message, or the message itself for RAW.
 : _enc-em ( data:bytes k:int scheme:str alg:str -- bytes )
-  scheme "RSA-OAEP" = [ data k alg _oaep-enc-em ] [
-  scheme "RSAES-PKCS1-V1_5" = [ data k _v15-enc-em ] [
-  scheme "RAW" = [ data k _raw-enc-em ]
-  [ "the scheme must be RSA-OAEP, RSAES-PKCS1-V1_5 or RAW" raise:range #[ ] ] if ] if ] if ;
+  scheme {
+    "RSA-OAEP" [ data k alg _oaep-enc-em ]
+    "RSAES-PKCS1-V1_5" [ data k _v15-enc-em ]
+    "RAW" [ data k _raw-enc-em ]
+    [ "the scheme must be RSA-OAEP, RSAES-PKCS1-V1_5 or RAW" fail-range ]
+  } case ;
 
 : _encrypt ( data:bytes key:record scheme:str alg:str -- bytes )
   key "n" get _k
   dup data swap scheme alg _enc-em _os2ip
-  dup key "n" get >= [ "the message, read as a number, is not below the modulus" raise:range ] when
+  dup key "n" get >= [ "the message, read as a number, is not below the modulus" fail-range ] when
   key _pub-op swap _i2osp ;
 
 : _dec-em ( em:bytes k:int scheme:str alg:str -- bytes )
-  scheme "RSA-OAEP" = [ em k alg _oaep-dec-em ] [
-  scheme "RSAES-PKCS1-V1_5" = [ em k _v15-dec-em ] [
-  scheme "RAW" = [ em ]
-  [ "the scheme must be RSA-OAEP, RSAES-PKCS1-V1_5 or RAW" raise:range #[ ] ] if ] if ] if ;
+  scheme {
+    "RSA-OAEP" [ em k alg _oaep-dec-em ]
+    "RSAES-PKCS1-V1_5" [ em k _v15-dec-em ]
+    "RAW" [ em ]
+    [ "the scheme must be RSA-OAEP, RSAES-PKCS1-V1_5 or RAW" fail-range ]
+  } case ;
 
 \ The k bytes of the private operation on the ciphertext; a wrong length or a value not below n is the one error.
 : _decrypt ( data:bytes key:record scheme:str alg:str -- bytes )
@@ -474,11 +520,11 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ecdsa ;
   data alg _digest alg _digest-info
   dup len 11 + k >
   [ drop #[ ] ]
-  [ k over len - 3 - util:zero-bytes #[ ff ] bxor
+  [ k over len - 3 - zero-bytes #[ ff ] bxor
     #[ 00 01 ] swap cat #[ 00 ] cat swap cat ] if ;
 
 : _v15-sign2 ( em:bytes key:record k:int -- bytes )
-  em len 0 = [ "the key is too small for this digest" raise:range ] when
+  em len 0 = [ "the key is too small for this digest" fail-range ] when
   em _os2ip key _priv-op k _i2osp ;
 
 : _v15-sign ( data:bytes key:record alg:str -- bytes )
@@ -503,14 +549,14 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ecdsa ;
   255 n _em-len 8 * n _bits 1 - - shr ;
 
 : _clear-top ( data:bytes mask:int -- bytes )
-  data 0 nth mask band 1 util:int>be-bytes data 1 data len slice cat ;
+  data 0 nth mask band 1 int>be-bytes data 1 data len slice cat ;
 
 \ H = Hash(8 zero bytes || mHash || salt).
 : _pss-h ( mhash:bytes salt:bytes alg:str -- bytes )
-  8 util:zero-bytes mhash cat salt cat alg _digest ;
+  8 zero-bytes mhash cat salt cat alg _digest ;
 
 : _pss-db ( salt:bytes emlen:int alg:str -- bytes )
-  emlen salt len - alg _hlen - 2 - util:zero-bytes #[ 01 ] cat salt cat ;
+  emlen salt len - alg _hlen - 2 - zero-bytes #[ 01 ] cat salt cat ;
 
 \ maskedDB || H || 0xbc.
 : _pss-finish ( h:bytes salt:bytes emlen:int alg:str mask:int -- bytes )
@@ -518,9 +564,9 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ecdsa ;
 
 \ E_RANGE unless the key has room for a salt of sl bytes with this digest.
 : _pss-room ( key:record alg:str sl:int -- )
-  sl -1 < [ "the PSS salt length must be -1 (the digest length) or more" raise:range ] when
+  sl -1 < [ "the PSS salt length must be -1 (the digest length) or more" fail-range ] when
   key "n" get _em-len alg _hlen sl -1 = [ alg _hlen ] [ sl ] if + 2 + < [
-    "the key is too small for this digest and salt length" raise:range ] when ;
+    "the key is too small for this digest and salt length" fail-range ] when ;
 
 : _pss-sign2 ( salt:bytes mhash:bytes key:record alg:str -- bytes )
   mhash salt alg _pss-h
@@ -534,28 +580,31 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ecdsa ;
 
 \ The emLen bytes of the encoded message (a leading zero byte is dropped when emLen is one less than k).
 : _pss-em ( em:bytes n:int -- bytes )
-  n _k n _em-len - dup 0 =
-  [ drop em ]
-  [ 1 = em 0 nth 0 = and [ em 1 em len slice ] [ "bad PSS encoding" raise:coerce #[ ] ] if ] if ;
+  n _k n _em-len - :> extra
+  {
+    [ extra 0 = ] [ em ]
+    [ extra 1 = em 0 nth 0 = and ] [ em 1 em len slice ]
+    [ "bad PSS encoding" fail-coerce ]
+  } cond ;
 
 \ The salt in DB = PS || 01 || salt, or a fault.
 : _pss-salt ( db:bytes -- bytes )
-  db [ 0 = ] util:count-leading
-  dup db len >= [ "bad PSS encoding" raise:coerce ] when
-  db over nth 1 <> [ "bad PSS encoding" raise:coerce ] when
+  db [ 0 = ] count-leading
+  dup db len >= [ "bad PSS encoding" fail-coerce ] when
+  db over nth 1 <> [ "bad PSS encoding" fail-coerce ] when
   1 + db swap db len slice ;
 
 \ The checks that need the split encoding: maskedDB (mdb) and H.
 : _pss-check2 ( mdb:bytes h:bytes mhash:bytes n:int alg:str sl:int -- bool )
-  mdb 0 nth 255 n _top-mask bxor band 0 <> [ "bad PSS encoding" raise:coerce ] when
+  mdb 0 nth 255 n _top-mask bxor band 0 <> [ "bad PSS encoding" fail-coerce ] when
   mdb h mdb len alg _mgf1 bxor n _top-mask _clear-top _pss-salt
-  dup len sl <> sl -1 <> and [ "bad PSS encoding" raise:coerce ] when
+  dup len sl <> sl -1 <> and [ "bad PSS encoding" fail-coerce ] when
   mhash swap alg _pss-h h = ;
 
 \ EMSA-PSS-VERIFY after the encoding is cut to emLen bytes: true when it matches, a fault is an error.
 : _pss-check ( em:bytes mhash:bytes n:int alg:str sl:int -- bool )
-  n _em-len alg _hlen sl 0 max + 2 + < [ "bad PSS encoding" raise:coerce ] when
-  em em len 1 - nth 188 <> [ "bad PSS encoding" raise:coerce ] when
+  n _em-len alg _hlen sl 0 max + 2 + < [ "bad PSS encoding" fail-coerce ] when
+  em em len 1 - nth 188 <> [ "bad PSS encoding" fail-coerce ] when
   em 0 n _em-len alg _hlen - 1 - slice
   em n _em-len alg _hlen - 1 - n _em-len 1 - slice
   mhash n alg sl _pss-check2 ;
@@ -604,9 +653,10 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ecdsa ;
   p q < [ q p ] [ p q ] if dup2 _exponent _assemble ;
 
 : _generate ( bits:int -- record )
-  bits 2 div
-  dup 200 _gen-prime dup rot _gen-other
-  _ordered ;
+  bits 2 div :> half
+  half 200 _gen-prime :> p
+  p half _gen-other :> q
+  p q _ordered ;
 
 : _key-pair-text ( key:record format:str -- str )
   format "JWK" =
@@ -616,7 +666,11 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ecdsa ;
 \ ---- the ops ----
 
 : _public-out ( key:record format:str -- bytes )
-  format "PEM" = [ key _pem-public str>bytes ] [ format "DER" = [ key _der-public ] [ key _jwk-public str>bytes ] if ] if ;
+  format {
+    "PEM" [ key _pem-public str>bytes ]
+    "DER" [ key _der-public ]
+    [ key _jwk-public str>bytes ]
+  } case ;
 
 : _generate-out ( key:record format:str -- bytes )
   format "DER" = [ key _der-private ] [ key format _key-pair-text str>bytes ] if ;
@@ -626,64 +680,131 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ecdsa ;
   "Public Key" category
   drop size str>int _generate format _generate-out ;
 
-: sign ( data:bytes key:str password:str="" digest:choice{SHA-1|MD5|SHA-256|SHA-384|SHA-512}="SHA-1" scheme:choice{RSASSA-PKCS1-V1_5|RSASSA-PSS}="RSASSA-PKCS1-V1_5" salt-length:int=-1 -- bytes )
+META: generate-key-pair
+  use-when "You need a fresh RSA key pair in PEM, DER or JWK form for a test or a new key. 2048 bits is the usual choice." ;
+  param size "The key size in bits: 1024, 2048 or 4096." ;
+  param format "PEM: the public key (PUBLIC KEY) then the private key (RSA PRIVATE KEY); JWK: one line of JSON each; DER: the private key (PKCS#1) as bytes." ;
+  see-also rsa:public-key rsa:sign rsa:encrypt pem:to-hex prime:generate ;
+  link "https://www.rfc-editor.org/rfc/rfc8017" "RFC 8017: PKCS #1 RSA cryptography" ;
+  link "https://en.wikipedia.org/wiki/RSA_cryptosystem" "RSA cryptosystem on Wikipedia" ;
+;
+
+: sign ( data:bytes key:str password:str="" digest:choice<digest-name>="SHA-1" scheme:choice<signature-scheme>="RSASSA-PKCS1-V1_5" salt-length:int=-1 -- bytes )
   "The RSA signature (RSA Sign) of the input bytes under a PEM private key, as raw bytes of the length of the modulus. The digest is hashed first (SHA-1 by default, as in CyberChef). The scheme is RSASSA-PKCS1-v1_5 (what CyberChef does, and deterministic) or RSASSA-PSS (random salt of salt-length bytes, -1 for the digest length; MGF1 with the same digest). The key is a PEM block of kind RSA PRIVATE KEY (PKCS#1), PRIVATE KEY (PKCS#8) or ENCRYPTED PRIVATE KEY, or the legacy encrypted PEM with Proc-Type and DEK-Info headers; the password decrypts an encrypted key (AES-CBC, Triple DES or DES, PBKDF2 with SHA-1 or SHA-2, or OpenSSL's MD5 key derivation). Of several blocks the first private key is used. A key that is not RSA (an EC key) or has no PEM block, a missing password and a key too small for the digest are E_RANGE; a damaged key or a wrong password is E_COERCE. PSS signatures differ on every call (the word carries +random)." doc
   "Public Key" category
   data key password _private-key digest scheme salt-length _sign ;
 
-: verify ( data:bytes key:str message:key{utf8|hex|latin1|base64}="" digest:choice{SHA-1|MD5|SHA-256|SHA-384|SHA-512}="SHA-1" scheme:choice{RSASSA-PKCS1-V1_5|RSASSA-PSS}="RSASSA-PKCS1-V1_5" salt-length:int=-1 -- str )
+META: sign
+  use-when "You have an RSA private key in PEM, plain or encrypted, and a message, and you need a PKCS #1 v1.5 or PSS signature that a verifier can check." ;
+  param key "The PEM private key: RSA PRIVATE KEY, PRIVATE KEY, ENCRYPTED PRIVATE KEY or an old-style encrypted PEM." ;
+  param password "The password of an encrypted key (empty when the key is not encrypted)." ;
+  param digest "The message digest: SHA-1, MD5, SHA-256, SHA-384 or SHA-512." ;
+  param scheme "RSASSA-PKCS1-V1_5 (deterministic, CyberChef's) or RSASSA-PSS (randomised)." ;
+  param salt-length "RSASSA-PSS only: the salt size in bytes; -1 is the digest length." ;
+  see-also rsa:verify rsa:decrypt rsa:generate-key-pair ;
+  link "https://www.rfc-editor.org/rfc/rfc8017" "RFC 8017: PKCS #1 RSA cryptography" ;
+  link "https://en.wikipedia.org/wiki/RSA_cryptosystem" "RSA cryptosystem on Wikipedia" ;
+;
+
+: verify ( data:bytes key:str message:key{utf8|hex|latin1|base64}="" digest:choice<digest-name>="SHA-1" scheme:choice<signature-scheme>="RSASSA-PKCS1-V1_5" salt-length:int=-1 -- str )
   "Verifies the input, a signature (RSA Verify), against the message and a PEM public key (PUBLIC KEY or RSA PUBLIC KEY block; the first one is used). The message is a parameter, as in CyberChef (UTF-8 text by default; hex, Latin-1 or Base64 for bytes), hashed with the digest. The result is the text Verified OK or Verification Failure; any fault in the signature (wrong length, value, padding or digest) is a failed verification and not an error. With RSASSA-PSS, salt-length is the salt size the signature must have (-1 accepts any size). A key that is not an RSA public key is E_RANGE, a damaged one E_COERCE." doc
   "Public Key" category
   data key _public-key message digest scheme salt-length _verify
   [ "Verified OK" ] [ "Verification Failure" ] if ;
 
-: encrypt ( data:bytes key:str scheme:choice{RSA-OAEP|RSAES-PKCS1-V1_5|RAW}="RSA-OAEP" digest:choice{SHA-1|MD5|SHA-256|SHA-384|SHA-512}="SHA-1" -- bytes )
+META: verify
+  use-when "You have an RSA public key in PEM, a message and a signature, and you want to know whether the signature was made with the matching private key." ;
+  param key "The PEM public key: PUBLIC KEY or RSA PUBLIC KEY." ;
+  param message "The message that was signed (UTF-8 text unless the encoding says otherwise)." ;
+  param digest "The message digest: SHA-1, MD5, SHA-256, SHA-384 or SHA-512." ;
+  param scheme "RSASSA-PKCS1-V1_5 or RSASSA-PSS." ;
+  param salt-length "RSASSA-PSS only: the salt size the signature must have; -1 accepts any." ;
+  inverse sign ;
+  see-also rsa:sign rsa:encrypt ;
+  link "https://www.rfc-editor.org/rfc/rfc8017" "RFC 8017: PKCS #1 RSA cryptography" ;
+  link "https://en.wikipedia.org/wiki/RSA_cryptosystem" "RSA cryptosystem on Wikipedia" ;
+;
+
+: encrypt ( data:bytes key:str scheme:choice<encryption-scheme>="RSA-OAEP" digest:choice<digest-name>="SHA-1" -- bytes )
   "RSA encryption (RSA Encrypt) of the input bytes under a PEM public key (PUBLIC KEY or RSA PUBLIC KEY block; the first one is used), as raw bytes of the length of the modulus. RSA-OAEP (the default, as in CyberChef) uses the digest for the label hash and MGF1, with an empty label: a message may have at most key bytes - 2 x digest - 2 bytes. RSAES-PKCS1-V1_5 allows key bytes - 11. RAW is textbook RSA with no padding: the message as a big-endian number must be below the modulus. A message that is too long, or a key that is not an RSA public key, is E_RANGE. OAEP and v1.5 use random bytes (the word carries +random), so the output differs on every call; RAW is deterministic." doc
   "Public Key" category
   data key _public-key scheme digest _encrypt ;
 
-: decrypt ( data:bytes key:str password:str="" scheme:choice{RSA-OAEP|RSAES-PKCS1-V1_5|RAW}="RSA-OAEP" digest:choice{SHA-1|MD5|SHA-256|SHA-384|SHA-512}="SHA-1" -- bytes )
+META: encrypt
+  use-when "You have an RSA public key in PEM and a short message, for the key's owner to decrypt. Use RSA-OAEP unless a protocol names another scheme." ;
+  param key "The PEM public key: PUBLIC KEY or RSA PUBLIC KEY." ;
+  param scheme "RSA-OAEP, RSAES-PKCS1-V1_5 or RAW (no padding)." ;
+  param digest "RSA-OAEP only: the digest of the label hash and of MGF1." ;
+  inverse decrypt ;
+  see-also rsa:decrypt rsa:verify ;
+  link "https://www.rfc-editor.org/rfc/rfc8017" "RFC 8017: PKCS #1 RSA cryptography" ;
+  link "https://en.wikipedia.org/wiki/RSA_cryptosystem" "RSA cryptosystem on Wikipedia" ;
+;
+
+: decrypt ( data:bytes key:str password:str="" scheme:choice<encryption-scheme>="RSA-OAEP" digest:choice<digest-name>="SHA-1" -- bytes )
   "RSA decryption (RSA Decrypt) of the input bytes under a PEM private key (see RSA Sign for the key forms and the password). The input must be as long as the modulus. Every failure of the decryption itself (length, value, padding, hash) is the one E_COERCE message decryption error, so the error is no oracle for the padding. RAW returns the modulus-length block with its leading zero bytes. A key that is not an RSA private key or lacks a password is E_RANGE, a damaged key or a wrong password E_COERCE." doc
   "Public Key" category
   data key password _private-key scheme digest _decrypt ;
 
+META: decrypt
+  use-when "You have RSA ciphertext and the PEM private key (or its password), from a protocol that encrypted to your key, and you want the plaintext." ;
+  param key "The PEM private key: RSA PRIVATE KEY, PRIVATE KEY, ENCRYPTED PRIVATE KEY or an old-style encrypted PEM." ;
+  param password "The password of an encrypted key (empty when the key is not encrypted)." ;
+  param scheme "RSA-OAEP, RSAES-PKCS1-V1_5 or RAW (no padding)." ;
+  param digest "RSA-OAEP only: the digest of the label hash and of MGF1." ;
+  inverse encrypt ;
+  see-also rsa:encrypt rsa:sign ;
+  link "https://www.rfc-editor.org/rfc/rfc8017" "RFC 8017: PKCS #1 RSA cryptography" ;
+  link "https://en.wikipedia.org/wiki/RSA_cryptosystem" "RSA cryptosystem on Wikipedia" ;
+  checks input binary ;
+  expects "encrypted data" ;
+;
+
 : _ec-oid ( -- str )
   "1.2.840.10045.2.1" ;
 
-: _private-labels ( -- list )
+MEMO: _private-labels ( -- list )
   { "RSA PRIVATE KEY" "EC PRIVATE KEY" "PRIVATE KEY" "ENCRYPTED PRIVATE KEY" "DSA PRIVATE KEY" } ;
 
 \ Every private key block of the text, in order; none is E_RANGE, naming the labels found.
 : _private-blocks ( pem:str -- list )
   pem str>bytes asn1:pem-decode
   dup _private-labels "PRIVATE KEY, RSA PRIVATE KEY, EC PRIVATE KEY or ENCRYPTED PRIVATE KEY block" _find-block drop
-  [ "label" get _private-labels swap util:contains? ] filter ;
+  [ "label" get _private-labels swap contains? ] filter ;
 
 \ The algorithm OID of a PKCS#8 PrivateKeyInfo.
 : _pkcs8-oid ( der:bytes -- str )
   der asn1:parse
   dup "universal" 16 "a PrivateKeyInfo" asn1:expect
-  dup asn1:children len 3 < [ "a PrivateKeyInfo needs a version, an algorithm and a key" raise:coerce ] when
+  dup asn1:children len 3 < [ "a PrivateKeyInfo needs a version, an algorithm and a key" fail-coerce ] when
   1 asn1:child dup "universal" 16 "an AlgorithmIdentifier" asn1:expect
   0 asn1:child asn1:node>oid ;
 
+\ "rsa" or "ec" for the algorithm OID of a PKCS#8 key; any other algorithm is E_RANGE.
+: _oid-kind ( oid:str -- str )
+  {
+    [ oid _rsa-oid = ] [ "rsa" ]
+    [ oid _ec-oid = ] [ "ec" ]
+    [ "the key is not an RSA or EC key: its algorithm is " oid asn1:oid-label cat fail-range ]
+  } cond ;
+
 \ "rsa" or "ec" for the label and the (decrypted) DER of a block; DSA and other algorithms are E_RANGE.
 : _key-kind ( label:str der:bytes -- str )
-  label "RSA PRIVATE KEY" = [ "rsa" ] [
-  label "EC PRIVATE KEY" = [ "ec" ] [
-  label "DSA PRIVATE KEY" = [ "DSA private keys are not supported" raise:range "" ] [
-  der _pkcs8-oid
-  dup _rsa-oid = [ drop "rsa" ] [
-  dup _ec-oid = [ drop "ec" ] [
-  "the key is not an RSA or EC key: its algorithm is " swap asn1:oid-label cat raise:range ""
-  ] if ] if ] if ] if ] if ;
+  label {
+    "RSA PRIVATE KEY" [ "rsa" ]
+    "EC PRIVATE KEY" [ "ec" ]
+    "DSA PRIVATE KEY" [ "DSA private keys are not supported" fail-range ]
+    [ der _pkcs8-oid _oid-kind ]
+  } case ;
 
 : _ec-crv ( oid:str -- str )
-  oid "1.2.840.10045.3.1.7" = [ "P-256" ] [
-  oid "1.3.132.0.34" = [ "P-384" ] [
-  oid "1.3.132.0.35" = [ "P-521" ] [
-  oid "1.3.132.0.10" = [ "secp256k1" ]
-  [ "unsupported curve " oid cat raise:coerce "" ] if ] if ] if ] if ;
+  oid {
+    "1.2.840.10045.3.1.7" [ "P-256" ]
+    "1.3.132.0.34" [ "P-384" ]
+    "1.3.132.0.35" [ "P-521" ]
+    "1.3.132.0.10" [ "secp256k1" ]
+    [ "unsupported curve " oid cat fail-coerce ]
+  } case ;
 
 : _tail1 ( b:bytes -- bytes )
   b 1 b len slice ;
@@ -700,9 +821,11 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ecdsa ;
   dup len 1 - 2 div _ec-jwk-xy ;
 
 : _ec-out ( pem:str format:str -- bytes )
-  format "PEM" = [ pem str>bytes ] [
-  format "DER" = [ pem str>bytes asn1:pem-decode 0 nth "data" get ] [
-  pem _ec-jwk str>bytes ] if ] if ;
+  format {
+    "PEM" [ pem str>bytes ]
+    "DER" [ pem str>bytes asn1:pem-decode 0 nth "data" get ]
+    [ pem _ec-jwk str>bytes ]
+  } case ;
 
 \ The label under which the decrypted DER of a block is read again.
 : _plain-label ( label:str -- str )
@@ -716,70 +839,11 @@ USING: asn1 random md5 sha1 sha2 evp pbkdf2 aes triple-des des json ecdsa ;
 : _block-public ( block:record password:str format:str -- bytes )
   block "label" get block password _block-der format _public-of ;
 
-: public-key ( key:str format:choice{PEM|DER|JWK}="PEM" password:str="" -- bytes )
+: public-key ( key:str format:choice<util:key-format>="PEM" password:str="" -- bytes )
   "The public key of every PEM private key in the text (Public Key from Private Key), RSA or elliptic curve: as PUBLIC KEY (SubjectPublicKeyInfo) PEM blocks, as the DER bytes, or as JWKs (RSA: kty, n, e; EC: kty, crv, x, y), one per key, in the order of the keys; JWKs are one line of JSON each. The keys may be RSA PRIVATE KEY (PKCS#1), EC PRIVATE KEY (SEC 1), PRIVATE KEY (PKCS#8, RSA or id-ecPublicKey) or encrypted (ENCRYPTED PRIVATE KEY, or the legacy Proc-Type and DEK-Info form), with the password; blocks of other labels are skipped. CyberChef's op writes PEM only, takes no password and also reads DSA keys; DSA keys (DSA PRIVATE KEY, or PKCS#8 with the DSA algorithm), explicit EC parameters and other algorithms are E_RANGE or E_COERCE, and text with no private key block is E_RANGE." doc
   "Public Key" category
   key _private-blocks [ password format _block-public ] map
   format "JWK" = [ #[ 0a ] bjoin ] [ #[ ] bjoin ] if ;
-
-META: generate-key-pair
-  use-when "You need a fresh RSA key pair in PEM, DER or JWK form for a test or a new key. 2048 bits is the usual choice." ;
-  param size "The key size in bits: 1024, 2048 or 4096." ;
-  param format "PEM: the public key (PUBLIC KEY) then the private key (RSA PRIVATE KEY); JWK: one line of JSON each; DER: the private key (PKCS#1) as bytes." ;
-  see-also rsa:public-key rsa:sign rsa:encrypt pem:to-hex prime:generate ;
-  link "https://www.rfc-editor.org/rfc/rfc8017" "RFC 8017: PKCS #1 RSA cryptography" ;
-  link "https://en.wikipedia.org/wiki/RSA_cryptosystem" "RSA cryptosystem on Wikipedia" ;
-;
-
-META: sign
-  use-when "You have an RSA private key in PEM, plain or encrypted, and a message, and you need a PKCS #1 v1.5 or PSS signature that a verifier can check." ;
-  param key "The PEM private key: RSA PRIVATE KEY, PRIVATE KEY, ENCRYPTED PRIVATE KEY or an old-style encrypted PEM." ;
-  param password "The password of an encrypted key (empty when the key is not encrypted)." ;
-  param digest "The message digest: SHA-1, MD5, SHA-256, SHA-384 or SHA-512." ;
-  param scheme "RSASSA-PKCS1-V1_5 (deterministic, CyberChef's) or RSASSA-PSS (randomised)." ;
-  param salt-length "RSASSA-PSS only: the salt size in bytes; -1 is the digest length." ;
-  see-also rsa:verify rsa:decrypt rsa:generate-key-pair ;
-  link "https://www.rfc-editor.org/rfc/rfc8017" "RFC 8017: PKCS #1 RSA cryptography" ;
-  link "https://en.wikipedia.org/wiki/RSA_cryptosystem" "RSA cryptosystem on Wikipedia" ;
-;
-
-META: verify
-  use-when "You have an RSA public key in PEM, a message and a signature, and you want to know whether the signature was made with the matching private key." ;
-  param key "The PEM public key: PUBLIC KEY or RSA PUBLIC KEY." ;
-  param message "The message that was signed (UTF-8 text unless the encoding says otherwise)." ;
-  param digest "The message digest: SHA-1, MD5, SHA-256, SHA-384 or SHA-512." ;
-  param scheme "RSASSA-PKCS1-V1_5 or RSASSA-PSS." ;
-  param salt-length "RSASSA-PSS only: the salt size the signature must have; -1 accepts any." ;
-  see-also rsa:sign rsa:encrypt ;
-  inverse sign ;
-  link "https://www.rfc-editor.org/rfc/rfc8017" "RFC 8017: PKCS #1 RSA cryptography" ;
-  link "https://en.wikipedia.org/wiki/RSA_cryptosystem" "RSA cryptosystem on Wikipedia" ;
-;
-
-META: encrypt
-  use-when "You have an RSA public key in PEM and a short message, for the key's owner to decrypt. Use RSA-OAEP unless a protocol names another scheme." ;
-  param key "The PEM public key: PUBLIC KEY or RSA PUBLIC KEY." ;
-  param scheme "RSA-OAEP, RSAES-PKCS1-V1_5 or RAW (no padding)." ;
-  param digest "RSA-OAEP only: the digest of the label hash and of MGF1." ;
-  see-also rsa:decrypt rsa:verify ;
-  inverse decrypt ;
-  link "https://www.rfc-editor.org/rfc/rfc8017" "RFC 8017: PKCS #1 RSA cryptography" ;
-  link "https://en.wikipedia.org/wiki/RSA_cryptosystem" "RSA cryptosystem on Wikipedia" ;
-;
-
-META: decrypt
-  use-when "You have RSA ciphertext and the PEM private key (or its password), from a protocol that encrypted to your key, and you want the plaintext." ;
-  param key "The PEM private key: RSA PRIVATE KEY, PRIVATE KEY, ENCRYPTED PRIVATE KEY or an old-style encrypted PEM." ;
-  param password "The password of an encrypted key (empty when the key is not encrypted)." ;
-  param scheme "RSA-OAEP, RSAES-PKCS1-V1_5 or RAW (no padding)." ;
-  param digest "RSA-OAEP only: the digest of the label hash and of MGF1." ;
-  see-also rsa:encrypt rsa:sign ;
-  inverse encrypt ;
-  link "https://www.rfc-editor.org/rfc/rfc8017" "RFC 8017: PKCS #1 RSA cryptography" ;
-  link "https://en.wikipedia.org/wiki/RSA_cryptosystem" "RSA cryptosystem on Wikipedia" ;
-  checks input binary ;
-  expects "encrypted data" ;
-;
 
 META: public-key
   use-when "You have one or more RSA or EC private keys in PEM and want their public keys as PEM, DER or JWK, to share them or to check signatures." ;

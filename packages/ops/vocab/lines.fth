@@ -23,7 +23,7 @@ IN: lines
 \ The digits after the point, as code points: nothing unless a point follows the integer digits (n1 of them).
 : _frac-codes ( body:list n1:int -- list )
   body len n1 > [ body n1 nth 46 = ] [ false ] if
-  [ body n1 1 + body len slice dup [ util:dec-digit? ] util:count-leading 0 swap slice ]
+  [ body n1 1 + body len slice dup [ dec-digit? ] count-leading 0 swap slice ]
   [ { } ]
   if ;
 
@@ -35,16 +35,16 @@ IN: lines
 : _signed ( codes:list lead:int -- list )
   lead 45 = lead 43 = or
   [ codes 1 codes len slice ] [ codes ] if
-  dup [ util:dec-digit? ] util:count-leading
+  dup [ dec-digit? ] count-leading
   lead 45 = _decimal-int ;
 
 \ The code points of a line without its leading white space.
 : _start ( s:str -- list )
-  s str>codes dup len 0 > [ dup 0 nth util:space? ] [ false ] if
-  [ drop s [ util:space? ] util:trim-start str>codes ] when ;
+  s str>codes dup len 0 > [ dup 0 nth space? ] [ false ] if
+  [ drop s [ space? ] trim-start str>codes ] when ;
 
 : _number-start? ( c:int -- bool )
-  c util:dec-digit? c 43 = or c 45 = or c 46 = or ;
+  c dec-digit? c 43 = or c 45 = or c 46 = or ;
 
 \ The number at the start of a line, as parseFloat reads it: white space, a sign, digits, a point and digits. No
 \ exponent. The fraction is cut at 1000 digits. Text that cannot start a number is refused at once.
@@ -56,7 +56,7 @@ IN: lines
 \ the integer digits, right the fraction digits.
 : _point-parts ( left:str right:str s:str -- list )
   right util:digits? right len 1000 <= and
-  left "-" util:starts-with? [ left 1 left len slice ] [ left ] if
+  left "-" starts-with? [ left 1 left len slice ] [ left ] if
   dup len 0 = swap util:digits? or and
   [ { true left right cat str>int right len } ]
   [ s _parse-decimal-slow ]
@@ -70,10 +70,11 @@ IN: lines
 
 \ A line that is only digits, or a plain decimal, is read at once.
 : _parse-decimal ( s:str -- list )
-  s len 0 =
-  [ { false 0 0 } ]
-  [ s util:digits? [ { true s str>int 0 } ] [ s _parse-point ] if ]
-  if ;
+  {
+    [ s len 0 = ] [ { false 0 0 } ]
+    [ s util:digits? ] [ { true s str>int 0 } ]
+    [ s _parse-point ]
+  } cond ;
 
 \ The text starts with 0x or 0X.
 : _has-0x ( body:list -- bool )
@@ -89,11 +90,11 @@ IN: lines
   lead 45 = lead 43 = or
   [ codes 1 codes len slice ] [ codes ] if
   dup _has-0x [ dup len 2 swap slice ] when
-  dup [ util:hex-digit? ] util:count-leading 0 swap slice
+  dup [ hex-digit? ] count-leading 0 swap slice
   lead 45 = _hex-parts ;
 
 : _hex-start? ( c:int -- bool )
-  c util:hex-digit? c 43 = or c 45 = or ;
+  c hex-digit? c 43 = or c 45 = or ;
 
 : _parse-hex-slow ( s:str -- list )
   s _start dup len 0 > [ dup 0 nth ] [ 0 ] if
@@ -102,11 +103,11 @@ IN: lines
 \ The integer at the start of a line, as parseInt(s, 16) reads it: white space, a sign, an optional 0x, hex digits.
 \ A line that is only hex digits is read at once.
 : _parse-hex ( s:str -- list )
-  s len 0 =
-  [ { false 0 0 } ]
-  [ s str>bytes [ util:hex-digit? not ] core:filter len 0 =
-    [ { true s 16 str>int-radix 0 } ] [ s _parse-hex-slow ] if ]
-  if ;
+  {
+    [ s len 0 = ] [ { false 0 0 } ]
+    [ s str>bytes [ hex-digit? not ] core:filter len 0 = ] [ { true s 16 str>int-radix 0 } ]
+    [ s _parse-hex-slow ]
+  } cond ;
 
 \ The value of a valid parsed number scaled by radix^scale, as an integer.
 : _scaled ( p:list radix:int scale:int -- int )
@@ -127,26 +128,26 @@ IN: lines
   parsed radix parsed 0 [ 2 nth max ] reduce _keys-at ;
 
 : _octet ( s:str -- int )
-  s len 1 3 util:between? s util:digits? and
+  s len 1 3 between? s util:digits? and
   [ s str>int dup 255 > [ drop -1 ] when ] [ -1 ] if ;
 
 \ The IPv4 address as one integer, or 2^32 for text that is not four decimal fields of 0 to 255.
 : _ip-key ( s:str -- int )
-  s "." split
-  dup len 4 =
-  [ [ _octet ] map dup [ 0 < ] core:filter len 0 = [ 0 [ swap 256 * + ] reduce ] [ drop 4294967296 ] if ]
-  [ drop 4294967296 ]
-  if ;
+  s "." split :> parts
+  parts len 4 = [ parts [ _octet ] map ] [ { -1 } ] if :> octets
+  octets [ 0 < ] any? [ 4294967296 ] [ octets 0 [ swap 256 * + ] reduce ] if ;
 
 : _ordered ( items:list order:str -- list )
-  order "alphabetical" = [ items list:sort ] [
-  order "case-insensitive" = [ items items [ lower ] map list:sort-by ] [
-  order "length" = [ items items [ len ] map list:sort-by ] [
-  order "ip-address" = [ items list:sort dup [ _ip-key ] map list:sort-by ] [
-  order "numeric" = [ items list:sort dup [ _parse-decimal ] map 10 _scaled-keys list:sort-by ]
-                    [ items list:sort dup [ _parse-hex ] map 16 _scaled-keys list:sort-by ] if ] if ] if ] if ] if ;
+  order {
+    "alphabetical" [ items list:sort ]
+    "case-insensitive" [ items items [ lower ] map list:sort-by ]
+    "length" [ items items [ len ] map list:sort-by ]
+    "ip-address" [ items list:sort dup [ _ip-key ] map list:sort-by ]
+    "numeric" [ items list:sort dup [ _parse-decimal ] map 10 _scaled-keys list:sort-by ]
+    [ items list:sort dup [ _parse-hex ] map 16 _scaled-keys list:sort-by ]
+  } case ;
 
-: sort ( data:str delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab}="newline" reverse:bool=false order:choice{alphabetical|case-insensitive|ip-address|numeric|hexadecimal|length}="alphabetical" -- str )
+: sort ( data:str delimiter:choice<util:delimiter>="newline" reverse:bool=false order:choice{alphabetical|case-insensitive|ip-address|numeric|hexadecimal|length}="alphabetical" -- str )
   "Sort the pieces of the text (lines by default). alphabetical compares by code point, case-insensitive by the lower-case text, ip-address by the IPv4 value (text that is not four decimal fields of 0 to 255 comes after the addresses, in code point order), numeric by the number at the start of the piece (white space, a sign, digits and a fraction; no exponent; pieces with no number come first), hexadecimal by the hex number at the start (an optional 0x; pieces with none come first), and length by the number of characters. Pieces that tie on the number (or have none) are in code point order for numeric and hexadecimal, as in ip-address; for the other orders the sort is stable; reverse reverses the sorted list. The pieces are joined with the same delimiter." doc
   "Utils" category
   data delimiter util:delimiter split order _ordered
@@ -163,7 +164,7 @@ META: sort
 
 \ ---- shuffle ----
 
-: shuffle ( data:str delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab}="newline" -- str )
+: shuffle ( data:str delimiter:choice<util:delimiter>="newline" -- str )
   "Put the pieces of the text (lines by default) in a random order: a uniform random permutation (Fisher-Yates) drawn from the host's cryptographic random generator, never Math.random. The pieces are joined with the same delimiter. The output differs on every call (the word carries the +random effect)." doc
   "Utils" category
   data delimiter util:delimiter split list:shuffle delimiter util:delimiter join ;
@@ -204,7 +205,7 @@ META: shuffle
 : _unique ( items:list show-count:bool -- list )
   items 0 items len range items list:sort-by show-count _unique-from ;
 
-: unique ( data:str delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab}="newline" show-count:bool=false -- str )
+: unique ( data:str delimiter:choice<util:delimiter>="newline" show-count:bool=false -- str )
   "Remove the repeated pieces of the text (lines by default), keeping the first of each in its place. With show-count each piece is written as its count, a space and the piece, the pieces in the order of their first appearance. The pieces are joined with the same delimiter." doc
   "Utils" category
   data delimiter util:delimiter split show-count _unique delimiter util:delimiter join ;
@@ -218,7 +219,7 @@ META: unique
 
 \ ---- head and tail ----
 
-: head ( data:str delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab}="newline" number:int=10 -- str )
+: head ( data:str delimiter:choice<util:delimiter>="newline" number:int=10 -- str )
   "Keep the first number pieces of the text (lines by default). A negative number keeps all but the last |number| pieces. More than there are keeps them all." doc
   "Utils" category
   data delimiter util:delimiter split
@@ -234,7 +235,7 @@ META: head
   see-also lines:tail ;
 ;
 
-: tail ( data:str delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab}="newline" number:int=10 -- str )
+: tail ( data:str delimiter:choice<util:delimiter>="newline" number:int=10 -- str )
   "Keep the last number pieces of the text (lines by default). A negative number keeps all but the first |number| pieces. More than there are keeps them all; 0 keeps none." doc
   "Utils" category
   data delimiter util:delimiter split
@@ -256,9 +257,9 @@ META: tail
   pairs [ dup 0 nth swap 1 nth dup len width swap - 0 max sp swap 0 swap slice swap cat " " cat swap cat ] map ;
 
 : _numbered ( items:list nums:list width:int -- list )
-  items nums zip " " width util:repeat-str width _join-numbered ;
+  items nums zip " " width repeat-str width _join-numbered ;
 
-: add-numbers ( data:str delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab}="newline" offset:int=0 -- str )
+: add-numbers ( data:str delimiter:choice<util:delimiter>="newline" offset:int=0 -- str )
   "Put a line number in front of every piece of the text (lines by default): the number, right-aligned with spaces to the width of the count of pieces (the width of 10 pieces is 2, so 1 is written ' 1'), then a space. The width does not grow with the offset, as in CyberChef: a number that is wider than that is written in full. The first piece is number 1 plus the offset." doc
   "Utils" category
   data delimiter util:delimiter split
@@ -274,7 +275,7 @@ META: add-numbers
   see-also lines:remove-numbers ;
 ;
 
-: remove-numbers ( data:str delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab}="newline" -- str )
+: remove-numbers ( data:str delimiter:choice<util:delimiter>="newline" -- str )
   "Remove a line number from the start of every piece of the text (lines by default): up to 5 spaces or tabs, one or more digits, then one white space character or one of : | - , . ) ] (the numbers add-numbers writes, and the usual ones of listings), as CyberChef does: only that one separator goes, so two spaces after the number leave one. A piece with digits but no separator after them is left as it is." doc
   "Utils" category
   data delimiter util:delimiter split
@@ -294,11 +295,11 @@ META: remove-numbers
 : _pad-items ( items:list fill:str position:str -- list )
   items [ position "start" = [ fill swap cat ] [ fill cat ] if ] map ;
 
-: pad ( data:str delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab}="newline" position:choice{start|end}="start" length:int[0..65536]=5 character:str[1..]=" " -- str )
+: pad ( data:str delimiter:choice<util:delimiter>="newline" position:choice<util:start-or-end>="start" length:int[0..65536]=5 character:str[1..]=" " -- str )
   "Add length characters of padding to every piece of the text (lines by default), at the start or at the end, as CyberChef's Pad lines does: the length is how many characters are added, not the length to pad to, so every piece grows by length code points whatever its own length. A character of several code points is repeated and cut to length, as JavaScript's padStart does." doc
   "Utils" category
   data delimiter util:delimiter split
-  character length character len div 1 + util:repeat-str 0 length slice
+  character length character len div 1 + repeat-str 0 length slice
   position _pad-items
   delimiter util:delimiter join ;
 
@@ -312,7 +313,7 @@ META: pad
 
 \ ---- wrap ----
 
-: wrap ( data:str delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab}="newline" width:int[1..65536]=64 -- str )
+: wrap ( data:str delimiter:choice<util:delimiter>="newline" width:int[1..65536]=64 -- str )
   "Cut every piece of the text (lines by default) into pieces of at most width characters (code points), counting characters, not words, and put the delimiter between them. Empty pieces stay empty." doc
   "Utils" category
   data delimiter util:delimiter split
@@ -331,12 +332,12 @@ META: wrap
 \ The cells of one row. Without a double quote the row is cut at the cell delimiter. A cell that starts with a quote
 \ runs to the quote that closes it (a doubled quote inside is one quote), so it may hold the delimiter.
 : _unquote ( cur:str -- str )
-  cur "\"" util:starts-with? cur "\"" util:ends-with? and cur len 2 >= and
+  cur "\"" starts-with? cur "\"" ends-with? and cur len 2 >= and
   [ cur 1 cur len 1 - slice "\"\"" split "\"" join ] [ cur ] if ;
 
 \ State is { cells open-text open? }.
 : _quote-next ( state:list cur:str -- list )
-  cur "\"" split len 1 - 2 mod 1 = cur "\"" util:starts-with? and
+  cur "\"" split len 1 - 2 mod 1 = cur "\"" starts-with? and
   [ { state 0 nth cur true } ]
   [ { state 0 nth cur _unquote append "" false } ]
   if ;
@@ -378,8 +379,8 @@ META: wrap
 
 \ The box of CyberChef: a rule above, under the header row (when there is one) and below, no rule between the rows.
 : _ascii ( rows:list widths:list header:bool -- str )
-  rows [ widths " " widths 0 [ max ] reduce util:repeat-str _line ] map
-  widths "-" widths 0 [ max ] reduce 2 + util:repeat-str _rule
+  rows [ widths " " widths 0 [ max ] reduce repeat-str _line ] map
+  widths "-" widths 0 [ max ] reduce 2 + repeat-str _rule
   header
   _ascii-out ;
 
@@ -390,8 +391,8 @@ META: wrap
 \ A pipe table: like CyberChef's, the first row is always the header (the dashes under it are as wide as the column).
 : _markdown ( rows:list widths:list -- str )
   rows 0 nth rows 1 rows len slice widths
-  " " widths 0 [ max ] reduce util:repeat-str
-  "-" widths 0 [ max ] reduce util:repeat-str
+  " " widths 0 [ max ] reduce repeat-str
+  "-" widths 0 [ max ] reduce repeat-str
   _markdown-table "\n" cat ;
 
 : _render ( rows:list header:bool format:str n:int -- str )
@@ -411,7 +412,7 @@ META: wrap
 : _table-rows ( data:str row-choice:str cell:str -- list )
   data row-choice util:delimiter split
   dup len 1 > [ dup dup len 1 - nth "" = [ dup len 1 - 0 swap slice ] when ] when
-  row-choice "newline" = [ [ dup "\r" util:ends-with? [ dup len 1 - 0 swap slice ] when ] map ] when
+  row-choice "newline" = [ [ dup "\r" ends-with? [ dup len 1 - 0 swap slice ] when ] map ] when
   [ cell _parse-row ] map ;
 
 : to-table ( data:str cell-delimiter:choice{space|comma|semicolon|colon|tab}="comma" row-delimiter:choice{newline|crlf|cr}="newline" first-row-header:bool=false format:choice{ascii|markdown}="ascii" -- str )
@@ -445,7 +446,7 @@ META: to-table
 : _tree-line ( parts:list j:int -- str )
   j 0 =
   [ parts 0 nth ]
-  [ "|   " j 1 - util:repeat-str "|---" cat parts j nth cat ]
+  [ "|   " j 1 - repeat-str "|---" cat parts j nth cat ]
   if ;
 
 \ For every part of a path "key line": the key is the parts up to it joined with a slash (the node of the tree), the
@@ -454,12 +455,11 @@ META: to-table
   1 parts len 1 + range
   [ dup parts swap 0 swap slice "/" join "\0" cat swap 1 - parts swap _tree-line cat ] map ;
 
-: file-tree ( data:str delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab}="newline" separator:str[1..]="/" -- str )
+: file-tree ( data:str delimiter:choice<util:delimiter>="newline" separator:str[1..]="/" -- str )
   "Draw a list of paths (one per line by default) as a tree, in CyberChef's style: the paths are made unique and sorted by code point, and each path writes a line for every part of it that has not been written yet. A first part is written as it is, a deeper part behind |   for every level above it minus one and the arrow |---, so a/b/c and a/d give a, |---b, |   |---c and |---d. A leading separator is ignored (one only); other empty parts are kept. There is no line for the root. The output is always cut at line feeds, whatever the delimiter. An empty input gives an empty output." doc
   "Utils" category
-  data delimiter util:delimiter split list:unique list:sort
-  [ separator _tree-parts _tree-entries ] map
-  { } [ cat ] reduce
+  data delimiter util:delimiter split list:unique list:sort :> paths
+  [ paths [ separator _tree-parts _tree-entries emit-all ] each ] collect
   list:unique
   [ "\0" split dup 1 swap len slice "\0" join ] map
   "\n" join ;
@@ -472,7 +472,7 @@ META: file-tree
 
 \ ---- filter (last: it shadows the core combinator inside this vocabulary) ----
 
-: filter ( data:str delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab}="newline" pattern:regex flags:str[0..3,/[ims]*/]="" invert:bool=false -- str )
+: filter ( data:str delimiter:choice<util:delimiter>="newline" pattern:regex flags:str[0..3,/[ims]*/]="" invert:bool=false -- str )
   "Keep the pieces of the text (lines by default) where the pattern matches anywhere (an ECMAScript regular expression, always with the u flag). With invert keep the pieces where it does not match. The pieces are joined with the same delimiter. An empty pattern matches every piece." doc
   "Utils" category
   data delimiter util:delimiter split

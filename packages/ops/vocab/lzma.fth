@@ -9,20 +9,20 @@ IN: lzma
 : compress ( data:bytes level:int=7 -- bytes )
   "An LZMA stream in the .lzma (LZMA alone) format: a 13-byte header (the properties, a dictionary size, the uncompressed size) and the LZMA data with its end marker. level is 1 (fastest) to 9 (smallest), CyberChef's Compression Mode, 7 by default; any other level is E_RANGE. The bytes differ from CyberChef's (another encoder), but xz --format=lzma, 7-Zip and Python's lzma module read them." doc
   "Compression" category
-  level 1 9 "the compression level" util:check-int-range
+  level 1 9 "the compression level" check-int-range
   data level _compress ;
 
 \ The header is 13 bytes, and the properties byte (lc, lp and pb packed as (pb * 5 + lp) * 9 + lc) is below 225.
 : _check-header ( data:bytes -- )
-  data len 13 < [ "unexpected EOF: an .lzma header is 13 bytes" raise:coerce ] when
-  data 0 nth 225 >= [ "not LZMA data: the properties byte is out of range (lc, lp and pb)" raise:coerce ] when ;
+  data len 13 < [ "unexpected EOF: an .lzma header is 13 bytes" fail-coerce ] when
+  data 0 nth 225 >= [ "not LZMA data: the properties byte is out of range (lc, lp and pb)" fail-coerce ] when ;
 
 \ The output must have the size the header declares; -1 (unknown) has nothing to compare with.
 : _check-size ( out:bytes declared:int -- bytes )
   declared -1 <> [
     out len declared <> [
       "lzma data does not match its declared size (corrupt data): the output is " out len int>str cat
-      " bytes, the header says " cat declared int>str cat " bytes" cat raise:coerce
+      " bytes, the header says " cat declared int>str cat " bytes" cat fail-coerce
     ] when
   ] when
   out ;

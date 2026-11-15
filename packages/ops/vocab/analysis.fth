@@ -4,7 +4,7 @@ IN: analysis
 
 \ Occurrences of byte b in the latin-1 text (one code point per byte): pieces minus one.
 : _count ( text:str b:int -- int )
-  b util:cp>str text swap split len 1 - ;
+  b cp>str text swap split len 1 - ;
 
 \ Count of every byte value 0..255, as a list of 256 ints.
 : _counts ( text:str -- list )
@@ -77,7 +77,7 @@ META: frequency
   den 0 = [ 0.0 ] [ num den / ] if ;
 
 : _total ( counts:list -- int )
-  counts util:sum ;
+  counts sum ;
 
 \ The index of coincidence of counts: the sum of n (n - 1) over the symbols divided by N (N - 1),
 \ where N is the sum of the counts; times the number of symbols when normalised.
@@ -93,10 +93,10 @@ META: frequency
 
 META: index-of-coincidence
   use-when "You have a text in letters, often a ciphertext, and want its index of coincidence, to tell English-like letters from random ones or from a repeating-key cipher." ;
-  link "https://en.wikipedia.org/wiki/Index_of_coincidence" "Index of coincidence on Wikipedia" ;
   param scope "letters: only A to Z, either case (26 symbols). bytes: all 256 byte values." ;
   param normalise "Multiply by the number of symbols, so that 1 is the value for uniform random symbols." ;
   see-also analysis:chi-squared analysis:entropy analysis:frequency ;
+  link "https://en.wikipedia.org/wiki/Index_of_coincidence" "Index of coincidence on Wikipedia" ;
 ;
 
 \ English letter frequencies A to Z in units of 1/100000 (the table of Wikipedia, "Letter
@@ -133,7 +133,7 @@ META: index-of-coincidence
 
 META: chi-squared
   use-when "You have a candidate decryption or any text and want to score how far its letter frequencies are from English, where a small score means English-like." ;
-  link "https://en.wikipedia.org/wiki/Chi-squared_test" "Chi-squared test on Wikipedia" ;
   param reference "uniform: all 256 byte values equally likely. english: the 26 letters at English frequencies (other bytes ignored)." ;
   see-also analysis:index-of-coincidence analysis:entropy analysis:frequency ;
+  link "https://en.wikipedia.org/wiki/Chi-squared_test" "Chi-squared test on Wikipedia" ;
 ;

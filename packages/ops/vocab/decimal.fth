@@ -1,9 +1,8 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ decimal: byte values as decimal numbers 0..255. The words are FL and need no primitive;
-\ E_COERCE comes from the raise vocabulary (raise:coerce).
+\ decimal: byte values as decimal numbers 0..255. The words are FL and need no primitive.
 IN: decimal
 
-: encode ( bytes delimiter:choice{space|comma|newline}=space -- str )
+: encode ( bytes delimiter:choice<util:number-delimiter>=space -- str )
   "Each byte as a decimal number, 0 to 255, separated by the delimiter." doc
   "Encodings" category
   bytes>list [ int>str ] map delimiter util:separator join ;

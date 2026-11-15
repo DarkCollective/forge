@@ -12,11 +12,6 @@ IN: argon2
   "Key derivation" category
   password salt iterations memory parallelism length type output "encoded" = _derive ;
 
-: compare ( password:bytes encoded:str -- bool )
-  "True when the input password gives the hash in the encoded Argon2 string ($argon2id$v=19$m=..,t=..,p=..$salt$hash, as argon2:derive writes it; a missing version means v=16). The hash is recomputed with the parameters in the string and compared in constant time. A string that is not a well-formed encoded Argon2 hash is E_COERCE; a cost in it above the limits of argon2:derive is E_RANGE. Where CyberChef returns the text Match or No match, this is a bool." doc
-  "Key derivation" category
-  password encoded _verify ;
-
 META: derive
   use-when "You have a password, a salt and the cost settings, and need the Argon2 hash a system stored, or want to make a new one for a password file." ;
   param salt "The salt, at least 8 bytes (CyberChef's default is the text somesalt)." ;
@@ -30,6 +25,11 @@ META: derive
   link "https://www.rfc-editor.org/rfc/rfc9106" "RFC 9106: Argon2 memory-hard hashing" ;
   link "https://en.wikipedia.org/wiki/Argon2" "Argon2 on Wikipedia" ;
 ;
+
+: compare ( password:bytes encoded:str -- bool )
+  "True when the input password gives the hash in the encoded Argon2 string ($argon2id$v=19$m=..,t=..,p=..$salt$hash, as argon2:derive writes it; a missing version means v=16). The hash is recomputed with the parameters in the string and compared in constant time. A string that is not a well-formed encoded Argon2 hash is E_COERCE; a cost in it above the limits of argon2:derive is E_RANGE. Where CyberChef returns the text Match or No match, this is a bool." doc
+  "Key derivation" category
+  password encoded _verify ;
 
 META: compare
   use-when "You have a stored Argon2 hash string and a password to try, and want a yes or no without working out the salt and cost settings yourself." ;

@@ -10,25 +10,17 @@ IN: bcrypt
 
 USING: random ;
 
-: hash ( password:bytes cost:int=10 version:choice{2b|2a|2y}="2b" -- bytes )
+\ The version prefix of a bcrypt string.
+CHOICE: bcrypt-version
+  option "2b" "The current version, $2b$." ;
+  option "2a" "The older version $2a$." ;
+  option "2y" "The version $2y$ of PHP's crypt_blowfish, the same as 2b." ;
+;
+
+: hash ( password:bytes cost:int=10 version:choice<bcrypt-version>="2b" -- bytes )
   "The bcrypt hash of the input password with a fresh random 16-byte salt: the string $2b$10$ + 22 characters of salt + 31 of hash, as ASCII bytes. cost is the log2 of the number of rounds, 4 to 16 (E_RANGE otherwise; CyberChef's default of 10 takes about a tenth of a second). The version prefix is 2b, 2a or 2y; the three give the same hash. Only the first 72 bytes of the password count. The word is not deterministic; use bcrypt:hash-salted to fix the salt, and bcrypt:compare to check a password." doc
   "Key derivation" category
   password 16 random:bytes-of cost version _hash ;
-
-: hash-salted ( password:bytes salt:key{hex|utf8|latin1|base64} cost:int=10 version:choice{2b|2a|2y}="2b" -- bytes )
-  "The bcrypt hash of the input password with the given salt, which must be 16 bytes (E_RANGE otherwise). Deterministic; see bcrypt:hash for the string format, the cost (4 to 16) and the version. Reusing a salt defeats its purpose: use it to reproduce a known hash." doc
-  "Key derivation" category
-  password salt cost version _hash ;
-
-: compare ( password:bytes encoded:str -- bool )
-  "True when the input password gives the bcrypt string (2a, 2b or 2y). The hash is recomputed with the cost and salt in the string and compared in constant time. A string that is not a well-formed bcrypt hash is E_COERCE; a cost in it above 16 is E_RANGE. Where CyberChef returns the text Match or No match, this is a bool." doc
-  "Key derivation" category
-  password encoded _verify ;
-
-: parse ( text:str -- str )
-  "A text report of a bcrypt hash, as CyberChef's Bcrypt parse: the lines Rounds (the cost), Salt (the prefix, cost and 22 salt characters), Password hash (the last 31 characters) and Full hash. A string that is not a well-formed bcrypt hash is E_COERCE." doc
-  "Key derivation" category
-  text _parse ;
 
 META: hash
   use-when "You want a bcrypt hash of a password, for example for a user table or an .htpasswd file, and a fresh random salt is what you want." ;
@@ -38,6 +30,11 @@ META: hash
   link "https://en.wikipedia.org/wiki/Bcrypt" "bcrypt on Wikipedia" ;
   checks output regex "^\\$2[aby]\\$[0-9]{2}\\$[./A-Za-z0-9]{53}$" ;
 ;
+
+: hash-salted ( password:bytes salt:key{hex|utf8|latin1|base64} cost:int=10 version:choice<bcrypt-version>="2b" -- bytes )
+  "The bcrypt hash of the input password with the given salt, which must be 16 bytes (E_RANGE otherwise). Deterministic; see bcrypt:hash for the string format, the cost (4 to 16) and the version. Reusing a salt defeats its purpose: use it to reproduce a known hash." doc
+  "Key derivation" category
+  password salt cost version _hash ;
 
 META: hash-salted
   use-when "You need the same bcrypt hash every time, for example to reproduce a known hash or to test code, and you can supply the 16-byte salt." ;
@@ -49,12 +46,22 @@ META: hash-salted
   checks output regex "^\\$2[aby]\\$[0-9]{2}\\$[./A-Za-z0-9]{53}$" ;
 ;
 
+: compare ( password:bytes encoded:str -- bool )
+  "True when the input password gives the bcrypt string (2a, 2b or 2y). The hash is recomputed with the cost and salt in the string and compared in constant time. A string that is not a well-formed bcrypt hash is E_COERCE; a cost in it above 16 is E_RANGE. Where CyberChef returns the text Match or No match, this is a bool." doc
+  "Key derivation" category
+  password encoded _verify ;
+
 META: compare
   use-when "You have a stored bcrypt hash (it starts with $2a$, $2b$ or $2y$) and a password guess, and want to know whether they match." ;
   param encoded "The bcrypt string, as bcrypt:hash writes it." ;
   see-also bcrypt:hash bcrypt:parse ;
   link "https://en.wikipedia.org/wiki/Bcrypt" "bcrypt on Wikipedia" ;
 ;
+
+: parse ( text:str -- str )
+  "A text report of a bcrypt hash, as CyberChef's Bcrypt parse: the lines Rounds (the cost), Salt (the prefix, cost and 22 salt characters), Password hash (the last 31 characters) and Full hash. A string that is not a well-formed bcrypt hash is E_COERCE." doc
+  "Key derivation" category
+  text _parse ;
 
 META: parse
   use-when "You have a bcrypt hash and want to read off its cost, its salt and the hash part, without checking a password." ;

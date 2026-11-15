@@ -12,24 +12,36 @@ IN: user-agent
 \ A rule is { pattern name }. The result is { name version }, or an empty list when no rule matches; the version is the
 \ first group of the pattern ("" when the pattern has none or the group did not take part).
 : _try-rule ( ua:str rule:list -- list )
-  ua rule 0 nth "i" regex:find-all
-  dup len 0 = [ drop { } ]
-  [ 0 nth "groups" get dup len 0 = [ drop "" ] [ 0 nth ] if
-    { rule 1 nth } swap append ] if ;
+  ua rule 0 nth "i" regex:find-all :> hits
+  hits len 0 = [ { } exit ] when
+  hits 0 nth "groups" get :> groups
+  groups len 0 = [ "" ] [ groups 0 nth ] if :> version
+  { rule 1 nth version } ;
 
+\ The result of the first rule that matches, or an empty list.
 : _first ( ua:str rules:list -- list )
-  rules { } [ over len 0 = [ nip ua swap _try-rule ] [ drop ] if ] reduce ;
+  rules [ ua swap _try-rule len 0 > ] find :> i
+  i -1 = [ { } ] [ ua rules i nth _try-rule ] if ;
+
+\ Field i of a found { name version } list, or "unknown" when nothing was found or the field is empty.
+: _pick ( found:list i:int -- str )
+  {
+    [ found len 0 = ] [ "unknown" ]
+    [ found i nth len 0 = ] [ "unknown" ]
+    [ found i nth ]
+  } cond ;
 
 : _name ( found:list -- str )
-  found len 0 = [ "unknown" ] [ found 0 nth dup len 0 = [ drop "unknown" ] when ] if ;
+  found 0 _pick ;
 
 : _version ( found:list -- str )
-  found len 0 = [ "unknown" ] [ found 1 nth dup len 0 = [ drop "unknown" ] when ] if ;
+  found 1 _pick ;
 
 \ ---- browser ----
 
-: _browser-rules ( -- list )
-  { { "\\bEdg(?:e|A|iOS)?/([\\d.]+)" "Edge" }
+MEMO: _browser-rules ( -- list )
+  {
+    { "\\bEdg(?:e|A|iOS)?/([\\d.]+)" "Edge" }
     { "\\bOPR/([\\d.]+)" "Opera" }
     { "Opera Mini/([\\d.]+)" "Opera Mini" }
     { "Opera Mobi.*Version/([\\d.]+)" "Opera Mobi" }
@@ -58,29 +70,37 @@ IN: user-agent
     { "(?:iPhone|iPad|iPod).*Version/([\\d.]+).*Safari" "Mobile Safari" }
     { "Mobile.*Version/([\\d.]+).*Safari" "Mobile Safari" }
     { "Version/([\\d.]+).*Safari" "Safari" }
-    { "AppleWebKit/([\\d.]+)" "WebKit" } } ;
+    { "AppleWebKit/([\\d.]+)" "WebKit" }
+  } ;
 
 \ ---- engine ----
 
-: _engine-rules ( -- list )
-  { { "Edge/([\\d.]+)" "EdgeHTML" }
+MEMO: _engine-rules ( -- list )
+  {
+    { "Edge/([\\d.]+)" "EdgeHTML" }
     { "Trident/([\\d.]+)" "Trident" }
     { "Presto/([\\d.]+)" "Presto" }
     { "AppleWebKit/537\\.36.*Chrome/(?!27\\.)([\\d.]+)" "Blink" }
     { "(?:AppleWebKit|KHTML)/([\\d.]+)" "WebKit" }
     { "rv:([\\w.]{1,9})\\b.*Gecko" "Gecko" }
-    { "Gecko/([\\d.]+)" "Gecko" } } ;
+    { "Gecko/([\\d.]+)" "Gecko" }
+  } ;
 
 \ ---- operating system ----
 
+MEMO: _windows-names ( -- list )
+  {
+    { "10.0" "10" } { "6.4" "10" } { "6.3" "8.1" } { "6.2" "8" } { "6.1" "7" } { "6.0" "Vista" } { "5.2" "XP" }
+    { "5.1" "XP" } { "5.0" "2000" } { "4.0" "NT 4.0" }
+  } ;
+
 \ Windows NT version to the name of the release.
 : _windows-name ( v:str -- str )
-  { { "10.0" "10" } { "6.4" "10" } { "6.3" "8.1" } { "6.2" "8" } { "6.1" "7" } { "6.0" "Vista" } { "5.2" "XP" }
-    { "5.1" "XP" } { "5.0" "2000" } { "4.0" "NT 4.0" } }
-  [ 0 nth v = ] filter { { v v } } cat 0 nth 1 nth ;
+  _windows-names [ 0 nth v = ] filter { { v v } } cat 0 nth 1 nth ;
 
-: _os-rules ( -- list )
-  { { "Windows Phone (?:OS )?([\\d.]+)" "Windows Phone" }
+MEMO: _os-rules ( -- list )
+  {
+    { "Windows Phone (?:OS )?([\\d.]+)" "Windows Phone" }
     { "Windows NT ([\\d.]+)" "Windows" }
     { "CPU (?:iPhone )?OS ([\\d_]+) like Mac OS X" "iOS" }
     { "(?:iPhone|iPad|iPod).*? OS ([\\d_]+)" "iOS" }
@@ -99,7 +119,8 @@ IN: user-agent
     { "Web0S|webOS" "webOS" }
     { "Tizen[ /]?([\\d.]*)" "Tizen" }
     { "KaiOS/([\\d.]+)" "KaiOS" }
-    { "Linux" "Linux" } } ;
+    { "Linux" "Linux" }
+  } ;
 
 \ The version as people write it: iOS and macOS use _ in the User-Agent; Windows names the release.
 : _os-version ( found:list -- str )
@@ -111,14 +132,17 @@ IN: user-agent
 
 \ A rule is { pattern vendor type model }; with an empty model the first group of the pattern is the model.
 : _try-device ( ua:str rule:list -- list )
-  ua rule 0 nth "i" regex:find-all
-  dup len 0 = [ drop { } ]
-  [ 0 nth "groups" get dup len 0 = [ drop "" ] [ 0 nth ] if
-    rule 3 nth dup len 0 = [ drop ] [ nip ] if
-    { rule 1 nth rule 2 nth } swap append ] if ;
+  ua rule 0 nth "i" regex:find-all :> hits
+  hits len 0 = [ { } exit ] when
+  hits 0 nth "groups" get :> groups
+  groups len 0 = [ "" ] [ groups 0 nth ] if :> version
+  rule 3 nth :> fixed
+  fixed len 0 = [ version ] [ fixed ] if :> model
+  { rule 1 nth rule 2 nth model } ;
 
-: _device-rules ( -- list )
-  { { "iPod" "Apple" "mobile" "iPod touch" }
+MEMO: _device-rules ( -- list )
+  {
+    { "iPod" "Apple" "mobile" "iPod touch" }
     { "iPhone" "Apple" "mobile" "iPhone" }
     { "iPad" "Apple" "tablet" "iPad" }
     { "Macintosh" "Apple" "" "Macintosh" }
@@ -142,22 +166,27 @@ IN: user-agent
     { "SmartTV|SMART-TV|HbbTV|Web0S|NetCast|Tizen.*TV" "" "smarttv" "" }
     { "Android[^;)]*; Mobile; rv:" "" "mobile" "" }
     { "Android[^;)]*; ((?:[^;()]|\\([^()]*\\))+?)(?: Build[^)]*)?\\).*Mobile" "" "mobile" "" }
-    { "Android[^;)]*; ((?:[^;()]|\\([^()]*\\))+?)(?: Build[^)]*)?\\)" "" "tablet" "" } } ;
+    { "Android[^;)]*; ((?:[^;()]|\\([^()]*\\))+?)(?: Build[^)]*)?\\)" "" "tablet" "" }
+  } ;
 
 : _device ( ua:str -- list )
-  _device-rules { } [ over len 0 = [ nip ua swap _try-device ] [ drop ] if ] reduce ;
+  _device-rules :> rules
+  rules [ ua swap _try-device len 0 > ] find :> i
+  i -1 = [ { } ] [ ua rules i nth _try-device ] if ;
 
 \ ---- CPU ----
 
-: _cpu-rules ( -- list )
-  { { "\\b(?:aarch64|arm64|armv8)" "arm64" }
+MEMO: _cpu-rules ( -- list )
+  {
+    { "\\b(?:aarch64|arm64|armv8)" "arm64" }
     { "\\barm(?:v[1-7])?(?:hf|l|el)?\\b" "arm" }
     { "\\b(?:amd64|x86[_-]64|x64|wow64|win64)" "amd64" }
     { "\\b(?:i[3-6]86|x86|ia32)\\b" "ia32" }
     { "\\bia64\\b" "ia64" }
     { "\\b(?:ppc|powerpc)(?:64)?\\b" "ppc" }
     { "\\bmips(?:64)?\\b" "mips" }
-    { "\\bsparc(?:64)?\\b|\\bsun4\\w" "sparc" } } ;
+    { "\\bsparc(?:64)?\\b|\\bsun4\\w" "sparc" }
+  } ;
 
 \ ---- the report ----
 
@@ -172,7 +201,7 @@ IN: user-agent
 
 : _clean ( s:str -- str )
   s "^\\s*(?:User-Agent:)?\\s*" "" "i" regex:replace rev "^\\s+" "" "" regex:replace rev
-  dup len 4096 > [ "a User-Agent of more than 4,096 characters is not parsed" raise:range ] when ;
+  dup len 4096 > [ "a User-Agent of more than 4,096 characters is not parsed" fail-range ] when ;
 
 : _dev-field ( d:list i:int -- str )
   d len 0 = [ "unknown" ] [ d i nth _or-unknown ] if ;

@@ -31,11 +31,10 @@ IN: list
 
 \ Whether two neighbouring pairs of a sorted list have the same key.
 : _tie? ( pairs:list -- bool )
-  pairs len 1 >
-  [ pairs 1 pairs len slice pairs 0 pairs len 1 - slice zip
-    [ dup 0 nth 1 nth swap 1 nth 1 nth = ] any? ]
-  [ false ]
-  if ;
+  pairs len 1 > [
+    pairs 1 pairs len slice pairs 0 pairs len 1 - slice zip
+    [ dup 0 nth 1 nth swap 1 nth 1 nth = ] any?
+  ] [ false ] if ;
 
 : shuffle ( items:list -- list )
   "A uniform random permutation of the list: the items are sorted by independent random 53-bit keys from the host CSPRNG, and the draw is repeated in the (about 2^-22 for 65,536 items) case that two keys are equal, so that every order is exactly as likely as any other. Shared word: call it qualified from any vocabulary." doc

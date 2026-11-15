@@ -18,9 +18,11 @@ USING: hmac ;
 \ The pseudo-random key (RFC 5869 section 2.2). skip: the keying material itself; no salt: HMAC under HashLen
 \ zero bytes; otherwise HMAC under the salt.
 : _prk ( ikm:bytes salt:bytes hash:str extract:str -- bytes )
-  extract "skip" =
-  [ ikm ]
-  [ ikm hash extract "no salt" = [ hash _hlen util:zero-bytes ] [ salt ] if hmac:digest ] if ;
+  {
+    [ extract "skip" = ] [ ikm ]
+    [ extract "no salt" = ] [ ikm hash hash _hlen zero-bytes hmac:digest ]
+    [ ikm hash salt hmac:digest ]
+  } cond ;
 
 \ Block i of the expansion: HMAC(PRK, T(i-1) || info || i), where i is one byte.
 : _block ( i:int prk:bytes info:bytes hash:str -- bytes )
@@ -35,10 +37,10 @@ USING: hmac ;
 : derive ( ikm:bytes salt:key{hex|base64|utf8|latin1}="" info:key{hex|base64|utf8|latin1}="" hash:choice{md2|md4|md5|sha0|sha1|sha224|sha256|sha384|sha512|sha512/224|sha512/256|ripemd128|ripemd160|ripemd256|ripemd320|has160|whirlpool|snefru}="sha256" extract:choice{"with salt"|"no salt"|skip}="with salt" length:int=16 -- bytes )
   "The HKDF output keying material (RFC 5869) from the input keying material, as raw bytes, length bytes long (0 gives no bytes). Extract mode: with salt (the PRK is the HMAC of the input under the salt), no salt (a salt of hash-length zero bytes, as the RFC says for no salt) or skip (the input itself is the PRK, the expand step only). The length is at most 255 times the hash length, else E_RANGE. Chain hex:encode for hex text." doc
   "Key derivation" category
-  length 0 < [ "the HKDF length cannot be negative" raise:range ] when
-  length hash _hlen 255 * > [ "the HKDF length is over 255 times the hash length" raise:range ] when
+  length 0 < [ "the HKDF length cannot be negative" fail-range ] when
+  length hash _hlen 255 * > [ "the HKDF length is over 255 times the hash length" fail-range ] when
   ikm salt hash extract _prk
-  info hash length hash _hlen util:ceil-div _expand
+  info hash length hash _hlen ceil-div _expand
   0 length slice ;
 
 META: derive

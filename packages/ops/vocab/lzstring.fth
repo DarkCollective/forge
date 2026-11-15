@@ -5,12 +5,20 @@
 \ The format is a choice, checked by the parameter header (the primitives check it again).
 IN: lzstring
 
-: compress ( data:bytes format:choice{default|utf16|base64|uri}="default" -- bytes )
+\ The text format of an LZString stream.
+CHOICE: stream-format
+  option default "The 16-bit code units as UCS-2 big-endian byte pairs." ;
+  option utf16 "compressToUTF16, written as UTF-8." ;
+  option base64 "compressToBase64 (ASCII)." ;
+  option uri "compressToEncodedURIComponent (ASCII)." ;
+;
+
+: compress ( data:bytes format:choice<stream-format>="default" -- bytes )
   "LZString-compress text (lz-string 1.5.0). The input is UTF-8 text (anything else is E_COERCE). The output is bytes: default is the library's 16-bit code units as UCS-2 big-endian byte pairs (what its compressToUint8Array writes; CyberChef shows the same units as a string, which cannot carry lone surrogates), utf16 is compressToUTF16 as UTF-8, base64 is compressToBase64 and uri is compressToEncodedURIComponent, both ASCII." doc
   "Compression" category
   data format _compress ;
 
-: decompress ( data:bytes format:choice{default|utf16|base64|uri}="default" -- bytes )
+: decompress ( data:bytes format:choice<stream-format>="default" -- bytes )
   "LZString-decompress to UTF-8 text bytes (lz-string 1.5.0); format is the one compress wrote (default is UCS-2 big-endian byte pairs, an even length). Empty input, input outside that format's alphabet or not UTF-8, a truncated stream (no end marker), a code that names no dictionary entry and text that holds an unpaired surrogate are E_COERCE. The expansion is checked before the library builds any string: output past the value limit is E_LIMIT_VALUE." doc
   "Compression" category
   data format _decompress ;

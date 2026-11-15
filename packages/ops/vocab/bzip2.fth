@@ -8,8 +8,8 @@ IN: bzip2
 : compress ( data:bytes block-size:int=9 work-factor:int=30 -- bytes )
   "A bzip2 stream (BZh1 to BZh9) of the input. block-size is the block size in hundreds of kilobytes, 1 to 9 (CyberChef's Block size, default 9; else E_RANGE). work-factor is accepted for CyberChef's recipes (0 to 250, else E_RANGE) and ignored: it tunes libbzip2's fallback between two sorting algorithms, and Forge sorts one way. The empty input gives the 14-byte empty stream. The bytes can differ from libbzip2's (a different Huffman refinement), and every bzip2 reads them." doc
   "Compression" category
-  block-size 1 9 "the block size" util:check-int-range
-  work-factor 0 250 "the work factor" util:check-int-range
+  block-size 1 9 "the block size" check-int-range
+  work-factor 0 250 "the work factor" check-int-range
   data block-size _compress ;
 
 : decompress ( data:bytes verify:bool=true -- bytes )
@@ -21,19 +21,19 @@ META: compress
   use-when "You have bytes and need a bzip2 stream, for example to pass to a tool that reads .bz2 files." ;
   param block-size "The block size in hundreds of kilobytes, 1 to 9 (900 kB by default)." ;
   param work-factor "CyberChef's work factor, 0 to 250. Accepted and ignored: Forge has one sorting method." ;
-  checks output magic-bytes "425a68" ;
-  see-also bzip2:decompress deflate:gzip ;
   inverse decompress ;
+  see-also bzip2:decompress deflate:gzip ;
   link "https://sourceware.org/bzip2/" "bzip2 home page" ;
   link "https://en.wikipedia.org/wiki/Bzip2" "Bzip2 on Wikipedia" ;
+  checks output magic-bytes "425a68" ;
 ;
 
 META: decompress
   use-when "You have a bzip2 file or stream, starting with the letters BZh, and want the data inside." ;
   param verify "Check the CRC-32 of each block and of the stream; off, a damaged checksum is ignored and the data is still returned." ;
-  checks input magic-bytes "425a68" ;
-  see-also bzip2:compress deflate:gunzip ;
   inverse compress ;
+  see-also bzip2:compress deflate:gunzip ;
   link "https://sourceware.org/bzip2/" "bzip2 home page" ;
   link "https://en.wikipedia.org/wiki/Bzip2" "Bzip2 on Wikipedia" ;
+  checks input magic-bytes "425a68" ;
 ;

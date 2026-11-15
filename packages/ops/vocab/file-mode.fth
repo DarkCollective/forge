@@ -28,19 +28,25 @@ IN: file-mode
   mode 4 512 "t" "T" _triplet cat ;
 
 : _octal ( mode:int -- str )
-  mode 8 int>str-radix dup len 4 swap - 0 max "0" swap util:repeat-str swap cat ;
+  mode 8 int>str-radix dup len 4 swap - 0 max "0" swap repeat-str swap cat ;
 
 \ ---- reading ----
 
 : _sym-bit ( c:str yes:str mask:int -- int )
-  c yes = [ mask ]
-  [ c "-" = [ 0 ] [ "not a permission character (use r, w, x, s, S, t, T or -)" raise:coerce 0 ] if ] if ;
+  {
+    [ c yes = ] [ mask ]
+    [ c "-" = ] [ 0 ]
+    [ "not a permission character (use r, w, x, s, S, t, T or -)" fail-coerce 0 ]
+  } cond ;
 
 : _sym-x ( c:str x:int special:int on:str off:str -- int )
-  c "x" = [ x ]
-  [ c "-" = [ 0 ]
-    [ c on = [ x special bor ]
-      [ c off = [ special ] [ "not a permission character (use r, w, x, s, S, t, T or -)" raise:coerce 0 ] if ] if ] if ] if ;
+  {
+    [ c "x" = ] [ x ]
+    [ c "-" = ] [ 0 ]
+    [ c on = ] [ x special bor ]
+    [ c off = ] [ special ]
+    [ "not a permission character (use r, w, x, s, S, t, T or -)" fail-coerce 0 ]
+  } cond ;
 
 : _sym-triplet ( t:str r:int special:int on:str off:str -- int )
   t 0 1 slice "r" r _sym-bit
@@ -54,30 +60,34 @@ IN: file-mode
   s 6 9 slice 4 512 "t" "T" _sym-triplet bor ;
 
 : _type-name ( c:str -- str )
-  c "-" = [ "Regular file" ]
-  [ c "d" = [ "Directory" ]
-    [ c "l" = [ "Symbolic link" ]
-      [ c "b" = [ "Block device" ]
-        [ c "c" = [ "Character device" ]
-          [ c "p" = [ "Named pipe" ]
-            [ c "s" = [ "Socket" ]
-              [ c "D" = [ "Door" ]
-                [ "not a file type character (use - d l b c p s or D)" raise:coerce "" ] if ] if ] if ] if ] if ] if ] if ] if ;
+  c {
+    "-" [ "Regular file" ]
+    "d" [ "Directory" ]
+    "l" [ "Symbolic link" ]
+    "b" [ "Block device" ]
+    "c" [ "Character device" ]
+    "p" [ "Named pipe" ]
+    "s" [ "Socket" ]
+    "D" [ "Door" ]
+    [ "not a file type character (use - d l b c p s or D)" fail-coerce "" ]
+  } case ;
 
 : _octal-mode ( t:str -- int )
   t len 3 < t len 4 > or
-  t str>codes [ 48 55 util:between? ] filter len t len = not or
-  [ "an octal mode is 3 or 4 digits, each 0 to 7" raise:coerce ] when
+  t str>codes [ 48 55 between? ] filter len t len = not or
+  [ "an octal mode is 3 or 4 digits, each 0 to 7" fail-coerce ] when
   t 8 str>int-radix ;
 
 \ The mode and the file type character ("" when there is none) of a mode in octal or symbolic text.
 : _parse-mode ( data:str -- int str )
-  data [ util:space? ] util:trim-start [ util:space? ] util:trim-end
-  dup str>codes [ util:dec-digit? ] filter len over len = over len 0 > and
-  [ _octal-mode "" ]
-  [ dup len 9 = [ _sym-mode "" ]
-    [ dup len 10 = [ dup 0 1 slice swap 1 10 slice _sym-mode swap ]
-      [ "a mode is 3 or 4 octal digits, or 9 symbolic characters (rwxr-xr-x) with an optional file type character before them" raise:coerce 0 "" ] if ] if ] if ;
+  data [ space? ] trim-start [ space? ] trim-end :> t
+  t str>codes [ dec-digit? ] filter len t len = t len 0 > and :> digits?
+  {
+    [ digits? ] [ t _octal-mode "" ]
+    [ t len 9 = ] [ t _sym-mode "" ]
+    [ t len 10 = ] [ t 1 10 slice _sym-mode t 0 1 slice ]
+    [ "a mode is 3 or 4 octal digits, or 9 symbolic characters (rwxr-xr-x) with an optional file type character before them" fail-coerce 0 "" ]
+  } cond ;
 
 \ ---- the breakdown ----
 \ The layout is CyberChef's: the textual and octal forms, the file type and the special bits as lines of words, a
@@ -115,13 +125,13 @@ IN: file-mode
 
 META: parse
   use-when "You have a UNIX file mode, such as 755 or drwxr-xr-x from ls -l, and want it explained permission by permission, to check what it allows." ;
-  link "https://en.wikipedia.org/wiki/File-system_permissions" "File-system permissions on Wikipedia" ;
   see-also file-mode:convert ;
+  link "https://en.wikipedia.org/wiki/File-system_permissions" "File-system permissions on Wikipedia" ;
 ;
 
 META: convert
   use-when "You have a UNIX file mode in one notation, such as 0755 or rwxr-xr-x from ls -l, and want it written in the other notation." ;
-  link "https://en.wikipedia.org/wiki/File-system_permissions" "File-system permissions on Wikipedia" ;
   param to "The notation to write: octal or symbolic." ;
   see-also file-mode:parse ;
+  link "https://en.wikipedia.org/wiki/File-system_permissions" "File-system permissions on Wikipedia" ;
 ;

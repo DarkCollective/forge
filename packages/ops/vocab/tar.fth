@@ -26,7 +26,8 @@ IN: tar
 
 \ ---- reading ----
 
-: _meta2 ( h:bytes p:int -- record )
+: _meta ( data:bytes p:int -- record )
+  data p p 512 + slice :> h
   { { "name" h _full-name }
     { "type" h 156 nth }
     { "size" h 124 136 slice "size" _oct }
@@ -35,9 +36,6 @@ IN: tar
     { "start" p 512 + } }
   >record ;
 
-: _meta ( data:bytes p:int -- record )
-  data p p 512 + slice p _meta2 ;
-
 \ A long name (GNU type L): the data of the entry, up to its NUL.
 : _long-name ( data:bytes m:record -- str )
   data m "start" get dup m "size" get + slice _cstr util:text-lossless ;
@@ -45,11 +43,15 @@ IN: tar
 \ type 0, a NUL (v7) and 7 (contiguous) are files, 5 is a directory; links, devices and the extended
 \ headers (L, K, x, g) are not entries.
 : _kind ( m:record -- str )
-  m "type" get dup 53 = [ drop "dir" ] [
-    dup 48 = over 0 = or swap 55 = or [ "file" ] [ "skip" ] if ] if ;
+  m "type" get :> t
+  {
+    [ t 53 = ] [ "dir" ]
+    [ t 48 = t 0 = or t 55 = or ] [ "file" ]
+    [ "skip" ]
+  } cond ;
 
-
-: _record2 ( data:bytes m:record name:str isdir:bool -- record )
+: _record ( data:bytes m:record name:str -- record )
+  m _kind "dir" = name "/" ends-with? or :> isdir
   { { "name" name }
     { "size" isdir [ 0 ] [ m "size" get ] if }
     { "dir" isdir }
@@ -58,9 +60,6 @@ IN: tar
     { "data" isdir [ #[ ] ] [ data m "start" get dup m "size" get + slice ] if } }
   >record ;
 
-: _record ( data:bytes m:record name:str -- record )
-  data m name m _kind "dir" = name "/" util:ends-with? or _record2 ;
-
 \ The name of entry i: the data of a type L entry just before it when there is one.
 : _name-for ( data:bytes metas:list i:int -- str )
   i 0 > [ metas i 1 - nth "type" get 76 = ] [ false ] if
@@ -68,14 +67,13 @@ IN: tar
 
 \ The record of header i, or an empty list when it is not an entry.
 : _entry ( data:bytes metas:list i:int -- any )
-  metas i nth dup _kind "skip" = [ drop { } ] [ data swap data metas i _name-for _record ] if ;
-
-: _entries2 ( data:bytes metas:list -- list )
-  0 metas len range [ data metas rot _entry ] map
-  [ type "record" = ] filter ;
+  metas i nth :> m
+  m _kind "skip" = [ { } ] [ data m data metas i _name-for _record ] if ;
 
 : _entries ( data:bytes verify:bool -- list )
-  data data verify _headers [ data swap _meta ] map _entries2 ;
+  data verify _headers [ data swap _meta ] map :> metas
+  0 metas len range [ :> i data metas i _entry ] map
+  [ type "record" = ] filter ;
 
 : untar ( data:bytes verify:bool=true -- list )
   "List a tar archive: one record per file or directory in archive order, with name (a ustar prefix is joined with a slash; a GNU long name, type L, is used), size, dir, mtime (Unix seconds), mode (the permission bits, 0 to 4095) and data (empty for a directory). Read are ustar, the older v7 headers and the GNU long-name form; entries that are not files or directories (links, devices, FIFOs) and the extended headers (GNU K, PAX x and g) are skipped, and PAX path and size records are not applied. The archive ends at two zero blocks or at the end of the data. With verify (the default; CyberChef does not check) every header checksum must match (E_COERCE); off, a damaged header is read as it is. Empty input, a bad octal field or data that ends early is E_COERCE. An entry is a slice of the input, so the total is never above the input. Use tar:entry to go on with one file." doc
@@ -90,11 +88,11 @@ IN: tar
 \ ---- writing ----
 
 : _pad ( b:bytes n:int -- bytes )
-  b n b len - util:zero-bytes cat ;
+  b n b len - zero-bytes cat ;
 
 \ v in octal, left-padded with zeros to w - 1 digits, then a NUL.
 : _octf ( v:int w:int -- bytes )
-  v 8 int>str-radix dup len w 1 - swap - 0 max "0" swap util:repeat-str swap cat latin1>bytes #[ 00 ] cat ;
+  v 8 int>str-radix dup len w 1 - swap - 0 max "0" swap repeat-str swap cat latin1>bytes #[ 00 ] cat ;
 
 : _ok-split? ( nameb:bytes i:int -- bool )
   i 0 > i 155 <= and nameb len i - 1 - dup 1 >= swap 100 <= and and ;
@@ -107,15 +105,15 @@ IN: tar
 : _split-name ( nameb:bytes -- bytes bytes )
   nameb len 100 <= [ #[ ] nameb ] [
     0 nameb len range [ nameb swap nth 47 = ] filter [ nameb swap _ok-split? ] filter
-    dup len 0 = [ "the file name is too long for the ustar format (100 bytes, or up to 255 when a slash splits it into 155 and 100)" raise:range ] when
+    dup len 0 = [ "the file name is too long for the ustar format (100 bytes, or up to 255 when a slash splits it into 155 and 100)" fail-range ] when
     0 nth nameb swap _cut
   ] if ;
 
 : _tar-name ( s:str -- bytes )
   s str>bytes
-  dup len 0 = [ "the file name cannot be empty" raise:range ] when
-  dup len 255 > [ "the file name is longer than 255 bytes" raise:range ] when
-  dup #[ 00 ] util:contains-bytes? [ "the file name cannot contain a NUL character" raise:range ] when ;
+  dup len 0 = [ "the file name cannot be empty" fail-range ] when
+  dup len 255 > [ "the file name is longer than 255 bytes" fail-range ] when
+  dup #[ 00 ] util:contains-bytes? [ "the file name cannot contain a NUL character" fail-range ] when ;
 
 : _seal ( h:bytes -- bytes )
   h 0 148 slice h _header-sum 7 _octf cat #[ 20 ] cat h 156 512 slice cat ;
@@ -124,24 +122,25 @@ IN: tar
   name 100 _pad
   mode 8 _octf cat uid 8 _octf cat gid 8 _octf cat size 12 _octf cat mtime 12 _octf cat
   #[ 20 20 20 20 20 20 20 20 30 ] cat
-  100 util:zero-bytes cat
+  100 zero-bytes cat
   #[ 75 73 74 61 72 00 30 30 ] cat
-  80 util:zero-bytes cat
-  prefix 155 _pad cat 12 util:zero-bytes cat
+  80 zero-bytes cat
+  prefix 155 _pad cat 12 zero-bytes cat
   _seal ;
 
 : tar ( data:bytes filename:str="file.txt" mode:int=436 mtime:int=0 uid:int=0 gid:int=0 -- bytes )
   "A tar archive (POSIX ustar) holding the input as one file named filename, as CyberChef's Tar does (one file; it writes the current time, so its bytes differ on every run). The header holds the permission bits mode (436 is 0664, CyberChef's), the Unix time mtime (0 by default, so the output is the same on every run), uid and gid (0), type 0 and no owner names; the data is padded to 512 bytes and two zero blocks end the archive. A name of up to 100 bytes goes in the name field; a longer one (up to 255) is cut at a slash into the ustar prefix and name, otherwise E_RANGE. An empty name or a NUL is E_RANGE, and so is a mode, id or time that does not fit its field. GNU tar, bsdtar and Python read the output." doc
   "Compression" category
-  mode 0 4095 "mode" util:check-int-range
-  uid 0 2097151 "uid" util:check-int-range
-  gid 0 2097151 "gid" util:check-int-range
-  mtime 0 8589934591 "mtime" util:check-int-range
+  mode 0 4095 "mode" check-int-range
+  uid 0 2097151 "uid" check-int-range
+  gid 0 2097151 "gid" check-int-range
+  mtime 0 8589934591 "mtime" check-int-range
   filename _tar-name _split-name
   mode uid gid data len mtime _header
   data cat
-  data len 512 mod dup 0 = [ drop 0 ] [ 512 swap - ] if util:zero-bytes cat
-  1024 util:zero-bytes cat ;
+  data len 512 mod :> rest
+  rest 0 = [ 0 ] [ 512 rest - ] if zero-bytes cat
+  1024 zero-bytes cat ;
 
 META: untar
   use-when "You have a tar archive, or a .tar.gz once it has been gunzipped, and want to list its files and read their contents." ;

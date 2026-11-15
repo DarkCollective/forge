@@ -9,13 +9,15 @@ USING: alphabet list ;
 
 \ The standard-alphabet index of a character code: 0 to 63, 64 for the padding, 255 for any other code.
 : _std-index ( c:int -- int )
-  c 65 90 util:between? [ c 65 - ] [
-    c 97 122 util:between? [ c 71 - ] [
-      c 48 57 util:between? [ c 4 + ] [
-        c 43 = [ 62 ] [ c 47 = [ 63 ] [ c 61 = [ 64 ] [ 255 ] if ] if ] if
-      ] if
-    ] if
-  ] if ;
+  {
+    [ c 65 90 between? ] [ c 65 - ]
+    [ c 97 122 between? ] [ c 71 - ]
+    [ c 48 57 between? ] [ c 4 + ]
+    [ c 43 = ] [ 62 ]
+    [ c 47 = ] [ 63 ]
+    [ c 61 = ] [ 64 ]
+    [ 255 ]
+  } cond ;
 
 \ The translation table from the standard alphabet to the chosen one (other codes stay as they are).
 : _table ( alpha:bytes -- bytes )
@@ -33,27 +35,35 @@ USING: alphabet list ;
 \ depends on them partly) and the last character when the data stops inside a group (it depends on the bytes that
 \ would follow) are left out unless show-variable is on, which also adds the padding.
 : _trim ( text:str k:int nz:int show:bool pad-char:str -- str )
-  show [ 0 ] [ k 0 > [ k 1 + ] [ k ] if ] if
+  {
+    [ show ] [ 0 ]
+    [ k 0 > ] [ k 1 + ]
+    [ k ]
+  } cond
   text len show [ 0 ] [ nz 3 mod 0 <> [ 1 ] [ 0 ] if ] if -
   text -rot slice
-  show [ pad-char nz _pad-count util:repeat-str cat ] when ;
-
-: _line2 ( z:bytes table:bytes k:int show:bool pad-char:str -- str )
-  z table _chars k z len show pad-char _trim ;
+  show [ pad-char nz _pad-count repeat-str cat ] when ;
 
 : _line ( data:bytes k:int table:bytes show:bool pad-char:str -- str )
-  data len 0 = [ "" ] [ k util:zero-bytes data cat table k show pad-char _line2 ] if ;
+  data len 0 = [ "" ] [
+    k zero-bytes data cat :> z
+    z table _chars k z len show pad-char _trim
+  ] if ;
 
 : _check-alphabet ( a:str -- )
-  a str>codes [ int>str ] map list:unique len a len <> [ "the alphabet must not repeat a character" raise:range ] when
-  a len 64 < a len 65 > or [ "the alphabet must hold 64 or 65 characters" raise:range ] when
-  a str>codes [ 127 > ] filter len 0 <> [ "the alphabet must hold ASCII characters only" raise:range ] when ;
+  a str>codes [ int>str ] map list:unique len a len <> [ "the alphabet must not repeat a character" fail-range ] when
+  a len 64 < a len 65 > or [ "the alphabet must hold 64 or 65 characters" fail-range ] when
+  a str>codes [ 127 > ] filter len 0 <> [ "the alphabet must hold ASCII characters only" fail-range ] when ;
 
 : _alphabet ( alphabet:str -- bytes )
   alphabet "none" alphabet:expand dup _check-alphabet str>bytes ;
 
 : _input ( data:bytes input-type:str -- bytes )
-  input-type "hex" = [ data bytes>str hex>bytes ] [ input-type "base64" = [ data "standard" base64:decode ] [ data ] if ] if ;
+  {
+    [ input-type "hex" = ] [ data bytes>str hex>bytes ]
+    [ input-type "base64" = ] [ data "standard" base64:decode ]
+    [ data ]
+  } cond ;
 
 : _run ( data:bytes table:bytes show:bool pad-char:str -- str )
   show [ "Offset 0: " ] [ "" ] if data 0 table show pad-char _line cat
@@ -61,8 +71,8 @@ USING: alphabet list ;
   "\n" cat show [ "Offset 2: " ] [ "" ] if cat data 2 table show pad-char _line cat ;
 
 : _go ( data:bytes alpha:bytes show:bool -- str )
-  data len 0 = [ "the input is empty" raise:coerce ] when
-  data alpha _table show alpha len 64 > [ alpha 64 nth util:cp>str ] [ "" ] if _run ;
+  data len 0 = [ "the input is empty" fail-coerce ] when
+  data alpha _table show alpha len 64 > [ alpha 64 nth cp>str ] [ "" ] if _run ;
 
 : show ( data:bytes alphabet:str="A-Za-z0-9+/=" show-variable:bool=true input-type:choice{raw|hex|base64}=raw -- str )
   "Show how the Base64 encoding of the data looks when it starts at each of the three alignments, as CyberChef's Show Base64 offsets does, as text. Offset 0 is the encoding of the data. Offsets 1 and 2 are what the same bytes look like when one or two other bytes (zeros here) come before them. With show-variable on (the default) the three lines are labelled Offset 0:, Offset 1: and Offset 2: and hold the whole encoding: the leading characters that only stand for the unknown bytes (CyberChef colours them red and green), the last character when the data stops inside a three-byte group (it depends on the bytes that would follow), and the = padding. With it off the three lines have no label and hold only the characters that the data alone fixes. CyberChef colours the characters and shows the static part decoded as a tooltip, and writes four lines of explanation above the offsets; text has neither, so Forge writes neither. The alphabet is written with ranges (A-Za-z0-9+/=) and has 64 characters, or 65 when the last one is the padding (no padding without it). input-type reads the data as it is, as hex (an addition to CyberChef's raw and Base64) or as Base64 text first. The alphabet must be 64 or 65 different ASCII characters; empty data (CyberChef: Please enter a string.) and hex or Base64 text that is not valid are E_COERCE." doc
@@ -74,8 +84,8 @@ META: show
   param alphabet "The Base64 alphabet, with ranges: 64 characters, or 65 with the padding character last." ;
   param show-variable "Keep the characters that depend on the unknown neighbouring bytes, and the padding." ;
   param input-type "How to read the input: as it is, as hex text or as Base64 text." ;
-  checks output utf8 ;
   see-also base64:encode ;
   link "https://www.rfc-editor.org/rfc/rfc4648#section-4" "RFC 4648, section 4: Base64" ;
   link "https://en.wikipedia.org/wiki/Base64" "Base64 on Wikipedia" ;
+  checks output utf8 ;
 ;

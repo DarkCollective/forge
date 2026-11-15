@@ -34,7 +34,7 @@ USING: base64 ;
   "The one element that is the whole of the DER bytes, as a node record; no element, or bytes after it, is E_COERCE. Shared word." doc
   data parse-all
   dup len 1 <> [
-    "expected one ASN.1 element, found " over len int>str cat raise:coerce ] when
+    "expected one ASN.1 element, found " over len int>str cat fail-coerce ] when
   0 nth ;
 
 : _where ( node:record -- str )
@@ -56,7 +56,7 @@ USING: base64 ;
   "E_COERCE unless the node has this class and tag number; the message names what was expected and the offset. Shared word." doc
   node class tag is? not [
     "expected " what cat node _where cat ", found " cat node "class" get cat " " cat node "tag" get int>str cat
-    raise:coerce ] when ;
+    fail-coerce ] when ;
 
 : children ( node:record -- list )
   "The child nodes of a node (empty for a primitive element). Shared word." doc
@@ -66,7 +66,7 @@ USING: base64 ;
   "Child number i (from 0) of a node; E_COERCE when the node has fewer children. Shared word." doc
   node "children" get len i <= [
     "the element" node _where cat " has " cat node "children" get len int>str cat " children, not " cat i 1 + int>str cat
-    raise:coerce ] when
+    fail-coerce ] when
   node "children" get i nth ;
 
 : raw ( data:bytes node:record -- bytes )
@@ -81,20 +81,20 @@ USING: base64 ;
 
 : der>int ( content:bytes -- int )
   "The signed big-endian two's complement integer of INTEGER content bytes (any size). No bytes is E_COERCE. Shared word." doc
-  content len 0 = [ "an INTEGER has no content bytes" raise:coerce ] when
-  content 256 util:digits>int
+  content len 0 = [ "an INTEGER has no content bytes" fail-coerce ] when
+  content 256 digits>int
   content 0 nth 127 > [ 1 content len 8 * shl - ] when ;
 
 : node>int ( node:record -- int )
   "The value of an INTEGER or ENUMERATED node (signed, any size); another type is E_COERCE. Shared word." doc
   node "universal" 2 is? node "universal" 10 is? or not [
-    "expected an INTEGER" node _where cat raise:coerce ] when
+    "expected an INTEGER" node _where cat fail-coerce ] when
   node "value" get der>int ;
 
 : node>bool ( node:record -- bool )
   "The value of a BOOLEAN node (any non-zero byte is true); another type or length is E_COERCE. Shared word." doc
   node "universal" 1 "a BOOLEAN" expect
-  node "len" get 1 <> [ "a BOOLEAN must be one byte" node _where cat raise:coerce ] when
+  node "len" get 1 <> [ "a BOOLEAN must be one byte" node _where cat fail-coerce ] when
   node "value" get 0 nth 0 <> ;
 
 : node>oid ( node:record -- str )
@@ -105,16 +105,16 @@ USING: base64 ;
 : node>bits ( node:record -- bytes int )
   "The bytes and the number of unused bits (0 to 7) of a BIT STRING node; another type, or a bad count, is E_COERCE. Shared word." doc
   node "universal" 3 "a BIT STRING" expect
-  node "len" get 1 < [ "a BIT STRING has no unused-bits byte" node _where cat raise:coerce ] when
+  node "len" get 1 < [ "a BIT STRING has no unused-bits byte" node _where cat fail-coerce ] when
   node "value" get 0 nth
-  dup 7 > [ "a BIT STRING declares more than 7 unused bits" node _where cat raise:coerce ] when
-  dup 0 > node "len" get 1 = and [ "an empty BIT STRING declares unused bits" node _where cat raise:coerce ] when
+  dup 7 > [ "a BIT STRING declares more than 7 unused bits" node _where cat fail-coerce ] when
+  dup 0 > node "len" get 1 = and [ "an empty BIT STRING declares unused bits" node _where cat fail-coerce ] when
   node "value" get 1 node "len" get slice swap ;
 
 : node>text ( node:record -- str )
   "The text of a string node (UTF8String as UTF-8, BMPString as UTF-16BE, UniversalString as UTF-32BE, PrintableString, IA5String, NumericString, VisibleString, TeletexString and the like as one character per byte, also UTCTime and GeneralizedTime); another type, or bytes the type cannot hold, is E_COERCE. Shared word." doc
-  { 12 18 19 20 21 22 23 24 25 26 27 28 30 } node "tag" get util:contains?
-  node "class" get "universal" = and not [ "expected a string type" node _where cat raise:coerce ] when
+  { 12 18 19 20 21 22 23 24 25 26 27 28 30 } node "tag" get contains?
+  node "class" get "universal" = and not [ "expected a string type" node _where cat fail-coerce ] when
   node "tag" get node "value" get _string ;
 
 \ ---- object identifiers ----
@@ -127,30 +127,35 @@ USING: base64 ;
 
 : der-length ( n:int -- bytes )
   "The DER length octets for a content of n bytes: one byte below 128, else 0x80 plus the count and the big-endian length without leading zeros. A negative n is E_RANGE. Shared word." doc
-  n 0 < [ "a DER length cannot be negative" raise:range ] when
-  n 128 < [ n 1 util:int>be-bytes ] [
-    n util:int>bytes dup len 126 > [ "a DER length of more than 126 bytes is not supported" raise:range ] when
-    dup len 128 + 1 util:int>be-bytes swap cat ] if ;
+  n 0 < [ "a DER length cannot be negative" fail-range ] when
+  n 128 < [ n 1 int>be-bytes ] [
+    n util:int>bytes dup len 126 > [ "a DER length of more than 126 bytes is not supported" fail-range ] when
+    dup len 128 + 1 int>be-bytes swap cat ] if ;
 
 : tlv ( id:int content:bytes -- bytes )
   "One DER element: the identifier octet id (0 to 255, for tag numbers below 31: 48 is SEQUENCE, 49 SET, 2 INTEGER, 4 OCTET STRING, 160 is [0] constructed), the minimal length and the content. Shared word." doc
-  id 0 255 "the identifier octet" util:check-int-range
-  id 1 util:int>be-bytes content len der-length cat content cat ;
+  id 0 255 "the identifier octet" check-int-range
+  id 1 int>be-bytes content len der-length cat content cat ;
 
 : _groups ( v:int cont:int -- bytes )
   v 128 <
-  [ v cont bor 1 util:int>be-bytes ]
-  [ v 128 div 128 recurse v 128 mod cont bor 1 util:int>be-bytes cat ] if ;
+  [ v cont bor 1 int>be-bytes ]
+  [ v 128 div 128 recurse v 128 mod cont bor 1 int>be-bytes cat ] if ;
 
 : tlv-tagged ( class:str constructed:bool tag:int content:bytes -- bytes )
   "One DER element of any class and tag number, including tag numbers of 31 and over (the high-tag form). class is universal, application, context or private (E_RANGE otherwise); a negative tag is E_RANGE. Shared word." doc
-  tag 0 < [ "a tag number cannot be negative" raise:range ] when
-  class "universal" = [ 0 ] [ class "application" = [ 64 ] [ class "context" = [ 128 ] [
-    class "private" = [ 192 ] [ "the class must be universal, application, context or private" raise:range 0 ] if ] if ] if ] if
+  tag 0 < [ "a tag number cannot be negative" fail-range ] when
+  {
+    [ class "universal" = ] [ 0 ]
+    [ class "application" = ] [ 64 ]
+    [ class "context" = ] [ 128 ]
+    [ class "private" = ] [ 192 ]
+    [ "the class must be universal, application, context or private" fail-range ]
+  } cond
   constructed [ 32 + ] when
   tag 31 <
-  [ tag + 1 util:int>be-bytes ]
-  [ 31 + 1 util:int>be-bytes tag 0 _groups cat ] if
+  [ tag + 1 int>be-bytes ]
+  [ 31 + 1 int>be-bytes tag 0 _groups cat ] if
   content len der-length cat content cat ;
 
 : int>der ( n:int -- bytes )
@@ -184,9 +189,9 @@ USING: base64 ;
 
 : tlv-bits ( data:bytes unused:int -- bytes )
   "A BIT STRING element: the count of unused bits (0 to 7, 0 for empty data), then the bytes. Shared word." doc
-  unused 0 7 "the unused bits" util:check-int-range
-  unused 0 > data len 0 = and [ "an empty BIT STRING has no unused bits" raise:range ] when
-  3 unused 1 util:int>be-bytes data cat tlv ;
+  unused 0 7 "the unused bits" check-int-range
+  unused 0 > data len 0 = and [ "an empty BIT STRING has no unused bits" fail-range ] when
+  3 unused 1 int>be-bytes data cat tlv ;
 
 : tlv-seq ( items:list -- bytes )
   "A SEQUENCE element whose content is the concatenation of the item elements (a list of bytes), in the order given. Shared word." doc
@@ -220,10 +225,10 @@ USING: base64 ;
   data _pem-scan [ _pem-block ] map ;
 
 : _check-label ( label:str -- )
-  label len 0 = [ "the PEM label cannot be empty" raise:range ] when
-  label str>codes [ 32 126 util:between? not ] filter len 0 <>
-  [ "the PEM label must be printable ASCII on one line" raise:range ] when
-  label "-----" split len 1 > [ "the PEM label cannot contain five hyphens" raise:range ] when ;
+  label len 0 = [ "the PEM label cannot be empty" fail-range ] when
+  label str>codes [ 32 126 between? not ] filter len 0 <>
+  [ "the PEM label must be printable ASCII on one line" fail-range ] when
+  label "-----" split len 1 > [ "the PEM label cannot contain five hyphens" fail-range ] when ;
 
 : pem-encode ( label:str data:bytes -- str )
   "A PEM block: the BEGIN line for the label, the Base64 of the data in lines of 64 characters, the END line, each ended by a line feed (RFC 7468; empty data gives no body lines). A label that is empty, not printable ASCII or holds five hyphens is E_RANGE. Shared word." doc

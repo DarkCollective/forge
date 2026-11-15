@@ -3,13 +3,13 @@
 \ symbols of the charset qpzry9x8gf2tvdw0s3jn54khce6mua7l, and a six-symbol BCH checksum. The data
 \ bytes are regrouped from 8 to 5 bits (zero padded), as the BIPs' convertbits does. encode writes
 \ lower case; decode takes all lower or all upper case. The regrouping uses shifts on a window of
-\ bytes (no big integers). Errors come from the raise vocabulary (raise:coerce, raise:range).
+\ bytes (no big integers). Errors are raised with the core words fail-coerce and fail-range.
 IN: bech32
 
-: _charset ( -- bytes )
+MEMO: _charset ( -- bytes )
   "qpzry9x8gf2tvdw0s3jn54khce6mua7l" str>bytes ;
 
-: _gen ( -- list )
+MEMO: _gen ( -- list )
   { 0x3b6a57b2 0x26508e6d 0x1ea119fa 0x3d4233dd 0x2a1462b3 } ;
 
 \ ---- checksum ----
@@ -52,8 +52,18 @@ IN: bech32
 : encode ( bytes hrp:str[1..83,/[!-~]+/] variant:choice{bech32|bech32m}=bech32 -- str )
   "Encode bytes as Bech32 or Bech32m (BIP-173, BIP-350): the human-readable part (written in lower case), 1, the data as 5-bit characters and a six-character checksum. A result over 90 characters is E_RANGE." doc
   "Encodings" category
-  _five dup len hrp len + 7 + 90 > [ "the result is over 90 characters" raise:range ] when
+  _five dup len hrp len + 7 + 90 > [ "the result is over 90 characters" fail-range ] when
   hrp lower str>bytes variant _build ;
+
+META: encode
+  use-when "You need bytes as a bech32 string with a readable prefix, such as a Bitcoin SegWit address (bc1...), where a checksum catches typing errors." ;
+  param hrp "The human-readable part, 1 to 83 printable ASCII characters (lower-cased)." ;
+  param variant "bech32 (BIP-173) or bech32m (BIP-350)." ;
+  inverse decode ;
+  see-also bech32:decode base32:encode ;
+  link "https://en.wikipedia.org/wiki/Bech32" "Bech32 on Wikipedia" ;
+  checks output charset "!-~" ;
+;
 
 \ ---- decode ----
 
@@ -64,39 +74,39 @@ IN: bech32
 
 \ The 8-bit data of the 5-bit values; the padding must be under 5 bits, all zero.
 : _regroup ( v:bytes -- bytes )
-  v len 5 * 8 mod 4 > [ "too many padding bits" raise:coerce ] when
-  v v len 5 * 8 div _byte 0 <> [ "non-zero padding bits" raise:coerce ] when
+  v len 5 * 8 mod 4 > [ "too many padding bits" fail-coerce ] when
+  v v len 5 * 8 div _byte 0 <> [ "non-zero padding bits" fail-coerce ] when
   0 v len 5 * 8 div range [ v swap _byte ] map list>bytes ;
 
 \ A string of 8 to 90 printable ASCII characters, not in mixed case.
 : _check-chars ( d:bytes -- )
-  d len 8 < d len 90 > or [ "a Bech32 string is 8 to 90 characters" raise:coerce ] when
+  d len 8 < d len 90 > or [ "a Bech32 string is 8 to 90 characters" fail-coerce ] when
   d [ dup 33 < swap 126 > or ] filter len 0 <>
-  [ "a character outside ASCII 33 to 126" raise:coerce ] when
+  [ "a character outside ASCII 33 to 126" fail-coerce ] when
   d [ dup 97 >= swap 122 <= and ] filter len 0 <>
   d [ dup 65 >= swap 90 <= and ] filter len 0 <> and
-  [ "mixed upper and lower case" raise:coerce ] when ;
+  [ "mixed upper and lower case" fail-coerce ] when ;
 
 \ The index of the last 1, which separates the hrp from the data.
 : _sep ( s:bytes -- int )
   0 s len range [ s swap nth 49 = ] filter
-  dup len 0 = [ "no separator 1" raise:coerce ] when
+  dup len 0 = [ "no separator 1" fail-coerce ] when
   dup len 1 - nth ;
 
-: _vtable ( -- bytes )
+MEMO: _vtable ( -- bytes )
   _charset bytes>latin1 255 255 util:decode-table ;
 
 : _verify ( hrp:bytes vals:bytes -- )
   hrp _expand vals cat _polymod dup 1 <> swap 0x2bc830a3 <> and
-  [ "the checksum is wrong" raise:coerce ] when ;
+  [ "the checksum is wrong" fail-coerce ] when ;
 
 : _finish ( hrp:bytes vals:bytes part:str -- bytes )
   hrp vals _verify
   part "hrp" = [ hrp ] [ vals 0 vals len 6 - slice _regroup ] if ;
 
 : _parse ( s:bytes part:str -- bytes )
-  s _sep 1 < [ "the human-readable part is empty" raise:coerce ] when
-  s len s _sep - 7 < [ "fewer than six checksum characters" raise:coerce ] when
+  s _sep 1 < [ "the human-readable part is empty" fail-coerce ] when
+  s len s _sep - 7 < [ "fewer than six checksum characters" fail-coerce ] when
   s 0 s _sep slice s s _sep 1 + s len slice _vtable util:check-symbols part _finish ;
 
 : decode ( bytes part:choice{data|hrp}=data -- bytes )
@@ -104,22 +114,12 @@ IN: bech32
   "Encodings" category
   dup _check-chars bytes>latin1 lower latin1>bytes part _parse ;
 
-META: encode
-  use-when "You need bytes as a bech32 string with a readable prefix, such as a Bitcoin SegWit address (bc1...), where a checksum catches typing errors." ;
-  link "https://en.wikipedia.org/wiki/Bech32" "Bech32 on Wikipedia" ;
-  inverse decode ;
-  param hrp "The human-readable part, 1 to 83 printable ASCII characters (lower-cased)." ;
-  param variant "bech32 (BIP-173) or bech32m (BIP-350)." ;
-  see-also bech32:decode base32:encode ;
-  checks output charset "!-~" ;
-;
-
 META: decode
   use-when "You have a bech32 or bech32m string, such as a bc1... address, and want its data bytes, or its prefix with part hrp. The checksum is checked." ;
-  link "https://en.wikipedia.org/wiki/Bech32" "Bech32 on Wikipedia" ;
-  inverse encode ;
   param part "What to return: the data bytes, or the human-readable part." ;
+  inverse encode ;
   see-also bech32:encode base32:decode ;
+  link "https://en.wikipedia.org/wiki/Bech32" "Bech32 on Wikipedia" ;
   checks input charset "!-~" ;
   expects "Bech32 string" ;
 ;

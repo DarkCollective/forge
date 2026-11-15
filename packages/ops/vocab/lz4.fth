@@ -9,13 +9,13 @@ IN: lz4
 
 \ The XXH32 (seed 0) of the bytes as four little-endian bytes, the way the frame stores it.
 : _xxh-bytes ( data:bytes -- bytes )
-  data 0 _xxh32 4 util:int>be-bytes rev ;
+  data 0 _xxh32 4 int>be-bytes rev ;
 
 \ ---- compress ----
 
 \ The BD block-size id: 4 is 64 KB, 5 is 256 KB, 6 is 1 MB, 7 is 4 MB.
 : _bs-id ( s:str -- int )
-  s "64KB" = [ 4 ] [ s "256KB" = [ 5 ] [ s "1MB" = [ 6 ] [ 7 ] if ] if ] if ;
+  s { "64KB" [ 4 ] "256KB" [ 5 ] "1MB" [ 6 ] [ 7 ] } case ;
 
 : _flg ( independent:bool bchk:bool csize:bool cchk:bool -- int )
   64
@@ -26,17 +26,17 @@ IN: lz4
 
 \ FLG, BD and the optional 8-byte content size.
 : _descriptor ( id:int flg:int csize:bool len:int -- bytes )
-  flg 1 util:int>be-bytes id 16 * 1 util:int>be-bytes cat
-  csize [ len 8 util:int>be-bytes rev cat ] when ;
+  flg 1 int>be-bytes id 16 * 1 int>be-bytes cat
+  csize [ len 8 int>be-bytes rev cat ] when ;
 
 \ The descriptor followed by its checksum byte: bits 8 to 15 of the XXH32 of the descriptor.
 : _with-hc ( desc:bytes -- bytes )
-  desc desc 0 _xxh32 8 shr 255 band 1 util:int>be-bytes cat ;
+  desc desc 0 _xxh32 8 shr 255 band 1 int>be-bytes cat ;
 
 : compress ( data:bytes level:int=1 block-size:choice{64KB|256KB|1MB|4MB}="4MB" independent:bool=true block-checksum:bool=false content-checksum:bool=true content-size:bool=false -- bytes )
   "An LZ4 frame (magic 0x184D2204) of the input, like CyberChef's LZ4 Compress (lz4js: independent 4 MB blocks, a content checksum, no content size) but with the frame's options as parameters. level is 0 (blocks stored) or 1 to 9: a greedy matcher that follows up to 2^(level-1) hash-chain links, so 1 is the fastest (the lz4 command's default, and the default here), and 9 the smallest; any other level is E_RANGE. The bytes differ from other encoders', but every LZ4 decoder (the lz4 command included) reads them. A block that does not shrink is stored, and with block-checksum each block carries an XXH32." doc
   "Compression" category
-  level 0 9 "the compression level" util:check-int-range
+  level 0 9 "the compression level" check-int-range
   #[ 04 22 4d 18 ]
   block-size _bs-id independent block-checksum content-size content-checksum _flg content-size data len _descriptor
   _with-hc cat
@@ -47,11 +47,11 @@ IN: lz4
 \ ---- decompress ----
 
 : _flags-check ( flg:int bd:int -- )
-  flg 6 shr 1 <> [ "not a supported LZ4 frame: the version is not 1" raise:coerce ] when
-  flg 2 band 0 <> [ "the LZ4 frame sets a reserved flag bit" raise:coerce ] when
-  flg 1 band 0 <> [ "the LZ4 frame needs a dictionary, which is not supported" raise:coerce ] when
-  bd 143 band 0 <> [ "the LZ4 frame sets a reserved block descriptor bit" raise:coerce ] when
-  bd 4 shr 7 band 4 < [ "the LZ4 frame's block maximum size id is invalid (4 to 7 are valid)" raise:coerce ] when ;
+  flg 6 shr 1 <> [ "not a supported LZ4 frame: the version is not 1" fail-coerce ] when
+  flg 2 band 0 <> [ "the LZ4 frame sets a reserved flag bit" fail-coerce ] when
+  flg 1 band 0 <> [ "the LZ4 frame needs a dictionary, which is not supported" fail-coerce ] when
+  bd 143 band 0 <> [ "the LZ4 frame sets a reserved block descriptor bit" fail-coerce ] when
+  bd 4 shr 7 band 4 < [ "the LZ4 frame's block maximum size id is invalid (4 to 7 are valid)" fail-coerce ] when ;
 
 \ The index of the header checksum byte of the frame at p.
 : _hc-pos ( p:int flg:int -- int )
@@ -60,41 +60,43 @@ IN: lz4
 : _trailer ( out:bytes e:int data:bytes flg:int p:int verify:bool -- bytes int )
   verify flg 8 band 0 <> and [
     out len data p 6 + 8 util:le-int <> [
-      "LZ4 content size mismatch: the size in the header differs from the output (corrupt data)" raise:coerce ] when ] when
+      "LZ4 content size mismatch: the size in the header differs from the output (corrupt data)" fail-coerce ] when ] when
   flg 4 band 0 = [ out e ] [
-    data len e - 4 < [ "LZ4 data is cut short: the content checksum is missing" raise:coerce ] when
+    data len e - 4 < [ "LZ4 data is cut short: the content checksum is missing" fail-coerce ] when
     verify [
       data e e 4 + slice out _xxh-bytes <> [
-        "LZ4 checksum mismatch: the XXH32 of the output differs from the trailer (corrupt data)" raise:coerce ] when ] when
+        "LZ4 checksum mismatch: the XXH32 of the output differs from the trailer (corrupt data)" fail-coerce ] when ] when
     out e 4 + ] if ;
 
 : _frame-body ( data:bytes p:int verify:bool flg:int bd:int -- bytes int )
   flg bd _flags-check
-  data len p flg _hc-pos - 1 < [ "LZ4 data is cut short: the frame header is incomplete" raise:coerce ] when
+  data len p flg _hc-pos - 1 < [ "LZ4 data is cut short: the frame header is incomplete" fail-coerce ] when
   verify [
     data p 4 + p flg _hc-pos slice _xxh-bytes 1 nth data p flg _hc-pos nth <> [
-      "LZ4 frame header checksum mismatch (corrupt header)" raise:coerce ] when ] when
+      "LZ4 frame header checksum mismatch (corrupt header)" fail-coerce ] when ] when
   data p flg _hc-pos 1 + flg 32 band 0 <> flg 16 band 0 <> 1 bd 4 shr 7 band 2 * 8 + shl verify _blocks
   data flg p verify _trailer ;
 
 : _frame ( data:bytes p:int verify:bool -- bytes int )
-  data len p - 7 < [ "LZ4 data is cut short: the frame header is incomplete" raise:coerce ] when
+  data len p - 7 < [ "LZ4 data is cut short: the frame header is incomplete" fail-coerce ] when
   data p verify data p 4 + nth data p 5 + nth _frame-body ;
 
 : _skip ( data:bytes p:int -- bytes int )
-  data len p - 8 < [ "LZ4 data is cut short: a skippable frame header is incomplete" raise:coerce ] when
+  data len p - 8 < [ "LZ4 data is cut short: a skippable frame header is incomplete" fail-coerce ] when
   p 8 + data p 4 + 4 util:le-int + dup data len > [
-    "LZ4 data is cut short: a skippable frame runs past the end" raise:coerce ] when
+    "LZ4 data is cut short: a skippable frame runs past the end" fail-coerce ] when
   data 0 0 slice swap ;
 
 : _one ( data:bytes p:int verify:bool magic:int -- bytes int )
-  magic 0x184d2204 = [ data p verify _frame ] [
-    magic 0x184c2102 = [ data p 4 + _legacy ] [
-      magic 0xfffffff0 band 0x184d2a50 = [ data p _skip ] [
-        "not LZ4 data: the frame magic number (04 22 4d 18) is missing" raise:coerce ] if ] if ] if ;
+  {
+    [ magic 0x184d2204 = ] [ data p verify _frame ]
+    [ magic 0x184c2102 = ] [ data p 4 + _legacy ]
+    [ magic 0xfffffff0 band 0x184d2a50 = ] [ data p _skip ]
+    [ "not LZ4 data: the frame magic number (04 22 4d 18) is missing" fail-coerce ]
+  } cond ;
 
 : _frames ( data:bytes p:int verify:bool -- bytes )
-  data len p - 4 < [ "not LZ4 data: the frame magic number is incomplete" raise:coerce ] when
+  data len p - 4 < [ "not LZ4 data: the frame magic number is incomplete" fail-coerce ] when
   data p verify data p 4 util:le-int _one
   dup data len < [ data swap verify recurse cat ] [ drop ] if ;
 

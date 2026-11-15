@@ -1,9 +1,9 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ octal: byte values as octal numbers 0..377 (no leading zeros are written). The words are FL and need
-\ no primitive; E_COERCE comes from the raise vocabulary (raise:coerce).
+\ no primitive; E_COERCE comes from fail-coerce.
 IN: octal
 
-: encode ( bytes delimiter:choice{space|comma|newline}=space -- str )
+: encode ( bytes delimiter:choice<util:number-delimiter>=space -- str )
   "Each byte as an octal number, 0 to 377, separated by the delimiter." doc
   "Encodings" category
   bytes>list [ 8 int>str-radix ] map delimiter util:separator join ;

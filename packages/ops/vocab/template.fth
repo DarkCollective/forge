@@ -1,6 +1,6 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ template: Template, CyberChef's rendering of a Handlebars template against JSON input. CyberChef compiles the template
-\ with the Handlebars library, which generates JavaScript and runs it with `new Function`; Forge renders a
+\ template: Template, CyberChef's rendering of a Handlebars template against JSON input. CyberChef compiles the
+\ template with the Handlebars library, which generates JavaScript and runs it with `new Function`; Forge renders a
 \ documented subset with the private primitive template:_render (src/prims/template.ts), which walks a parsed tree
 \ and runs no code. The JSON is read by the shared json words.
 IN: template

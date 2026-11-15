@@ -27,7 +27,7 @@ IN: hexdump
   n 2 * n 1 + 2 div + 1 - ;
 
 \ Byte b as the ASCII column shows it: itself from 0x20 to 0x7e, else a full stop.
-: _ascii-table ( -- bytes )
+MEMO: _ascii-table ( -- bytes )
   0 256 range [ dup 32 < over 126 > or [ drop 46 ] when ] map list>bytes ;
 
 \ One line. chunk is the bytes of the line and text the same bytes as the ASCII column shows them.
@@ -35,7 +35,7 @@ IN: hexdump
   off _offset ": " cat
   chunk bytes>hex up [ upper ] when _group cat
   with-ascii
-  [ width _field-len chunk len _field-len - " " swap util:repeat-str cat
+  [ width _field-len chunk len _field-len - " " swap repeat-str cat
     "  " cat
     text bytes>latin1 cat ]
   when ;
@@ -53,18 +53,18 @@ IN: hexdump
 : _encode ( data:bytes width:int up:bool with-ascii:bool -- str )
   data data _ascii-table translate width up with-ascii _rows ;
 
-: encode ( bytes width:int[1..64]=16 case:choice{lower|upper}=lower ascii:bool=true -- str )
+: encode ( bytes width:int[1..64]=16 case:choice<util:letter-case>=lower ascii:bool=true -- str )
   "Encode bytes as an xxd-style hex dump, one line per width bytes: an 8-digit hex offset, a colon and a space, the bytes as hex in groups of two bytes separated by a space, then (with ascii) padding so the columns line up, two spaces and the ASCII column (bytes 0x20 to 0x7e as themselves, others as a full stop). Lines are separated by a line feed with none at the end. Case sets the case of the hex digits; the offset is always lowercase, as in xxd -u. Empty input gives empty text." doc
   "Encodings" category
   width case "upper" = ascii _encode ;
 
 META: encode
   use-when "You want a readable hex and ASCII listing of some bytes, in the layout xxd prints, to inspect a file or a packet." ;
-  link "https://en.wikipedia.org/wiki/Hex_dump" "Hex dump on Wikipedia" ;
-  inverse decode ;
   param width "Bytes per line, 1 to 64." ;
   param case "Case of the hex digits (the offset is always lowercase)." ;
   param ascii "Add the ASCII column." ;
+  inverse decode ;
+  link "https://en.wikipedia.org/wiki/Hex_dump" "Hex dump on Wikipedia" ;
   checks output charset "\t\n\r\x20-\x7e" ;
 ;
 
@@ -76,7 +76,7 @@ META: encode
 
 \ True when the token ends in a colon (xxd and this vocabulary's own layout).
 : _colon? ( t:str -- bool )
-  t ":" util:ends-with? ;
+  t ":" ends-with? ;
 
 \ The token without a trailing colon.
 \ Kept private: it only resembles case:_body (see the ops README, Justified exceptions).
@@ -112,14 +112,14 @@ META: encode
   "Decode a hex dump to bytes. Accepts this vocabulary's layout, xxd output (any width and grouping) and hexdump -C output: each line is an offset (hex digits, optionally followed by a colon), the bytes as hex, and an ASCII column. Offsets and the ASCII column are ignored and blank lines are skipped. A line with no valid offset, a non-hex or odd-length hex field, or a * line that hexdump uses to squeeze repeated lines (use hexdump -v) raises E_COERCE. Empty input gives empty bytes." doc
   "Encodings" category
   "\r" split "" join "\n" split
-  [ [ 32 = ] util:trim-start ] map [ _blank? not ] filter
+  [ [ 32 = ] trim-start ] map [ _blank? not ] filter
   [ _line-bytes ] map #[ ] bjoin ;
 
 META: decode
   use-when "You have a hex dump from xxd or hexdump -C, or a listing in this layout, and want the bytes back." ;
-  link "https://en.wikipedia.org/wiki/Hex_dump" "Hex dump on Wikipedia" ;
   inverse encode ;
   see-also hexdump:encode ;
+  link "https://en.wikipedia.org/wiki/Hex_dump" "Hex dump on Wikipedia" ;
   checks input charset "\t\n\r\x20-\x7e" ;
   expects "hex dump" ;
 ;

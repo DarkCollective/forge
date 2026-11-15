@@ -13,7 +13,7 @@ USING: asn1 ;
   "The hex digits (lower case) of the decoded body of each PEM block in the text (PEM to Hex), one block per line, in order: -----BEGIN CERTIFICATE----- ... -----END CERTIFICATE----- gives the hex of the DER certificate. Text outside the blocks is ignored. No PEM block in the input is E_COERCE (CyberChef returns nothing); so is a block that is not closed, closed with another label, nested, or whose Base64 is damaged. The label and the RFC 1421 header lines of old encrypted keys are not part of the output." doc
   "Public Key" category
   data str>bytes asn1:pem-decode
-  dup len 0 = [ "no PEM block (-----BEGIN ...-----) found in the input" raise:coerce ] when
+  dup len 0 = [ "no PEM block (-----BEGIN ...-----) found in the input" fail-coerce ] when
   [ _hex-of ] map "\n" join ;
 
 : from-hex ( data:str header:str="CERTIFICATE" -- str )

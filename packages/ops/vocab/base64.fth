@@ -6,6 +6,12 @@
 \ Errors are E_COERCE (fail-coerce).
 IN: base64
 
+\ The alphabet of Base64 text.
+CHOICE: base64-alphabet
+  option standard "The standard alphabet of RFC 4648 section 4 (+ and /)." ;
+  option url "The URL and file name safe alphabet of RFC 4648 section 5 (- and _)." ;
+;
+
 \ ---- tables ----
 
 \ The tables are byte literals, so that using one costs a single step. A table of the encoder maps a
@@ -102,7 +108,7 @@ IN: base64
   text 0 text len fill - slice
   padding [ "==" 0 fill slice cat ] when ;
 
-: encode ( bytes alphabet:choice{standard|url}=standard padding:bool=true -- str )
+: encode ( bytes alphabet:choice<base64-alphabet>=standard padding:bool=true -- str )
   "Encode bytes as base64 text (RFC 4648)." doc
   "Encodings" category
   alphabet padding _encode ;
@@ -152,7 +158,7 @@ META: encode
   symbols 0 core len slice core = not [ "data after the padding" fail-coerce ] when
   core latin1>bytes pad _finish ;
 
-: decode ( bytes alphabet:choice{standard|url}=standard -- bytes )
+: decode ( bytes alphabet:choice<base64-alphabet>=standard -- bytes )
   "Decode base64 text (RFC 4648). White space is ignored and padding is optional." doc
   "Encodings" category
   alphabet _decode ;

@@ -2,7 +2,7 @@
 \ braille: bytes as 8-dot Unicode Braille patterns (Forge's own design, not CyberChef's table). Byte b
 \ is the code point U+2800 + b (Unicode block "Braille Patterns", U+2800 to U+28FF), so the mapping
 \ is lossless for every byte value. The words are FL and need no primitive; E_COERCE comes from the
-\ raise vocabulary (raise:coerce).
+\ core word fail-coerce.
 IN: braille
 
 : encode ( bytes -- str )
@@ -16,9 +16,9 @@ IN: braille
 : decode ( str -- bytes )
   "Read Braille patterns U+2800 to U+28FF as bytes (code point minus U+2800). ASCII white space between patterns is ignored; any other character is E_COERCE." doc
   "Encodings" category
-  str>codes [ util:space? not ] filter
+  str>codes [ space? not ] filter
   dup [ _outside? ] filter len 0 >
-  [ "not a Braille pattern (U+2800 to U+28FF)" raise:coerce ] when
+  [ "not a Braille pattern (U+2800 to U+28FF)" fail-coerce ] when
   [ 10240 - ] map list>bytes ;
 
 META: encode
@@ -29,8 +29,8 @@ META: encode
 
 META: decode
   use-when "You have text made of Braille pattern symbols (U+2800 to U+28FF) and want the bytes behind them." ;
-  link "https://en.wikipedia.org/wiki/Braille" "Braille on Wikipedia" ;
   inverse encode ;
+  link "https://en.wikipedia.org/wiki/Braille" "Braille on Wikipedia" ;
   checks input charset "\u{2800}-\u{28FF} \t\n\x0b\x0c\r" ;
   expects "Braille patterns" ;
 ;

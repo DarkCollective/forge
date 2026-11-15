@@ -9,25 +9,25 @@ IN: aes-kw
   "Encryption" category
   kek _wrap ;
 
+META: wrap
+  use-when "You have a key to protect and a 16, 24 or 32 byte key-encryption key, and you need the RFC 3394 wrapped form to store or send the key." ;
+  param kek "The key-encryption key: 16, 24 or 32 bytes (AES-128, -192 or -256)." ;
+  inverse unwrap ;
+  see-also aes-kw:unwrap hex:encode ;
+  link "https://www.rfc-editor.org/rfc/rfc3394" "RFC 3394: AES Key Wrap" ;
+  link "https://en.wikipedia.org/wiki/Advanced_Encryption_Standard" "Advanced Encryption Standard on Wikipedia" ;
+;
+
 : unwrap ( bytes kek:key{hex|utf8|latin1|base64} -- bytes )
   "AES Key Unwrap (RFC 3394), the inverse of aes-kw:wrap under the same key-encryption key. The wrapped key is a multiple of 8 bytes and at least 24 (E_COERCE otherwise). A wrong key or corrupted data fails the RFC 3394 integrity check, which is E_COERCE, and no key data is returned. A key-encryption key of the wrong length is E_RANGE." doc
   "Encryption" category
   kek _unwrap ;
 
-META: wrap
-  use-when "You have a key to protect and a 16, 24 or 32 byte key-encryption key, and you need the RFC 3394 wrapped form to store or send the key." ;
-  param kek "The key-encryption key: 16, 24 or 32 bytes (AES-128, -192 or -256)." ;
-  see-also aes-kw:unwrap hex:encode ;
-  inverse unwrap ;
-  link "https://www.rfc-editor.org/rfc/rfc3394" "RFC 3394: AES Key Wrap" ;
-  link "https://en.wikipedia.org/wiki/Advanced_Encryption_Standard" "Advanced Encryption Standard on Wikipedia" ;
-;
-
 META: unwrap
   use-when "You have RFC 3394 wrapped key data and the key-encryption key that wrapped it, and you want the original key back. A wrong key fails the check." ;
   param kek "The key-encryption key that wrapped the key: 16, 24 or 32 bytes." ;
-  see-also aes-kw:wrap hex:decode ;
   inverse wrap ;
+  see-also aes-kw:wrap hex:decode ;
   link "https://www.rfc-editor.org/rfc/rfc3394" "RFC 3394: AES Key Wrap" ;
   checks input binary ;
   expects "wrapped key data" ;

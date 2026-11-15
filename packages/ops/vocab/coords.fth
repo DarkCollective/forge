@@ -22,18 +22,21 @@ IN: coords
 
 \ True when s is one or more ASCII digits.
 : _digits? ( s:str -- bool )
-  s len 0 > s str>codes [ util:dec-digit? ] filter len s len = and ;
+  s len 0 > s str>codes [ dec-digit? ] filter len s len = and ;
 
 \ ip and fp are the digits before and after the point of an unsigned decimal number: its value
 \ as a fraction n / 10^(length of fp). str>int refuses anything that is not a digit.
 : _nd2 ( ip:str fp:str -- int int )
-  ip len fp len + 0 = [ "not a number" raise:coerce ] when
+  ip len fp len + 0 = [ "not a number" fail-coerce ] when
   "0" ip cat fp cat str>int 10 fp len pow ;
 
 : _nd ( t:str -- int int )
-  t "." split
-  dup len 1 = [ 0 nth "" ]
-  [ dup len 2 = [ dup 0 nth swap 1 nth ] [ "not a number" raise:coerce "" "" ] if ] if
+  t "." split :> parts
+  {
+    [ parts len 1 = ] [ parts 0 nth "" ]
+    [ parts len 2 = ] [ parts 0 nth parts 1 nth ]
+    [ "not a number" fail-coerce ]
+  } cond
   _nd2 ;
 
 \ An unsigned decimal number as a float (E_COERCE when it is not one).
@@ -52,7 +55,7 @@ IN: coords
 : _fixed ( v:int p:int -- str )
   p 0 =
   [ v int>str ]
-  [ "0" p 1 + v int>str len - 0 max util:repeat-str v int>str cat p _insert-point ] if ;
+  [ "0" p 1 + v int>str len - 0 max repeat-str v int>str cat p _insert-point ] if ;
 
 \ a (pico-degrees, at least 0) times mult, in units of 10^-p, rounded.
 : _units ( a:int mult:int p:int -- int )
@@ -92,7 +95,7 @@ IN: coords
 : _gh-alphabet ( -- str ) "0123456789bcdefghjkmnpqrstuvwxyz" ;
 
 : _gh-value ( c:str -- int )
-  _gh-alphabet c split dup len 2 = not [ "not a geohash character" raise:coerce ] when 0 nth len ;
+  _gh-alphabet c split dup len 2 = not [ "not a geohash character" fail-coerce ] when 0 nth len ;
 
 : _gh-bit ( vals:list i:int -- int )
   vals i 5 div nth 4 i 5 mod - shr 1 band ;
@@ -112,9 +115,9 @@ IN: coords
 
 \ A geohash as latitude and longitude of the middle of its cell.
 : _gh-decode ( text:str -- int int )
-  text [ util:space? ] util:trim-start [ util:space? ] util:trim-end lower
-  dup len 1 < over len 12 > or [ "a geohash has 1 to 12 characters" raise:coerce ] when
-  str>codes [ util:cp>str _gh-value ] map dup len 5 * _gh-decode-total ;
+  text [ space? ] trim-start [ space? ] trim-end lower
+  dup len 1 < over len 12 > or [ "a geohash has 1 to 12 characters" fail-coerce ] when
+  str>codes [ cp>str _gh-value ] map dup len 5 * _gh-decode-total ;
 
 : _ge-bit ( i:int lonidx:int latidx:int blon:int blat:int -- int )
   i 2 mod 0 =
@@ -145,11 +148,11 @@ IN: coords
 \ A letter or a number of the text: every character that is not a digit, point, minus sign or one
 \ of the hemisphere letters N S E W (any case) separates; the letters stand apart.
 : _spread ( acc:list c:int -- list )
-  c util:dec-digit? c 46 = or c 45 = or
-  [ acc c append ]
-  [ c 78 = c 83 = or c 69 = or c 87 = or
-    [ acc 32 append c append 32 append ]
-    [ acc 32 append ] if ] if ;
+  {
+    [ c dec-digit? c 46 = or c 45 = or ] [ acc c append ]
+    [ c 78 = c 83 = or c 69 = or c 87 = or ] [ acc 32 append c append 32 append ]
+    [ acc 32 append ]
+  } cond ;
 
 : _tokens ( text:str -- list )
   text upper str>codes { } [ _spread ] reduce codes>str " " split [ len 0 > ] filter ;
@@ -160,45 +163,48 @@ IN: coords
 \ One minutes or seconds component, in pico-degrees: the text divided by d (60 or 3600), rounded; it
 \ must be below 60 of its own unit.
 : _minor ( t:str d:int -- int )
-  t _pico dup 60 _d >= [ "minutes and seconds must be below 60" raise:range ] when
+  t _pico dup 60 _d >= [ "minutes and seconds must be below 60" fail-range ] when
   d 2 div + d div ;
 
 \ One co-ordinate from its tokens (degrees, then minutes, then seconds): pico-degrees with the sign
 \ of the first token.
 : _half ( toks:list -- int )
-  toks 0 nth dup "-" util:starts-with? [ 1 over len slice ] when _pico
+  toks 0 nth dup "-" starts-with? [ 1 over len slice ] when _pico
   toks len 1 > [ toks 1 nth 60 _minor + ] when
   toks len 2 > [ toks 2 nth 3600 _minor + ] when
-  toks 0 nth "-" util:starts-with? [ neg ] when ;
+  toks 0 nth "-" starts-with? [ neg ] when ;
 
 \ The numbers of the text split into a latitude half and a longitude half of h tokens each; the
 \ letters S and W make the value negative.
 : _halves ( nums:list letters:list h:int -- int int )
-  nums 0 h slice _half letters "S" util:contains? [ abs neg ] when
-  nums h nums len slice _half letters "W" util:contains? [ abs neg ] when ;
+  nums 0 h slice _half letters "S" contains? [ abs neg ] when
+  nums h nums len slice _half letters "W" contains? [ abs neg ] when ;
 
 \ How many numbers each format has (0 for auto).
 : _expected ( from:str -- int )
-  from "decimal-degrees" = [ 2 ]
-  [ from "degrees-decimal-minutes" = [ 4 ]
-    [ from "degrees-minutes-seconds" = [ 6 ] [ 0 ] if ] if ] if ;
+  from {
+    "decimal-degrees" [ 2 ]
+    "degrees-decimal-minutes" [ 4 ]
+    "degrees-minutes-seconds" [ 6 ]
+    [ 0 ]
+  } case ;
 
 : _check-count ( k:int from:str -- )
   from _expected 0 =
   [ k 2 = k 4 = or k 6 = or ]
   [ k from _expected = ] if
-  not [ "the number of values does not fit the format (2 for decimal degrees, 4 for degrees and decimal minutes, 6 for degrees, minutes and seconds)" raise:coerce ] when ;
+  not [ "the number of values does not fit the format (2 for decimal degrees, 4 for degrees and decimal minutes, 6 for degrees, minutes and seconds)" fail-coerce ] when ;
 
 : _check-range ( lat:int lon:int -- int int )
-  lat abs 90 _d > [ "the latitude is beyond 90 degrees" raise:range ] when
-  lon abs 180 _d > [ "the longitude is beyond 180 degrees" raise:range ] when
+  lat abs 90 _d > [ "the latitude is beyond 90 degrees" fail-range ] when
+  lon abs 180 _d > [ "the longitude is beyond 180 degrees" fail-range ] when
   lat lon ;
 
 \ The latitude and longitude of the numbers and letters in the tokens.
 : _parse-tokens ( toks:list from:str -- int int )
   toks [ _letter? not ] filter toks [ _letter? ] filter
   over len from _check-count
-  dup len 2 > [ "too many hemisphere letters" raise:coerce ] when
+  dup len 2 > [ "too many hemisphere letters" fail-coerce ] when
   over len 2 div _halves _check-range ;
 
 \ ---- the Transverse Mercator projection (UTM) ----
@@ -215,13 +221,13 @@ IN: coords
 : _poly ( coefs:list x:num -- num )
   coefs rev 0.0 [ swap x * + ] reduce ;
 
-: _alpha-coefs ( -- list )
+MEMO: _alpha-coefs ( -- list )
   { { 0.0 0.5 -0.6666666666666666 0.3125 0.22777777777777777 } { 0.0 0.0 0.2708333333333333 -0.6 0.38680555555555557 } { 0.0 0.0 0.0 0.25416666666666665 -0.7357142857142858 } { 0.0 0.0 0.0 0.0 0.30729786706349205 } } ;
 
-: _beta-coefs ( -- list )
+MEMO: _beta-coefs ( -- list )
   { { 0.0 0.5 -0.6666666666666666 0.3854166666666667 -0.002777777777777778 } { 0.0 0.0 0.020833333333333332 0.06666666666666667 -0.3034722222222222 } { 0.0 0.0 0.0 0.035416666666666666 -0.04404761904761905 } { 0.0 0.0 0.0 0.0 0.02726314484126984 } } ;
 
-: _delta-coefs ( -- list )
+MEMO: _delta-coefs ( -- list )
   { { 0.0 2.0 -0.6666666666666666 -2.0 2.577777777777778 } { 0.0 0.0 2.3333333333333335 -1.6 -5.044444444444444 } { 0.0 0.0 0.0 3.7333333333333334 -3.8857142857142857 } { 0.0 0.0 0.0 0.0 6.792063492063492 } } ;
 
 : _series ( coefs:list -- list ) coefs [ _n _poly ] map ;
@@ -304,15 +310,20 @@ IN: coords
 : _plain-zone ( lon:int -- int ) lon 180 _d + 6 _d div 1 + 60 min ;
 
 : _svalbard-zone ( lon:int -- int )
-  lon 9 _d < [ 31 ] [ lon 21 _d < [ 33 ] [ lon 33 _d < [ 35 ] [ 37 ] if ] if ] if ;
+  {
+    [ lon 9 _d < ] [ 31 ]
+    [ lon 21 _d < ] [ 33 ]
+    [ lon 33 _d < ] [ 35 ]
+    [ 37 ]
+  } cond ;
 
 \ The UTM zone of a point, with the exceptions for south-west Norway and Svalbard.
 : _zone-of ( lat:int lon:int -- int )
-  lat 56 _d >= lat 64 _d < and lon 3 _d >= and lon 12 _d < and
-  [ 32 ]
-  [ lat 72 _d >= lon 0 >= and lon 42 _d < and
-    [ lon _svalbard-zone ]
-    [ lon _plain-zone ] if ] if ;
+  {
+    [ lat 56 _d >= lat 64 _d < and lon 3 _d >= and lon 12 _d < and ] [ 32 ]
+    [ lat 72 _d >= lon 0 >= and lon 42 _d < and ] [ lon _svalbard-zone ]
+    [ lon _plain-zone ]
+  } cond ;
 
 : _bands ( -- str ) "CDEFGHJKLMNPQRSTUVWX" ;
 
@@ -321,7 +332,7 @@ IN: coords
 : _band ( lat:int -- str ) _bands lat _band-index dup 1 + slice ;
 
 : _check-utm-range ( lat:int lon:int -- int int )
-  lat 80 _d neg < lat 84 _d > or [ "UTM and MGRS cover latitudes 80 S to 84 N" raise:range ] when
+  lat 80 _d neg < lat 84 _d > or [ "UTM and MGRS cover latitudes 80 S to 84 N" fail-range ] when
   lat lon ;
 
 \ The easting and northing in metres of a point in the zone (the southern false northing of
@@ -341,12 +352,12 @@ IN: coords
 
 \ ---- MGRS ----
 
-: _pad2 ( n:int -- str ) "0" 2 n int>str len - 0 max util:repeat-str n int>str cat ;
+: _pad2 ( n:int -- str ) "0" 2 n int>str len - 0 max repeat-str n int>str cat ;
 
-: _pad5 ( n:int -- str ) "0" 5 n int>str len - 0 max util:repeat-str n int>str cat ;
+: _pad5 ( n:int -- str ) "0" 5 n int>str len - 0 max repeat-str n int>str cat ;
 
 : _col-set ( zone:int -- str )
-  zone 1 - 3 mod dup 0 = [ drop "ABCDEFGH" ] [ 1 = [ "JKLMNPQR" ] [ "STUVWXYZ" ] if ] if ;
+  zone 1 - 3 mod { 0 [ "ABCDEFGH" ] 1 [ "JKLMNPQR" ] [ "STUVWXYZ" ] } case ;
 
 : _row-set ( -- str ) "ABCDEFGHJKLMNPQRSTUV" ;
 
@@ -372,10 +383,10 @@ IN: coords
 
 \ The position of the one-character text c in set, E_COERCE when it is not there.
 : _index-in ( set:str c:str -- int )
-  set c split dup len 2 < [ "not a valid letter in this position" raise:coerce ] when 0 nth len ;
+  set c split dup len 2 < [ "not a valid letter in this position" fail-coerce ] when 0 nth len ;
 
 \ The smallest northing of each latitude band C to X, in metres.
-: _band-min-northing ( -- list )
+MEMO: _band-min-northing ( -- list )
   { 1100000 2000000 2800000 3700000 4600000 5500000 6400000 7300000 8200000 9100000 0 800000 1700000 2600000 3500000 4400000 5300000 6200000 7000000 7900000 } ;
 
 \ The northing of the 100 km row n100 (0 to 19) in a band: the smallest at or above the band's
@@ -413,43 +424,45 @@ IN: coords
 
 : _check-mgrs-digits ( digits:str -- )
   digits len 0 = digits _digits? or digits len 2 mod 0 = and digits len 10 <= and
-  not [ "the digits of an MGRS reference come in pairs, at most 5 for each of easting and northing" raise:coerce ] when ;
+  not [ "the digits of an MGRS reference come in pairs, at most 5 for each of easting and northing" fail-coerce ] when ;
 
 \ c is the reference upper-cased without spaces; z is the length of its zone number.
 : _mgrs-split ( c:str z:int -- int int )
-  c len z 3 + < [ "an MGRS reference is a zone, a band letter and two square letters, then digits" raise:coerce ] when
-  c 0 z slice str>int dup 1 < over 60 > or [ "the zone is 1 to 60" raise:range ] when
+  c len z 3 + < [ "an MGRS reference is a zone, a band letter and two square letters, then digits" fail-coerce ] when
+  c 0 z slice str>int dup 1 < over 60 > or [ "the zone is 1 to 60" fail-range ] when
   c z z 1 + slice c z 1 + z 2 + slice c z 2 + z 3 + slice c z 3 + c len slice
   dup _check-mgrs-digits _mgrs-build ;
 
 : _mgrs-parse-c ( c:str -- int int )
-  c [ util:dec-digit? ] util:count-leading
-  dup 1 < over 2 > or [ "an MGRS reference starts with a zone number of one or two digits" raise:coerce ] when
+  c [ dec-digit? ] count-leading
+  dup 1 < over 2 > or [ "an MGRS reference starts with a zone number of one or two digits" fail-coerce ] when
   c swap _mgrs-split ;
 
 \ An MGRS reference (any case, spaces allowed) as the latitude and longitude of the middle of its cell.
 : _mgrs-parse ( text:str -- int int )
-  text upper util:strip-space _mgrs-parse-c ;
+  text upper strip-space _mgrs-parse-c ;
 
 : _utm-tokens ( text:str -- list )
   text str>codes [ dup 44 = [ drop 32 ] when ] map codes>str upper " " split [ len 0 > ] filter ;
 
 \ The zone-and-band, easting and northing texts of 3 tokens (31T E N) or 4 (31 T E N).
 : _utm-fields ( toks:list -- str str str )
-  toks len 3 = [ toks 0 nth toks 1 nth toks 2 nth ]
-  [ toks len 4 = [ toks 0 nth toks 1 nth cat toks 2 nth toks 3 nth ]
-    [ "a UTM reference is a zone and band, an easting and a northing" raise:coerce "" "" "" ] if ] if ;
+  {
+    [ toks len 3 = ] [ toks 0 nth toks 1 nth toks 2 nth ]
+    [ toks len 4 = ] [ toks 0 nth toks 1 nth cat toks 2 nth toks 3 nth ]
+    [ "a UTM reference is a zone and band, an easting and a northing" fail-coerce ]
+  } cond ;
 
 : _utm-build2 ( zb:str z:int e:str n:str -- int int )
   zb len z 1 + = z 1 >= and z 2 <= and
-  not [ "the UTM zone is a number of one or two digits followed by a latitude band letter" raise:coerce ] when
-  zb 0 z slice str>int dup 1 < over 60 > or [ "the zone is 1 to 60" raise:range ] when
+  not [ "the UTM zone is a number of one or two digits followed by a latitude band letter" fail-coerce ] when
+  zb 0 z slice str>int dup 1 < over 60 > or [ "the zone is 1 to 60" fail-range ] when
   e _decimal-num n _decimal-num
   rot
   _bands zb z zb len slice _index-in 10 < _from-utm ;
 
 : _utm-build ( zb:str e:str n:str -- int int )
-  zb zb [ util:dec-digit? ] util:count-leading e n _utm-build2 ;
+  zb zb [ dec-digit? ] count-leading e n _utm-build2 ;
 
 : _utm-parse ( text:str -- int int )
   text _utm-tokens _utm-fields _utm-build ;
@@ -457,25 +470,25 @@ IN: coords
 \ ---- finding out which format a text is in ----
 
 : _decimal? ( t:str -- bool )
-  t len 0 > t str>codes [ dup util:dec-digit? swap 46 = or ] filter len t len = and ;
+  t len 0 > t str>codes [ dup dec-digit? swap 46 = or ] filter len t len = and ;
 
 : _geohash? ( text:str -- bool )
-  text [ util:space? ] util:trim-start [ util:space? ] util:trim-end
+  text [ space? ] trim-start [ space? ] trim-end
   dup len 1 >= over len 12 <= and swap
-  str>codes [ util:cp>str _gh-alphabet swap split len 2 = ] filter len
-  text [ util:space? ] util:trim-start [ util:space? ] util:trim-end len = and ;
+  str>codes [ cp>str _gh-alphabet swap split len 2 = ] filter len
+  text [ space? ] trim-start [ space? ] trim-end len = and ;
 
 : _mgrs-shape? ( c:str z:int -- bool )
   c len z 3 + >= z 1 >= and z 2 <= and
-  [ c z z 3 + slice str>codes [ 65 90 util:between? ] filter len 3 =
+  [ c z z 3 + slice str>codes [ 65 90 between? ] filter len 3 =
     c z 3 + c len slice dup len 0 = swap _digits? or and ]
   [ false ] if ;
 
 : _mgrs? ( text:str -- bool )
-  text upper util:strip-space dup [ util:dec-digit? ] util:count-leading _mgrs-shape? ;
+  text upper strip-space dup [ dec-digit? ] count-leading _mgrs-shape? ;
 
 : _zone-band? ( zb:str -- bool )
-  zb [ util:dec-digit? ] util:count-leading
+  zb [ dec-digit? ] count-leading
   dup 1 >= over 2 <= and swap zb len swap 1 + = and
   _bands zb zb len 1 - zb len slice split len 2 = and ;
 
@@ -490,15 +503,21 @@ IN: coords
 
 \ The format of the text: from when given, otherwise geohash, mgrs, utm, or auto for numbers.
 : _kind ( text:str from:str -- str )
-  from "auto" = not
-  [ from ]
-  [ text _geohash? [ "geohash" ]
-    [ text _mgrs? [ "mgrs" ] [ text _utm? [ "utm" ] [ "auto" ] if ] if ] if ] if ;
+  {
+    [ from "auto" = not ] [ from ]
+    [ text _geohash? ] [ "geohash" ]
+    [ text _mgrs? ] [ "mgrs" ]
+    [ text _utm? ] [ "utm" ]
+    [ "auto" ]
+  } cond ;
 
 : _dispatch ( text:str kind:str -- int int )
-  kind "geohash" = [ text _gh-decode ]
-  [ kind "mgrs" = [ text _mgrs-parse ]
-    [ kind "utm" = [ text _utm-parse ] [ text _tokens kind _parse-tokens ] if ] if ] if ;
+  kind {
+    "geohash" [ text _gh-decode ]
+    "mgrs" [ text _mgrs-parse ]
+    "utm" [ text _utm-parse ]
+    [ text _tokens kind _parse-tokens ]
+  } case ;
 
 : _parse ( text:str from:str -- int int )
   text text from _kind _dispatch ;
@@ -506,11 +525,14 @@ IN: coords
 \ ---- writing a format ----
 
 : _format-out ( lat:int lon:int to:str p:int -- str )
-  to "decimal-degrees" = [ lat p _dd ", " cat lon p _dd cat ]
-  [ to "degrees-decimal-minutes" = [ lat p "N" "S" _dmm ", " cat lon p "E" "W" _dmm cat ]
-    [ to "degrees-minutes-seconds" = [ lat p "N" "S" _dms ", " cat lon p "E" "W" _dms cat ]
-      [ to "geohash" = [ lat lon p _gh-encode ]
-        [ to "utm" = [ lat lon _utm ] [ lat lon _mgrs ] if ] if ] if ] if ] if ;
+  to {
+    "decimal-degrees" [ lat p _dd ", " cat lon p _dd cat ]
+    "degrees-decimal-minutes" [ lat p "N" "S" _dmm ", " cat lon p "E" "W" _dmm cat ]
+    "degrees-minutes-seconds" [ lat p "N" "S" _dms ", " cat lon p "E" "W" _dms cat ]
+    "geohash" [ lat lon p _gh-encode ]
+    "utm" [ lat lon _utm ]
+    [ lat lon _mgrs ]
+  } case ;
 
 : convert ( data:str from:choice{auto|decimal-degrees|degrees-decimal-minutes|degrees-minutes-seconds|geohash|utm|mgrs}="auto" to:choice{decimal-degrees|degrees-decimal-minutes|degrees-minutes-seconds|geohash|utm|mgrs}="decimal-degrees" precision:int[1..12]=6 -- str )
   "A position (latitude first) converted from one co-ordinate format to another. Formats: decimal degrees (48.856670, 2.352220), degrees and decimal minutes, degrees minutes and seconds (48 51 24 N, 2 21 7 E), geohash, UTM (31T 448251 5411932) and MGRS (31UDQ4825111932), the last two on WGS 84 and between 80 S and 84 N. The input is read in the format from; with auto, one lower-case word of geohash characters is a geohash, a zone with band letter and two numbers is UTM, an upper-case zone, band and square letters then digits is MGRS, and 2, 4 or 6 numbers are decimal degrees, degrees and minutes, or degrees minutes and seconds. Numbers may be separated by anything that is not a digit, point, minus sign or one of the letters N S E W (so write the units as degree, minute and second marks or leave them out: the s of 24s would be read as south); the letters S and W (or a minus sign) make a value negative. Output: precision is the number of decimals of degrees, minutes or seconds, and the number of characters of a geohash (1 to 12); UTM and MGRS ignore it (whole metres; MGRS cuts to the metre, UTM rounds). Reading a geohash or MGRS gives the middle of its cell. Degrees are exact to 10^-12; UTM and MGRS go through floating point (Karney series, sub-millimetre). The Ordnance Survey National Grid is not offered." doc
@@ -537,7 +559,7 @@ IN: coords
   { t 0 nth "," cat t 1 nth cat  t 2 nth "," cat t 3 nth cat } ;
 
 : _two-lines ( data:str -- list )
-  data "\n" split [ [ util:space? ] util:trim-start [ util:space? ] util:trim-end ] map [ len 0 > ] filter
+  data "\n" split [ [ space? ] trim-start [ space? ] trim-end ] map [ len 0 > ] filter
   dup len 1 =
   [ dup 0 nth "^-?\\d+(?:\\.\\d+)?, ?-?\\d+(?:\\.\\d+)?, ?-?\\d+(?:\\.\\d+)?, ?-?\\d+(?:\\.\\d+)?$" "" regex:test
     [ 0 nth "-?\\d+(?:\\.\\d+)?" "" util:match-texts _split4 ] when ]
@@ -546,8 +568,8 @@ IN: coords
 : haversine ( data:str radius:num=6371 -- str )
   "The great-circle distance between two positions, from the haversine formula on a sphere of the given radius in kilometres (6371, the mean radius of the earth, by default). The input is the two positions on two lines, each in any format convert reads with auto, or CyberChef's one line of four decimal degrees, lat1, lng1, lat2, lng2 (comma and an optional space between) (decimal degrees, degrees and minutes, degrees minutes and seconds, geohash, UTM or MGRS); the result is in metres, to the millimetre, as decimal text. Like CyberChef it treats the earth as a sphere, so it can differ from the geodesic on the ellipsoid by up to about 0.5 percent." doc
   "Conversions" category
-  radius 0.0 > not [ "the radius must be above 0" raise:range ] when
-  data _two-lines dup len 2 = not [ "give exactly two positions, one on each line" raise:coerce ] when
+  radius 0.0 > not [ "the radius must be above 0" fail-range ] when
+  data _two-lines dup len 2 = not [ "give exactly two positions, one on each line" fail-coerce ] when
   dup 0 nth "auto" _parse rot 1 nth "auto" _parse radius _hav ;
 
 META: convert

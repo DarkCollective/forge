@@ -7,7 +7,7 @@ IN: mac
 \ The twelve hex digits of a MAC address, lower case, from any of the usual notations.
 : _clean ( s:str -- str )
   s lower "[:.-]" "" "" regex:replace
-  dup "^[0-9a-f]{12}$" "" regex:test not [ "not a MAC address (12 hex digits): " s cat raise:coerce ] when ;
+  dup "^[0-9a-f]{12}$" "" regex:test not [ "not a MAC address (12 hex digits): " s cat fail-coerce ] when ;
 
 : _chunks ( s:str n:int sep:str -- str )
   s n util:str-chunks sep join ;
@@ -15,7 +15,7 @@ IN: mac
 \ The EUI-64 interface identifier: ff fe in the middle, the universal/local bit of the first byte flipped (RFC 4291 appendix A).
 : _interface-id ( clean:str -- str )
   clean 0 6 slice "fffe" cat clean 6 12 slice cat
-  dup 0 2 slice 16 str>int-radix 2 bxor 2 util:pad-hex swap 2 16 slice cat
+  dup 0 2 slice 16 str>int-radix 2 bxor 2 pad-hex swap 2 16 slice cat
   4 ":" _chunks ;
 
 \ The enabled notations of one address, in the order plain, hyphens, colons, Cisco, IPv6.
@@ -24,14 +24,13 @@ IN: mac
   { none dash colon cisco v6 }
   zip [ 1 nth ] filter [ 0 nth ] map ;
 
-: _both ( f:str -- list )
-  { f f upper } ;
-
 \ Both cases (lower, then upper), upper only, or lower only.
 : _cased ( forms:list letters:str -- list )
-  letters "both" =
-  [ forms [ _both ] map util:list-flatten ]
-  [ letters "upper" = [ forms [ upper ] map ] [ forms ] if ] if ;
+  {
+    [ letters "both" = ] [ [ forms [ dup emit upper emit ] each ] collect ]
+    [ letters "upper" = ] [ forms [ upper ] map ]
+    [ forms ]
+  } cond ;
 
 : _one ( s:str letters:str none:bool dash:bool colon:bool cisco:bool v6:bool -- str )
   s _clean none dash colon cisco v6 _notations letters _cased

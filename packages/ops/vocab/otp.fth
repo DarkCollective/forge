@@ -8,10 +8,17 @@ IN: otp
 
 USING: hmac base32 url random clock ;
 
+\ The hash of the HMAC behind the password.
+CHOICE: hmac-hash
+  option sha1 "SHA-1 (the RFC and the default of authenticator apps)." ;
+  option sha256 "SHA-256." ;
+  option sha512 "SHA-512." ;
+;
+
 \ The secret bytes: the Base32 text of the input (white space and the case are ignored), or size random bytes when
 \ the input is empty. A character outside the Base32 alphabet is E_COERCE.
 : _secret ( text:str size:int -- bytes )
-  text util:strip-space upper dup len 0 =
+  text strip-space upper dup len 0 =
   [ drop size random:bytes-of ]
   [ str>bytes "standard" base32:decode ] if ;
 
@@ -19,15 +26,15 @@ USING: hmac base32 url random clock ;
 \ (RFC 4226 section 5.3), reduced to the number of digits. 10^digits + code starts with a 1 followed by the code padded with
 \ zeros to the number of digits.
 : _dt ( off:int mac:bytes digits:int -- str )
-  10 digits pow dup mac off off 4 + slice 256 util:digits>int 2147483647 band swap mod + int>str 1 digits 1 + slice ;
+  10 digits pow dup mac off off 4 + slice 256 digits>int 2147483647 band swap mod + int>str 1 digits 1 + slice ;
 
 : _truncate ( mac:bytes digits:int -- str )
   mac mac len 1 - nth 15 band mac digits _dt ;
 
 \ The HOTP value of a secret for a counter (an unsigned 64-bit integer).
 : _hotp ( key:bytes counter:int alg:str digits:int -- str )
-  counter 0 < counter 1 64 shl >= or [ "the counter must fit in 64 bits" raise:range ] when
-  counter 8 util:int>be-bytes alg key hmac:digest digits _truncate ;
+  counter 0 < counter 1 64 shl >= or [ "the counter must fit in 64 bits" fail-range ] when
+  counter 8 int>be-bytes alg key hmac:digest digits _truncate ;
 
 \ The otpauth:// URI (key URI format of the Google Authenticator project).
 : _uri ( kind:str name:str key:bytes alg:str digits:int extra:str -- str )
@@ -42,7 +49,7 @@ USING: hmac base32 url random clock ;
   "hotp" name key alg digits "&counter=" counter int>str cat _uri
   key counter alg digits _hotp _report ;
 
-: hotp ( secret:str name:str="Account" algorithm:choice{sha1|sha256|sha512}="sha1" digits:int[1..10]=6 counter:int[0..]=0 key-size:int[1..256]=20 -- str )
+: hotp ( secret:str name:str="Account" algorithm:choice<hmac-hash>="sha1" digits:int[1..10]=6 counter:int[0..]=0 key-size:int[1..256]=20 -- str )
   "HOTP (RFC 4226). The input is the secret as Base32 text, as authenticator apps show it (white space and lower case are ignored); an empty input makes a random secret of key-size bytes from the host's cryptographic random generator, so then the output differs on every call (the word carries the +random effect). The result is the otpauth:// URI of the secret and the password for the counter, in the form CyberChef prints: URI: <uri>, a blank line, Password: <digits>. The password has digits decimal digits (1 to 10) from the HMAC-SHA1 (the default, as in the RFC), HMAC-SHA256 or HMAC-SHA512 of the 8-byte counter. A secret that is not Base32 is E_COERCE; a counter of 2 to the power 64 or more is E_RANGE." doc
   "Generators" category
   secret key-size _secret name algorithm digits counter _hotp-report ;
@@ -64,14 +71,14 @@ META: hotp
 
 \ The time step number: whole periods since the epoch offset.
 : _counter ( t:int epoch:int period:int -- int )
-  t epoch < [ "the time is before the epoch offset" raise:range ] when
+  t epoch < [ "the time is before the epoch offset" fail-range ] when
   t epoch - period div ;
 
 : _totp-report ( key:bytes name:str alg:str digits:int period:int epoch:int time:int -- str )
   "totp" name key alg digits "&period=" period int>str cat _uri
   key time _when epoch period _counter alg digits _hotp _report ;
 
-: totp ( secret:str name:str="Account" algorithm:choice{sha1|sha256|sha512}="sha1" digits:int[1..10]=6 period:int[1..]=30 epoch:int[0..]=0 key-size:int[1..256]=20 time:int[-1..]=-1 -- str )
+: totp ( secret:str name:str="Account" algorithm:choice<hmac-hash>="sha1" digits:int[1..10]=6 period:int[1..]=30 epoch:int[0..]=0 key-size:int[1..256]=20 time:int[-1..]=-1 -- str )
   "TOTP (RFC 6238). The input is the secret as Base32 text, as authenticator apps show it (white space and lower case are ignored); an empty input makes a random secret of key-size bytes from the host's cryptographic random generator. The password is the HOTP value of the time step number, the whole number of periods (seconds, 30 by default) since the epoch offset (0, the Unix epoch, by default). time is the Unix time in seconds to make the password for; -1 (the default) means now, from the host clock, so the output changes every period (the word carries the +time and +random effects). The result is the otpauth:// URI and the password, in the form CyberChef prints: URI: <uri>, a blank line, Password: <digits>. A secret that is not Base32 is E_COERCE; a time before the epoch offset is E_RANGE." doc
   "Generators" category
   secret key-size _secret name algorithm digits period epoch time _totp-report ;

@@ -3,6 +3,7 @@
 \ a size parameter. The digest is raw bytes; chain hex:encode for text. RIPEMD-160 is ripemd160:digest
 \ (over the audited @noble/hashes); the other sizes are _hash, a private primitive (src/prims/ripemd.ts).
 IN: ripemd
+
 USING: ripemd160 ;
 
 : digest ( bytes size:choice{"128"|"160"|"256"|"320"}="320" -- bytes )

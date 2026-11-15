@@ -9,13 +9,13 @@ IN: rc2
 
 USING: blockmode ;
 
-: encrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice{CBC|ECB}="CBC" padding:choice{pkcs7|none}="pkcs7" effective-bits:int[1..1024]=128 -- bytes )
+: encrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice{CBC|ECB}="CBC" padding:choice<util:pkcs7-padding>="pkcs7" effective-bits:int[1..1024]=128 -- bytes )
   "RC2 encryption (RFC 2268) of the input bytes, 64-bit blocks. The key is 1 to 128 bytes (E_RANGE otherwise). effective-bits (1 to 1024, default 128) is the effective key length T1 of the RFC key expansion; 64 and 40 are the common export-grade values, and the RFC 2268 test vectors use 63 to 129. The IV is 8 bytes for CBC (E_RANGE otherwise) and unused for ECB. padding (PKCS#7 or none) applies to both modes: with none the input must be whole 8-byte blocks (E_COERCE). Chain hex:encode for text." doc
   "Encryption" category
   key effective-bits _check-key
   mode iv 8 padding "pkcs7" = [ key effective-bits _encrypt-block ] blockmode:encrypt ;
 
-: decrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice{CBC|ECB}="CBC" padding:choice{pkcs7|none}="pkcs7" effective-bits:int[1..1024]=128 -- bytes )
+: decrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice{CBC|ECB}="CBC" padding:choice<util:pkcs7-padding>="pkcs7" effective-bits:int[1..1024]=128 -- bytes )
   "RC2 decryption, the inverse of rc2:encrypt with the same key, IV, mode, padding and effective-bits. PKCS#7 padding that does not check (usually a wrong key, IV or effective-bits) is E_COERCE, and so is ciphertext that is not whole 8-byte blocks. A key or IV of the wrong length is E_RANGE." doc
   "Encryption" category
   key effective-bits _check-key

@@ -14,7 +14,7 @@ IN: leet
 
 \ The code that c is replaced by: the entry of its position in from (letters are looked up in lower case) in to, or c.
 : _entry ( c:int from:str to:str -- int )
-  from c 65 90 util:between? [ c 32 + ] [ c ] if util:cp>str split
+  from c 65 90 between? [ c 32 + ] [ c ] if cp>str split
   dup len 2 = [ 0 nth len to str>codes swap nth ] [ drop c ] if ;
 
 \ The 128 replacement codes of ASCII.

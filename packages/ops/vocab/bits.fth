@@ -15,50 +15,124 @@ IN: bits
   "Bitwise" category
   key bxor ;
 
+META: xor
+  use-when "You have bytes and a repeating key, and want them XOR-ed with it, as in a simple cipher. Applying the same key again gives the input back." ;
+  param key "The key; it repeats over the data. One to 4096 bytes." ;
+  see-also bits:and bits:or bits:add bits:not ;
+  link "https://en.wikipedia.org/wiki/Exclusive_or" "Exclusive or on Wikipedia" ;
+  link "https://en.wikipedia.org/wiki/XOR_cipher" "XOR cipher on Wikipedia" ;
+;
+
 : and ( bytes key:key{hex|utf8|latin1|base64}[1..4096] -- bytes )
   "Bitwise AND of every byte with the key, which repeats over the data." doc
   "Bitwise" category
   [ key swap _key-at band ] mapi ;
+
+META: and
+  use-when "You have bytes and a mask, and want only the bits set in the mask kept, for example the low nibble with a key of 0f." ;
+  param key "The key; it repeats over the data. One to 4096 bytes." ;
+  see-also bits:or bits:xor bits:not ;
+  link "https://en.wikipedia.org/wiki/Bitwise_operation" "Bitwise operation on Wikipedia" ;
+;
 
 : or ( bytes key:key{hex|utf8|latin1|base64}[1..4096] -- bytes )
   "Bitwise OR of every byte with the key, which repeats over the data." doc
   "Bitwise" category
   [ key swap _key-at bor ] mapi ;
 
+META: or
+  use-when "You have bytes and a mask, and want the bits set in the mask forced on in every byte, for example the top bit with a key of 80." ;
+  param key "The key; it repeats over the data. One to 4096 bytes." ;
+  see-also bits:and bits:xor bits:not ;
+  link "https://en.wikipedia.org/wiki/Bitwise_operation" "Bitwise operation on Wikipedia" ;
+;
+
 : add ( bytes key:key{hex|utf8|latin1|base64}[1..4096] -- bytes )
   "Add the key to every byte, modulo 256. The key repeats over the data." doc
   "Bitwise" category
   [ key swap _key-at + 256 mod ] mapi ;
+
+META: add
+  use-when "You have bytes and a key, and want the key added to each byte modulo 256, as in a simple additive cipher." ;
+  param key "The key; it repeats over the data. One to 4096 bytes." ;
+  inverse sub ;
+  see-also bits:sub bits:xor ;
+  link "https://en.wikipedia.org/wiki/Modular_arithmetic" "Modular arithmetic on Wikipedia" ;
+;
 
 : sub ( bytes key:key{hex|utf8|latin1|base64}[1..4096] -- bytes )
   "Subtract the key from every byte, modulo 256 (data minus key). The key repeats over the data." doc
   "Bitwise" category
   [ key swap _key-at - 256 mod ] mapi ;
 
+META: sub
+  use-when "You have bytes that a key was added to modulo 256, and want the key taken away from each one to undo it." ;
+  param key "The key; it repeats over the data. One to 4096 bytes." ;
+  inverse add ;
+  see-also bits:add bits:xor ;
+  link "https://en.wikipedia.org/wiki/Modular_arithmetic" "Modular arithmetic on Wikipedia" ;
+;
+
 : not ( bytes -- bytes )
   "Invert every bit of every byte." doc
   "Bitwise" category
   #[ ff ] bxor ;
+
+META: not
+  use-when "You have bytes whose bits need flipping, such as a complemented value, and want every bit inverted. Applying it twice gives the input back." ;
+  see-also bits:xor bits:and ;
+  link "https://en.wikipedia.org/wiki/Bitwise_operation" "Bitwise operation on Wikipedia" ;
+;
 
 : shift-left ( bytes amount:int[1..7]=1 -- bytes )
   "Shift every byte left, within the byte, filling with zero bits. Bits shifted out are lost." doc
   "Bitwise" category
   [ amount shl 255 band ] _table translate ;
 
+META: shift-left
+  use-when "You have bytes, such as a packed field, and want each one moved up by some bits, with zeros coming in at the bottom and the top bits lost." ;
+  param amount "How many bit positions to shift, 1 to 7." ;
+  see-also bits:shift-right bits:rotate-left ;
+  link "https://en.wikipedia.org/wiki/Bitwise_operation" "Bitwise operation on Wikipedia" ;
+;
+
 : shift-right ( bytes amount:int[1..7]=1 -- bytes )
   "Shift every byte right, within the byte, filling with zero bits. Bits shifted out are lost." doc
   "Bitwise" category
   [ amount shr ] _table translate ;
+
+META: shift-right
+  use-when "You have bytes, such as a packed field, and want each one moved down by some bits, with zeros coming in at the top and the low bits lost." ;
+  param amount "How many bit positions to shift, 1 to 7." ;
+  see-also bits:shift-left bits:rotate-right ;
+  link "https://en.wikipedia.org/wiki/Bitwise_operation" "Bitwise operation on Wikipedia" ;
+;
 
 : rotate-left ( bytes amount:int[1..7]=1 -- bytes )
   "Rotate the bits of every byte left, within the byte; bits shifted out come back in on the right." doc
   "Bitwise" category
   [ dup amount shl 255 band swap 8 amount - shr bor ] _table translate ;
 
+META: rotate-left
+  use-when "You have bytes and want their bits rotated left within each byte, so bits that leave the top come back at the bottom." ;
+  param amount "How many bit positions to rotate, 1 to 7." ;
+  inverse rotate-right ;
+  see-also bits:rotate-right bits:shift-left ;
+  link "https://en.wikipedia.org/wiki/Bitwise_operation" "Bitwise operation on Wikipedia" ;
+;
+
 : rotate-right ( bytes amount:int[1..7]=1 -- bytes )
   "Rotate the bits of every byte right, within the byte; bits shifted out come back in on the left." doc
   "Bitwise" category
   [ dup amount shr swap 8 amount - shl 255 band bor ] _table translate ;
+
+META: rotate-right
+  use-when "You have bytes and want their bits rotated right within each byte, so bits that leave the bottom come back at the top." ;
+  param amount "How many bit positions to rotate, 1 to 7." ;
+  inverse rotate-left ;
+  see-also bits:rotate-left bits:shift-right ;
+  link "https://en.wikipedia.org/wiki/Bitwise_operation" "Bitwise operation on Wikipedia" ;
+;
 
 \ The n-th key of the given length, big-endian: 0x00 .. 0xff, or 0x0000 .. 0xffff.
 : _brute-key ( n:int length:int -- bytes )
@@ -86,85 +160,11 @@ IN: bits
   [ key-length _brute-key data swap crib _has-crib ] filter
   [ data swap key-length _candidate ] map ;
 
-META: xor
-  use-when "You have bytes and a repeating key, and want them XOR-ed with it, as in a simple cipher. Applying the same key again gives the input back." ;
-  link "https://en.wikipedia.org/wiki/Exclusive_or" "Exclusive or on Wikipedia" ;
-  link "https://en.wikipedia.org/wiki/XOR_cipher" "XOR cipher on Wikipedia" ;
-  param key "The key; it repeats over the data. One to 4096 bytes." ;
-  see-also bits:and bits:or bits:add bits:not ;
-;
-
-META: and
-  use-when "You have bytes and a mask, and want only the bits set in the mask kept, for example the low nibble with a key of 0f." ;
-  link "https://en.wikipedia.org/wiki/Bitwise_operation" "Bitwise operation on Wikipedia" ;
-  param key "The key; it repeats over the data. One to 4096 bytes." ;
-  see-also bits:or bits:xor bits:not ;
-;
-
-META: or
-  use-when "You have bytes and a mask, and want the bits set in the mask forced on in every byte, for example the top bit with a key of 80." ;
-  link "https://en.wikipedia.org/wiki/Bitwise_operation" "Bitwise operation on Wikipedia" ;
-  param key "The key; it repeats over the data. One to 4096 bytes." ;
-  see-also bits:and bits:xor bits:not ;
-;
-
-META: add
-  use-when "You have bytes and a key, and want the key added to each byte modulo 256, as in a simple additive cipher." ;
-  inverse sub ;
-  link "https://en.wikipedia.org/wiki/Modular_arithmetic" "Modular arithmetic on Wikipedia" ;
-  param key "The key; it repeats over the data. One to 4096 bytes." ;
-  see-also bits:sub bits:xor ;
-;
-
-META: sub
-  use-when "You have bytes that a key was added to modulo 256, and want the key taken away from each one to undo it." ;
-  inverse add ;
-  link "https://en.wikipedia.org/wiki/Modular_arithmetic" "Modular arithmetic on Wikipedia" ;
-  param key "The key; it repeats over the data. One to 4096 bytes." ;
-  see-also bits:add bits:xor ;
-;
-
-META: not
-  use-when "You have bytes whose bits need flipping, such as a complemented value, and want every bit inverted. Applying it twice gives the input back." ;
-  link "https://en.wikipedia.org/wiki/Bitwise_operation" "Bitwise operation on Wikipedia" ;
-  see-also bits:xor bits:and ;
-;
-
-META: shift-left
-  use-when "You have bytes, such as a packed field, and want each one moved up by some bits, with zeros coming in at the bottom and the top bits lost." ;
-  link "https://en.wikipedia.org/wiki/Bitwise_operation" "Bitwise operation on Wikipedia" ;
-  param amount "How many bit positions to shift, 1 to 7." ;
-  see-also bits:shift-right bits:rotate-left ;
-;
-
-META: shift-right
-  use-when "You have bytes, such as a packed field, and want each one moved down by some bits, with zeros coming in at the top and the low bits lost." ;
-  link "https://en.wikipedia.org/wiki/Bitwise_operation" "Bitwise operation on Wikipedia" ;
-  param amount "How many bit positions to shift, 1 to 7." ;
-  see-also bits:shift-left bits:rotate-right ;
-;
-
-META: rotate-left
-  use-when "You have bytes and want their bits rotated left within each byte, so bits that leave the top come back at the bottom." ;
-  inverse rotate-right ;
-  link "https://en.wikipedia.org/wiki/Bitwise_operation" "Bitwise operation on Wikipedia" ;
-  param amount "How many bit positions to rotate, 1 to 7." ;
-  see-also bits:rotate-right bits:shift-left ;
-;
-
-META: rotate-right
-  use-when "You have bytes and want their bits rotated right within each byte, so bits that leave the bottom come back at the top." ;
-  inverse rotate-left ;
-  link "https://en.wikipedia.org/wiki/Bitwise_operation" "Bitwise operation on Wikipedia" ;
-  param amount "How many bit positions to rotate, 1 to 7." ;
-  see-also bits:rotate-left bits:shift-right ;
-;
-
 META: xor-brute
   use-when "You have bytes that may be XOR-ed with a one- or two-byte key, and a word you expect in the plaintext (a crib), and want every key that makes that word appear." ;
-  link "https://en.wikipedia.org/wiki/XOR_cipher" "XOR cipher on Wikipedia" ;
-  link "https://en.wikipedia.org/wiki/Brute-force_search" "Brute-force search on Wikipedia" ;
   param key-length "Length of the keys to try: 1 byte (256 keys) or 2 bytes (65 536 keys)." ;
   param crib "Text expected in the output (matched as UTF-8 bytes). Empty keeps every candidate." ;
   see-also bits:xor ;
+  link "https://en.wikipedia.org/wiki/XOR_cipher" "XOR cipher on Wikipedia" ;
+  link "https://en.wikipedia.org/wiki/Brute-force_search" "Brute-force search on Wikipedia" ;
 ;

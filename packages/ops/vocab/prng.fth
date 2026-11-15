@@ -12,11 +12,11 @@ USING: random util ;
   "Generators" category
   drop length random:bytes-of ;
 
-: integers ( bytes min:int=0 max:int=99 count:int[1..65536]=1 delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab|none}="space" -- str )
+: integers ( bytes min:int=0 max:int=99 count:int[1..65536]=1 delimiter:choice<util:delimiter-or-none>="space" -- str )
   "Random integers, each uniform in [min, max] with both ends included (rejection sampling on the cryptographic random generator, so there is no modulo bias; the bounds may be big integers). count of them are written as decimal text, joined by the delimiter. The input is ignored. A min above max is E_RANGE. The output differs on every call (the word carries the +random effect)." doc
   "Generators" category
   drop
-  max min < [ "the minimum is above the maximum" raise:range ] when
+  max min < [ "the minimum is above the maximum" fail-range ] when
   0 count range [ drop min max random:between int>str ] map delimiter util:delimiter join ;
 
 META: bytes

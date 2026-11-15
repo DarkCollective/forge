@@ -6,7 +6,7 @@
 \ audited @noble/hashes library, because a real iteration count is far beyond the FL step budget.
 IN: pbkdf2
 
-: derive ( password:bytes size:int=16 iterations:int=1 hash:choice{sha1|sha256|sha384|sha512|md5}="sha1" salt:key{hex|utf8|latin1|base64}="" -- bytes )
+: derive ( password:bytes size:int=16 iterations:int=1 hash:choice<util:hash-algorithm>="sha1" salt:key{hex|utf8|latin1|base64}="" -- bytes )
   "The PBKDF2-HMAC key (RFC 8018) derived from the input passphrase, as raw bytes, size bytes long (CyberChef counts bits: its 128 bits is 16 bytes). The salt may be empty; where CyberChef generates a random salt for an empty one, the result here is always the same for the same parameters. Limits (E_RANGE): size 1 to 1024 bytes, iterations at least 1, and iterations times the number of hash blocks of the key at most 2,000,000. Chain hex:encode for hex text." doc
   "Key derivation" category
   password salt size iterations hash _derive ;

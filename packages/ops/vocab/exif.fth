@@ -10,10 +10,10 @@
 \ offset. The context of the IFD words is the TIFF block itself (t:bytes), so the byte order is read from it.
 IN: exif
 
-: _tag-names ( -- str )
+MEMO: _tag-names ( -- str )
   "|1:InteropIndex|2:InteropVersion|b:ProcessingSoftware|fe:NewSubfileType|ff:SubfileType|100:ImageWidth|101:ImageLength|102:BitsPerSample|103:Compression|106:PhotometricInterpretation|107:Thresholding|108:CellWidth|109:CellLength|10a:FillOrder|10d:DocumentName|10e:ImageDescription|10f:Make|110:Model|111:StripOffsets|112:Orientation|115:SamplesPerPixel|116:RowsPerStrip|117:StripByteCounts|118:MinSampleValue|119:MaxSampleValue|11a:XResolution|11b:YResolution|11c:PlanarConfiguration|11d:PageName|120:FreeOffsets|121:FreeByteCounts|122:GrayResponseUnit|123:GrayResponseCurve|124:T4Options|125:T6Options|128:ResolutionUnit|129:PageNumber|12d:TransferFunction|131:Software|132:DateTime|13b:Artist|13c:HostComputer|13d:Predictor|13e:WhitePoint|13f:PrimaryChromaticities|140:ColorMap|141:HalftoneHints|142:TileWidth|143:TileLength|144:TileOffsets|145:TileByteCounts|14a:SubIFDs|14c:InkSet|14d:InkNames|14e:NumberOfInks|150:DotRange|151:TargetPrinter|152:ExtraSamples|153:SampleFormat|154:SMinSampleValue|155:SMaxSampleValue|156:TransferRange|157:ClipPath|158:XClipPathUnits|159:YClipPathUnits|15a:Indexed|15b:JPEGTables|15f:OPIProxy|200:JPEGProc|201:JpegIFOffset|202:JpegIFByteCount|203:JpegRestartInterval|205:JpegLosslessPredictors|206:JpegPointTransforms|207:JpegQTables|208:JpegDCTables|209:JpegACTables|211:YCbCrCoefficients|212:YCbCrSubSampling|213:YCbCrPositioning|214:ReferenceBlackWhite|2bc:XMLPacket|1000:RelatedImageFileFormat|1001:RelatedImageWidth|1002:RelatedImageLength|4746:Rating|4749:RatingPercent|800d:ImageID|828d:CFARepeatPatternDim|828e:CFAPattern|828f:BatteryLevel|8298:Copyright|829a:ExposureTime|829d:FNumber|83bb:IPTCNAA|8649:ImageResources|8773:InterColorProfile|8822:ExposureProgram|8824:SpectralSensitivity|8827:ISOSpeedRatings|8828:OECF|8829:Interlace|882a:TimeZoneOffset|882b:SelfTimerMode|8830:SensitivityType|8831:StandardOutputSensitivity|8832:RecommendedExposureIndex|8833:ISOSpeed|8834:ISOSpeedLatitudeyyy|8835:ISOSpeedLatitudezzz|9000:ExifVersion|9003:DateTimeOriginal|9004:DateTimeDigitized|9010:OffsetTime|9011:OffsetTimeOriginal|9012:OffsetTimeDigitized|9101:ComponentsConfiguration|9102:CompressedBitsPerPixel|9201:ShutterSpeedValue|9202:ApertureValue|9203:BrightnessValue|9204:ExposureBiasValue|9205:MaxApertureValue|9206:SubjectDistance|9207:MeteringMode|9208:LightSource|9209:Flash|920a:FocalLength|920b:FlashEnergy|920c:SpatialFrequencyResponse|920d:Noise|9211:ImageNumber|9212:SecurityClassification|9213:ImageHistory|9214:SubjectLocation|9215:ExposureIndex|9216:TIFF/EPStandardID|927c:MakerNote|9286:UserComment|9290:SubsecTime|9291:SubsecTimeOriginal|9292:SubsecTimeDigitized|9400:AmbientTemperature|9401:Humidity|9402:Pressure|9403:WaterDepth|9404:Acceleration|9405:CameraElevationAngle|9c9b:XPTitle|9c9c:XPComment|9c9d:XPAuthor|9c9e:XPKeywords|9c9f:XPSubject|a000:FlashPixVersion|a001:ColorSpace|a002:ExifImageWidth|a003:ExifImageHeight|a004:RelatedSoundFile|a20b:FlashEnergy|a20c:SpatialFrequencyResponse|a20e:FocalPlaneXResolution|a20f:FocalPlaneYResolution|a210:FocalPlaneResolutionUnit|a214:SubjectLocation|a215:ExposureIndex|a217:SensingMethod|a300:FileSource|a301:SceneType|a302:CFAPattern|a401:CustomRendered|a402:ExposureMode|a403:WhiteBalance|a404:DigitalZoomRatio|a405:FocalLengthIn35mmFilm|a406:SceneCaptureType|a407:GainControl|a408:Contrast|a409:Saturation|a40a:Sharpness|a40b:DeviceSettingDescription|a40c:SubjectDistanceRange|a420:ImageUniqueID|a430:CameraOwnerName|a431:BodySerialNumber|a432:LensSpecification|a433:LensMake|a434:LensModel|a435:LensSerialNumber|a460:CompositeImage|a461:CompositeImageCount|a462:CompositeImageExposureTimes|a500:Gamma|c4a5:PrintImageMatching|c612:DNGVersion|c613:DNGBackwardVersion|c614:UniqueCameraModel|c615:LocalizedCameraModel|c616:CFAPlaneColor|c617:CFALayout|c618:LinearizationTable|c619:BlackLevelRepeatDim|c61a:BlackLevel|c61b:BlackLevelDeltaH|c61c:BlackLevelDeltaV|c61d:WhiteLevel|c61e:DefaultScale|c61f:DefaultCropOrigin|c620:DefaultCropSize|c621:ColorMatrix1|c622:ColorMatrix2|c623:CameraCalibration1|c624:CameraCalibration2|c625:ReductionMatrix1|c626:ReductionMatrix2|c627:AnalogBalance|c628:AsShotNeutral|c629:AsShotWhiteXY|c62a:BaselineExposure|c62b:BaselineNoise|c62c:BaselineSharpness|c62d:BayerGreenSplit|c62e:LinearResponseLimit|c62f:CameraSerialNumber|c630:LensInfo|c631:ChromaBlurRadius|c632:AntiAliasStrength|c633:ShadowScale|c634:DNGPrivateData|c635:MakerNoteSafety|c65a:CalibrationIlluminant1|c65b:CalibrationIlluminant2|c65c:BestQualityScale|c65d:RawDataUniqueID|c68b:OriginalRawFileName|c68c:OriginalRawFileData|c68d:ActiveArea|c68e:MaskedAreas|c68f:AsShotICCProfile|c690:AsShotPreProfileMatrix|c691:CurrentICCProfile|c692:CurrentPreProfileMatrix|c6bf:ColorimetricReference|c6f3:CameraCalibrationSignature|c6f4:ProfileCalibrationSignature|c6f6:AsShotProfileName|c6f7:NoiseReductionApplied|c6f8:ProfileName|c6f9:ProfileHueSatMapDims|c6fa:ProfileHueSatMapData1|c6fb:ProfileHueSatMapData2|c6fc:ProfileToneCurve|c6fd:ProfileEmbedPolicy|c6fe:ProfileCopyright|c714:ForwardMatrix1|c715:ForwardMatrix2|c716:PreviewApplicationName|c717:PreviewApplicationVersion|c718:PreviewSettingsName|c719:PreviewSettingsDigest|c71a:PreviewColorSpace|c71b:PreviewDateTime|c71c:RawImageDigest|c71d:OriginalRawFileDigest|c71e:SubTileBlockSize|c71f:RowInterleaveFactor|c725:ProfileLookTableDims|c726:ProfileLookTableData|c740:OpcodeList1|c741:OpcodeList2|c74e:OpcodeList3|c761:NoiseProfile|c764:FrameRate|" ;
 
-: _gps-names ( -- str )
+MEMO: _gps-names ( -- str )
   "|0:GPSVersionID|1:GPSLatitudeRef|2:GPSLatitude|3:GPSLongitudeRef|4:GPSLongitude|5:GPSAltitudeRef|6:GPSAltitude|7:GPSTimeStamp|8:GPSSatellites|9:GPSStatus|a:GPSMeasureMode|b:GPSDOP|c:GPSSpeedRef|d:GPSSpeed|e:GPSTrackRef|f:GPSTrack|10:GPSImgDirectionRef|11:GPSImgDirection|12:GPSMapDatum|13:GPSDestLatitudeRef|14:GPSDestLatitude|15:GPSDestLongitudeRef|16:GPSDestLongitude|17:GPSDestBearingRef|18:GPSDestBearing|19:GPSDestDistanceRef|1a:GPSDestDistance|1b:GPSProcessingMethod|1c:GPSAreaInformation|1d:GPSDateStamp|1e:GPSDifferential|1f:GPSHPositioningError|" ;
 
 \ ---- reading integers ----
@@ -26,14 +26,14 @@ IN: exif
 \ The same, little endian.
 : _le ( d:bytes p:int n:int -- int )
   d p n "image data" util:need-bytes
-  d p p n + slice rev 256 util:digits>int ;
+  d p p n + slice rev 256 digits>int ;
 
 \ n bytes at p of the TIFF block as an unsigned integer in its byte order ("II" is little endian).
 : _u ( t:bytes p:int n:int -- int )
   t p n "Exif data" util:need-bytes
   t p p n + slice
   t 0 nth 73 = [ rev ] [ ] if
-  256 util:digits>int ;
+  256 digits>int ;
 
 \ The same as a signed integer.
 : _s ( t:bytes p:int n:int -- int )
@@ -55,15 +55,20 @@ IN: exif
 
 \ Where the segment after the one at p (marker m) starts; -1 at the start of the scan or the end of the image.
 : _jpeg-after ( d:bytes p:int m:int -- int )
-  m 255 = [ p 1 + ] [
-  m _standalone? [ p 2 + ] [
-  m 217 = m 218 = or [ -1 ] [
-  p 4 + d len > [ -1 ] [
-    d p 2 + 2 _be dup 2 < [ drop -1 ] [ p 2 + + ] if ] if ] if ] if ] if ;
+  {
+    [ m 255 = ] [ p 1 + ]
+    [ m _standalone? ] [ p 2 + ]
+    [ m 217 = m 218 = or ] [ -1 ]
+    [ p 4 + d len > ] [ -1 ]
+    [ d p 2 + 2 _be dup 2 < [ drop -1 ] [ p 2 + + ] if ]
+  } cond ;
 
 : _jpeg-next ( d:bytes p:int -- int )
-  p 2 + d len > [ -1 ] [
-    d p nth 255 = [ d p d p 1 + nth _jpeg-after ] [ -1 ] if ] if ;
+  {
+    [ p 2 + d len > ] [ -1 ]
+    [ d p nth 255 = ] [ d p d p 1 + nth _jpeg-after ]
+    [ -1 ]
+  } cond ;
 
 \ The offset of the APP1 segment with the Exif header, or -1. The Exif segment follows the first
 \ one or two (SOI, APP0), so at most this many segments (or fill bytes) are looked at: a bound on the
@@ -89,9 +94,11 @@ IN: exif
   p 8 + d len <= [ d p 4 + p 8 + slice #[ 65 58 49 66 ] = ] [ false ] if ;
 
 : _png-next ( d:bytes p:int -- int )
-  p 8 + d len > [ -1 ] [
-    d p 4 + p 8 + slice #[ 49 45 4e 44 ] = [ -1 ] [
-      p 12 + d p 4 _be + dup d len > [ drop -1 ] when ] if ] if ;
+  {
+    [ p 8 + d len > ] [ -1 ]
+    [ d p 4 + p 8 + slice #[ 49 45 4e 44 ] = ] [ -1 ]
+    [ p 12 + d p 4 _be + dup d len > [ drop -1 ] when ]
+  } cond ;
 
 : _png-find ( d:bytes -- int )
   0 _chunk-cap range 8 [ drop dup 0 >= [ d over _png-hit? [ ] [ d swap _png-next ] if ] [ ] if ] reduce
@@ -133,11 +140,13 @@ IN: exif
 
 \ The TIFF block of an image of any supported kind; empty when the image has no Exif block.
 : _locate ( d:bytes -- bytes )
-  d #[ ff d8 ] util:starts-with-bytes? [ d _jpeg-tiff ] [
-  d #[ 89 50 4e 47 0d 0a 1a 0a ] util:starts-with-bytes? [ d _png-tiff _drop-header ] [
-  d _webp? [ d _webp-tiff _drop-header ] [
-  d _tiff? [ d ] [
-    "not a JPEG, PNG, WebP or TIFF image: no Exif block can be read from it" raise:coerce ] if ] if ] if ] if ;
+  {
+    [ d #[ ff d8 ] util:starts-with-bytes? ] [ d _jpeg-tiff ]
+    [ d #[ 89 50 4e 47 0d 0a 1a 0a ] util:starts-with-bytes? ] [ d _png-tiff _drop-header ]
+    [ d _webp? ] [ d _webp-tiff _drop-header ]
+    [ d _tiff? ] [ d ]
+    [ "not a JPEG, PNG, WebP or TIFF image: no Exif block can be read from it" fail-coerce ]
+  } cond ;
 
 \ ---- the IFDs ----
 
@@ -146,21 +155,19 @@ IN: exif
   1000 ;
 
 : _check-tiff ( t:bytes -- )
-  t len 8 < [ "Exif data is cut short: a TIFF header needs 8 bytes" raise:coerce ] when
-  t _tiff? not [ "the Exif block is not TIFF data (no II*, 0 or MM, 0, * header)" raise:coerce ] when ;
+  t len 8 < [ "Exif data is cut short: a TIFF header needs 8 bytes" fail-coerce ] when
+  t _tiff? not [ "the Exif block is not TIFF data (no II*, 0 or MM, 0, * header)" fail-coerce ] when ;
 
 : _entry ( t:bytes p:int -- record )
   { { "tag" t p 2 _u } { "type" t p 2 + 2 _u } { "count" t p 4 + 4 _u } { "at" p 8 + } } >record ;
 
-: _ifd-entries2 ( t:bytes off:int count:int -- list )
-  off 2 + count 12 * + t len > [
-    "the IFD at offset " off int>str cat " holds " cat count int>str cat
-    " entries and runs past the end of the data (truncated)" cat raise:coerce ] when
-  0 count _tag-cap min range [ 12 * off + 2 + t swap _entry ] map ;
-
 \ The entries of the IFD at off (at most _tag-cap).
 : _ifd-entries ( t:bytes off:int -- list )
-  t off t off 2 _u _ifd-entries2 ;
+  t off 2 _u :> count
+  off 2 + count 12 * + t len > [
+    "the IFD at offset " off int>str cat " holds " cat count int>str cat
+    " entries and runs past the end of the data (truncated)" cat fail-coerce ] when
+  0 count _tag-cap min range [ 12 * off + 2 + t swap _entry ] map ;
 
 \ The offset of the next IFD, after the entries of the IFD at off; 0 when there is none.
 : _next-ifd ( t:bytes off:int -- int )
@@ -180,26 +187,31 @@ IN: exif
 : _decimal-abs ( n:int d:int -- str )
   n d div int>str
   n d mod 1000000 * d div
-  dup 0 = [ drop ] [ 6 util:zero-pad [ 48 = ] util:trim-end "." swap cat cat ] if ;
+  dup 0 = [ drop ] [ 6 util:zero-pad [ 48 = ] trim-end "." swap cat cat ] if ;
 
 : _ratio ( n:int d:int -- str )
-  d 0 = [ n int>str "/0" cat ] [
-    d 0 < [ n int>str "/" cat d int>str cat ] [
-      n 0 < [ "-" 0 n - d _decimal-abs cat ] [ n d _decimal-abs ] if ] if ] if ;
+  {
+    [ d 0 = ] [ n int>str "/0" cat ]
+    [ d 0 < ] [ n int>str "/" cat d int>str cat ]
+    [ n 0 < ] [ "-" 0 n - d _decimal-abs cat ]
+    [ n d _decimal-abs ]
+  } cond ;
 
 \ Element i of an array of numbers of the type, starting at vstart.
 : _item ( i:int t:bytes type:int vstart:int -- str )
-  type 1 = [ t vstart i + 1 _u int>str ] [
-  type 6 = [ t vstart i + 1 _s int>str ] [
-  type 3 = [ t vstart i 2 * + 2 _u int>str ] [
-  type 8 = [ t vstart i 2 * + 2 _s int>str ] [
-  type 4 = type 13 = or [ t vstart i 4 * + 4 _u int>str ] [
-  type 9 = [ t vstart i 4 * + 4 _s int>str ] [
-  type 5 = [ t vstart i 8 * + 4 _u t vstart i 8 * + 4 + 4 _u _ratio ] [
-  type 10 = [ t vstart i 8 * + 4 _s t vstart i 8 * + 4 + 4 _s _ratio ] [
-  type 11 = [ "float:" t vstart i 4 * + 4 _u 8 util:pad-hex cat ] [
-  "double:" t vstart i 8 * + 8 _u 16 util:pad-hex cat
-  ] if ] if ] if ] if ] if ] if ] if ] if ] if ;
+  type {
+    1 [ t vstart i + 1 _u int>str ]
+    6 [ t vstart i + 1 _s int>str ]
+    3 [ t vstart i 2 * + 2 _u int>str ]
+    8 [ t vstart i 2 * + 2 _s int>str ]
+    4 [ t vstart i 4 * + 4 _u int>str ]
+    13 [ t vstart i 4 * + 4 _u int>str ]
+    9 [ t vstart i 4 * + 4 _s int>str ]
+    5 [ t vstart i 8 * + 4 _u t vstart i 8 * + 4 + 4 _u _ratio ]
+    10 [ t vstart i 8 * + 4 _s t vstart i 8 * + 4 + 4 _s _ratio ]
+    11 [ "float:" t vstart i 4 * + 4 _u 8 pad-hex cat ]
+    [ "double:" t vstart i 8 * + 8 _u 16 pad-hex cat ]
+  } case ;
 
 \ At most this many values of an array are shown.
 : _shown ( -- int )
@@ -223,23 +235,26 @@ IN: exif
   count 32 > [ "... (" count int>str cat " bytes)" cat cat ] when ;
 
 : _comment ( t:bytes count:int vstart:int -- str )
-  count 8 < [ t count vstart _hex-bytes ] [
-    t vstart vstart 8 + slice
-    dup #[ 41 53 43 49 49 00 00 00 ] = [ drop
-      t vstart 8 + vstart count 1024 min + slice bytes>latin1 "\x00" split 0 nth ] [
-    dup #[ 55 4e 49 43 4f 44 45 00 ] = [ drop
-      t vstart 8 + vstart count 1024 min + slice t 0 nth 73 = _utf16 ] [
-    #[ 00 00 00 00 00 00 00 00 ] = [
-      t vstart 8 + vstart count 1024 min + slice bytes>latin1 "\x00" split 0 nth ] [
-      t count vstart _hex-bytes ] if ] if ] if ] if ;
+  {
+    [ count 8 < ] [ t count vstart _hex-bytes ]
+    [ t vstart vstart 8 + slice #[ 41 53 43 49 49 00 00 00 ] = ]
+    [ t vstart 8 + vstart count 1024 min + slice bytes>latin1 "\x00" split 0 nth ]
+    [ t vstart vstart 8 + slice #[ 55 4e 49 43 4f 44 45 00 ] = ]
+    [ t vstart 8 + vstart count 1024 min + slice t 0 nth 73 = _utf16 ]
+    [ t vstart vstart 8 + slice #[ 00 00 00 00 00 00 00 00 ] = ]
+    [ t vstart 8 + vstart count 1024 min + slice bytes>latin1 "\x00" split 0 nth ]
+    [ t count vstart _hex-bytes ]
+  } cond ;
 
 \ UNDEFINED values: the maker note is not decoded, a user comment has a character set prefix, text-like
 \ values (ExifVersion, FlashpixVersion) are shown as text and the others as hex.
 : _undef ( t:bytes tag:int count:int vstart:int -- str )
-  tag 37500 = [ "[" count int>str cat " bytes, not decoded]" cat ] [
-  tag 37510 = [ t count vstart _comment ] [
-  t vstart vstart count 64 min + slice util:printable-bytes? count 64 <= and
-  [ t vstart vstart count + slice bytes>latin1 ] [ t count vstart _hex-bytes ] if ] if ] if ;
+  {
+    [ tag 37500 = ] [ "[" count int>str cat " bytes, not decoded]" cat ]
+    [ tag 37510 = ] [ t count vstart _comment ]
+    [ t vstart vstart count 64 min + slice util:printable-bytes? count 64 <= and ] [ t vstart vstart count + slice bytes>latin1 ]
+    [ t count vstart _hex-bytes ]
+  } cond ;
 
 \ The Windows XP tags (XPTitle ... XPSubject) are UTF-16LE text in BYTE values.
 : _xp? ( tag:int -- bool )
@@ -250,27 +265,25 @@ IN: exif
 
 : _value4 ( t:bytes e:record size:int vstart:int -- str )
   vstart size + t len > [
-    "the value of tag 0x" e "tag" get 4 util:pad-hex cat " (" cat size int>str cat " bytes at offset " cat
-    vstart int>str cat ") runs past the end of the data (truncated)" cat raise:coerce ] when
-  e "type" get 2 = [ t e "count" get vstart _ascii ] [
-  e "type" get 7 = [ t e "tag" get e "count" get vstart _undef ] [
-  e "tag" get _xp? e "type" get 1 = and [ t e "count" get vstart _xp-text ] [
-  t e "type" get e "count" get vstart _numeric ] if ] if ] if ;
-
-: _value3 ( t:bytes e:record size:int -- str )
-  t e size size 4 <= [ e "at" get ] [ t e "at" get 4 _u ] if _value4 ;
-
-: _value2 ( t:bytes e:record tsize:int -- str )
-  t e e "count" get tsize * _value3 ;
+    "the value of tag 0x" e "tag" get 4 pad-hex cat " (" cat size int>str cat " bytes at offset " cat
+    vstart int>str cat ") runs past the end of the data (truncated)" cat fail-coerce ] when
+  {
+    [ e "type" get 2 = ] [ t e "count" get vstart _ascii ]
+    [ e "type" get 7 = ] [ t e "tag" get e "count" get vstart _undef ]
+    [ e "tag" get _xp? e "type" get 1 = and ] [ t e "count" get vstart _xp-text ]
+    [ t e "type" get e "count" get vstart _numeric ]
+  } cond ;
 
 : _value ( t:bytes e:record -- str )
-  e "type" get _tsize
-  dup 0 = [ drop "(unsupported type " e "type" get int>str cat ")" cat ] [ t e rot _value2 ] if ;
+  e "type" get _tsize :> unit
+  e "count" get unit * :> size
+  size 4 <= [ e "at" get ] [ t e "at" get 4 _u ] if :> vstart
+  unit 0 = [ "(unsupported type " e "type" get int>str cat ")" cat ] [ t e size vstart _value4 ] if ;
 
 \ ---- lines ----
 
 : _tag-name ( names:str tag:int -- str )
-  names tag 16 int>str-radix util:name-in-table dup len 0 = [ drop "Tag0x" tag 4 util:pad-hex cat ] when ;
+  names tag 16 int>str-radix util:name-in-table dup len 0 = [ drop "Tag0x" tag 4 pad-hex cat ] when ;
 
 : _line ( e:record t:bytes names:str prefix:str -- str )
   prefix names e "tag" get _tag-name cat ": " cat t e _value cat ;
@@ -308,12 +321,12 @@ IN: exif
 
 META: extract
   use-when "You have a JPEG, PNG, WebP or TIFF photo as hex or bytes and want its camera, date and GPS details, without decoding the image." ;
+  see-also filetype:detect ;
+  link "https://en.wikipedia.org/wiki/Exif" "Exif on Wikipedia" ;
   checks input magic-bytes format "jpeg" ;
   checks input magic-bytes format "png" ;
   checks input magic-bytes format "webp" ;
   checks input magic-bytes format "tiff-le" ;
   checks input magic-bytes format "tiff-be" ;
   expects "JPEG, PNG, WebP or TIFF image" ;
-  link "https://en.wikipedia.org/wiki/Exif" "Exif on Wikipedia" ;
-  see-also filetype:detect ;
 ;

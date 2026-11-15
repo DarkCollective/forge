@@ -25,22 +25,22 @@ IN: float
   "Convert IEEE 754 bytes (binary32 or binary64, in the chosen byte order) to decimal text: the shortest text that reads back as the same number, one number per 4 or 8 bytes, separated by single spaces (JavaScript number notation, so large and small values use e notation). NaN, Infinity, -Infinity and -0 are written as such (NaN payloads are not kept). A length that is not a whole number of values raises E_COERCE. Empty input gives empty text." doc
   "Encodings" category
   dup len size str>int 8 div mod 0 <>
-  [ "the length is not a whole number of values" raise:coerce ] when
+  [ "the length is not a whole number of values" fail-coerce ] when
   size str>int 8 div endian "little" = _numbers ;
 
 META: encode
   use-when "You have decimal numbers and need their IEEE 754 bytes, for example to write a float field into a binary file or to see the bit pattern of a value." ;
-  link "https://en.wikipedia.org/wiki/IEEE_754" "IEEE 754 on Wikipedia" ;
-  inverse decode ;
   param size "Bits per number: 32 (binary32) or 64 (binary64)." ;
   param endian "Byte order of each number." ;
+  inverse decode ;
+  link "https://en.wikipedia.org/wiki/IEEE_754" "IEEE 754 on Wikipedia" ;
 ;
 
 META: decode
   use-when "You have IEEE 754 bytes, such as a float field from a binary file or a sensor record, and want the decimal numbers they hold." ;
-  link "https://en.wikipedia.org/wiki/IEEE_754" "IEEE 754 on Wikipedia" ;
-  inverse encode ;
   param size "Bits per number: 32 (binary32) or 64 (binary64)." ;
   param endian "Byte order of each number." ;
+  inverse encode ;
   see-also float:encode ;
+  link "https://en.wikipedia.org/wiki/IEEE_754" "IEEE 754 on Wikipedia" ;
 ;

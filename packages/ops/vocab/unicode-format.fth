@@ -9,7 +9,7 @@ IN: unicode-format
 
 \ Every character except a line break is followed by the marks.
 : _decorate ( s:str marks:str -- str )
-  s str>codes [ dup 10 = over 13 = or [ util:cp>str ] [ util:cp>str marks cat ] if ] map "" join ;
+  s str>codes [ dup 10 = over 13 = or [ cp>str ] [ cp>str marks cat ] if ] map "" join ;
 
 : decorate ( str underline:bool=false strikethrough:bool=false -- str )
   "Put combining characters after each character of the text so that it looks underlined (U+0332 COMBINING LOW LINE) and or struck through (U+0336 COMBINING LONG STROKE OVERLAY) wherever Unicode text is shown. Line feeds and carriage returns are left alone. Both options false (the default, as in CyberChef) leaves the text unchanged; with both on the strikethrough mark goes first, then the underline. The marks go after every code point, also after one that is itself a combining mark." doc
@@ -18,7 +18,7 @@ IN: unicode-format
 
 META: decorate
   use-when "You want underlined or struck-through text in a place that accepts only plain text, such as a chat box or a bio, where HTML styling is not available." ;
-  link "https://en.wikipedia.org/wiki/Combining_character" "Combining character on Wikipedia" ;
   param underline "Underline: put U+0332 after each character." ;
   param strikethrough "Strikethrough: put U+0336 after each character." ;
+  link "https://en.wikipedia.org/wiki/Combining_character" "Combining character on Wikipedia" ;
 ;

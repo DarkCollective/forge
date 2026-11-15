@@ -21,6 +21,14 @@ IN: x509
 
 USING: asn1 base64 md5 sha1 sha2 ;
 
+\ How the certificates, lists and requests are written in the input.
+CHOICE: cert-format
+  option pem "PEM blocks (-----BEGIN ...-----)." ;
+  option der-hex "DER as hex text." ;
+  option base64 "DER as Base64 text." ;
+  option raw "DER bytes." ;
+;
+
 \ ---- small text helpers ----
 
 \ Lower-case hex octets separated by colons: aa:bb:cc.
@@ -36,19 +44,19 @@ USING: asn1 base64 md5 sha1 sha2 ;
 : _wrap ( b:bytes per:int indent:int -- str )
   b len 0 = [ "" ] [
     b bytes>hex per 2 * util:str-chunks [ 2 util:str-chunks ":" join ] map
-    ":\n" " " indent util:repeat-str cat join
+    ":\n" " " indent repeat-str cat join
   ] if ;
 
 \ Every line of the text indented by n spaces.
 : _indent ( s:str n:int -- str )
-  s "\n" split [ " " n util:repeat-str swap cat ] map "\n" join ;
+  s "\n" split [ " " n repeat-str swap cat ] map "\n" join ;
 
 \ Control characters (below 32, DEL and C1) and the line separators written as \xHH or \uHHHH: names and URLs in a
 \ certificate are untrusted text, and a report is read line by line.
 : _safe-code ( c:int -- str )
   c 32 < c 127 >= c 160 < and or c 8232 = or c 8233 = or
-  [ c 255 > [ "\\u" c 4 util:pad-hex cat ] [ "\\x" c 2 util:pad-hex cat ] if ]
-  [ c util:cp>str ] if ;
+  [ c 255 > [ "\\u" c 4 pad-hex cat ] [ "\\x" c 2 pad-hex cat ] if ]
+  [ c cp>str ] if ;
 
 \ Bytes that may start a character that must be escaped: C0 controls, DEL, and the lead bytes of the C1 controls (C2)
 \ and of U+2028 and U+2029 (E2). A text without one of them is returned as it is, in a few VM steps.
@@ -77,20 +85,22 @@ USING: asn1 base64 md5 sha1 sha2 ;
   rest 6 8 slice cat ":" cat rest 8 10 slice cat " UTC" cat ;
 
 : _time-rest ( s:str year:str rest:str -- str )
-  rest len 11 = [
-    rest 10 11 slice "Z" = rest 0 10 slice util:digits? and
-    [ year rest _time-join ] [ s ] if
-  ] [ s ] if ;
+  {
+    [ rest len 11 = not ] [ s ]
+    [ rest 10 11 slice "Z" = rest 0 10 slice util:digits? and not ] [ s ]
+    [ year rest _time-join ]
+  } cond ;
 
 : _utc-year ( s:str -- str )
-  s len 2 < [ "" ] [
-    s 0 2 slice dup util:digits?
-    [ dup str>int 50 < [ "20" ] [ "19" ] if swap cat ]
-    [ drop "" ] if
-  ] if ;
+  {
+    [ s len 2 < ] [ "" ]
+    [ s 0 2 slice util:digits? not ] [ "" ]
+    [ s 0 2 slice str>int 50 < ] [ "20" s 0 2 slice cat ]
+    [ "19" s 0 2 slice cat ]
+  } cond ;
 
 : _gen-year ( s:str -- str )
-  s len 4 < [ "" ] [ s 0 4 slice dup util:digits? [ ] [ drop "" ] if ] if ;
+  s len 4 < [ "" ] [ s 0 4 slice dup util:digits? [ drop "" ] unless ] if ;
 
 : _time-go ( s:str year:str skip:int -- str )
   year len 0 = [ s ] [ s year s skip s len slice _time-rest ] if ;
@@ -118,17 +128,17 @@ USING: asn1 base64 md5 sha1 sha2 ;
 
 \ Every attribute of a Name in order, as { name value } pairs (a multi-valued RDN gives one pair per attribute).
 : _pairs ( name:record -- list )
-  name asn1:children [ asn1:children ] map util:list-flatten [ _atv ] map ;
+  [ name asn1:children [ asn1:children emit-all ] each ] collect [ _atv ] map ;
 
 : _widest ( pairs:list -- int )
   pairs 0 [ 0 nth len max ] reduce ;
 
 \ One line "CN = value": the name padded to w, the whole line indented by n spaces.
 : _dn-line ( pair:list w:int n:int -- str )
-  " " n util:repeat-str pair 0 nth w util:pad-right cat " = " cat pair 1 nth cat ;
+  " " n repeat-str pair 0 nth w util:pad-right cat " = " cat pair 1 nth cat ;
 
 : _dn-lines ( pairs:list n:int w:int -- str )
-  pairs len 0 = [ " " n util:repeat-str "(empty)" cat ] [
+  pairs len 0 = [ " " n repeat-str "(empty)" cat ] [
     pairs [ w n _dn-line ] map "\n" join
   ] if ;
 
@@ -148,7 +158,7 @@ USING: asn1 base64 md5 sha1 sha2 ;
 \ One line "  Label:   value": indent spaces, the label and a colon padded so that the values start at column 18 (one
 \ space at least).
 : _kv ( indent:int label:str value:str -- str )
-  " " indent util:repeat-str label cat ":" cat " " 17 indent - label len - 1 max util:repeat-str cat value cat ;
+  " " indent repeat-str label cat ":" cat " " 17 indent - label len - 1 max repeat-str cat value cat ;
 
 \ ---- public keys ----
 
@@ -159,9 +169,9 @@ USING: asn1 base64 md5 sha1 sha2 ;
     2 "Exponent" e int>str " (0x" cat e _hex-int cat ")" cat _kv } "\n" join ;
 
 : _rsa-key ( key:bytes -- str )
-  key asn1:parse
-  dup "universal" 16 "RSAPublicKey" asn1:expect
-  dup 0 asn1:child asn1:node>int swap 1 asn1:child asn1:node>int _rsa-text ;
+  key asn1:parse :> n
+  n "universal" 16 "RSAPublicKey" asn1:expect
+  n 0 asn1:child asn1:node>int n 1 asn1:child asn1:node>int _rsa-text ;
 
 \ The size of a curve in bits: 521 for secp521r1 (its point is 133 bytes, but the field is 521 bits), else from the
 \ length of the uncompressed point (a byte 04 and two coordinates).
@@ -169,8 +179,11 @@ USING: asn1 base64 md5 sha1 sha2 ;
   name "secp521r1" = [ 521 ] [ point-len 1 - 2 div 8 * ] if ;
 
 : _curve-name ( params:record -- str )
-  params "universal" 6 asn1:is? [ params asn1:node>oid asn1:oid-label ] [
-    params "universal" 16 asn1:is? [ "(explicit parameters)" ] [ "(implicit)" ] if ] if ;
+  {
+    [ params "universal" 6 asn1:is? ] [ params asn1:node>oid asn1:oid-label ]
+    [ params "universal" 16 asn1:is? ] [ "(explicit parameters)" ]
+    [ "(implicit)" ]
+  } cond ;
 
 : _ec-lines ( curve:str key:bytes -- str )
   { 2 "Algorithm" "EC" _kv
@@ -179,7 +192,7 @@ USING: asn1 base64 md5 sha1 sha2 ;
     2 "pub" key 16 18 _wrap _kv } "\n" join ;
 
 : _ec-text ( alg:record key:bytes -- str )
-  alg asn1:children len 2 < [ "the EC key has no curve parameters" raise:coerce ] when
+  alg asn1:children len 2 < [ "the EC key has no curve parameters" fail-coerce ] when
   alg 1 asn1:child _curve-name key _ec-lines ;
 
 : _dsa-lines ( p:int q:int g:int y:int -- str )
@@ -191,10 +204,12 @@ USING: asn1 base64 md5 sha1 sha2 ;
     2 "pub" y util:int>bytes 16 18 _wrap _kv } "\n" join ;
 
 : _dsa-text ( alg:record key:bytes -- str )
-  alg asn1:children len 2 < [ "the DSA key has no parameters" raise:coerce ] when
-  alg 1 asn1:child
-  dup "universal" 16 "DSA parameters" asn1:expect
-  dup 0 asn1:child asn1:node>int swap dup 1 asn1:child asn1:node>int swap 2 asn1:child asn1:node>int
+  alg asn1:children len 2 < [ "the DSA key has no parameters" fail-coerce ] when
+  alg 1 asn1:child :> params
+  params "universal" 16 "DSA parameters" asn1:expect
+  params 0 asn1:child asn1:node>int
+  params 1 asn1:child asn1:node>int
+  params 2 asn1:child asn1:node>int
   key asn1:parse asn1:node>int _dsa-lines ;
 
 : _generic-key ( oid:str key:bytes -- str )
@@ -207,11 +222,13 @@ USING: asn1 base64 md5 sha1 sha2 ;
     2 "pub" key 16 18 _wrap _kv } "\n" join ;
 
 : _pk-by-oid ( oid:str alg:record key:bytes -- str )
-  oid "1.2.840.113549.1.1.1" = [ key _rsa-key ] [
-  oid "1.2.840.10045.2.1" = [ alg key _ec-text ] [
-  oid "1.2.840.10040.4.1" = [ alg key _dsa-text ] [
-  { "1.3.101.110" "1.3.101.111" "1.3.101.112" "1.3.101.113" } oid util:contains? [ oid key _okp-key ] [
-  oid key _generic-key ] if ] if ] if ] if ;
+  {
+    [ oid "1.2.840.113549.1.1.1" = ] [ key _rsa-key ]
+    [ oid "1.2.840.10045.2.1" = ] [ alg key _ec-text ]
+    [ oid "1.2.840.10040.4.1" = ] [ alg key _dsa-text ]
+    [ { "1.3.101.110" "1.3.101.111" "1.3.101.112" "1.3.101.113" } oid contains? ] [ oid key _okp-key ]
+    [ oid key _generic-key ]
+  } cond ;
 
 : _pk-try ( oid:str alg:record key:bytes -- str )
   [ oid alg key _pk-by-oid ] [ drop oid key _generic-key ] try ;
@@ -221,7 +238,7 @@ USING: asn1 base64 md5 sha1 sha2 ;
 : _pk-text ( spki:record -- str )
   spki "universal" 16 "SubjectPublicKeyInfo" asn1:expect
   spki 0 asn1:child "universal" 16 "an AlgorithmIdentifier" asn1:expect
-  spki 0 asn1:child asn1:children len 0 = [ "the AlgorithmIdentifier is empty" raise:coerce ] when
+  spki 0 asn1:child asn1:children len 0 = [ "the AlgorithmIdentifier is empty" fail-coerce ] when
   spki 0 asn1:child 0 asn1:child asn1:node>oid
   spki 0 asn1:child
   spki 1 asn1:child asn1:node>bits drop
@@ -232,13 +249,13 @@ USING: asn1 base64 md5 sha1 sha2 ;
 \ oid=text lines: extension headings, key purposes and access methods as OpenSSL writes them.
 "2.5.29.9=X509v3 Subject Directory Attributes\n2.5.29.14=X509v3 Subject Key Identifier\n2.5.29.15=X509v3 Key Usage\n2.5.29.16=X509v3 Private Key Usage Period\n2.5.29.17=X509v3 Subject Alternative Name\n2.5.29.18=X509v3 Issuer Alternative Name\n2.5.29.19=X509v3 Basic Constraints\n2.5.29.20=X509v3 CRL Number\n2.5.29.21=X509v3 CRL Reason Code\n2.5.29.24=Invalidity Date\n2.5.29.27=X509v3 Delta CRL Indicator\n2.5.29.28=X509v3 Issuing Distribution Point\n2.5.29.29=X509v3 Certificate Issuer\n2.5.29.30=X509v3 Name Constraints\n2.5.29.31=X509v3 CRL Distribution Points\n2.5.29.32=X509v3 Certificate Policies\n2.5.29.33=X509v3 Policy Mappings\n2.5.29.35=X509v3 Authority Key Identifier\n2.5.29.36=X509v3 Policy Constraints\n2.5.29.37=X509v3 Extended Key Usage\n2.5.29.46=X509v3 Freshest CRL\n2.5.29.54=X509v3 Inhibit Any Policy\n1.3.6.1.5.5.7.1.1=Authority Information Access\n1.3.6.1.5.5.7.1.11=Subject Information Access\n1.3.6.1.5.5.7.1.24=TLS Feature\n1.3.6.1.5.5.7.48.1.5=OCSP No Check\n2.16.840.1.113730.1.1=Netscape Cert Type\n1.3.6.1.4.1.11129.2.4.2=CT Precertificate SCTs\n1.3.6.1.4.1.11129.2.4.3=CT Precertificate Poison\n1.3.6.1.5.5.7.3.1=TLS Web Server Authentication\n1.3.6.1.5.5.7.3.2=TLS Web Client Authentication\n1.3.6.1.5.5.7.3.3=Code Signing\n1.3.6.1.5.5.7.3.4=E-mail Protection\n1.3.6.1.5.5.7.3.8=Time Stamping\n1.3.6.1.5.5.7.3.9=OCSP Signing\n2.5.29.37.0=Any Extended Key Usage\n1.3.6.1.5.5.7.3.5=IPSec End System\n1.3.6.1.5.5.7.3.6=IPSec Tunnel\n1.3.6.1.5.5.7.3.7=IPSec User\n1.3.6.1.4.1.311.10.3.4=Microsoft Encrypted File System\n1.3.6.1.4.1.311.2.1.21=Microsoft Individual Code Signing\n1.3.6.1.4.1.311.2.1.22=Microsoft Commercial Code Signing\n1.3.6.1.5.5.7.48.1=OCSP\n1.3.6.1.5.5.7.48.2=CA Issuers\n1.3.6.1.5.5.7.48.3=AD Time Stamping\n1.3.6.1.5.5.7.48.5=CA Repository" CONSTANT _names
 
-: _after-eq ( line:str -- str )
-  line "=" split 1 nth ;
+\ The names of the oid=text table by OID.
+MEMO: _titles ( -- record )
+  _names "\n" split [ "=" split ] map >record ;
 
 \ The text for a key in the oid=text table, or the empty string.
 : _lookup ( key:str -- str )
-  _names "\n" split [ key "=" cat util:starts-with? ] filter
-  dup len 0 = [ drop "" ] [ 0 nth _after-eq ] if ;
+  _titles key has-key? [ _titles key get ] [ "" ] if ;
 
 \ The OpenSSL name of an OID when the table has one, else the name of the asn1 table, else the dotted text.
 : _oid-title ( oid:str -- str )
@@ -253,13 +270,17 @@ USING: asn1 base64 md5 sha1 sha2 ;
 : _bit-names ( bits:bytes names:list -- str )
   0 names len range [ bits swap _bit? ] filter [ names swap nth ] map ", " join ;
 
-: _key-usage-names ( -- list )
-  { "Digital Signature" "Non Repudiation" "Key Encipherment" "Data Encipherment" "Key Agreement"
-    "Certificate Sign" "CRL Sign" "Encipher Only" "Decipher Only" } ;
+MEMO: _key-usage-names ( -- list )
+  {
+    "Digital Signature" "Non Repudiation" "Key Encipherment" "Data Encipherment" "Key Agreement"
+    "Certificate Sign" "CRL Sign" "Encipher Only" "Decipher Only"
+  } ;
 
-: _reason-names ( -- list )
-  { "unused" "Key Compromise" "CA Compromise" "Affiliation Changed" "Superseded" "Cessation Of Operation"
-    "Certificate Hold" "Privilege Withdrawn" "AA Compromise" } ;
+MEMO: _reason-names ( -- list )
+  {
+    "unused" "Key Compromise" "CA Compromise" "Affiliation Changed" "Superseded" "Cessation Of Operation"
+    "Certificate Hold" "Privilege Withdrawn" "AA Compromise"
+  } ;
 
 \ ---- general names ----
 
@@ -271,12 +292,19 @@ USING: asn1 base64 md5 sha1 sha2 ;
   0 8 range [ 2 * dup v swap 1 + nth swap v swap nth 256 * + 16 int>str-radix upper ] map ":" join ;
 
 : _ip ( v:bytes -- str )
-  v len 4 = [ v _ip4 ] [ v len 16 = [ v _ip6 ] [ v _octets-up ] if ] if ;
+  {
+    [ v len 4 = ] [ v _ip4 ]
+    [ v len 16 = ] [ v _ip6 ]
+    [ v _octets-up ]
+  } cond ;
 
 \ An iPAddress of a GeneralName: an address, or an address and a mask in a name constraint (8 or 32 bytes).
 : _ip-name ( v:bytes -- str )
-  v len 8 = [ v 0 4 slice _ip4 "/" cat v 4 8 slice _ip4 cat ] [
-    v len 32 = [ v 0 16 slice _ip6 "/" cat v 16 32 slice _ip6 cat ] [ v _ip ] if ] if ;
+  {
+    [ v len 8 = ] [ v 0 4 slice _ip4 "/" cat v 4 8 slice _ip4 cat ]
+    [ v len 32 = ] [ v 0 16 slice _ip6 "/" cat v 16 32 slice _ip6 cat ]
+    [ v _ip ]
+  } cond ;
 
 \ The text of a primitive implicitly tagged IA5String.
 : _ia5 ( n:record -- str )
@@ -292,15 +320,18 @@ USING: asn1 base64 md5 sha1 sha2 ;
   [ drop "othername:<unsupported>" ] try ;
 
 : _gn-tagged ( n:record tag:int -- str )
-  tag 1 = [ "email:" n _ia5 cat ] [
-  tag 2 = [ "DNS:" n _ia5 cat ] [
-  tag 6 = [ "URI:" n _ia5 cat ] [
-  tag 7 = [ "IP Address:" n "value" get _ip-name cat ] [
-  tag 8 = [ "Registered ID:" n "value" get asn1:oid-decode cat ] [
-  tag 4 = [ "DirName:" n 0 asn1:child _dn-slash cat ] [
-  tag 0 = [ n _othername ] [
-  tag 3 = [ "X400Name:<unsupported>" ] [
-  tag 5 = [ "EdiPartyName:<unsupported>" ] [ "<unsupported GeneralName>" ] if ] if ] if ] if ] if ] if ] if ] if ] if ;
+  tag {
+    1 [ "email:" n _ia5 cat ]
+    2 [ "DNS:" n _ia5 cat ]
+    6 [ "URI:" n _ia5 cat ]
+    7 [ "IP Address:" n "value" get _ip-name cat ]
+    8 [ "Registered ID:" n "value" get asn1:oid-decode cat ]
+    4 [ "DirName:" n 0 asn1:child _dn-slash cat ]
+    0 [ n _othername ]
+    3 [ "X400Name:<unsupported>" ]
+    5 [ "EdiPartyName:<unsupported>" ]
+    [ "<unsupported GeneralName>" ]
+  } case ;
 
 \ One GeneralName, in OpenSSL's words (DNS:, IP Address:, email:, URI:, DirName:, Registered ID:).
 : _gn ( n:record -- str )
@@ -314,10 +345,10 @@ USING: asn1 base64 md5 sha1 sha2 ;
 
 : _basic ( n:record -- str )
   n "universal" 16 "BasicConstraints" asn1:expect
-  n asn1:children [ "universal" 1 asn1:is? ] filter
-  dup len 0 = [ drop "CA:FALSE" ] [ 0 nth asn1:node>bool [ "CA:TRUE" ] [ "CA:FALSE" ] if ] if
-  n asn1:children [ "universal" 2 asn1:is? ] filter
-  dup len 0 = [ drop ] [ 0 nth asn1:node>int int>str ", pathlen:" swap cat cat ] if ;
+  n asn1:children [ "universal" 1 asn1:is? ] filter :> flags
+  n asn1:children [ "universal" 2 asn1:is? ] filter :> paths
+  flags len 0 = [ "CA:FALSE" ] [ flags 0 nth asn1:node>bool [ "CA:TRUE" ] [ "CA:FALSE" ] if ] if
+  paths len 0 = not [ ", pathlen:" paths 0 nth asn1:node>int int>str cat cat ] when ;
 
 : _key-usage ( n:record -- str )
   n asn1:node>bits drop _key-usage-names _bit-names ;
@@ -333,10 +364,12 @@ USING: asn1 base64 md5 sha1 sha2 ;
 : _aki ( n:record -- str )
   n "universal" 16 "AuthorityKeyIdentifier" asn1:expect
   n asn1:children [
-    dup "tag" get 0 = [ "value" get _octets-up "keyid:" swap cat ] [
-    dup "tag" get 1 = [ asn1:children [ _gn ] map "\n" join ] [
-    dup "tag" get 2 = [ "value" get _octets-up "serial:" swap cat ] [
-    drop "<unknown field>" ] if ] if ] if
+    dup "tag" get {
+      0 [ "value" get _octets-up "keyid:" swap cat ]
+      1 [ asn1:children [ _gn ] map "\n" join ]
+      2 [ "value" get _octets-up "serial:" swap cat ]
+      [ drop "<unknown field>" ]
+    } case
   ] map "\n" join ;
 
 \ Reason flags: an implicitly tagged BIT STRING (the first content byte is the number of unused bits).
@@ -351,10 +384,12 @@ USING: asn1 base64 md5 sha1 sha2 ;
     "Relative Name:\n  " swap cat ] if ;
 
 : _dp-field ( f:record -- str )
-  f "tag" get 0 = [ f _dp-name ] [
-  f "tag" get 1 = [ "Reasons:\n  " f _reasons cat ] [
-  f "tag" get 2 = [ "CRL Issuer:\n" f asn1:children [ _gn ] map "\n" join 2 _indent cat ] [
-  "<unknown field>" ] if ] if ] if ;
+  f "tag" get {
+    0 [ f _dp-name ]
+    1 [ "Reasons:\n  " f _reasons cat ]
+    2 [ "CRL Issuer:\n" f asn1:children [ _gn ] map "\n" join 2 _indent cat ]
+    [ "<unknown field>" ]
+  } case ;
 
 : _crl-dp ( n:record -- str )
   n "universal" 16 "CRLDistributionPoints" asn1:expect
@@ -381,10 +416,11 @@ USING: asn1 base64 md5 sha1 sha2 ;
   ] map "\n" join ;
 
 : _qualifier ( q:record -- str )
-  q 0 asn1:child asn1:node>oid
-  dup "1.3.6.1.5.5.7.2.1" = [ drop "CPS: " q 1 asn1:child asn1:node>text _safe cat ] [
-    "1.3.6.1.5.5.7.2.2" = [ "User Notice:\n" q 1 asn1:child _user-notice 2 _indent cat ]
-    [ "Unknown Qualifier: " q 0 asn1:child asn1:node>oid cat ] if ] if ;
+  q 0 asn1:child asn1:node>oid {
+    "1.3.6.1.5.5.7.2.1" [ "CPS: " q 1 asn1:child asn1:node>text _safe cat ]
+    "1.3.6.1.5.5.7.2.2" [ "User Notice:\n" q 1 asn1:child _user-notice 2 _indent cat ]
+    [ "Unknown Qualifier: " q 0 asn1:child asn1:node>oid cat ]
+  } case ;
 
 : _policy ( p:record -- str )
   "Policy: " p 0 asn1:child asn1:node>oid asn1:oid-label cat
@@ -409,8 +445,8 @@ USING: asn1 base64 md5 sha1 sha2 ;
 
 : _policy-constraints ( n:record -- str )
   n asn1:children [
-    dup "tag" get 0 = [ "value" get 256 util:digits>int int>str "Require Explicit Policy:" swap cat ]
-    [ "value" get 256 util:digits>int int>str "Inhibit Policy Mapping:" swap cat ] if
+    dup "tag" get 0 = [ "value" get 256 digits>int int>str "Require Explicit Policy:" swap cat ]
+    [ "value" get 256 digits>int int>str "Inhibit Policy Mapping:" swap cat ] if
   ] map "\n" join ;
 
 : _policy-mappings ( n:record -- str )
@@ -422,9 +458,11 @@ USING: asn1 base64 md5 sha1 sha2 ;
 : _int-text ( n:record -- str )
   n asn1:node>int int>str ;
 
-: _crl-reasons ( -- list )
-  { "Unspecified" "Key Compromise" "CA Compromise" "Affiliation Changed" "Superseded" "Cessation Of Operation"
-    "Certificate Hold" "Unused" "Remove From CRL" "Privilege Withdrawn" "AA Compromise" } ;
+MEMO: _crl-reasons ( -- list )
+  {
+    "Unspecified" "Key Compromise" "CA Compromise" "Affiliation Changed" "Superseded" "Cessation Of Operation"
+    "Certificate Hold" "Unused" "Remove From CRL" "Privilege Withdrawn" "AA Compromise"
+  } ;
 
 : _reason-code ( n:record -- str )
   n asn1:node>int
@@ -432,16 +470,22 @@ USING: asn1 base64 md5 sha1 sha2 ;
 
 \ issuingDistributionPoint: [0] distributionPoint, [3] onlySomeReasons, and the flags [1], [2], [4] and [5].
 : _idp-flag ( f:record -- str )
-  f "value" get len 1 = not [ "<bad flag>" ] [
-  f "value" get 0 nth 0 = [ "" ] [
-  f "tag" get 1 = [ "Only User Certificates" ] [
-  f "tag" get 2 = [ "Only CA Certificates" ] [
-  f "tag" get 4 = [ "Indirect CRL" ] [
-  f "tag" get 5 = [ "Only Attribute Certificates" ] [ "<unknown field>" ] if ] if ] if ] if ] if ] if ;
+  {
+    [ f "value" get len 1 = not ] [ "<bad flag>" ]
+    [ f "value" get 0 nth 0 = ] [ "" ]
+    [ f "tag" get 1 = ] [ "Only User Certificates" ]
+    [ f "tag" get 2 = ] [ "Only CA Certificates" ]
+    [ f "tag" get 4 = ] [ "Indirect CRL" ]
+    [ f "tag" get 5 = ] [ "Only Attribute Certificates" ]
+    [ "<unknown field>" ]
+  } cond ;
 
 : _idp-field ( f:record -- str )
-  f "tag" get 0 = [ f _dp-name ] [
-  f "tag" get 3 = [ "Only Some Reasons:\n  " f _reasons cat ] [ f _idp-flag ] if ] if ;
+  f "tag" get {
+    0 [ f _dp-name ]
+    3 [ "Only Some Reasons:\n  " f _reasons cat ]
+    [ f _idp-flag ]
+  } case ;
 
 : _idp ( n:record -- str )
   n "universal" 16 "IssuingDistributionPoint" asn1:expect
@@ -449,7 +493,9 @@ USING: asn1 base64 md5 sha1 sha2 ;
 
 : _tls-feature ( n:record -- str )
   n "universal" 16 "TLS Feature" asn1:expect
-  n asn1:children [ asn1:node>int dup 5 = [ drop "status_request" ] [ dup 17 = [ drop "status_request_v2" ] [ int>str ] if ] if ] map ", " join ;
+  n asn1:children [
+    asn1:node>int dup { 5 [ drop "status_request" ] 17 [ drop "status_request_v2" ] [ int>str ] } case
+  ] map ", " join ;
 
 : _ns-cert-type ( n:record -- str )
   n asn1:node>bits drop
@@ -461,9 +507,9 @@ USING: asn1 base64 md5 sha1 sha2 ;
 
 \ ---- the extensions ----
 
-\ The reason of an error record (what raise:coerce was given), else its message.
+\ The reason of an error record (what fail-coerce was given), else its message.
 : _why ( e:record -- str )
-  e "detail" get keys "reason" util:contains? [ e "detail" get "reason" get ] [ e "message" get ] if ;
+  e "detail" get keys "reason" contains? [ e "detail" get "reason" get ] [ e "message" get ] if ;
 
 \ NULL-valued extensions (OCSP No Check, the CT poison) have no text.
 : _null-text ( n:record -- str )
@@ -474,26 +520,28 @@ USING: asn1 base64 md5 sha1 sha2 ;
   val 16 0 _wrap ;
 
 : _ext-decode ( oid:str val:bytes -- str )
-  oid "2.5.29.19" = [ val asn1:parse _basic ] [
-  oid "2.5.29.15" = [ val asn1:parse _key-usage ] [
-  oid "2.5.29.37" = [ val asn1:parse _eku ] [
-  oid "2.5.29.17" = oid "2.5.29.18" = oid "2.5.29.29" = or or [ val asn1:parse _gns ] [
-  oid "2.5.29.14" = [ val asn1:parse _ski ] [
-  oid "2.5.29.35" = [ val asn1:parse _aki ] [
-  oid "2.5.29.31" = oid "2.5.29.46" = or [ val asn1:parse _crl-dp ] [
-  oid "1.3.6.1.5.5.7.1.1" = oid "1.3.6.1.5.5.7.1.11" = or [ val asn1:parse _aia ] [
-  oid "2.5.29.32" = [ val asn1:parse _policies ] [
-  oid "2.5.29.30" = [ val asn1:parse _name-constraints ] [
-  oid "2.5.29.36" = [ val asn1:parse _policy-constraints ] [
-  oid "2.5.29.33" = [ val asn1:parse _policy-mappings ] [
-  oid "2.5.29.54" = oid "2.5.29.20" = oid "2.5.29.27" = or or [ val asn1:parse _int-text ] [
-  oid "2.5.29.21" = [ val asn1:parse _reason-code ] [
-  oid "2.5.29.24" = [ val asn1:parse _time ] [
-  oid "2.5.29.28" = [ val asn1:parse _idp ] [
-  oid "1.3.6.1.5.5.7.1.24" = [ val asn1:parse _tls-feature ] [
-  oid "2.16.840.1.113730.1.1" = [ val asn1:parse _ns-cert-type ] [
-  oid "1.3.6.1.5.5.7.48.1.5" = oid "1.3.6.1.4.1.11129.2.4.3" = or [ val asn1:parse _null-text ] [
-  val _hex-block ] if ] if ] if ] if ] if ] if ] if ] if ] if ] if ] if ] if ] if ] if ] if ] if ] if ] if ] if ;
+  {
+    [ oid "2.5.29.19" = ] [ val asn1:parse _basic ]
+    [ oid "2.5.29.15" = ] [ val asn1:parse _key-usage ]
+    [ oid "2.5.29.37" = ] [ val asn1:parse _eku ]
+    [ oid "2.5.29.17" = oid "2.5.29.18" = oid "2.5.29.29" = or or ] [ val asn1:parse _gns ]
+    [ oid "2.5.29.14" = ] [ val asn1:parse _ski ]
+    [ oid "2.5.29.35" = ] [ val asn1:parse _aki ]
+    [ oid "2.5.29.31" = oid "2.5.29.46" = or ] [ val asn1:parse _crl-dp ]
+    [ oid "1.3.6.1.5.5.7.1.1" = oid "1.3.6.1.5.5.7.1.11" = or ] [ val asn1:parse _aia ]
+    [ oid "2.5.29.32" = ] [ val asn1:parse _policies ]
+    [ oid "2.5.29.30" = ] [ val asn1:parse _name-constraints ]
+    [ oid "2.5.29.36" = ] [ val asn1:parse _policy-constraints ]
+    [ oid "2.5.29.33" = ] [ val asn1:parse _policy-mappings ]
+    [ oid "2.5.29.54" = oid "2.5.29.20" = oid "2.5.29.27" = or or ] [ val asn1:parse _int-text ]
+    [ oid "2.5.29.21" = ] [ val asn1:parse _reason-code ]
+    [ oid "2.5.29.24" = ] [ val asn1:parse _time ]
+    [ oid "2.5.29.28" = ] [ val asn1:parse _idp ]
+    [ oid "1.3.6.1.5.5.7.1.24" = ] [ val asn1:parse _tls-feature ]
+    [ oid "2.16.840.1.113730.1.1" = ] [ val asn1:parse _ns-cert-type ]
+    [ oid "1.3.6.1.5.5.7.48.1.5" = oid "1.3.6.1.4.1.11129.2.4.3" = or ] [ val asn1:parse _null-text ]
+    [ val _hex-block ]
+  } cond ;
 
 \ The text of an extension value, or its octets with the reason when it does not read as its type.
 : _ext-body ( oid:str val:bytes -- str )
@@ -513,7 +561,7 @@ USING: asn1 base64 md5 sha1 sha2 ;
 
 : _ext ( ext:record -- str )
   ext "universal" 16 "an Extension" asn1:expect
-  ext asn1:children len dup 2 < swap 3 > or [ "an Extension has 2 or 3 fields" raise:coerce ] when
+  ext asn1:children len dup 2 < swap 3 > or [ "an Extension has 2 or 3 fields" fail-coerce ] when
   ext 0 asn1:child asn1:node>oid
   ext asn1:children len 3 = [ ext 1 asn1:child asn1:node>bool ] [ false ] if
   ext _ext-value _ext-line ;
@@ -529,7 +577,7 @@ USING: asn1 base64 md5 sha1 sha2 ;
 
 \ The version as the 1-based number and the value in the DER: 3 (0x02).
 : _ver-text ( v:int -- str )
-  v 1 + int>str " (0x" cat v 2 util:pad-hex cat ")" cat ;
+  v 1 + int>str " (0x" cat v 2 pad-hex cat ")" cat ;
 
 \ ---- signatures ----
 
@@ -542,15 +590,15 @@ USING: asn1 base64 md5 sha1 sha2 ;
     2 "s" s util:int>bytes 16 18 _wrap _kv } "\n" join ;
 
 : _rs ( sig:bytes -- str )
-  sig asn1:parse
-  dup "universal" 16 "a signature (SEQUENCE)" asn1:expect
-  dup asn1:children len 2 <> [ "an ECDSA or DSA signature has two INTEGERs" raise:coerce ] when
-  dup 0 asn1:child asn1:node>int swap 1 asn1:child asn1:node>int _rs-lines ;
+  sig asn1:parse :> n
+  n "universal" 16 "a signature (SEQUENCE)" asn1:expect
+  n asn1:children len 2 <> [ "an ECDSA or DSA signature has two INTEGERs" fail-coerce ] when
+  n 0 asn1:child asn1:node>int n 1 asn1:child asn1:node>int _rs-lines ;
 
 \ ECDSA and DSA signature algorithms hold r and s; everything else is one number or string of octets.
 : _rs-alg? ( oid:str -- bool )
-  oid "1.2.840.10045.4." util:starts-with? oid "1.2.840.10040.4." util:starts-with? or
-  oid "2.16.840.1.101.3.4.3." util:starts-with? or ;
+  oid "1.2.840.10045.4." starts-with? oid "1.2.840.10040.4." starts-with? or
+  oid "2.16.840.1.101.3.4.3." starts-with? or ;
 
 : _sig-lines ( oid:str sig:bytes -- str )
   oid _rs-alg? [ [ sig _rs ] [ drop sig _sig-hex ] try ] [ sig _sig-hex ] if ;
@@ -598,28 +646,30 @@ USING: asn1 base64 md5 sha1 sha2 ;
 
 \ The first label is the one the message names.
 : _no-block ( labels:list -- )
-  "no PEM block (-----BEGIN " labels 0 nth cat "-----) found in the input" cat raise:coerce ;
+  "no PEM block (-----BEGIN " labels 0 nth cat "-----) found in the input" cat fail-coerce ;
 
 \ DER of each PEM block whose label is in labels (blocks of other labels, such as a private key in the same file,
 \ are ignored); no such block is E_COERCE.
 : _pem-ders ( data:bytes labels:list -- list )
-  data asn1:pem-decode [ "label" get labels swap util:contains? ] filter
+  data asn1:pem-decode [ "label" get labels swap contains? ] filter
   dup len 0 = [ labels _no-block ] when
   [ "data" get ] map ;
 
 : _der-list ( data:bytes -- list )
   data asn1:parse-all [ data swap asn1:raw ] map
-  dup len 0 = [ "no DER element found in the input" raise:coerce ] when ;
+  dup len 0 = [ "no DER element found in the input" fail-coerce ] when ;
 
 \ The DER encodings in the input, one per PEM block (of the labels) or per top-level element.
 : _blobs ( data:bytes fmt:str labels:list -- list )
-  fmt "pem" = [ data labels _pem-ders ] [
-  fmt "der-hex" = [ data bytes>str hex>bytes _der-list ] [
-  fmt "base64" = [ data "standard" base64:decode _der-list ] [
-  fmt "raw" = [ data _der-list ] [
-    "the input format must be pem, der-hex, base64 or raw" raise:range { } ] if ] if ] if ] if ;
+  fmt {
+    "pem" [ data labels _pem-ders ]
+    "der-hex" [ data bytes>str hex>bytes _der-list ]
+    "base64" [ data "standard" base64:decode _der-list ]
+    "raw" [ data _der-list ]
+    [ "the input format must be pem, der-hex, base64 or raw" fail-range ]
+  } case ;
 
-: _cert-labels ( -- list )
+MEMO: _cert-labels ( -- list )
   { "CERTIFICATE" "X509 CERTIFICATE" } ;
 
 \ ---- a certificate ----
@@ -661,31 +711,32 @@ USING: asn1 base64 md5 sha1 sha2 ;
 
 \ The report of one certificate given as DER.
 : _cert-report ( der:bytes -- str )
-  der asn1:parse
-  dup "universal" 16 "Certificate" asn1:expect
-  dup 0 asn1:child
-  dup "universal" 16 "TBSCertificate" asn1:expect
-  swap dup 1 asn1:child swap 2 asn1:child _sig-section
-  der _fingerprints _tbs-report ;
+  der asn1:parse :> cert
+  cert "universal" 16 "Certificate" asn1:expect
+  cert 0 asn1:child :> tbs
+  tbs "universal" 16 "TBSCertificate" asn1:expect
+  cert 1 asn1:child cert 2 asn1:child _sig-section :> sig
+  der _fingerprints :> fp
+  tbs sig fp _tbs-report ;
 
 \ ---- the operations ----
 
-: parse ( data:bytes input-format:choice{pem|der-hex|base64|raw}="pem" -- str )
+: parse ( data:bytes input-format:choice<cert-format>="pem" -- str )
   "Parse one X.509 certificate (RFC 5280) and report it as text, in the layout of CyberChef's Parse X.509 certificate: Version, Serial number (decimal and hex), Algorithm ID, Validity (UTC), Issuer and Subject (one attribute per line), Public Key (algorithm, size, modulus and exponent, or curve and point, or the DSA numbers), Certificate Signature and Extensions. input-format is pem (the default; PEM blocks of other kinds, such as a private key in the same file, are ignored), der-hex (hex digits), base64 (of the DER) or raw (the DER bytes). Extension values are written as OpenSSL's x509 -text writes them (Basic Constraints, Key Usage, Extended Key Usage, Subject and Issuer Alternative Name, Subject and Authority Key Identifier, CRL Distribution Points, Authority and Subject Information Access, Certificate Policies, Name Constraints, ...) and any other extension as hex. More than one certificate, none, bytes after the certificate or a malformed structure is E_COERCE; use Parse X.509 certificate bundles for several." doc
   "Public Key" category
   data input-format _cert-labels _blobs
-  dup len 1 <> [ "expected one certificate, found " over len int>str cat "; use x509:parse-bundle for several" cat raise:coerce ] when
+  dup len 1 <> [ "expected one certificate, found " over len int>str cat "; use x509:parse-bundle for several" cat fail-coerce ] when
   0 nth _cert-report ;
 
 : _numbered ( der:bytes n:int total:int -- str )
   "Certificate " n int>str cat " of " cat total int>str cat "\n" cat
   [ der _cert-report ]
-  [ _why "certificate " n int>str cat ": " cat swap cat raise:coerce "" ] try cat ;
+  [ _why "certificate " n int>str cat ": " cat swap cat fail-coerce ] try cat ;
 
 : _bundle ( blobs:list -- str )
   blobs [ 1 + blobs len _numbered ] mapi "\n\n" join ;
 
-: parse-bundle ( data:bytes input-format:choice{pem|der-hex|base64|raw}="pem" -- str )
+: parse-bundle ( data:bytes input-format:choice<cert-format>="pem" -- str )
   "Parse every certificate of a bundle (a PEM file with several CERTIFICATE blocks, or DER certificates one after the other in der-hex, base64 or raw) and report each as Parse X.509 certificate does, under a heading Certificate N of M, separated by a blank line. input-format is pem (the default), der-hex, base64 or raw. No certificate, or a malformed one, is E_COERCE (the message of a malformed certificate starts with its number). PEM blocks of other kinds in the same file (private keys, CRLs) are ignored." doc
   "Public Key" category
   data input-format _cert-labels _blobs _bundle ;
@@ -699,7 +750,7 @@ USING: asn1 base64 md5 sha1 sha2 ;
   dup "universal" 16 "SubjectPublicKeyInfo" asn1:expect
   der swap asn1:raw "PUBLIC KEY" swap asn1:pem-encode ;
 
-: public-key ( data:bytes input-format:choice{pem|der-hex|base64|raw}="pem" -- str )
+: public-key ( data:bytes input-format:choice<cert-format>="pem" -- str )
   "The public key of each certificate as a PEM block of its SubjectPublicKeyInfo (Public Key from Certificate): -----BEGIN PUBLIC KEY----- with the Base64 in lines of 64 characters. The key is copied byte for byte from the certificate, whatever its algorithm (RSA, EC, Ed25519, DSA, ...), so it is the same as openssl x509 -pubkey. input-format is pem (the default), der-hex, base64 or raw; the keys of several certificates follow one another. No certificate or a malformed one is E_COERCE." doc
   "Public Key" category
   data input-format _cert-labels _blobs [ _spki-pem ] map "" join ;
@@ -724,17 +775,24 @@ USING: asn1 base64 md5 sha1 sha2 ;
 : _dow ( y:int m:int d:int -- int )
   y m 3 < [ 1 ] [ 0 ] if - m d _dow2 ;
 
+MEMO: _day-names ( -- list )
+  { "Sun" "Mon" "Tue" "Wed" "Thu" "Fri" "Sat" } ;
+
+MEMO: _month-names ( -- list )
+  { "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec" } ;
+
 : _gmt2 ( t:str y:int m:int d:int -- str )
-  { "Sun" "Mon" "Tue" "Wed" "Thu" "Fri" "Sat" } y m d _dow nth ", " cat
+  _day-names y m d _dow nth ", " cat
   t 8 10 slice cat " " cat
-  { "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec" } m 1 - nth cat " " cat
+  _month-names m 1 - nth cat " " cat
   t 0 4 slice cat " " cat t 11 19 slice cat " GMT" cat ;
 
 \ The text "YYYY-MM-DD HH:MM:SS UTC" of _time as RFC 1123 text; anything else as it is.
 : _gmt ( t:str -- str )
-  t len 23 = not [ t ] [
-    t 5 7 slice str>int dup 1 < over 12 > or
-    [ drop t ] [ t t 0 4 slice str>int rot t 8 10 slice str>int _gmt2 ] if ] if ;
+  t len 23 = not [ t exit ] when
+  t 5 7 slice str>int :> m
+  m 1 < m 12 > or [ t exit ] when
+  t t 0 4 slice str>int m t 8 10 slice str>int _gmt2 ;
 
 : _time-gmt ( node:record -- str )
   node _time _gmt ;
@@ -742,13 +800,13 @@ USING: asn1 base64 md5 sha1 sha2 ;
 \ ---- extensions at a given indent: the name at n spaces, the value 4 further ----
 
 : _ext-at2 ( oid:str crit:bool val:bytes n:int -- str )
-  " " n util:repeat-str oid _oid-title cat ":" cat crit [ " critical" cat ] when
+  " " n repeat-str oid _oid-title cat ":" cat crit [ " critical" cat ] when
   oid val _ext-body
   dup len 0 = [ drop ] [ n 4 + _indent "\n" swap cat cat ] if ;
 
 : _ext-at ( ext:record n:int -- str )
   ext "universal" 16 "an Extension" asn1:expect
-  ext asn1:children len dup 2 < swap 3 > or [ "an Extension has 2 or 3 fields" raise:coerce ] when
+  ext asn1:children len dup 2 < swap 3 > or [ "an Extension has 2 or 3 fields" fail-coerce ] when
   ext 0 asn1:child asn1:node>oid
   ext asn1:children len 3 = [ ext 1 asn1:child asn1:node>bool ] [ false ] if
   ext _ext-value n _ext-at2 ;
@@ -765,7 +823,7 @@ USING: asn1 base64 md5 sha1 sha2 ;
 \ The nodes of a TBSCertList after the issuer and thisUpdate: [nextUpdate] [revoked] [[0] extensions].
 : _crl-rest ( tbs:record -- list )
   tbs asn1:children
-  dup len tbs _crl-base 3 + < [ "the CRL is cut short: it has no issuer and update times" raise:coerce ] when
+  dup len tbs _crl-base 3 + < [ "the CRL is cut short: it has no issuer and update times" fail-coerce ] when
   tbs _crl-base 3 + over len slice ;
 
 : _crl-next ( rest:list -- str )
@@ -802,18 +860,18 @@ USING: asn1 base64 md5 sha1 sha2 ;
   [ len 0 > ] filter "\n" join ;
 
 : _crl-report ( der:bytes -- str )
-  der asn1:parse
-  dup "universal" 16 "CertificateList" asn1:expect
-  dup 0 asn1:child
-  dup "universal" 16 "TBSCertList" asn1:expect
-  swap 2 asn1:child asn1:node>bits drop
-  over _crl-rest swap _crl-lines ;
+  der asn1:parse :> crl
+  crl "universal" 16 "CertificateList" asn1:expect
+  crl 0 asn1:child :> tbs
+  tbs "universal" 16 "TBSCertList" asn1:expect
+  crl 2 asn1:child asn1:node>bits drop :> sig
+  tbs tbs _crl-rest sig _crl-lines ;
 
-: parse-crl ( data:bytes input-format:choice{pem|der-hex|base64|raw}="pem" -- str )
+: parse-crl ( data:bytes input-format:choice<cert-format>="pem" -- str )
   "Parse one X.509 certificate revocation list (RFC 5280) and report it as text: Version, Algorithm ID, Issuer, Last Update and Next Update (UTC), the CRL extensions (CRL Number, Authority Key Identifier, Issuer Alternative Name, ... as OpenSSL writes them), the revoked certificates (serial number in decimal and hex, revocation date and the entry extensions such as the reason code) and the Signature. input-format is pem (the default; the block is X509 CRL), der-hex, base64 or raw. More than one CRL, none, bytes after the CRL or a malformed structure is E_COERCE." doc
   "Public Key" category
   data input-format { "X509 CRL" } _blobs
-  dup len 1 <> [ "expected one CRL, found " over len int>str cat raise:coerce ] when
+  dup len 1 <> [ "expected one CRL, found " over len int>str cat fail-coerce ] when
   0 nth _crl-report ;
 
 \ ---- Parse CSR ----
@@ -828,8 +886,10 @@ USING: asn1 base64 md5 sha1 sha2 ;
 
 \ The extension requests of the attributes: SEQUENCE OF Extension inside the SET of the extensionRequest attribute.
 : _csr-exts ( attrs:list -- list )
-  attrs [ 0 asn1:child asn1:node>oid "1.2.840.113549.1.9.14" = ] filter
-  [ 1 asn1:child 0 asn1:child asn1:children ] map util:list-flatten ;
+  [
+    attrs [ 0 asn1:child asn1:node>oid "1.2.840.113549.1.9.14" = ] filter
+    [ 1 asn1:child 0 asn1:child asn1:children emit-all ] each
+  ] collect ;
 
 : _csr-attrs ( info:record -- list )
   info asn1:children [ 0 asn1:context? ] filter
@@ -849,18 +909,18 @@ USING: asn1 base64 md5 sha1 sha2 ;
   [ len 0 > ] filter "\n" join ;
 
 : _csr-report ( der:bytes -- str )
-  der asn1:parse
-  dup "universal" 16 "CertificationRequest" asn1:expect
-  dup 0 asn1:child
-  dup "universal" 16 "CertificationRequestInfo" asn1:expect
-  swap dup 1 asn1:child swap 2 asn1:child _sig-section
-  over _csr-attrs swap _csr-lines ;
+  der asn1:parse :> csr
+  csr "universal" 16 "CertificationRequest" asn1:expect
+  csr 0 asn1:child :> info
+  info "universal" 16 "CertificationRequestInfo" asn1:expect
+  csr 1 asn1:child csr 2 asn1:child _sig-section :> sig
+  info info _csr-attrs sig _csr-lines ;
 
-: parse-csr ( data:bytes input-format:choice{pem|der-hex|base64|raw}="pem" -- str )
+: parse-csr ( data:bytes input-format:choice<cert-format>="pem" -- str )
   "Parse one PKCS #10 certificate signing request (RFC 2986) and report it as text: Version, Subject, Public Key (as in Parse X.509 certificate), Signature (algorithm and value), the Attributes (challengePassword, unstructuredName, ...) and the Requested Extensions of the extensionRequest attribute, written as OpenSSL writes extensions. input-format is pem (the default; the block is CERTIFICATE REQUEST or NEW CERTIFICATE REQUEST), der-hex, base64 or raw. More than one request, none, bytes after the request or a malformed structure is E_COERCE. The signature is not verified." doc
   "Public Key" category
   data input-format { "CERTIFICATE REQUEST" "NEW CERTIFICATE REQUEST" } _blobs
-  dup len 1 <> [ "expected one certificate request, found " over len int>str cat raise:coerce ] when
+  dup len 1 <> [ "expected one certificate request, found " over len int>str cat fail-coerce ] when
   0 nth _csr-report ;
 
 \ ---- Parse SSH Host Key ----
@@ -883,12 +943,12 @@ USING: asn1 base64 md5 sha1 sha2 ;
 \ One more string from the state { position strings }.
 : _ssh-field ( data:bytes acc:list -- list )
   data acc 0 nth 4 "the SSH key blob" util:need-bytes
-  data acc 0 nth acc 1 nth data acc 0 nth dup 4 + slice 256 util:digits>int _ssh-take ;
+  data acc 0 nth acc 1 nth data acc 0 nth dup 4 + slice 256 digits>int _ssh-take ;
 
 \ The first n strings of the blob; bytes after them are E_COERCE.
 : _ssh-read ( data:bytes n:int -- list )
   0 n range { 0 { } } [ drop data swap _ssh-field ] reduce
-  dup 0 nth data len <> [ "the SSH key blob has bytes after the key fields" raise:coerce ] when
+  dup 0 nth data len <> [ "the SSH key blob has bytes after the key fields" fail-coerce ] when
   1 nth ;
 
 \ The key type, the first string of the blob.
@@ -897,13 +957,15 @@ USING: asn1 base64 md5 sha1 sha2 ;
 
 \ How many strings (the type included) a key of this type holds.
 : _ssh-count ( type:str -- int )
-  type "ssh-rsa" = [ 3 ] [
-  type "ssh-dss" = [ 5 ] [
-  type "ssh-ed25519" = type "ssh-ed448" = or [ 2 ] [
-  type "ecdsa-sha2-" util:starts-with? [ 3 ] [
-  type "sk-ssh-ed25519@openssh.com" = [ 3 ] [
-  type "sk-ecdsa-sha2-nistp256@openssh.com" = [ 4 ] [
-    "unsupported SSH key type '" type _safe cat "'" cat raise:coerce 0 ] if ] if ] if ] if ] if ] if ;
+  {
+    [ type "ssh-rsa" = ] [ 3 ]
+    [ type "ssh-dss" = ] [ 5 ]
+    [ type "ssh-ed25519" = type "ssh-ed448" = or ] [ 2 ]
+    [ type "ecdsa-sha2-" starts-with? ] [ 3 ]
+    [ type "sk-ssh-ed25519@openssh.com" = ] [ 3 ]
+    [ type "sk-ecdsa-sha2-nistp256@openssh.com" = ] [ 4 ]
+    [ "unsupported SSH key type '" type _safe cat "'" cat fail-coerce ]
+  } cond ;
 
 \ An mpint: a signed big-endian number; no bytes is zero.
 : _ssh-mpint ( b:bytes -- int )
@@ -947,21 +1009,26 @@ USING: asn1 base64 md5 sha1 sha2 ;
 
 \ RFC 5656: the curve identifier is the end of the key type (ecdsa-sha2-nistp256 and nistp256).
 : _ssh-check-curve ( type:str id:str -- )
-  type "ecdsa-sha2-" util:starts-with? type 11 type len slice id <> and
-  [ "the curve '" id _safe cat "' does not belong to the key type '" cat type _safe cat "'" cat raise:coerce ] when ;
+  type "ecdsa-sha2-" starts-with? type 11 type len slice id <> and
+  [ "the curve '" id _safe cat "' does not belong to the key type '" cat type _safe cat "'" cat fail-coerce ] when ;
 
 : _ssh-application ( b:bytes -- str )
   "Application" b bytes>latin1 _safe _ssh-kv ;
 
 : _ssh-details ( type:str f:list -- str )
-  type "ssh-rsa" = [ f 1 nth f 2 nth _ssh-rsa-lines ] [
-  type "ssh-dss" = [ f 1 nth f 2 nth f 3 nth f 4 nth _ssh-dss-lines ] [
-  type "ecdsa-sha2-" util:starts-with? [
-    type f 1 nth bytes>latin1 _ssh-check-curve f 1 nth bytes>latin1 f 2 nth _ssh-ecdsa-lines ] [
-  type "sk-ecdsa-sha2-nistp256@openssh.com" = [
-    f 1 nth bytes>latin1 f 2 nth _ssh-ecdsa-lines "\n" cat f 3 nth _ssh-application cat ] [
-  type "sk-ssh-ed25519@openssh.com" = [ type f 1 nth _ssh-ed-lines "\n" cat f 2 nth _ssh-application cat ] [
-  type f 1 nth _ssh-ed-lines ] if ] if ] if ] if ] if ;
+  {
+    [ type "ssh-rsa" = ] [ f 1 nth f 2 nth _ssh-rsa-lines ]
+    [ type "ssh-dss" = ] [ f 1 nth f 2 nth f 3 nth f 4 nth _ssh-dss-lines ]
+    [ type "ecdsa-sha2-" starts-with? ] [
+      type f 1 nth bytes>latin1 _ssh-check-curve
+      f 1 nth bytes>latin1 f 2 nth _ssh-ecdsa-lines
+    ]
+    [ type "sk-ecdsa-sha2-nistp256@openssh.com" = ] [
+      f 1 nth bytes>latin1 f 2 nth _ssh-ecdsa-lines "\n" cat f 3 nth _ssh-application cat
+    ]
+    [ type "sk-ssh-ed25519@openssh.com" = ] [ type f 1 nth _ssh-ed-lines "\n" cat f 2 nth _ssh-application cat ]
+    [ type f 1 nth _ssh-ed-lines ]
+  } cond ;
 
 \ ---- the report ----
 
@@ -984,7 +1051,7 @@ USING: asn1 base64 md5 sha1 sha2 ;
   text "\r\n" split "\n" join "\r" split "\n" join "\n" split [ _ssh-words len 0 > ] filter ;
 
 : _ssh-type-token? ( t:str -- bool )
-  t "ssh-" util:starts-with? t "ecdsa-sha2-" util:starts-with? or t "sk-" util:starts-with? or ;
+  t "ssh-" starts-with? t "ecdsa-sha2-" starts-with? or t "sk-" starts-with? or ;
 
 \ The position of the first word that looks like a key type, or -1.
 : _ssh-type-index ( words:list -- int )
@@ -992,40 +1059,42 @@ USING: asn1 base64 md5 sha1 sha2 ;
   dup len 0 = [ drop -1 ] [ 0 nth ] if ;
 
 : _ssh-hexish? ( s:str -- bool )
-  s len 2 mod 0 = s len 0 > and s str>codes [ util:hex-digit? not ] filter len 0 = and ;
+  s len 2 mod 0 = s len 0 > and s str>codes [ hex-digit? not ] filter len 0 = and ;
 
 : _ssh-decode ( token:str fmt:str -- bytes )
-  fmt "hex" = [ token hex>bytes ] [
-  fmt "base64" = [ token str>bytes "standard" base64:decode ] [
-  token _ssh-hexish? [ token hex>bytes ] [ token str>bytes "standard" base64:decode ] if ] if ] if ;
+  {
+    [ fmt "hex" = ] [ token hex>bytes ]
+    [ fmt "base64" = ] [ token str>bytes "standard" base64:decode ]
+    [ token _ssh-hexish? ] [ token hex>bytes ]
+    [ token str>bytes "standard" base64:decode ]
+  } cond ;
 
 \ { blob comment type-word } of the key on a line: the word after the key type is the key, the rest is the comment.
 : _ssh-line-parts ( words:list ti:int fmt:str -- list )
-  words len ti 1 + <= [ "the key type '" words ti nth _safe cat "' is not followed by the key" cat raise:coerce ] when
+  words len ti 1 + <= [ "the key type '" words ti nth _safe cat "' is not followed by the key" cat fail-coerce ] when
   { words ti 1 + nth fmt _ssh-decode  words ti 2 + words len slice " " join _safe  words ti nth } ;
 
 \ A key line (one line holding a key type word), or else a bare blob: all the text with white space ignored.
-: _ssh-load3 ( words:list ti:int lines:list text:str fmt:str -- list )
-  ti 0 < [ { text util:strip-space fmt _ssh-decode "" "" } ] [
-    lines len 1 > [ "expected one key, found " lines len int>str cat " lines" cat raise:coerce ] when
-    words ti fmt _ssh-line-parts ] if ;
-
 : _ssh-load ( text:str fmt:str -- list )
-  text _ssh-lines
-  dup len 0 = [ "the input holds no key" raise:coerce ] when
-  dup 0 nth _ssh-words dup _ssh-type-index
-  rot text fmt _ssh-load3 ;
-
-: _ssh-finish3 ( blob:bytes comment:str tok:str type:str -- str )
-  tok len 0 > type tok <> and [
-    "the key type in the text ('" tok _safe cat "') differs from the one in the key ('" cat type _safe cat "')" cat
-    raise:coerce ] when
-  blob comment type blob type _ssh-count _ssh-read _ssh-render ;
+  text _ssh-lines :> lines
+  lines len 0 = [ "the input holds no key" fail-coerce ] when
+  lines 0 nth _ssh-words :> words
+  words _ssh-type-index :> ti
+  ti 0 < [ { text strip-space fmt _ssh-decode "" "" } exit ] when
+  lines len 1 > [ "expected one key, found " lines len int>str cat " lines" cat fail-coerce ] when
+  words ti fmt _ssh-line-parts ;
 
 : _ssh-finish ( parts:list -- str )
-  parts 0 nth
-  dup len 0 = [ "the key is empty" raise:coerce ] when
-  parts 1 nth parts 2 nth parts 0 nth _ssh-type _ssh-finish3 ;
+  parts 0 nth :> blob
+  blob len 0 = [ "the key is empty" fail-coerce ] when
+  parts 1 nth :> comment
+  parts 2 nth :> tok
+  blob _ssh-type :> type
+  tok len 0 > type tok <> and [
+    "the key type in the text ('" tok _safe cat "') differs from the one in the key ('" cat type _safe cat "')" cat
+    fail-coerce
+  ] when
+  blob comment type blob type _ssh-count _ssh-read _ssh-render ;
 
 : parse-ssh-host-key ( data:bytes input-format:choice{auto|base64|hex}="auto" -- str )
   "Parse an SSH public key and report it as text (Parse SSH Host Key): the key type, the comment, the fingerprints and the fields of the key. The input is an OpenSSH public key line (authorized_keys, known_hosts or a .pub file: optional hosts or options, the key type, the Base64 key and an optional comment), the Base64 of the key, or its hex; input-format auto (the default) takes a text with a key-type word (ssh-rsa, ssh-dss, ecdsa-sha2-*, ssh-ed25519, ssh-ed448, sk-...) as a line, a text of only hex digits as hex and anything else as Base64; base64 and hex force how the key is decoded. Fingerprints are written as ssh-keygen -l does: MD5:aa:bb:... (ssh-keygen -E md5) and SHA256:<unpadded Base64> (the default), taken over the whole key blob. Fields: ssh-rsa exponent, modulus and size; ssh-dss p, q, g and y; ecdsa-sha2-* the curve, its size and the public point; ssh-ed25519 and ssh-ed448 the public key; the FIDO sk-ssh-ed25519@openssh.com and sk-ecdsa-sha2-nistp256@openssh.com keys add the application. A certificate key type or any other type, a key cut short, bytes after the key fields, a curve that does not match the type, more than one key line or bad Base64 or hex is E_COERCE." doc

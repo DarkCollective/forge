@@ -4,6 +4,12 @@
 \ UTF-8 encoded at the boundary.
 IN: recipe
 
+\ How the bytes of the data are read as text.
+CHOICE: text-encoding
+  option utf8 "UTF-8 text." ;
+  option latin1 "Latin-1 text: each byte is one character." ;
+;
+
 : as-bytes ( bytes -- bytes )
   "Normalise the data to bytes. A str becomes its UTF-8 bytes; other types are a type error." doc ;
 
@@ -15,12 +21,12 @@ IN: recipe
   "Literal helper: a string in standard base64." doc
   str>bytes "standard" base64:decode ;
 
-: matches ( bytes pattern:regex flags:str encoding:choice{utf8|latin1}="utf8" -- bool )
+: matches ( bytes pattern:regex flags:str encoding:choice<text-encoding>="utf8" -- bool )
   "True when the pattern matches somewhere in the data, which is read as utf8 or latin1." doc
   encoding "latin1" = [ bytes>latin1 ] [ bytes>str ] if
   pattern flags regex:test ;
 
-: section ( bytes pattern:regex flags:str encoding:choice{utf8|latin1}="utf8" body:quot -- bytes )
+: section ( bytes pattern:regex flags:str encoding:choice<text-encoding>="utf8" body:quot -- bytes )
   "Run body on every non-empty match; the bytes between matches are untouched." doc
   pattern flags encoding _split-matches
   [ 2 mod 1 = [ body call as-bytes ] when ] mapi

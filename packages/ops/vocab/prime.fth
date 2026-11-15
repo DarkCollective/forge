@@ -21,8 +21,12 @@ USING: random ;
 
 \ True when n - 1 is reached by squaring x at most k times.
 : _squarings ( x:int n:int k:int -- bool )
-  k 0 <= [ false ]
-  [ x x * n mod dup n 1 - = [ drop true ] [ n k 1 - recurse ] if ] if ;
+  x x * n mod :> y
+  {
+    [ k 0 <= ] [ false ]
+    [ y n 1 - = ] [ true ]
+    [ y n k 1 - recurse ]
+  } cond ;
 
 \ One Miller-Rabin round of n = d * 2^s + 1 with the base a: false means n is certainly composite.
 : _round ( n:int d:int s:int a:int -- bool )
@@ -32,9 +36,11 @@ USING: random ;
 
 \ k Miller-Rabin rounds with random bases in [2, n - 2], stopping at the first that proves n composite.
 : _rounds ( d:int s:int n:int k:int -- bool )
-  k 0 = [ true ]
-  [ n d s 2 n 2 - random:between _round
-    [ d s n k 1 - recurse ] [ false ] if ] if ;
+  {
+    [ k 0 = ] [ true ]
+    [ n d s 2 n 2 - random:between _round ] [ d s n k 1 - recurse ]
+    [ false ]
+  } cond ;
 
 \ True when the odd number n above 3 passes k rounds of the Miller-Rabin test.
 : _mr ( n:int k:int -- bool )
@@ -43,11 +49,14 @@ USING: random ;
 \ True when n is prime: exact below 40,000 (every composite there has a factor below 200), then trial division by
 \ the primes below 200 (their product has a common factor with n), then Miller-Rabin.
 : _prime? ( n:int -- bool )
-  n 2 < [ false ]
-  [ n 200 < [ _small [ n = ] filter len 0 > ]
-    [ n _small 1 [ * ] reduce gcd 1 <> [ false ]
-      [ n 40000 < [ true ]
-        [ n 1 256 shl < [ n 40 _mr ] [ n 8 _mr ] if ] if ] if ] if ] if ;
+  {
+    [ n 2 < ] [ false ]
+    [ n 200 < ] [ _small [ n = ] filter len 0 > ]
+    [ n _small 1 [ * ] reduce gcd 1 <> ] [ false ]
+    [ n 40000 < ] [ true ]
+    [ n 1 256 shl < ] [ n 40 _mr ]
+    [ n 8 _mr ]
+  } cond ;
 
 \ A uniform random prime in [lo, hi] (the range holds one): candidates are drawn and tested until one is prime.
 : _draw ( lo:int hi:int -- int )
@@ -56,16 +65,16 @@ USING: random ;
 \ The range of the numbers of the given size: size bits (top bit set) or size decimal digits (no leading zero).
 : _range ( size:int unit:str -- int int )
   unit "bits" =
-  [ size 2 < size 2048 > or [ "a prime has 2 to 2048 bits" raise:range ] when
+  [ size 2 < size 2048 > or [ "a prime has 2 to 2048 bits" fail-range ] when
     1 size 1 - shl 1 size shl 1 - ]
-  [ size 1 < size 616 > or [ "a prime has 1 to 616 decimal digits" raise:range ] when
+  [ size 1 < size 616 > or [ "a prime has 1 to 616 decimal digits" fail-range ] when
     10 size 1 - pow 10 size pow 1 - ] if ;
 
 : _batch ( lo:int hi:int count:int format:str delimiter:str -- str )
   0 count range [ drop lo hi _draw format "hex" = [ 16 int>str-radix "0x" swap cat ] [ int>str ] if ] map
   delimiter util:delimiter join ;
 
-: generate ( bytes size:int[1..2048]=512 unit:choice{bits|digits}="bits" count:int[1..100]=1 format:choice{decimal|hex}="decimal" delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab|none}="newline" -- str )
+: generate ( bytes size:int[1..2048]=512 unit:choice{bits|digits}="bits" count:int[1..100]=1 format:choice{decimal|hex}="decimal" delimiter:choice<util:delimiter-or-none>="newline" -- str )
   "Random primes from the host's cryptographic random generator (never Math.random): count of them, each drawn uniformly from the primes that have exactly size bits (top bit set, 2 to 2048) or exactly size decimal digits (1 to 616), tested by trial division and Miller-Rabin with random bases (40 rounds below 256 bits, 8 above: a composite passes with probability below 4 to the power -8 in the worst case and far below that for a random candidate). A 2048-bit prime takes about 2 seconds, so a large count of large primes can reach the 30 second time limit (E_LIMIT_TIME). Written as decimal text, or as lower-case hex text with a 0x in front (as CyberChef writes it), joined by the delimiter. The input is ignored. A size out of range for its unit is E_RANGE. The output differs on every call (the word carries the +random effect)." doc
   "Generators" category
   drop

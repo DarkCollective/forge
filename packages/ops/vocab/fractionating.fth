@@ -3,12 +3,18 @@
 \ Only ASCII letters take part: other bytes are dropped, and letters are upper case with J merged into I.
 IN: fractionating
 
+\ The square of the ADFGX family.
+CHOICE: adf-variant
+  option adfgx "A 5 by 5 square of the 25 letters (J as I)." ;
+  option adfgvx "A 6 by 6 square of the 26 letters and 10 digits." ;
+;
+
 \ ---------------------------------------------------------------------------------------------
 \ Letters and grids (private helpers)
 \ ---------------------------------------------------------------------------------------------
 
 \ The 25 letters of the Polybius square: the alphabet without J.
-: _fr-alpha ( -- bytes )
+MEMO: _fr-alpha ( -- bytes )
   "ABCDEFGHIKLMNOPQRSTUVWXYZ" str>bytes ;
 
 \ The two-digit coordinate (row 1 to 5, column 1 to 5) of the letter c in the square.
@@ -42,27 +48,26 @@ IN: fractionating
 
 META: polybius-encrypt
   use-when "You have a message and want each letter written as two digits from 1 to 5, its row and column in a 5 by 5 Polybius square, for a puzzle or a lesson." ;
-  inverse polybius-decrypt ;
-  link "https://en.wikipedia.org/wiki/Polybius_square" "Polybius square on Wikipedia" ;
   param key "Keyword of letters (either case; repeats dropped); empty for the plain square." ;
+  inverse polybius-decrypt ;
   see-also fractionating:polybius-decrypt ;
+  link "https://en.wikipedia.org/wiki/Polybius_square" "Polybius square on Wikipedia" ;
 ;
 
 : polybius-decrypt ( data:bytes key:str[0..25,/[A-Za-z]*/]="" -- bytes )
   "Undo the Polybius encoding with the same key: digit pairs (1 to 5 each; other bytes dropped) become letters. An odd number of digits, or a digit outside 1 to 5, is E_COERCE." doc
   "Classical ciphers" category
-  data [ util:dec-digit? ] filter dup len 2 mod 0 =
-  [ ] [ drop "polybius-decrypt: an odd number of digits" raise:coerce ] if
+  data [ dec-digit? ] filter dup len 2 mod 0 = not [ "polybius-decrypt: an odd number of digits" fail-coerce ] when
   bytes>list [ 48 - ] map
-  dup [ dup 1 < over 5 > or [ "polybius-decrypt: digits must be 1 to 5" raise:coerce ] when drop ] each
+  dup [ dup 1 < over 5 > or [ "polybius-decrypt: digits must be 1 to 5" fail-coerce ] when drop ] each
   key str>bytes [ util:upper-merge-i ] map _fr-alpha util:keyed-alphabet _fr-decode ;
 
 META: polybius-decrypt
   use-when "You have pairs of digits from 1 to 5 that name the letters of a Polybius square, with the key that was used, and want the letters back, for a puzzle." ;
-  inverse polybius-encrypt ;
-  link "https://en.wikipedia.org/wiki/Polybius_square" "Polybius square on Wikipedia" ;
   param key "Keyword used to encrypt; empty for the plain square." ;
+  inverse polybius-encrypt ;
   see-also fractionating:polybius-encrypt ;
+  link "https://en.wikipedia.org/wiki/Polybius_square" "Polybius square on Wikipedia" ;
 ;
 
 \ ---------------------------------------------------------------------------------------------
@@ -81,7 +86,7 @@ META: polybius-decrypt
 \ The letter of the square cell that the sum v, less the key coordinate k, names; E_COERCE when that is not a cell.
 : _nh-cell ( v:int k:int grid:bytes -- int )
   v k - dup 11 < over 55 > or over 10 mod 1 < or over 10 mod 5 > or
-  [ "nihilist: a number is not a sum of two coordinates" raise:coerce ] when
+  [ "nihilist: a number is not a sum of two coordinates" fail-coerce ] when
   dup 10 div 1 - 5 * swap 10 mod 1 - + grid swap nth ;
 
 : _nh-decrypt ( grid:bytes keyc:list nums:list -- bytes )
@@ -97,11 +102,11 @@ META: polybius-decrypt
 
 META: nihilist-encrypt
   use-when "You have a message and a key, and want Nihilist numbers, each the sum of two square cells, for a puzzle or a lesson on how the cipher works." ;
-  inverse nihilist-decrypt ;
-  link "https://en.wikipedia.org/wiki/Nihilist_cipher" "Nihilist cipher on Wikipedia" ;
   param key "Nihilist key: letters (either case), repeated over the data." ;
   param square "Keyword of the Polybius square (letters, either case; repeats dropped); empty for the plain square." ;
+  inverse nihilist-decrypt ;
   see-also fractionating:nihilist-decrypt ;
+  link "https://en.wikipedia.org/wiki/Nihilist_cipher" "Nihilist cipher on Wikipedia" ;
 ;
 
 : nihilist-decrypt ( data:bytes key:str[1..256,/[A-Za-z]+/] square:str[0..25,/[A-Za-z]*/]="" -- bytes )
@@ -114,11 +119,11 @@ META: nihilist-encrypt
 
 META: nihilist-decrypt
   use-when "You have a row of Nihilist numbers with the key and square they were made with, and want the letters back, for a puzzle or a lesson." ;
-  inverse nihilist-encrypt ;
-  link "https://en.wikipedia.org/wiki/Nihilist_cipher" "Nihilist cipher on Wikipedia" ;
   param key "Nihilist key used to encrypt (letters, either case)." ;
   param square "Keyword of the Polybius square used to encrypt; empty for the plain square." ;
+  inverse nihilist-encrypt ;
   see-also fractionating:nihilist-encrypt ;
+  link "https://en.wikipedia.org/wiki/Nihilist_cipher" "Nihilist cipher on Wikipedia" ;
 ;
 
 \ ---------------------------------------------------------------------------------------------
@@ -143,7 +148,7 @@ META: nihilist-decrypt
 \ The text put into the square: ADFGX takes the letters (J as I); ADFGVX takes letters and digits. Letters are upper case.
 : _adf-data ( data:bytes variant:str -- bytes )
   variant "adfgx" = [ data [ util:letter? ] filter [ util:upper-merge-i ] map ]
-  [ data [ dup util:letter? swap util:dec-digit? or ] filter [ dup util:letter? [ 223 band ] when ] map ] if ;
+  [ data [ dup util:letter? swap dec-digit? or ] filter [ dup util:letter? [ 223 band ] when ] map ] if ;
 
 \ The two label bytes (row, then column) of the square position p in a w-wide square.
 : _adf-pair ( p:int w:int labels:bytes -- bytes )
@@ -161,11 +166,11 @@ META: nihilist-decrypt
 
 \ The letters of the square for the label text cipher (after the transposition is undone).
 : _adf-decode ( cipher:bytes key:str variant:str -- bytes )
-  cipher len 2 mod 0 = not [ "adfgx: the labels come in pairs, and the text has an odd number of them" raise:coerce ] when
+  cipher len 2 mod 0 = not [ "adfgx: the labels come in pairs, and the text has an odd number of them" fail-coerce ] when
   cipher variant _adf-labels bytes>str 255 255 util:decode-table util:check-symbols
   variant _adf-width key variant _adf-grid _adf-letters ;
 
-: adfgx-encrypt ( data:bytes key:str[1..36,/[A-Za-z0-9]+/] trkey:str[1..256,/[A-Za-z]+/] variant:choice{adfgx|adfgvx}="adfgx" -- bytes )
+: adfgx-encrypt ( data:bytes key:str[1..36,/[A-Za-z0-9]+/] trkey:str[1..256,/[A-Za-z]+/] variant:choice<adf-variant>="adfgx" -- bytes )
   "ADFGX and ADFGVX ciphers: each letter (ADFGVX also each digit) of the data becomes the labels of its cell in a keyed square (ADFGX: 5 by 5 square of the 25 letters, J as I; ADFGVX: 6 by 6 square of letters and digits; the square is filled by its key, then the rest of the alphabet). The label pairs (row, then column) are then written under the transposition key trkey and read out by columnar transposition (transposition:columnar-encrypt, no pad). Other bytes are dropped." doc
   "Classical ciphers" category
   data variant _adf-data
@@ -175,15 +180,15 @@ META: nihilist-decrypt
 
 META: adfgx-encrypt
   use-when "You have a message, a square key and a transposition key, and want ADFGX or ADFGVX ciphertext, as the German army used in 1918, for a CTF challenge." ;
-  inverse adfgx-decrypt ;
-  link "https://en.wikipedia.org/wiki/ADFGVX_cipher" "ADFGVX cipher on Wikipedia" ;
   param key "Keyword of the square (letters, or letters and digits for adfgvx, repeats dropped); it fills the square first." ;
   param trkey "Keyword of the transposition: its letters give the column order." ;
   param variant "adfgx (5 by 5, letters) or adfgvx (6 by 6, letters and digits)." ;
+  inverse adfgx-decrypt ;
   see-also fractionating:adfgx-decrypt ;
+  link "https://en.wikipedia.org/wiki/ADFGVX_cipher" "ADFGVX cipher on Wikipedia" ;
 ;
 
-: adfgx-decrypt ( data:bytes key:str[1..36,/[A-Za-z0-9]+/] trkey:str[1..256,/[A-Za-z]+/] variant:choice{adfgx|adfgvx}="adfgx" -- bytes )
+: adfgx-decrypt ( data:bytes key:str[1..36,/[A-Za-z0-9]+/] trkey:str[1..256,/[A-Za-z]+/] variant:choice<adf-variant>="adfgx" -- bytes )
   "Undo the ADFGX or ADFGVX cipher with the same keys and variant: the columnar transposition is undone (transposition:columnar-decrypt), then each label pair names a cell of the square. Letters only are read (case is ignored); a label pair that is not a label, or an odd count of labels, is E_COERCE." doc
   "Classical ciphers" category
   data [ util:letter? ] filter [ 223 band ] map
@@ -192,12 +197,12 @@ META: adfgx-encrypt
 
 META: adfgx-decrypt
   use-when "You have ADFGX or ADFGVX ciphertext with its two keys and variant, and want the plaintext back, for a puzzle or to read a historical text." ;
-  inverse adfgx-encrypt ;
-  link "https://en.wikipedia.org/wiki/ADFGVX_cipher" "ADFGVX cipher on Wikipedia" ;
   param key "Keyword of the square used to encrypt (same as adfgx-encrypt)." ;
   param trkey "Keyword of the transposition used to encrypt." ;
   param variant "adfgx or adfgvx, as used to encrypt." ;
+  inverse adfgx-encrypt ;
   see-also fractionating:adfgx-encrypt ;
+  link "https://en.wikipedia.org/wiki/ADFGVX_cipher" "ADFGVX cipher on Wikipedia" ;
 ;
 
 \ ---------------------------------------------------------------------------------------------
@@ -262,11 +267,11 @@ META: adfgx-decrypt
 
 META: trifid-encrypt
   use-when "You have a message and a key and want Trifid ciphertext, which uses a 27-symbol cube and mixes the coordinates in blocks, for a puzzle or a lesson." ;
-  inverse trifid-decrypt ;
-  link "https://en.wikipedia.org/wiki/Trifid_cipher" "Trifid cipher on Wikipedia" ;
   param key "Keyword of the cube (letters, either case; repeats dropped); empty for the plain cube." ;
   param period "The block size: the number of letters whose coordinates are read together." ;
+  inverse trifid-decrypt ;
   see-also fractionating:trifid-decrypt ;
+  link "https://en.wikipedia.org/wiki/Trifid_cipher" "Trifid cipher on Wikipedia" ;
 ;
 
 : trifid-decrypt ( data:bytes key:str[0..256,/[A-Za-z]*/]="" period:int[1..1000]=5 -- bytes )
@@ -278,10 +283,10 @@ META: trifid-encrypt
 
 META: trifid-decrypt
   use-when "You have Trifid ciphertext with the key and period it was made with, and want the letters back, for a puzzle or a lesson." ;
-  inverse trifid-encrypt ;
-  link "https://en.wikipedia.org/wiki/Trifid_cipher" "Trifid cipher on Wikipedia" ;
   param key "Keyword of the cube used to encrypt (letters, either case); empty for the plain cube." ;
   param period "The block size used to encrypt." ;
+  inverse trifid-encrypt ;
   see-also fractionating:trifid-encrypt ;
+  link "https://en.wikipedia.org/wiki/Trifid_cipher" "Trifid cipher on Wikipedia" ;
 ;
 
