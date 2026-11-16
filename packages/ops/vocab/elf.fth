@@ -356,7 +356,7 @@ MEMO: _file-types ( -- str )
 
 : _section-table ( e:bytes secs:list names:record -- str )
   e _s-title
-  0 secs len range [ e names rot dup secs swap nth _s-row ] map "" join cat
+  0 secs len range [ :> i e names i secs i nth _s-row ] map "" join cat
   e _shnum _more-line cat ;
 
 \ ---- symbol tables ----

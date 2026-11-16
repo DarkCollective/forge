@@ -56,7 +56,7 @@ IN: blockmode
 
 \ The blocks of data as a list of bytes: bs bytes each, the last one shorter if bs does not divide the length.
 : _blocks ( data:bytes bs:int -- list )
-  0 data len bs ceil-div range [ bs * dup bs + data len min data -rot slice ] map ;
+  0 data len bs ceil-div range [ bs * :> s data s s bs + data len min slice ] map ;
 
 : _join ( blocks:list -- bytes )
   blocks #[ ] bjoin ;

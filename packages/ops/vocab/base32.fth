@@ -31,7 +31,7 @@ CHOICE: base32-alphabet
   data { 0 0 0 0 } list>bytes 0 5 data len 5 mod - 5 mod slice cat
   alpha data len 4 + 5 div _groups
   0 data len 8 * 4 + 5 div slice bytes>latin1
-  padding [ dup len 8 mod 8 swap - 8 mod "========" 0 rot slice cat ] when ;
+  padding [ dup len 8 mod 8 swap - 8 mod :> n "========" 0 n slice cat ] when ;
 
 : encode ( bytes alphabet:choice<base32-alphabet>=standard padding:bool=true -- str )
   "Encode bytes as Base32 text (RFC 4648 sections 6 and 7)." doc

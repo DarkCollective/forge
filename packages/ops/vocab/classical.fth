@@ -189,7 +189,7 @@ META: bacon-encode
 
 : _bacon-lookup ( t:bytes table:bytes -- str )
   0 t len 5 div range
-  [ 5 * dup 5 + t -rot slice
+  [ 5 * :> s t s s 5 + slice
     0 [ 98 = [ 1 ] [ 0 ] if swap 2 * + ] reduce
     dup table len >=
     [ "bacon-decode: a group does not code a letter of this alphabet" fail-coerce ] when
@@ -350,10 +350,9 @@ META: bifid-decrypt
 
 : _rf-gather ( data:bytes starts:list off:int rails:int -- bytes )
   0 data len range
-  [ dup off rails _rf-rail
-    dup starts swap nth
-    -rot swap off rails _rf-size
-    + data swap nth ]
+  [ :> i
+    i off rails _rf-rail :> r
+    data starts r nth r i off rails _rf-size + nth ]
   map list>bytes ;
 
 : _rf-decrypt ( data:bytes rails:int off:int -- bytes )

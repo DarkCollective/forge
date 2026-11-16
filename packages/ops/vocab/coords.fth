@@ -126,7 +126,7 @@ IN: coords
 
 : _ge-char ( c:int lonidx:int latidx:int blon:int blat:int -- str )
   0 5 range 0 [ swap 2 * swap c 5 * + lonidx latidx blon blat _ge-bit + ] reduce
-  dup 1 + _gh-alphabet -rot slice ;
+  :> v _gh-alphabet v v 1 + slice ;
 
 : _gh-encode-from ( lonidx:int latidx:int blon:int blat:int n:int -- str )
   0 n range [ lonidx latidx blon blat _ge-char ] map "" join ;

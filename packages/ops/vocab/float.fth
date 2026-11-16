@@ -30,7 +30,7 @@ CHOICE: _byte-order
 \ The numbers of the data, w bytes each, as text separated by single spaces.
 : _numbers ( data:bytes w:int little:bool -- str )
   0 data len w div range
-  [ w * dup w + data -rot slice little _unpack ] map
+  [ w * :> s data s s w + slice little _unpack ] map
   " " join ;
 
 : decode ( bytes size:choice<_float-size>=64 endian:choice<_byte-order>=big -- str )

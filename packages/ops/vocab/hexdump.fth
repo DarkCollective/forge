@@ -47,7 +47,7 @@ MEMO: _ascii-table ( -- bytes )
 
 : _rows ( data:bytes text:bytes width:int up:bool with-ascii:bool -- str )
   0 data len width + 1 - width div range
-  [ data text rot width up with-ascii _row ] map
+  [ :> i data text i width up with-ascii _row ] map
   "\n" join ;
 
 : _encode ( data:bytes width:int up:bool with-ascii:bool -- str )

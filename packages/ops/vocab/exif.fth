@@ -41,7 +41,8 @@ MEMO: _gps-names ( -- str )
 
 \ The bytes of d from from up to to, cut at the end of the data; empty when from is past it.
 : _clip ( d:bytes from:int to:int -- bytes )
-  to d len min dup from < [ drop #[ ] ] [ d from rot slice ] if ;
+  to d len min :> end
+  end from < [ #[ ] ] [ d from end slice ] if ;
 
 \ ---- finding the Exif block ----
 
