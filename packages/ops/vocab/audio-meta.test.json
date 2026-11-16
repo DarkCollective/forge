@@ -173,5 +173,25 @@
       "enc": "utf8"
     },
     "expect": "fail"
+  },
+  {
+    "name": "audio-meta:extract: input check, an MP4 file of a brand with no row of its own (mmp4)",
+    "op": "audio-meta:extract",
+    "checks": "input",
+    "data": {
+      "value": "0000001c667479706d6d7034000000006d6d703469736f6d",
+      "enc": "hex"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "audio-meta:extract: input check, an MPEG-2.5 frame (FF E3)",
+    "op": "audio-meta:extract",
+    "checks": "input",
+    "data": {
+      "value": "ffe3900000000000",
+      "enc": "hex"
+    },
+    "expect": "pass"
   }
 ]

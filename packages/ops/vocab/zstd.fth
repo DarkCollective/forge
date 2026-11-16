@@ -17,5 +17,5 @@ META: decompress
   link "https://www.rfc-editor.org/rfc/rfc8878" "RFC 8878: Zstandard compression" ;
   link "https://en.wikipedia.org/wiki/Zstandard" "Zstandard on Wikipedia" ;
   checks input magic-bytes format "zstd" ;
-  checks input magic-bytes "502a4d18" ;
+  checks input magic-bytes format "skippable-frame" ;
 ;

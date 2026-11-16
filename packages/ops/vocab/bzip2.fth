@@ -25,7 +25,7 @@ META: compress
   see-also bzip2:decompress deflate:gzip ;
   link "https://sourceware.org/bzip2/" "bzip2 home page" ;
   link "https://en.wikipedia.org/wiki/Bzip2" "Bzip2 on Wikipedia" ;
-  checks output magic-bytes "425a68" ;
+  checks output magic-bytes format "bzip2-header" ;
 ;
 
 META: decompress
@@ -35,5 +35,5 @@ META: decompress
   see-also bzip2:compress deflate:gunzip ;
   link "https://sourceware.org/bzip2/" "bzip2 home page" ;
   link "https://en.wikipedia.org/wiki/Bzip2" "Bzip2 on Wikipedia" ;
-  checks input magic-bytes "425a68" ;
+  checks input magic-bytes format "bzip2-header" ;
 ;

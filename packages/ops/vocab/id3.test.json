@@ -137,5 +137,25 @@
       "enc": "utf8"
     },
     "expect": "fail"
+  },
+  {
+    "name": "id3:extract: input check, an MPEG-2.5 frame (FF E3)",
+    "op": "id3:extract",
+    "checks": "input",
+    "data": {
+      "value": "ffe3900000000000",
+      "enc": "hex"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "id3:extract: input check, an MPEG-2.5 frame (FF E2)",
+    "op": "id3:extract",
+    "checks": "input",
+    "data": {
+      "value": "ffe2900000000000",
+      "enc": "hex"
+    },
+    "expect": "pass"
   }
 ]

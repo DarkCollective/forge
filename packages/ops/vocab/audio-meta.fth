@@ -35,9 +35,10 @@ META: extract
   checks input magic-bytes format "mp3-id3" ;
   checks input magic-bytes format "mp3-mpeg1" ;
   checks input magic-bytes format "mp3-mpeg2" ;
+  checks input magic-bytes format "mp3-mpeg25" ;
   checks input magic-bytes format "flac" ;
   checks input magic-bytes format "ogg" ;
   checks input magic-bytes format "wav" ;
-  checks input magic-bytes "66747970" 4 ;
+  checks input magic-bytes format "iso-bmff" ;
   expects "MP3, FLAC, Ogg, WAV or M4A audio" ;
 ;

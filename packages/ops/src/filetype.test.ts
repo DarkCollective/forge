@@ -320,6 +320,39 @@ describe("Scan for Embedded Files", () => {
     );
   });
 
+  test("the rows for the bare header of a format: bzip2 header, any ftyp brand, skippable frames, Avro", async () => {
+    const empty = Uint8Array.from([
+      0x42, 0x5a, 0x68, 0x39, 0x17, 0x72, 0x45, 0x38, 0x50, 0x90, 0, 0, 0, 0,
+    ]);
+    expect(textOf(await scan(cat(text("junk"), empty)))).toContain(
+      "Offset 4 (0x4):\n  File type:   bzip2 compressed file (header)",
+    );
+    const brand = cat(Uint8Array.from([0, 0, 0, 0x14]), text("ftypmmp4"), new Uint8Array(12));
+    expect(textOf(await scan(brand))).toContain("ISO base media file (any brand)");
+    for (const first of [0x50, 0x55, 0x5f]) {
+      const frame = Uint8Array.from([first, 0x2a, 0x4d, 0x18, 0, 0, 0, 0]);
+      expect(textOf(await scan(cat(text("xx"), frame)))).toContain(
+        "Offset 2 (0x2):\n  File type:   LZ4 or Zstandard skippable frame",
+      );
+    }
+    expect(textOf(await scan(cat(text("xx"), text("Obj"), Uint8Array.of(1, 2, 3))))).toContain(
+      "Avro object container file",
+    );
+    // 0x60 is not a skippable-frame magic
+    expect(textOf(await scan(Uint8Array.from([0x60, 0x2a, 0x4d, 0x18])))).toContain(
+      "No embedded files",
+    );
+  });
+
+  test("the weak rows (MPEG-2.5 frame, .lzma header) are left out when common signatures are ignored", async () => {
+    const mp3 = Uint8Array.from([0xff, 0xe3, 0x90, 0, 0, 0]);
+    expect(textOf(await scan(mp3, true))).toContain("No embedded files");
+    expect(textOf(await scan(mp3, false))).toContain("MPEG-2.5 layer 3 frame");
+    const lzma = Uint8Array.from([0x5d, 0, 0, 0x80, 0, ...new Array<number>(8).fill(0xff)]);
+    expect(textOf(await scan(lzma, true))).toContain("No embedded files");
+    expect(textOf(await scan(lzma, false))).toContain("LZMA alone file");
+  });
+
   test("overlapping and repeated matches", async () => {
     const data = cat(sample("png"), sample("png"), sample("png"));
     expect(textOf(await scan(data)).match(/\nOffset /g)).toHaveLength(3);

@@ -56,6 +56,34 @@ describe("signatures", () => {
     expect(identifyData(jar)).toMatchObject({ id: "jar", family: "zip" });
   });
 
+  test("the bare-header rows: an empty bzip2 stream, any ftyp brand, skippable frames, Avro", () => {
+    const empty = Uint8Array.from([
+      0x42, 0x5a, 0x68, 0x39, 0x17, 0x72, 0x45, 0x38, 0x50, 0x90, 0, 0, 0, 0,
+    ]);
+    expect(identifyData(empty)).toMatchObject({ id: "bzip2-header", certainty: "high" });
+    const mmp4 = Uint8Array.from([0, 0, 0, 0x14, ...enc("ftypmmp4"), 0, 0, 0, 0]);
+    expect(identifyData(mmp4)).toMatchObject({ id: "iso-bmff", certainty: "high" });
+    // a brand with a row of its own is that row, in family iso-bmff
+    const isom = Uint8Array.from([0, 0, 0, 0x14, ...enc("ftypisom"), 0, 0, 0, 0]);
+    expect(identifyData(isom)).toMatchObject({ id: "mp4-isom", family: "iso-bmff" });
+    expect(identifyData(Uint8Array.from([0x5f, 0x2a, 0x4d, 0x18, 0, 0, 0, 0]))?.id).toBe(
+      "skippable-frame",
+    );
+    expect(identifyData(Uint8Array.from([0x02, 0x21, 0x4c, 0x18, 1, 2, 3, 4]))?.id).toBe(
+      "lz4-legacy",
+    );
+    expect(identifyData(Uint8Array.from([0x4f, 0x62, 0x6a, 0x01, 2, 3]))?.id).toBe("avro");
+  });
+
+  test("the weak rows, MPEG-2.5 frame and .lzma header, are low certainty", () => {
+    expect(identifyData(Uint8Array.from([0xff, 0xe3, 0x90, 0, 0, 0, 0, 0]))).toMatchObject({
+      id: "mp3-mpeg25",
+      certainty: "low",
+    });
+    const lzma = Uint8Array.from([0x5d, 0, 0, 0x80, 0, ...new Array<number>(8).fill(0xff)]);
+    expect(identifyData(lzma)).toMatchObject({ id: "lzma-alone", certainty: "low" });
+  });
+
   test("ELF and PDF", () => {
     expect(identifyData(new Uint8Array([0x7f, 0x45, 0x4c, 0x46, 2, 1, 1, 0]))?.id).toBe("elf");
     expect(identifyData(enc("%PDF-1.7\n%..."))?.id).toBe("pdf");

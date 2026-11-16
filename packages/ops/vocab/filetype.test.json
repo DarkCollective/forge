@@ -83,7 +83,105 @@
       "enc": "hex"
     },
     "expect": {
-      "value": "File type:   bzip2 compressed file\nExtension:   bz2,tbz2\nMIME type:   application/x-bzip2\nDescription: bzip2 stream\n",
+      "value": "File type:   bzip2 compressed file\nExtension:   bz2,tbz2\nMIME type:   application/x-bzip2\nDescription: bzip2 stream\n\nFile type:   bzip2 compressed file (header)\nExtension:   bz2,tbz2\nMIME type:   application/x-bzip2\nDescription: bzip2 stream header (BZh and a level digit), also of an empty stream\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "detect: empty bzip2 stream (the header row alone)",
+    "ref": "bzip2 1.0.8: bzip2 -c -9 < /dev/null; the 14-byte empty stream has no block magic",
+    "op": "filetype:detect",
+    "params": {},
+    "input": {
+      "value": "425a683917724538509000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "File type:   bzip2 compressed file (header)\nExtension:   bz2,tbz2\nMIME type:   application/x-bzip2\nDescription: bzip2 stream header (BZh and a level digit), also of an empty stream\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "detect: an ISO base media file of a brand with no row of its own",
+    "ref": "ISO/IEC 14496-12 section 4.3: the ftyp box, size then 'ftyp' then the major brand (here mmp4)",
+    "op": "filetype:detect",
+    "params": {},
+    "input": {
+      "value": "0000001c667479706d6d7034000000006d6d703469736f6d",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "File type:   ISO base media file (any brand)\nExtension:   mp4,m4a,mov,3gp\nMIME type:   video/mp4\nDescription: ISO base media file format (MP4, M4A, QuickTime, 3GPP, HEIF and relatives): a ftyp box, whatever the brand\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "detect: Avro object container file",
+    "ref": "Apache Avro 1.11 specification, Object Container Files: the four magic bytes 'O' 'b' 'j' 1 and the file metadata",
+    "op": "filetype:detect",
+    "params": {},
+    "input": {
+      "value": "4f626a01",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "File type:   Avro object container file\nExtension:   avro\nMIME type:   application/avro\nDescription: Apache Avro object container file (Obj and the version byte 1)\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "detect: LZ4 skippable frame",
+    "ref": "LZ4 frame format, skippable frames: magic 0x184D2A5F (little endian 5f 2a 4d 18), a 4-byte size, then that many bytes",
+    "op": "filetype:detect",
+    "params": {},
+    "input": {
+      "value": "5f2a4d180400000011223344",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "File type:   LZ4 or Zstandard skippable frame\nExtension:   lz4,zst\nMIME type:   application/octet-stream\nDescription: Skippable frame (magic numbers 0x184D2A50 to 0x184D2A5F) of an LZ4 or Zstandard stream\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "detect: LZ4 legacy frame",
+    "ref": "LZ4 frame format, legacy frames: magic 0x184C2102 (little endian 02 21 4c 18)",
+    "op": "filetype:detect",
+    "params": {},
+    "input": {
+      "value": "02214c18",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "File type:   LZ4 legacy frame\nExtension:   lz4\nMIME type:   application/x-lz4\nDescription: LZ4 legacy frame (magic number 0x184C2102)\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "detect: MPEG-2.5 layer 3 frame",
+    "ref": "ISO/IEC 11172-3 frame header with the unofficial MPEG-2.5 version bits 00: FF E3 (sync, version 00, layer III, no CRC)",
+    "op": "filetype:detect",
+    "params": {},
+    "input": {
+      "value": "ffe3900000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "File type:   MP3 audio (MPEG-2.5 layer 3 frame)\nExtension:   mp3\nMIME type:   audio/mpeg\nDescription: MPEG audio layer 3, MPEG-2.5 frame sync\n",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "detect: LZMA alone header",
+    "ref": "LZMA SDK, LzmaAlone format: properties 5D, dictionary size 8 MiB (little endian 00 00 80 00) and an unknown uncompressed size (eight FF bytes)",
+    "op": "filetype:detect",
+    "params": {},
+    "input": {
+      "value": "5d00008000ffffffffffffffff0000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "File type:   LZMA alone file\nExtension:   lzma\nMIME type:   application/x-lzma\nDescription: LZMA alone header: properties 5D (lc 3, lp 0, pb 2), a dictionary size that is a multiple of 64 KiB and under 256 MiB\n",
       "enc": "utf8"
     }
   },

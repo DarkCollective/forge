@@ -332,5 +332,25 @@
       "enc": "hex"
     },
     "expect": "pass"
+  },
+  {
+    "name": "bzip2:decompress: input check, an empty stream (header and end-of-stream only)",
+    "op": "bzip2:decompress",
+    "checks": "input",
+    "data": {
+      "value": "425a683917724538509000000000",
+      "enc": "hex"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "bzip2:decompress: input check, a header with the smallest block size and nothing after it",
+    "op": "bzip2:decompress",
+    "checks": "input",
+    "data": {
+      "value": "425a6831",
+      "enc": "hex"
+    },
+    "expect": "pass"
   }
 ]

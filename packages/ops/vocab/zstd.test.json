@@ -501,5 +501,25 @@
       "enc": "utf8"
     },
     "expect": "fail"
+  },
+  {
+    "name": "zstd:decompress: input check, a skippable frame with magic 0x184D2A5F",
+    "op": "zstd:decompress",
+    "checks": "input",
+    "data": {
+      "value": "5f2a4d1804000000aabbccdd",
+      "enc": "hex"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "zstd:decompress: input check, a skippable frame with magic 0x184D2A50",
+    "op": "zstd:decompress",
+    "checks": "input",
+    "data": {
+      "value": "502a4d1800000000",
+      "enc": "hex"
+    },
+    "expect": "pass"
   }
 ]

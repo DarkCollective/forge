@@ -55,6 +55,7 @@ CHOICE: magic-format
   option "3gp" "3GPP video." ;
   option "3g2" "3GPP2 video." ;
   option f4v "F4V video." ;
+  option iso-bmff "ISO base media file (MP4, M4A, QuickTime, 3GPP or another brand)." ;
   option avi "AVI video." ;
   option matroska "Matroska or WebM video." ;
   option flv "FLV video." ;
@@ -69,6 +70,7 @@ CHOICE: magic-format
   option mp3-id3 "MP3 audio." ;
   option mp3-mpeg1 "MP3 audio." ;
   option mp3-mpeg2 "MP3 audio." ;
+  option mp3-mpeg25 "MP3 audio." ;
   option aac-adts "AAC audio." ;
   option aac-adts-mpeg2 "AAC audio." ;
   option flac "FLAC audio." ;
@@ -124,9 +126,13 @@ CHOICE: magic-format
   option "7z" "7-Zip archive." ;
   option gzip "gzip data." ;
   option bzip2 "bzip2 data." ;
+  option bzip2-header "bzip2 data (the header alone)." ;
   option xz "XZ data." ;
   option zstd "Zstandard data." ;
   option lz4 "LZ4 data." ;
+  option lz4-legacy "LZ4 legacy frame." ;
+  option skippable-frame "LZ4 or Zstandard skippable frame." ;
+  option lzma-alone "LZMA data (.lzma)." ;
   option lzip "lzip data." ;
   option tar "tar archive." ;
   option compress "compress data." ;
@@ -176,6 +182,7 @@ CHOICE: magic-format
   option qcow "QCOW disk image." ;
   option krb5-ccache "Kerberos credential cache." ;
   option nes "NES ROM." ;
+  option avro "Avro object container file." ;
   option json "JSON text." ;
   option base64 "Base64 text." ;
   option hex "Hex text." ;

@@ -123,8 +123,8 @@ META: decompress
   use-when "You have an LZ4 frame, starting with 04 22 4d 18, and want the bytes it holds." ;
   param verify "Check the header checksum, the block and content checksums and the content size; off, damaged checksums are ignored and the data is still returned." ;
   checks input magic-bytes format "lz4" ;
-  checks input magic-bytes "02214c18" ;
-  checks input magic-bytes "502a4d18" ;
+  checks input magic-bytes format "lz4-legacy" ;
+  checks input magic-bytes format "skippable-frame" ;
   see-also lz4:compress deflate:gunzip ;
   inverse compress ;
   link "https://lz4.org/" "LZ4 home page" ;

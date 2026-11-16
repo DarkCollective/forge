@@ -35,6 +35,6 @@ META: to-json
   param indent "Spaces per level of the array; 0 writes compact JSON. Not used when force-valid-json is off." ;
   link "https://avro.apache.org/" "Apache Avro project" ;
   link "https://en.wikipedia.org/wiki/Apache_Avro" "Apache Avro on Wikipedia" ;
-  checks input magic-bytes "4f626a01" ;
+  checks input magic-bytes format "avro" ;
   expects "Avro object container file" ;
 ;
