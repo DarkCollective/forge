@@ -11,6 +11,10 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
+    "./magic": {
+      "types": "./dist/magic/index.d.ts",
+      "default": "./dist/magic/index.js"
+    },
     "./node": {
       "types": "./dist/host-node.d.ts",
       "default": "./dist/host-node.js"

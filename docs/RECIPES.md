@@ -1656,6 +1656,84 @@ receive. Reaching the end ends the bake normally. `step`/`continue` when not pau
 The VM does not charge the time spent awaiting an `onStep` hook to its wall-clock deadline (`vm.ts` extends the deadline by the pause), so
 nothing special is done for `maxMillis`. Only the **client's** deadline timer must stop while paused (§8.5), because it runs outside the VM.
 
+### 8.9 The Magic engine (`@forge/worker/magic`)
+
+WP 6.29. `magic(input, options)` searches for recipes that make the input more interesting. It is a separate subpath export, so the page loads it
+only when Magic is used; it adds nothing to the main entry, and it changes no existing export, type or message.
+
+**Design: the engine never runs an operation, a `Baker` does.** Every candidate is a one-step bake (`{ forge: 1, steps: [ { kind: "op", op } ] }`)
+of the data at that node, with `trust: "untrusted"`, `pins: "ignore"` and these limits, each of which a caller can only lower: `maxSteps` 1 000 000,
+`maxMillis` 1000 (and never more than the time left until the search's deadline), `maxValueBytes` 4 MiB, `maxTotalBytes` 16 MiB. So the
+untrusted-code limits, the watchdog and the hard kill of §8.5 apply unchanged. A run that is killed or hits a time, step or size limit puts its
+operation in `quarantined`: it is not tried again in that search, so a hostile operation costs at most one watchdog grace. The engine needs only the
+`Baker` interface, so both consumers use it as it is:
+
+- **6.30 (the button).** Pass the page's `BakerClient` (a worker with `hardKill`), the catalogue and the checks document, and an `AbortController`'s
+  signal for Cancel. `signal` aborts at once: the run in progress is cancelled (`baker.cancel()`, then the watchdog), the search returns what it has
+  with `stopped: "aborted"`. `onProgress` reports `{ tried, candidates, depth, elapsedMs }` for the running state. One bake runs at a time on a baker,
+  so the search holds the baker; use a baker of its own, not the one the editor bakes with.
+- **6.33 (`magic:magic`).** The op passes a baker that runs inside the enclosing bake, `deadlineMs` (the smaller of its own and what is left of the
+  run's), `limits` and its own signal (the run's). The charging of the nested steps and bytes to the run is for that WP to specify; nothing here
+  prevents it, since all limits are arguments.
+
+**Operations tried.** From the catalogue: input and output `bytes` or `str`, no required parameter (so every operation runs on its defaults), no
+effect label (`+random`, `+time`, `+async` are left out), and not `needsHardKill` unless the baker has `hardKill`. At a node the operation is tried
+when its input checks pass on the data (§2, `evaluateChecks`), or it has none; an operation with a `str` input needs valid UTF-8. `unknown` is not a
+pass. An operation counts as having **evidence** when one of its input checks is a `magic-bytes`, `regex` or `charset` test (and it declares no
+`magic-bytes` or `regex` output check: it would be a producer of a format, like `pem:from-hex`). Only an operation with evidence can raise a score
+by itself; without a crib, the others (hashes, encoders, compressors, ROT13) are not run at all, because they could not score. With a crib they run
+after the ones with evidence.
+
+**Search.** Depth first, breadth limited. At a node every applicable operation runs once, in a fixed order (evidence first, then qualified name in
+code-point order). Outputs are pruned if empty, equal to an earlier output of the search (the input included; compared by length and two 32-bit
+hashes), or not improving. The kept children are sorted (score descending, then qualified names) and the best `branching` are returned as candidates
+(when worth returning) and expanded in that order. Nothing is ordered by time, so the same input gives the same candidates in the same order; only
+the point where a deadline cuts the search depends on the clock.
+
+**Options (defaults and hard maxima).** A larger value is clamped to the maximum.
+
+| Option | Default | Maximum | |
+|---|---|---|---|
+| `depth` | 3 | 6 | operations in a candidate |
+| `branching` | 8 | 64 | children kept and expanded per node |
+| `maxTried` | 400 | 10 000 | operation runs in the whole search (the crib runs are not counted) |
+| `deadlineMs` | 10 000 | 120 000 | wall clock; a run in progress is cut at the deadline, so the call returns within about one watchdog grace after it |
+| `results` | 5 | 50 | candidates returned |
+| `crib` | none | 1024 chars | a regex (the §4 dialect) the wanted output matches; the baker must have `hardKill` |
+| `cribFlags` | `""` | `[ims]*` | |
+
+`magic` rejects (it does not return an empty answer) for an uninitialised baker, a crib on a baker without `hardKill`, or a crib over 1024
+characters. The crib is tested by baking `regex:test` over the output, never on the calling thread, since a regex can be slow; only outputs that
+are valid UTF-8 are tested.
+
+**Result.** `candidates` (best first: score, then fewer steps, then names), each `{ recipe, ops, depth, score, reasons, output, outputLength }`
+(`recipe` is a `Recipe`, ready for `setRecipe`; `output` is the first 4096 bytes), `stopped` (`done`, `deadline`, `max-tried`, `aborted`), `stats`
+and `quarantined`.
+
+**Scoring** (one place: `packages/worker/src/magic/score.ts`, `MAGIC_WEIGHTS`). The score of an output is the sum of
+
+| Term | Weight | When |
+|---|---|---|
+| `utf8` | 0.15 | the whole output is strictly valid UTF-8 |
+| `printable` | 0.20 x share | printable share of the first 4 KiB, when valid UTF-8 |
+| `plainText` | 0.10 | identified (6.23a) as UTF-8 or ASCII text |
+| `decoded` | 0.10 | the parent was identified as something other than text or noise (PEM, Base64, hex, gzip, ...), the output is not the same kind, and it is readable text (valid UTF-8, 90% printable) or a recognised kind |
+| `entropyDrop` | 0.15 x min(1, d / 3) | d bits per byte below the entropy of the search input |
+| `identified` | 0.25 x certainty | a Detect File Type match, PEM, JSON or XML (high 1, medium 0.6, low 0.2) |
+| `outputChecks` | minus 0.15 x (1 - share) | the operation's output checks that do not hold (`scoreChecks`) |
+| `crib` | 0.50 | the output matches the crib |
+
+Every term but `crib` is credited only to an operation with evidence; an operation without evidence is scored as its parent plus the crib.
+The search input itself is scored by `utf8`, `printable` and `plainText` only. The score is at most 1.35. Rules: an output is **kept**
+when its score is at least the parent's plus 0.05, or it matches the crib, or an operation with evidence made certain-enough data of a recognised kind
+the parent was not, or it took a parent apart (`decoded`); a kept output is **returned** when it beats the search input's score by 0.08 or matches
+one of those rules. These are the plan's defaults (PLAN.md §9, decision 12) and the owner may change them.
+
+**Known limits.** Nothing here knows a language, so text that merely looks like text cannot be told from the right text: ROT13 inside Base64 is
+found only with a crib, and an operation that expects hex and happens to print text (an OID or ASN.1 dump of the bytes) can score like the real
+decoding. Letter-frequency scoring is the optional follow-up of WP 6.31. A ZIP is found by its signature behind its encoding; `zip:unzip` and
+`filetype:extract` (a `list` output) and `zip:entry` (a required name) are outside "operations on their defaults with a bytes or str output".
+
 ---
 
 ## 9. Op test vectors
