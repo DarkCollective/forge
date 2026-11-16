@@ -79,13 +79,13 @@ describe("md4:digest", () => {
     expect((await run("md4:digest", KiB64)).out).toBe("3b2afe210a8c8378e23f5f007c259937");
   });
 
-  // The hash is FL (about 38 steps a byte), so 64 KiB must fit the untrusted limits (5,000,000 steps, 256 MiB).
+  // The hash is FL (about 30 steps a byte), so 64 KiB must fit the untrusted limits (5,000,000 steps, 256 MiB).
   // The explicit timeout allows for CI runners about 3.5 times slower.
   test("64 KiB stays inside the untrusted limits", { timeout: 60_000 }, async () => {
     const r = await runtime.call("md4:digest", [bytes(KiB64)], {
       limits: { maxSteps: 5_000_000, maxTotalBytes: 256 * 1024 * 1024 },
     });
     expect(r.ok).toBe(true);
-    expect(r.steps).toBeLessThan(2_800_000);
+    expect(r.steps).toBeLessThan(2_200_000);
   });
 });

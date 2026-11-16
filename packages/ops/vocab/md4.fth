@@ -1,6 +1,6 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ md4: MD4, RFC 1320. The digest is raw bytes; chain hex:encode for text. The hash itself is _hash, written in
-\ FL from the RFC over core words. It costs about 38 interpreter steps a byte, so 64 KiB takes about 2.5 million
+\ FL from the RFC over core words. It costs about 29 interpreter steps a byte, so 64 KiB takes about 1.9 million
 \ steps (the web app allows 5 million).
 IN: md4
 
@@ -8,7 +8,7 @@ IN: md4
 : _pad ( data:bytes -- bytes )
   data len :> n
   55 n - 64 mod :> zeros
-  [ data emit-all 128 emit zeros zero-bytes emit-all n 8 * 8 int>be-bytes rev emit-all ] collect-bytes ;
+  [ data emit-all 128 emit zeros zero-bytes emit-all n 8 * 8 int>le-bytes emit-all ] collect-bytes ;
 
 \ One entry per step: the message word index in the high bits, the shift in the low five.
 : _schedule ( ks:list ss:list -- list )
@@ -29,7 +29,7 @@ MEMO: _indices ( -- list )
 
 \ The 16 little-endian words of the 64-byte block that starts at offset o.
 : _words ( msg:bytes o:int -- list )
-  _indices [ 4 * o + :> p msg p p 4 + slice rev bytes>hex 16 str>int-radix ] map ;
+  _indices [ 4 * o + :> p msg p 4 le-bytes>int ] map ;
 
 \ The MD4 digest (16 bytes) of data. A step rotates the state (a b c d) to (d t b c), where t is the rotated sum
 \ of a, the round function, the message word and the round constant. The three rounds differ only in the
@@ -44,27 +44,24 @@ MEMO: _indices ( -- list )
     _round1 [
       :> e :> d :> c :> b :> a
       a c d bxor b band d bxor + w e 5 shr nth + 0xffffffff band :> u
-      e 31 band :> s
-      d u s shl u 32 s - shr bor 0xffffffff band b c
+      d u e 31 band 32 rotl b c
     ] each
     _round2 [
       :> e :> d :> c :> b :> a
       a b c band d b c bor band bor + w e 5 shr nth + 0x5a827999 + 0xffffffff band :> u
-      e 31 band :> s
-      d u s shl u 32 s - shr bor 0xffffffff band b c
+      d u e 31 band 32 rotl b c
     ] each
     _round3 [
       :> e :> d :> c :> b :> a
       a b c bxor d bxor + w e 5 shr nth + 0x6ed9eba1 + 0xffffffff band :> u
-      e 31 band :> s
-      d u s shl u 32 s - shr bor 0xffffffff band b c
+      d u e 31 band 32 rotl b c
     ] each
     :> nd :> nc :> nb :> na
     na a0 + 0xffffffff band nb b0 + 0xffffffff band nc c0 + 0xffffffff band nd d0 + 0xffffffff band
   ] each
   :> rd :> rc :> rb :> ra
-  [ ra 4 int>be-bytes rev emit-all rb 4 int>be-bytes rev emit-all
-    rc 4 int>be-bytes rev emit-all rd 4 int>be-bytes rev emit-all ] collect-bytes ;
+  [ ra 4 int>le-bytes emit-all rb 4 int>le-bytes emit-all
+    rc 4 int>le-bytes emit-all rd 4 int>le-bytes emit-all ] collect-bytes ;
 
 : digest ( bytes -- bytes )
   "The MD4 digest (RFC 1320) of the input as 16 raw bytes. Chain hex:encode for hex text. MD4 is obsolete and broken: do not use it for security." doc
