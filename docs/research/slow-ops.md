@@ -1,6 +1,6 @@
 # Slow operations: marking them, and moving primitives back to FL
 
-Status: design proposal, written to consider later. Nothing here is implemented, and the options in section 9 are for the owner to choose between. One decision is recorded (section 4), and the measurement spike is recorded in section 7a. Every statement about a primitive comes from the header comment of its file in `packages/ops/src/prims/`, and every statement about the language from `docs/LANGUAGE.md` or `docs/PLAN.md`. Where a number is not in those, it says "to measure".
+Status: design proposal, partly carried out (2026-11-16). The section 5 primitives that FL v0.2 could replace have been moved back to FL, apart from the rows marked not done, and MD4 and LS47 have moved too (outcome notes in sections 7a and 9). The snail marker, the Whirlpool and AMF moves and the mutable array are still for the owner to decide (section 9). One decision is recorded (section 4), and the measurement spike is recorded in section 7a. Every statement about a primitive comes from the header comment of its file in `packages/ops/src/prims/`, and every statement about the language from `docs/LANGUAGE.md` or `docs/PLAN.md`. Where a number is not in those, it says "to measure".
 
 ## 1. The idea
 
@@ -37,24 +37,24 @@ Decided by the owner on 2026-11-13: changing word hashes and the catalogue versi
 
 ## 5. Primitives that FL v0.2 already lets us drop
 
-No snail marker is needed for these. "Remaining doubt" is what the header or the docs leave open.
+No snail marker is needed for these. The last column was added on 2026-11-16 and says what was done (commits are on `main`). "Remaining doubt" is what the header or the docs leave open.
 
-| Primitive | Gap it was written for (from its header) | v0.2 feature | Remaining doubt |
-|---|---|---|---|
-| `cobs:_starts` | Block offsets need a growing list; quadratic, `E_LIMIT_TOTAL` at 64 KiB of one-byte blocks | `collect`, `emit` (LANGUAGE §8: linear time and allocation, `maxTotalBytes` charged once) | Steps per block: to measure |
-| `tlv:_parse` | Growing the result list per element is quadratic | `collect` | Each element is a record with lists of ints for key and value; step and size cost: to measure |
-| `http:_dechunk` | Collecting 10,900 chunks grows a bytes value each time (`E_LIMIT_TOTAL` after 0.2 s untrusted) | `collect-bytes`, `emit-all` | Steps per chunk: to measure |
-| `tar:_headers` | Offsets depend on the previous size field; growing a list is quadratic (12,000 entries took over 30 s) | `collect` | Covers `_headers` only. `_oct` (about 250 steps, six times a header) and `_sum` (about 2,500 steps) are step-cost reasons, not list reasons: not confirmed |
-| `zip:_cd-offsets` | Central directory walk, quadratic in FL | `collect` | Steps per entry: to measure. The other zip helpers wrap fflate and stay |
-| `asn1:parse-in` (growing lists only) | A record per element at a few hundred VM steps, and quadratic lists | `collect` fixes the lists only | Not confirmed: wave 7 records 245 steps an element, which does not fit a 64 KiB structure. Keep |
-| `packets:_name`, `asn1:oid-name`, `oid-short`, `oid-find` | No per-vocabulary constants, so an FL table is rebuilt on every call | `MEMO:` (LANGUAGE §5.13: built once, a hit is one step), with `has-key?` for the lookup | The tables are TypeScript data (`packets-names.ts`, `asn1-oids.ts`) and would have to be written in FL. The first-use build is charged to the run (the TLS registries alone have about 335 cipher suites): to measure under 5M steps |
-| CRC table rebuild (about 20,000 steps a call, wave 3) | Rebuilt on every call | `MEMO:`, for the part that does not depend on the preset | A `MEMO:` word has no inputs, so a table per polynomial cannot be one. Only the 171-line preset text can be memoised. Partly confirmed |
-| `generate-all:_crcs` | Parsing the preset table and calling the words once per preset | `MEMO:` for the parsed table | The per-byte loop (about 13 steps a byte, for up to 171 presets) is the other reason. Keep |
-| `charset` table rebuild | Rebuilt on every call (`mime` works around it) | `MEMO:` | The tables are already FL, so this is an adoption, not a dropped primitive. `charset:_decode` stays (section 8) |
-| `analysis:_log2` | Core had no logarithm | `log2` (LANGUAGE §13, maths words) | Confirmed for the stated reason. Equal results to the TypeScript value: to measure |
-| `coords:_math`, `coords:_atan2` | Core had no trigonometric or hyperbolic functions | `sin`, `cos`, `atan`, `atan2` and the other maths words | Confirmed for the stated reason. That every function `_math` offers has an FL word, and equal results to the last digit: to measure |
-| `list:sort`, `list:sort-by` | No sort word | `sort`; `sort-by ( list quot -- list )` | The signatures differ: the prim's `sort-by` takes a keys list, the core word a quotation. Its mixed-type `E_COERCE` and its code point order against the core's behaviour: to check. `list:shuffle` stays, since it needs swaps |
-| `float` (part) | No parse of decimal text to a float | `str>num` | The parse only. Reinterpreting float bits, and NaN and infinity, remain, so `float` stays |
+| Primitive | Gap it was written for (from its header) | v0.2 feature | Remaining doubt | Status |
+|---|---|---|---|---|
+| `cobs:_starts` | Block offsets need a growing list; quadratic, `E_LIMIT_TOTAL` at 64 KiB of one-byte blocks | `collect`, `emit` (LANGUAGE §8: linear time and allocation, `maxTotalBytes` charged once) | Steps per block: to measure | Done, b500639 (merge 9f9b090) |
+| `tlv:_parse` | Growing the result list per element is quadratic | `collect` | Each element is a record with lists of ints for key and value; step and size cost: to measure | Done, b500639 (merge 9f9b090) |
+| `http:_dechunk` | Collecting 10,900 chunks grows a bytes value each time (`E_LIMIT_TOTAL` after 0.2 s untrusted) | `collect-bytes`, `emit-all` | Steps per chunk: to measure | Done, b500639 (merge 9f9b090) |
+| `tar:_headers` | Offsets depend on the previous size field; growing a list is quadratic (12,000 entries took over 30 s) | `collect` | Covers `_headers` only. `_oct` (about 250 steps, six times a header) and `_sum` (about 2,500 steps) are step-cost reasons, not list reasons: not confirmed | Done, 9605ce3 (merge ffc1646); `_oct` and `_sum` stay primitives |
+| `zip:_cd-offsets` | Central directory walk, quadratic in FL | `collect` | Steps per entry: to measure. The other zip helpers wrap fflate and stay | Done, 9605ce3 (merge ffc1646); `_extract` stays |
+| `asn1:parse-in` (growing lists only) | A record per element at a few hundred VM steps, and quadratic lists | `collect` fixes the lists only | Not confirmed: wave 7 records 245 steps an element, which does not fit a 64 KiB structure. Keep | Not done: keep |
+| `packets:_name`, `asn1:oid-name`, `oid-short`, `oid-find` | No per-vocabulary constants, so an FL table is rebuilt on every call | `MEMO:` (LANGUAGE §5.13: built once, a hit is one step), with `has-key?` for the lookup | The tables are TypeScript data (`packets-names.ts`, `asn1-oids.ts`) and would have to be written in FL. The first-use build is charged to the run (the TLS registries alone have about 335 cipher suites): to measure under 5M steps | Not done |
+| CRC table rebuild (about 20,000 steps a call, wave 3) | Rebuilt on every call | `MEMO:`, for the part that does not depend on the preset | A `MEMO:` word has no inputs, so a table per polynomial cannot be one. Only the 171-line preset text can be memoised. Partly confirmed | Not done |
+| `generate-all:_crcs` | Parsing the preset table and calling the words once per preset | `MEMO:` for the parsed table | The per-byte loop (about 13 steps a byte, for up to 171 presets) is the other reason. Keep | Not done: keep |
+| `charset` table rebuild | Rebuilt on every call (`mime` works around it) | `MEMO:` | The tables are already FL, so this is an adoption, not a dropped primitive. `charset:_decode` stays (section 8) | Not done |
+| `analysis:_log2` | Core had no logarithm | `log2` (LANGUAGE §13, maths words) | Confirmed for the stated reason. Equal results to the TypeScript value: to measure | Done, 31d3a89 |
+| `coords:_math`, `coords:_atan2` | Core had no trigonometric or hyperbolic functions | `sin`, `cos`, `atan`, `atan2` and the other maths words | Confirmed for the stated reason. That every function `_math` offers has an FL word, and equal results to the last digit: to measure | Done, 31d3a89 |
+| `list:sort`, `list:sort-by` | No sort word | `sort`; `sort-by ( list quot -- list )` | The signatures differ: the prim's `sort-by` takes a keys list, the core word a quotation. Its mixed-type `E_COERCE` and its code point order against the core's behaviour: to check. `list:shuffle` stays, since it needs swaps | Done, 31d3a89 (`list:shuffle` is FL too, over `random:below`) |
+| `float` (part) | No parse of decimal text to a float | `str>num` | The parse only. Reinterpreting float bits, and NaN and infinity, remain, so `float` stays | Not done: `float` stays |
 
 ## 6. Gaps still open
 
@@ -95,6 +95,8 @@ Whirlpool costs about 2,436 steps a block plus about 2,514 fixed; the one-off ta
 
 AMF0 and AMF3 are complete, including all three AMF3 reference tables. All 116 decode vectors agree (77 values, 39 errors), as do 240 random values. Gaps: a non-integer double dictionary key is refused; dates beyond year 9999 differ; all errors are `E_COERCE` without offsets; the `maxValueBytes` meter is not replicated. It uses `float:decode` for doubles, itself a primitive. Cost is about 95-110 steps an element for a flat array of ints and strings and 120-225 for lists of 5-field objects. Main finding: the step limit is not the binding one. The reference tables grow by `put` and `append`, which copy, so total allocation is quadratic, and with default limits the decoder hits `E_LIMIT_TOTAL` at about 40-150 KB of input (about 6,000-18,000 elements), where steps alone would allow 130-450 KB. Missing: update-in-place for lists or records; mutual recursion (it goes through quotations); `:>` inside `{ }` (so each `case` action needs a helper); `case` and `cond` rebuilding their quotations per call; a big-endian read at an offset and a float-bits word in core; tail calls.
 
+**Outcome (2026-11-16).** MD4 and LS47 moved to FL in 23ea242 (`md4:_hash` and `classical:_ls47` are no longer primitives), MD4 was switched to the new words in 89c74c1, and both were merged in dc9d0d1 ("Merge WP: MD4 and LS47 in FL"). The new core words (`be-bytes>int`, `le-bytes>int`, `int>be-bytes` now native, `int>le-bytes`, `rotl`, `rotr`; `docs/LANGUAGE.md` section 13) took the shipped MD4 at 64 KiB from 2,516,727 steps (FL, before the new words) to 1,975,151 (with `rotl`, `le-bytes>int` and `int>le-bytes`), about -21.5%; `generate-all:hashes` is 1,980,589. The study (`docs/research/int-words.md`) measured -25.4% on its prototype (2,515,651 to 1,876,046); the estimate above was 25 to 30%. The new words are 21b4c36 (merge c25c344). `nthash:digest` runs MD4 over UTF-16LE text at about 84 steps a character, so the largest text under the untrusted limits is about 59,000 characters (58,000 took 4,884,038 steps). Held back: the lane-wise rotates and `addw`. The LS47 estimate above was wrong: a mutable board costs 163 steps a letter, against 55 for the tables, so a mutable array does not help LS47 (`docs/research/mutable-array.md`). That study recommends a copying `set-nth` and a bytes `index-of` now, and a restricted `array` type later.
+
 Conclusions the spike supports:
 
 - All four fit realistic CTF inputs (a few KB) in a few ms, so each could be a snail op rather than a primitive. In wall time at 64 KiB FL is about 80x (LS47) to about 2,500x (AMF, worst case) slower than the primitive, from the figures above.
@@ -112,6 +114,8 @@ Conclusions the spike supports:
 - File-sized forensic inputs: LZNT1 (12 to 49 steps an output byte in a prototype) and XPRESS.
 
 ## 9. Suggested next steps (options for the owner)
+
+**Outcome (2026-11-16).** Step 2 is done for section 5, apart from the rows marked not done there: `cobs:_starts`, `tlv:_parse`, `http:_dechunk`, `tar:_headers`, `zip:_cd-offsets`, `analysis:_log2`, the `coords` helpers, `list:sort` and `list:sort-by`, and the `cmac` and `lmhash` block calls are FL, and so are MD4 and LS47 from the spike branches. The new integer words took about 21.5% of the steps of the shipped MD4 (the study measured 25.4% on its prototype). Step 4 was studied in `docs/research/mutable-array.md` and is not decided; that study corrects the LS47 estimate in section 7a (a mutable array does not help it) and recommends the copying `set-nth` and bytes `index-of` first. Step 3 (the snail UX) and the Whirlpool and AMF moves are open.
 
 1. Done: the measurement spike (section 7a). It gives a "comfortable up to" size for MD4, LS47 and Whirlpool, and shows that AMF is limited by allocation, not steps.
 2. A work package that moves the section 5 primitives back to FL with vectors unchanged. Hash and catalogue version changes are accepted (section 4). It could also start with MD4 and LS47 from the spike branches. Whirlpool needs the snail marker first, and AMF waits for update-in-place.
