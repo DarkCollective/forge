@@ -38,11 +38,11 @@ IN: charset
 \ ---- the encodings ----
 
 \ Unicode encodings, decoded by the host (strict utf-8 is also what bytes>str does).
-: _unicode ( -- list )
+MEMO: _unicode ( -- list )
   { "utf-8" "utf-16le" "utf-16be" } ;
 
 \ Multi-byte WHATWG encodings, decoded by the host (decode only).
-: _multi-byte ( -- list )
+MEMO: _multi-byte ( -- list )
   { "gbk" "gb18030" "big5" "euc-jp" "iso-2022-jp" "shift_jis" "euc-kr" } ;
 
 \ The tables: a record of set name to 256 hexadecimal code points.

@@ -89,8 +89,9 @@ META: encode
 \ The hex field of a line body (the text after the offset) in the xxd form: the first piece that
 \ is not blank when the body is split at runs of two spaces.
 : _field ( body:str -- str )
-  body "  " split [ _blank? not ] filter
-  dup len 0 = [ drop "" ] [ 0 nth ] if ;
+  body "  " split :> parts
+  parts [ _blank? not ] find :> i
+  i 0 < [ "" ] [ parts i nth ] if ;
 
 \ The bytes of a line whose offset token is tok. The offset is checked to be hex digits and ignored.
 \ An offset with a colon (xxd and this vocabulary's own layout) is followed by a hex field closed by

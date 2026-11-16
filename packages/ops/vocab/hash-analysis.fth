@@ -26,11 +26,9 @@ MEMO: _rows ( -- list )
 
 \ The algorithm names for a digest of n bits (none when the table has no row).
 : _names ( n:int -- list )
-  _rows [ "|" split 0 nth n int>str = ] filter
-  dup len 0 =
-  [ drop { } ]
-  [ 0 nth "|" split 1 nth ", " split ]
-  if ;
+  _rows :> rows
+  rows [ "|" split 0 nth n int>str = ] find :> i
+  i 0 < [ { } ] [ rows i nth "|" split 1 nth ", " split ] if ;
 
 \ The closing paragraph of the report.
 : _candidates ( names:list -- str )

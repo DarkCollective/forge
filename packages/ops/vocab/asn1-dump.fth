@@ -33,7 +33,7 @@ USING: asn1 ;
 : _quoted ( s:str -- str )
   "'" s cat "'" cat ;
 
-: _universal-names ( -- list )
+MEMO: _universal-names ( -- list )
   { "EOC" "BOOLEAN" "INTEGER" "BITSTRING" "OCTETSTRING" "NULL" "ObjectIdentifier" "ObjectDescriptor" "EXTERNAL"
     "REAL" "ENUMERATED" "EMBEDDED PDV" "UTF8String" "RELATIVE-OID" "TIME" "reserved" "SEQUENCE" "SET"
     "NumericString" "PrintableString" "TeletexString" "VideotexString" "IA5String" "UTCTime" "GeneralizedTime"
@@ -85,6 +85,10 @@ USING: asn1 ;
 : _enum-text ( node:record trunc:int -- str )
   [ node asn1:node>int int>str ] [ drop node "value" get trunc _hex ] try ;
 
+\ The universal tag numbers of the string types.
+MEMO: _string-tags ( -- list )
+  { 12 18 19 20 21 22 23 24 25 26 27 28 30 } ;
+
 : _universal ( node:record trunc:int -- str )
   node "tag" get :> tag
   {
@@ -93,7 +97,7 @@ USING: asn1 ;
     [ tag 10 = ] [ node trunc _enum-text ]
     [ tag 5 = ] [ "" ]
     [ tag 6 = ] [ node trunc _oid-text ]
-    [ { 12 18 19 20 21 22 23 24 25 26 27 28 30 } tag contains? ] [ node trunc _string-text ]
+    [ _string-tags tag contains? ] [ node trunc _string-text ]
     [ node "value" get trunc _hex ]
   } cond ;
 

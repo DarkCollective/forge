@@ -100,8 +100,8 @@ MEMO: _picture-types ( -- list )
 
 \ The offset of the first aligned 00 00 of UTF-16 data (looked for in the first 1,024 bytes), else its length.
 : _nul16-at ( b:bytes -- int )
-  0 b len 2 div 512 min range [ 2 * ] map [ b swap _z16? ] filter
-  dup len 0 = [ drop b len ] [ 0 nth ] if ;
+  0 b len 2 div 512 min range [ 2 * b swap _z16? ] find :> i
+  i 0 < [ b len ] [ i 2 * ] if ;
 
 \ ( before after ): the bytes up to the terminator of the encoding and those after it.
 : _split ( b:bytes enc:int -- bytes bytes )

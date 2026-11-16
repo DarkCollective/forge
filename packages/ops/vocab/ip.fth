@@ -394,17 +394,21 @@ META: parse-range
 
 \ Table lookup: the text paired with key in a list of { key text } pairs, or nothing.
 : _assoc ( table:list key:int -- str )
-  table [ 0 nth key = ] filter
-  dup len 0 = [ drop "" ] [ 0 nth 1 nth ] if ;
+  table [ 0 nth key = ] find :> i
+  i 0 < [ "" ] [ table i nth 1 nth ] if ;
+
+MEMO: _mc-names-1 ( -- list )
+  { { 2 "All DHCP Servers and Relay Agents (defined in RFC3315)" } { 3 "All LLMNR Hosts (defined in RFC4795)" } } ;
+
+MEMO: _mc-names ( -- list )
+  { { 1 "All nodes" } { 2 "All routers" } { 5 "OSPFv3 - All OSPF routers" } { 6 "OSPFv3 - All Designated Routers" }
+    { 8 "IS-IS for IPv6 Routers" } { 9 "RIP Routers" } { 10 "EIGRP Routers" } { 12 "Simple Service Discovery Protocol" }
+    { 13 "PIM Routers" } { 22 "MLDv2 Reports (defined in RFC3810)" } { 107 "Precision Time Protocol v2 Peer Delay Measurement Messages" }
+    { 251 "Multicast DNS" } { 257 "Network Time Protocol" } { 264 "Network Information Service" } { 276 "Experiments" }
+    { 385 "Precision Time Protocol v2 Messages (exc. Peer Delay)" } } ;
 
 : _mc-name ( h6:int h7:int -- str )
-  h6 1 =
-  [ { { 2 "All DHCP Servers and Relay Agents (defined in RFC3315)" } { 3 "All LLMNR Hosts (defined in RFC4795)" } } h7 _assoc ]
-  [ { { 1 "All nodes" } { 2 "All routers" } { 5 "OSPFv3 - All OSPF routers" } { 6 "OSPFv3 - All Designated Routers" }
-      { 8 "IS-IS for IPv6 Routers" } { 9 "RIP Routers" } { 10 "EIGRP Routers" } { 12 "Simple Service Discovery Protocol" }
-      { 13 "PIM Routers" } { 22 "MLDv2 Reports (defined in RFC3810)" } { 107 "Precision Time Protocol v2 Peer Delay Measurement Messages" }
-      { 251 "Multicast DNS" } { 257 "Network Time Protocol" } { 264 "Network Information Service" } { 276 "Experiments" }
-      { 385 "Precision Time Protocol v2 Messages (exc. Peer Delay)" } } h7 _assoc ] if ;
+  h6 1 = [ _mc-names-1 h7 _assoc ] [ _mc-names h7 _assoc ] if ;
 
 : _d-multicast ( n:int -- str )
   n 0xff 8 _in

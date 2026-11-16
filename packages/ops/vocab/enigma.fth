@@ -44,7 +44,7 @@ IN: enigma
 
 \ ---- historical data ----
 
-: rotor-wirings ( -- record )
+MEMO: rotor-wirings ( -- record )
   "The historical rotor wirings as a record from rotor name (I to VIII, BETA, GAMMA) to the 26 letters its input contacts A to Z lead to. Shared data: bombe uses it too." doc
   { { "I" "EKMFLGDQVZNTOWYHXUSPAIBRCJ" } { "II" "AJDKSIRUXBLHWTMCQGZNPYFVOE" }
     { "III" "BDFHJLCPRTXVZNYEIWGAKMUSQO" } { "IV" "ESOVPZJAYQUIRHXLNFTGKDCMWB" }
@@ -52,12 +52,12 @@ IN: enigma
     { "VII" "NZJHGRCXMYSWBOUFAIVLPEKQDT" } { "VIII" "FKQHTLXOCBJSPDZRAMEWNIUYGV" }
     { "BETA" "LEYJVCNIXWPBQMDRTAKZGFUHOS" } { "GAMMA" "FSOKANUERHMBTIYCWLQPZXVGJD" } } >record ;
 
-: rotor-turnovers ( -- record )
+MEMO: rotor-turnovers ( -- record )
   "The turnover letters of each rotor as a record from rotor name to text: the window letters at which the rotor carries the next one along (one letter for I to V, two for VI to VIII, none for BETA and GAMMA)." doc
   { { "I" "Q" } { "II" "E" } { "III" "V" } { "IV" "J" } { "V" "Z" } { "VI" "ZM" }
     { "VII" "ZM" } { "VIII" "ZM" } { "BETA" "" } { "GAMMA" "" } } >record ;
 
-: rotor-reflectors ( -- record )
+MEMO: rotor-reflectors ( -- record )
   "The historical reflector wirings as a record from reflector name (A, B, C, B-thin, C-thin) to 26 letters." doc
   { { "A" "EJMZALYXVBWFCRQUONTSPIKHGD" } { "B" "YRUHQSLDPXNGOKMIEBFZCWVJAT" }
     { "C" "FVPJIAOYEDRZXWGCTKUQSBNMHL" } { "B-thin" "ENKQAUYWJICOPBLMDXZVFTHRGS" }

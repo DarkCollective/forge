@@ -175,13 +175,17 @@ MEMO: _gps-names ( -- str )
 
 \ The value of the tag in the IFD at off, as an offset; -1 when the IFD has no such tag.
 : _pointer ( t:bytes off:int tag:int -- int )
-  t off _ifd-entries [ "tag" get tag = ] filter
-  dup len 0 = [ drop -1 ] [ 0 nth "at" get t swap 4 _u ] if ;
+  t off _ifd-entries :> entries
+  entries [ "tag" get tag = ] find :> i
+  i 0 < [ -1 ] [ entries i nth "at" get t swap 4 _u ] if ;
 
 \ ---- values ----
 
+MEMO: _type-sizes ( -- list )
+  { 0 1 1 2 4 8 1 1 2 4 8 4 8 4 } ;
+
 : _tsize ( type:int -- int )
-  type 0 > type 13 <= and [ { 0 1 1 2 4 8 1 1 2 4 8 4 8 4 } type nth ] [ 0 ] if ;
+  type 0 > type 13 <= and [ _type-sizes type nth ] [ 0 ] if ;
 
 \ n/d as a decimal with up to six places (cut, not rounded), without trailing zeros.
 : _decimal-abs ( n:int d:int -- str )
