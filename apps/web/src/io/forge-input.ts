@@ -81,32 +81,25 @@ export class ForgeInput extends LitElement {
         align-items: center;
         flex: none;
       }
-      .tab {
-        display: inline-flex;
-        align-items: center;
+      button.tab {
         border: var(--border-width) solid var(--border-strong);
         border-radius: var(--radius-m);
         background: var(--surface);
         flex: none;
-      }
-      .tab.active {
-        background: var(--accent-soft);
-        border-color: var(--accent);
-      }
-      .tab button {
-        border: 0;
-        background: transparent;
         max-width: 12rem;
-      }
-      .tab button.name {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
         display: block;
         line-height: var(--hit-min);
       }
-      .tab input {
+      button.tab.active {
+        background: var(--accent-soft);
+        border-color: var(--accent);
+      }
+      input.rename {
         width: 9rem;
+        flex: none;
         margin: 0 var(--space-1);
       }
       .controls {
@@ -272,7 +265,7 @@ export class ForgeInput extends LitElement {
     const target = inputs[next] as InputTab;
     actions.selectInput(target.id);
     void this.updateComplete.then(() =>
-      this.renderRoot.querySelector<HTMLElement>(`#tab-${target.id} .name`)?.focus(),
+      this.renderRoot.querySelector<HTMLElement>(`#tab-${target.id}`)?.focus(),
     );
   }
 
@@ -427,55 +420,39 @@ export class ForgeInput extends LitElement {
 
   // ---- render ------------------------------------------------------------------------------------
 
+  /** One tab of the tablist. Only `role="tab"` elements live in the tablist; the close and rename controls sit beside it. */
   private renderTab(tab: InputTab) {
     const selected = tab.id === this.active.id;
-    const count = this.inputs.value.length;
-    return html`<div class=${classMap({ tab: true, active: selected })} role="presentation">
-      ${
-        this.renaming === tab.id
-          ? html`<input
-              class="rename"
-              aria-label="Rename input tab"
-              .value=${tab.name}
-              maxlength="80"
-              @keydown=${(e: KeyboardEvent) => {
-                if (e.key === "Enter")
-                  this.finishRename(tab.id, (e.target as HTMLInputElement).value);
-                else if (e.key === "Escape") this.finishRename(tab.id, null);
-                e.stopPropagation();
-              }}
-              @blur=${(e: FocusEvent) =>
-                this.finishRename(tab.id, (e.target as HTMLInputElement).value)}
-            />`
-          : html`<button
-              id="tab-${tab.id}"
-              class="name"
-              role="tab"
-              type="button"
-              aria-selected=${selected ? "true" : "false"}
-              aria-controls="panel-${tab.id}"
-              tabindex=${selected ? "0" : "-1"}
-              title="${tab.name} (double-click or F2 to rename)"
-              @click=${() => actions.selectInput(tab.id)}
-              @dblclick=${() => this.startRename(tab.id)}
-              @keydown=${(e: KeyboardEvent) => this.onTabKeydown(e, tab)}
-            >
-              ${tab.name}
-            </button>`
-      }
-      ${
-        count > 1
-          ? html`<button
-              class="icon ghost"
-              type="button"
-              aria-label="Close ${tab.name}"
-              @click=${() => this.closeTab(tab.id)}
-            >
-              ${icons.close}
-            </button>`
-          : nothing
-      }
-    </div>`;
+    return html`<button
+      id="tab-${tab.id}"
+      class=${classMap({ tab: true, name: true, active: selected })}
+      role="tab"
+      type="button"
+      aria-selected=${selected ? "true" : "false"}
+      aria-controls="panel-${tab.id}"
+      tabindex=${selected ? "0" : "-1"}
+      title="${tab.name} (double-click or F2 to rename)"
+      @click=${() => actions.selectInput(tab.id)}
+      @dblclick=${() => this.startRename(tab.id)}
+      @keydown=${(e: KeyboardEvent) => this.onTabKeydown(e, tab)}
+    >
+      ${tab.name}
+    </button>`;
+  }
+
+  private renderRename(tab: InputTab) {
+    return html`<input
+      class="rename"
+      aria-label="Rename input tab"
+      .value=${tab.name}
+      maxlength="80"
+      @keydown=${(e: KeyboardEvent) => {
+        if (e.key === "Enter") this.finishRename(tab.id, (e.target as HTMLInputElement).value);
+        else if (e.key === "Escape") this.finishRename(tab.id, null);
+        e.stopPropagation();
+      }}
+      @blur=${(e: FocusEvent) => this.finishRename(tab.id, (e.target as HTMLInputElement).value)}
+    />`;
   }
 
   private renderEditor(tab: InputTab) {
@@ -540,6 +517,7 @@ export class ForgeInput extends LitElement {
     const tab = this.active;
     const stats = this.statsOf(tab.bytes);
     const binary = this.viewOf(tab).kind === "readonly";
+    const renamingTab = this.inputs.value.find((t) => t.id === this.renaming);
     return html`<header class="pane-head">
         <h2 tabindex="-1">Input</h2>
         <button
@@ -572,6 +550,19 @@ export class ForgeInput extends LitElement {
           <div class="tablist" role="tablist" aria-label="Inputs">
             ${this.inputs.value.map((t) => this.renderTab(t))}
           </div>
+          ${renamingTab ? this.renderRename(renamingTab) : nothing}
+          ${
+            this.inputs.value.length > 1
+              ? html`<button
+                  class="icon"
+                  type="button"
+                  aria-label="Close ${tab.name}"
+                  @click=${() => this.closeTab(tab.id)}
+                >
+                  ${icons.close}
+                </button>`
+              : nothing
+          }
           <button class="icon" type="button" aria-label="New input tab" @click=${this.addTab}>
             ${icons.plus}
           </button>
