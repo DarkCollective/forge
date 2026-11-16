@@ -17,7 +17,7 @@
 /*
  * Tests for the `packets` vocabulary (vocab/packets.fth: Ethernet, IPv4, TCP, UDP, TLS records and the shared TLS
  * reader), its primitives (src/prims/packets.ts, the name tables of src/packets-names.ts) and the `http`
- * vocabulary (Strip HTTP headers, Dechunk HTTP response, src/prims/http.ts). The known-answer vectors are in
+ * vocabulary (Strip HTTP headers, Dechunk HTTP response; the dechunk tests are in src/http.test.ts). The known-answer vectors are in
  * vocab/packets.test.json and vocab/http.test.json: packets built with Python struct and its own RFC 1071
  * checksum, hello messages captured between openssl 3.0.13 s_client and s_server (checked against
  * `s_client -trace`), chunked bodies decoded by Python's http.client. Here: the name tables against OpenSSL,
@@ -33,7 +33,6 @@ import { assembleRuntime } from "./bundle.js";
 import { buildCatalogue } from "./catalogue.js";
 import { NAME_TABLES, isGrease, nameOf, tableSize } from "./packets-names.js";
 import { lookupName, walkOffsets } from "./prims/packets.js";
-import { dechunk } from "./prims/http.js";
 import { loadBundleNode } from "./sources-node.js";
 
 const { bytes, int, str, list } = valueHelpers;
@@ -909,74 +908,5 @@ describe("Strip HTTP headers (http:strip-headers)", () => {
     const dense = new Uint8Array(65_536).fill(0x0a);
     const d = await strict.call("http:strip-headers", [bytes(dense)]);
     expect(d.ok && (top(d).v as Uint8Array).length).toBe(65_535);
-  });
-});
-
-describe("Dechunk HTTP response (http:dechunk, src/prims/http.ts)", () => {
-  const enc = (s: string) => new TextEncoder().encode(s);
-  const dec = (s: string, limit = 1 << 20) => latin1(dechunk(enc(s), limit));
-
-  test("chunks, extensions, trailers, bare line feeds", () => {
-    expect(dec("4\r\nWiki\r\n6;a=b\r\npedia \r\nE\r\nin \r\n\r\nchunks.\r\n0\r\n\r\n")).toBe(
-      "Wikipedia in \r\n\r\nchunks.",
-    );
-    expect(dec("0\r\n\r\n")).toBe("");
-    expect(dec("1\r\nx\r\n0\r\nT: 1\r\nU: 2\r\n\r\n")).toBe("x");
-    expect(dec("1\nx\n0\n\n")).toBe("x");
-    expect(dec("A\r\n0123456789\r\n0000\r\n\r\n")).toBe("0123456789");
-    expect(dec("1 \t;e\r\nx\r\n0\r\n\r\n")).toBe("x");
-  });
-
-  test("errors are E_COERCE with an offset", () => {
-    for (const s of [
-      "",
-      "1\r\nx",
-      "1\r\nx\r\n",
-      "1\r\nx\r\n0\r\n",
-      "1\r\nxy\r\n0\r\n\r\n",
-      "g\r\n",
-      "1\r\nx\r\n0\r\n\r\nextra",
-      "-1\r\nx\r\n0\r\n\r\n",
-      "1\r\nx\r\n0\r\nT: 1\r\n",
-      "fffffffffffffffff\r\nx",
-      "1;\x00\r\nx\r\n0\r\n\r\n",
-    ]) {
-      expect(() => dechunk(enc(s), 1 << 20), JSON.stringify(s)).toThrow();
-    }
-    expect(() => dechunk(enc("1\r\nxy\r\n0\r\n\r\n"), 1 << 20)).toThrow(
-      /not followed by a line end \(byte 0x79\)/,
-    );
-    expect(() => dechunk(enc("5\r\nab\r\n"), 1 << 20)).toThrow(
-      /declares 5 bytes but only 4 are left/,
-    );
-  });
-
-  test("every cut of a valid body is E_COERCE", () => {
-    const body = enc("3;x=y\r\nabc\r\n5\r\n12345\r\n0\r\nTrail: v\r\n\r\n");
-    expect(latin1(dechunk(body, 1 << 20))).toBe("abc12345");
-    for (let cut = 0; cut < body.length; cut++)
-      expect(() => dechunk(body.subarray(0, cut), 1 << 20), `cut ${cut}`).toThrow();
-  });
-
-  test("the output limit (maxValueBytes) is E_LIMIT_VALUE", () => {
-    const body = enc("a\r\n0123456789\r\n0\r\n\r\n");
-    expect(dechunk(body, 10).length).toBe(10);
-    expect(() => dechunk(body, 9)).toThrow(/exceeds|limit/);
-  });
-
-  test("a size that lies allocates nothing; 64 KiB of one-byte chunks costs a few steps", async () => {
-    expect(() => dechunk(enc("7fffffffffffff\r\nabc\r\n0\r\n\r\n"), 1 << 20)).toThrow(/but only/);
-    expect(() =>
-      dechunk(enc("0000000000000000000000000000000002\r\nabc\r\n0\r\n\r\n"), 1 << 20),
-    ).toThrow(/not followed|but only|line end/);
-    const parts: Uint8Array[] = [];
-    for (let i = 0; i < 10_900; i++)
-      parts.push(enc("1\r\n" + String.fromCharCode(97 + (i % 26)) + "\r\n"));
-    parts.push(enc("0\r\n\r\n"));
-    const msg = cat(...parts);
-    const r = await strict.call("http:dechunk", [bytes(msg)]);
-    expect(r.ok && r.steps).toBeLessThan(100);
-    expect((top(r).v as Uint8Array).length).toBe(10_900);
-    expect(code(await call("http:dechunk", bytes(new Uint8Array(0))))).toBe("E_COERCE");
   });
 });

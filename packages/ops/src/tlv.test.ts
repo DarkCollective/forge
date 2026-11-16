@@ -15,27 +15,29 @@
  */
 
 /*
- * Tests for the `tlv` vocabulary (vocab/tlv.fth, src/prims/tlv.ts). The op vectors (vocab/tlv.test.json) hold
+ * Tests for the `tlv` vocabulary (vocab/tlv.fth, all FL). The op vectors (vocab/tlv.test.json) hold
  * elements assembled with Python's int.to_bytes; these tests add the cut points (a cut at the end of an element is
  * a shorter, valid run), mutated bytes, hostile lengths, round trips over random element lists and the cost at
  * 64 KiB.
  */
 import { valueHelpers } from "@forge/lang";
 import { describe, expect, test } from "vitest";
+import { assembleRuntime } from "./bundle.js";
 import {
   asBytes,
   code,
   cutPoints,
-  loadRuntime,
   message,
   mutations,
   rng,
   steps,
   text,
 } from "./data-format-test.js";
+import { loadBundleNode } from "./sources-node.js";
 
 const { int, bool } = valueHelpers;
-const runtime = await loadRuntime(["tlv"]);
+const bundle = await loadBundleNode(["tlv"]);
+const runtime = assembleRuntime(bundle);
 
 const parse = (d: Uint8Array, tag = 1, len = 1, ber = false, indent = 0) =>
   runtime.call("tlv:parse", [asBytes(d), int(tag), int(len), bool(ber), int(indent)]);
@@ -169,21 +171,73 @@ describe("parse", () => {
   });
 });
 
-describe("cost at 64 KiB", () => {
-  test("about 64 KiB of elements", { timeout: 60_000 }, async () => {
+// The walk over the elements used to be a primitive, because growing the result a record at a time was quadratic.
+// The collector makes it linear: about 60 to 70 steps per element. 64 KiB of the smallest elements, under the untrusted
+// limits of the worker (UNTRUSTED_LIMITS: 5 million steps, 256 MiB in total).
+describe("cost at 64 KiB under the untrusted limits", () => {
+  const strict = assembleRuntime(bundle, {
+    limits: {
+      maxSteps: 5_000_000,
+      maxDataDepth: 10_000,
+      maxValueBytes: 16 * 1024 * 1024,
+      maxTotalBytes: 256 * 1024 * 1024,
+      maxIntBits: 16_384,
+      maxMillis: 10_000,
+    },
+  });
+  async function measure(
+    label: string,
+    data: Uint8Array,
+    tw: number,
+    lw: number,
+    ber: boolean,
+    count: number,
+    bound: number,
+  ) {
+    const t0 = Date.now();
+    const r = await strict.call("tlv:parse", [asBytes(data), int(tw), int(lw), bool(ber), int(0)]);
+    const ms = Date.now() - t0;
+    expect(code(r)).toBe("ok");
+    expect(JSON.parse(text(r))).toHaveLength(count);
+    process.stderr.write(
+      `\ntlv ${label}: ${data.length} bytes, ${count} elements: ${steps(r)} steps ${ms} ms\n`,
+    );
+    expect(steps(r)).toBeLessThan(bound);
+  }
+
+  test(
+    "65,535 bytes of elements with a one-byte value (tag, length, value)",
+    { timeout: 60_000 },
+    async () => {
+      const elems = Array.from(
+        { length: 21_845 },
+        (_, i) => [i % 256, Uint8Array.of(i % 251)] as [number, Uint8Array],
+      );
+      const { data } = build(elems, 1, 1, false);
+      // Measured 1.53 million steps.
+      await measure("one-byte values", data, 1, 1, false, 21_845, 1_800_000);
+    },
+  );
+
+  test("64 KiB of elements with no value (tag, length 0)", { timeout: 60_000 }, async () => {
     const elems = Array.from(
-      { length: 16_400 },
-      (_, i) => [i % 256, Uint8Array.of(i % 251, 7)] as [number, Uint8Array],
+      { length: 32_768 },
+      (_, i) => [i % 256, new Uint8Array(0)] as [number, Uint8Array],
     );
     const { data } = build(elems, 1, 1, false);
-    expect(data.length).toBeGreaterThan(64 * 1024);
-    const t0 = Date.now();
-    const r = await parse(data, 1, 1, false, 0);
-    const ms = Date.now() - t0;
-    expect(JSON.parse(text(r))).toHaveLength(16_400);
-    expect(steps(r)).toBeLessThan(100);
-    process.stderr.write(
-      `\ntlv ${data.length} bytes, 16,400 elements: ${steps(r)} steps ${ms} ms\n`,
-    );
+    // Measured 2.29 million steps.
+    await measure("empty values", data, 1, 1, false, 32_768, 2_700_000);
   });
+
+  test(
+    "64 KiB of one-byte elements (length 0, no tag), fixed and BER lengths",
+    { timeout: 60_000 },
+    async () => {
+      // The smallest element a run can have: no tag and a length byte of 0.
+      const data = new Uint8Array(65_536);
+      // Measured 4.00 million (fixed) and 4.39 million (BER) steps; the limit is 5 million.
+      await measure("length-only", data, 0, 1, false, 65_536, 4_700_000);
+      await measure("length-only BER", data, 0, 1, true, 65_536, 4_700_000);
+    },
+  );
 });

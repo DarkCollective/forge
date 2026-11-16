@@ -1,8 +1,7 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ cobs: Consistent Overhead Byte Stuffing, Cheshire and Baker, "Consistent Overhead Byte Stuffing",
 \ IEEE/ACM Transactions on Networking 7(2), 1999. Encoded data has no zero byte. The frame delimiter
-\ (a zero byte after the encoded data) is not added or expected. Written in FL, except _starts, a
-\ private primitive (src/prims/cobs.ts) that walks the blocks of the data to decode.
+\ (a zero byte after the encoded data) is not added or expected.
 IN: cobs
 
 \ ---- encode ----
@@ -37,30 +36,33 @@ IN: cobs
 
 \ ---- decode ----
 
-\ One block at pos: its data, plus the zero it stands for unless its code is 255 or it is the last.
-: _piece ( data:bytes pos:int last:bool -- bytes )
-  data pos 1 + pos data pos nth + slice
-  data pos nth 255 < last not and
-  [ #[ 00 ] cat ] when ;
+\ The block at pos: its data, then the zero it stands for unless its code is 255 or it is the last block. A block
+\ that runs past the end is E_COERCE. Emits into the collector of decode and leaves the offset of the next block.
+: _block ( data:bytes pos:int -- int )
+  data pos nth :> code
+  pos code + :> end
+  end data len > [ "truncated COBS block" fail-coerce ] when
+  data pos 1 + end slice emit-all
+  code 255 < end data len < and [ 0 emit ] when
+  end ;
 
-\ The decoded blocks, joined. ps is the list of block offsets, already checked by _starts.
-: _decode ( data:bytes ps:list -- bytes )
-  ps [ ps len 1 - = data -rot _piece ] mapi #[ ] bjoin ;
-
-: decode ( bytes -- bytes )
+: decode ( data:bytes -- bytes )
   "Decode COBS data. A zero byte, or a block that runs past the end of the data, raises E_COERCE. A trailing zero delimiter is not accepted. Empty input gives empty output." doc
   "Encodings" category
-  dup _starts _decode ;
+  data bytes>latin1 0 cp>str split len 1 > [ "a zero byte in COBS data" fail-coerce ] when
+  [ 0 [ dup data len < ] [ data swap _block ] while drop ] collect-bytes ;
 
 META: decode
   use-when "You have a COBS-encoded packet, without its trailing zero, and want the original bytes back." ;
   inverse encode ;
   see-also cobs:encode ;
-  link "https://en.wikipedia.org/wiki/Consistent_Overhead_Byte_Stuffing" "Consistent Overhead Byte Stuffing on Wikipedia" ;
+  link
+    "https://en.wikipedia.org/wiki/Consistent_Overhead_Byte_Stuffing" "Consistent Overhead Byte Stuffing on Wikipedia" ;
 ;
 
 META: encode
-  use-when "You are sending binary data in a packet and need no zero bytes inside it, so that a zero can mark the end of each packet." ;
+  use-when "You are sending binary data in a packet and need no zero bytes inside it, so a zero can end each packet." ;
   inverse decode ;
-  link "https://en.wikipedia.org/wiki/Consistent_Overhead_Byte_Stuffing" "Consistent Overhead Byte Stuffing on Wikipedia" ;
+  link
+    "https://en.wikipedia.org/wiki/Consistent_Overhead_Byte_Stuffing" "Consistent Overhead Byte Stuffing on Wikipedia" ;
 ;

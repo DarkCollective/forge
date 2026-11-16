@@ -15,7 +15,7 @@
  */
 
 /*
- * Property tests for the `cobs` vocabulary (vocab/cobs.fth, with the private primitive `_starts`).
+ * Property tests for the `cobs` vocabulary (vocab/cobs.fth, all FL).
  * The fixed answers, including the published examples, are in vocab/cobs.test.json.
  */
 import { valueHelpers } from "@forge/lang";
@@ -89,5 +89,66 @@ describe("cobs", () => {
       const dec = (await run("cobs:decode", enc)).out!;
       expect(dec).toEqual(data);
     }
+  }, 60_000);
+
+  // What the private primitive `_starts` used to check, now checked by decode itself.
+  test("decode reads block by block: the zero a block stands for, and the two errors", async () => {
+    const dec = async (d: number[]) => {
+      const r = await runtime.call("cobs:decode", [bytes(Uint8Array.from(d))]);
+      return r.ok
+        ? { out: Array.from((r.stack[r.stack.length - 1] as { v: Uint8Array }).v) }
+        : { code: r.error.code, message: r.error.message };
+    };
+    expect(await dec([])).toEqual({ out: [] });
+    expect(await dec([1])).toEqual({ out: [] });
+    expect(await dec([3, 0x11, 0x22, 2, 0x33])).toEqual({ out: [0x11, 0x22, 0, 0x33] });
+    expect(await dec([1, 1, 1, 1])).toEqual({ out: [0, 0, 0] });
+    expect(await dec([1, 0])).toMatchObject({
+      code: "E_COERCE",
+      message: expect.stringMatching(/zero byte/) as string,
+    });
+    expect(await dec([3, 1])).toMatchObject({
+      code: "E_COERCE",
+      message: expect.stringMatching(/truncated/) as string,
+    });
+    expect(await dec([255, 1, 2])).toMatchObject({
+      code: "E_COERCE",
+      message: expect.stringMatching(/truncated/) as string,
+    });
+  });
+
+  // The worst case for decode is one-byte blocks, the encoding of 64 KiB of zero bytes, under the untrusted limits
+  // of the worker (UNTRUSTED_LIMITS: 5 million steps, 256 MiB in total). The walk over the blocks used to be a
+  // primitive (`_starts`); FL gathers the blocks linearly now.
+  test("64 KiB of zeros under the untrusted limits", async () => {
+    const strict = assembleRuntime(await loadBundleNode(["cobs"]), {
+      limits: {
+        maxSteps: 5_000_000,
+        maxDataDepth: 10_000,
+        maxValueBytes: 16 * 1024 * 1024,
+        maxTotalBytes: 256 * 1024 * 1024,
+        maxIntBits: 16_384,
+        maxMillis: 10_000,
+      },
+    });
+    const zeros = new Uint8Array(65536);
+    const t0 = Date.now();
+    const enc = await strict.call("cobs:encode", [bytes(zeros)]);
+    const encMs = Date.now() - t0;
+    if (!enc.ok) throw new Error(`${enc.error.code}: ${enc.error.message}`);
+    const encoded = (enc.stack[enc.stack.length - 1] as { v: Uint8Array }).v;
+    expect(encoded).toEqual(new Uint8Array(65537).fill(1));
+    // Measured 4.13 million steps; the limit is 5 million.
+    expect(enc.steps).toBeLessThan(4_500_000);
+    const t1 = Date.now();
+    const dec = await strict.call("cobs:decode", [bytes(encoded)]);
+    const decMs = Date.now() - t1;
+    if (!dec.ok) throw new Error(`${dec.error.code}: ${dec.error.message}`);
+    expect((dec.stack[dec.stack.length - 1] as { v: Uint8Array }).v).toEqual(zeros);
+    // Measured 3.01 million steps (46 per block); the limit is 5 million.
+    expect(dec.steps).toBeLessThan(3_500_000);
+    process.stderr.write(
+      `\ncobs 64 KiB of zeros: encode ${enc.steps} steps ${encMs} ms, decode ${dec.steps} steps ${decMs} ms\n`,
+    );
   }, 60_000);
 });
