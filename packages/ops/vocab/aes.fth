@@ -14,7 +14,17 @@ USING: blockmode ;
   key _check-key
   data "OFB" iv 16 false [ key _block-enc ] blockmode:encrypt ;
 
-: encrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice{CBC|CFB|OFB|CTR|GCM|ECB}="CBC" padding:choice<util:pkcs7-padding>="pkcs7" aad:key{hex|utf8|latin1|base64}="" -- bytes )
+\ The modes of operation of AES offered by the encrypt and decrypt operations.
+CHOICE: _cipher-mode
+  option CBC ;
+  option CFB ;
+  option OFB ;
+  option CTR ;
+  option GCM ;
+  option ECB ;
+;
+
+: encrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice<_cipher-mode>="CBC" padding:choice<util:pkcs7-padding>="pkcs7" aad:key{hex|utf8|latin1|base64}="" -- bytes )
   "AES encryption (FIPS 197) of the input bytes. The key is 16, 24 or 32 bytes (AES-128, -192, -256); a wrong length is E_RANGE. The IV is 16 bytes for CBC, CFB, OFB and CTR (E_RANGE otherwise), at least 8 bytes for GCM (12 is usual) and unused for ECB. padding (PKCS#7 or none) applies to CBC and ECB only: with none the input must be whole 16-byte blocks (E_COERCE); CFB, OFB, CTR and GCM keep the length. GCM authenticates the additional data aad and appends the 16-byte tag to the ciphertext. CTR increments only the last four bytes of the 16-byte counter block, modulo 2^32 with no carry into the rest, as CyberChef's does (node-forge's inc32); it differs from a whole-block counter (SP 800-38A) only after 2^32 blocks. CFB is CFB-128. Chain hex:encode for text." doc
   "Encryption" category
   {
@@ -36,7 +46,7 @@ META: encrypt
   link "https://en.wikipedia.org/wiki/Galois/Counter_Mode" "Galois/Counter Mode on Wikipedia" ;
 ;
 
-: decrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice{CBC|CFB|OFB|CTR|GCM|ECB}="CBC" padding:choice<util:pkcs7-padding>="pkcs7" aad:key{hex|utf8|latin1|base64}="" -- bytes )
+: decrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice<_cipher-mode>="CBC" padding:choice<util:pkcs7-padding>="pkcs7" aad:key{hex|utf8|latin1|base64}="" -- bytes )
   "AES decryption, the inverse of aes:encrypt with the same key, IV, mode, padding and aad. PKCS#7 padding that does not check (usually a wrong key or IV) is E_COERCE, and so is a GCM tag that does not verify (the last 16 bytes of the input are the tag; wrong key, IV, data or aad). A key or IV of the wrong length is E_RANGE. No plaintext is returned when GCM authentication fails." doc
   "Encryption" category
   {

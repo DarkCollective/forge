@@ -78,12 +78,18 @@ USING: hmac base64 clock deflate ;
   "Encryption" category
   _parts timestamp _decode ;
 
-: verify ( bytes key:key{utf8|hex|latin1|base64} salt:key{utf8|hex|latin1|base64}="cookie-session" algorithm:choice{sha1|sha256}="sha1" timestamp:bool=true -- bytes )
+\ The digest of the signature: SHA-1 (Flask's default) or SHA-256.
+CHOICE: _mac-digest
+  option sha1 ;
+  option sha256 ;
+;
+
+: verify ( bytes key:key{utf8|hex|latin1|base64} salt:key{utf8|hex|latin1|base64}="cookie-session" algorithm:choice<_mac-digest>="sha1" timestamp:bool=true -- bytes )
   "Verifies a Flask session cookie (itsdangerous URLSafeTimedSerializer with the 'hmac' key derivation): the HMAC of payload.timestamp, under HMAC(key, salt), with SHA-1 or SHA-256, must equal the signature. The result is {\"valid\":true,\"payload\":...} with ,\"timestamp\":N when timestamp is set, as CyberChef. A signature that does not verify, or a malformed cookie, is E_COERCE (CyberChef: Invalid signature); an empty key is E_RANGE; an empty salt means cookie-session, as CyberChef. A zlib-compressed payload (leading dot) is inflated, and the signature covers the dot as Flask signs it. The age of the cookie is not checked." doc
   "Encryption" category
   _parts key salt algorithm timestamp _verify ;
 
-: sign ( bytes key:key{utf8|hex|latin1|base64} salt:key{utf8|hex|latin1|base64}="cookie-session" algorithm:choice{sha1|sha256}="sha1" timestamp:int=0 -- bytes )
+: sign ( bytes key:key{utf8|hex|latin1|base64} salt:key{utf8|hex|latin1|base64}="cookie-session" algorithm:choice<_mac-digest>="sha1" timestamp:int=0 -- bytes )
   "Signs a session JSON as a Flask session cookie (itsdangerous URLSafeTimedSerializer, 'hmac' key derivation, salt cookie-session by default): payload.timestamp.signature, url-safe base64 without padding. The input is the JSON text, used as given (Flask writes it compact, with no spaces). The time is the clock unless timestamp (Unix seconds, above 0) pins it; 0 means now, so the word carries the +time effect. The payload is never compressed. An empty key or a negative timestamp is E_RANGE; an empty salt means cookie-session, as CyberChef." doc
   "Encryption" category
   key salt algorithm timestamp dup 0 = [ drop clock:now-s ] when _sign ;
