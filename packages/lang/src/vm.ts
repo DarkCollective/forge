@@ -69,6 +69,7 @@ import type {
   SourcePos,
   StackSlot,
   StackWord,
+  Tag,
   TraceEntry,
   Value,
   VarStore,
@@ -210,6 +211,30 @@ class Interrupt {
 // ---------------------------------------------------------------------------------------------
 // Small helpers
 // ---------------------------------------------------------------------------------------------
+
+const VALUE_TAGS: ReadonlySet<string> = new Set<Tag>([
+  "bytes",
+  "str",
+  "int",
+  "num",
+  "bool",
+  "list",
+  "quot",
+  "record",
+  "file",
+]);
+
+/** The setters of `StepEvent` take host data: refuse anything that is not a tagged value. */
+function assertValue(x: unknown, who: string): asserts x is Value {
+  if (
+    typeof x !== "object" ||
+    x === null ||
+    !VALUE_TAGS.has((x as { tag?: unknown }).tag as string) ||
+    !("v" in x)
+  ) {
+    throw new RangeError(`${who}: the argument is not a Value`);
+  }
+}
 
 function isThenable(x: unknown): x is PromiseLike<unknown> {
   return (
@@ -895,6 +920,7 @@ class Machine {
       returnDepth: this.rs.length,
       breakpoint,
       frames: () => this.debugFrames(at),
+      setStackItem: (index, value) => this.setStackItem(index, value),
     });
   }
 
@@ -915,9 +941,49 @@ class Machine {
         ip,
         pos: f.word.positions[ip] ?? null,
         locals,
+        setLocal: (name, value) => this.setLocal(f, name, value),
       });
     }
     return out;
+  }
+
+  /** `StepEvent.setStackItem`. */
+  private setStackItem(index: number, value: Value): void {
+    if (!Number.isInteger(index) || index < 0 || index >= this.ds.length) {
+      throw new RangeError(
+        `setStackItem: index ${String(index)} is not in 0..${this.ds.length - 1}`,
+      );
+    }
+    assertValue(value, "setStackItem");
+    this.meter(value);
+    this.ds[index] = value;
+  }
+
+  /** `DebugFrame.setLocal`. A header local is checked as word entry checks it, without coercion. */
+  private setLocal(f: ActFrame, name: string, value: Value): void {
+    const names = f.word.localNames;
+    let slot = -1;
+    for (let i = 0; i < names.length; i++) {
+      if (names[i] === name && f.locals[i] !== undefined) {
+        slot = i;
+        break;
+      }
+    }
+    if (slot < 0) throw new RangeError(`setLocal: no local "${String(name)}" holds a value`);
+    assertValue(value, "setLocal");
+    let v = value;
+    const input = slot < f.word.namedInputs.length ? f.word.namedInputs[slot] : undefined;
+    const decl = input === undefined ? undefined : f.word.effect.inputs[input];
+    if (decl !== undefined) {
+      try {
+        validate(v, decl, this.limits, input);
+      } catch (e) {
+        throw (e as ForgeError).with({ word: f.word.qname });
+      }
+      if (decl.type === "key") v = markSecret(v);
+    }
+    this.meter(v);
+    (f.locals as Value[])[slot] = v;
   }
 
   /** Awaits a hook's promise. Abort still wins; the time spent paused is not charged to the deadline. */

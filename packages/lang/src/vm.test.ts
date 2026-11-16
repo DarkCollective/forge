@@ -1608,6 +1608,169 @@ describe("hooks, breakpoints and trace", () => {
     expect({ ...withHook, elapsedMs: 0 }).toEqual({ ...without, elapsedMs: 0 });
   });
 
+  test("setStackItem replaces a stack entry, seen at once and by the rest of the run", async () => {
+    const seen: string[] = [];
+    const r = await run("1 2 +", {
+      stepAll: true,
+      onStep: (e) => {
+        if (e.op !== "prim" || e.stack.length !== 2) return;
+        e.setStackItem(0, int(40));
+        seen.push(e.stack.map(repr).join(" "));
+      },
+    });
+    if (!r.ok) throw r.error;
+    expect(seen).toEqual(["40 2"]);
+    expect(r.stack.map(repr)).toEqual(["42"]);
+  });
+
+  test("setLocal changes a header local and a :> local, and frames() shows it", async () => {
+    const rt = runtime();
+    rt.load(`
+      : f ( n:int -- int )
+        n 1 +
+        :> r
+        r n + ;
+    `);
+    const after: string[] = [];
+    let did = 0;
+    const r = await run(
+      "5 f",
+      {
+        stepAll: true,
+        onStep: (e) => {
+          if (!/f$/.test(e.word)) return;
+          const names = e.frames()[0]?.locals.map((l) => l.name) ?? [];
+          if (did === 0 && names.includes("n") && !names.includes("r")) {
+            e.frames()[0]?.setLocal("n", int(10));
+            did = 1;
+          } else if (did === 1 && names.includes("r")) {
+            e.frames()[0]?.setLocal("r", int(100));
+            did = 2;
+            after.push(
+              e
+                .frames()[0]
+                ?.locals.map((l) => `${l.name}=${repr(l.value)}`)
+                .join(",") ?? "",
+            );
+          }
+        },
+      },
+      rt,
+    );
+    if (!r.ok) throw r.error;
+    expect(did).toBe(2);
+    expect(after).toEqual(["n=10,r=100"]);
+    // r = 5 + 1 was computed before r was replaced: 100 + 10
+    expect(r.stack.map(repr)).toEqual(["110"]);
+  });
+
+  test("setLocal through a quotation frame is seen by the containing word", async () => {
+    const rt = runtime();
+    rt.load(`
+      : g ( k:int -- int )
+        { 1 } [ k + ] map drop
+        k ;
+    `);
+    let done = false;
+    const r = await run(
+      "3 g",
+      {
+        stepAll: true,
+        onStep: (e) => {
+          const fs = e.frames();
+          if (done || fs[0]?.kind !== "quot") return;
+          fs[0].setLocal("k", int(9));
+          done = true;
+        },
+      },
+      rt,
+    );
+    if (!r.ok) throw r.error;
+    expect(done).toBe(true);
+    expect(r.stack.map(repr)).toEqual(["9"]);
+  });
+
+  test("the setters throw RangeError for a bad index, name or value", async () => {
+    const rt = runtime();
+    rt.load(": h ( n:int -- int ) n 1 + :> r r ;");
+    const errs: unknown[] = [];
+    const r = await run(
+      "5 h",
+      {
+        stepAll: true,
+        onStep: (e) => {
+          if (errs.length > 0 || !/h$/.test(e.word)) return;
+          const f = e.frames()[0];
+          const bad = (fn: () => void) => {
+            try {
+              fn();
+            } catch (x) {
+              errs.push(x);
+            }
+          };
+          bad(() => e.setStackItem(-1, int(1)));
+          bad(() => e.setStackItem(1.5, int(1)));
+          bad(() => e.setStackItem(e.stack.length, int(1)));
+          bad(() => e.setStackItem(0, { tag: "nope", v: 1 } as unknown as Value));
+          bad(() => e.setStackItem(0, null as unknown as Value));
+          bad(() => f?.setLocal("zz", int(1)));
+          bad(() => f?.setLocal("r", int(1))); // :> slot not yet bound
+          bad(() => f?.setLocal("n", 7 as unknown as Value));
+        },
+      },
+      rt,
+    );
+    if (!r.ok) throw r.error;
+    expect(errs).toHaveLength(8);
+    for (const x of errs) expect(x).toBeInstanceOf(RangeError);
+    expect(r.stack.map(repr)).toEqual(["6"]);
+  });
+
+  test("setLocal checks a header local's type and constraint without coercion", async () => {
+    const rt = runtime();
+    rt.load(": k ( n:int[1..10] -- int ) n 0 + ;");
+    const codes: string[] = [];
+    const r = await run(
+      "5 k",
+      {
+        stepAll: true,
+        onStep: (e) => {
+          if (codes.length > 0 || !/k$/.test(e.word)) return;
+          const f = e.frames()[0];
+          for (const bad of [str("x"), { tag: "num", v: 3 } as Value, int(11)]) {
+            try {
+              f?.setLocal("n", bad);
+            } catch (x) {
+              codes.push((x as ForgeError).code);
+            }
+          }
+          expect(f?.locals[0]?.value).toEqual(int(5));
+          expect(e.frames()[0]?.locals[0]?.value).toEqual(int(5));
+          f?.setLocal("n", int(7));
+          expect(e.frames()[0]?.locals[0]?.value).toEqual(int(7));
+        },
+      },
+      rt,
+    );
+    if (!r.ok) throw r.error;
+    expect(codes).toEqual(["E_TYPE", "E_TYPE", "E_PARAM_INVALID"]);
+    expect(r.stack.map(repr)).toEqual(["7"]);
+  });
+
+  test("the setters meter the new value against the value limit", async () => {
+    const r = await run("1 2 +", {
+      stepAll: true,
+      limits: { maxValueBytes: 64 },
+      onStep: (e) => {
+        if (e.op !== "prim") return;
+        expect(() => e.setStackItem(0, str("x".repeat(1000)))).toThrow(ForgeError);
+        expect(e.stack[0]).toEqual(int(1));
+      },
+    });
+    if (!r.ok) throw r.error;
+    expect(r.stack.map(repr)).toEqual(["3"]);
+  });
+
   test("trace records every instruction with a shallow copy of the top 16 values", async () => {
     const r = await run("1 2 + .", { trace: true });
     if (!r.ok) throw r.error;
