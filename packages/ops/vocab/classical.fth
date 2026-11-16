@@ -835,7 +835,123 @@ META: ctx1-decode
 
 \ ---- the cipher ----
 
-\ The letter-by-letter cipher is the private primitive _ls47 (src/prims/classical.ts).
+\ The letter-by-letter cipher. The board is not kept as a board but as its inverse, a 49-byte table with the place
+\ (0 to 48) of each letter, indexed by the letter's place on the standard board. Moving a row or a column then
+\ moves places, which is a value mapping, so one native `translate` with a fixed 256-byte table does the whole
+\ rotation. Adding an offset to a place is a value mapping too (one table per offset), and so is moving the
+\ marker. The letter at a place is found by looking for the place in the Latin-1 text of the table with `split`.
+\ The tables are built once (MEMO:); a letter costs about 55 interpreter steps, so 64 KiB of text takes about
+\ 3.6 million steps (the web app allows 5 million).
+
+MEMO: _ls-id ( -- bytes )
+  0 256 range list>bytes ;
+
+MEMO: _ls-chars ( -- list )
+  0 49 range [ cp>str ] map ;
+
+MEMO: _ls-decode ( -- bytes )
+  _ls-alpha 255 255 util:decode-table ;
+
+\ Letter id (0 to 48) to letter byte; the other 207 entries are padding.
+MEMO: _ls-letters ( -- bytes )
+  _ls-alpha str>bytes 207 zero-bytes cat ;
+
+\ Table r moves the places of row r one place right: place s + j goes to s + (j + 1) mod 7.
+MEMO: _ls-rows ( -- list )
+  0 7 range [
+    7 * :> s
+    _ls-id 0 s slice
+    _ls-id s 1 + s 7 + slice cat
+    _ls-id s s 1 + slice cat
+    _ls-id s 7 + 256 slice cat
+  ] map ;
+
+\ The transpose of the places: (row, column) goes to (column, row).
+MEMO: _ls-transpose ( -- bytes )
+  [ 0 7 range [ :> r 0 7 range [ 7 * r + emit ] each ] each ] collect-bytes
+  _ls-id 49 256 slice cat ;
+
+\ Table c moves the places of column c one place down: the row table of c between two transposes.
+MEMO: _ls-cols ( -- list )
+  0 7 range [ :> c _ls-transpose _ls-rows c nth translate _ls-transpose translate ] map ;
+
+\ For each place, the table that moves its row, and the table that moves its column.
+MEMO: _ls-rowp ( -- list )
+  0 49 range [ 7 div _ls-rows swap nth ] map ;
+
+MEMO: _ls-colp ( -- list )
+  0 49 range [ 7 mod _ls-cols swap nth ] map ;
+
+\ Every row one place right.
+MEMO: _ls-rotall ( -- bytes )
+  _ls-rows _ls-id [ translate ] reduce ;
+
+\ That k times: the places (r, c) go to (r, c + k mod 7).
+MEMO: _ls-addc ( -- list )
+  0 7 range [ :> k 0 k range _ls-id [ drop _ls-rotall translate ] reduce ] map ;
+
+\ The same for the rows: the places (r, c) go to (r + k mod 7, c), between two transposes.
+MEMO: _ls-addr ( -- list )
+  0 7 range [ :> k _ls-transpose _ls-addc k nth translate _ls-transpose translate ] map ;
+
+\ For each place t (an offset), the table that adds t to a place; and the table that subtracts it.
+MEMO: _ls-add ( -- list )
+  0 49 range [ :> t _ls-addc t 7 mod nth _ls-addr t 7 div nth translate ] map ;
+
+MEMO: _ls-sub ( -- list )
+  0 49 range [
+    :> t _ls-addc 7 t 7 mod - 7 mod nth _ls-addr 7 t 7 div - 7 mod nth translate
+  ] map ;
+
+\ The inverse board of a 49-byte key: the place in the key of each letter of the alphabet. A key that is not
+\ 49 tiles, or that does not use each letter once, is E_COERCE.
+: _ls-inverse ( key:bytes -- bytes )
+  key len 49 <> [ "LS47 key: the board needs 49 tiles" fail-coerce ] when
+  key bytes>latin1 :> ktext
+  0 49 range [ _ls-alpha swap dup 1 + slice ktext swap split 0 nth len ] map list>bytes
+  dup [ 49 = ] any? [ "LS47 key: the board must use each LS47 letter once" fail-coerce ] when ;
+
+\ Encrypt (dec false) or decrypt (dec true) text on the board key. The state on the stack is the inverse board
+\ and the marker (a one-byte value holding its place); x is the id of the input letter, o the place of the
+\ output letter and y its id. A letter outside the alphabet is E_COERCE.
+: _ls47 ( text:bytes key:bytes dec:bool -- bytes )
+  text _ls-decode util:check-symbols :> ids
+  [
+    key _ls-inverse _ls-id 0 1 slice
+    ids
+    dec
+    [
+      [
+        :> x :> mb :> inv
+        inv bytes>latin1 :> invs
+        invs mb bytes>latin1 split 0 nth len :> t
+        inv _ls-sub t nth translate x nth :> o
+        invs _ls-chars o nth split 0 nth len :> y
+        y emit
+        inv _ls-rowp o nth translate :> inv1
+        inv1 _ls-colp inv1 x nth nth translate
+        mb _ls-add x nth translate
+      ]
+    ]
+    [
+      [
+        :> x :> mb :> inv
+        inv bytes>latin1 :> invs
+        inv x nth :> q
+        invs mb bytes>latin1 split 0 nth len :> t
+        _ls-add t nth q nth :> o
+        invs _ls-chars o nth split 0 nth len :> y
+        y emit
+        inv _ls-rowp q nth translate :> inv1
+        inv1 _ls-colp inv1 y nth nth translate
+        mb _ls-add y nth translate
+      ]
+    ]
+    if each
+    drop2
+  ] collect-bytes
+  _ls-letters translate ;
+
 : _ls-run ( text:bytes key:bytes dec:bool -- str )
   text key dec _ls47 bytes>str ;
 
