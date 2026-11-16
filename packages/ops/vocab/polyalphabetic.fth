@@ -3,9 +3,7 @@
 \ bytes and touch ASCII letters only; every other byte passes through and uses up no key letter.
 IN: polyalphabetic
 
-\ ---------------------------------------------------------------------------------------------
-\ Letters (private helpers)
-\ ---------------------------------------------------------------------------------------------
+\ ---- letters (private helpers) ----
 
 \ The index 0 to 25 of an ASCII letter (either case).
 : _pa-index ( c:int -- int )
@@ -23,47 +21,36 @@ IN: polyalphabetic
 : _pa-reflect ( c:int k:int -- int )
   c util:letter? [ k c _pa-index - 26 mod c _pa-letter-of ] [ c ] if ;
 
-\ ---------------------------------------------------------------------------------------------
-\ Key streams: the key values repeat over the letters of the data (a VARIABLE counts them)
-\ ---------------------------------------------------------------------------------------------
+\ ---- key streams: the key values repeat over the letters of the data (a VARIABLE counts them) ----
 
 0 VARIABLE _pa-pos
 
 \ f ( c:int k:int -- int ) combines each letter with the key value of its position.
 : _pa-stream ( data:bytes ks:bytes f:quot -- bytes )
   0 _pa-pos!
-  data [ dup util:letter?
-    [ _pa-pos ks len mod ks swap nth f call _pa-pos 1 + _pa-pos! ]
-    [ ]
-    if ] map ;
+  data [ dup util:letter? [ _pa-pos ks len mod ks swap nth f call _pa-pos 1 + _pa-pos! ] [ ] if ] map ;
 
-\ ---------------------------------------------------------------------------------------------
-\ Autokey: the key is followed by the plaintext, so the key value of a letter is the plaintext
-\ letter klen letters earlier. The next key values are kept in a window (a bytes VARIABLE).
-\ ---------------------------------------------------------------------------------------------
+\ ---- autokey ----
+\ The key is followed by the plaintext, so the key value of a letter is the plaintext letter klen letters
+\ earlier. The next key values are kept in a window (a bytes VARIABLE).
 
 #[ ] VARIABLE _pa-win
 
 \ Encrypt one letter: the window is the next key values; the plaintext letter enters it.
 : _pa-auto-enc ( c:int -- int )
   c _pa-index _pa-win 0 nth + 26 mod c _pa-letter-of
-  _pa-win 1 _pa-win len slice c _pa-index 1 util:int>be-bytes cat _pa-win! ;
+  _pa-win 1 _pa-win len slice c _pa-index 1 int>be-bytes cat _pa-win! ;
 
 \ Decrypt one letter: the recovered plaintext letter enters the window.
 : _pa-auto-dec ( c:int -- int )
   c _pa-index _pa-win 0 nth - 26 mod dup c _pa-letter-of
-  _pa-win 1 _pa-win len slice rot 1 util:int>be-bytes cat _pa-win! ;
+  _pa-win 1 _pa-win len slice rot 1 int>be-bytes cat _pa-win! ;
 
 : _pa-autokey ( data:bytes kv:bytes dec:bool -- bytes )
   kv _pa-win!
-  data [ dup util:letter?
-    [ dec [ _pa-auto-dec ] [ _pa-auto-enc ] if ]
-    [ ]
-    if ] map ;
+  data [ dup util:letter? [ dec [ _pa-auto-dec ] [ _pa-auto-enc ] if ] [ ] if ] map ;
 
-\ ---------------------------------------------------------------------------------------------
-\ Words
-\ ---------------------------------------------------------------------------------------------
+\ ---- words ----
 
 : beaufort ( data:bytes key:str[1..256,/[A-Za-z]+/] -- bytes )
   "Beaufort cipher: each ASCII letter with index p (A = 0) becomes (k - p) mod 26, where k is the index of the key letter at that letter's position (the key repeats over the letters, case-insensitive). Case is kept; other bytes pass through and use up no key letter. It is its own inverse, so the same word decrypts." doc
@@ -127,9 +114,7 @@ META: gronsfeld-decrypt
   see-also polyalphabetic:gronsfeld-encrypt ;
 ;
 
-\ ---------------------------------------------------------------------------------------------
-\ Porta: thirteen paired alphabets, one per key letter pair AB, CD, ... YZ.
-\ ---------------------------------------------------------------------------------------------
+\ ---- porta: thirteen paired alphabets, one per key letter pair AB, CD, ... YZ ----
 
 \ The index (0 to 25) that letter index i (0 to 25) becomes under the pair index t (0 to 12): A to M
 \ go to the N to Z half by (i + t) mod 13, and N to Z go to the A to M half by (i - 13 - t) mod 13.

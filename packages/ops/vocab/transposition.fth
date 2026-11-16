@@ -2,9 +2,7 @@
 \ transposition: columnar transposition. Every byte takes part (nothing is dropped); the cipher only moves bytes.
 IN: transposition
 
-\ ---------------------------------------------------------------------------------------------
-\ Column order (private helpers)
-\ ---------------------------------------------------------------------------------------------
+\ ---- column order (private helpers) ----
 
 \ A unique sort value per key position: letter code * 256 + position.
 \ Used by this vocabulary only (the other column ciphers rank keys differently), so it stays private.
@@ -60,27 +58,22 @@ IN: transposition
   [ data w data len w mod - w mod 0 swap range [ drop padb ] map list>bytes cat ]
   if ;
 
-\ ---------------------------------------------------------------------------------------------
-\ Encrypt and decrypt
-\ ---------------------------------------------------------------------------------------------
+\ ---- encrypt and decrypt ----
 
 : columnar-encrypt ( data:bytes key:str[1..256,/[A-Za-z]+/] pad:str[0..1,/[A-Za-z]?/]="" -- bytes )
   "Columnar transposition: the bytes are written in rows under the key (one column per key letter) and the columns are read out in alphabetical order of their key letters (a repeated letter keeps left-to-right order). With pad empty, the last row may be short and is not padded. With a pad letter, the last row is filled with that letter first; decryption does not remove it. Every byte takes part; nothing is dropped." doc
   "Classical ciphers" category
-  pad len 0 =
-  [ data ]
-  [ data key len pad str>bytes 0 nth _pad-to ]
-  if
+  pad len 0 = [ data ] [ data key len pad str>bytes 0 nth _pad-to ] if
   key upper str>codes _key-values _column-ranks _column-order
   key len _columns ;
 
 META: columnar-encrypt
   use-when "You have a message and a keyword, and want it scrambled by a columnar transposition, which keeps every letter and changes only their order, for a puzzle." ;
-  inverse columnar-decrypt ;
-  link "https://en.wikipedia.org/wiki/Transposition_cipher" "Transposition cipher on Wikipedia" ;
   param key "Keyword of letters (either case); its letters give the column order." ;
   param pad "A pad letter to fill the last row, or empty for none." ;
+  inverse columnar-decrypt ;
   see-also transposition:columnar-decrypt ;
+  link "https://en.wikipedia.org/wiki/Transposition_cipher" "Transposition cipher on Wikipedia" ;
 ;
 
 : columnar-decrypt ( data:bytes key:str[1..256,/[A-Za-z]+/] -- bytes )
@@ -90,8 +83,8 @@ META: columnar-encrypt
 
 META: columnar-decrypt
   use-when "You have columnar transposition ciphertext and its keyword, and want the letters back in their original order, as in a puzzle or a lesson." ;
-  inverse columnar-encrypt ;
-  link "https://en.wikipedia.org/wiki/Transposition_cipher" "Transposition cipher on Wikipedia" ;
   param key "Keyword used to encrypt (either case)." ;
+  inverse columnar-encrypt ;
   see-also transposition:columnar-encrypt ;
+  link "https://en.wikipedia.org/wiki/Transposition_cipher" "Transposition cipher on Wikipedia" ;
 ;

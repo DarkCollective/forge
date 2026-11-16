@@ -25,7 +25,7 @@ import { assembleRuntime } from "./bundle.js";
 import { loadBundleNode } from "./sources-node.js";
 
 const { str } = valueHelpers;
-const runtime = assembleRuntime(await loadBundleNode(["colour", "raise"]));
+const runtime = assembleRuntime(await loadBundleNode(["colour"]));
 
 const parse = async (data: string) => {
   const r = await runtime.call("colour:parse", [str(data)]);

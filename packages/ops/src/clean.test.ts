@@ -21,7 +21,7 @@ import { loadBundleNode } from "./sources-node.js";
 
 // clean is FL (vocab/clean.fth); these tests drive its public words through the runtime.
 const { bool, bytes, str } = valueHelpers;
-const runtime = assembleRuntime(await loadBundleNode(["clean", "raise"]));
+const runtime = assembleRuntime(await loadBundleNode(["clean"]));
 
 function top(r: { stack: readonly Value[] }): { v: unknown } {
   return r.stack[r.stack.length - 1] as { v: unknown };

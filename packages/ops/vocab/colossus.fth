@@ -42,23 +42,23 @@
 \ Colossus. Written in FL, no primitive: the work is the folding loop (one pass over the
 \ message) and a few hundred thousand steps of arithmetic.
 IN: colossus
-USING: lorenz ;
 
+USING: lorenz ;
 
 \ ---- the condition ----
 
 \ k is the letter (z or x), w the digit, d 1 for a differenced term; the code is 16 d + 8 x + w.
 : _term3 ( k:int w:int d:int -- int )
-  k 122 <> k 120 <> and w 1 5 util:between? not or
-  [ "a term is z1, dz1, x1 or dx1 (impulse or wheel 1 to 5), terms joined by +" raise:range ] when
+  k 122 <> k 120 <> and w 1 5 between? not or
+  [ "a term is z1, dz1, x1 or dx1 (impulse or wheel 1 to 5), terms joined by +" fail-range ] when
   d 16 * k 120 = [ 8 ] [ 0 ] if + w + ;
 
 : _term2 ( c:list d:int -- int )
-  c len 2 <> [ "a term is z1, dz1, x1 or dx1 (impulse or wheel 1 to 5), terms joined by +" raise:range ] when
+  c len 2 <> [ "a term is z1, dz1, x1 or dx1 (impulse or wheel 1 to 5), terms joined by +" fail-range ] when
   c 0 nth c 1 nth 48 - d _term3 ;
 
 : _term1 ( c:list -- int )
-  c len 0 = [ "an empty term in the condition" raise:range ] when
+  c len 0 = [ "an empty term in the condition" fail-range ] when
   c 0 nth 100 =
   [ c 1 c len slice 1 _term2 ]
   [ c 0 _term2 ]
@@ -89,25 +89,23 @@ USING: lorenz ;
   pat d _arr start 1 - m util:cycle-bytes ;
 
 : _need ( pat:bytes w:int -- bytes )
-  pat len 0 = [ "chi" w int>str cat " has no pattern: choose KH, ZMUG or BREAM, or give the custom pattern" cat raise:range ] when
+  pat len 0 = [ "chi" w int>str cat " has no pattern: choose KH, ZMUG or BREAM, or give the custom pattern" cat fail-range ] when
   pat ;
 
 \ One term of the sum that does not depend on the searched settings (a ciphertext term or a
 \ term of a known chi wheel); a term of a searched wheel gives zeros here.
 : _stream-of ( c:int z:bytes pats:list starts:list a:int b:int m:int -- bytes )
-  c 8 band 0 =
-  [ z c 7 band c 4 shr 1 band m _zstream ]
-  [ c 7 band a = c 7 band b = or
-    [ m util:zero-bytes ]
+  {
+    [ c 8 band 0 = ] [ z c 7 band c 4 shr 1 band m _zstream ]
+    [ c 7 band a = c 7 band b = or ] [ m zero-bytes ]
     [ starts c 7 band 1 - nth 0 =
-      [ "a chi wheel in the condition that is not searched needs its start position (chiN-start)" raise:range ] when
+      [ "a chi wheel in the condition that is not searched needs its start position (chiN-start)" fail-range ] when
       pats c 7 band 1 - nth c 7 band _need c 4 shr 1 band starts c 7 band 1 - nth m _xstream ]
-    if ]
-  if ;
+  } cond ;
 
 : _zpart ( terms:list z:bytes pats:list starts:list a:int b:int m:int -- bytes )
   terms [ z pats starts a b m _stream-of ] map
-  m util:zero-bytes [ bxor ] reduce ;
+  m zero-bytes [ bxor ] reduce ;
 
 \ The values 1 where zp is not the target and 0 where it is.
 : _zt ( zp:bytes target:int -- bytes )
@@ -118,7 +116,7 @@ USING: lorenz ;
 \ The sum, over the terms of chi wheel w, of its cells (or their differences).
 : _fn ( terms:list pat:bytes w:int -- bytes )
   terms [ dup 8 band 0 > swap 7 band w = and ] filter
-  pat len util:zero-bytes
+  pat len zero-bytes
   [ 4 shr 1 band pat swap _arr bxor ] reduce ;
 
 \ +1 for a dot and -1 for a cross, over two turns of the wheel.
@@ -167,7 +165,7 @@ USING: lorenz ;
 
 : _sums ( z:bytes terms:list pats:list starts:list a:int b:int target:int -- list )
   terms [ 16 band 0 > ] filter len 0 > [ z len 1 - ] [ z len ] if _m!
-  _m 1 < [ "the message is too short for a differenced term" raise:range ] when
+  _m 1 < [ "the message is too short for a differenced term" fail-range ] when
   pats a 1 - nth a _need len _la!
   pats b 1 - nth b _need len _lb!
   terms z pats starts a b _m _zpart target _zt
@@ -236,12 +234,12 @@ USING: lorenz ;
   a b t 0 = [ "dot" ] [ "cross" ] if total _table ;
 
 : _colossus ( cipher:str a:int b:int cond:str target:str pattern:str custom:list starts:list top:int total:int -- str )
-  a b = [ "wheel-a and wheel-b must be two different chi wheels" raise:range ] when
-  cipher util:from-bp dup len 0 = [ "the ciphertext is empty" raise:range ] when
-  cond len 0 = [ a b _default ] [ cond util:strip-space lower ] if
+  a b = [ "wheel-a and wheel-b must be two different chi wheels" fail-range ] when
+  cipher util:from-bp dup len 0 = [ "the ciphertext is empty" fail-range ] when
+  cond len 0 = [ a b _default ] [ cond strip-space lower ] if
   a b target "cross" = [ 1 ] [ 0 ] if pattern custom starts top total _go ;
 
-: count ( cipher:str wheel-a:int[1..5]=1 wheel-b:int[1..5]=2 condition:str[0..64,/[dDzZxX1-5+]*/]="" target:choice{dot|cross}=dot pattern:choice{KH|ZMUG|BREAM|custom}=KH chi1:str[0|41,/[x.]*/]="" chi2:str[0|31,/[x.]*/]="" chi3:str[0|29,/[x.]*/]="" chi4:str[0|26,/[x.]*/]="" chi5:str[0|23,/[x.]*/]="" chi1-start:int[0..41]=0 chi2-start:int[0..31]=0 chi3-start:int[0..29]=0 chi4-start:int[0..26]=0 chi5-start:int[0..23]=0 top:int[1..100]=10 set-total:int[0..]=0 -- str )
+: count ( cipher:str wheel-a:int[1..5]=1 wheel-b:int[1..5]=2 condition:str[0..64,/[dDzZxX1-5+]*/]="" target:choice{dot|cross}=dot pattern:choice<util:wheel-pattern>=KH chi1:str[0|41,/[x.]*/]="" chi2:str[0|31,/[x.]*/]="" chi3:str[0|29,/[x.]*/]="" chi4:str[0|26,/[x.]*/]="" chi5:str[0|23,/[x.]*/]="" chi1-start:int[0..41]=0 chi2-start:int[0..31]=0 chi3-start:int[0..29]=0 chi4-start:int[0..26]=0 chi5-start:int[0..23]=0 top:int[1..100]=10 set-total:int[0..]=0 -- str )
   "Count, over every start position of two chi wheels, how often a Boolean condition on the ciphertext and the chi cells holds (a Colossus run), and list the best settings. The ciphertext is Lorenz ITA2 text in Bletchley Park notation. The default is the 1+2 break-in: dz1+dz2+dx1+dx2 = dot over chi1 and chi2. The table shows the start positions (as lorenz:decrypt takes them), the count, the bias (count minus failures) and sigma." doc
   "Cipher machines" category
   cipher wheel-a wheel-b condition target pattern

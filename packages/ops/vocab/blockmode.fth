@@ -22,9 +22,6 @@
 \ off, or any decryption in ECB or CBC) and bad padding are E_COERCE.
 IN: blockmode
 
-\ Not USING: raise, whose range would hide the core word range; the raise words are called qualified.
-USING: util ;
-
 #[ ] VARIABLE _prev
 0 VARIABLE _ctr0
 #[ ] VARIABLE _head
@@ -41,14 +38,14 @@ USING: util ;
 \ The padding length read from the last byte of data, checked to be 1 to bs.
 : _pad-len ( data:bytes bs:int -- int )
   data len bs mod 0 <> data len 0 = or
-  [ "bad padding: the length is not a whole number of blocks" raise:coerce ] when
+  [ "bad padding: the length is not a whole number of blocks" fail-coerce ] when
   data data len 1 - nth
-  dup 1 < over bs > or [ "bad padding: the last byte is out of range" raise:coerce ] when ;
+  dup 1 < over bs > or [ "bad padding: the last byte is out of range" fail-coerce ] when ;
 
 \ data without its last p bytes, after checking that all of them are p.
 : _strip ( data:bytes p:int -- bytes )
   data data len p - data len slice [ p <> ] filter len 0 >
-  [ "bad padding: the padding bytes differ" raise:coerce ] when
+  [ "bad padding: the padding bytes differ" fail-coerce ] when
   data 0 data len p - slice ;
 
 : unpad ( data:bytes bs:int -- bytes )
@@ -67,7 +64,7 @@ USING: util ;
 \ data, after checking that it is a whole number of blocks.
 : _whole ( data:bytes bs:int -- bytes )
   data len bs mod 0 <>
-  [ "the input is not a whole number of blocks (use PKCS#7 padding or a multiple of the block size)" raise:coerce ] when
+  [ "the input is not a whole number of blocks (use PKCS#7 padding or a multiple of the block size)" fail-coerce ] when
   data ;
 
 \ The data to encrypt in ECB or CBC: padded, or checked to be whole blocks.
@@ -107,20 +104,20 @@ USING: util ;
 \ Set up the counter of a CTR mode from the IV: the value that block i adds to (_ctr0), and for CTR32 the
 \ head that stays fixed (all but the last four bytes, _head).
 : _ctr-init ( iv:bytes mode:str -- )
-  mode "CTR32" =
-  [ iv 0 iv len 4 - slice _head! iv iv len 4 - iv len slice 256 digits>int _ctr0! ] [
-  mode "CTRLE" =
-  [ iv rev 256 digits>int _ctr0! ]
-  [ iv 256 digits>int _ctr0! ] if ] if ;
+  {
+    [ mode "CTR32" = ] [ iv 0 iv len 4 - slice _head! iv iv len 4 - iv len slice 256 digits>int _ctr0! ]
+    [ mode "CTRLE" = ] [ iv rev 256 digits>int _ctr0! ]
+    [ iv 256 digits>int _ctr0! ]
+  } cond ;
 
 \ The counter block i places after the IV: the IV as a big-endian integer plus i, in bs bytes (wrapping);
 \ for CTR32 only the last four bytes count; for CTRLE the integer is little-endian.
 : _ctr-block ( i:int bs:int mode:str -- bytes )
-  mode "CTR32" =
-  [ _head _ctr0 i + 4 util:int>be-bytes cat ] [
-  mode "CTRLE" =
-  [ _ctr0 i + bs util:int>be-bytes rev ]
-  [ _ctr0 i + bs util:int>be-bytes ] if ] if ;
+  {
+    [ mode "CTR32" = ] [ _head _ctr0 i + 4 int>be-bytes cat ]
+    [ mode "CTRLE" = ] [ _ctr0 i + bs int>be-bytes rev ]
+    [ _ctr0 i + bs int>be-bytes ]
+  } cond ;
 
 : _ctr ( data:bytes mode:str iv:bytes bs:int f:quot -- bytes )
   iv mode _ctr-init
@@ -130,29 +127,33 @@ USING: util ;
 
 : _check ( mode:str iv:bytes bs:int -- )
   mode "ECB" = mode "CBC" = or mode "CFB" = or mode "OFB" = or mode "CTR" = or mode "CTR32" = or mode "CTRLE" = or not
-  [ "unknown mode (use ECB, CBC, CFB, OFB, CTR, CTR32 or CTRLE)" raise:range ] when
+  [ "unknown mode (use ECB, CBC, CFB, OFB, CTR, CTR32 or CTRLE)" fail-range ] when
   mode "ECB" <> iv len bs <> and
-  [ "the IV must be one block long" raise:range ] when ;
+  [ "the IV must be one block long" fail-range ] when ;
 
 \ ---- the public words ----
 
 : encrypt ( data:bytes mode:str iv:bytes bs:int padding:bool enc:quot -- bytes )
   "Encrypt data in a mode (ECB, CBC, CFB, OFB or CTR; CTR32 and CTRLE are CTR with the other two counter conventions, see the file header) with a block function enc ( block:bytes -- bytes ) of bs-byte blocks that encrypts one block under a key the quotation closes over. The IV must be bs bytes (ignored for ECB, E_RANGE if the length is wrong). padding on applies PKCS#7 to ECB and CBC; with it off those two need whole blocks (E_COERCE). CFB, OFB and CTR never pad and keep the length." doc
   mode iv bs _check
-  mode "ECB" = [ data bs padding _prep bs enc _ecb ] [
-  mode "CBC" = [ data bs padding _prep iv bs enc _cbc-enc ] [
-  mode "CFB" = [ data iv bs enc _cfb-enc ] [
-  mode "OFB" = [ data iv bs enc _ofb ]
-  [ data mode iv bs enc _ctr ] if ] if ] if ] if ;
+  {
+    [ mode "ECB" = ] [ data bs padding _prep bs enc _ecb ]
+    [ mode "CBC" = ] [ data bs padding _prep iv bs enc _cbc-enc ]
+    [ mode "CFB" = ] [ data iv bs enc _cfb-enc ]
+    [ mode "OFB" = ] [ data iv bs enc _ofb ]
+    [ data mode iv bs enc _ctr ]
+  } cond ;
 
 : decrypt ( data:bytes mode:str iv:bytes bs:int padding:bool enc:quot dec:quot -- bytes )
   "Decrypt data in a mode (ECB, CBC, CFB, OFB, CTR, CTR32 or CTRLE). enc ( block:bytes -- bytes ) encrypts one block and dec decrypts one; ECB and CBC use dec, and CFB, OFB and CTR use enc (their decryption runs the cipher forwards), so give both. padding on removes and checks PKCS#7 in ECB and CBC (E_COERCE if it is bad); with it off the input must be whole blocks. The other arguments are as for encrypt." doc
   mode iv bs _check
-  mode "ECB" = [ data bs _whole bs dec _ecb bs padding _finish ] [
-  mode "CBC" = [ data bs _whole iv bs dec _cbc-dec bs padding _finish ] [
-  mode "CFB" = [ data iv bs enc _cfb-dec ] [
-  mode "OFB" = [ data iv bs enc _ofb ]
-  [ data mode iv bs enc _ctr ] if ] if ] if ] if ;
+  {
+    [ mode "ECB" = ] [ data bs _whole bs dec _ecb bs padding _finish ]
+    [ mode "CBC" = ] [ data bs _whole iv bs dec _cbc-dec bs padding _finish ]
+    [ mode "CFB" = ] [ data iv bs enc _cfb-dec ]
+    [ mode "OFB" = ] [ data iv bs enc _ofb ]
+    [ data mode iv bs enc _ctr ]
+  } cond ;
 
 : ctr-as ( mode:str variant:str -- str )
   "The mode a cipher passes to encrypt or decrypt: variant (CTR32 or CTRLE) when mode is CTR, and mode itself otherwise. It lets a cipher word give CTR the counter convention of its CyberChef counterpart in one place." doc

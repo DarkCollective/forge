@@ -15,135 +15,69 @@
  */
 
 /*
- * base64 primitives (RFC 4648). `vocab/base64.fth` adds the parameter help.
+ * The two private regrouping helpers of base64 (RFC 4648): three bytes are four 6-bit symbol values and
+ * back. Everything else (the alphabets, white space, padding, every check and error) is FL in
+ * `vocab/base64.fth`. In FL the regrouping costs about 50 VM steps for every 3 bytes (1.1 million steps
+ * for 64 KiB, against a default limit of 10 million), which the PEM, JWT and JWK words that call
+ * base64 many times could not afford; here it is a fixed 2 steps.
  */
 import { definePrimitive } from "@forge/lang";
 import type { PrimitiveContext, PrimitiveDef } from "@forge/lang";
-import { coerceFailure, guardResult, isAsciiSpace } from "../prim-util.js";
+import { guardResult } from "../prim-util.js";
 
-const STANDARD = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-const URL_SAFE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-
-function reverseTable(alphabet: string): Int8Array {
-  const table = new Int8Array(256).fill(-1);
-  for (let i = 0; i < alphabet.length; i++) table[alphabet.charCodeAt(i)] = i;
-  return table;
-}
-
-const STANDARD_TABLE = reverseTable(STANDARD);
-const URL_TABLE = reverseTable(URL_SAFE);
-
-function fail(reason: string) {
-  return coerceFailure("str", "bytes", reason);
-}
-
-function hexByte(byte: number): string {
-  return "0x" + byte.toString(16).padStart(2, "0");
-}
-
-/** Decodes base64 text (as ASCII bytes). Whitespace is ignored; padding is optional but must be right. */
-function decode(data: Uint8Array, alphabet: string): Uint8Array {
-  const table = alphabet === "url" ? URL_TABLE : STANDARD_TABLE;
-  const sextets = new Uint8Array(data.length);
-  let n = 0;
-  let pad = 0;
-  for (const byte of data) {
-    if (isAsciiSpace(byte)) continue;
-    if (byte === 0x3d) {
-      pad++;
-      continue;
-    }
-    if (pad > 0) throw fail("data after the padding");
-    const v = table[byte] as number;
-    if (v < 0) throw fail(`byte ${hexByte(byte)} is not in the ${alphabet} alphabet`);
-    sextets[n++] = v;
-  }
-  const rest = n % 4;
-  if (rest === 1) throw fail("a single character cannot be the end of base64 data");
-  if (pad > 2 || (pad > 0 && (n + pad) % 4 !== 0)) throw fail("incorrect padding");
-  if (rest === 2 && ((sextets[n - 1] as number) & 0x0f) !== 0) {
-    throw fail("non-zero bits after the end of the data");
-  }
-  if (rest === 3 && ((sextets[n - 1] as number) & 0x03) !== 0) {
-    throw fail("non-zero bits after the end of the data");
-  }
-  const out = new Uint8Array(Math.floor((n * 6) / 8));
+/** The symbol values (0 to 63) of the bytes, four to every three. The length must be a multiple of 3. */
+function sextets(data: Uint8Array, ctx: PrimitiveContext): Uint8Array {
+  guardResult(ctx, (data.length / 3) * 4, "base64 symbols");
+  const out = new Uint8Array((data.length / 3) * 4);
   let o = 0;
-  let i = 0;
-  for (; i + 4 <= n; i += 4) {
-    const a = sextets[i] as number;
-    const b = sextets[i + 1] as number;
-    const c = sextets[i + 2] as number;
-    const d = sextets[i + 3] as number;
-    out[o++] = (a << 2) | (b >> 4);
-    out[o++] = ((b & 0x0f) << 4) | (c >> 2);
-    out[o++] = ((c & 0x03) << 6) | d;
-  }
-  if (rest >= 2) {
-    const a = sextets[i] as number;
-    const b = sextets[i + 1] as number;
-    out[o++] = (a << 2) | (b >> 4);
-    if (rest === 3) out[o] = ((b & 0x0f) << 4) | ((sextets[i + 2] as number) >> 2);
+  for (let i = 0; i + 3 <= data.length; i += 3) {
+    const n =
+      ((data[i] as number) << 16) | ((data[i + 1] as number) << 8) | (data[i + 2] as number);
+    out[o++] = n >> 18;
+    out[o++] = (n >> 12) & 63;
+    out[o++] = (n >> 6) & 63;
+    out[o++] = n & 63;
   }
   return out;
 }
 
-const CHUNK_BYTES = 3 * 4096;
-
-function encode(data: Uint8Array, alphabet: string, padding: boolean, ctx: PrimitiveContext) {
-  const chars = alphabet === "url" ? URL_SAFE : STANDARD;
-  const full = Math.floor(data.length / 3);
-  const rest = data.length - full * 3;
-  const length = full * 4 + (rest === 0 ? 0 : padding ? 4 : rest + 1);
-  guardResult(ctx, 2 * length, "base64 text");
-  const parts: string[] = [];
-  for (let start = 0; start < full * 3; start += CHUNK_BYTES) {
-    const stop = Math.min(start + CHUNK_BYTES, full * 3);
-    let part = "";
-    for (let i = start; i < stop; i += 3) {
-      const n =
-        ((data[i] as number) << 16) | ((data[i + 1] as number) << 8) | (data[i + 2] as number);
-      part +=
-        chars.charAt(n >> 18) +
-        chars.charAt((n >> 12) & 63) +
-        chars.charAt((n >> 6) & 63) +
-        chars.charAt(n & 63);
-    }
-    parts.push(part);
+/** The bytes of the symbol values, three to every four. The length must be a multiple of 4. */
+function unsextets(data: Uint8Array, ctx: PrimitiveContext): Uint8Array {
+  guardResult(ctx, (data.length / 4) * 3, "base64 bytes");
+  const out = new Uint8Array((data.length / 4) * 3);
+  let o = 0;
+  for (let i = 0; i + 4 <= data.length; i += 4) {
+    const n =
+      ((data[i] as number) << 18) |
+      ((data[i + 1] as number) << 12) |
+      ((data[i + 2] as number) << 6) |
+      (data[i + 3] as number);
+    out[o++] = n >> 16;
+    out[o++] = (n >> 8) & 255;
+    out[o++] = n & 255;
   }
-  const at = full * 3;
-  if (rest === 1) {
-    const n = (data[at] as number) << 16;
-    parts.push(chars.charAt(n >> 18) + chars.charAt((n >> 12) & 63) + (padding ? "==" : ""));
-  } else if (rest === 2) {
-    const n = ((data[at] as number) << 16) | ((data[at + 1] as number) << 8);
-    parts.push(
-      chars.charAt(n >> 18) +
-        chars.charAt((n >> 12) & 63) +
-        chars.charAt((n >> 6) & 63) +
-        (padding ? "=" : ""),
-    );
-  }
-  return parts.join("");
+  return out;
 }
 
 export const primitives: readonly PrimitiveDef[] = [
   definePrimitive(
     "base64",
-    "decode",
-    "( bytes alphabet:choice{standard|url}=standard -- bytes )",
-    (data: Uint8Array, alphabet: string) => decode(data, alphabet),
+    "_sextets",
+    "( data:bytes -- bytes )",
+    (data: Uint8Array, ctx: PrimitiveContext) => sextets(data, ctx),
     {
-      doc: "Decode base64 text (RFC 4648). White space is ignored and padding is optional.",
+      doc: "The 6-bit symbol values of bytes, four to every three; the length must be a multiple of 3 (private helper of base64:encode).",
       category: "Encodings",
     },
   ),
   definePrimitive(
     "base64",
-    "encode",
-    "( bytes alphabet:choice{standard|url}=standard padding:bool=true -- str )",
-    (data: Uint8Array, alphabet: string, padding: boolean, ctx: PrimitiveContext) =>
-      encode(data, alphabet, padding, ctx),
-    { doc: "Encode bytes as base64 text (RFC 4648).", category: "Encodings" },
+    "_unsextets",
+    "( data:bytes -- bytes )",
+    (data: Uint8Array, ctx: PrimitiveContext) => unsextets(data, ctx),
+    {
+      doc: "The bytes of 6-bit symbol values, three to every four; the length must be a multiple of 4, each value 0 to 63 (private helper of base64:decode).",
+      category: "Encodings",
+    },
   ),
 ];

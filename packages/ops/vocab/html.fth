@@ -27,7 +27,13 @@ IN: html
   scope "all" = cp _special? or scope "non-ascii" = cp 126 > and or ;
 
 : _named ( cp:int -- str )
-  cp 38 = [ "&amp;" ] [ cp 60 = [ "&lt;" ] [ cp 62 = [ "&gt;" ] [ cp 34 = [ "&quot;" ] [ "&apos;" ] if ] if ] if ] if ;
+  cp {
+    38 [ "&amp;" ]
+    60 [ "&lt;" ]
+    62 [ "&gt;" ]
+    34 [ "&quot;" ]
+    [ "&apos;" ]
+  } case ;
 
 : _numeric ( cp:int format:str -- str )
   format "hex" = [ "&#x" cp 16 int>str-radix cat ";" cat ] [ "&#" cp int>str cat ";" cat ] if ;
@@ -36,13 +42,13 @@ IN: html
   format "named" = cp _special? and [ cp _named ] [ cp format _numeric ] if ;
 
 : _char-of ( cp:int scope:str format:str -- str )
-  cp scope _escape? [ cp format _ref ] [ cp util:cp>str ] if ;
+  cp scope _escape? [ cp format _ref ] [ cp cp>str ] if ;
 
 : _digit-in? ( c:int radix:int -- bool )
-  radix 16 = [ c util:hex-digit? ] [ c util:dec-digit? ] if ;
+  radix 16 = [ c hex-digit? ] [ c dec-digit? ] if ;
 
 : _alnum? ( c:int -- bool )
-  c util:dec-digit? c 65 >= c 90 <= and or c 97 >= c 122 <= and or ;
+  c dec-digit? c 65 >= c 90 <= and or c 97 >= c 122 <= and or ;
 
 \ ---- the data ----
 
@@ -2281,13 +2287,14 @@ zwj;=200d
 zwnj;=200c" ;
 
 \ The 32 code points that the standard gives for the numeric references 128 to 159.
-: _remap-table ( -- list )
+MEMO: _remap-table ( -- list )
   "20AC 0081 201A 0192 201E 2026 2020 2021 02C6 2030 0160 2039 0152 008D 017D 008F 0090 2018 2019 201C 201D 2022 2013 2014 02DC 2122 0161 203A 0153 009D 017E 0178"
   " " split [ 16 str>int-radix ] map ;
 
 \ ---- decode ----
 
-: _table ( -- record )
+\ The lookup record of the named references, built once by the first decode that needs it.
+MEMO: _table ( -- record )
   _entities "\n" split [ "=" split ] map >record ;
 
 \ The text of "hex[,hex]".
@@ -2295,9 +2302,11 @@ zwnj;=200c" ;
   hex "," split [ 16 str>int-radix ] map codes>str ;
 
 : _cp-of ( v:int -- int )
-  v 0 = v 1114111 > or v 55296 >= v 57343 <= and or
-  [ 65533 ]
-  [ v 128 >= v 159 <= and [ _remap-table v 128 - nth ] [ v ] if ] if ;
+  {
+    [ v 0 = v 1114111 > or v 55296 >= v 57343 <= and or ] [ 65533 ]
+    [ v 128 >= v 159 <= and ] [ _remap-table v 128 - nth ]
+    [ v ]
+  } cond ;
 
 \ The text of p from index i on, without one semicolon at i.
 : _after-semi ( p:str i:int -- str )
@@ -2309,12 +2318,12 @@ zwnj;=200c" ;
   to from - 4000 >
   [ 65533 ]
   [ p from to slice radix str>int-radix _cp-of ] if
-  util:cp>str
+  cp>str
   p to _after-semi cat ;
 
 : _num-at ( p:str codes:list start:int radix:int -- str )
-  codes start codes len slice [ radix _digit-in? ] util:count-leading
-  dup 0 = [ drop "&" p cat ] [ start + p start rot radix _num-result ] if ;
+  codes start codes len slice [ radix _digit-in? ] count-leading :> n
+  n 0 = [ "&" p cat ] [ p start start n + radix _num-result ] if ;
 
 : _x? ( codes:list -- bool )
   codes len 1 > [ codes 1 nth dup 120 = swap 88 = or ] [ false ] if ;
@@ -2326,33 +2335,30 @@ zwnj;=200c" ;
 
 \ The value of a name in the table, or the empty string.
 : _lookup ( table:record key:str -- str )
-  [ table key get ] [ drop "" ] try ;
+  table key has-key? [ table key get ] [ "" ] if ;
 
 \ The longest legacy name (no semicolon) among the first k, at most, letters of p, replaced; else "".
 : _prefix ( p:str table:record k:int -- str )
-  k 2 <
-  [ "" ]
-  [ table p 0 k slice _lookup dup len 0 >
-    [ _chars p k p len slice cat ]
-    [ drop p table k 1 - recurse ] if ] if ;
+  k 2 < [ "" exit ] when
+  table p 0 k slice _lookup :> hit
+  hit len 0 >
+  [ hit _chars p k p len slice cat ]
+  [ p table k 1 - recurse ] if ;
 
 \ p starts with r letters and digits (a possible name).
 : _name-at ( p:str table:record r:int -- str )
   r p len < [ p r r 1 + slice ";" = ] [ false ] if
-  [ table p 0 r slice ";" cat _lookup ] [ "" ] if
-  dup len 0 >
-  [ _chars p r 1 + p len slice cat ]
-  [ drop p table r 6 min _prefix dup len 0 = [ drop "&" p cat ] when ] if ;
+  [ table p 0 r slice ";" cat _lookup ] [ "" ] if :> hit
+  hit len 0 >
+  [ hit _chars p r 1 + p len slice cat ]
+  [ p table r 6 min _prefix dup len 0 = [ drop "&" p cat ] when ] if ;
 
 \ p is the text after an ampersand: the decoded reference and the rest of p, or "&" and p.
 : _piece ( p:str table:record -- str )
-  p len 0 =
-  [ "&" ]
-  [ p "#" util:starts-with?
-    [ p _numeric-piece ]
-    [ p str>codes [ _alnum? ] util:count-leading dup 0 =
-      [ drop "&" p cat ]
-      [ p table rot _name-at ] if ] if ] if ;
+  p len 0 = [ "&" exit ] when
+  p "#" starts-with? [ p _numeric-piece exit ] when
+  p str>codes [ _alnum? ] count-leading :> r
+  r 0 = [ "&" p cat ] [ p table r _name-at ] if ;
 
 : _resolve-all ( pieces:list table:record -- str )
   pieces [ table _piece ] map "" join ;
@@ -2385,4 +2391,5 @@ META: decode
   link "https://html.spec.whatwg.org/" "HTML Living Standard (WHATWG)" ;
   inverse encode ;
   see-also html:encode ;
+  checks output utf8 ;
 ;

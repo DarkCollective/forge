@@ -558,5 +558,65 @@
     "expect": {
       "error": "E_RANGE"
     }
+  },
+  {
+    "name": "to-hex input: real data",
+    "op": "pem:to-hex",
+    "checks": "input",
+    "data": {
+      "value": "-----BEGIN EMPTY-----\n-----END EMPTY-----\n",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "to-hex input: plain text",
+    "op": "pem:to-hex",
+    "checks": "input",
+    "data": {
+      "value": "hello world",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "to-hex output",
+    "op": "pem:to-hex",
+    "checks": "output",
+    "data": {
+      "value": "302a300506032b6570032100cd6a003368c95bcd51bcfbfdef332874ac96cbaf3c4ad6fc101c944b6f1d4893",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "from-hex input: real data",
+    "op": "pem:from-hex",
+    "checks": "input",
+    "data": {
+      "value": "03",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "from-hex input: plain text",
+    "op": "pem:from-hex",
+    "checks": "input",
+    "data": {
+      "value": "hello world, not hex digits",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "from-hex output",
+    "op": "pem:from-hex",
+    "checks": "output",
+    "data": {
+      "value": "-----BEGIN DATA-----\n-----END DATA-----\n",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

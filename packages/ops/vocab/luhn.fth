@@ -6,19 +6,23 @@
 IN: luhn
 
 : _check-radix ( radix:int -- )
-  radix 2 mod 0 <> [ "the radix must be even" raise:range ] when ;
+  radix 2 mod 0 <> [ "the radix must be even" fail-range ] when ;
 
 \ The value of the digit with character code c, or -1 when c is not a digit or letter.
 : _value ( c:int -- int )
-  c 48 57 util:between? [ c 48 - ]
-  [ c 97 122 util:between? [ c 87 - ] [ c 65 90 util:between? [ c 55 - ] [ -1 ] if ] if ] if ;
+  {
+    [ c 48 57 between? ] [ c 48 - ]
+    [ c 97 122 between? ] [ c 87 - ]
+    [ c 65 90 between? ] [ c 55 - ]
+    [ -1 ]
+  } cond ;
 
 \ The digit values of the text, most significant first; a character that is not a digit of the
 \ radix is E_COERCE.
 : _values ( digits:str radix:int -- list )
   digits str>codes [
     _value dup 0 < over radix >= or
-    [ "a character is not a digit in this radix" raise:coerce ] when
+    [ "a character is not a digit in this radix" fail-coerce ] when
   ] map ;
 
 \ The Luhn sum, modulo the radix. Counting from the right, the digits at positions p with
@@ -26,7 +30,7 @@ IN: luhn
 : _sum ( vals:list radix:int shift:int -- int )
   vals rev [
     shift + 2 mod 1 = [ 2 * dup radix div swap radix mod + ] when
-  ] mapi util:sum radix mod ;
+  ] mapi sum radix mod ;
 
 : check-digit ( digits:str radix:int[2..36]=10 -- str )
   "The Luhn check digit for the digits, as one character (0-9, then a-z for radix above 10): append it to make a valid number. Digits are case-insensitive. The radix must be even. The empty input gives the empty text." doc

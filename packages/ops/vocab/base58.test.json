@@ -1119,5 +1119,35 @@
     "expect": {
       "error": "E_LIMIT_VALUE"
     }
+  },
+  {
+    "name": "base58:decode input checks: matching text",
+    "op": "base58:decode",
+    "checks": "input",
+    "data": {
+      "value": "StV1DL6CwTryKyV",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "base58:decode input checks: other text",
+    "op": "base58:decode",
+    "checks": "input",
+    "data": {
+      "value": "0OIl",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "base58:encode output checks: typical result",
+    "op": "base58:encode",
+    "checks": "output",
+    "data": {
+      "value": "StV1DL6CwTryKyV",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

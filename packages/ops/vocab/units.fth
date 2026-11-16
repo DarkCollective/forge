@@ -10,21 +10,24 @@ IN: units
 
 \ An unsigned whole number in digits (str>int does the rest: anything but -?[0-9]+ is E_COERCE).
 : _uint ( s:str -- int )
-  s "-" util:starts-with? [ "not a number" raise:coerce ] when s str>int ;
+  s "-" starts-with? [ "not a number" fail-coerce ] when s str>int ;
 
 : _unsigned ( s:str -- str )
-  s "-" util:starts-with? s "+" util:starts-with? or [ s 1 s len slice ] [ s ] if ;
+  s "-" starts-with? s "+" starts-with? or [ s 1 s len slice ] [ s ] if ;
 
 : _sign-of ( s:str -- int )
-  s "-" util:starts-with? [ -1 ] [ 1 ] if ;
+  s "-" starts-with? [ -1 ] [ 1 ] if ;
 
 \ ip and fp are the digits before and after the point; the fraction n/d of the number.
 : _frac ( ip:str fp:str -- int int )
   ip fp cat _uint 10 fp len pow ;
 
 : _frac-list ( parts:list -- int int )
-  parts len 1 = [ parts 0 nth "" _frac ]
-  [ parts len 2 = [ parts 0 nth parts 1 nth _frac ] [ "not a number" raise:coerce 0 0 ] if ] if ;
+  {
+    [ parts len 1 = ] [ parts 0 nth "" _frac ]
+    [ parts len 2 = ] [ parts 0 nth parts 1 nth _frac ]
+    [ "not a number" fail-coerce ]
+  } cond ;
 
 \ n/d times ten to the power ex.
 : _scale ( n:int d:int ex:int -- int int )
@@ -32,18 +35,21 @@ IN: units
 
 : _exponent ( t:str -- int )
   t _unsigned _uint t _sign-of *
-  dup abs 400 > [ "the exponent is too large" raise:range ] when ;
+  dup abs 400 > [ "the exponent is too large" fail-range ] when ;
 
 : _signed-scaled ( m:str ex:int -- int int )
   m _unsigned "." split _frac-list ex _scale
   swap m _sign-of * swap ;
 
 : _parse-parts ( parts:list -- int int )
-  parts len 1 = [ parts 0 nth 0 _signed-scaled ]
-  [ parts len 2 = [ parts 0 nth parts 1 nth _exponent _signed-scaled ] [ "not a number" raise:coerce 0 0 ] if ] if ;
+  {
+    [ parts len 1 = ] [ parts 0 nth 0 _signed-scaled ]
+    [ parts len 2 = ] [ parts 0 nth parts 1 nth _exponent _signed-scaled ]
+    [ "not a number" fail-coerce ]
+  } cond ;
 
 : _parse-decimal ( text:str -- int int )
-  text [ util:space? ] util:trim-start [ util:space? ] util:trim-end lower "e" split _parse-parts ;
+  text [ space? ] trim-start [ space? ] trim-end lower "e" split _parse-parts ;
 
 \ ---- a fraction to decimal text ----
 
@@ -55,13 +61,13 @@ IN: units
 \ instead); trailing zeros after the point go.
 : _point ( padded:str p:int -- str )
   padded 0 padded len p - slice
-  padded padded len p - padded len slice [ 48 = ] util:trim-end
+  padded padded len p - padded len slice [ 48 = ] trim-end
   dup len 0 = [ drop ] [ "." swap cat cat ] if ;
 
 : _place-point ( digits:str p:int -- str )
   p 0 <=
-  [ digits "0" p neg util:repeat-str cat ]
-  [ "0" p 1 + digits len - 0 max util:repeat-str digits cat p _point ] if ;
+  [ digits "0" p neg repeat-str cat ]
+  [ "0" p 1 + digits len - 0 max repeat-str digits cat p _point ] if ;
 
 : _format-p ( a:int d:int p:int neg:bool -- str )
   a d p _scaled int>str p _place-point
@@ -74,10 +80,98 @@ IN: units
 
 \ ---- the conversion ----
 
+CHOICE: distance-unit
+  option picometre ;
+  option nanometre ;
+  option micrometre ;
+  option millimetre ;
+  option centimetre ;
+  option metre ;
+  option kilometre ;
+  option angstrom ;
+  option thou ;
+  option inch ;
+  option foot ;
+  option yard ;
+  option mile ;
+  option nautical-mile ;
+  option furlong ;
+  option fathom ;
+  option astronomical-unit ;
+  option light-year ;
+;
+
+CHOICE: area-unit
+  option square-millimetre ;
+  option square-centimetre ;
+  option square-metre ;
+  option are ;
+  option hectare ;
+  option square-kilometre ;
+  option square-inch ;
+  option square-foot ;
+  option square-yard ;
+  option acre ;
+  option square-mile ;
+;
+
+CHOICE: mass-unit
+  option microgram ;
+  option milligram ;
+  option gram ;
+  option kilogram ;
+  option tonne ;
+  option carat ;
+  option grain ;
+  option ounce ;
+  option pound ;
+  option stone ;
+  option short-ton ;
+  option long-ton ;
+  option troy-ounce ;
+;
+
+CHOICE: speed-unit
+  option centimetre-per-second ;
+  option metre-per-second ;
+  option kilometre-per-second ;
+  option kilometre-per-hour ;
+  option mile-per-hour ;
+  option knot ;
+  option foot-per-second ;
+  option speed-of-light ;
+;
+
+CHOICE: data-unit
+  option bit ;
+  option nibble ;
+  option byte ;
+  option kilobit ;
+  option megabit ;
+  option gigabit ;
+  option terabit ;
+  option kibibit ;
+  option mebibit ;
+  option gibibit ;
+  option tebibit ;
+  option kilobyte ;
+  option megabyte ;
+  option gigabyte ;
+  option terabyte ;
+  option petabyte ;
+  option exabyte ;
+  option kibibyte ;
+  option mebibyte ;
+  option gibibyte ;
+  option tebibyte ;
+  option pebibyte ;
+  option exbibyte ;
+;
+
 \ The ratio of a unit to the base unit, from a table of "name numerator denominator" entries.
 : _factor ( table:str unit:str -- int int )
-  table ";" split [ unit " " cat util:starts-with? ] filter
-  dup len 1 = not [ "unknown unit" raise:range ] when
+  table ";" split [ unit " " cat starts-with? ] filter
+  dup len 1 = not [ "unknown unit" fail-range ] when
   0 nth " " split dup 1 nth str>int swap 2 nth str>int ;
 
 : _combine ( fn:int fd:int tn:int td:int vn:int vd:int -- int int )
@@ -104,27 +198,27 @@ IN: units
 : _data ( -- str )
   "bit 1 1;nibble 4 1;byte 8 1;kilobit 1000 1;megabit 1000000 1;gigabit 1000000000 1;terabit 1000000000000 1;kibibit 1024 1;mebibit 1048576 1;gibibit 1073741824 1;tebibit 1099511627776 1;kilobyte 8000 1;megabyte 8000000 1;gigabyte 8000000000 1;terabyte 8000000000000 1;petabyte 8000000000000000 1;exabyte 8000000000000000000 1;kibibyte 8192 1;mebibyte 8388608 1;gibibyte 8589934592 1;tebibyte 8796093022208 1;pebibyte 9007199254740992 1;exbibyte 9223372036854775808 1" ;
 
-: convert-distance ( value:str from:choice{picometre|nanometre|micrometre|millimetre|centimetre|metre|kilometre|angstrom|thou|inch|foot|yard|mile|nautical-mile|furlong|fathom|astronomical-unit|light-year}="metre" to:choice{picometre|nanometre|micrometre|millimetre|centimetre|metre|kilometre|angstrom|thou|inch|foot|yard|mile|nautical-mile|furlong|fathom|astronomical-unit|light-year}="kilometre" digits:int[0..60]=20 -- str )
+: convert-distance ( value:str from:choice<distance-unit>="metre" to:choice<distance-unit>="kilometre" digits:int[0..60]=20 -- str )
   "A length converted from one unit to another. The value is decimal text (an optional sign, digits with an optional point, an optional exponent such as 1.5e3); anything else is an error. The sum is exact (the units are defined as exact ratios of the metre: the inch is 0.0254 m, the nautical mile 1852 m, the astronomical unit 149,597,870,700 m, the light year 9,460,730,472,580,800 m), and the result is rounded half away from zero to the given number of decimal places (20 by default, as CyberChef's BigNumber does) and written in plain decimal form with no trailing zeros." doc
   "Conversions" category
   value from to _distance digits _convert ;
 
-: convert-area ( value:str from:choice{square-millimetre|square-centimetre|square-metre|are|hectare|square-kilometre|square-inch|square-foot|square-yard|acre|square-mile}="square-metre" to:choice{square-millimetre|square-centimetre|square-metre|are|hectare|square-kilometre|square-inch|square-foot|square-yard|acre|square-mile}="hectare" digits:int[0..60]=20 -- str )
+: convert-area ( value:str from:choice<area-unit>="square-metre" to:choice<area-unit>="hectare" digits:int[0..60]=20 -- str )
   "An area converted from one unit to another. The value is decimal text (an optional sign, digits with an optional point, an optional exponent); anything else is an error. The sum is exact (the international inch, foot and yard give the square inch 0.00064516 m2, the acre 4046.8564224 m2 and the square mile 2,589,988.110336 m2), and the result is rounded half away from zero to the given number of decimal places (20 by default, as CyberChef's BigNumber does) and written in plain decimal form with no trailing zeros." doc
   "Conversions" category
   value from to _area digits _convert ;
 
-: convert-mass ( value:str from:choice{microgram|milligram|gram|kilogram|tonne|carat|grain|ounce|pound|stone|short-ton|long-ton|troy-ounce}="kilogram" to:choice{microgram|milligram|gram|kilogram|tonne|carat|grain|ounce|pound|stone|short-ton|long-ton|troy-ounce}="pound" digits:int[0..60]=20 -- str )
+: convert-mass ( value:str from:choice<mass-unit>="kilogram" to:choice<mass-unit>="pound" digits:int[0..60]=20 -- str )
   "A mass converted from one unit to another. The value is decimal text (an optional sign, digits with an optional point, an optional exponent); anything else is an error. The sum is exact (the international pound is 0.45359237 kg, the ounce a sixteenth of it, the stone 14 pounds, the short ton 2000 and the long ton 2240 pounds, the grain 64.79891 mg, the metric carat 200 mg, the troy ounce 31.1034768 g), and the result is rounded half away from zero to the given number of decimal places (20 by default, as CyberChef's BigNumber does) and written in plain decimal form with no trailing zeros." doc
   "Conversions" category
   value from to _mass digits _convert ;
 
-: convert-speed ( value:str from:choice{centimetre-per-second|metre-per-second|kilometre-per-second|kilometre-per-hour|mile-per-hour|knot|foot-per-second|speed-of-light}="metre-per-second" to:choice{centimetre-per-second|metre-per-second|kilometre-per-second|kilometre-per-hour|mile-per-hour|knot|foot-per-second|speed-of-light}="kilometre-per-hour" digits:int[0..60]=20 -- str )
+: convert-speed ( value:str from:choice<speed-unit>="metre-per-second" to:choice<speed-unit>="kilometre-per-hour" digits:int[0..60]=20 -- str )
   "A speed converted from one unit to another. The value is decimal text (an optional sign, digits with an optional point, an optional exponent); anything else is an error. The sum is exact (the mile per hour is 0.44704 m/s, the knot 1852 m per hour, the speed of light 299,792,458 m/s), and the result is rounded half away from zero to the given number of decimal places (20 by default, as CyberChef's BigNumber does) and written in plain decimal form with no trailing zeros. Mach is not offered: it depends on the air." doc
   "Conversions" category
   value from to _speed digits _convert ;
 
-: convert-data ( value:str from:choice{bit|nibble|byte|kilobit|megabit|gigabit|terabit|kibibit|mebibit|gibibit|tebibit|kilobyte|megabyte|gigabyte|terabyte|petabyte|exabyte|kibibyte|mebibyte|gibibyte|tebibyte|pebibyte|exbibyte}="byte" to:choice{bit|nibble|byte|kilobit|megabit|gigabit|terabit|kibibit|mebibit|gibibit|tebibit|kilobyte|megabyte|gigabyte|terabyte|petabyte|exabyte|kibibyte|mebibyte|gibibyte|tebibyte|pebibyte|exbibyte}="bit" digits:int[0..60]=20 -- str )
+: convert-data ( value:str from:choice<data-unit>="byte" to:choice<data-unit>="bit" digits:int[0..60]=20 -- str )
   "An amount of data converted from one unit to another. The value is decimal text (an optional sign, digits with an optional point, an optional exponent); anything else is an error. The decimal units (kilo, mega, giga, tera, peta, exa) are powers of 1000 and the binary units (kibi, mebi, gibi, tebi, pebi, exbi: IEC 80000-13) powers of 1024; a byte is 8 bits and a nibble 4. The sum is exact and the result is rounded half away from zero to the given number of decimal places (20 by default, as CyberChef's BigNumber does) and written in plain decimal form with no trailing zeros." doc
   "Conversions" category
   value from to _data digits _convert ;

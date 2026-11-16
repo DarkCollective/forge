@@ -2789,5 +2789,25 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "cbor:decode input check: binary CBOR passes",
+    "op": "cbor:decode",
+    "checks": "input",
+    "data": {
+      "value": "a56161614161626142616361436164614461656145",
+      "enc": "hex"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "cbor:decode input check: plain text fails",
+    "op": "cbor:decode",
+    "checks": "input",
+    "data": {
+      "value": "This is plain text, not binary data of the expected kind.",
+      "enc": "utf8"
+    },
+    "expect": "fail"
   }
 ]

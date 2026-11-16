@@ -14,7 +14,7 @@ USING: hmac base64 clock deflate ;
 
 \ The key must not be empty (CyberChef: "Secret key required").
 : _need-key ( key:bytes -- )
-  key len 0 = [ "the Flask secret key is empty" raise:range ] when ;
+  key len 0 = [ "the Flask secret key is empty" fail-range ] when ;
 
 \ The salt, with CyberChef's rule that an empty salt means the default cookie-session.
 : _salt ( salt:bytes -- bytes )
@@ -23,7 +23,7 @@ USING: hmac base64 clock deflate ;
 \ The cookie signed at the Unix time ts (above 0) for a payload (JSON text).
 : _sign ( payload:bytes key:bytes salt:bytes alg:str ts:int -- bytes )
   key _need-key
-  ts 1 < [ "the timestamp must be a positive Unix time in seconds" raise:range ] when
+  ts 1 < [ "the timestamp must be a positive Unix time in seconds" fail-range ] when
   payload false util:b64url-encode "." str>bytes cat
   ts util:int>bytes false util:b64url-encode cat
   dup alg salt _salt alg key hmac:digest hmac:digest
@@ -36,9 +36,9 @@ USING: hmac base64 clock deflate ;
 
 \ The three parts of a cookie. Surrounding white space is ignored. A compressed payload keeps its leading dot.
 : _parts ( token:bytes -- list )
-  token bytes>str util:strip-space "." split
+  token bytes>str strip-space "." split
   dup len 4 = [ dup 0 nth len 0 = ] [ false ] if [ _undot ] when
-  dup len 3 <> [ "a Flask session cookie has three parts: payload.timestamp.signature" raise:coerce ] when ;
+  dup len 3 <> [ "a Flask session cookie has three parts: payload.timestamp.signature" fail-coerce ] when ;
 
 \ The bytes of a compressed payload part: the dot, then url-safe base64 of a zlib stream (a bomb stops at the value limit).
 : _inflate ( s:str -- bytes )
@@ -46,12 +46,12 @@ USING: hmac base64 clock deflate ;
 
 \ The payload text of the cookie parts, inflated when the part starts with a dot.
 : _payload ( parts:list -- str )
-  parts 0 nth dup "." util:starts-with?
+  parts 0 nth dup "." starts-with?
   [ _inflate ] [ str>bytes util:b64url-decode ] if bytes>str ;
 
 \ The signing time of the cookie parts.
 : _time ( parts:list -- int )
-  parts 1 nth str>bytes util:b64url-decode 256 util:digits>int ;
+  parts 1 nth str>bytes util:b64url-decode 256 digits>int ;
 
 \ The cookie parts as JSON text: {"payload":P,"timestamp":T} with the time, or just P without it.
 : _decode ( parts:list view:bool -- bytes )
@@ -64,7 +64,7 @@ USING: hmac base64 clock deflate ;
   key _need-key
   parts 0 nth "." cat parts 1 nth cat str>bytes alg salt _salt alg key hmac:digest hmac:digest
   parts 2 nth str>bytes util:b64url-decode <>
-  [ "the Flask signature does not verify (wrong key, salt or algorithm, or the cookie was altered)" raise:coerce ] when ;
+  [ "the Flask signature does not verify (wrong key, salt or algorithm, or the cookie was altered)" fail-coerce ] when ;
 
 \ {"valid":true,"payload":P} with ,"timestamp":T before the brace when view is set.
 : _verify ( parts:list key:bytes salt:bytes alg:str view:bool -- bytes )
@@ -92,6 +92,8 @@ META: decode
   use-when "You have a Flask session cookie and want its payload without a key. Nothing is checked, so the contents may be forged; use verify to check them." ;
   param timestamp "Also return the signing time (Unix seconds): {\"payload\":...,\"timestamp\":N}." ;
   see-also flask-session:verify flask-session:sign base64:decode ;
+  checks input regex "^\\s*\\.?[\\sA-Za-z0-9_=-]+\\.[\\sA-Za-z0-9_=-]+\\.[\\sA-Za-z0-9_=-]+$" ;
+  expects "Flask session cookie" ;
 ;
 
 META: verify
@@ -101,6 +103,9 @@ META: verify
   param algorithm "The digest of the signature: sha1 (Flask's default) or sha256." ;
   param timestamp "Include the signing time in the result." ;
   see-also flask-session:sign flask-session:decode hmac:digest ;
+  checks input regex "^\\s*\\.?[\\sA-Za-z0-9_=-]+\\.[\\sA-Za-z0-9_=-]+\\.[\\sA-Za-z0-9_=-]+$" ;
+  expects "Flask session cookie" ;
+  checks output regex "^\\{\"valid\":true" ;
 ;
 
 META: sign
@@ -110,4 +115,5 @@ META: sign
   param algorithm "The digest of the signature: sha1 (Flask's default) or sha256." ;
   param timestamp "The signing time in Unix seconds; 0 (the default) uses the clock." ;
   see-also flask-session:verify flask-session:decode hmac:digest ;
+  checks output regex "^[A-Za-z0-9_=-]+\\.[A-Za-z0-9_=-]+\\.[A-Za-z0-9_=-]+$" ;
 ;

@@ -4,48 +4,41 @@
 \ because the dynamic programme needs a fast mutable array (see the primitive file).
 IN: distance
 
-USING: util ;
-
 \ The two samples of the input; anything but exactly two is E_COERCE.
 : _two ( data:str delimiter:str -- list )
   data delimiter split dup len 2 <>
-  [ "the input needs exactly two samples separated by the delimiter" raise:coerce ] when ;
-
-: _pop ( v:int -- int )
-  v 2 int>str-radix "1" split len 1 - ;
+  [ "the input needs exactly two samples separated by the delimiter" fail-coerce ] when ;
 
 \ The number of set bits in each byte, as a lookup table for translate.
-: _pop-table ( -- bytes )
-  0 256 range [ _pop ] map list>bytes ;
+MEMO: _pop-table ( -- bytes )
+  0 256 range [ 2 int>str-radix "1" split len 1 - ] map list>bytes ;
 
 : _nonzero ( x:bytes -- int )
-  x len x bytes>latin1 0 util:cp>str split len 1 - - ;
+  x len x bytes>latin1 0 cp>str split len 1 - - ;
 
 : _bit-count ( x:bytes -- int )
-  x _pop-table translate bytes>list util:sum ;
+  x _pop-table translate bytes>list sum ;
 
 : _bytes-distance ( a:bytes b:bytes unit:str -- int )
-  a len b len <> [ "the samples must be of equal length" raise:coerce ] when
+  a len b len <> [ "the samples must be of equal length" fail-coerce ] when
   a len 0 =
   [ 0 ]
   [ a b bxor unit "bit" = [ _bit-count ] [ _nonzero ] if ]
   if ;
 
 : _codes-distance ( a:list b:list -- int )
-  a len b len <> [ "the samples must be of equal length" raise:coerce ] when
+  a len b len <> [ "the samples must be of equal length" fail-coerce ] when
   a b zip [ dup 0 nth swap 1 nth <> ] filter len ;
 
 : _measure ( a:str b:str unit:str format:str -- int )
-  format "hex" =
-  [ unit "char" = [ "the char unit needs raw input, not hex" raise:range ] when
-    a hex>bytes b hex>bytes unit _bytes-distance ]
-  [ unit "char" =
-    [ a str>codes b str>codes _codes-distance ]
+  {
+    [ format "hex" = unit "char" = and ] [ "the char unit needs raw input, not hex" fail-range ]
+    [ format "hex" = ] [ a hex>bytes b hex>bytes unit _bytes-distance ]
+    [ unit "char" = ] [ a str>codes b str>codes _codes-distance ]
     [ a str>bytes b str>bytes unit _bytes-distance ]
-    if ]
-  if ;
+  } cond ;
 
-: hamming ( data:str delimiter:str[1..]="\n\n" unit:choice{byte|char|bit}="byte" format:choice{raw|hex}="raw" -- int )
+: hamming ( data:str delimiter:str[1..]="\n\n" unit:choice{byte|char|bit}="byte" format:choice<util:raw-or-hex>="raw" -- int )
   "The Hamming distance of two samples of equal length: the number of positions at which they differ. The input holds both samples, cut at the delimiter (a blank line by default); anything but exactly two samples, or samples of different length, is E_COERCE. The unit is the byte (of the UTF-8 text, or of the decoded hex), the char (a code point; raw input only) or the bit (the differing bits of the bytes). With format hex each sample is read as hexadecimal bytes (white space is ignored). CyberChef's options and defaults, except that its Hamming distance counts bytes of the text as UTF-8 and adds the char unit." doc
   "Analysis" category
   data delimiter _two dup 0 nth swap 1 nth unit format _measure ;

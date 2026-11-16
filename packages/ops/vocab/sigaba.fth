@@ -60,7 +60,7 @@ IN: sigaba
 
 \ ids must use each of 0 to n-1 once; otherwise E_RANGE with msg.
 : _check-ids ( ids:list n:int msg:str -- )
-  ids n util:perm? not [ msg raise:range ] when ;
+  ids n util:perm? not [ msg fail-range ] when ;
 
 \ ---- reading the parameters ----
 
@@ -73,20 +73,20 @@ IN: sigaba
 
 \ The wirings of a list of words of letters or digits, each a permutation of n values; E_RANGE otherwise.
 : _checked ( ws:list n:int msg:str -- list )
-  ws [ n util:perm? not [ msg raise:range ] when ] each ws ;
+  ws [ n util:perm? not [ msg fail-range ] when ] each ws ;
 
 \ The ten 26-letter wirings: the default when w is empty.
 : _wiring-list ( w:str -- list )
   w len 0 = [ _default-wirings ] [ w ] if
   util:number-tokens [ util:letter-indices ] map
-  dup len 10 <> [ "wirings must be ten words of 26 letters" raise:range ] when
+  dup len 10 <> [ "wirings must be ten words of 26 letters" fail-range ] when
   26 "each wiring must use the 26 letters once" _checked ;
 
 \ The five 10-digit index wirings: the default when w is empty.
 : _index-wiring-list ( w:str -- list )
   w len 0 = [ _default-index-wirings ] [ w ] if
   util:number-tokens [ util:digit-values ] map
-  dup len 5 <> [ "index wirings must be five words of 10 digits" raise:range ] when
+  dup len 5 <> [ "index wirings must be five words of 10 digits" fail-range ] when
   10 "each index wiring must use the digits 0 to 9 once" _checked ;
 
 \ The wirings of a bank in slot order, 26 bytes each.
@@ -112,13 +112,12 @@ IN: sigaba
 \ The table entry of byte b: 0 to 25 for a letter (encrypting turns Z into X), a space is Z when
 \ encrypting, 254 for white space that is skipped when decrypting and 255 for anything else.
 : _in-code ( b:int decrypt:bool -- int )
-  b 32 bor 97 122 util:between?
-  [ b 32 bor 97 - dup 25 = decrypt not and [ drop 23 ] when ]
-  [ b 32 = decrypt not and
-    [ 25 ]
-    [ decrypt b util:space? and [ 254 ] [ 255 ] if ]
-    if ]
-  if ;
+  {
+    [ b 32 bor 97 122 between? ] [ b 32 bor 97 - dup 25 = decrypt not and [ drop 23 ] when ]
+    [ b 32 = decrypt not and ] [ 25 ]
+    [ decrypt b space? and ] [ 254 ]
+    [ 255 ]
+  } cond ;
 
 : _in-table ( decrypt:bool -- bytes )
   0 256 range [ decrypt _in-code ] map list>bytes ;
@@ -131,19 +130,23 @@ IN: sigaba
 : _letters-in ( data:bytes decrypt:bool other:str -- bytes )
   data decrypt _in-table translate
   dup [ 255 = ] filter len 0 > other "error" = and
-  [ "a byte is neither a letter nor a space" raise:coerce ] when
+  [ "a byte is neither a letter nor a space" fail-coerce ] when
   [ 254 < ] filter ;
 
 \ ---- the machine ----
 
 : _machine ( data:bytes decrypt:bool cr:str kr:str ir:str cp:str kp:str ip:str w:str iw:str other:str -- bytes )
-  cr _rotor-ids kr _rotor-ids cat 10 "the cipher and control rotors must be the ten rotors 0 to 9, each once" _check-ids
-  ir _rotor-ids 5 "the index rotors must be 0 to 4, each once" _check-ids
+  cr _rotor-ids :> cids
+  kr _rotor-ids :> kids
+  ir _rotor-ids :> iids
+  cids kids cat 10 "the cipher and control rotors must be the ten rotors 0 to 9, each once" _check-ids
+  iids 5 "the index rotors must be 0 to 4, each once" _check-ids
   data decrypt other _letters-in
-  cr _rotor-ids w _wiring-list _bank-wiring
-  kr _rotor-ids w _wiring-list _bank-wiring
+  w _wiring-list :> wl
+  cids wl _bank-wiring
+  kids wl _bank-wiring
   cr _rotor-orient kr _rotor-orient cat cp util:letter-indices cat kp util:letter-indices cat
-  ir _rotor-ids iw _index-wiring-list ip util:digit-values _index-bank
+  iids iw _index-wiring-list ip util:digit-values _index-bank
   decrypt _run
   decrypt _out-table translate ;
 

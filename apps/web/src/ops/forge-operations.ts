@@ -31,6 +31,9 @@
 //     half-filled disc plus a hint such as "text only if valid UTF-8" (a conversion happens and may
 //     fail), a cross plus a dimmed row with the reason such as "needs a list" (cannot take the data).
 //     `data-fit` is yes, converts or no. The marks are decorative; the hints are in the accessible name.
+//   Content tier (content.ts, WP 6.28): the header says what the data is ("bytes (gzip data)"), and a row says
+//     what its op expects ("Expects gzip data; this looks like PNG image"); failed input checks make a row
+//     amber, a red is never changed. It loads lazily and runs 150 ms after the last change of the data.
 //   "Fits the data" (toggle button, Tab reaches it) hides only the red operations (cannot take the data
 //     at the end of the recipe); amber and green stay. Red rows stay addable when shown.
 // The row's own star, help and add buttons are pointer and touch shortcuts: they are out of the Tab
@@ -45,10 +48,22 @@ import { loadCatalogue } from "../catalogue.js";
 import { actions, store } from "../state/app.js";
 import { beginPointerDrag } from "../state/dnd.js";
 import { StoreController } from "../state/store-controller.js";
+import type { AppState } from "../state/types.js";
 import { icons } from "../styles/icons.js";
 import { baseStyles, paneStyles } from "../styles/shared.js";
-import { convertHint, dataFactsAtEnd, dataLine, fitLevel, sameFacts, whyNotFit } from "./fit.js";
-import type { DataFacts, FitLevel } from "./fit.js";
+import { checksLoader } from "./checks-loader.js";
+import type { ChecksReady } from "./checks-data.js";
+import {
+  analyseContent,
+  contentBytesAtEnd,
+  contentHint,
+  contentLevel,
+  headerLine,
+  sameSource,
+} from "./content.js";
+import type { ContentSource, ContentView } from "./content.js";
+import { convertHint, dataFactsAtEnd, fitLevel, sameFacts, whyNotFit } from "./fit.js";
+import type { DataFacts, DataTypeInput, FitLevel } from "./fit.js";
 import { helpFor } from "./help.js";
 import { helpLoader } from "./help-loader.js";
 import { buildListModel } from "./group.js";
@@ -58,6 +73,24 @@ const SEARCH_ID = "op-search";
 const LIST_ID = "op-list";
 const HELP_ID = "op-help";
 const PAGE_STEP = 10;
+/** The quiet time after the last change of the data before the content tier looks at it (WP 6.28). */
+const CONTENT_DEBOUNCE_MS = 150;
+
+/** The data at the end of the recipe, as the type fit and the content tier read it. */
+function dataInput(s: AppState): DataTypeInput {
+  return {
+    recipe: s.recipe,
+    bake: s.bake,
+    ops: s.catalogue.status === "ready" ? s.catalogue.catalogue.ops : null,
+    inputBytes: s.inputs.find((t) => t.id === s.activeInputId)?.bytes,
+  };
+}
+
+/** Runs `fn` when the browser is idle (a short timeout where there is no idle callback). */
+function whenIdle(fn: () => void): void {
+  if (typeof requestIdleCallback === "function") requestIdleCallback(fn, { timeout: 1000 });
+  else setTimeout(fn, 0);
+}
 
 const starIcon = (filled: boolean): TemplateResult =>
   svg`<svg viewBox="0 0 24 24" fill="${filled ? "currentColor" : "none"}" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg>`;
@@ -296,15 +329,26 @@ export class ForgeOperations extends LitElement {
   private readonly dataFacts = new StoreController(
     this,
     store,
-    (s): DataFacts =>
-      dataFactsAtEnd({
-        recipe: s.recipe,
-        bake: s.bake,
-        ops: s.catalogue.status === "ready" ? s.catalogue.catalogue.ops : null,
-        inputBytes: s.inputs.find((t) => t.id === s.activeInputId)?.bytes,
-      }),
+    (s): DataFacts => dataFactsAtEnd(dataInput(s)),
     sameFacts,
   );
+  /** The bytes the content tier looks at, or null when they are not known (WP 6.28). */
+  private readonly contentSource = new StoreController(
+    this,
+    store,
+    (s): ContentSource | null => {
+      const input = dataInput(s);
+      const bytes = contentBytesAtEnd(input);
+      return bytes === null ? null : { bytes, utf8: dataFactsAtEnd(input).utf8 };
+    },
+    sameSource,
+  );
+  /** The content tier for `source`, computed after the debounce; null until the checks have loaded. */
+  @state() private content: ContentView | null = null;
+  private contentTimer: ReturnType<typeof setTimeout> | undefined;
+  private contentWanted: ContentSource | null | undefined;
+  private contentCatalogue: unknown;
+  private contentReady: ChecksReady | null = null;
 
   /** The user's open (true) or closed (false) choice per section id; no entry = the default. */
   @state() private overrides: ReadonlyMap<string, boolean> = new Map();
@@ -343,6 +387,55 @@ export class ForgeOperations extends LitElement {
 
   protected override updated(): void {
     this.syncHelp();
+    this.syncContent();
+  }
+
+  override disconnectedCallback(): void {
+    clearTimeout(this.contentTimer);
+    this.contentWanted = undefined;
+    super.disconnectedCallback();
+  }
+
+  /** Schedules the content tier when the data or the catalogue changed: 150 ms after the last change. */
+  private syncContent(): void {
+    const cat = this.catalogue.value;
+    if (cat.status !== "ready") return;
+    const source = this.contentSource.value;
+    if (source === this.contentWanted && cat.catalogue === this.contentCatalogue) return;
+    this.contentWanted = source;
+    this.contentCatalogue = cat.catalogue;
+    clearTimeout(this.contentTimer);
+    // No known bytes: nothing to look at, and the old result must not be shown for other data.
+    if (source === null) {
+      if (this.content !== null) this.content = null;
+      return;
+    }
+    this.contentTimer = setTimeout(() => void this.refreshContent(), CONTENT_DEBOUNCE_MS);
+  }
+
+  private async refreshContent(): Promise<void> {
+    const cat = this.catalogue.value;
+    const source = this.contentWanted;
+    if (cat.status !== "ready" || source === null || source === undefined) return;
+    if (this.contentReady === null) {
+      this.contentReady = checksLoader.cached(cat.catalogue);
+      if (this.contentReady === null) {
+        // The first load waits for an idle moment: the checks are never part of start-up.
+        await new Promise<void>((resolve) => whenIdle(resolve));
+        try {
+          this.contentReady = await checksLoader.load(cat.catalogue);
+        } catch {
+          return; // not cached: the 6.21 result stays, and the next change of the data tries again
+        }
+      }
+    }
+    if (this.contentWanted !== source || this.contentCatalogue !== cat.catalogue) return;
+    this.content = analyseContent(source, this.contentReady.index, this.contentReady.evaluator);
+  }
+
+  /** The content tier applies only to bytes (the checks are about bytes). */
+  private contentView(): ContentView | null {
+    return this.dataFacts.value.type === "bytes" ? this.content : null;
   }
 
   protected override render() {
@@ -359,7 +452,7 @@ export class ForgeOperations extends LitElement {
         ${
           cat.status === "ready"
             ? html`<span class="data-type" id="op-data-type"
-                >Data here: ${dataLine(this.dataFacts.value)}</span
+                >Data here: ${headerLine(this.dataFacts.value, this.contentView())}</span
               >`
             : nothing
         }
@@ -501,9 +594,12 @@ export class ForgeOperations extends LitElement {
     const favourite = this.favourites.value.includes(op.qname);
     const showingHelp = this.helpIndex === index;
     const { type, utf8 } = this.dataFacts.value;
-    const level = fitLevel(op.input, type, utf8);
+    const fit = fitLevel(op.input, type, utf8);
     const why = whyNotFit(op.input, type, utf8);
-    const converts = convertHint(op.input, type, utf8);
+    // A red stays red and says why; otherwise the content tier may turn a pass into "expects" and a fail amber.
+    const note = fit === "no" ? undefined : this.contentView()?.rows.get(op.qname);
+    const level = contentLevel(fit, note);
+    const converts = contentHint(note, convertHint(op.input, type, utf8));
     const dataFit = level === "fits" ? "yes" : level;
     let hint: TemplateResult | typeof nothing = nothing;
     if (why !== "") hint = html`<span class="row-hint">${why}</span>`;

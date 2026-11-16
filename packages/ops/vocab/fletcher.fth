@@ -18,13 +18,13 @@ IN: fletcher
 
 \ The sum over the words of (nw - index) * word, from the per-byte values of _words.
 : _weighted ( ws:list s:int nw:int -- int )
-  ws [ s div nw swap - * ] mapi util:sum ;
+  ws [ s div nw swap - * ] mapi sum ;
 
 : _fletcher ( data:bytes bits:int -- bytes )
   data bits _s _words
-  dup util:sum 1 bits 2 div shl 1 - mod
-  swap bits _s data len bits _s util:ceil-div _weighted 1 bits 2 div shl 1 - mod
-  1 bits 2 div shl * + bits 8 div util:int>be-bytes ;
+  dup sum 1 bits 2 div shl 1 - mod
+  swap bits _s data len bits _s ceil-div _weighted 1 bits 2 div shl 1 - mod
+  1 bits 2 div shl * + bits 8 div int>be-bytes ;
 
 : checksum ( data:bytes size:choice{8|16|32|64}=16 -- bytes )
   "A Fletcher checksum as size/8 big-endian bytes: the second sum b first, then the first sum a (CyberChef prints b then a). Fletcher-8 and -16 add one byte at a time, modulo 15 and 255; Fletcher-32 and -64 add little-endian 16-bit and 32-bit words, modulo 65535 and 4294967295, with a short last word zero-padded." doc

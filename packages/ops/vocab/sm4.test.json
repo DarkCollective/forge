@@ -579,5 +579,25 @@
       "value": "e1a0678f40b23b46925b467475f2bc0482cb1c419d7b30eba886e78093de44a3bff07cfe",
       "enc": "hex"
     }
+  },
+  {
+    "name": "decrypt input: real data",
+    "op": "sm4:decrypt",
+    "checks": "input",
+    "data": {
+      "value": "681edf34d206965e86b3e94f536e4246",
+      "enc": "hex"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "decrypt input: plain text",
+    "op": "sm4:decrypt",
+    "checks": "input",
+    "data": {
+      "value": "The quick brown fox jumps over the lazy dog.",
+      "enc": "utf8"
+    },
+    "expect": "fail"
   }
 ]

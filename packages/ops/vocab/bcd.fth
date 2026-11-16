@@ -16,20 +16,24 @@
 \ A, C, E and F are plus and B and D are minus. F also marks unsigned data in IBM formats.
 IN: bcd
 
+\ The digit code of binary-coded decimal.
+CHOICE: bcd-scheme
+  option 8421 "Natural BCD: the digit as a 4-bit binary number." ;
+  option 7421 "Weights 7, 4, 2, 1." ;
+  option 4221 "Weights 4, 2, 2, 1, in the self-complementary assignment." ;
+  option excess-3 "The digit plus 3 as a 4-bit number (Stibitz code)." ;
+;
+
 \ ---- tables ----
 
 \ The ten digit codes of a scheme.
 : _codes ( scheme:str -- bytes )
-  scheme "8421" =
-  [ #[ 00 01 02 03 04 05 06 07 08 09 ] ]
-  [ scheme "7421" =
-    [ #[ 00 01 02 03 04 05 06 08 09 0a ] ]
-    [ scheme "4221" =
-      [ #[ 00 01 02 03 08 07 0c 0d 0e 0f ] ]
-      [ #[ 03 04 05 06 07 08 09 0a 0b 0c ] ]
-      if ]
-    if ]
-  if ;
+  {
+    [ scheme "8421" = ] [ #[ 00 01 02 03 04 05 06 07 08 09 ] ]
+    [ scheme "7421" = ] [ #[ 00 01 02 03 04 05 06 08 09 0a ] ]
+    [ scheme "4221" = ] [ #[ 00 01 02 03 08 07 0c 0d 0e 0f ] ]
+    [ #[ 03 04 05 06 07 08 09 0a 0b 0c ] ]
+  } cond ;
 
 \ The digit whose code is n, or 255.
 : _digit-of ( codes:bytes n:int -- int )
@@ -43,7 +47,7 @@ IN: bcd
 \ ---- encode ----
 
 : _clean ( text:str -- list )
-  text util:strip-space str>codes ;
+  text strip-space str>codes ;
 
 : _has-sign ( cs:list signed:bool -- bool )
   signed cs len 0 > and
@@ -59,9 +63,9 @@ IN: bcd
   if ;
 
 : _check-digits ( digits:list -- )
-  digits len 0 = [ "a number needs at least one digit" raise:coerce ] when
+  digits len 0 = [ "a number needs at least one digit" fail-coerce ] when
   digits [ dup 48 < swap 57 > or ] filter len 0 >
-  [ "not a decimal digit" raise:coerce ] when ;
+  [ "not a decimal digit" fail-coerce ] when ;
 
 \ The nibbles of the digits, followed by the sign nibble when signed.
 : _nibbles ( digits:list codes:bytes neg:bool signed:bool -- list )
@@ -92,7 +96,7 @@ IN: bcd
   [ signed _unpack ]
   if ;
 
-: encode ( str scheme:choice{8421|7421|4221|excess-3}=8421 packed:bool=true signed:bool=false -- bytes )
+: encode ( str scheme:choice<bcd-scheme>=8421 packed:bool=true signed:bool=false -- bytes )
   "Encode decimal digits as binary-coded decimal. Schemes: 8421 (natural BCD), 7421, 4221 (self-complementary) and excess-3. Packed gives two digits per byte, most significant first, with a leading zero digit if the count is odd; unpacked gives one digit per byte (high nibble 0). Signed accepts an optional + or - and adds a sign nibble, C for plus and D for minus: the last nibble of packed data, or the high nibble of the last byte when unpacked. White space is ignored; a character that is not a digit (or a sign when not signed) raises E_COERCE. Empty text gives empty bytes." doc
   "Encodings" category
   _clean dup len 0 =
@@ -102,11 +106,11 @@ IN: bcd
 
 META: encode
   use-when "You have decimal digits and need them as binary-coded decimal bytes, for example a packed number in a mainframe or COBOL record, or a code such as excess-3." ;
-  link "https://en.wikipedia.org/wiki/Binary-coded_decimal" "Binary-coded decimal on Wikipedia" ;
-  inverse decode ;
   param scheme "The digit code: 8421, 7421, 4221 or excess-3." ;
   param packed "Two digits per byte (otherwise one digit per byte)." ;
   param signed "Accept a leading + or - and add a sign nibble (C plus, D minus)." ;
+  inverse decode ;
+  link "https://en.wikipedia.org/wiki/Binary-coded_decimal" "Binary-coded decimal on Wikipedia" ;
 ;
 
 \ ---- decode ----
@@ -126,7 +130,7 @@ META: encode
   data bytes>list [ 4 shr ] map
   signed [ dup len 1 - 0 swap slice ] when
   [ 0 <> ] filter len 0 >
-  [ "an unpacked byte has a non-zero high nibble" raise:coerce ] when ;
+  [ "an unpacked byte has a non-zero high nibble" fail-coerce ] when ;
 
 \ The sign nibble: the last nibble of packed data, or the high nibble of the last byte.
 : _sign-nibble ( data:bytes packed:bool -- int )
@@ -134,13 +138,11 @@ META: encode
 
 \ True for a minus sign nibble (B, D), false for a plus (A, C, E, F); any other nibble raises E_COERCE.
 : _minus? ( s:int -- bool )
-  s 13 = s 11 = or
-  [ true ]
-  [ s 10 = s 12 = or s 14 = s 15 = or or
-    [ false ]
-    [ "the sign nibble is not a sign (A to F)" raise:coerce false ]
-    if ]
-  if ;
+  {
+    [ s 13 = s 11 = or ] [ true ]
+    [ s 10 = s 12 = or s 14 = s 15 = or or ] [ false ]
+    [ "the sign nibble is not a sign (A to F)" fail-coerce ]
+  } cond ;
 
 \ The digit nibbles: all nibbles, but the last one of packed signed data (the sign).
 : _digit-nibs ( nibs:list packed:bool signed:bool -- list )
@@ -151,7 +153,7 @@ META: encode
 
 : _digits-text ( ds:list table:bytes -- str )
   ds [ table swap nth ] map
-  dup [ 255 = ] filter len 0 > [ "a nibble is not a digit of the scheme" raise:coerce ] when
+  dup [ 255 = ] filter len 0 > [ "a nibble is not a digit of the scheme" fail-coerce ] when
   [ 48 + ] map codes>str ;
 
 : _decode ( data:bytes scheme:str packed:bool signed:bool -- str )
@@ -160,7 +162,7 @@ META: encode
   data packed _nibs packed signed _digit-nibs scheme _codes _decode-table _digits-text
   swap [ "-" swap cat ] when ;
 
-: decode ( bytes scheme:choice{8421|7421|4221|excess-3}=8421 packed:bool=true signed:bool=false -- str )
+: decode ( bytes scheme:choice<bcd-scheme>=8421 packed:bool=true signed:bool=false -- str )
   "Decode binary-coded decimal to digits, the inverse of encode. Packed data is two digits per byte, most significant first (so an odd digit count shows as a leading 0); unpacked is one digit per byte with a zero high nibble. Signed data ends in a sign nibble (A, C, E, F plus; B, D minus; the result starts with - for a minus). A nibble that is no digit of the scheme, a sign nibble that is not A to F, or a non-zero high nibble in unpacked data raises E_COERCE. Empty input gives empty text." doc
   "Encodings" category
   dup len 0 =
@@ -170,11 +172,10 @@ META: encode
 
 META: decode
   use-when "You have binary-coded decimal bytes, such as a packed number from a mainframe or COBOL record, and want the digits they stand for." ;
-  link "https://en.wikipedia.org/wiki/Binary-coded_decimal" "Binary-coded decimal on Wikipedia" ;
-  inverse encode ;
   param scheme "The digit code: 8421, 7421, 4221 or excess-3." ;
   param packed "Two digits per byte (otherwise one digit per byte)." ;
   param signed "The data ends in a sign nibble (C plus, D minus; A to F accepted)." ;
+  inverse encode ;
   see-also bcd:encode ;
+  link "https://en.wikipedia.org/wiki/Binary-coded_decimal" "Binary-coded decimal on Wikipedia" ;
 ;
-

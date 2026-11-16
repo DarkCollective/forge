@@ -824,5 +824,25 @@
       "value": "e3dda0a71801b49c644a4481bc318869787fede026",
       "enc": "hex"
     }
+  },
+  {
+    "name": "decrypt input: real data",
+    "op": "blowfish:decrypt",
+    "checks": "input",
+    "data": {
+      "value": "4d4a388b3e166b70a531947cbcf800d7",
+      "enc": "hex"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "decrypt input: plain text",
+    "op": "blowfish:decrypt",
+    "checks": "input",
+    "data": {
+      "value": "The quick brown fox jumps over the lazy dog.",
+      "enc": "utf8"
+    },
+    "expect": "fail"
   }
 ]

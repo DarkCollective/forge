@@ -255,5 +255,35 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "bigint:to-bytes input checks: matching text",
+    "op": "bigint:to-bytes",
+    "checks": "input",
+    "data": {
+      "value": "255",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "bigint:to-bytes input checks: other text",
+    "op": "bigint:to-bytes",
+    "checks": "input",
+    "data": {
+      "value": "12ab",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "bigint:from-bytes output checks: typical result",
+    "op": "bigint:from-bytes",
+    "checks": "output",
+    "data": {
+      "value": "255",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

@@ -3,8 +3,6 @@
 \ list:sort-by; no primitive.
 IN: search
 
-USING: util list ;
-
 \ ---- count ----
 
 : _literal ( pattern:str mode:str -- str )
@@ -13,16 +11,21 @@ USING: util list ;
 : count ( data:str pattern:str[1..] mode:choice{string|regex|extended}="string" ignore-case:bool=false -- int )
   "How many times the pattern occurs in the text. Mode string looks for the exact text, counting non-overlapping occurrences from the left (aa in aaaa is 2); mode extended is the same after the escapes of the pattern are read (\\n, \\t, \\x41, \\u0041, as string-escape:unescape reads them, which is CyberChef's Extended mode); mode regex takes an ECMAScript regular expression (the u flag) and counts its matches, empty ones included. With ignore-case, upper and lower case match each other (string and extended mode fold both texts to lower case first). The pattern may not be empty." doc
   "Analysis" category
-  mode "regex" =
-  [ data pattern ignore-case [ "i" ] [ "" ] if regex:find-all len ]
-  [ ignore-case [ data lower pattern mode _literal lower ] [ data pattern mode _literal ] if split len 1 - ]
-  if ;
+  {
+    [ mode "regex" = ] [ data pattern ignore-case [ "i" ] [ "" ] if regex:find-all len ]
+    [ ignore-case ] [ data lower pattern mode _literal lower split len 1 - ]
+    [ data pattern mode _literal split len 1 - ]
+  } cond ;
 
 \ ---- fuzzy match ----
 
 \ One character as it is compared: itself, or lower case when the one-code-point lower case form exists.
 : _fold ( ch:str cs:bool -- str )
-  cs [ ch ] [ ch lower dup len 1 = [ ] [ drop ch ] if ] if ;
+  {
+    [ cs ] [ ch ]
+    [ ch lower len 1 = ] [ ch lower ]
+    [ ch ]
+  } cond ;
 
 \ The index of the first c in fs at or after from, or -1.
 : _find-next ( fs:str from:int c:str -- int )
@@ -45,7 +48,7 @@ USING: util list ;
   if ;
 
 : _sep-code? ( c:int -- bool )
-  c 128 < c util:letter? not and c util:dec-digit? not and ;
+  c 128 < c util:letter? not and c dec-digit? not and ;
 
 \ True at the start of the text and after an ASCII character that is not a letter or a digit.
 : _boundary? ( p:int orig:list -- bool )
@@ -58,7 +61,7 @@ USING: util list ;
   ps i nth orig _boundary? [ 6 + ] when ;
 
 : _score ( ps:list orig:list -- int )
-  0 ps len range [ ps swap orig _term ] map util:sum
+  0 ps len range [ ps swap orig _term ] map sum
   ps ps len 1 - nth ps 0 nth - 1 + ps len - - ;
 
 : _csv ( ps:list -- str )
@@ -81,7 +84,7 @@ USING: util list ;
   if ;
 
 : _scored ( line:str q:list cs:bool -- list )
-  line str>codes [ util:cp>str ] map
+  line str>codes [ cp>str ] map
   dup [ cs _fold ] map "" join q _scored-fs ;
 
 : _fuzzy-rows ( lines:list q:list cs:bool -- list )
@@ -93,11 +96,11 @@ USING: util list ;
   [ scored [ 1 nth ] map ]
   if ;
 
-: fuzzy ( data:str query:str[1..] case-sensitive:bool=false best-first:bool=true delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab}="newline" -- str )
+: fuzzy ( data:str query:str[1..] case-sensitive:bool=false best-first:bool=true delimiter:choice<util:delimiter>="newline" -- str )
   "Fuzzy search: keep the lines (the pieces of the text between delimiters) that contain all the characters of the query in order, not necessarily next to each other, and score them. Each line is matched greedily from the left: every query character takes the first occurrence after the previous one. The score adds 1 for each matched character, 4 more when it directly follows the previous matched one, 6 more at the start of the line or after an ASCII character that is not a letter or a digit (a word start), and takes off the number of unmatched characters between the first and the last match. Case is ignored unless case-sensitive is set. A line becomes one row of three columns separated by single spaces: the score, the matched positions (code point offsets, from 0, joined by commas; neither holds a space) and the line, which is the rest of the row. Best-first (the default) orders rows by falling score, equal scores in input order; otherwise rows keep the input order. Lines that do not match are left out. A redesign of CyberChef's Fuzzy Match, which highlights the text in HTML." doc
   "Analysis" category
   data delimiter util:delimiter split
-  query str>codes [ util:cp>str case-sensitive _fold ] map
+  query str>codes [ cp>str case-sensitive _fold ] map
   case-sensitive _fuzzy-rows best-first _arrange
   delimiter util:delimiter join ;
 
@@ -132,7 +135,7 @@ USING: util list ;
   "Compare two or more samples (the input cut at the delimiter, a blank line by default) and list where they agree: the stretches of consecutive offsets at which every sample has the same character (code point). Only offsets that every sample has are looked at, so nothing is reported beyond the shortest sample. Each stretch is one line of three columns separated by single spaces: the offset of its first character (from 0), its length in characters, and the shared text (the rest of the line), with the backslash, line feed, carriage return and tab written as \\\\ \\n \\r \\t. min-run drops the stretches shorter than that. No stretch gives empty output; fewer than two samples is E_COERCE. A redesign of CyberChef's Offset checker, which highlights the common characters in the output." doc
   "Analysis" category
   data delimiter split
-  dup len 2 < [ "at least two samples are needed" raise:coerce ] when
+  dup len 2 < [ "at least two samples are needed" fail-coerce ] when
   dup 0 nth swap [ str>codes ] map _all-equal
   [ [ "1" ] [ "0" ] if ] map "" join "1+" "" regex:find-all
   min-run _run-rows ;

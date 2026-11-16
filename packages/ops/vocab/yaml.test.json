@@ -866,5 +866,75 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "input: YAML text is valid UTF-8",
+    "op": "yaml:to-json",
+    "checks": "input",
+    "data": {
+      "value": "name: Ada\nage: 36\n",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "input: gzip bytes are not text",
+    "op": "yaml:to-json",
+    "checks": "input",
+    "data": {
+      "value": "1f8b0800",
+      "enc": "hex"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "output: the JSON text is valid UTF-8",
+    "op": "yaml:to-json",
+    "checks": "output",
+    "data": {
+      "value": "{\n    \"name\": \"Ada\",\n    \"age\": 36\n}",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "output: control bytes are not printable text",
+    "op": "yaml:to-json",
+    "checks": "output",
+    "data": {
+      "value": "0102030405060708",
+      "enc": "hex"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "input: a JSON object is valid UTF-8",
+    "op": "yaml:from-json",
+    "checks": "input",
+    "data": {
+      "value": "{\"name\":\"Ada\",\"age\":36}",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "input: gzip bytes are not text",
+    "op": "yaml:from-json",
+    "checks": "input",
+    "data": {
+      "value": "1f8b0800",
+      "enc": "hex"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "output: the YAML text is valid UTF-8",
+    "op": "yaml:from-json",
+    "checks": "output",
+    "data": {
+      "value": "name: Ada\nage: 36\n",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

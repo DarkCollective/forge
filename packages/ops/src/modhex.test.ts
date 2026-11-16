@@ -21,7 +21,7 @@ import { loadBundleNode } from "./sources-node.js";
 
 // modhex is FL (vocab/modhex.fth); these tests drive its public words through the runtime.
 const { bytes, str } = valueHelpers;
-const runtime = assembleRuntime(await loadBundleNode(["modhex", "raise"]));
+const runtime = assembleRuntime(await loadBundleNode(["modhex"]));
 
 const ALPHA = "cbdefghijklnrtuv";
 function ascii(s: string): Uint8Array {

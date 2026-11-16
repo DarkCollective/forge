@@ -13,20 +13,15 @@ IN: ascon
   "Hashing" category
   _hash ;
 
+META: hash
+  use-when "You need an Ascon-Hash256 value, as a lightweight device or an SP 800-232 test expects it. For ordinary hashing, use sha2 or sha3." ;
+  see-also ascon:mac sha3:digest hex:encode ;
+;
+
 : mac ( data:bytes key:key{hex|utf8|latin1|base64} -- bytes )
   "Ascon-Mac of the input under a 16-byte key (a key of another length is E_RANGE): a 16-byte tag, as raw bytes. Chain hex:encode for hex text." doc
   "Hashing" category
   data key _mac ;
-
-: encrypt ( data:bytes key:key{hex|utf8|latin1|base64} nonce:key{hex|utf8|latin1|base64} ad:key{hex|utf8|latin1|base64}="" -- bytes )
-  "Ascon-AEAD128 authenticated encryption (NIST SP 800-232) of the input. The key and the nonce are 16 bytes each (E_RANGE otherwise); never reuse a nonce under one key. The additional data ad is authenticated but not encrypted, and must be the same when decrypting. The output is the ciphertext followed by the 16-byte tag, as in CyberChef. Chain hex:encode for text." doc
-  "Encryption" category
-  data key nonce ad false _aead ;
-
-: decrypt ( data:bytes key:key{hex|utf8|latin1|base64} nonce:key{hex|utf8|latin1|base64} ad:key{hex|utf8|latin1|base64}="" -- bytes )
-  "Ascon-AEAD128 authenticated decryption (NIST SP 800-232), the inverse of ascon:encrypt with the same key, nonce and additional data. The last 16 bytes of the input are the tag. A tag that does not verify (wrong key, nonce, data or additional data), or an input shorter than the tag, is E_COERCE and returns no plaintext. A key or nonce of the wrong length is E_RANGE." doc
-  "Encryption" category
-  data key nonce ad true _aead ;
 
 META: mac
   use-when "You have a 16-byte key and a message and need an Ascon-Mac tag that a system names. It is not a word of SP 800-232 itself." ;
@@ -34,25 +29,32 @@ META: mac
   see-also hmac:digest cmac:digest hex:encode ;
 ;
 
+: encrypt ( data:bytes key:key{hex|utf8|latin1|base64} nonce:key{hex|utf8|latin1|base64} ad:key{hex|utf8|latin1|base64}="" -- bytes )
+  "Ascon-AEAD128 authenticated encryption (NIST SP 800-232) of the input. The key and the nonce are 16 bytes each (E_RANGE otherwise); never reuse a nonce under one key. The additional data ad is authenticated but not encrypted, and must be the same when decrypting. The output is the ciphertext followed by the 16-byte tag, as in CyberChef. Chain hex:encode for text." doc
+  "Encryption" category
+  data key nonce ad false _aead ;
+
 META: encrypt
   use-when "You have a plaintext, a 16-byte key and a 16-byte nonce, and need Ascon-AEAD128 ciphertext with its tag. Never reuse a nonce with the same key." ;
-  inverse decrypt ;
   param key "The 16-byte key." ;
   param nonce "The 16-byte nonce; unique for every message under one key." ;
   param ad "Associated data: authenticated, not encrypted. Empty by default." ;
+  inverse decrypt ;
   see-also ascon:decrypt hex:encode ;
 ;
 
+: decrypt ( data:bytes key:key{hex|utf8|latin1|base64} nonce:key{hex|utf8|latin1|base64} ad:key{hex|utf8|latin1|base64}="" -- bytes )
+  "Ascon-AEAD128 authenticated decryption (NIST SP 800-232), the inverse of ascon:encrypt with the same key, nonce and additional data. The last 16 bytes of the input are the tag. A tag that does not verify (wrong key, nonce, data or additional data), or an input shorter than the tag, is E_COERCE and returns no plaintext. A key or nonce of the wrong length is E_RANGE." doc
+  "Encryption" category
+  data key nonce ad true _aead ;
+
 META: decrypt
   use-when "You have Ascon-AEAD128 ciphertext with its 16-byte tag, and the same key, nonce and associated data, and want the plaintext back. A bad tag is an error." ;
-  inverse encrypt ;
   param key "The 16-byte key used to encrypt." ;
   param nonce "The 16-byte nonce used to encrypt." ;
   param ad "The associated data used to encrypt." ;
+  inverse encrypt ;
   see-also ascon:encrypt hex:decode ;
-;
-
-META: hash
-  use-when "You need an Ascon-Hash256 value, as a lightweight device or an SP 800-232 test expects it. For ordinary hashing, use sha2 or sha3." ;
-  see-also ascon:mac sha3:digest hex:encode ;
+  checks input binary ;
+  expects "encrypted data" ;
 ;

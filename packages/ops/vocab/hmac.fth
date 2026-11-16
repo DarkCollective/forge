@@ -9,52 +9,57 @@ IN: hmac
 
 USING: md2 md4 md5 sha0 sha1 sha2 sha3 ripemd ripemd160 has160 whirlpool snefru ;
 
-\ The digest of data under the hash named alg (one of the choices of digest). The names are tested in turn.
-: _digest ( bytes str -- bytes )
-  dup "md2" = [ drop md2:digest ] [
-  dup "md4" = [ drop md4:digest ] [
-  dup "md5" = [ drop md5:digest ] [
-  dup "sha0" = [ drop sha0:digest ] [
-  dup "sha1" = [ drop sha1:digest ] [
-  dup "sha224" = [ drop "224" sha2:digest ] [
-  dup "sha256" = [ drop "256" sha2:digest ] [
-  dup "sha384" = [ drop "384" sha2:digest ] [
-  dup "sha512" = [ drop "512" sha2:digest ] [
-  dup "sha512/224" = [ drop "512/224" sha2:digest ] [
-  dup "sha512/256" = [ drop "512/256" sha2:digest ] [
-  dup "sha3-224" = [ drop "224" sha3:digest ] [
-  dup "sha3-256" = [ drop "256" sha3:digest ] [
-  dup "sha3-384" = [ drop "384" sha3:digest ] [
-  dup "sha3-512" = [ drop "512" sha3:digest ] [
-  dup "ripemd128" = [ drop "128" ripemd:digest ] [
-  dup "ripemd256" = [ drop "256" ripemd:digest ] [
-  dup "ripemd320" = [ drop "320" ripemd:digest ] [
-  dup "has160" = [ drop has160:digest ] [
-  dup "whirlpool" = [ drop whirlpool:digest ] [
-  dup "snefru" = [ drop "128" "8" snefru:digest ] [
-  drop ripemd160:digest
-  ] if ] if ] if ] if ] if ] if ] if ] if ] if ] if ] if ] if ] if ] if ] if ] if ] if ] if ] if ] if ] if ;
+\ The digest of data under the hash named alg (one of the choices of digest).
+: _digest ( data:bytes alg:str -- bytes )
+  alg {
+    "md2" [ data md2:digest ]
+    "md4" [ data md4:digest ]
+    "md5" [ data md5:digest ]
+    "sha0" [ data sha0:digest ]
+    "sha1" [ data sha1:digest ]
+    "sha224" [ data "224" sha2:digest ]
+    "sha256" [ data "256" sha2:digest ]
+    "sha384" [ data "384" sha2:digest ]
+    "sha512" [ data "512" sha2:digest ]
+    "sha512/224" [ data "512/224" sha2:digest ]
+    "sha512/256" [ data "512/256" sha2:digest ]
+    "sha3-224" [ data "224" sha3:digest ]
+    "sha3-256" [ data "256" sha3:digest ]
+    "sha3-384" [ data "384" sha3:digest ]
+    "sha3-512" [ data "512" sha3:digest ]
+    "ripemd128" [ data "128" ripemd:digest ]
+    "ripemd256" [ data "256" ripemd:digest ]
+    "ripemd320" [ data "320" ripemd:digest ]
+    "has160" [ data has160:digest ]
+    "whirlpool" [ data whirlpool:digest ]
+    "snefru" [ data "128" "8" snefru:digest ]
+    [ data ripemd160:digest ]
+  } case ;
 
 \ The block size in bytes of the hash named alg (RFC 2104 section 2: the input block of the hash). MD2
 \ takes 16 bytes (RFC 1319) and Snefru-128 takes 48 (its 512-bit block less the 128-bit chaining value);
 \ the SHA-3 sizes are the rates of the sponge.
-: _block ( str -- int )
-  dup "md2" = [ drop 16 ] [
-  dup "snefru" = [ drop 48 ] [
-  dup "sha3-224" = [ drop 144 ] [
-  dup "sha3-256" = [ drop 136 ] [
-  dup "sha3-384" = [ drop 104 ] [
-  dup "sha3-512" = [ drop 72 ] [
-  dup "sha384" = over "sha512" = or over "sha512/224" = or over "sha512/256" = or
-  [ drop 128 ] [ drop 64 ] if
-  ] if ] if ] if ] if ] if ] if ;
+: _block ( alg:str -- int )
+  alg {
+    "md2" [ 16 ]
+    "snefru" [ 48 ]
+    "sha3-224" [ 144 ]
+    "sha3-256" [ 136 ]
+    "sha3-384" [ 104 ]
+    "sha3-512" [ 72 ]
+    "sha384" [ 128 ]
+    "sha512" [ 128 ]
+    "sha512/224" [ 128 ]
+    "sha512/256" [ 128 ]
+    [ 64 ]
+  } case ;
 
 \ The key as one block of the hash's block size: a key longer than the block is hashed first, then
 \ zero-padded to the block size (RFC 2104 step 1).
 : _key-block ( key:bytes alg:str -- bytes )
-  key len alg _block >
-  [ key alg _digest ] [ key ] if
-  dup len alg _block swap - util:zero-bytes cat ;
+  alg _block :> size
+  key len size > [ key alg _digest ] [ key ] if
+  dup len size swap - zero-bytes cat ;
 
 \ A block of the hash's block size filled with the byte v: the ipad (54, 0x36) or opad (92, 0x5C).
 : _pad ( alg:str v:int -- bytes )

@@ -984,7 +984,7 @@
     "ref": "RFC 1952 FNAME is ISO 8859-1",
     "op": "deflate:gzip",
     "params": {
-      "filename": "\u2603"
+      "filename": "☃"
     },
     "input": {
       "value": "x",
@@ -993,5 +993,85 @@
     "expect": {
       "error": "E_RANGE"
     }
+  },
+  {
+    "name": "deflate:inflate: input check, real data",
+    "op": "deflate:inflate",
+    "checks": "input",
+    "data": {
+      "value": "012c00d3ff68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c617465",
+      "enc": "hex"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "deflate:inflate: input check, plain text",
+    "op": "deflate:inflate",
+    "checks": "input",
+    "data": {
+      "value": "This is plain text, not any compressed or archive format at all.",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "deflate:zlib-inflate: input check, real data",
+    "op": "deflate:zlib-inflate",
+    "checks": "input",
+    "data": {
+      "value": "7801012c00d3ff68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c6174656f83104e",
+      "enc": "hex"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "deflate:zlib-inflate: input check, plain text",
+    "op": "deflate:zlib-inflate",
+    "checks": "input",
+    "data": {
+      "value": "This is plain text, not any compressed or archive format at all.",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "deflate:gunzip: input check, real data",
+    "op": "deflate:gunzip",
+    "checks": "input",
+    "data": {
+      "value": "1f8b08000000000004ffcb48cdc9c957c8c020cbf38b725274a01229a969398925a9001926a8a22c000000",
+      "enc": "hex"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "deflate:gunzip: input check, plain text",
+    "op": "deflate:gunzip",
+    "checks": "input",
+    "data": {
+      "value": "This is plain text, not any compressed or archive format at all.",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "deflate:gzip: output check, real output",
+    "op": "deflate:gzip",
+    "checks": "output",
+    "data": {
+      "value": "1f8b081a00f1536504ff612e747874006300ea02012c00d3ff68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c6174651926a8a22c000000",
+      "enc": "hex"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "deflate:zlib-deflate: output check, real output",
+    "op": "deflate:zlib-deflate",
+    "checks": "output",
+    "data": {
+      "value": "7801012c00d3ff68656c6c6f2068656c6c6f2068656c6c6f2068656c6c6f20776f726c642c2068656c6c6f206465666c6174656f83104e",
+      "enc": "hex"
+    },
+    "expect": "pass"
   }
 ]

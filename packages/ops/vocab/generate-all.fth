@@ -15,7 +15,7 @@ USING: hex md2 md4 md5 md6 sha0 sha1 sha2 sha3 keccak shake ripemd has160 whirlp
 \ The name with a colon, padded with spaces to at least width characters, then the digest.
 : _line ( name:str hex:str names:bool width:int -- str )
   names
-  [ name ":" cat dup len width swap - 1 max " " swap util:repeat-str cat hex cat ]
+  [ name ":" cat dup len width swap - 1 max " " swap repeat-str cat hex cat ]
   [ hex ]
   if "\n" cat ;
 

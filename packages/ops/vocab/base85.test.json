@@ -945,5 +945,25 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "base85:decode input checks: matching text",
+    "op": "base85:decode",
+    "checks": "input",
+    "data": {
+      "value": "<~87cURD]i,\"Ebo80~>",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "base85:decode input checks: other text",
+    "op": "base85:decode",
+    "checks": "input",
+    "data": {
+      "value": "héllo",
+      "enc": "utf8"
+    },
+    "expect": "fail"
   }
 ]

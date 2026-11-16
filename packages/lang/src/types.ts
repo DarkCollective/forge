@@ -333,7 +333,28 @@ export interface MetaLink {
 }
 
 /**
- * Discovery metadata (`use-when`, `link`, `inverse`). Absent from `WordMeta` when nothing is set;
+ * One test of a `checks` clause (LANGUAGE.md section 5.9). `magic-bytes` has two forms: a hex
+ * signature at an offset, or the id of a named signature (`format`). `charset` and `printable`
+ * take the minimum share (above 0, at most 1); `entropy` is in bits per byte (0 to 8).
+ */
+export type MagicTest =
+  | { readonly kind: "regex"; readonly pattern: string }
+  | { readonly kind: "charset"; readonly alphabet: string; readonly min: number }
+  | { readonly kind: "entropy"; readonly min: number; readonly max: number }
+  | { readonly kind: "magic-bytes"; readonly hex: string; readonly offset: number }
+  | { readonly kind: "magic-bytes"; readonly format: string }
+  | { readonly kind: "printable"; readonly min: number }
+  | { readonly kind: "utf8" }
+  | { readonly kind: "binary" };
+
+/** A `checks` clause: a test on the word's input or on its output. */
+export interface MagicCheck {
+  readonly scope: "input" | "output";
+  readonly test: MagicTest;
+}
+
+/**
+ * Discovery metadata (`use-when`, `link`, `inverse`, `checks`, `expects`). Absent from `WordMeta` when nothing is set;
  * each member is omitted when unset.
  */
 export interface WordDiscovery {
@@ -343,6 +364,10 @@ export interface WordDiscovery {
   readonly links?: readonly MetaLink[];
   /** `inverse`: a qualified name in the same vocabulary. */
   readonly inverse?: string;
+  /** `checks` clauses, in order, at most 8. Omitted when empty. */
+  readonly checks?: readonly MagicCheck[];
+  /** `expects`: a short name of the data the word expects, at most 64 code points. */
+  readonly expects?: string;
   /** Per parameter name, per option, the help of a shared `choice` type. Options without help are omitted. */
   readonly optionDocs?: Readonly<Record<string, Readonly<Record<string, string>>>>;
 }
@@ -720,6 +745,18 @@ export interface Breakpoint {
   readonly ip?: number;
 }
 
+export interface DebugFrame {
+  /** Qualified name of the word whose code runs: for a quotation, the word that contains it; `<console>` for console code. */
+  readonly word: string;
+  /** "word" for a word activation, "quot" for a quotation activation. */
+  readonly kind: "word" | "quot";
+  /** Index of the instruction this frame is executing: for the innermost frame the instruction about to run (same as StepEvent.ip); for an outer frame the call instruction it is waiting on. */
+  readonly ip: number;
+  readonly pos: SourcePos | null;
+  /** The frame's locals that hold a value, in slot order: header names, then `:>` names (CompiledWord.localNames). A `:>` slot not yet bound is left out. A quotation sees the locals of the word it was created in. Values are live; copy them if you keep them. */
+  readonly locals: readonly { readonly name: string; readonly value: Value }[];
+}
+
 export interface StepEvent {
   readonly step: number;
   /** Qualified name of the executing word, or `<console>`. */
@@ -731,6 +768,8 @@ export interface StepEvent {
   readonly stack: readonly Value[];
   readonly returnDepth: number;
   readonly breakpoint: boolean;
+  /** The activations (word and quotation frames), innermost first. Built on each call; valid only during the hook call, like `stack`. */
+  frames(): readonly DebugFrame[];
 }
 
 /** A hook may return "stop" to end the run with E_ABORTED. It may be async (that is how a UI pauses a run). */

@@ -37,15 +37,15 @@ function block(...lines: string[]): string {
 }
 
 describe("spec extraction", () => {
-  it("finds exactly 259 cases: C01 to C171 and C201 to C288, without gaps or duplicates", () => {
+  it("finds exactly 310 cases: C01 to C171 and C201 to C339, without gaps or duplicates", () => {
     const ids = [
       ...Array.from({ length: 171 }, (_, i) => i + 1),
-      ...Array.from({ length: 88 }, (_, i) => i + 201),
+      ...Array.from({ length: 139 }, (_, i) => i + 201),
     ];
-    expect(spec.cases).toHaveLength(259);
+    expect(spec.cases).toHaveLength(310);
     // File order follows the subsections, not the numbers: C286 and up sit beside their feature.
     expect(spec.cases.map((c) => c.id).sort((a, b) => a - b)).toEqual(ids);
-    expect(new Set(spec.cases.map((c) => c.name)).size).toBe(259);
+    expect(new Set(spec.cases.map((c) => c.name)).size).toBe(310);
     expect(spec.cases.map((c) => c.label).sort()).toEqual(
       ids.map((n) => `C${String(n).padStart(2, "0")}`).sort(),
     );
@@ -88,10 +88,10 @@ describe("spec extraction", () => {
     // Number of tests that use each directive at least once.
     expect(count.get("run")).toBe(spec.cases.filter((c) => c.runs.length > 0).length);
     expect(count.get("use")).toBe(12);
-    expect(count.get("unit-fails")).toBe(29);
-    expect(count.get("hash-eq")).toBe(3);
+    expect(count.get("unit-fails")).toBe(69);
+    expect(count.get("hash-eq")).toBe(4);
     expect(count.get("hash-ne")).toBe(2);
-    expect(count.get("meta")).toBe(12);
+    expect(count.get("meta")).toBe(22);
     expect(count.get("warnings")).toBe(3);
     expect(count.get("coercions")).toBe(1);
     expect(count.get("abort")).toBe(1);
@@ -142,9 +142,9 @@ describe("two documents form one suite", () => {
       .cases.map((c) => c.id)
       .sort((a, b) => a - b);
     expect(new Set(ids).size).toBe(ids.length);
-    expect(ids).toHaveLength(259);
+    expect(ids).toHaveLength(310);
     expect(ids.slice(0, 171)).toEqual(Array.from({ length: 171 }, (_, i) => i + 1));
-    expect(ids.slice(171)).toEqual(Array.from({ length: 88 }, (_, i) => i + 201));
+    expect(ids.slice(171)).toEqual(Array.from({ length: 139 }, (_, i) => i + 201));
   });
 });
 

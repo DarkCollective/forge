@@ -5,11 +5,11 @@
 IN: netbios
 
 : _check-offset ( offset:int -- )
-  offset 0 240 "offset" util:check-int-range ;
+  offset 0 240 "offset" check-int-range ;
 
 \ The 16 bytes of a name, padded with spaces; more than 16 bytes is E_RANGE.
 : _padded ( name:bytes -- bytes )
-  name len 16 > [ "a NetBIOS name is at most 16 bytes, not " name len int>str cat raise:range ] when
+  name len 16 > [ "a NetBIOS name is at most 16 bytes, not " name len int>str cat fail-range ] when
   name "                " str>bytes 0 16 name len - slice cat ;
 
 : encode ( name:bytes offset:int=65 -- bytes )
@@ -17,13 +17,13 @@ IN: netbios
   "Networking" category
   offset _check-offset
   name _padded bytes>list
-  [ dup 4 shr offset + util:cp>str swap 15 band offset + util:cp>str cat ] map
+  [ dup 4 shr offset + cp>str swap 15 band offset + cp>str cat ] map
   "" join latin1>bytes ;
 
 \ Two nibbles (the bytes minus offset) to a byte; a byte that is not offset to offset + 15 is E_COERCE.
 : _nibble ( b:int offset:int -- int )
   b offset -
-  dup 0 15 util:between? not [ "byte " b int>str cat " is not offset plus a half byte (offset to offset + 15)" cat raise:coerce ] when ;
+  dup 0 15 between? not [ "byte " b int>str cat " is not offset plus a half byte (offset to offset + 15)" cat fail-coerce ] when ;
 
 : _pair ( nibbles:list i:int -- int )
   nibbles i 2 * nth 4 shl nibbles i 2 * 1 + nth + ;
@@ -35,14 +35,14 @@ IN: netbios
 : _unpad ( b:bytes -- bytes )
   b len 0 =
   [ b ]
-  [ b bytes>latin1 [ 32 = ] util:trim-end dup len 0 = [ drop " " ] when latin1>bytes ] if ;
+  [ b bytes>latin1 [ 32 = ] trim-end dup len 0 = [ drop " " ] when latin1>bytes ] if ;
 
 : decode ( name:bytes offset:int=65 -- bytes )
   "Undoes the first-level encoding of RFC 1001 section 14.1: every two bytes become one, (first minus offset) times 16 plus (second minus offset), and trailing spaces (the padding) are removed. The input is up to 32 bytes and an even number of them; a byte that is not offset to offset + 15 is E_COERCE, so is an odd or longer input (CyberChef answers nothing). offset is 65 by default and must be 0 to 240. The decoded name keeps at least its first byte, so a name of only spaces decodes to one space." doc
   "Networking" category
   offset _check-offset
   name len 2 mod 0 <> name len 32 > or
-  [ "a first-level encoded NetBIOS name is 32 bytes (an even number, at most 32), not " name len int>str cat raise:coerce ] when
+  [ "a first-level encoded NetBIOS name is 32 bytes (an even number, at most 32), not " name len int>str cat fail-coerce ] when
   name bytes>list [ offset _nibble ] map _pairs _unpad ;
 
 META: encode

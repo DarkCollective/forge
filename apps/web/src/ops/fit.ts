@@ -92,7 +92,7 @@ function outputType(output: { readonly kind: string; readonly tag?: string }): D
 }
 
 /** Last step that changes the data: skips comments and disabled steps (a disabled container is skipped whole). */
-function lastActive(steps: readonly Step[]): Step | undefined {
+export function lastActive(steps: readonly Step[]): Step | undefined {
   for (let i = steps.length - 1; i >= 0; i--) {
     const step = steps[i];
     if (step === undefined || step.kind === "comment" || step.disabled === true) continue;

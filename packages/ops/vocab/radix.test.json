@@ -315,5 +315,35 @@
     "expect": {
       "error": "E_RECIPE_INVALID"
     }
+  },
+  {
+    "name": "radix:convert input checks: matching text",
+    "op": "radix:convert",
+    "checks": "input",
+    "data": {
+      "value": "ff",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "radix:convert input checks: other text",
+    "op": "radix:convert",
+    "checks": "input",
+    "data": {
+      "value": "12.5",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "radix:convert output checks: typical result",
+    "op": "radix:convert",
+    "checks": "output",
+    "data": {
+      "value": "255",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

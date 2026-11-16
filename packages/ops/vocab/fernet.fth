@@ -12,12 +12,12 @@ USING: aes hmac base64 random clock ;
 \ The 32 raw key bytes. A key that is 32 bytes long is taken as it is; otherwise it is read as the url-safe base64
 \ text of the key (the form Fernet libraries print, 43 or 44 characters), which must decode to 32 bytes.
 : _check-key-len ( k:bytes -- bytes )
-  k len 32 <> [ "the Fernet key must be 32 bytes, or their url-safe base64 text" raise:range ] when k ;
+  k len 32 <> [ "the Fernet key must be 32 bytes, or their url-safe base64 text" fail-range ] when k ;
 
 : _raw-key ( key:bytes -- bytes )
   key len 32 =
   [ key ]
-  [ key len 43 < key len 44 > or [ "the Fernet key must be 32 bytes, or their url-safe base64 text" raise:range ] when
+  [ key len 43 < key len 44 > or [ "the Fernet key must be 32 bytes, or their url-safe base64 text" fail-range ] when
     key util:b64url-decode _check-key-len ] if ;
 
 \ The signing key (first 16 bytes) and the encryption key (last 16 bytes).
@@ -33,7 +33,7 @@ USING: aes hmac base64 random clock ;
 
 \ The token for data with the given IV (16 bytes) and Unix time.
 : _seal ( data:bytes key:bytes iv:bytes ts:int -- bytes )
-  #[ 80 ] ts 8 util:int>be-bytes cat iv cat
+  #[ 80 ] ts 8 int>be-bytes cat iv cat
   data key _encryption iv "CBC" "pkcs7" #[ ] aes:encrypt cat
   key _finish ;
 
@@ -46,21 +46,21 @@ USING: aes hmac base64 random clock ;
 \ 60 seconds in the future.
 : _age-check ( ts:int ttl:int now:int -- )
   ttl 0 > [
-    ts ttl + now < [ "the token has expired (older than the TTL)" raise:coerce ] when
-    ts now 60 + > [ "the token's time is too far in the future (clock skew over 60 s)" raise:coerce ] when
+    ts ttl + now < [ "the token has expired (older than the TTL)" fail-coerce ] when
+    ts now 60 + > [ "the token's time is too far in the future (clock skew over 60 s)" fail-coerce ] when
   ] when ;
 
 \ The plaintext of an already base64-decoded token.
 : _open-raw ( raw:bytes key:bytes ttl:int now:int -- bytes )
-  raw len 73 < [ "the token is too short to be a Fernet token" raise:coerce ] when
-  raw 0 nth 128 <> [ "the token's version byte is not 0x80" raise:coerce ] when
-  raw key _mac-ok? not [ "the token's HMAC does not verify (wrong key, or the token was altered)" raise:coerce ] when
-  raw 1 9 slice 256 util:digits>int ttl now _age-check
+  raw len 73 < [ "the token is too short to be a Fernet token" fail-coerce ] when
+  raw 0 nth 128 <> [ "the token's version byte is not 0x80" fail-coerce ] when
+  raw key _mac-ok? not [ "the token's HMAC does not verify (wrong key, or the token was altered)" fail-coerce ] when
+  raw 1 9 slice 256 digits>int ttl now _age-check
   raw 25 raw len 32 - slice key _encryption raw 9 25 slice "CBC" "pkcs7" #[ ] aes:decrypt ;
 
 \ The plaintext of a token (url-safe base64 text) at the given time.
 : _open ( token:bytes key:bytes ttl:int now:int -- bytes )
-  ttl 0 < [ "the TTL cannot be negative" raise:range ] when
+  ttl 0 < [ "the TTL cannot be negative" fail-range ] when
   token util:b64url-decode key ttl now _open-raw ;
 
 : encrypt ( bytes key:key{utf8|hex|latin1|base64} -- bytes )
@@ -76,16 +76,19 @@ USING: aes hmac base64 random clock ;
 META: encrypt
   use-when "You want a Fernet token, a url-safe base64 string that a Fernet library can read, made with a 32-byte key for a test or an interchange." ;
   param key "The Fernet key: 32 bytes, or their url-safe base64 text (43 or 44 characters)." ;
-  see-also fernet:decrypt aes:encrypt hmac:digest ;
   inverse decrypt ;
+  see-also fernet:decrypt aes:encrypt hmac:digest ;
   link "https://github.com/fernet/spec" "Fernet specification (github.com/fernet/spec)" ;
+  checks output regex "^gA[A-Za-z0-9_=-]+$" ;
 ;
 
 META: decrypt
   use-when "You have a Fernet token, which starts gAAAAA, and its key, and you want the message. The HMAC is checked before anything is decrypted." ;
   param key "The Fernet key the token was made with." ;
   param ttl "Maximum token age in seconds; 0 means no time check." ;
-  see-also fernet:encrypt aes:decrypt hmac:digest ;
   inverse encrypt ;
+  see-also fernet:encrypt aes:decrypt hmac:digest ;
   link "https://github.com/fernet/spec" "Fernet specification (github.com/fernet/spec)" ;
+  checks input regex "^\\s*gA[\\sA-Za-z0-9_=-]*$" ;
+  expects "Fernet token" ;
 ;

@@ -19,6 +19,8 @@
 export type * from "./types.js";
 export {
   CATALOGUE_FORMAT,
+  CHECKS_FORMAT,
+  CHECKS_MAX_BYTES,
   HELP_FORMAT,
   HELP_MAX_BYTES,
   INTERNAL_VOCABS,
@@ -28,4 +30,12 @@ export { scanVocab } from "./scan.js";
 export { assembleRuntime, createBundleLoader } from "./bundle.js";
 export { buildCatalogue, isCatalogueOp } from "./catalogue.js";
 export { buildHelp } from "./help.js";
+export { buildChecks } from "./checks-doc.js";
 export { REGEX_LIMITS, execAll, isRegexPrimitive, markRegexPrimitive } from "./regex-engine.js";
+export { magicHostFor, provideMagicHost } from "./magic-host.js";
+export type {
+  MagicHost,
+  MagicHostCandidate,
+  MagicHostReport,
+  MagicHostRequest,
+} from "./magic-host.js";

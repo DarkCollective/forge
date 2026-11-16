@@ -1,0 +1,323 @@
+[
+  {
+    "name": "identify gzip data",
+    "ref": "RFC 1952 gzip header 1f 8b",
+    "op": "magic:identify",
+    "params": {},
+    "input": {
+      "value": "1f8b080000e10b5e0003cb48cdc9c9574022018088f9e511000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "gzip",
+      "enc": "utf8"
+    },
+    "example": {
+      "title": "What is this data?",
+      "note": "The bytes 1f 8b open a gzip stream, so the id is gzip."
+    }
+  },
+  {
+    "name": "identify an Office Open XML file (a zip with [Content_Types].xml)",
+    "ref": "OPC: a zip whose first member is [Content_Types].xml",
+    "op": "magic:identify",
+    "params": {},
+    "input": {
+      "value": "504b030414000000080000002150c71c173c0a00000008000000130000005b436f6e74656e745f54797065735d2e786d6cb309a92c482dd6b70300504b0102140014000000080000002150c71c173c0a000000080000001300000000000000000000000000000000005b436f6e74656e745f54797065735d2e786d6c504b05060000000001000100410000003b0000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ooxml",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "identify a plain zip archive",
+    "ref": "PKZIP APPNOTE: local file header PK 03 04",
+    "op": "magic:identify",
+    "params": {},
+    "input": {
+      "value": "504b030414000000080000002150ac2a93d8040000000200000005000000612e747874cbc80400504b0102140014000000080000002150ac2a93d80400000002000000050000000000000000000000000000000000612e747874504b0506000000000100010033000000270000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "zip",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "identify a PNG header",
+    "ref": "PNG specification: the 8-byte signature",
+    "op": "magic:identify",
+    "params": {},
+    "input": {
+      "value": "89504e470d0a1a0a0000000d49484452",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "png",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "identify a PEM block",
+    "ref": "RFC 7468: textual encoding with BEGIN and END lines",
+    "op": "magic:identify",
+    "params": {},
+    "input": {
+      "value": "2d2d2d2d2d424547494e2043455254494649434154452d2d2d2d2d0a414141410a2d2d2d2d2d454e442043455254494649434154452d2d2d2d2d0a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "pem",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "identify a JSON object",
+    "ref": "RFC 8259: a JSON object",
+    "op": "magic:identify",
+    "params": {},
+    "input": {
+      "value": "7b2261223a205b312c20322c20335d7d",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "json",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "identify plain ASCII text",
+    "ref": "plain ASCII text",
+    "op": "magic:identify",
+    "params": {},
+    "input": {
+      "value": "48656c6c6f2c20776f726c642e0a",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "ascii-text",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "identify a few control bytes",
+    "ref": "no signature and not text",
+    "op": "magic:identify",
+    "params": {},
+    "input": {
+      "value": "0001020304050607",
+      "enc": "hex"
+    },
+    "expect": {
+      "value": "unknown",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "gzip data is gzip",
+    "ref": "RFC 1952 gzip header 1f 8b",
+    "op": "magic:is-format",
+    "params": {
+      "format": "gzip"
+    },
+    "input": {
+      "value": "1f8b080000e10b5e0003cb48cdc9c9574022018088f9e511000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "json": true
+    },
+    "example": {
+      "title": "Is this gzip?",
+      "note": "A gzip stream starts with the bytes 1f 8b, so testing it for gzip gives true."
+    }
+  },
+  {
+    "name": "a PNG is not gzip",
+    "ref": "PNG signature is not 1f 8b",
+    "op": "magic:is-format",
+    "params": {
+      "format": "gzip"
+    },
+    "input": {
+      "value": "89504e470d0a1a0a0000000d49484452",
+      "enc": "hex"
+    },
+    "expect": {
+      "json": false
+    }
+  },
+  {
+    "name": "text is not gzip",
+    "ref": "RFC 1952 gzip header 1f 8b",
+    "op": "magic:is-format",
+    "params": {
+      "format": "gzip"
+    },
+    "input": {
+      "value": "48656c6c6f2c20776f726c642e0a",
+      "enc": "hex"
+    },
+    "expect": {
+      "json": false
+    }
+  },
+  {
+    "name": "unrecognised data is not gzip",
+    "ref": "RFC 1952 gzip header 1f 8b",
+    "op": "magic:is-format",
+    "params": {
+      "format": "gzip"
+    },
+    "input": {
+      "value": "0001020304050607",
+      "enc": "hex"
+    },
+    "expect": {
+      "json": false
+    }
+  },
+  {
+    "name": "an OOXML file is ooxml",
+    "ref": "OPC",
+    "op": "magic:is-format",
+    "params": {
+      "format": "ooxml"
+    },
+    "input": {
+      "value": "504b030414000000080000002150c71c173c0a00000008000000130000005b436f6e74656e745f54797065735d2e786d6cb309a92c482dd6b70300504b0102140014000000080000002150c71c173c0a000000080000001300000000000000000000000000000000005b436f6e74656e745f54797065735d2e786d6c504b05060000000001000100410000003b0000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "json": true
+    }
+  },
+  {
+    "name": "an OOXML file is a child of zip",
+    "ref": "OPC is a zip container: family zip",
+    "op": "magic:is-format",
+    "params": {
+      "format": "zip"
+    },
+    "input": {
+      "value": "504b030414000000080000002150c71c173c0a00000008000000130000005b436f6e74656e745f54797065735d2e786d6cb309a92c482dd6b70300504b0102140014000000080000002150c71c173c0a000000080000001300000000000000000000000000000000005b436f6e74656e745f54797065735d2e786d6c504b05060000000001000100410000003b0000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "json": true
+    },
+    "example": {
+      "title": "A docx is a zip",
+      "note": "An Office Open XML file is an ooxml file in the family zip, so testing it for zip gives true."
+    }
+  },
+  {
+    "name": "a plain zip is zip",
+    "ref": "PKZIP APPNOTE",
+    "op": "magic:is-format",
+    "params": {
+      "format": "zip"
+    },
+    "input": {
+      "value": "504b030414000000080000002150ac2a93d8040000000200000005000000612e747874cbc80400504b0102140014000000080000002150ac2a93d80400000002000000050000000000000000000000000000000000612e747874504b0506000000000100010033000000270000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "json": true
+    }
+  },
+  {
+    "name": "a plain zip is not ooxml",
+    "ref": "no [Content_Types].xml",
+    "op": "magic:is-format",
+    "params": {
+      "format": "ooxml"
+    },
+    "input": {
+      "value": "504b030414000000080000002150ac2a93d8040000000200000005000000612e747874cbc80400504b0102140014000000080000002150ac2a93d80400000002000000050000000000000000000000000000000000612e747874504b0506000000000100010033000000270000000000",
+      "enc": "hex"
+    },
+    "expect": {
+      "json": false
+    }
+  },
+  {
+    "name": "ASCII text is a child of utf8-text",
+    "ref": "family of ascii-text is utf8-text",
+    "op": "magic:is-format",
+    "params": {
+      "format": "utf8-text"
+    },
+    "input": {
+      "value": "48656c6c6f2c20776f726c642e0a",
+      "enc": "hex"
+    },
+    "expect": {
+      "json": true
+    }
+  },
+  {
+    "name": "JSON text is json",
+    "ref": "RFC 8259",
+    "op": "magic:is-format",
+    "params": {
+      "format": "json"
+    },
+    "input": {
+      "value": "7b2261223a205b312c20322c20335d7d",
+      "enc": "hex"
+    },
+    "expect": {
+      "json": true
+    }
+  },
+  {
+    "name": "a PEM block is pem",
+    "ref": "RFC 7468",
+    "op": "magic:is-format",
+    "params": {
+      "format": "pem"
+    },
+    "input": {
+      "value": "2d2d2d2d2d424547494e2043455254494649434154452d2d2d2d2d0a414141410a2d2d2d2d2d454e442043455254494649434154452d2d2d2d2d0a",
+      "enc": "hex"
+    },
+    "expect": {
+      "json": true
+    }
+  },
+  {
+    "name": "the report of Base64 text names the decoding",
+    "ref": "WP 6.33, the Magic engine report",
+    "op": "magic:magic",
+    "params": {},
+    "input": {
+      "value": "SGVsbG8sIFdvcmxkIQ==",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "recipe: base64:decode\nscore: 0.59\nreasons: valid UTF-8 text, 100% printable; looks like ASCII text; takes apart the base64 data; entropy 3.9 to 3.2 bits per byte\noutput: Hello, World!",
+      "enc": "utf8"
+    },
+    "example": {
+      "title": "What is this text?",
+      "note": "The report lists the candidate recipes, best first: here one step, base64:decode, gives readable text."
+    }
+  },
+  {
+    "name": "plain text has no candidate",
+    "ref": "WP 6.33, the Magic engine report",
+    "op": "magic:magic",
+    "params": {},
+    "input": {
+      "value": "Hello, World!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "no candidate",
+      "enc": "utf8"
+    }
+  }
+]

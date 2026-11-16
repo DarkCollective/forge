@@ -23,6 +23,9 @@ META: from-hex
   link "https://en.wikipedia.org/wiki/Object_identifier" "Object identifier on Wikipedia" ;
   link "https://oid-info.com/" "OID Repository (look up what a number means)" ;
   link "https://www.itu.int/rec/T-REC-X.690/en" "ITU-T X.690: encoding rules, section 8.19" ;
+  checks input regex "^[0-9a-fA-F\\s]+$" ;
+  expects "hex of an OID's content bytes" ;
+  checks output charset "0-9." ;
 ;
 
 META: to-hex
@@ -31,4 +34,7 @@ META: to-hex
   link "https://en.wikipedia.org/wiki/Object_identifier" "Object identifier on Wikipedia" ;
   link "https://oid-info.com/" "OID Repository (look up what a number means)" ;
   link "https://www.itu.int/rec/T-REC-X.690/en" "ITU-T X.690: encoding rules, section 8.19" ;
+  checks input regex "^\\s*[0-9]+(?:\\.[0-9]+)*\\s*$" ;
+  expects "dotted object identifier" ;
+  checks output charset "0-9a-f" ;
 ;

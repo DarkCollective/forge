@@ -95,6 +95,24 @@ describe("runOpVectors", () => {
     expect(r).toMatchObject({ total: 1, passed: 1, failures: [], uncovered: ["a:two"] });
   });
 
+  test("check pairs are skipped: not run, not counted, not covering their op", async () => {
+    const seen: unknown[] = [];
+    const pair = {
+      op: "a:two",
+      checks: "input",
+      data: { value: "1f8b", enc: "hex" },
+      expect: "pass",
+    } as const;
+    const r = await runOpVectors({
+      baker: bakerReturning(ok({ kind: "str", text: "y" }), seen),
+      catalogue,
+      // A pair is not an OpTestVector; the files in the vocabulary directory hold both kinds.
+      files: { "a.test.json": [pair as unknown as OpTestVector, vec({})] },
+    });
+    expect(seen).toHaveLength(1);
+    expect(r).toMatchObject({ total: 1, passed: 1, failures: [], uncovered: ["a:two"] });
+  });
+
   test("bytes and str outputs compare as bytes", async () => {
     const bytesOut: OutputValue = { kind: "bytes", bytes: new Uint8Array([0xff]), text: null };
     expect((await run(ok(bytesOut), [vec({ expect: { value: "ff", enc: "hex" } })])).passed).toBe(

@@ -17,7 +17,7 @@ The key words MUST, MUST NOT, SHOULD and MAY are used as in RFC 2119.
 1. Overview and design decisions
 2. Operations and the catalogue
 3. Recipe JSON v1
-4. The `regex` and `recipe` vocabularies
+4. The `regex`, `recipe` and `magic` vocabularies
 5. Recipe to FL compilation
 6. The canonical text form
 7. Share URL
@@ -113,7 +113,7 @@ A vocabulary needs at least one of the two. The vocabulary name is the file name
 6. It is the canonical entry: `meta.qname === vocab + ":" + meta.name`. Aliases (extra names for the same entry)
    are listed under `aliases` and never as ops of their own.
 
-**Chainable** (defined once, used everywhere): an op is *chainable* iff it is a catalogue op. A recipe `op` step or op test may name only chainable ops.
+**Chainable** (defined once, used everywhere): an op is *chainable* iff it is a catalogue op. A recipe `op` step or op test may name only chainable ops. The `magic` vocabulary (§4.4) follows the rule unchanged: `magic:identify` and `magic:is-format` are ordinary catalogue ops (bytes in, one output, a `choice` parameter), and `magic:is-format`, whose output is `bool`, is a predicate.
 
 A word that fails 2 to 5 is simply not an op; that is not an error (except the missing `doc`/`category` case of §2.4). The recipe words (`recipe:section`, which takes a
 `quot`) fail rule 2 and rule 4.
@@ -488,12 +488,16 @@ untouched, never passed to the children). Each non-empty match, as bytes, goes t
 { "kind": "if", "test": { "kind": "regex", "pattern": "^o", "flags": "", "encoding": "utf8" },
   "then": [ /* Step[] */ ], "else": [ /* Step[] */ ] }
 { "kind": "if", "test": { "kind": "op", "op": "regex:test", "params": { "pattern": "^o" } }, "then": [ … ] }
+{ "kind": "if", "test": { "kind": "op", "op": "magic:is-format", "params": { "format": "gzip" } },
+  "then": [ { "kind": "op", "op": "gzip:decompress" } ] }
 ```
 
 The test sees a copy of the data and leaves it unchanged. A **regex test** is true iff the pattern matches anywhere in
 the data (read as `encoding`). An **op test** runs a *predicate op*: an op whose `output` is `bool` (otherwise
 `not-predicate`) and that is chainable (§2.2). `else` may be omitted (the data passes through unchanged). The step
-returns whatever the chosen branch returns, which may be any type.
+returns whatever the chosen branch returns, which may be any type. An op test needs no new field: any chainable predicate
+op is a test as it stands, so a recipe branches on what the data is (the third example, `magic:is-format`, §4.4) with the
+step and the JSON Schema unchanged.
 
 **`repeat`** — run the children several times, feeding each result to the next iteration.
 
@@ -640,7 +644,7 @@ user-supplied value.
 | `exclusive` | error | a `repeat` without exactly one of `times`/`until`, or `max` without `until` | |
 | `limit` | error | `RECIPE_LIMITS` exceeded: too many steps, too deep, too much JSON | `limit`, `max` |
 | `unknown-op` | error | `op` is not in the catalogue (also not as an alias) | `op` |
-| `not-predicate` | error | an `if` op test whose `output` is not `bool` | `op`, `output` |
+| `not-predicate` | error | an `if` op test whose `output` is not `bool` (for example `magic:identify`, which gives the format id as text; use `magic:is-format`) | `op`, `output` |
 | `unknown-param` | error | a `params` key that is no parameter | `param` |
 | `missing-param` | error | a required parameter is absent | `param` |
 | `bad-param` | error | wrong shape for the type, not an option, `enc` not allowed, or a constraint is violated | `param`, `reason`, `constraint?` |
@@ -907,10 +911,10 @@ version of each op.
 
 ---
 
-## 4. The `regex` and `recipe` vocabularies
+## 4. The `regex`, `recipe` and `magic` vocabularies
 
-Both ship in `@forge/ops`. `regex` is a normal vocabulary (its words are catalogue ops, category
-`"Regular expressions"`). `recipe` is internal (R18).
+All three ship in `@forge/ops`. `regex` is a normal vocabulary (its words are catalogue ops, category
+`"Regular expressions"`). `recipe` is internal (R18). `magic` is a normal vocabulary (§4.4).
 
 ### 4.1 Regex semantics (shared)
 
@@ -1044,6 +1048,24 @@ empty) are the text between matches, re-encoded in the same encoding. Concatenat
 input exactly. Limits: §4.1.
 
 ---
+
+### 4.4 The `magic` vocabulary (identification, `vocab/magic.fth`)
+
+Three catalogue ops, category `"Forensics"`: two that say what the data is, and the report form of the Magic engine (`magic:magic`, below). The identification is `identifyData` of the content checks (`packages/ops/src/checks/identify.ts`): the Detect File Type signatures first, then the generic kinds (PEM, JSON, XML, Base64, hex, UTF-8 and ASCII text, random-looking bytes). Both are FL over one private primitive (`_identity`, `src/prims/magic.ts`) that calls it. `magic:identify` and `magic:is-format` are pure, look at a bounded prefix only, do no search and run no operation; neither reaches the regex engine, so neither needs a hard kill (`needsHardKill` is false). `magic:magic` is the exception on every count.
+
+| op | signature | meaning |
+|---|---|---|
+| `magic:identify` | `( data:bytes -- str )` | the id of the most specific identification (`gzip`, `png`, `pem`, `json`, `utf8-text`, `base64`, `hex`, ...), or `"unknown"` when there is none. Not a predicate: as the test of an `if` it is `not-predicate`. |
+| `magic:is-format` | `( data:bytes format:choice<magic-format> -- bool )` | true when the identification's id is `format` or its family is `format` (so `zip` is true for an OOXML file or a JAR, and `utf8-text` for plain ASCII text); false for unidentified data. A chainable predicate: the test of an `if` step (§3.2). |
+| `magic:magic` | `( data:bytes depth:int[1..6]=3 intensive:bool=false crib:regex="" -- str )` | the report form of the Magic engine (§8.9), as CyberChef's Magic operation: a text report of the best candidates, or `"no candidate"`. Not a predicate (the output is `str`). `needsHardKill` is true. |
+
+`format` is the shared `CHOICE: magic-format`, which lists every id of the Detect File Type table (`SIGNATURE_IDS`) and of the generic kinds (`GENERIC_IDS`), each once, in that order, with the display name as its help. A vocabulary test fails when the list and the two sources differ, so a stale or missing id is caught; an id outside the list is `bad-param` (§3.4). `"unknown"` is not an option: test for the formats you expect and let the `else` branch take the rest.
+
+**`magic:magic` and the host dependency on the engine (WP 6.33).** The engine is in `@forge/worker` (§8.9), which depends on `@forge/ops`, so the operation cannot import it. It is FL over one private primitive, `magic:_search ( data:bytes depth:int crib:str intensive:bool -- list )` (`src/prims/magic.ts`, effect `+async`), which asks a **host** for the search: `magicHostFor(ctx.signal)` of `src/magic-host.ts`. The worker's baker core installs a host (`provideMagicHost(signal, host)`) for the duration of each bake, keyed by the bake's abort signal (the object the VM gives every primitive as `ctx.signal`), so the host is per bake and nothing is global. A runtime with no such host (`@forge/ops` alone, or a bake that no baker core drives) fails the operation with `E_PRIMITIVE`, `detail.reason` `"no-magic-host"`, and the message "magic:magic needs the Forge worker". The primitive is marked as a regex-engine primitive (`markRegexPrimitive`), because the candidates run operations that may use regular expressions, so `needsHardKill` is true: an untrusted bake needs a baker with `hardKill`, as for any regex op (§8.2 step 3).
+
+The report is FL (`_block`, `magic`): the candidates of the engine's `results` default (5), best first, one block per candidate, blocks separated by one blank line, and `"no candidate"` when there is none. A block is four lines: `recipe: ` and the qualified names of the operations in order, separated by a space (the recipe as FL text: every operation runs on its defaults); `score: ` and the score with two decimals; `reasons: ` and the reasons joined with `"; "`; `output: ` and the first 80 characters of the output (UTF-8 decoded without failing, invalid bytes shown as U+FFFD, backslash as `\\`, line feed, carriage return and tab as `\n`, `\r`, `\t`, other controls as `\xNN`). The report is as deterministic as the engine (§8.9): the same data and parameters give the same text. `depth` is the most operations in a candidate (1 to 6, the engine's maximum). `crib` is the engine's crib (§8.9; it makes the search try the operations that show no evidence). `intensive` is accepted and passed on, and has no effect: the extensive mode belongs to WP 6.31, and the help of the parameter says so.
+
+A recipe that wants to act on what the data is does not use the report: it tests with `magic:identify` or `magic:is-format` and adds the steps by hand, since the engine only suggests.
 
 ## 5. Recipe to FL compilation
 
@@ -1606,6 +1628,12 @@ The in-process baker implements layers 1 and 2 only (an `AbortController`, no sh
   text (the validator's JSON cap keeps compiled text far below it), and the FL capability model (PLAN §5): a recipe can only
   call the catalogue's ops, and `PRIMITIVE` is unavailable to untrusted code.
 - `maxOutputBytes` bounds `.` output and is irrelevant to recipes (they print nothing).
+- **Limits charged to the run by `magic:magic`** (WP 6.33). The Magic search runs inside the bake, on a baker of the core's own (a second runtime with the same vocabularies, made on the first use and rebuilt by `init`: a baker runs one bake at a time, and a new `bake` cancels the active one, so the search cannot use the baker that runs the bake) behind a metering wrapper, and what it uses is charged to the enclosing run:
+  - **steps.** Every nested bake is limited to what is left of the run's `maxSteps`: the VM steps the run had used at the latest step of the recipe (the core sees each step through the breakpoint hook; the steps of an operation in progress are not visible), less everything that earlier searches of this bake were charged. The VM steps of every nested bake (at least 1) are added to that charge. When the budget is used up the search is cancelled and the operation fails with `E_LIMIT_STEPS`. The charge is added to `stats.vmSteps` of the result, so it shows what the run cost. A bake of this operation at the untrusted default (5 000 000 steps) has room for the search of the layered inputs of 6.29 (about 180 000 steps).
+  - **bytes.** The input and the output of every nested bake count towards what is left of `maxTotalBytes` (the output of a `str` as its length). The host cannot see what the rest of the run has allocated, so this bounds the search's own allocation; when it is used up the search is cancelled and the operation fails with `E_LIMIT_TOTAL`. Each nested bake also keeps the per-run limits of §8.9 (never above what is left of the run's).
+  - **time.** The search's `deadlineMs` is the smaller of the engine's default (10 000) and what is left of the run's `maxMillis`, less a reserve of 200 ms (at least 1 ms), so that the operation can usually report what it found before the run's own deadline would fire. A search that runs out of time returns the candidates it has (§8.9, `stopped: "deadline"`); a run whose own deadline fires first fails with `E_LIMIT_TIME`, as for any operation (the VM waits for an async primitive against the deadline, and a synchronous primitive is for the watchdog, §8.5). A candidate's own bake is also cut at the time left.
+  - **cancellation.** The run's abort signal cancels the search: the search stops after the run in progress and the nested baker's active bake is cancelled. The operation fails with `E_ABORTED`; cancelling the bake needs no other path. A hard kill (§8.5) ends the worker, nested baker included, so a hostile operation that spins inside the search ends the whole enclosing bake, not only that candidate (in a search of the button, §8.9, the watchdog kills the worker of the search and quarantines the operation).
+  - **hard kill.** The nested baker has the `hardKill` flag of the core that made it, so inside a worker the crib and the operations that `needsHardKill` are searched.
 
 ### 8.7 The main-thread client
 
@@ -1641,6 +1669,86 @@ receive. Reaching the end ends the bake normally. `step`/`continue` when not pau
 The VM does not charge the time spent awaiting an `onStep` hook to its wall-clock deadline (`vm.ts` extends the deadline by the pause), so
 nothing special is done for `maxMillis`. Only the **client's** deadline timer must stop while paused (§8.5), because it runs outside the VM.
 
+### 8.9 The Magic engine (`@forge/worker/magic`)
+
+WP 6.29. `magic(input, options)` searches for recipes that make the input more interesting. It is a separate subpath export, so the page loads it
+only when Magic is used; it adds nothing to the main entry, and it changes no existing export, type or message.
+
+**Design: the engine never runs an operation, a `Baker` does.** Every candidate is a one-step bake (`{ forge: 1, steps: [ { kind: "op", op } ] }`)
+of the data at that node, with `trust: "untrusted"`, `pins: "ignore"` and these limits, each of which a caller can only lower: `maxSteps` 1 000 000,
+`maxMillis` 1000 (and never more than the time left until the search's deadline), `maxValueBytes` 4 MiB, `maxTotalBytes` 16 MiB. So the
+untrusted-code limits, the watchdog and the hard kill of §8.5 apply unchanged. A run that is killed or hits a time, step or size limit puts its
+operation in `quarantined`: it is not tried again in that search, so a hostile operation costs at most one watchdog grace. The engine needs only the
+`Baker` interface, so both consumers use it as it is:
+
+- **6.30 (the button).** Pass the page's `BakerClient` (a worker with `hardKill`), the catalogue and the checks document, and an `AbortController`'s
+  signal for Cancel. `signal` aborts at once: the run in progress is cancelled (`baker.cancel()`, then the watchdog), the search returns what it has
+  with `stopped: "aborted"`. `onProgress` reports `{ tried, candidates, depth, elapsedMs }` for the running state. One bake runs at a time on a baker,
+  so the search holds the baker; use a baker of its own, not the one the editor bakes with.
+- **6.33 (`magic:magic`).** The op passes a baker that runs inside the enclosing bake (a nested baker of the core's own, behind a metering wrapper),
+  `deadlineMs` (the smaller of its own and what is left of the run's, less a reserve), and a signal that the run's signal aborts. The nested steps and
+  bytes are charged to the run by the wrapper (§8.6): no change to the engine was needed, since all limits are arguments and every operation is a bake
+  of the `Baker` it is given. The host that carries the engine to the operation is in §4.4 (`packages/worker/src/magic/host.ts`; the engine is loaded by a
+  dynamic `import`, so the main entry of the worker stays free of it).
+
+**Operations tried.** From the catalogue: input and output `bytes` or `str`, no required parameter (so every operation runs on its defaults), no
+effect label (`+random`, `+time`, `+async` are left out), and not `needsHardKill` unless the baker has `hardKill`. At a node the operation is tried
+when its input checks pass on the data (§2, `evaluateChecks`), or it has none; an operation with a `str` input needs valid UTF-8. `unknown` is not a
+pass. An operation counts as having **evidence** when one of its input checks is a `magic-bytes`, `regex` or `charset` test (and it declares no
+`magic-bytes` or `regex` output check: it would be a producer of a format, like `pem:from-hex`). Only an operation with evidence can raise a score
+by itself; without a crib, the others (hashes, encoders, compressors, ROT13) are not run at all, because they could not score. With a crib they run
+after the ones with evidence.
+
+**Search.** Depth first, breadth limited. At a node every applicable operation runs once, in a fixed order (evidence first, then qualified name in
+code-point order). Outputs are pruned if empty, equal to an earlier output of the search (the input included; compared by length and two 32-bit
+hashes), or not improving. The kept children are sorted (score descending, then qualified names) and the best `branching` are returned as candidates
+(when worth returning) and expanded in that order. Nothing is ordered by time, so the same input gives the same candidates in the same order; only
+the point where a deadline cuts the search depends on the clock.
+
+**Options (defaults and hard maxima).** A larger value is clamped to the maximum.
+
+| Option | Default | Maximum | |
+|---|---|---|---|
+| `depth` | 3 | 6 | operations in a candidate |
+| `branching` | 8 | 64 | children kept and expanded per node |
+| `maxTried` | 400 | 10 000 | operation runs in the whole search (the crib runs are not counted) |
+| `deadlineMs` | 10 000 | 120 000 | wall clock; a run in progress is cut at the deadline, so the call returns within about one watchdog grace after it |
+| `results` | 5 | 50 | candidates returned |
+| `crib` | none | 1024 chars | a regex (the §4 dialect) the wanted output matches; the baker must have `hardKill` |
+| `cribFlags` | `""` | `[ims]*` | |
+
+`magic` rejects (it does not return an empty answer) for an uninitialised baker, a crib on a baker without `hardKill`, or a crib over 1024
+characters. The crib is tested by baking `regex:test` over the output, never on the calling thread, since a regex can be slow; only outputs that
+are valid UTF-8 are tested.
+
+**Result.** `candidates` (best first: score, then fewer steps, then names), each `{ recipe, ops, depth, score, reasons, output, outputLength }`
+(`recipe` is a `Recipe`, ready for `setRecipe`; `output` is the first 4096 bytes), `stopped` (`done`, `deadline`, `max-tried`, `aborted`), `stats`
+and `quarantined`.
+
+**Scoring** (one place: `packages/worker/src/magic/score.ts`, `MAGIC_WEIGHTS`). The score of an output is the sum of
+
+| Term | Weight | When |
+|---|---|---|
+| `utf8` | 0.15 | the whole output is strictly valid UTF-8 |
+| `printable` | 0.20 x share | printable share of the first 4 KiB, when valid UTF-8 |
+| `plainText` | 0.10 | identified (6.23a) as UTF-8 or ASCII text |
+| `decoded` | 0.10 | the parent was identified as something other than text or noise (PEM, Base64, hex, gzip, ...), the output is not the same kind, and it is readable text (valid UTF-8, 90% printable) or a recognised kind |
+| `entropyDrop` | 0.15 x min(1, d / 3) | d bits per byte below the entropy of the search input |
+| `identified` | 0.25 x certainty | a Detect File Type match, PEM, JSON or XML (high 1, medium 0.6, low 0.2) |
+| `outputChecks` | minus 0.15 x (1 - share) | the operation's output checks that do not hold (`scoreChecks`) |
+| `crib` | 0.50 | the output matches the crib |
+
+Every term but `crib` is credited only to an operation with evidence; an operation without evidence is scored as its parent plus the crib.
+The search input itself is scored by `utf8`, `printable` and `plainText` only. The score is at most 1.35. Rules: an output is **kept**
+when its score is at least the parent's plus 0.05, or it matches the crib, or an operation with evidence made certain-enough data of a recognised kind
+the parent was not, or it took a parent apart (`decoded`); a kept output is **returned** when it beats the search input's score by 0.08 or matches
+one of those rules. These are the plan's defaults (PLAN.md §9, decision 12) and the owner may change them.
+
+**Known limits.** Nothing here knows a language, so text that merely looks like text cannot be told from the right text: ROT13 inside Base64 is
+found only with a crib, and an operation that expects hex and happens to print text (an OID or ASN.1 dump of the bytes) can score like the real
+decoding. Letter-frequency scoring is the optional follow-up of WP 6.31. A ZIP is found by its signature behind its encoding; `zip:unzip` and
+`filetype:extract` (a `list` output) and `zip:entry` (a required name) are outside "operations on their defaults with a bytes or str output".
+
 ---
 
 ## 9. Op test vectors
@@ -1657,7 +1765,7 @@ test failure once it has an op.
   "$id": "urn:forge:schema:op-vectors:1",
   "title": "Forge operation test vectors, one file per vocabulary",
   "type": "array",
-  "items": { "$ref": "#/$defs/vector" },
+  "items": { "oneOf": [{ "$ref": "#/$defs/vector" }, { "$ref": "#/$defs/checkPair" }] },
   "$defs": {
     "encoded": {
       "type": "object",
@@ -1666,6 +1774,19 @@ test failure once it has an op.
         "enc": { "enum": ["utf8", "hex", "latin1", "base64"] }
       },
       "required": ["value", "enc"],
+      "additionalProperties": false
+    },
+    "checkPair": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 200 },
+        "ref": { "type": "string", "maxLength": 200 },
+        "op": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,63}:[^\\s:]{1,128}$" },
+        "checks": { "enum": ["input", "output"] },
+        "data": { "$ref": "#/$defs/encoded" },
+        "expect": { "enum": ["pass", "fail", "unknown"] }
+      },
+      "required": ["op", "checks", "data", "expect"],
       "additionalProperties": false
     },
     "vector": {
@@ -1739,6 +1860,13 @@ A vector is `{ name?, ref?, op, params, input, expect, example? }`:
     a JSON `1` matches both `int 1` and `num 1.0` (the vector cannot tell them apart; give the op a distinguishing vector if it matters).
 - `ref`: where the value comes from (a standard, an RFC section, a published test vector, or `"hand-computed"`).
 - `example` (optional): `{ title, note? }` marks the vector as a worked example for the op's help page (§2.7). `title` is required, 1 to 80 characters, plain text; `note` is optional, up to 400 characters. An example is an ordinary vector in every other respect: the runner (§9.3) reads the fields it knows by name and ignores the key, so an example is correct by construction and never written separately. Rules, enforced by `buildHelp` at build time and by `vocab/vectors.test.ts` on the files: at most **3** examples per op; titles unique within an op; `input.value`, each encoded parameter value and `expect.value` at most 2048 characters (so `help.json` stays small; big cases stay plain vectors); the vector's `op` is a catalogue op (an alias is accepted); the order is the order in the file. An error vector (`expect: { "error": … }`) may be an example (the title says so), and `ref` is carried to the help page as the source line of the example.
+
+**Check pairs.** An array may also hold entries that test an op's `checks` clauses (LANGUAGE.md section 5.9) instead of running the op: `{ name?, ref?, op, checks, data, expect }`. `checks` is `"input"` or `"output"` (the scope), `data` is `{ value, enc }` as for an input, and `expect` is `"pass"`, `"fail"` or `"unknown"`, the result of `evaluateChecks` for the op's checks of that scope on those bytes. An entry with a `checks` key is a pair; it has no `params`, `input` or `example`, and the runner (§9.3) skips it: it is not run, not counted and does not cover its op. `packages/ops/src/checks-pairs.test.ts` evaluates every pair and requires, for each op with `input` checks, at least one `pass` and one `fail` input pair, and for each op with `output` checks at least one `pass` output pair; a pair naming an op with no checks in its scope is an error.
+
+```json
+{ "name": "gunzip input: a gzip header passes", "op": "gzip:gunzip", "checks": "input",
+  "data": { "value": "1f8b0800", "enc": "hex" }, "expect": "pass" }
+```
 
 ### 9.2 Authoring rules
 
@@ -2051,6 +2179,7 @@ aliases in each `types.ts` (a WP implements a function with exactly that type). 
 | `buildHelp` | `(runtime: ForgeRuntime, catalogue: Catalogue, vectorFiles: readonly VectorFile[]) => HelpDoc` (throws `Error` on a content violation, §2.7) |
 | `markRegexPrimitive`, `isRegexPrimitive` | `(def: PrimitiveDef) => PrimitiveDef`, `(qname: string) => boolean` |
 | `execAll`, `REGEX_LIMITS` | `(pattern: string, flags: string, text: string) => RegexMatch[]`, `RegexLimits` |
+| `provideMagicHost`, `magicHostFor` | `(signal: AbortSignalLike, host: MagicHost) => () => void` (installs the host of one bake, returns the function that removes it), `(signal: AbortSignalLike \| undefined) => MagicHost \| undefined` (§4.4, WP 6.33) |
 
 `@forge/ops/node`: `createNodeProvider(root?: string): VocabSourceProvider`, `loadBundleNode: LoadBundleFn`.
 `@forge/ops/vite`: `createViteProvider(): VocabSourceProvider`, `loadBundleVite: LoadBundleFn`.

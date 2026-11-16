@@ -12,12 +12,14 @@ USING: json list ;
 
 \ A header must not repeat a name: the objects would silently lose a column.
 : _check-header ( header:list -- )
-  header list:unique len header len <> [ "the header row repeats a column name, so the objects would lose a column" raise:coerce ] when ;
+  header list:unique len header len <>
+  [ "the header row repeats a column name, so the objects would lose a column" fail-coerce ] when ;
 
 \ Row n of the CSV (counting the header as row 1) as an object keyed by the header.
 : _record ( row:list n:int header:list -- record )
   row len header len <> [
-    "CSV row " n 1 + int>str cat " has " cat row len int>str cat " cells but the header has " cat header len int>str cat raise:coerce
+    "CSV row " n 1 + int>str cat " has " cat row len int>str cat
+    " cells but the header has " cat header len int>str cat fail-coerce
   ] when
   header row zip >record ;
 
@@ -40,6 +42,10 @@ META: to-json
   param row-delimiter "The characters that end a row; each one counts, and a CR followed by an LF is one. Escapes like \\r\\n are read." ;
   param format "An array of objects keyed by the header row, or an array of arrays of the rows as they are." ;
   param indent "Spaces per level; 0 writes compact JSON." ;
+  expects "CSV text" ;
+  checks input utf8 ;
+  checks output utf8 ;
+  checks output printable ;
   see-also csv:from-json ;
   inverse from-json ;
   link "https://www.rfc-editor.org/rfc/rfc4180" "RFC 4180: CSV format" ;
@@ -57,11 +63,11 @@ META: to-json
   v type "record" = v json:null? not and ;
 
 : _need-all ( items:list pred:quot what:str -- )
-  items pred filter len items len <> [ "a JSON array to convert must hold only " what cat raise:coerce ] when ;
+  items pred filter len items len <> [ "a JSON array to convert must hold only " what cat fail-coerce ] when ;
 
 \ The cell of key k in an object, or an empty cell when it has no such key.
 : _field ( r:any k:str -- str )
-  r keys k util:contains? [ r k get _cell ] [ "" ] if ;
+  r keys k contains? [ r k get _cell ] [ "" ] if ;
 
 : _dict-row ( r:any header:list -- list )
   r keys header = [ header [ r swap get _cell ] map ] [ header [ r swap _field ] map ] if ;
@@ -73,7 +79,7 @@ META: to-json
 
 : _dicts-out ( items:list -- list )
   items [ _object? ] "objects" _need-all
-  items items [ keys ] map util:list-flatten list:unique _dict-table ;
+  items [ items [ keys emit-all ] each ] collect list:unique _dict-table ;
 
 : _arrays-out ( items:list -- list )
   items [ type "list" = ] "arrays" _need-all
@@ -81,21 +87,22 @@ META: to-json
 
 \ The rows of a JSON array: of objects (with a header row) or of arrays.
 : _items-table ( items:list -- list )
-  items len 0 = [ { } ] [
-    items 0 nth _object? [ items _dicts-out ] [
-      items 0 nth type "list" = [ items _arrays-out ] [
-        "a JSON array to convert must hold objects or arrays" raise:coerce { }
-      ] if
-    ] if
-  ] if ;
+  {
+    [ items len 0 = ] [ { } ]
+    [ items 0 nth _object? ] [ items _dicts-out ]
+    [ items 0 nth type "list" = ] [ items _arrays-out ]
+    [ "a JSON array to convert must hold objects or arrays" fail-coerce ]
+  } cond ;
 
 : _table ( v:any -- list )
-  v _object? [ { } v append _dicts-out ] [
-    v type "list" = [ v _items-table ] [
-      "the JSON to convert must be an array of objects, an array of arrays, or one object" raise:coerce { }
-    ] if
-  ] if ;
+  {
+    [ v _object? ] [ { } v append _dicts-out ]
+    [ v type "list" = ] [ v _items-table ]
+    [ "the JSON to convert must be an array of objects, an array of arrays, or one object" fail-coerce ]
+  } cond ;
 
+\ The input check (see META) is a regex: a table is a JSON object or array after white space, and json:parse starts no
+\ other value that way. Its second alternative keeps a long run of white space that fills the 4 KiB prefix from being read as a failure.
 : from-json ( data:str cell-delimiter:str="," row-delimiter:str="\\r\\n" -- str )
   "Write JSON text as CSV (RFC 4180), as CyberChef's JSON to CSV does. The input is an array of objects, an array of arrays, or one object (one row). For objects the first row is the header, the keys of all the objects in order of first appearance (CyberChef takes the keys of the first object), and an object without a key gives an empty cell; for arrays there is no header row. A string is written as it is, null as an empty cell (CyberChef writes the word null), and a number, true, false, an array or an object as its JSON text (CyberChef: a nested value makes it flatten the keys to a.b names). A cell is quoted when it holds the cell or the row delimiter, a double quote, a CR or an LF. The cell and row delimiters are used as written (both read the escapes \\r \\n \\t \\\\ and \\xHH; the default row delimiter is CRLF), and a row delimiter follows every row, the last one too, as CyberChef writes it. An empty array gives empty text (CyberChef fails). Anything else, an array that mixes objects and arrays or holds other values, a repeated key, or text that is not JSON is E_COERCE." doc
   "Data format" category
@@ -105,6 +112,10 @@ META: from-json
   use-when "You have JSON text as an array of objects, such as an export from an API, and need CSV for a spreadsheet." ;
   param cell-delimiter "The text put between the cells. Escapes like \\t are read." ;
   param row-delimiter "The text put between the rows. Escapes like \\r\\n are read." ;
+  expects "JSON text" ;
+  checks input regex "^(?:\\s*[\\[{]|\\s{1000})" ;
+  checks input utf8 ;
+  checks output utf8 ;
   see-also csv:to-json ;
   inverse to-json ;
   link "https://www.rfc-editor.org/rfc/rfc4180" "RFC 4180: CSV format" ;

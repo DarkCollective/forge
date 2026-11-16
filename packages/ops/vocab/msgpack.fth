@@ -14,6 +14,8 @@ USING: json ;
 
 META: decode
   use-when "You have MessagePack bytes from a cache, a message queue or an RPC call, and want to read them as JSON." ;
+  checks input binary ;
+  expects "MessagePack data" ;
   param indent "Spaces per level; 0 writes compact JSON." ;
   see-also msgpack:encode ;
   inverse encode ;

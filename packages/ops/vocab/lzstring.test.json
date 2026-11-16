@@ -599,5 +599,35 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "lzstring:compress: input check, UTF-8 text",
+    "op": "lzstring:compress",
+    "checks": "input",
+    "data": {
+      "value": "hello hello hello",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "lzstring:compress: input check, bytes that are not UTF-8",
+    "op": "lzstring:compress",
+    "checks": "input",
+    "data": {
+      "value": "fffefdfc80",
+      "enc": "hex"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "lzstring:decompress: output check, text",
+    "op": "lzstring:decompress",
+    "checks": "output",
+    "data": {
+      "value": "hello hello hello",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

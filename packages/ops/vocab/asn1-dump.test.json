@@ -1078,5 +1078,25 @@
       "value": "SEQUENCE\n  ObjectIdentifier subjectAltName (2 5 29 17)\n  OCTETSTRING, encapsulates\n    SEQUENCE\n      [2] a.example\n      [7] 01020304\n",
       "enc": "utf8"
     }
+  },
+  {
+    "name": "parse input: real data",
+    "op": "asn1-dump:parse",
+    "checks": "input",
+    "data": {
+      "value": "0500",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "parse input: plain text",
+    "op": "asn1-dump:parse",
+    "checks": "input",
+    "data": {
+      "value": "hello world, not hex digits",
+      "enc": "utf8"
+    },
+    "expect": "fail"
   }
 ]

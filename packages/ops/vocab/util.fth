@@ -4,25 +4,151 @@
 \ are never listed in the catalogue and have no category. Private (_) words cannot be called across
 \ vocabularies, so anything more than one vocabulary needs belongs here: check util before writing a
 \ helper, and move a helper here when a second vocabulary wants it (npm run dupes finds copies).
+\ Choice types that two or more vocabularies share are defined here too: write choice<util:name> in a
+\ header (or choice<name> after USING: util ;).
 IN: util
 
-: space? ( b:int -- bool )
-  "True for ASCII white space: tab, line feed, vertical tab, form feed, carriage return (9 to 13) and space (32)." doc
-  b 32 = b 9 >= b 13 <= and or ;
+\ ---- shared choice types ----
 
-: between? ( n:int lo:int hi:int -- bool )
-  "True when lo <= n <= hi (both ends included)." doc
-  n lo >= n hi <= and ;
+\ How block-cipher input is padded to whole blocks.
+CHOICE: pkcs7-padding
+  option pkcs7 "PKCS#7 padding (RFC 5652, section 6.3)." ;
+  option none "No padding: the input must already be whole blocks." ;
+;
 
-: check-int-range ( n:int lo:int hi:int what:str -- )
-  "Raises E_RANGE unless lo <= n <= hi (both ends included). The message is what, then must be lo to hi, not n: 12 checked against 0 9 for the compression level gives the compression level must be 0 to 9, not 12." doc
-  n lo < n hi > or [
-    what " must be " cat lo int>str cat " to " cat hi int>str cat ", not " cat n int>str cat raise:range
-  ] when ;
+\ The mode of operation of a block cipher.
+CHOICE: block-mode
+  option CBC "Cipher block chaining: each block is mixed with the one before it. Needs an IV." ;
+  option CFB "Cipher feedback: a stream mode built on the cipher. Needs an IV." ;
+  option OFB "Output feedback: a stream mode whose key stream does not depend on the data. Needs an IV." ;
+  option CTR "Counter mode: a stream mode that encrypts a counter. Needs an IV." ;
+  option ECB "Electronic codebook: no IV; equal blocks give equal output, which leaks patterns." ;
+;
 
-: cp>str ( cp:int -- str )
-  "The one-character string of a code point (0 to 0x10FFFF, not a surrogate: anything else is the error codes>str raises)." doc
-  { cp } codes>str ;
+\ What separates the pieces of a text (lines, items, cells). The words of the choice are turned into text by
+\ delimiter; use delimiter-or-none when "no separator at all" must be possible too.
+CHOICE: delimiter
+  option space "One space." ;
+  option comma "A comma." ;
+  option semicolon "A semicolon." ;
+  option colon "A colon." ;
+  option newline "A line feed (U+000A)." ;
+  option crlf "A carriage return then a line feed." ;
+  option cr "A lone carriage return." ;
+  option tab "A tab." ;
+;
+
+\ The same as delimiter, with the empty string as a last option.
+CHOICE: delimiter-or-none
+  option space "One space." ;
+  option comma "A comma." ;
+  option semicolon "A semicolon." ;
+  option colon "A colon." ;
+  option newline "A line feed (U+000A)." ;
+  option crlf "A carriage return then a line feed." ;
+  option cr "A lone carriage return." ;
+  option tab "A tab." ;
+  option none "Nothing: the empty string." ;
+;
+
+\ What separates the numbers of an encoded list.
+CHOICE: number-delimiter
+  option space "One space." ;
+  option comma "A comma." ;
+  option newline "A line feed (U+000A)." ;
+;
+
+\ The case of letters.
+CHOICE: letter-case
+  option lower "Lower case." ;
+  option upper "Upper case." ;
+;
+
+\ Where something is added to a piece of text or a block.
+CHOICE: start-or-end
+  option start "At the start (in front)." ;
+  option end "At the end (behind)." ;
+;
+
+\ How the data of an op is written: as it is, or as hexadecimal text.
+CHOICE: raw-or-hex
+  option raw "The data as it is." ;
+  option hex "Hexadecimal text; white space is ignored." ;
+;
+
+\ How the input of a fingerprint op is written (see wire-input).
+CHOICE: wire-format
+  option hex "Hexadecimal text; white space is ignored." ;
+  option base64 "Base64 text (the standard alphabet)." ;
+  option raw "The bytes as they are." ;
+;
+
+\ What a fingerprint op gives back.
+CHOICE: fingerprint-output
+  option hash "The MD5 hash of the fingerprint string." ;
+  option string "The fingerprint string, not hashed." ;
+  option full "Both, with the fields the string is made of." ;
+;
+
+\ The substitution table of GOST 28147-89.
+CHOICE: gost-sbox
+  option E-TEST "id-Gost28147-89-TestParamSet." ;
+  option E-A "CryptoPro set A." ;
+  option E-B "CryptoPro set B." ;
+  option E-C "CryptoPro set C." ;
+  option E-D "CryptoPro set D." ;
+  option E-Z "TC26 set Z." ;
+  option D-TEST "The test set of the digest (RFC 4357 section 11.2)." ;
+  option D-A "Set A of the digest (RFC 4357 section 11.2)." ;
+;
+
+\ The unit of a Unix timestamp.
+CHOICE: time-unit
+  option seconds "Seconds." ;
+  option milliseconds "Milliseconds." ;
+  option microseconds "Microseconds." ;
+  option nanoseconds "Nanoseconds." ;
+;
+
+\ The published chi wheel patterns of the Lorenz machines, or your own.
+CHOICE: wheel-pattern
+  option KH "The KH patterns." ;
+  option ZMUG "The ZMUG patterns." ;
+  option BREAM "The BREAM patterns." ;
+  option custom "Patterns you give in the other parameters." ;
+;
+
+\ How a public or private key is written. What DER holds differs between the ops, so it has no help here.
+CHOICE: key-format
+  option PEM "PEM text: a base64 body between BEGIN and END lines." ;
+  option DER ;
+  option JWK "A JSON Web Key (RFC 7517), one line of JSON per key." ;
+;
+
+\ What to do with the bytes of a text that are not letters (the rotor machines).
+CHOICE: other-chars
+  option keep "Bytes that are not letters pass through unchanged." ;
+  option remove "Bytes that are not letters are dropped." ;
+;
+
+\ A hash function by name.
+CHOICE: hash-algorithm
+  option sha1 "SHA-1." ;
+  option sha256 "SHA-256." ;
+  option sha384 "SHA-384." ;
+  option sha512 "SHA-512." ;
+  option md5 "MD5." ;
+;
+
+\ The digest size of SHA-3 and Keccak, in bits.
+CHOICE: sha3-size
+  option 224 "224-bit digest." ;
+  option 256 "256-bit digest." ;
+  option 384 "384-bit digest." ;
+  option 512 "512-bit digest." ;
+;
+
+\ ---- characters and text ----
 
 : u16 ( b:bytes i:int big-endian:bool -- int )
   "The i-th 16-bit unit of the bytes (the bytes at 2 i and 2 i + 1), big-endian when big-endian is true, else little-endian. Raises the error of nth when the unit is not in the bytes." doc
@@ -30,8 +156,13 @@ IN: util
 
 \ The table entry of byte b: its index in alpha, else ws or pad, else 255.
 : _code-of ( b:int alpha:str ws:int pad:int -- int )
-  alpha b cp>str split dup len 2 = [ 0 nth len ]
-  [ drop b 61 = [ pad ] [ b space? [ ws ] [ 255 ] if ] if ] if ;
+  alpha b cp>str split :> parts
+  {
+    [ parts len 2 = ] [ parts 0 nth len ]
+    [ b 61 = ] [ pad ]
+    [ b space? ] [ ws ]
+    [ 255 ]
+  } cond ;
 
 : surrogate? ( cp:int -- bool )
   "True for a UTF-16 surrogate code point, U+D800 to U+DFFF (55296 to 57343): not a character on its own." doc
@@ -52,22 +183,22 @@ IN: util
 
 : separator ( choice:str -- str )
   "The text for a delimiter choice: none gives the empty string, comma a comma, newline a line feed and anything else (space) a space." doc
-  choice "none" = [ "" ]
-  [ choice "comma" = [ "," ] [ choice "newline" = [ "\n" ] [ " " ] if ] if ] if ;
+  choice { "none" [ "" ] "comma" [ "," ] "newline" [ "\n" ] [ " " ] } case ;
 
 : delimiter ( choice:str -- str )
-  "The text for a delimiter choice of the wave 5 list and line ops: space (one space), comma, semicolon, colon, newline (a line feed, U+000A), crlf (carriage return then line feed), cr (a lone carriage return), tab and none (the empty string). Anything else is E_RANGE. Use the header form delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab|none}=\"newline\" (see the ops README, Wave 5 conventions). Unlike separator, an unknown choice is an error." doc
-  choice "space" = [ " " ] [
-  choice "comma" = [ "," ] [
-  choice "semicolon" = [ ";" ] [
-  choice "colon" = [ ":" ] [
-  choice "newline" = [ "\n" ] [
-  choice "crlf" = [ "\r\n" ] [
-  choice "cr" = [ "\r" ] [
-  choice "tab" = [ "\t" ] [
-  choice "none" = [ "" ] [
-  "unknown delimiter choice (use space, comma, semicolon, colon, newline, crlf, cr, tab or none)" raise:range ""
-  ] if ] if ] if ] if ] if ] if ] if ] if ] if ;
+  "The text for a delimiter choice of the wave 5 list and line ops: space (one space), comma, semicolon, colon, newline (a line feed, U+000A), crlf (carriage return then line feed), cr (a lone carriage return), tab and none (the empty string). Anything else is E_RANGE. Use the header form delimiter:choice<delimiter-or-none>=\"newline\" (or choice<delimiter> where none makes no sense). Unlike separator, an unknown choice is an error." doc
+  choice {
+    "space" [ " " ]
+    "comma" [ "," ]
+    "semicolon" [ ";" ]
+    "colon" [ ":" ]
+    "newline" [ "\n" ]
+    "crlf" [ "\r\n" ]
+    "cr" [ "\r" ]
+    "tab" [ "\t" ]
+    "none" [ "" ]
+    [ "unknown delimiter choice (use space, comma, semicolon, colon, newline, crlf, cr, tab or none)" fail-range ]
+  } case ;
 
 : space-or-comma? ( b:int -- bool )
   "True for the separators of numeric text: ASCII white space (see space?) and the comma (44)." doc
@@ -75,59 +206,23 @@ IN: util
 
 : check-symbols ( data:bytes table:bytes -- bytes )
   "Translate data through a decode table (see decode-table) and raise E_COERCE (a character is not in the alphabet) if any byte maps to 255. The translated bytes are returned with any other marker (white space, padding) left in place for the caller to handle. A constant number of interpreter steps for any length: the marker is looked for in the Latin-1 text of the bytes." doc
-  data table translate
-  dup bytes>latin1 255 cp>str split len 1 >
-  [ "a character is not in the alphabet" raise:coerce ] when ;
-
-: int>be-bytes ( v:int n:int -- bytes )
-  "The low n bytes of v, most significant first (big-endian); higher bytes are dropped and an n of 0 gives no bytes." doc
-  0 n range [ n 1 - swap - 8 * v swap shr 255 band ] map list>bytes ;
-
-: digits>int ( vals:bytes radix:int -- int )
-  "The integer whose digits are the elements of vals, most significant digit first, in the given radix: a positional fold. Digits are not checked against the radix. Large inputs are bounded by the integer limit (E_LIMIT_VALUE)." doc
-  vals 0 [ swap radix * + ] reduce ;
-
-: ceil-div ( n:int d:int -- int )
-  "n divided by d, rounded up: the number of groups of d needed for n items (0 for n = 0). d must be positive and n non-negative." doc
-  n d 1 - + d div ;
-
-: sum ( xs:list -- int )
-  "The sum of a list of integers (0 for the empty list). For a list of floats write the fold yourself." doc
-  xs 0 [ + ] reduce ;
-
-\ ---- characters and text ----
-
-: dec-digit? ( c:int -- bool )
-  "True for the ASCII decimal digits 0 to 9 (codes 48 to 57)." doc
-  c 48 57 between? ;
-
-: hex-digit? ( c:int -- bool )
-  "True for an ASCII hexadecimal digit: 0 to 9, A to F or a to f." doc
-  c 48 >= c 57 <= and c 65 >= c 70 <= and or c 97 >= c 102 <= and or ;
-
-: byte>hex ( b:int -- str )
-  "Two upper-case hex digits of a byte 0 to 255, e.g. 0A or FF." doc
-  b 256 + 16 int>str-radix 1 3 slice upper ;
-
-: repeat-str ( s:str n:int -- str )
-  "The text s repeated n times (the empty string for 0)." doc
-  0 n range [ drop s ] map "" join ;
-
-: pad-hex ( v:int n:int -- str )
-  "The lower-case hex digits of a non-negative integer, left-padded with zeros to at least n digits (never truncated)." doc
-  v 16 int>str-radix dup len n <
-  [ n over len - dup 16 <= [ "0000000000000000" swap 0 swap slice ] [ "0" swap repeat-str ] if swap cat ]
-  when ;
+  data table translate :> out
+  out bytes>latin1 255 cp>str split len 1 >
+  [ "a character is not in the alphabet" fail-coerce ] when
+  out ;
 
 : zero-pad ( n:int w:int -- str )
   "The decimal digits of a non-negative integer, left-padded with zeros to at least w digits (never cut): 7 and 3 give 007, 1234 and 2 give 1234." doc
   "0" w n int>str len - 0 max repeat-str n int>str cat ;
 
+: byte>hex ( b:int -- str )
+  "Two upper-case hex digits of a byte 0 to 255, e.g. 0A or FF." doc
+  b 256 + 16 int>str-radix 1 3 slice upper ;
+
 : ordinal-suffix ( n:int -- str )
   "The English ordinal suffix of a non-negative integer: st, nd, rd or th (1 gives st, 2 nd, 3 rd, 11 to 13 th, 21 st, 111 th)." doc
-  n 100 mod dup 11 >= swap 13 <= and
-  [ "th" ]
-  [ n 10 mod dup 1 = [ drop "st" ] [ dup 2 = [ drop "nd" ] [ 3 = [ "rd" ] [ "th" ] if ] if ] if ] if ;
+  n 100 mod 11 13 between? [ "th" exit ] when
+  n 10 mod { 1 [ "st" ] 2 [ "nd" ] 3 [ "rd" ] [ "th" ] } case ;
 
 : tdiv ( a:int b:int -- int )
   "Integer division that rounds towards zero (div rounds down, so -7 2 div is -4 and -7 2 tdiv is -3). b must be positive." doc
@@ -136,10 +231,6 @@ IN: util
 : round-div ( n:int d:int -- int )
   "n divided by d, rounded to the nearest integer, halves up. n must not be negative and d must be positive." doc
   n 2 * d + d 2 * div ;
-
-: contains? ( items:list x:any -- bool )
-  "True when some element of the list equals x (a linear search; an empty list has nothing)." doc
-  items [ x = ] filter len 0 > ;
 
 : total-text ( items:list total:bool -- str )
   "The items one per line; with total true, a line Total found: N (N is the number of items) and a blank line go in front. The output of the extractors and the date finder." doc
@@ -150,38 +241,6 @@ IN: util
   "The text of every match of a regular expression in s, in order, as a list of strings (regex:find-all keeps position and groups too; this keeps the text only). flags are the regex flags, empty for none." doc
   s pattern flags regex:find-all [ "text" get ] map ;
 
-: starts-with? ( s:str prefix:str -- bool )
-  "True when s begins with prefix; false (not an error) when s is shorter than prefix. Every string starts with the empty string." doc
-  s len prefix len >= [ s 0 prefix len slice prefix = ] [ false ] if ;
-
-: ends-with? ( s:str suffix:str -- bool )
-  "True when s ends with suffix; false (not an error) when s is shorter than suffix." doc
-  s len suffix len >= [ s s len suffix len - s len slice suffix = ] [ false ] if ;
-
-: strip-space ( s:str -- str )
-  "The text without any of its ASCII white space characters (see space?), wherever they are." doc
-  s str>codes [ space? not ] filter codes>str ;
-
-\ ---- scanning and trimming ----
-
-\ Fold step of count-leading: acc >= 0 is still counting, acc < 0 is -(count) - 1 once pred failed.
-: _lead-step ( acc:int c:int pred:quot -- int )
-  acc 0 < [ acc ] [ c pred call [ acc 1 + ] [ acc neg 1 - ] if ] if ;
-
-: count-leading ( items pred:quot -- int )
-  "The number of elements at the start of items (a list, bytes or the like) for which pred ( element -- bool ) holds, stopping at the first that fails. Zero for an empty sequence." doc
-  items 0 [ pred _lead-step ] reduce
-  dup 0 < [ neg 1 - ] when ;
-
-: trim-start ( s:str pred:quot -- str )
-  "The text without its leading characters whose code satisfies pred ( code:int -- bool )." doc
-  0 [ dup s len < [ dup s swap dup 1 + slice str>codes 0 nth pred call ] [ false ] if ] [ 1 + ] while
-  s swap s len slice ;
-
-: trim-end ( s:str pred:quot -- str )
-  "The text without its trailing characters whose code satisfies pred ( code:int -- bool )." doc
-  s 0 s len s str>codes rev pred count-leading - slice ;
-
 \ ---- numeric text ----
 
 : number-tokens ( s:str -- list )
@@ -191,9 +250,10 @@ IN: util
 
 \ One unsigned byte value written in the radix; anything else is E_COERCE with msg.
 : _byte-number ( t:str radix:int msg:str -- int )
-  t 0 1 slice "-" = [ msg raise:coerce ] when
-  t radix str>int-radix
-  dup 255 > [ msg raise:coerce ] when ;
+  t 0 1 slice "-" = [ msg fail-coerce ] when
+  t radix str>int-radix :> v
+  v 255 > [ msg fail-coerce ] when
+  v ;
 
 : numbers>bytes ( data:bytes radix:int msg:str -- bytes )
   "Decode text of byte values written in the radix (2 to 36), separated by white space and/or commas (see number-tokens), to bytes. A value that is negative, not a number of the radix or over 255 is E_COERCE with the message msg." doc
@@ -204,12 +264,11 @@ IN: util
 \ p is the text after an escape introducer: the byte of its two leading hex digits (E_COERCE with
 \ msg if either is not one), then the rest of p as Latin-1 bytes.
 : _hex-escape ( p:str msg:str -- bytes )
-  p len 2 < [ msg raise:coerce ] when
-  p 0 1 slice "-" = [ msg raise:coerce ] when
-  [ p 0 2 slice 16 str>int-radix ] [ drop -1 ] try
-  dup 0 < [ msg raise:coerce ] when
-  { } swap append list>bytes
-  p 2 p len slice latin1>bytes cat ;
+  p len 2 < [ msg fail-coerce ] when
+  p 0 1 slice "-" = [ msg fail-coerce ] when
+  [ p 0 2 slice 16 str>int-radix ] [ drop -1 ] try :> v
+  v 0 < [ msg fail-coerce ] when
+  { v } list>bytes p 2 p len slice latin1>bytes cat ;
 
 : _unescape-pieces ( pieces:list msg:str -- bytes )
   pieces 0 nth latin1>bytes
@@ -231,7 +290,7 @@ IN: util
 
 : need-bytes ( data:bytes p:int n:int what:str -- )
   "Raises E_COERCE with the message what then is cut short unless data holds n bytes from offset p (a truncated file). what names the data, for example gzip data." doc
-  p n + data len > [ what " is cut short" cat raise:coerce ] when ;
+  p n + data len > [ what " is cut short" cat fail-coerce ] when ;
 
 : names-of ( records:list -- list )
   "The name field of each record of a list, in order (the entries of an archive)." doc
@@ -239,19 +298,15 @@ IN: util
 
 \ E_RANGE for a name that is not there: it lists the first entries (the first eight) to help.
 : _no-entry-named ( records:list name:str -- )
-  records len 0 = [ "there are no entries, so there is no entry named " name cat raise:range ] when
+  records len 0 = [ "there are no entries, so there is no entry named " name cat fail-range ] when
   "no entry named " name cat ", the first entries are: " cat
-  records names-of 0 records len 8 min slice ", " join cat raise:range ;
+  records names-of 0 records len 8 min slice ", " join cat fail-range ;
 
 : pick-named ( records:list name:str -- record )
   "The first record of a list whose name field is exactly name. A name that is not there is E_RANGE, and the message lists the first eight names." doc
-  0 records len range [ records swap nth "name" get name = ] filter
-  dup len 0 = [ records name _no-entry-named ] when
-  0 nth records swap nth ;
-
-: zero-bytes ( n:int -- bytes )
-  "n zero bytes (none for 0)." doc
-  0 n range [ drop 0 ] map list>bytes ;
+  records [ "name" get name = ] find :> i
+  i 0 < [ records name _no-entry-named ] when
+  records i nth ;
 
 : byte-at ( d j:int -- int )
   "The element j of d (bytes, or a list of ints), or 0 past the end." doc
@@ -292,8 +347,8 @@ IN: util
 
 : symbols>bytes ( data:bytes table:bytes radix:int -- bytes )
   "The inverse of bytes>symbols. table is a decode table (see decode-table) built with 254 for white space and 255 for a byte outside the alphabet: an unknown symbol is E_COERCE and white space is ignored. Each leading zero digit becomes a zero byte. The integer limit applies (E_LIMIT_VALUE)." doc
-  data table check-symbols [ 254 <> ] filter
-  dup [ 0 = ] count-leading swap radix digits>int _zero-prefixed ;
+  data table check-symbols [ 254 <> ] filter :> digits
+  digits [ 0 = ] count-leading digits radix digits>int _zero-prefixed ;
 
 \ ---- lists and byte searches ----
 
@@ -320,7 +375,8 @@ IN: util
 
 : letter? ( c:int -- bool )
   "True for an ASCII letter, A to Z or a to z." doc
-  c 32 bor 97 - dup 0 >= swap 25 <= and ;
+  c 32 bor 97 - :> k
+  k 0 >= k 25 <= and ;
 
 : letters? ( t:str -- bool )
   "True when t is not empty and every character is an ASCII letter (either case)." doc
@@ -386,42 +442,47 @@ IN: util
   "A 676-byte table for the rotor next to the reflector: for each shift s and contact x, the signal goes through the rotor (fl, a rotor-shift-table), then the fixed 26-byte permutation r (a reflector, possibly with fixed rotors folded in), then back through the rotor (il, the rotor-shift-table of its inverse wiring)." doc
   0 676 range [ dup dup 26 mod - swap fl swap nth r swap nth + il swap nth ] map list>bytes ;
 
+\ The number 0 to 25 of a setting token that is a number 1 to 26.
+: _setting-number ( t:str what:str -- int )
+  t len 3 < [ t str>int 1 - ] [ -1 ] if :> v
+  v 0 < v 25 > or [ what ": a number must be 1 to 26" cat fail-range ] when
+  v ;
+
 \ The value 0 to 25 of one setting token: a number 1 to 26 or a single letter.
 : _setting-token ( t:str what:str -- int )
-  t digits?
-  [ t len 3 < [ t str>int 1 - ] [ -1 ] if
-    dup 0 < over 25 > or [ what ": a number must be 1 to 26" cat raise:range ] when ]
-  [ t len 1 = t letters? and
-    [ t str>bytes 0 nth 32 bor 97 - ]
-    [ what ": write letters (BUL), letters apart (B U L) or numbers 1 to 26 (2 21 12)" cat raise:range 0 ] if ]
-  if ;
+  {
+    [ t digits? ] [ t what _setting-number ]
+    [ t len 1 = t letters? and ] [ t str>bytes 0 nth 32 bor 97 - ]
+    [ what ": write letters (BUL), letters apart (B U L) or numbers 1 to 26 (2 21 12)" cat fail-range ]
+  } cond ;
 
 : letter-settings ( s:str n:int what:str -- bytes )
   "Machine settings (ring settings, start positions) as n numbers 0 to 25: one word of n letters (BUL), or n tokens separated by white space or commas, each a letter or a number 1 to 26 (B U L, 2 21 12). The wrong count or a bad token is E_RANGE with a message that starts with what." doc
-  s number-tokens
-  dup len 0 = [ what ": the setting is empty" cat raise:range ] when
-  dup len 1 = over 0 nth letters? and
-  [ 0 nth str>bytes [ 32 bor 97 - ] map ]
-  [ [ what _setting-token ] map list>bytes ] if
-  dup len n <>
-  [ what ": " cat n int>str cat " settings are needed" cat raise:range ] when ;
+  s number-tokens :> tokens
+  tokens len 0 = [ what ": the setting is empty" cat fail-range ] when
+  tokens len 1 = tokens 0 nth letters? and
+  [ tokens 0 nth str>bytes [ 32 bor 97 - ] map ]
+  [ tokens [ what _setting-token ] map list>bytes ] if :> settings
+  settings len n <>
+  [ what ": " cat n int>str cat " settings are needed" cat fail-range ] when
+  settings ;
 
 \ The partner of letter i in a flat list of plugboard letters (pairs side by side), else i.
 : _plug-partner ( i:int fl:bytes -- int )
-  0 fl len range [ fl swap nth i = ] filter
-  dup len 0 = [ drop i ] [ 0 nth 1 bxor fl swap nth ] if ;
+  fl [ i = ] find :> k
+  k 0 < [ i ] [ k 1 bxor fl swap nth ] if ;
 
 : _plug-pair ( t:str -- bytes )
   t len 2 = t letters? and not
-  [ "plugboard: each pair is two letters, like AB" raise:range ] when
+  [ "plugboard: each pair is two letters, like AB" fail-range ] when
   t letter-indices ;
 
 : plugboard-table ( s:str -- bytes )
   "A plugboard written as letter pairs (AB CD EF, separated by white space or commas, either case) as a 26-byte permutation that swaps each pair and leaves the other letters alone. A group that is not two different letters, or a letter used twice, is E_RANGE." doc
-  s number-tokens [ _plug-pair ] map #[ ] [ cat ] reduce
-  0 26 range [ over swap count-of 1 > ] filter len 0 >
-  [ "plugboard: a letter may be in one pair only" raise:range ] when
-  0 26 range [ over _plug-partner ] map list>bytes nip ;
+  s number-tokens [ _plug-pair ] map #[ ] [ cat ] reduce :> fl
+  0 26 range [ fl swap count-of 1 > ] filter len 0 >
+  [ "plugboard: a letter may be in one pair only" fail-range ] when
+  0 26 range [ fl _plug-partner ] map list>bytes ;
 
 \ ---- cycles and teleprinter (ITA2) text ----
 
@@ -436,7 +497,7 @@ IN: util
 
 : ita2-code ( u:int tbl:bytes -- int )
   "The code of a Bletchley Park character: u is its upper-case byte and tbl the table of ita2-alphabet from decode-table. + gives 27 (figure shift) and - gives 31 (letter shift); otherwise the table entry (254 white space, 255 not a character)." doc
-  u 43 = [ 27 ] [ u 45 = [ 31 ] [ tbl u nth ] if ] if ;
+  { [ u 43 = ] [ 27 ] [ u 45 = ] [ 31 ] [ tbl u nth ] } cond ;
 
 : ita2-entry ( b:int base:bytes -- int )
   "The code of the byte b (either case) in Bletchley Park notation, through the alphabet table base (see ita2-code)." doc
@@ -452,10 +513,10 @@ IN: util
 
 : from-bp ( s:str -- bytes )
   "The ITA2 codes (0 to 31) of text in Bletchley Park notation, either case, white space ignored. Any other character is E_COERCE." doc
-  s str>bytes ita2-table translate
-  dup [ 255 = ] filter len 0 <>
-  [ "not an ITA2 character: use the letters, 3 4 5 8 9 / (and + and -); white space is ignored" raise:coerce ] when
-  [ 254 <> ] filter ;
+  s str>bytes ita2-table translate :> codes
+  codes [ 255 = ] filter len 0 <>
+  [ "not an ITA2 character: use the letters, 3 4 5 8 9 / (and + and -); white space is ignored" fail-coerce ] when
+  codes [ 254 <> ] filter ;
 
 \ ---- keyed alphabets and squares ----
 
@@ -476,7 +537,8 @@ IN: util
 
 : upper-merge-i ( code:int -- int )
   "A letter code made upper case (bit 5 cleared) with J merged into I. Use it on letters only: other codes are only masked." doc
-  code 223 band dup 74 = [ drop 73 ] when ;
+  code 223 band :> c
+  c 74 = [ 73 ] [ c ] if ;
 
 \ ---- checksums ----
 
@@ -554,8 +616,8 @@ IN: util
 
 : name-in-table ( table:str key:str -- str )
   "The name that a table gives to a key. The table is text of entries between bars, each as key:name, for example |1:Blues|2:Classic Rock| (a leading and a trailing bar); the key is compared as text, so write a number in the form the table uses. The empty string when the key is not there." doc
-  table "|" key cat ":" cat split
-  dup len 2 < [ drop "" ] [ 1 nth "|" split 0 nth ] if ;
+  table "|" key cat ":" cat split :> parts
+  parts len 2 < [ "" ] [ parts 1 nth "|" split 0 nth ] if ;
 
 : pad-left ( s:str w:int -- str )
   "The text s with spaces added at the left up to a width of w characters; a text that is w characters or longer is returned as it is (never truncated)." doc
@@ -575,8 +637,11 @@ IN: util
 
 : wire-input ( data:bytes format:str -- bytes )
   "The bytes of an op's input given as hex text (format hex, white space ignored), Base64 text (format base64, the standard alphabet) or raw bytes (any other format name, normally raw). The shared input step of the fingerprint ops (JA3, JA4, HASSH)." doc
-  format "hex" = [ data hex:decode ] [
-    format "base64" = [ data "standard" base64:decode ] [ data ] if ] if ;
+  format {
+    "hex" [ data hex:decode ]
+    "base64" [ data "standard" base64:decode ]
+    [ data ]
+  } case ;
 
 : md5-hex ( s:str -- str )
   "The MD5 digest of the characters of s (as UTF-8) as 32 lower-case hex digits." doc

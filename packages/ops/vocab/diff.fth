@@ -13,24 +13,29 @@ IN: diff
 : _sample-lines ( s:str -- list )
   s len 0 =
   [ { } ]
-  [ s "\n" util:ends-with? [ s 0 s len 1 - slice ] [ s ] if "\n" split ]
+  [ s "\n" ends-with? [ s 0 s len 1 - slice ] [ s ] if "\n" split ]
   if ;
 
-\ The words of a sample: runs of white space (ASCII, as util:space? has it) and runs of anything else, in order, so
+\ The words of a sample: runs of white space (ASCII, as space? has it) and runs of anything else, in order, so
 \ joining them gives the text back.
 : _words ( s:str -- list )
   s "[\t-\r ]+|[^\t-\r ]+" "" util:match-texts ;
 
 : _tokens ( s:str by:str -- list )
-  by "line" = [ s _sample-lines ] [ by "word" = [ s _words ] [ s str>codes [ util:cp>str ] map ] if ] if ;
+  {
+    [ by "line" = ] [ s _sample-lines ]
+    [ by "word" = ] [ s _words ]
+    [ s str>codes [ cp>str ] map ]
+  } cond ;
 
 \ What tokens are compared by: the tokens themselves, or with ignore, a line without its white space and a word or
 \ character that is white space as the empty text (all white space is equal).
 : _keys ( toks:list by:str ignore:bool -- list )
-  ignore not
-  [ toks ]
-  [ by "line" = [ toks [ util:strip-space ] map ] [ toks [ dup str>codes 0 nth util:space? [ drop "" ] when ] map ] if ]
-  if ;
+  {
+    [ ignore not ] [ toks ]
+    [ by "line" = ] [ toks [ strip-space ] map ]
+    [ toks [ dup str>codes 0 nth space? [ drop "" ] when ] map ]
+  } cond ;
 
 \ ---- unified text for lines ----
 
@@ -46,13 +51,12 @@ IN: diff
 
 \ The equal run at the start of the script keeps only its last ctx lines, the one at the end its first ctx lines.
 : _clip-run ( run:list i:int n:int ctx:int -- list )
-  run 0 nth 0 =
-  [ i 0 =
-    [ run 3 nth ctx > [ run ctx _ctx-tail ] [ run ] if ]
-    [ i n 1 - = [ run 3 nth ctx > [ run ctx _ctx-head ] [ run ] if ] [ run ] if ]
-    if ]
-  [ run ]
-  if ;
+  {
+    [ run 0 nth 0 <> run 3 nth ctx <= or ] [ run ]
+    [ i 0 = ] [ run ctx _ctx-tail ]
+    [ i n 1 - = ] [ run ctx _ctx-head ]
+    [ run ]
+  } cond ;
 
 \ The places in the script of equal runs, not at an end, that are longer than twice the context: the hunks lie between.
 : _gaps ( runs:list ctx:int -- list )
@@ -77,9 +81,11 @@ IN: diff
 
 \ The lines of a run, each behind the sign.
 : _block ( run:list a:list b:list -- str )
-  run 0 nth 0 = [ a run 1 nth run 1 nth run 3 nth + slice "\n " join " " swap cat ] [
-  run 0 nth 1 = [ a run 1 nth run 1 nth run 3 nth + slice "\n-" join "-" swap cat ]
-                 [ b run 2 nth run 2 nth run 3 nth + slice "\n+" join "+" swap cat ] if ] if ;
+  {
+    [ run 0 nth 0 = ] [ a run 1 nth run 1 nth run 3 nth + slice "\n " join " " swap cat ]
+    [ run 0 nth 1 = ] [ a run 1 nth run 1 nth run 3 nth + slice "\n-" join "-" swap cat ]
+    [ b run 2 nth run 2 nth run 3 nth + slice "\n+" join "+" swap cat ]
+  } cond ;
 
 : _hunk-text ( hr:list a:list b:list -- str )
   "@@ -" hr 0 nth 1 nth hr 2 _span _range cat
@@ -103,9 +109,11 @@ IN: diff
 \ ---- inline text for words and characters ----
 
 : _piece ( run:list a:list b:list -- str )
-  run 0 nth 0 = [ a run 1 nth run 1 nth run 3 nth + slice "" join ] [
-  run 0 nth 1 = [ "[-" a run 1 nth run 1 nth run 3 nth + slice "" join cat "-]" cat ]
-                 [ "{+" b run 2 nth run 2 nth run 3 nth + slice "" join cat "+}" cat ] if ] if ;
+  {
+    [ run 0 nth 0 = ] [ a run 1 nth run 1 nth run 3 nth + slice "" join ]
+    [ run 0 nth 1 = ] [ "[-" a run 1 nth run 1 nth run 3 nth + slice "" join cat "-]" cat ]
+    [ "{+" b run 2 nth run 2 nth run 3 nth + slice "" join cat "+}" cat ]
+  } cond ;
 
 : _inline ( a:list b:list runs:list -- str )
   runs [ a b _piece ] map "" join ;
@@ -120,7 +128,7 @@ IN: diff
   "Compare two samples of text, written one after the other in the input and cut apart at the sample delimiter (exactly two samples, else E_COERCE). The default is by character, as in CyberChef. by line gives a unified-style text: the header --- sample 1 and +++ sample 2, then hunks, each @@ -first,count +first,count @@ and its lines behind a space (kept), - (only in sample 1) or + (only in sample 2), with context lines around the changes; samples that do not differ give the empty text. A final line feed ends the last line. by word and by character give the second sample's text with the changes marked in line, [-deleted-] and {+inserted+}, with no context (words are runs of white space and runs of anything else, so the text reads as it was). With ignore-whitespace, lines are compared without their white space and for words and characters all white space is equal; the text shown for a kept part is the first sample's. The difference is a shortest one (Myers); on very different inputs the search stops after 60 million steps and the rest is reported as one deletion and one insertion." doc
   "Utils" category
   data sample-delimiter split
-  dup len 2 <> [ "the input must hold exactly two samples separated by the sample delimiter" raise:coerce ] when
+  dup len 2 <> [ "the input must hold exactly two samples separated by the sample delimiter" fail-coerce ] when
   dup 0 nth swap 1 nth
   by ignore-whitespace context _diff-samples ;
 

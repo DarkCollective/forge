@@ -46,7 +46,7 @@ IN: charset
   { "gbk" "gb18030" "big5" "euc-jp" "iso-2022-jp" "shift_jis" "euc-kr" } ;
 
 \ The tables: a record of set name to 256 hexadecimal code points.
-: _tables ( -- record )
+MEMO: _tables ( -- record )
   {
     \ WHATWG ibm866
     { "ibm866" "0000 0001 0002 0003 0004 0005 0006 0007 0008 0009 000A 000B 000C 000D 000E 000F
@@ -911,15 +911,15 @@ F8FF 00D2 00DA 00DB 00D9 0131 02C6 02DC 00AF 02D8 02D9 02DA 00B8 02DD 02DB 02C7"
 
 \ With strict, an unassigned byte (U+FFFD in the table) is an error.
 : _check-assigned ( text:str strict:bool -- str )
-  strict [ text "\u{fffd}" split len 1 > [ "a byte is not assigned in this character set" raise:coerce ] when ] when
+  strict [ text "\u{fffd}" split len 1 > [ "a byte is not assigned in this character set" fail-coerce ] when ] when
   text ;
 
 : _decode-with ( data:bytes enc:str strict:bool -- str )
-  enc "iso-8859-1" =
-  [ data bytes>latin1 ]
-  [ enc _table?
-    [ data enc _codes-of _lookup-decode strict _check-assigned ]
-    [ data enc strict _decode ] if ] if ;
+  {
+    [ enc "iso-8859-1" = ] [ data bytes>latin1 ]
+    [ enc _table? ] [ data enc _codes-of _lookup-decode strict _check-assigned ]
+    [ data enc strict _decode ]
+  } cond ;
 
 : decode ( data:bytes encoding:choice{utf-8|utf-16le|utf-16be|iso-8859-1|ibm866|iso-8859-2|iso-8859-3|iso-8859-4|iso-8859-5|iso-8859-6|iso-8859-7|iso-8859-8|iso-8859-10|iso-8859-13|iso-8859-14|iso-8859-15|iso-8859-16|koi8-r|koi8-u|macintosh|windows-874|windows-1250|windows-1251|windows-1252|windows-1253|windows-1254|windows-1255|windows-1256|windows-1257|windows-1258|x-mac-cyrillic|ibm037|ibm273|ibm277|ibm278|ibm280|ibm284|ibm285|ibm297|ibm500|ibm875|ibm1026|ibm1047|ibm1140|ibm1141|ibm1142|ibm1143|ibm1144|ibm1145|ibm1146|ibm1147|ibm1148|ibm1149|gbk|gb18030|big5|euc-jp|iso-2022-jp|shift_jis|euc-kr}=utf-8 strict:bool=true -- str )
   "Decode bytes as text in a legacy character set: WHATWG encodings (single-byte, CJK, UTF-16), true ISO 8859-1 and EBCDIC code pages (ibm037 ... ibm1149). strict raises E_COERCE on bytes that are not valid or not assigned in the encoding (iso-8859-1 and the EBCDIC pages never fail); otherwise U+FFFD replaces them. A byte order mark is kept as U+FEFF." doc
@@ -938,8 +938,10 @@ F8FF 00D2 00DA 00DB 00D9 0131 02C6 02DC 00AF 02D8 02D9 02DA 00B8 02DD 02DB 02C7"
   [ 0 nth "65533" <> ] filter >record ;
 
 : _encode-with ( s:str inv:record -- bytes )
-  [ s str>codes [ int>str inv swap get ] map list>bytes ]
-  [ drop "a character cannot be encoded in this character set" raise:coerce ] try ;
+  s str>codes :> cps
+  cps [ int>str inv swap has-key? not ] any?
+  [ "a character cannot be encoded in this character set" fail-coerce ] when
+  cps [ int>str inv swap get ] map list>bytes ;
 
 : _single-encode ( s:str enc:str -- bytes )
   s enc _codes-of _inverse _encode-with ;
@@ -961,16 +963,18 @@ F8FF 00D2 00DA 00DB 00D9 0131 02C6 02DC 00AF 02D8 02D9 02DA 00B8 02DD 02DB 02C7"
 : encode ( text:str encoding:choice{utf-8|utf-16le|utf-16be|iso-8859-1|ibm866|iso-8859-2|iso-8859-3|iso-8859-4|iso-8859-5|iso-8859-6|iso-8859-7|iso-8859-8|iso-8859-10|iso-8859-13|iso-8859-14|iso-8859-15|iso-8859-16|koi8-r|koi8-u|macintosh|windows-874|windows-1250|windows-1251|windows-1252|windows-1253|windows-1254|windows-1255|windows-1256|windows-1257|windows-1258|x-mac-cyrillic|ibm037|ibm273|ibm277|ibm278|ibm280|ibm284|ibm285|ibm297|ibm500|ibm875|ibm1026|ibm1047|ibm1140|ibm1141|ibm1142|ibm1143|ibm1144|ibm1145|ibm1146|ibm1147|ibm1148|ibm1149}=utf-8 -- bytes )
   "Encode text in a single-byte character set (WHATWG encodings, ISO 8859-1 and EBCDIC code pages), or as UTF-8 or UTF-16. A character the character set cannot represent is E_COERCE. The multi-byte legacy encodings (Shift_JIS, GBK, Big5, EUC-JP, EUC-KR, ISO-2022-JP) are not offered: the host has no encoder for them." doc
   "Encodings" category
-  encoding "utf-8" = [ text str>bytes ]
-  [ encoding "utf-16le" = [ text false _utf16 ]
-    [ encoding "utf-16be" = [ text true _utf16 ]
-      [ text encoding _single-encode ] if ] if ] if ;
+  encoding {
+    "utf-8" [ text str>bytes ]
+    "utf-16le" [ text false _utf16 ]
+    "utf-16be" [ text true _utf16 ]
+    [ text encoding _single-encode ]
+  } case ;
 
 \ ---- brute force ----
 
 \ Every encoding charset:decode offers, in a fixed order: the Unicode ones, iso-8859-1, the tables (in the order of
 \ _tables) and the multi-byte ones.
-: _all ( -- list )
+MEMO: _all ( -- list )
   _unicode { "iso-8859-1" } cat _tables keys cat _multi-byte cat ;
 
 \ The record { encoding text } of a strict decoding, or an empty record when the bytes are not valid.
@@ -989,26 +993,26 @@ F8FF 00D2 00DA 00DB 00D9 0131 02C6 02DC 00AF 02D8 02D9 02DA 00B8 02DD 02DB 02C7"
 
 META: decode
   use-when "You have bytes in a legacy character set, such as an EBCDIC mainframe file or a Windows code page, and want to read them as text." ;
-  link "https://encoding.spec.whatwg.org/" "WHATWG Encoding Standard" ;
-  link "https://en.wikipedia.org/wiki/EBCDIC" "EBCDIC on Wikipedia" ;
-  inverse encode ;
   param encoding "A WHATWG encoding label, iso-8859-1 (true ISO 8859-1) or an EBCDIC code page ibmNNN (037, 273, 277, 278, 280, 284, 285, 297, 500, 875, 1026, 1047, 1140-1149)." ;
   param strict "Raise an error on bytes that are not valid in the encoding. Off: replace them with U+FFFD." ;
+  inverse encode ;
   see-also charset:encode charset:brute ;
+  link "https://encoding.spec.whatwg.org/" "WHATWG Encoding Standard" ;
+  link "https://en.wikipedia.org/wiki/EBCDIC" "EBCDIC on Wikipedia" ;
 ;
 
 META: encode
   use-when "You have text and need it in a legacy character set, such as an EBCDIC code page or a Windows code page, for a system that cannot read Unicode." ;
+  param encoding "The character set to encode into: a single-byte WHATWG encoding, iso-8859-1, an EBCDIC code page (see charset:decode), utf-8, utf-16le or utf-16be." ;
+  inverse decode ;
+  see-also charset:decode ;
   link "https://encoding.spec.whatwg.org/" "WHATWG Encoding Standard" ;
   link "https://en.wikipedia.org/wiki/Character_encoding" "Character encoding on Wikipedia" ;
-  inverse decode ;
-  param encoding "The character set to encode into: a single-byte WHATWG encoding, iso-8859-1, an EBCDIC code page (see charset:decode), utf-8, utf-16le or utf-16be." ;
-  see-also charset:decode ;
 ;
 
 META: brute
   use-when "You have bytes of unknown encoding and want to see them under each legacy character set, to pick the one that reads as text." ;
-  link "https://encoding.spec.whatwg.org/" "WHATWG Encoding Standard" ;
   param sample "Decode only this many bytes from the start of the input, so that the result stays small for large inputs." ;
   see-also charset:decode ;
+  link "https://encoding.spec.whatwg.org/" "WHATWG Encoding Standard" ;
 ;

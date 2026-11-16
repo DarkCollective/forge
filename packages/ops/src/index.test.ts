@@ -20,6 +20,8 @@ describe("the main entry (RECIPES 11.5)", () => {
   test("exports exactly the documented values", () => {
     expect(Object.keys(ops).sort()).toEqual([
       "CATALOGUE_FORMAT",
+      "CHECKS_FORMAT",
+      "CHECKS_MAX_BYTES",
       "HELP_FORMAT",
       "HELP_MAX_BYTES",
       "INTERNAL_VOCABS",
@@ -27,12 +29,15 @@ describe("the main entry (RECIPES 11.5)", () => {
       "UI_PARAM_TYPES",
       "assembleRuntime",
       "buildCatalogue",
+      "buildChecks",
       "buildHelp",
       "createBundleLoader",
       "execAll",
       "isCatalogueOp",
       "isRegexPrimitive",
+      "magicHostFor",
       "markRegexPrimitive",
+      "provideMagicHost",
       "scanVocab",
     ]);
   });

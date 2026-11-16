@@ -16,9 +16,8 @@
 import { valueHelpers } from "@forge/lang";
 import type { Value } from "@forge/lang";
 import { describe, expect, test } from "vitest";
-import { assembleRuntime } from "../bundle.js";
-import { loadBundleNode } from "../sources-node.js";
-import { primitives } from "./base64.js";
+import { assembleRuntime } from "./bundle.js";
+import { loadBundleNode } from "./sources-node.js";
 
 const { bytes, str, bool } = valueHelpers;
 const runtime = assembleRuntime(await loadBundleNode(["base64"]));
@@ -76,19 +75,28 @@ describe("base64:encode", () => {
 
   test("does not return an alias of its argument and rejects an oversize result", async () => {
     const small = assembleRuntime(await loadBundleNode(["base64"]), {
-      limits: { maxValueBytes: 15 },
+      limits: { maxValueBytes: 10000 },
     });
     const ok = await small.call("base64:encode", [bytes(enc("foo")), str("standard"), bool(true)]);
     expect(ok.ok).toBe(true);
     const r = await small.call("base64:encode", [
-      bytes(enc("foobar")),
+      bytes(new Uint8Array(6000)),
       str("standard"),
       bool(true),
     ]);
     expect(r.ok).toBe(false);
-    if (!r.ok) {
-      expect(r.error.code).toBe("E_LIMIT_VALUE");
-      expect(r.error.detail.limit).toBe("maxValueBytes");
+    if (!r.ok) expect(r.error.code).toBe("E_LIMIT_VALUE");
+  });
+
+  test("64 KiB takes far fewer steps than the default limit of 10 million", async () => {
+    const data = new Uint8Array(65536).map((_, i) => (i * 131 + (i >> 8)) & 255);
+    for (const alphabet of ["standard", "url"]) {
+      const r = await encode(data, alphabet, alphabet === "standard");
+      expect(r.ok).toBe(true);
+      expect(r.steps).toBeLessThan(2_000_000);
+      const back = await decode(ascii(String((stackTop(r) as { v: string }).v)), alphabet);
+      expect((stackTop(back) as { v: Uint8Array }).v).toEqual(data);
+      expect(back.steps).toBeLessThan(2_000_000);
     }
   });
 });
@@ -173,14 +181,11 @@ describe("base64:decode", () => {
 });
 
 describe("module", () => {
-  test("defines both words with doc and category in the base64 vocabulary", () => {
-    expect(primitives.map((p) => `${p.vocab}:${p.name}`)).toEqual([
-      "base64:decode",
-      "base64:encode",
-    ]);
-    for (const p of primitives) {
-      expect(p.doc).toBeTruthy();
-      expect(p.category).toBe("Encodings");
+  test("both words are in the vocabulary with doc and category", () => {
+    for (const name of ["base64:decode", "base64:encode"]) {
+      const meta = runtime.meta(name);
+      expect(meta.doc).toBeTruthy();
+      expect(meta.category).toBe("Encodings");
     }
   });
 

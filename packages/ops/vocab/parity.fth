@@ -5,6 +5,12 @@
 \ its own parity bit.
 IN: parity
 
+\ Which parity the bit makes.
+CHOICE: parity-mode
+  option even "The number of 1 bits, parity bit included, is even." ;
+  option odd "The number of 1 bits, parity bit included, is odd." ;
+;
+
 \ The number of 1 characters in the text.
 : _ones ( s:str -- int )
   s "1" split len 1 - ;
@@ -12,7 +18,7 @@ IN: parity
 \ E_COERCE unless the block holds only 0, 1 and space.
 : _check-chars ( block:str -- )
   block "0" split "" join "1" split "" join " " split "" join
-  dup len 0 > [ str>codes 0 nth util:cp>str "unexpected character " swap cat raise:coerce ] [ drop ] if ;
+  dup len 0 > [ str>codes 0 nth cp>str "unexpected character " swap cat fail-coerce ] [ drop ] if ;
 
 : _bit ( block:str mode:str -- str )
   block _check-chars
@@ -23,27 +29,28 @@ IN: parity
   position "end" = [ block swap cat ] [ block cat ] if ;
 
 : _decode-block ( block:str mode:str position:str verify:bool -- str )
-  block len 0 = [ "no parity bit to remove" raise:coerce ] when
+  block len 0 = [ "no parity bit to remove" fail-coerce ] when
   verify [
     block _check-chars
     block _ones 2 mod mode "odd" = [ 1 ] [ 0 ] if <>
-    [ "parity check failed" raise:coerce ] when
+    [ "parity check failed" fail-coerce ] when
   ] when
   position "end" = [ block 0 block len 1 - slice ] [ block 1 block len slice ] if ;
 
 \ Apply the quotation to the whole text, or to each block when there is a delimiter.
 : _blocks ( text:str delimiter:str f:quot -- str )
-  text len 0 =
-  [ text ]
-  [ delimiter len 0 = [ text f call ] [ text delimiter split f map delimiter join ] if ]
-  if ;
+  {
+    [ text len 0 = ] [ text ]
+    [ delimiter len 0 = ] [ text f call ]
+    [ text delimiter split f map delimiter join ]
+  } cond ;
 
-: encode ( bits:str mode:choice{even|odd}=even position:choice{start|end}=end delimiter:str[0..16]="" -- str )
+: encode ( bits:str mode:choice<parity-mode>=even position:choice<util:start-or-end>=end delimiter:str[0..16]="" -- str )
   "Add a parity bit to a string of binary digits. Even parity makes the number of 1 bits, parity bit included, even; odd parity makes it odd. With a delimiter, the text is split at it and each block gets its own parity bit. Spaces are kept and not counted; any other character that is not 0 or 1 is an error. The empty input gives the empty text." doc
   "Hashing" category
   bits delimiter [ mode position _encode-block ] _blocks ;
 
-: decode ( bits:str mode:choice{even|odd}=even position:choice{start|end}=end delimiter:str[0..16]="" verify:bool=true -- str )
+: decode ( bits:str mode:choice<parity-mode>=even position:choice<util:start-or-end>=end delimiter:str[0..16]="" verify:bool=true -- str )
   "Remove the parity bit from a string of binary digits (from each block, with a delimiter). With verify on, the parity of every block is checked against the mode and a mismatch is an error; CyberChef removes the bit without checking." doc
   "Hashing" category
   bits delimiter [ mode position verify _decode-block ] _blocks ;

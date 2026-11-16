@@ -198,5 +198,15 @@
     "params": {},
     "input": { "value": "a%", "enc": "utf8" },
     "expect": { "error": "E_COERCE" }
+  },
+  {
+    "name": "url:encode output checks: typical result",
+    "op": "url:encode",
+    "checks": "output",
+    "data": {
+      "value": "caf%C3%A9",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

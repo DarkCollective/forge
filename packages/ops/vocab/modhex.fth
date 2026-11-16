@@ -1,7 +1,7 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ modhex: Yubico ModHex, a hexadecimal whose digits 0 to f are the keyboard-layout-independent
 \ letters cbdefghijklnrtuv (Yubico "Modhex" documentation). The words are FL; E_COERCE comes from
-\ the raise vocabulary (raise:coerce).
+\ fail-coerce.
 IN: modhex
 
 : _alpha ( -- str )
@@ -14,11 +14,11 @@ IN: modhex
   delimiter util:separator join ;
 
 \ 255 for a byte outside the alphabet, 254 for ASCII white space, else the digit value.
-: _table ( -- bytes )
+MEMO: _table ( -- bytes )
   _alpha 254 255 util:decode-table ;
 
 : _pack ( nib:bytes -- bytes )
-  nib len 2 mod 1 = [ "an odd number of ModHex letters" raise:coerce ] when
+  nib len 2 mod 1 = [ "an odd number of ModHex letters" fail-coerce ] when
   0 nib len 2 div range [ nib swap util:nibbles>byte ] map list>bytes ;
 
 : decode ( bytes -- bytes )
@@ -32,6 +32,7 @@ META: encode
   inverse decode ;
   param delimiter "What to put between the bytes: nothing or a space." ;
   see-also modhex:decode hex:encode ;
+  checks output charset "cbdefghijklnrtuv " ;
 ;
 
 META: decode
@@ -39,4 +40,6 @@ META: decode
   link "https://www.yubico.com/" "Yubico, the makers of the YubiKey" ;
   inverse encode ;
   see-also modhex:encode hex:decode ;
+  checks input charset "cbdefghijklnrtuvCBDEFGHIJKLNRTUV \t\n\x0b\x0c\r" ;
+  expects "ModHex text" ;
 ;

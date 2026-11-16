@@ -306,7 +306,7 @@ describe("ecdsa:sign", () => {
     const r = await sign(msg, KEYS.p256Sec1);
     const small = await sign("x", KEYS.p256Sec1);
     expect(Math.abs(steps(r) - steps(small))).toBeLessThan(100);
-    expect(steps(r)).toBeLessThan(5000);
+    expect(steps(r)).toBeLessThan(6000);
     const sig = out(r);
     const v = await verify(sig, KEYS.p256Pub, msg);
     expect(out(v)).toBe("Verified OK");

@@ -8,7 +8,7 @@ IN: adler32
 : checksum ( data:bytes -- bytes )
   "The Adler-32 checksum (RFC 1950, as used by zlib) as four big-endian bytes: b in the high 16 bits, a in the low 16. The empty input gives 00000001. Check value: Adler-32 of 123456789 is 091e01de." doc
   "Hashing" category
-  data _adler 4 util:int>be-bytes ;
+  data _adler 4 int>be-bytes ;
 
 META: checksum
   use-when "You have the uncompressed data of a zlib stream and want its Adler-32 value, to compare with the stored check. It finds accidental damage, not tampering." ;

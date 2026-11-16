@@ -11,6 +11,10 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
+    "./checks": {
+      "types": "./dist/checks/index.d.ts",
+      "default": "./dist/checks/index.js"
+    },
     "./node": {
       "types": "./dist/sources-node.d.ts",
       "default": "./dist/sources-node.js"
@@ -22,7 +26,9 @@
     "./catalogue.json": "./dist/catalogue.json",
     "./catalogue.schema.json": "./dist/catalogue.schema.json",
     "./help.json": "./dist/help.json",
-    "./help.schema.json": "./dist/help.schema.json"
+    "./help.schema.json": "./dist/help.schema.json",
+    "./checks.json": "./dist/checks.json",
+    "./checks.schema.json": "./dist/checks.schema.json"
   },
   "files": [
     "dist",
@@ -30,7 +36,7 @@
     "vocab"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && tsc -p tsconfig.scripts.json && node dist-scripts/catalogue.js && node dist-scripts/help.js",
+    "build": "tsc -p tsconfig.build.json && tsc -p tsconfig.scripts.json && node dist-scripts/catalogue.js && node dist-scripts/help.js && node dist-scripts/checks.js",
     "hash-snapshot": "tsc -p tsconfig.build.json && tsc -p tsconfig.scripts.json && node dist-scripts/hash-snapshot.js",
     "dupes": "tsc -p tsconfig.build.json && tsc -p tsconfig.scripts.json && node dist-scripts/dupes.js",
     "coverage": "tsc -p tsconfig.build.json && tsc -p tsconfig.scripts.json && node dist-scripts/catalogue.js && node dist-scripts/coverage.js",

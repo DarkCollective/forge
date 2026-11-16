@@ -10,14 +10,14 @@ USING: json deflate ;
 \ The codecs that are read; the others are named in the error.
 : _check-codec ( codec:str -- )
   codec "null" = codec "deflate" = or not [
-    "the Avro codec " codec cat " is not supported (only null and deflate are)" cat raise:coerce
+    "the Avro codec " codec cat " is not supported (only null and deflate are)" cat fail-coerce
   ] when ;
 
 : _block-bytes ( data:bytes codec:str -- bytes )
   codec "deflate" = [ data 0 deflate:inflate ] [ data ] if ;
 
 : _block ( acc:list b:record schema:str codec:str -- list )
-  acc  b "data" get codec _block-bytes  schema  b "count" get  avro:_decode  cat ;
+  acc b "data" get codec _block-bytes schema b "count" get avro:_decode cat ;
 
 : _all ( schema:str codec:str blocks:list -- list )
   codec _check-codec
@@ -35,4 +35,6 @@ META: to-json
   param indent "Spaces per level of the array; 0 writes compact JSON. Not used when force-valid-json is off." ;
   link "https://avro.apache.org/" "Apache Avro project" ;
   link "https://en.wikipedia.org/wiki/Apache_Avro" "Apache Avro on Wikipedia" ;
+  checks input magic-bytes format "avro" ;
+  expects "Avro object container file" ;
 ;

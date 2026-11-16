@@ -3,7 +3,7 @@
 \ Written in FL over the regex words, base64 and the charset vocabulary (every character set it decodes).
 IN: mime
 
-USING: charset base64 util raise ;
+USING: charset base64 util ;
 
 \ MIME charset names (lower case) and the name charset:decode knows them by, as "|name=target|name=target|". us-ascii is
 \ checked here (it is UTF-8 text without a byte above 127).
@@ -21,13 +21,13 @@ USING: charset base64 util raise ;
 \ The name charset:decode knows a MIME charset name by; an unknown name is E_COERCE.
 : _lookup ( name:str -- str )
   name _found len 0 =
-  [ "unsupported character set " name cat " in an encoded word" cat raise:coerce ] when
+  [ "unsupported character set " name cat " in an encoded word" cat fail-coerce ] when
   name _found 0 nth "groups" get 0 nth ;
 
 \ The bytes of a Q encoded text: _ is a space, =XX a byte, any other printable ASCII character itself.
 : _q-bytes ( text:str -- bytes )
   text "^[!-~]*$" "" regex:test not
-  [ "an encoded word holds a character that is not printable ASCII" raise:coerce ] when
+  [ "an encoded word holds a character that is not printable ASCII" fail-coerce ] when
   text "_" split " " join "=" "= must be followed by two hex digits in a Q encoded word" util:hex-unescape ;
 
 : _word-bytes ( enc:str text:str -- bytes )
@@ -36,16 +36,18 @@ USING: charset base64 util raise ;
 \ ASCII text is UTF-8 text without a byte above 127.
 : _ascii-text ( b:bytes -- str )
   b bytes>list [ 127 > ] filter len 0 >
-  [ "a us-ascii encoded word holds a byte above 127" raise:coerce ] when
+  [ "a us-ascii encoded word holds a byte above 127" fail-coerce ] when
   b bytes>str ;
 
 \ The characters of bytes in the character set name. UTF-8, ISO 8859-1 and ASCII are read here: charset:decode builds
 \ its tables on every call, which costs about 0.5 MB of the total allocation limit each time.
 : _decode-bytes ( b:bytes name:str -- str )
-  name "utf-8" = [ b bytes>str ] [
-  name "iso-8859-1" = [ b bytes>latin1 ] [
-  name "ascii" = [ b _ascii-text ] [
-  b name true charset:decode ] if ] if ] if ;
+  {
+    [ name "utf-8" = ] [ b bytes>str ]
+    [ name "iso-8859-1" = ] [ b bytes>latin1 ]
+    [ name "ascii" = ] [ b _ascii-text ]
+    [ b name true charset:decode ]
+  } cond ;
 
 \ The charset name (as charset:decode knows it) and the bytes of one encoded word, from its regex groups.
 : _name-of ( g:list -- str )
@@ -128,6 +130,10 @@ USING: charset base64 util raise ;
 
 META: decode
   use-when "You have a mail header with encoded words such as =?UTF-8?Q?...?= in its Subject or From line, and want the readable text." ;
+  expects "mail header text" ;
+  checks input utf8 ;
+  checks output utf8 ;
+  checks output printable ;
   link "https://www.rfc-editor.org/rfc/rfc2047" "RFC 2047: encoded words in mail headers" ;
   link "https://en.wikipedia.org/wiki/MIME" "MIME on Wikipedia" ;
 ;

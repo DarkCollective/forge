@@ -927,5 +927,25 @@
       "value": "[\n    {\n        \"id\": 1,\n        \"name\": \"a\",\n        \"score\": null,\n        \"tags\": [\n            \"x\",\n            \"y\"\n        ],\n        \"attrs\": {\n            \"k\": 1\n        },\n        \"kind\": \"B\",\n        \"raw\": {\n            \"type\": \"Buffer\",\n            \"data\": [\n                0,\n                255\n            ]\n        },\n        \"fx\": {\n            \"type\": \"Buffer\",\n            \"data\": [\n                97,\n                98,\n                99,\n                100\n            ]\n        },\n        \"f\": 0.10000000149011612,\n        \"ok\": true,\n        \"next\": null\n    },\n    {\n        \"id\": -9007199254740993123,\n        \"name\": \"é\",\n        \"score\": 2.5,\n        \"tags\": [],\n        \"attrs\": {},\n        \"kind\": \"C\",\n        \"raw\": {\n            \"type\": \"Buffer\",\n            \"data\": []\n        },\n        \"fx\": {\n            \"type\": \"Buffer\",\n            \"data\": [\n                1,\n                2,\n                3,\n                4\n            ]\n        },\n        \"f\": -1.5,\n        \"ok\": false,\n        \"next\": {\n            \"id\": 2,\n            \"name\": \"n\",\n            \"score\": null,\n            \"tags\": [],\n            \"attrs\": {},\n            \"kind\": \"A\",\n            \"raw\": {\n                \"type\": \"Buffer\",\n                \"data\": [\n                    122\n                ]\n            },\n            \"fx\": {\n                \"type\": \"Buffer\",\n                \"data\": [\n                    0,\n                    0,\n                    0,\n                    0\n                ]\n            },\n            \"f\": 3.0,\n            \"ok\": true,\n            \"next\": null\n        }\n    }\n]",
       "enc": "utf8"
     }
+  },
+  {
+    "name": "avro:to-json input check: an Avro container passes",
+    "op": "avro:to-json",
+    "checks": "input",
+    "data": {
+      "value": "4f626a01012a166176726f2e736368656d611022737472696e672200000102030405060708090a0b0c0d0e0f",
+      "enc": "hex"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "avro:to-json input check: plain text fails",
+    "op": "avro:to-json",
+    "checks": "input",
+    "data": {
+      "value": "This is plain text, not binary data of the expected kind.",
+      "enc": "utf8"
+    },
+    "expect": "fail"
   }
 ]

@@ -22,7 +22,7 @@ import { loadBundleNode } from "./sources-node.js";
 // base92 is FL (vocab/base92.fth); the vectors come from an independent port of the reference
 // implementation. These tests cover round trips, the size of the work and the error codes.
 const { bytes } = valueHelpers;
-const runtime = assembleRuntime(await loadBundleNode(["base92", "raise"]));
+const runtime = assembleRuntime(await loadBundleNode(["base92"]));
 
 function ascii(s: string): Uint8Array {
   return Uint8Array.from(s, (c) => c.charCodeAt(0));

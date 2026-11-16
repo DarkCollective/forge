@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-import { describe, expect, test } from "vitest";
-import { primitives } from "./analysis.js";
-
-const log2 = primitives.find((p) => p.name === "_log2")!.fn as (x: number) => number;
-
-describe("analysis._log2 (the only analysis primitive)", () => {
-  test("exact on powers of two, which the entropy vectors rely on", () => {
-    expect(log2(1)).toBe(0);
-    expect(log2(0.5)).toBe(-1);
-    expect(log2(1 / 256)).toBe(-8);
-  });
-  test("log2 of 3 is within rounding of the known value", () => {
-    expect(Math.abs(log2(3) - 1.584962500721156)).toBeLessThan(1e-12);
-  });
-});
+// `@forge/worker/magic`: the Magic engine (PLAN.md WP 6.29). Not part of the main entry, so the page only loads it
+// when the Magic button is used.
+export { magic } from "./search.js";
+export { MAGIC_LIMITS, MAGIC_OUTPUT_KEEP, MAGIC_RUN_LIMITS } from "./types.js";
+export type {
+  MagicCandidate,
+  MagicOp,
+  MagicOptions,
+  MagicProgress,
+  MagicResult,
+  MagicRunLimits,
+  MagicStop,
+} from "./types.js";
+export { ENTROPY_FULL_DROP, MAGIC_WEIGHTS, MIN_GAIN, MIN_RESULT_GAIN } from "./score.js";

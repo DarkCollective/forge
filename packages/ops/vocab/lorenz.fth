@@ -47,16 +47,23 @@ IN: lorenz
 
 \ ---- the alphabet, wheel sizes and published patterns ----
 
-: wheel-lengths ( -- list )
+MEMO: wheel-lengths ( -- list )
   "The cams of the twelve wheels in the order chi1 to chi5, psi1 to psi5, mu37, mu61." doc
   { 41 31 29 26 23 43 47 51 53 59 37 61 } ;
 
-: cam-table ( -- bytes )
+MEMO: cam-table ( -- bytes )
   "A 256-byte table for translate: x becomes 1, . becomes 0 and any other byte 255." doc
-  0 256 range [ dup 120 = [ drop 1 ] [ 46 = [ 0 ] [ 255 ] if ] if ] map list>bytes ;
+  0 256 range [
+    :> b
+    {
+      [ b 120 = ] [ 1 ]
+      [ b 46 = ] [ 0 ]
+      [ 255 ]
+    } cond
+  ] map list>bytes ;
 
 \ The twelve patterns of a setting, in the order chi1 to chi5, psi1 to psi5, mu37, mu61.
-: kh-patterns ( -- list )
+MEMO: kh-patterns ( -- list )
   "The wheel patterns of the KH setting (the 1942 depth), as twelve strings of x and ., in the order chi1 to chi5, psi1 to psi5, mu37, mu61, each in the order of use." doc
   { "..xxxx.xx....xxx..x.x...x.xxxx.x.xxx...x."
     "..xx.xx..x..xx..xxxx.x...xxx..x"
@@ -71,7 +78,7 @@ IN: lorenz
     "....x.x...x.x.x...x.x.x...x.x.x.x.x.x"
     "...xxxx.xxx.xxxx.xxxx.xxxx.xxxx.xxx....xx.xxxx.xxx.xxxx.xxxx." } ;
 
-: zmug-patterns ( -- list )
+MEMO: zmug-patterns ( -- list )
   "The wheel patterns of the ZMUG setting, as twelve strings of x and ., in the order chi1 to chi5, psi1 to psi5, mu37, mu61, each in the order of use." doc
   { ".xx..xxx....xxx..xxx....x..xx.xx...xx.xx."
     "...xx..xx...x.xxxx.xxx....xx.xx"
@@ -86,7 +93,7 @@ IN: lorenz
     "xxx.xxx.xxx.x.xx.xxx.xxx.xx.x.xx.x.x."
     "x.x.x.xxxx.x.x.xxx.xxx.xxx.xx.xx.xx.xx.xxx.x.x.xxx.xxx.x.xx.x" } ;
 
-: bream-patterns ( -- list )
+MEMO: bream-patterns ( -- list )
   "The wheel patterns of the BREAM setting, as twelve strings of x and ., in the order chi1 to chi5, psi1 to psi5, mu37, mu61, each in the order of use." doc
   { "...xxxx....xx....x.xx..x..xx.x.xx.x.xxxx."
     "xx..xxx.xx...x.x.xx...x....xxx."
@@ -132,17 +139,17 @@ IN: lorenz
 \ it has none there); a shift character is put in front when the other row is current.
 : _enc-char ( lc:int fc:int reps:int -- bytes )
   lc 255 = fc 255 = and
-  [ "the character has no ITA2 code (letters, digits, . , : - ? ' ( ) + = / ! & # space and line ends are supported)" raise:coerce ] when
-  lc 255 <> fc 255 <> and
-  [ { lc } list>bytes ]
-  [ lc 255 <>
-    [ _st 0 = [ { lc } list>bytes ] [ 0 _st! 31 lc reps _shift-piece ] if ]
-    [ _st 1 = [ { fc } list>bytes ] [ 1 _st! 27 fc reps _shift-piece ] if ]
-    if ]
-  if ;
+  [ "the character has no ITA2 code (letters, digits, . , : - ? ' ( ) + = / ! & # space and line ends are supported)" fail-coerce ] when
+  {
+    [ lc 255 <> fc 255 <> and ] [ { lc } list>bytes ]
+    [ lc 255 <> _st 0 = and ] [ { lc } list>bytes ]
+    [ lc 255 <> ] [ 0 _st! 31 lc reps _shift-piece ]
+    [ _st 1 = ] [ { fc } list>bytes ]
+    [ 1 _st! 27 fc reps _shift-piece ]
+  } cond ;
 
-: _upper-table ( -- bytes )
-  0 256 range [ dup 97 122 util:between? [ 32 - ] when ] map list>bytes ;
+MEMO: _upper-table ( -- bytes )
+  0 256 range [ dup 97 122 between? [ 32 - ] when ] map list>bytes ;
 
 : _text>codes ( s:str reps:int lt:bytes ft:bytes -- bytes )
   0 _st!
@@ -153,9 +160,13 @@ IN: lorenz
   s reps _letter-row 255 255 util:decode-table _figure-row 255 255 util:decode-table _text>codes ;
 
 : _dec-char ( c:int -- str )
-  c 31 = [ 0 _st! "" ]
-  [ c 27 = [ 1 _st! "" ]
-    [ c 0 = [ "" ] [ _st 1 = [ _figure-row ] [ _letter-row ] if c nth ] if ] if ] if ;
+  {
+    [ c 31 = ] [ 0 _st! "" ]
+    [ c 27 = ] [ 1 _st! "" ]
+    [ c 0 = ] [ "" ]
+    [ _st 1 = ] [ _figure-row c nth ]
+    [ _letter-row c nth ]
+  } cond ;
 
 : _to-text ( codes:bytes -- str )
   0 _st! codes bytes>list [ _dec-char ] map "" join ;
@@ -252,7 +263,7 @@ IN: lorenz
 \ ---- wheel sets and the words ----
 
 \ The published sets by name; custom is twelve empty patterns.
-: pattern-sets ( -- record )
+MEMO: pattern-sets ( -- record )
   "The wheel pattern sets by name: KH, ZMUG and BREAM (see kh-patterns) and custom, which is twelve empty strings." doc
   { { "KH" kh-patterns } { "ZMUG" zmug-patterns } { "BREAM" bream-patterns }
     { "custom" { "" "" "" "" "" "" "" "" "" "" "" "" } } } >record ;
@@ -264,15 +275,15 @@ IN: lorenz
 : _wheels ( name:str custom:list -- list )
   pattern-sets name get custom merge-patterns
   dup [ len 0 = ] filter len 0 >
-  [ "pattern custom needs all twelve wheel patterns (chi1 to chi5, psi1 to psi5, mu37, mu61)" raise:range ] when ;
+  [ "pattern custom needs all twelve wheel patterns (chi1 to chi5, psi1 to psi5, mu37, mu61)" fail-range ] when ;
 
 : _lorenz ( data:str model:str p5:bool pattern:str custom:list starts:list input:str output:str shifts:str dec:bool -- str )
-  p5 model "SZ40" = and [ "the P5 limitation needs the SZ42a or SZ42b model" raise:range ] when
+  p5 model "SZ40" = and [ "the P5 limitation needs the SZ42a or SZ42b model" fail-range ] when
   data input "ita2" = [ util:from-bp ] [ shifts "double" = [ 2 ] [ 1 ] if _from-text ] if
   pattern custom _wheels starts model p5 dec _crypt
   output "ita2" = [ _to-bp ] [ _to-text ] if ;
 
-: encrypt ( data:str model:choice{SZ40|SZ42a|SZ42b}=SZ42a p5:bool=false pattern:choice{KH|ZMUG|BREAM|custom}=KH input:choice{text|ita2}=text output:choice{ita2|text}=ita2 shifts:choice{auto|double}=auto chi1:str[0|41,/[x.]*/]="" chi2:str[0|31,/[x.]*/]="" chi3:str[0|29,/[x.]*/]="" chi4:str[0|26,/[x.]*/]="" chi5:str[0|23,/[x.]*/]="" psi1:str[0|43,/[x.]*/]="" psi2:str[0|47,/[x.]*/]="" psi3:str[0|51,/[x.]*/]="" psi4:str[0|53,/[x.]*/]="" psi5:str[0|59,/[x.]*/]="" mu37:str[0|37,/[x.]*/]="" mu61:str[0|61,/[x.]*/]="" chi1-start:int[1..41]=1 chi2-start:int[1..31]=1 chi3-start:int[1..29]=1 chi4-start:int[1..26]=1 chi5-start:int[1..23]=1 psi1-start:int[1..43]=1 psi2-start:int[1..47]=1 psi3-start:int[1..51]=1 psi4-start:int[1..53]=1 psi5-start:int[1..59]=1 mu37-start:int[1..37]=1 mu61-start:int[1..61]=1 -- str )
+: encrypt ( data:str model:choice{SZ40|SZ42a|SZ42b}=SZ42a p5:bool=false pattern:choice<util:wheel-pattern>=KH input:choice{text|ita2}=text output:choice{ita2|text}=ita2 shifts:choice{auto|double}=auto chi1:str[0|41,/[x.]*/]="" chi2:str[0|31,/[x.]*/]="" chi3:str[0|29,/[x.]*/]="" chi4:str[0|26,/[x.]*/]="" chi5:str[0|23,/[x.]*/]="" psi1:str[0|43,/[x.]*/]="" psi2:str[0|47,/[x.]*/]="" psi3:str[0|51,/[x.]*/]="" psi4:str[0|53,/[x.]*/]="" psi5:str[0|59,/[x.]*/]="" mu37:str[0|37,/[x.]*/]="" mu61:str[0|61,/[x.]*/]="" chi1-start:int[1..41]=1 chi2-start:int[1..31]=1 chi3-start:int[1..29]=1 chi4-start:int[1..26]=1 chi5-start:int[1..23]=1 psi1-start:int[1..43]=1 psi2-start:int[1..47]=1 psi3-start:int[1..51]=1 psi4-start:int[1..53]=1 psi5-start:int[1..59]=1 mu37-start:int[1..37]=1 mu61-start:int[1..61]=1 -- str )
   "Encipher with the Lorenz SZ40/SZ42 cipher attachment. The plain text is ordinary text (letters, digits, some punctuation, space and line ends; shift characters are added where the case changes) or ITA2 characters in Bletchley Park notation; the result is ITA2 characters (or text). The twelve wheels take a published pattern set or custom patterns and a start position each (the cell of the wheel at the first character, from 1). The cipher is reciprocal; the P5 attachment makes the key depend on the plain text." doc
   "Cipher machines" category
   data model p5 pattern
@@ -318,7 +329,7 @@ META: encrypt
   link "https://en.wikipedia.org/wiki/Lorenz_cipher" "Lorenz cipher on Wikipedia" ;
 ;
 
-: decrypt ( data:str model:choice{SZ40|SZ42a|SZ42b}=SZ42a p5:bool=false pattern:choice{KH|ZMUG|BREAM|custom}=KH input:choice{ita2|text}=ita2 output:choice{text|ita2}=text shifts:choice{auto|double}=auto chi1:str[0|41,/[x.]*/]="" chi2:str[0|31,/[x.]*/]="" chi3:str[0|29,/[x.]*/]="" chi4:str[0|26,/[x.]*/]="" chi5:str[0|23,/[x.]*/]="" psi1:str[0|43,/[x.]*/]="" psi2:str[0|47,/[x.]*/]="" psi3:str[0|51,/[x.]*/]="" psi4:str[0|53,/[x.]*/]="" psi5:str[0|59,/[x.]*/]="" mu37:str[0|37,/[x.]*/]="" mu61:str[0|61,/[x.]*/]="" chi1-start:int[1..41]=1 chi2-start:int[1..31]=1 chi3-start:int[1..29]=1 chi4-start:int[1..26]=1 chi5-start:int[1..23]=1 psi1-start:int[1..43]=1 psi2-start:int[1..47]=1 psi3-start:int[1..51]=1 psi4-start:int[1..53]=1 psi5-start:int[1..59]=1 mu37-start:int[1..37]=1 mu61-start:int[1..61]=1 -- str )
+: decrypt ( data:str model:choice{SZ40|SZ42a|SZ42b}=SZ42a p5:bool=false pattern:choice<util:wheel-pattern>=KH input:choice{ita2|text}=ita2 output:choice{text|ita2}=text shifts:choice{auto|double}=auto chi1:str[0|41,/[x.]*/]="" chi2:str[0|31,/[x.]*/]="" chi3:str[0|29,/[x.]*/]="" chi4:str[0|26,/[x.]*/]="" chi5:str[0|23,/[x.]*/]="" psi1:str[0|43,/[x.]*/]="" psi2:str[0|47,/[x.]*/]="" psi3:str[0|51,/[x.]*/]="" psi4:str[0|53,/[x.]*/]="" psi5:str[0|59,/[x.]*/]="" mu37:str[0|37,/[x.]*/]="" mu61:str[0|61,/[x.]*/]="" chi1-start:int[1..41]=1 chi2-start:int[1..31]=1 chi3-start:int[1..29]=1 chi4-start:int[1..26]=1 chi5-start:int[1..23]=1 psi1-start:int[1..43]=1 psi2-start:int[1..47]=1 psi3-start:int[1..51]=1 psi4-start:int[1..53]=1 psi5-start:int[1..59]=1 mu37-start:int[1..37]=1 mu61-start:int[1..61]=1 -- str )
   "Decipher Lorenz SZ40/SZ42 traffic. The same machine as lorenz:encrypt; only the defaults differ (ITA2 in, text out) and, with the P5 attachment, the plain text bit that enters the limitation is taken from the result instead of the input. Without P5 the two words give the same key." doc
   "Cipher machines" category
   data model p5 pattern

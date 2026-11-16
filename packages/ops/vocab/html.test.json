@@ -714,5 +714,15 @@
       "value": "R&D & AT&T",
       "enc": "utf8"
     }
+  },
+  {
+    "name": "html:decode output checks: typical result",
+    "op": "html:decode",
+    "checks": "output",
+    "data": {
+      "value": "<b>café</b>",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

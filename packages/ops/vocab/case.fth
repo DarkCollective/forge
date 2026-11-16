@@ -15,7 +15,7 @@ USING: util ;
 : swap-case ( data:str -- str )
   "Swap the case of every letter: upper case becomes lower case and lower case becomes upper case. Characters without case stay as they are. The case of each character is mapped alone, so the German sharp s (which has no single upper case letter) becomes SS." doc
   "Text" category
-  data str>codes [ util:cp>str _swap-ch ] map "" join ;
+  data str>codes [ cp>str _swap-ch ] map "" join ;
 
 0 VARIABLE _k
 
@@ -26,11 +26,11 @@ USING: util ;
   [ _k 1 band 0 = first-upper = [ ch upper ] [ ch lower ] if
     _k 1 + _k! ] if ;
 
-: alternating ( data:str first:choice{lower|upper}="lower" -- str )
+: alternating ( data:str first:choice<util:letter-case>="lower" -- str )
   "Alternate the case of the letters: the first letter is lower case (or upper case with first set to upper), the next the other case, and so on. Characters without case are kept and do not count, so the alternation carries on across them and Hello, World! becomes hElLo, WoRlD! (the W is the sixth letter, so it is upper case). CyberChef's Alternating Caps starts with a lower case letter too." doc
   "Text" category
   0 _k!
-  data str>codes [ util:cp>str first "upper" = _alt-ch ] map "" join ;
+  data str>codes [ cp>str first "upper" = _alt-ch ] map "" join ;
 
 \ ---- all casings ----
 
@@ -47,12 +47,12 @@ USING: util ;
   [ vars [ tok cat ] map ]
   if ;
 
-: all-casings ( data:str delimiter:choice{space|comma|semicolon|colon|newline|crlf|cr|tab}="newline" -- str )
+: all-casings ( data:str delimiter:choice<util:delimiter>="newline" -- str )
   "Every combination of upper and lower case of the letters in the text, one per line (or joined by the delimiter), as CyberChef's Get All Casings does. Letters with a different upper and lower case form get both; everything else is kept. The first combination is all lower case, and the first letter varies fastest (the second combination has the first letter in upper case). At most 12 such letters (4,096 combinations): more is E_RANGE. Unlike CyberChef, which counts every character, the number of combinations is two to the power of the letters only." doc
   "Text" category
   data _casing-tokens
   dup [ _cased? ] filter len 12 >
-  [ "at most 12 letters with a case can be combined (4096 combinations)" raise:range ] when
+  [ "at most 12 letters with a case can be combined (4096 combinations)" fail-range ] when
   { "" } [ _grow ] reduce
   delimiter util:delimiter join ;
 
@@ -62,10 +62,11 @@ USING: util ;
 
 \ The one-code-point string of the other case of ch, or "" when it has none (or the other case is longer).
 : _other ( ch:str -- str )
-  ch upper ch <> ch upper len 1 = and
-  [ ch upper ]
-  [ ch lower ch <> ch lower len 1 = and [ ch lower ] [ "" ] if ]
-  if ;
+  {
+    [ ch upper ch <> ch upper len 1 = and ] [ ch upper ]
+    [ ch lower ch <> ch lower len 1 = and ] [ ch lower ]
+    [ "" ]
+  } cond ;
 
 : _join-range ( a:str b:str -- str )
   a "" = b "" = or [ "" ] [ a "-" cat b cat ] if ;
@@ -78,14 +79,18 @@ USING: util ;
 
 \ The extra text a class token needs: the other case of a letter, or of a range of ASCII letters; else "".
 : _other-tok ( t:str -- str )
-  t len 1 =
-  [ t _other ]
-  [ t len 3 = [ t 1 2 slice "-" = ] [ false ] if
-    [ t 0 1 slice t 2 3 slice _letter-range-other ] [ "" ] if ]
-  if ;
+  {
+    [ t len 1 = ] [ t _other ]
+    [ t len 3 = [ t 1 2 slice "-" = ] [ false ] if ] [ t 0 1 slice t 2 3 slice _letter-range-other ]
+    [ "" ]
+  } cond ;
 
 : _add-new ( acc:list x:str -- list )
-  x "" = [ acc ] [ acc x util:contains? [ acc ] [ acc x append ] if ] if ;
+  {
+    [ x "" = ] [ acc ]
+    [ acc x contains? ] [ acc ]
+    [ acc x append ]
+  } cond ;
 
 : _pieces ( pattern:str -- list )
   pattern
@@ -114,14 +119,20 @@ USING: util ;
   dup [ _other-tok ] map swap [ _add-new ] reduce
   "" join cls _neg? _wrap ;
 
+\ A one-character piece p whose other case is o: a class of both cases, lower case first.
+: _both-cases ( p:str o:str -- str )
+  {
+    [ o "" = ] [ p ]
+    [ p upper p = p lower p <> and ] [ "[" o cat p cat "]" cat ]
+    [ "[" p cat o cat "]" cat ]
+  } cond ;
+
 : _piece-to ( p:str -- str )
-  p len 1 =
-  [ p _other dup "" = [ drop p ]
-    [ p upper p = p lower p <> and
-      [ "[" swap cat p cat "]" cat ]
-      [ "[" p cat swap cat "]" cat ] if ] if ]
-  [ p 0 1 slice "[" = [ p _class-to ] [ p ] if ]
-  if ;
+  {
+    [ p len 1 = ] [ p p _other _both-cases ]
+    [ p 0 1 slice "[" = ] [ p _class-to ]
+    [ p ]
+  } cond ;
 
 : to-insensitive-regex ( pattern:str -- str )
   "Rewrite a regular expression (ECMAScript syntax) so that it matches without regard to case, whatever flags it runs with: every letter outside a class becomes a class of both its cases, the lower case first as in CyberChef (h and H both become [hH]), and in a character class the other case of each letter or range of ASCII letters is added, so [a-f] becomes [a-fA-F]. Escapes (\\d, \\x41, \\u00e9, \\p{Lu}, \\k<name>), group names and quantifiers are copied unchanged. Letters whose other case is not one code point (the German sharp s) are left as they are. The output is the pattern text only, no slashes." doc
@@ -132,7 +143,7 @@ USING: util ;
 : _keep ( acc:list x:str -- list )
   x _other-tok dup "" =
   [ drop acc x append ]
-  [ acc swap util:contains? [ acc ] [ acc x append ] if ]
+  [ acc swap contains? [ acc ] [ acc x append ] if ]
   if ;
 
 \ A class that is left with one plain letter and is not negated needs no brackets.
@@ -159,15 +170,15 @@ USING: util ;
 
 META: swap-case
   use-when "You have text with the case the wrong way round, such as a caps-lock mistake, and want each letter's case swapped." ;
-  link "https://en.wikipedia.org/wiki/Letter_case" "Letter case on Wikipedia" ;
   see-also case:alternating text:upper text:lower ;
+  link "https://en.wikipedia.org/wiki/Letter_case" "Letter case on Wikipedia" ;
 ;
 
 META: alternating
   use-when "You want text in alternating upper and lower case, as in a mocking meme, and have plain text to change." ;
-  link "https://en.wikipedia.org/wiki/Letter_case" "Letter case on Wikipedia" ;
   param first "Whether the first letter is lower case (the default) or upper case." ;
   see-also case:swap-case ;
+  link "https://en.wikipedia.org/wiki/Letter_case" "Letter case on Wikipedia" ;
 ;
 
 META: all-casings
@@ -179,13 +190,13 @@ META: all-casings
 META: to-insensitive-regex
   use-when "You have a regular expression and want it to match the text whatever its case, for example in a search box that ignores case." ;
   inverse from-insensitive-regex ;
-  link "https://en.wikipedia.org/wiki/Regular_expression" "Regular expression on Wikipedia" ;
   see-also case:from-insensitive-regex regex:test ;
+  link "https://en.wikipedia.org/wiki/Regular_expression" "Regular expression on Wikipedia" ;
 ;
 
 META: from-insensitive-regex
   use-when "You have a regular expression that spells out both cases in brackets, such as [aA], and want the short form that you would write by hand." ;
   inverse to-insensitive-regex ;
-  link "https://en.wikipedia.org/wiki/Regular_expression" "Regular expression on Wikipedia" ;
   see-also case:to-insensitive-regex ;
+  link "https://en.wikipedia.org/wiki/Regular_expression" "Regular expression on Wikipedia" ;
 ;

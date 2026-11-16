@@ -119,6 +119,8 @@ A table of 10,000 rows by 10 integer columns costs about **4.08 MB** as a list o
 | Own cipher and hash cores | 53 in 25 files (3,626 code lines, 57% of primitive code) | Written in TypeScript because FL is too slow at 64 KiB |
 | Other | 10 | `cmac` and `lmhash` exist only because private words are not callable across vocabularies; base64 and hex were never ported |
 
+*Dated note (2026-11-14):* the table above is the measure at the time of the survey and is kept as it was. Since then the analysis `log2`, the coords maths, the list `sort`, `sort-by` and `shuffle`, `cmac`, `lmhash` and the `hex` primitive have moved to FL. `base64` is now FL with two private helpers (`_sextets`, `_unsextets`).
+
 **Measured FL cost:** TEA 478 VM steps per byte (about 31 M steps at 64 KiB, three times the 10 M budget); SHA-1 186 steps per byte (about 12.2 M); RC4 in today's FL 80 steps per byte (5.25 M, passes).
 
 **Conclusion.** Syntax features alone would move about 8 to 12 of the 119 primitives (10 to 14% of primitive code). The cipher and hash cores need a performance mechanism, not syntax. The evidence for that mechanism is thin: two measured ciphers and one hash.
@@ -453,9 +455,9 @@ The coverage table marks these ops `pack:media` or `pack:code`. Lowest priority 
 
 ### 11.1 Group L-A: prelude and core words (additive)
 
-- Promote the generic `util` words: the trim family, `starts-with`/`ends-with`, `contains`, `repeat`, `zero-pad`, `cp>str`, `between?`, `index-of`, `sum`, `tdiv`, `ceil-div`, `int>be-bytes`, `count-leading`, character predicates. (**done** for twenty words, LANGUAGE.md A.4 and §13.8; `index-of`, `tdiv` and `zero-pad` of this list were not promoted, and the old `util:` forms stay valid.)
+- Promote the generic `util` words: the trim family, `starts-with`/`ends-with`, `contains`, `repeat`, `zero-pad`, `cp>str`, `between?`, `index-of`, `sum`, `tdiv`, `ceil-div`, `int>be-bytes`, `count-leading`, character predicates. (**done** for twenty words, LANGUAGE.md A.4 and §13.8; `index-of`, `tdiv` and `zero-pad` of this list were not promoted. 2026-11-15: the vocabularies now call the core words and the `util` copies are removed, except `util:int>be-bytes` and `util:pad-hex`, which `zip`, `fingerprint` and `hexdump` still call.)
 - Maths: `ln exp log2 sin cos tan atan2 …`, `str>num`, float bit packing. (**done** for the maths words and `str>num`, LANGUAGE.md A.4; float bit packing is not done.)
-- Typed failure words in core, replacing 253 qualified `raise:` calls. (**done** for the words, `fail-coerce` and `fail-range`, LANGUAGE.md A.4; the 253 existing `raise:` calls were not rewritten and stay valid.)
+- Typed failure words in core, replacing 253 qualified `raise:` calls. (**done**, `fail-coerce` and `fail-range`, LANGUAGE.md A.4; 2026-11-15: the existing `raise:` calls were rewritten and the `raise` vocabulary removed.)
 - `sort`, `sort-by`, `has-key?`, `find`, `any?`, `all?`, `first`, `second`, `last`, `divmod`, a `case`/`cond` combinator. (**done** for `sort`, `sort-by`, `has-key?`, `find`, `any?`, `all?`, `case` and `cond`, LANGUAGE.md A.4; `first`, `second`, `last` and `divmod` are not in v0.2.)
 - JSON parse and serialise.
 
@@ -507,9 +509,9 @@ Sizes are relative. "Revisits" lists LANGUAGE.md decisions or sections touched (
 
 | Proposal | Corpus evidence | Unlocks | Kind | Size | Revisits |
 |---|---|---|---|---|---|
-| Promote `util` words to core (**done** for 20 words, LANGUAGE.md A.4) | 37 words used by 3+ vocabularies; `between?` 59 calls | Fewer duplicate helpers | Additive | S | §13 |
+| Promote `util` words to core (**done** for 20 words, LANGUAGE.md A.4; callers moved and 18 `util` copies removed 2026-11-15) | 37 words used by 3+ vocabularies; `between?` 59 calls | Fewer duplicate helpers | Additive | S | §13 |
 | Maths, `str>num`, float bits (maths and `str>num` **done**, LANGUAGE.md A.4; float bits open) | 7 missing core maths and IEEE primitives | 7 primitives to FL | Additive | M | §13, §17.1 |
-| Typed failure words (words **done**, LANGUAGE.md A.4; the `raise:` calls not rewritten) | 253 qualified `raise:` calls | Shorter error paths | Additive | S | §13 |
+| Typed failure words (**done**, LANGUAGE.md A.4; the `raise:` calls rewritten and the `raise` vocabulary removed 2026-11-15) | 253 qualified `raise:` calls | Shorter error paths | Additive | S | §13 |
 | `sort`, `has-key?`, `find`, `case` (**done**, LANGUAGE.md A.4) | 3 sort/shuffle primitives; 234 else-if chains (96 at depth 3+); 12 `try` for control flow | Flatter code; 3 primitives to FL | Additive | M | §13 |
 | JSON parse and serialise | Wave 4 gap | Data words, Relix bridge | Additive | M | §13 |
 | Mid-body local binding (**done**, LANGUAGE.md A.2) | 84 closure-binding helpers; 221 single-use helpers; 984 private words called once | Fewer helpers | Additive | M | D10, §5.7 |
@@ -592,8 +594,8 @@ Parallel, time-boxed, throwaway code. Each ends in a written result and an owner
 | L9 | Breaking fixes L-E (language part) | `packages/lang` | L2 | So | Each fix in §11.5 has a conformance block |
 | L10 | Generic arithmetic and generic words | `packages/lang/src/compiler.ts`, `dictionary.ts`, `vm.ts` | X1, L9 | So | Plain numbers bit-identical to v0.1; step overhead measured |
 | L11 | Kernel tier (only if L0 passes) | `packages/lang/src/kernel/*` | L7, L0 | So | Every kernel word equals the interpreted run |
-| L12 | Codemod over the 161 `.fth` files | `packages/ops/vocab/*.fth` | L2 to L10 | So | All 4,488 vectors pass unchanged; catalogue version bumped; run at a wave boundary |
-| L13 | Move primitives to FL (the 7 + 3 + 9 made possible by L2 and L7; the cipher and hash cores only if L11 passes) | `packages/ops/prims/*`, `vocab/*` | L12, L11 | Ha | Vectors unchanged; corpus-stats report shows the change in primitive count and lines |
+| L12 | Codemod over the 161 `.fth` files | `packages/ops/vocab/*.fth` | L2 to L10 | So | All 4,488 vectors pass unchanged; catalogue version bumped; run at a wave boundary. Dated note (2026-11-15): the v0.2 subset of the migration is done, that is the forms available in v0.2 (typed `fail-*` words, promoted core words, shared `CHOICE:` types, `cond`/`case`, `:>`, collectors, `MEMO:`) over all 207 vocabularies. The L-E breaking fixes, generic arithmetic and the kernel tier were not part of it. |
+| L13 | Move primitives to FL (the 7 + 3 + 9 made possible by L2 and L7; the cipher and hash cores only if L11 passes) | `packages/ops/prims/*`, `vocab/*` | L12, L11 | Ha | Vectors unchanged; corpus-stats report shows the change in primitive count and lines. Dated note (2026-11-14): the analysis `log2`, the coords maths, the list `sort`, `sort-by` and `shuffle`, `cmac`, `lmhash` and the `hex` primitive are now FL, and `base64` is FL with two private helpers (`_sextets`, `_unsextets`). |
 
 L10 needs the `ext` tag (X1), so X1 is built inside Phase T2 although it appears in the T3 table; the gate for T2 covers it.
 

@@ -21,7 +21,7 @@ import { loadBundleNode } from "./sources-node.js";
 
 // case is FL (vocab/case.fth); these tests drive its public words through the runtime.
 const { str } = valueHelpers;
-const runtime = assembleRuntime(await loadBundleNode(["case", "raise"]));
+const runtime = assembleRuntime(await loadBundleNode(["case"]));
 
 type Result = { ok: boolean; stack: readonly Value[]; steps?: number; error?: { code: string } };
 function top(r: Result): { v: unknown } {

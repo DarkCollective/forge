@@ -12,13 +12,12 @@ IN: endian
 
 \ The data, a whole number of words long: zero-padded at the end if pad is set, else E_RANGE.
 : _fit ( data:bytes width:int pad:bool -- bytes )
-  data len width mod 0 =
-  [ data ]
-  [ pad
-    [ data width data len width mod - util:zero-bytes cat ]
-    [ "the length is not a multiple of the word width" raise:range data ]
-    if ]
-  if ;
+  data len width mod :> extra
+  {
+    [ extra 0 = ] [ data ]
+    [ pad ] [ data width extra - zero-bytes cat ]
+    [ "the length is not a multiple of the word width" fail-range data ]
+  } cond ;
 
 : swap ( bytes width:int[2|4|8]=4 pad:bool=false -- bytes )
   "Reverse the byte order of every word of width bytes (2, 4 or 8), converting between big-endian and little-endian data. The input must be a whole number of words (E_RANGE); with pad, a final partial word is first zero-padded at the end, so those zero bytes come out at the start of the last word." doc
@@ -27,7 +26,7 @@ IN: endian
 
 META: swap
   use-when "You have binary data from a big-endian or little-endian system, such as 32-bit integers, and want each word reversed. Applying it again gives the input back." ;
-  link "https://en.wikipedia.org/wiki/Endianness" "Endianness on Wikipedia" ;
   param width "The size of a word in bytes: 2, 4 or 8." ;
   param pad "Zero-pad a final partial word at the end instead of raising an error." ;
+  link "https://en.wikipedia.org/wiki/Endianness" "Endianness on Wikipedia" ;
 ;

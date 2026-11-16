@@ -16,7 +16,9 @@
 
 /*
  * File signature matching and carving (vocab/filetype.fth). The table of signatures is data in
- * src/filetype-sigs.ts. Three public primitives (public because other vocabularies call them qualified,
+ * src/filetype-sigs.ts, and the pure matching of a row (magic, verify, scan) is in src/filetype-match.ts,
+ * which has no runtime import so that a checks evaluator can match signatures without this module.
+ * Three public primitives (public because other vocabularies call them qualified,
  * as YARA does; none is a catalogue op, because each takes a `list` parameter):
  *  - `filetype:detect-list ( data categories -- list )`: the signatures that match at offset 0;
  *  - `filetype:scan-list ( data categories ignore-weak -- list )`: every offset where a signature matches
@@ -43,8 +45,18 @@
  */
 import { definePrimitive, valueHelpers } from "@forge/lang";
 import type { PrimitiveContext, PrimitiveDef, Value } from "@forge/lang";
-import { CATEGORIES, FILE_SIGNATURES } from "../filetype-sigs.js";
+import { CATEGORIES } from "../filetype-sigs.js";
 import type { Category, FileSig } from "../filetype-sigs.js";
+import {
+  TooManyMatches,
+  latin1Of,
+  peHeader,
+  scanAll,
+  detectAll,
+  u16,
+  u32,
+} from "../filetype-match.js";
+import type { Match } from "../filetype-match.js";
 import { coerceFailure, limitFailure, rangeFailure } from "../prim-util.js";
 import { inflateLimited } from "./deflate.js";
 
@@ -59,24 +71,6 @@ const WORK_LIMIT = 2 ** 28;
 // reading helpers
 // ---------------------------------------------------------------------------------------------
 
-function u16(d: Uint8Array, p: number, le: boolean): number {
-  if (p < 0 || p + 2 > d.length) return -1;
-  return le
-    ? (d[p] as number) | ((d[p + 1] as number) << 8)
-    : ((d[p] as number) << 8) | (d[p + 1] as number);
-}
-
-function u32(d: Uint8Array, p: number, le: boolean): number {
-  if (p < 0 || p + 4 > d.length) return -1;
-  const a = d[p] as number;
-  const b = d[p + 1] as number;
-  const c = d[p + 2] as number;
-  const e = d[p + 3] as number;
-  return le
-    ? (a | (b << 8) | (c << 16) | (e << 24)) >>> 0
-    : ((a << 24) | (b << 16) | (c << 8) | e) >>> 0;
-}
-
 /** An unsigned 64-bit field as a number, or -1 when it does not fit 2^53 or lies outside the data. */
 function u64(d: Uint8Array, p: number, le: boolean): number {
   const lo = u32(d, le ? p : p + 4, le);
@@ -85,57 +79,9 @@ function u64(d: Uint8Array, p: number, le: boolean): number {
   return hi * 4294967296 + lo;
 }
 
-const CHUNK = 8192;
-
-/** The Latin-1 text of the bytes (one character per byte), for `indexOf`. */
-export function latin1Of(d: Uint8Array): string {
-  const parts: string[] = [];
-  for (let i = 0; i < d.length; i += CHUNK)
-    parts.push(String.fromCharCode.apply(null, d.subarray(i, i + CHUNK) as unknown as number[]));
-  return parts.join("");
-}
-
 // ---------------------------------------------------------------------------------------------
-// matching
+// matching: the pure matcher is in filetype-match.ts; here are the categories and the limits
 // ---------------------------------------------------------------------------------------------
-
-/** Does the magic of `sig` match with the file starting at `i`? */
-export function magicAt(d: Uint8Array, i: number, sig: FileSig): boolean {
-  for (const part of sig.parts) {
-    const at = i + part.offset;
-    if (at + part.value.length > d.length) return false;
-    for (let k = 0; k < part.value.length; k++) {
-      const m = part.mask[k] as number;
-      if (((d[at + k] as number) & m) !== (part.value[k] as number)) return false;
-    }
-  }
-  return true;
-}
-
-/** The checks the magic alone cannot do. */
-function verifyAt(d: Uint8Array, i: number, name: string | undefined): boolean {
-  if (name === undefined) return true;
-  switch (name) {
-    case "pe":
-      return peHeader(d, i) !== null;
-    case "dos":
-      return d.length - i >= 28 && peHeader(d, i) === null;
-    case "class": {
-      const major = u16(d, i + 6, false);
-      return major >= 45 && major <= 130;
-    }
-    case "fat": {
-      const n = u32(d, i + 4, false);
-      return n >= 1 && n <= 44;
-    }
-    default:
-      throw new Error(`unknown verifier ${name}`);
-  }
-}
-
-function matches(d: Uint8Array, i: number, sig: FileSig): boolean {
-  return magicAt(d, i, sig) && verifyAt(d, i, sig.verify);
-}
 
 /** The categories named in a list value, or E_RANGE for a name that is not one. */
 export function categoriesOf(items: readonly Value[]): Set<Category> {
@@ -151,56 +97,27 @@ export function categoriesOf(items: readonly Value[]): Set<Category> {
   return out;
 }
 
-export interface Match {
-  readonly offset: number;
-  readonly sig: FileSig;
-}
-
-/** The signatures that match with the file starting at offset 0, in table order. */
-export function detect(d: Uint8Array, cats: ReadonlySet<Category>): Match[] {
-  const out: Match[] = [];
-  for (const sig of FILE_SIGNATURES) {
-    if (cats.has(sig.category) && matches(d, 0, sig)) out.push({ offset: 0, sig });
-  }
-  return out;
-}
-
 /**
- * Every offset where a signature matches, ordered by offset and then by table order. `maxMatches` bounds
- * the result (E_LIMIT_VALUE past it).
+ * Every match of `scanAll`, with the limit of the value: more matches than `maxMatches` is E_LIMIT_VALUE.
  */
-export function scan(
+function scanOrFail(
   d: Uint8Array,
   cats: ReadonlySet<Category>,
   ignoreWeak: boolean,
   maxMatches: number,
 ): Match[] {
-  const text = latin1Of(d);
-  const found: { offset: number; order: number; sig: FileSig }[] = [];
-  FILE_SIGNATURES.forEach((sig, order) => {
-    if (!cats.has(sig.category) || (ignoreWeak && sig.weak)) return;
-    const needle = latin1Of(sig.anchor.bytes);
-    let from = 0;
-    for (;;) {
-      const j = text.indexOf(needle, from);
-      if (j < 0) break;
-      from = j + 1;
-      const i = j - sig.anchor.offset;
-      if (i < 0) continue;
-      if (matches(d, i, sig)) {
-        if (found.length >= maxMatches)
-          throw limitFailure(
-            "maxValueBytes",
-            maxMatches * RECORD_BYTES,
-            (found.length + 1) * RECORD_BYTES,
-            "the list of matches",
-          );
-        found.push({ offset: i, order, sig });
-      }
-    }
-  });
-  found.sort((a, b) => a.offset - b.offset || a.order - b.order);
-  return found.map((m) => ({ offset: m.offset, sig: m.sig }));
+  try {
+    return scanAll(d, cats, ignoreWeak, maxMatches);
+  } catch (e) {
+    if (e instanceof TooManyMatches)
+      throw limitFailure(
+        "maxValueBytes",
+        maxMatches * RECORD_BYTES,
+        (maxMatches + 1) * RECORD_BYTES,
+        "the list of matches",
+      );
+    throw e;
+  }
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -738,18 +655,6 @@ function octal(d: Uint8Array, p: number, n: number): number {
   return digits === 0 && n > 0 ? 0 : v;
 }
 
-/** The offset of the PE header ("PE\0\0") of an MZ file, or null. */
-function peHeader(d: Uint8Array, i: number): number | null {
-  const lfanew = u32(d, i + 0x3c, true);
-  if (lfanew < 0x40 || i + lfanew + 24 > d.length) return null;
-  return d[i + lfanew] === 0x50 &&
-    d[i + lfanew + 1] === 0x45 &&
-    d[i + lfanew + 2] === 0 &&
-    d[i + lfanew + 3] === 0
-    ? lfanew
-    : null;
-}
-
 function pcap(c: Ctx, s: number, le: boolean): number | null {
   const { d } = c;
   if (s + 24 > d.length) return null;
@@ -820,7 +725,7 @@ export function carve(
   maxBytes: number,
   minSize = 0,
 ): Carved[] {
-  const found = scan(d, cats, false, Math.floor(maxBytes / RECORD_BYTES));
+  const found = scanOrFail(d, cats, false, Math.floor(maxBytes / RECORD_BYTES));
   let textCache: string | undefined;
   const ctx: Ctx = {
     d,
@@ -876,7 +781,7 @@ export const primitives: readonly PrimitiveDef[] = [
     "filetype",
     "detect-list",
     "( data:bytes categories:list -- list )",
-    (d: Uint8Array, cats: Value[]) => detect(d, categoriesOf(cats)).map(matchRecord),
+    (d: Uint8Array, cats: Value[]) => detectAll(d, categoriesOf(cats)).map(matchRecord),
     {
       doc: "The file signatures that match at offset 0 of the data, as records of offset, name, extensions, mime, description, category and weak, in table order; categories is a list of category names (Images, Video, Audio, Documents, Applications, Archives, Miscellaneous). Shared word of the filetype vocabulary.",
     },
@@ -886,7 +791,7 @@ export const primitives: readonly PrimitiveDef[] = [
     "scan-list",
     "( data:bytes categories:list ignore-weak:bool -- list )",
     (d: Uint8Array, cats: Value[], ignoreWeak: boolean, ctx: PrimitiveContext) =>
-      scan(
+      scanOrFail(
         d,
         categoriesOf(cats),
         ignoreWeak,

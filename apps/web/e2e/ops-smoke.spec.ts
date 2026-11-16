@@ -119,7 +119,10 @@ const files = readdirSync(vocabDir)
   .sort();
 
 for (const file of files) {
-  const vectors = JSON.parse(readFileSync(vocabDir + file, "utf8")) as Vector[];
+  // Check pairs (RECIPES.md section 9.1) have a `checks` key and no input: not op vectors.
+  const vectors = (JSON.parse(readFileSync(vocabDir + file, "utf8")) as Vector[]).filter(
+    (v) => !("checks" in v),
+  );
   const chosen = pick(vectors, PER_VOCAB);
   const vocab = file.slice(0, -".test.json".length);
 

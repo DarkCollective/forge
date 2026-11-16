@@ -455,5 +455,35 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "hexdump:decode input checks: matching text",
+    "op": "hexdump:decode",
+    "checks": "input",
+    "data": {
+      "value": "00000000: 4865 6c6c 6f  Hello",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "hexdump:decode input checks: other text",
+    "op": "hexdump:decode",
+    "checks": "input",
+    "data": {
+      "value": "héllo",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "hexdump:encode output checks: typical result",
+    "op": "hexdump:encode",
+    "checks": "output",
+    "data": {
+      "value": "00000000: 4865 6c6c 6f  Hello",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

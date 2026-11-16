@@ -22,7 +22,7 @@ import { loadBundleNode } from "./sources-node.js";
 // The operations are FL (vocab/base58.fth); the conformance vectors cover the known answers. These
 // tests cover round trips, the size of the work, and the error codes.
 const { bytes, str } = valueHelpers;
-const runtime = assembleRuntime(await loadBundleNode(["base58", "raise"]));
+const runtime = assembleRuntime(await loadBundleNode(["base58"]));
 
 function encode(data: Uint8Array, alphabet = "bitcoin") {
   return runtime.call("base58:encode", [bytes(data), str(alphabet)]);

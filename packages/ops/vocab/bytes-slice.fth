@@ -3,8 +3,6 @@
 \ over the core slice, range and map words; the per-line form uses the fork combinator on line feeds.
 IN: bytes-slice
 
-USING: util ;
-
 \ ---- a span ----
 
 : _take ( d:bytes start:int length:int -- bytes )
@@ -35,7 +33,7 @@ USING: util ;
 \ ---- every nth byte ----
 
 : _take-nth ( d:bytes n:int start:int -- bytes )
-  d len start - 0 max n util:ceil-div
+  d len start - 0 max n ceil-div
   0 swap range [ n * start + d swap nth ] map list>bytes ;
 
 \ True for the index i that remove-nth removes: start, start + n, start + 2n, ...

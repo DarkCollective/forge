@@ -53,9 +53,9 @@ META: digest
 
 : _parse ( hash:str -- list )
   hash ":" split
-  dup len 3 <> [ "an ssdeep hash has the form blocksize:hash:hash" raise:coerce ] when
+  dup len 3 <> [ "an ssdeep hash has the form blocksize:hash:hash" fail-coerce ] when
   _parts
-  dup 0 nth 1 < [ "the block size must be at least 1" raise:coerce ] when ;
+  dup 0 nth 1 < [ "the block size must be at least 1" fail-coerce ] when ;
 
 : _unpack ( l:list -- int str str )
   l 0 nth l 1 nth l 2 nth ;
@@ -64,18 +64,20 @@ META: digest
 : _common7? ( a:str b:str -- bool )
   a len 7 <
   [ false ]
-  [ 0 a len 6 - range [ a swap dup 7 + slice b swap split len 1 > ] map false [ or ] reduce ]
+  [ 0 a len 6 - range [ a swap dup 7 + slice b swap split len 1 > ] any? ]
   if ;
 
-\ The new row of the longest-common-subsequence table after the character ca of the first string.
-: _cell ( row:list j:int prev:list ca:int bc:list -- list )
-  bc j 1 - nth ca =
-  [ row prev j 1 - nth 1 + append ]
-  [ row prev j nth row dup len 1 - nth max append ]
-  if ;
-
+\ The new row of the longest-common-subsequence table after the character ca of the first string: each cell is
+\ the diagonal one plus 1 on a match, else the larger of the cell above and the one to the left.
 : _lcs-row ( prev:list ca:int bc:list -- list )
-  1 prev len range { 0 } [ prev ca bc _cell ] reduce ;
+  [
+    0 emit
+    1 prev len range 0 [
+      :> j :> left
+      bc j 1 - nth ca = [ prev j 1 - nth 1 + ] [ prev j nth left max ] if
+      dup emit
+    ] reduce drop
+  ] collect ;
 
 \ Length of the longest common subsequence of two lists of codes.
 : _lcs ( a:list b:list -- int )
@@ -98,19 +100,17 @@ META: digest
   if ;
 
 : _cmp ( xb:int x1:str x2:str yb:int y1:str y2:str -- int )
-  xb yb =
-  [ x1 y1 = x2 y2 = and
-    [ 100 ]
-    [ x1 y1 xb _score x2 y2 xb 2 * _score max ]
-    if ]
-  [ xb yb 2 * =
-    [ x1 y2 xb _score ]
-    [ xb 2 * yb =
-      [ x2 y1 yb _score ]
-      [ 0 ]
-      if ]
-    if ]
-  if ;
+  {
+    [ xb yb = ] [
+      x1 y1 = x2 y2 = and
+      [ 100 ]
+      [ x1 y1 xb _score x2 y2 xb 2 * _score max ]
+      if
+    ]
+    [ xb yb 2 * = ] [ x1 y2 xb _score ]
+    [ xb 2 * yb = ] [ x2 y1 yb _score ]
+    [ 0 ]
+  } cond ;
 
 : compare ( hash:str other:str -- int )
   "The similarity score 0 to 100 of two ssdeep hashes (blocksize:hash:hash text), 100 for identical hashes and 0 when the block sizes differ by more than a factor of two, the hashes share no run of 7 characters, or they are unrelated. It follows the reference ssdeep comparison: runs of more than three equal characters are cut to three, a weighted edit distance (insert and remove 1, replace 2) is scaled to a score, and for small block sizes the score is capped by the length of the shorter hash." doc

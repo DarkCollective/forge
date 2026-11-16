@@ -371,5 +371,35 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "hex:decode input checks: matching text",
+    "op": "hex:decode",
+    "checks": "input",
+    "data": {
+      "value": "66 6f 6f",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "hex:decode input checks: other text",
+    "op": "hex:decode",
+    "checks": "input",
+    "data": {
+      "value": "hello world",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "hex:encode output checks: typical result",
+    "op": "hex:encode",
+    "checks": "output",
+    "data": {
+      "value": "66:6f:6f",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

@@ -583,5 +583,35 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "encrypt output",
+    "op": "sm2:encrypt",
+    "checks": "output",
+    "data": {
+      "value": "6e89ea282ea157cabf4c4dc3f6167b36a46e710f1ba054c20555b279db8133b5271c44a88bb60414ceb3a71acafce0599cd26ed559744039ef14bdbd10fc348397a4a309e32e829ffc76a083f7b1aa348bb6b6964be57642950e4a562f2b1df39a",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "decrypt input: real data",
+    "op": "sm2:decrypt",
+    "checks": "input",
+    "data": {
+      "value": "6e89ea282ea157cabf4c4dc3f6167b36a46e710f1ba054c20555b279db8133b5271c44a88bb60414ceb3a71acafce0599cd26ed559744039ef14bdbd10fc348397a4a309e32e829ffc76a083f7b1aa348bb6b6964be57642950e4a562f2b1df39a",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "decrypt input: plain text",
+    "op": "sm2:decrypt",
+    "checks": "input",
+    "data": {
+      "value": "hello world, not hex digits",
+      "enc": "utf8"
+    },
+    "expect": "fail"
   }
 ]

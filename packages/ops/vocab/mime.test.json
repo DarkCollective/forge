@@ -405,5 +405,45 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "input: a header with an encoded word is valid UTF-8",
+    "op": "mime:decode",
+    "checks": "input",
+    "data": {
+      "value": "Subject: =?UTF-8?Q?Caf=C3=A9?= <a@b.example>",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "input: gzip bytes are not text",
+    "op": "mime:decode",
+    "checks": "input",
+    "data": {
+      "value": "1f8b0800",
+      "enc": "hex"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "output: the decoded header is valid UTF-8",
+    "op": "mime:decode",
+    "checks": "output",
+    "data": {
+      "value": "Subject: Café <a@b.example>",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "output: control bytes are not printable text",
+    "op": "mime:decode",
+    "checks": "output",
+    "data": {
+      "value": "0102030405060708",
+      "enc": "hex"
+    },
+    "expect": "fail"
   }
 ]

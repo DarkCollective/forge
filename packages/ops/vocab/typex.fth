@@ -59,10 +59,10 @@ IN: typex
 \ A wiring as a permutation 0 to 25: 26 distinct letters.
 : _wiring ( s:str what:str -- bytes )
   s util:letters? s len 26 = and not
-  [ what ": the wiring must be the 26 letters A to Z in some order" cat raise:range ] when
+  [ what ": the wiring must be the 26 letters A to Z in some order" cat fail-range ] when
   s util:letter-indices
   0 26 range [ over swap util:count-of 1 <> ] filter len 0 >
-  [ what ": the wiring uses a letter twice, so it is not a permutation" cat raise:range ] when ;
+  [ what ": the wiring uses a letter twice, so it is not a permutation" cat fail-range ] when ;
 
 : _bad-reflector? ( i:int r:bytes -- bool )
   r i nth i = r r i nth nth i <> or ;
@@ -70,14 +70,14 @@ IN: typex
 : _reflector ( s:str -- bytes )
   s "reflector" _wiring
   0 26 range [ over _bad-reflector? ] filter len 0 >
-  [ "reflector: it must pair the letters up (A to B means B to A) with no letter left alone" raise:range ] when ;
+  [ "reflector: it must pair the letters up (A to B means B to A) with no letter left alone" fail-range ] when ;
 
 \ The notch letters of a rotor as numbers 0 to 25 (none is allowed), spaces and commas ignored. The
 \ notch is tested after the step, so each is moved one back: the letter the window shows before.
 : _notches ( s:str what:str -- bytes )
   s util:number-tokens "" join
   dup len 0 > over util:letters? not and
-  [ what ": notches are letters, like EJR" cat raise:range ] when
+  [ what ": notches are letters, like EJR" cat fail-range ] when
   util:letter-indices [ 25 + 26 mod ] map ;
 
 \ The rotors fitted back to front: tokens 1 to 5, as written (rotor 1 is the leftmost). They are
@@ -85,14 +85,14 @@ IN: typex
 : _reversed ( s:str -- bytes )
   s util:number-tokens
   [ dup util:digits? [ str>int ] [ drop 0 ] if
-    dup 1 < over 5 > or [ "reversed: rotor numbers are 1 to 5, like 2 4" raise:range ] when
+    dup 1 < over 5 > or [ "reversed: rotor numbers are 1 to 5, like 2 4" fail-range ] when
     6 swap - ]
   map list>bytes ;
 
 \ The entry plugboard as the table c -> minus P(c) mod 26: empty is the identity wiring P. P must
 \ be a permutation of the 26 letters.
 : _entry ( s:str -- bytes )
-  s util:strip-space dup len 0 =
+  s strip-space dup len 0 =
   [ drop 0 26 range list>bytes ]
   [ "plugboard" _wiring ] if
   [ 26 swap - 26 mod ] map ;
@@ -185,7 +185,7 @@ IN: typex
   [ drop ]
   [ nip _press 65 + ] if ;
 
-: encrypt ( bytes rotor-1:str[26,/[A-Za-z]+/]="PJRGUSXFOWDLITKBMZQHAVYNCE" rotor-2:str[26,/[A-Za-z]+/]="BNJDZKRLPCSXEVQIATGWFMOUHY" rotor-3:str[26,/[A-Za-z]+/]="FSMHZXQKOJVDBURPGWLIYAETCN" rotor-4:str[26,/[A-Za-z]+/]="NQJYLKMDXWOAHTBCIUZEGRPVSF" rotor-5:str[26,/[A-Za-z]+/]="BAZQDEVNCYGOIWMHTRXKLPSFUJ" reflector:str[26,/[A-Za-z]+/]="TPZRFEOWNXUQVIGBLDYAKMHJSC" notches-3:str[0..26]="FKS" notches-2:str[0..26]="DIQ" reversed:str[0..20]="" rings:str[5..40]="AAAAA" positions:str[5..40]="AAAAA" plugboard:str[0..64]="" others:choice{keep|remove}=keep -- bytes )
+: encrypt ( bytes rotor-1:str[26,/[A-Za-z]+/]="PJRGUSXFOWDLITKBMZQHAVYNCE" rotor-2:str[26,/[A-Za-z]+/]="BNJDZKRLPCSXEVQIATGWFMOUHY" rotor-3:str[26,/[A-Za-z]+/]="FSMHZXQKOJVDBURPGWLIYAETCN" rotor-4:str[26,/[A-Za-z]+/]="NQJYLKMDXWOAHTBCIUZEGRPVSF" rotor-5:str[26,/[A-Za-z]+/]="BAZQDEVNCYGOIWMHTRXKLPSFUJ" reflector:str[26,/[A-Za-z]+/]="TPZRFEOWNXUQVIGBLDYAKMHJSC" notches-3:str[0..26]="FKS" notches-2:str[0..26]="DIQ" reversed:str[0..20]="" rings:str[5..40]="AAAAA" positions:str[5..40]="AAAAA" plugboard:str[0..64]="" others:choice<util:other-chars>=keep -- bytes )
   "Typex-style five-rotor machine with parameters for every wiring, following CyberChef's conventions for compatibility (the real Typex conventions are unpublished). The real Typex wirings were never published: the defaults are EXAMPLE rotors made up for Forge, not historical ones. Rotors are written left to right; the signal enters at rotor-5, through the fixed stators 5 and 4, the moving rotors 3 (fast), 2 and 1 (slow), the reflector, and back. Each letter A to Z, in either case, is enciphered and written in upper case; the same word deciphers. Rotor wirings and the reflector are permutations of A to Z (the reflector pairs letters). Rings and positions are five letters (or numbers 1 to 26) in left to right order. The entry plugboard is a 26-letter wiring that enters each letter c as minus its wiring, mod 26 (empty: the identity wiring, which swaps B and Z, C and Y and so on). Stepping is Enigma-like with a double step; notch letters are tested after the step. Other bytes are kept or dropped with others=remove. A wiring that is not a permutation or other bad settings are E_RANGE." doc
   "Cipher machines" category
   rotor-1 rotor-2 rotor-3 rotor-4 rotor-5 reflector notches-3 notches-2 reversed rings positions plugboard _setup

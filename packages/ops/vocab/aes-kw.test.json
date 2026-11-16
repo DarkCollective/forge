@@ -350,5 +350,25 @@
     "expect": {
       "error": "E_RANGE"
     }
+  },
+  {
+    "name": "unwrap input: real data",
+    "op": "aes-kw:unwrap",
+    "checks": "input",
+    "data": {
+      "value": "1fa68b0a8112b447aef34bd8fb5a7b829d3e862371d2cfe5",
+      "enc": "hex"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "unwrap input: plain text",
+    "op": "aes-kw:unwrap",
+    "checks": "input",
+    "data": {
+      "value": "The quick brown fox jumps over the lazy dog.",
+      "enc": "utf8"
+    },
+    "expect": "fail"
   }
 ]

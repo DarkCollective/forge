@@ -20,7 +20,7 @@ IN: html-text
   "</?[A-Za-z][^>]*>" "" "" regex:replace
   html:decode
   "\n{3,}" "\n\n" "" regex:replace
-  [ util:space? ] util:trim-start [ util:space? ] util:trim-end ;
+  [ space? ] trim-start [ space? ] trim-end ;
 
 META: to-text
   use-when "You have an HTML page or snippet and want only its readable text, such as the words of an email, without the tags." ;

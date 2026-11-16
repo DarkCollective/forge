@@ -1046,5 +1046,15 @@
       "value": "café 'x' - ...",
       "enc": "utf8"
     }
+  },
+  {
+    "name": "unicode:unescape output checks: typical result",
+    "op": "unicode:unescape",
+    "checks": "output",
+    "data": {
+      "value": "café",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

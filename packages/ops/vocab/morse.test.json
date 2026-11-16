@@ -196,5 +196,45 @@
     "params": {},
     "input": { "value": "é", "enc": "utf8" },
     "expect": { "error": "E_COERCE" }
+  },
+  {
+    "name": "morse:decode input checks: matching text",
+    "op": "morse:decode",
+    "checks": "input",
+    "data": {
+      "value": "... --- ...",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "morse:decode input checks: other text",
+    "op": "morse:decode",
+    "checks": "input",
+    "data": {
+      "value": "hello",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "morse:decode output checks: typical result",
+    "op": "morse:decode",
+    "checks": "output",
+    "data": {
+      "value": "SOS",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "morse:encode output checks: typical result",
+    "op": "morse:encode",
+    "checks": "output",
+    "data": {
+      "value": ".- / -...",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

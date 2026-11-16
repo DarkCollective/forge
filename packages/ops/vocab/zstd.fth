@@ -16,4 +16,6 @@ META: decompress
   see-also deflate:gunzip deflate:inflate ;
   link "https://www.rfc-editor.org/rfc/rfc8878" "RFC 8878: Zstandard compression" ;
   link "https://en.wikipedia.org/wiki/Zstandard" "Zstandard on Wikipedia" ;
+  checks input magic-bytes format "zstd" ;
+  checks input magic-bytes format "skippable-frame" ;
 ;

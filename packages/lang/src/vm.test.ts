@@ -1519,6 +1519,95 @@ describe("hooks, breakpoints and trace", () => {
     expect(tops).toEqual(["-", "1", "2", "3"]);
   });
 
+  test("frames() lists the activations innermost first, with kinds, instruction positions and locals", async () => {
+    const rt = runtime();
+    rt.load(`
+      : inner ( n:int -- int )
+        n 1 +
+        :> r
+        r ;
+      : outer ( a:int -- int )
+        a inner
+        a + ;
+    `);
+    const seen: string[] = [];
+    const r = await run(
+      "5 outer",
+      {
+        stepAll: true,
+        onStep: (e) => {
+          if (e.word !== "user:inner" && e.word !== "inner") return;
+          const fs = e.frames();
+          seen.push(
+            fs
+              .map(
+                (f) =>
+                  `${f.word}/${f.kind}/${f.pos?.line}/` +
+                  f.locals.map((l) => `${l.name}=${repr(l.value)}`).join(","),
+              )
+              .join(" | "),
+          );
+          expect(fs[0]?.ip).toBe(e.ip);
+        },
+      },
+      rt,
+    );
+    if (!r.ok) throw r.error;
+    expect(seen.length).toBeGreaterThan(0);
+    const names = (s: string) => s.split(" | ").map((p) => p.split("/")[0]);
+    for (const s of seen)
+      expect(names(s)).toEqual([
+        expect.stringMatching(/inner$/),
+        expect.stringMatching(/outer$/),
+        "<console>",
+      ]);
+    // the `:>` local is absent until it is bound
+    expect(seen[0]).toContain("n=5");
+    expect(seen[0]).not.toContain("r=");
+    expect(seen[seen.length - 1]).toMatch(/n=5,r=6/);
+    // outer frames point at their call instruction: line 7 in `outer`, line 1 in the console
+    expect(seen[0]?.split(" | ")[1]).toMatch(/\/word\/7\/a=5$/);
+    expect(seen[0]?.split(" | ")[2]).toMatch(/^<console>\/word\/1\/$/);
+  });
+
+  test("frames() of a quotation run by map is a quot frame of the containing word, seeing its locals", async () => {
+    const rt = runtime();
+    rt.load(`
+      : twice ( k:int -- list )
+        { 1 2 } [ k * ] map ;
+    `);
+    const kinds: string[] = [];
+    const r = await run(
+      "3 twice",
+      {
+        stepAll: true,
+        onStep: (e) => {
+          const fs = e.frames();
+          if (fs[0]?.kind !== "quot") return;
+          kinds.push(
+            fs
+              .map(
+                (f) => `${f.kind}:${f.word}:${f.locals.map((l) => `${l.name}=${repr(l.value)}`)}`,
+              )
+              .join(" | "),
+          );
+        },
+      },
+      rt,
+    );
+    if (!r.ok) throw r.error;
+    expect(kinds.length).toBeGreaterThan(0);
+    for (const k of kinds) {
+      expect(k).toMatch(/^quot:\S*twice:k=3 \| word:\S*twice:k=3 \| word:<console>:$/);
+    }
+  });
+
+  test("a hook that never calls frames() sees the same run", async () => {
+    const withHook = await run("1 2 + .", { stepAll: true, onStep: () => undefined });
+    const without = await run("1 2 + .");
+    expect({ ...withHook, elapsedMs: 0 }).toEqual({ ...without, elapsedMs: 0 });
+  });
+
   test("trace records every instruction with a shallow copy of the top 16 values", async () => {
     const r = await run("1 2 + .", { trace: true });
     if (!r.ok) throw r.error;

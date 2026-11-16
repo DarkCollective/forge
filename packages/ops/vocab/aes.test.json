@@ -1944,5 +1944,25 @@
       "value": "bed2cd809eb01b9d4332de897b95492dcb42ee6babc27467f2c22a1ad7e3da25c6af60d151dc21105a",
       "enc": "hex"
     }
+  },
+  {
+    "name": "decrypt input: real data",
+    "op": "aes:decrypt",
+    "checks": "input",
+    "data": {
+      "value": "c84af0b613435d5d9182801a9bd9320b",
+      "enc": "hex"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "decrypt input: plain text",
+    "op": "aes:decrypt",
+    "checks": "input",
+    "data": {
+      "value": "The quick brown fox jumps over the lazy dog.",
+      "enc": "utf8"
+    },
+    "expect": "fail"
   }
 ]

@@ -501,5 +501,25 @@
       "value": "cbf3758e99efb3b5c7fab8bf7881864e25ecc1762a",
       "enc": "hex"
     }
+  },
+  {
+    "name": "decrypt input: real data",
+    "op": "triple-des:decrypt",
+    "checks": "input",
+    "data": {
+      "value": "a242ad370ee232ed1c8a4f0ac0abaa9f",
+      "enc": "hex"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "decrypt input: plain text",
+    "op": "triple-des:decrypt",
+    "checks": "input",
+    "data": {
+      "value": "The quick brown fox jumps over the lazy dog.",
+      "enc": "utf8"
+    },
+    "expect": "fail"
   }
 ]

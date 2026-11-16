@@ -2391,5 +2391,25 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "msgpack:decode input check: binary MessagePack passes",
+    "op": "msgpack:decode",
+    "checks": "input",
+    "data": {
+      "value": "9f000102030405060708090a0b0c0d0e",
+      "enc": "hex"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "msgpack:decode input check: plain text fails",
+    "op": "msgpack:decode",
+    "checks": "input",
+    "data": {
+      "value": "This is plain text, not binary data of the expected kind.",
+      "enc": "utf8"
+    },
+    "expect": "fail"
   }
 ]

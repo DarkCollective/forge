@@ -11,14 +11,15 @@ IN: filetype
 
 \ The category names for the seven switches, in CyberChef's order.
 : _cats ( images:bool video:bool audio:bool documents:bool applications:bool archives:bool misc:bool -- list )
-  { }
-  images [ "Images" append ] when
-  video [ "Video" append ] when
-  audio [ "Audio" append ] when
-  documents [ "Documents" append ] when
-  applications [ "Applications" append ] when
-  archives [ "Archives" append ] when
-  misc [ "Miscellaneous" append ] when ;
+  [
+    images [ "Images" emit ] when
+    video [ "Video" emit ] when
+    audio [ "Audio" emit ] when
+    documents [ "Documents" emit ] when
+    applications [ "Applications" emit ] when
+    archives [ "Archives" emit ] when
+    misc [ "Miscellaneous" emit ] when
+  ] collect ;
 
 \ The four description lines of a match, each starting with indent.
 : _lines ( m:record indent:str -- str )
@@ -49,7 +50,7 @@ IN: filetype
   "Forensics" category
   data images video audio documents applications archives miscellaneous _cats ignore-common scan-list
   dup len 0 = [ drop "\nNo embedded files were found." ] [
-    [ _found ] map ""  join
+    [ _found ] map "" join
   ] if
   _scan-intro swap cat ;
 
@@ -65,12 +66,11 @@ IN: filetype
   dup len index <= index 0 < or [
     "the file index must be 0 to " over len 1 - int>str cat ", not " cat index int>str cat
     over len 0 = [ drop "there are no files to extract" ] when
-    raise:range ] when
+    fail-range ] when
   index nth "data" get ;
 
 META: detect
   use-when "You have a file or blob of unknown type, as hex or bytes, and want its type from the signature (magic bytes) at its start, with its usual extensions." ;
-  link "https://en.wikipedia.org/wiki/List_of_file_signatures" "List of file signatures on Wikipedia" ;
   param images "Look for image formats." ;
   param video "Look for video formats." ;
   param audio "Look for audio formats." ;
@@ -79,11 +79,11 @@ META: detect
   param archives "Look for archive and compression formats." ;
   param miscellaneous "Look for other formats (databases, captures, certificates, fonts, ...)." ;
   see-also filetype:scan filetype:extract ;
+  link "https://en.wikipedia.org/wiki/List_of_file_signatures" "List of file signatures on Wikipedia" ;
 ;
 
 META: scan
   use-when "You have a blob that may hide other files inside it, and want every offset where a known file signature (magic bytes) appears, to look for embedded files." ;
-  link "https://en.wikipedia.org/wiki/List_of_file_signatures" "List of file signatures on Wikipedia" ;
   param images "Look for image formats." ;
   param video "Look for video formats." ;
   param audio "Look for audio formats." ;
@@ -93,11 +93,11 @@ META: scan
   param miscellaneous "Look for other formats (databases, captures, certificates, fonts, ...)." ;
   param ignore-common "Leave out the short signatures that occur by chance in any data (MZ, ICO, MP3 and AAC frame sync, a shebang, ...)." ;
   see-also filetype:detect filetype:extract ;
+  link "https://en.wikipedia.org/wiki/List_of_file_signatures" "List of file signatures on Wikipedia" ;
 ;
 
 META: extract
   use-when "You have a blob with files embedded in it, such as a PNG or gzip inside a firmware image, and want those files cut out, each up to where it ends." ;
-  link "https://en.wikipedia.org/wiki/List_of_file_signatures" "List of file signatures on Wikipedia" ;
   param images "Look for image formats." ;
   param video "Look for video formats." ;
   param audio "Look for audio formats." ;
@@ -107,11 +107,11 @@ META: extract
   param miscellaneous "Look for other formats (off by default: databases, captures, fonts, ...)." ;
   param ignore-failed "Leave out a file that cannot be extracted instead of raising an error." ;
   see-also filetype:entry filetype:scan filetype:detect ;
+  link "https://en.wikipedia.org/wiki/List_of_file_signatures" "List of file signatures on Wikipedia" ;
 ;
 
 META: entry
   use-when "You have a blob with embedded files and want one of the files Extract Files finds, by its number in the list, as bytes to save or inspect." ;
-  link "https://en.wikipedia.org/wiki/List_of_file_signatures" "List of file signatures on Wikipedia" ;
   param index "Which of the extracted files to return (0 is the first)." ;
   param images "Look for image formats." ;
   param video "Look for video formats." ;
@@ -122,4 +122,5 @@ META: entry
   param miscellaneous "Look for other formats (off by default)." ;
   param ignore-failed "Leave out a file that cannot be extracted instead of raising an error." ;
   see-also filetype:extract ;
+  link "https://en.wikipedia.org/wiki/List_of_file_signatures" "List of file signatures on Wikipedia" ;
 ;

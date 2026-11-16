@@ -14,5 +14,5 @@ IN: random
 
 : between ( lo:int hi:int -- int )
   "A uniform random integer in [lo, hi], both ends included, from the host CSPRNG (no modulo bias; lo and hi may be big integers). lo above hi is E_RANGE. Shared word: call it qualified from any vocabulary." doc
-  hi lo < [ "the lower bound of a random integer is above the upper bound" raise:range ] when
+  hi lo < [ "the lower bound of a random integer is above the upper bound" fail-range ] when
   hi lo - 1 + below lo + ;

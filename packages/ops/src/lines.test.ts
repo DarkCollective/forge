@@ -407,16 +407,17 @@ describe("shuffle", () => {
     expect(out).not.toEqual(lines);
   });
 
-  test("with the random source pinned, the swaps are Fisher-Yates", async () => {
-    const seq = [[0x01], [0x00]];
+  test("with the random source pinned, the lines follow the order of the random keys", async () => {
+    // One 7-byte key per line (big-endian): 5, 2 and 9 put the second line first and the third last.
+    const keys = [5, 2, 9];
     let i = 0;
     vi.stubGlobal("crypto", {
       getRandomValues: (a: Uint8Array) => {
-        a.set(seq[i++] as number[]);
+        a.set([0, 0, 0, 0, 0, 0, keys[i++] as number]);
         return a;
       },
     });
-    expect(await shuffle("a\nb\nc")).toBe("c\na\nb");
+    expect(await shuffle("a\nb\nc")).toBe("b\na\nc");
   });
 
   test("every order of 3 lines comes out about equally often", async () => {

@@ -12,31 +12,35 @@ USING: hmac base64 ;
 
 \ The text without its leading and trailing ASCII white space.
 : _trim ( s:str -- str )
-  s [ util:space? ] util:trim-start [ util:space? ] util:trim-end ;
+  s [ space? ] trim-start [ space? ] trim-end ;
 
 \ The HMAC hash for an algorithm name. Anything else is E_RANGE, with a reason for the usual suspects.
 : _hash ( alg:str -- str )
-  alg "HS256" = [ "sha256" ] [
-  alg "HS384" = [ "sha384" ] [
-  alg "HS512" = [ "sha512" ] [
-  alg "none" = [ "the JWT algorithm none (an unsigned token) is never signed or accepted" raise:range "" ] [
-  "the JWT algorithm '" alg 0 alg len 24 min slice cat "' is not supported: only HS256, HS384 and HS512 (RS, ES and PS are public-key algorithms and come later)" cat raise:range ""
-  ] if ] if ] if ] if ;
+  alg {
+    "HS256" [ "sha256" ]
+    "HS384" [ "sha384" ]
+    "HS512" [ "sha512" ]
+    "none" [ "the JWT algorithm none (an unsigned token) is never signed or accepted" fail-range ]
+    [
+      "the JWT algorithm '" alg 0 alg len 24 min slice cat
+      "' is not supported: only HS256, HS384 and HS512 (RS, ES and PS are public-key algorithms and come later)" cat fail-range
+    ]
+  } case ;
 
 \ E_COERCE unless the text is a JSON object by its first and last characters. what names the part.
 : _check-object ( text:str what:str -- )
-  text _trim "{" util:starts-with? text _trim "}" util:ends-with? and not
-  [ "the JWT " what cat " is not a JSON object" cat raise:coerce ] when ;
+  text _trim "{" starts-with? text _trim "}" ends-with? and not
+  [ "the JWT " what cat " is not a JSON object" cat fail-coerce ] when ;
 
 \ The key must not be empty.
 : _need-key ( key:bytes -- )
-  key len 0 = [ "the JWT key is empty" raise:range ] when ;
+  key len 0 = [ "the JWT key is empty" fail-range ] when ;
 
 \ The dot-separated parts of a compact token. Surrounding white space is ignored; it must be three parts.
 : _parts ( token:bytes -- list )
-  token bytes>str util:strip-space "." split
-  dup len 5 = [ "this looks like an encrypted JWT (five parts); only signed tokens (three parts) are read" raise:coerce ] when
-  dup len 3 <> [ "a JWT has three parts separated by dots" raise:coerce ] when ;
+  token bytes>str strip-space "." split
+  dup len 5 = [ "this looks like an encrypted JWT (five parts); only signed tokens (three parts) are read" fail-coerce ] when
+  dup len 3 <> [ "a JWT has three parts separated by dots" fail-coerce ] when ;
 
 \ Part i of the token decoded from url-safe base64 to text, which must be a JSON object.
 : _part ( parts:list i:int what:str -- str )
@@ -46,23 +50,23 @@ USING: hmac base64 ;
 \ The alg of a header: the value of the one "alg" key.
 : _alg ( header:str -- str )
   header "\"alg\"" split
-  dup len 2 <> [ "the JWT header must have exactly one alg" raise:coerce ] when
+  dup len 2 <> [ "the JWT header must have exactly one alg" fail-coerce ] when
   1 nth "\"" split
-  dup len 3 < [ "the JWT header's alg is not a string" raise:coerce ] when
-  dup 0 nth util:strip-space ":" <> [ "the JWT header's alg is not a string" raise:coerce ] when
+  dup len 3 < [ "the JWT header's alg is not a string" fail-coerce ] when
+  dup 0 nth strip-space ":" <> [ "the JWT header's alg is not a string" fail-coerce ] when
   1 nth ;
 
 \ The algorithm of a token, checked: it must be an HMAC one, and be want unless want is auto.
 : _pick ( alg:str want:str -- str )
   alg _hash drop
-  want "auto" <> alg want <> and [ "the token's alg is not the expected one" raise:coerce ] when
+  want "auto" <> alg want <> and [ "the token's alg is not the expected one" fail-coerce ] when
   alg ;
 
 \ E_COERCE unless the signature (part 3) is the HMAC of the first two parts.
 : _check-sig ( parts:list key:bytes alg:str -- )
   parts 0 nth "." cat parts 1 nth cat str>bytes alg _hash key hmac:digest
   parts 2 nth str>bytes util:b64url-decode <>
-  [ "the JWT signature does not verify (wrong key, or the token was altered)" raise:coerce ] when ;
+  [ "the JWT signature does not verify (wrong key, or the token was altered)" fail-coerce ] when ;
 
 \ The payload of a token whose signature checks out.
 : _verify ( parts:list key:bytes want:str -- bytes )
@@ -78,7 +82,7 @@ USING: hmac base64 ;
 
 \ The header JSON: alg first, typ JWT unless the extra members set it, then the extra members.
 : _compose ( alg:str inner:str -- str )
-  inner "\"alg\"" split len 1 > [ "the extra header must not set alg; it comes from the alg parameter" raise:range ] when
+  inner "\"alg\"" split len 1 > [ "the extra header must not set alg; it comes from the alg parameter" fail-range ] when
   "{\"alg\":\"" alg cat "\"" cat
   inner "\"typ\"" split len 1 > [ "" ] [ ",\"typ\":\"JWT\"" ] if cat
   inner len 0 = [ "" ] [ "," inner cat ] if cat
@@ -114,6 +118,9 @@ META: decode
   link "https://www.rfc-editor.org/rfc/rfc7519" "RFC 7519: JSON Web Token" ;
   link "https://www.rfc-editor.org/rfc/rfc7515" "RFC 7515: JSON Web Signature" ;
   link "https://jwt.io/" "jwt.io: token debugger" ;
+  checks input regex "^\\s*[\\sA-Za-z0-9_=-]+\\.[\\sA-Za-z0-9_=-]+\\.[\\sA-Za-z0-9_=-]*$" ;
+  expects "JWT" ;
+  checks output regex "^\\s*\\{" ;
 ;
 
 META: verify
@@ -124,6 +131,9 @@ META: verify
   see-also jwt:sign jwt:decode hmac:digest ;
   link "https://www.rfc-editor.org/rfc/rfc7519" "RFC 7519: JSON Web Token" ;
   link "https://www.rfc-editor.org/rfc/rfc7518#section-3.2" "RFC 7518, section 3.2: HMAC signatures" ;
+  checks input regex "^\\s*[\\sA-Za-z0-9_=-]+\\.[\\sA-Za-z0-9_=-]+\\.[\\sA-Za-z0-9_=-]+$" ;
+  expects "JWT" ;
+  checks output regex "^\\s*\\{" ;
 ;
 
 META: sign
@@ -134,4 +144,5 @@ META: sign
   see-also jwt:verify jwt:decode hmac:digest ;
   link "https://www.rfc-editor.org/rfc/rfc7519" "RFC 7519: JSON Web Token" ;
   link "https://www.rfc-editor.org/rfc/rfc7518#section-3.2" "RFC 7518, section 3.2: HMAC signatures" ;
+  checks output regex "^[A-Za-z0-9_=-]+\\.[A-Za-z0-9_=-]+\\.[A-Za-z0-9_=-]+$" ;
 ;

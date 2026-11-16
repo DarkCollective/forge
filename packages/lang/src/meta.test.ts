@@ -1559,12 +1559,65 @@ describe("discovery clauses: use-when, link, inverse, helper, checks", () => {
     expect(metaError(() => rotBuilder().clauseFromArgs("helper", [n("x")])).code).toBe("E_META");
   });
 
-  test("checks is reserved", () => {
-    const e = metaError(() => rotBuilder().clauseFromArgs("checks", [n("input"), n("utf8")], pos));
+  test("checks and expects are parsed, ranged and accumulated", () => {
+    const b = rotBuilder();
+    b.clauseFromArgs("checks", [n("input"), n("magic-bytes"), s("1F8B")]);
+    b.clauseFromArgs("checks", [n("output"), n("charset"), s("a-z+-"), n("0.5")]);
+    b.clauseFromArgs("checks", [n("input"), n("entropy"), n("7"), n("8")]);
+    b.clauseFromArgs("checks", [n("input"), n("binary")]);
+    b.clauseFromArgs("checks", [n("input"), n("magic-bytes"), n("format"), s("gzip")]);
+    b.clauseFromArgs("expects", [s("gzip data")]);
+    const m = checked(b.build(H));
+    expect(m.discovery).toStrictEqual({
+      checks: [
+        { scope: "input", test: { kind: "magic-bytes", hex: "1f8b", offset: 0 } },
+        { scope: "output", test: { kind: "charset", alphabet: "a-z+-", min: 0.5 } },
+        { scope: "input", test: { kind: "entropy", min: 7, max: 8 } },
+        { scope: "input", test: { kind: "binary" } },
+        { scope: "input", test: { kind: "magic-bytes", format: "gzip" } },
+      ],
+      expects: "gzip data",
+    });
+  });
+
+  test("a bad checks clause is E_META with the clause and a reason", () => {
+    const e = metaError(() => rotBuilder().clauseFromArgs("checks", [n("both"), n("utf8")], pos));
     expect(e.code).toBe("E_META");
-    expect(e.message).toContain("`checks` is reserved for a later release");
-    expect(e.detail).toStrictEqual({ clause: "checks" });
+    expect(e.detail).toMatchObject({ clause: "checks" });
     expect(e.pos).toBe(pos);
+    const bad = (args: ClauseArg[]): string =>
+      metaError(() => rotBuilder().clauseFromArgs("checks", args)).code;
+    for (const args of [
+      [],
+      [n("input")],
+      [n("input"), s("utf8")],
+      [n("input"), n("utf8"), n("1")],
+      [n("input"), n("regex"), s("(")],
+      [n("input"), n("regex"), s("a".repeat(1025))],
+      [n("input"), n("charset"), s("z-a")],
+      [n("input"), n("entropy"), n("9"), n("9")],
+      [n("input"), n("printable"), n("0")],
+      [n("input"), n("magic-bytes"), s("abc")],
+      [n("input"), n("magic-bytes"), s("ab"), n("4096")],
+      [n("input"), n("magic-bytes"), n("format"), s("Gzip")],
+    ]) {
+      expect(bad(args), JSON.stringify(args)).toBe("E_META");
+    }
+  });
+
+  test("at most eight checks, and expects once", () => {
+    const b = rotBuilder();
+    for (let i = 0; i < 8; i++) b.clauseFromArgs("checks", [n("input"), n("utf8")]);
+    expect(metaError(() => b.clauseFromArgs("checks", [n("input"), n("utf8")])).code).toBe(
+      "E_META",
+    );
+    b.clauseFromArgs("expects", [s("x".repeat(64))]);
+    expect(metaError(() => b.clauseFromArgs("expects", [s("y")])).code).toBe("E_META");
+    for (const text of ["", " a", "a ", "a\nb", "x".repeat(65)]) {
+      expect(metaError(() => rotBuilder().clauseFromArgs("expects", [s(text)])).code, text).toBe(
+        "E_META",
+      );
+    }
   });
 
   test("the clauses are refused on a private word", () => {

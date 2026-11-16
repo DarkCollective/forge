@@ -22,7 +22,7 @@ import { loadBundleNode } from "./sources-node.js";
 // base62 is FL (vocab/base62.fth); the vectors cover known answers. These tests cover round trips,
 // the size of the work and the error codes.
 const { bytes, str } = valueHelpers;
-const runtime = assembleRuntime(await loadBundleNode(["base62", "raise"]));
+const runtime = assembleRuntime(await loadBundleNode(["base62"]));
 
 function ascii(s: string): Uint8Array {
   return Uint8Array.from(s, (c) => c.charCodeAt(0));

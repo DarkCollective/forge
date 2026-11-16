@@ -8,7 +8,7 @@ IN: hash-analysis
 \ HAVAL, FSB, ...) are not implemented in Forge: the table is about what a digest could be. The
 \ MD6, BLAKE2 and FNV entries are the usual sizes of functions that Forge computes (or, for FNV, that
 \ are fixed-size).
-: _rows ( -- list )
+MEMO: _rows ( -- list )
   { "4|Fletcher-4, Luhn algorithm, Verhoeff algorithm"
     "8|CRC-8, Fletcher-8"
     "16|CRC-16, Fletcher-16, BSD checksum, SYSV checksum"
@@ -58,9 +58,9 @@ IN: hash-analysis
 : analyse ( hash:str -- str )
   "Report the length of a hash given as hex text (whitespace is ignored) in hex characters, bytes and bits, and list the hashing functions whose digest has that many bits. The length is the only evidence: many functions share a size, and SHAKE, BLAKE3, BLAKE2 and MD6 can produce other sizes. An odd number of digits is a size too (4 bits for one digit). The result is a text report. Text that is not hex digits, or empty, is E_COERCE." doc
   "Hashing" category
-  hash util:strip-space str>codes
-  dup len 0 = [ "the hash is empty" raise:coerce ] when
-  dup [ util:hex-digit? not ] filter len 0 > [ "the hash is not hex text" raise:coerce ] when
+  hash strip-space str>codes
+  dup len 0 = [ "the hash is empty" fail-coerce ] when
+  dup [ hex-digit? not ] filter len 0 > [ "the hash is not hex text" fail-coerce ] when
   len _report ;
 
 META: analyse

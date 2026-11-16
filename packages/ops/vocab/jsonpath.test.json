@@ -1294,5 +1294,35 @@
       "value": "123456789012345678901234567890",
       "enc": "utf8"
     }
+  },
+  {
+    "name": "input: JSON text is valid UTF-8",
+    "op": "jsonpath:query",
+    "checks": "input",
+    "data": {
+      "value": "{\"store\":{\"book\":[{\"author\":\"Herman\"}]}}",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "input: gzip bytes are not text",
+    "op": "jsonpath:query",
+    "checks": "input",
+    "data": {
+      "value": "1f8b0800",
+      "enc": "hex"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "output: the JSON text is valid UTF-8",
+    "op": "jsonpath:query",
+    "checks": "output",
+    "data": {
+      "value": "\"Herman\"",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

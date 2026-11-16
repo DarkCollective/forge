@@ -22,7 +22,7 @@ import { loadBundleNode } from "./sources-node.js";
 // The operations are FL (vocab/base85.fth); the conformance vectors cover the known answers. These
 // tests cover round trips, the size of the work, and the error codes.
 const { bytes, str, bool } = valueHelpers;
-const runtime = assembleRuntime(await loadBundleNode(["base85", "raise"]));
+const runtime = assembleRuntime(await loadBundleNode(["base85"]));
 
 function encode(data: Uint8Array, variant = "ascii85", delimiters = false) {
   return runtime.call("base85:encode", [bytes(data), str(variant), bool(delimiters)]);

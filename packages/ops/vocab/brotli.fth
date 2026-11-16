@@ -14,4 +14,6 @@ META: decompress
   see-also deflate:inflate zstd:decompress ;
   link "https://www.rfc-editor.org/rfc/rfc7932" "RFC 7932: Brotli compressed data format" ;
   link "https://en.wikipedia.org/wiki/Brotli" "Brotli on Wikipedia" ;
+  checks input binary ;
+  expects "Brotli data" ;
 ;

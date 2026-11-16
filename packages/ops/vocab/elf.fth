@@ -14,26 +14,26 @@ IN: elf
 
 \ ---- tables ----
 
-: _machines ( -- str )
+MEMO: _machines ( -- str )
   "|0:None|1:WE32100|2:Sparc|3:Intel 80386|4:MC68000|5:MC88000|6:Intel MCU|7:Intel 80860|8:MIPS R3000|9:IBM System/370|a:MIPS R4000 big-endian|b:Sparc v9 (old)|f:HPPA|11:Fujitsu VPP500|12:Sparc v8+|13:Intel 80960|14:PowerPC|15:PowerPC64|16:IBM S/390|17:SPU|24:Renesas V850 (using RH850 ABI)|25:Fujitsu FR20|26:TRW RH32|27:MCORE|28:ARM|29:Digital Alpha (old)|2a:Renesas / SuperH SH|2b:Sparc v9|2c:Siemens Tricore|2d:ARC|2e:Renesas H8/300|2f:Renesas H8/300H|30:Renesas H8S|31:Renesas H8/500|32:Intel IA-64|33:Stanford MIPS-X|34:Motorola Coldfire|35:Motorola MC68HC12 Microcontroller|36:Fujitsu Multimedia Accelerator|37:Siemens PCP|38:Sony nCPU embedded RISC processor|39:Denso NDR1 microprocessor|3a:Motorola Star*Core processor|3b:Toyota ME16 processor|3c:STMicroelectronics ST100 processor|3d:Advanced Logic Corp. TinyJ embedded processor|3e:Advanced Micro Devices X86-64|3f:Sony DSP processor|40:Digital Equipment Corp. PDP-10|41:Digital Equipment Corp. PDP-11|42:Siemens FX66 microcontroller|43:STMicroelectronics ST9+ 8/16 bit microcontroller|44:STMicroelectronics ST7 8-bit microcontroller|45:Motorola MC68HC16 Microcontroller|46:Motorola MC68HC11 Microcontroller|47:Motorola MC68HC08 Microcontroller|48:Motorola MC68HC05 Microcontroller|49:Silicon Graphics SVx|4a:STMicroelectronics ST19 8-bit microcontroller|4b:Digital VAX|4c:Axis Communications 32-bit embedded processor|4d:Infineon Technologies 32-bit embedded cpu|4e:Element 14 64-bit DSP processor|4f:LSI Logic's 16-bit DSP processor|50:Donald Knuth's educational 64-bit processor|51:Harvard Universitys's machine-independent object format|52:Vitesse Prism|53:Atmel AVR 8-bit microcontroller|54:Fujitsu FR30|55:d10v|56:d30v|57:Renesas V850|58:Renesas M32R (formerly Mitsubishi M32r)|59:mn10300|5a:mn10200|5b:picoJava|5c:OpenRISC 1000|5d:ARCompact|5e:Tensilica Xtensa Processor|5f:Alphamosaic VideoCore processor|60:Thompson Multimedia General Purpose Processor|61:National Semiconductor 32000 series|62:Tenor Network TPC processor|63:Trebia SNP 1000 processor|64:STMicroelectronics ST200 microcontroller|65:Ubicom IP2xxx 8-bit microcontrollers|66:MAX Processor|67:National Semiconductor CompactRISC|68:Fujitsu F2MC16|69:Texas Instruments msp430 microcontroller|6a:Analog Devices Blackfin|6b:S1C33 Family of Seiko Epson processors|6c:Sharp embedded microprocessor|6d:Arca RISC microprocessor|6e:Unicore|6f:eXcess 16/32/64-bit configurable embedded CPU|70:Icera Semiconductor Inc. Deep Execution Processor|71:Altera Nios II|72:National Semiconductor CRX microprocessor|73:Motorola XGATE embedded processor|74:Infineon Technologies xc16x|75:Renesas M16C series microprocessors|76:Microchip Technology dsPIC30F Digital Signal Controller|77:Freescale Communication Engine RISC core|78:Renesas M32c|83:Altium TSK3000 core|84:Freescale RS08 embedded processor|86:Cyan Technology eCOG2 microprocessor|87:SUNPLUS S+Core|88:New Japan Radio (NJR) 24-bit DSP Processor|89:Broadcom VideoCore III processor|8a:Lattice Mico32|8b:Seiko Epson C17 family|8c:Texas Instruments TMS320C6000 DSP family|8d:Texas Instruments TMS320C2000 DSP family|8e:Texas Instruments TMS320C55x DSP family|90:TI PRU I/O processor|a0:STMicroelectronics 64bit VLIW Data Signal Processor|a1:Cypress M8C microprocessor|a2:Renesas R32C series microprocessors|a3:NXP Semiconductors TriMedia architecture family|a4:QUALCOMM DSP6 Processor|a5:Intel 8051 and variants|a6:STMicroelectronics STxP7x family|a7:Andes Technology compact code size embedded RISC processor family|a8:Cyan Technology eCOG1X family|a9:Dallas Semiconductor MAXQ30 Core microcontrollers|aa:New Japan Radio (NJR) 16-bit DSP Processor|ab:M2000 Reconfigurable RISC Microprocessor|ac:Cray Inc. NV2 vector architecture|ad:Renesas RX|ae:Imagination Technologies Meta processor architecture|af:MCST Elbrus general purpose hardware architecture|b0:Cyan Technology eCOG16 family|b1:Xilinx MicroBlaze|b2:Freescale Extended Time Processing Unit|b3:Infineon Technologies SLE9X core|b4:Intel L1OM|b5:Intel K1OM|b6:Intel (reserved)|b7:AArch64|b8:ARM (reserved)|b9:Atmel Corporation 32-bit microprocessor|ba:STMicroeletronics STM8 8-bit microcontroller|bb:Tilera TILE64 multicore architecture family|bc:Tilera TILEPro multicore architecture family|bd:Xilinx MicroBlaze|be:NVIDIA CUDA architecture|bf:Tilera TILE-Gx multicore architecture family|c0:CloudShield architecture family|c1:KIPO-KAIST Core-A 1st generation processor family|c2:KIPO-KAIST Core-A 2nd generation processor family|c3:ARCv2|c4:Open8 8-bit RISC soft processor core|c5:Renesas RL78|c6:Broadcom VideoCore V processor|c7:Renesas 78K0R|c8:Freescale 56800EX Digital Signal Controller (DSC)|c9:Beyond BA1 CPU architecture|ca:Beyond BA2 CPU architecture|cb:XMOS xCORE processor family|cc:Microchip 8-bit PIC(r) family|cd:Intel Graphics Technology|d2:KM211 KM32 32-bit processor|d3:KM211 KMX32 32-bit processor|d4:KM211 KMX16 16-bit processor|d5:KM211 KMX8 8-bit processor|d6:KM211 KVARC processor|d7:Paneve CDP architecture family|d8:Cognitive Smart Memory Processor|d9:Bluechip Systems CoolEngine|da:Nanoradio Optimized RISC|db:CSR Kalimba architecture family|dc:Zilog Z80|dd:CDS VISIUMcore processor|de:FTDI Chip FT32|df:Moxie|e0:AMD GPU|f3:RISC-V|f4:Lanai 32-bit processor|f5:CEVA Processor Architecture Family|f6:CEVA X2 Processor Family|f7:Linux BPF|f8:Graphcore Intelligent Processing Unit|f9:Imagination Technologies|fa:Netronome Flow Processor|fb:NEC Vector Engine|fc:C-SKY|fd:Synopsys ARCv3 64-bit processor|fe:MOS Technology MCS 6502 processor|ff:Synopsys ARCv3 32-bit processor|100:Kalray VLIW core of the MPPA processor family|101:WDC 65816/65C816|102:LoongArch|103:ChipON KungFu32|1057:Atmel AVR 8-bit microcontroller|1223:Adapteva EPIPHANY|2530:Morpho Techologies MT processor|3330:Fujitsu FR30|4157:Web Assembly|4688:Infineon Technologies xc16x|5441:Fujitsu FR-V|5aa5:OpenDLX|7650:d10v|9026:Alpha|a390:IBM S/390|abc7:Tensilica Xtensa Processor|ad45:Sanyo XStormy16 CPU core|baab:Xilinx MicroBlaze|beef:mn10300|dead:mn10200|feba:Vitesse IQ2000|febb:Altera Nios|" ;
 
-: _abis ( -- str )
+MEMO: _abis ( -- str )
   "|0:UNIX - System V|1:UNIX - HP-UX|2:UNIX - NetBSD|3:UNIX - GNU|6:UNIX - Solaris|7:UNIX - AIX|8:UNIX - IRIX|9:UNIX - FreeBSD|a:UNIX - TRU64|b:Novell - Modesto|c:UNIX - OpenBSD|d:VMS - OpenVMS|e:HP - Non-Stop Kernel|f:AROS|10:FenixOS|11:Nuxi CloudABI|12:Stratus Technologies OpenVOS|" ;
 
-: _section-types ( -- str )
+MEMO: _section-types ( -- str )
   "|0:NULL|1:PROGBITS|2:SYMTAB|3:STRTAB|4:RELA|5:HASH|6:DYNAMIC|7:NOTE|8:NOBITS|9:REL|a:SHLIB|b:DYNSYM|e:INIT_ARRAY|f:FINI_ARRAY|10:PREINIT_ARRAY|11:GROUP|12:SYMTAB SECTION INDICES|13:RELR|6ffffff5:GNU_ATTRIBUTES|6ffffff6:GNU_HASH|6ffffff7:GNU_LIBLIST|6ffffffd:VERDEF|6ffffffe:VERNEED|6fffffff:VERSYM|" ;
 
-: _segment-types ( -- str )
+MEMO: _segment-types ( -- str )
   "|0:NULL|1:LOAD|2:DYNAMIC|3:INTERP|4:NOTE|5:SHLIB|6:PHDR|7:TLS|6474e550:GNU_EH_FRAME|6474e551:GNU_STACK|6474e552:GNU_RELRO|6474e553:GNU_PROPERTY|6474e554:GNU_SFRAME|" ;
 
-: _file-types ( -- str )
+MEMO: _file-types ( -- str )
   "|0:NONE (None)|1:REL (Relocatable file)|2:EXEC (Executable file)|3:DYN (Shared object file)|4:CORE (Core file)|" ;
 
 \ ---- text helpers ----
 
 \ Lower-case hex of v, zero-padded to w digits.
 : _hex ( v:int w:int -- str )
-  v w util:pad-hex ;
+  v w pad-hex ;
 
 \ ---- reading ----
 
@@ -42,7 +42,7 @@ IN: elf
   e p n "ELF data" util:need-bytes
   e p p n + slice
   e 5 nth 2 = [ ] [ rev ] if
-  256 util:digits>int ;
+  256 digits>int ;
 
 \ The class decides: a64 for ELF64, a32 for ELF32.
 : _o ( e:bytes a64:int a32:int -- int )
@@ -78,22 +78,25 @@ IN: elf
 \ ---- the identification and the header ----
 
 : _check-ident ( data:bytes -- )
-  data len 16 < [ "not an ELF file: the data is shorter than the 16-byte identification" raise:coerce ] when
-  data 0 4 slice #[ 7f 45 4c 46 ] = not [ "not an ELF file: the magic bytes 7f 45 4c 46 are missing" raise:coerce ] when
+  data len 16 < [ "not an ELF file: the data is shorter than the 16-byte identification" fail-coerce ] when
+  data 0 4 slice #[ 7f 45 4c 46 ] = not [ "not an ELF file: the magic bytes 7f 45 4c 46 are missing" fail-coerce ] when
   data 4 nth dup 1 = swap 2 = or not [
-    "unsupported ELF class " data 4 nth int>str cat " (1 is ELF32, 2 is ELF64)" cat raise:coerce ] when
+    "unsupported ELF class " data 4 nth int>str cat " (1 is ELF32, 2 is ELF64)" cat fail-coerce ] when
   data 5 nth dup 1 = swap 2 = or not [
-    "unsupported ELF data encoding " data 5 nth int>str cat " (1 is little endian, 2 is big endian)" cat raise:coerce ] when
-  data len data 4 nth 2 = [ 64 ] [ 52 ] if < [ "the ELF header is cut short" raise:coerce ] when ;
+    "unsupported ELF data encoding " data 5 nth int>str cat " (1 is little endian, 2 is big endian)" cat fail-coerce ] when
+  data len data 4 nth 2 = [ 64 ] [ 52 ] if < [ "the ELF header is cut short" fail-coerce ] when ;
 
 : _context ( data:bytes -- bytes )
   data _check-ident data ;
 
 : _file-type-name ( t:int -- str )
   _file-types t 16 int>str-radix util:name-in-table dup len 0 = [ drop
-    t 65024 >= t 65279 <= and [ "OS Specific: (" t 16 int>str-radix cat ")" cat ] [
-    t 65280 >= [ "Processor Specific: (" t 16 int>str-radix cat ")" cat ] [
-    "<unknown>: " t 16 int>str-radix cat ] if ] if ] when ;
+    {
+      [ t 65024 >= t 65279 <= and ] [ "OS Specific: (" t 16 int>str-radix cat ")" cat ]
+      [ t 65280 >= ] [ "Processor Specific: (" t 16 int>str-radix cat ")" cat ]
+      [ "<unknown>: " t 16 int>str-radix cat ]
+    } cond
+  ] when ;
 
 : _machine-name ( m:int -- str )
   _machines m 16 int>str-radix util:name-in-table dup len 0 = [ drop "<unknown>: 0x" m 16 int>str-radix cat ] when ;
@@ -119,7 +122,7 @@ IN: elf
 : _check-table ( e:bytes off:int count:int esize:int what:str -- )
   off count esize * + e len > [
     what " at offset " cat off int>str cat " holds " cat count int>str cat " entries of " cat esize int>str cat
-    " bytes and runs past the end of the data (truncated)" cat raise:coerce ] when ;
+    " bytes and runs past the end of the data (truncated)" cat fail-coerce ] when ;
 
 : _cap ( -- int )
   2000 ;
@@ -136,9 +139,12 @@ IN: elf
 
 : _segment-name ( t:int -- str )
   _segment-types t 16 int>str-radix util:name-in-table dup len 0 = [ drop
-    t 1610612736 >= t 1879048191 <= and [ "LOOS+0x" t 1610612736 - 16 int>str-radix cat ] [
-    t 1879048192 >= [ "LOPROC+0x" t 1879048192 - 16 int>str-radix cat ] [
-    "<unknown>: " t 16 int>str-radix cat ] if ] if ] when
+    {
+      [ t 1610612736 >= t 1879048191 <= and ] [ "LOOS+0x" t 1610612736 - 16 int>str-radix cat ]
+      [ t 1879048192 >= ] [ "LOPROC+0x" t 1879048192 - 16 int>str-radix cat ]
+      [ "<unknown>: " t 16 int>str-radix cat ]
+    } cond
+  ] when
   dup len 14 min 0 swap slice ;
 
 \ ---- the segments, as the header and the program table need them ----
@@ -229,7 +235,7 @@ IN: elf
 : _program-headers ( e:bytes -- str )
   e 56 44 _h16 0 = [ "There are no program headers in this file.\n" ] [
     e 54 42 _h16 e 4 nth 2 = [ 56 ] [ 32 ] if < [
-      "the program header entries are " e 54 42 _h16 int>str cat " bytes, too small for an ELF program header" cat raise:coerce ] when
+      "the program header entries are " e 54 42 _h16 int>str cat " bytes, too small for an ELF program header" cat fail-coerce ] when
     e e 32 28 _nat e 56 44 _h16 e 54 42 _h16 _program-table ] if ;
 
 : _header-text ( e:bytes -- str )
@@ -286,7 +292,7 @@ IN: elf
 : _sections ( e:bytes -- list )
   e _shnum 0 = [ { } ] [
     e _shentsize e 4 nth 2 = [ 64 ] [ 40 ] if < [
-      "the section header entries are " e _shentsize int>str cat " bytes, too small for an ELF section header" cat raise:coerce ] when
+      "the section header entries are " e _shentsize int>str cat " bytes, too small for an ELF section header" cat fail-coerce ] when
     e e _shoff e _shnum e _shentsize "the section header table" _check-table
     0 e _shnum _cap min range [ e swap _section-at ] map ] if ;
 
@@ -306,10 +312,13 @@ IN: elf
 
 : _sec-type-name ( t:int -- str )
   _section-types t 16 int>str-radix util:name-in-table dup len 0 = [ drop
-    t 2147483648 >= [ "LOUSER+0x" t 2147483648 - 16 int>str-radix cat ] [
-    t 1879048192 >= [ "LOPROC+0x" t 1879048192 - 16 int>str-radix cat ] [
-    t 1610612736 >= [ "LOOS+0x" t 1610612736 - 16 int>str-radix cat ] [
-    t 8 _hex ": <unknown>" cat ] if ] if ] if ] when ;
+    {
+      [ t 2147483648 >= ] [ "LOUSER+0x" t 2147483648 - 16 int>str-radix cat ]
+      [ t 1879048192 >= ] [ "LOPROC+0x" t 1879048192 - 16 int>str-radix cat ]
+      [ t 1610612736 >= ] [ "LOOS+0x" t 1610612736 - 16 int>str-radix cat ]
+      [ t 8 _hex ": <unknown>" cat ]
+    } cond
+  ] when ;
 
 : _flags-text ( f:int -- str )
   ""
@@ -355,9 +364,12 @@ IN: elf
 \ The name of v in a "|hex:name|" table, else the readelf wording for the ranges.
 : _sym-field ( table:str v:int -- str )
   table v 16 int>str-radix util:name-in-table dup len 0 = [ drop
-    v 13 >= [ "<processor specific>: " v int>str cat ] [
-    v 10 >= [ "<OS specific>: " v int>str cat ] [
-    "<unknown>: " v int>str cat ] if ] if ] when ;
+    {
+      [ v 13 >= ] [ "<processor specific>: " v int>str cat ]
+      [ v 10 >= ] [ "<OS specific>: " v int>str cat ]
+      [ "<unknown>: " v int>str cat ]
+    } cond
+  ] when ;
 
 \ GNU_IFUNC and GNU_UNIQUE have a name under the GNU and FreeBSD OS/ABIs only.
 : _gnu? ( osabi:int -- bool )
@@ -373,6 +385,7 @@ IN: elf
 : _vis-name ( other:int -- str )
   "|0:DEFAULT|1:INTERNAL|2:HIDDEN|3:PROTECTED|" other 3 band 16 int>str-radix util:name-in-table ;
 
+\ Kept as an if chain: it runs once per symbol, and a cond costs extra steps against the step bound of the 2,500-symbol test.
 : _ndx-text ( ndx:int shnum:int -- str )
   ndx 0 = [ "UND" ] [ ndx 65521 = [ "ABS" ] [ ndx 65522 = [ "COM" ] [
   ndx 65280 >= [
@@ -407,7 +420,7 @@ IN: elf
   [ "   Num:    Value          Size Type    Bind   Vis      Ndx Name\n" ]
   [ "   Num:    Value  Size Type    Bind   Vis      Ndx Name\n" ] if ;
 
-: _no-names ( -- record )
+MEMO: _no-names ( -- record )
   { { "off" 0 } { "size" 0 } { "ok" false } } >record ;
 
 \ The names of the symbols of a symbol table section: the string table its sh_link names.
@@ -422,19 +435,15 @@ IN: elf
   0 count _cap min range [ e sec esize names _sym-line ] map "" join
   count _more-line cat ;
 
-: _symtab-block3 ( e:bytes sec:record snames:record esize:int count:int -- str )
+: _symtab-block ( e:bytes sec:record snames:record -- str )
+  sec "entsize" get dup 0 = [ drop e 4 nth 2 = [ 24 ] [ 16 ] if ] when :> esize
+  esize e 4 nth 2 = [ 24 ] [ 16 ] if < [
+    "the symbol table entries are " esize int>str cat " bytes, too small for an ELF symbol" cat fail-coerce ] when
+  sec "size" get esize div :> count
   "Symbol table '" e snames sec "name" get _name cat "' contains " cat count int>str cat
   count 1 = [ " entry:\n" ] [ " entries:\n" ] if cat
   e _sym-title cat
   e sec esize count e sec _sym-names _symtab-rows cat ;
-
-: _symtab-block2 ( e:bytes sec:record snames:record esize:int -- str )
-  esize e 4 nth 2 = [ 24 ] [ 16 ] if < [
-    "the symbol table entries are " esize int>str cat " bytes, too small for an ELF symbol" cat raise:coerce ] when
-  e sec snames esize sec "size" get esize div _symtab-block3 ;
-
-: _symtab-block ( e:bytes sec:record snames:record -- str )
-  e sec snames sec "entsize" get dup 0 = [ drop e 4 nth 2 = [ 24 ] [ 16 ] if ] when _symtab-block2 ;
 
 \ ---- the report ----
 
@@ -457,6 +466,7 @@ IN: elf
 
 META: info
   use-when "You have an ELF file as hex or bytes and want its headers, segments, sections and symbols, in readelf style, without running it." ;
-  link "https://en.wikipedia.org/wiki/Executable_and_Linkable_Format" "Executable and Linkable Format on Wikipedia" ;
   see-also filetype:detect filetype:scan ;
+  link "https://en.wikipedia.org/wiki/Executable_and_Linkable_Format" "Executable and Linkable Format on Wikipedia" ;
+  checks input magic-bytes format "elf" ;
 ;

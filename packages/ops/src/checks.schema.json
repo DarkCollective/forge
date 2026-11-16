@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:forge:schema:checks:1",
+  "title": "Forge checks document, format 1",
+  "type": "object",
+  "properties": {
+    "format": {
+      "const": 1
+    },
+    "catalogue": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{16}$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{16}$"
+    },
+    "ops": {
+      "description": "Keyed by qname; only ops with a checks or expects clause are present.",
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/qname"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/op"
+      }
+    }
+  },
+  "required": ["format", "catalogue", "version", "ops"],
+  "additionalProperties": false,
+  "$defs": {
+    "qname": {
+      "$ref": "https://forge.darkcollective.com/schemas/word-meta.schema.json#/$defs/qname"
+    },
+    "op": {
+      "type": "object",
+      "properties": {
+        "expects": {
+          "type": ["string", "null"],
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[^\\u0000-\\u001f]*$"
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "$ref": "https://forge.darkcollective.com/schemas/word-meta.schema.json#/$defs/check"
+          },
+          "maxItems": 8
+        }
+      },
+      "required": ["expects", "checks"],
+      "additionalProperties": false
+    }
+  }
+}

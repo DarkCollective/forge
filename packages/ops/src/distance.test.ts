@@ -22,7 +22,7 @@ import { loadBundleNode } from "./sources-node.js";
 
 // distance is FL (vocab/distance.fth) over one primitive, distance:_levenshtein (src/prims/distance.ts).
 const { int, str } = valueHelpers;
-const runtime = assembleRuntime(await loadBundleNode(["distance", "raise"]));
+const runtime = assembleRuntime(await loadBundleNode(["distance"]));
 
 type Result = { ok: boolean; stack: readonly Value[]; steps?: number; error?: { code: string } };
 function top(r: Result): { v: unknown } {

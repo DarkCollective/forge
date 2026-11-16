@@ -293,5 +293,35 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "decrypt input: real data",
+    "op": "fernet:decrypt",
+    "checks": "input",
+    "data": {
+      "value": "gAAAAAAdwJ6wAAECAwQFBgcICQoLDA0ODy021cpGVWKZ_eEwCGM4BLLF_5CV9dOPmrhuVUPgJobwOz7JcbmrR64jVmpU4IwqDA",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "decrypt input: plain text",
+    "op": "fernet:decrypt",
+    "checks": "input",
+    "data": {
+      "value": "hello world",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "encrypt output",
+    "op": "fernet:encrypt",
+    "checks": "output",
+    "data": {
+      "value": "gAAAAAAdwJ6wAAECAwQFBgcICQoLDA0ODy021cpGVWKZ_eEwCGM4BLLF_5CV9dOPmrhuVUPgJobwOz7JcbmrR64jVmpU4IwqDA==",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

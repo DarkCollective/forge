@@ -2078,5 +2078,45 @@
     "expect": {
       "error": "E_RANGE"
     }
+  },
+  {
+    "name": "decrypt input: real data",
+    "op": "rsa:decrypt",
+    "checks": "input",
+    "data": {
+      "value": "b3f20681cff415a3c2c7699dc2d1a28c6f153175f657fc63174fbeba387da94b25d2bf1dc0032fafdb766ad56e7d66c22667caa93ce2977cb186d9b9af79dc1910e3087373bb21415c3eb6e00a0a1858b19b6ea866259737c86002f86c89d296c37a2dc648c36ed276ef5295e7a25d0ddcf63785aeff8a6eb26083f636726778",
+      "enc": "hex"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "decrypt input: plain text",
+    "op": "rsa:decrypt",
+    "checks": "input",
+    "data": {
+      "value": "The quick brown fox jumps over the lazy dog.",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "public-key input: real data",
+    "op": "rsa:public-key",
+    "checks": "input",
+    "data": {
+      "value": "-----BEGIN EC PRIVATE KEY-----\nMHQCAQEEIAlcEyPShVHofOkvMfbYVVkDmRddG+Eequ/XTgH8xtRUoAcGBSuBBAAK\noUQDQgAE6gxaJw2tv1+ZF0VaAxXEDXluSaFe8deddqpnP7nvFnTg9Ljl/0qoctj7\na510AQK8wZTbpts+lpEqgRpiSVrcWA==\n-----END EC PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "public-key input: plain text",
+    "op": "rsa:public-key",
+    "checks": "input",
+    "data": {
+      "value": "hello world",
+      "enc": "utf8"
+    },
+    "expect": "fail"
   }
 ]

@@ -12,18 +12,15 @@ IN: set
 \ The sets of the input, at least `least` of them (exactly that many when exact is true; the messages say 2, the only count used).
 : _sets ( data:str sample:str item:str least:int exact:bool -- list )
   data sample split [ item _parse-set ] map
-  dup len least < [ "the input needs at least 2 sets, cut by the sample delimiter" raise:range ] when
-  exact [ dup len least <> [ "the input needs exactly 2 sets, cut by the sample delimiter" raise:range ] when ] when ;
+  dup len least < [ "the input needs at least 2 sets, cut by the sample delimiter" fail-range ] when
+  exact [ dup len least <> [ "the input needs exactly 2 sets, cut by the sample delimiter" fail-range ] when ] when ;
 
 : _lookup ( items:list -- record )
   items items zip >record ;
 
-: _has? ( rec:record key:str -- bool )
-  [ rec key get drop true ] [ drop false ] try ;
-
 \ The items of a that are in (want true) or not in (want false) the record.
 : _keep ( a:list rec:record want:bool -- list )
-  a [ rec swap _has? want = ] filter ;
+  a [ rec swap has-key? want = ] filter ;
 
 : _common ( a:list b:list -- list )
   a b _lookup true _keep ;
@@ -35,7 +32,7 @@ IN: set
   a b _minus b a _minus cat ;
 
 : _union-all ( sets:list -- list )
-  sets util:list-flatten list:unique ;
+  [ sets [ emit-all ] each ] collect list:unique ;
 
 \ The first set and the union of all the others: ( sets -- first others ).
 : _rest-union ( sets:list -- list list )
@@ -59,7 +56,8 @@ IN: set
 : symmetric-difference ( data:str sample-delimiter:str[1..]="\n\n" item-delimiter:str[1..]="," -- str )
   "The symmetric difference of the sets: the items that are in exactly one of two sets, the ones of the first set first. With more than two sets it is applied from left to right, so an item stays when it is in an odd number of the sets. Same input and output shape as union. Fewer than two sets is E_RANGE." doc
   "Arithmetic" category
-  data sample-delimiter item-delimiter 2 false _sets dup 1 over len slice swap 0 nth [ _either ] reduce item-delimiter join ;
+  data sample-delimiter item-delimiter 2 false _sets :> sets
+  sets 1 sets len slice sets 0 nth [ _either ] reduce item-delimiter join ;
 
 : _pairs ( x:str b:list -- list )
   b [ "(" x cat "," cat swap cat ")" cat ] map ;
@@ -67,8 +65,9 @@ IN: set
 : cartesian-product ( data:str sample-delimiter:str[1..]="\n\n" item-delimiter:str[1..]="," -- str )
   "The Cartesian product of two sets A and B: every pair (a,b) with a from A and b from B, written (a,b), the pairs of the first item of A first, joined by the item delimiter. The input must be exactly two sets cut at the sample delimiter (anything else is E_RANGE); an empty set gives an empty result." doc
   "Arithmetic" category
-  data sample-delimiter item-delimiter 2 true _sets
-  dup 1 nth swap 0 nth [ over _pairs ] map nip { } [ cat ] reduce item-delimiter join ;
+  data sample-delimiter item-delimiter 2 true _sets :> sets
+  sets 1 nth :> b
+  [ sets 0 nth [ b _pairs emit-all ] each ] collect item-delimiter join ;
 
 : _grow ( acc:list item:str -- list )
   acc acc [ { item } swap cat ] map cat ;
@@ -78,15 +77,14 @@ IN: set
 : power-set ( data:str item-delimiter:str[1..]="," subset-delimiter:str[1..]="\n" -- str )
   "The power set of one set: all its subsets, 2 to the power n of them, each written as its items joined by the item delimiter and each followed by the subset delimiter, as CyberChef writes them (the result ends with the subset delimiter). The order is CyberChef's: first the subsets in binary counting order with the first item as the most significant bit (for a,b,c: empty, c, b, b+c, a, a+c, a+b, a+b+c), then a stable sort by the length of the written subset (its items and the item delimiters between them), shortest first, with subsets of equal length keeping their counting order. For items of one character the result is therefore the empty subset, then the single items from last to first, then the pairs, and so on (for a,b,c: empty, c, b, a, b+c, a+c, a+b, a+b+c), and with longer items a subset can come after a subset of more items. The set is cut at the item delimiter; empty items and duplicates are removed (CyberChef keeps duplicates); it may have at most 16 items (E_RANGE beyond that) because the output doubles with every item. An empty set gives an empty result." doc
   "Arithmetic" category
-  data item-delimiter _parse-set [ len 0 > ] filter
-  dup len 0 =
-  [ drop "" ]
-  [ dup len 16 > [ "the power set is limited to 16 items" raise:range ] when
-    rev { { } } [ _grow ] reduce
-    [ item-delimiter join ] map
-    dup [ len ] map list:sort-by
-    [ subset-delimiter cat ] map "" join ]
-  if ;
+  data item-delimiter _parse-set [ len 0 > ] filter :> items
+  {
+    [ items len 0 = ] [ "" ]
+    [ items len 16 > ] [ "the power set is limited to 16 items" fail-range ]
+    [ items rev { { } } [ _grow ] reduce [ item-delimiter join ] map
+      dup [ len ] map list:sort-by
+      [ subset-delimiter cat ] map "" join ]
+  } cond ;
 
 META: union
   use-when "You have two or more lists of items, separated by a blank line, and want one list of every item they contain, each item once." ;

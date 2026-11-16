@@ -17,4 +17,7 @@ META: select
   link "https://en.wikipedia.org/wiki/CSS" "CSS on Wikipedia" ;
   param css-selector "The CSS selector, for example div.content > a[href^='https']." ;
   param delimiter "The text put between the matches. Escapes like \\n are read." ;
+  expects "HTML text" ;
+  checks input utf8 ;
+  checks output utf8 ;
 ;

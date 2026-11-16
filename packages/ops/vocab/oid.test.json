@@ -719,5 +719,65 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "from-hex input: real data",
+    "op": "oid:from-hex",
+    "checks": "input",
+    "data": {
+      "value": "00",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "from-hex input: plain text",
+    "op": "oid:from-hex",
+    "checks": "input",
+    "data": {
+      "value": "hello world, not hex digits",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "from-hex output",
+    "op": "oid:from-hex",
+    "checks": "output",
+    "data": {
+      "value": "0.0",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "to-hex input: real data",
+    "op": "oid:to-hex",
+    "checks": "input",
+    "data": {
+      "value": "0.0",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "to-hex input: plain text",
+    "op": "oid:to-hex",
+    "checks": "input",
+    "data": {
+      "value": "hello world",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "to-hex output",
+    "op": "oid:to-hex",
+    "checks": "output",
+    "data": {
+      "value": "00",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

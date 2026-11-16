@@ -21,7 +21,7 @@ import { loadBundleNode } from "./sources-node.js";
 
 // string-escape is FL (vocab/string-escape.fth); these tests drive its public words through the runtime.
 const { bool, str } = valueHelpers;
-const runtime = assembleRuntime(await loadBundleNode(["string-escape", "raise"]));
+const runtime = assembleRuntime(await loadBundleNode(["string-escape"]));
 
 type Result = { ok: boolean; stack: readonly Value[]; steps?: number; error?: { code: string } };
 function top(r: Result): { v: unknown } {

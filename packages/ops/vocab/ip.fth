@@ -16,7 +16,7 @@ USING: defang ;
   s "^\\s+" "" "" regex:replace rev "^\\s+" "" "" regex:replace rev ;
 
 : _bad ( what:str s:str -- )
-  what ": " cat s cat raise:coerce ;
+  what ": " cat s cat fail-coerce ;
 
 \ A dotted quad of decimal octets of one to three digits (leading zeros read as decimal), each 0 to 255.
 : _v4 ( s:str -- int )
@@ -47,7 +47,7 @@ USING: defang ;
   dup len 0 = [ "not an IPv6 address" s _bad ] when
   0 nth "groups" get dup 1 nth _v4
   swap 0 nth swap
-  dup 16 shr 4 util:pad-hex swap 65535 band 4 util:pad-hex ":" swap cat cat cat ;
+  dup 16 shr 4 pad-hex swap 65535 band 4 pad-hex ":" swap cat cat cat ;
 
 : _join ( l:list r:list -- int )
   l _fold16 8 l len - 16 * shl r _fold16 + ;
@@ -77,7 +77,7 @@ USING: defang ;
 
 \ Eight groups of four hex digits (CyberChef's longhand).
 : _long ( n:int -- str )
-  n _hextet-list [ 4 util:pad-hex ] map ":" join ;
+  n _hextet-list [ 4 pad-hex ] map ":" join ;
 
 \ The first of the longest runs of two or more zero groups of the plain form, as a match, or an empty list.
 : _zero-run ( text:str -- list )
@@ -138,7 +138,7 @@ USING: defang ;
 : _count ( lo:int hi:int -- str )
   hi lo - 1 + int>str ;
 
-: _nums256 ( -- str )
+MEMO: _nums256 ( -- str )
   0 256 range [ int>str ] map "\n" join ;
 
 \ The text of one /24 prefix as "a.b.c." for the 24-bit number b.
@@ -172,12 +172,13 @@ USING: defang ;
 \ The enumeration of an IPv4 range, or nothing when it is switched off; more than 65,536 addresses needs allow
 \ (and no range may pass 1,048,576).
 : _listing ( lo:int hi:int enum:bool allow:bool -- str )
-  enum not [ "" ] [
-    hi lo - 1 +
-    dup allow [ 1048576 ] [ 65536 ] if >
-    [ "the range holds " swap int>str cat " addresses; listing them is limited to 65,536 (1,048,576 with Allow large queries)" cat raise:range ]
-    [ drop lo hi _enumerate ] if
-  ] if ;
+  hi lo - 1 + :> total
+  {
+    [ enum not ] [ "" ]
+    [ total allow [ 1048576 ] [ 65536 ] if > ]
+    [ "the range holds " total int>str cat " addresses; listing them is limited to 65,536 (1,048,576 with Allow large queries)" cat fail-range ]
+    [ lo hi _enumerate ]
+  } cond ;
 
 : _cidr4 ( lo:int hi:int cidr:int info:bool enum:bool allow:bool -- str )
   info
@@ -197,7 +198,7 @@ USING: defang ;
 
 \ The hyphenated range of IPv4 addresses (and the list, reduced to its lowest and highest address).
 : _range4 ( ip1:int ip2:int info:bool enum:bool allow:bool -- str )
-  ip2 ip1 < [ "the second address is below the first" raise:range ] when
+  ip2 ip1 < [ "the second address is below the first" fail-range ] when
   info [ ip1 ip2 32 ip1 ip2 bxor util:bit-length - _info4 ] [ "" ] if
   ip1 ip2 enum allow _listing cat ;
 
@@ -208,7 +209,7 @@ USING: defang ;
   [ "" ] if ;
 
 : _range6 ( ip1:int ip2:int info:bool -- str )
-  ip2 ip1 < [ "the second address is below the first" raise:range ] when
+  ip2 ip1 < [ "the second address is below the first" fail-range ] when
   info
   [ { "Range: " ip1 _long " - " ip2 _long "\nShorthand range: " ip1 _short " - " ip2 _short
       "\nTotal addresses in range: " ip1 ip2 _count "\n\n" } "" join ]
@@ -228,19 +229,21 @@ USING: defang ;
   bits 32 = [ lo hi info enum allow _range4 ] [ lo hi info _range6 ] if ;
 
 : _parse-range ( lines:list bits:int info:bool enum:bool allow:bool -- str )
-  lines len 1 = lines 0 nth "/" split len 1 > and
-  [ lines 0 nth bits _line lines 0 nth bits _split-cidr nip
-    bits 32 = [ info enum allow _cidr4 ] [ info _cidr6 ] if ]
-  [ lines len 1 = lines 0 nth "-" split len 1 > and
-    [ lines 0 nth bits _hyphen-bounds ] [ lines bits _bounds ] if
-    bits info enum allow _hyphen-final ]
-  if ;
+  lines len 1 = :> single
+  {
+    [ single lines 0 nth "/" split len 1 > and ] [
+      lines 0 nth bits _line lines 0 nth bits _split-cidr nip
+      bits 32 = [ info enum allow _cidr4 ] [ info _cidr6 ] if
+    ]
+    [ single lines 0 nth "-" split len 1 > and ] [ lines 0 nth bits _hyphen-bounds bits info enum allow _hyphen-final ]
+    [ lines bits _bounds bits info enum allow _hyphen-final ]
+  } cond ;
 
 : parse-range ( data:str include-network-info:bool=true enumerate:bool=true allow-large:bool=false -- str )
   "Network information and the addresses of an IP range, IPv4 or IPv6. The input is a CIDR range (10.0.0.0/24), a hyphenated range (10.0.0.0 - 10.0.1.0) or a list of addresses and CIDR ranges, one per line (the list is read as the range from its lowest to its highest address); empty lines are ignored. For a CIDR range the report gives the network, prefix length, mask, first and last address and the number of addresses (for IPv6 also the shorthand); for a hyphenated range or a list it gives the smallest subnet that holds the range (IPv4) and the range with its number of addresses, as CyberChef does. With enumerate, IPv4 ranges list every address, one per line; IPv6 ranges are never listed. A range of more than 65,536 addresses is E_RANGE unless allow-large is on, and none of more than 1,048,576 is listed. Anything that is not an address or range is E_COERCE, a prefix length over 32 (IPv4) or 128 (IPv6) is E_COERCE, a range whose second address is below the first is E_RANGE." doc
   "Networking" category
   data "\n" split [ _trim ] map [ len 0 > ] filter
-  dup len 0 = [ "no address or range in the input" raise:coerce ] when
+  dup len 0 = [ "no address or range in the input" fail-coerce ] when
   dup 0 nth _bits-of include-network-info enumerate allow-large _parse-range ;
 
 META: parse-range
@@ -266,16 +269,19 @@ META: parse-range
   n 4294967295 band _v4>s ;
 
 : _bin ( v:int w:int -- str )
-  "0" w v 2 int>str-radix len - util:repeat-str v 2 int>str-radix cat ;
+  "0" w v 2 int>str-radix len - repeat-str v 2 int>str-radix cat ;
 
 : _scope-name ( k:int -- str )
-  k 1 = [ "Interface Local" ] [
-  k 2 = [ "Link Local" ] [
-  k 3 = [ "Realm Local" ] [
-  k 4 = [ "Admin Local" ] [
-  k 5 = [ "Site Local" ] [
-  k 8 = [ "Organisation Local" ] [
-  k 14 = [ "Global" ] [ "" ] if ] if ] if ] if ] if ] if ] if ;
+  k {
+    1 [ "Interface Local" ]
+    2 [ "Link Local" ]
+    3 [ "Realm Local" ]
+    4 [ "Admin Local" ]
+    5 [ "Site Local" ]
+    8 [ "Organisation Local" ]
+    14 [ "Global" ]
+    [ "" ]
+  } case ;
 
 \ Each detector gives the text of the reserved range an address is in (starting with a line feed), or nothing.
 : _d-unspecified ( n:int -- str )
@@ -300,11 +306,15 @@ META: parse-range
   [ "" ] if ;
 
 : _d-nat64 ( n:int -- str )
-  n 0x0064_ff9b_0000_0000_0000_0000 96 _in
-  [ "\n'Well-Known' prefix for IPv4/IPv6 translation detected. See RFC 6052 for more details.\nTranslated IPv4 address: " n _low4 cat "\n'Well-Known' prefix range: 64:ff9b::/96" cat ]
-  [ n 0x0064_ff9b_0001 48 _in
-    [ "\nLocal-use prefix for IPv4/IPv6 translation detected (RFC 8215). The IPv4 address is embedded as RFC 6052 describes for the prefix length in use.\nLocal-use prefix range: 64:ff9b:1::/48" ]
-    [ "" ] if ] if ;
+  {
+    [ n 0x0064_ff9b_0000_0000_0000_0000 96 _in ] [
+      "\n'Well-Known' prefix for IPv4/IPv6 translation detected. See RFC 6052 for more details.\nTranslated IPv4 address: " n _low4 cat "\n'Well-Known' prefix range: 64:ff9b::/96" cat
+    ]
+    [ n 0x0064_ff9b_0001 48 _in ] [
+      "\nLocal-use prefix for IPv4/IPv6 translation detected (RFC 8215). The IPv4 address is embedded as RFC 6052 describes for the prefix length in use.\nLocal-use prefix range: 64:ff9b:1::/48"
+    ]
+    [ "" ]
+  } cond ;
 
 : _d-bmwg ( n:int -- str )
   n 0x2001_0002_0000 48 _in
@@ -331,7 +341,7 @@ META: parse-range
   [ "\n6to4 transition IPv6 address detected. See RFC 3056 for more details.\n6to4 prefix range: 2002::/16\n\nEncapsulated IPv4 address: "
     n 80 shr 4294967295 band _v4>s cat
     "\nSLA ID: " cat n 64 shr 65535 band int>str cat
-    "\nInterface ID (base 16): " cat n 18446744073709551615 band 16 util:pad-hex cat
+    "\nInterface ID (base 16): " cat n 18446744073709551615 band 16 pad-hex cat
     "\nInterface ID (base 10): " cat n 18446744073709551615 band int>str cat ]
   [ "" ] if ;
 
@@ -348,11 +358,12 @@ META: parse-range
 \ Teredo (RFC 4380, flags as RFC 5991): the server address, the flags, and the client address and port, which are
 \ stored with every bit inverted.
 : _teredo-verdict ( r:int ug:int random1:int random2:int -- str )
-  r 0 = ug 0 = and random1 0 <> and random2 0 <> and
-  [ "\n\nThis is a valid Teredo address which complies with RFC 4380 and RFC 5991." ]
-  [ r 0 = ug 0 = and
-    [ "\n\nThis is a valid Teredo address which complies with RFC 4380, however it does not comply with RFC 5991 (Teredo Security Updates) as there are no randomised bits in the flag field." ]
-    [ "\n\nThis is an invalid Teredo address." ] if ] if ;
+  r 0 = ug 0 = and :> valid
+  {
+    [ valid random1 0 <> and random2 0 <> and ] [ "\n\nThis is a valid Teredo address which complies with RFC 4380 and RFC 5991." ]
+    [ valid ] [ "\n\nThis is a valid Teredo address which complies with RFC 4380, however it does not comply with RFC 5991 (Teredo Security Updates) as there are no randomised bits in the flag field." ]
+    [ "\n\nThis is an invalid Teredo address." ]
+  } cond ;
 
 : _cone-text ( cone:int -- str )
   cone 0 = [ " (Client is not behind a cone NAT)" ] [ " (Client is behind a cone NAT)" ] if ;
@@ -417,7 +428,7 @@ META: parse-range
   [ "" ] if ;
 
 : _hex2 ( v:int -- str )
-  v 255 band 2 util:pad-hex ;
+  v 255 band 2 pad-hex ;
 
 \ The MAC address of a modified EUI-64: bytes 0 to 2 and 5 to 7 of the interface identifier, universal/local bit flipped.
 : _mac-bytes ( n2:int -- str )
@@ -477,15 +488,15 @@ META: parse-ipv6
 
 \ The transition forms of an IPv4 address (a /24 range keeps its first three octets).
 : _t4 ( n:int range:bool rh:bool -- str )
-  n 16 shr 65535 band 4 util:pad-hex
+  n 16 shr 65535 band 4 pad-hex
   range
   [ n 8 shr 255 band _hex2 "00" cat "::/40" "/120" ]
-  [ n 65535 band 4 util:pad-hex "::/48" "" ] if
+  [ n 65535 band 4 pad-hex "::/48" "" ] if
   rh _t4b ;
 
 : _eui-text ( e:int rh:bool -- str )
   rh "EUI-64 Interface ID: " _label
-  { 48 32 16 0 } [ e swap shr 65535 band 4 util:pad-hex ] map ":" join cat "\n" cat ;
+  { 48 32 16 0 } [ e swap shr 65535 band 4 pad-hex ] map ":" join cat "\n" cat ;
 
 \ A MAC address (colons) to the modified EUI-64 interface identifier of RFC 4291 appendix A.
 : _t-mac ( s:str rh:bool -- str )
@@ -498,27 +509,32 @@ META: parse-ipv6
   rh "IPv4: " _label n _low4 cat "\n" cat ;
 
 : _t6 ( n:int rh:bool s:str -- str )
-  n 0x2002 16 _in
-  [ rh "IPv4: " _label n 80 shr 4294967295 band _v4>s cat "\n" cat ]
-  [ n 32 shr 65535 =
-    n 32 shr 0xffff0000 = or
-    n 0x0064_ff9b_0000_0000_0000_0000 96 _in or
-    n _isatap len 0 > or
-    [ n rh _un4 ]
-    [ n _eui64 len 0 >
-      [ rh "Mac Address: " _label n _mac-of upper cat "\n" cat ]
-      [ s ": no IPv4 or MAC address is embedded in this IPv6 address\n" cat ] if ] if ] if ;
+  {
+    [ n 0x2002 16 _in ] [ rh "IPv4: " _label n 80 shr 4294967295 band _v4>s cat "\n" cat ]
+    [
+      n 32 shr 65535 =
+      n 32 shr 0xffff0000 = or
+      n 0x0064_ff9b_0000_0000_0000_0000 96 _in or
+      n _isatap len 0 > or
+    ] [ n rh _un4 ]
+    [ n _eui64 len 0 > ] [ rh "Mac Address: " _label n _mac-of upper cat "\n" cat ]
+    [ s ": no IPv4 or MAC address is embedded in this IPv6 address\n" cat ]
+  } cond ;
 
 : _t-line ( s:str ignore:bool rh:bool -- str )
-  ignore s "/" split len 1 > and
-  [ "" ]
-  [ s _v4? [ s _v4 false rh _t4 ] [
-    s "^([0-9]{1,3}(?:\\.[0-9]{1,3}){3})/24$" "" regex:find-all dup len 0 > [ 0 nth "groups" get 0 nth _v4 true rh _t4 ] [
-    drop s "/" split len 1 > [ "only /24 ranges of IPv4 addresses can be converted" s _bad ] when
-    s "^(?:[0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}$" "" regex:test [ s rh _t-mac ] [
-    [ s _v6 true ] [ drop 0 false ] try
-    [ rh s _t6 ] [ drop "Enter a compressed or expanded IPv6 address, an IPv4 address or a MAC address" s _bad "" ] if
-    ] if ] if ] if ] if ;
+  s "/" split len 1 > :> slashed
+  "^([0-9]{1,3}(?:\\.[0-9]{1,3}){3})/24$" :> range-pattern
+  {
+    [ ignore slashed and ] [ "" ]
+    [ s _v4? ] [ s _v4 false rh _t4 ]
+    [ s range-pattern "" regex:test ] [ s range-pattern "" regex:find-all 0 nth "groups" get 0 nth _v4 true rh _t4 ]
+    [ slashed ] [ "only /24 ranges of IPv4 addresses can be converted" s _bad ]
+    [ s "^(?:[0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}$" "" regex:test ] [ s rh _t-mac ]
+    [
+      [ s _v6 true ] [ drop 0 false ] try
+      [ rh s _t6 ] [ drop "Enter a compressed or expanded IPv6 address, an IPv4 address or a MAC address" s _bad ] if
+    ]
+  } cond ;
 
 : transition ( data:str ignore-ranges:bool=true remove-headers:bool=false -- str )
   "Converts between IPv4 addresses and their IPv6 transition forms, line by line. An IPv4 address gives its 6to4 prefix (2002:XXXX:XXXX::/48), IPv4-mapped (::ffff:XXXX:XXXX), IPv4-translated (::ffff:0:XXXX:XXXX) and NAT64 well-known (64:ff9b::XXXX:XXXX) forms; a 192.0.2.0/24 range gives the same with /40 and /120 prefixes (other prefix lengths are E_COERCE). A MAC address with colons gives its modified EUI-64 interface identifier, to append to an IPv6 /64 prefix. An IPv6 address of one of those transition forms (or an ISATAP address) gives the IPv4 address in it, and an address with a modified EUI-64 identifier the MAC address. ignore-ranges skips lines that hold a / (CyberChef's default); remove-headers leaves out the labels so the values can be copied. Empty lines are skipped. A line that is none of these is E_COERCE (CyberChef overwrites the output with a message); an IPv6 address with no embedded address gets a line saying so. The text is CyberChef's, one value per line, each line ended by a line feed." doc
@@ -537,24 +553,36 @@ META: transition
 
 \ ---- Change IP format ----
 
+\ The notations of an IPv4 address as a single text or number.
+CHOICE: ipv4-format
+  option dotted-decimal "Four decimal octets separated by dots (192.168.0.1)." ;
+  option decimal "One decimal number (3232235521)." ;
+  option octal "One octal number written with a leading 0 (030052000001)." ;
+  option hex "Eight hex digits (c0a80001); a 0x prefix is read." ;
+;
+
 : _from-number ( s:str radix:int pattern:str what:str -- int )
   s pattern "" regex:test not [ what s _bad ] when
   s radix str>int-radix
   dup 4294967295 > [ "the number is over 4294967295 (it does not fit 32 bits)" s _bad ] when ;
 
 : _read-ip ( s:str fmt:str -- int )
-  fmt "dotted-decimal" = [ s _v4 ] [
-  fmt "decimal" = [ s 10 "^[0-9]{1,10}$" "not a decimal IPv4 number" _from-number ] [
-  fmt "octal" = [ s 8 "^[0-7]{1,12}$" "not an octal IPv4 number" _from-number ] [
-  s "^0[xX]" "" "" regex:replace 16 "^[0-9a-fA-F]{1,8}$" "not a hex IPv4 number" _from-number ] if ] if ] if ;
+  fmt {
+    "dotted-decimal" [ s _v4 ]
+    "decimal" [ s 10 "^[0-9]{1,10}$" "not a decimal IPv4 number" _from-number ]
+    "octal" [ s 8 "^[0-7]{1,12}$" "not an octal IPv4 number" _from-number ]
+    [ s "^0[xX]" "" "" regex:replace 16 "^[0-9a-fA-F]{1,8}$" "not a hex IPv4 number" _from-number ]
+  } case ;
 
 : _write-ip ( n:int fmt:str -- str )
-  fmt "dotted-decimal" = [ n _v4>s ] [
-  fmt "decimal" = [ n int>str ] [
-  fmt "octal" = [ "0" n 8 int>str-radix cat ] [
-  n 8 util:pad-hex ] if ] if ] if ;
+  fmt {
+    "dotted-decimal" [ n _v4>s ]
+    "decimal" [ n int>str ]
+    "octal" [ "0" n 8 int>str-radix cat ]
+    [ n 8 pad-hex ]
+  } case ;
 
-: change-format ( data:str input-format:choice{dotted-decimal|decimal|octal|hex}="dotted-decimal" output-format:choice{dotted-decimal|decimal|octal|hex}="dotted-decimal" -- str )
+: change-format ( data:str input-format:choice<ipv4-format>="dotted-decimal" output-format:choice<ipv4-format>="dotted-decimal" -- str )
   "Converts IPv4 addresses, one per line, between dotted decimal (192.168.0.1), decimal (3232235521), octal (030052000001, written with a leading 0) and hex (c0a80001, eight digits, a 0x prefix is read and not written). The octal, decimal and hex forms are one 32-bit number; octal reads with or without the leading 0 and hex with or without 0x. Empty lines are dropped. A line that is not an address in the input format (a dotted octet over 255, a number over 4294967295, a wrong digit) is E_COERCE where CyberChef gives a wrong answer; when both formats are the same the address is still checked and written in canonical form." doc
   "Networking" category
   data "\n" split [ _trim ] map [ len 0 > ] filter
@@ -643,9 +671,11 @@ META: group
 \ A candidate is an IPv6 address when it parses; one that ends in a . or a : that belongs to the sentence is tried without it.
 \ No address is longer than 45 characters (ffff:ffff:ffff:ffff:ffff:ffff:255.255.255.255), so a longer run is left alone.
 : _defang-v6 ( s:str -- str )
-  s len 45 >
-  [ s ]
-  [ s _valid-v6? [ s _plain-defang ] [ s s "[.:]+$" "" "" regex:replace _defang-tail ] if ] if ;
+  {
+    [ s len 45 > ] [ s ]
+    [ s _valid-v6? ] [ s _plain-defang ]
+    [ s s "[.:]+$" "" "" regex:replace _defang-tail ]
+  } cond ;
 
 : defang ( data:str -- str )
   "Makes the IPv4 and IPv6 addresses in the text harmless: every . of an IPv4 address (with an optional /prefix) is written [.], and every : (and . of an IPv4 tail) of an IPv6 address [:] (192[.]0[.]2[.]1, 2001[:]db8[:][:]1). IPv6 addresses are found as runs of hex digits, colons and dots with at least two colons that read as an address in any of the forms of RFC 4291, in either case; an IPv4 address is four numbers from 0 to 255 not inside a longer dotted or numeric run (CyberChef would defang the first four numbers of 1.2.3.4.5). Everything else in the text is kept." doc

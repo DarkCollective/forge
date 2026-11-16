@@ -41,11 +41,12 @@ IN: extract
   term [ "(?=\\x00\\x00)" cat ] when ;
 
 : _strings-regex ( encoding:str c:str n:str term:bool -- str )
-  encoding "single" = [ c n term _single ] [
-  encoding "utf16le" = [ c n term _le ] [
-  encoding "utf16be" = [ c n term _be ] [
-    c n term _single "|" cat c n term _le cat "|" cat c n term _be cat
-  ] if ] if ] if ;
+  encoding {
+    "single" [ c n term _single ]
+    "utf16le" [ c n term _le ]
+    "utf16be" [ c n term _be ]
+    [ c n term _single "|" cat c n term _le cat "|" cat c n term _be cat ]
+  } case ;
 
 : strings ( data:bytes encoding:choice{single|utf16le|utf16be|all}="single" min-length:int[1..100000]=4 match:choice{printable|alphanumeric}="alphanumeric" null-terminated:bool=false display-total:bool=false sort:bool=false unique:bool=false -- str )
   "The runs of printable characters in the data, like the Unix strings tool, one per line. encoding single reads one byte per character, utf16le and utf16be two bytes per character (a printable ASCII character with a zero byte next to it, after it for little-endian and before it for big-endian; the zero bytes are removed from the output), and all looks for the three kinds together. min-length is how many characters make a string. match printable takes the characters from space to tilde (U+0020 to U+007E); alphanumeric (the default, as CyberChef's Alphanumeric + punctuation) takes the letters, digits and the punctuation / - : . , _ $ % ' \" ( ) [ ] < > = ! { } @ and the space. With null-terminated a string counts only when a zero byte follows it (two zero bytes in UTF-16). Only ASCII characters are found. The input is read as bytes, so any binary file will do. With display-total the output starts with Total found: N and a blank line, with sort the strings are sorted by code point, with unique each is kept once (first appearance)." doc
@@ -58,8 +59,6 @@ IN: extract
 
 META: strings
   use-when "You have a binary file, or bytes from memory, and want the readable text in it, like the Unix strings command, to find names, paths or messages." ;
-  link "https://en.wikipedia.org/wiki/ASCII" "ASCII on Wikipedia" ;
-  link "https://en.wikipedia.org/wiki/UTF-16" "UTF-16 on Wikipedia" ;
   param encoding "single: one byte per character. utf16le and utf16be: two. all: all three." ;
   param min-length "How many characters a run needs to count as a string." ;
   param match "alphanumeric: letters, digits, space and common punctuation only (the default). printable: any character from space to tilde." ;
@@ -68,6 +67,8 @@ META: strings
   param sort "Sort the strings by code point." ;
   param unique "Keep each string once, in the order of first appearance." ;
   see-also extract:urls hexdump:encode ;
+  link "https://en.wikipedia.org/wiki/ASCII" "ASCII on Wikipedia" ;
+  link "https://en.wikipedia.org/wiki/UTF-16" "UTF-16 on Wikipedia" ;
 ;
 
 \ ---- IP addresses ----
@@ -77,21 +78,21 @@ META: strings
   "(?:25[0-5]|2[0-4]\\d|[01]?\\d?\\d)" ;
 
 \ Four octets, no surrounding checks.
-: _quad ( -- str )
+MEMO: _quad ( -- str )
   _octet "(?:\\." cat _octet cat "){3}" cat ;
 
-: _v4-pattern ( -- str )
+MEMO: _v4-pattern ( -- str )
   "(?<!\\d)(?<!\\d\\.)" _quad cat "(?!\\d)(?!\\.\\d)" cat ;
 
 \ The IPv6 forms of RFC 4291 section 2.2: full, with :: for a run of zero groups, and with an embedded IPv4 tail.
 \ H is a group of 1 to 4 hex digits and Q an IPv4 address; the guard after the alternatives makes the engine
 \ back into a longer form when a shorter one is followed by more address.
-: _v6-forms ( -- str )
+MEMO: _v6-forms ( -- str )
   "(?:H:){6}Q|::(?:H:){0,5}Q|(?:H:){1,4}:(?:H:){0,3}Q|(?:H:){7}H|(?:H:){1,7}:|(?:H:){1,6}:H|(?:H:){1,5}(?::H){1,2}|(?:H:){1,4}(?::H){1,3}|(?:H:){1,3}(?::H){1,4}|(?:H:){1,2}(?::H){1,5}|H:(?::H){1,6}|:(?:(?::H){1,7}|:)"
   "H" split "[0-9a-f]{1,4}" join
   "Q" split _quad join ;
 
-: _v6-pattern ( -- str )
+MEMO: _v6-pattern ( -- str )
   "(?<![\\w:.])(?:" _v6-forms cat ")(?![\\w:])(?!\\.\\d)" cat ;
 
 \ Private and loopback IPv4: 10/8, 172.16/12, 192.168/16 and 127/8 (CyberChef's local addresses; 169.254/16 stays).
@@ -99,10 +100,11 @@ META: strings
   ip "^(?:10\\.|127\\.|192\\.168\\.|172\\.(?:1[6-9]|2\\d|3[01])\\.)" "" regex:test ;
 
 : _ip-pattern ( ipv4:bool ipv6:bool -- str )
-  ipv6
-  [ ipv4 [ _v6-pattern "|" cat _v4-pattern cat ] [ _v6-pattern ] if ]
-  [ _v4-pattern ]
-  if ;
+  {
+    [ ipv6 ipv4 and ] [ _v6-pattern "|" cat _v4-pattern cat ]
+    [ ipv6 ] [ _v6-pattern ]
+    [ _v4-pattern ]
+  } cond ;
 
 : ip-addresses ( data:bytes ipv4:bool=true ipv6:bool=false remove-local:bool=false display-total:bool=false sort:bool=false unique:bool=false -- str )
   "The IP addresses in the data, one per line. ipv4 finds dotted-quad addresses (four decimal numbers from 0 to 255, leading zeros allowed, not part of a longer dotted number); ipv6 finds the forms of RFC 4291 section 2.2 (full, with :: and with an IPv4 tail), in either letter case. A :: standing alone is found as well. remove-local drops the IPv4 addresses in 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 (private) and 127.0.0.0/8 (loopback), the local addresses CyberChef removes; 169.254.0.0/16 (link-local) is kept. With both ipv4 and ipv6 off nothing is found. With display-total the output starts with Total found: N and a blank line, with sort the addresses are sorted as text (by code point, so 10.0.0.9 comes after 10.0.0.10), with unique each is kept once (first appearance). The data is read byte by byte, so binary data will do." doc
@@ -116,9 +118,6 @@ META: strings
 
 META: ip-addresses
   use-when "You have a log, a capture or a config file and want the IP addresses in it, one per line, optionally without the private and loopback ones." ;
-  link "https://www.rfc-editor.org/rfc/rfc4291" "RFC 4291: IPv6 addressing architecture" ;
-  link "https://www.rfc-editor.org/rfc/rfc1918" "RFC 1918: private IPv4 address ranges" ;
-  link "https://en.wikipedia.org/wiki/IP_address" "IP address on Wikipedia" ;
   param ipv4 "Find IPv4 addresses." ;
   param ipv6 "Find IPv6 addresses." ;
   param remove-local "Leave out the private and loopback IPv4 addresses." ;
@@ -126,6 +125,9 @@ META: ip-addresses
   param sort "Sort the addresses as text (by code point)." ;
   param unique "Keep each address once, in the order of first appearance." ;
   see-also extract:mac-addresses extract:domains ;
+  link "https://www.rfc-editor.org/rfc/rfc4291" "RFC 4291: IPv6 addressing architecture" ;
+  link "https://www.rfc-editor.org/rfc/rfc1918" "RFC 1918: private IPv4 address ranges" ;
+  link "https://en.wikipedia.org/wiki/IP_address" "IP address on Wikipedia" ;
 ;
 
 \ ---- e-mail addresses ----
@@ -140,11 +142,11 @@ META: ip-addresses
 
 META: emails
   use-when "You have text or a binary dump and want the e-mail addresses in it, one per line, for example the contacts in a log or a copied mail header." ;
-  link "https://en.wikipedia.org/wiki/Email_address" "Email address on Wikipedia" ;
   param display-total "Put Total found: N and a blank line in front of the output." ;
   param sort "Sort the addresses by code point." ;
   param unique "Keep each address once, in the order of first appearance." ;
   see-also extract:domains extract:urls ;
+  link "https://en.wikipedia.org/wiki/Email_address" "Email address on Wikipedia" ;
 ;
 
 \ ---- MAC addresses ----
@@ -159,11 +161,11 @@ META: emails
 
 META: mac-addresses
   use-when "You have a log, a capture or a device listing and want the MAC addresses in it, one per line, whichever notation they are written in." ;
-  link "https://en.wikipedia.org/wiki/MAC_address" "MAC address on Wikipedia" ;
   param display-total "Put Total found: N and a blank line in front of the output." ;
   param sort "Sort the addresses by code point." ;
   param unique "Keep each address once, in the order of first appearance." ;
   see-also extract:ip-addresses ;
+  link "https://en.wikipedia.org/wiki/MAC_address" "MAC address on Wikipedia" ;
 ;
 
 \ ---- URLs ----
@@ -178,11 +180,11 @@ META: mac-addresses
 
 META: urls
   use-when "You have a web page, a log or any text and want every URL in it, one per line, to check the links or see where traffic was sent." ;
-  link "https://en.wikipedia.org/wiki/URL" "URL on Wikipedia" ;
   param display-total "Put Total found: N and a blank line in front of the output." ;
   param sort "Sort the URLs by code point." ;
   param unique "Keep each URL once, in the order of first appearance." ;
   see-also extract:domains extract:emails ;
+  link "https://en.wikipedia.org/wiki/URL" "URL on Wikipedia" ;
 ;
 
 \ ---- domain names ----
@@ -201,12 +203,12 @@ META: urls
 
 META: domains
   use-when "You have text, a log or a file dump and want the domain names in it, one per line, for example the hosts that a page or a log refers to." ;
-  link "https://en.wikipedia.org/wiki/Domain_name" "Domain name on Wikipedia" ;
   param display-total "Put Total found: N and a blank line in front of the output." ;
   param sort "Sort the names by code point." ;
   param unique "Keep each name once, in the order of first appearance." ;
   param underscore "Allow _ in the labels of a name (_dmarc.example.com, _domainkey)." ;
   see-also extract:urls extract:emails extract:ip-addresses ;
+  link "https://en.wikipedia.org/wiki/Domain_name" "Domain name on Wikipedia" ;
 ;
 
 \ ---- file paths ----
@@ -222,10 +224,11 @@ META: domains
   "(?<![\\w/.:~-])(?:/[\\w.~+@%=,-]+)+(?<![.,])/?" ;
 
 : _paths-pattern ( windows:bool unix:bool -- str )
-  unix
-  [ windows [ _windows-path "|" cat _unix-path cat ] [ _unix-path ] if ]
-  [ _windows-path ]
-  if ;
+  {
+    [ unix windows and ] [ _windows-path "|" cat _unix-path cat ]
+    [ unix ] [ _unix-path ]
+    [ _windows-path ]
+  } cond ;
 
 : file-paths ( data:bytes windows:bool=true unix:bool=true display-total:bool=false sort:bool=false unique:bool=false -- str )
   "The file paths in the data, one per line. windows finds C:\\folder\\file paths: a drive letter, then names joined by backslashes; a folder name may hold single spaces (C:\\Program Files\\App\\app.exe) but the last name stops at the first space. unix finds /folder/file paths: names joined by slashes, ending at white space; a path is not found inside a word, a URL or a relative path (a/b/c), and a trailing full stop or comma is left out. With both off nothing is found. With display-total the output starts with Total found: N and a blank line, with sort the paths are sorted by code point, with unique each is kept once (first appearance). The data is read byte by byte, so binary data will do." doc
@@ -239,20 +242,20 @@ META: domains
 
 META: file-paths
   use-when "You have a log, a script or a memory dump and want the file paths in it, Windows or UNIX style, one per line, to see which files it mentions." ;
-  link "https://en.wikipedia.org/wiki/Path_(computing)" "Path (computing) on Wikipedia" ;
   param windows "Find Windows paths (C:\\dir\\file)." ;
   param unix "Find UNIX paths (/dir/file)." ;
   param display-total "Put Total found: N and a blank line in front of the output." ;
   param sort "Sort the paths by code point." ;
   param unique "Keep each path once, in the order of first appearance." ;
   see-also extract:urls ;
+  link "https://en.wikipedia.org/wiki/Path_(computing)" "Path (computing) on Wikipedia" ;
 ;
 
 \ ---- hashes ----
 
 \ The digest lengths in hex digits that are found with all: 4 (CRC-16), 8 (CRC-32, Adler-32), 16 (64-bit),
 \ 32 (MD5), 40 (SHA-1), 48 (192-bit), 56 (SHA-224), 64 (SHA-256), 80 (RIPEMD-320), 96 (SHA-384) and 128 (SHA-512).
-: _digest-lengths ( -- list )
+MEMO: _digest-lengths ( -- list )
   { 4 8 16 32 40 48 56 64 80 96 128 } ;
 
 : _of-length ( found:list n:int -- list )
@@ -261,7 +264,7 @@ META: file-paths
 \ With all: the values of each usual length together, the shortest length first, each in the order of the text (the
 \ order CyberChef writes them in).
 : _by-length ( found:list -- list )
-  _digest-lengths [ found swap _of-length ] map { } [ cat ] reduce ;
+  [ _digest-lengths [ found swap _of-length emit-all ] each ] collect ;
 
 : hashes ( data:bytes length:int[1..128]=40 all:bool=false display-total:bool=false sort:bool=false unique:bool=false -- str )
   "The hexadecimal hash values in the data, one per line: runs of exactly length hex digits (40 by default, the size of SHA-1) that are not part of a longer run of letters, digits or underscores. With all the length is ignored and runs of the usual digest sizes are found instead: 4, 8, 16, 32, 40, 48, 56, 64, 80, 96 and 128 digits (CRC-16 up to SHA-512), the values of each length together, the shortest length first. Either letter case is found, and the match is output as written. The length is only a pattern: any run of hex digits of that size counts, hash or not. With display-total the output starts with Total found: N and a blank line, with sort the values are sorted by code point, with unique each is kept once (first appearance). The data is read byte by byte, so binary data will do." doc
@@ -274,12 +277,12 @@ META: file-paths
 
 META: hashes
   use-when "You have text or a dump with hash values in it, such as SHA-1 or MD5 digests, and want them listed one per line, for example to check them against a list." ;
-  link "https://www.rfc-editor.org/rfc/rfc1321" "RFC 1321: the MD5 message-digest algorithm" ;
-  link "https://en.wikipedia.org/wiki/Cryptographic_hash_function" "Cryptographic hash function on Wikipedia" ;
   param length "How many hex digits a hash has (32 MD5, 40 SHA-1, 64 SHA-256, 128 SHA-512)." ;
   param all "Ignore length and find every usual digest size instead." ;
   param display-total "Put Total found: N and a blank line in front of the output." ;
   param sort "Sort the values by code point." ;
   param unique "Keep each value once, in the order of first appearance." ;
   see-also hash-analysis:analyse ;
+  link "https://www.rfc-editor.org/rfc/rfc1321" "RFC 1321: the MD5 message-digest algorithm" ;
+  link "https://en.wikipedia.org/wiki/Cryptographic_hash_function" "Cryptographic hash function on Wikipedia" ;
 ;

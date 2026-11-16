@@ -1,11 +1,10 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ analysis: statistics of the bytes of an input. Written in FL over the core words, except
-\ _log2, a private primitive (src/prims/analysis.ts): the core has no logarithm.
+\ analysis: statistics of the bytes of an input. Written in FL over the core words.
 IN: analysis
 
 \ Occurrences of byte b in the latin-1 text (one code point per byte): pieces minus one.
 : _count ( text:str b:int -- int )
-  b util:cp>str text swap split len 1 - ;
+  b cp>str text swap split len 1 - ;
 
 \ Count of every byte value 0..255, as a list of 256 ints.
 : _counts ( text:str -- list )
@@ -15,29 +14,12 @@ IN: analysis
 : _term ( count:int total:int -- num )
   count 0 =
   [ 0.0 ]
-  [ count total / dup _log2 0.0 swap - * ]
+  [ count total / dup log2 0.0 swap - * ]
   if ;
 
 \ Sum of the terms. An empty input has no non-zero count, so the sum is 0.0 (never -0.0).
 : _entropy ( counts:list total:int -- num )
   counts [ total _term ] map 0.0 [ + ] reduce ;
-
-\ Smallest element of a non-empty list of ints.
-: _min ( keys:list -- int )
-  keys keys 0 nth [ min ] reduce ;
-
-\ The list without the (unique) element key.
-: _without ( keys:list key:int -- list )
-  keys [ key <> ] filter ;
-
-\ One selection-sort step on (remaining, sorted): move the smallest remaining key to the end.
-: _step ( rem:list out:list -- rem out )
-  rem rem _min _without
-  out rem _min append ;
-
-\ Ascending sort of a list of distinct ints (selection sort; the lists here have at most 256).
-: _sort-keys ( keys:list -- list )
-  keys { } over len [ _step ] times nip ;
 
 \ The byte count encoded in a key: keys are b - 256 * count, so count = (b - key) div 256.
 : _cnt ( key:int -- int )
@@ -70,7 +52,7 @@ META: entropy
   data bytes>latin1 _counts 0 256 range swap zip
   [ 1 nth 0 > ] filter
   [ dup 1 nth 256 * swap 0 nth swap - ] map
-  _sort-keys
+  sort
   data len _rows ;
 
 META: frequency
@@ -95,7 +77,7 @@ META: frequency
   den 0 = [ 0.0 ] [ num den / ] if ;
 
 : _total ( counts:list -- int )
-  counts util:sum ;
+  counts sum ;
 
 \ The index of coincidence of counts: the sum of n (n - 1) over the symbols divided by N (N - 1),
 \ where N is the sum of the counts; times the number of symbols when normalised.
@@ -111,10 +93,10 @@ META: frequency
 
 META: index-of-coincidence
   use-when "You have a text in letters, often a ciphertext, and want its index of coincidence, to tell English-like letters from random ones or from a repeating-key cipher." ;
-  link "https://en.wikipedia.org/wiki/Index_of_coincidence" "Index of coincidence on Wikipedia" ;
   param scope "letters: only A to Z, either case (26 symbols). bytes: all 256 byte values." ;
   param normalise "Multiply by the number of symbols, so that 1 is the value for uniform random symbols." ;
   see-also analysis:chi-squared analysis:entropy analysis:frequency ;
+  link "https://en.wikipedia.org/wiki/Index_of_coincidence" "Index of coincidence on Wikipedia" ;
 ;
 
 \ English letter frequencies A to Z in units of 1/100000 (the table of Wikipedia, "Letter
@@ -151,7 +133,7 @@ META: index-of-coincidence
 
 META: chi-squared
   use-when "You have a candidate decryption or any text and want to score how far its letter frequencies are from English, where a small score means English-like." ;
-  link "https://en.wikipedia.org/wiki/Chi-squared_test" "Chi-squared test on Wikipedia" ;
   param reference "uniform: all 256 byte values equally likely. english: the 26 letters at English frequencies (other bytes ignored)." ;
   see-also analysis:index-of-coincidence analysis:entropy analysis:frequency ;
+  link "https://en.wikipedia.org/wiki/Chi-squared_test" "Chi-squared test on Wikipedia" ;
 ;

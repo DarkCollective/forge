@@ -15,6 +15,9 @@ USING: json ;
 META: encode
   use-when "You have JSON data and need it as Rison, for example to put a value into a Kibana style URL." ;
   param mode "rison for any value, o-rison for an object without its parentheses, a-rison for an array without !( and ), uri for any value quoted for a URI." ;
+  expects "JSON text" ;
+  checks input utf8 ;
+  checks output utf8 ;
   see-also rison:decode ;
   inverse decode ;
 ;
@@ -28,6 +31,10 @@ META: decode
   use-when "You have Rison text from a URL or a Kibana style link, such as (a:1,b:'x'), and want the JSON it stands for." ;
   param mode "rison for any value, o-rison for the members of an object, a-rison for the items of an array." ;
   param indent "Spaces per level; 0 writes compact JSON." ;
+  expects "Rison text" ;
+  checks input utf8 ;
+  checks output utf8 ;
+  checks output printable ;
   see-also rison:encode ;
   inverse encode ;
 ;

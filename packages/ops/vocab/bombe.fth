@@ -92,17 +92,17 @@ true VARIABLE _check
 
 : _check-reflector ( refl:str model:str -- )
   model "I" = [ { "A" "B" "C" } ] [ { "B" "C" } ] if refl util:count-of 0 =
-  [ "reflector " refl cat " does not fit model " cat model cat raise:range ] when ;
+  [ "reflector " refl cat " does not fit model " cat model cat fail-range ] when ;
 
 : _check-rotors ( names:list model:str -- )
   names len 3 <
-  [ "rotors: give three rotors, or more to search every order of three of them" raise:range ] when
+  [ "rotors: give three rotors, or more to search every order of three of them" fail-range ] when
   names [ model _names-for swap util:count-of 0 = ] filter
   dup len 0 >
-  [ 0 nth "rotors: " swap cat " is not available in model " cat model cat raise:range ]
+  [ 0 nth "rotors: " swap cat " is not available in model " cat model cat fail-range ]
   [ drop ] if
   names [ names swap util:count-of 1 > ] filter len 0 >
-  [ "rotors: a rotor may be named only once" raise:range ] when ;
+  [ "rotors: a rotor may be named only once" fail-range ] when ;
 
 \ ---- the orders of the rotors ----
 
@@ -111,14 +111,13 @@ true VARIABLE _check
   [ names swap nth { names a nth names b nth } swap append ] map ;
 
 : _triples-a ( names:list a:int -- list )
-  0 names len range [ a <> ] filter
-  [ names a rot _triples-ab ] map util:list-flatten ;
+  [ 0 names len range [ a <> ] filter [ names a rot _triples-ab emit-all ] each ] collect ;
 
 \ Every ordered choice of three of the names, left rotor first.
 : _orders ( names:list -- list )
   names len 3 =
   [ { names } ]
-  [ 0 names len range [ names swap _triples-a ] map util:list-flatten ] if ;
+  [ [ 0 names len range [ names swap _triples-a emit-all ] each ] collect ] if ;
 
 \ ---- the menu ----
 
@@ -134,7 +133,7 @@ true VARIABLE _check
 : _check-crib ( p:bytes c:bytes -- )
   0 p len range [ dup p swap nth swap c swap nth = ] filter
   dup len 0 >
-  [ 0 nth p swap _self-msg raise:range ]
+  [ 0 nth p swap _self-msg fail-range ]
   [ drop ] if ;
 
 \ Bit mask of the letters joined to u by an edge, for the crib p and the cipher text c.
@@ -171,10 +170,12 @@ true VARIABLE _check
   p [ u = ] filter len c [ u = ] filter len + ;
 
 : _pick-step ( best:int u:int p:bytes c:bytes mask:int -- int )
-  mask u shr 1 band 1 <> [ best ]
-  [ best 0 <
-    [ u ]
-    [ p c u _degree p c best _degree > [ u ] [ best ] if ] if ] if ;
+  {
+    [ mask u shr 1 band 1 <> ] [ best ]
+    [ best 0 < ] [ u ]
+    [ p c u _degree p c best _degree > ] [ u ]
+    [ best ]
+  } cond ;
 
 \ The letter of the component with the most edges (the lowest on a tie).
 : _pick-test ( p:bytes c:bytes mask:int -- int )
@@ -184,8 +185,8 @@ true VARIABLE _check
   { j p j nth c j nth } ;
 
 : _menu-of ( p:bytes c:bytes mask:int -- bytes )
-  0 p len range [ p swap nth mask swap shr 1 band 1 = ] filter
-  [ p c rot _edge ] map util:list-flatten list>bytes ;
+  [ 0 p len range [ p swap nth mask swap shr 1 band 1 = ] filter [ p c rot _edge emit-all ] each ] collect
+  list>bytes ;
 
 : _head-text ( edges:int letters:int test:int -- str )
   "# menu: " edges int>str cat " edges between " cat letters int>str cat " letters, " cat
@@ -204,9 +205,9 @@ true VARIABLE _check
   _prefix _offset _offset p len + slice [ 65 - ] map ;
 
 : _prepare-letters ( p:bytes ct:bytes -- )
-  p len 0 = [ "crib: write at least one letter" raise:range ] when
+  p len 0 = [ "crib: write at least one letter" fail-range ] when
   _offset p len + ct len >
-  [ "crib: it runs past the end of the ciphertext, which has " ct len int>str cat " letters" cat raise:range ] when
+  [ "crib: it runs past the end of the ciphertext, which has " ct len int>str cat " letters" cat fail-range ] when
   ct 0 _offset p len + slice [ 65 + ] map _prefix!
   p [ 65 + ] map _crib!
   p p _cipher-part _check-crib
@@ -251,10 +252,12 @@ true VARIABLE _check
 
 \ The pair of letters u and its partner, written once (u before its partner); "" when none.
 : _pair-of ( partner:bytes u:int -- str )
-  partner u nth dup 26 < over u > and
-  [ dup partner swap nth u =
-    [ 65 + { u 65 + } swap append codes>str ] [ drop "" ] if ]
-  [ drop "" ] if ;
+  partner u nth :> v
+  {
+    [ v 26 < v u > and not ] [ "" ]
+    [ partner v nth u = not ] [ "" ]
+    [ { u 65 + v 65 + } codes>str ]
+  } cond ;
 
 : _plug-text ( partner:bytes -- str )
   0 26 range [ partner swap _pair-of ] map [ len 0 > ] filter " " join ;
@@ -331,7 +334,7 @@ true VARIABLE _check
   _menu len 3 div dup orders * _max-work >
   [ "rotors, crib: " orders int>str cat " rotor orders times " cat swap int>str cat
     " menu edges is over the limit of " cat _max-work int>str cat
-    " (more would not finish in a bake): use fewer rotors or a shorter crib" cat raise:range ]
+    " (more would not finish in a bake): use fewer rotors or a shorter crib" cat fail-range ]
   [ drop ] if ;
 
 : _go ( data:bytes crib:str names:list -- bytes )
@@ -340,7 +343,6 @@ true VARIABLE _check
   names _cache-of names _orders _search-all
   _header "\n" join "\n" cat _lines cat names len _count _footer "\n" join cat str>bytes ;
 
-
 : search ( data:bytes crib:str[1..256] offset:int[0..1000000]=0 model:choice{I|M3}=I rotors:str[1..64]="I II III" reflector:choice{A|B|C}=B rings:str[1..32]="AAA" check:choice{on|off}=on limit:int[1..100]=20 -- bytes )
   "Turing-Welchman Bombe for the Enigma I and M3. Finds the start positions at which the plugboard implied by a crib (a guess of the plaintext, at a known offset in the ciphertext) is consistent, in every order of the rotors given (three rotors: that order; more: every order of three of them), and prints one stop per line: the rotor order, the start positions (the window letters at the start of the message), the steckers deduced and the crib region deciphered with them. Letters outside the menu component are lower case. Only letters count in the ciphertext and the crib. A crib letter that lines up with the same letter in the ciphertext is E_RANGE." doc
   "Cipher machines" category
@@ -348,7 +350,7 @@ true VARIABLE _check
   dup model _check-rotors
   reflector model _check-reflector
   dup len _count _max-orders >
-  [ "rotors: at most " _max-orders int>str cat " rotor orders (five rotors) can be searched at once" cat raise:range ] when
+  [ "rotors: at most " _max-orders int>str cat " rotor orders (five rotors) can be searched at once" cat fail-range ] when
   model _model! reflector _reflector! rings _rings-str! offset _offset! limit _limit!
   check "on" = _check!
   0 _found! 0 _trunc! "" _lines!

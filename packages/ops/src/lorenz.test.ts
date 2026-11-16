@@ -23,7 +23,7 @@ import { loadBundleNode } from "./sources-node.js";
 // Colossus) and the values of an independent simulator are in vocab/lorenz.test.json; these tests
 // cover round trips, reciprocity, the autoclave, parameter validation and the size of the work.
 const { str, int, bool } = valueHelpers;
-const runtime = assembleRuntime(await loadBundleNode(["lorenz", "raise"]));
+const runtime = assembleRuntime(await loadBundleNode(["lorenz"]));
 
 const WHEELS = [
   "chi1",

@@ -5,7 +5,7 @@
 \ itself is _hash, a private primitive (src/prims/keccak.ts) over the audited @noble/hashes library.
 IN: keccak
 
-: digest ( bytes size:choice{"224"|"256"|"384"|"512"}="512" -- bytes )
+: digest ( bytes size:choice<util:sha3-size>="512" -- bytes )
   "The Keccak digest of the input as raw bytes: 28, 32, 48 or 64 bytes by size, with the original Keccak padding (not FIPS 202 SHA-3). Chain hex:encode for hex text." doc
   "Hashing" category
   size _hash ;

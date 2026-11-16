@@ -1474,7 +1474,10 @@ class Compiler {
         if (a.kind === "eof") this.syntax(a, "';' to end the clause", qname);
         if (a.kind === "word" && a.text === ";") break;
         if (a.kind === "str") args.push({ type: "str", value: a.value });
-        else if (a.kind === "word" || a.kind === "qword" || kw.text === "alias") {
+        else if (kw.text === "checks" && (a.kind === "int" || a.kind === "float")) {
+          // A number of a `checks` clause reaches the builder as its text (it parses and ranges it).
+          args.push({ type: "name", text: a.text });
+        } else if (a.kind === "word" || a.kind === "qword" || kw.text === "alias") {
           // Any token in an alias position is a candidate name; the builder rejects bad ones (E_NAME).
           args.push({ type: "name", text: a.text });
         } else {

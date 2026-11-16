@@ -797,5 +797,75 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "input: CSV text is valid UTF-8",
+    "op": "csv:to-json",
+    "checks": "input",
+    "data": {
+      "value": "name,age\r\nAda,36\r\n",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "input: gzip bytes are not text",
+    "op": "csv:to-json",
+    "checks": "input",
+    "data": {
+      "value": "1f8b0800",
+      "enc": "hex"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "output: the JSON text is valid UTF-8",
+    "op": "csv:to-json",
+    "checks": "output",
+    "data": {
+      "value": "[\n  {\n    \"name\": \"Ada\",\n    \"age\": \"36\"\n  }\n]",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "output: control bytes are not printable text",
+    "op": "csv:to-json",
+    "checks": "output",
+    "data": {
+      "value": "0102030405060708",
+      "enc": "hex"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "input: a JSON array of objects passes",
+    "op": "csv:from-json",
+    "checks": "input",
+    "data": {
+      "value": "[{\"name\":\"Ada\",\"age\":36}]",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "input: CSV text is not JSON",
+    "op": "csv:from-json",
+    "checks": "input",
+    "data": {
+      "value": "name,age\nAda,36\n",
+      "enc": "utf8"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "output: CSV text is valid UTF-8",
+    "op": "csv:from-json",
+    "checks": "output",
+    "data": {
+      "value": "name,age\r\nAda,36\r\n",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]

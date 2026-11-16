@@ -597,5 +597,35 @@
     "expect": {
       "error": "E_COERCE"
     }
+  },
+  {
+    "name": "input: HTML text is valid UTF-8",
+    "op": "css:select",
+    "checks": "input",
+    "data": {
+      "value": "<ul><li class=\"a\">x</li></ul>",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "input: gzip bytes are not text",
+    "op": "css:select",
+    "checks": "input",
+    "data": {
+      "value": "1f8b0800",
+      "enc": "hex"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "output: the result is valid UTF-8",
+    "op": "css:select",
+    "checks": "output",
+    "data": {
+      "value": "<li class=\"a\">x</li>",
+      "enc": "utf8"
+    },
+    "expect": "pass"
   }
 ]
