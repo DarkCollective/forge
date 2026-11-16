@@ -157,7 +157,7 @@ USING: lorenz ;
 
 \ The sum of +1/-1 over the positions for every setting, the first wheel's start major.
 : _scores ( g:list siga:list la:int lb:int -- list )
-  0 la range [ g siga la lb _srow ] map { } [ cat ] reduce ;
+  [ 0 la range [ g siga la lb _srow emit-all ] each ] collect ;
 
 0 VARIABLE _m
 0 VARIABLE _la

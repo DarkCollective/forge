@@ -147,15 +147,15 @@ IN: coords
 
 \ A letter or a number of the text: every character that is not a digit, point, minus sign or one
 \ of the hemisphere letters N S E W (any case) separates; the letters stand apart.
-: _spread ( acc:list c:int -- list )
+: _spread ( c:int -- )
   {
-    [ c dec-digit? c 46 = or c 45 = or ] [ acc c append ]
-    [ c 78 = c 83 = or c 69 = or c 87 = or ] [ acc 32 append c append 32 append ]
-    [ acc 32 append ]
+    [ c dec-digit? c 46 = or c 45 = or ] [ c emit ]
+    [ c 78 = c 83 = or c 69 = or c 87 = or ] [ 32 emit c emit 32 emit ]
+    [ 32 emit ]
   } cond ;
 
 : _tokens ( text:str -- list )
-  text upper str>codes { } [ _spread ] reduce codes>str " " split [ len 0 > ] filter ;
+  [ text upper str>codes [ _spread ] each ] collect-str " " split [ len 0 > ] filter ;
 
 : _letter? ( t:str -- bool )
   t len 1 = t "N" = t "S" = or t "E" = or t "W" = or and ;
