@@ -13,9 +13,11 @@ IN: file-mode
 \ The execute position of a triplet: x when only the execute bit is set, a lower-case letter (on)
 \ when the special bit goes with execute, an upper-case one (off) when it stands alone.
 : _x-char ( mode:int x:int special:int on:str off:str -- str )
-  mode special band 0 <>
-  [ mode x band 0 <> [ on ] [ off ] if ]
-  [ mode x "x" _flag ] if ;
+  {
+    [ mode special band 0 = ] [ mode x "x" _flag ]
+    [ mode x band 0 <> ] [ on ]
+    [ off ]
+  } cond ;
 
 \ r is the read bit of the triplet; the write and execute bits are the next two lower ones.
 : _triplet ( mode:int r:int special:int on:str off:str -- str )

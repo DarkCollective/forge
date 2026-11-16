@@ -216,6 +216,7 @@ META: adfgx-decrypt
   key upper str>bytes "ABCDEFGHIJKLMNOPQRSTUVWXYZ+" str>bytes util:keyed-alphabet ;
 
 \ The coordinate kind (0 layer, 1 row, 2 column; each 0 to 2) of the cell at position p (0 to 26).
+\ Kept as an if chain: it runs three times per letter, and a case takes the 64 KiB trifid run over the step limit.
 : _tr-coord ( p:int kind:int -- int )
   kind 0 = [ p 9 div ] [ kind 1 = [ p 3 div 3 mod ] [ p 3 mod ] if ] if ;
 

@@ -108,11 +108,13 @@ MEMO: _string-tags ( -- list )
 \ The line of an element without its indent. kids are the child nodes that are shown below it.
 : _text ( kids:list node:record trunc:int san:bool -- str )
   node _tag-name
-  node "constructed" get
-  [ kids len 0 = node "tag" get 16 = and node "class" get "universal" = and [ " {}" cat ] when ]
-  [ kids len 0 >
+  {
+    [ node "constructed" get ]
+    [ kids len 0 = node "tag" get 16 = and node "class" get "universal" = and [ " {}" cat ] when ]
+    [ kids len 0 > ]
     [ ", encapsulates" cat ]
-    [ node trunc san _value-text dup len 0 = [ drop ] [ " " swap cat cat ] if ] if ] if ;
+    [ node trunc san _value-text dup len 0 = [ drop ] [ " " swap cat cat ] if ]
+  } cond ;
 
 \ ---- opening OCTET STRINGs and BIT STRINGs ----
 

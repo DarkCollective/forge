@@ -387,9 +387,12 @@ MEMO: _picture-types ( -- list )
 
 \ Where the frames start: after the extended header, which is skipped.
 : _ext-size ( v:int fl:int body:bytes -- int )
-  v 2 > fl 64 band 0 <> and [
-    v 3 = [ body 0 4 be-bytes>int 4 + ] [ body 0 4 _syncsafe? [ body 0 _syncsafe ] [ 0 ] if ] if
-  ] [ 0 ] if ;
+  {
+    [ v 2 > fl 64 band 0 <> and not ] [ 0 ]
+    [ v 3 = ] [ body 0 4 be-bytes>int 4 + ]
+    [ body 0 4 _syncsafe? ] [ body 0 _syncsafe ]
+    [ 0 ]
+  } cond ;
 
 : _v2b ( d:bytes v:int fl:int size:int body:bytes -- str )
   v 2 = fl 64 band 0 <> and [

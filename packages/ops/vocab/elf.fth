@@ -189,8 +189,8 @@ MEMO: _file-types ( -- str )
   [ e swap 4 _u 2 = ] filter ;
 
 : _pie? ( e:bytes -- bool )
-  e _phdr-ok? not [ false ] [
-    e _dyn-bases dup len 0 = [ drop false ] [ 0 nth e swap _pie-base ] if ] if ;
+  e _phdr-ok? not [ false exit ] when
+  e _dyn-bases dup len 0 = [ drop false ] [ 0 nth e swap _pie-base ] if ;
 
 : _type-text ( e:bytes -- str )
   e 16 16 _h16 dup 3 = [ drop

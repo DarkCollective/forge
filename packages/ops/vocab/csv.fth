@@ -55,6 +55,7 @@ META: to-json
 \ ---- JSON to CSV ----
 
 \ A cell: a string as it is, null as nothing, anything else as its JSON text (a number, true or false, an array, an object).
+\ Kept as an if chain: it runs once per cell, and a cond takes the 64 KiB from-json run from 153,697 to 261,697 steps.
 : _cell ( v:any -- str )
   v type "str" = [ v ] [ v json:null? [ "" ] [ v json:compact ] if ] if ;
 

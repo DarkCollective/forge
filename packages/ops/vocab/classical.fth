@@ -628,6 +628,7 @@ META: caesar-box-decrypt
   "a lone UTF-16 surrogate cannot be decoded" fail-coerce ;
 
 \ The code point that starts at unit i: -1 for the low half of a pair.
+\ Kept as an if chain: it runs once per unit, and a cond takes 32,768 non-BMP characters (cetacean-decode) from 4,940,115 to 5,628,243 steps.
 : _unit>cp ( units:list i:int -- int )
   units i nth
   dup 55296 56319 between?
