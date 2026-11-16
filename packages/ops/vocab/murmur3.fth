@@ -18,10 +18,7 @@ IN: murmur3
 
 \ The little-endian 32-bit word number i of the data.
 : _word ( data:bytes i:int -- int )
-  data i 4 * nth
-  data i 4 * 1 + nth 8 shl bor
-  data i 4 * 2 + nth 16 shl bor
-  data i 4 * 3 + nth 24 shl bor ;
+  data i 4 * 4 le-bytes>int ;
 
 \ One full block: h xor mixk(k), rotl 13, * 5 + 0xe6546b64.
 : _round ( h:int k:int -- int )
@@ -31,15 +28,11 @@ IN: murmur3
 : _blocks ( data:bytes seed:int -- int )
   0 data len 4 div range seed [ data swap _word _round ] reduce ;
 
-\ The r trailing bytes (1 to 3), starting at base, as a little-endian word.
-: _tail-word ( data:bytes base:int r:int -- int )
-  0 r range [ dup data swap base + nth swap 8 * shl ] map 0 [ bor ] reduce ;
-
 \ h with the trailing bytes mixed in (unchanged when the length is a multiple of 4).
 : _tail ( data:bytes h:int -- int )
   data len 4 mod 0 =
   [ h ]
-  [ h data data len 4 div 4 * data len 4 mod _tail-word _mixk bxor ]
+  [ h data data len 4 div 4 * data len 4 mod util:le-int _mixk bxor ]
   if ;
 
 \ The final avalanche.

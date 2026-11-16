@@ -35,7 +35,7 @@ USING: charset base64 util ;
 
 \ ASCII text is UTF-8 text without a byte above 127.
 : _ascii-text ( b:bytes -- str )
-  b bytes>list [ 127 > ] filter len 0 >
+  b [ 127 > ] any?
   [ "a us-ascii encoded word holds a byte above 127" fail-coerce ] when
   b bytes>str ;
 
@@ -67,7 +67,7 @@ USING: charset base64 util ;
 
 \ True when none of the byte strings holds a NUL.
 : _no-nul? ( bs:list -- bool )
-  bs [ bytes>latin1 "\x00" split len 1 = ] filter len bs len = ;
+  bs [ bytes>latin1 "\x00" split len 1 = ] all? ;
 
 : _per-word ( bs:list name:str -- list )
   bs [ name _decode-bytes ] map ;

@@ -34,7 +34,7 @@ CHOICE: curve
 
 \ True when t has bytes and all are zero (the standard asks for a new k then).
 : _zero-key? ( t:bytes -- bool )
-  t len 0 > t [ 0 <> ] filter len 0 = and ;
+  t len 0 > t [ 0 = ] all? and ;
 
 \ ---- keys ----
 

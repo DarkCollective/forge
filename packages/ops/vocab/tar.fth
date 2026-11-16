@@ -137,9 +137,9 @@ IN: tar
 \ prefix of up to 155 bytes and a name of up to 100.
 : _split-name ( nameb:bytes -- bytes bytes )
   nameb len 100 <= [ #[ ] nameb ] [
-    0 nameb len range [ nameb swap nth 47 = ] filter [ nameb swap _ok-split? ] filter
-    dup len 0 = [ "the file name is too long for the ustar format (100 bytes, or up to 255 when a slash splits it into 155 and 100)" fail-range ] when
-    0 nth nameb swap _cut
+    0 nameb len range [ :> i nameb i nth 47 = nameb i _ok-split? and ] find
+    dup 0 < [ "the file name is too long for the ustar format (100 bytes, or up to 255 when a slash splits it into 155 and 100)" fail-range ] when
+    nameb swap _cut
   ] if ;
 
 : _tar-name ( s:str -- bytes )

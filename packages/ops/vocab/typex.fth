@@ -61,7 +61,7 @@ IN: typex
   s util:letters? s len 26 = and not
   [ what ": the wiring must be the 26 letters A to Z in some order" cat fail-range ] when
   s util:letter-indices
-  0 26 range [ over swap util:count-of 1 <> ] filter len 0 >
+  0 26 range [ over swap util:count-of 1 <> ] any?
   [ what ": the wiring uses a letter twice, so it is not a permutation" cat fail-range ] when ;
 
 : _bad-reflector? ( i:int r:bytes -- bool )
@@ -69,7 +69,7 @@ IN: typex
 
 : _reflector ( s:str -- bytes )
   s "reflector" _wiring
-  0 26 range [ over _bad-reflector? ] filter len 0 >
+  0 26 range [ over _bad-reflector? ] any?
   [ "reflector: it must pair the letters up (A to B means B to A) with no letter left alone" fail-range ] when ;
 
 \ The notch letters of a rotor as numbers 0 to 25 (none is allowed), spaces and commas ignored. The

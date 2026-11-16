@@ -170,9 +170,9 @@ CHOICE: data-unit
 
 \ The ratio of a unit to the base unit, from a table of "name numerator denominator" entries.
 : _factor ( table:str unit:str -- int int )
-  table ";" split [ unit " " cat starts-with? ] filter
-  dup len 1 = not [ "unknown unit" fail-range ] when
-  0 nth " " split dup 1 nth str>int swap 2 nth str>int ;
+  table ";" split :> entries
+  entries [ unit " " cat starts-with? ] find dup 0 < [ "unknown unit" fail-range ] when
+  entries swap nth " " split dup 1 nth str>int swap 2 nth str>int ;
 
 : _combine ( fn:int fd:int tn:int td:int vn:int vd:int -- int int )
   vn fn * td * vd fd * tn * ;

@@ -327,13 +327,9 @@ CHOICE: sha3-size
   [ #[ ] ]
   [ n 16 int>str-radix dup len 2 mod 1 = [ "0" swap cat ] when hex>bytes ] if ;
 
-\ Adds the symbol for n mod radix in front of acc, and gives n div radix.
-: _symbol-step ( acc:bytes n:int alpha:bytes radix:int -- bytes int )
-  acc { alpha n radix mod nth } list>bytes cat n radix div ;
-
 : int>symbols ( n:int alpha:bytes -- bytes )
   "The digits of a non-negative integer written with the bytes of alpha as symbols, the radix being the length of alpha, most significant first; none for 0." doc
-  #[ ] n [ dup 0 > ] [ alpha alpha len _symbol-step ] while drop rev ;
+  [ n [ dup 0 > ] [ dup alpha len mod alpha swap nth emit alpha len div ] while drop ] collect-bytes rev ;
 
 \ The big-endian integer of the digits (for a bytes with zero-prefix use).
 : bytes>symbols ( data:bytes alpha:bytes -- bytes )
@@ -354,7 +350,7 @@ CHOICE: sha3-size
 
 : list-flatten ( ll:list -- list )
   "The elements of a list of lists (or of bytes) joined in order into one list: one level of nesting removed. An empty ll gives the empty list." doc
-  ll { } [ cat ] reduce ;
+  [ ll [ emit-all ] each ] collect ;
 
 : contains-bytes? ( data:bytes needle:bytes -- bool )
   "True when data holds the bytes of needle side by side, in order; an empty needle is always found. The search is done on the Latin-1 text of both, so it takes a few interpreter steps for any length." doc
@@ -380,11 +376,11 @@ CHOICE: sha3-size
 
 : letters? ( t:str -- bool )
   "True when t is not empty and every character is an ASCII letter (either case)." doc
-  t str>bytes [ letter? not ] filter len 0 = t len 0 > and ;
+  t str>bytes [ letter? ] all? t len 0 > and ;
 
 : digits? ( t:str -- bool )
   "True when t is not empty and every character is an ASCII decimal digit." doc
-  t str>bytes [ dec-digit? not ] filter len 0 = t len 0 > and ;
+  t str>bytes [ dec-digit? ] all? t len 0 > and ;
 
 : letter-indices ( s:str -- bytes )
   "The letters of s (either case) as numbers 0 to 25, A = 0. A character that is not a letter gives a meaningless number, so check with letters? first; a character above U+00FF is E_RANGE." doc
@@ -394,7 +390,7 @@ CHOICE: sha3-size
   "The digits of s as numbers 0 to 9. A character that is not a digit gives a meaningless number, so check with digits? first; a character above U+00FF is E_RANGE." doc
   s latin1>bytes [ 48 - ] map ;
 
-: letter-table ( -- bytes )
+MEMO: letter-table ( -- bytes )
   "A 256-byte table for translate: a letter byte (either case) becomes its number 0 to 25, every other byte 255." doc
   0 256 range [ dup 32 bor 97 - dup 0 >= over 25 <= and [ nip ] [ drop drop 255 ] if ] map list>bytes ;
 
@@ -408,7 +404,7 @@ CHOICE: sha3-size
 
 : index-of ( p:bytes i:int -- int )
   "The position of the first element of p equal to i; E_RANGE when there is none. For a permutation this is the inverse permutation at i." doc
-  0 p len range [ p swap nth i = ] filter 0 nth ;
+  p [ i = ] find dup 0 < [ drop { } 0 nth ] when ;
 
 : perm-invert ( p:bytes -- bytes )
   "The inverse of a permutation of 0 to len-1 given as bytes: element p[i] = j becomes element j = i. E_RANGE if p is not a permutation." doc
@@ -479,8 +475,8 @@ CHOICE: sha3-size
 
 : plugboard-table ( s:str -- bytes )
   "A plugboard written as letter pairs (AB CD EF, separated by white space or commas, either case) as a 26-byte permutation that swaps each pair and leaves the other letters alone. A group that is not two different letters, or a letter used twice, is E_RANGE." doc
-  s number-tokens [ _plug-pair ] map #[ ] [ cat ] reduce :> fl
-  0 26 range [ fl swap count-of 1 > ] filter len 0 >
+  [ s number-tokens [ _plug-pair emit-all ] each ] collect-bytes :> fl
+  0 26 range [ fl swap count-of 1 > ] any?
   [ "plugboard: a letter may be in one pair only" fail-range ] when
   0 26 range [ fl _plug-partner ] map list>bytes ;
 
@@ -507,14 +503,14 @@ CHOICE: sha3-size
   "The 256-byte translate table of Bletchley Park notation built from an alphabet table (see ita2-entry)." doc
   0 256 range [ base ita2-entry ] map list>bytes ;
 
-: ita2-table ( -- bytes )
+MEMO: ita2-table ( -- bytes )
   "A 256-byte table for translate: the ITA2 code of each Bletchley Park character in either case, 27 for + and 31 for -, 254 for ASCII white space and 255 for any other byte." doc
   ita2-alphabet 254 255 decode-table ita2-table2 ;
 
 : from-bp ( s:str -- bytes )
   "The ITA2 codes (0 to 31) of text in Bletchley Park notation, either case, white space ignored. Any other character is E_COERCE." doc
   s str>bytes ita2-table translate :> codes
-  codes [ 255 = ] filter len 0 <>
+  codes [ 255 = ] any?
   [ "not an ITA2 character: use the letters, 3 4 5 8 9 / (and + and -); white space is ignored" fail-coerce ] when
   codes [ 254 <> ] filter ;
 
@@ -522,8 +518,8 @@ CHOICE: sha3-size
 
 \ acc with c appended, when c is in alpha and not yet in acc.
 : _keyed-alphabet-step ( acc:bytes alpha:bytes c:int -- bytes )
-  alpha [ c = ] filter len 0 >
-  acc [ c = ] filter len 0 =
+  alpha [ c = ] any?
+  acc [ c = ] any? not
   and
   [ acc c 1 int>be-bytes cat ] [ acc ] if ;
 
@@ -612,7 +608,7 @@ CHOICE: sha3-size
 
 : printable-bytes? ( data:bytes -- bool )
   "True when data is not empty and every byte is printable ASCII (32 to 126)." doc
-  data len 0 > data [ dup 32 >= swap 126 <= and ] filter len data len = and ;
+  data len 0 > data [ dup 32 >= swap 126 <= and ] all? and ;
 
 : name-in-table ( table:str key:str -- str )
   "The name that a table gives to a key. The table is text of entries between bars, each as key:name, for example |1:Blues|2:Classic Rock| (a leading and a trailing bar); the key is compared as text, so write a number in the form the table uses. The empty string when the key is not there." doc

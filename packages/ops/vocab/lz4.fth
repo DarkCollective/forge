@@ -31,7 +31,7 @@ IN: lz4
 
 \ The descriptor followed by its checksum byte: bits 8 to 15 of the XXH32 of the descriptor.
 : _with-hc ( desc:bytes -- bytes )
-  desc desc 0 _xxh32 8 shr 255 band 1 int>be-bytes cat ;
+  desc desc 0 _xxh32 8 shr 1 int>be-bytes cat ;
 
 : compress ( data:bytes level:int=1 block-size:choice{64KB|256KB|1MB|4MB}="4MB" independent:bool=true block-checksum:bool=false content-checksum:bool=true content-size:bool=false -- bytes )
   "An LZ4 frame (magic 0x184D2204) of the input, like CyberChef's LZ4 Compress (lz4js: independent 4 MB blocks, a content checksum, no content size) but with the frame's options as parameters. level is 0 (blocks stored) or 1 to 9: a greedy matcher that follows up to 2^(level-1) hash-chain links, so 1 is the fastest (the lz4 command's default, and the default here), and 9 the smallest; any other level is E_RANGE. The bytes differ from other encoders', but every LZ4 decoder (the lz4 command included) reads them. A block that does not shrink is stored, and with block-checksum each block carries an XXH32." doc

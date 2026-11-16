@@ -78,7 +78,7 @@ CHOICE: encryption-scheme
 \ ---- integers and bytes ----
 
 : _os2ip ( data:bytes -- int )
-  data len 0 = [ 0 ] [ data bytes>hex 16 str>int-radix ] if ;
+  data 0 data len be-bytes>int ;
 
 \ The k big-endian bytes of v; E_RANGE when v needs more.
 : _i2osp ( v:int k:int -- bytes )
@@ -178,7 +178,7 @@ CHOICE: encryption-scheme
   [ "no PEM block found: " what cat " is expected (-----BEGIN ...-----)" cat fail-range ]
   [ blocks [ "label" get ] map ", " join
     "the PEM text has no " what cat " (found: " cat swap cat ")" cat
-    blocks [ "label" get "EC PRIVATE KEY" = ] filter len 0 > [ " (use the ecdsa words for elliptic curve keys)" cat ] when
+    blocks [ "label" get "EC PRIVATE KEY" = ] any? [ " (use the ecdsa words for elliptic curve keys)" cat ] when
     fail-range ] if ;
 
 \ The first block whose label is in labels. None is E_RANGE, naming what was expected and the labels found.
@@ -239,9 +239,9 @@ CHOICE: encryption-scheme
 
 : _legacy-decrypt ( block:record password:str -- bytes )
   password _no-password
-  block "headers" get "DEK-Info" get strip-space "," split
-  dup len 2 <> [ "the DEK-Info header is not cipher,IV" fail-coerce ] when
-  block "data" get password rot dup 0 nth upper swap 1 nth hex>bytes _legacy-open ;
+  block "headers" get "DEK-Info" get strip-space "," split :> parts
+  parts len 2 <> [ "the DEK-Info header is not cipher,IV" fail-coerce ] when
+  block "data" get password parts 0 nth upper parts 1 nth hex>bytes _legacy-open ;
 
 \ ---- PKCS#8 EncryptedPrivateKeyInfo with PBES2 (RFC 8018 appendix A.4) ----
 \ SEQUENCE { SEQUENCE { pbes2, SEQUENCE { SEQUENCE { pbkdf2, params }, SEQUENCE { cipher, IV } } }, OCTET STRING }
@@ -349,7 +349,7 @@ CHOICE: encryption-scheme
 : _der-pkcs1-public ( key:record -- bytes )
   { key "n" get asn1:tlv-int key "e" get asn1:tlv-int } asn1:tlv-seq ;
 
-: _rsa-alg-id ( -- bytes )
+MEMO: _rsa-alg-id ( -- bytes )
   { _rsa-oid asn1:tlv-oid asn1:tlv-null } asn1:tlv-seq ;
 
 \ SubjectPublicKeyInfo.

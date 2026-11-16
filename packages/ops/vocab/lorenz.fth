@@ -45,6 +45,30 @@
 \ and the only per-character loop is a mapi over the data).
 IN: lorenz
 
+\ ---- shared choice types ----
+
+CHOICE: model
+  option SZ40 "No limitation." ;
+  option SZ42a "Limitation chi2 one back." ;
+  option SZ42b "Limitation chi2 and psi1' one back." ;
+;
+
+CHOICE: shift-mode
+  option auto "A shift character is sent when the case changes." ;
+  option double "A shift character is sent twice, as many operators did." ;
+;
+
+\ The two ways a message is written; the order is the order of the options in the header of the op.
+CHOICE: text-first
+  option text "Ordinary text." ;
+  option ita2 "Characters in Bletchley Park notation (/ for null, 3 4 5 8 9 and the letters)." ;
+;
+
+CHOICE: ita2-first
+  option ita2 "Characters in Bletchley Park notation (/ for null, 3 4 5 8 9 and the letters)." ;
+  option text "Ordinary text." ;
+;
+
 \ ---- the alphabet, wheel sizes and published patterns ----
 
 MEMO: wheel-lengths ( -- list )
@@ -120,11 +144,18 @@ MEMO: bream-patterns ( -- list )
 : _figure-row ( -- str )
   "\u{100}3\n- '87\r\x054\x07,!:(5+)2#6019?&\u{100}./=\u{100}" ;
 
-: _bp-table2 ( alpha:list -- bytes )
+MEMO: _bp-table ( -- bytes )
+  util:ita2-alphabet str>codes :> alpha
   0 256 range [ dup 32 < [ alpha swap nth ] [ drop 0 ] if ] map list>bytes ;
 
 : _to-bp ( codes:bytes -- str )
-  codes util:ita2-alphabet str>codes _bp-table2 translate bytes>str ;
+  codes _bp-table translate bytes>str ;
+
+MEMO: _letter-codes ( -- bytes )
+  _letter-row 255 255 util:decode-table ;
+
+MEMO: _figure-codes ( -- bytes )
+  _figure-row 255 255 util:decode-table ;
 
 \ ---- text to codes and back ----
 
@@ -157,7 +188,7 @@ MEMO: _upper-table ( -- bytes )
   [ dup lt swap nth swap ft swap nth reps _enc-char ] map #[ ] bjoin ;
 
 : _from-text ( s:str reps:int -- bytes )
-  s reps _letter-row 255 255 util:decode-table _figure-row 255 255 util:decode-table _text>codes ;
+  s reps _letter-codes _figure-codes _text>codes ;
 
 : _dec-char ( c:int -- str )
   {
@@ -274,7 +305,7 @@ MEMO: pattern-sets ( -- record )
 
 : _wheels ( name:str custom:list -- list )
   pattern-sets name get custom merge-patterns
-  dup [ len 0 = ] filter len 0 >
+  dup [ len 0 = ] any?
   [ "pattern custom needs all twelve wheel patterns (chi1 to chi5, psi1 to psi5, mu37, mu61)" fail-range ] when ;
 
 : _lorenz ( data:str model:str p5:bool pattern:str custom:list starts:list input:str output:str shifts:str dec:bool -- str )
@@ -283,7 +314,7 @@ MEMO: pattern-sets ( -- record )
   pattern custom _wheels starts model p5 dec _crypt
   output "ita2" = [ _to-bp ] [ _to-text ] if ;
 
-: encrypt ( data:str model:choice{SZ40|SZ42a|SZ42b}=SZ42a p5:bool=false pattern:choice<util:wheel-pattern>=KH input:choice{text|ita2}=text output:choice{ita2|text}=ita2 shifts:choice{auto|double}=auto chi1:str[0|41,/[x.]*/]="" chi2:str[0|31,/[x.]*/]="" chi3:str[0|29,/[x.]*/]="" chi4:str[0|26,/[x.]*/]="" chi5:str[0|23,/[x.]*/]="" psi1:str[0|43,/[x.]*/]="" psi2:str[0|47,/[x.]*/]="" psi3:str[0|51,/[x.]*/]="" psi4:str[0|53,/[x.]*/]="" psi5:str[0|59,/[x.]*/]="" mu37:str[0|37,/[x.]*/]="" mu61:str[0|61,/[x.]*/]="" chi1-start:int[1..41]=1 chi2-start:int[1..31]=1 chi3-start:int[1..29]=1 chi4-start:int[1..26]=1 chi5-start:int[1..23]=1 psi1-start:int[1..43]=1 psi2-start:int[1..47]=1 psi3-start:int[1..51]=1 psi4-start:int[1..53]=1 psi5-start:int[1..59]=1 mu37-start:int[1..37]=1 mu61-start:int[1..61]=1 -- str )
+: encrypt ( data:str model:choice<model>=SZ42a p5:bool=false pattern:choice<util:wheel-pattern>=KH input:choice<text-first>=text output:choice<ita2-first>=ita2 shifts:choice<shift-mode>=auto chi1:str[0|41,/[x.]*/]="" chi2:str[0|31,/[x.]*/]="" chi3:str[0|29,/[x.]*/]="" chi4:str[0|26,/[x.]*/]="" chi5:str[0|23,/[x.]*/]="" psi1:str[0|43,/[x.]*/]="" psi2:str[0|47,/[x.]*/]="" psi3:str[0|51,/[x.]*/]="" psi4:str[0|53,/[x.]*/]="" psi5:str[0|59,/[x.]*/]="" mu37:str[0|37,/[x.]*/]="" mu61:str[0|61,/[x.]*/]="" chi1-start:int[1..41]=1 chi2-start:int[1..31]=1 chi3-start:int[1..29]=1 chi4-start:int[1..26]=1 chi5-start:int[1..23]=1 psi1-start:int[1..43]=1 psi2-start:int[1..47]=1 psi3-start:int[1..51]=1 psi4-start:int[1..53]=1 psi5-start:int[1..59]=1 mu37-start:int[1..37]=1 mu61-start:int[1..61]=1 -- str )
   "Encipher with the Lorenz SZ40/SZ42 cipher attachment. The plain text is ordinary text (letters, digits, some punctuation, space and line ends; shift characters are added where the case changes) or ITA2 characters in Bletchley Park notation; the result is ITA2 characters (or text). The twelve wheels take a published pattern set or custom patterns and a start position each (the cell of the wheel at the first character, from 1). The cipher is reciprocal; the P5 attachment makes the key depend on the plain text." doc
   "Cipher machines" category
   data model p5 pattern
@@ -329,7 +360,7 @@ META: encrypt
   link "https://en.wikipedia.org/wiki/Lorenz_cipher" "Lorenz cipher on Wikipedia" ;
 ;
 
-: decrypt ( data:str model:choice{SZ40|SZ42a|SZ42b}=SZ42a p5:bool=false pattern:choice<util:wheel-pattern>=KH input:choice{ita2|text}=ita2 output:choice{text|ita2}=text shifts:choice{auto|double}=auto chi1:str[0|41,/[x.]*/]="" chi2:str[0|31,/[x.]*/]="" chi3:str[0|29,/[x.]*/]="" chi4:str[0|26,/[x.]*/]="" chi5:str[0|23,/[x.]*/]="" psi1:str[0|43,/[x.]*/]="" psi2:str[0|47,/[x.]*/]="" psi3:str[0|51,/[x.]*/]="" psi4:str[0|53,/[x.]*/]="" psi5:str[0|59,/[x.]*/]="" mu37:str[0|37,/[x.]*/]="" mu61:str[0|61,/[x.]*/]="" chi1-start:int[1..41]=1 chi2-start:int[1..31]=1 chi3-start:int[1..29]=1 chi4-start:int[1..26]=1 chi5-start:int[1..23]=1 psi1-start:int[1..43]=1 psi2-start:int[1..47]=1 psi3-start:int[1..51]=1 psi4-start:int[1..53]=1 psi5-start:int[1..59]=1 mu37-start:int[1..37]=1 mu61-start:int[1..61]=1 -- str )
+: decrypt ( data:str model:choice<model>=SZ42a p5:bool=false pattern:choice<util:wheel-pattern>=KH input:choice<ita2-first>=ita2 output:choice<text-first>=text shifts:choice<shift-mode>=auto chi1:str[0|41,/[x.]*/]="" chi2:str[0|31,/[x.]*/]="" chi3:str[0|29,/[x.]*/]="" chi4:str[0|26,/[x.]*/]="" chi5:str[0|23,/[x.]*/]="" psi1:str[0|43,/[x.]*/]="" psi2:str[0|47,/[x.]*/]="" psi3:str[0|51,/[x.]*/]="" psi4:str[0|53,/[x.]*/]="" psi5:str[0|59,/[x.]*/]="" mu37:str[0|37,/[x.]*/]="" mu61:str[0|61,/[x.]*/]="" chi1-start:int[1..41]=1 chi2-start:int[1..31]=1 chi3-start:int[1..29]=1 chi4-start:int[1..26]=1 chi5-start:int[1..23]=1 psi1-start:int[1..43]=1 psi2-start:int[1..47]=1 psi3-start:int[1..51]=1 psi4-start:int[1..53]=1 psi5-start:int[1..59]=1 mu37-start:int[1..37]=1 mu61-start:int[1..61]=1 -- str )
   "Decipher Lorenz SZ40/SZ42 traffic. The same machine as lorenz:encrypt; only the defaults differ (ITA2 in, text out) and, with the P5 attachment, the plain text bit that enters the limitation is taken from the result instead of the input. Without P5 the two words give the same key." doc
   "Cipher machines" category
   data model p5 pattern

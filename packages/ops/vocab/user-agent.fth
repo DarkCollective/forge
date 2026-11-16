@@ -96,7 +96,9 @@ MEMO: _windows-names ( -- list )
 
 \ Windows NT version to the name of the release.
 : _windows-name ( v:str -- str )
-  _windows-names [ 0 nth v = ] filter { { v v } } cat 0 nth 1 nth ;
+  _windows-names :> names
+  names [ 0 nth v = ] find :> i
+  i 0 < [ v ] [ names i nth 1 nth ] if ;
 
 MEMO: _os-rules ( -- list )
   {

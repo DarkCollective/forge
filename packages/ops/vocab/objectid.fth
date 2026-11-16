@@ -12,7 +12,7 @@ IN: objectid
   "The creation time of a MongoDB ObjectID: its first four bytes (8 hex digits) are the number of seconds since 1970-01-01 UTC. The input is the 24 hex digits of the ObjectID (either case, surrounding white space ignored); the result is the time in ISO 8601 UTC, with a .000 fraction because the field has whole seconds (507f1f77bcf86cd799439011, the example of the MongoDB manual, gives 2012-10-17T21:13:27.000Z). Anything but 24 hex digits is an error." doc
   "Conversions" category
   data [ space? ] trim-start [ space? ] trim-end
-  dup len 24 = over str>codes [ hex-digit? ] filter len 24 = and not
+  dup len 24 = over str>codes [ hex-digit? ] all? and not
   [ "an ObjectID is 24 hex digits" fail-coerce ] when
   0 8 slice 16 str>int-radix _iso ;
 

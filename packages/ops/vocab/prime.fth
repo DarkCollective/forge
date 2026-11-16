@@ -51,7 +51,7 @@ USING: random ;
 : _prime? ( n:int -- bool )
   {
     [ n 2 < ] [ false ]
-    [ n 200 < ] [ _small [ n = ] filter len 0 > ]
+    [ n 200 < ] [ _small n contains? ]
     [ n _small 1 [ * ] reduce gcd 1 <> ] [ false ]
     [ n 40000 < ] [ true ]
     [ n 1 256 shl < ] [ n 40 _mr ]

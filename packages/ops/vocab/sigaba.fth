@@ -119,17 +119,29 @@ IN: sigaba
     [ 255 ]
   } cond ;
 
+MEMO: _in-table-enc ( -- bytes )
+  0 256 range [ false _in-code ] map list>bytes ;
+
+MEMO: _in-table-dec ( -- bytes )
+  0 256 range [ true _in-code ] map list>bytes ;
+
 : _in-table ( decrypt:bool -- bytes )
-  0 256 range [ decrypt _in-code ] map list>bytes ;
+  decrypt [ _in-table-dec ] [ _in-table-enc ] if ;
 
 \ The output letter of 0 to 25; a deciphered Z (25) is a space.
+MEMO: _out-table-enc ( -- bytes )
+  0 256 range [ 65 + 255 band ] map list>bytes ;
+
+MEMO: _out-table-dec ( -- bytes )
+  0 256 range [ dup 25 = [ drop 32 ] [ 65 + 255 band ] if ] map list>bytes ;
+
 : _out-table ( decrypt:bool -- bytes )
-  0 256 range [ dup 25 = decrypt and [ drop 32 ] [ 65 + 255 band ] if ] map list>bytes ;
+  decrypt [ _out-table-dec ] [ _out-table-enc ] if ;
 
 \ The data as letters 0 to 25: other bytes are dropped, or E_COERCE when other is error.
 : _letters-in ( data:bytes decrypt:bool other:str -- bytes )
   data decrypt _in-table translate
-  dup [ 255 = ] filter len 0 > other "error" = and
+  dup [ 255 = ] any? other "error" = and
   [ "a byte is neither a letter nor a space" fail-coerce ] when
   [ 254 < ] filter ;
 

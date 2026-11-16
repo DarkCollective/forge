@@ -54,9 +54,11 @@ CHOICE: cert-format
 \ Control characters (below 32, DEL and C1) and the line separators written as \xHH or \uHHHH: names and URLs in a
 \ certificate are untrusted text, and a report is read line by line.
 : _safe-code ( c:int -- str )
-  c 32 < c 127 >= c 160 < and or c 8232 = or c 8233 = or
-  [ c 255 > [ "\\u" c 4 pad-hex cat ] [ "\\x" c 2 pad-hex cat ] if ]
-  [ c cp>str ] if ;
+  {
+    [ c 8232 = c 8233 = or ] [ "\\u" c 4 pad-hex cat ]
+    [ c 32 < c 127 >= c 160 < and or ] [ "\\x" c 2 pad-hex cat ]
+    [ c cp>str ]
+  } cond ;
 
 \ Bytes that may start a character that must be escaped: C0 controls, DEL, and the lead bytes of the C1 controls (C2)
 \ and of U+2028 and U+2029 (E2). A text without one of them is returned as it is, in a few VM steps.
@@ -289,7 +291,7 @@ MEMO: _reason-names ( -- list )
 
 \ Eight groups of hex digits in upper case, none compressed, as OpenSSL writes IPv6 addresses.
 : _ip6 ( v:bytes -- str )
-  0 8 range [ 2 * dup v swap 1 + nth swap v swap nth 256 * + 16 int>str-radix upper ] map ":" join ;
+  0 8 range [ 2 * v swap 2 be-bytes>int 16 int>str-radix upper ] map ":" join ;
 
 : _ip ( v:bytes -- str )
   {
@@ -347,7 +349,11 @@ MEMO: _reason-names ( -- list )
   n "universal" 16 "BasicConstraints" asn1:expect
   n asn1:children [ "universal" 1 asn1:is? ] filter :> flags
   n asn1:children [ "universal" 2 asn1:is? ] filter :> paths
-  flags len 0 = [ "CA:FALSE" ] [ flags 0 nth asn1:node>bool [ "CA:TRUE" ] [ "CA:FALSE" ] if ] if
+  {
+    [ flags len 0 = ] [ "CA:FALSE" ]
+    [ flags 0 nth asn1:node>bool ] [ "CA:TRUE" ]
+    [ "CA:FALSE" ]
+  } cond
   paths len 0 = not [ ", pathlen:" paths 0 nth asn1:node>int int>str cat cat ] when ;
 
 : _key-usage ( n:record -- str )
@@ -1055,11 +1061,10 @@ MEMO: _month-names ( -- list )
 
 \ The position of the first word that looks like a key type, or -1.
 : _ssh-type-index ( words:list -- int )
-  0 words len range [ words swap nth _ssh-type-token? ] filter
-  dup len 0 = [ drop -1 ] [ 0 nth ] if ;
+  words [ _ssh-type-token? ] find ;
 
 : _ssh-hexish? ( s:str -- bool )
-  s len 2 mod 0 = s len 0 > and s str>codes [ hex-digit? not ] filter len 0 = and ;
+  s len 2 mod 0 = s len 0 > and s str>codes [ hex-digit? ] all? and ;
 
 : _ssh-decode ( token:str fmt:str -- bytes )
   {
