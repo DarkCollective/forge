@@ -408,7 +408,7 @@ META: a1z26-encode
 : a1z26-decode ( str -- str )
   "Replace each number 1 to 26 by the matching upper-case letter. Any run of characters that are not digits separates numbers (spaces, commas, dashes, newlines). A number outside 1 to 26 is an error (E_COERCE)." doc
   "Classical ciphers" category
-  str>bytes [ dup 48 >= over 57 <= and not [ drop 32 ] when ] map bytes>str
+  str>bytes [ dup 48 57 between? not [ drop 32 ] when ] map bytes>str
   " " split [ len 0 > ] filter
   [ str>int dup 1 < over 26 > or
     [ "a1z26-decode: numbers must be between 1 and 26" fail-coerce ] when

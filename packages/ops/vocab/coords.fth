@@ -489,7 +489,7 @@ MEMO: _band-min-northing ( -- list )
 
 : _zone-band? ( zb:str -- bool )
   zb [ dec-digit? ] count-leading
-  dup 1 >= over 2 <= and swap zb len swap 1 + = and
+  dup 1 2 between? swap zb len swap 1 + = and
   _bands zb zb len 1 - zb len slice split len 2 = and ;
 
 : _utm-fields-ok? ( zb:str e:str n:str -- bool )

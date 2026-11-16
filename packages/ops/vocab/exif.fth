@@ -52,7 +52,7 @@ MEMO: _gps-names ( -- str )
   [ d p nth 255 = d p 1 + nth 225 = and d p 4 + p 10 + slice #[ 45 78 69 66 00 00 ] = and ] [ false ] if ;
 
 : _standalone? ( m:int -- bool )
-  m 216 = m 1 = or m 208 >= m 215 <= and or ;
+  m 216 = m 1 = or m 208 215 between? or ;
 
 \ Where the segment after the one at p (marker m) starts; -1 at the start of the scan or the end of the image.
 : _jpeg-after ( d:bytes p:int m:int -- int )
@@ -263,7 +263,7 @@ MEMO: _type-sizes ( -- list )
 
 \ The Windows XP tags (XPTitle ... XPSubject) are UTF-16LE text in BYTE values.
 : _xp? ( tag:int -- bool )
-  tag 40091 >= tag 40095 <= and ;
+  tag 40091 40095 between? ;
 
 : _xp-text ( t:bytes count:int vstart:int -- str )
   t vstart vstart count 1024 min + slice true _utf16 ;

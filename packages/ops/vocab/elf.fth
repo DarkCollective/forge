@@ -92,7 +92,7 @@ MEMO: _file-types ( -- str )
 : _file-type-name ( t:int -- str )
   _file-types t 16 int>str-radix util:name-in-table dup len 0 = [ drop
     {
-      [ t 65024 >= t 65279 <= and ] [ "OS Specific: (" t 16 int>str-radix cat ")" cat ]
+      [ t 65024 65279 between? ] [ "OS Specific: (" t 16 int>str-radix cat ")" cat ]
       [ t 65280 >= ] [ "Processor Specific: (" t 16 int>str-radix cat ")" cat ]
       [ "<unknown>: " t 16 int>str-radix cat ]
     } cond
@@ -140,7 +140,7 @@ MEMO: _file-types ( -- str )
 : _segment-name ( t:int -- str )
   _segment-types t 16 int>str-radix util:name-in-table dup len 0 = [ drop
     {
-      [ t 1610612736 >= t 1879048191 <= and ] [ "LOOS+0x" t 1610612736 - 16 int>str-radix cat ]
+      [ t 1610612736 1879048191 between? ] [ "LOOS+0x" t 1610612736 - 16 int>str-radix cat ]
       [ t 1879048192 >= ] [ "LOPROC+0x" t 1879048192 - 16 int>str-radix cat ]
       [ "<unknown>: " t 16 int>str-radix cat ]
     } cond

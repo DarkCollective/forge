@@ -81,10 +81,10 @@ META: encode
 \ A string of 8 to 90 printable ASCII characters, not in mixed case.
 : _check-chars ( d:bytes -- )
   d len 8 < d len 90 > or [ "a Bech32 string is 8 to 90 characters" fail-coerce ] when
-  d [ dup 33 < swap 126 > or ] any?
+  d [ 33 126 between? not ] any?
   [ "a character outside ASCII 33 to 126" fail-coerce ] when
-  d [ dup 97 >= swap 122 <= and ] any?
-  d [ dup 65 >= swap 90 <= and ] any? and
+  d [ 97 122 between? ] any?
+  d [ 65 90 between? ] any? and
   [ "mixed upper and lower case" fail-coerce ] when ;
 
 \ The index of the last 1, which separates the hrp from the data.

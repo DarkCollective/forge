@@ -30,7 +30,7 @@ IN: caret
 : _ctrl-of ( c:int -- int )
   {
     [ c 63 = ] [ 127 ]
-    [ c 64 >= c 95 <= and ] [ c 64 - ]
+    [ c 64 95 between? ] [ c 64 - ]
     [ "a ^ must be followed by one of @ A-Z [ \\ ] ^ _ ?" fail-coerce ]
   } cond ;
 

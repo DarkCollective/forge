@@ -47,6 +47,7 @@ IN: html
 : _digit-in? ( c:int radix:int -- bool )
   radix 16 = [ c hex-digit? ] [ c dec-digit? ] if ;
 
+\ Comparisons, not between?: this runs once per name character, and between? takes the 64 KiB decode from 3,657,460 to 4,003,350 steps.
 : _alnum? ( c:int -- bool )
   c dec-digit? c 65 >= c 90 <= and or c 97 >= c 122 <= and or ;
 

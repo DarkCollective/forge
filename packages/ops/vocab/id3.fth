@@ -49,24 +49,18 @@ MEMO: _picture-types ( -- list )
 
 \ ---- text ----
 
-: _hi? ( u:int -- bool )
-  u 55296 >= u 56319 <= and ;
-
-: _lo? ( u:int -- bool )
-  u 56320 >= u 57343 <= and ;
-
 \ Whether the unit at i is a low (or high) surrogate; false outside the list.
 : _lo-at? ( units:list i:int -- bool )
-  i 0 >= i units len < and [ units i nth _lo? ] [ false ] if ;
+  i 0 >= i units len < and [ units i nth 56320 57343 between? ] [ false ] if ;
 
 : _hi-at? ( units:list i:int -- bool )
-  i 0 >= i units len < and [ units i nth _hi? ] [ false ] if ;
+  i 0 >= i units len < and [ units i nth 55296 56319 between? ] [ false ] if ;
 
 \ One UTF-16 unit as a code point: a surrogate pair becomes one code point, the second half of a pair -1.
 : _fix ( u:int i:int units:list -- int )
   {
-    [ u _hi? [ units i 1 + _lo-at? ] [ false ] if ] [ 65536 u 55296 - 1024 * + units i 1 + nth 56320 - + ]
-    [ u _lo? [ units i 1 - _hi-at? ] [ false ] if ] [ -1 ]
+    [ u 55296 56319 between? [ units i 1 + _lo-at? ] [ false ] if ] [ 65536 u 55296 - 1024 * + units i 1 + nth 56320 - + ]
+    [ u 56320 57343 between? [ units i 1 - _hi-at? ] [ false ] if ] [ -1 ]
     [ u util:surrogate? ] [ 65533 ]
     [ u ]
   } cond ;
@@ -165,7 +159,7 @@ MEMO: _picture-types ( -- list )
   1000 ;
 
 : _idchar? ( c:int -- bool )
-  c 48 >= c 57 <= and c 65 >= c 90 <= and or ;
+  c 48 57 between? c 65 90 between? or ;
 
 : _idlen ( v:int -- int )
   v 2 = [ 3 ] [ 4 ] if ;
@@ -412,7 +406,7 @@ MEMO: _picture-types ( -- list )
   {
     [ d len 10 < ] [ false ]
     [ d #[ 49 44 33 ] util:starts-with-bytes? not ] [ false ]
-    [ d 3 nth dup 2 >= swap 4 <= and ] [ d 6 _syncsafe? ]
+    [ d 3 nth 2 4 between? ] [ d 6 _syncsafe? ]
     [ false ]
   } cond ;
 

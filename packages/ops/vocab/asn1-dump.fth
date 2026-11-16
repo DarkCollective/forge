@@ -25,7 +25,7 @@ USING: asn1 ;
 
 \ No control characters (below 32 or 127 to 159): safe to print between quotes.
 : _printable? ( s:str -- bool )
-  s str>codes [ dup 32 < swap dup 127 >= swap 159 <= and or ] any? not ;
+  s str>codes [ dup 32 < swap 127 159 between? or ] any? not ;
 
 : _ascii? ( v:bytes -- bool )
   v len 0 > v [ 32 126 between? ] all? and ;
