@@ -9,7 +9,7 @@ IN: lz4
 
 \ The XXH32 (seed 0) of the bytes as four little-endian bytes, the way the frame stores it.
 : _xxh-bytes ( data:bytes -- bytes )
-  data 0 _xxh32 4 int>be-bytes rev ;
+  data 0 _xxh32 4 int>le-bytes ;
 
 \ ---- compress ----
 
@@ -27,7 +27,7 @@ IN: lz4
 \ FLG, BD and the optional 8-byte content size.
 : _descriptor ( id:int flg:int csize:bool len:int -- bytes )
   flg 1 int>be-bytes id 16 * 1 int>be-bytes cat
-  csize [ len 8 int>be-bytes rev cat ] when ;
+  csize [ len 8 int>le-bytes cat ] when ;
 
 \ The descriptor followed by its checksum byte: bits 8 to 15 of the XXH32 of the descriptor.
 : _with-hc ( desc:bytes -- bytes )

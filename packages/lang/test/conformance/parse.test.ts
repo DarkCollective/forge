@@ -37,15 +37,15 @@ function block(...lines: string[]): string {
 }
 
 describe("spec extraction", () => {
-  it("finds exactly 310 cases: C01 to C171 and C201 to C339, without gaps or duplicates", () => {
+  it("finds exactly 317 cases: C01 to C171 and C201 to C339 and C340 to C346, without gaps or duplicates", () => {
     const ids = [
       ...Array.from({ length: 171 }, (_, i) => i + 1),
-      ...Array.from({ length: 139 }, (_, i) => i + 201),
+      ...Array.from({ length: 146 }, (_, i) => i + 201),
     ];
-    expect(spec.cases).toHaveLength(310);
+    expect(spec.cases).toHaveLength(317);
     // File order follows the subsections, not the numbers: C286 and up sit beside their feature.
     expect(spec.cases.map((c) => c.id).sort((a, b) => a - b)).toEqual(ids);
-    expect(new Set(spec.cases.map((c) => c.name)).size).toBe(310);
+    expect(new Set(spec.cases.map((c) => c.name)).size).toBe(317);
     expect(spec.cases.map((c) => c.label).sort()).toEqual(
       ids.map((n) => `C${String(n).padStart(2, "0")}`).sort(),
     );
@@ -142,9 +142,9 @@ describe("two documents form one suite", () => {
       .cases.map((c) => c.id)
       .sort((a, b) => a - b);
     expect(new Set(ids).size).toBe(ids.length);
-    expect(ids).toHaveLength(310);
+    expect(ids).toHaveLength(317);
     expect(ids.slice(0, 171)).toEqual(Array.from({ length: 171 }, (_, i) => i + 1));
-    expect(ids.slice(171)).toEqual(Array.from({ length: 139 }, (_, i) => i + 201));
+    expect(ids.slice(171)).toEqual(Array.from({ length: 146 }, (_, i) => i + 201));
   });
 });
 

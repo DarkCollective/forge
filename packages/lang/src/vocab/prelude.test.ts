@@ -26,9 +26,9 @@ async function go(src: string): Promise<string> {
 }
 
 describe("the prelude", () => {
-  test("twenty promoted words, listed, public in core and compiled from FL", () => {
-    expect(PRELUDE_WORDS).toHaveLength(20);
-    expect(new Set(PRELUDE_WORDS).size).toBe(20);
+  test("nineteen promoted words, listed, public in core and compiled from FL", () => {
+    expect(PRELUDE_WORDS).toHaveLength(19);
+    expect(new Set(PRELUDE_WORDS).size).toBe(19);
     const words = new Set(listWords(rt.dictionary, "core"));
     for (const w of PRELUDE_WORDS) {
       expect(words.has(w), w).toBe(true);

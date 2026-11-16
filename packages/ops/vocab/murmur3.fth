@@ -10,7 +10,7 @@ IN: murmur3
 
 \ x rotated left by r bits, as a 32-bit value.
 : _rotl ( x:int r:int -- int )
-  x r shl x 32 r - shr bor 0xffffffff band ;
+  x r 32 rotl ;
 
 \ The key-mixing step: k * c1, rotl 15, * c2.
 : _mixk ( k:int -- int )

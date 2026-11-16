@@ -82,7 +82,7 @@ USING: adler32 crc ;
 \ XFL as gzip writes it: 2 for the slowest level, 4 for the fastest, else 0. OS 255 (unknown).
 : _gz-header ( level:int mtime:int fname:bytes comment:bytes header-crc:bool -- bytes )
   #[ 1f 8b 08 ] fname comment header-crc _gz-flags 1 int>be-bytes cat
-  mtime 4 int>be-bytes rev cat
+  mtime 4 int>le-bytes cat
   { [ level 9 = ] [ #[ 02 ] ] [ level 2 < ] [ #[ 04 ] ] [ #[ 00 ] ] } cond cat
   #[ ff ] cat
   fname len 0 > [ fname cat #[ 00 ] cat ] when
@@ -94,7 +94,7 @@ USING: adler32 crc ;
 
 \ The CRC-32 and the length modulo 2^32 of the input, each little-endian.
 : _gz-trailer ( data:bytes -- bytes )
-  data _crc32 rev data len 4 int>be-bytes rev cat ;
+  data _crc32 rev data len 4 int>le-bytes cat ;
 
 : gzip ( data:bytes level:int=6 filename:str="" comment:str="" header-crc:bool=false mtime:int=0 -- bytes )
   "A gzip file (RFC 1952) of the input: a 10-byte header, the optional zero-terminated Latin-1 file name and comment, the optional header CRC-16 (CyberChef's Include file checksum), the raw DEFLATE stream, and the little-endian CRC-32 and length. level is 0 to 9 as for deflate:deflate (E_RANGE otherwise). mtime is the modification time in Unix seconds, 0 by default (CyberChef writes the current time, which makes its output differ on every run); the OS byte is 255 (unknown) and XFL follows the level as gzip writes it. A file name or comment with a NUL or above U+00FF is E_RANGE." doc

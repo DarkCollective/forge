@@ -115,7 +115,7 @@ IN: blockmode
 : _ctr-block ( i:int bs:int mode:str -- bytes )
   {
     [ mode "CTR32" = ] [ _head _ctr0 i + 4 int>be-bytes cat ]
-    [ mode "CTRLE" = ] [ _ctr0 i + bs int>be-bytes rev ]
+    [ mode "CTRLE" = ] [ _ctr0 i + bs int>le-bytes ]
     [ _ctr0 i + bs int>be-bytes ]
   } cond ;
 
