@@ -276,6 +276,8 @@ Language gaps found in wave 1 (candidates for the core, or for a primitive):
 *FL v0.2 closed three of these in the language: the list builder (`collect`, `emit`), the per-vocabulary memoised constant (`MEMO:`) and the early-exit scan (`find`, `any?`, `all?`, `exit`). The text below is the original record.*
 
 - There is no efficient list builder or append. Growing a list or a string one element at a time is quadratic and hits `E_LIMIT_TOTAL` on large input (`cobs` needed a primitive for that reason). Words such as `cat` and `append` copy; `map` and `reduce` are the linear idioms, and `bjoin` and `join` collect.
+
+*`collect` and `emit` now do this, and `cobs:_starts`, `tlv:_parse`, `http:_dechunk`, `tar:_headers` and `zip:_cd-offsets` are FL with collectors; the primitives are removed (`docs/research/slow-ops.md` section 5).*
 - There is no way to memoise a computed constant per vocabulary. `html:decode` rebuilds its 2,231-entry named-entity record on every call, about 5 ms per call. A load-time `CONSTANT`, or a cached zero-input word, would remove it.
 - The `charset` TextDecoder labels are tested in Chromium and Node only. Firefox and Safari are untested: their label lists and their handling of the legacy sets can differ.
 - There is no early-exit loop over a list or a string. Scanning for a prefix (`util:count-leading`) is a fold over everything, or a `while` that is slower per element.
