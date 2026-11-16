@@ -144,11 +144,18 @@ MEMO: bream-patterns ( -- list )
 : _figure-row ( -- str )
   "\u{100}3\n- '87\r\x054\x07,!:(5+)2#6019?&\u{100}./=\u{100}" ;
 
-: _bp-table2 ( alpha:list -- bytes )
+MEMO: _bp-table ( -- bytes )
+  util:ita2-alphabet str>codes :> alpha
   0 256 range [ dup 32 < [ alpha swap nth ] [ drop 0 ] if ] map list>bytes ;
 
 : _to-bp ( codes:bytes -- str )
-  codes util:ita2-alphabet str>codes _bp-table2 translate bytes>str ;
+  codes _bp-table translate bytes>str ;
+
+MEMO: _letter-codes ( -- bytes )
+  _letter-row 255 255 util:decode-table ;
+
+MEMO: _figure-codes ( -- bytes )
+  _figure-row 255 255 util:decode-table ;
 
 \ ---- text to codes and back ----
 
@@ -181,7 +188,7 @@ MEMO: _upper-table ( -- bytes )
   [ dup lt swap nth swap ft swap nth reps _enc-char ] map #[ ] bjoin ;
 
 : _from-text ( s:str reps:int -- bytes )
-  s reps _letter-row 255 255 util:decode-table _figure-row 255 255 util:decode-table _text>codes ;
+  s reps _letter-codes _figure-codes _text>codes ;
 
 : _dec-char ( c:int -- str )
   {

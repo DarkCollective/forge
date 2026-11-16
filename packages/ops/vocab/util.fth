@@ -394,7 +394,7 @@ CHOICE: sha3-size
   "The digits of s as numbers 0 to 9. A character that is not a digit gives a meaningless number, so check with digits? first; a character above U+00FF is E_RANGE." doc
   s latin1>bytes [ 48 - ] map ;
 
-: letter-table ( -- bytes )
+MEMO: letter-table ( -- bytes )
   "A 256-byte table for translate: a letter byte (either case) becomes its number 0 to 25, every other byte 255." doc
   0 256 range [ dup 32 bor 97 - dup 0 >= over 25 <= and [ nip ] [ drop drop 255 ] if ] map list>bytes ;
 
@@ -507,7 +507,7 @@ CHOICE: sha3-size
   "The 256-byte translate table of Bletchley Park notation built from an alphabet table (see ita2-entry)." doc
   0 256 range [ base ita2-entry ] map list>bytes ;
 
-: ita2-table ( -- bytes )
+MEMO: ita2-table ( -- bytes )
   "A 256-byte table for translate: the ITA2 code of each Bletchley Park character in either case, 27 for + and 31 for -, 254 for ASCII white space and 255 for any other byte." doc
   ita2-alphabet 254 255 decode-table ita2-table2 ;
 

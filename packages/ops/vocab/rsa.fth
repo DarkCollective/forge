@@ -349,7 +349,7 @@ CHOICE: encryption-scheme
 : _der-pkcs1-public ( key:record -- bytes )
   { key "n" get asn1:tlv-int key "e" get asn1:tlv-int } asn1:tlv-seq ;
 
-: _rsa-alg-id ( -- bytes )
+MEMO: _rsa-alg-id ( -- bytes )
   { _rsa-oid asn1:tlv-oid asn1:tlv-null } asn1:tlv-seq ;
 
 \ SubjectPublicKeyInfo.
