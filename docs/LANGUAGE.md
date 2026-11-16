@@ -1279,6 +1279,8 @@ The maths words convert an `int` operand to `num` (a `bigint` beyond ±(2^53−1
 | `bnot` | P | `( int -- int )` | bitwise not, `-n-1` |
 | `shl` | P | `( int k:int -- int )` | shift left by k ≥ 0 (k < 0 `E_RANGE`); a result over `maxIntBits` bits is `E_LIMIT_VALUE` (checked before computing) |
 | `shr` | P | `( int k:int -- int )` | arithmetic shift right by k ≥ 0 (k < 0 `E_RANGE`) |
+| `rotl` | P | `( v:int k:int width:int -- int )` | the low `width` bits of `v` (two's complement for a negative `v`) rotated left by `k`, an `int` in `[0, 2^width)`; `k` is taken modulo `width`; width < 1 or k < 0 `E_RANGE`, width over `maxIntBits` `E_LIMIT_VALUE` |
+| `rotr` | P | `( v:int k:int width:int -- int )` | as `rotl`, rotated right |
 
 `true` and `false` are literals, not words.
 
@@ -1329,6 +1331,10 @@ For `len cat slice nth rev` the first operand selects the sequence kind (`str` b
 | `latin1>bytes` | P | `( str -- bytes )` | one byte per code point; a code point above U+00FF is `E_RANGE` |
 | `bytes>latin1` | P | `( bytes -- str )` | one code point (U+0000..U+00FF) per byte; never fails |
 | `bytes>hex` | P | `( bytes -- str )` | lowercase hex, no separators |
+| `be-bytes>int` | P | `( data:bytes p:int n:int -- int )` | the `n` bytes of `data` at `p` as one big-endian unsigned integer (`n` of 0 gives 0); a negative `p` or `n`, or a read past the end, is the `slice` `E_RANGE`; over `maxIntBits` `E_LIMIT_VALUE` |
+| `le-bytes>int` | P | `( data:bytes p:int n:int -- int )` | as `be-bytes>int`, little-endian |
+| `int>be-bytes` | P | `( v:int n:int -- bytes )` | the low `n` bytes of `v` (two's complement for a negative `v`), most significant first; `n` of 0 gives no bytes; `n` < 0 `E_RANGE` |
+| `int>le-bytes` | P | `( v:int n:int -- bytes )` | as `int>be-bytes`, least significant first |
 | `hex>bytes` | P | `( str -- bytes )` | ASCII whitespace ignored; odd digit count or non-hex `E_COERCE` |
 | `str>codes` | P | `( str -- list )` | list of code points as `int` |
 | `codes>str` | P | `( list -- str )` | from a list of code-point `int`s; invalid or surrogate `E_RANGE`; non-int `E_TYPE` |
@@ -1385,7 +1391,7 @@ Ciphers over text should operate on `bytes` (see §15.1). The Latin-1 pair is th
 
 ### 13.8 Prelude words
 
-Twenty words that more than one op vocabulary needed were promoted from the internal `util` vocabulary into `core`. They are written in **FL**, not in TypeScript: `vocab/prelude.ts` holds one source unit (`IN: core`, one string constant) that `createRuntime` compiles and commits as a **trusted** unit when it builds a runtime (trusted loads may define into `core`, §5.3, §6.5). The bodies are verbatim copies of the `util` definitions of `packages/ops/vocab/util.fth`, with `raise:range` replaced by `fail-range`, so their behaviour is that of the `util` words by construction (an equivalence test in `@forge/ops` compares them, errors included). The prelude is compiled under the default limits, never the caller's (§10.13). Their `WordMeta.kind` is `"fl"`, `op` is `false` (they are in `core`), and `source.unit` is `null`.
+Nineteen words that more than one op vocabulary needed were promoted from the internal `util` vocabulary into `core`. They are written in **FL**, not in TypeScript: `vocab/prelude.ts` holds one source unit (`IN: core`, one string constant) that `createRuntime` compiles and commits as a **trusted** unit when it builds a runtime (trusted loads may define into `core`, §5.3, §6.5). The bodies are verbatim copies of the `util` definitions of `packages/ops/vocab/util.fth`, with `raise:range` replaced by `fail-range`, so their behaviour is that of the `util` words by construction (an equivalence test in `@forge/ops` compares them, errors included). The prelude is compiled under the default limits, never the caller's (§10.13). Their `WordMeta.kind` is `"fl"`, `op` is `false` (they are in `core`), and `source.unit` is `null`.
 
 | word | kind | effect | description |
 |---|---|---|---|
@@ -1393,7 +1399,6 @@ Twenty words that more than one op vocabulary needed were promoted from the inte
 | `between?` | F | `( n:int lo:int hi:int -- bool )` | true when `lo <= n <= hi` (both ends included) |
 | `check-int-range` | F | `( n:int lo:int hi:int what:str -- )` | raise `E_RANGE` unless `lo <= n <= hi`; the message is `what`, ` must be `, `lo`, ` to `, `hi`, `, not `, `n` |
 | `cp>str` | F | `( cp:int -- str )` | the one-character string of a code point (the errors of `codes>str` for an invalid one) |
-| `int>be-bytes` | F | `( v:int n:int -- bytes )` | the low `n` bytes of `v`, most significant first; higher bytes are dropped; `n` of 0 gives no bytes |
 | `digits>int` | F | `( vals:bytes radix:int -- int )` | the integer whose digits are the bytes of `vals`, most significant first, in the radix (digits are not checked against it) |
 | `ceil-div` | F | `( n:int d:int -- int )` | `n` divided by `d`, rounded up; `d` positive and `n` non-negative |
 | `sum` | F | `( xs:list -- int )` | the sum of a list of integers (0 for the empty list) |
@@ -1414,7 +1419,7 @@ Twenty words that more than one op vocabulary needed were promoted from the inte
 
 Resolution is unaffected for existing code (§6.2 puts the current vocabulary and imports before `core`): inside `IN: util` and with `USING: util`, `between?` still resolves to `util:between?`; elsewhere it was `E_UNDEFINED` and is now `core:between?`. The `util` and `raise` vocabularies are not touched, and `fail-coerce` and `fail-range` (§13.6) are the `core` counterparts of `raise:coerce` and `raise:range`. Because the hash covers source text and callees and not the vocabulary (§12.4), a promoted word whose text and callees are those of its `util` twin has the same hash (`between?`, `space?`, `sum`, `cp>str`, `zero-bytes`, `hex-digit?`); one that calls a word that differs between the two (`fail-range` against `raise:range`, or a private helper) has a different hash (`check-int-range`, `count-leading`, `trim-end`). The set is the generic `util` words called from at least six vocabularies of the bundle; the domain words stay in `util`. The prelude defines one private helper, `core:_lead-step` (for `count-leading`), visible only inside `core`.
 
-Total: **155** words (12 stack + 37 arithmetic, comparison and maths, counting `< > <= >=` individually + 9 logic and bitwise + 20 sequences and records + 21 conversion + 29 control + 7 printing and introspection + 20 prelude words). By kind: 40 intrinsic (28 from v0.1, `exit` and 11 added by the selection and collector words), 90 primitive (69 from v0.1 and 21 added: 16 maths words, `str>num`, `has-key?`, `sort`, `fail-coerce`, `fail-range`), 5 runtime-supplied and 20 prelude words. The 102 words of v0.1 are unchanged. The prelude also defines one private helper, `core:_lead-step`, which is not counted.
+Total: **160** words (12 stack + 37 arithmetic, comparison and maths, counting `< > <= >=` individually + 9 logic and bitwise + 20 sequences and records + 21 conversion + 29 control + 7 printing and introspection + 19 prelude words). By kind: 40 intrinsic, 96 primitive (69 from v0.1, 21 from v0.2 and 6 integer words added after v0.2, `int>be-bytes` among them, moved from the prelude), 5 runtime-supplied and 19 prelude words. The 102 words of v0.1 are unchanged. The prelude also defines one private helper, `core:_lead-step`, which is not counted.
 
 Recipe-oriented vocabularies (`encoding`, `classical`, …) arrive in Phase 4. Nothing in `core` can reach the network, DOM, storage or clock.
 
@@ -4968,6 +4973,86 @@ demo:t .
 true
 ```
 
+```fl-test
+# C340 be-bytes>int and le-bytes>int read at an offset
+@run
+#[ ff 01 02 03 ff ] 1 3 be-bytes>int .
+#[ ff 01 02 03 ff ] 1 3 le-bytes>int .
+#[ 01 02 ] 2 0 be-bytes>int .
+#[ ff ff ff ff ff ff ff ff ] 0 8 be-bytes>int .
+#[ 01 00 00 00 00 00 00 00 ] 0 8 le-bytes>int .
+@out
+66051
+197121
+0
+18446744073709551615
+1
+```
+
+```fl-test
+# C341 a read past the end is the slice error
+@run
+#[ 01 02 ] 1 2 be-bytes>int
+@error
+E_RANGE
+```
+
+```fl-test
+# C342 a negative offset or length is E_RANGE
+@run
+#[ 01 02 ] 0 -1 le-bytes>int
+@error
+E_RANGE
+```
+
+```fl-test
+# C343 int>be-bytes and int>le-bytes keep the low n bytes
+@run
+258 3 int>be-bytes bytes>hex .
+258 3 int>le-bytes bytes>hex .
+0x1234 1 int>be-bytes bytes>hex .
+-2 3 int>le-bytes bytes>hex .
+5 0 int>be-bytes len .
+@out
+000102
+020100
+34
+feffff
+0
+```
+
+```fl-test
+# C344 a negative byte count is E_RANGE
+@run
+1 -1 int>be-bytes
+@error
+E_RANGE
+```
+
+```fl-test
+# C345 rotl and rotr rotate the low width bits
+@run
+0x80000001 1 32 rotl .
+0x80000001 1 32 rotr .
+0x12345678 40 32 rotl 16 int>str-radix .
+-2 1 8 rotl .
+1 99 100 rotl 1 99 shl = .
+@out
+3
+3221225472
+34567812
+253
+true
+```
+
+```fl-test
+# C346 rotl with a width under 1 or a negative count is E_RANGE
+@run
+1 1 0 rotl
+@error
+E_RANGE
+```
+
 Behaviour the harness cannot assert is covered by unit tests instead: the step counts of lowered and unlowered code (§8 excludes them), the shape of `ForgeError.frames` and `framesSkipped` (`errors.test.ts`, `vm.test.ts`), the runtime options and `warm()` (`memo.test.ts`, `runtime.test.ts`), the equivalence of the prelude words with their `util` twins (`packages/ops/src/core-promotion.test.ts`), and the hash guard (`npm run -s hash-snapshot -w @forge/ops`, which prints one `qname hash` line for every word of every vocabulary and the digest of `catalogue.json`; a change that must not alter any word gives an identical output).
 
 ---
@@ -5101,7 +5186,7 @@ Three differences can be observed by existing code: a local (header or `:>` name
 
 ### A.4 Words added to `core` (53)
 
-Total `core` words: 102 in v0.1, **155** in v0.2 (§13).
+Total `core` words: 102 in v0.1, **155** in v0.2 (§13), **160** after the integer words of §A.7.
 
 - **Maths (16), §13.2:** `ln log2 log10 exp sin cos tan asin acos atan atan2 sinh cosh tanh fpow pi`.
 - **Parsing (1), §13.5:** `str>num`.
@@ -5145,3 +5230,12 @@ Work through this list for a lexer, parser, highlighter or completion source:
 - [ ] Core words: the 53 words of §A.4, with the effects of §13 for signature help.
 - [ ] Diagnostics worth mirroring: `exit` placement (§8); `emit` outside a collector is a run-time error only; `MEMO:` header shape and purity (§5.13); `:>` duplicate local, name rules (§7.1).
 - [ ] Do not treat `option`, `inverse`, `helper`, `link`, `use-when` or `checks` as reserved words outside their blocks: they are ordinary names.
+
+### A.7 Changes after v0.2: integer and bytes words
+
+A small additive wave (studied in [research/int-words.md](research/int-words.md)). `core` grows from 155 to 160 words; no token, header or form changes, and no error code is added.
+
+- **New primitives (5), §13.3 and §13.5:** `rotl rotr` (§13.3) and `be-bytes>int le-bytes>int int>le-bytes` (§13.5). Each costs one step, like `shl`.
+- **Changed kind (1), §13.5:** `int>be-bytes` was a prelude word (kind F, §13.8) and is now a primitive (kind P) with the same name and effect. Behaviour is the same, except that a negative byte count is `E_RANGE` (the FL body gave no bytes). Because the hash covers callees (§12.4), the hash of `core:int>be-bytes` and of every word that calls it changed. The prelude is now 19 words.
+- **For an editor plugin:** add the five rows to the builtins list, and change the kind of `int>be-bytes` from prelude to primitive. The totals are 160 words, 96 primitive and 19 prelude.
+- **Held back:** `rotl-lanes`, `rotr-lanes` (a lane-wise rotate of a wide integer) and `addw` (a masked add) were prototyped and measured but are not part of the language; see the study for the numbers.

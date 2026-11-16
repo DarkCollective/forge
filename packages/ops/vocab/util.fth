@@ -286,7 +286,7 @@ CHOICE: sha3-size
 
 : le-int ( data:bytes p:int n:int -- int )
   "The n bytes of data at p read as one little-endian unsigned integer (the first byte is the least significant; n of 0 gives 0). The caller has checked that the bytes are there: a read past the end is the slice error (use need-bytes first)." doc
-  data p p n + slice rev 256 digits>int ;
+  data p n le-bytes>int ;
 
 : need-bytes ( data:bytes p:int n:int what:str -- )
   "Raises E_COERCE with the message what then is cut short unless data holds n bytes from offset p (a truncated file). what names the data, for example gzip data." doc
@@ -604,7 +604,7 @@ CHOICE: sha3-size
 
 : be-int ( data:bytes p:int n:int -- int )
   "The n bytes of data at p read as one big-endian unsigned integer (the first byte is the most significant; n of 0 gives 0). The caller has checked that the bytes are there: a read past the end is the slice error (use need-bytes first). The mirror of le-int." doc
-  data p p n + slice 256 digits>int ;
+  data p n be-bytes>int ;
 
 : starts-with-bytes? ( data:bytes prefix:bytes -- bool )
   "True when data begins with the bytes of prefix; false (not an error) when data is shorter than prefix. Every bytes starts with the empty bytes. The bytes form of starts-with?." doc

@@ -111,7 +111,7 @@ META: shift-right
 : rotate-left ( bytes amount:int[1..7]=1 -- bytes )
   "Rotate the bits of every byte left, within the byte; bits shifted out come back in on the right." doc
   "Bitwise" category
-  [ dup amount shl 255 band swap 8 amount - shr bor ] _table translate ;
+  [ amount 8 rotl ] _table translate ;
 
 META: rotate-left
   use-when "You have bytes and want their bits rotated left within each byte, so bits that leave the top come back at the bottom." ;
@@ -124,7 +124,7 @@ META: rotate-left
 : rotate-right ( bytes amount:int[1..7]=1 -- bytes )
   "Rotate the bits of every byte right, within the byte; bits shifted out come back in on the left." doc
   "Bitwise" category
-  [ dup amount shr swap 8 amount - shl 255 band bor ] _table translate ;
+  [ amount 8 rotr ] _table translate ;
 
 META: rotate-right
   use-when "You have bytes and want their bits rotated right within each byte, so bits that leave the bottom come back at the top." ;

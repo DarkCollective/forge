@@ -29,6 +29,7 @@ import {
   CORE_RUNTIME_WORDS,
   registerCorePrimitives,
 } from "./core.js";
+import { INT_PRIMITIVES } from "./intwords.js";
 import { NUMERIC_PRIMITIVES } from "./numeric.js";
 import { PRELUDE_WORDS } from "./prelude.js";
 
@@ -135,13 +136,13 @@ describe("the core table", () => {
   const namesOf = (kind: string): string[] =>
     rows.filter((r) => r.kind === kind).map((r) => r.names[0] as string);
 
-  test("section 13 declares 155 words: 40 intrinsic, 90 primitive, 5 runtime-supplied, 20 prelude", () => {
-    expect(rows).toHaveLength(155);
+  test("section 13 declares 160 words: 40 intrinsic, 96 primitive, 5 runtime-supplied, 19 prelude", () => {
+    expect(rows).toHaveLength(160);
     expect(rows.filter((r) => r.kind === "I")).toHaveLength(40);
-    expect(rows.filter((r) => r.kind === "P")).toHaveLength(90);
+    expect(rows.filter((r) => r.kind === "P")).toHaveLength(96);
     expect(rows.filter((r) => r.kind === "R")).toHaveLength(5);
-    expect(rows.filter((r) => r.kind === "F")).toHaveLength(20);
-    expect(section).toContain("Total: **155** words");
+    expect(rows.filter((r) => r.kind === "F")).toHaveLength(19);
+    expect(section).toContain("Total: **160** words");
   });
 
   test("primitives + intrinsics + runtime-supplied + prelude words equal the table exactly", () => {
@@ -151,8 +152,8 @@ describe("the core table", () => {
       ...CORE_RUNTIME_WORDS,
       ...PRELUDE_WORDS,
     ];
-    expect(all).toHaveLength(155);
-    expect(new Set(all).size).toBe(155);
+    expect(all).toHaveLength(160);
+    expect(new Set(all).size).toBe(160);
     expect([...all].sort()).toEqual(rows.map((r) => r.names[0] as string).sort());
   });
 
@@ -187,9 +188,9 @@ describe("the core table", () => {
   });
 
   test("registerCorePrimitives registers into vocabulary core, once", () => {
-    // the 69 words of the v0.1 table plus the 21 primitives of FL 0.2
-    expect(registry.list("core")).toHaveLength(90);
-    expect(CORE_PRIMITIVES).toHaveLength(90);
+    // the 69 words of the v0.1 table, the 21 primitives of FL 0.2 and the 6 integer words
+    expect(registry.list("core")).toHaveLength(96);
+    expect(CORE_PRIMITIVES).toHaveLength(96);
     expect(() => registerCorePrimitives(registry)).toThrowError(/already registered/);
   });
 });
@@ -1317,8 +1318,8 @@ describe("fail-coerce and fail-range", () => {
   });
 });
 
-test("every core primitive is exercised by this file or by numeric.test.ts", () => {
-  const numeric = new Set(NUMERIC_PRIMITIVES.map((d) => d.name));
+test("every core primitive is exercised by this file, numeric.test.ts or intwords.test.ts", () => {
+  const numeric = new Set([...NUMERIC_PRIMITIVES, ...INT_PRIMITIVES].map((d) => d.name));
   const expected = CORE_PRIMITIVES.map((d) => d.name).filter((n) => !numeric.has(n));
   expect([...tested].sort()).toEqual(expected.sort());
 });

@@ -680,7 +680,7 @@ MEMO: _preset-formats ( -- record )
   output {
     "decimal" [ ft int>str ]
     "hex-be" [ ft 16 int>str-radix ]
-    [ ft 8 int>be-bytes rev bytes>hex ]
+    [ ft 8 int>le-bytes bytes>hex ]
   } case ;
 
 \ ---- the operations ----

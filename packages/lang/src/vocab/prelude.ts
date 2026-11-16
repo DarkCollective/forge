@@ -30,7 +30,6 @@ export const PRELUDE_WORDS: readonly string[] = Object.freeze([
   "between?",
   "check-int-range",
   "cp>str",
-  "int>be-bytes",
   "digits>int",
   "ceil-div",
   "sum",
@@ -68,10 +67,6 @@ export const PRELUDE_SOURCE: string = String.raw`IN: core
 : cp>str ( cp:int -- str )
   "The one-character string of a code point (0 to 0x10FFFF, not a surrogate: anything else is the error codes>str raises)." doc
   { cp } codes>str ;
-
-: int>be-bytes ( v:int n:int -- bytes )
-  "The low n bytes of v, most significant first (big-endian); higher bytes are dropped and an n of 0 gives no bytes." doc
-  0 n range [ n 1 - swap - 8 * v swap shr 255 band ] map list>bytes ;
 
 : digits>int ( vals:bytes radix:int -- int )
   "The integer whose digits are the elements of vals, most significant digit first, in the given radix: a positional fold. Digits are not checked against the radix. Large inputs are bounded by the integer limit (E_LIMIT_VALUE)." doc

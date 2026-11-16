@@ -27,6 +27,7 @@
 import { ForgeError } from "../errors.js";
 import { CORE_VOCAB } from "../dictionary.js";
 import { definePrimitive } from "../primitives.js";
+import { INT_PRIMITIVES } from "./intwords.js";
 import { NUMERIC_PRIMITIVES } from "./numeric.js";
 import type {
   EffectLabel,
@@ -1200,6 +1201,7 @@ const CORE_PRIMITIVES_V02: readonly PrimitiveDef[] = Object.freeze([
     },
   ),
   ...NUMERIC_PRIMITIVES,
+  ...INT_PRIMITIVES,
   core(
     "fail-coerce",
     "( reason:str -- )",
