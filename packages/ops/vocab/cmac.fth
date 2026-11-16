@@ -20,7 +20,7 @@ IN: cmac
   if ;
 
 \ The big-endian integer of the bytes.
-: _be ( b:bytes -- int ) b bytes>list 0 [ swap 8 shl + ] reduce ;
+: _be ( b:bytes -- int ) b 0 b len be-bytes>int ;
 
 \ Doubling in GF(2^n): shift left by one bit, and XOR Rb into the result when a bit fell off the top.
 : _dbl ( l:bytes rb:int -- bytes )

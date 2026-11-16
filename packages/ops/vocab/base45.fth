@@ -16,7 +16,7 @@ MEMO: _alpha ( -- bytes )
 
 \ The 16-bit number of the pair of bytes i.
 : _pair ( d:bytes i:int -- int )
-  d i 2 * nth 256 * d i 2 * 1 + nth + ;
+  d i 2 * 2 be-bytes>int ;
 
 : _enc ( data:bytes -- bytes )
   [
@@ -52,7 +52,7 @@ MEMO: _table ( -- bytes )
 
 : _two ( n:int -- bytes )
   n 65535 > [ "a group of three characters is more than 65535" fail-coerce ] when
-  [ n 256 div emit n 256 mod emit ] collect-bytes ;
+  n 2 int>be-bytes ;
 
 \ The byte of the last two digits.
 : _one ( v:bytes -- bytes )

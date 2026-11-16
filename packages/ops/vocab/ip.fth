@@ -23,7 +23,7 @@ USING: defang ;
   s "^[0-9]{1,3}(?:\\.[0-9]{1,3}){3}$" "" regex:test not [ "not an IPv4 address" s _bad ] when
   s "." split [ str>int ] map
   dup [ 255 > ] any? [ "an IPv4 octet is over 255" s _bad ] when
-  0 [ swap 256 * + ] reduce ;
+  list>bytes 0 4 be-bytes>int ;
 
 : _v4? ( s:str -- bool )
   s "^[0-9]{1,3}(?:\\.[0-9]{1,3}){3}$" "" regex:test ;

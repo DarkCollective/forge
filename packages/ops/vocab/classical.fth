@@ -608,7 +608,7 @@ META: caesar-box-decrypt
 \ ---------------------------------------------------------------------------------------------
 
 : _be-unit ( u:int -- bytes )
-  { u 8 shr u 255 band } list>bytes ;
+  u 2 int>be-bytes ;
 
 \ A code point as the big-endian bytes of one or two UTF-16 code units.
 : _cp>be ( cp:int -- bytes )
@@ -651,7 +651,7 @@ META: caesar-box-decrypt
 \ UTF-16 bytes (an even number of them), little-endian or big-endian, as text.
 : _utf16>str ( b:bytes le:bool -- str )
   0 b len 2 div range
-  [ 2 * dup b swap nth swap 1 + b swap nth le [ swap ] when swap 8 shl bor ] map
+  [ 2 * b swap 2 le [ le-bytes>int ] [ be-bytes>int ] if ] map
   _units>str ;
 
 \ ---------------------------------------------------------------------------------------------

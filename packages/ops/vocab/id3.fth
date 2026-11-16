@@ -76,7 +76,7 @@ MEMO: _picture-types ( -- list )
   units [ units _fix ] mapi [ dup 0 >= swap 65279 <> and ] filter ;
 
 : _utf16-text ( b:bytes be:bool -- str )
-  0 b len 2 div range [ b swap be util:u16 ] map _utf16-codes codes>str ;
+  0 b len 2 div range [ 2 * b swap 2 be [ be-bytes>int ] [ le-bytes>int ] if ] map _utf16-codes codes>str ;
 
 \ UTF-16 with a byte order mark (FF FE little, FE FF big; none: little endian).
 : _utf16-bom ( b:bytes -- str )
@@ -183,10 +183,10 @@ MEMO: _picture-types ( -- list )
 \ The size field of the frame header at pos.
 : _frame-size ( b:bytes v:int pos:int -- int )
   {
-    [ v 2 = ] [ b pos 3 + 3 util:be-int ]
-    [ v 3 = ] [ b pos 4 + 4 util:be-int ]
+    [ v 2 = ] [ b pos 3 + 3 be-bytes>int ]
+    [ v 3 = ] [ b pos 4 + 4 be-bytes>int ]
     [ b pos 4 + _syncsafe? ] [ b pos 4 + _syncsafe ]
-    [ b pos 4 + 4 util:be-int ]
+    [ b pos 4 + 4 be-bytes>int ]
   } cond ;
 
 \ The record of the frame at pos: id, at (where its data starts), size, flags and next (where the next frame starts).
@@ -196,7 +196,7 @@ MEMO: _picture-types ( -- list )
     " declares " cat size int>str cat " bytes but only " cat b len pos v _hdrlen + - int>str cat
     " are left (truncated)" cat fail-coerce ] when
   { { "id" b pos pos v _idlen + slice bytes>latin1 } { "at" pos v _hdrlen + } { "size" size }
-    { "flags" v 2 = [ 0 ] [ b pos 8 + 2 util:be-int ] if } { "next" pos v _hdrlen + size + } } >record ;
+    { "flags" v 2 = [ 0 ] [ b pos 8 + 2 be-bytes>int ] if } { "next" pos v _hdrlen + size + } } >record ;
 
 : _frame-at ( b:bytes v:int pos:int -- record )
   b v pos b v pos _frame-size _frame-rec ;
@@ -280,7 +280,7 @@ MEMO: _picture-types ( -- list )
 
 \ A big-endian number of the bytes (0 when there are none).
 : _beall ( b:bytes -- int )
-  b len 0 = [ 0 ] [ b 0 b len util:be-int ] if ;
+  b len 0 = [ 0 ] [ b 0 b len be-bytes>int ] if ;
 
 \ POPM: an e-mail address, a rating byte and a counter.
 : _popm ( data:bytes -- str )
@@ -388,7 +388,7 @@ MEMO: _picture-types ( -- list )
 \ Where the frames start: after the extended header, which is skipped.
 : _ext-size ( v:int fl:int body:bytes -- int )
   v 2 > fl 64 band 0 <> and [
-    v 3 = [ body 0 4 util:be-int 4 + ] [ body 0 4 _syncsafe? [ body 0 _syncsafe ] [ 0 ] if ] if
+    v 3 = [ body 0 4 be-bytes>int 4 + ] [ body 0 4 _syncsafe? [ body 0 _syncsafe ] [ 0 ] if ] if
   ] [ 0 ] if ;
 
 : _v2b ( d:bytes v:int fl:int size:int body:bytes -- str )

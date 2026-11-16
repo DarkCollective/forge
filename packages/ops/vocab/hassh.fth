@@ -11,7 +11,7 @@ USING: md5 hex base64 ;
 
 \ Four bytes at p as a big-endian unsigned integer (the caller has checked that they are there).
 : _u32 ( d:bytes p:int -- int )
-  d p nth 24 shl d p 1 + nth 16 shl bor d p 2 + nth 8 shl bor d p 3 + nth bor ;
+  d p 4 be-bytes>int ;
 
 \ ---- the packet ----
 

@@ -670,7 +670,7 @@ MEMO: _preset-formats ( -- record )
   txt "^\\s*(?:0x)?([0-9a-fA-F]+)\\s*$" "" regex:find-all dup len 0 = [ "not a hexadecimal number" fail-coerce ] when
   0 nth "groups" get 0 nth
   input "hex-le" =
-  [ hex>bytes rev 256 digits>int ]
+  [ hex>bytes dup len 0 swap le-bytes>int ]
   [ 16 str>int-radix ] if ;
 
 \ A file time (ticks since 1601) written as decimal, as 16 hex digits, or as the 8 bytes in little-endian order.

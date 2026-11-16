@@ -50,7 +50,7 @@ IN: http
 
 \ The two hex digits of a byte, for the messages.
 : _hex2 ( b:int -- str )
-  { b } list>bytes bytes>hex ;
+  b 1 int>be-bytes bytes>hex ;
 
 \ The size and whether it is too big to be one, of a run of hex digits. More than 13 significant digits is too big
 \ (they would not be exact in a double), whatever the maxIntBits limit says.

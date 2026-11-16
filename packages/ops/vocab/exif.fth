@@ -21,7 +21,7 @@ MEMO: _gps-names ( -- str )
 \ n bytes of d at p as a big-endian integer; E_COERCE when the data ends first.
 : _be ( d:bytes p:int n:int -- int )
   d p n "image data" util:need-bytes
-  d p n util:be-int ;
+  d p n be-bytes>int ;
 
 \ The same, little endian.
 : _le ( d:bytes p:int n:int -- int )
@@ -227,7 +227,7 @@ MEMO: _gps-names ( -- str )
 
 \ UTF-16 text (BMP only; a surrogate is U+FFFD), up to the first NUL.
 : _utf16 ( b:bytes le:bool -- str )
-  0 b len 2 div range [ b swap le not util:u16 dup util:surrogate? [ drop 65533 ] when ] map
+  0 b len 2 div range [ 2 * b swap 2 le [ le-bytes>int ] [ be-bytes>int ] if dup util:surrogate? [ drop 65533 ] when ] map
   codes>str "\x00" split 0 nth ;
 
 : _hex-bytes ( t:bytes count:int vstart:int -- str )

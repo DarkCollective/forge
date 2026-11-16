@@ -948,7 +948,7 @@ F8FF 00D2 00DA 00DB 00D9 0131 02C6 02DC 00AF 02D8 02D9 02DA 00B8 02DD 02DB 02C7"
 
 \ A UTF-16 code unit as two bytes.
 : _unit-bytes ( u:int be:bool -- bytes )
-  be [ { u 8 shr u 255 band } ] [ { u 255 band u 8 shr } ] if list>bytes ;
+  be [ u 2 int>be-bytes ] [ u 2 int>le-bytes ] if ;
 
 \ A code point as one or two UTF-16 code units.
 : _utf16-cp ( cp:int be:bool -- bytes )
