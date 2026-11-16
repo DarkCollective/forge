@@ -25,7 +25,7 @@ USING: crc deflate ;
 
 \ v as n little-endian bytes.
 : _le-bytes ( v:int n:int -- bytes )
-  v n util:int>be-bytes rev ;
+  v n int>be-bytes rev ;
 
 \ ---- DOS date and time (read as UTC) ----
 

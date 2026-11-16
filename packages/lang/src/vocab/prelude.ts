@@ -15,9 +15,10 @@
  */
 
 /**
- * The FL prelude of `core` (docs/LANGUAGE-0.2.md section 13): twenty `util` words promoted to the
- * core vocabulary, as verbatim copies of the `packages/ops/vocab/util.fth` definitions with
- * `raise:range` replaced by `fail-range`. `createRuntime` loads this unit trusted, into `core`.
+ * The FL prelude of `core` (docs/LANGUAGE-0.2.md section 13): twenty words promoted from the `util`
+ * vocabulary to the core vocabulary, with the bodies the `util` definitions had (`raise:range`
+ * replaced by `fail-range`). The `util` copies are gone, so callers use these words unqualified.
+ * `createRuntime` loads this unit trusted, into `core`.
  * `_lead-step` is the private helper of `count-leading`.
  *
  * The promoted words are: between? cp>str int>be-bytes space? starts-with? repeat-str pad-hex

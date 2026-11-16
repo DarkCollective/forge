@@ -16,7 +16,7 @@ IN: hexdump
 
 \ The offset as 8 lowercase hex digits.
 : _offset ( v:int -- str )
-  v 8 util:pad-hex ;
+  v 8 pad-hex ;
 
 \ Hex digits in groups of four (two bytes), separated by a space.
 : _group ( h:str -- str )

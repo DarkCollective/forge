@@ -148,22 +148,6 @@ CHOICE: sha3-size
   option 512 "512-bit digest." ;
 ;
 
-\ ---- words promoted to core ----
-
-\ These twenty words are in core now, with the same effect and behaviour. The util twins stay until the cleanup after
-\ Phase 2 removes them and their callers use the core word. Three of them call the core word. The others keep their own
-\ body (the same text as the core word): a call through a wrapper costs about three more interpreter steps, and these
-\ words run once per character or byte in many ops, so a wrapper would push large inputs over the step limit.
-
-: int>be-bytes ( v:int n:int -- bytes )
-  "The low n bytes of v, most significant first (big-endian); higher bytes are dropped and an n of 0 gives no bytes." doc
-  0 n range [ n 1 - swap - 8 * v swap shr 255 band ] map list>bytes ;
-
-: pad-hex ( v:int n:int -- str )
-  "The lower-case hex digits of a non-negative integer, left-padded with zeros to at least n digits (never truncated)." doc
-  v 16 int>str-radix dup len n <
-  [ n over len - dup 16 <= [ "0000000000000000" swap 0 swap slice ] [ "0" swap repeat-str ] if swap cat ]
-  when ;
 \ ---- characters and text ----
 
 : u16 ( b:bytes i:int big-endian:bool -- int )

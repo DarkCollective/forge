@@ -154,7 +154,7 @@ META: ja3s
   raw len 0 = [ "000000000000" ] [ raw str>bytes "256" sha2:digest bytes>hex 0 12 slice ] if ;
 
 : _hex4 ( items:list -- list )
-  items [ 4 util:pad-hex ] map ;
+  items [ 4 pad-hex ] map ;
 
 \ ---- JA4 ----
 
@@ -234,7 +234,7 @@ META: ja4
 \ JA4S: a (protocol, version, number of extensions, ALPN), the chosen cipher suite and the hash of the extension types in order.
 : _ja4s-head ( h:record proto:str -- str )
   proto h _top-version _ver2 cat h "ext-types" get len _count2 cat h "alpn" get _alpn2 cat "_" cat
-  h "ciphers" get 0 nth 4 util:pad-hex cat "_" cat ;
+  h "ciphers" get 0 nth 4 pad-hex cat "_" cat ;
 
 : _ja4s-out ( head:str raw:str fmt:str -- str )
   fmt {

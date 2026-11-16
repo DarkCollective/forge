@@ -149,31 +149,6 @@ describe("util:check-symbols", () => {
   });
 });
 
-describe("util:int>be-bytes", () => {
-  const be = async (v: number | bigint, n: number) =>
-    (await value("util:int>be-bytes", [int(v), int(n)])) as Uint8Array;
-
-  test("the low n bytes, most significant first", async () => {
-    expect(await be(0x01020304, 4)).toEqual(Uint8Array.of(1, 2, 3, 4));
-    expect(await be(0x0102030405, 5)).toEqual(Uint8Array.of(1, 2, 3, 4, 5));
-  });
-
-  test("pads with zeros and truncates high bytes", async () => {
-    expect(await be(0x0102, 4)).toEqual(Uint8Array.of(0, 0, 1, 2));
-    expect(await be(0x01020304, 2)).toEqual(Uint8Array.of(3, 4));
-    expect(await be(0, 3)).toEqual(Uint8Array.of(0, 0, 0));
-  });
-
-  test("n of 0 gives no bytes; a single byte masks to 255", async () => {
-    expect(await be(0x1234, 0)).toEqual(new Uint8Array(0));
-    expect(await be(0x1ff, 1)).toEqual(Uint8Array.of(255));
-  });
-
-  test("beyond 32 bits (a 64-bit value)", async () => {
-    expect(await be(0x0102030405060708n, 8)).toEqual(Uint8Array.of(1, 2, 3, 4, 5, 6, 7, 8));
-  });
-});
-
 // ---- the words promoted at the close-out of Phase 5 wave 1 ----
 
 const bytesV = (...xs: number[]): Value => valueHelpers.bytes(Uint8Array.from(xs));
@@ -194,26 +169,13 @@ async function failure(qname: string, args: Value[]): Promise<{ code: string; me
   return { code: r.error.code, message: r.error.message };
 }
 
-describe("util:byte>hex and util:pad-hex", () => {
+describe("util:byte>hex", () => {
   test("byte>hex is two upper-case digits", async () => {
     for (const b of [0, 9, 10, 15, 16, 127, 171, 255]) {
       expect(await value("util:byte>hex", [int(b)])).toBe(
         b.toString(16).toUpperCase().padStart(2, "0"),
       );
     }
-  });
-
-  test.each([
-    [255, 4, "00ff"],
-    [255, 2, "ff"],
-    [255, 1, "ff"],
-    [0, 0, "0"],
-    [0, 3, "000"],
-    [4096, 8, "00001000"],
-    [0xdeadbeef, 8, "deadbeef"],
-    [0x123456789, 8, "123456789"],
-  ])("pad-hex %i to %i digits is %s", async (v, n, expected) => {
-    expect(await value("util:pad-hex", [int(v), int(n)])).toBe(expected);
   });
 });
 
