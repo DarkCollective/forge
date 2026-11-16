@@ -551,6 +551,14 @@ export class ForgeInput extends LitElement {
         <button type="button" @click=${this.clear} ?disabled=${tab.bytes.length === 0}>
           Clear
         </button>
+        <button
+          type="button"
+          aria-haspopup="dialog"
+          title="Search for recipes that make this input readable"
+          @click=${() => actions.openDialog("magic")}
+        >
+          Magic
+        </button>
         <input id="file" type="file" multiple hidden @change=${this.onFilePicked} />
       </header>
       <div

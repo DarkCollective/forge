@@ -23,6 +23,16 @@ import { feature as recipe } from "./recipe/index.js";
 import { feature as io } from "./io/index.js";
 import { feature as bake } from "./bake/index.js";
 import { feature as consolePane } from "./console/index.js";
+import { feature as magic } from "./magic/index.js";
 
 // persist first: it loads favourites, options and user words before the bake controller reads them.
-export const features: readonly Feature[] = [persist, ops, params, recipe, io, bake, consolePane];
+export const features: readonly Feature[] = [
+  persist,
+  ops,
+  params,
+  recipe,
+  io,
+  bake,
+  consolePane,
+  magic,
+];

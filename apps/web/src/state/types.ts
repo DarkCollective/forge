@@ -25,7 +25,7 @@ export type ThemePreference = "system" | "light" | "dark" | "contrast";
 export type ResolvedTheme = "light" | "dark" | "contrast";
 
 export type PaneId = "ops" | "recipe" | "input" | "output" | "console";
-export type DialogId = "share" | "save" | "open" | "fl" | "shortcuts" | "op-help";
+export type DialogId = "share" | "save" | "open" | "fl" | "shortcuts" | "op-help" | "magic";
 
 /** Line ending shown and produced by the text editor of an input tab. */
 export type EolName = "lf" | "crlf" | "cr";
