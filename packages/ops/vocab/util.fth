@@ -376,11 +376,11 @@ CHOICE: sha3-size
 
 : letters? ( t:str -- bool )
   "True when t is not empty and every character is an ASCII letter (either case)." doc
-  t str>bytes [ letter? not ] filter len 0 = t len 0 > and ;
+  t str>bytes [ letter? ] all? t len 0 > and ;
 
 : digits? ( t:str -- bool )
   "True when t is not empty and every character is an ASCII decimal digit." doc
-  t str>bytes [ dec-digit? not ] filter len 0 = t len 0 > and ;
+  t str>bytes [ dec-digit? ] all? t len 0 > and ;
 
 : letter-indices ( s:str -- bytes )
   "The letters of s (either case) as numbers 0 to 25, A = 0. A character that is not a letter gives a meaningless number, so check with letters? first; a character above U+00FF is E_RANGE." doc
@@ -404,7 +404,7 @@ MEMO: letter-table ( -- bytes )
 
 : index-of ( p:bytes i:int -- int )
   "The position of the first element of p equal to i; E_RANGE when there is none. For a permutation this is the inverse permutation at i." doc
-  0 p len range [ p swap nth i = ] filter 0 nth ;
+  p [ i = ] find dup 0 < [ drop { } 0 nth ] when ;
 
 : perm-invert ( p:bytes -- bytes )
   "The inverse of a permutation of 0 to len-1 given as bytes: element p[i] = j becomes element j = i. E_RANGE if p is not a permutation." doc
@@ -510,7 +510,7 @@ MEMO: ita2-table ( -- bytes )
 : from-bp ( s:str -- bytes )
   "The ITA2 codes (0 to 31) of text in Bletchley Park notation, either case, white space ignored. Any other character is E_COERCE." doc
   s str>bytes ita2-table translate :> codes
-  codes [ 255 = ] filter len 0 <>
+  codes [ 255 = ] any?
   [ "not an ITA2 character: use the letters, 3 4 5 8 9 / (and + and -); white space is ignored" fail-coerce ] when
   codes [ 254 <> ] filter ;
 
@@ -518,8 +518,8 @@ MEMO: ita2-table ( -- bytes )
 
 \ acc with c appended, when c is in alpha and not yet in acc.
 : _keyed-alphabet-step ( acc:bytes alpha:bytes c:int -- bytes )
-  alpha [ c = ] filter len 0 >
-  acc [ c = ] filter len 0 =
+  alpha [ c = ] any?
+  acc [ c = ] any? not
   and
   [ acc c 1 int>be-bytes cat ] [ acc ] if ;
 
@@ -608,7 +608,7 @@ MEMO: ita2-table ( -- bytes )
 
 : printable-bytes? ( data:bytes -- bool )
   "True when data is not empty and every byte is printable ASCII (32 to 126)." doc
-  data len 0 > data [ dup 32 >= swap 126 <= and ] filter len data len = and ;
+  data len 0 > data [ dup 32 >= swap 126 <= and ] all? and ;
 
 : name-in-table ( table:str key:str -- str )
   "The name that a table gives to a key. The table is text of entries between bars, each as key:name, for example |1:Blues|2:Classic Rock| (a leading and a trailing bar); the key is compared as text, so write a number in the form the table uses. The empty string when the key is not there." doc

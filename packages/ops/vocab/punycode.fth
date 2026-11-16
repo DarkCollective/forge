@@ -83,7 +83,7 @@ CHOICE: scope
   _acc ;
 
 : _ascii? ( s:str -- bool )
-  s str>codes [ 127 > ] filter len 0 = ;
+  s str>codes [ 128 < ] all? ;
 
 : _encode-dom-label ( label:str -- str )
   label _ascii? [ label ] [ "xn--" label str>codes _encode-label cat ] if ;
@@ -140,7 +140,7 @@ META: encode
   128 _n! 0 _i! 72 _bias! 0 _in!
   cps _last-dash dup 0 >=
   [ dup 1 + _in!
-    cps swap 0 swap slice dup [ 127 > ] filter len 0 >
+    cps swap 0 swap slice dup [ 127 > ] any?
     [ "a character before the last - is not ASCII" fail-coerce ] when
     codes>str _out! ]
   [ drop "" _out! ] if

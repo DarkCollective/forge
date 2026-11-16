@@ -178,7 +178,7 @@ CHOICE: encryption-scheme
   [ "no PEM block found: " what cat " is expected (-----BEGIN ...-----)" cat fail-range ]
   [ blocks [ "label" get ] map ", " join
     "the PEM text has no " what cat " (found: " cat swap cat ")" cat
-    blocks [ "label" get "EC PRIVATE KEY" = ] filter len 0 > [ " (use the ecdsa words for elliptic curve keys)" cat ] when
+    blocks [ "label" get "EC PRIVATE KEY" = ] any? [ " (use the ecdsa words for elliptic curve keys)" cat ] when
     fail-range ] if ;
 
 \ The first block whose label is in labels. None is E_RANGE, naming what was expected and the labels found.

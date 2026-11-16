@@ -1061,11 +1061,10 @@ MEMO: _month-names ( -- list )
 
 \ The position of the first word that looks like a key type, or -1.
 : _ssh-type-index ( words:list -- int )
-  0 words len range [ words swap nth _ssh-type-token? ] filter
-  dup len 0 = [ drop -1 ] [ 0 nth ] if ;
+  words [ _ssh-type-token? ] find ;
 
 : _ssh-hexish? ( s:str -- bool )
-  s len 2 mod 0 = s len 0 > and s str>codes [ hex-digit? not ] filter len 0 = and ;
+  s len 2 mod 0 = s len 0 > and s str>codes [ hex-digit? ] all? and ;
 
 : _ssh-decode ( token:str fmt:str -- bytes )
   {

@@ -305,7 +305,7 @@ MEMO: pattern-sets ( -- record )
 
 : _wheels ( name:str custom:list -- list )
   pattern-sets name get custom merge-patterns
-  dup [ len 0 = ] filter len 0 >
+  dup [ len 0 = ] any?
   [ "pattern custom needs all twelve wheel patterns (chi1 to chi5, psi1 to psi5, mu37, mu61)" fail-range ] when ;
 
 : _lorenz ( data:str model:str p5:bool pattern:str custom:list starts:list input:str output:str shifts:str dec:bool -- str )

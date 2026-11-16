@@ -105,7 +105,7 @@ IN: lines
 : _parse-hex ( s:str -- list )
   {
     [ s len 0 = ] [ { false 0 0 } ]
-    [ s str>bytes [ hex-digit? not ] core:filter len 0 = ] [ { true s 16 str>int-radix 0 } ]
+    [ s str>bytes [ hex-digit? ] all? ] [ { true s 16 str>int-radix 0 } ]
     [ s _parse-hex-slow ]
   } cond ;
 

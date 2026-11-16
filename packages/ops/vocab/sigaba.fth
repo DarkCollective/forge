@@ -141,7 +141,7 @@ MEMO: _out-table-dec ( -- bytes )
 \ The data as letters 0 to 25: other bytes are dropped, or E_COERCE when other is error.
 : _letters-in ( data:bytes decrypt:bool other:str -- bytes )
   data decrypt _in-table translate
-  dup [ 255 = ] filter len 0 > other "error" = and
+  dup [ 255 = ] any? other "error" = and
   [ "a byte is neither a letter nor a space" fail-coerce ] when
   [ 254 < ] filter ;
 

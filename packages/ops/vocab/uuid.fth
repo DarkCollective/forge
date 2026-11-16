@@ -29,7 +29,7 @@ USING: random clock md5 sha1 ;
 \ The 16 bytes of the text of a UUID (hyphens, braces, a urn:uuid: prefix and either case are accepted); E_COERCE
 \ for anything else.
 : _parse ( s:str -- bytes )
-  s _flat dup len 32 = over str>codes [ hex-digit? ] filter len 32 = and
+  s _flat dup len 32 = over str>codes [ hex-digit? ] all? and
   [ hex>bytes ] [ drop "not a UUID: it needs 32 hex digits (hyphens, braces and a urn:uuid: prefix are allowed)" fail-coerce ] if ;
 
 \ ---- the fields ----
