@@ -11,7 +11,7 @@ USING: md5 hex base64 ;
 
 \ Four bytes at p as a big-endian unsigned integer (the caller has checked that they are there).
 : _u32 ( d:bytes p:int -- int )
-  d p nth 24 shl d p 1 + nth 16 shl bor d p 2 + nth 8 shl bor d p 3 + nth bor ;
+  d p 4 be-bytes>int ;
 
 \ ---- the packet ----
 
@@ -34,7 +34,7 @@ USING: md5 hex base64 ;
 
 \ The text of a name-list: US-ASCII, no control characters or spaces (RFC 4251 section 5).
 : _ascii ( b:bytes p:int -- str )
-  b bytes>list [ 33 126 between? not ] filter len 0 > [
+  b bytes>list [ 33 126 between? not ] any? [
     "a name-list contains a byte that is not printable US-ASCII, at offset " p int>str cat fail-coerce ] when
   b bytes>latin1 ;
 

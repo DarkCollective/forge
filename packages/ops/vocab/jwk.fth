@@ -19,23 +19,26 @@ MEMO: _rows ( -- list )
 
 \ The row (name oid size kind) of a curve by its JWK name, else E_COERCE.
 : _by-name ( name:str -- list )
-  _rows [ 0 nth name = ] filter
-  dup len 0 = [ "unsupported curve '" name cat "'" cat fail-coerce ] when
-  0 nth ;
+  _rows :> rows
+  rows [ 0 nth name = ] find :> i
+  i 0 < [ "unsupported curve '" name cat "'" cat fail-coerce ] when
+  rows i nth ;
 
 \ The row of a curve by its OID.
 : _by-oid ( oid:str -- list )
-  _rows [ 1 nth oid = ] filter
-  dup len 0 = [ "unsupported curve " oid cat fail-coerce ] when
-  0 nth ;
+  _rows :> rows
+  rows [ 1 nth oid = ] find :> i
+  i 0 < [ "unsupported curve " oid cat fail-coerce ] when
+  rows i nth ;
 
 : _size ( row:list -- int )
   row 2 nth str>int ;
 
 \ The JWK name of the Ed25519, X25519, Ed448 or X448 algorithm OID, else the empty string.
 : _okp-name ( oid:str -- str )
-  _rows [ 1 nth oid = ] filter
-  dup len 0 = [ drop "" ] [ 0 nth 0 nth ] if ;
+  _rows :> rows
+  rows [ 1 nth oid = ] find :> i
+  i 0 < [ "" ] [ rows i nth 0 nth ] if ;
 
 : _b64u ( b:bytes -- str )
   b false util:b64url-encode bytes>latin1 ;
@@ -114,8 +117,9 @@ MEMO: _rows ( -- list )
 
 \ The public point of an ECPrivateKey: its [1] publicKey, else derived from the private key d.
 : _ec-point ( crv:str ec:record d:bytes -- bytes )
-  ec asn1:children [ 1 asn1:context? ] filter
-  dup len 0 = [ drop crv d jwk:_public ] [ 0 nth 0 asn1:child asn1:node>bits drop ] if ;
+  ec asn1:children :> kids
+  kids [ 1 asn1:context? ] find :> i
+  i 0 < [ crv d jwk:_public ] [ kids i nth 0 asn1:child asn1:node>bits drop ] if ;
 
 : _ec-private-d ( crv:str ec:record d:bytes -- record )
   crv crv ec d _ec-point d _ec-jwk ;
@@ -262,7 +266,7 @@ META: from-pem
 
 \ ---- RSA ----
 
-: _rsa-alg ( -- bytes )
+MEMO: _rsa-alg ( -- bytes )
   "1.2.840.113549.1.1.1" asn1:tlv-null _alg-id ;
 
 : _rsa-der ( jwk:record -- bytes )

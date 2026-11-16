@@ -72,7 +72,7 @@ IN: diff
 
 \ The lines covered, counting every run that is not of the kind skip.
 : _span ( runs:list skip:int -- int )
-  runs [ dup 0 nth skip = [ drop 0 ] [ 3 nth ] if ] map 0 [ + ] reduce ;
+  runs [ dup 0 nth skip = [ drop 0 ] [ 3 nth ] if ] map sum ;
 
 \ A range of a hunk header: the first line number (the line before when the range is empty) and the count unless 1.
 : _range ( s:int count:int -- str )

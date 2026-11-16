@@ -10,7 +10,7 @@ IN: hex
 
 \ The two lower-case digits of every byte value, by value.
 MEMO: _pairs ( -- list )
-  0 256 range [ { } swap append list>bytes bytes>hex ] map ;
+  0 256 range [ 1 int>be-bytes bytes>hex ] map ;
 
 \ The digits of data with sep after each byte, less the last sep. data must not be empty.
 : _delimited ( data:bytes sep:str -- str )

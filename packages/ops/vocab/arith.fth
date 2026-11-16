@@ -173,7 +173,7 @@ IN: arith
 \ The exact sum { m s } of the numbers: all written at the largest scale, then added as integers.
 : _total ( ds:list -- list )
   ds _scale-of :> s
-  ds s _aligned 0 [ + ] reduce s _norm ;
+  ds s _aligned sum s _norm ;
 
 : _mean ( ds:list -- list )
   ds _total { ds len 0 } _div ;

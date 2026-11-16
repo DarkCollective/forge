@@ -22,16 +22,16 @@ CHOICE: base32-alphabet
   0 8 range [ 7 swap - 5 * v swap shr 31 band alpha swap nth ] map list>bytes ;
 
 : _group ( p:bytes g:int alpha:bytes -- bytes )
-  p g 5 * g 5 * 5 + slice 256 digits>int alpha _chars ;
+  p g 5 * 5 be-bytes>int alpha _chars ;
 
 : _groups ( p:bytes alpha:bytes ng:int -- bytes )
   0 ng range [ p swap alpha _group ] map #[ ] bjoin ;
 
 : _encode ( data:bytes alpha:bytes padding:bool -- str )
   data { 0 0 0 0 } list>bytes 0 5 data len 5 mod - 5 mod slice cat
-  alpha data len 4 + 5 div _groups
-  0 data len 8 * 4 + 5 div slice bytes>latin1
-  padding [ dup len 8 mod 8 swap - 8 mod "========" 0 rot slice cat ] when ;
+  alpha data len 5 ceil-div _groups
+  0 data len 8 * 5 ceil-div slice bytes>latin1
+  padding [ dup len 8 mod 8 swap - 8 mod :> n "========" 0 n slice cat ] when ;
 
 : encode ( bytes alphabet:choice<base32-alphabet>=standard padding:bool=true -- str )
   "Encode bytes as Base32 text (RFC 4648 sections 6 and 7)." doc
@@ -78,7 +78,7 @@ META: encode
   [ core core len 1 - nth 1 core len 5 * 8 mod shl 1 - band 0 <>
     [ "non-zero bits after the end of the data" fail-coerce ] when ] when
   core { 0 0 0 0 0 0 0 } list>bytes 0 8 core len 8 mod - 8 mod slice cat
-  core len 7 + 8 div _ungroups
+  core len 8 ceil-div _ungroups
   0 core len 5 * 8 div slice ;
 
 : _decode ( data:bytes table:bytes -- bytes )

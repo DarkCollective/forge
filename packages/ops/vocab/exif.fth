@@ -21,19 +21,17 @@ MEMO: _gps-names ( -- str )
 \ n bytes of d at p as a big-endian integer; E_COERCE when the data ends first.
 : _be ( d:bytes p:int n:int -- int )
   d p n "image data" util:need-bytes
-  d p n util:be-int ;
+  d p n be-bytes>int ;
 
 \ The same, little endian.
 : _le ( d:bytes p:int n:int -- int )
   d p n "image data" util:need-bytes
-  d p p n + slice rev 256 digits>int ;
+  d p n le-bytes>int ;
 
 \ n bytes at p of the TIFF block as an unsigned integer in its byte order ("II" is little endian).
 : _u ( t:bytes p:int n:int -- int )
   t p n "Exif data" util:need-bytes
-  t p p n + slice
-  t 0 nth 73 = [ rev ] [ ] if
-  256 digits>int ;
+  t 0 nth 73 = [ t p n le-bytes>int ] [ t p n be-bytes>int ] if ;
 
 \ The same as a signed integer.
 : _s ( t:bytes p:int n:int -- int )
@@ -41,7 +39,8 @@ MEMO: _gps-names ( -- str )
 
 \ The bytes of d from from up to to, cut at the end of the data; empty when from is past it.
 : _clip ( d:bytes from:int to:int -- bytes )
-  to d len min dup from < [ drop #[ ] ] [ d from rot slice ] if ;
+  to d len min :> end
+  end from < [ #[ ] ] [ d from end slice ] if ;
 
 \ ---- finding the Exif block ----
 
@@ -51,7 +50,7 @@ MEMO: _gps-names ( -- str )
   [ d p nth 255 = d p 1 + nth 225 = and d p 4 + p 10 + slice #[ 45 78 69 66 00 00 ] = and ] [ false ] if ;
 
 : _standalone? ( m:int -- bool )
-  m 216 = m 1 = or m 208 >= m 215 <= and or ;
+  m 216 = m 1 = or m 208 215 between? or ;
 
 \ Where the segment after the one at p (marker m) starts; -1 at the start of the scan or the end of the image.
 : _jpeg-after ( d:bytes p:int m:int -- int )
@@ -175,13 +174,17 @@ MEMO: _gps-names ( -- str )
 
 \ The value of the tag in the IFD at off, as an offset; -1 when the IFD has no such tag.
 : _pointer ( t:bytes off:int tag:int -- int )
-  t off _ifd-entries [ "tag" get tag = ] filter
-  dup len 0 = [ drop -1 ] [ 0 nth "at" get t swap 4 _u ] if ;
+  t off _ifd-entries :> entries
+  entries [ "tag" get tag = ] find :> i
+  i 0 < [ -1 ] [ entries i nth "at" get t swap 4 _u ] if ;
 
 \ ---- values ----
 
+MEMO: _type-sizes ( -- list )
+  { 0 1 1 2 4 8 1 1 2 4 8 4 8 4 } ;
+
 : _tsize ( type:int -- int )
-  type 0 > type 13 <= and [ { 0 1 1 2 4 8 1 1 2 4 8 4 8 4 } type nth ] [ 0 ] if ;
+  type 0 > type 13 <= and [ _type-sizes type nth ] [ 0 ] if ;
 
 \ n/d as a decimal with up to six places (cut, not rounded), without trailing zeros.
 : _decimal-abs ( n:int d:int -- str )
@@ -227,7 +230,7 @@ MEMO: _gps-names ( -- str )
 
 \ UTF-16 text (BMP only; a surrogate is U+FFFD), up to the first NUL.
 : _utf16 ( b:bytes le:bool -- str )
-  0 b len 2 div range [ b swap le not util:u16 dup util:surrogate? [ drop 65533 ] when ] map
+  0 b len 2 div range [ 2 * b swap 2 le [ le-bytes>int ] [ be-bytes>int ] if dup util:surrogate? [ drop 65533 ] when ] map
   codes>str "\x00" split 0 nth ;
 
 : _hex-bytes ( t:bytes count:int vstart:int -- str )
@@ -258,7 +261,7 @@ MEMO: _gps-names ( -- str )
 
 \ The Windows XP tags (XPTitle ... XPSubject) are UTF-16LE text in BYTE values.
 : _xp? ( tag:int -- bool )
-  tag 40091 >= tag 40095 <= and ;
+  tag 40091 40095 between? ;
 
 : _xp-text ( t:bytes count:int vstart:int -- str )
   t vstart vstart count 1024 min + slice true _utf16 ;

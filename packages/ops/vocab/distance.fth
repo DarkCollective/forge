@@ -21,10 +21,11 @@ MEMO: _pop-table ( -- bytes )
 
 : _bytes-distance ( a:bytes b:bytes unit:str -- int )
   a len b len <> [ "the samples must be of equal length" fail-coerce ] when
-  a len 0 =
-  [ 0 ]
-  [ a b bxor unit "bit" = [ _bit-count ] [ _nonzero ] if ]
-  if ;
+  {
+    [ a len 0 = ] [ 0 ]
+    [ unit "bit" = ] [ a b bxor _bit-count ]
+    [ a b bxor _nonzero ]
+  } cond ;
 
 : _codes-distance ( a:list b:list -- int )
   a len b len <> [ "the samples must be of equal length" fail-coerce ] when

@@ -82,7 +82,7 @@ USING: base64 ;
 : der>int ( content:bytes -- int )
   "The signed big-endian two's complement integer of INTEGER content bytes (any size). No bytes is E_COERCE. Shared word." doc
   content len 0 = [ "an INTEGER has no content bytes" fail-coerce ] when
-  content 256 digits>int
+  content 0 content len be-bytes>int
   content 0 nth 127 > [ 1 content len 8 * shl - ] when ;
 
 : node>int ( node:record -- int )
@@ -111,9 +111,13 @@ USING: base64 ;
   dup 0 > node "len" get 1 = and [ "an empty BIT STRING declares unused bits" node _where cat fail-coerce ] when
   node "value" get 1 node "len" get slice swap ;
 
+\ The universal tag numbers of the string types.
+MEMO: _string-tags ( -- list )
+  { 12 18 19 20 21 22 23 24 25 26 27 28 30 } ;
+
 : node>text ( node:record -- str )
   "The text of a string node (UTF8String as UTF-8, BMPString as UTF-16BE, UniversalString as UTF-32BE, PrintableString, IA5String, NumericString, VisibleString, TeletexString and the like as one character per byte, also UTCTime and GeneralizedTime); another type, or bytes the type cannot hold, is E_COERCE. Shared word." doc
-  { 12 18 19 20 21 22 23 24 25 26 27 28 30 } node "tag" get contains?
+  _string-tags node "tag" get contains?
   node "class" get "universal" = and not [ "expected a string type" node _where cat fail-coerce ] when
   node "tag" get node "value" get _string ;
 
@@ -226,7 +230,7 @@ USING: base64 ;
 
 : _check-label ( label:str -- )
   label len 0 = [ "the PEM label cannot be empty" fail-range ] when
-  label str>codes [ 32 126 between? not ] filter len 0 <>
+  label str>codes [ 32 126 between? not ] any?
   [ "the PEM label must be printable ASCII on one line" fail-range ] when
   label "-----" split len 1 > [ "the PEM label cannot contain five hyphens" fail-range ] when ;
 

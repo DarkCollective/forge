@@ -64,7 +64,8 @@ CHOICE: bcd-scheme
 
 : _check-digits ( digits:list -- )
   digits len 0 = [ "a number needs at least one digit" fail-coerce ] when
-  digits [ dup 48 < swap 57 > or ] filter len 0 >
+  \ Comparisons, not between?: this scan runs once per digit, and between? takes the 64 KiB encode from 2,785,410 to 3,113,090 steps.
+  digits [ dup 48 < swap 57 > or ] any?
   [ "not a decimal digit" fail-coerce ] when ;
 
 \ The nibbles of the digits, followed by the sign nibble when signed.
@@ -129,7 +130,7 @@ META: encode
 : _check-zones ( data:bytes signed:bool -- )
   data bytes>list [ 4 shr ] map
   signed [ dup len 1 - 0 swap slice ] when
-  [ 0 <> ] filter len 0 >
+  [ 0 <> ] any?
   [ "an unpacked byte has a non-zero high nibble" fail-coerce ] when ;
 
 \ The sign nibble: the last nibble of packed data, or the high nibble of the last byte.
@@ -153,7 +154,7 @@ META: encode
 
 : _digits-text ( ds:list table:bytes -- str )
   ds [ table swap nth ] map
-  dup [ 255 = ] filter len 0 > [ "a nibble is not a digit of the scheme" fail-coerce ] when
+  dup [ 255 = ] any? [ "a nibble is not a digit of the scheme" fail-coerce ] when
   [ 48 + ] map codes>str ;
 
 : _decode ( data:bytes scheme:str packed:bool signed:bool -- str )

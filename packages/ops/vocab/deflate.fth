@@ -43,7 +43,7 @@ USING: adler32 crc ;
 
 : _zlib-check-header ( data:bytes s:int -- )
   data len s - 2 < [ "zlib data is shorter than its two header bytes" fail-coerce ] when
-  data s nth 8 shl data s 1 + nth bor 31 mod 0 <> [
+  data s 2 be-bytes>int 31 mod 0 <> [
     "not zlib data: the header check (a multiple of 31) fails" fail-coerce ] when
   data s nth 15 band 8 <> [ "not zlib data: the compression method is not deflate (8)" fail-coerce ] when
   data s nth 4 shr 7 > [ "zlib header window size is over 32 KiB" fail-coerce ] when
@@ -109,7 +109,7 @@ USING: adler32 crc ;
 : _gz-extra-end ( p:int data:bytes flg:int -- int )
   flg 4 band 0 = [ p ] [
     data p 2 "gzip data" util:need-bytes
-    data p 2 util:le-int p + 2 +
+    data p 2 le-bytes>int p + 2 +
     dup data len > [ "the gzip extra field runs past the end of the data" fail-coerce ] when ] if ;
 
 \ The index of the first zero byte at or after p, or the length when there is none; it looks at
@@ -155,7 +155,7 @@ USING: adler32 crc ;
   data e 8 "gzip data" util:need-bytes
   data e e 4 + slice out _crc32 rev <> [
     "gzip checksum mismatch: the CRC-32 of the output differs from the trailer (corrupt data)" fail-coerce ] when
-  data e 4 + 4 util:le-int out len 4294967296 mod <> [
+  data e 4 + 4 le-bytes>int out len 4294967296 mod <> [
     "gzip length mismatch: the size in the trailer differs from the output (corrupt data)" fail-coerce ] when ;
 
 : _gz-member ( data:bytes m:int verify:bool -- bytes int )

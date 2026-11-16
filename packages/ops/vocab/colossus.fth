@@ -157,14 +157,14 @@ USING: lorenz ;
 
 \ The sum of +1/-1 over the positions for every setting, the first wheel's start major.
 : _scores ( g:list siga:list la:int lb:int -- list )
-  0 la range [ g siga la lb _srow ] map { } [ cat ] reduce ;
+  [ 0 la range [ g siga la lb _srow emit-all ] each ] collect ;
 
 0 VARIABLE _m
 0 VARIABLE _la
 0 VARIABLE _lb
 
 : _sums ( z:bytes terms:list pats:list starts:list a:int b:int target:int -- list )
-  terms [ 16 band 0 > ] filter len 0 > [ z len 1 - ] [ z len ] if _m!
+  terms [ 16 band 0 > ] any? [ z len 1 - ] [ z len ] if _m!
   _m 1 < [ "the message is too short for a differenced term" fail-range ] when
   pats a 1 - nth a _need len _la!
   pats b 1 - nth b _need len _lb!

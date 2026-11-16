@@ -49,24 +49,18 @@ MEMO: _picture-types ( -- list )
 
 \ ---- text ----
 
-: _hi? ( u:int -- bool )
-  u 55296 >= u 56319 <= and ;
-
-: _lo? ( u:int -- bool )
-  u 56320 >= u 57343 <= and ;
-
 \ Whether the unit at i is a low (or high) surrogate; false outside the list.
 : _lo-at? ( units:list i:int -- bool )
-  i 0 >= i units len < and [ units i nth _lo? ] [ false ] if ;
+  i 0 >= i units len < and [ units i nth 56320 57343 between? ] [ false ] if ;
 
 : _hi-at? ( units:list i:int -- bool )
-  i 0 >= i units len < and [ units i nth _hi? ] [ false ] if ;
+  i 0 >= i units len < and [ units i nth 55296 56319 between? ] [ false ] if ;
 
 \ One UTF-16 unit as a code point: a surrogate pair becomes one code point, the second half of a pair -1.
 : _fix ( u:int i:int units:list -- int )
   {
-    [ u _hi? [ units i 1 + _lo-at? ] [ false ] if ] [ 65536 u 55296 - 1024 * + units i 1 + nth 56320 - + ]
-    [ u _lo? [ units i 1 - _hi-at? ] [ false ] if ] [ -1 ]
+    [ u 55296 56319 between? [ units i 1 + _lo-at? ] [ false ] if ] [ 65536 u 55296 - 1024 * + units i 1 + nth 56320 - + ]
+    [ u 56320 57343 between? [ units i 1 - _hi-at? ] [ false ] if ] [ -1 ]
     [ u util:surrogate? ] [ 65533 ]
     [ u ]
   } cond ;
@@ -76,7 +70,7 @@ MEMO: _picture-types ( -- list )
   units [ units _fix ] mapi [ dup 0 >= swap 65279 <> and ] filter ;
 
 : _utf16-text ( b:bytes be:bool -- str )
-  0 b len 2 div range [ b swap be util:u16 ] map _utf16-codes codes>str ;
+  0 b len 2 div range [ 2 * b swap 2 be [ be-bytes>int ] [ le-bytes>int ] if ] map _utf16-codes codes>str ;
 
 \ UTF-16 with a byte order mark (FF FE little, FE FF big; none: little endian).
 : _utf16-bom ( b:bytes -- str )
@@ -100,8 +94,8 @@ MEMO: _picture-types ( -- list )
 
 \ The offset of the first aligned 00 00 of UTF-16 data (looked for in the first 1,024 bytes), else its length.
 : _nul16-at ( b:bytes -- int )
-  0 b len 2 div 512 min range [ 2 * ] map [ b swap _z16? ] filter
-  dup len 0 = [ drop b len ] [ 0 nth ] if ;
+  0 b len 2 div 512 min range [ 2 * b swap _z16? ] find :> i
+  i 0 < [ b len ] [ i 2 * ] if ;
 
 \ ( before after ): the bytes up to the terminator of the encoding and those after it.
 : _split ( b:bytes enc:int -- bytes bytes )
@@ -165,7 +159,7 @@ MEMO: _picture-types ( -- list )
   1000 ;
 
 : _idchar? ( c:int -- bool )
-  c 48 >= c 57 <= and c 65 >= c 90 <= and or ;
+  c 48 57 between? c 65 90 between? or ;
 
 : _idlen ( v:int -- int )
   v 2 = [ 3 ] [ 4 ] if ;
@@ -177,16 +171,16 @@ MEMO: _picture-types ( -- list )
 : _frame-ok? ( pos:int b:bytes v:int -- bool )
   pos v _hdrlen + b len <= [
     b pos nth 0 <>
-    b pos pos v _idlen + slice [ _idchar? ] filter len v _idlen = and
+    b pos pos v _idlen + slice [ _idchar? ] all? and
   ] [ false ] if ;
 
 \ The size field of the frame header at pos.
 : _frame-size ( b:bytes v:int pos:int -- int )
   {
-    [ v 2 = ] [ b pos 3 + 3 util:be-int ]
-    [ v 3 = ] [ b pos 4 + 4 util:be-int ]
+    [ v 2 = ] [ b pos 3 + 3 be-bytes>int ]
+    [ v 3 = ] [ b pos 4 + 4 be-bytes>int ]
     [ b pos 4 + _syncsafe? ] [ b pos 4 + _syncsafe ]
-    [ b pos 4 + 4 util:be-int ]
+    [ b pos 4 + 4 be-bytes>int ]
   } cond ;
 
 \ The record of the frame at pos: id, at (where its data starts), size, flags and next (where the next frame starts).
@@ -196,7 +190,7 @@ MEMO: _picture-types ( -- list )
     " declares " cat size int>str cat " bytes but only " cat b len pos v _hdrlen + - int>str cat
     " are left (truncated)" cat fail-coerce ] when
   { { "id" b pos pos v _idlen + slice bytes>latin1 } { "at" pos v _hdrlen + } { "size" size }
-    { "flags" v 2 = [ 0 ] [ b pos 8 + 2 util:be-int ] if } { "next" pos v _hdrlen + size + } } >record ;
+    { "flags" v 2 = [ 0 ] [ b pos 8 + 2 be-bytes>int ] if } { "next" pos v _hdrlen + size + } } >record ;
 
 : _frame-at ( b:bytes v:int pos:int -- record )
   b v pos b v pos _frame-size _frame-rec ;
@@ -280,7 +274,7 @@ MEMO: _picture-types ( -- list )
 
 \ A big-endian number of the bytes (0 when there are none).
 : _beall ( b:bytes -- int )
-  b len 0 = [ 0 ] [ b 0 b len util:be-int ] if ;
+  b len 0 = [ 0 ] [ b 0 b len be-bytes>int ] if ;
 
 \ POPM: an e-mail address, a rating byte and a counter.
 : _popm ( data:bytes -- str )
@@ -387,9 +381,12 @@ MEMO: _picture-types ( -- list )
 
 \ Where the frames start: after the extended header, which is skipped.
 : _ext-size ( v:int fl:int body:bytes -- int )
-  v 2 > fl 64 band 0 <> and [
-    v 3 = [ body 0 4 util:be-int 4 + ] [ body 0 4 _syncsafe? [ body 0 _syncsafe ] [ 0 ] if ] if
-  ] [ 0 ] if ;
+  {
+    [ v 2 > fl 64 band 0 <> and not ] [ 0 ]
+    [ v 3 = ] [ body 0 4 be-bytes>int 4 + ]
+    [ body 0 4 _syncsafe? ] [ body 0 _syncsafe ]
+    [ 0 ]
+  } cond ;
 
 : _v2b ( d:bytes v:int fl:int size:int body:bytes -- str )
   v 2 = fl 64 band 0 <> and [
@@ -409,7 +406,7 @@ MEMO: _picture-types ( -- list )
   {
     [ d len 10 < ] [ false ]
     [ d #[ 49 44 33 ] util:starts-with-bytes? not ] [ false ]
-    [ d 3 nth dup 2 >= swap 4 <= and ] [ d 6 _syncsafe? ]
+    [ d 3 nth 2 4 between? ] [ d 6 _syncsafe? ]
     [ false ]
   } cond ;
 

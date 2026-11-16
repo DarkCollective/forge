@@ -22,8 +22,8 @@ USING: defang ;
 : _v4 ( s:str -- int )
   s "^[0-9]{1,3}(?:\\.[0-9]{1,3}){3}$" "" regex:test not [ "not an IPv4 address" s _bad ] when
   s "." split [ str>int ] map
-  dup [ 255 > ] filter len 0 > [ "an IPv4 octet is over 255" s _bad ] when
-  0 [ swap 256 * + ] reduce ;
+  dup [ 255 > ] any? [ "an IPv4 octet is over 255" s _bad ] when
+  list>bytes 0 4 be-bytes>int ;
 
 : _v4? ( s:str -- bool )
   s "^[0-9]{1,3}(?:\\.[0-9]{1,3}){3}$" "" regex:test ;
@@ -39,7 +39,7 @@ USING: defang ;
 
 \ The hextet strings of one side of ::, each 1 to 4 hex digits.
 : _check-hextets ( hs:list s:str -- )
-  hs [ "^[0-9a-f]{1,4}$" "" regex:test not ] filter len 0 > [ "not an IPv6 address" s _bad ] when ;
+  hs [ "^[0-9a-f]{1,4}$" "" regex:test not ] any? [ "not an IPv6 address" s _bad ] when ;
 
 \ The text with an embedded IPv4 tail (::ffff:192.0.2.1) turned into two hextets.
 : _untail ( t:str s:str -- str )
@@ -394,17 +394,21 @@ META: parse-range
 
 \ Table lookup: the text paired with key in a list of { key text } pairs, or nothing.
 : _assoc ( table:list key:int -- str )
-  table [ 0 nth key = ] filter
-  dup len 0 = [ drop "" ] [ 0 nth 1 nth ] if ;
+  table [ 0 nth key = ] find :> i
+  i 0 < [ "" ] [ table i nth 1 nth ] if ;
+
+MEMO: _mc-names-1 ( -- list )
+  { { 2 "All DHCP Servers and Relay Agents (defined in RFC3315)" } { 3 "All LLMNR Hosts (defined in RFC4795)" } } ;
+
+MEMO: _mc-names ( -- list )
+  { { 1 "All nodes" } { 2 "All routers" } { 5 "OSPFv3 - All OSPF routers" } { 6 "OSPFv3 - All Designated Routers" }
+    { 8 "IS-IS for IPv6 Routers" } { 9 "RIP Routers" } { 10 "EIGRP Routers" } { 12 "Simple Service Discovery Protocol" }
+    { 13 "PIM Routers" } { 22 "MLDv2 Reports (defined in RFC3810)" } { 107 "Precision Time Protocol v2 Peer Delay Measurement Messages" }
+    { 251 "Multicast DNS" } { 257 "Network Time Protocol" } { 264 "Network Information Service" } { 276 "Experiments" }
+    { 385 "Precision Time Protocol v2 Messages (exc. Peer Delay)" } } ;
 
 : _mc-name ( h6:int h7:int -- str )
-  h6 1 =
-  [ { { 2 "All DHCP Servers and Relay Agents (defined in RFC3315)" } { 3 "All LLMNR Hosts (defined in RFC4795)" } } h7 _assoc ]
-  [ { { 1 "All nodes" } { 2 "All routers" } { 5 "OSPFv3 - All OSPF routers" } { 6 "OSPFv3 - All Designated Routers" }
-      { 8 "IS-IS for IPv6 Routers" } { 9 "RIP Routers" } { 10 "EIGRP Routers" } { 12 "Simple Service Discovery Protocol" }
-      { 13 "PIM Routers" } { 22 "MLDv2 Reports (defined in RFC3810)" } { 107 "Precision Time Protocol v2 Peer Delay Measurement Messages" }
-      { 251 "Multicast DNS" } { 257 "Network Time Protocol" } { 264 "Network Information Service" } { 276 "Experiments" }
-      { 385 "Precision Time Protocol v2 Messages (exc. Peer Delay)" } } h7 _assoc ] if ;
+  h6 1 = [ _mc-names-1 h7 _assoc ] [ _mc-names h7 _assoc ] if ;
 
 : _d-multicast ( n:int -- str )
   n 0xff 8 _in

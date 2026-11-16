@@ -13,9 +13,11 @@ IN: file-mode
 \ The execute position of a triplet: x when only the execute bit is set, a lower-case letter (on)
 \ when the special bit goes with execute, an upper-case one (off) when it stands alone.
 : _x-char ( mode:int x:int special:int on:str off:str -- str )
-  mode special band 0 <>
-  [ mode x band 0 <> [ on ] [ off ] if ]
-  [ mode x "x" _flag ] if ;
+  {
+    [ mode special band 0 = ] [ mode x "x" _flag ]
+    [ mode x band 0 <> ] [ on ]
+    [ off ]
+  } cond ;
 
 \ r is the read bit of the triplet; the write and execute bits are the next two lower ones.
 : _triplet ( mode:int r:int special:int on:str off:str -- str )
@@ -74,14 +76,14 @@ IN: file-mode
 
 : _octal-mode ( t:str -- int )
   t len 3 < t len 4 > or
-  t str>codes [ 48 55 between? ] filter len t len = not or
+  t [ 48 55 between? ] all? not or
   [ "an octal mode is 3 or 4 digits, each 0 to 7" fail-coerce ] when
   t 8 str>int-radix ;
 
 \ The mode and the file type character ("" when there is none) of a mode in octal or symbolic text.
 : _parse-mode ( data:str -- int str )
   data [ space? ] trim-start [ space? ] trim-end :> t
-  t str>codes [ dec-digit? ] filter len t len = t len 0 > and :> digits?
+  t [ dec-digit? ] all? t len 0 > and :> digits?
   {
     [ digits? ] [ t _octal-mode "" ]
     [ t len 9 = ] [ t _sym-mode "" ]

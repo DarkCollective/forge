@@ -55,7 +55,7 @@ USING: aes hmac base64 random clock ;
   raw len 73 < [ "the token is too short to be a Fernet token" fail-coerce ] when
   raw 0 nth 128 <> [ "the token's version byte is not 0x80" fail-coerce ] when
   raw key _mac-ok? not [ "the token's HMAC does not verify (wrong key, or the token was altered)" fail-coerce ] when
-  raw 1 9 slice 256 digits>int ttl now _age-check
+  raw 1 8 be-bytes>int ttl now _age-check
   raw 25 raw len 32 - slice key _encryption raw 9 25 slice "CBC" "pkcs7" #[ ] aes:decrypt ;
 
 \ The plaintext of a token (url-safe base64 text) at the given time.

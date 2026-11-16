@@ -25,15 +25,15 @@ USING: asn1 ;
 
 \ No control characters (below 32 or 127 to 159): safe to print between quotes.
 : _printable? ( s:str -- bool )
-  s str>codes [ dup 32 < swap dup 127 >= swap 159 <= and or ] filter len 0 = ;
+  s str>codes [ dup 32 < swap 127 159 between? or ] any? not ;
 
 : _ascii? ( v:bytes -- bool )
-  v len 0 > v [ 32 126 between? ] filter len v len = and ;
+  v len 0 > v [ 32 126 between? ] all? and ;
 
 : _quoted ( s:str -- str )
   "'" s cat "'" cat ;
 
-: _universal-names ( -- list )
+MEMO: _universal-names ( -- list )
   { "EOC" "BOOLEAN" "INTEGER" "BITSTRING" "OCTETSTRING" "NULL" "ObjectIdentifier" "ObjectDescriptor" "EXTERNAL"
     "REAL" "ENUMERATED" "EMBEDDED PDV" "UTF8String" "RELATIVE-OID" "TIME" "reserved" "SEQUENCE" "SET"
     "NumericString" "PrintableString" "TeletexString" "VideotexString" "IA5String" "UTCTime" "GeneralizedTime"
@@ -85,6 +85,10 @@ USING: asn1 ;
 : _enum-text ( node:record trunc:int -- str )
   [ node asn1:node>int int>str ] [ drop node "value" get trunc _hex ] try ;
 
+\ The universal tag numbers of the string types.
+MEMO: _string-tags ( -- list )
+  { 12 18 19 20 21 22 23 24 25 26 27 28 30 } ;
+
 : _universal ( node:record trunc:int -- str )
   node "tag" get :> tag
   {
@@ -93,7 +97,7 @@ USING: asn1 ;
     [ tag 10 = ] [ node trunc _enum-text ]
     [ tag 5 = ] [ "" ]
     [ tag 6 = ] [ node trunc _oid-text ]
-    [ { 12 18 19 20 21 22 23 24 25 26 27 28 30 } tag contains? ] [ node trunc _string-text ]
+    [ _string-tags tag contains? ] [ node trunc _string-text ]
     [ node "value" get trunc _hex ]
   } cond ;
 
@@ -104,11 +108,13 @@ USING: asn1 ;
 \ The line of an element without its indent. kids are the child nodes that are shown below it.
 : _text ( kids:list node:record trunc:int san:bool -- str )
   node _tag-name
-  node "constructed" get
-  [ kids len 0 = node "tag" get 16 = and node "class" get "universal" = and [ " {}" cat ] when ]
-  [ kids len 0 >
+  {
+    [ node "constructed" get ]
+    [ kids len 0 = node "tag" get 16 = and node "class" get "universal" = and [ " {}" cat ] when ]
+    [ kids len 0 > ]
     [ ", encapsulates" cat ]
-    [ node trunc san _value-text dup len 0 = [ drop ] [ " " swap cat cat ] if ] if ] if ;
+    [ node trunc san _value-text dup len 0 = [ drop ] [ " " swap cat cat ] if ]
+  } cond ;
 
 \ ---- opening OCTET STRINGs and BIT STRINGs ----
 
@@ -181,7 +187,7 @@ USING: asn1 ;
 \ The end of a long-form length of n bytes that starts at q.
 : _long-end ( d:bytes q:int n:int -- int )
   q n + d len > [ _cut-short ] when
-  d q q n + slice 256 digits>int q n + + ;
+  d q n be-bytes>int q n + + ;
 
 \ The end of the element whose length octets start at p.
 : _len-end ( d:bytes p:int -- int )

@@ -44,7 +44,7 @@ IN: blockmode
 
 \ data without its last p bytes, after checking that all of them are p.
 : _strip ( data:bytes p:int -- bytes )
-  data data len p - data len slice [ p <> ] filter len 0 >
+  data data len p - data len slice [ p <> ] any?
   [ "bad padding: the padding bytes differ" fail-coerce ] when
   data 0 data len p - slice ;
 
@@ -56,7 +56,7 @@ IN: blockmode
 
 \ The blocks of data as a list of bytes: bs bytes each, the last one shorter if bs does not divide the length.
 : _blocks ( data:bytes bs:int -- list )
-  0 data len bs ceil-div range [ bs * dup bs + data len min data -rot slice ] map ;
+  0 data len bs ceil-div range [ bs * :> s data s s bs + data len min slice ] map ;
 
 : _join ( blocks:list -- bytes )
   blocks #[ ] bjoin ;
@@ -105,9 +105,9 @@ IN: blockmode
 \ head that stays fixed (all but the last four bytes, _head).
 : _ctr-init ( iv:bytes mode:str -- )
   {
-    [ mode "CTR32" = ] [ iv 0 iv len 4 - slice _head! iv iv len 4 - iv len slice 256 digits>int _ctr0! ]
-    [ mode "CTRLE" = ] [ iv rev 256 digits>int _ctr0! ]
-    [ iv 256 digits>int _ctr0! ]
+    [ mode "CTR32" = ] [ iv 0 iv len 4 - slice _head! iv iv len 4 - 4 be-bytes>int _ctr0! ]
+    [ mode "CTRLE" = ] [ iv 0 iv len le-bytes>int _ctr0! ]
+    [ iv 0 iv len be-bytes>int _ctr0! ]
   } cond ;
 
 \ The counter block i places after the IV: the IV as a big-endian integer plus i, in bs bytes (wrapping);

@@ -22,7 +22,7 @@ IN: coords
 
 \ True when s is one or more ASCII digits.
 : _digits? ( s:str -- bool )
-  s len 0 > s str>codes [ dec-digit? ] filter len s len = and ;
+  s len 0 > s [ dec-digit? ] all? and ;
 
 \ ip and fp are the digits before and after the point of an unsigned decimal number: its value
 \ as a fraction n / 10^(length of fp). str>int refuses anything that is not a digit.
@@ -111,7 +111,7 @@ IN: coords
 
 : _gh-decode-total ( vals:list total:int -- int int )
   vals total 1 _gh-axis total 2 div 180 _d 90 _d neg _gh-centre
-  vals total 0 _gh-axis total 1 + 2 div 360 _d 180 _d neg _gh-centre ;
+  vals total 0 _gh-axis total 2 ceil-div 360 _d 180 _d neg _gh-centre ;
 
 \ A geohash as latitude and longitude of the middle of its cell.
 : _gh-decode ( text:str -- int int )
@@ -126,7 +126,7 @@ IN: coords
 
 : _ge-char ( c:int lonidx:int latidx:int blon:int blat:int -- str )
   0 5 range 0 [ swap 2 * swap c 5 * + lonidx latidx blon blat _ge-bit + ] reduce
-  dup 1 + _gh-alphabet -rot slice ;
+  :> v _gh-alphabet v v 1 + slice ;
 
 : _gh-encode-from ( lonidx:int latidx:int blon:int blat:int n:int -- str )
   0 n range [ lonidx latidx blon blat _ge-char ] map "" join ;
@@ -136,9 +136,9 @@ IN: coords
   v off + 2 bits pow * span div 2 bits pow 1 - min ;
 
 : _gh-encode-total ( lat:int lon:int n:int total:int -- str )
-  lon 180 _d 360 _d total 1 + 2 div _gh-index
+  lon 180 _d 360 _d total 2 ceil-div _gh-index
   lat 90 _d 180 _d total 2 div _gh-index
-  total 1 + 2 div total 2 div n _gh-encode-from ;
+  total 2 ceil-div total 2 div n _gh-encode-from ;
 
 : _gh-encode ( lat:int lon:int n:int -- str )
   lat lon n n 5 * _gh-encode-total ;
@@ -147,15 +147,15 @@ IN: coords
 
 \ A letter or a number of the text: every character that is not a digit, point, minus sign or one
 \ of the hemisphere letters N S E W (any case) separates; the letters stand apart.
-: _spread ( acc:list c:int -- list )
+: _spread ( c:int -- )
   {
-    [ c dec-digit? c 46 = or c 45 = or ] [ acc c append ]
-    [ c 78 = c 83 = or c 69 = or c 87 = or ] [ acc 32 append c append 32 append ]
-    [ acc 32 append ]
+    [ c dec-digit? c 46 = or c 45 = or ] [ c emit ]
+    [ c 78 = c 83 = or c 69 = or c 87 = or ] [ 32 emit c emit 32 emit ]
+    [ 32 emit ]
   } cond ;
 
 : _tokens ( text:str -- list )
-  text upper str>codes { } [ _spread ] reduce codes>str " " split [ len 0 > ] filter ;
+  [ text upper str>codes [ _spread ] each ] collect-str " " split [ len 0 > ] filter ;
 
 : _letter? ( t:str -- bool )
   t len 1 = t "N" = t "S" = or t "E" = or t "W" = or and ;
@@ -470,7 +470,7 @@ MEMO: _band-min-northing ( -- list )
 \ ---- finding out which format a text is in ----
 
 : _decimal? ( t:str -- bool )
-  t len 0 > t str>codes [ dup dec-digit? swap 46 = or ] filter len t len = and ;
+  t len 0 > t [ dup dec-digit? swap 46 = or ] all? and ;
 
 : _geohash? ( text:str -- bool )
   text [ space? ] trim-start [ space? ] trim-end
@@ -480,7 +480,7 @@ MEMO: _band-min-northing ( -- list )
 
 : _mgrs-shape? ( c:str z:int -- bool )
   c len z 3 + >= z 1 >= and z 2 <= and
-  [ c z z 3 + slice str>codes [ 65 90 between? ] filter len 3 =
+  [ c z z 3 + slice [ 65 90 between? ] all?
     c z 3 + c len slice dup len 0 = swap _digits? or and ]
   [ false ] if ;
 
@@ -489,7 +489,7 @@ MEMO: _band-min-northing ( -- list )
 
 : _zone-band? ( zb:str -- bool )
   zb [ dec-digit? ] count-leading
-  dup 1 >= over 2 <= and swap zb len swap 1 + = and
+  dup 1 2 between? swap zb len swap 1 + = and
   _bands zb zb len 1 - zb len slice split len 2 = and ;
 
 : _utm-fields-ok? ( zb:str e:str n:str -- bool )

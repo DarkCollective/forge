@@ -425,8 +425,11 @@ MEMO: _months-abbr ( -- list )
 
 \ The pattern that finds the value of a format token, or "" for a token that is only text.
 : _tok-pattern ( tok:str -- str )
-  tok _tok-ordinal? [ tok "DDDo" = [ "\\d{1,3}(?:st|nd|rd|th)" ] [ "\\d{1,2}(?:st|nd|rd|th)" ] if ]
-  [ tok 0 nth tok _pattern-by ] if ;
+  {
+    [ tok _tok-ordinal? not ] [ tok 0 nth tok _pattern-by ]
+    [ tok "DDDo" = ] [ "\\d{1,3}(?:st|nd|rd|th)" ]
+    [ "\\d{1,2}(?:st|nd|rd|th)" ]
+  } cond ;
 
 \ The sign, integer part and fraction of a decimal amount (g, from _amount-ns) as nanoseconds, scale per unit.
 : _amount-groups ( g:list scale:int -- int )
@@ -536,8 +539,11 @@ MEMO: _months-abbr ( -- list )
   y 1 1 util:days-from-civil doy + 1 - ;
 
 : _month-of ( acc:record -- int )
-  acc "M" _set? [ acc "M" get ]
-  [ acc "Q" _set? [ acc "Q" get 1 - 3 * 1 + ] [ 1 ] if ] if ;
+  {
+    [ acc "M" _set? ] [ acc "M" get ]
+    [ acc "Q" _set? ] [ acc "Q" get 1 - 3 * 1 + ]
+    [ 1 ]
+  } cond ;
 
 : _days-calendar ( acc:record -- int )
   acc "Y" 1970 _get-or
@@ -580,10 +586,9 @@ MEMO: _months-abbr ( -- list )
   acc "m" 0 _get-or acc "s" 0 _get-or acc "frac" 0 _get-or _tod2 ;
 
 : _resolve ( acc:record zone:str -- int )
-  acc "X" _set?
-  [ acc "X" get ]
-  [ acc _days-of 86400000000000 * acc _tod +
-    acc "off" _set? [ acc "off" get 1000000000 * - ] [ zone _local>instant ] if ] if ;
+  acc "X" _set? [ acc "X" get exit ] when
+  acc _days-of 86400000000000 * acc _tod +
+  acc "off" _set? [ acc "off" get 1000000000 * - ] [ zone _local>instant ] if ;
 
 \ The instant (ns) of a text read with a format, in a zone (an offset in the text wins over the zone).
 : _parse ( text:str fmt:str zone:str -- int )
@@ -670,7 +675,7 @@ MEMO: _preset-formats ( -- record )
   txt "^\\s*(?:0x)?([0-9a-fA-F]+)\\s*$" "" regex:find-all dup len 0 = [ "not a hexadecimal number" fail-coerce ] when
   0 nth "groups" get 0 nth
   input "hex-le" =
-  [ hex>bytes rev 256 digits>int ]
+  [ hex>bytes dup len 0 swap le-bytes>int ]
   [ 16 str>int-radix ] if ;
 
 \ A file time (ticks since 1601) written as decimal, as 16 hex digits, or as the 8 bytes in little-endian order.

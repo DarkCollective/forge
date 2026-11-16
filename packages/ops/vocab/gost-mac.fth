@@ -20,7 +20,7 @@ IN: gost-mac
 : verify ( data:bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mac:toggle{hex|utf8|latin1|base64}="" sbox:choice<util:gost-sbox>="E-TEST" -- str )
   "Check a GOST 28147-89 MAC of the input bytes (CyberChef's GOST Verify for its GOST 28147 (1989) algorithm): the MAC is computed with the key, IV and S-box as gost-mac:sign does, as long as the MAC given (1 to 8 bytes, E_RANGE otherwise; CyberChef takes the bit length from the hex digits), and compared. The answer is The signature matches or The signature does not match." doc
   "Encryption" category
-  mac len dup 1 < swap 8 > or [ "the MAC must be 1 to 8 bytes" fail-range ] when
+  mac len 1 8 between? not [ "the MAC must be 1 to 8 bytes" fail-range ] when
   data key iv sbox mac len _mac mac =
   [ "The signature matches" ] [ "The signature does not match" ] if ;
 

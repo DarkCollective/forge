@@ -237,7 +237,7 @@ CHOICE: _signature-format-auto
 
 : _hex-int ( s:str what:str -- int )
   s len 0 = [ "No \"" what cat "\" value in the signature JSON" cat fail-coerce ] when
-  s str>codes [ hex-digit? not ] filter len 0 <>
+  s str>codes [ hex-digit? not ] any?
   [ "the \"" what cat "\" value in the signature JSON is not hex" cat fail-coerce ] when
   s 16 str>int-radix ;
 
@@ -267,7 +267,7 @@ CHOICE: _signature-format-auto
   [ text json:parse type "record" = ] [ drop false ] try ;
 
 : _hex-text? ( t:str -- bool )
-  t len 2 >= t len 2 mod 0 = and t str>codes [ hex-digit? not ] filter len 0 = and ;
+  t len 2 >= t len 2 mod 0 = and t str>codes [ hex-digit? not ] any? not and ;
 
 : _der-text? ( t:str -- bool )
   t "30" starts-with? [ [ t hex>bytes asn1:parse drop true ] [ drop false ] try ] [ false ] if ;

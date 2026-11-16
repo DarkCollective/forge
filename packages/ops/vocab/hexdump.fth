@@ -24,7 +24,7 @@ IN: hexdump
 
 \ The characters of the hex field of n bytes (n at least 1).
 : _field-len ( n:int -- int )
-  n 2 * n 1 + 2 div + 1 - ;
+  n 2 * n 2 ceil-div + 1 - ;
 
 \ Byte b as the ASCII column shows it: itself from 0x20 to 0x7e, else a full stop.
 MEMO: _ascii-table ( -- bytes )
@@ -47,7 +47,7 @@ MEMO: _ascii-table ( -- bytes )
 
 : _rows ( data:bytes text:bytes width:int up:bool with-ascii:bool -- str )
   0 data len width + 1 - width div range
-  [ data text rot width up with-ascii _row ] map
+  [ :> i data text i width up with-ascii _row ] map
   "\n" join ;
 
 : _encode ( data:bytes width:int up:bool with-ascii:bool -- str )
@@ -72,7 +72,7 @@ META: encode
 
 \ True when the text has a character other than a space.
 : _blank? ( s:str -- bool )
-  s " " split [ len 0 > ] filter len 0 = ;
+  s " " split [ len 0 > ] any? not ;
 
 \ True when the token ends in a colon (xxd and this vocabulary's own layout).
 : _colon? ( t:str -- bool )
@@ -89,8 +89,9 @@ META: encode
 \ The hex field of a line body (the text after the offset) in the xxd form: the first piece that
 \ is not blank when the body is split at runs of two spaces.
 : _field ( body:str -- str )
-  body "  " split [ _blank? not ] filter
-  dup len 0 = [ drop "" ] [ 0 nth ] if ;
+  body "  " split :> parts
+  parts [ _blank? not ] find :> i
+  i 0 < [ "" ] [ parts i nth ] if ;
 
 \ The bytes of a line whose offset token is tok. The offset is checked to be hex digits and ignored.
 \ An offset with a colon (xxd and this vocabulary's own layout) is followed by a hex field closed by

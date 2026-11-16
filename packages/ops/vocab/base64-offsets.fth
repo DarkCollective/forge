@@ -53,7 +53,7 @@ USING: alphabet list ;
 : _check-alphabet ( a:str -- )
   a str>codes [ int>str ] map list:unique len a len <> [ "the alphabet must not repeat a character" fail-range ] when
   a len 64 < a len 65 > or [ "the alphabet must hold 64 or 65 characters" fail-range ] when
-  a str>codes [ 127 > ] filter len 0 <> [ "the alphabet must hold ASCII characters only" fail-range ] when ;
+  a str>codes [ 127 > ] any? [ "the alphabet must hold ASCII characters only" fail-range ] when ;
 
 : _alphabet ( alphabet:str -- bytes )
   alphabet "none" alphabet:expand dup _check-alphabet str>bytes ;

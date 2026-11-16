@@ -40,9 +40,7 @@ MEMO: _file-types ( -- str )
 \ n bytes at p as an unsigned integer in the byte order of the file; E_COERCE when the data ends first.
 : _u ( e:bytes p:int n:int -- int )
   e p n "ELF data" util:need-bytes
-  e p p n + slice
-  e 5 nth 2 = [ ] [ rev ] if
-  256 digits>int ;
+  e 5 nth 2 = [ e p n be-bytes>int ] [ e p n le-bytes>int ] if ;
 
 \ The class decides: a64 for ELF64, a32 for ELF32.
 : _o ( e:bytes a64:int a32:int -- int )
@@ -92,7 +90,7 @@ MEMO: _file-types ( -- str )
 : _file-type-name ( t:int -- str )
   _file-types t 16 int>str-radix util:name-in-table dup len 0 = [ drop
     {
-      [ t 65024 >= t 65279 <= and ] [ "OS Specific: (" t 16 int>str-radix cat ")" cat ]
+      [ t 65024 65279 between? ] [ "OS Specific: (" t 16 int>str-radix cat ")" cat ]
       [ t 65280 >= ] [ "Processor Specific: (" t 16 int>str-radix cat ")" cat ]
       [ "<unknown>: " t 16 int>str-radix cat ]
     } cond
@@ -140,7 +138,7 @@ MEMO: _file-types ( -- str )
 : _segment-name ( t:int -- str )
   _segment-types t 16 int>str-radix util:name-in-table dup len 0 = [ drop
     {
-      [ t 1610612736 >= t 1879048191 <= and ] [ "LOOS+0x" t 1610612736 - 16 int>str-radix cat ]
+      [ t 1610612736 1879048191 between? ] [ "LOOS+0x" t 1610612736 - 16 int>str-radix cat ]
       [ t 1879048192 >= ] [ "LOPROC+0x" t 1879048192 - 16 int>str-radix cat ]
       [ "<unknown>: " t 16 int>str-radix cat ]
     } cond
@@ -174,7 +172,7 @@ MEMO: _file-types ( -- str )
   e off i e 4 nth 2 = [ 16 ] [ 8 ] if * + e 4 nth 2 = [ 8 ] [ 4 ] if + _w 134217728 band 0 <> and ;
 
 : _pie-in ( e:bytes off:int size:int -- bool )
-  0 e off size _dyn-count range [ e off _dyn-pie-at ] filter len 0 > ;
+  0 e off size _dyn-count range [ e off _dyn-pie-at ] any? ;
 
 : _pie-base ( e:bytes base:int -- bool )
   e e base _p-offset e base _p-filesz _pie-in ;
@@ -189,8 +187,8 @@ MEMO: _file-types ( -- str )
   [ e swap 4 _u 2 = ] filter ;
 
 : _pie? ( e:bytes -- bool )
-  e _phdr-ok? not [ false ] [
-    e _dyn-bases dup len 0 = [ drop false ] [ 0 nth e swap _pie-base ] if ] if ;
+  e _phdr-ok? not [ false exit ] when
+  e _dyn-bases dup len 0 = [ drop false ] [ 0 nth e swap _pie-base ] if ;
 
 : _type-text ( e:bytes -- str )
   e 16 16 _h16 dup 3 = [ drop
@@ -356,7 +354,7 @@ MEMO: _file-types ( -- str )
 
 : _section-table ( e:bytes secs:list names:record -- str )
   e _s-title
-  0 secs len range [ e names rot dup secs swap nth _s-row ] map "" join cat
+  0 secs len range [ :> i e names i secs i nth _s-row ] map "" join cat
   e _shnum _more-line cat ;
 
 \ ---- symbol tables ----

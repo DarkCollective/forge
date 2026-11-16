@@ -15,7 +15,7 @@ IN: crc
   v 1 w shl 1 - band ;
 
 : _hex ( b:bytes -- int )
-  b 256 digits>int ;
+  b 0 b len be-bytes>int ;
 
 : custom ( data:bytes width:int[1..82]=32 poly:toggle{hex}[1..11]="04c11db7" init:toggle{hex}[1..11]="ffffffff" refin:bool=true refout:bool=true xorout:toggle{hex}[1..11]="ffffffff" -- bytes )
   "CRC of any width from 1 to 82 bits, from the Rocksoft model: poly, init and xorout are big-endian hex (the polynomial without its top bit), refin reflects each input byte and refout reflects the register before xorout. Gives ceil(width/8) big-endian bytes. The defaults are CRC-32 (ISO-HDLC, zip)." doc

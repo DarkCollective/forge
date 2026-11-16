@@ -136,10 +136,7 @@ META: rotate-right
 
 \ The n-th key of the given length, big-endian: 0x00 .. 0xff, or 0x0000 .. 0xffff.
 : _brute-key ( n:int length:int -- bytes )
-  length 1 =
-  [ { n } list>bytes ]
-  [ { n 256 div n 256 mod } list>bytes ]
-  if ;
+  n length int>be-bytes ;
 
 \ True when the crib is empty or the data xor key contains it. Both are viewed as Latin-1 text
 \ so that the search is a byte search; the crib is the UTF-8 encoding of its text.

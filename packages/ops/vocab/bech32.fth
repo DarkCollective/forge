@@ -35,7 +35,7 @@ MEMO: _gen ( -- list )
 \ ---- encode ----
 
 : _five ( d:bytes -- bytes )
-  0 d len 8 * 4 + 5 div range [ 5 * d swap 5 util:bit-field ] map list>bytes ;
+  0 d len 8 * 5 ceil-div range [ 5 * d swap 5 util:bit-field ] map list>bytes ;
 
 \ The checksum value of hrp and the 5-bit data: the polymod with the variant's constant removed.
 : _pm ( hrp:bytes five:bytes variant:str -- int )
@@ -81,10 +81,10 @@ META: encode
 \ A string of 8 to 90 printable ASCII characters, not in mixed case.
 : _check-chars ( d:bytes -- )
   d len 8 < d len 90 > or [ "a Bech32 string is 8 to 90 characters" fail-coerce ] when
-  d [ dup 33 < swap 126 > or ] filter len 0 <>
+  d [ 33 126 between? not ] any?
   [ "a character outside ASCII 33 to 126" fail-coerce ] when
-  d [ dup 97 >= swap 122 <= and ] filter len 0 <>
-  d [ dup 65 >= swap 90 <= and ] filter len 0 <> and
+  d [ 97 122 between? ] any?
+  d [ 65 90 between? ] any? and
   [ "mixed upper and lower case" fail-coerce ] when ;
 
 \ The index of the last 1, which separates the hrp from the data.

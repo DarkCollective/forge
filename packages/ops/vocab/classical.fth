@@ -189,7 +189,7 @@ META: bacon-encode
 
 : _bacon-lookup ( t:bytes table:bytes -- str )
   0 t len 5 div range
-  [ 5 * dup 5 + t -rot slice
+  [ 5 * :> s t s s 5 + slice
     0 [ 98 = [ 1 ] [ 0 ] if swap 2 * + ] reduce
     dup table len >=
     [ "bacon-decode: a group does not code a letter of this alphabet" fail-coerce ] when
@@ -198,7 +198,7 @@ META: bacon-encode
   list>bytes bytes>str ;
 
 : _bacon-groups ( t:bytes classic:bool -- str )
-  t [ dup 97 = swap 98 = or ] filter len t len <>
+  t [ dup 97 = swap 98 = or ] all? not
   [ "bacon-decode: only the symbols A and B (any case) and white space are allowed" fail-coerce ] when
   t len 5 mod 0 <>
   [ "bacon-decode: the number of A/B symbols must be a multiple of five" fail-coerce ] when
@@ -231,7 +231,7 @@ META: bacon-decode
   data [ _is-letter ] filter [ util:upper-merge-i ] map ;
 
 : _add-unique ( acc:bytes c:int -- bytes )
-  acc [ c = ] filter len 0 >
+  acc [ c = ] any?
   [ acc ]
   [ acc { c } list>bytes cat ]
   if ;
@@ -350,10 +350,9 @@ META: bifid-decrypt
 
 : _rf-gather ( data:bytes starts:list off:int rails:int -- bytes )
   0 data len range
-  [ dup off rails _rf-rail
-    dup starts swap nth
-    -rot swap off rails _rf-size
-    + data swap nth ]
+  [ :> i
+    i off rails _rf-rail :> r
+    data starts r nth r i off rails _rf-size + nth ]
   map list>bytes ;
 
 : _rf-decrypt ( data:bytes rails:int off:int -- bytes )
@@ -409,7 +408,7 @@ META: a1z26-encode
 : a1z26-decode ( str -- str )
   "Replace each number 1 to 26 by the matching upper-case letter. Any run of characters that are not digits separates numbers (spaces, commas, dashes, newlines). A number outside 1 to 26 is an error (E_COERCE)." doc
   "Classical ciphers" category
-  str>bytes [ dup 48 >= over 57 <= and not [ drop 32 ] when ] map bytes>str
+  str>bytes [ dup 48 57 between? not [ drop 32 ] when ] map bytes>str
   " " split [ len 0 > ] filter
   [ str>int dup 1 < over 26 > or
     [ "a1z26-decode: numbers must be between 1 and 26" fail-coerce ] when
@@ -438,8 +437,8 @@ META: a1z26-decode
   0 256 range [ pb cb _sub-byte ] map list>bytes ;
 
 : _substitute ( data:bytes pb:bytes cb:bytes -- bytes )
-  pb [ _printable ] filter len pb len <>
-  cb [ _printable ] filter len cb len <> or
+  pb [ _printable ] all? not
+  cb [ _printable ] all? not or
   [ "substitute: plaintext and ciphertext must be printable ASCII" fail-range ] when
   pb len cb len <>
   [ "substitute: plaintext and ciphertext must have the same length" fail-range ] when
@@ -608,7 +607,7 @@ META: caesar-box-decrypt
 \ ---------------------------------------------------------------------------------------------
 
 : _be-unit ( u:int -- bytes )
-  { u 8 shr u 255 band } list>bytes ;
+  u 2 int>be-bytes ;
 
 \ A code point as the big-endian bytes of one or two UTF-16 code units.
 : _cp>be ( cp:int -- bytes )
@@ -628,6 +627,7 @@ META: caesar-box-decrypt
   "a lone UTF-16 surrogate cannot be decoded" fail-coerce ;
 
 \ The code point that starts at unit i: -1 for the low half of a pair.
+\ Kept as an if chain: it runs once per unit, and a cond takes 32,768 non-BMP characters (cetacean-decode) from 4,940,115 to 5,628,243 steps.
 : _unit>cp ( units:list i:int -- int )
   units i nth
   dup 55296 56319 between?
@@ -643,7 +643,7 @@ META: caesar-box-decrypt
 
 \ Code units as text. Without surrogates the units are the code points.
 : _units>str ( units:list -- str )
-  units [ 55296 57343 between? ] filter len 0 =
+  units [ 55296 57343 between? ] any? not
   [ units codes>str ]
   [ units [ nip units swap _unit>cp ] mapi [ -1 <> ] filter codes>str ]
   if ;
@@ -651,7 +651,7 @@ META: caesar-box-decrypt
 \ UTF-16 bytes (an even number of them), little-endian or big-endian, as text.
 : _utf16>str ( b:bytes le:bool -- str )
   0 b len 2 div range
-  [ 2 * dup b swap nth swap 1 + b swap nth le [ swap ] when swap 8 shl bor ] map
+  [ 2 * b swap 2 le [ le-bytes>int ] [ be-bytes>int ] if ] map
   _units>str ;
 
 \ ---------------------------------------------------------------------------------------------
@@ -958,7 +958,7 @@ MEMO: _ls-sub ( -- list )
 \ Raise E_COERCE unless every byte is a letter of the board.
 : _ls-check ( data:bytes what:str -- bytes )
   data _ls-alpha 255 255 util:decode-table translate
-  [ 255 = ] filter len 0 <>
+  [ 255 = ] any?
   [ what fail-coerce ] when
   data ;
 
