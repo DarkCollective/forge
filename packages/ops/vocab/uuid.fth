@@ -58,14 +58,14 @@ USING: random clock md5 sha1 ;
   ms 10000 * 122192928000000000 + ;
 
 : _v1 ( ticks:int rnd:bytes -- bytes )
-  ticks 4294967295 band 4 int>be-bytes
-  ticks 32 shr 65535 band 2 int>be-bytes cat
+  ticks 4 int>be-bytes
+  ticks 32 shr 2 int>be-bytes cat
   ticks 48 shr 4095 band 2 int>be-bytes cat
   rnd _node-bit cat 1 _stamp ;
 
 : _v6 ( ticks:int rnd:bytes -- bytes )
   ticks 28 shr 4 int>be-bytes
-  ticks 12 shr 65535 band 2 int>be-bytes cat
+  ticks 12 shr 2 int>be-bytes cat
   ticks 4095 band 2 int>be-bytes cat
   rnd _node-bit cat 6 _stamp ;
 
@@ -116,9 +116,6 @@ META: generate
 
 \ ---- analyse ----
 
-: _be-int ( b:bytes -- int )
-  b 256 digits>int ;
-
 \ The Unix time in 100 ns ticks as UTC text with seven fractional digits.
 : _iso-ticks ( u:int -- str )
   u 10000 div util:iso-from-ms u 10000 mod 4 util:zero-pad cat "Z" cat ;
@@ -126,10 +123,10 @@ META: generate
 \ The tick count of a version 1 UUID (time_low, time_mid, time_hi) and of a version 6 UUID (time_high, time_mid,
 \ time_low), minus the Gregorian offset: Unix 100 ns ticks.
 : _ticks1 ( b:bytes -- int )
-  b 0 4 slice _be-int b 4 6 slice _be-int 32 shl + b 6 8 slice _be-int 4095 band 48 shl + 122192928000000000 - ;
+  b 0 4 util:be-int b 4 2 util:be-int 32 shl + b 6 2 util:be-int 4095 band 48 shl + 122192928000000000 - ;
 
 : _ticks6 ( b:bytes -- int )
-  b 0 4 slice _be-int 28 shl b 4 6 slice _be-int 12 shl + b 6 8 slice _be-int 4095 band + 122192928000000000 - ;
+  b 0 4 util:be-int 28 shl b 4 2 util:be-int 12 shl + b 6 2 util:be-int 4095 band + 122192928000000000 - ;
 
 : _version-name ( v:int -- str )
   v {
@@ -158,7 +155,7 @@ META: generate
   v {
     1 [ { } "Timestamp: " b _ticks1 _iso-ticks cat append ]
     6 [ { } "Timestamp: " b _ticks6 _iso-ticks cat append ]
-    7 [ { } "Timestamp: " b 0 6 slice _be-int util:iso-from-ms cat "Z" cat append ]
+    7 [ { } "Timestamp: " b 0 6 util:be-int util:iso-from-ms cat "Z" cat append ]
     [ { } ]
   } case ;
 

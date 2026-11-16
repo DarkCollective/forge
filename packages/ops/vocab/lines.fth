@@ -135,7 +135,7 @@ IN: lines
 : _ip-key ( s:str -- int )
   s "." split :> parts
   parts len 4 = [ parts [ _octet ] map ] [ { -1 } ] if :> octets
-  octets [ 0 < ] any? [ 4294967296 ] [ octets 0 [ swap 256 * + ] reduce ] if ;
+  octets [ 0 < ] any? [ 4294967296 ] [ octets list>bytes 0 4 be-bytes>int ] if ;
 
 : _ordered ( items:list order:str -- list )
   order {

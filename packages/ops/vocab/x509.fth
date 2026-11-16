@@ -291,7 +291,7 @@ MEMO: _reason-names ( -- list )
 
 \ Eight groups of hex digits in upper case, none compressed, as OpenSSL writes IPv6 addresses.
 : _ip6 ( v:bytes -- str )
-  0 8 range [ 2 * dup v swap 1 + nth swap v swap nth 256 * + 16 int>str-radix upper ] map ":" join ;
+  0 8 range [ 2 * v swap 2 be-bytes>int 16 int>str-radix upper ] map ":" join ;
 
 : _ip ( v:bytes -- str )
   {

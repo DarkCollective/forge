@@ -9,7 +9,7 @@ IN: ror13
 : hash ( data:bytes -- bytes )
   "The ROR13 API-name hash used in shellcode (for example in the Metasploit block_api stubs): starting from 0, each byte rotates the 32-bit accumulator right by 13 bits and is then added to it modulo 2^32. The result is four big-endian bytes (chain hex:encode; CyberChef shows it as 0x and upper-case hex). The input is hashed as given: to hash an API name the way a stub does, add the terminating zero byte (and use upper-case or wide characters where the stub does) before this step. The empty input gives 00000000." doc
   "Hashing" category
-  data bytes>list 0 [ swap dup 8192 mod 524288 * swap 8192 div + + 4294967296 mod ] reduce
+  data bytes>list 0 [ swap 13 32 rotr + 4294967296 mod ] reduce
   4 int>be-bytes ;
 
 META: hash

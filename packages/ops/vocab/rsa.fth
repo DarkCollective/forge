@@ -78,7 +78,7 @@ CHOICE: encryption-scheme
 \ ---- integers and bytes ----
 
 : _os2ip ( data:bytes -- int )
-  data len 0 = [ 0 ] [ data bytes>hex 16 str>int-radix ] if ;
+  data 0 data len be-bytes>int ;
 
 \ The k big-endian bytes of v; E_RANGE when v needs more.
 : _i2osp ( v:int k:int -- bytes )

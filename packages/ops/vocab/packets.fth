@@ -279,7 +279,7 @@ CHOICE: hex-or-raw
     "Acknowledgement number: " d 8 4 util:be-int int>str cat
     "Data offset: " hl 4 div int>str cat " (" cat hl int>str cat " bytes)" cat
     "Reserved bits: " d 12 nth 1 shr 7 band int>str cat }
-  d 12 nth 1 band 256 * d 13 nth + _tcp-flag-lines cat
+  d 12 2 be-bytes>int 511 band _tcp-flag-lines cat
   { "Window size: " d 14 2 util:be-int int>str cat
     "Checksum: " d 16 2 util:be-int 4 _hex0x cat
     "Urgent pointer: " d 18 2 util:be-int 4 _hex0x cat } cat
