@@ -372,4 +372,27 @@ describe("ls47", () => {
     const c = text(await enc(t, pw));
     expect(text(await dec(c, pw))).toBe(t);
   });
+
+  // The cipher is FL (about 55 steps a letter plus the one-off tables), so 64 KiB must fit the untrusted limits
+  // (5,000,000 steps, 256 MiB). The explicit timeout allows for CI runners about 3.5 times slower.
+  test("64 KiB stays inside the untrusted limits, both ways", { timeout: 60_000 }, async () => {
+    const limits = { maxSteps: 5_000_000, maxTotalBytes: 256 * 1024 * 1024 };
+    const t = randLs47(65536);
+    const e = await runtime.call(
+      "classical:ls47-encrypt",
+      [str(t), str("password"), str(""), str("")],
+      { limits },
+    );
+    expect(e.ok).toBe(true);
+    if (!e.ok) return;
+    expect(e.steps).toBeLessThan(4_200_000);
+    const c = e.stack[e.stack.length - 1] as Value;
+    const d = await runtime.call("classical:ls47-decrypt", [c, str("password"), int(0), str("")], {
+      limits,
+    });
+    expect(d.ok).toBe(true);
+    if (!d.ok) return;
+    expect(d.steps).toBeLessThan(4_200_000);
+    expect(text(d.stack[d.stack.length - 1] as Value)).toBe(t);
+  });
 });

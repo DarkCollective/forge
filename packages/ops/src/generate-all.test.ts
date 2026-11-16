@@ -184,10 +184,11 @@ describe("generate-all:hashes", () => {
     expect(out).toContain("NT Hash:      (the input is not valid UTF-8 text)");
   });
 
-  test("64 KiB takes a few thousand steps", async () => {
+  // MD4 is FL (about 29 steps a byte, 1.98 million for 64 KiB); every other hash is a primitive.
+  test("64 KiB stays inside the untrusted step limit", async () => {
     const r = await report("generate-all:hashes", randBytes(65536));
     expect(lines(r.out!)).toHaveLength(46);
-    expect(r.steps).toBeLessThan(100_000);
+    expect(r.steps).toBeLessThan(2_200_000);
   }, 60_000);
 });
 
