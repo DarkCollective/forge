@@ -77,9 +77,6 @@ CHOICE: encryption-scheme
 
 \ ---- integers and bytes ----
 
-: _os2ip ( data:bytes -- int )
-  data 0 data len be-bytes>int ;
-
 \ The k big-endian bytes of v; E_RANGE when v needs more.
 : _i2osp ( v:int k:int -- bytes )
   v util:int>bytes
@@ -487,7 +484,7 @@ MEMO: _rsa-alg-id ( -- bytes )
 
 : _encrypt ( data:bytes key:record scheme:str alg:str -- bytes )
   key "n" get _k
-  dup data swap scheme alg _enc-em _os2ip
+  dup data swap scheme alg _enc-em util:be-whole
   dup key "n" get >= [ "the message, read as a number, is not below the modulus" fail-range ] when
   key _pub-op swap _i2osp ;
 
@@ -503,7 +500,7 @@ MEMO: _rsa-alg-id ( -- bytes )
 : _decrypt ( data:bytes key:record scheme:str alg:str -- bytes )
   key "n" get _k
   data len over <> [ _fail ] when
-  data _os2ip dup key "n" get >= [ _fail ] when
+  data util:be-whole dup key "n" get >= [ _fail ] when
   key _priv-op over _i2osp swap scheme alg _dec-em ;
 
 \ ---- RSASSA-PKCS1-v1_5 (RFC 8017 section 8.2) ----
@@ -525,14 +522,14 @@ MEMO: _rsa-alg-id ( -- bytes )
 
 : _v15-sign2 ( em:bytes key:record k:int -- bytes )
   em len 0 = [ "the key is too small for this digest" fail-range ] when
-  em _os2ip key _priv-op k _i2osp ;
+  em util:be-whole key _priv-op k _i2osp ;
 
 : _v15-sign ( data:bytes key:record alg:str -- bytes )
   data alg key "n" get _k _v15-em key key "n" get _k _v15-sign2 ;
 
 \ The signature as a number, or -1 when its length is not the key's or its value is not below n.
 : _sig-int ( sig:bytes key:record -- int )
-  sig len key "n" get _k <> [ -1 ] [ sig _os2ip dup key "n" get >= [ drop -1 ] when ] if ;
+  sig len key "n" get _k <> [ -1 ] [ sig util:be-whole dup key "n" get >= [ drop -1 ] when ] if ;
 
 : _v15-verify ( sig:bytes key:record alg:str msg:bytes -- bool )
   sig key _sig-int dup 0 <
@@ -571,7 +568,7 @@ MEMO: _rsa-alg-id ( -- bytes )
 : _pss-sign2 ( salt:bytes mhash:bytes key:record alg:str -- bytes )
   mhash salt alg _pss-h
   salt key "n" get _em-len alg key "n" get _top-mask _pss-finish
-  _os2ip key _priv-op key "n" get _k _i2osp ;
+  util:be-whole key _priv-op key "n" get _k _i2osp ;
 
 : _pss-sign ( data:bytes key:record alg:str sl:int -- bytes )
   key alg sl _pss-room

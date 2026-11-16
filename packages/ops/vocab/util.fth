@@ -602,6 +602,10 @@ MEMO: ita2-table ( -- bytes )
   "The n bytes of data at p read as one big-endian unsigned integer (the first byte is the most significant; n of 0 gives 0). The caller has checked that the bytes are there: a read past the end is the slice error (use need-bytes first). The mirror of le-int." doc
   data p n be-bytes>int ;
 
+: be-whole ( data:bytes -- int )
+  "All the bytes of data read as one big-endian unsigned integer (empty bytes give 0). The whole-value form of be-int; the language integer limit applies to the length." doc
+  data 0 data len be-bytes>int ;
+
 : starts-with-bytes? ( data:bytes prefix:bytes -- bool )
   "True when data begins with the bytes of prefix; false (not an error) when data is shorter than prefix. Every bytes starts with the empty bytes. The bytes form of starts-with?." doc
   data len prefix len >= [ data 0 prefix len slice prefix = ] [ false ] if ;
