@@ -17,6 +17,15 @@ IN: search
     [ data pattern mode _literal split len 1 - ]
   } cond ;
 
+META: count
+  use-when "You have a text and a string or regular expression, and want to know how many times it occurs, for example how often a word or a byte pattern appears." ;
+  link "https://en.wikipedia.org/wiki/Regular_expression" "Regular expression on Wikipedia" ;
+  param pattern "The text to count, or a regular expression in regex mode." ;
+  param mode "string counts exact text, extended reads the escapes (\\n, \\t, \\x41) of the pattern first, regex counts matches of an ECMAScript regular expression." ;
+  param ignore-case "Treat upper and lower case as the same." ;
+  see-also regex:find-all text:split ;
+;
+
 \ ---- fuzzy match ----
 
 \ One character as it is compared: itself, or lower case when the one-code-point lower case form exists.
@@ -104,6 +113,16 @@ IN: search
   case-sensitive _fuzzy-rows best-first _arrange
   delimiter util:delimiter join ;
 
+META: fuzzy
+  use-when "You have a list of lines, such as file names or commands, and a few letters of the one you want, and need the lines holding those letters in order, best first." ;
+  link "https://en.wikipedia.org/wiki/Approximate_string_matching" "Approximate string matching on Wikipedia" ;
+  param query "The characters to look for, in order." ;
+  param case-sensitive "Match upper and lower case as different characters." ;
+  param best-first "Order the rows by falling score instead of keeping the input order." ;
+  param delimiter "What separates the lines of the input, and the rows of the output." ;
+  see-also search:count ;
+;
+
 \ ---- offsets ----
 
 : _escape-run ( s:str -- str )
@@ -139,25 +158,6 @@ IN: search
   dup 0 nth swap [ str>codes ] map _all-equal
   [ [ "1" ] [ "0" ] if ] map "" join "1+" "" regex:find-all
   min-run _run-rows ;
-
-META: count
-  use-when "You have a text and a string or regular expression, and want to know how many times it occurs, for example how often a word or a byte pattern appears." ;
-  link "https://en.wikipedia.org/wiki/Regular_expression" "Regular expression on Wikipedia" ;
-  param pattern "The text to count, or a regular expression in regex mode." ;
-  param mode "string counts exact text, extended reads the escapes (\\n, \\t, \\x41) of the pattern first, regex counts matches of an ECMAScript regular expression." ;
-  param ignore-case "Treat upper and lower case as the same." ;
-  see-also regex:find-all text:split ;
-;
-
-META: fuzzy
-  use-when "You have a list of lines, such as file names or commands, and a few letters of the one you want, and need the lines holding those letters in order, best first." ;
-  link "https://en.wikipedia.org/wiki/Approximate_string_matching" "Approximate string matching on Wikipedia" ;
-  param query "The characters to look for, in order." ;
-  param case-sensitive "Match upper and lower case as different characters." ;
-  param best-first "Order the rows by falling score instead of keeping the input order." ;
-  param delimiter "What separates the lines of the input, and the rows of the output." ;
-  see-also search:count ;
-;
 
 META: offsets
   use-when "You have two or more versions of the same data, such as two ciphertexts or captures, and want the stretches where they agree at the same positions." ;

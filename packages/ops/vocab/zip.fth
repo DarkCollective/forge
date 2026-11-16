@@ -192,6 +192,15 @@ USING: crc deflate ;
   data metas [ _plan-item ] map _extract
   metas swap verify _records ;
 
+META: unzip
+  use-when "You have a zip archive that is not encrypted, and want to list its entries and read their contents." ;
+  param verify "Check each entry's size and CRC-32 against the directory (CyberChef's Verify result); off, damaged data is returned anyway." ;
+  see-also zip:entry zip:zip deflate:inflate ;
+  link "https://en.wikipedia.org/wiki/ZIP_(file_format)" "ZIP file format on Wikipedia" ;
+  checks input magic-bytes format "zip" ;
+  checks input magic-bytes format "zip-empty" ;
+;
+
 : entry ( data:bytes name:str verify:bool=true -- bytes )
   "The bytes of one entry of a zip archive, found by its name exactly as unzip lists it (the first, if the name is repeated). A name that is not there is E_RANGE and the message lists the first entries. Only that entry is inflated. verify, damaged or unsupported entries and the output limit are as for zip:unzip (the entry's own size is capped by the value limit)." doc
   "Compression" category
@@ -200,6 +209,16 @@ USING: crc deflate ;
   data { m _plan-item } _extract 0 nth :> content
   verify [ m content _verify ] when
   content ;
+
+META: entry
+  use-when "You have a zip archive and want one file from it, found by its exact name, without listing the whole archive." ;
+  param name "The entry's name as unzip lists it, for example docs/readme.txt." ;
+  param verify "Check the entry's size and CRC-32 against the directory." ;
+  see-also zip:unzip zip:zip ;
+  link "https://en.wikipedia.org/wiki/ZIP_(file_format)" "ZIP file format on Wikipedia" ;
+  checks input magic-bytes format "zip" ;
+  checks input magic-bytes format "zip-empty" ;
+;
 
 \ ---- writing ----
 
@@ -271,25 +290,6 @@ USING: crc deflate ;
   method "store" = [ data ] [ data level deflate:deflate ] if
   data len
   _assemble ;
-
-META: unzip
-  use-when "You have a zip archive that is not encrypted, and want to list its entries and read their contents." ;
-  param verify "Check each entry's size and CRC-32 against the directory (CyberChef's Verify result); off, damaged data is returned anyway." ;
-  see-also zip:entry zip:zip deflate:inflate ;
-  link "https://en.wikipedia.org/wiki/ZIP_(file_format)" "ZIP file format on Wikipedia" ;
-  checks input magic-bytes format "zip" ;
-  checks input magic-bytes format "zip-empty" ;
-;
-
-META: entry
-  use-when "You have a zip archive and want one file from it, found by its exact name, without listing the whole archive." ;
-  param name "The entry's name as unzip lists it, for example docs/readme.txt." ;
-  param verify "Check the entry's size and CRC-32 against the directory." ;
-  see-also zip:unzip zip:zip ;
-  link "https://en.wikipedia.org/wiki/ZIP_(file_format)" "ZIP file format on Wikipedia" ;
-  checks input magic-bytes format "zip" ;
-  checks input magic-bytes format "zip-empty" ;
-;
 
 META: zip
   use-when "You have bytes and need a zip file that holds them as one named file, for a recipient or tool that expects a zip." ;

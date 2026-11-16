@@ -17,6 +17,12 @@ USING: util ;
   "Text" category
   data str>codes [ cp>str _swap-ch ] map "" join ;
 
+META: swap-case
+  use-when "You have text with the case the wrong way round, such as a caps-lock mistake, and want each letter's case swapped." ;
+  see-also case:alternating text:upper text:lower ;
+  link "https://en.wikipedia.org/wiki/Letter_case" "Letter case on Wikipedia" ;
+;
+
 0 VARIABLE _k
 
 \ A letter alternates; anything without case is kept and does not count.
@@ -31,6 +37,13 @@ USING: util ;
   "Text" category
   0 _k!
   data str>codes [ cp>str first "upper" = _alt-ch ] map "" join ;
+
+META: alternating
+  use-when "You want text in alternating upper and lower case, as in a mocking meme, and have plain text to change." ;
+  param first "Whether the first letter is lower case (the default) or upper case." ;
+  see-also case:swap-case ;
+  link "https://en.wikipedia.org/wiki/Letter_case" "Letter case on Wikipedia" ;
+;
 
 \ ---- all casings ----
 
@@ -55,6 +68,12 @@ USING: util ;
   [ "at most 12 letters with a case can be combined (4096 combinations)" fail-range ] when
   { "" } [ _grow ] reduce
   delimiter util:delimiter join ;
+
+META: all-casings
+  use-when "You have a word and want every upper and lower case version of it, for example to list the case variants of a password guess." ;
+  param delimiter "What is written between the combinations: a line feed by default." ;
+  see-also case:swap-case ;
+;
 
 \ ---- case-insensitive regular expressions ----
 \ A pattern is cut into pieces with regex:find-all: an escape, a named group, a quoted character class, or one character.
@@ -139,6 +158,13 @@ USING: util ;
   "Text" category
   pattern _pieces [ _piece-to ] map "" join ;
 
+META: to-insensitive-regex
+  use-when "You have a regular expression and want it to match the text whatever its case, for example in a search box that ignores case." ;
+  inverse from-insensitive-regex ;
+  see-also case:from-insensitive-regex regex:test ;
+  link "https://en.wikipedia.org/wiki/Regular_expression" "Regular expression on Wikipedia" ;
+;
+
 \ Keep a class token unless the other case of it is already kept.
 : _keep ( acc:list x:str -- list )
   x _other-tok dup "" =
@@ -167,32 +193,6 @@ USING: util ;
   "The reverse of to-insensitive-regex: a character class that holds both cases of a letter ([xX]) is written with the first one (x), and in a bigger class the second case of a letter or range is dropped when its first case is already there ([a-zA-Z0-9] becomes [a-z0-9]). Everything else is copied, so a pattern that never used the other case is unchanged. to-insensitive-regex followed by this gives the original pattern back when the original had no class with both cases of one letter." doc
   "Text" category
   pattern _pieces [ _piece-from ] map "" join ;
-
-META: swap-case
-  use-when "You have text with the case the wrong way round, such as a caps-lock mistake, and want each letter's case swapped." ;
-  see-also case:alternating text:upper text:lower ;
-  link "https://en.wikipedia.org/wiki/Letter_case" "Letter case on Wikipedia" ;
-;
-
-META: alternating
-  use-when "You want text in alternating upper and lower case, as in a mocking meme, and have plain text to change." ;
-  param first "Whether the first letter is lower case (the default) or upper case." ;
-  see-also case:swap-case ;
-  link "https://en.wikipedia.org/wiki/Letter_case" "Letter case on Wikipedia" ;
-;
-
-META: all-casings
-  use-when "You have a word and want every upper and lower case version of it, for example to list the case variants of a password guess." ;
-  param delimiter "What is written between the combinations: a line feed by default." ;
-  see-also case:swap-case ;
-;
-
-META: to-insensitive-regex
-  use-when "You have a regular expression and want it to match the text whatever its case, for example in a search box that ignores case." ;
-  inverse from-insensitive-regex ;
-  see-also case:from-insensitive-regex regex:test ;
-  link "https://en.wikipedia.org/wiki/Regular_expression" "Regular expression on Wikipedia" ;
-;
 
 META: from-insensitive-regex
   use-when "You have a regular expression that spells out both cases in brackets, such as [aA], and want the short form that you would write by hand." ;

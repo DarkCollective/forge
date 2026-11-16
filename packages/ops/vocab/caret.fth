@@ -26,6 +26,12 @@ IN: caret
   "Encodings" category
   bytes>list [ _piece ] map "" join ;
 
+META: encode
+  use-when "You have a file or terminal output with hidden control characters and want to see them as text, in the form that cat -v prints." ;
+  inverse decode ;
+  link "https://en.wikipedia.org/wiki/Caret_notation" "Caret notation on Wikipedia" ;
+;
+
 \ The control character that ^c stands for: c in @ A-Z [ \ ] ^ _ gives 0 to 31, ? gives 127.
 : _ctrl-of ( c:int -- int )
   {
@@ -69,12 +75,6 @@ IN: caret
   "Encodings" category
   dup str>codes [ 127 > ] any? [ "caret notation is ASCII text" fail-coerce ] when
   _carets _metas latin1>bytes ;
-
-META: encode
-  use-when "You have a file or terminal output with hidden control characters and want to see them as text, in the form that cat -v prints." ;
-  inverse decode ;
-  link "https://en.wikipedia.org/wiki/Caret_notation" "Caret notation on Wikipedia" ;
-;
 
 META: decode
   use-when "You have text copied from cat -v output, with ^ and M- marks, and want the bytes it stands for." ;

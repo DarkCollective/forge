@@ -70,7 +70,7 @@ MEMO: _file-types ( -- str )
 : _str-at ( e:bytes tbl:int tsize:int off:int -- str )
   off tsize >= [ "<corrupt>" ] [
     e tbl off +
-    tbl tsize + e len min  tbl off + 1024 + min
+    tbl tsize + e len min tbl off + 1024 + min
     _cut ] if ;
 
 \ ---- the identification and the header ----
@@ -375,7 +375,7 @@ MEMO: _file-types ( -- str )
 
 : _type-table ( osabi:int -- str )
   osabi _gnu? [ "|0:NOTYPE|1:OBJECT|2:FUNC|3:SECTION|4:FILE|5:COMMON|6:TLS|8:RELC|9:SRELC|a:IFUNC|" ]
-              [ "|0:NOTYPE|1:OBJECT|2:FUNC|3:SECTION|4:FILE|5:COMMON|6:TLS|8:RELC|9:SRELC|" ] if ;
+  [ "|0:NOTYPE|1:OBJECT|2:FUNC|3:SECTION|4:FILE|5:COMMON|6:TLS|8:RELC|9:SRELC|" ] if ;
 
 : _bind-table ( osabi:int -- str )
   osabi _gnu? [ "|0:LOCAL|1:GLOBAL|2:WEAK|a:UNIQUE|" ] [ "|0:LOCAL|1:GLOBAL|2:WEAK|" ] if ;
@@ -386,11 +386,11 @@ MEMO: _file-types ( -- str )
 \ Kept as an if chain: it runs once per symbol, and a cond costs extra steps against the step bound of the 2,500-symbol test.
 : _ndx-text ( ndx:int shnum:int -- str )
   ndx 0 = [ "UND" ] [ ndx 65521 = [ "ABS" ] [ ndx 65522 = [ "COM" ] [
-  ndx 65280 >= [
-    ndx 65311 <= [ "PRC[0x" ndx 4 _hex cat "]" cat ] [
-    ndx 65343 <= [ "OS [0x" ndx 4 _hex cat "]" cat ] [
-    "RSV[0x" ndx 4 _hex cat "]" cat ] if ] if ] [
-    ndx shnum < [ ndx int>str ] [ "BAD[0x" ndx 16 int>str-radix cat "]" cat ] if ] if ] if ] if ] if ;
+        ndx 65280 >= [
+          ndx 65311 <= [ "PRC[0x" ndx 4 _hex cat "]" cat ] [
+            ndx 65343 <= [ "OS [0x" ndx 4 _hex cat "]" cat ] [
+              "RSV[0x" ndx 4 _hex cat "]" cat ] if ] if ] [
+          ndx shnum < [ ndx int>str ] [ "BAD[0x" ndx 16 int>str-radix cat "]" cat ] if ] if ] if ] if ] if ;
 
 \ One symbol as a record; base is the offset of the entry.
 : _sym ( e:bytes base:int -- record )

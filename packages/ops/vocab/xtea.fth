@@ -10,12 +10,6 @@ IN: xtea
   key _check-key
   dup len 0 = [ mode iv 8 util:iv-or-zeros 8 padding "pkcs7" = [ key rounds _encrypt-block ] blockmode:encrypt ] unless ;
 
-: decrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice<util:block-mode>="CBC" padding:choice<util:pkcs7-padding>="pkcs7" rounds:int[1..255]=32 -- bytes )
-  "XTEA decryption, the inverse of xtea:encrypt with the same key, IV, mode, padding and rounds. PKCS#7 padding that does not check (usually a wrong key or IV) and CBC or ECB input that is not whole blocks are E_COERCE. A key of the wrong length is E_RANGE. An empty input gives an empty output." doc
-  "Encryption" category
-  key _check-key
-  dup len 0 = [ mode iv 8 util:iv-or-zeros 8 padding "pkcs7" = [ key rounds _encrypt-block ] [ key rounds _decrypt-block ] blockmode:decrypt ] unless ;
-
 META: encrypt
   use-when "You have an XTEA key of 16 bytes and data from an old system or test that uses XTEA, and you need the output. XTEA is for existing data only." ;
   param key "The XTEA key: 16 bytes." ;
@@ -28,6 +22,12 @@ META: encrypt
   link "https://en.wikipedia.org/wiki/XTEA" "XTEA on Wikipedia" ;
   link "https://en.wikipedia.org/wiki/Tiny_Encryption_Algorithm" "Tiny Encryption Algorithm on Wikipedia" ;
 ;
+
+: decrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice<util:block-mode>="CBC" padding:choice<util:pkcs7-padding>="pkcs7" rounds:int[1..255]=32 -- bytes )
+  "XTEA decryption, the inverse of xtea:encrypt with the same key, IV, mode, padding and rounds. PKCS#7 padding that does not check (usually a wrong key or IV) and CBC or ECB input that is not whole blocks are E_COERCE. A key of the wrong length is E_RANGE. An empty input gives an empty output." doc
+  "Encryption" category
+  key _check-key
+  dup len 0 = [ mode iv 8 util:iv-or-zeros 8 padding "pkcs7" = [ key rounds _encrypt-block ] [ key rounds _decrypt-block ] blockmode:decrypt ] unless ;
 
 META: decrypt
   use-when "You have XTEA ciphertext with its key, IV and cycle count, and you want the plaintext back. Use it for reading existing data only." ;

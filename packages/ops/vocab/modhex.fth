@@ -13,6 +13,15 @@ IN: modhex
   bytes>list [ dup 16 div _alpha swap nth swap 15 band _alpha swap nth cat ] map
   delimiter util:separator join ;
 
+META: encode
+  use-when "You have bytes or hex digits and need them as ModHex letters, for example to write the public ID of a YubiKey." ;
+  link "https://www.yubico.com/" "Yubico, the makers of the YubiKey" ;
+  inverse decode ;
+  param delimiter "What to put between the bytes: nothing or a space." ;
+  see-also modhex:decode hex:encode ;
+  checks output charset "cbdefghijklnrtuv " ;
+;
+
 \ 255 for a byte outside the alphabet, 254 for ASCII white space, else the digit value.
 MEMO: _table ( -- bytes )
   _alpha 254 255 util:decode-table ;
@@ -25,15 +34,6 @@ MEMO: _table ( -- bytes )
   "Decode ModHex text to bytes. White space is ignored and upper case is accepted; an odd number of letters is E_COERCE." doc
   "Encodings" category
   bytes>latin1 lower latin1>bytes _table util:check-symbols [ 254 <> ] filter _pack ;
-
-META: encode
-  use-when "You have bytes or hex digits and need them as ModHex letters, for example to write the public ID of a YubiKey." ;
-  link "https://www.yubico.com/" "Yubico, the makers of the YubiKey" ;
-  inverse decode ;
-  param delimiter "What to put between the bytes: nothing or a space." ;
-  see-also modhex:decode hex:encode ;
-  checks output charset "cbdefghijklnrtuv " ;
-;
 
 META: decode
   use-when "You have ModHex letters, such as the part of a YubiKey one-time password that is ModHex, and want the bytes they stand for." ;

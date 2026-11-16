@@ -12,11 +12,6 @@ IN: bzip2
   work-factor 0 250 "the work factor" check-int-range
   data block-size _compress ;
 
-: decompress ( data:bytes verify:bool=true -- bytes )
-  "Decompress bzip2 data: one stream or several written one after the other (as bzip2 -d joins them); bytes after the last stream that do not begin another one are ignored. Randomised blocks (a deprecated form) are read. With verify (the default) every block CRC and the stream CRC must match, otherwise E_COERCE; a missing magic, a bad block size digit, a bad Huffman table, a block larger than its stated size or data that ends early is E_COERCE naming the fault. Output past the value limit stops with E_LIMIT_VALUE (the decompression bomb rule). CyberChef's low-memory option is not offered: it chooses a slower algorithm in libbzip2 and the result is the same." doc
-  "Compression" category
-  data verify _decompress ;
-
 META: compress
   use-when "You have bytes and need a bzip2 stream, for example to pass to a tool that reads .bz2 files." ;
   param block-size "The block size in hundreds of kilobytes, 1 to 9 (900 kB by default)." ;
@@ -27,6 +22,11 @@ META: compress
   link "https://en.wikipedia.org/wiki/Bzip2" "Bzip2 on Wikipedia" ;
   checks output magic-bytes format "bzip2-header" ;
 ;
+
+: decompress ( data:bytes verify:bool=true -- bytes )
+  "Decompress bzip2 data: one stream or several written one after the other (as bzip2 -d joins them); bytes after the last stream that do not begin another one are ignored. Randomised blocks (a deprecated form) are read. With verify (the default) every block CRC and the stream CRC must match, otherwise E_COERCE; a missing magic, a bad block size digit, a bad Huffman table, a block larger than its stated size or data that ends early is E_COERCE naming the fault. Output past the value limit stops with E_LIMIT_VALUE (the decompression bomb rule). CyberChef's low-memory option is not offered: it chooses a slower algorithm in libbzip2 and the result is the same." doc
+  "Compression" category
+  data verify _decompress ;
 
 META: decompress
   use-when "You have a bzip2 file or stream, starting with the letters BZh, and want the data inside." ;

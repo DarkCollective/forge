@@ -68,11 +68,6 @@ USING: aes hmac base64 random clock ;
   "Encryption" category
   key 16 random:bytes-of clock:now-s _seal ;
 
-: decrypt ( bytes key:key{utf8|hex|latin1|base64} ttl:int=0 -- bytes )
-  "Fernet decryption: the plaintext of a token (url-safe base64 text). The HMAC is verified before anything is decrypted; a token that is too short, has another version, fails the HMAC, is not whole blocks or has bad padding is E_COERCE, and so is bad base64. ttl is the maximum age in seconds: 0 (the default, as CyberChef) skips the time checks; above 0 the token must be no older than ttl and no more than 60 seconds in the future (E_COERCE). A negative ttl, or a key of the wrong size, is E_RANGE." doc
-  "Encryption" category
-  key ttl ttl 0 > [ clock:now-s ] [ 0 ] if _open ;
-
 META: encrypt
   use-when "You want a Fernet token, a url-safe base64 string that a Fernet library can read, made with a 32-byte key for a test or an interchange." ;
   param key "The Fernet key: 32 bytes, or their url-safe base64 text (43 or 44 characters)." ;
@@ -81,6 +76,11 @@ META: encrypt
   link "https://github.com/fernet/spec" "Fernet specification (github.com/fernet/spec)" ;
   checks output regex "^gA[A-Za-z0-9_=-]+$" ;
 ;
+
+: decrypt ( bytes key:key{utf8|hex|latin1|base64} ttl:int=0 -- bytes )
+  "Fernet decryption: the plaintext of a token (url-safe base64 text). The HMAC is verified before anything is decrypted; a token that is too short, has another version, fails the HMAC, is not whole blocks or has bad padding is E_COERCE, and so is bad base64. ttl is the maximum age in seconds: 0 (the default, as CyberChef) skips the time checks; above 0 the token must be no older than ttl and no more than 60 seconds in the future (E_COERCE). A negative ttl, or a key of the wrong size, is E_RANGE." doc
+  "Encryption" category
+  key ttl ttl 0 > [ clock:now-s ] [ 0 ] if _open ;
 
 META: decrypt
   use-when "You have a Fernet token, which starts gAAAAA, and its key, and you want the message. The HMAC is checked before anything is decrypted." ;

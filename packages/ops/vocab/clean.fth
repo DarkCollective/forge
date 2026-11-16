@@ -19,18 +19,6 @@ USING: util ;
   "\x0c" form-feeds _drop-char
   "." full-stops _drop-char ;
 
-: remove-null-bytes ( data:bytes -- bytes )
-  "Delete every zero byte (0x00) from the data; every other byte stays in order. A few interpreter steps for any length." doc
-  "Text" category
-  data 0 util:drop-byte ;
-
-: remove-ansi ( data:str -- str )
-  "Delete ANSI escape sequences (ECMA-48 and the common terminal extensions): CSI sequences (ESC [ or the single code point U+009B, then parameter bytes 0x30-0x3F, intermediate bytes 0x20-0x2F and a final byte 0x40-0x7E, which covers the colour and cursor codes), string sequences (OSC, DCS, SOS, PM and APC, ended by BEL or ESC \\) and the other two-byte ESC sequences. Ordinary text, including a lone ESC at the very end, is kept." doc
-  "Text" category
-  data
-  "(?:\\x1b\\[|\\x9b)[0-?]*[ -/]*[@-~]|\\x1b[\\]PX^_][^\\x07\\x1b]*(?:\\x07|\\x1b\\\\)|\\x1b[ -/]*[0-~]"
-  "" "" regex:replace ;
-
 META: remove-whitespace
   use-when "You have pasted text full of spaces, tabs or line breaks that you want gone, for example to get a compact token or to compare two strings." ;
   param spaces "Delete spaces (U+0020)." ;
@@ -41,11 +29,23 @@ META: remove-whitespace
   param full-stops "Delete full stops (U+002E)." ;
 ;
 
+: remove-null-bytes ( data:bytes -- bytes )
+  "Delete every zero byte (0x00) from the data; every other byte stays in order. A few interpreter steps for any length." doc
+  "Text" category
+  data 0 util:drop-byte ;
+
 META: remove-null-bytes
   use-when "You have data with zero bytes scattered through it, from a bad export or from UTF-16 text read as bytes, and want the rest of the data." ;
   see-also clean:remove-whitespace ;
   link "https://en.wikipedia.org/wiki/Null_character" "Null character on Wikipedia" ;
 ;
+
+: remove-ansi ( data:str -- str )
+  "Delete ANSI escape sequences (ECMA-48 and the common terminal extensions): CSI sequences (ESC [ or the single code point U+009B, then parameter bytes 0x30-0x3F, intermediate bytes 0x20-0x2F and a final byte 0x40-0x7E, which covers the colour and cursor codes), string sequences (OSC, DCS, SOS, PM and APC, ended by BEL or ESC \\) and the other two-byte ESC sequences. Ordinary text, including a lone ESC at the very end, is kept." doc
+  "Text" category
+  data
+  "(?:\\x1b\\[|\\x9b)[0-?]*[ -/]*[@-~]|\\x1b[\\]PX^_][^\\x07\\x1b]*(?:\\x07|\\x1b\\\\)|\\x1b[ -/]*[0-~]"
+  "" "" regex:replace ;
 
 META: remove-ansi
   use-when "You have text copied from a terminal, with colour and cursor codes that show as junk, and want only the words." ;

@@ -11,12 +11,6 @@ IN: present
   key _check-key
   mode iv 8 padding "pkcs7" = [ key _encrypt-block ] blockmode:encrypt ;
 
-: decrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice<util:block-mode>="CBC" padding:choice<util:pkcs7-padding>="pkcs7" -- bytes )
-  "PRESENT decryption, the inverse of present:encrypt with the same key, IV, mode and padding. PKCS#7 padding that does not check (usually a wrong key or IV) and CBC or ECB input that is not whole blocks are E_COERCE. A key of the wrong length is E_RANGE." doc
-  "Encryption" category
-  key _check-key
-  mode iv 8 padding "pkcs7" = [ key _encrypt-block ] [ key _decrypt-block ] blockmode:decrypt ;
-
 META: encrypt
   use-when "You need PRESENT, the 64-bit lightweight block cipher of ISO/IEC 29192-2, with an 80 or 128-bit key, for a device or a test vector." ;
   param key "The PRESENT key: 10 bytes (80 bits) or 16 bytes (128 bits)." ;
@@ -26,6 +20,12 @@ META: encrypt
   see-also present:decrypt hex:encode ;
   inverse decrypt ;
 ;
+
+: decrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice<util:block-mode>="CBC" padding:choice<util:pkcs7-padding>="pkcs7" -- bytes )
+  "PRESENT decryption, the inverse of present:encrypt with the same key, IV, mode and padding. PKCS#7 padding that does not check (usually a wrong key or IV) and CBC or ECB input that is not whole blocks are E_COERCE. A key of the wrong length is E_RANGE." doc
+  "Encryption" category
+  key _check-key
+  mode iv 8 padding "pkcs7" = [ key _encrypt-block ] [ key _decrypt-block ] blockmode:decrypt ;
 
 META: decrypt
   use-when "You have PRESENT ciphertext in 64-bit blocks with its key, from a device or a test vector, and you want the plaintext back." ;

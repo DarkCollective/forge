@@ -13,12 +13,6 @@ USING: blockmode ;
   key _check-key
   mode "CTR32" blockmode:ctr-as iv 8 padding "pkcs7" = [ key _encrypt-block ] blockmode:encrypt ;
 
-: decrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice<util:block-mode>="CBC" padding:choice<util:pkcs7-padding>="pkcs7" -- bytes )
-  "Triple DES decryption, the inverse of triple-des:encrypt with the same key, IV, mode and padding. PKCS#7 padding that does not check (usually a wrong key or IV) is E_COERCE, and so is ciphertext that is not whole 8-byte blocks in CBC or ECB. A key or IV of the wrong length is E_RANGE." doc
-  "Encryption" category
-  key _check-key
-  mode "CTR32" blockmode:ctr-as iv 8 padding "pkcs7" = [ key _encrypt-block ] [ key _decrypt-block ] blockmode:decrypt ;
-
 META: encrypt
   use-when "You have a Triple DES key of 16 or 24 bytes and data from a legacy or payment system that still uses 3DES, and you need the output. Use AES for new data." ;
   param key "The Triple DES key: 24 bytes (K1, K2, K3), or 16 bytes (K1, K2, with K3 = K1)." ;
@@ -30,6 +24,12 @@ META: encrypt
   link "https://en.wikipedia.org/wiki/Triple_DES" "Triple DES on Wikipedia" ;
   link "https://en.wikipedia.org/wiki/Data_Encryption_Standard" "Data Encryption Standard on Wikipedia" ;
 ;
+
+: decrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice<util:block-mode>="CBC" padding:choice<util:pkcs7-padding>="pkcs7" -- bytes )
+  "Triple DES decryption, the inverse of triple-des:encrypt with the same key, IV, mode and padding. PKCS#7 padding that does not check (usually a wrong key or IV) is E_COERCE, and so is ciphertext that is not whole 8-byte blocks in CBC or ECB. A key or IV of the wrong length is E_RANGE." doc
+  "Encryption" category
+  key _check-key
+  mode "CTR32" blockmode:ctr-as iv 8 padding "pkcs7" = [ key _encrypt-block ] [ key _decrypt-block ] blockmode:decrypt ;
 
 META: decrypt
   use-when "You have Triple DES ciphertext with its key and mode from a legacy or payment system, and you want the plaintext. Use it for existing data only." ;

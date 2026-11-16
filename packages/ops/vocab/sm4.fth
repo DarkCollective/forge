@@ -13,12 +13,6 @@ USING: blockmode ;
   key _check-key
   mode "CTR32" blockmode:ctr-as iv 16 padding "pkcs7" = [ key _encrypt-block ] blockmode:encrypt ;
 
-: decrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice<util:block-mode>="CBC" padding:choice<util:pkcs7-padding>="pkcs7" -- bytes )
-  "SM4 decryption, the inverse of sm4:encrypt with the same key, IV, mode and padding. PKCS#7 padding that does not check (usually a wrong key or IV) is E_COERCE, and so is ciphertext that is not whole 16-byte blocks in CBC or ECB. A key or IV of the wrong length is E_RANGE." doc
-  "Encryption" category
-  key _check-key
-  mode "CTR32" blockmode:ctr-as iv 16 padding "pkcs7" = [ key _encrypt-block ] [ key _decrypt-block ] blockmode:decrypt ;
-
 META: encrypt
   use-when "You have an SM4 key of 16 bytes and data from a system built on the Chinese standard GB/T 32907-2016, and you need the output in ECB, CBC, CFB, OFB or CTR." ;
   param key "The SM4 key: 16 bytes." ;
@@ -28,6 +22,12 @@ META: encrypt
   inverse decrypt ;
   see-also sm4:decrypt hex:encode ;
 ;
+
+: decrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice<util:block-mode>="CBC" padding:choice<util:pkcs7-padding>="pkcs7" -- bytes )
+  "SM4 decryption, the inverse of sm4:encrypt with the same key, IV, mode and padding. PKCS#7 padding that does not check (usually a wrong key or IV) is E_COERCE, and so is ciphertext that is not whole 16-byte blocks in CBC or ECB. A key or IV of the wrong length is E_RANGE." doc
+  "Encryption" category
+  key _check-key
+  mode "CTR32" blockmode:ctr-as iv 16 padding "pkcs7" = [ key _encrypt-block ] [ key _decrypt-block ] blockmode:decrypt ;
 
 META: decrypt
   use-when "You have SM4 ciphertext with its key, IV and mode, from a system built on GB/T 32907-2016, and you want the plaintext back." ;

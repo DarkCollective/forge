@@ -34,6 +34,13 @@ IN: cobs
   "Encodings" category
   bytes>latin1 0 cp>str split _runs ;
 
+META: encode
+  use-when "You are sending binary data in a packet and need no zero bytes inside it, so a zero can end each packet." ;
+  inverse decode ;
+  link
+  "https://en.wikipedia.org/wiki/Consistent_Overhead_Byte_Stuffing" "Consistent Overhead Byte Stuffing on Wikipedia" ;
+;
+
 \ ---- decode ----
 
 \ The block at pos: its data, then the zero it stands for unless its code is 255 or it is the last block. A block
@@ -57,12 +64,5 @@ META: decode
   inverse encode ;
   see-also cobs:encode ;
   link
-    "https://en.wikipedia.org/wiki/Consistent_Overhead_Byte_Stuffing" "Consistent Overhead Byte Stuffing on Wikipedia" ;
-;
-
-META: encode
-  use-when "You are sending binary data in a packet and need no zero bytes inside it, so a zero can end each packet." ;
-  inverse decode ;
-  link
-    "https://en.wikipedia.org/wiki/Consistent_Overhead_Byte_Stuffing" "Consistent Overhead Byte Stuffing on Wikipedia" ;
+  "https://en.wikipedia.org/wiki/Consistent_Overhead_Byte_Stuffing" "Consistent Overhead Byte Stuffing on Wikipedia" ;
 ;

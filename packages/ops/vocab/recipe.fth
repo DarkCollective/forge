@@ -11,7 +11,8 @@ CHOICE: text-encoding
 ;
 
 : as-bytes ( bytes -- bytes )
-  "Normalise the data to bytes. A str becomes its UTF-8 bytes; other types are a type error." doc ;
+  "Normalise the data to bytes. A str becomes its UTF-8 bytes; other types are a type error." doc
+  ;
 
 : latin1 ( str -- bytes )
   "Literal helper: a string whose code points are byte values 0 to 255." doc

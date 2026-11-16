@@ -43,21 +43,52 @@ IN: set
   "Arithmetic" category
   data sample-delimiter item-delimiter 2 false _sets _union-all item-delimiter join ;
 
+META: union
+  use-when "You have two or more lists of items, separated by a blank line, and want one list of every item they contain, each item once." ;
+  link "https://en.wikipedia.org/wiki/Union_(set_theory)" "Union (set theory) on Wikipedia" ;
+  param sample-delimiter "The text between the sets." ;
+  param item-delimiter "The text between the items of a set." ;
+  see-also set:intersection ;
+;
+
 : intersection ( data:str sample-delimiter:str[1..]="\n\n" item-delimiter:str[1..]="," -- str )
   "The intersection of the sets: the items that are in every one of them, in the order of the first set. Same input and output shape as union. Fewer than two sets is E_RANGE." doc
   "Arithmetic" category
   data sample-delimiter item-delimiter 2 false _sets dup 0 nth [ _common ] reduce item-delimiter join ;
+
+META: intersection
+  use-when "You have two or more lists of items and want only the items that appear in every one of them." ;
+  link "https://en.wikipedia.org/wiki/Intersection_(set_theory)" "Intersection (set theory) on Wikipedia" ;
+  param sample-delimiter "The text between the sets." ;
+  param item-delimiter "The text between the items of a set." ;
+  see-also set:union ;
+;
 
 : difference ( data:str sample-delimiter:str[1..]="\n\n" item-delimiter:str[1..]="," -- str )
   "The difference of the sets: the items of the first set that are in none of the others (A minus B, minus C ...), in the order of the first set. Same input and output shape as union. Fewer than two sets is E_RANGE." doc
   "Arithmetic" category
   data sample-delimiter item-delimiter 2 false _sets _rest-union _minus item-delimiter join ;
 
+META: difference
+  use-when "You have two or more lists of items and want the items of the first that are missing from all the others, for example words in one list that the rest lack." ;
+  param sample-delimiter "The text between the sets." ;
+  param item-delimiter "The text between the items of a set." ;
+  see-also set:symmetric-difference ;
+;
+
 : symmetric-difference ( data:str sample-delimiter:str[1..]="\n\n" item-delimiter:str[1..]="," -- str )
   "The symmetric difference of the sets: the items that are in exactly one of two sets, the ones of the first set first. With more than two sets it is applied from left to right, so an item stays when it is in an odd number of the sets. Same input and output shape as union. Fewer than two sets is E_RANGE." doc
   "Arithmetic" category
   data sample-delimiter item-delimiter 2 false _sets :> sets
   sets 1 sets len slice sets 0 nth [ _either ] reduce item-delimiter join ;
+
+META: symmetric-difference
+  use-when "You have two or more lists of items and want the items that are in only one of them, the ones that differ, for example between two versions of a list." ;
+  link "https://en.wikipedia.org/wiki/Symmetric_difference" "Symmetric difference on Wikipedia" ;
+  param sample-delimiter "The text between the sets." ;
+  param item-delimiter "The text between the items of a set." ;
+  see-also set:difference ;
+;
 
 : _pairs ( x:str b:list -- list )
   b [ "(" x cat "," cat swap cat ")" cat ] map ;
@@ -68,6 +99,14 @@ IN: set
   data sample-delimiter item-delimiter 2 true _sets :> sets
   sets 1 nth :> b
   [ sets 0 nth [ b _pairs emit-all ] each ] collect item-delimiter join ;
+
+META: cartesian-product
+  use-when "You have two lists of items and want every pair with one item from each, for example every combination of a size and a colour to try." ;
+  link "https://en.wikipedia.org/wiki/Cartesian_product" "Cartesian product on Wikipedia" ;
+  param sample-delimiter "The text between the two sets." ;
+  param item-delimiter "The text between the items of a set and between the pairs of the result." ;
+  see-also set:power-set ;
+;
 
 : _grow ( acc:list item:str -- list )
   acc acc [ { item } swap cat ] map cat ;
@@ -85,45 +124,6 @@ IN: set
       dup [ len ] map list:sort-by
       [ subset-delimiter cat ] map "" join ]
   } cond ;
-
-META: union
-  use-when "You have two or more lists of items, separated by a blank line, and want one list of every item they contain, each item once." ;
-  link "https://en.wikipedia.org/wiki/Union_(set_theory)" "Union (set theory) on Wikipedia" ;
-  param sample-delimiter "The text between the sets." ;
-  param item-delimiter "The text between the items of a set." ;
-  see-also set:intersection ;
-;
-
-META: intersection
-  use-when "You have two or more lists of items and want only the items that appear in every one of them." ;
-  link "https://en.wikipedia.org/wiki/Intersection_(set_theory)" "Intersection (set theory) on Wikipedia" ;
-  param sample-delimiter "The text between the sets." ;
-  param item-delimiter "The text between the items of a set." ;
-  see-also set:union ;
-;
-
-META: difference
-  use-when "You have two or more lists of items and want the items of the first that are missing from all the others, for example words in one list that the rest lack." ;
-  param sample-delimiter "The text between the sets." ;
-  param item-delimiter "The text between the items of a set." ;
-  see-also set:symmetric-difference ;
-;
-
-META: symmetric-difference
-  use-when "You have two or more lists of items and want the items that are in only one of them, the ones that differ, for example between two versions of a list." ;
-  link "https://en.wikipedia.org/wiki/Symmetric_difference" "Symmetric difference on Wikipedia" ;
-  param sample-delimiter "The text between the sets." ;
-  param item-delimiter "The text between the items of a set." ;
-  see-also set:difference ;
-;
-
-META: cartesian-product
-  use-when "You have two lists of items and want every pair with one item from each, for example every combination of a size and a colour to try." ;
-  link "https://en.wikipedia.org/wiki/Cartesian_product" "Cartesian product on Wikipedia" ;
-  param sample-delimiter "The text between the two sets." ;
-  param item-delimiter "The text between the items of a set and between the pairs of the result." ;
-  see-also set:power-set ;
-;
 
 META: power-set
   use-when "You have a list of items and want every subset of it, for example every combination of options to try, including the empty one." ;

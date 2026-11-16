@@ -23,7 +23,7 @@ USING: hex md2 md4 md5 md6 sha0 sha1 sha2 sha3 keccak shake ripemd has160 whirlp
 \ "all" or equals the digest size in bits.
 : _h ( data:bytes name:str bits:int f:quot length:str names:bool width:int -- str )
   length "all" = length bits int>str = or
-  [ name  data f call "none" "lower" hex:encode  names width _line ]
+  [ name data f call "none" "lower" hex:encode names width _line ]
   [ "" ]
   if ;
 
@@ -96,6 +96,13 @@ USING: hex md2 md4 md5 md6 sha0 sha1 sha2 sha3 keccak shake ripemd has160 whirlp
     data length names _ss }
   "" join ;
 
+META: hashes
+  use-when "You have one input and want its digest under many hash functions at once, to see which of them gives the value you hold." ;
+  param length "Show only the digests with this many bits, or all of them." ;
+  param names "Put the algorithm name before each digest." ;
+  see-also generate-all:checksums hash-analysis:analyse ;
+;
+
 \ The CRC preset lines of util:crc-presets whose width is length (every line for all).
 : _crc-lines ( length:str -- list )
   util:crc-presets "\n" split [ len 0 > ] filter
@@ -119,13 +126,6 @@ USING: hex md2 md4 md5 md6 sha0 sha1 sha2 sha3 keccak shake ripemd has160 whirlp
   data "Fletcher-16" 16 [ "16" fletcher:checksum ] length names 26 _h cat
   data "Fletcher-32" 32 [ "32" fletcher:checksum ] length names 26 _h cat
   data "Fletcher-64" 64 [ "64" fletcher:checksum ] length names 26 _h cat ;
-
-META: hashes
-  use-when "You have one input and want its digest under many hash functions at once, to see which of them gives the value you hold." ;
-  param length "Show only the digests with this many bits, or all of them." ;
-  param names "Put the algorithm name before each digest." ;
-  see-also generate-all:checksums hash-analysis:analyse ;
-;
 
 META: checksums
   use-when "You have one input and want its value under every CRC preset, and the Adler and Fletcher sums, at once, to see which checksum it matches." ;

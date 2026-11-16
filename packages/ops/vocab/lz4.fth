@@ -40,9 +40,23 @@ IN: lz4
   #[ 04 22 4d 18 ]
   block-size _bs-id independent block-checksum content-size content-checksum _flg content-size data len _descriptor
   _with-hc cat
-  data  1 block-size _bs-id 2 * 8 + shl  independent block-checksum level _encode cat
+  data 1 block-size _bs-id 2 * 8 + shl independent block-checksum level _encode cat
   #[ 00 00 00 00 ] cat
   content-checksum [ data _xxh-bytes cat ] when ;
+
+META: compress
+  use-when "You have bytes and need an LZ4 frame, for example to store data for an lz4 tool or a service that reads LZ4." ;
+  param level "The compression level: 0 stores, 1 to 9 compress (1 fastest and the default; 9 searches 256 candidates per position). CyberChef's LZ4 Compress has no parameters." ;
+  param block-size "The largest block: 64KB, 256KB, 1MB or 4MB (lz4js and the lz4 command default to 4MB)." ;
+  param independent "Independent blocks (the default): each block decodes alone. Off lets a block refer back into the 64 KB before it (smaller, like lz4 -BD)." ;
+  param block-checksum "Add an XXH32 after every block (lz4 -BX)." ;
+  param content-checksum "Add the XXH32 of the whole input at the end (on by default, as lz4js and lz4 write it)." ;
+  param content-size "Store the input length in the header (lz4 --content-size)." ;
+  checks output magic-bytes format "lz4" ;
+  see-also lz4:decompress lzstring:compress deflate:gzip ;
+  inverse decompress ;
+  link "https://lz4.org/" "LZ4 home page" ;
+;
 
 \ ---- decompress ----
 
@@ -104,20 +118,6 @@ IN: lz4
   "Decompress LZ4 frames (lz4_Frame_format.md): the header is parsed (version, flags, block maximum size; a frame that needs a dictionary is E_COERCE), the blocks are decoded, and with verify (the default) the header checksum, every block checksum, the content checksum and the content size must be present and agree, otherwise E_COERCE. Frames written one after the other are joined, skippable frames (0x184D2A50 to 5F) are skipped, and a legacy frame (0x184C2102) is read; any other magic number is E_COERCE, as is data cut short. The size claimed in the header never sizes a buffer: output past the value limit stops with E_LIMIT_VALUE." doc
   "Compression" category
   data 0 verify _frames ;
-
-META: compress
-  use-when "You have bytes and need an LZ4 frame, for example to store data for an lz4 tool or a service that reads LZ4." ;
-  param level "The compression level: 0 stores, 1 to 9 compress (1 fastest and the default; 9 searches 256 candidates per position). CyberChef's LZ4 Compress has no parameters." ;
-  param block-size "The largest block: 64KB, 256KB, 1MB or 4MB (lz4js and the lz4 command default to 4MB)." ;
-  param independent "Independent blocks (the default): each block decodes alone. Off lets a block refer back into the 64 KB before it (smaller, like lz4 -BD)." ;
-  param block-checksum "Add an XXH32 after every block (lz4 -BX)." ;
-  param content-checksum "Add the XXH32 of the whole input at the end (on by default, as lz4js and lz4 write it)." ;
-  param content-size "Store the input length in the header (lz4 --content-size)." ;
-  checks output magic-bytes format "lz4" ;
-  see-also lz4:decompress lzstring:compress deflate:gzip ;
-  inverse decompress ;
-  link "https://lz4.org/" "LZ4 home page" ;
-;
 
 META: decompress
   use-when "You have an LZ4 frame, starting with 04 22 4d 18, and want the bytes it holds." ;

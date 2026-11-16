@@ -539,6 +539,18 @@ MEMO: _band-min-northing ( -- list )
   "Conversions" category
   data from _parse to precision _format-out ;
 
+META: convert
+  use-when "You have a position as latitude and longitude, or as a geohash, UTM or MGRS grid reference, and want it written in another co-ordinate format." ;
+  link "https://en.wikipedia.org/wiki/Geographic_coordinate_system" "Geographic coordinate system on Wikipedia" ;
+  link "https://en.wikipedia.org/wiki/Geohash" "Geohash on Wikipedia" ;
+  link "https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system" "Universal Transverse Mercator coordinate system on Wikipedia" ;
+  link "https://en.wikipedia.org/wiki/Military_Grid_Reference_System" "Military Grid Reference System on Wikipedia" ;
+  param from "The format of the input, or auto to detect it." ;
+  param to "The format to write." ;
+  param precision "Decimals of degrees, minutes or seconds; the characters of a geohash (1 to 12)." ;
+  see-also coords:haversine units:convert-distance ;
+;
+
 \ ---- the great-circle distance ----
 
 : _sq ( x:num -- num ) x x * ;
@@ -556,7 +568,7 @@ MEMO: _band-min-northing ( -- list )
 
 \ The four numbers of CyberChef's one-line input "lat1, lng1, lat2, lng2" as two positions.
 : _split4 ( t:list -- list )
-  { t 0 nth "," cat t 1 nth cat  t 2 nth "," cat t 3 nth cat } ;
+  { t 0 nth "," cat t 1 nth cat t 2 nth "," cat t 3 nth cat } ;
 
 : _two-lines ( data:str -- list )
   data "\n" split [ [ space? ] trim-start [ space? ] trim-end ] map [ len 0 > ] filter
@@ -571,18 +583,6 @@ MEMO: _band-min-northing ( -- list )
   radius 0.0 > not [ "the radius must be above 0" fail-range ] when
   data _two-lines dup len 2 = not [ "give exactly two positions, one on each line" fail-coerce ] when
   dup 0 nth "auto" _parse rot 1 nth "auto" _parse radius _hav ;
-
-META: convert
-  use-when "You have a position as latitude and longitude, or as a geohash, UTM or MGRS grid reference, and want it written in another co-ordinate format." ;
-  link "https://en.wikipedia.org/wiki/Geographic_coordinate_system" "Geographic coordinate system on Wikipedia" ;
-  link "https://en.wikipedia.org/wiki/Geohash" "Geohash on Wikipedia" ;
-  link "https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system" "Universal Transverse Mercator coordinate system on Wikipedia" ;
-  link "https://en.wikipedia.org/wiki/Military_Grid_Reference_System" "Military Grid Reference System on Wikipedia" ;
-  param from "The format of the input, or auto to detect it." ;
-  param to "The format to write." ;
-  param precision "Decimals of degrees, minutes or seconds; the characters of a geohash (1 to 12)." ;
-  see-also coords:haversine units:convert-distance ;
-;
 
 META: haversine
   use-when "You have two positions, one per line, and want the straight-line distance between them over the earth's surface, in metres." ;

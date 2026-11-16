@@ -10,6 +10,12 @@ IN: braille
   "Encodings" category
   bytes>list [ 10240 + ] map codes>str ;
 
+META: encode
+  use-when "You have bytes and want each one written as a single Braille pattern symbol, a lossless form that decode reads back." ;
+  inverse decode ;
+  checks output charset "\u{2800}-\u{28FF}" ;
+;
+
 : _outside? ( cp:int -- bool )
   cp 10240 < cp 10495 > or ;
 
@@ -20,12 +26,6 @@ IN: braille
   dup [ _outside? ] any?
   [ "not a Braille pattern (U+2800 to U+28FF)" fail-coerce ] when
   [ 10240 - ] map list>bytes ;
-
-META: encode
-  use-when "You have bytes and want each one written as a single Braille pattern symbol, a lossless form that decode reads back." ;
-  inverse decode ;
-  checks output charset "\u{2800}-\u{28FF}" ;
-;
 
 META: decode
   use-when "You have text made of Braille pattern symbols (U+2800 to U+28FF) and want the bytes behind them." ;

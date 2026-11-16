@@ -113,10 +113,25 @@ IN: tar
   "Compression" category
   data verify _entries ;
 
+META: untar
+  use-when "You have a tar archive, or a .tar.gz once it has been gunzipped, and want to list its files and read their contents." ;
+  param verify "Check each header's checksum; off, a damaged header is read anyway." ;
+  see-also tar:entry tar:tar zip:unzip ;
+  link "https://en.wikipedia.org/wiki/Tar_(computing)" "Tar on Wikipedia" ;
+;
+
 : entry ( data:bytes name:str verify:bool=true -- bytes )
   "The bytes of one file of a tar archive, found by its name exactly as tar:untar lists it (the first, if the name is repeated). A name that is not there is E_RANGE and the message lists the first entries. verify and damaged data are as for tar:untar." doc
   "Compression" category
   data verify _entries name util:pick-named "data" get ;
+
+META: entry
+  use-when "You have a tar archive and want one file from it, found by its exact name." ;
+  param name "The file's name as untar lists it, for example docs/readme.txt." ;
+  param verify "Check each header's checksum." ;
+  see-also tar:untar tar:tar ;
+  link "https://en.wikipedia.org/wiki/Tar_(computing)" "Tar on Wikipedia" ;
+;
 
 \ ---- writing ----
 
@@ -174,21 +189,6 @@ IN: tar
   data len 512 mod :> rest
   rest 0 = [ 0 ] [ 512 rest - ] if zero-bytes cat
   1024 zero-bytes cat ;
-
-META: untar
-  use-when "You have a tar archive, or a .tar.gz once it has been gunzipped, and want to list its files and read their contents." ;
-  param verify "Check each header's checksum; off, a damaged header is read anyway." ;
-  see-also tar:entry tar:tar zip:unzip ;
-  link "https://en.wikipedia.org/wiki/Tar_(computing)" "Tar on Wikipedia" ;
-;
-
-META: entry
-  use-when "You have a tar archive and want one file from it, found by its exact name." ;
-  param name "The file's name as untar lists it, for example docs/readme.txt." ;
-  param verify "Check each header's checksum." ;
-  see-also tar:untar tar:tar ;
-  link "https://en.wikipedia.org/wiki/Tar_(computing)" "Tar on Wikipedia" ;
-;
 
 META: tar
   use-when "You have bytes and need a tar archive holding them as one file with a given name, for example to pass to a tool that reads tar." ;

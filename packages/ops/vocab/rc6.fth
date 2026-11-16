@@ -15,12 +15,6 @@ USING: blockmode util ;
   key word-size rounds _check-key
   mode "CTRLE" blockmode:ctr-as iv word-size 2 div util:iv-or-zeros word-size 2 div padding "pkcs7" = [ key word-size rounds _encrypt-block ] blockmode:encrypt ;
 
-: decrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice<util:block-mode>="CBC" padding:choice<util:pkcs7-padding>="pkcs7" word-size:int[8..256]=32 rounds:int[1..255]=20 -- bytes )
-  "RC6-w/r decryption, the inverse of rc6:encrypt with the same key, IV, mode, padding, word-size and rounds. PKCS#7 padding that does not check (usually a wrong key, IV or parameter) is E_COERCE, and so is ciphertext that is not whole blocks in CBC or ECB. A key, IV, word-size or rounds of the wrong value is E_RANGE." doc
-  "Encryption" category
-  key word-size rounds _check-key
-  mode "CTRLE" blockmode:ctr-as iv word-size 2 div util:iv-or-zeros word-size 2 div padding "pkcs7" = [ key word-size rounds _encrypt-block ] [ key word-size rounds _decrypt-block ] blockmode:decrypt ;
-
 META: encrypt
   use-when "You have an RC6 key of 16 to 32 bytes from a test or an older system, and you need RC6-w/r output. RC6 was an AES finalist, not a standard for new data." ;
   param key "The RC6 key: at most 255 bytes (16, 24 or 32 for the AES submission)." ;
@@ -33,6 +27,12 @@ META: encrypt
   inverse decrypt ;
   link "https://en.wikipedia.org/wiki/RC6" "RC6 on Wikipedia" ;
 ;
+
+: decrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice<util:block-mode>="CBC" padding:choice<util:pkcs7-padding>="pkcs7" word-size:int[8..256]=32 rounds:int[1..255]=20 -- bytes )
+  "RC6-w/r decryption, the inverse of rc6:encrypt with the same key, IV, mode, padding, word-size and rounds. PKCS#7 padding that does not check (usually a wrong key, IV or parameter) is E_COERCE, and so is ciphertext that is not whole blocks in CBC or ECB. A key, IV, word-size or rounds of the wrong value is E_RANGE." doc
+  "Encryption" category
+  key word-size rounds _check-key
+  mode "CTRLE" blockmode:ctr-as iv word-size 2 div util:iv-or-zeros word-size 2 div padding "pkcs7" = [ key word-size rounds _encrypt-block ] [ key word-size rounds _decrypt-block ] blockmode:decrypt ;
 
 META: decrypt
   use-when "You have RC6 ciphertext with its key, word size and round count, from a test or an older system, and you want to read the existing data." ;

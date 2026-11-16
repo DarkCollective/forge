@@ -44,11 +44,6 @@ MEMO: _pop-table ( -- bytes )
   "Analysis" category
   data delimiter _two dup 0 nth swap 1 nth unit format _measure ;
 
-: levenshtein ( data:str delimiter:str[1..]="\n" insertion:int[0..1000000]=1 deletion:int[0..1000000]=1 substitution:int[0..1000000]=1 -- int )
-  "The Levenshtein (edit) distance from the first sample to the second: the least total cost of inserting, deleting and substituting characters (code points) to turn one into the other. The input holds both samples, cut at the delimiter (a line feed by default); anything but exactly two samples is E_COERCE. Insertion adds a character of the second sample, deletion removes a character of the first, and each costs 1 unless set. The product of the two lengths is limited to 100 million (E_LIMIT_VALUE): about 10,000 characters each." doc
-  "Analysis" category
-  data delimiter _two dup 0 nth swap 1 nth insertion deletion substitution _levenshtein ;
-
 META: hamming
   use-when "You have two strings or byte values of equal length, such as two hashes or a message and a corrupted copy, and want the number of positions where they differ." ;
   link "https://en.wikipedia.org/wiki/Hamming_distance" "Hamming distance on Wikipedia" ;
@@ -57,6 +52,11 @@ META: hamming
   param format "raw reads each sample as text, hex as hexadecimal bytes." ;
   see-also distance:levenshtein ;
 ;
+
+: levenshtein ( data:str delimiter:str[1..]="\n" insertion:int[0..1000000]=1 deletion:int[0..1000000]=1 substitution:int[0..1000000]=1 -- int )
+  "The Levenshtein (edit) distance from the first sample to the second: the least total cost of inserting, deleting and substituting characters (code points) to turn one into the other. The input holds both samples, cut at the delimiter (a line feed by default); anything but exactly two samples is E_COERCE. Insertion adds a character of the second sample, deletion removes a character of the first, and each costs 1 unless set. The product of the two lengths is limited to 100 million (E_LIMIT_VALUE): about 10,000 characters each." doc
+  "Analysis" category
+  data delimiter _two dup 0 nth swap 1 nth insertion deletion substitution _levenshtein ;
 
 META: levenshtein
   use-when "You have two words or short texts and want the fewest insertions, deletions and substitutions that turn one into the other, for spelling or fuzzy matching." ;

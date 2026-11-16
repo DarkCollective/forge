@@ -321,7 +321,7 @@ CHOICE: encryption-scheme
   password _no-password
   root _pbes2-check
   [ password str>bytes root _pbes2-oid _pbes2-size root _kdfp 1 _int-at root _pbes2-prf
-      root _kdfp 0 asn1:child "value" get pbkdf2:derive
+    root _kdfp 0 asn1:child "value" get pbkdf2:derive
     root 1 asn1:child "value" get swap root _enc 1 asn1:child "value" get root _pbes2-oid _pbes2-kind
     _cbc-decrypt _check-plain ]
   [ drop _bad-password #[ ] ] try ;

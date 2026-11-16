@@ -16,11 +16,6 @@ USING: asn1 ;
   dup len 0 = [ "no PEM block (-----BEGIN ...-----) found in the input" fail-coerce ] when
   [ _hex-of ] map "\n" join ;
 
-: from-hex ( data:str header:str="CERTIFICATE" -- str )
-  "A PEM block of the bytes written as hex digits (Hex to PEM): the line -----BEGIN header-----, the Base64 in lines of 64 characters, and the line -----END header-----, each ended by a line feed. header is the label (CERTIFICATE by default; PUBLIC KEY, PRIVATE KEY, CERTIFICATE REQUEST, ...). Hex is read as in From Hex; empty input gives a block with no body. A header that is empty, not printable ASCII or holds five hyphens is E_RANGE; bad hex is E_COERCE." doc
-  "Public Key" category
-  header data hex>bytes asn1:pem-encode ;
-
 META: to-hex
   use-when "You have a block between -----BEGIN and -----END lines, such as a certificate or key, and want the hex of the DER bytes inside it." ;
   see-also pem:from-hex asn1-dump:parse ;
@@ -30,6 +25,11 @@ META: to-hex
   expects "PEM text" ;
   checks output charset "0-9a-f\n" ;
 ;
+
+: from-hex ( data:str header:str="CERTIFICATE" -- str )
+  "A PEM block of the bytes written as hex digits (Hex to PEM): the line -----BEGIN header-----, the Base64 in lines of 64 characters, and the line -----END header-----, each ended by a line feed. header is the label (CERTIFICATE by default; PUBLIC KEY, PRIVATE KEY, CERTIFICATE REQUEST, ...). Hex is read as in From Hex; empty input gives a block with no body. A header that is empty, not printable ASCII or holds five hyphens is E_RANGE; bad hex is E_COERCE." doc
+  "Public Key" category
+  header data hex>bytes asn1:pem-encode ;
 
 META: from-hex
   use-when "You have DER bytes as hex and need a PEM file that openssl and other tools will read, with a label such as CERTIFICATE or PUBLIC KEY." ;

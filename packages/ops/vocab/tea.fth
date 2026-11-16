@@ -11,12 +11,6 @@ IN: tea
   key _check-key
   dup len 0 = [ ] [ mode iv 8 util:iv-or-zeros 8 padding "pkcs7" = [ key _encrypt-block ] blockmode:encrypt ] if ;
 
-: decrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice<util:block-mode>="CBC" padding:choice<util:pkcs7-padding>="pkcs7" -- bytes )
-  "TEA decryption, the inverse of tea:encrypt with the same key, IV, mode and padding. PKCS#7 padding that does not check (usually a wrong key or IV) and CBC or ECB input that is not whole blocks are E_COERCE. A key of the wrong length is E_RANGE. An empty input gives an empty output." doc
-  "Encryption" category
-  key _check-key
-  dup len 0 = [ ] [ mode iv 8 util:iv-or-zeros 8 padding "pkcs7" = [ key _encrypt-block ] [ key _decrypt-block ] blockmode:decrypt ] if ;
-
 META: encrypt
   use-when "You have a 16-byte TEA key and data from an old system that uses the Tiny Encryption Algorithm. TEA is weak, so use it for existing data only." ;
   param key "The TEA key: 16 bytes." ;
@@ -27,6 +21,12 @@ META: encrypt
   see-also tea:decrypt xtea:encrypt hex:encode ;
   link "https://en.wikipedia.org/wiki/Tiny_Encryption_Algorithm" "Tiny Encryption Algorithm on Wikipedia" ;
 ;
+
+: decrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice<util:block-mode>="CBC" padding:choice<util:pkcs7-padding>="pkcs7" -- bytes )
+  "TEA decryption, the inverse of tea:encrypt with the same key, IV, mode and padding. PKCS#7 padding that does not check (usually a wrong key or IV) and CBC or ECB input that is not whole blocks are E_COERCE. A key of the wrong length is E_RANGE. An empty input gives an empty output." doc
+  "Encryption" category
+  key _check-key
+  dup len 0 = [ ] [ mode iv 8 util:iv-or-zeros 8 padding "pkcs7" = [ key _encrypt-block ] [ key _decrypt-block ] blockmode:decrypt ] if ;
 
 META: decrypt
   use-when "You have TEA ciphertext with its key, IV and mode, from an old system, and you want the plaintext. Use it for reading existing data only." ;

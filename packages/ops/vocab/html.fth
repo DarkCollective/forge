@@ -2373,11 +2373,6 @@ MEMO: _table ( -- record )
   "Encodings" category
   str>codes [ scope format _char-of ] map "" join ;
 
-: decode ( str -- str )
-  "Decode HTML character references as the HTML Living Standard does in text: all 2,231 named references (with or without the semicolon for the 106 legacy names such as &amp and &copy), and decimal and hex numeric references (the semicolon is optional). References to 0, surrogates or values above 0x10FFFF become U+FFFD, and 128 to 159 are read as windows-1252. Anything else passes through." doc
-  "Encodings" category
-  "&" split dup len 1 = [ 0 nth ] [ _decode-pieces ] if ;
-
 META: encode
   use-when "You have text that must go inside HTML, such as a value to show on a web page, and want the characters that would break the markup escaped." ;
   link "https://html.spec.whatwg.org/" "HTML Living Standard (WHATWG)" ;
@@ -2386,6 +2381,11 @@ META: encode
   param format "named: the five named entities, decimal references otherwise. decimal or hex: numeric references only." ;
   see-also html:decode ;
 ;
+
+: decode ( str -- str )
+  "Decode HTML character references as the HTML Living Standard does in text: all 2,231 named references (with or without the semicolon for the 106 legacy names such as &amp and &copy), and decimal and hex numeric references (the semicolon is optional). References to 0, surrogates or values above 0x10FFFF become U+FFFD, and 128 to 159 are read as windows-1252. Anything else passes through." doc
+  "Encodings" category
+  "&" split dup len 1 = [ 0 nth ] [ _decode-pieces ] if ;
 
 META: decode
   use-when "You have HTML text with character references such as &amp; or &#233; and want the characters they stand for. This decodes text, not an attribute value." ;

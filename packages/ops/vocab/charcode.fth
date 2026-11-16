@@ -18,11 +18,6 @@ IN: charcode
   "Encodings" category
   str>codes [ base _cp-text ] map delimiter util:separator join ;
 
-: decode ( str base:int[2..36]=16 -- str )
-  "Decode numbers in the base separated by white space and/or commas, one code point each." doc
-  "Encodings" category
-  util:number-tokens [ base _cp-value ] map codes>str ;
-
 META: encode
   use-when "You have text and want the Unicode code point of each character as numbers, such as 1f600 for an emoji, to look up or compare." ;
   param base "The number base, 2 to 36." ;
@@ -31,6 +26,11 @@ META: encode
   link "https://en.wikipedia.org/wiki/Code_point" "Code point on Wikipedia" ;
   checks output charset "0-9a-z ,\n" ;
 ;
+
+: decode ( str base:int[2..36]=16 -- str )
+  "Decode numbers in the base separated by white space and/or commas, one code point each." doc
+  "Encodings" category
+  util:number-tokens [ base _cp-value ] map codes>str ;
 
 META: decode
   use-when "You have Unicode code points as numbers, such as 48 69 or 1F600 from a table, and want the characters they stand for." ;

@@ -11,15 +11,15 @@ IN: xpress
   "Compression" category
   data _lz77 ;
 
-: huffman-decompress ( data:bytes -- bytes )
-  "Decompress XPRESS LZ77+Huffman data (MS-XCA 2.2; CyberChef's XPRESS LZ77+Huffman Decompress): blocks of 64 KiB of output, each a 256-byte table of 512 four-bit code lengths (symbols 0-255 literals, 256-511 matches with a 15-bit offset and a length that grows through extra bytes) and a bit stream read in 16-bit words; the end-of-data symbol (256) ends the data. An invalid Huffman table (over-subscribed or incomplete), truncated data, a match before the start of the output or a bad long length is E_COERCE naming the fault; empty input is E_COERCE; output past the value limit stops with E_LIMIT_VALUE (the decompression bomb rule of the Wave 6 conventions)." doc
-  "Compression" category
-  data _huffman ;
-
 META: decompress
   use-when "You have XPRESS plain LZ77 data from the Windows compression API, described in MS-XCA, and want the bytes it holds." ;
   see-also xpress:huffman-decompress lznt1:decompress ;
 ;
+
+: huffman-decompress ( data:bytes -- bytes )
+  "Decompress XPRESS LZ77+Huffman data (MS-XCA 2.2; CyberChef's XPRESS LZ77+Huffman Decompress): blocks of 64 KiB of output, each a 256-byte table of 512 four-bit code lengths (symbols 0-255 literals, 256-511 matches with a 15-bit offset and a length that grows through extra bytes) and a bit stream read in 16-bit words; the end-of-data symbol (256) ends the data. An invalid Huffman table (over-subscribed or incomplete), truncated data, a match before the start of the output or a bad long length is E_COERCE naming the fault; empty input is E_COERCE; output past the value limit stops with E_LIMIT_VALUE (the decompression bomb rule of the Wave 6 conventions)." doc
+  "Compression" category
+  data _huffman ;
 
 META: huffman-decompress
   use-when "You have XPRESS LZ77 with Huffman data from the Windows compression API, with its code table in front, and want the bytes it holds." ;

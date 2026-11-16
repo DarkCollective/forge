@@ -12,13 +12,6 @@ USING: random ;
   "Encryption" category
   10 random:bytes-of tuck key swap rounds _crypt cat ;
 
-: decrypt ( bytes key:key{hex|utf8|latin1|base64} rounds:int[1..10000]=20 -- bytes )
-  "CipherSaber-2 decryption, the inverse of ciphersaber2:encrypt with the same key and rounds: the first 10 bytes of the input are the IV and the rest is decrypted. Input shorter than the 10-byte IV is E_COERCE. A wrong key or round count gives garbage, not an error (there is no check value)." doc
-  "Encryption" category
-  dup len 10 < [ "the input is shorter than the 10-byte CipherSaber IV" fail-coerce ] when
-  dup 0 10 slice swap 10 over len slice
-  swap key swap rounds _crypt ;
-
 META: encrypt
   use-when "You need a CipherSaber-2 message for an existing CipherSaber user, with a passphrase. The format is built on RC4, so it is not for new protection." ;
   param key "The CipherSaber key (up to 246 bytes by the specification; longer keys work but are not CipherSaber)." ;
@@ -27,6 +20,13 @@ META: encrypt
   see-also ciphersaber2:decrypt rc4:crypt hex:encode ;
   link "https://en.wikipedia.org/wiki/RC4" "RC4 on Wikipedia" ;
 ;
+
+: decrypt ( bytes key:key{hex|utf8|latin1|base64} rounds:int[1..10000]=20 -- bytes )
+  "CipherSaber-2 decryption, the inverse of ciphersaber2:encrypt with the same key and rounds: the first 10 bytes of the input are the IV and the rest is decrypted. Input shorter than the 10-byte IV is E_COERCE. A wrong key or round count gives garbage, not an error (there is no check value)." doc
+  "Encryption" category
+  dup len 10 < [ "the input is shorter than the 10-byte CipherSaber IV" fail-coerce ] when
+  dup 0 10 slice swap 10 over len slice
+  swap key swap rounds _crypt ;
 
 META: decrypt
   use-when "You have a CipherSaber-2 message, which starts with its IV, and its passphrase, and you want the text. The format is RC4-based, so use it to read old messages." ;

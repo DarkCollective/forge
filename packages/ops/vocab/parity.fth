@@ -50,11 +50,6 @@ CHOICE: parity-mode
   "Hashing" category
   bits delimiter [ mode position _encode-block ] _blocks ;
 
-: decode ( bits:str mode:choice<parity-mode>=even position:choice<util:start-or-end>=end delimiter:str[0..16]="" verify:bool=true -- str )
-  "Remove the parity bit from a string of binary digits (from each block, with a delimiter). With verify on, the parity of every block is checked against the mode and a mismatch is an error; CyberChef removes the bit without checking." doc
-  "Hashing" category
-  bits delimiter [ mode position verify _decode-block ] _blocks ;
-
 META: encode
   use-when "You have a string of 0 and 1 digits, such as bits from an old serial link, and need a parity bit added to each block so the count of 1 bits is even or odd." ;
   inverse decode ;
@@ -64,6 +59,11 @@ META: encode
   see-also parity:decode ;
   link "https://en.wikipedia.org/wiki/Parity_bit" "Parity bit on Wikipedia" ;
 ;
+
+: decode ( bits:str mode:choice<parity-mode>=even position:choice<util:start-or-end>=end delimiter:str[0..16]="" verify:bool=true -- str )
+  "Remove the parity bit from a string of binary digits (from each block, with a delimiter). With verify on, the parity of every block is checked against the mode and a mismatch is an error; CyberChef removes the bit without checking." doc
+  "Hashing" category
+  bits delimiter [ mode position verify _decode-block ] _blocks ;
 
 META: decode
   use-when "You have bits with a parity bit on each block, from an old serial or tape format, and want the data bits back, with the parity checked." ;

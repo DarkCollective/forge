@@ -12,18 +12,18 @@ USING: random util ;
   "Generators" category
   drop length random:bytes-of ;
 
+META: bytes
+  use-when "You need random bytes, for example a test key or a salt, drawn from a cryptographic random source." ;
+  param length "How many random bytes (0 to 1,048,576)." ;
+  see-also hex:encode base64:encode ;
+;
+
 : integers ( bytes min:int=0 max:int=99 count:int[1..65536]=1 delimiter:choice<util:delimiter-or-none>="space" -- str )
   "Random integers, each uniform in [min, max] with both ends included (rejection sampling on the cryptographic random generator, so there is no modulo bias; the bounds may be big integers). count of them are written as decimal text, joined by the delimiter. The input is ignored. A min above max is E_RANGE. The output differs on every call (the word carries the +random effect)." doc
   "Generators" category
   drop
   max min < [ "the minimum is above the maximum" fail-range ] when
   0 count range [ drop min max random:between int>str ] map delimiter util:delimiter join ;
-
-META: bytes
-  use-when "You need random bytes, for example a test key or a salt, drawn from a cryptographic random source." ;
-  param length "How many random bytes (0 to 1,048,576)." ;
-  see-also hex:encode base64:encode ;
-;
 
 META: integers
   use-when "You need random whole numbers within a range, for example to pick test cases, drawn from a cryptographic random source." ;

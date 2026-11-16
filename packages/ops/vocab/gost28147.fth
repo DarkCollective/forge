@@ -35,24 +35,6 @@ CHOICE: meshing
   [ key iv 8 util:iv-or-zeros mode padding "pkcs7" = sbox meshing "CP" = _ext-enc ]
   [ mode iv 8 util:iv-or-zeros 8 padding "pkcs7" = [ key sbox _encrypt-block ] blockmode:encrypt ] if ;
 
-: decrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice<util:block-mode>="CBC" padding:choice<util:pkcs7-padding>="pkcs7" sbox:choice<util:gost-sbox>="E-TEST" meshing:choice<meshing>="NO" -- bytes )
-  "GOST 28147-89 decryption, the inverse of gost28147:encrypt with the same key, IV, mode, padding, S-box and meshing. PKCS#7 padding that does not check (usually a wrong key or IV) and CBC or ECB input that is not whole blocks are E_COERCE. A key of the wrong length is E_RANGE." doc
-  "Encryption" category
-  key sbox _check-key
-  mode meshing _ext?
-  [ key iv 8 util:iv-or-zeros mode padding "pkcs7" = sbox meshing "CP" = _ext-dec ]
-  [ mode iv 8 util:iv-or-zeros 8 padding "pkcs7" = [ key sbox _encrypt-block ] [ key sbox _decrypt-block ] blockmode:decrypt ] if ;
-
-: wrap-key ( bytes key:key{hex|utf8|latin1|base64} ukm:key{hex|utf8|latin1|base64} sbox:choice<util:gost-sbox>="E-TEST" wrapping:choice<meshing>="NO" -- bytes )
-  "GOST 28147-89 key wrap (RFC 4357 section 6.1, or with wrapping CP section 6.3, which diversifies the key by the UKM first). The input is the 32-byte content key (E_COERCE otherwise), key is the 32-byte key encryption key (E_RANGE) and ukm the 8-byte user key material (E_RANGE). The output is CEK_ENC (the content key in ECB under the KEK) followed by CEK_MAC (the 4-byte IMIT with the UKM as the initial register), 36 bytes: CyberChef's layout, which leaves out the UKM that RFC 4357 puts in front (chain the UKM bytes in front with cat to get the RFC's 44 bytes). Not covered: CyberChef's SC (Signal-COM) wrapping." doc
-  "Encryption" category
-  key ukm sbox wrapping _wrap ;
-
-: unwrap-key ( bytes key:key{hex|utf8|latin1|base64} ukm:key{hex|utf8|latin1|base64} sbox:choice<util:gost-sbox>="E-TEST" wrapping:choice<meshing>="NO" -- bytes )
-  "GOST 28147-89 key unwrap (RFC 4357 section 6.2, or with wrapping CP section 6.4), the inverse of gost28147:wrap-key. The input is the 36 bytes CEK_ENC and CEK_MAC without the UKM (E_COERCE otherwise); the MAC is checked and a mismatch (a wrong KEK, UKM or S-box, or damaged data) is E_COERCE, returning no key." doc
-  "Encryption" category
-  key ukm sbox wrapping _unwrap ;
-
 META: encrypt
   use-when "You have a 32-byte GOST 28147-89 key and data from a system that uses the 1989 Soviet standard cipher. Use it for existing data only." ;
   param key "The GOST 28147-89 key: 32 bytes." ;
@@ -65,6 +47,14 @@ META: encrypt
   see-also gost28147:decrypt gost28147:wrap-key gost:digest hex:encode ;
   link "https://www.rfc-editor.org/rfc/rfc5830" "RFC 5830: GOST 28147-89 algorithms" ;
 ;
+
+: decrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice<util:block-mode>="CBC" padding:choice<util:pkcs7-padding>="pkcs7" sbox:choice<util:gost-sbox>="E-TEST" meshing:choice<meshing>="NO" -- bytes )
+  "GOST 28147-89 decryption, the inverse of gost28147:encrypt with the same key, IV, mode, padding, S-box and meshing. PKCS#7 padding that does not check (usually a wrong key or IV) and CBC or ECB input that is not whole blocks are E_COERCE. A key of the wrong length is E_RANGE." doc
+  "Encryption" category
+  key sbox _check-key
+  mode meshing _ext?
+  [ key iv 8 util:iv-or-zeros mode padding "pkcs7" = sbox meshing "CP" = _ext-dec ]
+  [ mode iv 8 util:iv-or-zeros 8 padding "pkcs7" = [ key sbox _encrypt-block ] [ key sbox _decrypt-block ] blockmode:decrypt ] if ;
 
 META: decrypt
   use-when "You have GOST 28147-89 ciphertext from an older system, with its key, IV, S-box and mode, and you want the plaintext back. Use it for existing data only." ;
@@ -81,6 +71,11 @@ META: decrypt
   expects "encrypted data" ;
 ;
 
+: wrap-key ( bytes key:key{hex|utf8|latin1|base64} ukm:key{hex|utf8|latin1|base64} sbox:choice<util:gost-sbox>="E-TEST" wrapping:choice<meshing>="NO" -- bytes )
+  "GOST 28147-89 key wrap (RFC 4357 section 6.1, or with wrapping CP section 6.3, which diversifies the key by the UKM first). The input is the 32-byte content key (E_COERCE otherwise), key is the 32-byte key encryption key (E_RANGE) and ukm the 8-byte user key material (E_RANGE). The output is CEK_ENC (the content key in ECB under the KEK) followed by CEK_MAC (the 4-byte IMIT with the UKM as the initial register), 36 bytes: CyberChef's layout, which leaves out the UKM that RFC 4357 puts in front (chain the UKM bytes in front with cat to get the RFC's 44 bytes). Not covered: CyberChef's SC (Signal-COM) wrapping." doc
+  "Encryption" category
+  key ukm sbox wrapping _wrap ;
+
 META: wrap-key
   use-when "You have a 32-byte content key to protect with a 32-byte key-encryption key and an 8-byte UKM, in the RFC 4357 wrap used for GOST key exchange." ;
   param key "The key encryption key (KEK): 32 bytes." ;
@@ -91,6 +86,11 @@ META: wrap-key
   see-also gost28147:unwrap-key gost28147:encrypt ;
   link "https://www.rfc-editor.org/rfc/rfc4357" "RFC 4357: GOST key wrapping" ;
 ;
+
+: unwrap-key ( bytes key:key{hex|utf8|latin1|base64} ukm:key{hex|utf8|latin1|base64} sbox:choice<util:gost-sbox>="E-TEST" wrapping:choice<meshing>="NO" -- bytes )
+  "GOST 28147-89 key unwrap (RFC 4357 section 6.2, or with wrapping CP section 6.4), the inverse of gost28147:wrap-key. The input is the 36 bytes CEK_ENC and CEK_MAC without the UKM (E_COERCE otherwise); the MAC is checked and a mismatch (a wrong KEK, UKM or S-box, or damaged data) is E_COERCE, returning no key." doc
+  "Encryption" category
+  key ukm sbox wrapping _unwrap ;
 
 META: unwrap-key
   use-when "You have a GOST 28147-89 wrapped key with its UKM and key-encryption key, and you want the content key back. The MAC check catches a damaged key." ;

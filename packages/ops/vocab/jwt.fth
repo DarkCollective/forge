@@ -101,16 +101,6 @@ USING: hmac base64 ;
   "Encryption" category
   _parts part "header" = [ 0 "header" _part ] [ 1 "payload" _part ] if str>bytes ;
 
-: verify ( bytes key:key{utf8|hex|latin1|base64} alg:choice{auto|HS256|HS384|HS512}="auto" -- bytes )
-  "Verifies a compact JWT signed with an HMAC (HS256, HS384 or HS512) under the key, and returns its payload as the JSON text the token holds. A signature that does not verify, a malformed token, or an alg other than the expected one is E_COERCE; an alg that is none (never accepted) or is not an HMAC one (RS, ES, PS: public-key algorithms, a later wave) is E_RANGE, and so is an empty key. alg auto trusts the token's own header to choose among the three HMAC algorithms (safe here, since only a shared secret is accepted); naming one pins it. This is a signature check only: the exp and nbf claims are not examined." doc
-  "Encryption" category
-  _parts key alg _verify ;
-
-: sign ( bytes key:key{utf8|hex|latin1|base64} alg:choice{HS256|HS384|HS512}="HS256" header:str="{}" -- bytes )
-  "Signs the input, a JSON object, as a compact JWT with an HMAC (HS256, HS384 or HS512) under the key. The payload text is signed exactly as given. The header is {\"alg\":...,\"typ\":\"JWT\"} followed by the members of the header parameter, a JSON object (typ in it replaces the default; alg in it is E_RANGE). An empty key is E_RANGE and an input that is not a JSON object by its first and last character is E_COERCE. Unsigned (none) tokens and the public-key algorithms are not offered." doc
-  "Encryption" category
-  key alg alg header _extra _compose _sign ;
-
 META: decode
   use-when "You have a token of three dot-separated parts that starts with eyJ and want to read its claims or header. This does not prove the token is genuine." ;
   param part "payload: the claims; header: the JOSE header." ;
@@ -122,6 +112,11 @@ META: decode
   expects "JWT" ;
   checks output regex "^\\s*\\{" ;
 ;
+
+: verify ( bytes key:key{utf8|hex|latin1|base64} alg:choice{auto|HS256|HS384|HS512}="auto" -- bytes )
+  "Verifies a compact JWT signed with an HMAC (HS256, HS384 or HS512) under the key, and returns its payload as the JSON text the token holds. A signature that does not verify, a malformed token, or an alg other than the expected one is E_COERCE; an alg that is none (never accepted) or is not an HMAC one (RS, ES, PS: public-key algorithms, a later wave) is E_RANGE, and so is an empty key. alg auto trusts the token's own header to choose among the three HMAC algorithms (safe here, since only a shared secret is accepted); naming one pins it. This is a signature check only: the exp and nbf claims are not examined." doc
+  "Encryption" category
+  _parts key alg _verify ;
 
 META: verify
   use-when "You have a JWT signed with a shared secret (HS256, HS384 or HS512) and want to check the signature before you trust the claims." ;
@@ -135,6 +130,11 @@ META: verify
   expects "JWT" ;
   checks output regex "^\\s*\\{" ;
 ;
+
+: sign ( bytes key:key{utf8|hex|latin1|base64} alg:choice{HS256|HS384|HS512}="HS256" header:str="{}" -- bytes )
+  "Signs the input, a JSON object, as a compact JWT with an HMAC (HS256, HS384 or HS512) under the key. The payload text is signed exactly as given. The header is {\"alg\":...,\"typ\":\"JWT\"} followed by the members of the header parameter, a JSON object (typ in it replaces the default; alg in it is E_RANGE). An empty key is E_RANGE and an input that is not a JSON object by its first and last character is E_COERCE. Unsigned (none) tokens and the public-key algorithms are not offered." doc
+  "Encryption" category
+  key alg alg header _extra _compose _sign ;
 
 META: sign
   use-when "You need a test or hand-made JWT signed with a shared secret (HS256, HS384 or HS512), for example to try an API or to reproduce a token." ;

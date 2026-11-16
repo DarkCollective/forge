@@ -36,6 +36,19 @@ IN: filetype
     "Unknown file type. Have you tried checking the entropy of this data to determine whether it might be encrypted or compressed?"
   ] [ [ "" _lines ] map "\n" join ] if ;
 
+META: detect
+  use-when "You have a file or blob of unknown type, as hex or bytes, and want its type from the signature (magic bytes) at its start, with its usual extensions." ;
+  param images "Look for image formats." ;
+  param video "Look for video formats." ;
+  param audio "Look for audio formats." ;
+  param documents "Look for document formats." ;
+  param applications "Look for executable and application formats." ;
+  param archives "Look for archive and compression formats." ;
+  param miscellaneous "Look for other formats (databases, captures, certificates, fonts, ...)." ;
+  see-also filetype:scan filetype:extract ;
+  link "https://en.wikipedia.org/wiki/List_of_file_signatures" "List of file signatures on Wikipedia" ;
+;
+
 \ The text that opens the report of scan.
 : _scan-intro ( -- str )
   "Scanning data for 'magic bytes' which may indicate embedded files. The following results may be false positives and should not be treated as reliable. Any sufficiently long file is likely to contain these magic bytes coincidentally.\n" ;
@@ -54,34 +67,6 @@ IN: filetype
   ] if
   _scan-intro swap cat ;
 
-: extract ( data:bytes images:bool=true video:bool=true audio:bool=true documents:bool=true applications:bool=true archives:bool=true miscellaneous:bool=false ignore-failed:bool=true minimum-size:int=100 -- list )
-  "Extract Files: cut out the files whose signature is found in the data, using the end finder of each type (PNG up to IEND, JPEG to the EOI marker, GIF to its trailer, ZIP and JAR to the end record, PDF to the last %%EOF, ELF and PE from their headers, gzip and Zstandard by walking the stream, tar, 7z, SQLite, pcap, PEM, MP4 boxes, Ogg pages, RIFF, BMP, ICO, CAB, DEX, ...). The result is a list of records with name (extracted_at_0x<offset>.<extension>), offset, size, type (the MIME type) and data, in order of offset; files inside other files are extracted as well. A type that has no end finder is always left out (CyberChef: No extraction algorithm available is never an error), and a file that is damaged or cut short is left out (ignore-failed, the default) or is E_COERCE; a file smaller than minimum-size bytes (default 100, as CyberChef) is left out to prune false positives. The total size is bounded by the value limit. Use filetype:entry to continue a recipe with one of the files." doc
-  "Forensics" category
-  data images video audio documents applications archives miscellaneous _cats ignore-failed minimum-size carve ;
-
-: entry ( data:bytes index:int=0 images:bool=true video:bool=true audio:bool=true documents:bool=true applications:bool=true archives:bool=true miscellaneous:bool=false ignore-failed:bool=true minimum-size:int=100 -- bytes )
-  "The bytes of one file found by Extract Files, by its position in the list (0 is the first, the lowest offset). An index past the last file is E_RANGE and the message lists the first names. The other parameters are those of filetype:extract." doc
-  "Forensics" category
-  data images video audio documents applications archives miscellaneous _cats ignore-failed minimum-size carve
-  dup len index <= index 0 < or [
-    "the file index must be 0 to " over len 1 - int>str cat ", not " cat index int>str cat
-    over len 0 = [ drop "there are no files to extract" ] when
-    fail-range ] when
-  index nth "data" get ;
-
-META: detect
-  use-when "You have a file or blob of unknown type, as hex or bytes, and want its type from the signature (magic bytes) at its start, with its usual extensions." ;
-  param images "Look for image formats." ;
-  param video "Look for video formats." ;
-  param audio "Look for audio formats." ;
-  param documents "Look for document formats." ;
-  param applications "Look for executable and application formats." ;
-  param archives "Look for archive and compression formats." ;
-  param miscellaneous "Look for other formats (databases, captures, certificates, fonts, ...)." ;
-  see-also filetype:scan filetype:extract ;
-  link "https://en.wikipedia.org/wiki/List_of_file_signatures" "List of file signatures on Wikipedia" ;
-;
-
 META: scan
   use-when "You have a blob that may hide other files inside it, and want every offset where a known file signature (magic bytes) appears, to look for embedded files." ;
   param images "Look for image formats." ;
@@ -96,6 +81,11 @@ META: scan
   link "https://en.wikipedia.org/wiki/List_of_file_signatures" "List of file signatures on Wikipedia" ;
 ;
 
+: extract ( data:bytes images:bool=true video:bool=true audio:bool=true documents:bool=true applications:bool=true archives:bool=true miscellaneous:bool=false ignore-failed:bool=true minimum-size:int=100 -- list )
+  "Extract Files: cut out the files whose signature is found in the data, using the end finder of each type (PNG up to IEND, JPEG to the EOI marker, GIF to its trailer, ZIP and JAR to the end record, PDF to the last %%EOF, ELF and PE from their headers, gzip and Zstandard by walking the stream, tar, 7z, SQLite, pcap, PEM, MP4 boxes, Ogg pages, RIFF, BMP, ICO, CAB, DEX, ...). The result is a list of records with name (extracted_at_0x<offset>.<extension>), offset, size, type (the MIME type) and data, in order of offset; files inside other files are extracted as well. A type that has no end finder is always left out (CyberChef: No extraction algorithm available is never an error), and a file that is damaged or cut short is left out (ignore-failed, the default) or is E_COERCE; a file smaller than minimum-size bytes (default 100, as CyberChef) is left out to prune false positives. The total size is bounded by the value limit. Use filetype:entry to continue a recipe with one of the files." doc
+  "Forensics" category
+  data images video audio documents applications archives miscellaneous _cats ignore-failed minimum-size carve ;
+
 META: extract
   use-when "You have a blob with files embedded in it, such as a PNG or gzip inside a firmware image, and want those files cut out, each up to where it ends." ;
   param images "Look for image formats." ;
@@ -109,6 +99,16 @@ META: extract
   see-also filetype:entry filetype:scan filetype:detect ;
   link "https://en.wikipedia.org/wiki/List_of_file_signatures" "List of file signatures on Wikipedia" ;
 ;
+
+: entry ( data:bytes index:int=0 images:bool=true video:bool=true audio:bool=true documents:bool=true applications:bool=true archives:bool=true miscellaneous:bool=false ignore-failed:bool=true minimum-size:int=100 -- bytes )
+  "The bytes of one file found by Extract Files, by its position in the list (0 is the first, the lowest offset). An index past the last file is E_RANGE and the message lists the first names. The other parameters are those of filetype:extract." doc
+  "Forensics" category
+  data images video audio documents applications archives miscellaneous _cats ignore-failed minimum-size carve
+  dup len index <= index 0 < or [
+    "the file index must be 0 to " over len 1 - int>str cat ", not " cat index int>str cat
+    over len 0 = [ drop "there are no files to extract" ] when
+    fail-range ] when
+  index nth "data" get ;
 
 META: entry
   use-when "You have a blob with embedded files and want one of the files Extract Files finds, by its number in the list, as bytes to save or inspect." ;

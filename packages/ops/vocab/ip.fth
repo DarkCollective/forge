@@ -380,7 +380,7 @@ META: parse-range
     "\nClient IPv4 address: " n 4294967295 band 4294967295 bxor _v4>s
     "\nClient UDP port:     " n 32 shr 65535 band 65535 bxor int>str
     "\nObfuscated client address and port (every bit inverted, RFC 4380): "
-      n 4294967295 band _v4>s " and " n 32 shr 65535 band int>str
+    n 4294967295 band _v4>s " and " n 32 shr 65535 band int>str
     "\nFlags:\n\tCone:    " n 63 shr 1 band int>str n 63 shr 1 band _cone-text
     "\n\tR:       " n 62 shr 1 band int>str n 62 shr 1 band _r-text
     "\n\tRandom1: " n 58 shr 15 band 4 _bin

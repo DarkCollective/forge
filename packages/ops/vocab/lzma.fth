@@ -12,6 +12,14 @@ IN: lzma
   level 1 9 "the compression level" check-int-range
   data level _compress ;
 
+META: compress
+  use-when "You have bytes and need an .lzma file in the older LZMA alone format, for a tool such as xz, 7-Zip or Python's lzma module." ;
+  param level "The compression level, 1 (fastest) to 9 (smallest); 7 is CyberChef's default." ;
+  see-also lzma:decompress deflate:gzip ;
+  inverse decompress ;
+  link "https://en.wikipedia.org/wiki/LZMA" "LZMA on Wikipedia" ;
+;
+
 \ The header is 13 bytes, and the properties byte (lc, lp and pb packed as (pb * 5 + lp) * 9 + lc) is below 225.
 : _check-header ( data:bytes -- )
   data len 13 < [ "unexpected EOF: an .lzma header is 13 bytes" fail-coerce ] when
@@ -32,14 +40,6 @@ IN: lzma
   "Compression" category
   data _check-header
   data _decode _check-size ;
-
-META: compress
-  use-when "You have bytes and need an .lzma file in the older LZMA alone format, for a tool such as xz, 7-Zip or Python's lzma module." ;
-  param level "The compression level, 1 (fastest) to 9 (smallest); 7 is CyberChef's default." ;
-  see-also lzma:decompress deflate:gzip ;
-  inverse decompress ;
-  link "https://en.wikipedia.org/wiki/LZMA" "LZMA on Wikipedia" ;
-;
 
 META: decompress
   use-when "You have an LZMA file in the .lzma format, starting with its 13-byte header, and want the data inside." ;

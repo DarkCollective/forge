@@ -124,4 +124,3 @@ META: decode
   checks input charset "\t\n\r\x20-\x7e" ;
   expects "hex dump" ;
 ;
-

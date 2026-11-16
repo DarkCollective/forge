@@ -20,6 +20,15 @@ IN: netbios
   [ dup 4 shr offset + cp>str swap 15 band offset + cp>str cat ] map
   "" join latin1>bytes ;
 
+META: encode
+  use-when "You have a NetBIOS name and need its encoded form as it appears in a NetBIOS name query packet." ;
+  param offset "Added to each half byte: 65 (the letter A) in RFC 1001." ;
+  see-also netbios:decode ;
+  inverse decode ;
+  link "https://www.rfc-editor.org/rfc/rfc1001" "RFC 1001: NetBIOS over TCP/UDP, concepts and methods" ;
+  link "https://en.wikipedia.org/wiki/NetBIOS" "NetBIOS on Wikipedia" ;
+;
+
 \ Two nibbles (the bytes minus offset) to a byte; a byte that is not offset to offset + 15 is E_COERCE.
 : _nibble ( b:int offset:int -- int )
   b offset -
@@ -44,15 +53,6 @@ IN: netbios
   name len 2 mod 0 <> name len 32 > or
   [ "a first-level encoded NetBIOS name is 32 bytes (an even number, at most 32), not " name len int>str cat fail-coerce ] when
   name bytes>list [ offset _nibble ] map _pairs _unpad ;
-
-META: encode
-  use-when "You have a NetBIOS name and need its encoded form as it appears in a NetBIOS name query packet." ;
-  param offset "Added to each half byte: 65 (the letter A) in RFC 1001." ;
-  see-also netbios:decode ;
-  inverse decode ;
-  link "https://www.rfc-editor.org/rfc/rfc1001" "RFC 1001: NetBIOS over TCP/UDP, concepts and methods" ;
-  link "https://en.wikipedia.org/wiki/NetBIOS" "NetBIOS on Wikipedia" ;
-;
 
 META: decode
   use-when "You have a 32-letter NetBIOS name from a capture or log, in its first-level encoded form, and want the name it stands for." ;

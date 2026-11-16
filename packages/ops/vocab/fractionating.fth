@@ -290,4 +290,3 @@ META: trifid-decrypt
   see-also fractionating:trifid-encrypt ;
   link "https://en.wikipedia.org/wiki/Trifid_cipher" "Trifid cipher on Wikipedia" ;
 ;
-

@@ -9,17 +9,17 @@ IN: xxtea
   "Encryption" category
   key _encrypt ;
 
-: decrypt ( bytes key:key{hex|utf8|latin1|base64} -- bytes )
-  "XXTEA decryption, the inverse of xxtea:encrypt: the input must be whole 4-byte words, at least two (E_COERCE), and the length word found after decryption must fit the data (E_COERCE otherwise, which usually means a wrong key). An empty input gives an empty output." doc
-  "Encryption" category
-  key _decrypt ;
-
 META: encrypt
   use-when "You have an XXTEA key of up to 16 bytes and data from a system that uses the corrected block TEA, and you need its output. Use it for existing data only." ;
   param key "The XXTEA key: up to 16 bytes, zero-padded." ;
   inverse decrypt ;
   see-also xxtea:decrypt tea:encrypt hex:encode ;
 ;
+
+: decrypt ( bytes key:key{hex|utf8|latin1|base64} -- bytes )
+  "XXTEA decryption, the inverse of xxtea:encrypt: the input must be whole 4-byte words, at least two (E_COERCE), and the length word found after decryption must fit the data (E_COERCE otherwise, which usually means a wrong key). An empty input gives an empty output." doc
+  "Encryption" category
+  key _decrypt ;
 
 META: decrypt
   use-when "You have XXTEA ciphertext of whole 32-bit words with its key, and you want the plaintext. A wrong key usually shows up as an error." ;

@@ -78,7 +78,7 @@ CHOICE: hex-or-raw
 
 : _vlan ( d:bytes i:int -- str )
   d i 4 * 12 + 4 "Ethernet VLAN tag" _need
-  d i 4 * 12 + 2 util:be-int  d i 4 * 14 + 2 util:be-int  i _vlan2 ;
+  d i 4 * 12 + 2 util:be-int d i 4 * 14 + 2 util:be-int i _vlan2 ;
 
 \ The EtherType field, or the length of an IEEE 802.3 frame (up to 1500).
 : _type-line ( t:int -- str )
@@ -101,6 +101,13 @@ CHOICE: hex-or-raw
   "Parse an Ethernet frame (Parse Ethernet frame), given as raw bytes (the default, as CyberChef's Raw) or hex text, without the preamble and the frame check sequence: the sender and destination MAC addresses (lower case, colon separated), every VLAN tag (IEEE 802.1Q TPID 0x8100 or 802.1ad 0x88a8, with the priority, the drop eligible bit and the VLAN ID), the EtherType with its name (IPv4, ARP, IPv6, ...; a value up to 1500 is the length of an IEEE 802.3 frame instead), and the payload as hex. A frame shorter than its header, or a VLAN tag cut short, is E_COERCE with the offset; bad hex is E_COERCE. The fields are CyberChef's (the sender first, then the destination; the VLAN IDs and the data), shown as text with more detail; CyberChef's Return type (packet data as raw or hex) is not an option: take the payload from the last line." doc
   "Networking" category
   data format _input _ethernet ;
+
+META: parse-ethernet
+  use-when "You have an Ethernet frame from a capture, as raw bytes or hex, and want its MAC addresses, VLAN tags and EtherType." ;
+  param format "How the input is written: hex text (any white space is ignored) or raw bytes." ;
+  see-also packets:parse-ipv4 packets:parse-tcp packets:parse-udp ;
+  link "https://en.wikipedia.org/wiki/Ethernet_frame" "Ethernet frame on Wikipedia" ;
+;
 
 \ ---- IPv4 ----
 
@@ -185,6 +192,14 @@ CHOICE: hex-or-raw
   "Networking" category
   data format _input dup _ipv4-hl _ipv4-lines "\n" join ;
 
+META: parse-ipv4
+  use-when "You have an IPv4 header in hex or raw bytes from a capture and want its fields, such as the addresses, TTL and protocol, decoded." ;
+  param format "How the input is written: hex text (any white space is ignored) or raw bytes." ;
+  see-also packets:strip-ipv4 packets:parse-tcp packets:parse-udp packets:parse-ethernet ;
+  link "https://www.rfc-editor.org/rfc/rfc791" "RFC 791: Internet Protocol" ;
+  link "https://en.wikipedia.org/wiki/IPv4" "IPv4 on Wikipedia" ;
+;
+
 : _strip-ipv4 ( d:bytes hl:int -- bytes )
   d hl d 2 2 util:be-int hl d len _end slice ;
 
@@ -192,6 +207,13 @@ CHOICE: hex-or-raw
   "Remove the IPv4 header (Strip IPv4 header) and give the payload as bytes: everything after the header, which is IHL times 4 bytes long, up to the total length when that is set and the data holds that many bytes (so link padding after the datagram is dropped; a total length of 0, as with TCP segmentation offload, or one beyond the data, keeps all that is there). The input is raw bytes (the default, as CyberChef's ArrayBuffer input) or hex text. A header cut short, a version other than 4 or an IHL below 5 is E_COERCE." doc
   "Networking" category
   data format _input dup _ipv4-hl _strip-ipv4 ;
+
+META: strip-ipv4
+  use-when "You have an IPv4 datagram and want only the payload after its header, such as the TCP segment inside it." ;
+  param format "How the input is written: hex text (any white space is ignored) or raw bytes." ;
+  see-also packets:parse-ipv4 packets:strip-tcp packets:strip-udp ;
+  link "https://www.rfc-editor.org/rfc/rfc791" "RFC 791: Internet Protocol" ;
+;
 
 \ ---- TCP ----
 
@@ -291,6 +313,14 @@ CHOICE: hex-or-raw
   "Networking" category
   data format _input dup _tcp-hl _tcp-lines "\n" join ;
 
+META: parse-tcp
+  use-when "You have a TCP segment from a capture, as hex or raw bytes, and want its ports, sequence numbers, flags and options." ;
+  param format "How the input is written: hex text (any white space is ignored) or raw bytes." ;
+  see-also packets:strip-tcp packets:parse-ipv4 packets:parse-tls ;
+  link "https://www.rfc-editor.org/rfc/rfc9293" "RFC 9293: Transmission Control Protocol" ;
+  link "https://en.wikipedia.org/wiki/Transmission_Control_Protocol" "Transmission Control Protocol on Wikipedia" ;
+;
+
 : _strip-tcp ( d:bytes hl:int -- bytes )
   d hl d len slice ;
 
@@ -298,6 +328,13 @@ CHOICE: hex-or-raw
   "Remove the TCP header (Strip TCP header) and give the payload as bytes: everything after the header, which is the data offset times 4 bytes long. The input is raw bytes (the default, as CyberChef) or hex text. A header cut short or a data offset below 5 is E_COERCE." doc
   "Networking" category
   data format _input dup _tcp-hl _strip-tcp ;
+
+META: strip-tcp
+  use-when "You have a TCP segment and want only its data, such as an HTTP request sent over TCP, without the header and options." ;
+  param format "How the input is written: hex text (any white space is ignored) or raw bytes." ;
+  see-also packets:parse-tcp packets:strip-ipv4 http:strip-headers ;
+  link "https://www.rfc-editor.org/rfc/rfc9293" "RFC 9293: Transmission Control Protocol" ;
+;
 
 \ ---- UDP ----
 
@@ -320,6 +357,14 @@ CHOICE: hex-or-raw
   "Networking" category
   data format _input dup _udp-length _udp-lines "\n" join ;
 
+META: parse-udp
+  use-when "You have a UDP datagram from a capture, such as a DNS query, and want its ports, length and payload." ;
+  param format "How the input is written: hex text (any white space is ignored) or raw bytes." ;
+  see-also packets:strip-udp packets:parse-ipv4 ;
+  link "https://www.rfc-editor.org/rfc/rfc768" "RFC 768: User Datagram Protocol" ;
+  link "https://en.wikipedia.org/wiki/User_Datagram_Protocol" "User Datagram Protocol on Wikipedia" ;
+;
+
 : _strip-udp ( d:bytes length:int -- bytes )
   d 8 length 8 d len _end slice ;
 
@@ -327,6 +372,13 @@ CHOICE: hex-or-raw
   "Remove the UDP header (Strip UDP header) and give the payload as bytes: the 8-byte header is dropped, and so is anything after the length the header declares (link padding); a length of 0 or beyond the data keeps all that is there. The input is raw bytes (the default, as CyberChef) or hex text. A header shorter than 8 bytes or a length between 1 and 7 is E_COERCE." doc
   "Networking" category
   data format _input dup _udp-length _strip-udp ;
+
+META: strip-udp
+  use-when "You have a UDP datagram and want only its payload, without the 8-byte header." ;
+  param format "How the input is written: hex text (any white space is ignored) or raw bytes." ;
+  see-also packets:parse-udp packets:strip-ipv4 ;
+  link "https://www.rfc-editor.org/rfc/rfc768" "RFC 768: User Datagram Protocol" ;
+;
 
 \ ---- TLS records and handshake messages (RFC 8446 section 5 and 4; the same layouts for TLS 1.0 to 1.2 and SSL 3.0) ----
 \ A record is { type version length offset fragment }, a handshake message { type length offset complete body }.
@@ -767,58 +819,6 @@ CHOICE: hex-or-raw
   dup len 0 = [ "no TLS record: the input is empty" fail-coerce ] when
   dup _hello-msgs [ _hello ] map [ _check-hello ] each
   [ _record-text ] mapi "\n\n" join ;
-
-META: parse-ethernet
-  use-when "You have an Ethernet frame from a capture, as raw bytes or hex, and want its MAC addresses, VLAN tags and EtherType." ;
-  param format "How the input is written: hex text (any white space is ignored) or raw bytes." ;
-  see-also packets:parse-ipv4 packets:parse-tcp packets:parse-udp ;
-  link "https://en.wikipedia.org/wiki/Ethernet_frame" "Ethernet frame on Wikipedia" ;
-;
-
-META: parse-ipv4
-  use-when "You have an IPv4 header in hex or raw bytes from a capture and want its fields, such as the addresses, TTL and protocol, decoded." ;
-  param format "How the input is written: hex text (any white space is ignored) or raw bytes." ;
-  see-also packets:strip-ipv4 packets:parse-tcp packets:parse-udp packets:parse-ethernet ;
-  link "https://www.rfc-editor.org/rfc/rfc791" "RFC 791: Internet Protocol" ;
-  link "https://en.wikipedia.org/wiki/IPv4" "IPv4 on Wikipedia" ;
-;
-
-META: strip-ipv4
-  use-when "You have an IPv4 datagram and want only the payload after its header, such as the TCP segment inside it." ;
-  param format "How the input is written: hex text (any white space is ignored) or raw bytes." ;
-  see-also packets:parse-ipv4 packets:strip-tcp packets:strip-udp ;
-  link "https://www.rfc-editor.org/rfc/rfc791" "RFC 791: Internet Protocol" ;
-;
-
-META: parse-tcp
-  use-when "You have a TCP segment from a capture, as hex or raw bytes, and want its ports, sequence numbers, flags and options." ;
-  param format "How the input is written: hex text (any white space is ignored) or raw bytes." ;
-  see-also packets:strip-tcp packets:parse-ipv4 packets:parse-tls ;
-  link "https://www.rfc-editor.org/rfc/rfc9293" "RFC 9293: Transmission Control Protocol" ;
-  link "https://en.wikipedia.org/wiki/Transmission_Control_Protocol" "Transmission Control Protocol on Wikipedia" ;
-;
-
-META: strip-tcp
-  use-when "You have a TCP segment and want only its data, such as an HTTP request sent over TCP, without the header and options." ;
-  param format "How the input is written: hex text (any white space is ignored) or raw bytes." ;
-  see-also packets:parse-tcp packets:strip-ipv4 http:strip-headers ;
-  link "https://www.rfc-editor.org/rfc/rfc9293" "RFC 9293: Transmission Control Protocol" ;
-;
-
-META: parse-udp
-  use-when "You have a UDP datagram from a capture, such as a DNS query, and want its ports, length and payload." ;
-  param format "How the input is written: hex text (any white space is ignored) or raw bytes." ;
-  see-also packets:strip-udp packets:parse-ipv4 ;
-  link "https://www.rfc-editor.org/rfc/rfc768" "RFC 768: User Datagram Protocol" ;
-  link "https://en.wikipedia.org/wiki/User_Datagram_Protocol" "User Datagram Protocol on Wikipedia" ;
-;
-
-META: strip-udp
-  use-when "You have a UDP datagram and want only its payload, without the 8-byte header." ;
-  param format "How the input is written: hex text (any white space is ignored) or raw bytes." ;
-  see-also packets:parse-udp packets:strip-ipv4 ;
-  link "https://www.rfc-editor.org/rfc/rfc768" "RFC 768: User Datagram Protocol" ;
-;
 
 META: parse-tls
   use-when "You have TLS records from a capture, as raw bytes or hex, and want the handshake messages, versions, cipher suites and extensions, such as the server name." ;

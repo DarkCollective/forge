@@ -13,12 +13,6 @@ USING: blockmode ;
   key _check-key
   mode "CTRLE" blockmode:ctr-as iv 16 padding "pkcs7" = [ key _encrypt-block ] blockmode:encrypt ;
 
-: decrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice<util:block-mode>="CBC" padding:choice<util:pkcs7-padding>="pkcs7" -- bytes )
-  "Twofish decryption, the inverse of twofish:encrypt with the same key, IV, mode and padding. PKCS#7 padding that does not check (usually a wrong key or IV) is E_COERCE, and so is ciphertext that is not whole 16-byte blocks in CBC or ECB. A key or IV of the wrong length is E_RANGE." doc
-  "Encryption" category
-  key _check-key
-  mode "CTRLE" blockmode:ctr-as iv 16 padding "pkcs7" = [ key _encrypt-block ] [ key _decrypt-block ] blockmode:decrypt ;
-
 META: encrypt
   use-when "You have a Twofish key of 16, 24 or 32 bytes from an AES-candidate test or an older file format, and you need the output in a usual mode." ;
   param key "The Twofish key: 16, 24 or 32 bytes." ;
@@ -29,6 +23,12 @@ META: encrypt
   see-also twofish:decrypt hex:encode ;
   link "https://en.wikipedia.org/wiki/Twofish" "Twofish on Wikipedia" ;
 ;
+
+: decrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice<util:block-mode>="CBC" padding:choice<util:pkcs7-padding>="pkcs7" -- bytes )
+  "Twofish decryption, the inverse of twofish:encrypt with the same key, IV, mode and padding. PKCS#7 padding that does not check (usually a wrong key or IV) is E_COERCE, and so is ciphertext that is not whole 16-byte blocks in CBC or ECB. A key or IV of the wrong length is E_RANGE." doc
+  "Encryption" category
+  key _check-key
+  mode "CTRLE" blockmode:ctr-as iv 16 padding "pkcs7" = [ key _encrypt-block ] [ key _decrypt-block ] blockmode:decrypt ;
 
 META: decrypt
   use-when "You have Twofish ciphertext with its key and mode, from a test or an older file format, and you need the plaintext." ;

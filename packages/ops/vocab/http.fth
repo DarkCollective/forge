@@ -31,6 +31,12 @@ IN: http
   pos 0 < [ "no empty line ends the HTTP header block (no CRLF CRLF or LF LF in the data)" fail-coerce ] when
   data pos data len slice ;
 
+META: strip-headers
+  use-when "You have a raw HTTP request or response with its headers and body together, and want only the body bytes." ;
+  see-also http:dechunk ;
+  link "https://www.rfc-editor.org/rfc/rfc9112" "RFC 9112: HTTP/1.1" ;
+;
+
 \ ---- dechunk ----
 \ Each chunk starts where the one before it ends, so the walk keeps the offset p of the next chunk on the stack and
 \ emits the data of every chunk into a collector (linear time and allocation). It reads strictly, as the recipient
@@ -143,12 +149,6 @@ IN: http
   "Networking" category
   data len 0 = [ "the input is empty" fail-coerce ] when
   [ 0 [ data swap _chunk ] loop drop ] collect-bytes ;
-
-META: strip-headers
-  use-when "You have a raw HTTP request or response with its headers and body together, and want only the body bytes." ;
-  see-also http:dechunk ;
-  link "https://www.rfc-editor.org/rfc/rfc9112" "RFC 9112: HTTP/1.1" ;
-;
 
 META: dechunk
   use-when "You have a chunked HTTP body, with hex sizes before its pieces and a final zero, and want the content." ;

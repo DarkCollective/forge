@@ -203,26 +203,6 @@ CHOICE: data-unit
   "Conversions" category
   value from to _distance digits _convert ;
 
-: convert-area ( value:str from:choice<area-unit>="square-metre" to:choice<area-unit>="hectare" digits:int[0..60]=20 -- str )
-  "An area converted from one unit to another. The value is decimal text (an optional sign, digits with an optional point, an optional exponent); anything else is an error. The sum is exact (the international inch, foot and yard give the square inch 0.00064516 m2, the acre 4046.8564224 m2 and the square mile 2,589,988.110336 m2), and the result is rounded half away from zero to the given number of decimal places (20 by default, as CyberChef's BigNumber does) and written in plain decimal form with no trailing zeros." doc
-  "Conversions" category
-  value from to _area digits _convert ;
-
-: convert-mass ( value:str from:choice<mass-unit>="kilogram" to:choice<mass-unit>="pound" digits:int[0..60]=20 -- str )
-  "A mass converted from one unit to another. The value is decimal text (an optional sign, digits with an optional point, an optional exponent); anything else is an error. The sum is exact (the international pound is 0.45359237 kg, the ounce a sixteenth of it, the stone 14 pounds, the short ton 2000 and the long ton 2240 pounds, the grain 64.79891 mg, the metric carat 200 mg, the troy ounce 31.1034768 g), and the result is rounded half away from zero to the given number of decimal places (20 by default, as CyberChef's BigNumber does) and written in plain decimal form with no trailing zeros." doc
-  "Conversions" category
-  value from to _mass digits _convert ;
-
-: convert-speed ( value:str from:choice<speed-unit>="metre-per-second" to:choice<speed-unit>="kilometre-per-hour" digits:int[0..60]=20 -- str )
-  "A speed converted from one unit to another. The value is decimal text (an optional sign, digits with an optional point, an optional exponent); anything else is an error. The sum is exact (the mile per hour is 0.44704 m/s, the knot 1852 m per hour, the speed of light 299,792,458 m/s), and the result is rounded half away from zero to the given number of decimal places (20 by default, as CyberChef's BigNumber does) and written in plain decimal form with no trailing zeros. Mach is not offered: it depends on the air." doc
-  "Conversions" category
-  value from to _speed digits _convert ;
-
-: convert-data ( value:str from:choice<data-unit>="byte" to:choice<data-unit>="bit" digits:int[0..60]=20 -- str )
-  "An amount of data converted from one unit to another. The value is decimal text (an optional sign, digits with an optional point, an optional exponent); anything else is an error. The decimal units (kilo, mega, giga, tera, peta, exa) are powers of 1000 and the binary units (kibi, mebi, gibi, tebi, pebi, exbi: IEC 80000-13) powers of 1024; a byte is 8 bits and a nibble 4. The sum is exact and the result is rounded half away from zero to the given number of decimal places (20 by default, as CyberChef's BigNumber does) and written in plain decimal form with no trailing zeros." doc
-  "Conversions" category
-  value from to _data digits _convert ;
-
 META: convert-distance
   use-when "You have a length in one unit, such as miles or inches, and want it in another, such as metres or feet." ;
   link "https://en.wikipedia.org/wiki/Conversion_of_units" "Conversion of units on Wikipedia" ;
@@ -231,6 +211,11 @@ META: convert-distance
   param digits "How many digits to keep after the decimal point (0 to 60)." ;
   see-also units:convert-area units:convert-mass units:convert-speed units:convert-data ;
 ;
+
+: convert-area ( value:str from:choice<area-unit>="square-metre" to:choice<area-unit>="hectare" digits:int[0..60]=20 -- str )
+  "An area converted from one unit to another. The value is decimal text (an optional sign, digits with an optional point, an optional exponent); anything else is an error. The sum is exact (the international inch, foot and yard give the square inch 0.00064516 m2, the acre 4046.8564224 m2 and the square mile 2,589,988.110336 m2), and the result is rounded half away from zero to the given number of decimal places (20 by default, as CyberChef's BigNumber does) and written in plain decimal form with no trailing zeros." doc
+  "Conversions" category
+  value from to _area digits _convert ;
 
 META: convert-area
   use-when "You have an area in one unit, such as acres or square miles, and want it in another, such as square metres or hectares." ;
@@ -241,6 +226,11 @@ META: convert-area
   see-also units:convert-distance units:convert-mass units:convert-speed units:convert-data ;
 ;
 
+: convert-mass ( value:str from:choice<mass-unit>="kilogram" to:choice<mass-unit>="pound" digits:int[0..60]=20 -- str )
+  "A mass converted from one unit to another. The value is decimal text (an optional sign, digits with an optional point, an optional exponent); anything else is an error. The sum is exact (the international pound is 0.45359237 kg, the ounce a sixteenth of it, the stone 14 pounds, the short ton 2000 and the long ton 2240 pounds, the grain 64.79891 mg, the metric carat 200 mg, the troy ounce 31.1034768 g), and the result is rounded half away from zero to the given number of decimal places (20 by default, as CyberChef's BigNumber does) and written in plain decimal form with no trailing zeros." doc
+  "Conversions" category
+  value from to _mass digits _convert ;
+
 META: convert-mass
   use-when "You have a mass in one unit, such as pounds or ounces, and want it in another, such as kilograms or grams." ;
   link "https://en.wikipedia.org/wiki/Conversion_of_units" "Conversion of units on Wikipedia" ;
@@ -250,6 +240,11 @@ META: convert-mass
   see-also units:convert-distance units:convert-area units:convert-speed units:convert-data ;
 ;
 
+: convert-speed ( value:str from:choice<speed-unit>="metre-per-second" to:choice<speed-unit>="kilometre-per-hour" digits:int[0..60]=20 -- str )
+  "A speed converted from one unit to another. The value is decimal text (an optional sign, digits with an optional point, an optional exponent); anything else is an error. The sum is exact (the mile per hour is 0.44704 m/s, the knot 1852 m per hour, the speed of light 299,792,458 m/s), and the result is rounded half away from zero to the given number of decimal places (20 by default, as CyberChef's BigNumber does) and written in plain decimal form with no trailing zeros. Mach is not offered: it depends on the air." doc
+  "Conversions" category
+  value from to _speed digits _convert ;
+
 META: convert-speed
   use-when "You have a speed in one unit, such as knots or miles per hour, and want it in another, such as kilometres per hour or metres per second." ;
   link "https://en.wikipedia.org/wiki/Conversion_of_units" "Conversion of units on Wikipedia" ;
@@ -258,6 +253,11 @@ META: convert-speed
   param digits "How many digits to keep after the decimal point (0 to 60)." ;
   see-also units:convert-distance units:convert-area units:convert-mass units:convert-data ;
 ;
+
+: convert-data ( value:str from:choice<data-unit>="byte" to:choice<data-unit>="bit" digits:int[0..60]=20 -- str )
+  "An amount of data converted from one unit to another. The value is decimal text (an optional sign, digits with an optional point, an optional exponent); anything else is an error. The decimal units (kilo, mega, giga, tera, peta, exa) are powers of 1000 and the binary units (kibi, mebi, gibi, tebi, pebi, exbi: IEC 80000-13) powers of 1024; a byte is 8 bits and a nibble 4. The sum is exact and the result is rounded half away from zero to the given number of decimal places (20 by default, as CyberChef's BigNumber does) and written in plain decimal form with no trailing zeros." doc
+  "Conversions" category
+  value from to _data digits _convert ;
 
 META: convert-data
   use-when "You have an amount of data in one unit, such as kibibytes, and want it in bytes, bits or another unit, with decimal and binary prefixes kept apart." ;

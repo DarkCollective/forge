@@ -196,15 +196,15 @@ CHOICE: magic-format
   "Forensics" category
   data _identity 0 nth ;
 
-: is-format ( data:bytes format:choice<magic-format> -- bool )
-  "True when the identification of the data is the format or a child of it: the family of an identification is the more general format it refines, so zip is true for an Office Open XML file or a JAR, and utf8-text is true for plain ASCII text. False for data that is not recognised." doc
-  "Forensics" category
-  data _identity dup 0 nth format = swap 1 nth format = or ;
-
 META: identify
   use-when "You want to know what the data is, as an id you can show or compare, such as gzip, png, pem or json." ;
   see-also magic:is-format filetype:detect ;
 ;
+
+: is-format ( data:bytes format:choice<magic-format> -- bool )
+  "True when the identification of the data is the format or a child of it: the family of an identification is the more general format it refines, so zip is true for an Office Open XML file or a JAR, and utf8-text is true for plain ASCII text. False for data that is not recognised." doc
+  "Forensics" category
+  data _identity dup 0 nth format = swap 1 nth format = or ;
 
 META: is-format
   use-when "You want a recipe to branch on what the data is, as the test of an if step, for example to decode only data that is gzip." ;

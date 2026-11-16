@@ -7,11 +7,6 @@ IN: decimal
   "Encodings" category
   bytes>list [ int>str ] map delimiter util:separator join ;
 
-: decode ( bytes -- bytes )
-  "Decode decimal numbers 0 to 255 separated by white space and/or commas." doc
-  "Encodings" category
-  10 "a decimal byte is 0 to 255" util:numbers>bytes ;
-
 META: encode
   use-when "You have bytes or text and want each byte as a decimal number from 0 to 255, for example 65 66 for the letters AB." ;
   link "https://en.wikipedia.org/wiki/ASCII" "ASCII on Wikipedia" ;
@@ -19,6 +14,11 @@ META: encode
   param delimiter "What to put between the numbers: a space, a comma or a newline." ;
   checks output charset "0-9 ,\n" ;
 ;
+
+: decode ( bytes -- bytes )
+  "Decode decimal numbers 0 to 255 separated by white space and/or commas." doc
+  "Encodings" category
+  10 "a decimal byte is 0 to 255" util:numbers>bytes ;
 
 META: decode
   use-when "You have decimal numbers from 0 to 255, separated by spaces or commas, and want the bytes they stand for." ;

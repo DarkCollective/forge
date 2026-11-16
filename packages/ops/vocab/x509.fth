@@ -734,6 +734,12 @@ MEMO: _cert-labels ( -- list )
   dup len 1 <> [ "expected one certificate, found " over len int>str cat "; use x509:parse-bundle for several" cat fail-coerce ] when
   0 nth _cert-report ;
 
+META: parse
+  use-when "You have a certificate as PEM, DER hex or Base64 and want to read its subject, issuer, validity dates, key and extensions." ;
+  link "https://www.rfc-editor.org/rfc/rfc5280" "RFC 5280: X.509 certificates and CRLs" ;
+  link "https://en.wikipedia.org/wiki/X.509" "X.509 on Wikipedia" ;
+;
+
 : _numbered ( der:bytes n:int total:int -- str )
   "Certificate " n int>str cat " of " cat total int>str cat "\n" cat
   [ der _cert-report ]
@@ -746,6 +752,12 @@ MEMO: _cert-labels ( -- list )
   "Parse every certificate of a bundle (a PEM file with several CERTIFICATE blocks, or DER certificates one after the other in der-hex, base64 or raw) and report each as Parse X.509 certificate does, under a heading Certificate N of M, separated by a blank line. input-format is pem (the default), der-hex, base64 or raw. No certificate, or a malformed one, is E_COERCE (the message of a malformed certificate starts with its number). PEM blocks of other kinds in the same file (private keys, CRLs) are ignored." doc
   "Public Key" category
   data input-format _cert-labels _blobs _bundle ;
+
+META: parse-bundle
+  use-when "You have a file with several certificates, such as a CA bundle or a certificate chain, and want to read each one in turn." ;
+  link "https://www.rfc-editor.org/rfc/rfc5280" "RFC 5280: X.509 certificates and CRLs" ;
+  link "https://en.wikipedia.org/wiki/X.509" "X.509 on Wikipedia" ;
+;
 
 \ ---- Public Key from Certificate ----
 
@@ -760,6 +772,13 @@ MEMO: _cert-labels ( -- list )
   "The public key of each certificate as a PEM block of its SubjectPublicKeyInfo (Public Key from Certificate): -----BEGIN PUBLIC KEY----- with the Base64 in lines of 64 characters. The key is copied byte for byte from the certificate, whatever its algorithm (RSA, EC, Ed25519, DSA, ...), so it is the same as openssl x509 -pubkey. input-format is pem (the default), der-hex, base64 or raw; the keys of several certificates follow one another. No certificate or a malformed one is E_COERCE." doc
   "Public Key" category
   data input-format _cert-labels _blobs [ _spki-pem ] map "" join ;
+
+META: public-key
+  use-when "You have a certificate and need just its public key as a PEM block, for example to pin it, compare it or check a signature elsewhere." ;
+  link "https://www.rfc-editor.org/rfc/rfc5280#section-4.1.2.7" "RFC 5280, section 4.1.2.7: subject public key info" ;
+  link "https://en.wikipedia.org/wiki/X.509" "X.509 on Wikipedia" ;
+  checks output regex "^-----BEGIN PUBLIC KEY-----" ;
+;
 
 \ ---- Parse X.509 CRL ----
 
@@ -880,6 +899,12 @@ MEMO: _month-names ( -- list )
   dup len 1 <> [ "expected one CRL, found " over len int>str cat fail-coerce ] when
   0 nth _crl-report ;
 
+META: parse-crl
+  use-when "You have a certificate revocation list and want to see who issued it, when it expires and which serial numbers it revokes." ;
+  link "https://www.rfc-editor.org/rfc/rfc5280#section-5" "RFC 5280, section 5: CRL profile" ;
+  link "https://en.wikipedia.org/wiki/Certificate_revocation_list" "Certificate revocation list on Wikipedia" ;
+;
+
 \ ---- Parse CSR ----
 
 : _attr-values ( set:record -- str )
@@ -928,6 +953,12 @@ MEMO: _month-names ( -- list )
   data input-format { "CERTIFICATE REQUEST" "NEW CERTIFICATE REQUEST" } _blobs
   dup len 1 <> [ "expected one certificate request, found " over len int>str cat fail-coerce ] when
   0 nth _csr-report ;
+
+META: parse-csr
+  use-when "You have a certificate signing request and want to check the subject, key and requested extensions before you send it to a CA." ;
+  link "https://www.rfc-editor.org/rfc/rfc2986" "RFC 2986: PKCS #10 certification requests" ;
+  link "https://en.wikipedia.org/wiki/Certificate_signing_request" "Certificate signing request on Wikipedia" ;
+;
 
 \ ---- Parse SSH Host Key ----
 \ The SSH public key of an authorized_keys, known_hosts or .pub line, or its Base64 or hex blob, as a text report with the
@@ -1077,7 +1108,7 @@ MEMO: _month-names ( -- list )
 \ { blob comment type-word } of the key on a line: the word after the key type is the key, the rest is the comment.
 : _ssh-line-parts ( words:list ti:int fmt:str -- list )
   words len ti 1 + <= [ "the key type '" words ti nth _safe cat "' is not followed by the key" cat fail-coerce ] when
-  { words ti 1 + nth fmt _ssh-decode  words ti 2 + words len slice " " join _safe  words ti nth } ;
+  { words ti 1 + nth fmt _ssh-decode words ti 2 + words len slice " " join _safe words ti nth } ;
 
 \ A key line (one line holding a key type word), or else a bare blob: all the text with white space ignored.
 : _ssh-load ( text:str fmt:str -- list )
@@ -1110,35 +1141,4 @@ META: parse-ssh-host-key
   use-when "You have a key line from known_hosts, authorized_keys or a .pub file and want its type and fingerprints, to compare with what ssh-keygen -l prints." ;
   param input-format "How the key is written: auto (a key line, hex or Base64 as found), base64 or hex." ;
   link "https://www.rfc-editor.org/rfc/rfc4253#section-6.6" "RFC 4253, section 6.6: SSH public key algorithms" ;
-;
-
-META: parse
-  use-when "You have a certificate as PEM, DER hex or Base64 and want to read its subject, issuer, validity dates, key and extensions." ;
-  link "https://www.rfc-editor.org/rfc/rfc5280" "RFC 5280: X.509 certificates and CRLs" ;
-  link "https://en.wikipedia.org/wiki/X.509" "X.509 on Wikipedia" ;
-;
-
-META: parse-bundle
-  use-when "You have a file with several certificates, such as a CA bundle or a certificate chain, and want to read each one in turn." ;
-  link "https://www.rfc-editor.org/rfc/rfc5280" "RFC 5280: X.509 certificates and CRLs" ;
-  link "https://en.wikipedia.org/wiki/X.509" "X.509 on Wikipedia" ;
-;
-
-META: parse-crl
-  use-when "You have a certificate revocation list and want to see who issued it, when it expires and which serial numbers it revokes." ;
-  link "https://www.rfc-editor.org/rfc/rfc5280#section-5" "RFC 5280, section 5: CRL profile" ;
-  link "https://en.wikipedia.org/wiki/Certificate_revocation_list" "Certificate revocation list on Wikipedia" ;
-;
-
-META: parse-csr
-  use-when "You have a certificate signing request and want to check the subject, key and requested extensions before you send it to a CA." ;
-  link "https://www.rfc-editor.org/rfc/rfc2986" "RFC 2986: PKCS #10 certification requests" ;
-  link "https://en.wikipedia.org/wiki/Certificate_signing_request" "Certificate signing request on Wikipedia" ;
-;
-
-META: public-key
-  use-when "You have a certificate and need just its public key as a PEM block, for example to pin it, compare it or check a signature elsewhere." ;
-  link "https://www.rfc-editor.org/rfc/rfc5280#section-4.1.2.7" "RFC 5280, section 4.1.2.7: subject public key info" ;
-  link "https://en.wikipedia.org/wiki/X.509" "X.509 on Wikipedia" ;
-  checks output regex "^-----BEGIN PUBLIC KEY-----" ;
 ;

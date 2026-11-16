@@ -17,11 +17,31 @@ USING: adler32 crc ;
   level 0 9 "the compression level" check-int-range
   data level _deflate ;
 
+META: deflate
+  use-when "You have bytes and need a raw DEFLATE stream, without a zlib or gzip wrapper, for example to put inside a zip entry." ;
+  param level "The compression level: 0 stores, 1 to 9 compress (6 default). CyberChef's None is 0 and its Dynamic Huffman Coding is any level from 1; Fixed Huffman Coding has no equivalent." ;
+  see-also deflate:inflate deflate:zlib-deflate deflate:gzip ;
+  inverse inflate ;
+  link "https://www.rfc-editor.org/rfc/rfc1951" "RFC 1951: DEFLATE compressed data format" ;
+  link "https://en.wikipedia.org/wiki/Deflate" "Deflate on Wikipedia" ;
+;
+
 : inflate ( data:bytes start:int=0 -- bytes )
   "Inflate a raw DEFLATE stream (RFC 1951) that begins at byte start of the input (CyberChef's Start index); bytes after the stream are ignored. A corrupt or cut-short stream is E_COERCE naming the fault; a start beyond the input is E_RANGE; output past the value limit stops with E_LIMIT_VALUE (the decompression bomb rule of the Wave 6 conventions)." doc
   "Compression" category
   start 0 data len "the start index" check-int-range
   data start _inflate drop ;
+
+META: inflate
+  use-when "You have a raw DEFLATE stream, such as the data inside a zip entry, and want the bytes it holds." ;
+  param start "The byte offset in the input where the DEFLATE stream begins (CyberChef's Start index)." ;
+  checks input binary ;
+  expects "raw DEFLATE data" ;
+  see-also deflate:deflate deflate:zlib-inflate deflate:gunzip ;
+  inverse deflate ;
+  link "https://www.rfc-editor.org/rfc/rfc1951" "RFC 1951: DEFLATE compressed data format" ;
+  link "https://en.wikipedia.org/wiki/Deflate" "Deflate on Wikipedia" ;
+;
 
 \ ---- zlib ----
 
@@ -40,6 +60,19 @@ USING: adler32 crc ;
   "Compression" category
   level 0 9 "the compression level" check-int-range
   level _zlib-header data level _deflate cat data adler32:checksum cat ;
+
+META: zlib-deflate
+  use-when "You have bytes and need a zlib stream, with its two-byte header and Adler-32 trailer, as used by HTTP deflate bodies and PNG images." ;
+  param level "The compression level, 0 (stored) to 9; 6 is the default." ;
+  checks output magic-bytes "7801" ;
+  checks output magic-bytes "785e" ;
+  checks output magic-bytes "789c" ;
+  checks output magic-bytes "78da" ;
+  see-also deflate:zlib-inflate deflate:deflate adler32:checksum ;
+  inverse zlib-inflate ;
+  link "https://www.rfc-editor.org/rfc/rfc1950" "RFC 1950: zlib compressed data format" ;
+  link "https://en.wikipedia.org/wiki/Zlib" "Zlib on Wikipedia" ;
+;
 
 : _zlib-check-header ( data:bytes s:int -- )
   data len s - 2 < [ "zlib data is shorter than its two header bytes" fail-coerce ] when
@@ -63,6 +96,18 @@ USING: adler32 crc ;
   start 0 data len "the start index" check-int-range
   data start _zlib-check-header
   data start 2 + _inflate data verify _zlib-finish ;
+
+META: zlib-inflate
+  use-when "You have zlib data, usually starting with 78 9c or 78 da, and want the bytes inside, such as an HTTP deflate body or PNG image data." ;
+  param start "The byte offset in the input where the zlib header begins." ;
+  param verify "Check the Adler-32 trailer (CyberChef's Verify result); off, the trailer is not read." ;
+  checks input binary ;
+  expects "zlib data" ;
+  see-also deflate:zlib-deflate deflate:inflate adler32:checksum ;
+  inverse zlib-deflate ;
+  link "https://www.rfc-editor.org/rfc/rfc1950" "RFC 1950: zlib compressed data format" ;
+  link "https://en.wikipedia.org/wiki/Zlib" "Zlib on Wikipedia" ;
+;
 
 \ ---- gzip ----
 
@@ -104,6 +149,20 @@ USING: adler32 crc ;
   level mtime filename "the file name" _gz-text comment "the comment" _gz-text header-crc _gz-header
   header-crc _gz-header-crc
   data level _deflate cat data _gz-trailer cat ;
+
+META: gzip
+  use-when "You have bytes and need a gzip file or body, for example to serve compressed text or to make a .gz test file." ;
+  param level "The compression level, 0 (stored) to 9; 6 is the default." ;
+  param filename "The original file name stored in the header (Latin-1); empty stores none." ;
+  param comment "A comment stored in the header (Latin-1); empty stores none." ;
+  param header-crc "Add the CRC-16 of the header to the header (CyberChef's Include file checksum)." ;
+  param mtime "The modification time in Unix seconds (0 to 4294967295); 0 means none, and keeps the output the same on every run." ;
+  checks output magic-bytes format "gzip" ;
+  see-also deflate:gunzip deflate:deflate crc:checksum ;
+  inverse gunzip ;
+  link "https://www.rfc-editor.org/rfc/rfc1952" "RFC 1952: gzip file format" ;
+  link "https://en.wikipedia.org/wiki/Gzip" "Gzip on Wikipedia" ;
+;
 
 \ The offset after the FEXTRA field when the flag is set (a 2-byte length, then the field).
 : _gz-extra-end ( p:int data:bytes flg:int -- int )
@@ -176,65 +235,6 @@ USING: adler32 crc ;
   "Decompress gzip data (RFC 1952): the header is parsed (name, comment, extra field and header CRC-16 are skipped; a missing magic number, another method or reserved flags are E_COERCE), the stream is inflated, and with verify (the default) the CRC-32 and length of the trailer must be present and match, otherwise E_COERCE. Members written one after the other are joined, as gzip does; other bytes after the last member are ignored. Output past the value limit stops with E_LIMIT_VALUE." doc
   "Compression" category
   data 0 verify _gz-all ;
-
-META: deflate
-  use-when "You have bytes and need a raw DEFLATE stream, without a zlib or gzip wrapper, for example to put inside a zip entry." ;
-  param level "The compression level: 0 stores, 1 to 9 compress (6 default). CyberChef's None is 0 and its Dynamic Huffman Coding is any level from 1; Fixed Huffman Coding has no equivalent." ;
-  see-also deflate:inflate deflate:zlib-deflate deflate:gzip ;
-  inverse inflate ;
-  link "https://www.rfc-editor.org/rfc/rfc1951" "RFC 1951: DEFLATE compressed data format" ;
-  link "https://en.wikipedia.org/wiki/Deflate" "Deflate on Wikipedia" ;
-;
-
-META: inflate
-  use-when "You have a raw DEFLATE stream, such as the data inside a zip entry, and want the bytes it holds." ;
-  param start "The byte offset in the input where the DEFLATE stream begins (CyberChef's Start index)." ;
-  checks input binary ;
-  expects "raw DEFLATE data" ;
-  see-also deflate:deflate deflate:zlib-inflate deflate:gunzip ;
-  inverse deflate ;
-  link "https://www.rfc-editor.org/rfc/rfc1951" "RFC 1951: DEFLATE compressed data format" ;
-  link "https://en.wikipedia.org/wiki/Deflate" "Deflate on Wikipedia" ;
-;
-
-META: zlib-deflate
-  use-when "You have bytes and need a zlib stream, with its two-byte header and Adler-32 trailer, as used by HTTP deflate bodies and PNG images." ;
-  param level "The compression level, 0 (stored) to 9; 6 is the default." ;
-  checks output magic-bytes "7801" ;
-  checks output magic-bytes "785e" ;
-  checks output magic-bytes "789c" ;
-  checks output magic-bytes "78da" ;
-  see-also deflate:zlib-inflate deflate:deflate adler32:checksum ;
-  inverse zlib-inflate ;
-  link "https://www.rfc-editor.org/rfc/rfc1950" "RFC 1950: zlib compressed data format" ;
-  link "https://en.wikipedia.org/wiki/Zlib" "Zlib on Wikipedia" ;
-;
-
-META: zlib-inflate
-  use-when "You have zlib data, usually starting with 78 9c or 78 da, and want the bytes inside, such as an HTTP deflate body or PNG image data." ;
-  param start "The byte offset in the input where the zlib header begins." ;
-  param verify "Check the Adler-32 trailer (CyberChef's Verify result); off, the trailer is not read." ;
-  checks input binary ;
-  expects "zlib data" ;
-  see-also deflate:zlib-deflate deflate:inflate adler32:checksum ;
-  inverse zlib-deflate ;
-  link "https://www.rfc-editor.org/rfc/rfc1950" "RFC 1950: zlib compressed data format" ;
-  link "https://en.wikipedia.org/wiki/Zlib" "Zlib on Wikipedia" ;
-;
-
-META: gzip
-  use-when "You have bytes and need a gzip file or body, for example to serve compressed text or to make a .gz test file." ;
-  param level "The compression level, 0 (stored) to 9; 6 is the default." ;
-  param filename "The original file name stored in the header (Latin-1); empty stores none." ;
-  param comment "A comment stored in the header (Latin-1); empty stores none." ;
-  param header-crc "Add the CRC-16 of the header to the header (CyberChef's Include file checksum)." ;
-  param mtime "The modification time in Unix seconds (0 to 4294967295); 0 means none, and keeps the output the same on every run." ;
-  checks output magic-bytes format "gzip" ;
-  see-also deflate:gunzip deflate:deflate crc:checksum ;
-  inverse gunzip ;
-  link "https://www.rfc-editor.org/rfc/rfc1952" "RFC 1952: gzip file format" ;
-  link "https://en.wikipedia.org/wiki/Gzip" "Gzip on Wikipedia" ;
-;
 
 META: gunzip
   use-when "You have gzip data, such as a .gz file or an HTTP body sent with Content-Encoding gzip, and want the original bytes." ;

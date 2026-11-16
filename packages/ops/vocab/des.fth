@@ -14,12 +14,6 @@ USING: blockmode ;
   key _check-key
   mode "CTR32" blockmode:ctr-as iv 8 padding "pkcs7" = [ key _encrypt-block ] blockmode:encrypt ;
 
-: decrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice<util:block-mode>="CBC" padding:choice<util:pkcs7-padding>="pkcs7" -- bytes )
-  "DES decryption, the inverse of des:encrypt with the same key, IV, mode and padding. PKCS#7 padding that does not check (usually a wrong key or IV) is E_COERCE, and so is ciphertext that is not whole 8-byte blocks in CBC or ECB. A key or IV of the wrong length is E_RANGE." doc
-  "Encryption" category
-  key _check-key
-  mode "CTR32" blockmode:ctr-as iv 8 padding "pkcs7" = [ key _encrypt-block ] [ key _decrypt-block ] blockmode:decrypt ;
-
 META: encrypt
   use-when "You have a DES key of 8 bytes and data from an old protocol or file, and you need to reproduce its output. DES is broken, so use it for existing data only." ;
   param key "The DES key: 8 bytes (the least significant bit of each byte is a parity bit and is ignored)." ;
@@ -31,6 +25,12 @@ META: encrypt
   link "https://en.wikipedia.org/wiki/Data_Encryption_Standard" "Data Encryption Standard on Wikipedia" ;
   link "https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation" "Block cipher mode of operation on Wikipedia" ;
 ;
+
+: decrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice<util:block-mode>="CBC" padding:choice<util:pkcs7-padding>="pkcs7" -- bytes )
+  "DES decryption, the inverse of des:encrypt with the same key, IV, mode and padding. PKCS#7 padding that does not check (usually a wrong key or IV) is E_COERCE, and so is ciphertext that is not whole 8-byte blocks in CBC or ECB. A key or IV of the wrong length is E_RANGE." doc
+  "Encryption" category
+  key _check-key
+  mode "CTR32" blockmode:ctr-as iv 8 padding "pkcs7" = [ key _encrypt-block ] [ key _decrypt-block ] blockmode:decrypt ;
 
 META: decrypt
   use-when "You have DES ciphertext from an old system, with its key, IV and mode, and you want the plaintext. DES is broken, so use it for existing data only." ;

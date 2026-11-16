@@ -82,6 +82,17 @@ CHOICE: curve
   "Public Key" category
   data public-key-x public-key-y _public-point output-format _encrypt-random bytes>hex ;
 
+META: encrypt
+  use-when "You have an SM2 public key as its X and Y coordinates (32 bytes each, in hex) and a message, for the key's owner to decrypt the ciphertext." ;
+  param public-key-x "The X coordinate of the public key: 32 bytes as hex." ;
+  param public-key-y "The Y coordinate of the public key: 32 bytes as hex." ;
+  param output-format "The order of the parts: C1C3C2 (the standard's) or C1C2C3." ;
+  param curve "The curve: sm2p256v1, the only one." ;
+  see-also sm2:decrypt sm3:digest ;
+  inverse decrypt ;
+  checks output charset "0-9a-f" ;
+;
+
 \ ---- decrypt ----
 
 \ C1 as the 65-byte point and the rest of the ciphertext. C1 may be written with or without the 04 byte; the 65 bytes
@@ -115,17 +126,6 @@ CHOICE: curve
   "Decrypt an SM2 ciphertext with the private key (GB/T 32918.4, CyberChef's SM2 Decrypt) on the curve sm2p256v1. The input is the ciphertext as hex text (white space is ignored) in the order named: C1C3C2 or C1C2C3. C1 may be x || y (64 bytes, as CyberChef writes it) or the uncompressed point with its 04 byte (65 bytes, as other SM2 libraries write it). The private key is 32 bytes as hex. A ciphertext that is cut short, whose C1 is not a point on the curve, or whose C3 check does not match (a wrong key, a wrong order or damaged data) is E_COERCE; a key outside 1 to the order minus 1 is E_RANGE. The output is the message as bytes." doc
   "Public Key" category
   data hex>bytes private-key "Private Key" _coord input-format _decrypt ;
-
-META: encrypt
-  use-when "You have an SM2 public key as its X and Y coordinates (32 bytes each, in hex) and a message, for the key's owner to decrypt the ciphertext." ;
-  param public-key-x "The X coordinate of the public key: 32 bytes as hex." ;
-  param public-key-y "The Y coordinate of the public key: 32 bytes as hex." ;
-  param output-format "The order of the parts: C1C3C2 (the standard's) or C1C2C3." ;
-  param curve "The curve: sm2p256v1, the only one." ;
-  see-also sm2:decrypt sm3:digest ;
-  inverse decrypt ;
-  checks output charset "0-9a-f" ;
-;
 
 META: decrypt
   use-when "You have an SM2 ciphertext in hex and its 32-byte private key, and you want the plaintext. SM2 is the Chinese national public-key standard." ;

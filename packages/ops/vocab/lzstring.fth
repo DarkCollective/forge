@@ -18,11 +18,6 @@ CHOICE: stream-format
   "Compression" category
   data format _compress ;
 
-: decompress ( data:bytes format:choice<stream-format>="default" -- bytes )
-  "LZString-decompress to UTF-8 text bytes (lz-string 1.5.0); format is the one compress wrote (default is UCS-2 big-endian byte pairs, an even length). Empty input, input outside that format's alphabet or not UTF-8, a truncated stream (no end marker), a code that names no dictionary entry and text that holds an unpaired surrogate are E_COERCE. The expansion is checked before the library builds any string: output past the value limit is E_LIMIT_VALUE." doc
-  "Compression" category
-  data format _decompress ;
-
 META: compress
   use-when "You have text and want it in the lz-string form that web apps use, for example to keep a compressed value in a URL or in storage." ;
   param format "default: the 16-bit units as big-endian byte pairs; utf16: compressToUTF16 (UTF-8); base64: compressToBase64; uri: compressToEncodedURIComponent. CyberChef offers default, UTF16 and Base64." ;
@@ -32,6 +27,11 @@ META: compress
   inverse decompress ;
   link "https://github.com/pieroxy/lz-string" "lz-string on GitHub" ;
 ;
+
+: decompress ( data:bytes format:choice<stream-format>="default" -- bytes )
+  "LZString-decompress to UTF-8 text bytes (lz-string 1.5.0); format is the one compress wrote (default is UCS-2 big-endian byte pairs, an even length). Empty input, input outside that format's alphabet or not UTF-8, a truncated stream (no end marker), a code that names no dictionary entry and text that holds an unpaired surrogate are E_COERCE. The expansion is checked before the library builds any string: output past the value limit is E_LIMIT_VALUE." doc
+  "Compression" category
+  data format _decompress ;
 
 META: decompress
   use-when "You have an lz-string value from a web app's URL or storage, and want the text it stands for." ;

@@ -327,6 +327,14 @@ CHOICE: _signature-format-auto
   "Public Key" category
   curve curve _seed-length random:bytes-of format _generate ;
 
+META: generate-key-pair
+  use-when "You need a fresh ECDSA key pair on P-256, P-384 or P-521, in PEM, DER or JWK form, for a test or a new signing key." ;
+  param curve "The curve: P-256, P-384 or P-521." ;
+  param format "PEM (public key, then PKCS #8 private key), DER (the private scalar as hex, CyberChef's name) or JWK." ;
+  see-also ecdsa:sign ecdsa:public-key ;
+  link "https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm" "ECDSA on Wikipedia" ;
+;
+
 \ ---- sign, verify, convert, public key ----
 
 : _write-rs ( rs:bytes w:int format:str -- str )
@@ -342,6 +350,16 @@ CHOICE: _signature-format-auto
   dup "curve" get swap "key" get
   data -rot digest format _sign-with ;
 
+META: sign
+  use-when "You have an EC private key in PEM on P-256, P-384, P-521 or secp256k1 and a message, and you need an ECDSA signature in DER, r then s, JWS or JSON form." ;
+  param private-key "The private key as PEM: SEC1 (EC PRIVATE KEY) or PKCS #8 (PRIVATE KEY)." ;
+  param digest "The hash applied to the input before signing: sha256, sha384, sha512, sha1 or md5." ;
+  param format "asn1-hex (DER), p1363-hex (r then s), jws (URL-safe Base64 of r then s) or raw-json." ;
+  see-also ecdsa:verify ecdsa:convert-signature ;
+  link "https://www.rfc-editor.org/rfc/rfc6979" "RFC 6979: deterministic DSA and ECDSA" ;
+  link "https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm" "ECDSA on Wikipedia" ;
+;
+
 : _verify-rs ( curve:str pub:bytes r:int s:int h:bytes hash:str -- bool )
   1 curve _size 8 * shl dup r > swap s > and
   [ curve pub h r s curve _size _p1363 hash _verify ] [ false ] if ;
@@ -355,42 +373,6 @@ CHOICE: _signature-format-auto
   message digest _digest digest _verify-rs
   [ "Verified OK" ] [ "Verification Failure" ] if ;
 
-: _guess-width ( r:int s:int -- int )
-  r s max util:int>bytes len
-  :> n
-  { [ n 32 <= ] [ 32 ] [ n 48 <= ] [ 48 ] [ 66 ] } cond ;
-
-: convert-signature ( signature:str input-format:choice<_signature-format-auto>="auto" output-format:choice<_signature-format>="asn1-hex" -- str )
-  "Convert an ECDSA signature between the DER SEQUENCE (asn1-hex), r then s (p1363-hex), the URL-safe Base64 of r then s (jws) and {\"r\",\"s\"} in hex (raw-json) (CyberChef's ECDSA Signature Conversion). The curve is not known, so the width of r and s in p1363-hex and jws is the smallest of 32, 48 and 66 bytes (P-256 and secp256k1, P-384, P-521) that holds the larger of the two (CyberChef cannot write a P-521 signature this way). auto detects the input as in ECDSA Verify. A value over 66 bytes cannot be written in those two formats." doc
-  "Public Key" category
-  signature input-format _parse-sig
-  dup2 _guess-width output-format _write-sig ;
-
-: public-key ( data:str -- str )
-  "The public key of an EC private key, as a PUBLIC KEY (SubjectPublicKeyInfo) PEM. The input is the private key as PEM, SEC1 (EC PRIVATE KEY) or PKCS #8 (PRIVATE KEY), on P-256, P-384, P-521 or secp256k1. This is the elliptic curve half of CyberChef's Public Key from Private Key." doc
-  "Public Key" category
-  data _need-private
-  dup "curve" get swap "key" get
-  over swap _public-key _public-pem ;
-
-META: generate-key-pair
-  use-when "You need a fresh ECDSA key pair on P-256, P-384 or P-521, in PEM, DER or JWK form, for a test or a new signing key." ;
-  param curve "The curve: P-256, P-384 or P-521." ;
-  param format "PEM (public key, then PKCS #8 private key), DER (the private scalar as hex, CyberChef's name) or JWK." ;
-  see-also ecdsa:sign ecdsa:public-key ;
-  link "https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm" "ECDSA on Wikipedia" ;
-;
-
-META: sign
-  use-when "You have an EC private key in PEM on P-256, P-384, P-521 or secp256k1 and a message, and you need an ECDSA signature in DER, r then s, JWS or JSON form." ;
-  param private-key "The private key as PEM: SEC1 (EC PRIVATE KEY) or PKCS #8 (PRIVATE KEY)." ;
-  param digest "The hash applied to the input before signing: sha256, sha384, sha512, sha1 or md5." ;
-  param format "asn1-hex (DER), p1363-hex (r then s), jws (URL-safe Base64 of r then s) or raw-json." ;
-  see-also ecdsa:verify ecdsa:convert-signature ;
-  link "https://www.rfc-editor.org/rfc/rfc6979" "RFC 6979: deterministic DSA and ECDSA" ;
-  link "https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm" "ECDSA on Wikipedia" ;
-;
-
 META: verify
   use-when "You have an ECDSA signature, the message and the PEM public key, and you want to check the signature. Auto reads the format the signer used." ;
   param input-format "The signature format, or auto to detect it." ;
@@ -403,6 +385,17 @@ META: verify
   link "https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm" "ECDSA on Wikipedia" ;
 ;
 
+: _guess-width ( r:int s:int -- int )
+  r s max util:int>bytes len
+  :> n
+  { [ n 32 <= ] [ 32 ] [ n 48 <= ] [ 48 ] [ 66 ] } cond ;
+
+: convert-signature ( signature:str input-format:choice<_signature-format-auto>="auto" output-format:choice<_signature-format>="asn1-hex" -- str )
+  "Convert an ECDSA signature between the DER SEQUENCE (asn1-hex), r then s (p1363-hex), the URL-safe Base64 of r then s (jws) and {\"r\",\"s\"} in hex (raw-json) (CyberChef's ECDSA Signature Conversion). The curve is not known, so the width of r and s in p1363-hex and jws is the smallest of 32, 48 and 66 bytes (P-256 and secp256k1, P-384, P-521) that holds the larger of the two (CyberChef cannot write a P-521 signature this way). auto detects the input as in ECDSA Verify. A value over 66 bytes cannot be written in those two formats." doc
+  "Public Key" category
+  signature input-format _parse-sig
+  dup2 _guess-width output-format _write-sig ;
+
 META: convert-signature
   use-when "You have an ECDSA signature in one form (DER hex, r then s hex, JWS or JSON) and a system that wants another form, and you need the conversion." ;
   param input-format "The format of the signature, or auto to detect it." ;
@@ -410,6 +403,13 @@ META: convert-signature
   see-also ecdsa:sign ecdsa:verify ;
   link "https://www.rfc-editor.org/rfc/rfc7518" "RFC 7518: JSON Web Algorithms (JWS ECDSA)" ;
 ;
+
+: public-key ( data:str -- str )
+  "The public key of an EC private key, as a PUBLIC KEY (SubjectPublicKeyInfo) PEM. The input is the private key as PEM, SEC1 (EC PRIVATE KEY) or PKCS #8 (PRIVATE KEY), on P-256, P-384, P-521 or secp256k1. This is the elliptic curve half of CyberChef's Public Key from Private Key." doc
+  "Public Key" category
+  data _need-private
+  dup "curve" get swap "key" get
+  over swap _public-key _public-pem ;
 
 META: public-key
   use-when "You have an EC private key in PEM, SEC1 or PKCS #8, and you want its public key as a PUBLIC KEY PEM, to share it or to check signatures." ;

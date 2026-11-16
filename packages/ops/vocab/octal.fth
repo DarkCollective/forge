@@ -8,11 +8,6 @@ IN: octal
   "Encodings" category
   bytes>list [ 8 int>str-radix ] map delimiter util:separator join ;
 
-: decode ( bytes -- bytes )
-  "Decode octal numbers 0 to 377 separated by white space and/or commas." doc
-  "Encodings" category
-  8 "an octal byte is 0 to 377" util:numbers>bytes ;
-
 META: encode
   use-when "You want bytes written as octal numbers from 0 to 377, for example to match the three-digit octal escapes that some languages use in strings." ;
   link "https://en.wikipedia.org/wiki/Octal" "Octal on Wikipedia" ;
@@ -21,6 +16,11 @@ META: encode
   see-also octal:decode decimal:encode ;
   checks output charset "0-7 ,\n" ;
 ;
+
+: decode ( bytes -- bytes )
+  "Decode octal numbers 0 to 377 separated by white space and/or commas." doc
+  "Encodings" category
+  8 "an octal byte is 0 to 377" util:numbers>bytes ;
 
 META: decode
   use-when "You have octal numbers from 0 to 377, separated by spaces or commas, and want the bytes they stand for." ;

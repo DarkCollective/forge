@@ -11,11 +11,6 @@ USING: asn1 ;
   "Public Key" category
   data hex>bytes asn1:oid-decode ;
 
-: to-hex ( data:str -- str )
-  "The hex digits (lower case, no separators) of the DER content bytes of a dotted object identifier (Object Identifier to Hex): 1.2.840.113549.1.1.1 is 2a864886f70d010101; the tag and length bytes are not written. Surrounding white space is ignored. Fewer than two arcs, a first arc above 2, a second arc of 40 or more under 0 or 1, or anything but digits is E_COERCE." doc
-  "Public Key" category
-  data asn1:oid-encode bytes>hex ;
-
 META: from-hex
   use-when "You have the hex of an OBJECT IDENTIFIER's content bytes, for example from a certificate dump, and want the dotted number such as 1.2.840.113549.1.1.11." ;
   inverse to-hex ;
@@ -27,6 +22,11 @@ META: from-hex
   expects "hex of an OID's content bytes" ;
   checks output charset "0-9." ;
 ;
+
+: to-hex ( data:str -- str )
+  "The hex digits (lower case, no separators) of the DER content bytes of a dotted object identifier (Object Identifier to Hex): 1.2.840.113549.1.1.1 is 2a864886f70d010101; the tag and length bytes are not written. Surrounding white space is ignored. Fewer than two arcs, a first arc above 2, a second arc of 40 or more under 0 or 1, or anything but digits is E_COERCE." doc
+  "Public Key" category
+  data asn1:oid-encode bytes>hex ;
 
 META: to-hex
   use-when "You have a dotted object identifier and want its DER content bytes in hex, for example to search a hex dump for it or to build a certificate by hand." ;

@@ -120,16 +120,16 @@ IN: file-mode
   "Conversions" category
   data _parse-mode _report ;
 
-: convert ( data:str to:choice{octal|symbolic}="symbolic" -- str )
-  "A UNIX file mode written in the other notation: octal (four digits, 0755) or symbolic (rwxr-xr-x). The input may be either; the file type character of a symbolic input is kept." doc
-  "Conversions" category
-  data _parse-mode to "octal" = [ drop _octal ] [ swap _symbolic cat ] if ;
-
 META: parse
   use-when "You have a UNIX file mode, such as 755 or drwxr-xr-x from ls -l, and want it explained permission by permission, to check what it allows." ;
   see-also file-mode:convert ;
   link "https://en.wikipedia.org/wiki/File-system_permissions" "File-system permissions on Wikipedia" ;
 ;
+
+: convert ( data:str to:choice{octal|symbolic}="symbolic" -- str )
+  "A UNIX file mode written in the other notation: octal (four digits, 0755) or symbolic (rwxr-xr-x). The input may be either; the file type character of a symbolic input is kept." doc
+  "Conversions" category
+  data _parse-mode to "octal" = [ drop _octal ] [ swap _symbolic cat ] if ;
 
 META: convert
   use-when "You have a UNIX file mode in one notation, such as 0755 or rwxr-xr-x from ls -l, and want it written in the other notation." ;

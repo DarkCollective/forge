@@ -62,11 +62,6 @@ MEMO: _decode-table ( -- record )
   "Encodings" category
   _ws-to-space " " split [ len 0 > ] filter _table word-separator _sep-of _encode-words ;
 
-: decode ( str -- str )
-  "Decode Morse to upper-case text. Words are separated by /, a newline or a run of spaces; letters by one space. Unknown code is E_COERCE." doc
-  "Encodings" category
-  _breaks " " split _decode-table _decode-tokens " " split [ len 0 > ] filter " " join ;
-
 META: encode
   use-when "You have plain text and want it as Morse code, dots and dashes with a space between letters and a slash between words." ;
   link "https://en.wikipedia.org/wiki/Morse_code" "Morse code on Wikipedia" ;
@@ -74,6 +69,11 @@ META: encode
   param word-separator "What to put between words: \" / \" or a newline." ;
   checks output charset "./ \n-" ;
 ;
+
+: decode ( str -- str )
+  "Decode Morse to upper-case text. Words are separated by /, a newline or a run of spaces; letters by one space. Unknown code is E_COERCE." doc
+  "Encodings" category
+  _breaks " " split _decode-table _decode-tokens " " split [ len 0 > ] filter " " join ;
 
 META: decode
   use-when "You have Morse code, dots and dashes, and want the text it spells." ;

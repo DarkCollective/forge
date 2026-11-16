@@ -47,20 +47,6 @@ CHOICE: gost-curve
   curve private-key "private key" curve _size curve _exact
   data curve _digest _sign-digest ;
 
-: verify ( signature:str public-key:bytes="" curve:choice<gost-curve>="cryptopro-a" message:toggle{utf8|hex|base64|latin1}="" -- str )
-  "Verify a GOST R 34.10-2012 signature (RFC 7091) of a message. The input is the signature r || s as hex (white space is ignored); the public key is the point x || y as hex, as wide as the curve twice (E_RANGE otherwise; a point not on the curve is E_COERCE); the message is read as UTF-8 text, hex, Base64 or Latin-1 per the toggle and hashed with Streebog as sign does. The answer is Verified OK or Verification Failure; a signature of the wrong length or with r or s outside 1 to the order minus 1 is a failure, not an error." doc
-  "Public Key" category
-  curve public-key "public key" curve _size 2 * curve _exact
-  message curve _digest
-  signature strip-space hex>bytes
-  _verify
-  [ "Verified OK" ] [ "Verification Failure" ] if ;
-
-: public-key ( data:str curve:choice<gost-curve>="cryptopro-a" -- str )
-  "The public key of a GOST R 34.10-2012 private key: the point x followed by y, big-endian, each as wide as the curve, as lower-case hex. The input is the private key as hex, as wide as the curve (E_RANGE otherwise)." doc
-  "Public Key" category
-  curve data strip-space hex>bytes "private key" curve _size curve _exact _public-key bytes>hex ;
-
 META: sign
   use-when "You have a GOST R 34.10-2012 private key in hex and a message, and you need a signature for a Russian standard test or protocol." ;
   param private-key "The private key d as hex, as wide as the curve: 32 bytes (64 hex digits) or 64 bytes." ;
@@ -70,6 +56,15 @@ META: sign
   link "https://www.rfc-editor.org/rfc/rfc6986" "RFC 6986: the Streebog hash" ;
   checks output charset "0-9a-f" ;
 ;
+
+: verify ( signature:str public-key:bytes="" curve:choice<gost-curve>="cryptopro-a" message:toggle{utf8|hex|base64|latin1}="" -- str )
+  "Verify a GOST R 34.10-2012 signature (RFC 7091) of a message. The input is the signature r || s as hex (white space is ignored); the public key is the point x || y as hex, as wide as the curve twice (E_RANGE otherwise; a point not on the curve is E_COERCE); the message is read as UTF-8 text, hex, Base64 or Latin-1 per the toggle and hashed with Streebog as sign does. The answer is Verified OK or Verification Failure; a signature of the wrong length or with r or s outside 1 to the order minus 1 is a failure, not an error." doc
+  "Public Key" category
+  curve public-key "public key" curve _size 2 * curve _exact
+  message curve _digest
+  signature strip-space hex>bytes
+  _verify
+  [ "Verified OK" ] [ "Verification Failure" ] if ;
 
 META: verify
   use-when "You have a GOST R 34.10-2012 signature (r then s, in hex), the public point and the message, and you want to check that the signature is genuine." ;
@@ -83,6 +78,11 @@ META: verify
   checks input regex "^[0-9a-fA-F\\s]+$" ;
   expects "signature as hex" ;
 ;
+
+: public-key ( data:str curve:choice<gost-curve>="cryptopro-a" -- str )
+  "The public key of a GOST R 34.10-2012 private key: the point x followed by y, big-endian, each as wide as the curve, as lower-case hex. The input is the private key as hex, as wide as the curve (E_RANGE otherwise)." doc
+  "Public Key" category
+  curve data strip-space hex>bytes "private key" curve _size curve _exact _public-key bytes>hex ;
 
 META: public-key
   use-when "You have a GOST R 34.10-2012 private key in hex and need the public point x then y, to check signatures or to publish the key." ;

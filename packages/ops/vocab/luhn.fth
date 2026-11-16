@@ -41,18 +41,18 @@ IN: luhn
   [ digits radix _values radix 1 _sum radix swap - radix mod radix int>str-radix ]
   if ;
 
-: validate ( digits:str radix:int[2..36]=10 -- bool )
-  "True when the digits, including their last digit as the check digit, pass the Luhn test. The empty input is not valid. A character that is not a digit of the radix is an error. The radix must be even." doc
-  "Hashing" category
-  radix _check-radix
-  digits len 0 = [ false ] [ digits radix _values radix 0 _sum 0 = ] if ;
-
 META: check-digit
   use-when "You are making a card, account or serial number and need the Luhn check digit to append, so that the whole number passes the Luhn test." ;
   param radix "The number base, an even number from 2 to 36. 10 for decimal." ;
   see-also luhn:validate ;
   link "https://en.wikipedia.org/wiki/Luhn_algorithm" "Luhn algorithm on Wikipedia" ;
 ;
+
+: validate ( digits:str radix:int[2..36]=10 -- bool )
+  "True when the digits, including their last digit as the check digit, pass the Luhn test. The empty input is not valid. A character that is not a digit of the radix is an error. The radix must be even." doc
+  "Hashing" category
+  radix _check-radix
+  digits len 0 = [ false ] [ digits radix _values radix 0 _sum 0 = ] if ;
 
 META: validate
   use-when "You have a card, account or serial number with its check digit and want to see whether it passes the Luhn test. A pass is not proof the number is real." ;

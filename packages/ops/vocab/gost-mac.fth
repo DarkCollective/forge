@@ -17,13 +17,6 @@ IN: gost-mac
   mac-length 8 mod 0 <> [ "the MAC length must be a multiple of 8 bits, from 8 to 64" fail-range ] when
   data key iv sbox mac-length 8 div _mac ;
 
-: verify ( data:bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mac:toggle{hex|utf8|latin1|base64}="" sbox:choice<util:gost-sbox>="E-TEST" -- str )
-  "Check a GOST 28147-89 MAC of the input bytes (CyberChef's GOST Verify for its GOST 28147 (1989) algorithm): the MAC is computed with the key, IV and S-box as gost-mac:sign does, as long as the MAC given (1 to 8 bytes, E_RANGE otherwise; CyberChef takes the bit length from the hex digits), and compared. The answer is The signature matches or The signature does not match." doc
-  "Encryption" category
-  mac len 1 8 between? not [ "the MAC must be 1 to 8 bytes" fail-range ] when
-  data key iv sbox mac len _mac mac =
-  [ "The signature matches" ] [ "The signature does not match" ] if ;
-
 META: sign
   use-when "You have a 32-byte GOST 28147-89 key and a message, and you need the IMIT MAC that a Russian protocol or standard names, to compare or to make a test value." ;
   param key "The 256-bit key (32 bytes)." ;
@@ -34,6 +27,13 @@ META: sign
   link "https://www.rfc-editor.org/rfc/rfc5830" "RFC 5830: GOST 28147-89 algorithms" ;
   link "https://www.rfc-editor.org/rfc/rfc4357" "RFC 4357: GOST key wrapping" ;
 ;
+
+: verify ( data:bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mac:toggle{hex|utf8|latin1|base64}="" sbox:choice<util:gost-sbox>="E-TEST" -- str )
+  "Check a GOST 28147-89 MAC of the input bytes (CyberChef's GOST Verify for its GOST 28147 (1989) algorithm): the MAC is computed with the key, IV and S-box as gost-mac:sign does, as long as the MAC given (1 to 8 bytes, E_RANGE otherwise; CyberChef takes the bit length from the hex digits), and compared. The answer is The signature matches or The signature does not match." doc
+  "Encryption" category
+  mac len 1 8 between? not [ "the MAC must be 1 to 8 bytes" fail-range ] when
+  data key iv sbox mac len _mac mac =
+  [ "The signature matches" ] [ "The signature does not match" ] if ;
 
 META: verify
   use-when "You have a GOST 28147-89 IMIT MAC from a message, with the key, IV and S-box it was made with, and you want to check whether the MAC matches." ;

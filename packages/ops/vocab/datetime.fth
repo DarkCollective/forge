@@ -205,7 +205,6 @@ MEMO: _weekdays ( -- list )
 
 \ ---- formatting ----
 
-
 : _ord ( n:int -- str )
   n int>str n util:ordinal-suffix cat ;
 
@@ -699,12 +698,34 @@ MEMO: _preset-formats ( -- record )
   "Date/Time" category
   data preset format _preset zone _parse zone _fields _report ;
 
+META: parse
+  use-when "You have a date and time as text in a known layout, such as a log stamp, and want it broken down into weekday, zone offset, ISO week and similar facts." ;
+  link "https://en.wikipedia.org/wiki/ISO_8601" "ISO 8601 on Wikipedia" ;
+  param preset "A known format to read the date and time with, or Custom to use the format string." ;
+  param format "The format string for the preset Custom, in moment.js-style tokens (YYYY MM DD HH mm ss SSS Z A and so on; [text] is copied as it is)." ;
+  param zone "Where the time was read: UTC, a fixed offset like +09:00, or an IANA time zone like Asia/Tokyo." ;
+  see-also datetime:translate datetime:to-unix ;
+;
+
 : translate ( data:str in-preset:choice<_date-preset>="Standard date and time" in-format:str="DD/MM/YYYY HH:mm:ss" in-zone:str="UTC" out-preset:choice<_date-preset>="Verbose date and time" out-format:str="dddd Do MMMM YYYY HH:mm:ss Z z" out-zone:str="UTC" -- str )
   "Read a date and time in one format and time zone and write it in another. Each format is one of the presets or, with the preset Custom, a format string written with moment.js-style tokens (YYYY MM DD HH mm ss Z z and so on; see the datetime vocabulary). The reading is forgiving, as in datetime:parse. A zone is UTC, a fixed offset like +09:00, or an IANA name like Asia/Tokyo; the instant is the same, only its wall clock changes. Text that does not fit the input format is E_COERCE; an unknown zone is E_RANGE." doc
   "Date/Time" category
   out-preset out-format _preset
   data in-preset in-format _preset in-zone _parse
   out-zone _format ;
+
+META: translate
+  use-when "You have a date and time in one format or time zone, such as a log stamp in UTC, and want it written in another format or zone, such as Tokyo time in ISO form." ;
+  link "https://en.wikipedia.org/wiki/ISO_8601" "ISO 8601 on Wikipedia" ;
+  link "https://en.wikipedia.org/wiki/Tz_database" "Tz database on Wikipedia" ;
+  param in-preset "A known format to read the date and time with, or Custom to use the input format string." ;
+  param in-format "The input format string for the preset Custom, in moment.js-style tokens." ;
+  param in-zone "Where the time was read: UTC, a fixed offset like +09:00, or an IANA time zone like Asia/Tokyo." ;
+  param out-preset "A known format to write the date and time in, or Custom to use the output format string." ;
+  param out-format "The output format string for the preset Custom, in moment.js-style tokens." ;
+  param out-zone "The time zone to write the time in: UTC, a fixed offset like +09:00, or an IANA time zone." ;
+  see-also datetime:parse datetime:delta ;
+;
 
 : from-unix ( data:str unit:choice<util:time-unit>="seconds" zone:str="UTC" format:str="" -- str )
   "Write a Unix timestamp (the time since 1970-01-01T00:00:00Z in the chosen unit, a whole or decimal number, negative for earlier times) as a date and time. The default (an empty format) gives text like Wed 11 November 2026 12:34:56 UTC for seconds and, as CyberChef does, like Wed 11 November 2026 12:34:56.789 UTC for the other units (milliseconds are shown, finer digits are not); the zone and the moment.js-style format string are yours to change (see the datetime vocabulary for the tokens). A fraction finer than a nanosecond is cut. Text that is not a number is E_COERCE; an unknown zone is E_RANGE." doc
@@ -716,10 +737,30 @@ MEMO: _preset-formats ( -- record )
   } cond
   data unit _unit-scale _amount-ns zone _format ;
 
+META: from-unix
+  use-when "You have a Unix timestamp, such as a number from a log or an API, and want it written as a readable date and time, in UTC or another zone." ;
+  link "https://en.wikipedia.org/wiki/Unix_time" "Unix time on Wikipedia" ;
+  param unit "What the number counts: seconds, milliseconds, microseconds or nanoseconds since 1970-01-01T00:00:00Z." ;
+  param zone "The time zone to write the time in: UTC, a fixed offset like +09:00, or an IANA time zone." ;
+  param format "The output format string, in moment.js-style tokens. Empty (the default) gives ddd D MMMM YYYY HH:mm:ss z for seconds and ddd D MMMM YYYY HH:mm:ss.SSS z for the finer units, as CyberChef does." ;
+  see-also datetime:to-unix datetime:unix-to-filetime ;
+;
+
 : to-unix ( data:str unit:choice<util:time-unit>="seconds" preset:choice<_date-preset>="International date and time" format:str="YYYY-MM-DD HH:mm:ss" zone:str="UTC" show-parsed:bool=true -- str )
   "Read a date and time and give its Unix timestamp: the time since 1970-01-01T00:00:00Z in the chosen unit, rounded down to a whole number. The date is read with a preset or a custom moment.js-style format (forgiving, as in datetime:parse, so an ISO 8601 text such as 2026-11-11T12:34:56Z is read by the default) in the given zone (an offset in the text wins). With show-parsed the instant is also written out in UTC after the number, like 1794400496 (Wed 11 November 2026 12:34:56 UTC); turn it off to chain the number into other operations. Text that does not fit the format is E_COERCE; an unknown zone is E_RANGE." doc
   "Date/Time" category
   data preset format _preset zone _parse unit show-parsed _unix-text ;
+
+META: to-unix
+  use-when "You have a date and time as text, such as 2026-11-11 12:34:56, and want its Unix timestamp, the whole seconds since 1970, to store or compare." ;
+  link "https://en.wikipedia.org/wiki/Unix_time" "Unix time on Wikipedia" ;
+  param unit "What to count since 1970-01-01T00:00:00Z: seconds, milliseconds, microseconds or nanoseconds." ;
+  param preset "A known format to read the date and time with, or Custom to use the format string." ;
+  param format "The format string for the preset Custom, in moment.js-style tokens." ;
+  param zone "Where the time was read: UTC, a fixed offset like +09:00, or an IANA time zone like Asia/Tokyo." ;
+  param show-parsed "Add the time as it was read, in UTC, after the number." ;
+  see-also datetime:from-unix datetime:parse ;
+;
 
 : _frac-text ( f:int digits:int -- str )
   f digits util:zero-pad [ 48 = ] trim-end ;
@@ -742,10 +783,28 @@ MEMO: _preset-formats ( -- record )
     [ 7 _fixed ]
   } case ;
 
+META: filetime-to-unix
+  use-when "You have a Windows file time, as decimal digits or hex from a file or registry record, and want the Unix timestamp it stands for." ;
+  inverse unix-to-filetime ;
+  link "https://en.wikipedia.org/wiki/Unix_time" "Unix time on Wikipedia" ;
+  param input "How the file time is written: decimal digits, hex digits (hex-be), or hex bytes in little-endian order (hex-le)." ;
+  param unit "The unit of the Unix timestamp to give." ;
+  see-also datetime:unix-to-filetime datetime:from-unix ;
+;
+
 : unix-to-filetime ( data:str unit:choice<util:time-unit>="seconds" output:choice<_file-time-form>="decimal" -- str )
   "Convert a Unix timestamp (a whole or decimal number in the chosen unit) to a Windows file time, the number of 100-nanosecond intervals since 1601-01-01T00:00:00Z. The output is decimal digits, hex digits most significant first without leading zeros (hex-be, as CyberChef writes them) or the 8 bytes in little-endian order as 16 hex digits (hex-le). A fraction finer than 100 nanoseconds is cut towards zero. Text that is not a number is E_COERCE; a time before 1601 or past the 64-bit range is E_RANGE." doc
   "Date/Time" category
   data unit _unit-scale _amount-ns 100 util:tdiv _filetime-epoch + output _filetime-write ;
+
+META: unix-to-filetime
+  use-when "You have a Unix timestamp and need it as a Windows file time, in decimal or hex, to match a value in a Windows file or registry record." ;
+  inverse filetime-to-unix ;
+  link "https://en.wikipedia.org/wiki/Unix_time" "Unix time on Wikipedia" ;
+  param unit "The unit of the Unix timestamp that is given." ;
+  param output "How to write the file time: decimal digits, 16 hex digits (hex-be), or the 8 bytes in little-endian order (hex-le)." ;
+  see-also datetime:filetime-to-unix datetime:to-unix ;
+;
 
 : _shift ( ns:int zone:str sign:int days:int elapsed:int -- int )
   days 0 =
@@ -762,77 +821,6 @@ MEMO: _preset-formats ( -- record )
   hours 3600000000000 * minutes 60000000000 * + seconds 1000000000 * + milliseconds 1000000 * +
   _shift zone _format ;
 
-: _date-pattern ( -- str )
-  "\\b(?:(?:19|20)\\d\\d[-/. ](?:0?[1-9]|1[0-2])[-/. ](?:0?[1-9]|[12]\\d|3[01])|(?:0?[1-9]|[12]\\d|3[01])[-/. ](?:0?[1-9]|1[0-2])[-/. ](?:19|20)\\d\\d|(?:0?[1-9]|1[0-2])[-/. ](?:1[3-9]|2\\d|3[01])[-/. ](?:19|20)\\d\\d)\\b" ;
-
-: extract-dates ( data:str display-total:bool=false sort:bool=false unique:bool=false -- str )
-  "Find the dates in the text and list them, one per line, in the order they appear. A date is a year, month and day written yyyy-mm-dd, a day, month and year written dd/mm/yyyy, or a month, day and year written mm/dd/yyyy (the day is more than 12 there, so it cannot be a month), with a hyphen, slash, full stop or space between the parts, one or two digits for the month and day and a year from 1900 to 2099. The match is by pattern only: a date that does not exist, like 2026-02-30, is still listed. With sort the dates are in code point order; with unique each is listed once (at its first position, or sorted); with display-total the first line says how many dates are listed, then a blank line." doc
-  "Date/Time" category
-  data _date-pattern "" util:match-texts
-  unique [ list:unique ] when
-  sort [ list:sort ] when
-  display-total util:total-text ;
-
-META: parse
-  use-when "You have a date and time as text in a known layout, such as a log stamp, and want it broken down into weekday, zone offset, ISO week and similar facts." ;
-  link "https://en.wikipedia.org/wiki/ISO_8601" "ISO 8601 on Wikipedia" ;
-  param preset "A known format to read the date and time with, or Custom to use the format string." ;
-  param format "The format string for the preset Custom, in moment.js-style tokens (YYYY MM DD HH mm ss SSS Z A and so on; [text] is copied as it is)." ;
-  param zone "Where the time was read: UTC, a fixed offset like +09:00, or an IANA time zone like Asia/Tokyo." ;
-  see-also datetime:translate datetime:to-unix ;
-;
-
-META: translate
-  use-when "You have a date and time in one format or time zone, such as a log stamp in UTC, and want it written in another format or zone, such as Tokyo time in ISO form." ;
-  link "https://en.wikipedia.org/wiki/ISO_8601" "ISO 8601 on Wikipedia" ;
-  link "https://en.wikipedia.org/wiki/Tz_database" "Tz database on Wikipedia" ;
-  param in-preset "A known format to read the date and time with, or Custom to use the input format string." ;
-  param in-format "The input format string for the preset Custom, in moment.js-style tokens." ;
-  param in-zone "Where the time was read: UTC, a fixed offset like +09:00, or an IANA time zone like Asia/Tokyo." ;
-  param out-preset "A known format to write the date and time in, or Custom to use the output format string." ;
-  param out-format "The output format string for the preset Custom, in moment.js-style tokens." ;
-  param out-zone "The time zone to write the time in: UTC, a fixed offset like +09:00, or an IANA time zone." ;
-  see-also datetime:parse datetime:delta ;
-;
-
-META: from-unix
-  use-when "You have a Unix timestamp, such as a number from a log or an API, and want it written as a readable date and time, in UTC or another zone." ;
-  link "https://en.wikipedia.org/wiki/Unix_time" "Unix time on Wikipedia" ;
-  param unit "What the number counts: seconds, milliseconds, microseconds or nanoseconds since 1970-01-01T00:00:00Z." ;
-  param zone "The time zone to write the time in: UTC, a fixed offset like +09:00, or an IANA time zone." ;
-  param format "The output format string, in moment.js-style tokens. Empty (the default) gives ddd D MMMM YYYY HH:mm:ss z for seconds and ddd D MMMM YYYY HH:mm:ss.SSS z for the finer units, as CyberChef does." ;
-  see-also datetime:to-unix datetime:unix-to-filetime ;
-;
-
-META: to-unix
-  use-when "You have a date and time as text, such as 2026-11-11 12:34:56, and want its Unix timestamp, the whole seconds since 1970, to store or compare." ;
-  link "https://en.wikipedia.org/wiki/Unix_time" "Unix time on Wikipedia" ;
-  param unit "What to count since 1970-01-01T00:00:00Z: seconds, milliseconds, microseconds or nanoseconds." ;
-  param preset "A known format to read the date and time with, or Custom to use the format string." ;
-  param format "The format string for the preset Custom, in moment.js-style tokens." ;
-  param zone "Where the time was read: UTC, a fixed offset like +09:00, or an IANA time zone like Asia/Tokyo." ;
-  param show-parsed "Add the time as it was read, in UTC, after the number." ;
-  see-also datetime:from-unix datetime:parse ;
-;
-
-META: filetime-to-unix
-  use-when "You have a Windows file time, as decimal digits or hex from a file or registry record, and want the Unix timestamp it stands for." ;
-  inverse unix-to-filetime ;
-  link "https://en.wikipedia.org/wiki/Unix_time" "Unix time on Wikipedia" ;
-  param input "How the file time is written: decimal digits, hex digits (hex-be), or hex bytes in little-endian order (hex-le)." ;
-  param unit "The unit of the Unix timestamp to give." ;
-  see-also datetime:unix-to-filetime datetime:from-unix ;
-;
-
-META: unix-to-filetime
-  use-when "You have a Unix timestamp and need it as a Windows file time, in decimal or hex, to match a value in a Windows file or registry record." ;
-  inverse filetime-to-unix ;
-  link "https://en.wikipedia.org/wiki/Unix_time" "Unix time on Wikipedia" ;
-  param unit "The unit of the Unix timestamp that is given." ;
-  param output "How to write the file time: decimal digits, 16 hex digits (hex-be), or the 8 bytes in little-endian order (hex-le)." ;
-  see-also datetime:filetime-to-unix datetime:to-unix ;
-;
-
 META: delta
   use-when "You have a date and time and want to move it forward or back by days, hours, minutes or seconds, for example to find a deadline a set time later." ;
   param preset "A known format to read and write the date and time with, or Custom to use the format string." ;
@@ -846,6 +834,17 @@ META: delta
   param milliseconds "Milliseconds of elapsed time." ;
   see-also datetime:translate datetime:parse ;
 ;
+
+: _date-pattern ( -- str )
+  "\\b(?:(?:19|20)\\d\\d[-/. ](?:0?[1-9]|1[0-2])[-/. ](?:0?[1-9]|[12]\\d|3[01])|(?:0?[1-9]|[12]\\d|3[01])[-/. ](?:0?[1-9]|1[0-2])[-/. ](?:19|20)\\d\\d|(?:0?[1-9]|1[0-2])[-/. ](?:1[3-9]|2\\d|3[01])[-/. ](?:19|20)\\d\\d)\\b" ;
+
+: extract-dates ( data:str display-total:bool=false sort:bool=false unique:bool=false -- str )
+  "Find the dates in the text and list them, one per line, in the order they appear. A date is a year, month and day written yyyy-mm-dd, a day, month and year written dd/mm/yyyy, or a month, day and year written mm/dd/yyyy (the day is more than 12 there, so it cannot be a month), with a hyphen, slash, full stop or space between the parts, one or two digits for the month and day and a year from 1900 to 2099. The match is by pattern only: a date that does not exist, like 2026-02-30, is still listed. With sort the dates are in code point order; with unique each is listed once (at its first position, or sorted); with display-total the first line says how many dates are listed, then a blank line." doc
+  "Date/Time" category
+  data _date-pattern "" util:match-texts
+  unique [ list:unique ] when
+  sort [ list:sort ] when
+  display-total util:total-text ;
 
 META: extract-dates
   use-when "You have text, such as an e-mail or a document, and want the dates it mentions, listed one per line in the order they appear." ;

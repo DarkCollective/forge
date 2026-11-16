@@ -15,12 +15,6 @@ USING: blockmode ;
   key effective-bits _check-key
   mode iv 8 padding "pkcs7" = [ key effective-bits _encrypt-block ] blockmode:encrypt ;
 
-: decrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice{CBC|ECB}="CBC" padding:choice<util:pkcs7-padding>="pkcs7" effective-bits:int[1..1024]=128 -- bytes )
-  "RC2 decryption, the inverse of rc2:encrypt with the same key, IV, mode, padding and effective-bits. PKCS#7 padding that does not check (usually a wrong key, IV or effective-bits) is E_COERCE, and so is ciphertext that is not whole 8-byte blocks. A key or IV of the wrong length is E_RANGE." doc
-  "Encryption" category
-  key effective-bits _check-key
-  mode iv 8 padding "pkcs7" = [ key effective-bits _encrypt-block ] [ key effective-bits _decrypt-block ] blockmode:decrypt ;
-
 META: encrypt
   use-when "You have RC2 data from an older protocol or file, with its key, effective key bits and mode. RC2 is weak, so use it for existing data only." ;
   param key "The RC2 key: 1 to 128 bytes." ;
@@ -33,6 +27,12 @@ META: encrypt
   link "https://www.rfc-editor.org/rfc/rfc2268" "RFC 2268: the RC2 cipher" ;
   link "https://en.wikipedia.org/wiki/RC2" "RC2 on Wikipedia" ;
 ;
+
+: decrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice{CBC|ECB}="CBC" padding:choice<util:pkcs7-padding>="pkcs7" effective-bits:int[1..1024]=128 -- bytes )
+  "RC2 decryption, the inverse of rc2:encrypt with the same key, IV, mode, padding and effective-bits. PKCS#7 padding that does not check (usually a wrong key, IV or effective-bits) is E_COERCE, and so is ciphertext that is not whole 8-byte blocks. A key or IV of the wrong length is E_RANGE." doc
+  "Encryption" category
+  key effective-bits _check-key
+  mode iv 8 padding "pkcs7" = [ key effective-bits _encrypt-block ] [ key effective-bits _decrypt-block ] blockmode:decrypt ;
 
 META: decrypt
   use-when "You have RC2 ciphertext from an old system, with its key, IV and effective key bits, and you want the plaintext. RC2 is weak, so use it for existing data only." ;
