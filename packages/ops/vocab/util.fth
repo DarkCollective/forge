@@ -327,13 +327,9 @@ CHOICE: sha3-size
   [ #[ ] ]
   [ n 16 int>str-radix dup len 2 mod 1 = [ "0" swap cat ] when hex>bytes ] if ;
 
-\ Adds the symbol for n mod radix in front of acc, and gives n div radix.
-: _symbol-step ( acc:bytes n:int alpha:bytes radix:int -- bytes int )
-  acc { alpha n radix mod nth } list>bytes cat n radix div ;
-
 : int>symbols ( n:int alpha:bytes -- bytes )
   "The digits of a non-negative integer written with the bytes of alpha as symbols, the radix being the length of alpha, most significant first; none for 0." doc
-  #[ ] n [ dup 0 > ] [ alpha alpha len _symbol-step ] while drop rev ;
+  [ n [ dup 0 > ] [ dup alpha len mod alpha swap nth emit alpha len div ] while drop ] collect-bytes rev ;
 
 \ The big-endian integer of the digits (for a bytes with zero-prefix use).
 : bytes>symbols ( data:bytes alpha:bytes -- bytes )
@@ -354,7 +350,7 @@ CHOICE: sha3-size
 
 : list-flatten ( ll:list -- list )
   "The elements of a list of lists (or of bytes) joined in order into one list: one level of nesting removed. An empty ll gives the empty list." doc
-  ll { } [ cat ] reduce ;
+  [ ll [ emit-all ] each ] collect ;
 
 : contains-bytes? ( data:bytes needle:bytes -- bool )
   "True when data holds the bytes of needle side by side, in order; an empty needle is always found. The search is done on the Latin-1 text of both, so it takes a few interpreter steps for any length." doc
@@ -479,8 +475,8 @@ MEMO: letter-table ( -- bytes )
 
 : plugboard-table ( s:str -- bytes )
   "A plugboard written as letter pairs (AB CD EF, separated by white space or commas, either case) as a 26-byte permutation that swaps each pair and leaves the other letters alone. A group that is not two different letters, or a letter used twice, is E_RANGE." doc
-  s number-tokens [ _plug-pair ] map #[ ] [ cat ] reduce :> fl
-  0 26 range [ fl swap count-of 1 > ] filter len 0 >
+  [ s number-tokens [ _plug-pair emit-all ] each ] collect-bytes :> fl
+  0 26 range [ fl swap count-of 1 > ] any?
   [ "plugboard: a letter may be in one pair only" fail-range ] when
   0 26 range [ fl _plug-partner ] map list>bytes ;
 
