@@ -390,3 +390,68 @@ describe("tar:untar", () => {
     },
   );
 });
+
+// The limits of an untrusted bake (UNTRUSTED_LIMITS in the worker package), which is what the web app
+// uses for everything; @forge/ops cannot import them from there.
+const UNTRUSTED = {
+  maxSteps: 5_000_000,
+  maxDataDepth: 10_000,
+  maxValueBytes: 16 * 1024 * 1024,
+  maxTotalBytes: 256 * 1024 * 1024,
+  maxIntBits: 16_384,
+  maxMillis: 10_000,
+};
+
+describe("tar header walk (tar:_headers, FL with a collector), seen through tar:untar", () => {
+  const headers = (d: Uint8Array, verify = true) => untar(d, verify);
+  const offsets = (r: Result) => entries(r).map((e) => e.name);
+  const block = (name: string, size: number): Uint8Array => {
+    const h = new Uint8Array(512);
+    h.set(text(name));
+    h.set(text(size.toString(8).padStart(11, "0")), 124);
+    h.fill(0x20, 148, 156);
+    let sum = 0;
+    for (const b of h) sum += b;
+    h.set(text(sum.toString(8).padStart(6, "0") + "\0"), 148);
+    return h;
+  };
+
+  test("walks the sizes, stops at zeros and checks the checksum", async () => {
+    const a = new Uint8Array(512 * 6);
+    a.set(block("one", 513), 0); // header 0, data 512..1025 padded to 1536
+    a.set(block("two", 0), 1536);
+    a.set(block("three", 5), 2048); // data 2560..2565 padded to 3072
+    expect(offsets(await headers(a))).toEqual(["one", "two", "three"]);
+    expect(offsets(await headers(a.subarray(0, 2565)))).toEqual(["one", "two", "three"]);
+    expect(msg(await headers(a.subarray(0, 2564)))).toContain("cut short");
+    expect(msg(await headers(new Uint8Array(0)))).toContain("empty");
+    expect(offsets(await headers(new Uint8Array(1024)))).toEqual([]);
+    const bad = a.slice();
+    bad[1536] = (bad[1536] as number) ^ 1;
+    expect(msg(await headers(bad))).toContain("checksum mismatch at offset 1536");
+    expect(offsets(await headers(bad, false))).toEqual(["one", "uwo", "three"]);
+    expect(msg(await headers(a.subarray(0, 700)))).toContain("cut short");
+    expect(code(await headers(a.subarray(0, 700)))).toBe("E_COERCE");
+  });
+
+  test("a size field of 8 GiB allocates nothing", async () => {
+    expect(msg(await headers(block("big", 0o77777777777)))).toContain("cut short");
+  });
+
+  test(
+    "12,000 entries (the worst case for the walk) are read under the untrusted limits in under 4.9 million steps",
+    { timeout: 60_000 },
+    async () => {
+      const n = 12_000;
+      const t = new Uint8Array(512 * n + 1024);
+      for (let i = 0; i < n; i++) t.set(header({ name: `dir${i % 7}/f${i}` }), i * 512);
+      const r = await runtime.call("tar:untar", [bytes(t), bool(true)], { limits: UNTRUSTED });
+      const e = entries(r);
+      expect(e).toHaveLength(n);
+      expect(e[n - 1]?.name).toBe(`dir${(n - 1) % 7}/f${n - 1}`);
+      // Measured: 4,752,070 steps (about 396 an entry, 97 of them the walk), 0.7 s; 3,588,012 with the primitive. The largest count
+      // that fits in 5,000,000 steps is 12,626.
+      expect(r.ok && r.steps).toBeLessThan(4_900_000);
+    },
+  );
+});

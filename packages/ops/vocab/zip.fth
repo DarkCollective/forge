@@ -2,9 +2,9 @@
 \ zip: the ZIP container (PKWARE APPNOTE 6.3), one file in (zip:zip) or any number out (zip:unzip,
 \ zip:entry). Everything about the container is FL: the local file header, the central directory and
 \ the end-of-central-directory record, the DOS date and time, the flags, the checks. The CRC-32 is
-\ crc:checksum and the DEFLATE encoder is deflate:deflate. Two private primitives (src/prims/zip.ts):
-\ _cd-offsets (the sequential walk of the directory, quadratic in FL) and _extract (inflate several
-\ entries under ONE output budget, the decompression bomb rule applied to the sum of all entries).
+\ crc:checksum and the DEFLATE encoder is deflate:deflate. One private primitive (src/prims/zip.ts):
+\ _extract (inflate several entries under ONE output budget, the decompression bomb rule applied to the
+\ sum of all entries). The walk of the directory is FL, with a collector.
 \ Reading follows the central directory, not the local headers (a zip written to a stream has zero
 \ sizes in the local header and a data descriptor after the data). Stored (0) and deflate (8) only;
 \ encryption, ZIP64 and multi-disk archives are E_COERCE.
@@ -120,6 +120,21 @@ USING: crc deflate ;
   data cd 46 "zip data" util:need-bytes
   data cd 4 _rd 33639248 <> [ "the zip central directory is damaged: bad entry signature" fail-coerce ] when
   data cd delta data cd 46 + data cd 28 + 2 _rd _slice-text _entry-record ;
+
+\ Emits the offset p of the central directory entry at p, after checking its signature, and returns the
+\ offset of the next one (the name, extra field and comment follow the 46 fixed bytes).
+: _cd-next ( data:bytes p:int -- int )
+  p 46 + data len > [ "zip data is cut short (truncated)" fail-coerce ] when
+  data p p 4 + slice #[ 50 4b 01 02 ] = not [
+    "the zip central directory is damaged: bad entry signature" fail-coerce
+  ] when
+  p emit
+  p 46 + data p 28 + 2 util:le-int + data p 30 + 2 util:le-int + data p 32 + 2 util:le-int + ;
+
+\ Where each of the n central directory entries from cdoff starts: entry i + 1 follows the variable part
+\ of entry i, so the walk is sequential; a collector keeps it linear.
+: _cd-offsets ( data:bytes cdoff:int n:int -- list )
+  [ cdoff n [ data swap _cd-next ] times drop ] collect ;
 
 : _entries-at ( data:bytes q:int delta:int -- list )
   data data q 16 + 4 _rd delta + data q 10 + 2 _rd _cd-offsets

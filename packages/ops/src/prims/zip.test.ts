@@ -16,18 +16,15 @@
 
 /*
  * Tests of the zip primitives themselves: the entry budget (exactly the
- * limit passes, one byte more does not, the sum of the entries counts), and the directory walk.
+ * limit passes, one byte more does not, the sum of the entries counts).
  */
 import { deflateRawSync } from "node:zlib";
 import { describe, expect, test } from "vitest";
-import { cdOffsets, extractEntries, primitives } from "./zip.js";
+import { extractEntries, primitives } from "./zip.js";
 
 describe("zip primitives", () => {
   test("are exported as private helpers", () => {
-    expect(primitives.map((p) => `${p.vocab}:${p.name}`)).toEqual([
-      "zip:_cd-offsets",
-      "zip:_extract",
-    ]);
+    expect(primitives.map((p) => `${p.vocab}:${p.name}`)).toEqual(["zip:_extract"]);
   });
 
   test("a stored entry is the slice; exactly the limit passes and one byte more does not", () => {
@@ -101,27 +98,5 @@ describe("zip primitives", () => {
     expect(code(() => extractEntries(data, [{ start: 0, size: 5, method: 8 }], 100))).toBe(
       "E_COERCE",
     );
-  });
-
-  test("cdOffsets walks name, extra and comment lengths and checks each signature", () => {
-    const entry = (n: number, x: number, c: number) => {
-      const e = new Uint8Array(46 + n + x + c);
-      e.set([0x50, 0x4b, 1, 2]);
-      e[28] = n;
-      e[30] = x;
-      e[32] = c;
-      return e;
-    };
-    const parts = [entry(3, 0, 0), entry(5, 4, 2), entry(1, 0, 9)];
-    const all = new Uint8Array(parts.reduce((s, p) => s + p.length, 0));
-    let at = 0;
-    for (const p of parts) {
-      all.set(p, at);
-      at += p.length;
-    }
-    expect(cdOffsets(all, 0, 3)).toEqual([0, 49, 49 + 57]);
-    expect(() => cdOffsets(all, 0, 4)).toThrow(/cut short/);
-    all[49] = 0;
-    expect(() => cdOffsets(all, 0, 3)).toThrow(/bad entry signature/);
   });
 });
