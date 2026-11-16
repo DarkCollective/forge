@@ -72,7 +72,7 @@ export type Verdict = "all" | "bundled" | "none";
 
 /** What part of the document applies to `catalogue`, given the version of the bundled catalogue if it is needed. */
 export function judge(
-  doc: HelpDoc,
+  doc: Pick<HelpDoc, "catalogue">,
   catalogue: Pick<Catalogue, "version" | "ops">,
   bundledVersion: string | null,
 ): Verdict {
