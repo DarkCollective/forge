@@ -1,6 +1,6 @@
 # @forge/ops
 
-The operation vocabularies of Forge: 458 ops in 200 vocabularies, written in FL (the Forth-like Forge language), plus the build-time catalogue and the loaders that make them available in Node and in the browser.
+The operation vocabularies of Forge: 460 ops in 201 vocabularies, written in FL (the Forth-like Forge language), plus the build-time catalogue and the loaders that make them available in Node and in the browser.
 
 The package holds:
 
@@ -94,7 +94,7 @@ Typed errors come from the core words `fail-coerce ( reason:str -- )`, which rai
 
 ## Vocabularies
 
-200 vocabularies, 458 ops (two ops each unless noted or listed). Vocabulary names are lower-kebab-case.
+201 vocabularies, 460 ops (two ops each unless noted or listed). Vocabulary names are lower-kebab-case.
 
 | Vocabulary         | Ops                                                                                                                                                                                                |
 | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -211,6 +211,7 @@ Typed errors come from the core words `fail-coerce ( reason:str -- )`, which rai
 | `lznt1`            | LZNT1 Decompress (MS-XCA 2.5, the NTFS compression format) (1 op)                                                                                                                                  |
 | `lzstring`         | LZString (lz-string 1.5.0): default, UTF-16, Base64 and URI formats (2 ops)                                                                                                                        |
 | `mac`              | Format MAC addresses: plain, hyphens, colons, Cisco dots and the EUI-64 interface identifier, both cases (1 op)                                                                                    |
+| `magic`            | identification for recipes: the id of what the data is, and a predicate for an `if` step (2 ops, FL over one private primitive)                                                                    |
 | `md2`              | MD2 (RFC 1319) (1 op)                                                                                                                                                                              |
 | `md4`              | MD4 (RFC 1320) (1 op)                                                                                                                                                                              |
 | `md5`              | MD5 (RFC 1321) (1 op)                                                                                                                                                                              |

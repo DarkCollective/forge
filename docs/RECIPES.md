@@ -17,7 +17,7 @@ The key words MUST, MUST NOT, SHOULD and MAY are used as in RFC 2119.
 1. Overview and design decisions
 2. Operations and the catalogue
 3. Recipe JSON v1
-4. The `regex` and `recipe` vocabularies
+4. The `regex`, `recipe` and `magic` vocabularies
 5. Recipe to FL compilation
 6. The canonical text form
 7. Share URL
@@ -113,7 +113,7 @@ A vocabulary needs at least one of the two. The vocabulary name is the file name
 6. It is the canonical entry: `meta.qname === vocab + ":" + meta.name`. Aliases (extra names for the same entry)
    are listed under `aliases` and never as ops of their own.
 
-**Chainable** (defined once, used everywhere): an op is *chainable* iff it is a catalogue op. A recipe `op` step or op test may name only chainable ops.
+**Chainable** (defined once, used everywhere): an op is *chainable* iff it is a catalogue op. A recipe `op` step or op test may name only chainable ops. The `magic` vocabulary (§4.4) follows the rule unchanged: `magic:identify` and `magic:is-format` are ordinary catalogue ops (bytes in, one output, a `choice` parameter), and `magic:is-format`, whose output is `bool`, is a predicate.
 
 A word that fails 2 to 5 is simply not an op; that is not an error (except the missing `doc`/`category` case of §2.4). The recipe words (`recipe:section`, which takes a
 `quot`) fail rule 2 and rule 4.
@@ -488,12 +488,16 @@ untouched, never passed to the children). Each non-empty match, as bytes, goes t
 { "kind": "if", "test": { "kind": "regex", "pattern": "^o", "flags": "", "encoding": "utf8" },
   "then": [ /* Step[] */ ], "else": [ /* Step[] */ ] }
 { "kind": "if", "test": { "kind": "op", "op": "regex:test", "params": { "pattern": "^o" } }, "then": [ … ] }
+{ "kind": "if", "test": { "kind": "op", "op": "magic:is-format", "params": { "format": "gzip" } },
+  "then": [ { "kind": "op", "op": "gzip:decompress" } ] }
 ```
 
 The test sees a copy of the data and leaves it unchanged. A **regex test** is true iff the pattern matches anywhere in
 the data (read as `encoding`). An **op test** runs a *predicate op*: an op whose `output` is `bool` (otherwise
 `not-predicate`) and that is chainable (§2.2). `else` may be omitted (the data passes through unchanged). The step
-returns whatever the chosen branch returns, which may be any type.
+returns whatever the chosen branch returns, which may be any type. An op test needs no new field: any chainable predicate
+op is a test as it stands, so a recipe branches on what the data is (the third example, `magic:is-format`, §4.4) with the
+step and the JSON Schema unchanged.
 
 **`repeat`** — run the children several times, feeding each result to the next iteration.
 
@@ -640,7 +644,7 @@ user-supplied value.
 | `exclusive` | error | a `repeat` without exactly one of `times`/`until`, or `max` without `until` | |
 | `limit` | error | `RECIPE_LIMITS` exceeded: too many steps, too deep, too much JSON | `limit`, `max` |
 | `unknown-op` | error | `op` is not in the catalogue (also not as an alias) | `op` |
-| `not-predicate` | error | an `if` op test whose `output` is not `bool` | `op`, `output` |
+| `not-predicate` | error | an `if` op test whose `output` is not `bool` (for example `magic:identify`, which gives the format id as text; use `magic:is-format`) | `op`, `output` |
 | `unknown-param` | error | a `params` key that is no parameter | `param` |
 | `missing-param` | error | a required parameter is absent | `param` |
 | `bad-param` | error | wrong shape for the type, not an option, `enc` not allowed, or a constraint is violated | `param`, `reason`, `constraint?` |
@@ -907,10 +911,10 @@ version of each op.
 
 ---
 
-## 4. The `regex` and `recipe` vocabularies
+## 4. The `regex`, `recipe` and `magic` vocabularies
 
-Both ship in `@forge/ops`. `regex` is a normal vocabulary (its words are catalogue ops, category
-`"Regular expressions"`). `recipe` is internal (R18).
+All three ship in `@forge/ops`. `regex` is a normal vocabulary (its words are catalogue ops, category
+`"Regular expressions"`). `recipe` is internal (R18). `magic` is a normal vocabulary (§4.4).
 
 ### 4.1 Regex semantics (shared)
 
@@ -1044,6 +1048,17 @@ empty) are the text between matches, re-encoded in the same encoding. Concatenat
 input exactly. Limits: §4.1.
 
 ---
+
+### 4.4 The `magic` vocabulary (identification, `vocab/magic.fth`)
+
+Two catalogue ops, category `"Forensics"`, that say what the data is. The identification is `identifyData` of the content checks (`packages/ops/src/checks/identify.ts`): the Detect File Type signatures first, then the generic kinds (PEM, JSON, XML, Base64, hex, UTF-8 and ASCII text, random-looking bytes). Both are FL over one private primitive (`_identity`, `src/prims/magic.ts`) that calls it. They are pure, look at a bounded prefix only, do no search and run no operation; neither reaches the regex engine, so neither needs a hard kill (`needsHardKill` is false).
+
+| op | signature | meaning |
+|---|---|---|
+| `magic:identify` | `( data:bytes -- str )` | the id of the most specific identification (`gzip`, `png`, `pem`, `json`, `utf8-text`, `base64`, `hex`, ...), or `"unknown"` when there is none. Not a predicate: as the test of an `if` it is `not-predicate`. |
+| `magic:is-format` | `( data:bytes format:choice<magic-format> -- bool )` | true when the identification's id is `format` or its family is `format` (so `zip` is true for an OOXML file or a JAR, and `utf8-text` for plain ASCII text); false for unidentified data. A chainable predicate: the test of an `if` step (§3.2). |
+
+`format` is the shared `CHOICE: magic-format`, which lists every id of the Detect File Type table (`SIGNATURE_IDS`) and of the generic kinds (`GENERIC_IDS`), each once, in that order, with the display name as its help. A vocabulary test fails when the list and the two sources differ, so a stale or missing id is caught; an id outside the list is `bad-param` (§3.4). `"unknown"` is not an option: test for the formats you expect and let the `else` branch take the rest.
 
 ## 5. Recipe to FL compilation
 
