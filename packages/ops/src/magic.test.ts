@@ -25,6 +25,8 @@ import { assembleRuntime } from "./bundle.js";
 import { buildCatalogue } from "./catalogue.js";
 import { GENERIC_IDS } from "./checks/identify.js";
 import { SIGNATURE_IDS } from "./filetype-sigs.js";
+import { provideMagicHost } from "./magic-host.js";
+import type { MagicHost, MagicHostCandidate, MagicHostRequest } from "./magic-host.js";
 import { loadBundleNode } from "./sources-node.js";
 
 const { bytes, str } = valueHelpers;
@@ -79,10 +81,96 @@ describe("magic words", () => {
     });
   });
 
-  test("the words run no regex engine, so need no hard kill", () => {
-    expect(catalogue.ops.filter((o) => o.vocab === "magic").map((o) => o.needsHardKill)).toEqual([
-      false,
-      false,
-    ]);
+  test("identify and is-format run no regex engine, so need no hard kill; magic does", () => {
+    const flags = Object.fromEntries(
+      catalogue.ops.filter((o) => o.vocab === "magic").map((o) => [o.qname, o.needsHardKill]),
+    );
+    expect(flags).toEqual({
+      "magic:identify": false,
+      "magic:is-format": false,
+      "magic:magic": true,
+    });
+  });
+});
+
+describe("magic:magic (the host dependency, WP 6.33)", () => {
+  const text = new TextEncoder().encode("SGVsbG8=");
+  const callMagic = (data: Uint8Array, signal?: AbortSignal) =>
+    runtime.call(
+      "magic:magic",
+      [bytes(data), { tag: "int", v: 3 }, { tag: "bool", v: false }, str("")],
+      signal === undefined ? {} : { signal },
+    );
+  const top = (r: Awaited<ReturnType<typeof callMagic>>) => {
+    if (!r.ok) throw new Error(`${r.error.code}: ${r.error.message}`);
+    return r.stack[r.stack.length - 1];
+  };
+
+  test("a runtime with no host fails with a typed error that says what is missing", async () => {
+    for (const signal of [undefined, new AbortController().signal]) {
+      const r = await callMagic(text, signal);
+      expect(r.ok).toBe(false);
+      if (r.ok) continue;
+      expect(r.error.code).toBe("E_PRIMITIVE");
+      expect(r.error.message).toContain("needs the Forge worker");
+      expect(r.error.detail).toEqual({ reason: "no-magic-host" });
+    }
+  });
+
+  test("the report is built from the host's candidates, one block of four lines each", async () => {
+    const ctl = new AbortController();
+    const seen: MagicHostRequest[] = [];
+    const host: MagicHost = {
+      search(request) {
+        seen.push(request);
+        return Promise.resolve({
+          candidates: [
+            {
+              ops: ["base64:decode", "hex:decode"],
+              score100: 130,
+              reasons: ["valid UTF-8 text", "decoded"],
+              output: new TextEncoder().encode("a\tb\n\\ \u0001 é"),
+            },
+            { ops: ["x:y"], score100: 7, reasons: [], output: Uint8Array.of(0xff, 0x41) },
+          ],
+        });
+      },
+    };
+    const withdraw = provideMagicHost(ctl.signal, host);
+    const r = await runtime.call(
+      "magic:magic",
+      [bytes(text), { tag: "int", v: 2 }, { tag: "bool", v: true }, str("^H")],
+      { signal: ctl.signal },
+    );
+    expect(top(r)).toEqual(
+      str(
+        [
+          "recipe: base64:decode hex:decode",
+          "score: 1.30",
+          "reasons: valid UTF-8 text; decoded",
+          "output: a\\tb\\n\\\\ \\x01 é",
+          "",
+          "recipe: x:y",
+          "score: 0.07",
+          "reasons: ",
+          "output: �A",
+        ].join("\n"),
+      ),
+    );
+    expect(seen).toEqual([{ data: text, depth: 2, intensive: true, crib: "^H" }]);
+    withdraw();
+    expect((await callMagic(text, ctl.signal)).ok).toBe(false);
+  });
+
+  test("no candidate gives the words no candidate, and the output shows 80 characters", async () => {
+    const ctl = new AbortController();
+    let candidates: MagicHostCandidate[] = [];
+    provideMagicHost(ctl.signal, { search: () => Promise.resolve({ candidates }) });
+    expect(top(await callMagic(text, ctl.signal))).toEqual(str("no candidate"));
+    candidates = [
+      { ops: ["a:b"], score100: 100, reasons: ["r"], output: new Uint8Array(200).fill(0x61) },
+    ];
+    const out = top(await callMagic(text, ctl.signal));
+    expect((out as { v: string }).v.split("\n")[3]).toBe(`output: ${"a".repeat(80)}`);
   });
 });

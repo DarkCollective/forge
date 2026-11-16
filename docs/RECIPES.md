@@ -1051,14 +1051,21 @@ input exactly. Limits: §4.1.
 
 ### 4.4 The `magic` vocabulary (identification, `vocab/magic.fth`)
 
-Two catalogue ops, category `"Forensics"`, that say what the data is. The identification is `identifyData` of the content checks (`packages/ops/src/checks/identify.ts`): the Detect File Type signatures first, then the generic kinds (PEM, JSON, XML, Base64, hex, UTF-8 and ASCII text, random-looking bytes). Both are FL over one private primitive (`_identity`, `src/prims/magic.ts`) that calls it. They are pure, look at a bounded prefix only, do no search and run no operation; neither reaches the regex engine, so neither needs a hard kill (`needsHardKill` is false).
+Three catalogue ops, category `"Forensics"`: two that say what the data is, and the report form of the Magic engine (`magic:magic`, below). The identification is `identifyData` of the content checks (`packages/ops/src/checks/identify.ts`): the Detect File Type signatures first, then the generic kinds (PEM, JSON, XML, Base64, hex, UTF-8 and ASCII text, random-looking bytes). Both are FL over one private primitive (`_identity`, `src/prims/magic.ts`) that calls it. `magic:identify` and `magic:is-format` are pure, look at a bounded prefix only, do no search and run no operation; neither reaches the regex engine, so neither needs a hard kill (`needsHardKill` is false). `magic:magic` is the exception on every count.
 
 | op | signature | meaning |
 |---|---|---|
 | `magic:identify` | `( data:bytes -- str )` | the id of the most specific identification (`gzip`, `png`, `pem`, `json`, `utf8-text`, `base64`, `hex`, ...), or `"unknown"` when there is none. Not a predicate: as the test of an `if` it is `not-predicate`. |
 | `magic:is-format` | `( data:bytes format:choice<magic-format> -- bool )` | true when the identification's id is `format` or its family is `format` (so `zip` is true for an OOXML file or a JAR, and `utf8-text` for plain ASCII text); false for unidentified data. A chainable predicate: the test of an `if` step (§3.2). |
+| `magic:magic` | `( data:bytes depth:int[1..6]=3 intensive:bool=false crib:regex="" -- str )` | the report form of the Magic engine (§8.9), as CyberChef's Magic operation: a text report of the best candidates, or `"no candidate"`. Not a predicate (the output is `str`). `needsHardKill` is true. |
 
 `format` is the shared `CHOICE: magic-format`, which lists every id of the Detect File Type table (`SIGNATURE_IDS`) and of the generic kinds (`GENERIC_IDS`), each once, in that order, with the display name as its help. A vocabulary test fails when the list and the two sources differ, so a stale or missing id is caught; an id outside the list is `bad-param` (§3.4). `"unknown"` is not an option: test for the formats you expect and let the `else` branch take the rest.
+
+**`magic:magic` and the host dependency on the engine (WP 6.33).** The engine is in `@forge/worker` (§8.9), which depends on `@forge/ops`, so the operation cannot import it. It is FL over one private primitive, `magic:_search ( data:bytes depth:int crib:str intensive:bool -- list )` (`src/prims/magic.ts`, effect `+async`), which asks a **host** for the search: `magicHostFor(ctx.signal)` of `src/magic-host.ts`. The worker's baker core installs a host (`provideMagicHost(signal, host)`) for the duration of each bake, keyed by the bake's abort signal (the object the VM gives every primitive as `ctx.signal`), so the host is per bake and nothing is global. A runtime with no such host (`@forge/ops` alone, or a bake that no baker core drives) fails the operation with `E_PRIMITIVE`, `detail.reason` `"no-magic-host"`, and the message "magic:magic needs the Forge worker". The primitive is marked as a regex-engine primitive (`markRegexPrimitive`), because the candidates run operations that may use regular expressions, so `needsHardKill` is true: an untrusted bake needs a baker with `hardKill`, as for any regex op (§8.2 step 3).
+
+The report is FL (`_block`, `magic`): the candidates of the engine's `results` default (5), best first, one block per candidate, blocks separated by one blank line, and `"no candidate"` when there is none. A block is four lines: `recipe: ` and the qualified names of the operations in order, separated by a space (the recipe as FL text: every operation runs on its defaults); `score: ` and the score with two decimals; `reasons: ` and the reasons joined with `"; "`; `output: ` and the first 80 characters of the output (UTF-8 decoded without failing, invalid bytes shown as U+FFFD, backslash as `\\`, line feed, carriage return and tab as `\n`, `\r`, `\t`, other controls as `\xNN`). The report is as deterministic as the engine (§8.9): the same data and parameters give the same text. `depth` is the most operations in a candidate (1 to 6, the engine's maximum). `crib` is the engine's crib (§8.9; it makes the search try the operations that show no evidence). `intensive` is accepted and passed on, and has no effect: the extensive mode belongs to WP 6.31, and the help of the parameter says so.
+
+A recipe that wants to act on what the data is does not use the report: it tests with `magic:identify` or `magic:is-format` and adds the steps by hand, since the engine only suggests.
 
 ## 5. Recipe to FL compilation
 
@@ -1621,6 +1628,12 @@ The in-process baker implements layers 1 and 2 only (an `AbortController`, no sh
   text (the validator's JSON cap keeps compiled text far below it), and the FL capability model (PLAN §5): a recipe can only
   call the catalogue's ops, and `PRIMITIVE` is unavailable to untrusted code.
 - `maxOutputBytes` bounds `.` output and is irrelevant to recipes (they print nothing).
+- **Limits charged to the run by `magic:magic`** (WP 6.33). The Magic search runs inside the bake, on a baker of the core's own (a second runtime with the same vocabularies, made on the first use and rebuilt by `init`: a baker runs one bake at a time, and a new `bake` cancels the active one, so the search cannot use the baker that runs the bake) behind a metering wrapper, and what it uses is charged to the enclosing run:
+  - **steps.** Every nested bake is limited to what is left of the run's `maxSteps`: the VM steps the run had used at the latest step of the recipe (the core sees each step through the breakpoint hook; the steps of an operation in progress are not visible), less everything that earlier searches of this bake were charged. The VM steps of every nested bake (at least 1) are added to that charge. When the budget is used up the search is cancelled and the operation fails with `E_LIMIT_STEPS`. The charge is added to `stats.vmSteps` of the result, so it shows what the run cost. A bake of this operation at the untrusted default (5 000 000 steps) has room for the search of the layered inputs of 6.29 (about 180 000 steps).
+  - **bytes.** The input and the output of every nested bake count towards what is left of `maxTotalBytes` (the output of a `str` as its length). The host cannot see what the rest of the run has allocated, so this bounds the search's own allocation; when it is used up the search is cancelled and the operation fails with `E_LIMIT_TOTAL`. Each nested bake also keeps the per-run limits of §8.9 (never above what is left of the run's).
+  - **time.** The search's `deadlineMs` is the smaller of the engine's default (10 000) and what is left of the run's `maxMillis`, less a reserve of 200 ms (at least 1 ms), so that the operation can usually report what it found before the run's own deadline would fire. A search that runs out of time returns the candidates it has (§8.9, `stopped: "deadline"`); a run whose own deadline fires first fails with `E_LIMIT_TIME`, as for any operation (the VM waits for an async primitive against the deadline, and a synchronous primitive is for the watchdog, §8.5). A candidate's own bake is also cut at the time left.
+  - **cancellation.** The run's abort signal cancels the search: the search stops after the run in progress and the nested baker's active bake is cancelled. The operation fails with `E_ABORTED`; cancelling the bake needs no other path. A hard kill (§8.5) ends the worker, nested baker included, so a hostile operation that spins inside the search ends the whole enclosing bake, not only that candidate (in a search of the button, §8.9, the watchdog kills the worker of the search and quarantines the operation).
+  - **hard kill.** The nested baker has the `hardKill` flag of the core that made it, so inside a worker the crib and the operations that `needsHardKill` are searched.
 
 ### 8.7 The main-thread client
 
@@ -1672,9 +1685,11 @@ operation in `quarantined`: it is not tried again in that search, so a hostile o
   signal for Cancel. `signal` aborts at once: the run in progress is cancelled (`baker.cancel()`, then the watchdog), the search returns what it has
   with `stopped: "aborted"`. `onProgress` reports `{ tried, candidates, depth, elapsedMs }` for the running state. One bake runs at a time on a baker,
   so the search holds the baker; use a baker of its own, not the one the editor bakes with.
-- **6.33 (`magic:magic`).** The op passes a baker that runs inside the enclosing bake, `deadlineMs` (the smaller of its own and what is left of the
-  run's), `limits` and its own signal (the run's). The charging of the nested steps and bytes to the run is for that WP to specify; nothing here
-  prevents it, since all limits are arguments.
+- **6.33 (`magic:magic`).** The op passes a baker that runs inside the enclosing bake (a nested baker of the core's own, behind a metering wrapper),
+  `deadlineMs` (the smaller of its own and what is left of the run's, less a reserve), and a signal that the run's signal aborts. The nested steps and
+  bytes are charged to the run by the wrapper (§8.6): no change to the engine was needed, since all limits are arguments and every operation is a bake
+  of the `Baker` it is given. The host that carries the engine to the operation is in §4.4 (`packages/worker/src/magic/host.ts`; the engine is loaded by a
+  dynamic `import`, so the main entry of the worker stays free of it).
 
 **Operations tried.** From the catalogue: input and output `bytes` or `str`, no required parameter (so every operation runs on its defaults), no
 effect label (`+random`, `+time`, `+async` are left out), and not `needsHardKill` unless the baker has `hardKill`. At a node the operation is tried
@@ -2164,6 +2179,7 @@ aliases in each `types.ts` (a WP implements a function with exactly that type). 
 | `buildHelp` | `(runtime: ForgeRuntime, catalogue: Catalogue, vectorFiles: readonly VectorFile[]) => HelpDoc` (throws `Error` on a content violation, §2.7) |
 | `markRegexPrimitive`, `isRegexPrimitive` | `(def: PrimitiveDef) => PrimitiveDef`, `(qname: string) => boolean` |
 | `execAll`, `REGEX_LIMITS` | `(pattern: string, flags: string, text: string) => RegexMatch[]`, `RegexLimits` |
+| `provideMagicHost`, `magicHostFor` | `(signal: AbortSignalLike, host: MagicHost) => () => void` (installs the host of one bake, returns the function that removes it), `(signal: AbortSignalLike \| undefined) => MagicHost \| undefined` (§4.4, WP 6.33) |
 
 `@forge/ops/node`: `createNodeProvider(root?: string): VocabSourceProvider`, `loadBundleNode: LoadBundleFn`.
 `@forge/ops/vite`: `createViteProvider(): VocabSourceProvider`, `loadBundleVite: LoadBundleFn`.

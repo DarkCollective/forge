@@ -35,7 +35,9 @@ describe("the main entry (RECIPES 11.5)", () => {
       "execAll",
       "isCatalogueOp",
       "isRegexPrimitive",
+      "magicHostFor",
       "markRegexPrimitive",
+      "provideMagicHost",
       "scanVocab",
     ]);
   });

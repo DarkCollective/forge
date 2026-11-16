@@ -28,7 +28,7 @@ import type {
   Value,
   FlWordEntry,
 } from "@forge/lang";
-import { assembleRuntime, buildCatalogue } from "@forge/ops";
+import { assembleRuntime, buildCatalogue, buildChecks, provideMagicHost } from "@forge/ops";
 import type { Catalogue } from "@forge/ops";
 import {
   attributeError,
@@ -39,6 +39,8 @@ import {
 } from "@forge/recipe";
 import type { RecipeIssue, Step, StepIpMap, StepLine } from "@forge/recipe";
 import { effectiveLimits } from "./limits.js";
+import { createRunMagicHost } from "./magic/host.js";
+import type { MagicEnvironment } from "./magic/host.js";
 import { renderValue } from "./render.js";
 import { PROGRESS_INTERVAL_MS, PROTOCOL_VERSION } from "./types.js";
 import type {
@@ -209,6 +211,52 @@ export function createBakerCore(options: BakerCoreOptions): Baker {
   let epoch = 0;
   let nextId = 1;
   let tail: Promise<unknown> = Promise.resolve();
+  // The Magic engine of `magic:magic` runs on a baker of its own (see magic/host.ts), made on first use.
+  let lastInit: BakerInit = {};
+  let nested: Promise<Baker> | null = null;
+  let environment: { readonly of: Ready; readonly value: MagicEnvironment } | null = null;
+
+  function dropNested(): void {
+    const old = nested;
+    nested = null;
+    environment = null;
+    void old?.then(
+      (b) => b.dispose(),
+      () => undefined,
+    );
+  }
+
+  function nestedBaker(): Promise<Baker> {
+    if (nested === null) {
+      const made = (async () => {
+        const baker = createBakerCore({
+          loadBundle: options.loadBundle,
+          hardKill,
+        });
+        await baker.init(lastInit);
+        return baker;
+      })();
+      nested = made;
+      made.catch(() => {
+        if (nested === made) nested = null;
+      });
+    }
+    return nested;
+  }
+
+  function magicEnvironment(): MagicEnvironment {
+    if (ready === null) throw new Error("the baker has not been initialised");
+    if (environment?.of !== ready) {
+      environment = {
+        of: ready,
+        value: {
+          catalogue: ready.catalogue,
+          checks: buildChecks(ready.runtime, ready.catalogue).ops,
+        },
+      };
+    }
+    return environment.value;
+  }
 
   function cancelActive(): Promise<void> {
     if (active === null) return Promise.resolve();
@@ -220,6 +268,7 @@ export function createBakerCore(options: BakerCoreOptions): Baker {
   async function init(request: BakerInit = {}): Promise<InitInfo> {
     await cancelActive();
     ready = null;
+    dropNested();
     try {
       const vocabs = request.vocabs ?? "all";
       const names = vocabs === "all" ? "all" : [...new Set([...vocabs, "recipe"])];
@@ -235,6 +284,7 @@ export function createBakerCore(options: BakerCoreOptions): Baker {
         vocabs: bundle.vocabs,
       };
       ready = { runtime, catalogue, info };
+      lastInit = request;
       return info;
     } catch (e) {
       throw new Error(errorMessage(e), { cause: e });
@@ -365,6 +415,7 @@ export function createBakerCore(options: BakerCoreOptions): Baker {
     const byIp = new Map(map.events.map((e) => [e.ip, e]));
     const breakpointOf = new Map(map.steps.map((s) => [s.path, s.breakpoint]));
     const debug = opts.debug;
+    let vmStepsSeen = 0;
     let stepping = debug?.startPaused === true;
     let startPending = stepping;
 
@@ -392,6 +443,7 @@ export function createBakerCore(options: BakerCoreOptions): Baker {
       if (ev.word !== word) return;
       const at = byIp.get(ev.ip);
       if (at === undefined) return;
+      vmStepsSeen = ev.step;
       const now = performance.now();
       for (const path of at.ends) tracker.end(path, now);
       for (const path of at.starts) tracker.start(path, now);
@@ -416,6 +468,12 @@ export function createBakerCore(options: BakerCoreOptions): Baker {
     if (signal.aborted) {
       return finish({ ok: false, error: bakeError("E_ABORTED", "aborted") }, {});
     }
+    // `magic:magic` reaches the Magic engine through this host (WP 6.33); it charges the run (magic/host.ts).
+    const magicRun = createRunMagicHost(
+      { baker: nestedBaker, environment: magicEnvironment },
+      { signal, limits, startedAt: t0, steps: () => vmStepsSeen },
+    );
+    const withdrawMagic = provideMagicHost(signal, magicRun.host);
     try {
       res = await runtime.call(word, [bytesValue(input)], {
         limits,
@@ -426,6 +484,8 @@ export function createBakerCore(options: BakerCoreOptions): Baker {
       });
     } catch (e) {
       return finish({ ok: false, error: bakeError("E_INTERNAL", errorMessage(e)) }, {});
+    } finally {
+      withdrawMagic();
     }
 
     const end = performance.now();
@@ -444,7 +504,7 @@ export function createBakerCore(options: BakerCoreOptions): Baker {
       steps: [...tracker.reports].map(([path, r]) => ({ path, ms: r.ms, runs: r.runs })),
       coercions,
       coercionsTruncated: res.coercions.length >= limits.maxTraceEntries,
-      vmSteps: res.steps,
+      vmSteps: res.steps + magicRun.charge.steps,
       effects: res.effects,
     };
     const top = res.stack[res.stack.length - 1];
@@ -494,6 +554,7 @@ export function createBakerCore(options: BakerCoreOptions): Baker {
     async dispose() {
       await cancelActive();
       ready = null;
+      dropNested();
     },
   };
 }

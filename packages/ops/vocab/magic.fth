@@ -3,8 +3,12 @@
 \ the content checks (src/checks/identify.ts, WP 6.23a) can, so a recipe can branch on it with an `if` step
 \ whose test is magic:is-format. The identification itself is one private primitive (src/prims/magic.ts), the
 \ evaluator of the checks; the words, their documentation and the family rule are FL. No search and no
-\ operation is run: only a prefix of the data is looked at.
+\ operation is run: only a prefix of the data is looked at. The exception is magic:magic, the report form of
+\ the Magic engine (WP 6.33): the search itself is a host primitive (_search), which asks the engine of the
+\ worker that runs the bake, and the report text is FL.
 IN: magic
+
+USING: util ;
 
 \ Every id the identification can give: the rows of the Detect File Type table (src/filetype-sigs.ts) and the
 \ generic kinds (pem and xml are in both). A test keeps this list equal to those two sources.
@@ -199,4 +203,37 @@ META: is-format
   use-when "You want a recipe to branch on what the data is, as the test of an if step, for example to decode only data that is gzip." ;
   see-also magic:identify filetype:detect ;
   param format "The format to test for: a file type of the Detect File Type table, or a generic kind such as json, base64 or utf8-text." ;
+;
+
+\ ---- magic:magic ----
+
+\ A score in hundredths as text: 87 is 0.87 and 130 is 1.30.
+: _score-text ( hundredths:int -- str )
+  hundredths 100 div int>str "." cat hundredths 100 mod 2 util:zero-pad cat ;
+
+\ One block of the report, from { recipe score reasons preview }: four lines, the recipe as FL text.
+: _block ( found:list -- str )
+  found 0 nth :> recipe
+  found 1 nth :> score
+  found 2 nth :> reasons
+  found 3 nth :> preview
+  { "recipe: " recipe cat
+    "score: " score _score-text cat
+    "reasons: " reasons "; " join cat
+    "output: " preview cat } "\n" join ;
+
+: magic ( data:bytes depth:int[1..6]=3 intensive:bool=false crib:regex="" -- str )
+  "Searches for recipes that make the data more readable or more recognisable (the Magic engine: decoders, decompressors and the like, each tried on its defaults) and reports the best candidates, best first, one block of four lines each, separated by a blank line: the recipe as FL text (the operations in order), the score (higher is better), the reasons and the first 80 characters of the output. It is the text form of the Magic button, and it is not a predicate: to branch on what the data is, test with magic:identify or magic:is-format. depth is the most operations in a candidate (1 to 6). crib is a regular expression the wanted output matches; it makes the engine try operations that show no sign of fitting the data. intensive is accepted and has no effect yet (it is for the extensive mode of a later version). The search runs inside the bake, so it counts towards the run's step, byte and time limits and stops with the run. It needs the Forge worker (a plain runtime reports an error), and it needs a hard kill, as it may run regular expressions. Gives no candidate when nothing beats the data as it is." doc
+  "Forensics" category
+  data depth crib intensive _search :> found
+  found len 0 =
+  [ "no candidate" ]
+  [ found [ _block ] map "\n\n" join ] if ;
+
+META: magic
+  use-when "You do not know how the data is encoded or compressed and want a text report of the recipes the Magic engine suggests, like CyberChef's Magic." ;
+  see-also magic:identify magic:is-format filetype:detect ;
+  param depth "The most operations in a candidate, 1 to 6. A larger depth takes longer." ;
+  param intensive "Accepted for CyberChef's sake; it has no effect until the extensive mode exists." ;
+  param crib "A regular expression the wanted output must match, such as flag\\{ or the start of a known text. Empty for none." ;
 ;

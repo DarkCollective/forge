@@ -287,5 +287,37 @@
     "expect": {
       "json": true
     }
+  },
+  {
+    "name": "the report of Base64 text names the decoding",
+    "ref": "WP 6.33, the Magic engine report",
+    "op": "magic:magic",
+    "params": {},
+    "input": {
+      "value": "SGVsbG8sIFdvcmxkIQ==",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "recipe: base64:decode\nscore: 0.59\nreasons: valid UTF-8 text, 100% printable; looks like ASCII text; takes apart the base64 data; entropy 3.9 to 3.2 bits per byte\noutput: Hello, World!",
+      "enc": "utf8"
+    },
+    "example": {
+      "title": "What is this text?",
+      "note": "The report lists the candidate recipes, best first: here one step, base64:decode, gives readable text."
+    }
+  },
+  {
+    "name": "plain text has no candidate",
+    "ref": "WP 6.33, the Magic engine report",
+    "op": "magic:magic",
+    "params": {},
+    "input": {
+      "value": "Hello, World!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "no candidate",
+      "enc": "utf8"
+    }
   }
 ]

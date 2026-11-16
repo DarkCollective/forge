@@ -1,6 +1,6 @@
 # @forge/ops
 
-The operation vocabularies of Forge: 460 ops in 201 vocabularies, written in FL (the Forth-like Forge language), plus the build-time catalogue and the loaders that make them available in Node and in the browser.
+The operation vocabularies of Forge: 461 ops in 201 vocabularies, written in FL (the Forth-like Forge language), plus the build-time catalogue and the loaders that make them available in Node and in the browser.
 
 The package holds:
 
@@ -94,7 +94,7 @@ Typed errors come from the core words `fail-coerce ( reason:str -- )`, which rai
 
 ## Vocabularies
 
-201 vocabularies, 460 ops (two ops each unless noted or listed). Vocabulary names are lower-kebab-case.
+201 vocabularies, 461 ops (two ops each unless noted or listed). Vocabulary names are lower-kebab-case.
 
 | Vocabulary         | Ops                                                                                                                                                                                                |
 | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
