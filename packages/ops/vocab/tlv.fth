@@ -23,7 +23,8 @@ USING: json ;
     [ b 255 = ] [ "the BER length byte 0xff is reserved" p _cut ]
     [ n 6 > ] [ "a BER length of " n int>str cat " bytes is too long" cat p _cut ]
     [ data len q - n < ] [
-      "the length needs " n int>str cat " bytes but only " cat data len q - int>str cat " are left (truncated)" cat q _cut
+      "the length needs " n int>str cat " bytes but only " cat data len q - int>str cat
+      " are left (truncated)" cat q _cut
     ]
     [ data q n util:be-int q n + ]
   } cond ;
@@ -31,7 +32,8 @@ USING: json ;
 \ The fixed-width length at p, little-endian as CyberChef reads it: the length and the offset after it.
 : _fixed-length ( data:bytes p:int lw:int -- int int )
   data len p - lw < [
-    "the length needs " lw int>str cat " bytes but only " cat data len p - int>str cat " are left (truncated)" cat p _cut
+    "the length needs " lw int>str cat " bytes but only " cat data len p - int>str cat
+    " are left (truncated)" cat p _cut
   ] when
   lw 1 = [ data p nth ] [ data p lw util:le-int ] if p lw + ;
 
@@ -76,7 +78,7 @@ USING: json ;
   data tag-bytes length-bytes ber _parse indent json:stringify ;
 
 META: parse
-  use-when "You have tag-length-value bytes, such as EMV card data or a binary record, and want each element listed with its tag, length and value." ;
+  use-when "You have tag-length-value bytes, such as EMV card data, and want each element's tag, length and value." ;
   param tag-bytes "How many bytes the tag of an element has; 0 for length-value data." ;
   param length-bytes "How many bytes the length of an element has (little-endian); not used with BER lengths." ;
   param ber "Read the length in the BER/DER form (short form below 128, long form 128 plus a byte count)." ;

@@ -56,11 +56,13 @@ META: decode
   use-when "You have a COBS-encoded packet, without its trailing zero, and want the original bytes back." ;
   inverse encode ;
   see-also cobs:encode ;
-  link "https://en.wikipedia.org/wiki/Consistent_Overhead_Byte_Stuffing" "Consistent Overhead Byte Stuffing on Wikipedia" ;
+  link
+    "https://en.wikipedia.org/wiki/Consistent_Overhead_Byte_Stuffing" "Consistent Overhead Byte Stuffing on Wikipedia" ;
 ;
 
 META: encode
-  use-when "You are sending binary data in a packet and need no zero bytes inside it, so that a zero can mark the end of each packet." ;
+  use-when "You are sending binary data in a packet and need no zero bytes inside it, so a zero can end each packet." ;
   inverse decode ;
-  link "https://en.wikipedia.org/wiki/Consistent_Overhead_Byte_Stuffing" "Consistent Overhead Byte Stuffing on Wikipedia" ;
+  link
+    "https://en.wikipedia.org/wiki/Consistent_Overhead_Byte_Stuffing" "Consistent Overhead Byte Stuffing on Wikipedia" ;
 ;

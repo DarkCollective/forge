@@ -4,7 +4,8 @@
 \ (RFC 9112 section 7.1) is FL too, collecting the chunks with a collector (a linear walk).
 IN: http
 
-\ The offset in p of the end of the first occurrence of sep (the characters before it plus adv, the length of sep), or -1.
+\ The offset in p of the end of the first occurrence of sep (the characters before it plus adv, the length of sep),
+\ or -1.
 : _first ( p:str sep:str adv:int -- int )
   p sep split dup len 1 = [ drop -1 ] [ 0 nth len adv + ] if ;
 
@@ -107,7 +108,8 @@ IN: http
   line [ hex-digit? not ] find :> k
   k 0 < [ line len ] [ k ] if :> nd
   nd 0 = [
-    "the chunk size at offset " p int>str cat " is not hexadecimal (byte 0x" cat data p nth _hex2 cat ")" cat fail-coerce
+    "the chunk size at offset " p int>str cat " is not hexadecimal (byte 0x" cat data p nth _hex2 cat ")" cat
+    fail-coerce
   ] when
   nd line len < [ data p p nd + end _check-ext ] when
   line 0 nd slice bytes>latin1 _size :> big :> size
@@ -115,7 +117,8 @@ IN: http
   data len a - :> left
   size 0 = big not and [ data a _trailer a false ] [
     big size left > or [
-      "the chunk at offset " a int>str cat " declares " cat big [ "a size too large to fit" ] [ size int>str " bytes" cat ] if
+      "the chunk at offset " a int>str cat " declares " cat
+      big [ "a size too large to fit" ] [ size int>str " bytes" cat ] if
       cat " but only " cat left int>str cat " are left (truncated)" cat fail-coerce
     ] when
     data a a size + slice emit-all
@@ -127,8 +130,8 @@ IN: http
         "the chunk data ends at offset " b int>str cat " without its line end (truncated)" cat fail-coerce
       ]
       [
-        "the chunk data at offset " b int>str cat " is not followed by a line end (byte 0x" cat data b nth _hex2 cat ")" cat
-        fail-coerce
+        "the chunk data at offset " b int>str cat " is not followed by a line end (byte 0x" cat
+        data b nth _hex2 cat ")" cat fail-coerce
       ]
     } cond :> c
     c data len >= [ "the chunked data ends without the last chunk (size 0): truncated" fail-coerce ] when
@@ -148,7 +151,7 @@ META: strip-headers
 ;
 
 META: dechunk
-  use-when "You have a chunked HTTP body, with hex sizes before its pieces and a zero at the end, and want the joined content." ;
+  use-when "You have a chunked HTTP body, with hex sizes before its pieces and a final zero, and want the content." ;
   see-also http:strip-headers ;
   link "https://www.rfc-editor.org/rfc/rfc9112#section-7.1" "RFC 9112, section 7.1: chunked transfer coding" ;
   link "https://en.wikipedia.org/wiki/Chunked_transfer_encoding" "Chunked transfer encoding on Wikipedia" ;
