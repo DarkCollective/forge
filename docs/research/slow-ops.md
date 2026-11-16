@@ -1,6 +1,6 @@
 # Slow operations: marking them, and moving primitives back to FL
 
-Status: design proposal, written to consider later. Nothing here is implemented, and the options in section 9 are for the owner to choose between. One decision is recorded (section 4). Every statement about a primitive comes from the header comment of its file in `packages/ops/src/prims/`, and every statement about the language from `docs/LANGUAGE.md` or `docs/PLAN.md`. Where a number is not in those, it says "to measure".
+Status: design proposal, written to consider later. Nothing here is implemented, and the options in section 9 are for the owner to choose between. One decision is recorded (section 4), and the measurement spike is recorded in section 7a. Every statement about a primitive comes from the header comment of its file in `packages/ops/src/prims/`, and every statement about the language from `docs/LANGUAGE.md` or `docs/PLAN.md`. Where a number is not in those, it says "to measure".
 
 ## 1. The idea
 
@@ -76,6 +76,33 @@ Speed-only primitives, written by us (not library wrappers), for rare operations
 | Data formats | AMF, Avro, Rison, plist | AMF and Avro readers cost several hundred VM steps an element; Rison and plist are character scanners at 5.5 steps a character before any state. Array not named in the headers |
 | Maybe | Levenshtein, ssdeep | Levenshtein is Array (about 39 steps a cell); ssdeep is 60 to 100 steps a byte, 4 to 7 million for one 64 KiB pass, and may need several passes |
 
+## 7a. Measurement spike (2026-11-16)
+
+Four primitives were prototyped in pure FL (v0.2) on unmerged branches. Each prototype matched the primitive on all the op's vectors and on seeded random inputs. Steps are VM steps; the limits are 5,000,000 steps for untrusted bakes (the web app bakes everything untrusted) and 10,000,000 for trusted ones, with a default `maxTotalBytes` of 256 MiB untrusted and 1 GiB trusted. Each prototype is `packages/ops/spike/<op>.fth` with `packages/ops/src/spike-<op>.test.ts`, so it can be reused when the op is moved.
+
+| Op (branch, commit) | Unit | Steps per unit | At 64 KiB: steps, FL time | Primitive at 64 KiB | Largest input under 5M / 10M steps | Binding limit | Lines, FL / TS |
+|---|---|---|---|---|---|---|---|
+| MD4 (`wp/spike-md4`, 80dc09f) | byte | about 38.4 | 2,516,022; 400 ms | 0.47 ms (about 850x) | 130,359 B (813 ms) / 260,727 B (1,549 ms) | Steps; 500 ms is reached at about 80 KiB | 46 / 52 |
+| LS47 (`wp/spike-ls47`, ded1980) | letter | 55 (decrypt 53) | 3,605,522; 475 ms | 5.9 ms | 90,668 letters (659 ms, cold) / 181,550 (1,348 ms) | Steps; 500 ms is reached at about 64 KiB | 80 / about 45 |
+| Whirlpool (`wp/spike-whirlpool`, adf04b7) | byte | about 38.1 | 2,496,978; 910 ms | 2.2 ms (about 400x) | about 131 KB (1.8 s) / about 262 KB (3.9 s) | Wall time; 500 ms is reached at about 35 KiB | 91 / 98 |
+| AMF decoder (`wp/spike-amf`, 4eaffae) | element | about 95-225 (11-39 a byte) | 722,719 (flat AMF0, 78 ms) to 2.5M (objects, AMF3 with references; 1.5 s) | 0.6-2.4 ms | Not reached | Total allocation: `E_LIMIT_TOTAL` at about 40-150 KB | 272 / 396 |
+
+MD4 costs about 2,455 steps a 64-byte block plus about 672 fixed. The TS is 52 lines and also uses four `hash-util.ts` helpers, not counted. Missing: a fixed-width `rotl32` and masked add would save about 25-30% (estimate). A mutable array would not help much.
+
+LS47 costs 55 steps a letter, against about 800 for the WP 5.9 FL version (14.5x fewer). The one-off `MEMO:` table build is 11,815 steps. The board is held inverted (letter to place), so a rotation or offset move is one `translate` through a `MEMO:` table (7 row, 7 column, 49 add and 49 subtract tables); version 1 cost 104 steps a letter and version 2 added the add and subtract tables. The 80 FL lines are about 36 for the cipher and about 44 building tables once. Wall time is dominated by allocating small values per letter. Missing: a mutable array or indexed update would cut it to about 15-25 steps a letter, and a bytes `index-of` would save about 10 a letter (both estimates).
+
+Whirlpool costs about 2,436 steps a block plus about 2,514 fixed; the one-off table build is about 11,404 steps (2.2 ms). The whole state, with the key schedule, is one wide integer (1536 bits), so bitwise words act on the whole state at once, and the S-box is a hex round trip through `translate`. A step here costs about 2.5x an MD4 step in time (big-integer work), so wall time reaches the 500 ms snail threshold before steps do. Missing: a one-step bytes to int would save about 5%, and a lane-wise 64-bit rotate about 40% a round (estimates). A lookup-table design would cost about 500 steps a byte (estimate, not built).
+
+AMF0 and AMF3 are complete, including all three AMF3 reference tables. All 116 decode vectors agree (77 values, 39 errors), as do 240 random values. Gaps: a non-integer double dictionary key is refused; dates beyond year 9999 differ; all errors are `E_COERCE` without offsets; the `maxValueBytes` meter is not replicated. It uses `float:decode` for doubles, itself a primitive. Cost is about 95-110 steps an element for a flat array of ints and strings and 120-225 for lists of 5-field objects. Main finding: the step limit is not the binding one. The reference tables grow by `put` and `append`, which copy, so total allocation is quadratic, and with default limits the decoder hits `E_LIMIT_TOTAL` at about 40-150 KB of input (about 6,000-18,000 elements), where steps alone would allow 130-450 KB. Missing: update-in-place for lists or records; mutual recursion (it goes through quotations); `:>` inside `{ }` (so each `case` action needs a helper); `case` and `cond` rebuilding their quotations per call; a big-endian read at an offset and a float-bits word in core; tail calls.
+
+Conclusions the spike supports:
+
+- All four fit realistic CTF inputs (a few KB) in a few ms, so each could be a snail op rather than a primitive. In wall time at 64 KiB FL is about 80x (LS47) to about 2,500x (AMF, worst case) slower than the primitive, from the figures above.
+- The 500 ms snail threshold, not the step limit, is reached first for Whirlpool (about 35 KiB) and LS47 (about 64 KiB). MD4 reaches it at about 80 KiB.
+- For AMF the binding limit is total allocation, not steps, and a snail marker cannot fix that. It needs update-in-place.
+- Language gaps, ranked by how many spikes hit them: (1) mutable or indexed update (LS47, AMF, and section 6(a)); (2) fixed-width word operations such as rotate and masked add, and bytes to int at an offset (MD4, Whirlpool, AMF); (3) smaller ones: mutual recursion, `:>` in `{ }`, tail calls.
+- Compactness: FL was 46/52, 80/45, 91/98 and 272/396 lines against TS. FL is about as compact or more so for the hashes and the decoder, but LS47 is longer because its speed comes from precomputed tables. This is a weaker result than the 2.5x of the CRC comparison.
+
 ## 8. Must stay primitives
 
 - Too slow even on small input: Bombe (tens of millions of simple operations per rotor order), QR (a version 40 symbol has 31,329 modules, each mask scored).
@@ -86,7 +113,7 @@ Speed-only primitives, written by us (not library wrappers), for rare operations
 
 ## 9. Suggested next steps (options for the owner)
 
-1. A measurement spike: prototype LS47, MD4, Whirlpool and AMF in FL and record steps per byte or element. That gives a "comfortable up to" size for each, and shows whether a snail marker is needed at all.
-2. A work package that moves the section 5 primitives back to FL with vectors unchanged. Hash and catalogue version changes are accepted (section 4).
+1. Done: the measurement spike (section 7a). It gives a "comfortable up to" size for MD4, LS47 and Whirlpool, and shows that AMF is limited by allocation, not steps.
+2. A work package that moves the section 5 primitives back to FL with vectors unchanged. Hash and catalogue version changes are accepted (section 4). It could also start with MD4 and LS47 from the spike branches. Whirlpool needs the snail marker first, and AMF waits for update-in-place.
 3. A decision on the snail UX of section 3, including whether a bake may raise its limits and for which recipes.
-4. A decision on a core mutable byte array. It would unlock most of section 6(a) and much of section 7, and it is a change to the language, so it is the largest of the four.
+4. A decision on a core mutable byte array, or at least update-in-place for lists and records. The spike makes this the most-hit gap (LS47, AMF), and AMF cannot move without it. It would unlock most of section 6(a) and much of section 7, and it is a change to the language, so it is the largest of the four.
