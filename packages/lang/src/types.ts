@@ -755,6 +755,10 @@ export interface DebugFrame {
   readonly pos: SourcePos | null;
   /** The frame's locals that hold a value, in slot order: header names, then `:>` names (CompiledWord.localNames). A `:>` slot not yet bound is left out. A quotation sees the locals of the word it was created in. Values are live; copy them if you keep them. */
   readonly locals: readonly { readonly name: string; readonly value: Value }[];
+  /**
+   * Replaces the value of the local `name`, one that `locals` lists. For a quotation frame it is the local of the word's environment the quotation runs on, so the word sees the change too (unless the quotation runs on its own copy, because it binds a local with `:>`). Valid only during the hook call. A header local with a declared type or constraint must accept the value as word entry does, but without coercion, else the ForgeError of that check is thrown and the local is unchanged. A value that is not a Value, or a name that is not listed, is a RangeError. The value is metered like a new value (E_LIMIT_VALUE, E_LIMIT_TOTAL).
+   */
+  setLocal(name: string, value: Value): void;
 }
 
 export interface StepEvent {
@@ -770,6 +774,8 @@ export interface StepEvent {
   readonly breakpoint: boolean;
   /** The activations (word and quotation frames), innermost first. Built on each call; valid only during the hook call, like `stack`. */
   frames(): readonly DebugFrame[];
+  /** Replaces entry `index` of the data stack, indexed like `stack` (0 is the deepest). Valid only during the hook call. A bad index or a value that is not a Value is a RangeError; the value is metered like a new value (E_LIMIT_VALUE, E_LIMIT_TOTAL). */
+  setStackItem(index: number, value: Value): void;
 }
 
 /** A hook may return "stop" to end the run with E_ABORTED. It may be async (that is how a UI pauses a run). */
