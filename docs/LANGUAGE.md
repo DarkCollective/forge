@@ -993,7 +993,7 @@ The checks happen at result creation, so a limit is reported at the instruction 
 `RunOptions` fields (see `types.ts`): `onStep`, `stepAll`, `breakpoints`, `trace`, `stack`, `vars`, `deny`, `scope`.
 
 - `breakpoints`: a list of `{ word, ip? }` (`word` a qualified name). A breakpoint is *hit* just before the instruction at `(word, ip)` executes; if `ip` is omitted it is hit on entry to the word (`ip` 0). The debugger maps source lines to `ip` using `CompiledWord.positions`.
-- `onStep(event)` is called, after the step is counted and the limit checks, just before an instruction runs, **if** `stepAll` is true (every instruction) or a breakpoint is hit (`event.breakpoint = true`). It may return a promise; the VM awaits it, which is how a UI pauses a run. It may return `"stop"`, which ends the run with `E_ABORTED` (`message: "stopped by hook"`). The `StepEvent.stack` is a live read-only view valid only during the call.
+- `onStep(event)` is called, after the step is counted and the limit checks, just before an instruction runs, **if** `stepAll` is true (every instruction) or a breakpoint is hit (`event.breakpoint = true`). It may return a promise; the VM awaits it, which is how a UI pauses a run. It may return `"stop"`, which ends the run with `E_ABORTED` (`message: "stopped by hook"`). The `StepEvent.stack` is a live read-only view valid only during the call. `StepEvent.frames()` builds, on each call, the activations innermost first as `DebugFrame`s (`word`, `kind` `"word"` or `"quot"`, `ip`, `pos`, and the `locals` that hold a value, in slot order; a quotation reports the word that contains it and sees that word's locals); like `stack` it is valid only during the call, and a hook that never calls it pays nothing.
 - `trace: true` records, per executed instruction, `{ step, word, ip, op, depth, stack }` (`stack` is a shallow copy of the top 16 values), up to `maxTraceEntries`; the rest are dropped and `RunResult.traceTruncated` is true.
 - `vars`: a `Map` keyed by the variable id; `undefined` means a fresh store. Reuse the same map across runs to persist variables.
 - `deny`: effect labels (below) that must not run in this run. Calling a primitive that has a denied label raises `E_FORBIDDEN` (a "reproducible mode").
@@ -5070,6 +5070,8 @@ This appendix lists every new token, form, clause and word of v0.2 with the sect
 - **`catalogue.json` is byte-identical** for an unchanged bundle ([RECIPES.md](RECIPES.md) §2.3, §2.7).
 
 Three differences can be observed by existing code: a local (header or `:>` name) named like a word that `core` now defines draws a `W_SHADOW` warning, never an error (§6.2, §7); a name that was `E_UNDEFINED` may now resolve to a `core` word (§6.2); `ForgeError.frames` can be longer than 16 and has a new field `framesSkipped` (§11).
+
+`StepEvent.frames()` and the `DebugFrame` type (§10.9) were added for debuggers; the addition is purely additive, and no existing export, type member or behaviour changed.
 
 ### A.2 Tokens
 

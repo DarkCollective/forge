@@ -53,6 +53,7 @@ import type {
   CoercionRecord,
   CompiledWord,
   ConsoleSegment,
+  DebugFrame,
   MemoSlot,
   EffectLabel,
   ErrorCode,
@@ -893,7 +894,30 @@ class Machine {
       stack: this.ds,
       returnDepth: this.rs.length,
       breakpoint,
+      frames: () => this.debugFrames(at),
     });
+  }
+
+  /** The activation chain for `StepEvent.frames()`, innermost first. Follows `caller`, the dynamic chain. */
+  private debugFrames(at: number): DebugFrame[] {
+    const out: DebugFrame[] = [];
+    for (let f: ActFrame | null = this.cur; f !== null; f = f.caller) {
+      const ip = f === this.cur ? at : f.ip - 1;
+      const names = f.word.localNames;
+      const locals: { name: string; value: Value }[] = [];
+      for (let i = 0; i < names.length; i++) {
+        const value = f.locals[i];
+        if (value !== undefined) locals.push({ name: names[i] as string, value });
+      }
+      out.push({
+        word: f.word.qname,
+        kind: f.k === K_WORD ? "word" : "quot",
+        ip,
+        pos: f.word.positions[ip] ?? null,
+        locals,
+      });
+    }
+    return out;
   }
 
   /** Awaits a hook's promise. Abort still wins; the time spent paused is not charged to the deadline. */

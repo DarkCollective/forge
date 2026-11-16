@@ -745,6 +745,18 @@ export interface Breakpoint {
   readonly ip?: number;
 }
 
+export interface DebugFrame {
+  /** Qualified name of the word whose code runs: for a quotation, the word that contains it; `<console>` for console code. */
+  readonly word: string;
+  /** "word" for a word activation, "quot" for a quotation activation. */
+  readonly kind: "word" | "quot";
+  /** Index of the instruction this frame is executing: for the innermost frame the instruction about to run (same as StepEvent.ip); for an outer frame the call instruction it is waiting on. */
+  readonly ip: number;
+  readonly pos: SourcePos | null;
+  /** The frame's locals that hold a value, in slot order: header names, then `:>` names (CompiledWord.localNames). A `:>` slot not yet bound is left out. A quotation sees the locals of the word it was created in. Values are live; copy them if you keep them. */
+  readonly locals: readonly { readonly name: string; readonly value: Value }[];
+}
+
 export interface StepEvent {
   readonly step: number;
   /** Qualified name of the executing word, or `<console>`. */
@@ -756,6 +768,8 @@ export interface StepEvent {
   readonly stack: readonly Value[];
   readonly returnDepth: number;
   readonly breakpoint: boolean;
+  /** The activations (word and quotation frames), innermost first. Built on each call; valid only during the hook call, like `stack`. */
+  frames(): readonly DebugFrame[];
 }
 
 /** A hook may return "stop" to end the run with E_ABORTED. It may be async (that is how a UI pauses a run). */
