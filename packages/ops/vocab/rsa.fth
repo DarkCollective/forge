@@ -239,9 +239,9 @@ CHOICE: encryption-scheme
 
 : _legacy-decrypt ( block:record password:str -- bytes )
   password _no-password
-  block "headers" get "DEK-Info" get strip-space "," split
-  dup len 2 <> [ "the DEK-Info header is not cipher,IV" fail-coerce ] when
-  block "data" get password rot dup 0 nth upper swap 1 nth hex>bytes _legacy-open ;
+  block "headers" get "DEK-Info" get strip-space "," split :> parts
+  parts len 2 <> [ "the DEK-Info header is not cipher,IV" fail-coerce ] when
+  block "data" get password parts 0 nth upper parts 1 nth hex>bytes _legacy-open ;
 
 \ ---- PKCS#8 EncryptedPrivateKeyInfo with PBES2 (RFC 8018 appendix A.4) ----
 \ SEQUENCE { SEQUENCE { pbes2, SEQUENCE { SEQUENCE { pbkdf2, params }, SEQUENCE { cipher, IV } } }, OCTET STRING }

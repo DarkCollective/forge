@@ -142,10 +142,10 @@ USING: crc deflate ;
 
 \ The entries of the archive, one record each, in directory order.
 : _entries ( data:bytes -- list )
-  data _find-eocd
-  data over _check-eocd
-  data over _shift
-  data -rot _entries-at ;
+  data _find-eocd :> q
+  data q _check-eocd
+  data q _shift :> delta
+  data q delta _entries-at ;
 
 \ ---- reading entries ----
 
