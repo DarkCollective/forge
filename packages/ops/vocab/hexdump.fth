@@ -24,7 +24,7 @@ IN: hexdump
 
 \ The characters of the hex field of n bytes (n at least 1).
 : _field-len ( n:int -- int )
-  n 2 * n 1 + 2 div + 1 - ;
+  n 2 * n 2 ceil-div + 1 - ;
 
 \ Byte b as the ASCII column shows it: itself from 0x20 to 0x7e, else a full stop.
 MEMO: _ascii-table ( -- bytes )

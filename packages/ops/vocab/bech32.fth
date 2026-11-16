@@ -35,7 +35,7 @@ MEMO: _gen ( -- list )
 \ ---- encode ----
 
 : _five ( d:bytes -- bytes )
-  0 d len 8 * 4 + 5 div range [ 5 * d swap 5 util:bit-field ] map list>bytes ;
+  0 d len 8 * 5 ceil-div range [ 5 * d swap 5 util:bit-field ] map list>bytes ;
 
 \ The checksum value of hrp and the 5-bit data: the polymod with the variant's constant removed.
 : _pm ( hrp:bytes five:bytes variant:str -- int )

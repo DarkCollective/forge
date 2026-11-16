@@ -111,7 +111,7 @@ IN: coords
 
 : _gh-decode-total ( vals:list total:int -- int int )
   vals total 1 _gh-axis total 2 div 180 _d 90 _d neg _gh-centre
-  vals total 0 _gh-axis total 1 + 2 div 360 _d 180 _d neg _gh-centre ;
+  vals total 0 _gh-axis total 2 ceil-div 360 _d 180 _d neg _gh-centre ;
 
 \ A geohash as latitude and longitude of the middle of its cell.
 : _gh-decode ( text:str -- int int )
@@ -136,9 +136,9 @@ IN: coords
   v off + 2 bits pow * span div 2 bits pow 1 - min ;
 
 : _gh-encode-total ( lat:int lon:int n:int total:int -- str )
-  lon 180 _d 360 _d total 1 + 2 div _gh-index
+  lon 180 _d 360 _d total 2 ceil-div _gh-index
   lat 90 _d 180 _d total 2 div _gh-index
-  total 1 + 2 div total 2 div n _gh-encode-from ;
+  total 2 ceil-div total 2 div n _gh-encode-from ;
 
 : _gh-encode ( lat:int lon:int n:int -- str )
   lat lon n n 5 * _gh-encode-total ;

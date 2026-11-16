@@ -34,7 +34,7 @@ MEMO: _z85-str ( -- str )
 
 : _encode ( data:bytes alpha:bytes zmode:bool -- bytes )
   data { 0 0 0 } list>bytes 0 4 data len 4 mod - 4 mod slice cat
-  alpha zmode data len 4 div data len 3 + 4 div _groups
+  alpha zmode data len 4 div data len 4 ceil-div _groups
   dup len 4 data len 4 mod - 4 mod - 0 swap slice ;
 
 : encode ( bytes variant:choice<base85-variant>=ascii85 delimiters:bool=false -- str )

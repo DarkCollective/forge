@@ -29,8 +29,8 @@ CHOICE: base32-alphabet
 
 : _encode ( data:bytes alpha:bytes padding:bool -- str )
   data { 0 0 0 0 } list>bytes 0 5 data len 5 mod - 5 mod slice cat
-  alpha data len 4 + 5 div _groups
-  0 data len 8 * 4 + 5 div slice bytes>latin1
+  alpha data len 5 ceil-div _groups
+  0 data len 8 * 5 ceil-div slice bytes>latin1
   padding [ dup len 8 mod 8 swap - 8 mod :> n "========" 0 n slice cat ] when ;
 
 : encode ( bytes alphabet:choice<base32-alphabet>=standard padding:bool=true -- str )
@@ -78,7 +78,7 @@ META: encode
   [ core core len 1 - nth 1 core len 5 * 8 mod shl 1 - band 0 <>
     [ "non-zero bits after the end of the data" fail-coerce ] when ] when
   core { 0 0 0 0 0 0 0 } list>bytes 0 8 core len 8 mod - 8 mod slice cat
-  core len 7 + 8 div _ungroups
+  core len 8 ceil-div _ungroups
   0 core len 5 * 8 div slice ;
 
 : _decode ( data:bytes table:bytes -- bytes )
