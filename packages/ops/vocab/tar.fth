@@ -1,10 +1,10 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ tar: the tar container (POSIX ustar, IEEE 1003.1), one file in (tar:tar) or any number out
-\ (tar:untar, tar:entry). FL on the core words, plus three small primitives (src/prims/tar.ts): _headers
-\ (the sequential walk over the headers, which is quadratic in FL: 12,000 entries took over 30 s), _oct
-\ (an octal field, 250 VM steps each in FL) and _sum (the byte sum of the header checksum, 2,500 steps in
-\ FL). The format: 512-byte headers with octal fields, the header checksum, padding to whole blocks and
-\ the two zero blocks that end an archive. Reading takes ustar (name prefix included), the older v7
+\ (tar:untar, tar:entry). FL on the core words, plus two small primitives (src/prims/tar.ts): _oct (an
+\ octal field, 250 VM steps each in FL) and _sum (the byte sum of the header checksum, 2,500 steps in
+\ FL). The walk over the headers (_headers) is FL with a collector. The format: 512-byte headers with
+\ octal fields, the header checksum, padding to whole blocks and the two zero blocks that end an
+\ archive. Reading takes ustar (name prefix included), the older v7
 \ headers and the GNU long-name form (a type L entry); writing is ustar. An entry's data is a slice of
 \ the input, so the total of all entries can never pass the input length (the bomb rule needs no budget).
 IN: tar
@@ -23,6 +23,39 @@ IN: tar
   h 0 100 slice _cstr util:text-lossless
   h 257 262 slice #[ 75 73 74 61 72 ] = h 345 500 slice _cstr len 0 > and
   [ h 345 500 slice _cstr util:text-lossless "/" cat swap cat ] when ;
+
+\ ---- walking the headers ----
+
+\ Fails unless the checksum stored in the header block (at offset p) matches its bytes; total is the sum of
+\ the block.
+: _check-sum ( block:bytes total:int p:int -- )
+  block 148 156 slice :> field
+  total field _sum - 256 + :> actual
+  field "header checksum" _oct actual <> [
+    "tar header checksum mismatch at offset " p int>str cat " (not a tar archive, or corrupt data)" cat fail-coerce
+  ] when ;
+
+\ Emits the offset p of the header at p and returns the offset of the next one: the data that follows
+\ is padded to 512 bytes. Returns -1 at the end of the data or at a block of zeros, which ends the archive.
+: _next ( data:bytes p:int verify:bool -- int )
+  data len p - :> rest
+  rest 0 <= [ -1 exit ] when
+  data p p rest 512 min + slice :> block
+  block _sum :> total
+  total 0 = [ -1 exit ] when
+  rest 512 < [ "tar data is cut short: the last header is incomplete" fail-coerce ] when
+  verify [ block total p _check-sum ] when
+  block 124 136 slice "size" _oct :> size
+  p 512 + size + data len > [ "tar data is cut short: an entry's data ends early (truncated)" fail-coerce ] when
+  p emit
+  p 512 + size 511 + 512 div 512 * + ;
+
+\ The offsets of all the headers, in order. Each depends on the size field of the one before, so the
+\ walk is sequential; the collector keeps it linear. A part of a block that is not zeros, or an entry
+\ whose data runs past the input, is E_COERCE; with verify each header's checksum must match.
+: _headers ( data:bytes verify:bool -- list )
+  data len 0 = [ "not tar data: the input is empty" fail-coerce ] when
+  [ 0 [ dup 0 >= ] [ data swap verify _next ] while drop ] collect ;
 
 \ ---- reading ----
 

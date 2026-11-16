@@ -18,9 +18,9 @@
  * zip primitives, over `fflate` (MIT, pinned) through the deflate primitives' bounded inflater. The
  * ZIP container itself (local headers, the central directory, the end record, DOS times, the
  * checks) is FL in vocab/zip.fth, which takes its CRC-32 from `crc:checksum` and the DEFLATE encoder
- * from `deflate:deflate`. Private helpers:
+ * from `deflate:deflate`. The walk over the central directory is FL too (a collector keeps it
+ * linear). One private helper:
  *
- *  - `_cd-offsets ( data cdoff n -- list )`: where each central directory entry starts (a sequential walk, quadratic in FL).
  *  - `_extract ( data plan -- list )`: the contents of several entries under ONE budget. Each plan
  *    item is `{ start compressed-size method }` (method 0 stored, 8 deflate; FL has already refused
  *    any other). The sum of all the entries is capped by `maxValueBytes`: the bomb rule of the wave 6
@@ -30,10 +30,10 @@
  */
 import { definePrimitive, valueHelpers } from "@forge/lang";
 import type { PrimitiveContext, PrimitiveDef, Value } from "@forge/lang";
-import { bombFailure, coerceFailure, rangeFailure, readU16LE, readU32LE } from "../prim-util.js";
+import { bombFailure, coerceFailure, rangeFailure } from "../prim-util.js";
 import { inflateLimited } from "./deflate.js";
 
-const { bytes, int } = valueHelpers;
+const { bytes } = valueHelpers;
 
 /** One entry to read: where its data starts, how many bytes it occupies, and the zip method. */
 export interface ZipPlanItem {
@@ -88,26 +88,6 @@ export function extractEntries(
   return out;
 }
 
-/**
- * The offset of each central directory entry: entry i + 1 starts after the name, extra field and comment
- * of entry i, so the walk is sequential. In FL it has to grow a list one entry at a time, which is
- * quadratic (3,000 entries take 1 s, 10,000 take 27 s, and the total-bytes meter ends it at about 14,000);
- * the cobs vocabulary has the same walk and the same answer.
- */
-export function cdOffsets(data: Uint8Array, cdoff: number, count: number): number[] {
-  const out: number[] = [];
-  let p = cdoff;
-  for (let i = 0; i < count; i++) {
-    if (p + 46 > data.length) throw corrupt("zip data is cut short (truncated)");
-    const sig = readU32LE(data, p);
-    if (sig !== 0x02014b50)
-      throw corrupt("the zip central directory is damaged: bad entry signature");
-    out.push(p);
-    p += 46 + readU16LE(data, p + 28) + readU16LE(data, p + 30) + readU16LE(data, p + 32);
-  }
-  return out;
-}
-
 function planOf(items: readonly Value[]): ZipPlanItem[] {
   return items.map((it) => {
     if (it.tag !== "list" || it.v.length !== 3)
@@ -130,17 +110,6 @@ function planOf(items: readonly Value[]): ZipPlanItem[] {
 }
 
 export const primitives: readonly PrimitiveDef[] = [
-  definePrimitive(
-    "zip",
-    "_cd-offsets",
-    "( data:bytes cdoff:int n:int -- list )",
-    (data: Uint8Array, cdoff: number | bigint, n: number | bigint) =>
-      cdOffsets(data, Number(cdoff), Number(n)).map((p) => int(p)),
-    {
-      doc: "The offsets of the n central directory entries that start at cdoff, each checked for its signature (private helper of zip:unzip and zip:entry).",
-      category: "Compression",
-    },
-  ),
   definePrimitive(
     "zip",
     "_extract",

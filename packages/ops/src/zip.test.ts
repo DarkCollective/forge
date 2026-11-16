@@ -459,3 +459,82 @@ describe("zip: the bomb rules", () => {
     expect(["E_LIMIT_STEPS", "E_LIMIT_TOTAL", "E_LIMIT_VALUE", "E_LIMIT_TIME"]).toContain(code(r));
   }, 60_000);
 });
+
+// The limits of an untrusted bake (UNTRUSTED_LIMITS in the worker package), which is what the web app
+// uses for everything; @forge/ops cannot import them from there.
+const UNTRUSTED = {
+  maxSteps: 5_000_000,
+  maxDataDepth: 10_000,
+  maxValueBytes: 16 * 1024 * 1024,
+  maxTotalBytes: 256 * 1024 * 1024,
+  maxIntBits: 16_384,
+  maxMillis: 10_000,
+};
+
+describe("zip central directory walk (zip:_cd-offsets, FL with a collector), seen through zip:unzip", () => {
+  const names = (r: Result) => entries(r).map((e) => e.name);
+
+  test("steps over each entry's name, extra field and comment, and checks each signature", async () => {
+    const z = zipSync({
+      a: [text("A"), { comment: "first", extra: { 0x6375: text("xx") } }],
+      "bb/": [new Uint8Array(0), { comment: "" }],
+      ccc: [text("C"), { extra: { 0x7075: text("1234567"), 0x6375: text("") } }],
+    });
+    expect(names(await unzip(z))).toEqual(["a", "bb/", "ccc"]);
+    expect(ascii(entries(await unzip(z))[2]?.data)).toBe("C");
+    // the second entry's signature is damaged
+    const bad = z.slice();
+    const sigs: number[] = [];
+    for (let i = where(z).cd; i < where(z).eocd; i++) if (u32(z, i) === 0x02014b50) sigs.push(i);
+    expect(sigs).toHaveLength(3);
+    bad[sigs[1] as number] = 0;
+    expect(msg(await unzip(bad))).toContain("central directory is damaged");
+    // the directory says there are more entries than it holds: the walk runs into the end record
+    const more = z.slice();
+    more[where(more).eocd + 10] = 4;
+    more[where(more).eocd + 8] = 4;
+    expect(code(await unzip(more))).toBe("E_COERCE");
+  });
+
+  test(
+    "780 entries, as many as fit in a 64 KiB archive, are read under the untrusted limits",
+    { timeout: 60_000 },
+    async () => {
+      const many: Record<string, Uint8Array> = {};
+      for (let i = 0; i < 780; i++) many[`${i}`] = new Uint8Array(0);
+      const z = zipSync(many);
+      expect(z.length).toBeLessThanOrEqual(65_536);
+      const r = await runtime.call("zip:unzip", [bytes(z), bool(true)], { limits: UNTRUSTED });
+      expect(entries(r)).toHaveLength(780);
+      // Measured: 1,230,670 steps (about 1,578 an entry), 0.16 s; 1,129,260 with the primitive.
+      expect(r.ok && r.steps).toBeLessThan(1_500_000);
+    },
+  );
+
+  test(
+    "a central directory of 64 KiB (1,390 one-byte entries) is read under the untrusted limits",
+    { timeout: 60_000 },
+    async () => {
+      const z = zipSync({ e: text("x") });
+      const { cd } = where(z);
+      const one = z.subarray(cd, cd + 46 + 1);
+      const n = 1_390;
+      const dir = new Uint8Array(one.length * n);
+      for (let i = 0; i < n; i++) dir.set(one, i * one.length);
+      expect(dir.length).toBeLessThanOrEqual(65_536);
+      const big = new Uint8Array(cd + dir.length + 22);
+      big.set(z.subarray(0, cd));
+      big.set(dir, cd);
+      const eocd = big.subarray(cd + dir.length);
+      put32(eocd, 0, 0x06054b50);
+      eocd[8] = eocd[10] = n & 255;
+      eocd[9] = eocd[11] = n >> 8;
+      put32(eocd, 12, dir.length);
+      put32(eocd, 16, cd);
+      const r = await runtime.call("zip:unzip", [bytes(big), bool(true)], { limits: UNTRUSTED });
+      expect(entries(r)).toHaveLength(n);
+      // Measured: 2,192,640 steps (about 1,577 an entry), 0.3 s; 2,011,930 with the primitive.
+      expect(r.ok && r.steps).toBeLessThan(2_300_000);
+    },
+  );
+});
