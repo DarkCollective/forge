@@ -24,7 +24,7 @@ MEMO: _z85-str ( -- str )
 
 \ One group: its five digits, or z for an all-zero group (ascii85, full groups only).
 : _group ( p:bytes g:int alpha:bytes zmode:bool nfull:int -- bytes )
-  p g 4 * g 4 * 4 + slice 256 digits>int
+  p g 4 * 4 be-bytes>int
   dup 0 = zmode and g nfull < and
   [ drop { 122 } list>bytes ]
   [ alpha _digits ] if ;

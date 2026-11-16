@@ -82,7 +82,7 @@ USING: base64 ;
 : der>int ( content:bytes -- int )
   "The signed big-endian two's complement integer of INTEGER content bytes (any size). No bytes is E_COERCE. Shared word." doc
   content len 0 = [ "an INTEGER has no content bytes" fail-coerce ] when
-  content 256 digits>int
+  content 0 content len be-bytes>int
   content 0 nth 127 > [ 1 content len 8 * shl - ] when ;
 
 : node>int ( node:record -- int )

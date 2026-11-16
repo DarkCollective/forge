@@ -26,14 +26,12 @@ MEMO: _gps-names ( -- str )
 \ The same, little endian.
 : _le ( d:bytes p:int n:int -- int )
   d p n "image data" util:need-bytes
-  d p p n + slice rev 256 digits>int ;
+  d p n le-bytes>int ;
 
 \ n bytes at p of the TIFF block as an unsigned integer in its byte order ("II" is little endian).
 : _u ( t:bytes p:int n:int -- int )
   t p n "Exif data" util:need-bytes
-  t p p n + slice
-  t 0 nth 73 = [ rev ] [ ] if
-  256 digits>int ;
+  t 0 nth 73 = [ t p n le-bytes>int ] [ t p n be-bytes>int ] if ;
 
 \ The same as a signed integer.
 : _s ( t:bytes p:int n:int -- int )

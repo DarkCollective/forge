@@ -19,13 +19,10 @@ IN: cmac
   [ data key algorithm _bs zero-bytes mode "none" triple-des:encrypt ]
   if ;
 
-\ The big-endian integer of the bytes.
-: _be ( b:bytes -- int ) b 0 b len be-bytes>int ;
-
 \ Doubling in GF(2^n): shift left by one bit, and XOR Rb into the result when a bit fell off the top.
 : _dbl ( l:bytes rb:int -- bytes )
   l len :> n
-  l _be :> v
+  l 0 n be-bytes>int :> v
   v 1 shl 1 n 8 * shl 1 - band
   v n 8 * 1 - shr rb * bxor
   n int>be-bytes ;

@@ -40,9 +40,7 @@ MEMO: _file-types ( -- str )
 \ n bytes at p as an unsigned integer in the byte order of the file; E_COERCE when the data ends first.
 : _u ( e:bytes p:int n:int -- int )
   e p n "ELF data" util:need-bytes
-  e p p n + slice
-  e 5 nth 2 = [ ] [ rev ] if
-  256 digits>int ;
+  e 5 nth 2 = [ e p n be-bytes>int ] [ e p n le-bytes>int ] if ;
 
 \ The class decides: a64 for ELF64, a32 for ELF32.
 : _o ( e:bytes a64:int a32:int -- int )

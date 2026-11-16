@@ -105,9 +105,9 @@ IN: blockmode
 \ head that stays fixed (all but the last four bytes, _head).
 : _ctr-init ( iv:bytes mode:str -- )
   {
-    [ mode "CTR32" = ] [ iv 0 iv len 4 - slice _head! iv iv len 4 - iv len slice 256 digits>int _ctr0! ]
-    [ mode "CTRLE" = ] [ iv rev 256 digits>int _ctr0! ]
-    [ iv 256 digits>int _ctr0! ]
+    [ mode "CTR32" = ] [ iv 0 iv len 4 - slice _head! iv iv len 4 - 4 be-bytes>int _ctr0! ]
+    [ mode "CTRLE" = ] [ iv 0 iv len le-bytes>int _ctr0! ]
+    [ iv 0 iv len be-bytes>int _ctr0! ]
   } cond ;
 
 \ The counter block i places after the IV: the IV as a big-endian integer plus i, in bs bytes (wrapping);

@@ -187,7 +187,7 @@ MEMO: _string-tags ( -- list )
 \ The end of a long-form length of n bytes that starts at q.
 : _long-end ( d:bytes q:int n:int -- int )
   q n + d len > [ _cut-short ] when
-  d q q n + slice 256 digits>int q n + + ;
+  d q n be-bytes>int q n + + ;
 
 \ The end of the element whose length octets start at p.
 : _len-end ( d:bytes p:int -- int )

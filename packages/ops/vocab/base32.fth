@@ -22,7 +22,7 @@ CHOICE: base32-alphabet
   0 8 range [ 7 swap - 5 * v swap shr 31 band alpha swap nth ] map list>bytes ;
 
 : _group ( p:bytes g:int alpha:bytes -- bytes )
-  p g 5 * g 5 * 5 + slice 256 digits>int alpha _chars ;
+  p g 5 * 5 be-bytes>int alpha _chars ;
 
 : _groups ( p:bytes alpha:bytes ng:int -- bytes )
   0 ng range [ p swap alpha _group ] map #[ ] bjoin ;
