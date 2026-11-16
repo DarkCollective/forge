@@ -58,11 +58,12 @@ IN: string-escape
   quote { "single" [ 39 ] "double" [ 34 ] [ 96 ] } case ;
 
 : _escape-with ( data:str level:str q:int json:bool es6:bool up:bool -- str )
-  data str>codes
-  dup len 0 =
-  [ drop json [ q cp>str dup cat ] [ "" ] if ]
-  [ level q json es6 up _escape-list ]
-  if ;
+  data str>codes :> codes
+  {
+    [ codes len 0 = json and ] [ q cp>str dup cat ]
+    [ codes len 0 = ] [ "" ]
+    [ codes level q json es6 up _escape-list ]
+  } cond ;
 
 : escape ( data:str level:choice{special|everything|minimal}="special" quote:choice{single|double|backtick}="single" json:bool=false es6:bool=true uppercase:bool=false -- str )
   "Escape text so that it can sit inside a JavaScript string literal, with the rules of the escaper CyberChef uses (so the same recipe gives the same text). Every code point is one unit, not a UTF-8 byte. Every level writes the backslash as \\\\, the chosen quote with a backslash in front, the backspace, tab, line feed, form feed and carriage return as \\b \\t \\n \\f \\r, and a NUL as \\0 (as \\x00 or \\u0000 when a digit follows or json is on). Level special (the default) writes the other control characters, DEL and every character beyond ASCII as \\xHH (below 256), \\uHHHH or, with es6, \\u{H...} (without es6 a character above U+FFFF is two \\u escapes); the vertical tab is \\x0b, not \\v. Level everything writes every other character that way too, the printable ASCII ones included, and puts a backslash before all three quotes. Level minimal writes only what the first sentence names plus the Unicode spaces (U+00A0, U+1680, U+2000 to U+200A, U+2028, U+2029, U+202F, U+205F, U+3000); other control characters and DEL stay as they are. Json writes \\uHHHH instead of \\xHH and no \\0, and, as CyberChef does, puts the chosen quote around the result (so it is only valid JSON with the double quote, at the special level, and with es6 off, because \\u{H}, \\' and \\` are not JSON). Uppercase writes the hex digits in capitals." doc
