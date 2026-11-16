@@ -67,7 +67,7 @@ IN: caret
 : decode ( str -- bytes )
   "Read cat -v caret and M- notation back to bytes: ^@ to ^_ and ^? are control bytes, M- adds 128 to the byte that follows (a character, or a ^ escape). ASCII characters otherwise stand for themselves. A ^ or M- that is not followed by a valid character, or a non-ASCII character, is E_COERCE. ^ is read before M-, left to right." doc
   "Encodings" category
-  dup str>codes [ 127 > ] filter len 0 > [ "caret notation is ASCII text" fail-coerce ] when
+  dup str>codes [ 127 > ] any? [ "caret notation is ASCII text" fail-coerce ] when
   _carets _metas latin1>bytes ;
 
 META: encode

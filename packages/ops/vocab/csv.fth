@@ -63,7 +63,7 @@ META: to-json
   v type "record" = v json:null? not and ;
 
 : _need-all ( items:list pred:quot what:str -- )
-  items pred filter len items len <> [ "a JSON array to convert must hold only " what cat fail-coerce ] when ;
+  items pred all? not [ "a JSON array to convert must hold only " what cat fail-coerce ] when ;
 
 \ The cell of key k in an object, or an empty cell when it has no such key.
 : _field ( r:any k:str -- str )

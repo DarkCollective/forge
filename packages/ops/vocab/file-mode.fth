@@ -74,14 +74,14 @@ IN: file-mode
 
 : _octal-mode ( t:str -- int )
   t len 3 < t len 4 > or
-  t str>codes [ 48 55 between? ] filter len t len = not or
+  t [ 48 55 between? ] all? not or
   [ "an octal mode is 3 or 4 digits, each 0 to 7" fail-coerce ] when
   t 8 str>int-radix ;
 
 \ The mode and the file type character ("" when there is none) of a mode in octal or symbolic text.
 : _parse-mode ( data:str -- int str )
   data [ space? ] trim-start [ space? ] trim-end :> t
-  t str>codes [ dec-digit? ] filter len t len = t len 0 > and :> digits?
+  t [ dec-digit? ] all? t len 0 > and :> digits?
   {
     [ digits? ] [ t _octal-mode "" ]
     [ t len 9 = ] [ t _sym-mode "" ]

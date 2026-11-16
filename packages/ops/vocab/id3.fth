@@ -177,7 +177,7 @@ MEMO: _picture-types ( -- list )
 : _frame-ok? ( pos:int b:bytes v:int -- bool )
   pos v _hdrlen + b len <= [
     b pos nth 0 <>
-    b pos pos v _idlen + slice [ _idchar? ] filter len v _idlen = and
+    b pos pos v _idlen + slice [ _idchar? ] all? and
   ] [ false ] if ;
 
 \ The size field of the frame header at pos.

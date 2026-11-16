@@ -103,7 +103,7 @@ IN: colour
   t "(" split dup 0 nth [ space? ] trim-end swap 1 nth _args _func-colour ;
 
 : _hex ( s:str -- int )
-  s str>codes [ hex-digit? ] filter len s len = s len 0 > and not
+  s [ hex-digit? ] all? s len 0 > and not
   [ "not a hex digit" fail-coerce ] when
   s 16 str>int-radix ;
 

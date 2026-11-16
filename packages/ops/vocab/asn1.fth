@@ -226,7 +226,7 @@ USING: base64 ;
 
 : _check-label ( label:str -- )
   label len 0 = [ "the PEM label cannot be empty" fail-range ] when
-  label str>codes [ 32 126 between? not ] filter len 0 <>
+  label str>codes [ 32 126 between? not ] any?
   [ "the PEM label must be printable ASCII on one line" fail-range ] when
   label "-----" split len 1 > [ "the PEM label cannot contain five hyphens" fail-range ] when ;
 

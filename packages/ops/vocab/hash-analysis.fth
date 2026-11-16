@@ -60,7 +60,7 @@ MEMO: _rows ( -- list )
   "Hashing" category
   hash strip-space str>codes
   dup len 0 = [ "the hash is empty" fail-coerce ] when
-  dup [ hex-digit? not ] filter len 0 > [ "the hash is not hex text" fail-coerce ] when
+  dup [ hex-digit? not ] any? [ "the hash is not hex text" fail-coerce ] when
   len _report ;
 
 META: analyse

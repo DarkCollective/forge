@@ -174,7 +174,7 @@ MEMO: _file-types ( -- str )
   e off i e 4 nth 2 = [ 16 ] [ 8 ] if * + e 4 nth 2 = [ 8 ] [ 4 ] if + _w 134217728 band 0 <> and ;
 
 : _pie-in ( e:bytes off:int size:int -- bool )
-  0 e off size _dyn-count range [ e off _dyn-pie-at ] filter len 0 > ;
+  0 e off size _dyn-count range [ e off _dyn-pie-at ] any? ;
 
 : _pie-base ( e:bytes base:int -- bool )
   e e base _p-offset e base _p-filesz _pie-in ;

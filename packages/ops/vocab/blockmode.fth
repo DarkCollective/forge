@@ -44,7 +44,7 @@ IN: blockmode
 
 \ data without its last p bytes, after checking that all of them are p.
 : _strip ( data:bytes p:int -- bytes )
-  data data len p - data len slice [ p <> ] filter len 0 >
+  data data len p - data len slice [ p <> ] any?
   [ "bad padding: the padding bytes differ" fail-coerce ] when
   data 0 data len p - slice ;
 

@@ -164,7 +164,7 @@ USING: lorenz ;
 0 VARIABLE _lb
 
 : _sums ( z:bytes terms:list pats:list starts:list a:int b:int target:int -- list )
-  terms [ 16 band 0 > ] filter len 0 > [ z len 1 - ] [ z len ] if _m!
+  terms [ 16 band 0 > ] any? [ z len 1 - ] [ z len ] if _m!
   _m 1 < [ "the message is too short for a differenced term" fail-range ] when
   pats a 1 - nth a _need len _la!
   pats b 1 - nth b _need len _lb!

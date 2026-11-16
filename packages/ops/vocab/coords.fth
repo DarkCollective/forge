@@ -22,7 +22,7 @@ IN: coords
 
 \ True when s is one or more ASCII digits.
 : _digits? ( s:str -- bool )
-  s len 0 > s str>codes [ dec-digit? ] filter len s len = and ;
+  s len 0 > s [ dec-digit? ] all? and ;
 
 \ ip and fp are the digits before and after the point of an unsigned decimal number: its value
 \ as a fraction n / 10^(length of fp). str>int refuses anything that is not a digit.
@@ -470,7 +470,7 @@ MEMO: _band-min-northing ( -- list )
 \ ---- finding out which format a text is in ----
 
 : _decimal? ( t:str -- bool )
-  t len 0 > t str>codes [ dup dec-digit? swap 46 = or ] filter len t len = and ;
+  t len 0 > t [ dup dec-digit? swap 46 = or ] all? and ;
 
 : _geohash? ( text:str -- bool )
   text [ space? ] trim-start [ space? ] trim-end
@@ -480,7 +480,7 @@ MEMO: _band-min-northing ( -- list )
 
 : _mgrs-shape? ( c:str z:int -- bool )
   c len z 3 + >= z 1 >= and z 2 <= and
-  [ c z z 3 + slice str>codes [ 65 90 between? ] filter len 3 =
+  [ c z z 3 + slice [ 65 90 between? ] all?
     c z 3 + c len slice dup len 0 = swap _digits? or and ]
   [ false ] if ;
 

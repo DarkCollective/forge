@@ -22,7 +22,7 @@ USING: defang ;
 : _v4 ( s:str -- int )
   s "^[0-9]{1,3}(?:\\.[0-9]{1,3}){3}$" "" regex:test not [ "not an IPv4 address" s _bad ] when
   s "." split [ str>int ] map
-  dup [ 255 > ] filter len 0 > [ "an IPv4 octet is over 255" s _bad ] when
+  dup [ 255 > ] any? [ "an IPv4 octet is over 255" s _bad ] when
   0 [ swap 256 * + ] reduce ;
 
 : _v4? ( s:str -- bool )
@@ -39,7 +39,7 @@ USING: defang ;
 
 \ The hextet strings of one side of ::, each 1 to 4 hex digits.
 : _check-hextets ( hs:list s:str -- )
-  hs [ "^[0-9a-f]{1,4}$" "" regex:test not ] filter len 0 > [ "not an IPv6 address" s _bad ] when ;
+  hs [ "^[0-9a-f]{1,4}$" "" regex:test not ] any? [ "not an IPv6 address" s _bad ] when ;
 
 \ The text with an embedded IPv4 tail (::ffff:192.0.2.1) turned into two hextets.
 : _untail ( t:str s:str -- str )

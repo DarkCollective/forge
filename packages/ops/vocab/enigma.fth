@@ -73,7 +73,7 @@ IN: enigma
   } cond ;
 
 : _check-rotor ( name:str model:str idx:int -- )
-  model idx 0 = model "M4" = and _names-for [ name = ] filter len 0 =
+  model idx 0 = model "M4" = and _names-for [ name = ] any? not
   [ "rotors: " name cat " is not available as rotor " cat idx 1 + int>str cat " of model " cat model cat fail-range ] when ;
 
 : _check-reflector ( refl:str model:str -- )
@@ -82,7 +82,7 @@ IN: enigma
     [ model "M3" = ] [ { "B" "C" } ]
     [ { "B-thin" "C-thin" } ]
   } cond
-  [ refl = ] filter len 0 =
+  [ refl = ] any? not
   [ "reflector " refl cat " does not fit model " cat model cat fail-range ] when ;
 
 \ ---- the tables ----

@@ -101,7 +101,7 @@ true VARIABLE _check
   dup len 0 >
   [ 0 nth "rotors: " swap cat " is not available in model " cat model cat fail-range ]
   [ drop ] if
-  names [ names swap util:count-of 1 > ] filter len 0 >
+  names [ names swap util:count-of 1 > ] any?
   [ "rotors: a rotor may be named only once" fail-range ] when ;
 
 \ ---- the orders of the rotors ----

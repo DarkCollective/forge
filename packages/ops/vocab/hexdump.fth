@@ -72,7 +72,7 @@ META: encode
 
 \ True when the text has a character other than a space.
 : _blank? ( s:str -- bool )
-  s " " split [ len 0 > ] filter len 0 = ;
+  s " " split [ len 0 > ] any? not ;
 
 \ True when the token ends in a colon (xxd and this vocabulary's own layout).
 : _colon? ( t:str -- bool )

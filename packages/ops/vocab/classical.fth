@@ -198,7 +198,7 @@ META: bacon-encode
   list>bytes bytes>str ;
 
 : _bacon-groups ( t:bytes classic:bool -- str )
-  t [ dup 97 = swap 98 = or ] filter len t len <>
+  t [ dup 97 = swap 98 = or ] all? not
   [ "bacon-decode: only the symbols A and B (any case) and white space are allowed" fail-coerce ] when
   t len 5 mod 0 <>
   [ "bacon-decode: the number of A/B symbols must be a multiple of five" fail-coerce ] when
@@ -231,7 +231,7 @@ META: bacon-decode
   data [ _is-letter ] filter [ util:upper-merge-i ] map ;
 
 : _add-unique ( acc:bytes c:int -- bytes )
-  acc [ c = ] filter len 0 >
+  acc [ c = ] any?
   [ acc ]
   [ acc { c } list>bytes cat ]
   if ;
@@ -438,8 +438,8 @@ META: a1z26-decode
   0 256 range [ pb cb _sub-byte ] map list>bytes ;
 
 : _substitute ( data:bytes pb:bytes cb:bytes -- bytes )
-  pb [ _printable ] filter len pb len <>
-  cb [ _printable ] filter len cb len <> or
+  pb [ _printable ] all? not
+  cb [ _printable ] all? not or
   [ "substitute: plaintext and ciphertext must be printable ASCII" fail-range ] when
   pb len cb len <>
   [ "substitute: plaintext and ciphertext must have the same length" fail-range ] when
@@ -643,7 +643,7 @@ META: caesar-box-decrypt
 
 \ Code units as text. Without surrogates the units are the code points.
 : _units>str ( units:list -- str )
-  units [ 55296 57343 between? ] filter len 0 =
+  units [ 55296 57343 between? ] any? not
   [ units codes>str ]
   [ units [ nip units swap _unit>cp ] mapi [ -1 <> ] filter codes>str ]
   if ;
@@ -958,7 +958,7 @@ MEMO: _ls-sub ( -- list )
 \ Raise E_COERCE unless every byte is a letter of the board.
 : _ls-check ( data:bytes what:str -- bytes )
   data _ls-alpha 255 255 util:decode-table translate
-  [ 255 = ] filter len 0 <>
+  [ 255 = ] any?
   [ what fail-coerce ] when
   data ;
 

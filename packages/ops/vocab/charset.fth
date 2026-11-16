@@ -890,7 +890,7 @@ F8FF 00D2 00DA 00DB 00D9 0131 02C6 02DC 00AF 02D8 02D9 02DA 00B8 02DD 02DB 02C7"
   s "\n" split " " join " " split [ 16 str>int-radix ] map ;
 
 : _table? ( enc:str -- bool )
-  _tables keys [ enc = ] filter len 0 > ;
+  _tables keys [ enc = ] any? ;
 
 \ The 256 code points of a single-byte encoding: its table, or the identity for iso-8859-1.
 : _codes-of ( enc:str -- list )

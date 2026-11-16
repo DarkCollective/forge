@@ -17,7 +17,7 @@ IN: braille
   "Read Braille patterns U+2800 to U+28FF as bytes (code point minus U+2800). ASCII white space between patterns is ignored; any other character is E_COERCE." doc
   "Encodings" category
   str>codes [ space? not ] filter
-  dup [ _outside? ] filter len 0 >
+  dup [ _outside? ] any?
   [ "not a Braille pattern (U+2800 to U+28FF)" fail-coerce ] when
   [ 10240 - ] map list>bytes ;
 
