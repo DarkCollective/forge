@@ -377,7 +377,7 @@
   },
   {
     "name": "a query that selects nothing gives an empty string",
-    "ref": "CyberChef writes JSON.stringify of an empty string for no result",
+    "ref": "JSON.stringify of an empty string is written for no result",
     "op": "jsonata:query",
     "params": {
       "query": "Missing.Path"

@@ -15,7 +15,7 @@
  */
 
 /*
- * xpath primitive: the XPath 1.0 engine behind `xpath:query`. The libraries are the ones CyberChef uses:
+ * xpath primitive: the XPath 1.0 engine behind `xpath:query`. The libraries are:
  * `@xmldom/xmldom` (MIT, an XML parser that needs no browser DOMParser, which a Worker does not have) and `xpath`
  * (MIT, by Cameron McCormack and Yaron Naveh), both imported here only, both synchronous, with no `eval` and no
  * `Function`. xmldom reads no external entity and does not expand the entities a document type declares
@@ -24,7 +24,7 @@
  *  - `_query ( xml:str expression:str -- list )`: the result of the expression over the document, as a list of
  *    str: for a node set the serialisation of each node in document order (an element as markup, an attribute as
  *    name="value", a text node as its escaped text), for a number, a string or a boolean the one text of the value
- *    (3, abc, true). Names with no prefix match any namespace, as CyberChef does (`allowAnyNamespaceForNoPrefix`).
+ *    (3, abc, true). Names with no prefix match any namespace (`allowAnyNamespaceForNoPrefix`).
  *    A document that is not well formed is E_COERCE with the parser's message (and position); a bad expression is
  *    E_COERCE.
  *

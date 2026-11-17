@@ -603,7 +603,7 @@
   },
   {
     "name": "unescape \\a is the bell",
-    "ref": "the C escape for the bell, U+0007, which CyberChef reads (hand-computed)",
+    "ref": "the C escape for the bell, U+0007, which is read (hand-computed)",
     "op": "string-escape:unescape",
     "params": {},
     "input": {

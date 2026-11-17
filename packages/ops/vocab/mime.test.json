@@ -303,7 +303,7 @@
   },
   {
     "name": "CRLF in plain text becomes LF",
-    "ref": "CyberChef's documented behaviour",
+    "ref": "documented behaviour",
     "op": "mime:decode",
     "params": {},
     "input": {

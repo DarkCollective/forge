@@ -19,10 +19,10 @@
  * `htmlparser2` (MIT, an HTML parser that never fails: it repairs unclosed and mis-nested tags as browsers do),
  * the selector is matched by `css-select` (BSD-2-Clause) and the matches are written by `dom-serializer` (MIT), all
  * three of the same family (the cheeriojs organisation), synchronous, imported here only, with no `eval` and no
- * `Function`. CyberChef parses with xmldom and matches with nwmatcher; it fails on HTML that is not XML.
+ * `Function`. An XML parser with nwmatcher would fail on HTML that is not XML.
  *
  *  - `_select ( html:str selector:str -- list )`: the outer HTML of each element that matches the selector, in
- *    document order (an element nested in another match is listed again inside it, as in CyberChef), as a list
+ *    document order (an element nested in another match is listed again inside it), as a list
  *    of str. A selector that css-select cannot read (a syntax error, a pseudo-element, an unknown pseudo-class) is
  *    E_COERCE with the library's message.
  *

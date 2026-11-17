@@ -296,7 +296,7 @@
     }
   },
   {
-    "name": "an empty string field is an empty object (CyberChef's guess)",
+    "name": "an empty string field is an empty object (a guess)",
     "ref": "Python google.protobuf 7.36.1 serialisation of a message built with the library; the expected JSON written from the values put in (json.dumps)",
     "op": "protobuf:decode",
     "params": {},

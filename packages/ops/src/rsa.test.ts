@@ -384,7 +384,7 @@ describe("key generation", () => {
     },
   );
 
-  test("the DER format is the PKCS#1 private key alone, as bytes (CyberChef's DER format)", async () => {
+  test("the DER format is the PKCS#1 private key alone, as bytes", async () => {
     pinStream(1n);
     const der = topBytes(await generate("1024", "DER"));
     const priv = GOLDEN_1024.split("\n\n")[1] as string;

@@ -60,7 +60,7 @@ describe("catalogue", () => {
 });
 
 describe("prng:bytes", () => {
-  test("the default delimiter of the integers is a space, as CyberChef's", () => {
+  test("the default delimiter of the integers is a space", () => {
     const p = runtime.meta("prng:integers").params.find((x) => x.name === "delimiter");
     expect(p?.default).toBe("space");
   });

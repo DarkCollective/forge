@@ -23,7 +23,7 @@
  *  - `$random`, `$shuffle`, `$now` and `$millis` are replaced by functions that raise an error: Forge ops are
  *    deterministic and the only source of randomness and time is the `random` and `clock` vocabularies.
  *  - `$base64encode` and `$base64decode` are replaced by `btoa` and `atob` (the library falls back to a Node
- *    `Buffer` that a Worker does not have, which is why CyberChef replaces them too), with the same
+ *    `Buffer` that a Worker does not have, which is why they are replaced), with the same
  *    byte-per-character meaning.
  *  - `$pad` is rewritten with a width limit (the library builds the padding in an array of the requested width).
  *  - Evaluation is counted: a step is one evaluation of an expression node, and more than `MAX_STEPS` of them is
@@ -34,7 +34,7 @@
  *    like the regex words.
  *
  *  - `_query ( value:any query:str -- any )`: the result of the query over the JSON value; no result at all (the
- *    expression selects nothing) is the empty string, as CyberChef does (it writes JSON.stringify of ""). A
+ *    expression selects nothing) is the empty string (JSON.stringify of "" is written). A
  *    syntax or evaluation error is E_COERCE with the library's code and message and the position; a result that
  *    is a function is E_COERCE. A number with an integral value in the result is an int, as in JSON.stringify.
  */

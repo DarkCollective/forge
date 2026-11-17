@@ -29,7 +29,7 @@
  * Primitives:
  *  - `_hash ( password salt cost prefix -- bytes )`: the 60-character string as ASCII bytes;
  *  - `_verify ( password hash -- bool )`: parses the string, recomputes and compares in constant time;
- *  - `_parse ( hash -- str )`: a text report of the cost, salt and hash (CyberChef's "Bcrypt parse");
+ *  - `_parse ( hash -- str )`: a text report of the cost, salt and hash;
  *
  * Cost cap: the work doubles with each step of the cost, and the bake deadline of an untrusted recipe is
  * 10 s. `MAX_COST` (16) bounds the cost of `_hash` and of the cost read from a string in `_verify`

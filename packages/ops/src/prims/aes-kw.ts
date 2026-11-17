@@ -22,7 +22,7 @@
  *  - `_wrap`: wraps the key data (a multiple of 8 bytes, at least 16) under the key-encryption key;
  *  - `_unwrap`: unwraps, and checks the RFC 3394 integrity value (the default IV) before it returns.
  *
- * The IV is the RFC 3394 default (A6A6A6A6A6A6A6A6), fixed by noble's `aeskw`; CyberChef's IV parameter is
+ * The IV is the RFC 3394 default (A6A6A6A6A6A6A6A6), fixed by noble's `aeskw`; an IV parameter is
  * not offered. Errors: a key-encryption key that is not 16, 24 or 32 bytes is E_RANGE; a data length that
  * the wrap cannot take, and a failed integrity check, are E_COERCE.
  */

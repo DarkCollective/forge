@@ -18,7 +18,7 @@
  * Tests for the `filetype` vocabulary (vocab/filetype.fth, src/prims/filetype.ts, the table in
  * src/filetype-sigs.ts): Detect File Type, Scan for Embedded Files, Extract Files and the entry op.
  *
- * The samples (src/fixtures/filetype.json, hex) were made by independent tools, never by CyberChef:
+ * The samples (src/fixtures/filetype.json, hex) were made by independent tools only:
  * Pillow (PNG, JPEG, GIF, BMP, TIFF, WebP, ICO), Python's zipfile, gzip, bz2, lzma, wave and sqlite3,
  * GNU tar, openssl (a DER certificate and its PEM), cc (a 872-byte ELF), ffmpeg (MP3, Ogg, M4A, Matroska)
  * and, where no tool exists in the sandbox, bytes written by hand from the format documents (pcap and
@@ -477,7 +477,7 @@ describe("Extract Files", () => {
     expect(r.map((f) => f.size)).toEqual(parts.map((p) => p.length));
   });
 
-  test("types without an end finder are always left out, as in CyberChef; a damaged file is E_COERCE unless ignored", async () => {
+  test("types without an end finder are always left out; a damaged file is E_COERCE unless ignored", async () => {
     const tiff = sample("tiff");
     expect(files(await extract(tiff)).length).toBe(0);
     const png = sample("png");
@@ -486,7 +486,7 @@ describe("Extract Files", () => {
     expect(code(await extract(cut, false))).toBe("E_COERCE");
   });
 
-  test("minimum-size leaves out small files (CyberChef's default is 100)", async () => {
+  test("minimum-size leaves out small files (the default is 100)", async () => {
     const png = sample("png");
     expect(files(await extract(png, true, FLAGS_EXTRACT, undefined, png.length)).length).toBe(1);
     expect(files(await extract(png, true, FLAGS_EXTRACT, undefined, png.length + 1)).length).toBe(

@@ -194,7 +194,7 @@
   },
   {
     "name": "an empty input is an empty output",
-    "ref": "CyberChef returns an empty output for an empty input",
+    "ref": "an empty input gives an empty output",
     "op": "xtea:encrypt",
     "params": {
       "key": {

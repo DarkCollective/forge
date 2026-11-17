@@ -144,7 +144,7 @@ describe("fields", () => {
     });
   });
 
-  test("indent: 4 by default in the sense of CyberChef, 0 is compact", async () => {
+  test("indent: 4 by default, 0 is compact", async () => {
     const m = fVarint(1, 1n);
     expect(top(await decode(m, false, 4)).v).toBe('{\n    "1": 1\n}');
     expect(top(await decode(m, false, 0)).v).toBe('{"1":1}');
@@ -152,7 +152,7 @@ describe("fields", () => {
     expect(code(await decode(m, false, 33))).toBe("E_RANGE");
   });
 
-  test("short text that happens to be a message is read as one (CyberChef's guess, as protoc --decode_raw)", async () => {
+  test("short text that happens to be a message is read as one (a guess, as protoc --decode_raw)", async () => {
     // "hi" is field 13 with the varint 105
     expect(await json(fText(1, "hi"))).toEqual({ "1": { "13": 105 } });
     expect(await json(fText(1, "hello"))).toEqual({ "1": "hello" });

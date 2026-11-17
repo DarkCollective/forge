@@ -396,7 +396,7 @@
   },
   {
     "name": "parse reports cost, salt and hash",
-    "ref": "CyberChef's Bcrypt parse report layout (Rounds, Salt, Password hash, Full hash)",
+    "ref": "the bcrypt parse report layout (Rounds, Salt, Password hash, Full hash)",
     "op": "bcrypt:parse",
     "params": {},
     "input": {

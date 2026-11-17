@@ -140,7 +140,7 @@ describe("aes:encrypt and aes:decrypt", () => {
     }
   });
 
-  // SP 800-38A leaves the incrementing function to the application. CyberChef's AES is node-forge, which adds one
+  // SP 800-38A leaves the incrementing function to the application. The node-forge convention adds one
   // to the last four bytes of the counter block, modulo 2^32, with no carry into the other twelve; Forge follows
   // it. The expected key stream is built here from raw ECB blocks of the counters that convention gives.
   test("CTR adds one to the last four bytes only, wrapping without a carry", async () => {

@@ -18,8 +18,7 @@
  * triple-des primitives: Triple DES in the encrypt-decrypt-encrypt form, C = E_K3(D_K2(E_K1(P))) and
  * P = D_K1(E_K2(D_K3(C))) (NIST SP 800-67, the TDEA). The single-block DES is the one in `des.ts`.
  *
- *  - `_check-key`: the key must be 24 bytes (three-key) or 16 bytes (two-key, K3 = K1, which is how
- *    CyberChef treats a 16-byte key); anything else is E_RANGE;
+ *  - `_check-key`: the key must be 24 bytes (three-key) or 16 bytes (two-key, K3 = K1); anything else is E_RANGE;
  *  - `_encrypt-block` and `_decrypt-block`: one 8-byte block, the block functions of the shared
  *    `blockmode` layer. The three schedules of the last key are cached.
  *

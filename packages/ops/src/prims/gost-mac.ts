@@ -16,7 +16,7 @@
 
 /*
  * gost-mac primitives: the GOST 28147-89 MAC ("imitovstavka", IMIT, RFC 5830 section 8) with a MAC of 1 to 8 bytes,
- * for vocab/gost-mac.fth (CyberChef's GOST Sign and GOST Verify, which are this MAC and the MACs of the 2015
+ * for vocab/gost-mac.fth (the GOST sign and verify ops, which are this MAC and the MACs of the 2015
  * ciphers, not a public key signature). The IMIT is the cipher's round function run 16 times (the keys K1 to K8
  * twice) over each block of the data, zero-padded, xor-ed into a register that starts as the IV; the MAC is the first
  * bytes of the final register, N1 then N2, little-endian. The 4-byte form is also inside src/prims/gost28147.ts,

@@ -107,7 +107,7 @@ describe("totp reads the clock", () => {
   });
 });
 
-describe("the defaults follow CyberChef", () => {
+describe("the defaults", () => {
   test("the account name is Account and a random secret has 20 bytes", () => {
     for (const w of ["otp:hotp", "otp:totp"]) {
       const ps = runtime.meta(w).params;

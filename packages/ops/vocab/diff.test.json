@@ -24,7 +24,7 @@
   },
   {
     "name": "diff: defaults compare characters, with the changes marked in line",
-    "ref": "by character is the default, as in CyberChef; the markers are [-deleted-] and {+inserted+} (hand-computed)",
+    "ref": "by character is the default; the markers are [-deleted-] and {+inserted+} (hand-computed)",
     "op": "diff:compare",
     "params": {},
     "input": {

@@ -20,7 +20,7 @@
  * scanner is too slow in FL (5.5 VM steps a character before any state, see json.ts), so the reader is a
  * primitive; it builds the outline text directly.
  *
- *  - `_view ( data:bytes -- str )`: the property list as text in the layout of CyberChef's P-list Viewer: a first line
+ *  - `_view ( data:bytes -- str )`: the property list as text in this layout: a first line
  *    `plist => ` followed by the root, a last line `/plist`, one tab per level. A dictionary is `{`, one `key => value`
  *    line per entry and `}`; an array is `[`, one `index => item` line per item (from 0) and `]`; an entry whose value
  *    is a dictionary or an array opens it on the same line (`key => {`); an empty dictionary or array is `{}` or `[]`.

@@ -16,7 +16,7 @@
 
 /*
  * Tests for the `fletcher` vocabulary (vocab/fletcher.fth, no primitives). Known answers are in
- * vocab/fletcher.test.json; these compare with the step-by-step loops of CyberChef's four
+ * vocab/fletcher.test.json; these compare with the step-by-step loops of the four
  * Fletcher operations (words read little-endian, a short last word zero-padded, reduced at every
  * step) and measure 64 KiB.
  */

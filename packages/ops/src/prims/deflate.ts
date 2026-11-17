@@ -46,7 +46,7 @@ export function deflateRaw(data: Uint8Array, level: number): Uint8Array {
  * Stored blocks (RFC 1951 3.2.4) of at most 65535 bytes, the last one final. Written here because
  * fflate 0.8.3 marks the last block final and then writes one more, empty, final block when the
  * length is a nonzero multiple of 65535 (found by the wave 6 cross-check: the five stray bytes
- * stand in front of the zlib and gzip trailers, so zlib and CyberChef reject the stream).
+ * stand in front of the zlib and gzip trailers, so zlib rejects the stream).
  */
 function storedBlocks(data: Uint8Array): Uint8Array {
   const blocks = Math.max(1, Math.ceil(data.length / 65_535));

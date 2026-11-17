@@ -21,7 +21,7 @@
  *
  * The JSON side of the formats is the shared `json` value model: FL values with the json:null sentinel
  * (src/prims/json.ts). Bytes have no JSON form, so a decoder shows them the way Node's Buffer is shown by
- * JSON.stringify, as CyberChef does: {"type":"Buffer","data":[1,2,3]} (`bufferValue`); an encoder can read that
+ * JSON.stringify: {"type":"Buffer","data":[1,2,3]} (`bufferValue`); an encoder can read that
  * shape back (`asBuffer`) when its `typed-objects` switch is on.
  */
 import { ForgeError, valueHelpers } from "@forge/lang";
@@ -99,7 +99,7 @@ export function writeFailure(format: string, reason: string): ForgeError {
   });
 }
 
-/** A byte string as CyberChef shows it: {"type":"Buffer","data":[...]}. */
+/** A byte string as a decoder shows it: {"type":"Buffer","data":[...]}. */
 export function bufferValue(b: Uint8Array, meter: Meter): Value {
   meter.add(64 + 16 * b.length);
   const items: Value[] = new Array<Value>(b.length);

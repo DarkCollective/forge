@@ -1,7 +1,7 @@
 [
   {
     "name": "INTEGER 0",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -15,7 +15,7 @@
   },
   {
     "name": "INTEGER 127 is one byte",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -29,7 +29,7 @@
   },
   {
     "name": "INTEGER 128 needs a leading zero byte",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -43,7 +43,7 @@
   },
   {
     "name": "INTEGER -1",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -57,7 +57,7 @@
   },
   {
     "name": "INTEGER -129 (X.690 8.3.3 two's complement)",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -71,7 +71,7 @@
   },
   {
     "name": "a 2048-bit INTEGER is shown in full",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -85,7 +85,7 @@
   },
   {
     "name": "BOOLEAN true and false",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -99,7 +99,7 @@
   },
   {
     "name": "BOOLEAN with a wrong length falls back to hex",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -113,7 +113,7 @@
   },
   {
     "name": "ENUMERATED",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -127,7 +127,7 @@
   },
   {
     "name": "NULL",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -187,7 +187,7 @@
   },
   {
     "name": "malformed OBJECT IDENTIFIER falls back to hex",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -201,7 +201,7 @@
   },
   {
     "name": "UTF8String with a non-ASCII letter",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -215,7 +215,7 @@
   },
   {
     "name": "UTF8String that is not valid UTF-8 shows hex",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -229,7 +229,7 @@
   },
   {
     "name": "a string with a control character shows hex (no forged lines)",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -243,7 +243,7 @@
   },
   {
     "name": "PrintableString",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -257,7 +257,7 @@
   },
   {
     "name": "IA5String",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -271,7 +271,7 @@
   },
   {
     "name": "NumericString and VisibleString",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -285,7 +285,7 @@
   },
   {
     "name": "BMPString is UTF-16BE",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -299,7 +299,7 @@
   },
   {
     "name": "UniversalString is UTF-32BE",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -313,7 +313,7 @@
   },
   {
     "name": "UTCTime and GeneralizedTime",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -327,7 +327,7 @@
   },
   {
     "name": "SEQUENCE with three children",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -345,7 +345,7 @@
   },
   {
     "name": "an empty SEQUENCE and an empty SET",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -359,7 +359,7 @@
   },
   {
     "name": "OCTET STRING that holds DER is opened",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -373,7 +373,7 @@
   },
   {
     "name": "OCTET STRING that is not DER shows hex",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -387,7 +387,7 @@
   },
   {
     "name": "an empty OCTET STRING",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -401,7 +401,7 @@
   },
   {
     "name": "BIT STRING with unused bits",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -415,7 +415,7 @@
   },
   {
     "name": "BIT STRING with no unused bits",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -429,7 +429,7 @@
   },
   {
     "name": "BIT STRING that holds DER is opened",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -443,7 +443,7 @@
   },
   {
     "name": "explicit context tag [0]",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -457,7 +457,7 @@
   },
   {
     "name": "implicit context tag with text (dNSName)",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -471,7 +471,7 @@
   },
   {
     "name": "implicit context tag with bytes (iPAddress)",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -485,7 +485,7 @@
   },
   {
     "name": "application and private classes",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -499,7 +499,7 @@
   },
   {
     "name": "high tag number form: context [31] and application [128]",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -513,7 +513,7 @@
   },
   {
     "name": "universal tag 31 and over shows [UNIVERSAL n]",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -527,7 +527,7 @@
   },
   {
     "name": "long-form length in a SEQUENCE (minimal 81)",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -541,7 +541,7 @@
   },
   {
     "name": "long-form length 82 (2 length bytes)",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -555,7 +555,7 @@
   },
   {
     "name": "non-minimal long-form length is accepted (BER-tolerant)",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -569,7 +569,7 @@
   },
   {
     "name": "only the first of several top-level elements is shown",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -583,7 +583,7 @@
   },
   {
     "name": "white space in the hex",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -597,7 +597,7 @@
   },
   {
     "name": "empty input has no elements",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -611,7 +611,7 @@
   },
   {
     "name": "start skips leading bytes",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {
       "start": 4
@@ -631,7 +631,7 @@
   },
   {
     "name": "start at the end of the data shows nothing",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {
       "start": 6
@@ -647,7 +647,7 @@
   },
   {
     "name": "truncate cuts a long value (4 bytes)",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {
       "truncate": 8
@@ -663,7 +663,7 @@
   },
   {
     "name": "truncate 0 shows everything",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {
       "truncate": 0
@@ -679,7 +679,7 @@
   },
   {
     "name": "the default truncation is 32 bytes",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {
@@ -693,7 +693,7 @@
   },
   {
     "name": "exactly the truncation length is not cut",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {
       "truncate": 8
@@ -709,7 +709,7 @@
   },
   {
     "name": "64 levels of nesting are read",
-    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's dump by running CyberChef 11.5.0",
+    "ref": "DER assembled by hand from X.690 section 8; layout checked against jsrsasign's ASN.1 dump",
     "op": "asn1-dump:parse",
     "params": {},
     "input": {

@@ -21,7 +21,7 @@
  * of pi, in order, as in the paper. They are computed here from that definition (Machin's formula in
  * fixed-point BigInt arithmetic, once, on first use) and not stored.
  *
- *  - `_check-key`: the key must be 4 to 56 bytes (32 to 448 bits, CyberChef's range; E_RANGE);
+ *  - `_check-key`: the key must be 4 to 56 bytes (32 to 448 bits; E_RANGE);
  *  - `_encrypt-block` and `_decrypt-block`: one 8-byte block, the block functions of the shared
  *    `blockmode` layer. The expanded state of the last key is cached. Words are big-endian.
  *

@@ -394,7 +394,7 @@
     }
   },
   {
-    "name": "encrypt an empty IV is all zero bytes (as CyberChef)",
+    "name": "encrypt an empty IV is all zero bytes",
     "ref": "CBC by hand: IV 0, P = 0 gives C = E(0), the first vector",
     "op": "rc6:encrypt",
     "params": {
@@ -421,7 +421,7 @@
     }
   },
   {
-    "name": "decrypt an empty IV is all zero bytes (as CyberChef)",
+    "name": "decrypt an empty IV is all zero bytes",
     "ref": "CBC by hand: IV 0, P = 0 gives C = E(0), the first vector",
     "op": "rc6:decrypt",
     "params": {

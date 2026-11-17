@@ -433,7 +433,7 @@ describe("the ops and the shared words", () => {
     }
   });
 
-  test("the parameter lists: format hex or raw (as CyberChef: raw, the default, for the ops whose input it types as bytes)", () => {
+  test("the parameter lists: format hex or raw (raw, the default, for the ops whose input it types as bytes)", () => {
     const hexFirst = ["packets:parse-ipv4", "packets:parse-tcp", "packets:parse-udp"];
     for (const op of ops.filter((o) => o.startsWith("packets:"))) {
       const p = runtime.meta(op).params;

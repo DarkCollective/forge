@@ -94,7 +94,7 @@ describe("set operations against a JavaScript model", () => {
 });
 
 describe("power set", () => {
-  test("2^n subsets, each distinct, the empty one first, in CyberChef's order, each followed by the delimiter", async () => {
+  test("2^n subsets, each distinct, the empty one first, each followed by the delimiter", async () => {
     for (const n of [0, 1, 2, 5, 8]) {
       const items = Array.from({ length: n }, (_, i) => `i${i}`);
       const raw = await call("set:power-set", items.join(","), ",", "\n");

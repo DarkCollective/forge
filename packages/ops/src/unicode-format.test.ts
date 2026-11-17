@@ -56,7 +56,7 @@ describe("unicode-format:decorate", () => {
     expect(await decorate("abc", false, true)).toBe(`a${S}b${S}c${S}`);
   });
 
-  test("both: the strikethrough first, as in CyberChef", async () => {
+  test("both: the strikethrough first", async () => {
     expect(await decorate("ab", true, true)).toBe(`a${S}${U}b${S}${U}`);
   });
 

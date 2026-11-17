@@ -34,13 +34,13 @@
  * any byte, `X?` and `?X` a byte with one nibble free, `XX&MM` a byte compared under a mask (the data
  * byte and MM must equal XX and MM), and `'text'` is the ASCII bytes of the text. All the parts must
  * match. The signatures are from each format's specification and the usual magic lists (file(1)); none
- * is copied from CyberChef's table.
+ * is copied from another tool's table.
  */
 
 export type Category =
   "Images" | "Video" | "Audio" | "Documents" | "Applications" | "Archives" | "Miscellaneous";
 
-/** The categories in CyberChef's option order. */
+/** The categories in the order of the option. */
 export const CATEGORIES: readonly Category[] = [
   "Images",
   "Video",

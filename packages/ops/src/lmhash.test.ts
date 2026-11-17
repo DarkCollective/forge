@@ -54,7 +54,7 @@ describe("lmhash:digest", () => {
   test("upper-casing comes before the cut at 14 bytes, and the rest is ignored", async () => {
     expect((await lm("Password")).out).toBe((await lm("PASSWORD")).out);
     expect((await lm("abcdefghijklmnopqrstuvwxyz")).out).toBe((await lm("ABCDEFGHIJKLMN")).out);
-    // ß upper-cases to SS before the cut (as CyberChef does), so it fills two of the 14 bytes.
+    // ß upper-cases to SS before the cut, so it fills two of the 14 bytes.
     expect((await lm("ßabcdefghijklmn")).out).toBe((await lm("SSABCDEFGHIJKL")).out);
   });
 

@@ -131,7 +131,7 @@ describe("generate-all:hashes", () => {
     );
   }, 60_000);
 
-  test("the LM hash line sits just before the NT hash line, where CyberChef has it (after the GOST hash)", async () => {
+  test("the LM hash line sits just before the NT hash line (after the GOST hash)", async () => {
     const out = (await report("generate-all:hashes", enc("password"))).out!;
     const names = lines(out).map(([n]) => n);
     expect(names.indexOf("LM Hash")).toBeGreaterThan(names.indexOf("GOST"));

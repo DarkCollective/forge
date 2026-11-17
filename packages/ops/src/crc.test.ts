@@ -103,7 +103,7 @@ function randBytes(n: number): Uint8Array {
 }
 
 describe("presets", () => {
-  test("the table has every CyberChef preset", () => {
+  test("the table has every preset", () => {
     expect(presets.length).toBe(171);
     expect(new Set(presets.map((p) => p.name)).size).toBe(171);
   });

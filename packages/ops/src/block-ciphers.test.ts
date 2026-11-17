@@ -57,9 +57,9 @@ interface Cipher {
   modes: string[];
   /**
    * The counter convention of CTR, which SP 800-38A leaves to the application: "be32" adds one to the last four
-   * bytes, big-endian modulo 2^32, with no carry into the rest (node-forge's inc32, which CyberChef's DES,
-   * Triple DES, Blowfish, SM4 and AES use); "le" reads the whole block as a little-endian integer (CyberChef's
-   * Twofish and RC6).
+   * bytes, big-endian modulo 2^32, with no carry into the rest (node-forge's inc32, which DES,
+   * Triple DES, Blowfish, SM4 and AES use); "le" reads the whole block as a little-endian integer (the
+   * Twofish and RC6 convention).
    */
   ctr: "be32" | "le";
 }

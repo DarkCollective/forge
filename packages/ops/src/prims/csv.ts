@@ -20,15 +20,14 @@
  * character of a bare FL loop (see json.ts), so the scan is a primitive; the rows-to-JSON mapping, the header rules and every parameter check are FL.
  *
  *  - `_parse ( data:str cells:str rows:str -- list )`: a list of rows, each a list of str. Every character of
- *    `cells` ends a cell and every character of `rows` ends a row (CyberChef's behaviour: its delimiters are sets
+ *    `cells` ends a cell and every character of `rows` ends a row (the delimiters are sets
  *    of characters); a CR directly followed by an LF counts as one row end when both are row delimiters. A cell
  *    that starts with a double quote runs to the closing quote and may hold delimiters and line breaks, and a
  *    doubled quote in it is one quote; a quote inside an unquoted cell is kept as it is. A quoted cell followed
  *    by anything but a delimiter or the end, and an unterminated quote, are E_COERCE naming the offset, line and
- *    column. An empty line is skipped, and the last row needs no row end. A byte order mark at the start is dropped
- *    (as CyberChef does).
+ *    column. An empty line is skipped, and the last row needs no row end. A byte order mark at the start is dropped.
  *  - `_write ( rows:list cell:str row:str -- str )`: rows (lists of str) joined with `cell` between cells and
- *    `row` after every row (CyberChef ends the text with a row delimiter; no rows give empty text). A cell is quoted when it holds the cell or row delimiter,
+ *    `row` after every row (the text ends with a row delimiter; no rows give empty text). A cell is quoted when it holds the cell or row delimiter,
  *    a double quote, a CR or an LF; a row of one empty cell is written `""` so it is not an empty line.
  *
  * Both delimiter strings are read for the escapes `\r \n \t \\` and `\xHH` (so a user can type `\r\n`
@@ -72,7 +71,7 @@ function coercion(s: string, at: number, reason: string, row: number): ForgeErro
 }
 
 function parse(dataArg: string, cellsArg: string, rowsArg: string, ctx: PrimitiveContext): Value[] {
-  // CyberChef removes a byte order mark, which Excel writes at the start of a CSV file
+  // a byte order mark is removed, which Excel writes at the start of a CSV file
   const data = dataArg.charCodeAt(0) === 0xfeff ? dataArg.slice(1) : dataArg;
   const cells = new Set(Array.from(unescapeDelimiter(cellsArg)));
   const rowEnds = new Set(Array.from(unescapeDelimiter(rowsArg)));
@@ -196,7 +195,7 @@ function write(
     });
     if (out.length * 2 > max) throw limitFailure("maxValueBytes", max, out.length * 2, "CSV text");
   });
-  // CyberChef ends the text with a row delimiter after the last row
+  // the text ends with a row delimiter after the last row
   if (rows.length > 0) out += rowEnd;
   return out;
 }

@@ -819,7 +819,7 @@
     }
   },
   {
-    "name": "the defaults: Show counts is on, as in CyberChef",
+    "name": "the defaults: Show counts is on",
     "ref": "libyara 4.5.4 (yara-python) for the matches; the layout is Forge's",
     "op": "yara:scan",
     "params": {

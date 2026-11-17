@@ -20,7 +20,7 @@
  * block, with 6 + 52/n cycles over the words, each word updated from both neighbours by
  * MX = ((z>>5 ^ y<<2) + (y>>3 ^ z<<4)) ^ ((sum ^ y) + (k[(p&3) ^ e] ^ z)) and delta = 0x9E3779B9.
  *
- * Byte conventions (CyberChef's, which are the usual XXTEA library ones): words are little-endian; the key
+ * Byte conventions (the usual XXTEA library ones): words are little-endian; the key
  * is up to 16 bytes, zero-padded; encryption zero-pads the data to whole words and appends the byte length as
  * one more word before the cipher, so the ciphertext is 4 bytes more than the data rounded up to words;
  * decryption reads that word back and trims (the length must lie in the last word group, else the key is

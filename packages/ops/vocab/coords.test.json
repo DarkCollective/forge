@@ -846,7 +846,7 @@
     }
   },
   {
-    "name": "haversine: CyberChef's one line of four numbers",
+    "name": "haversine: one line of four numbers",
     "ref": "haversine formula on a sphere of radius 6371 km, computed independently in Python (math.asin form)",
     "op": "coords:haversine",
     "params": {},

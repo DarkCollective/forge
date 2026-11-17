@@ -24,7 +24,7 @@
  *
  * Representation. lz-string works on JavaScript strings, and its default `compress` output is a string
  * of arbitrary 16-bit code units, lone surrogates included, which Forge's strict UTF-8 text cannot
- * carry (CyberChef turns such a string into UTF-8 and silently corrupts it). So the formats are:
+ * carry (turning such a string into UTF-8 would silently corrupt it). So the formats are:
  *
  *  - `default`: the 16-bit code units as UCS-2 big-endian bytes, which is exactly the library's own
  *    `compressToUint8Array` (two bytes per unit, an even length);

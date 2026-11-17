@@ -83,7 +83,7 @@
     }
   },
   {
-    "name": "sign: an empty salt means cookie-session (as CyberChef)",
+    "name": "sign: an empty salt means cookie-session",
     "ref": "itsdangerous TimestampSigner + URLSafeSerializer, Flask settings (salt cookie-session, key_derivation hmac); computed with Python hmac/hashlib (itsdangerous not installed), see scratchpad flaskvec.py",
     "op": "flask-session:sign",
     "params": {
@@ -184,7 +184,7 @@
   },
   {
     "name": "sign: an empty key is E_RANGE",
-    "ref": "CyberChef: Secret key required",
+    "ref": "a secret key is required",
     "op": "flask-session:sign",
     "params": {
       "key": {
@@ -583,7 +583,7 @@
   },
   {
     "name": "verify: an empty key is E_RANGE",
-    "ref": "CyberChef: Secret key required",
+    "ref": "a secret key is required",
     "op": "flask-session:verify",
     "params": {
       "key": {

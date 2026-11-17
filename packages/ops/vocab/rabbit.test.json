@@ -153,7 +153,7 @@
   },
   {
     "name": "a short last block uses the rightmost key stream bytes (Big)",
-    "ref": "RFC 4503 A.1 key 0 block S[0]; short-block convention is CyberChef's (unverified against it)",
+    "ref": "RFC 4503 A.1 key 0 block S[0]; the short-block convention is a common implementation choice, not fixed by the specification (no published vector checks it)",
     "op": "rabbit:crypt",
     "params": {
       "key": {

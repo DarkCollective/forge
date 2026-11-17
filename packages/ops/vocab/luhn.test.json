@@ -69,7 +69,7 @@
   },
   {
     "name": "check digit of the empty input",
-    "ref": "CyberChef LuhnChecksum.mjs returns an empty string for empty input",
+    "ref": "an empty input gives an empty string",
     "op": "luhn:check-digit",
     "params": {
       "radix": 10
@@ -153,7 +153,7 @@
   },
   {
     "name": "odd radix is an error",
-    "ref": "CyberChef LuhnChecksum.mjs: the radix must be divisible by 2",
+    "ref": "the radix must be divisible by 2",
     "op": "luhn:check-digit",
     "params": {
       "radix": 7
@@ -168,7 +168,7 @@
   },
   {
     "name": "a letter is not a decimal digit",
-    "ref": "CyberChef LuhnChecksum.mjs: character is not valid in radix",
+    "ref": "a character that is not valid in the radix is refused",
     "op": "luhn:check-digit",
     "params": {
       "radix": 10

@@ -16,7 +16,7 @@
 
 /*
  * ascon primitives: the Ascon permutation (five 64-bit words, 12 or 8 rounds) and the three modes
- * CyberChef offers, in the byte order of NIST SP 800-232 (little-endian words):
+ * it offers, in the byte order of NIST SP 800-232 (little-endian words):
  *
  *  - `_hash`: Ascon-Hash256 (SP 800-232 section 5): 32-byte digest, 8-byte rate, p12 throughout;
  *  - `_mac`: Ascon-Mac (the Ascon-PRF construction of Dobraunig, Eichlseder, Mendel and Schlaeffer,
@@ -27,7 +27,7 @@
  *    decryption verifies it in constant time before returning the plaintext (E_COERCE on failure).
  *
  * Ascon-Mac is not part of SP 800-232 (which standardises Ascon-Hash256, Ascon-XOF128, Ascon-CXOF128 and
- * Ascon-AEAD128); it is the PRF-based MAC of the Ascon designers' reference code, which CyberChef labels
+ * Ascon-AEAD128); it is the PRF-based MAC of the Ascon designers' reference code, which is sometimes labelled
  * with the standard. Words are BigInt, which is fast enough for the sizes of a recipe (a 64 KiB hash
  * is under a second); a bad key or nonce length is E_RANGE.
  *

@@ -109,7 +109,7 @@
   },
   {
     "name": "encrypt 2-key ECB (K3 = K1)",
-    "ref": "NIST SP 800-67 two-key TDEA; openssl enc -des-ede -K 0123456789abcdef23456789abcdef01 (CyberChef repeats K1 as K3)",
+    "ref": "NIST SP 800-67 two-key TDEA; openssl enc -des-ede -K 0123456789abcdef23456789abcdef01 (K1 is repeated as K3)",
     "op": "triple-des:encrypt",
     "params": {
       "key": {
@@ -138,7 +138,7 @@
   },
   {
     "name": "decrypt 2-key ECB (K3 = K1)",
-    "ref": "NIST SP 800-67 two-key TDEA; openssl enc -des-ede -K 0123456789abcdef23456789abcdef01 (CyberChef repeats K1 as K3)",
+    "ref": "NIST SP 800-67 two-key TDEA; openssl enc -des-ede -K 0123456789abcdef23456789abcdef01 (K1 is repeated as K3)",
     "op": "triple-des:decrypt",
     "params": {
       "key": {

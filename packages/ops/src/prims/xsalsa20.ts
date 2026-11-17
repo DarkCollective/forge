@@ -19,8 +19,8 @@
  * XSalsa20 keystream is ARX work per 64-byte block, too slow in FL at 64 KiB, so this wraps the library.
  *
  * XSalsa20 derives a subkey from the key and the first 16 nonce bytes (HSalsa20), then runs Salsa20/20
- * with the last 8 nonce bytes. Noble takes a 32-byte key and a 24-byte nonce; a 16-byte key, which CyberChef
- * accepts, raises E_RANGE here. Only 20 rounds exist. The word `xsalsa20:encrypt` (vocab/xsalsa20.fth)
+ * with the last 8 nonce bytes. Noble takes a 32-byte key and a 24-byte nonce; a 16-byte key, which some libraries
+ * accept, raises E_RANGE here. Only 20 rounds exist. The word `xsalsa20:encrypt` (vocab/xsalsa20.fth)
  * holds the metadata and the parameters.
  */
 import { xsalsa20 } from "@noble/ciphers/salsa.js";

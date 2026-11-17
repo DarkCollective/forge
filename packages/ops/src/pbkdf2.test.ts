@@ -46,7 +46,7 @@ describe("pbkdf2:derive", () => {
     expect((await derive(20, 2_000_000, "sha1")).out).toHaveLength(20);
   }, 30_000);
 
-  test("the key size of CyberChef's 128 bits is 16 bytes", async () => {
+  test("the key size of 128 bits is 16 bytes", async () => {
     expect((await derive(16, 1, "sha1")).out).toHaveLength(16);
   });
 

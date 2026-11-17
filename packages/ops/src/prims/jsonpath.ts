@@ -18,8 +18,8 @@
  * jsonpath primitive: the JSONPath (RFC 9535) engine behind `jsonpath:query`, the library json-p3 of James Prior
  * (MIT; `iregexp-check` for the I-Regexp of `match` and `search`, MIT), imported here only. It is synchronous,
  * uses no `eval` and no `Function`, and passes the whole JSONPath Compliance Test Suite (715 cases, valid and
- * invalid queries). CyberChef's JPath expression uses jsonpath-plus (Goessner's dialect, which evaluates script
- * expressions); that library needs `new Function` or its own script interpreter and does not accept the RFC's
+ * invalid queries). The jsonpath-plus library (Goessner's dialect, which evaluates script
+ * expressions) is not used: it needs `new Function` or its own script interpreter and does not accept the RFC's
  * filter syntax, so the standard was chosen (see the op's documentation for what differs).
  *
  *  - `_query ( value:any query:str -- list )`: the values of the nodes the query selects, in the order the RFC
