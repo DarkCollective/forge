@@ -1,7 +1,7 @@
 [
   {
     "name": "8 zero bytes under a zero key",
-    "ref": "throwaway independent reference of btea from \"Correction to xtea\" (Needham and Wheeler, 1998) with the length-word convention of CyberChef; not a published vector",
+    "ref": "throwaway independent reference of btea from \"Correction to xtea\" (Needham and Wheeler, 1998) with the usual length-word convention; not a published vector",
     "op": "xxtea:encrypt",
     "params": {
       "key": {
@@ -20,7 +20,7 @@
   },
   {
     "name": "8 zero bytes under a zero key",
-    "ref": "throwaway independent reference of btea from \"Correction to xtea\" (Needham and Wheeler, 1998) with the length-word convention of CyberChef; not a published vector",
+    "ref": "throwaway independent reference of btea from \"Correction to xtea\" (Needham and Wheeler, 1998) with the usual length-word convention; not a published vector",
     "op": "xxtea:decrypt",
     "params": {
       "key": {
@@ -43,7 +43,7 @@
   },
   {
     "name": "21 bytes",
-    "ref": "throwaway independent reference of btea from \"Correction to xtea\" (Needham and Wheeler, 1998) with the length-word convention of CyberChef; not a published vector",
+    "ref": "throwaway independent reference of btea from \"Correction to xtea\" (Needham and Wheeler, 1998) with the usual length-word convention; not a published vector",
     "op": "xxtea:encrypt",
     "params": {
       "key": {
@@ -66,7 +66,7 @@
   },
   {
     "name": "21 bytes",
-    "ref": "throwaway independent reference of btea from \"Correction to xtea\" (Needham and Wheeler, 1998) with the length-word convention of CyberChef; not a published vector",
+    "ref": "throwaway independent reference of btea from \"Correction to xtea\" (Needham and Wheeler, 1998) with the usual length-word convention; not a published vector",
     "op": "xxtea:decrypt",
     "params": {
       "key": {
@@ -89,7 +89,7 @@
   },
   {
     "name": "one byte, a 1-byte key zero-padded",
-    "ref": "throwaway independent reference of btea from \"Correction to xtea\" (Needham and Wheeler, 1998) with the length-word convention of CyberChef; not a published vector",
+    "ref": "throwaway independent reference of btea from \"Correction to xtea\" (Needham and Wheeler, 1998) with the usual length-word convention; not a published vector",
     "op": "xxtea:encrypt",
     "params": {
       "key": {
@@ -112,7 +112,7 @@
   },
   {
     "name": "an empty input is an empty output",
-    "ref": "CyberChef returns the empty input",
+    "ref": "the empty input is returned",
     "op": "xxtea:encrypt",
     "params": {
       "key": {

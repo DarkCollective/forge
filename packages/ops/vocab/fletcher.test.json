@@ -153,7 +153,7 @@
   },
   {
     "name": "Fletcher-8 of abcde",
-    "ref": "CyberChef Fletcher8Checksum.mjs loop (mod 15), re-run independently",
+    "ref": "an independent reference implementation of the loop (mod 15)",
     "op": "fletcher:checksum",
     "params": {
       "size": "8"
@@ -169,7 +169,7 @@
   },
   {
     "name": "Fletcher-8 of abcdef",
-    "ref": "CyberChef Fletcher8Checksum.mjs loop (mod 15), re-run independently",
+    "ref": "an independent reference implementation of the loop (mod 15)",
     "op": "fletcher:checksum",
     "params": {
       "size": "8"
@@ -185,7 +185,7 @@
   },
   {
     "name": "Fletcher-8 of Hello, world!",
-    "ref": "CyberChef Fletcher8Checksum.mjs loop (mod 15), re-run independently",
+    "ref": "an independent reference implementation of the loop (mod 15)",
     "op": "fletcher:checksum",
     "params": {
       "size": "8"
@@ -265,7 +265,7 @@
   },
   {
     "name": "Fletcher-32 of an odd-length input",
-    "ref": "CyberChef Fletcher32Checksum.mjs: a lone last byte is added as a word",
+    "ref": "a lone last byte is added as a word",
     "op": "fletcher:checksum",
     "params": {
       "size": "32"
@@ -281,7 +281,7 @@
   },
   {
     "name": "Fletcher-64 with a 3-byte tail",
-    "ref": "CyberChef Fletcher64Checksum.mjs: the tail is a little-endian word",
+    "ref": "the tail is a little-endian word",
     "op": "fletcher:checksum",
     "params": {
       "size": "64"

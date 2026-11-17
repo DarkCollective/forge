@@ -173,7 +173,7 @@ describe("prime:generate", () => {
     }
   });
 
-  test("the default size is 512 bits, as CyberChef's bit length", () => {
+  test("the default size is 512 bits", () => {
     expect(runtime.meta("prime:generate").params.find((x) => x.name === "size")?.default).toBe(512);
   });
 

@@ -18,7 +18,7 @@
  * Tests for the `argon2` vocabulary (vocab/argon2.fth, with the private primitives `_derive` and
  * `_verify`). The reference-implementation hashes and the compare errors are in
  * vocab/argon2.test.json and the RFC 9106 section 5 vectors in src/prims/argon2.test.ts; these run
- * CyberChef's default parameters, the three types round trip, and the largest memory.
+ * the default parameters, the three types round trip, and the largest memory.
  */
 import { valueHelpers } from "@forge/lang";
 import { describe, expect, test } from "vitest";
@@ -64,7 +64,7 @@ async function compare(pw: string, encoded: string) {
 }
 
 describe("argon2", () => {
-  test("CyberChef's defaults (somesalt, 3 iterations, 4096 KiB, 1 lane, 32 bytes, argon2i, encoded)", async () => {
+  test("the defaults (somesalt, 3 iterations, 4096 KiB, 1 lane, 32 bytes, argon2i, encoded)", async () => {
     const enc = ascii((await derive("password")).out!);
     expect(enc).toMatch(/^\$argon2i\$v=19\$m=4096,t=3,p=1\$c29tZXNhbHQ\$[A-Za-z0-9+/]{43}$/);
     expect((await compare("password", enc)).out).toBe(true);

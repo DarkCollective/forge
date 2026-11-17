@@ -113,7 +113,7 @@
   },
   {
     "name": "blocks with a delimiter",
-    "ref": "CyberChef ParityBit.mjs: each block gets its own bit",
+    "ref": "each block gets its own bit",
     "op": "parity:encode",
     "params": {
       "mode": "even",
@@ -135,7 +135,7 @@
   },
   {
     "name": "spaces are kept and not counted",
-    "ref": "CyberChef lib/ParityBit.mjs",
+    "ref": "hand-computed parity bit",
     "op": "parity:encode",
     "params": {
       "mode": "even",
@@ -153,7 +153,7 @@
   },
   {
     "name": "the empty input stays empty",
-    "ref": "CyberChef ParityBit.mjs returns empty input unchanged",
+    "ref": "an empty input is returned unchanged",
     "op": "parity:encode",
     "params": {
       "mode": "even",
@@ -171,7 +171,7 @@
   },
   {
     "name": "a character other than 0 and 1 is an error",
-    "ref": "CyberChef lib/ParityBit.mjs: unexpected character",
+    "ref": "an unexpected character is refused",
     "op": "parity:encode",
     "params": {
       "mode": "even",
@@ -271,7 +271,7 @@
   },
   {
     "name": "decode without verification strips the bit",
-    "ref": "CyberChef lib/ParityBit.mjs decodeParityBit removes one character unchecked",
+    "ref": "decoding removes one character unchecked",
     "op": "parity:decode",
     "params": {
       "mode": "even",
@@ -290,7 +290,7 @@
   },
   {
     "name": "decode of the empty input stays empty",
-    "ref": "CyberChef ParityBit.mjs",
+    "ref": "hand-computed parity bit",
     "op": "parity:decode",
     "params": {
       "mode": "even",

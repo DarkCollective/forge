@@ -27,7 +27,7 @@
  *    throws, which the library answers by not blinding its scalar multiplications (it falls back to its
  *    constant-time path), and a key generator is given its seed by the FL word (`random:bytes-of`);
  *  - every option the call depends on is stated: the digest is computed by the FL caller and passed in with
- *    `prehash: false`, `lowS: false` (OpenSSL and CyberChef accept and make either half), `format: "compact"`
+ *    `prehash: false`, `lowS: false` (OpenSSL accepts and makes either half), `format: "compact"`
  *    (`r || s`, each as wide as the curve's order) and `extraEntropy: false` (RFC 6979 deterministic k, whose
  *    HMAC-DRBG uses the same hash as the message digest, as the RFC 6979 appendix A.2 vectors do).
  * The DER form, the PEM, JSON and Base64url forms are FL (the shared `asn1`, `json` and `base64` words).

@@ -16,7 +16,7 @@
 
 /*
  * template primitive: the renderer behind `template:render`, a documented subset of Handlebars written for Forge.
- * CyberChef's Template renders with the Handlebars library, which compiles a template to JavaScript source and
+ * The Handlebars library compiles a template to JavaScript source and
  * runs it with `new Function`; that is code execution, and it does not run under the strict CSP of the bake
  * Worker. This module parses the template into a tree and walks the tree against the value, so no code is
  * generated or run, and the data and the template can come from anyone.

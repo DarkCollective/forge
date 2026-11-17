@@ -22,7 +22,7 @@
  *  - `_block-enc` and `_block-dec`: one raw AES block (the block function of the shared `blockmode`
  *    layer, which the OFB mode of `aes:encrypt` runs on, since noble has no OFB);
  *  - `_crypt`: ECB, CBC, CFB (CFB-128) and CTR (the last four bytes of the counter block count, modulo
- *    2^32 with no carry into the rest, as node-forge and so CyberChef do), with or without PKCS#7;
+ *    2^32 with no carry into the rest, as node-forge does), with or without PKCS#7;
  *  - `_gcm`: AES-GCM with the 16-byte tag appended to the ciphertext.
  *
  * Errors: a bad key or IV length is E_RANGE; a failed padding check, a failed tag check and a ciphertext
@@ -68,7 +68,7 @@ export function blockDecrypt(block: Uint8Array, key: Uint8Array): Uint8Array {
 
 /**
  * CTR with a 32-bit counter: only the last four bytes of the counter block are incremented, big-endian modulo
- * 2^32, and a wrap does not carry into the other twelve bytes (node-forge's inc32, which CyberChef's AES uses).
+ * 2^32, and a wrap does not carry into the other twelve bytes (node-forge's inc32).
  * Noble's `ctr` carries through the whole block, so the data is cut where the low word would wrap, and each
  * piece runs under noble with the counter the wrap leaves (the high twelve bytes unchanged, the low word 0).
  * A counter that does not wrap inside the data gives the same key stream as the whole-block counter.

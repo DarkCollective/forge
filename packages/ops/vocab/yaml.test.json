@@ -481,7 +481,7 @@
   },
   {
     "name": ".inf has no JSON form",
-    "ref": "JSON has no infinity (CyberChef writes null; here it is refused)",
+    "ref": "JSON has no infinity (it is refused)",
     "op": "yaml:to-json",
     "params": {
       "indent": 4
@@ -496,7 +496,7 @@
   },
   {
     "name": ".nan has no JSON form",
-    "ref": "JSON has no NaN (CyberChef writes null; here it is refused)",
+    "ref": "JSON has no NaN (it is refused)",
     "op": "yaml:to-json",
     "params": {
       "indent": 4

@@ -71,7 +71,7 @@ describe("clock", () => {
     expect(top(r)).toBe(expected);
   });
 
-  test("the default unit is seconds, as CyberChef's Get Time", () => {
+  test("the default unit is seconds", () => {
     const p = runtime.meta("clock:get-time").params.find((x) => x.name === "unit");
     expect(p?.default).toBe("seconds");
   });

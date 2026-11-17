@@ -118,7 +118,7 @@ describe("csv:to-json: reading", () => {
     expect(await arrays(' "a",b')).toEqual([[' "a"', "b"]]);
   });
 
-  test("a BOM at the start is dropped, as CyberChef does; one inside the text stays", async () => {
+  test("a BOM at the start is dropped; one inside the text stays", async () => {
     expect(await arrays("\ufeffa,b")).toEqual([["a", "b"]]);
     expect(await arrays("a,\ufeffb")).toEqual([["a", "\ufeffb"]]);
   });

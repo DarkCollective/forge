@@ -582,8 +582,8 @@
     }
   },
   {
-    "name": "length-value data: tag-bytes 0 (CyberChef test, Python-computed)",
-    "ref": "CyberChef layout; the bytes assembled with Python",
+    "name": "length-value data: tag-bytes 0 (Python-computed)",
+    "ref": "the bytes assembled with Python",
     "op": "tlv:parse",
     "params": {
       "tag-bytes": 0,

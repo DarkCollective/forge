@@ -180,7 +180,7 @@ describe("sigaba round trip", () => {
     expect(new Set([a, b, c, d]).size).toBe(4);
   });
 
-  test("an index rotor at digit d is offset by +d, as in CyberChef (an independent simulator's value)", async () => {
+  test("an index rotor at digit d is offset by +d (an independent simulator's value)", async () => {
     expect(await text("ATTACK AT DAWN ATTACK AT DAWN", { indexPositions: "31415" })).toBe(
       "DYWSWHMOQUSVSUNXBLBWYWYTKOTPS",
     );

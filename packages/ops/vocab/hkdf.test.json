@@ -325,7 +325,7 @@
   },
   {
     "name": "length 0 gives no bytes",
-    "ref": "WP 5.25: L = 0 is empty (CyberChef allows it)",
+    "ref": "WP 5.25: L = 0 is empty (it is allowed)",
     "op": "hkdf:derive",
     "params": {
       "salt": {

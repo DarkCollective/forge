@@ -24,12 +24,12 @@
  *  - an 8-byte nonce with an 8-byte block counter (the original layout), with 20 rounds only, and a 16-
  *    or 32-byte key.
  *
- * A 16-byte key with a 12-byte nonce, which CyberChef accepts, is not in noble (it needs the "expand
+ * A 16-byte key with a 12-byte nonce, which some libraries accept, is not in noble (it needs the "expand
  * 16-byte k" core with the key repeated, written by hand); it raises E_RANGE. The word `chacha:encrypt`
  * (vocab/chacha.fth) holds the metadata and the parameters.
  *
  * Errors: a key, nonce or round count that noble does not take is E_RANGE, and so is a counter that noble
- * refuses (noble rejects a counter that would wrap, rather than wrapping it as CyberChef does).
+ * refuses (noble rejects a counter that would wrap, rather than wrapping it).
  */
 import { chacha8, chacha12, chacha20, chacha20orig } from "@noble/ciphers/chacha.js";
 import { definePrimitive } from "@forge/lang";

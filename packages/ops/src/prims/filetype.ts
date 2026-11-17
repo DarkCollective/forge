@@ -736,7 +736,7 @@ export function carve(
   const out: Carved[] = [];
   let total = 0;
   for (const m of found) {
-    // a type with no end finder is never an error, as in CyberChef ("No extraction algorithm available")
+    // a type with no end finder is never an error
     if (m.sig.end === undefined) continue;
     const r = endOf(ctx, m.sig, m.offset);
     if ("reason" in r) {

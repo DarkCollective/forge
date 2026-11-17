@@ -434,7 +434,7 @@
   },
   {
     "name": "a name with no prefix matches in any namespace",
-    "ref": "CyberChef's documented behaviour (allowAnyNamespaceForNoPrefix); lxml needs a prefix, so the expected nodes are those of {http://www.w3.org/2005/Atom}title",
+    "ref": "names with no prefix match any namespace (allowAnyNamespaceForNoPrefix); lxml needs a prefix, so the expected nodes are those of {http://www.w3.org/2005/Atom}title",
     "op": "xpath:query",
     "params": {
       "xpath": "//title",

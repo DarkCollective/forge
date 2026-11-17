@@ -29,7 +29,7 @@
  *    exactly. The schema is JSON: the primitive types, record (and error), enum, array, map, fixed, unions and
  *    named references (a record may refer to itself); logical types are ignored (the underlying value is shown).
  *    Values: null as null, a long as an exact integer, float and double as numbers (NaN and the infinities null),
- *    bytes and fixed as {"type":"Buffer","data":[...]} (CyberChef shows the avsc Buffer through JSON.stringify), an
+ *    bytes and fixed as {"type":"Buffer","data":[...]} (the avsc Buffer as JSON.stringify shows it), an
  *    enum as its symbol, a union as the value of its branch (not wrapped in {"type": value}, which avsc does only
  *    when the branch is ambiguous), a map as an object (a repeated key is E_COERCE). Bad varints, an int outside 32
  *    bits, a long outside 64 bits, a boolean that is not 0 or 1, a union or enum index out of range, a negative

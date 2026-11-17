@@ -29,7 +29,7 @@
  *    heads, shortest floating-point form that keeps the value (half, single or double), definite lengths only, map
  *    keys sorted bytewise by their encoding.
  *
- * How the JSON side looks (CyberChef shows the result of the `cbor` npm package through JSON.stringify):
+ * How the JSON side looks (the result of the `cbor` npm package as JSON.stringify shows it):
  * a byte string is {"type":"Buffer","data":[...]}; a tag is {"tag":N,"contents":V}, except tags 0 and 1 (dates, shown
  * as the ISO 8601 text JavaScript's Date.toJSON writes) and 2 and 3 (big integers, shown as exact integers);
  * `undefined` and the non-finite floats (NaN, the infinities) are null, as JSON.stringify writes them; a simple

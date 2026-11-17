@@ -73,7 +73,7 @@
   },
   {
     "name": "blocksize 4 of Hello, world!",
-    "ref": "CyberChef XORChecksum.mjs column-wise xor, re-run with a plain loop",
+    "ref": "column-wise xor, re-run with a plain loop",
     "op": "xor-checksum:checksum",
     "params": {
       "blocksize": 4
@@ -89,7 +89,7 @@
   },
   {
     "name": "empty input gives blocksize zero bytes",
-    "ref": "CyberChef XORChecksum.mjs: no chunks",
+    "ref": "no chunks",
     "op": "xor-checksum:checksum",
     "params": {
       "blocksize": 4

@@ -103,7 +103,7 @@ describe("Defang URL and Fang URL", () => {
       "xn--bcher-kva[.]example",
     );
     // a name right after a dot or a hyphen that follows a letter or digit is not a new start (the lookbehind that
-    // keeps the search linear); after anything else it is, as in CyberChef (found by the WP 5.59b cross-check:
+    // keeps the search linear); after anything else it is (found by the WP 5.59b cross-check:
     // the first lookbehind also skipped ".example.com", "*.example.com" and "-bad-.example.com")
     expect(out(await defang("-bad-.example.com", "valid-domains-and-full-urls"))).toBe(
       "-bad-.example[.]com",

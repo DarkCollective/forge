@@ -18,7 +18,7 @@
  * xtea primitives. XTEA, the eXtended TEA of Needham and Wheeler ("Tea extensions", Computer Laboratory,
  * University of Cambridge, 1997): the 64-bit block as v0, v1, the 128-bit key as k0..k3, and a round count
  * of `rounds` cycles (32 is the recommended 64 rounds; every cycle is two Feistel rounds). The key word of a
- * cycle is chosen by sum & 3 and (sum >> 11) & 3. Block and key words are big-endian (CyberChef's order).
+ * cycle is chosen by sum & 3 and (sum >> 11) & 3. Block and key words are big-endian.
  * Block functions for the shared `blockmode` layer. The words `xtea:encrypt` and `xtea:decrypt` (vocab/xtea.fth)
  * hold the metadata.
  */

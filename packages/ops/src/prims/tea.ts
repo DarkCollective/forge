@@ -18,7 +18,7 @@
  * tea primitives. The Tiny Encryption Algorithm of Wheeler and Needham ("TEA, a Tiny Encryption Algorithm",
  * 1994): a 64-bit block as two 32-bit halves v0, v1, a 128-bit key as four 32-bit words k0..k3, 32 cycles
  * (64 rounds) with delta = 0x9E3779B9 (2^32 over the golden ratio). The block and key words are read
- * big-endian (the order of the "network" reference and of CyberChef; the original C code reads host-order
+ * big-endian (the order of the "network" reference; the original C code reads host-order
  * words). The block function of the shared `blockmode` layer; the modes and padding are not here. The
  * words `tea:encrypt` and `tea:decrypt` (vocab/tea.fth) hold the metadata.
  */

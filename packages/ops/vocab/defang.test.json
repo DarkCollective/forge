@@ -1,7 +1,7 @@
 [
   {
     "name": "defang-url: a URL and a domain",
-    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "ref": "hand-checked against the doc string",
     "op": "defang:defang-url",
     "params": {},
     "input": {
@@ -19,7 +19,7 @@
   },
   {
     "name": "defang-url: only full URLs",
-    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "ref": "hand-checked against the doc string",
     "op": "defang:defang-url",
     "params": {
       "process": "only-full-urls"
@@ -39,7 +39,7 @@
   },
   {
     "name": "defang-url: everything",
-    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "ref": "hand-checked against the doc string",
     "op": "defang:defang-url",
     "params": {
       "process": "everything"
@@ -55,7 +55,7 @@
   },
   {
     "name": "defang-url: dots only",
-    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "ref": "hand-checked against the doc string",
     "op": "defang:defang-url",
     "params": {
       "escape-http": false,
@@ -72,7 +72,7 @@
   },
   {
     "name": "defang-url: http only",
-    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "ref": "hand-checked against the doc string",
     "op": "defang:defang-url",
     "params": {
       "escape-dots": false,
@@ -89,7 +89,7 @@
   },
   {
     "name": "defang-url: slashes only",
-    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "ref": "hand-checked against the doc string",
     "op": "defang:defang-url",
     "params": {
       "escape-dots": false,
@@ -106,7 +106,7 @@
   },
   {
     "name": "defang-url: all off changes nothing",
-    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "ref": "hand-checked against the doc string",
     "op": "defang:defang-url",
     "params": {
       "escape-dots": false,
@@ -124,7 +124,7 @@
   },
   {
     "name": "defang-url: two URLs on two lines",
-    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "ref": "hand-checked against the doc string",
     "op": "defang:defang-url",
     "params": {
       "process": "only-full-urls"
@@ -140,7 +140,7 @@
   },
   {
     "name": "defang-url: text without a URL",
-    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "ref": "hand-checked against the doc string",
     "op": "defang:defang-url",
     "params": {},
     "input": {
@@ -154,7 +154,7 @@
   },
   {
     "name": "defang-url: empty input",
-    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "ref": "hand-checked against the doc string",
     "op": "defang:defang-url",
     "params": {},
     "input": {
@@ -168,7 +168,7 @@
   },
   {
     "name": "fang-url: restores all three",
-    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "ref": "hand-checked against the doc string",
     "op": "defang:fang-url",
     "params": {},
     "input": {
@@ -186,7 +186,7 @@
   },
   {
     "name": "fang-url: dots only",
-    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "ref": "hand-checked against the doc string",
     "op": "defang:fang-url",
     "params": {
       "restore-http": false,
@@ -207,7 +207,7 @@
   },
   {
     "name": "fang-url: http only",
-    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "ref": "hand-checked against the doc string",
     "op": "defang:fang-url",
     "params": {
       "restore-dots": false,
@@ -224,7 +224,7 @@
   },
   {
     "name": "fang-url: slashes only",
-    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "ref": "hand-checked against the doc string",
     "op": "defang:fang-url",
     "params": {
       "restore-dots": false,
@@ -241,7 +241,7 @@
   },
   {
     "name": "fang-url: text that was not defanged is kept",
-    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "ref": "hand-checked against the doc string",
     "op": "defang:fang-url",
     "params": {},
     "input": {
@@ -255,7 +255,7 @@
   },
   {
     "name": "fang-url: empty input",
-    "ref": "hand-checked against the doc string and CyberChef's documented rules",
+    "ref": "hand-checked against the doc string",
     "op": "defang:fang-url",
     "params": {},
     "input": {

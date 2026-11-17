@@ -1,7 +1,7 @@
 [
   {
     "name": "remove whitespace, the defaults",
-    "ref": "hand-computed: the six characters of CyberChef's Remove whitespace options, removed one by one",
+    "ref": "hand-computed: the six whitespace characters the option removes, removed one by one",
     "op": "clean:remove-whitespace",
     "params": {},
     "input": {
@@ -19,7 +19,7 @@
   },
   {
     "name": "remove whitespace with full stops",
-    "ref": "hand-computed: the six characters of CyberChef's Remove whitespace options, removed one by one",
+    "ref": "hand-computed: the six whitespace characters the option removes, removed one by one",
     "op": "clean:remove-whitespace",
     "params": {
       "full-stops": true
@@ -39,7 +39,7 @@
   },
   {
     "name": "remove whitespace, tabs only",
-    "ref": "hand-computed: the six characters of CyberChef's Remove whitespace options, removed one by one",
+    "ref": "hand-computed: the six whitespace characters the option removes, removed one by one",
     "op": "clean:remove-whitespace",
     "params": {
       "spaces": false,
@@ -63,7 +63,7 @@
   },
   {
     "name": "remove whitespace keeps the no-break space",
-    "ref": "hand-computed: the six characters of CyberChef's Remove whitespace options, removed one by one; U+00A0 is not one of them",
+    "ref": "hand-computed: the six whitespace characters the option removes, removed one by one; U+00A0 is not one of them",
     "op": "clean:remove-whitespace",
     "params": {},
     "input": {
@@ -77,7 +77,7 @@
   },
   {
     "name": "remove whitespace, nothing to remove",
-    "ref": "hand-computed: the six characters of CyberChef's Remove whitespace options, removed one by one",
+    "ref": "hand-computed: the six whitespace characters the option removes, removed one by one",
     "op": "clean:remove-whitespace",
     "params": {},
     "input": {
@@ -91,7 +91,7 @@
   },
   {
     "name": "remove whitespace of empty input",
-    "ref": "hand-computed: the six characters of CyberChef's Remove whitespace options, removed one by one",
+    "ref": "hand-computed: the six whitespace characters the option removes, removed one by one",
     "op": "clean:remove-whitespace",
     "params": {},
     "input": {

@@ -16,7 +16,7 @@
 
 /*
  * Tests of the `ecdsa` vocabulary (vocab/ecdsa.fth, with the private primitives of src/prims/ecdsa.ts). The
- * signatures, formats and keys of the four CyberChef ops and the error cases are in vocab/ecdsa.test.json; these
+ * signatures, formats and keys of the four ops and the error cases are in vocab/ecdsa.test.json; these
  * cover what a vector cannot: the random key generator (pinned through its seed, and the real op), truncated and
  * mutated keys and signatures, hostile input, the effects, and the cost of 64 KiB.
  */
@@ -233,7 +233,7 @@ describe("ecdsa:generate-key-pair", () => {
     vi.unstubAllGlobals();
   });
 
-  test("the JWK output is {keys: [private, public]} with the CyberChef extras, indent 4", async () => {
+  test("the JWK output is {keys: [private, public]} with the extras, indent 4", async () => {
     const j = JSON.parse(
       out(await runtime.call("ecdsa:t-generate", [str("P-256"), bytes(seedOf(48)), str("JWK")])),
     );

@@ -514,7 +514,7 @@
   },
   {
     "name": "range error: alphabet with 63 characters",
-    "ref": "CyberChef alphabet rule (64 or 65 characters)",
+    "ref": "alphabet rule (64 or 65 characters)",
     "op": "base64-offsets:show",
     "params": {
       "alphabet": "A-Za-z0-9+",
@@ -531,7 +531,7 @@
   },
   {
     "name": "range error: alphabet with 66 characters",
-    "ref": "CyberChef alphabet rule (64 or 65 characters)",
+    "ref": "alphabet rule (64 or 65 characters)",
     "op": "base64-offsets:show",
     "params": {
       "alphabet": "A-Za-z0-9+/==",
@@ -548,7 +548,7 @@
   },
   {
     "name": "range error: alphabet with a repeated character",
-    "ref": "CyberChef alphabet rule (64 or 65 characters)",
+    "ref": "alphabet rule (64 or 65 characters)",
     "op": "base64-offsets:show",
     "params": {
       "alphabet": "A-Za-z0-9++/",
@@ -565,7 +565,7 @@
   },
   {
     "name": "range error: alphabet with a non-ASCII character",
-    "ref": "CyberChef alphabet rule (64 or 65 characters)",
+    "ref": "alphabet rule (64 or 65 characters)",
     "op": "base64-offsets:show",
     "params": {
       "alphabet": "A-Za-z0-9+é",

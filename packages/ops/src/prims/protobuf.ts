@@ -16,20 +16,20 @@
 
 /*
  * protobuf primitive: the schemaless reader of the Protocol Buffers wire format (varints, 64-bit and 32-bit
- * fixed values, length-delimited fields) that builds a JSON value in CyberChef's layout. A reader that visits
+ * fixed values, length-delimited fields) that builds a JSON value in a fixed layout. A reader that visits
  * every field in FL costs several hundred VM steps a field (the measure of the other data formats, see the
  * wave 7 conventions), which would cap a 64 KiB message far below the value limit, so the walk is a primitive;
  * the JSON text, the parameters and the checks are FL.
  *
  *  - `_decode ( data:bytes types:bool -- any )`: the fields of the message in the bytes as a record keyed by
- *    field number (ascending, as JavaScript orders integer keys, so CyberChef shows them so), a field that
+ *    field number (ascending, as JavaScript orders integer keys), a field that
  *    appears again becomes a list of its values in wire order. A varint, a fixed64 and a fixed32 are exact
  *    unsigned integers (a varint up to 64 bits, 10 bytes). A length-delimited field is read as a nested message
- *    if its bytes parse completely as one (CyberChef's guess; an empty field is an empty record), else as text
+ *    if its bytes parse completely as one (a guess; an empty field is an empty record), else as text
  *    if they are valid UTF-8, else as their hex digits. With `types` set the keys read
- *    `field #N: VarInt (e.g. int32, bool)` and so on, CyberChef's wire type labels.
+ *    `field #N: VarInt (e.g. int32, bool)` and so on (the wire type labels).
  *  - Field number 0 and numbers above 2^29-1 are not fields: the top level refuses them, a nested guess fails
- *    on them (CyberChef accepts field 0). Wire types 3 and 4 (groups) and 6 and 7 are refused at the top level
+ *    on them. Wire types 3 and 4 (groups) and 6 and 7 are refused at the top level
  *    and make a nested guess fail. Nesting stops at 64 levels (a deeper message stays text or hex). Nothing is
  *    allocated from a length: it is compared with the bytes that are left. The size of the value is held to
  *    `limits.maxValueBytes` while it grows.
@@ -43,7 +43,7 @@ const { int, str, list, record } = valueHelpers;
 /** Nested messages are tried to this depth. */
 export const MAX_NESTING = 64;
 
-/** CyberChef's labels of the wire types, shown next to the field number when `types` is set. */
+/** The labels of the wire types, shown next to the field number when `types` is set. */
 const WIRE_LABEL: Record<number, string> = {
   0: "VarInt (e.g. int32, bool)",
   1: "64-Bit (e.g. fixed64, double)",

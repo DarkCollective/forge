@@ -1,7 +1,7 @@
 [
   {
     "name": "example rotors, all defaults",
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "op": "typex:encrypt",
     "params": {},
     "input": {
@@ -19,7 +19,7 @@
   },
   {
     "name": "example rotors: decipher the previous ciphertext",
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "op": "typex:encrypt",
     "params": {},
     "input": {
@@ -33,7 +33,7 @@
   },
   {
     "name": "long text across several notches of rotor 3 and 4",
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "op": "typex:encrypt",
     "params": {},
     "input": {
@@ -47,7 +47,7 @@
   },
   {
     "name": "rings and positions as letters",
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "op": "typex:encrypt",
     "params": {
       "rings": "BCDEF",
@@ -64,7 +64,7 @@
   },
   {
     "name": "rings and positions as numbers equal the same letters",
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "op": "typex:encrypt",
     "params": {
       "rings": "2 3 4 5 6",
@@ -81,7 +81,7 @@
   },
   {
     "name": "start positions near notches",
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "op": "typex:encrypt",
     "params": {
       "positions": "ACEAA"
@@ -97,7 +97,7 @@
   },
   {
     "name": "stators turned: position minus ring only",
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "op": "typex:encrypt",
     "params": {
       "rings": "AAAMQ",
@@ -114,7 +114,7 @@
   },
   {
     "name": "stator position and ring shifted together give the same text",
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "op": "typex:encrypt",
     "params": {
       "rings": "AAABB",
@@ -131,7 +131,7 @@
   },
   {
     "name": "rotor 2 and rotor 4 fitted back to front",
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "op": "typex:encrypt",
     "params": {
       "reversed": "2 4"
@@ -151,7 +151,7 @@
   },
   {
     "name": "all five rotors reversed",
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "op": "typex:encrypt",
     "params": {
       "reversed": "1,2,3,4,5"
@@ -167,7 +167,7 @@
   },
   {
     "name": "rotor 3 reversed with a different start",
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "op": "typex:encrypt",
     "params": {
       "reversed": "3",
@@ -184,7 +184,7 @@
   },
   {
     "name": "no notches: only the fast rotor moves",
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "op": "typex:encrypt",
     "params": {
       "notches-3": "",
@@ -201,7 +201,7 @@
   },
   {
     "name": "every position a notch on rotor 3: the middle rotor steps at every press",
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "op": "typex:encrypt",
     "params": {
       "notches-3": "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -217,7 +217,7 @@
   },
   {
     "name": "notches given with spaces and lower case",
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "op": "typex:encrypt",
     "params": {
       "notches-3": "a b, c",
@@ -234,7 +234,7 @@
   },
   {
     "name": "notches on the middle rotor reach the slow rotor",
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "op": "typex:encrypt",
     "params": {
       "notches-3": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
@@ -251,7 +251,7 @@
   },
   {
     "name": "entry plugboard",
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "op": "typex:encrypt",
     "params": {
       "plugboard": "BADCFEHGJILKNMPORQTSVUXWZY"
@@ -267,7 +267,7 @@
   },
   {
     "name": "entry plugboard with spaces and lower case",
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "op": "typex:encrypt",
     "params": {
       "plugboard": "zyxwvutsr qponmlkjihgfedcba"
@@ -283,7 +283,7 @@
   },
   {
     "name": "your own wirings (here five arbitrary permutations and a reflector)",
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "op": "typex:encrypt",
     "params": {
       "rotor-1": "VZBRGITYUPSDNHLXAWMJQOFECK",
@@ -304,7 +304,7 @@
   },
   {
     "name": "wirings written in lower case",
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "op": "typex:encrypt",
     "params": {
       "rotor-3": "bdfhjlcprtxvznyeiwgakmusqo",
@@ -321,7 +321,7 @@
   },
   {
     "name": "identity rotors leave only the reflector and the shifts",
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "op": "typex:encrypt",
     "params": {
       "rotor-1": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
@@ -344,7 +344,7 @@
   },
   {
     "name": "lower case in, upper case out; other characters kept",
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "op": "typex:encrypt",
     "params": {},
     "input": {
@@ -358,7 +358,7 @@
   },
   {
     "name": "others=remove drops other characters",
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "op": "typex:encrypt",
     "params": {
       "others": "remove"
@@ -374,7 +374,7 @@
   },
   {
     "name": "binary bytes pass through in keep mode",
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "op": "typex:encrypt",
     "params": {},
     "input": {
@@ -388,7 +388,7 @@
   },
   {
     "name": "empty input",
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "op": "typex:encrypt",
     "params": {},
     "input": {
@@ -402,7 +402,7 @@
   },
   {
     "name": "the empty plugboard is the identity wiring (B and Z swap, C and Y swap)",
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "op": "typex:encrypt",
     "params": {
       "plugboard": "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -418,7 +418,7 @@
   },
   {
     "name": "the double step: the middle rotor steps on two presses running",
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "op": "typex:encrypt",
     "params": {
       "positions": "AADAA",
@@ -437,7 +437,7 @@
   },
   {
     "name": "the double step, slow rotor carried only by the middle rotor's own notch",
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "op": "typex:encrypt",
     "params": {
       "positions": "ADEAA",
@@ -455,7 +455,7 @@
   },
   {
     "name": "notch tested after the step: the fast rotor at the letter before the notch carries",
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "op": "typex:encrypt",
     "params": {
       "positions": "AAEAA",
@@ -473,7 +473,7 @@
   },
   {
     "name": "two notches per rotor, rings set",
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "op": "typex:encrypt",
     "params": {
       "positions": "AAZAA",
@@ -492,7 +492,7 @@
   },
   {
     "name": "a non-involution plugboard wiring (a permutation, not letter pairs)",
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "op": "typex:encrypt",
     "params": {
       "plugboard": "BCDEFGHIJKLMNOPQRSTUVWXYZA"
@@ -732,7 +732,7 @@
     }
   },
   {
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "name": "error: plugboard that is not a permutation",
     "op": "typex:encrypt",
     "params": {
@@ -747,7 +747,7 @@
     }
   },
   {
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "name": "error: plugboard of letter pairs is not a 26-letter wiring",
     "op": "typex:encrypt",
     "params": {
@@ -762,7 +762,7 @@
     }
   },
   {
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "name": "error: plugboard with a digit",
     "op": "typex:encrypt",
     "params": {
@@ -777,7 +777,7 @@
     }
   },
   {
-    "ref": "self-derived with an independent simulator (Python, outside the repo) following CyberChef conventions; real Typex wirings and conventions are unpublished, so no historical vectors exist",
+    "ref": "self-derived with an independent simulator (Python, outside the repo); real Typex wirings and conventions are unpublished, so no historical vectors exist",
     "name": "error: notches-2 with a digit",
     "op": "typex:encrypt",
     "params": {

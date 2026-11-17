@@ -28,7 +28,7 @@ describe("argon2 primitives", () => {
 
   // RFC 9106 section 5: password 32 x 0x01, salt 16 x 0x02, secret 8 x 0x03, associated data 12 x 0x04,
   // t = 3, m = 32 KiB, p = 4, tag length 32. The word argon2:derive has no secret or associated data
-  // (CyberChef has none), so these run on the tag function that the word is built on.
+  // (the word has none), so these run on the tag function that the word is built on.
   describe("RFC 9106 section 5 test vectors", () => {
     const password = new Uint8Array(32).fill(1);
     const salt = new Uint8Array(16).fill(2);

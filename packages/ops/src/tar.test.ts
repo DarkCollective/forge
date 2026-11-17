@@ -173,7 +173,7 @@ describe("tar:tar", () => {
     expect(t.subarray(521).every((b) => b === 0)).toBe(true);
   });
 
-  test("the defaults are CyberChef's file name and mode, and the output never changes", async () => {
+  test("the defaults are the file name and mode, and the output never changes", async () => {
     const a = out(await tar(text("x")));
     const b = out(await tar(text("x")));
     expect(Array.from(a)).toEqual(Array.from(b));

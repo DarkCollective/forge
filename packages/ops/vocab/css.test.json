@@ -468,7 +468,7 @@
   },
   {
     "name": "empty selector gives an empty result",
-    "ref": "CyberChef's documented behaviour",
+    "ref": "documented behaviour",
     "op": "css:select",
     "params": {
       "css-selector": "",
@@ -485,7 +485,7 @@
   },
   {
     "name": "empty document gives an empty result",
-    "ref": "CyberChef's documented behaviour",
+    "ref": "documented behaviour",
     "op": "css:select",
     "params": {
       "css-selector": "p",

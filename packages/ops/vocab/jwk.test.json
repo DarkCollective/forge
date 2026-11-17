@@ -1375,8 +1375,8 @@
     }
   },
   {
-    "name": "from-pem: the default is compact JSON (CyberChef's)",
-    "ref": "PEM to JWK of CyberChef writes JSON.stringify(jwk); key by openssl",
+    "name": "from-pem: the default is compact JSON",
+    "ref": "PEM to JWK writes JSON.stringify(jwk); key by openssl",
     "op": "jwk:from-pem",
     "params": {},
     "input": {

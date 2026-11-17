@@ -17,7 +17,7 @@
 /*
  * Tests for the `scrypt` vocabulary (vocab/scrypt.fth, with the private primitive `_derive`). The
  * RFC 7914 vectors (all but the 1 GiB one, which is over the memory cap) and the cap cases are in
- * vocab/scrypt.test.json; these run CyberChef's defaults and the largest cost allowed.
+ * vocab/scrypt.test.json; these run the defaults and the largest cost allowed.
  */
 import { valueHelpers } from "@forge/lang";
 import { describe, expect, test } from "vitest";
@@ -43,7 +43,7 @@ async function derive(n: number, r: number, p: number, length: number) {
 }
 
 describe("scrypt:derive", () => {
-  test("CyberChef's defaults (N 16384, r 8, p 1, 64 bytes)", async () => {
+  test("the defaults (N 16384, r 8, p 1, 64 bytes)", async () => {
     expect((await derive(16384, 8, 1, 64)).out).toHaveLength(64);
   });
 

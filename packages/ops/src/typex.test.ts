@@ -22,7 +22,7 @@ import { loadBundleNode } from "./sources-node.js";
 // wirings are unpublished, so the vectors in vocab/typex.test.json are self-derived with an
 // independent simulator, and the tests here are round trips and structural properties. The
 // conventions (rotor order, notch timing, reversed rotors, entry plugboard, stepping) follow
-// CyberChef's for compatibility, so the vectors are of a CyberChef-compatible machine.
+// the usual ones.
 const { str, bytes } = valueHelpers;
 const runtime = assembleRuntime(await loadBundleNode(["typex"]));
 

@@ -190,7 +190,7 @@ describe("rounding", () => {
     expect(small).toMatch(/^0\.0{20,}[1-9]\d*$/);
     const big = await conv("convert-distance", "1", "light-year", "angstrom", 5);
     expect(big).toBe("94607304725808000000000000");
-    // the default is 20 decimal places, as CyberChef's BigNumber rounds: a very small result is 0
+    // the default is 20 decimal places: a very small result is 0
     expect(await conv("convert-distance", "1", "angstrom", "light-year")).toBe("0");
   });
 });

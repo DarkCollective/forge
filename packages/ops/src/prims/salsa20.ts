@@ -18,7 +18,7 @@
  * salsa20 primitive, over the audited `@noble/ciphers` (imported from the `salsa.js` subpath only). The
  * Salsa20 keystream is ARX work per 64-byte block, too slow in FL at 64 KiB, so this wraps the library.
  *
- * Noble runs Salsa20/20 only: the reduced-round variants (CyberChef's rounds 12 and 8) are not in noble,
+ * Noble runs Salsa20/20 only: the reduced-round variants (rounds 12 and 8) are not in noble,
  * so the word takes no rounds parameter. The key is 16 or 32 bytes, the nonce 8 bytes, and the counter is
  * the 64-bit block counter (noble rejects a counter that would wrap). The word `salsa20:encrypt`
  * (vocab/salsa20.fth) holds the metadata and the parameters.

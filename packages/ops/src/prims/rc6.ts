@@ -23,7 +23,7 @@
  * integer to a fractional value the integer part made odd is the same, so the truncated value is
  * OR-ed with 1).
  *
- * The word size follows CyberChef: any multiple of 8 from 8 to 256, with the data-dependent rotations
+ * The word size is any multiple of 8 from 8 to 256, with the data-dependent rotations
  * taking the low floor(log2 w) bits of the amount (and that modulo w, which matters only when w is not
  * a power of two). w = 32 has a fast path on 32-bit integers; every other size runs on BigInt, and the
  * tests hold the two equal at w = 32.

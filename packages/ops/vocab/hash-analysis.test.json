@@ -1,7 +1,7 @@
 [
   {
     "name": "analyse: MD5 of the empty string (16 bytes)",
-    "ref": "cyberchef-style report; digest sizes are those of the published algorithms (RFC 1321 MD5 16 bytes, FIPS 180-4 SHA-256 32 bytes, FIPS 180-4 SHA-1 20 bytes)",
+    "ref": "hash report; digest sizes are those of the published algorithms (RFC 1321 MD5 16 bytes, FIPS 180-4 SHA-256 32 bytes, FIPS 180-4 SHA-1 20 bytes)",
     "op": "hash-analysis:analyse",
     "params": {},
     "input": {
@@ -19,7 +19,7 @@
   },
   {
     "name": "analyse: SHA-1 of the empty string (20 bytes)",
-    "ref": "cyberchef-style report; digest sizes are those of the published algorithms (RFC 1321 MD5 16 bytes, FIPS 180-4 SHA-256 32 bytes, FIPS 180-4 SHA-1 20 bytes)",
+    "ref": "hash report; digest sizes are those of the published algorithms (RFC 1321 MD5 16 bytes, FIPS 180-4 SHA-256 32 bytes, FIPS 180-4 SHA-1 20 bytes)",
     "op": "hash-analysis:analyse",
     "params": {},
     "input": {
@@ -37,7 +37,7 @@
   },
   {
     "name": "analyse: SHA-256 of the empty string (32 bytes)",
-    "ref": "cyberchef-style report; digest sizes are those of the published algorithms (RFC 1321 MD5 16 bytes, FIPS 180-4 SHA-256 32 bytes, FIPS 180-4 SHA-1 20 bytes)",
+    "ref": "hash report; digest sizes are those of the published algorithms (RFC 1321 MD5 16 bytes, FIPS 180-4 SHA-256 32 bytes, FIPS 180-4 SHA-1 20 bytes)",
     "op": "hash-analysis:analyse",
     "params": {},
     "input": {
@@ -51,7 +51,7 @@
   },
   {
     "name": "analyse: whitespace and upper case are ignored",
-    "ref": "cyberchef-style report; digest sizes are those of the published algorithms (RFC 1321 MD5 16 bytes, FIPS 180-4 SHA-256 32 bytes, FIPS 180-4 SHA-1 20 bytes)",
+    "ref": "hash report; digest sizes are those of the published algorithms (RFC 1321 MD5 16 bytes, FIPS 180-4 SHA-256 32 bytes, FIPS 180-4 SHA-1 20 bytes)",
     "op": "hash-analysis:analyse",
     "params": {},
     "input": {
