@@ -7,16 +7,14 @@
 \ these words with a quotation, so the modes are never written twice. The quotations have the effect
 \ ( block:bytes -- bytes ): the caller closes over the key, e.g. [ key _encrypt-block ].
 \
-\ The block size bs is in bytes (any size; the ciphers here use 4, 8 or 16). CFB is full-block CFB (CFB-64 for
-\ 8-byte blocks, CFB-128 for 16), OFB is the standard output feedback, and CTR increments the whole
-\ counter block as one big-endian integer, wrapping at the block size (NIST SP 800-38A, appendix B.1).
-\ SP 800-38A leaves the incrementing function to the application, and CyberChef's ciphers use two others,
-\ so two more counter modes exist for compatibility: CTR32 increments only the last four bytes, big-endian
-\ modulo 2^32, with no carry into the rest (node-forge's inc32, used by CyberChef for AES, DES, Triple DES,
-\ Blowfish and SM4), and CTRLE reads the whole block as a little-endian integer (CyberChef's Twofish and
-\ RC6). A cipher word turns its CTR mode into one of them with blockmode:ctr-as. The last block of CFB,
-\ OFB and CTR may be short; the key stream is cut to fit. Padding is PKCS#7 and applies to ECB and CBC
-\ only.
+\ The block size bs is in bytes (any size; the ciphers here use 4, 8 or 16). CFB is full-block CFB (CFB-64 for 8-byte
+\ blocks, CFB-128 for 16), OFB is the standard output feedback, and CTR increments the whole counter block as one
+\ big-endian integer, wrapping at the block size (NIST SP 800-38A, appendix B.1). SP 800-38A leaves the incrementing
+\ function to the application, and some ciphers use two others, so two more counter modes exist for compatibility:
+\ CTR32 increments only the last four bytes, big-endian modulo 2^32, with no carry into the rest (node-forge's inc32,
+\ used for AES, DES, Triple DES, Blowfish and SM4), and CTRLE reads the whole block as a little-endian integer (used
+\ for Twofish and RC6). A cipher word turns its CTR mode into one of them with blockmode:ctr-as. The last block of CFB,
+\ OFB and CTR may be short; the key stream is cut to fit. Padding is PKCS#7 and applies to ECB and CBC only.
 \
 \ Errors: a bad IV length or an unknown mode is E_RANGE; an input that is not whole blocks (padding
 \ off, or any decryption in ECB or CBC) and bad padding are E_COERCE.
@@ -156,5 +154,5 @@ IN: blockmode
   } cond ;
 
 : ctr-as ( mode:str variant:str -- str )
-  "The mode a cipher passes to encrypt or decrypt: variant (CTR32 or CTRLE) when mode is CTR, and mode itself otherwise. It lets a cipher word give CTR the counter convention of its CyberChef counterpart in one place." doc
+  "The mode a cipher passes to encrypt or decrypt: variant (CTR32 or CTRLE) when mode is CTR, and mode itself otherwise. It lets a cipher word give CTR the counter convention it needs in one place." doc
   mode "CTR" = [ variant ] [ mode ] if ;

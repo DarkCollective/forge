@@ -2,11 +2,11 @@
 \ arith: arithmetic over a delimited list of numbers (Sum, Subtract, Multiply, Divide, MOD, Mean, Median, Standard
 \ Deviation) and over big integers (Extended GCD, Modular Exponentiation, Modular Inverse). All FL, no primitives.
 \
-\ Decimals are exact. A number is read as a pair { m s }, the value m / 10^s, with m a big integer (so 0.1 + 0.2 is 3 / 10
-\ plus 1 / 10 with no float noise). Sum, subtract, multiply, MOD, median and the order of the digits are exact for any
-\ size; divide, mean and standard deviation round half away from zero to 20 decimal places (the BigNumber defaults
-\ CyberChef uses), each fold step on its own. Results are written in plain decimal notation with no trailing zeros.
-\ The integer limit of the language (maxIntBits, 65 536 bits) caps the size of a number (E_LIMIT_VALUE).
+\ Decimals are exact. A number is read as a pair { m s }, the value m / 10^s, with m a big integer (so 0.1 + 0.2 is 3 /
+\ 10 plus 1 / 10 with no float noise). Sum, subtract, multiply, MOD, median and the order of the digits are exact for
+\ any size; divide, mean and standard deviation round half away from zero to 20 decimal places (the BigNumber
+\ defaults), each fold step on its own. Results are written in plain decimal notation with no trailing zeros. The
+\ integer limit of the language (maxIntBits, 65 536 bits) caps the size of a number (E_LIMIT_VALUE).
 IN: arith
 
 : _p10 ( n:int -- int )
@@ -198,7 +198,7 @@ IN: arith
 \ ---- the operations ----
 
 : sum ( data:str delimiter:choice<util:delimiter>="newline" -- str )
-  "Add the numbers of the input. The input is a list of numbers cut at the delimiter (white space around a number and blank pieces are ignored). Numbers may have a sign, a decimal point and an exponent (-12.5, .5, 1e3); the arithmetic is exact decimal arithmetic, so 0.1 + 0.2 is 0.3, and integers of any size are exact (up to the 65,536-bit limit). The result is plain decimal text with no trailing zeros. A piece that is not a number is E_COERCE (CyberChef ignores it); no numbers at all is E_RANGE." doc
+  "Add the numbers of the input. The input is a list of numbers cut at the delimiter (white space around a number and blank pieces are ignored). Numbers may have a sign, a decimal point and an exponent (-12.5, .5, 1e3); the arithmetic is exact decimal arithmetic, so 0.1 + 0.2 is 0.3, and integers of any size are exact (up to the 65,536-bit limit). The result is plain decimal text with no trailing zeros. A piece that is not a number is E_COERCE; no numbers at all is E_RANGE." doc
   "Arithmetic" category
   data delimiter _numbers _total _fmt ;
 
@@ -231,7 +231,7 @@ META: multiply
 ;
 
 : divide ( data:str delimiter:choice<util:delimiter>="newline" -- str )
-  "Divide the first number by the others, left to right (a / b / c). Each division is rounded half away from zero to 20 decimal places (the BigNumber defaults CyberChef uses), so 1 / 3 is 0.33333333333333333333; a division that ends sooner is exact (1 / 8 is 0.125). Dividing by zero is E_DIV_ZERO. Same input rules as sum." doc
+  "Divide the first number by the others, left to right (a / b / c). Each division is rounded half away from zero to 20 decimal places (the BigNumber defaults), so 1 / 3 is 0.33333333333333333333; a division that ends sooner is exact (1 / 8 is 0.125). Dividing by zero is E_DIV_ZERO. Same input rules as sum." doc
   "Arithmetic" category
   data delimiter _numbers [ _div ] _fold _fmt ;
 
@@ -246,7 +246,7 @@ META: divide
   ds [ m _rem ] map ;
 
 : mod ( data:str modulus:str="2" delimiter:choice<util:delimiter>="newline" -- str )
-  "Every number of the input modulo the modulus, as in CyberChef's MOD: 15 4 7 with the modulus 3 gives 0 1 1. The modulus is text (2 by default), a decimal of any size; the numbers are cut at the delimiter. Each remainder has the sign of the dividend, like the % operator of JavaScript and the BigNumber default (-7 mod 3 is -1), and is exact for decimals (5.5 mod 2 is 1.5). The remainders are joined by a single space whatever the delimiter is, which is what CyberChef writes. A zero modulus is E_DIV_ZERO; a modulus that is not a number is E_COERCE. Same input rules as sum." doc
+  "Every number of the input modulo the modulus: 15 4 7 with the modulus 3 gives 0 1 1. The modulus is text (2 by default), a decimal of any size; the numbers are cut at the delimiter. Each remainder has the sign of the dividend, like the % operator of JavaScript and the BigNumber default (-7 mod 3 is -1), and is exact for decimals (5.5 mod 2 is 1.5). The remainders are joined by a single space whatever the delimiter is. A zero modulus is E_DIV_ZERO; a modulus that is not a number is E_COERCE. Same input rules as sum." doc
   "Arithmetic" category
   data delimiter _numbers modulus _parse _mod-all [ _fmt ] map " " join ;
 
@@ -283,7 +283,7 @@ META: median
 ;
 
 : standard-deviation ( data:str kind:choice{population|sample}="population" delimiter:choice<util:delimiter>="newline" -- str )
-  "The standard deviation of the numbers of the input: the square root of the mean squared distance from the mean. population divides by the count n (CyberChef's choice); sample divides by n - 1 and needs at least two numbers (E_RANGE otherwise). The mean, the variance and the root are each rounded half away from zero to 20 decimal places. Same input rules as sum." doc
+  "The standard deviation of the numbers of the input: the square root of the mean squared distance from the mean. population divides by the count n; sample divides by n - 1 and needs at least two numbers (E_RANGE otherwise). The mean, the variance and the root are each rounded half away from zero to 20 decimal places. Same input rules as sum." doc
   "Arithmetic" category
   data delimiter _numbers dup _mean
   kind "sample" =
@@ -328,7 +328,7 @@ META: standard-deviation
   "\ny = " cat r 2 nth int>str cat "\n\n" cat ;
 
 : ext-gcd ( data:str b:str -- str )
-  "The extended Euclidean algorithm on two integers of any size: the input is a, the parameter is b. The output is CyberChef's report: gcd: g, a blank line, Bezout coefficients: and the lines x = and y = , each ending in a line feed, with a * x + b * y = g, where g is the greatest common divisor (never negative). The coefficients are the ones of the standard iterative algorithm on the absolute values, with the signs of a and b put back, so the identity holds for negative a or b too (CyberChef's coefficients are the same for a and b of 0 or more, but do not satisfy it when b is negative); they are not unique, but they are the same on every run. The gcd of 0 and 0 is 0. A value that is not an integer is E_COERCE." doc
+  "The extended Euclidean algorithm on two integers of any size: the input is a, the parameter is b. The output is a report: gcd: g, a blank line, Bezout coefficients: and the lines x = and y = , each ending in a line feed, with a * x + b * y = g, where g is the greatest common divisor (never negative). The coefficients are the ones of the standard iterative algorithm on the absolute values, with the signs of a and b put back, so the identity holds for negative a or b too; they are not unique, but they are the same on every run. The gcd of 0 and 0 is 0. A value that is not an integer is E_COERCE." doc
   "Arithmetic" category
   data "the input" _int b "b" _int _egcd _egcd-report ;
 

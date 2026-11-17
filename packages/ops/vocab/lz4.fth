@@ -34,7 +34,7 @@ IN: lz4
   desc desc 0 _xxh32 8 shr 1 int>be-bytes cat ;
 
 : compress ( data:bytes level:int=1 block-size:choice{64KB|256KB|1MB|4MB}="4MB" independent:bool=true block-checksum:bool=false content-checksum:bool=true content-size:bool=false -- bytes )
-  "An LZ4 frame (magic 0x184D2204) of the input, like CyberChef's LZ4 Compress (lz4js: independent 4 MB blocks, a content checksum, no content size) but with the frame's options as parameters. level is 0 (blocks stored) or 1 to 9: a greedy matcher that follows up to 2^(level-1) hash-chain links, so 1 is the fastest (the lz4 command's default, and the default here), and 9 the smallest; any other level is E_RANGE. The bytes differ from other encoders', but every LZ4 decoder (the lz4 command included) reads them. A block that does not shrink is stored, and with block-checksum each block carries an XXH32." doc
+  "An LZ4 frame (magic 0x184D2204) of the input, written with lz4js, with the frame's options as parameters. level is 0 (blocks stored) or 1 to 9: a greedy matcher that follows up to 2^(level-1) hash-chain links, so 1 is the fastest (the lz4 command's default, and the default here), and 9 the smallest; any other level is E_RANGE. The bytes differ from other encoders', but every LZ4 decoder (the lz4 command included) reads them. A block that does not shrink is stored, and with block-checksum each block carries an XXH32." doc
   "Compression" category
   level 0 9 "the compression level" check-int-range
   #[ 04 22 4d 18 ]
@@ -46,7 +46,7 @@ IN: lz4
 
 META: compress
   use-when "You have bytes and need an LZ4 frame, for example to store data for an lz4 tool or a service that reads LZ4." ;
-  param level "The compression level: 0 stores, 1 to 9 compress (1 fastest and the default; 9 searches 256 candidates per position). CyberChef's LZ4 Compress has no parameters." ;
+  param level "The compression level: 0 stores, 1 to 9 compress (1 fastest and the default; 9 searches 256 candidates per position)." ;
   param block-size "The largest block: 64KB, 256KB, 1MB or 4MB (lz4js and the lz4 command default to 4MB)." ;
   param independent "Independent blocks (the default): each block decodes alone. Off lets a block refer back into the 64 KB before it (smaller, like lz4 -BD)." ;
   param block-checksum "Add an XXH32 after every block (lz4 -BX)." ;

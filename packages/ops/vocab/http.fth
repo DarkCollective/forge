@@ -1,7 +1,7 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ http: Strip HTTP headers and Dechunk HTTP response (CyberChef's Networking ops), on bytes. The header search is
-\ FL on the Latin-1 text of the message (a split, a few VM steps for any length); the chunked transfer coding
-\ (RFC 9112 section 7.1) is FL too, collecting the chunks with a collector (a linear walk).
+\ http: Strip HTTP headers and Dechunk HTTP response, on bytes. The header search is FL on the Latin-1 text of the
+\ message (a split, a few VM steps for any length); the chunked transfer coding (RFC 9112 section 7.1) is FL too,
+\ collecting the chunks with a collector (a linear walk).
 IN: http
 
 \ The offset in p of the end of the first occurrence of sep (the characters before it plus adv, the length of sep),
@@ -25,7 +25,7 @@ IN: http
   dup 0 >= [ 1 - ] when ;
 
 : strip-headers ( data:bytes -- bytes )
-  "Remove the HTTP header block from a request or response (Strip HTTP headers): everything up to and including the first empty line, which ends a header block with CRLF CRLF, LF LF or a mix (the first line of the message is part of the block). What follows, the body, is the output. A message with no empty line has no complete header block and is E_COERCE (CyberChef returns it unchanged); one that starts with an empty line has an empty header block and is returned after that line. Bytes in, bytes out; the search is on the bytes as Latin-1, so any encoding works." doc
+  "Remove the HTTP header block from a request or response (Strip HTTP headers): everything up to and including the first empty line, which ends a header block with CRLF CRLF, LF LF or a mix (the first line of the message is part of the block). What follows, the body, is the output. A message with no empty line has no complete header block and is E_COERCE; one that starts with an empty line has an empty header block and is returned after that line. Bytes in, bytes out; the search is on the bytes as Latin-1, so any encoding works." doc
   "Networking" category
   data bytes>latin1 _body-start :> pos
   pos 0 < [ "no empty line ends the HTTP header block (no CRLF CRLF or LF LF in the data)" fail-coerce ] when

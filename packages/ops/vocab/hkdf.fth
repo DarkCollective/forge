@@ -1,9 +1,8 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ hkdf: HKDF, RFC 5869, written in FL over hmac:digest, so every hash of the hmac vocabulary that CyberChef's
-\ "Derive HKDF key" offers is available (CyberChef's Whirlpool-0 and Whirlpool-T are not; hmac has Whirlpool).
-\ The input is the input keying material. Extract: PRK = HMAC(salt, IKM), where "no salt" uses HashLen zero
-\ bytes and "skip" takes the IKM itself as the PRK. Expand: T(i) = HMAC(PRK, T(i-1) || info || i), the output
-\ the first L bytes of T(1) || T(2) || ... The key is raw bytes; chain hex:encode for text.
+\ hkdf: HKDF, RFC 5869, written in FL over hmac:digest, so every hash of the hmac vocabulary is available (Whirlpool
+\ included). The input is the input keying material. Extract: PRK = HMAC(salt, IKM), where "no salt" uses HashLen zero
+\ bytes and "skip" takes the IKM itself as the PRK. Expand: T(i) = HMAC(PRK, T(i-1) || info || i), the output the first
+\ L bytes of T(1) || T(2) || ... The key is raw bytes; chain hex:encode for text.
 IN: hkdf
 
 USING: hmac ;
@@ -49,7 +48,7 @@ META: derive
   param info "The context and application information for the expand step, any length. Empty by default." ;
   param hash "The hash of the HMAC; the hmac vocabulary's hashes less the SHA-3 family and Whirlpool-0 and -T." ;
   param extract "with salt: extract with the salt; no salt: with zero bytes; skip: no extract, the input is the PRK." ;
-  param length "L, the number of output bytes, at most 255 times the hash length (CyberChef's default is 16)." ;
+  param length "L, the number of output bytes, at most 255 times the hash length (the default is 16)." ;
   see-also hmac:digest pbkdf2:derive hex:encode ;
   link "https://www.rfc-editor.org/rfc/rfc5869" "RFC 5869: HKDF" ;
   link "https://en.wikipedia.org/wiki/HKDF" "HKDF on Wikipedia" ;

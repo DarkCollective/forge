@@ -10,7 +10,7 @@ USING: util ;
   on [ s c split "" join ] [ s ] if ;
 
 : remove-whitespace ( data:str spaces:bool=true carriage-returns:bool=true line-feeds:bool=true tabs:bool=true form-feeds:bool=true full-stops:bool=false -- str )
-  "Delete the chosen white space characters from the text: spaces, carriage returns, line feeds, tabs, form feeds and, off by default, full stops (the same six options and defaults as CyberChef's Remove whitespace). Only those exact characters go; other Unicode spaces such as the no-break space stay. Use the white space words of the text vocabularies for anything finer." doc
+  "Delete the chosen white space characters from the text: spaces, carriage returns, line feeds, tabs, form feeds and, off by default, full stops. Only those exact characters go; other Unicode spaces such as the no-break space stay. Use the white space words of the text vocabularies for anything finer." doc
   "Text" category
   data " " spaces _drop-char
   "\r" carriage-returns _drop-char

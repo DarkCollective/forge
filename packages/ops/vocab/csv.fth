@@ -1,9 +1,8 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ csv: CSV (RFC 4180) to JSON and JSON to CSV, the CyberChef operations of the same names. The scan of the CSV text
-\ and its writer are the private primitives csv:_parse and csv:_write (src/prims/csv.ts; a per-character FL scanner
-\ is far too slow at 64 KiB); the header rules, the mapping between rows and JSON values and the checks are FL over the
-\ shared json words. Every CSV cell is a string; JSON values that are not strings are written as their JSON text
-\ (a null as an empty cell).
+\ csv: CSV (RFC 4180) to JSON and JSON to CSV. The scan of the CSV text and its writer are the private primitives
+\ csv:_parse and csv:_write (src/prims/csv.ts; a per-character FL scanner is far too slow at 64 KiB); the header rules,
+\ the mapping between rows and JSON values and the checks are FL over the shared json words. Every CSV cell is a
+\ string; JSON values that are not strings are written as their JSON text (a null as an empty cell).
 IN: csv
 
 USING: json list ;
@@ -30,7 +29,7 @@ USING: json list ;
   ] if ;
 
 : to-json ( data:str cell-delimiter:str="," row-delimiter:str="\\r\\n" format:choice{array-of-dictionaries|array-of-arrays}="array-of-dictionaries" indent:int=4 -- str )
-  "Read CSV (RFC 4180) and write it as JSON text, as CyberChef's CSV to JSON does. Each character of the cell delimiter ends a cell and each character of the row delimiter ends a row (CyberChef's delimiters are sets of characters: the default row delimiter accepts CRLF, LF and CR); both read the escapes \\r \\n \\t \\\\ and \\xHH. A cell that starts with a double quote runs to the closing quote and may hold delimiters and line breaks, a doubled quote in it is one quote, and a quote inside an unquoted cell is kept; an unterminated quote or text after a closing quote is E_COERCE with the position. Empty lines are skipped and the last row needs no row end. Every value is a JSON string. array-of-arrays gives the rows as they are (they may differ in length); array-of-dictionaries takes the first row as the header and writes one object per later row with its keys in header order. A repeated header name, or a row whose cell count differs from the header, is E_COERCE (CyberChef drops the extra cells and the missing keys silently). A header with no rows gives []. A byte order mark at the start is dropped, as CyberChef does. indent is the spaces per level (default 4, the indent of CyberChef's JSON output; 0 gives compact text); this parameter is an addition to CyberChef's." doc
+  "Read CSV (RFC 4180) and write it as JSON text. Each character of the cell delimiter ends a cell and each character of the row delimiter ends a row (the delimiters are sets of characters: the default row delimiter accepts CRLF, LF and CR); both read the escapes \\r \\n \\t \\\\ and \\xHH. A cell that starts with a double quote runs to the closing quote and may hold delimiters and line breaks, a doubled quote in it is one quote, and a quote inside an unquoted cell is kept; an unterminated quote or text after a closing quote is E_COERCE with the position. Empty lines are skipped and the last row needs no row end. Every value is a JSON string. array-of-arrays gives the rows as they are (they may differ in length); array-of-dictionaries takes the first row as the header and writes one object per later row with its keys in header order. A repeated header name, or a row whose cell count differs from the header, is E_COERCE. A header with no rows gives []. A byte order mark at the start is dropped. indent is the spaces per level (default 4; 0 gives compact text)." doc
   "Data format" category
   data cell-delimiter row-delimiter csv:_parse
   format "array-of-dictionaries" = [ _dicts ] when
@@ -105,7 +104,7 @@ META: to-json
 \ The input check (see META) is a regex: a table is a JSON object or array after white space, and json:parse starts no
 \ other value that way. Its second alternative keeps a long run of white space that fills the 4 KiB prefix from being read as a failure.
 : from-json ( data:str cell-delimiter:str="," row-delimiter:str="\\r\\n" -- str )
-  "Write JSON text as CSV (RFC 4180), as CyberChef's JSON to CSV does. The input is an array of objects, an array of arrays, or one object (one row). For objects the first row is the header, the keys of all the objects in order of first appearance (CyberChef takes the keys of the first object), and an object without a key gives an empty cell; for arrays there is no header row. A string is written as it is, null as an empty cell (CyberChef writes the word null), and a number, true, false, an array or an object as its JSON text (CyberChef: a nested value makes it flatten the keys to a.b names). A cell is quoted when it holds the cell or the row delimiter, a double quote, a CR or an LF. The cell and row delimiters are used as written (both read the escapes \\r \\n \\t \\\\ and \\xHH; the default row delimiter is CRLF), and a row delimiter follows every row, the last one too, as CyberChef writes it. An empty array gives empty text (CyberChef fails). Anything else, an array that mixes objects and arrays or holds other values, a repeated key, or text that is not JSON is E_COERCE." doc
+  "Write JSON text as CSV (RFC 4180). The input is an array of objects, an array of arrays, or one object (one row). For objects the first row is the header, the keys of all the objects in order of first appearance, and an object without a key gives an empty cell; for arrays there is no header row. A string is written as it is, null as an empty cell, and a number, true, false, an array or an object as its JSON text. A cell is quoted when it holds the cell or the row delimiter, a double quote, a CR or an LF. The cell and row delimiters are used as written (both read the escapes \\r \\n \\t \\\\ and \\xHH; the default row delimiter is CRLF), and a row delimiter follows every row, the last one too. An empty array gives empty text. Anything else, an array that mixes objects and arrays or holds other values, a repeated key, or text that is not JSON is E_COERCE." doc
   "Data format" category
   data json:parse _table cell-delimiter row-delimiter csv:_write ;
 

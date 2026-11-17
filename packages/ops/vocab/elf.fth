@@ -1,15 +1,14 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ elf: ELF Info (CyberChef's op). A report in the layout of `readelf -W -h -l -S -s` for ELF32 and ELF64,
-\ little and big endian: the ELF header, the program headers, the section headers with their names, and
-\ the symbol tables (.symtab and .dynsym) with the names of their symbols. All FL: a header is a handful
-\ of integer reads and the tables are bounded by the input (a count or an offset is only compared with the
-\ bytes that exist, never used to allocate). The printed rows are capped (2,000 a table). The names of
-\ machines, OS/ABIs, section types, segment types and symbol fields are tables of "|hex:name|" in this
-\ file, read from readelf itself (every e_machine, OS/ABI, section type and segment type was fed to
-\ `readelf` in a header crafted for the purpose and its answer kept), looked up with split, which runs in
-\ the host. The "context" of every word is the data itself (e:bytes): the byte order and the class are read from
-\ its identification bytes. Passing the bytes, not a record that holds them, keeps the allocation meter low
-\ (every `get` of a 64 KiB value counts 64 KiB against maxTotalBytes).
+\ elf: ELF Info. A report in the layout of `readelf -W -h -l -S -s` for ELF32 and ELF64, little and big endian: the ELF
+\ header, the program headers, the section headers with their names, and the symbol tables (.symtab and .dynsym) with
+\ the names of their symbols. All FL: a header is a handful of integer reads and the tables are bounded by the input (a
+\ count or an offset is only compared with the bytes that exist, never used to allocate). The printed rows are capped
+\ (2,000 a table). The names of machines, OS/ABIs, section types, segment types and symbol fields are tables of
+\ "|hex:name|" in this file, read from readelf itself (every e_machine, OS/ABI, section type and segment type was fed
+\ to `readelf` in a header crafted for the purpose and its answer kept), looked up with split, which runs in the host.
+\ The "context" of every word is the data itself (e:bytes): the byte order and the class are read from its
+\ identification bytes. Passing the bytes, not a record that holds them, keeps the allocation meter low (every `get` of
+\ a 64 KiB value counts 64 KiB against maxTotalBytes).
 IN: elf
 
 \ ---- tables ----

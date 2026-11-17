@@ -15,7 +15,7 @@ IN: bytes-slice
   d start d len min dup length + d len min _cut ;
 
 : take ( data:bytes start:int[0..]=0 length:int[0..]=5 each-line:bool=false -- bytes )
-  "Keep length bytes of the data from the offset start (0 is the first byte); less if the data ends first, none if it starts past the end. With each-line set, every line (the pieces between line feeds, which stay) is cut in the same way. CyberChef's Take bytes, with the same defaults." doc
+  "Keep length bytes of the data from the offset start (0 is the first byte); less if the data ends first, none if it starts past the end. With each-line set, every line (the pieces between line feeds, which stay) is cut in the same way." doc
   "Text" category
   each-line
   [ data #[ 0a ] #[ 0a ] [ start length _take ] fork ]
@@ -31,7 +31,7 @@ META: take
 ;
 
 : remove ( data:bytes start:int[0..]=0 length:int[0..]=5 each-line:bool=false -- bytes )
-  "Remove length bytes from the offset start (0 is the first byte): everything before and after that span stays. Less is removed if the data ends first, and nothing if it starts past the end. With each-line set, the span is removed from every line (the pieces between line feeds, which stay). CyberChef's Drop bytes, with the same defaults." doc
+  "Remove length bytes from the offset start (0 is the first byte): everything before and after that span stays. Less is removed if the data ends first, and nothing if it starts past the end. With each-line set, the span is removed from every line (the pieces between line feeds, which stay)." doc
   "Text" category
   each-line
   [ data #[ 0a ] #[ 0a ] [ start length _remove ] fork ]
@@ -61,7 +61,7 @@ META: remove
   [ d swap nth ] map list>bytes ;
 
 : take-nth ( data:bytes n:int[1..]=4 start:int[0..]=0 each-line:bool=false -- bytes )
-  "Keep every nth byte, beginning with the byte at offset start: the bytes at start, start + n, start + 2n, and so on, in order. With each-line set, every line (the pieces between line feeds, which stay) is treated alone, counting from its own first byte. CyberChef's Take nth bytes, with the same defaults." doc
+  "Keep every nth byte, beginning with the byte at offset start: the bytes at start, start + n, start + 2n, and so on, in order. With each-line set, every line (the pieces between line feeds, which stay) is treated alone, counting from its own first byte." doc
   "Text" category
   each-line
   [ data #[ 0a ] #[ 0a ] [ n start _take-nth ] fork ]
@@ -77,7 +77,7 @@ META: take-nth
 ;
 
 : remove-nth ( data:bytes n:int[1..]=4 start:int[0..]=0 each-line:bool=false -- bytes )
-  "Remove every nth byte, beginning with the byte at offset start: the bytes at start, start + n, start + 2n, and so on; the others stay in order. With each-line set, every line (the pieces between line feeds, which stay) is treated alone, counting from its own first byte. CyberChef's Drop nth bytes, with the same defaults." doc
+  "Remove every nth byte, beginning with the byte at offset start: the bytes at start, start + n, start + 2n, and so on; the others stay in order. With each-line set, every line (the pieces between line feeds, which stay) is treated alone, counting from its own first byte." doc
   "Text" category
   each-line
   [ data #[ 0a ] #[ 0a ] [ n start _remove-nth ] fork ]

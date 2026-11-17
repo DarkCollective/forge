@@ -1,13 +1,12 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ exif: Extract EXIF (CyberChef's op), without decoding any image. The Exif block is found in a JPEG (the
-\ APP1 segment that starts with "Exif" and two NULs), a PNG (the eXIf chunk), a WebP (the EXIF chunk) or a
-\ bare TIFF file; it is a TIFF structure (byte order mark, magic 42, IFD0 offset), and the tags of IFD0,
-\ the Exif IFD (0x8769) with the Interoperability IFD (0xA005) inside it, the GPS IFD (0x8825) and the
-\ thumbnail IFD (IFD1) are listed as `Name: value` lines. Tag names are the ones of Pillow's ExifTags
-\ (TIFF 6, Exif 2.32 and the GPS tags), as "|hex:Name|" tables looked up with split. All FL: a handful of
-\ integer reads for each tag. Every offset and count is compared with the data and never used to allocate;
-\ a value that runs past the data, an IFD that does, or a block that is not TIFF is E_COERCE with the
-\ offset. The context of the IFD words is the TIFF block itself (t:bytes), so the byte order is read from it.
+\ exif: Extract EXIF, without decoding any image. The Exif block is found in a JPEG (the APP1 segment that starts with
+\ "Exif" and two NULs), a PNG (the eXIf chunk), a WebP (the EXIF chunk) or a bare TIFF file; it is a TIFF structure
+\ (byte order mark, magic 42, IFD0 offset), and the tags of IFD0, the Exif IFD (0x8769) with the Interoperability IFD
+\ (0xA005) inside it, the GPS IFD (0x8825) and the thumbnail IFD (IFD1) are listed as `Name: value` lines. Tag names
+\ are the ones of Pillow's ExifTags (TIFF 6, Exif 2.32 and the GPS tags), as "|hex:Name|" tables looked up with split.
+\ All FL: a handful of integer reads for each tag. Every offset and count is compared with the data and never used to
+\ allocate; a value that runs past the data, an IFD that does, or a block that is not TIFF is E_COERCE with the offset.
+\ The context of the IFD words is the TIFF block itself (t:bytes), so the byte order is read from it.
 IN: exif
 
 MEMO: _tag-names ( -- str )

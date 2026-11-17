@@ -8,7 +8,7 @@ IN: blowfish
 USING: blockmode ;
 
 : encrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice<util:block-mode>="CBC" padding:choice<util:pkcs7-padding>="pkcs7" -- bytes )
-  "Blowfish encryption of the input bytes, 64-bit blocks, big-endian words. The key is 4 to 56 bytes (32 to 448 bits, CyberChef's range); another length is E_RANGE. The IV is 8 bytes for CBC, CFB, OFB and CTR (E_RANGE otherwise) and unused for ECB. padding (PKCS#7 or none) applies to CBC and ECB only: with none the input must be whole 8-byte blocks (E_COERCE); CFB (full-block CFB-64), OFB and CTR keep the length. CTR increments only the last four bytes of the 8-byte counter block, modulo 2^32 with no carry into the rest, as CyberChef's does (node-forge's inc32); it differs from a whole-block counter only after 2^32 blocks. Chain hex:encode for text." doc
+  "Blowfish encryption of the input bytes, 64-bit blocks, big-endian words. The key is 4 to 56 bytes (32 to 448 bits); another length is E_RANGE. The IV is 8 bytes for CBC, CFB, OFB and CTR (E_RANGE otherwise) and unused for ECB. padding (PKCS#7 or none) applies to CBC and ECB only: with none the input must be whole 8-byte blocks (E_COERCE); CFB (full-block CFB-64), OFB and CTR keep the length. CTR increments only the last four bytes of the 8-byte counter block, modulo 2^32 with no carry into the rest (node-forge's inc32); it differs from a whole-block counter only after 2^32 blocks. Chain hex:encode for text." doc
   "Encryption" category
   key _check-key
   mode "CTR32" blockmode:ctr-as iv 8 padding "pkcs7" = [ key _encrypt-block ] blockmode:encrypt ;

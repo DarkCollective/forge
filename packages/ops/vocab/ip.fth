@@ -1,9 +1,9 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ ip: IP address ops (WP 5.53): Parse IP range, Parse IPv6 address, IPv6 Transition Addresses, Change IP format, Group IP
-\ addresses and Defang IP Addresses. All FL on the core words: an IPv4 address is an int below 2^32, an IPv6 address an int
-\ below 2^128 (big integers are first class, so the masks, the totals of a range and the sorting are exact), and the text
-\ forms are read and written by the private words at the top. The layouts of the reports follow CyberChef's operation
-\ modules; the values were checked against Python's ipaddress and the RFC examples (see ip.test.json).
+\ ip: IP address ops (WP 5.53): Parse IP range, Parse IPv6 address, IPv6 Transition Addresses, Change IP format, Group
+\ IP addresses and Defang IP Addresses. All FL on the core words: an IPv4 address is an int below 2^32, an IPv6 address
+\ an int below 2^128 (big integers are first class, so the masks, the totals of a range and the sorting are exact), and
+\ the text forms are read and written by the private words at the top. The values were checked against Python's
+\ ipaddress and the RFC examples (see ip.test.json).
 IN: ip
 
 USING: defang ;
@@ -75,7 +75,7 @@ USING: defang ;
 : _hextet-list ( n:int -- list )
   0 8 range [ 7 swap - 16 * n swap shr 65535 band ] map ;
 
-\ Eight groups of four hex digits (CyberChef's longhand).
+\ Eight groups of four hex digits (the longhand form).
 : _long ( n:int -- str )
   n _hextet-list [ 4 pad-hex ] map ":" join ;
 
@@ -240,7 +240,7 @@ MEMO: _nums256 ( -- str )
   } cond ;
 
 : parse-range ( data:str include-network-info:bool=true enumerate:bool=true allow-large:bool=false -- str )
-  "Network information and the addresses of an IP range, IPv4 or IPv6. The input is a CIDR range (10.0.0.0/24), a hyphenated range (10.0.0.0 - 10.0.1.0) or a list of addresses and CIDR ranges, one per line (the list is read as the range from its lowest to its highest address); empty lines are ignored. For a CIDR range the report gives the network, prefix length, mask, first and last address and the number of addresses (for IPv6 also the shorthand); for a hyphenated range or a list it gives the smallest subnet that holds the range (IPv4) and the range with its number of addresses, as CyberChef does. With enumerate, IPv4 ranges list every address, one per line; IPv6 ranges are never listed. A range of more than 65,536 addresses is E_RANGE unless allow-large is on, and none of more than 1,048,576 is listed. Anything that is not an address or range is E_COERCE, a prefix length over 32 (IPv4) or 128 (IPv6) is E_COERCE, a range whose second address is below the first is E_RANGE." doc
+  "Network information and the addresses of an IP range, IPv4 or IPv6. The input is a CIDR range (10.0.0.0/24), a hyphenated range (10.0.0.0 - 10.0.1.0) or a list of addresses and CIDR ranges, one per line (the list is read as the range from its lowest to its highest address); empty lines are ignored. For a CIDR range the report gives the network, prefix length, mask, first and last address and the number of addresses (for IPv6 also the shorthand); for a hyphenated range or a list it gives the smallest subnet that holds the range (IPv4) and the range with its number of addresses. With enumerate, IPv4 ranges list every address, one per line; IPv6 ranges are never listed. A range of more than 65,536 addresses is E_RANGE unless allow-large is on, and none of more than 1,048,576 is listed. Anything that is not an address or range is E_COERCE, a prefix length over 32 (IPv4) or 128 (IPv6) is E_COERCE, a range whose second address is below the first is E_RANGE." doc
   "Networking" category
   data "\n" split [ _trim ] map [ len 0 > ] filter
   dup len 0 = [ "no address or range in the input" fail-coerce ] when
@@ -467,7 +467,7 @@ MEMO: _mc-names ( -- list )
   [ 0 nth "" ] if ;
 
 : parse-ipv6 ( data:str -- str )
-  "The longhand and shorthand forms of an IPv6 address, and what its range is for: unspecified, loopback, IPv4-mapped, IPv4-translated (SIIT), discard, the NAT64 well-known and local-use prefixes, Teredo (server, client address and port with the bit inversion undone, and the flags, checked against RFC 4380 and RFC 5991), the benchmarking, ORCHID and documentation ranges, 6to4 (the IPv4 address, SLA ID and interface identifier), unique local, link-local and multicast (with its scope); and whether the interface identifier is ISATAP (RFC 5214, with its IPv4 address) or a modified EUI-64 (with the MAC address it came from). The input is one address, compressed or not, with or without an IPv4 tail, optionally in [brackets] and with a %zone (shown as Zone ID). The layout is CyberChef's. Anything else is E_COERCE (CyberChef answers Invalid IPv6 address)." doc
+  "The longhand and shorthand forms of an IPv6 address, and what its range is for: unspecified, loopback, IPv4-mapped, IPv4-translated (SIIT), discard, the NAT64 well-known and local-use prefixes, Teredo (server, client address and port with the bit inversion undone, and the flags, checked against RFC 4380 and RFC 5991), the benchmarking, ORCHID and documentation ranges, 6to4 (the IPv4 address, SLA ID and interface identifier), unique local, link-local and multicast (with its scope); and whether the interface identifier is ISATAP (RFC 5214, with its IPv4 address) or a modified EUI-64 (with the MAC address it came from). The input is one address, compressed or not, with or without an IPv4 tail, optionally in [brackets] and with a %zone (shown as Zone ID). Anything else is E_COERCE." doc
   "Networking" category
   data _trim _unbracket _zone-split
   swap _v6 swap _report ;
@@ -541,7 +541,7 @@ META: parse-ipv6
   } cond ;
 
 : transition ( data:str ignore-ranges:bool=true remove-headers:bool=false -- str )
-  "Converts between IPv4 addresses and their IPv6 transition forms, line by line. An IPv4 address gives its 6to4 prefix (2002:XXXX:XXXX::/48), IPv4-mapped (::ffff:XXXX:XXXX), IPv4-translated (::ffff:0:XXXX:XXXX) and NAT64 well-known (64:ff9b::XXXX:XXXX) forms; a 192.0.2.0/24 range gives the same with /40 and /120 prefixes (other prefix lengths are E_COERCE). A MAC address with colons gives its modified EUI-64 interface identifier, to append to an IPv6 /64 prefix. An IPv6 address of one of those transition forms (or an ISATAP address) gives the IPv4 address in it, and an address with a modified EUI-64 identifier the MAC address. ignore-ranges skips lines that hold a / (CyberChef's default); remove-headers leaves out the labels so the values can be copied. Empty lines are skipped. A line that is none of these is E_COERCE (CyberChef overwrites the output with a message); an IPv6 address with no embedded address gets a line saying so. The text is CyberChef's, one value per line, each line ended by a line feed." doc
+  "Converts between IPv4 addresses and their IPv6 transition forms, line by line. An IPv4 address gives its 6to4 prefix (2002:XXXX:XXXX::/48), IPv4-mapped (::ffff:XXXX:XXXX), IPv4-translated (::ffff:0:XXXX:XXXX) and NAT64 well-known (64:ff9b::XXXX:XXXX) forms; a 192.0.2.0/24 range gives the same with /40 and /120 prefixes (other prefix lengths are E_COERCE). A MAC address with colons gives its modified EUI-64 interface identifier, to append to an IPv6 /64 prefix. An IPv6 address of one of those transition forms (or an ISATAP address) gives the IPv4 address in it, and an address with a modified EUI-64 identifier the MAC address. ignore-ranges skips lines that hold a / (the default); remove-headers leaves out the labels so the values can be copied. Empty lines are skipped. A line that is none of these is E_COERCE; an IPv6 address with no embedded address gets a line saying so. The text is one value per line, each line ended by a line feed." doc
   "Networking" category
   data "\n" split [ _trim ] map [ len 0 > ] filter
   [ ignore-ranges remove-headers _t-line ] map "" join ;
@@ -587,7 +587,7 @@ CHOICE: ipv4-format
   } case ;
 
 : change-format ( data:str input-format:choice<ipv4-format>="dotted-decimal" output-format:choice<ipv4-format>="dotted-decimal" -- str )
-  "Converts IPv4 addresses, one per line, between dotted decimal (192.168.0.1), decimal (3232235521), octal (030052000001, written with a leading 0) and hex (c0a80001, eight digits, a 0x prefix is read and not written). The octal, decimal and hex forms are one 32-bit number; octal reads with or without the leading 0 and hex with or without 0x. Empty lines are dropped. A line that is not an address in the input format (a dotted octet over 255, a number over 4294967295, a wrong digit) is E_COERCE where CyberChef gives a wrong answer; when both formats are the same the address is still checked and written in canonical form." doc
+  "Converts IPv4 addresses, one per line, between dotted decimal (192.168.0.1), decimal (3232235521), octal (030052000001, written with a leading 0) and hex (c0a80001, eight digits, a 0x prefix is read and not written). The octal, decimal and hex forms are one 32-bit number; octal reads with or without the leading 0 and hex with or without 0x. Empty lines are dropped. A line that is not an address in the input format (a dotted octet over 255, a number over 4294967295, a wrong digit) is E_COERCE; when both formats are the same the address is still checked and written in canonical form." doc
   "Networking" category
   data "\n" split [ _trim ] map [ len 0 > ] filter
   [ input-format _read-ip output-format _write-ip ] map "\n" join ;
@@ -632,7 +632,7 @@ META: change-format
   only not [ "\n" cat ] when ;
 
 : group ( data:str delimiter:choice{newline|crlf|space|comma|semicolon}="newline" cidr:int[0..128]=24 only-subnets:bool=false -- str )
-  "Groups a list of IPv4 and IPv6 addresses into subnets of the given prefix length (default 24): each subnet as network/prefix on a line, then its addresses indented by two spaces and in ascending order, and a blank line. IPv4 subnets come first, then IPv6 (written in shorthand), each in ascending order. With only-subnets only the networks are listed. The addresses are cut at the delimiter (newline, CRLF, space, comma or semicolon) and white space around them is dropped; empty pieces are skipped, a piece that is not an address is E_COERCE (CyberChef ignores it), and a prefix length over 32 meeting an IPv4 address is E_COERCE (CyberChef takes it as 32 and prints the longer number). The addresses are written in canonical form (shorthand for IPv6), repeats are kept. Unlike CyberChef the IPv6 networks and addresses are sorted, and the IPv4 ones by number, not as text." doc
+  "Groups a list of IPv4 and IPv6 addresses into subnets of the given prefix length (default 24): each subnet as network/prefix on a line, then its addresses indented by two spaces and in ascending order, and a blank line. IPv4 subnets come first, then IPv6 (written in shorthand), each in ascending order. With only-subnets only the networks are listed. The addresses are cut at the delimiter (newline, CRLF, space, comma or semicolon) and white space around them is dropped; empty pieces are skipped, a piece that is not an address is E_COERCE, and a prefix length over 32 meeting an IPv4 address is E_COERCE. The addresses are written in canonical form (shorthand for IPv6), repeats are kept. The IPv6 networks and addresses are sorted, and the IPv4 ones by number, not as text." doc
   "Networking" category
   data delimiter util:delimiter split [ _trim ] map [ len 0 > ] filter
   dup len 0 = [ drop "" ] [
@@ -682,7 +682,7 @@ META: group
   } cond ;
 
 : defang ( data:str -- str )
-  "Makes the IPv4 and IPv6 addresses in the text harmless: every . of an IPv4 address (with an optional /prefix) is written [.], and every : (and . of an IPv4 tail) of an IPv6 address [:] (192[.]0[.]2[.]1, 2001[:]db8[:][:]1). IPv6 addresses are found as runs of hex digits, colons and dots with at least two colons that read as an address in any of the forms of RFC 4291, in either case; an IPv4 address is four numbers from 0 to 255 not inside a longer dotted or numeric run (CyberChef would defang the first four numbers of 1.2.3.4.5). Everything else in the text is kept." doc
+  "Makes the IPv4 and IPv6 addresses in the text harmless: every . of an IPv4 address (with an optional /prefix) is written [.], and every : (and . of an IPv4 tail) of an IPv6 address [:] (192[.]0[.]2[.]1, 2001[:]db8[:][:]1). IPv6 addresses are found as runs of hex digits, colons and dots with at least two colons that read as an address in any of the forms of RFC 4291, in either case; an IPv4 address is four numbers from 0 to 255 not inside a longer dotted or numeric run. Everything else in the text is kept." doc
   "Networking" category
   data data _v6-candidate-pattern "" regex:find-all [ _defang-v6 ] defang:rewrite
   _v4-defang-pattern "$1[.]$2[.]$3[.]$4$5" "" regex:replace ;

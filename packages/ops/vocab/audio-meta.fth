@@ -1,11 +1,11 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ audio-meta: Extract Audio Metadata (CyberChef 11's op): the container metadata of an audio file, without
-\ decoding any audio. MP3 (the first MPEG audio frame: version, layer, bit rate, sample rate, channels; the
-\ Xing, Info or VBRI header for the frame count; the ID3 tags through id3:extract), FLAC (STREAMINFO, the
-\ Vorbis comments and pictures), Ogg (Vorbis, Opus or Speex: the identification packet, the comment packet and
-\ the granule position of the last page for the duration), WAV (the fmt chunk, the data size and the LIST INFO
-\ tags) and MP4 or M4A (ftyp, mvhd, the sample entry of the audio track and the ilst tags). The container
-\ walks are one private primitive (src/prims/audio-meta.ts, with the reason there); the report layout is FL.
+\ audio-meta: Extract Audio Metadata: the container metadata of an audio file, without decoding any audio. MP3 (the
+\ first MPEG audio frame: version, layer, bit rate, sample rate, channels; the Xing, Info or VBRI header for the frame
+\ count; the ID3 tags through id3:extract), FLAC (STREAMINFO, the Vorbis comments and pictures), Ogg (Vorbis, Opus or
+\ Speex: the identification packet, the comment packet and the granule position of the last page for the duration), WAV
+\ (the fmt chunk, the data size and the LIST INFO tags) and MP4 or M4A (ftyp, mvhd, the sample entry of the audio track
+\ and the ilst tags). The container walks are one private primitive (src/prims/audio-meta.ts, with the reason there);
+\ the report layout is FL.
 IN: audio-meta
 
 USING: id3 ;

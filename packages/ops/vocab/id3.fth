@@ -1,13 +1,12 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ id3: Extract ID3 (CyberChef's op): the ID3 tags of an audio file as text. ID3v2.2, 2.3 and 2.4 at the start
-\ of the data (the header, the extended header, the unsynchronisation of the whole tag or of one frame, the
-\ frames with their sizes, flags and padding) and ID3v1 and v1.1 in the last 128 bytes. Text frames are decoded
-\ by their encoding byte (ISO-8859-1, UTF-16 with a byte order mark, UTF-16BE, UTF-8); user text and URL
-\ frames, comments and lyrics, pictures (the MIME type, picture type, description and size, not the image),
-\ private frames, play counters and ratings are read by their layouts; every other frame is shown by its size.
-\ A compressed or encrypted frame is named, not decoded. All FL. A size in the data is only compared with the
-\ bytes that exist, never used to allocate; at most 1,000 frames are read; a tag, a frame or a field that runs
-\ past the data is E_COERCE with the offset. The layout of the report is Forge's own.
+\ id3: Extract ID3: the ID3 tags of an audio file as text. ID3v2.2, 2.3 and 2.4 at the start of the data (the header,
+\ the extended header, the unsynchronisation of the whole tag or of one frame, the frames with their sizes, flags and
+\ padding) and ID3v1 and v1.1 in the last 128 bytes. Text frames are decoded by their encoding byte (ISO-8859-1, UTF-16
+\ with a byte order mark, UTF-16BE, UTF-8); user text and URL frames, comments and lyrics, pictures (the MIME type,
+\ picture type, description and size, not the image), private frames, play counters and ratings are read by their
+\ layouts; every other frame is shown by its size. A compressed or encrypted frame is named, not decoded. All FL. A
+\ size in the data is only compared with the bytes that exist, never used to allocate; at most 1,000 frames are read; a
+\ tag, a frame or a field that runs past the data is E_COERCE with the offset. The layout of the report is Forge's own.
 IN: id3
 
 \ ---- tables ----

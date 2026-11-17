@@ -1,15 +1,14 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ filetype: Detect File Type, Scan for Embedded Files and Extract Files (CyberChef's three signature ops).
-\ The table of about 150 signatures (name, extensions, MIME type, description, magic bytes with offsets
-\ and masks, an optional end finder) is data in src/filetype-sigs.ts, and the matching loop and the end
-\ finders are three primitives in src/prims/filetype.ts (detect-list, scan-list, carve), because a bare FL
-\ scan costs about 5.5 VM steps per byte per signature (see the primitive file). They are public words
-\ that other vocabularies can call (the YARA ops reuse scan-list); none is an op, as each takes a list.
-\ Everything else is FL: the category switches, the report text, the list of extracted files and the entry
-\ op that takes one of them as bytes.
+\ filetype: Detect File Type, Scan for Embedded Files and Extract Files, the three signature operations. The table of
+\ about 150 signatures (name, extensions, MIME type, description, magic bytes with offsets and masks, an optional end
+\ finder) is data in src/filetype-sigs.ts, and the matching loop and the end finders are three primitives in
+\ src/prims/filetype.ts (detect-list, scan-list, carve), because a bare FL scan costs about 5.5 VM steps per byte per
+\ signature (see the primitive file). They are public words that other vocabularies can call (the YARA ops reuse
+\ scan-list); none is an op, as each takes a list. Everything else is FL: the category switches, the report text, the
+\ list of extracted files and the entry op that takes one of them as bytes.
 IN: filetype
 
-\ The category names for the seven switches, in CyberChef's order.
+\ The category names for the seven switches, in order.
 : _cats ( images:bool video:bool audio:bool documents:bool applications:bool archives:bool misc:bool -- list )
   [
     images [ "Images" emit ] when
@@ -59,7 +58,7 @@ META: detect
   m "  " _lines cat ;
 
 : scan ( data:bytes images:bool=true video:bool=true audio:bool=true documents:bool=true applications:bool=true archives:bool=true miscellaneous:bool=true ignore-common:bool=true -- str )
-  "Scan for Embedded Files: every offset of the data where the signature (magic bytes) of a known file format matches, with its name, extension, MIME type and description, in order of offset. The result is a guide only: any long data contains the short signatures by chance. With ignore-common (the default; CyberChef 11.5.0 has no such option and reports every match)  the short, ambiguous signatures (MZ, ICO, MP3 and AAC frame sync, a shebang, zlib headers, ...) are left out. The switches choose the categories. Extract Files cuts the files out." doc
+  "Scan for Embedded Files: every offset of the data where the signature (magic bytes) of a known file format matches, with its name, extension, MIME type and description, in order of offset. The result is a guide only: any long data contains the short signatures by chance. With ignore-common (the default) the short, ambiguous signatures (MZ, ICO, MP3 and AAC frame sync, a shebang, zlib headers, ...) are left out. The switches choose the categories. Extract Files cuts the files out." doc
   "Forensics" category
   data images video audio documents applications archives miscellaneous _cats ignore-common scan-list
   dup len 0 = [ drop "\nNo embedded files were found." ] [
@@ -82,7 +81,7 @@ META: scan
 ;
 
 : extract ( data:bytes images:bool=true video:bool=true audio:bool=true documents:bool=true applications:bool=true archives:bool=true miscellaneous:bool=false ignore-failed:bool=true minimum-size:int=100 -- list )
-  "Extract Files: cut out the files whose signature is found in the data, using the end finder of each type (PNG up to IEND, JPEG to the EOI marker, GIF to its trailer, ZIP and JAR to the end record, PDF to the last %%EOF, ELF and PE from their headers, gzip and Zstandard by walking the stream, tar, 7z, SQLite, pcap, PEM, MP4 boxes, Ogg pages, RIFF, BMP, ICO, CAB, DEX, ...). The result is a list of records with name (extracted_at_0x<offset>.<extension>), offset, size, type (the MIME type) and data, in order of offset; files inside other files are extracted as well. A type that has no end finder is always left out (CyberChef: No extraction algorithm available is never an error), and a file that is damaged or cut short is left out (ignore-failed, the default) or is E_COERCE; a file smaller than minimum-size bytes (default 100, as CyberChef) is left out to prune false positives. The total size is bounded by the value limit. Use filetype:entry to continue a recipe with one of the files." doc
+  "Extract Files: cut out the files whose signature is found in the data, using the end finder of each type (PNG up to IEND, JPEG to the EOI marker, GIF to its trailer, ZIP and JAR to the end record, PDF to the last %%EOF, ELF and PE from their headers, gzip and Zstandard by walking the stream, tar, 7z, SQLite, pcap, PEM, MP4 boxes, Ogg pages, RIFF, BMP, ICO, CAB, DEX, ...). The result is a list of records with name (extracted_at_0x<offset>.<extension>), offset, size, type (the MIME type) and data, in order of offset; files inside other files are extracted as well. A type that has no end finder is left out without an error, and a file that is damaged or cut short is left out (ignore-failed, the default) or is E_COERCE; a file smaller than minimum-size bytes (default 100) is left out to prune false positives. The total size is bounded by the value limit. Use filetype:entry to continue a recipe with one of the files." doc
   "Forensics" category
   data images video audio documents applications archives miscellaneous _cats ignore-failed minimum-size carve ;
 

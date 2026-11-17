@@ -1,13 +1,13 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ gost3410: the GOST R 34.10-2012 digital signature (RFC 7091) with the Streebog hash (GOST R 34.11-2012, the
-\ `streebog` words: 256 bits for the 256-bit curves, 512 bits for the 512-bit ones). Added in WP 5.51 as the
-\ public key signature of the GOST family. NOTE: CyberChef's "GOST Sign" and "GOST Verify" are not this: they are
-\ the MAC modes of the GOST 28147-89, Magma and Kuznyechik block ciphers (see the vocabulary gost-mac). The curve
-\ arithmetic is the private primitives of src/prims/gost3410.ts over @noble/curves (it is not ECDSA: s = r*d + k*e);
-\ the hash, the random nonce k (random:bytes-of, with the standard's retry when r or s is 0) and the text forms are FL.
-\ A private key d and a public point x || y are big-endian numbers as wide as the curve (32 or 64 bytes), written as
-\ hex; the signature is r || s as hex, as RFC 7091 writes ζ. The digest bytes of the streebog words are the little-endian
-\ bytes of the number RFC 6986 prints, and the number alpha of RFC 7091 section 6 is that number.
+\ `streebog` words: 256 bits for the 256-bit curves, 512 bits for the 512-bit ones). Added in WP 5.51 as the public key
+\ signature of the GOST family. NOTE: the MAC modes of the GOST 28147-89, Magma and Kuznyechik block ciphers are not
+\ this (see the vocabulary gost-mac). The curve arithmetic is the private primitives of src/prims/gost3410.ts over
+\ @noble/curves (it is not ECDSA: s = r*d + k*e); the hash, the random nonce k (random:bytes-of, with the standard's
+\ retry when r or s is 0) and the text forms are FL. A private key d and a public point x || y are big-endian numbers
+\ as wide as the curve (32 or 64 bytes), written as hex; the signature is r || s as hex, as RFC 7091 writes ζ. The
+\ digest bytes of the streebog words are the little-endian bytes of the number RFC 6986 prints, and the number alpha of
+\ RFC 7091 section 6 is that number.
 IN: gost3410
 
 USING: streebog random ;

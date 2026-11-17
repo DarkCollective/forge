@@ -1,10 +1,10 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ fingerprint: the TLS client and server fingerprints of CyberChef's Networking group: JA3 Fingerprint, JA3S
-\ Fingerprint, JA4 Fingerprint and JA4Server Fingerprint. JA3 and JA3S are Salesforce's (MD5 of a text built from the
-\ hello; GREASE values of RFC 8701 left out of the lists of the client); JA4 and JA4S are FoxIO's (a readable part and
-\ two truncated SHA-256 hashes). All four read the hello with the shared TLS words of the packets vocabulary
-\ (packets:tls-hellos), so the hello is parsed and checked in one place; only the rendering is here. FL only, no
-\ primitive: the hello has a few dozen numbers and the hashes are the md5 and sha2 words.
+\ fingerprint: the TLS client and server fingerprints JA3 Fingerprint, JA3S Fingerprint, JA4 Fingerprint and JA4Server
+\ Fingerprint. JA3 and JA3S are Salesforce's (MD5 of a text built from the hello; GREASE values of RFC 8701 left out of
+\ the lists of the client); JA4 and JA4S are FoxIO's (a readable part and two truncated SHA-256 hashes). All four read
+\ the hello with the shared TLS words of the packets vocabulary (packets:tls-hellos), so the hello is parsed and
+\ checked in one place; only the rendering is here. FL only, no primitive: the hello has a few dozen numbers and the
+\ hashes are the md5 and sha2 words.
 IN: fingerprint
 
 USING: packets md5 sha2 hex base64 list ;
@@ -60,7 +60,7 @@ USING: packets md5 sha2 hex base64 list ;
   } case ;
 
 : ja3 ( data:bytes input-format:choice<util:wire-format>="hex" output-format:choice<util:fingerprint-output>="hash" -- str )
-  "The JA3 fingerprint (Salesforce) of the TLS ClientHello in the input, as CyberChef's JA3 Fingerprint. The input is a TLS handshake record (hex text, Base64 text or raw bytes; a bare ClientHello message without the record header is read too) and the first ClientHello in it is used. The JA3 string is five fields separated by commas: the legacy client version in decimal, the cipher suites, the extension types, the supported groups (elliptic curves) and the EC point formats, each list in the order of the hello with its numbers in decimal joined by dashes and with GREASE values (RFC 8701) removed; a field the hello does not have is empty. The fingerprint is the MD5 of that string as 32 lower-case hex digits. output-format: hash (the MD5), string (the JA3 string) or full (CyberChef's layout: the hash, the string and the five fields, each under its heading). The input must be a well-formed hello: a record that is not a TLS record, a hello that is cut short or that goes on in the next record, a damaged extension (see Parse TLS record), or no ClientHello at all is E_COERCE with the offset; CyberChef rejects fewer inputs of the first kind and none of the last (it needs exactly one record and does not look inside the extensions it does not decode)." doc
+  "The JA3 fingerprint (Salesforce) of the TLS ClientHello in the input. The input is a TLS handshake record (hex text, Base64 text or raw bytes; a bare ClientHello message without the record header is read too) and the first ClientHello in it is used. The JA3 string is five fields separated by commas: the legacy client version in decimal, the cipher suites, the extension types, the supported groups (elliptic curves) and the EC point formats, each list in the order of the hello with its numbers in decimal joined by dashes and with GREASE values (RFC 8701) removed; a field the hello does not have is empty. The fingerprint is the MD5 of that string as 32 lower-case hex digits. output-format: hash (the MD5), string (the JA3 string) or full (the hash, the string and the five fields, each under its heading). The input must be a well-formed hello: a record that is not a TLS record, a hello that is cut short or that goes on in the next record, a damaged extension (see Parse TLS record), or no ClientHello at all is E_COERCE with the offset." doc
   "Networking" category
   data input-format 1 "ClientHello" _hello _ja3-parts
   dup "," join output-format _ja3-out ;
@@ -94,7 +94,7 @@ META: ja3
   } case ;
 
 : ja3s ( data:bytes input-format:choice<util:wire-format>="hex" output-format:choice<util:fingerprint-output>="hash" -- str )
-  "The JA3S fingerprint (Salesforce) of the TLS ServerHello in the input, as CyberChef's JA3S Fingerprint. The input is a TLS handshake record (hex text, Base64 text or raw bytes; a bare ServerHello message is read too) and the first ServerHello in it is used. The JA3S string is three fields separated by commas: the legacy server version in decimal, the cipher suite the server chose in decimal, and the extension types in the order of the hello joined by dashes (empty when there are none; nothing is removed, as in CyberChef and Salesforce's script). The fingerprint is the MD5 of that string as 32 lower-case hex digits. output-format: hash, string or full (CyberChef's layout: the hash, the string and the three fields under their headings). A malformed hello or no ServerHello is E_COERCE (see JA3 Fingerprint)." doc
+  "The JA3S fingerprint (Salesforce) of the TLS ServerHello in the input. The input is a TLS handshake record (hex text, Base64 text or raw bytes; a bare ServerHello message is read too) and the first ServerHello in it is used. The JA3S string is three fields separated by commas: the legacy server version in decimal, the cipher suite the server chose in decimal, and the extension types in the order of the hello joined by dashes (empty when there are none; nothing is removed, as in Salesforce's script). The fingerprint is the MD5 of that string as 32 lower-case hex digits. output-format: hash, string or full (the hash, the string and the three fields under their headings). A malformed hello or no ServerHello is E_COERCE (see JA3 Fingerprint)." doc
   "Networking" category
   data input-format 2 "ServerHello" _hello _ja3s-parts
   dup "," join output-format _ja3s-out ;
@@ -175,7 +175,7 @@ META: ja3s
   h "sig-algs" get dup len 0 = [ drop "" ] [ _hex4 "," join "_" swap cat ] if ;
 
 \ The extension types (GREASE out) as 4 hex digits each, then the signature algorithms. Sorted: without server_name
-\ (0000) and ALPN (0010). In the original order nothing but GREASE is left out (CyberChef's JA4_o and JA4_ro).
+\ (0000) and ALPN (0010). In the original order nothing but GREASE is left out (the JA4_o and JA4_ro forms).
 : _ext-raw ( h:record sorted:bool -- str )
   h "ext-types" get _no-grease
   sorted [ [ dup 0 <> swap 16 <> and ] filter list:sort ] when
@@ -221,7 +221,7 @@ CHOICE: _transport
   transport "quic" = [ "q" ] [ "t" ] if ;
 
 : ja4 ( data:bytes input-format:choice<util:wire-format>="hex" output-format:choice{ja4|ja4-o|ja4-r|ja4-ro|all}="ja4" transport:choice<_transport>="tcp" -- str )
-  "The JA4 fingerprint (FoxIO) of the TLS ClientHello in the input, as CyberChef's JA4 Fingerprint. The input is a TLS handshake record (hex text, Base64 text or raw bytes; a bare ClientHello message, as a QUIC CRYPTO frame holds it, is read too); the first ClientHello is used. JA4 is a_b_c. a: t (TCP) or q (QUIC), the version (13, 12, 11, 10, s3, s2, s1 or 00: the highest supported_versions value without GREASE, else the hello's version field), d with a server_name extension or i without, the number of cipher suites and of extensions as two digits (GREASE not counted, 99 at most, server_name and ALPN counted), and two characters for the first ALPN value (its first and last character when both are letters or digits, else the first hex digit of its first byte and the last of its last; 00 when none). b: the first 12 hex digits of the SHA-256 of the cipher suites (GREASE out, four lower-case hex digits each, sorted, comma separated). c: the same for the extension types (GREASE, server_name and ALPN out), then an underscore and the signature algorithms in hello order when the hello has them. An empty list hashes to twelve zeros (FoxIO's rule; CyberChef hashes the empty text and always writes the underscore). output-format: ja4; ja4-o (hello order, server_name and ALPN kept, as CyberChef's JA4_o); ja4-r (not hashed); ja4-ro; all (four labelled lines, as CyberChef). transport sets the first character (CyberChef always writes t). A malformed hello or no ClientHello is E_COERCE." doc
+  "The JA4 fingerprint (FoxIO) of the TLS ClientHello in the input. The input is a TLS handshake record (hex text, Base64 text or raw bytes; a bare ClientHello message, as a QUIC CRYPTO frame holds it, is read too); the first ClientHello is used. JA4 is a_b_c. a: t (TCP) or q (QUIC), the version (13, 12, 11, 10, s3, s2, s1 or 00: the highest supported_versions value without GREASE, else the hello's version field), d with a server_name extension or i without, the number of cipher suites and of extensions as two digits (GREASE not counted, 99 at most, server_name and ALPN counted), and two characters for the first ALPN value (its first and last character when both are letters or digits, else the first hex digit of its first byte and the last of its last; 00 when none). b: the first 12 hex digits of the SHA-256 of the cipher suites (GREASE out, four lower-case hex digits each, sorted, comma separated). c: the same for the extension types (GREASE, server_name and ALPN out), then an underscore and the signature algorithms in hello order when the hello has them. An empty list hashes to twelve zeros (FoxIO's rule). output-format: ja4; ja4-o (hello order, server_name and ALPN kept); ja4-r (not hashed); ja4-ro; all (four labelled lines). transport sets the first character. A malformed hello or no ClientHello is E_COERCE." doc
   "Networking" category
   data input-format 1 "ClientHello" _hello transport _proto _ja4-parts output-format _ja4-out ;
 
@@ -253,7 +253,7 @@ META: ja4
   h proto _ja4s-head h "ext-types" get _hex4 "," join fmt _ja4s-out ;
 
 : ja4s ( data:bytes input-format:choice<util:wire-format>="hex" output-format:choice{ja4s|ja4s-r|both}="ja4s" transport:choice<_transport>="tcp" -- str )
-  "The JA4S fingerprint (JA4Server, FoxIO) of the TLS ServerHello in the input, as CyberChef's JA4Server Fingerprint. The input is a TLS handshake record (hex text, Base64 text or raw bytes; a bare ServerHello message is read too) and the first ServerHello in it is used. JA4S is a_b_c. a is: t or q, the version as two characters (the selected version of the supported_versions extension, else the version field of the hello; see JA4 Fingerprint), the number of extensions as two digits (99 at most) and two characters for the ALPN protocol the server chose (see JA4 Fingerprint; 00 when there is none). b is the chosen cipher suite as four lower-case hex digits. c is the first 12 hex digits of the SHA-256 of the extension types in the order of the hello, as four hex digits each joined by commas (twelve zeros when there are none; nothing is sorted or removed). output-format: ja4s, ja4s-r (c as the list itself) or both (two lines labelled JA4S and JA4S_r, as CyberChef does). transport is q or t for the first character (CyberChef always writes t). A malformed hello or no ServerHello is E_COERCE (see JA3 Fingerprint)." doc
+  "The JA4S fingerprint (JA4Server, FoxIO) of the TLS ServerHello in the input. The input is a TLS handshake record (hex text, Base64 text or raw bytes; a bare ServerHello message is read too) and the first ServerHello in it is used. JA4S is a_b_c. a is: t or q, the version as two characters (the selected version of the supported_versions extension, else the version field of the hello; see JA4 Fingerprint), the number of extensions as two digits (99 at most) and two characters for the ALPN protocol the server chose (see JA4 Fingerprint; 00 when there is none). b is the chosen cipher suite as four lower-case hex digits. c is the first 12 hex digits of the SHA-256 of the extension types in the order of the hello, as four hex digits each joined by commas (twelve zeros when there are none; nothing is sorted or removed). output-format: ja4s, ja4s-r (c as the list itself) or both (two lines labelled JA4S and JA4S_r). transport is q or t for the first character. A malformed hello or no ServerHello is E_COERCE (see JA3 Fingerprint)." doc
   "Networking" category
   data input-format 2 "ServerHello" _hello transport _proto output-format _ja4s-run ;
 

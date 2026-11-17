@@ -1,12 +1,11 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ ecdsa: ECDSA key pairs, signatures and their formats (CyberChef's Generate ECDSA Key Pair, ECDSA Sign, ECDSA Verify
-\ and ECDSA Signature Conversion, plus an EC public key from a private one). The curve arithmetic and RFC 6979 are the
-\ private primitives of src/prims/ecdsa.ts over @noble/curves; everything else is FL: the PEM and DER keys (the shared
-\ asn1 words: SEC1 "EC PRIVATE KEY", PKCS #8 "PRIVATE KEY" and SPKI "PUBLIC KEY" are read, PKCS #8 and SPKI are written,
-\ as CyberChef does), the digest (the md5, sha1 and sha2 words), and the four signature formats (the asn1, json and
-\ util words). Curves: P-256, P-384, P-521 (all three are offered for a new key); secp256k1 keys are read too.
-\ Signatures are deterministic (RFC 6979); CyberChef (jsrsasign) uses a random k, so its signatures differ on every
-\ call, and verification accepts either. A signature is r and s as integers; the formats are
+\ ecdsa: ECDSA key pairs, signatures and their formats (key pair generation, signing, verification and signature
+\ conversion, plus an EC public key from a private one). The curve arithmetic and RFC 6979 are the private primitives
+\ of src/prims/ecdsa.ts over @noble/curves; everything else is FL: the PEM and DER keys (the shared asn1 words: SEC1
+\ "EC PRIVATE KEY", PKCS #8 "PRIVATE KEY" and SPKI "PUBLIC KEY" are read, PKCS #8 and SPKI are written), the digest
+\ (the md5, sha1 and sha2 words), and the four signature formats (the asn1, json and util words). Curves: P-256, P-384,
+\ P-521 (all three are offered for a new key); secp256k1 keys are read too. Signatures are deterministic (RFC 6979),
+\ and verification accepts a signature made with a random k too. A signature is r and s as integers; the formats are
 \   asn1-hex   the DER SEQUENCE of two INTEGERs, as hex text
 \   p1363-hex  r || s, each as wide as the curve's order, as hex text
 \   jws        the same bytes in URL-safe Base64 without padding (RFC 7515 / 7518 section 3.4)
@@ -261,7 +260,7 @@ CHOICE: _signature-format-auto
     [ text _from-json ]
   } case ;
 
-\ ---- format detection (CyberChef's order: JSON, hex, Base64url) ----
+\ ---- format detection (order: JSON, hex, Base64url) ----
 
 : _json-object? ( text:str -- bool )
   [ text json:parse type "record" = ] [ drop false ] try ;
@@ -294,7 +293,7 @@ CHOICE: _signature-format-auto
 : _b64u ( b:bytes -- str )
   b false util:b64url-encode bytes>str ;
 
-\ The JWK of a key (RFC 7517 / 7518 section 6.2), with the key_ops and kid CyberChef adds.
+\ The JWK of a key (RFC 7517 / 7518 section 6.2), with the key_ops and kid members added.
 : _jwk ( curve:str d:bytes pub:bytes priv:bool -- record )
   { { "kty" "EC" } { "crv" curve }
     { "x" pub 1 curve _size 1 + slice _b64u }
@@ -323,14 +322,14 @@ CHOICE: _signature-format-auto
   curve seed _keygen curve swap format _generate-with ;
 
 : generate-key-pair ( data:bytes curve:choice{P-256|P-384|P-521}="P-256" format:choice<util:key-format>="PEM" -- str )
-  "Generate an ECDSA key pair on P-256, P-384 or P-521 (CyberChef's Generate ECDSA Key Pair). The private scalar is made from random bytes of the host's cryptographic random generator (never Math.random; the word carries the +random effect), mapped into 1 to the order minus 1 as FIPS 186-5 appendix A.2 does. Output as in CyberChef, the public key first and then the private key, a blank line apart. PEM: the SubjectPublicKeyInfo (PUBLIC KEY) and the PKCS #8 PrivateKeyInfo (PRIVATE KEY, which carries the public point). DER: CyberChef's name for the private key alone as hex (the raw scalar, not DER). JWK: {\"keys\": [private, public]} with 4 spaces of indent, each with key_ops and kid as CyberChef adds. The input is ignored." doc
+  "Generate an ECDSA key pair on P-256, P-384 or P-521. The private scalar is made from random bytes of the host's cryptographic random generator (never Math.random; the word carries the +random effect), mapped into 1 to the order minus 1 as FIPS 186-5 appendix A.2 does. Output: the public key first and then the private key, a blank line apart. PEM: the SubjectPublicKeyInfo (PUBLIC KEY) and the PKCS #8 PrivateKeyInfo (PRIVATE KEY, which carries the public point). DER: the private key alone as hex (the raw scalar, not DER). JWK: {\"keys\": [private, public]} with 4 spaces of indent, each with key_ops and kid members. The input is ignored." doc
   "Public Key" category
   curve curve _seed-length random:bytes-of format _generate ;
 
 META: generate-key-pair
   use-when "You need a fresh ECDSA key pair on P-256, P-384 or P-521, in PEM, DER or JWK form, for a test or a new signing key." ;
   param curve "The curve: P-256, P-384 or P-521." ;
-  param format "PEM (public key, then PKCS #8 private key), DER (the private scalar as hex, CyberChef's name) or JWK." ;
+  param format "PEM (public key, then PKCS #8 private key), DER (the private scalar as hex) or JWK." ;
   see-also ecdsa:sign ecdsa:public-key ;
   link "https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm" "ECDSA on Wikipedia" ;
 ;
@@ -344,7 +343,7 @@ META: generate-key-pair
   curve d data digest _digest digest _sign curve _size format _write-rs ;
 
 : sign ( data:bytes private-key:str="" digest:choice<_hash-name>="sha256" format:choice<_signature-format>="asn1-hex" -- str )
-  "Sign the input with an ECDSA private key (CyberChef's ECDSA Sign). The key is PEM, either SEC1 (EC PRIVATE KEY) or PKCS #8 (PRIVATE KEY) on P-256, P-384, P-521 or secp256k1. The input bytes are hashed with the digest and the digest is signed. The signature is deterministic (RFC 6979, with the HMAC of the same hash), where CyberChef's uses a random k: the same key and message give the same signature here, and every ECDSA verifier accepts it. The s value is not forced to the low half. Formats: asn1-hex (the DER SEQUENCE of r and s as hex), p1363-hex (r then s, each as wide as the curve's order, as hex), jws (those bytes in URL-safe Base64 without padding) and raw-json ({\"r\":\"hex\",\"s\":\"hex\"})." doc
+  "Sign the input with an ECDSA private key. The key is PEM, either SEC1 (EC PRIVATE KEY) or PKCS #8 (PRIVATE KEY) on P-256, P-384, P-521 or secp256k1. The input bytes are hashed with the digest and the digest is signed. The signature is deterministic (RFC 6979, with the HMAC of the same hash): the same key and message give the same signature, and every ECDSA verifier accepts it. The s value is not forced to the low half. Formats: asn1-hex (the DER SEQUENCE of r and s as hex), p1363-hex (r then s, each as wide as the curve's order, as hex), jws (those bytes in URL-safe Base64 without padding) and raw-json ({\"r\":\"hex\",\"s\":\"hex\"})." doc
   "Public Key" category
   private-key _need-private
   dup "curve" get swap "key" get
@@ -365,7 +364,7 @@ META: sign
   [ curve pub h r s curve _size _p1363 hash _verify ] [ false ] if ;
 
 : verify ( signature:str input-format:choice<_signature-format-auto>="auto" digest:choice<_hash-name>="sha256" public-key:str="" message:toggle{utf8|hex|base64|latin1}="" -- str )
-  "Verify a signature of a message with an ECDSA public key (CyberChef's ECDSA Verify). The input is the signature in the format named (auto detects JSON, then hex, then URL-safe Base64, as CyberChef does; a hex signature that starts 30 and parses as DER is asn1-hex, any other hex is p1363-hex); the message is a parameter, read as UTF-8 text, hex, Base64 or Latin-1 per the toggle. The key is a PUBLIC KEY (SubjectPublicKeyInfo) PEM on P-256, P-384, P-521 or secp256k1. The answer is Verified OK or Verification Failure; a signature of any s (high or low) and of any k (random or RFC 6979) is accepted. A key that is not an EC public key, or not on its curve, or a signature that cannot be read, is an error." doc
+  "Verify a signature of a message with an ECDSA public key. The input is the signature in the format named (auto detects JSON, then hex, then URL-safe Base64; a hex signature that starts 30 and parses as DER is asn1-hex, any other hex is p1363-hex); the message is a parameter, read as UTF-8 text, hex, Base64 or Latin-1 per the toggle. The key is a PUBLIC KEY (SubjectPublicKeyInfo) PEM on P-256, P-384, P-521 or secp256k1. The answer is Verified OK or Verification Failure; a signature of any s (high or low) and of any k (random or RFC 6979) is accepted. A key that is not an EC public key, or not on its curve, or a signature that cannot be read, is an error." doc
   "Public Key" category
   public-key _need-public
   dup "curve" get swap "key" get
@@ -391,7 +390,7 @@ META: verify
   { [ n 32 <= ] [ 32 ] [ n 48 <= ] [ 48 ] [ 66 ] } cond ;
 
 : convert-signature ( signature:str input-format:choice<_signature-format-auto>="auto" output-format:choice<_signature-format>="asn1-hex" -- str )
-  "Convert an ECDSA signature between the DER SEQUENCE (asn1-hex), r then s (p1363-hex), the URL-safe Base64 of r then s (jws) and {\"r\",\"s\"} in hex (raw-json) (CyberChef's ECDSA Signature Conversion). The curve is not known, so the width of r and s in p1363-hex and jws is the smallest of 32, 48 and 66 bytes (P-256 and secp256k1, P-384, P-521) that holds the larger of the two (CyberChef cannot write a P-521 signature this way). auto detects the input as in ECDSA Verify. A value over 66 bytes cannot be written in those two formats." doc
+  "Convert an ECDSA signature between the DER SEQUENCE (asn1-hex), r then s (p1363-hex), the URL-safe Base64 of r then s (jws) and {\"r\",\"s\"} in hex (raw-json). The curve is not known, so the width of r and s in p1363-hex and jws is the smallest of 32, 48 and 66 bytes (P-256 and secp256k1, P-384, P-521) that holds the larger of the two. auto detects the input as in ECDSA Verify. A value over 66 bytes cannot be written in those two formats." doc
   "Public Key" category
   signature input-format _parse-sig
   dup2 _guess-width output-format _write-sig ;
@@ -405,7 +404,7 @@ META: convert-signature
 ;
 
 : public-key ( data:str -- str )
-  "The public key of an EC private key, as a PUBLIC KEY (SubjectPublicKeyInfo) PEM. The input is the private key as PEM, SEC1 (EC PRIVATE KEY) or PKCS #8 (PRIVATE KEY), on P-256, P-384, P-521 or secp256k1. This is the elliptic curve half of CyberChef's Public Key from Private Key." doc
+  "The public key of an EC private key, as a PUBLIC KEY (SubjectPublicKeyInfo) PEM. The input is the private key as PEM, SEC1 (EC PRIVATE KEY) or PKCS #8 (PRIVATE KEY), on P-256, P-384, P-521 or secp256k1." doc
   "Public Key" category
   data _need-private
   dup "curve" get swap "key" get

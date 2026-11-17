@@ -1,20 +1,19 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ lzma: LZMA in the .lzma ("LZMA alone") format, CyberChef's LZMA Compress and LZMA Decompress. The
-\ codec is two private primitives over lzma1 (src/prims/lzma.ts): _compress and _decode. Everything
-\ around it is FL: the level and the 13-byte header's framing (a short header, a properties byte out of
-\ range), and the comparison of the output with the size the header declares. The primitive owns the
-\ output limit, because only it can read ctx.limits.maxValueBytes.
+\ lzma: LZMA in the .lzma ("LZMA alone") format, compression and decompression. The codec is two private primitives
+\ over lzma1 (src/prims/lzma.ts): _compress and _decode. Everything around it is FL: the level and the 13-byte header's
+\ framing (a short header, a properties byte out of range), and the comparison of the output with the size the header
+\ declares. The primitive owns the output limit, because only it can read ctx.limits.maxValueBytes.
 IN: lzma
 
 : compress ( data:bytes level:int=7 -- bytes )
-  "An LZMA stream in the .lzma (LZMA alone) format: a 13-byte header (the properties, a dictionary size, the uncompressed size) and the LZMA data with its end marker. level is 1 (fastest) to 9 (smallest), CyberChef's Compression Mode, 7 by default; any other level is E_RANGE. The bytes differ from CyberChef's (another encoder), but xz --format=lzma, 7-Zip and Python's lzma module read them." doc
+  "An LZMA stream in the .lzma (LZMA alone) format: a 13-byte header (the properties, a dictionary size, the uncompressed size) and the LZMA data with its end marker. level is 1 (fastest) to 9 (smallest), 7 by default; any other level is E_RANGE. The bytes can differ from those of other encoders, but xz --format=lzma, 7-Zip and Python's lzma module read them." doc
   "Compression" category
   level 1 9 "the compression level" check-int-range
   data level _compress ;
 
 META: compress
   use-when "You have bytes and need an .lzma file in the older LZMA alone format, for a tool such as xz, 7-Zip or Python's lzma module." ;
-  param level "The compression level, 1 (fastest) to 9 (smallest); 7 is CyberChef's default." ;
+  param level "The compression level, 1 (fastest) to 9 (smallest); 7 is the default." ;
   see-also lzma:decompress deflate:gzip ;
   inverse decompress ;
   link "https://en.wikipedia.org/wiki/LZMA" "LZMA on Wikipedia" ;
@@ -36,7 +35,7 @@ META: compress
   out ;
 
 : decompress ( data:bytes -- bytes )
-  "The bytes of an LZMA stream in the .lzma format (CyberChef's LZMA Decompress). The header is checked (shorter than 13 bytes, or a properties byte out of range, is E_COERCE). A declared size above the value limit (16 MiB for shared recipes, 64 MiB otherwise) is E_LIMIT_VALUE before anything is decoded. An unknown size (all 0xFF, as xz and Python write it) is decoded only up to the limit, and more output is E_LIMIT_VALUE: the decompression bomb rule of the wave 6 conventions. Corrupt or cut-short data is E_COERCE naming the fault, and so is output whose length differs from the declared size." doc
+  "The bytes of an LZMA stream in the .lzma format. The header is checked (shorter than 13 bytes, or a properties byte out of range, is E_COERCE). A declared size above the value limit (16 MiB for shared recipes, 64 MiB otherwise) is E_LIMIT_VALUE before anything is decoded. An unknown size (all 0xFF, as xz and Python write it) is decoded only up to the limit, and more output is E_LIMIT_VALUE: the decompression bomb rule of the wave 6 conventions. Corrupt or cut-short data is E_COERCE naming the fault, and so is output whose length differs from the declared size." doc
   "Compression" category
   data _check-header
   data _decode _check-size ;
