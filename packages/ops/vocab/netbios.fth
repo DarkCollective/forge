@@ -13,7 +13,7 @@ IN: netbios
   name "                " str>bytes 0 16 name len - slice cat ;
 
 : encode ( name:bytes offset:int=65 -- bytes )
-  "The first-level encoding of a NetBIOS name (RFC 1001 section 14.1): the name is padded with spaces to 16 bytes, and every byte is written as two bytes, the high half byte plus offset and then the low half byte plus offset, 32 bytes in all. With offset 65 (the default) the result is the letters A to P; FRED gives EGFCEFEECACACACACACACACACACACACA. A name of more than 16 bytes is E_RANGE (CyberChef answers nothing); offset must be 0 to 240 so that every byte fits. The second level (the compressed DNS form) is not done." doc
+  "The first-level encoding of a NetBIOS name (RFC 1001 section 14.1): the name is padded with spaces to 16 bytes, and every byte is written as two bytes, the high half byte plus offset and then the low half byte plus offset, 32 bytes in all. With offset 65 (the default) the result is the letters A to P; FRED gives EGFCEFEECACACACACACACACACACACACA. A name of more than 16 bytes is E_RANGE; offset must be 0 to 240 so that every byte fits. The second level (the compressed DNS form) is not done." doc
   "Networking" category
   offset _check-offset
   name _padded bytes>list
@@ -47,7 +47,7 @@ META: encode
   [ b bytes>latin1 [ 32 = ] trim-end dup len 0 = [ drop " " ] when latin1>bytes ] if ;
 
 : decode ( name:bytes offset:int=65 -- bytes )
-  "Undoes the first-level encoding of RFC 1001 section 14.1: every two bytes become one, (first minus offset) times 16 plus (second minus offset), and trailing spaces (the padding) are removed. The input is up to 32 bytes and an even number of them; a byte that is not offset to offset + 15 is E_COERCE, so is an odd or longer input (CyberChef answers nothing). offset is 65 by default and must be 0 to 240. The decoded name keeps at least its first byte, so a name of only spaces decodes to one space." doc
+  "Undoes the first-level encoding of RFC 1001 section 14.1: every two bytes become one, (first minus offset) times 16 plus (second minus offset), and trailing spaces (the padding) are removed. The input is up to 32 bytes and an even number of them; a byte that is not offset to offset + 15 is E_COERCE, so is an odd or longer input. offset is 65 by default and must be 0 to 240. The decoded name keeps at least its first byte, so a name of only spaces decodes to one space." doc
   "Networking" category
   offset _check-offset
   name len 2 mod 0 <> name len 32 > or

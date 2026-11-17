@@ -1,13 +1,12 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ sm2: SM2 public key encryption (GB/T 32918.4-2017, CyberChef's SM2 Encrypt and SM2 Decrypt) on the 256-bit
-\ recommended curve sm2p256v1 (GB/T 32918.5-2017). The point arithmetic is the private primitives of
-\ src/prims/sm2.ts over @noble/curves; the rest is FL: the hash is SM3 (the sm3 words), the key derivation function
-\ is the standard's (SM3 of the shared point and a 32-bit counter, GB/T 32918.4 section 5.4.3), and the random k comes
-\ from random:bytes-of (+random). The ciphertext is C1, C2 and C3 with C1 = k*G, C2 = the message xor the KDF output
-\ and C3 = SM3(x2 || message || y2); the order of the parts is the choice C1C3C2 (the standard's current order) or
-\ C1C2C3 (the 2010 draft's). As CyberChef writes it, C1 is x || y without the 04 byte of the uncompressed point and
-\ the ciphertext is hex text; decryption also accepts the 04 byte (the form GB/T 32918.4 and OpenSSL's inner values
-\ use), which it finds by checking that the 65 bytes are a point on the curve.
+\ sm2: SM2 public key encryption (GB/T 32918.4-2017) on the 256-bit recommended curve sm2p256v1 (GB/T 32918.5-2017).
+\ The point arithmetic is the private primitives of src/prims/sm2.ts over @noble/curves; the rest is FL: the hash is
+\ SM3 (the sm3 words), the key derivation function is the standard's (SM3 of the shared point and a 32-bit counter,
+\ GB/T 32918.4 section 5.4.3), and the random k comes from random:bytes-of (+random). The ciphertext is C1, C2 and C3
+\ with C1 = k*G, C2 = the message xor the KDF output and C3 = SM3(x2 || message || y2); the order of the parts is the
+\ choice C1C3C2 (the standard's current order) or C1C2C3 (the 2010 draft's). C1 is written as x || y without the 04
+\ byte of the uncompressed point and the ciphertext is hex text; decryption also accepts the 04 byte (the form GB/T
+\ 32918.4 and OpenSSL's inner values use), which it finds by checking that the 65 bytes are a point on the curve.
 IN: sm2
 
 USING: sm3 random ;
@@ -78,7 +77,7 @@ CHOICE: curve
   dup len 0 = [ drop msg pub format recurse ] when ;
 
 : encrypt ( data:bytes public-key-x:bytes="" public-key-y:bytes="" output-format:choice<ciphertext-order>="C1C3C2" curve:choice<curve>="sm2p256v1" -- str )
-  "Encrypt the input with an SM2 public key (GB/T 32918.4, CyberChef's SM2 Encrypt) on the curve sm2p256v1. The public key is its two coordinates X and Y, 32 bytes each as hex (E_RANGE otherwise); a point that is not on the curve is E_COERCE. The output is hex text, lower case: C1 (the point k*G as x then y, 64 bytes, without the 04 byte of the uncompressed form, as CyberChef writes it), then C3 (the SM3 check, 32 bytes) and C2 (the message xor the key stream, as long as the message) for C1C3C2, or C2 then C3 for C1C2C3. k is random from the host's cryptographic generator (never Math.random; the word carries the +random effect), so the output differs on every call. The input may be empty." doc
+  "Encrypt the input with an SM2 public key (GB/T 32918.4) on the curve sm2p256v1. The public key is its two coordinates X and Y, 32 bytes each as hex (E_RANGE otherwise); a point that is not on the curve is E_COERCE. The output is hex text, lower case: C1 (the point k*G as x then y, 64 bytes, without the 04 byte of the uncompressed form), then C3 (the SM3 check, 32 bytes) and C2 (the message xor the key stream, as long as the message) for C1C3C2, or C2 then C3 for C1C2C3. k is random from the host's cryptographic generator (never Math.random; the word carries the +random effect), so the output differs on every call. The input may be empty." doc
   "Public Key" category
   data public-key-x public-key-y _public-point output-format _encrypt-random bytes>hex ;
 
@@ -123,7 +122,7 @@ META: encrypt
   d _open ;
 
 : decrypt ( data:str private-key:bytes="" input-format:choice<ciphertext-order>="C1C3C2" curve:choice<curve>="sm2p256v1" -- bytes )
-  "Decrypt an SM2 ciphertext with the private key (GB/T 32918.4, CyberChef's SM2 Decrypt) on the curve sm2p256v1. The input is the ciphertext as hex text (white space is ignored) in the order named: C1C3C2 or C1C2C3. C1 may be x || y (64 bytes, as CyberChef writes it) or the uncompressed point with its 04 byte (65 bytes, as other SM2 libraries write it). The private key is 32 bytes as hex. A ciphertext that is cut short, whose C1 is not a point on the curve, or whose C3 check does not match (a wrong key, a wrong order or damaged data) is E_COERCE; a key outside 1 to the order minus 1 is E_RANGE. The output is the message as bytes." doc
+  "Decrypt an SM2 ciphertext with the private key (GB/T 32918.4) on the curve sm2p256v1. The input is the ciphertext as hex text (white space is ignored) in the order named: C1C3C2 or C1C2C3. C1 may be x || y (64 bytes) or the uncompressed point with its 04 byte (65 bytes, as other SM2 libraries write it). The private key is 32 bytes as hex. A ciphertext that is cut short, whose C1 is not a point on the curve, or whose C3 check does not match (a wrong key, a wrong order or damaged data) is E_COERCE; a key outside 1 to the order minus 1 is E_RANGE. The output is the message as bytes." doc
   "Public Key" category
   data hex>bytes private-key "Private Key" _coord input-format _decrypt ;
 

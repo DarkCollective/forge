@@ -42,7 +42,7 @@ IN: murmur3
   dup 16 shr bxor ;
 
 : digest ( data:bytes seed:int[0..4294967295]=0 -- bytes )
-  "The MurmurHash3 x86_32 hash (Austin Appleby, SMHasher) of the input, a non-cryptographic 32-bit hash, as 4 raw bytes in big-endian order: the bytes of the 32-bit value as it is usually written in hex (SMHasher prints it that way; its own byte buffer holds the same value little-endian). Chain hex:encode for hex text. CyberChef shows the same value as an unsigned decimal. The seed is a 32-bit unsigned integer (default 0). Not for security." doc
+  "The MurmurHash3 x86_32 hash (Austin Appleby, SMHasher) of the input, a non-cryptographic 32-bit hash, as 4 raw bytes in big-endian order: the bytes of the 32-bit value as it is usually written in hex (SMHasher prints it that way; its own byte buffer holds the same value little-endian). Chain hex:encode for hex text. The seed is a 32-bit unsigned integer (default 0). Not for security." doc
   "Hashing" category
   data seed _blocks data swap _tail data len bxor _fmix 4 int>be-bytes ;
 

@@ -1,5 +1,5 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ parity: add or check a parity bit on a string of binary digits (CyberChef's Parity Bit), written
+\ parity: add or check a parity bit on a string of binary digits, written
 \ in FL on the core words; no primitives. The input is text of 0 and 1 characters (and spaces,
 \ which are kept and ignored), optionally in blocks separated by a delimiter, each block with
 \ its own parity bit.
@@ -61,7 +61,7 @@ META: encode
 ;
 
 : decode ( bits:str mode:choice<parity-mode>=even position:choice<util:start-or-end>=end delimiter:str[0..16]="" verify:bool=true -- str )
-  "Remove the parity bit from a string of binary digits (from each block, with a delimiter). With verify on, the parity of every block is checked against the mode and a mismatch is an error; CyberChef removes the bit without checking." doc
+  "Remove the parity bit from a string of binary digits (from each block, with a delimiter). With verify on, the parity of every block is checked against the mode and a mismatch is an error." doc
   "Hashing" category
   bits delimiter [ mode position verify _decode-block ] _blocks ;
 

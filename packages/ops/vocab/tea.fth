@@ -1,12 +1,12 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ tea: the Tiny Encryption Algorithm (Wheeler and Needham, 1994) with the modes ECB, CBC, CFB, OFB and CTR.
 \ Follows the "Cipher conventions" of packages/ops/README.md: the block function is a private primitive
-\ pair (src/prims/tea.ts) and the shared blockmode layer supplies the modes and PKCS#7 padding. As in
-\ CyberChef, an empty input gives an empty output in every mode, and an empty IV is eight zero bytes.
+\ pair (src/prims/tea.ts) and the shared blockmode layer supplies the modes and PKCS#7 padding. An empty input gives
+\ an empty output in every mode, and an empty IV is eight zero bytes.
 IN: tea
 
 : encrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice<util:block-mode>="CBC" padding:choice<util:pkcs7-padding>="pkcs7" -- bytes )
-  "TEA (Tiny Encryption Algorithm) encryption of the input bytes: 64-bit blocks, a 128-bit key (16 bytes, E_RANGE otherwise), 32 cycles (64 rounds), the key and block words read big-endian (CyberChef's order). The IV is 8 bytes for CBC, CFB, OFB and CTR (empty means eight zero bytes; E_RANGE for any other length) and unused for ECB. padding (PKCS#7 or none) applies to CBC and ECB only: with none the input must be whole 8-byte blocks (E_COERCE). CFB is CFB-64 and CTR increments the whole 8-byte counter block. An empty input gives an empty output. Chain hex:encode for text." doc
+  "TEA (Tiny Encryption Algorithm) encryption of the input bytes: 64-bit blocks, a 128-bit key (16 bytes, E_RANGE otherwise), 32 cycles (64 rounds), the key and block words read big-endian. The IV is 8 bytes for CBC, CFB, OFB and CTR (empty means eight zero bytes; E_RANGE for any other length) and unused for ECB. padding (PKCS#7 or none) applies to CBC and ECB only: with none the input must be whole 8-byte blocks (E_COERCE). CFB is CFB-64 and CTR increments the whole 8-byte counter block. An empty input gives an empty output. Chain hex:encode for text." doc
   "Encryption" category
   key _check-key
   dup len 0 = [ ] [ mode iv 8 util:iv-or-zeros 8 padding "pkcs7" = [ key _encrypt-block ] blockmode:encrypt ] if ;

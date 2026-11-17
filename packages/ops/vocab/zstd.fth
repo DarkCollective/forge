@@ -1,5 +1,5 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ zstd: Zstandard decompression (RFC 8878), beyond CyberChef (which has no Zstandard). The decoder is
+\ zstd: Zstandard decompression (RFC 8878). The decoder is
 \ one private primitive over fzstd (src/prims/zstd.ts): it walks the frames, refuses dictionary frames,
 \ oversized windows and declared sizes, feeds fzstd in chunks, bounds the output at the value limit and
 \ checks the XXH64 content checksum. Compression is not offered (it would need WASM).

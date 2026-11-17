@@ -1,7 +1,6 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ pem: PEM to Hex and Hex to PEM (CyberChef's two ops) over the shared PEM codec of the internal asn1
-\ vocabulary (asn1:pem-decode, asn1:pem-encode, RFC 7468). Both work on hex text, as CyberChef's do; to get the
-\ bytes themselves, put From Hex or To Hex next to them.
+\ pem: PEM to Hex and Hex to PEM over the shared PEM codec of the internal asn1 vocabulary (asn1:pem-decode,
+\ asn1:pem-encode, RFC 7468). Both work on hex text; to get the bytes themselves, put From Hex or To Hex next to them.
 IN: pem
 
 USING: asn1 ;
@@ -10,7 +9,7 @@ USING: asn1 ;
   block "data" get bytes>hex ;
 
 : to-hex ( data:str -- str )
-  "The hex digits (lower case) of the decoded body of each PEM block in the text (PEM to Hex), one block per line, in order: -----BEGIN CERTIFICATE----- ... -----END CERTIFICATE----- gives the hex of the DER certificate. Text outside the blocks is ignored. No PEM block in the input is E_COERCE (CyberChef returns nothing); so is a block that is not closed, closed with another label, nested, or whose Base64 is damaged. The label and the RFC 1421 header lines of old encrypted keys are not part of the output." doc
+  "The hex digits (lower case) of the decoded body of each PEM block in the text (PEM to Hex), one block per line, in order: -----BEGIN CERTIFICATE----- ... -----END CERTIFICATE----- gives the hex of the DER certificate. Text outside the blocks is ignored. No PEM block in the input is E_COERCE; so is a block that is not closed, closed with another label, nested, or whose Base64 is damaged. The label and the RFC 1421 header lines of old encrypted keys are not part of the output." doc
   "Public Key" category
   data str>bytes asn1:pem-decode
   dup len 0 = [ "no PEM block (-----BEGIN ...-----) found in the input" fail-coerce ] when

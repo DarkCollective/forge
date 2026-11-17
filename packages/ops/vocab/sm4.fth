@@ -1,14 +1,14 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ sm4: the SM4 block cipher (GB/T 32907-2016), on the shared blockmode layer (see "Cipher conventions" in
 \ packages/ops/README.md). The single-block primitives and the key check are private TypeScript
-\ (src/prims/sm4.ts); every mode and the PKCS#7 padding come from blockmode. CyberChef's CBC/NoPadding and
-\ ECB/NoPadding modes are the padding parameter here. Bytes in and bytes out.
+\ (src/prims/sm4.ts); every mode and the PKCS#7 padding come from blockmode. CBC and ECB without padding are the
+\ padding parameter here. Bytes in and bytes out.
 IN: sm4
 
 USING: blockmode ;
 
 : encrypt ( bytes key:key{hex|utf8|latin1|base64} iv:key{hex|utf8|latin1|base64}="" mode:choice<util:block-mode>="CBC" padding:choice<util:pkcs7-padding>="pkcs7" -- bytes )
-  "SM4 encryption (GB/T 32907-2016) of the input bytes, 128-bit blocks. The key is 16 bytes; another length is E_RANGE. The IV is 16 bytes for CBC, CFB, OFB and CTR (E_RANGE otherwise) and unused for ECB. padding (PKCS#7 or none) applies to CBC and ECB only: with none the input must be whole 16-byte blocks (E_COERCE); CFB (CFB-128), OFB and CTR keep the length. CTR increments only the last four bytes of the 16-byte counter block, modulo 2^32 with no carry into the rest, as CyberChef's does (node-forge's inc32); it differs from a whole-block counter only after 2^32 blocks. Chain hex:encode for text." doc
+  "SM4 encryption (GB/T 32907-2016) of the input bytes, 128-bit blocks. The key is 16 bytes; another length is E_RANGE. The IV is 16 bytes for CBC, CFB, OFB and CTR (E_RANGE otherwise) and unused for ECB. padding (PKCS#7 or none) applies to CBC and ECB only: with none the input must be whole 16-byte blocks (E_COERCE); CFB (CFB-128), OFB and CTR keep the length. CTR increments only the last four bytes of the 16-byte counter block, modulo 2^32 with no carry into the rest (inc32); it differs from a whole-block counter only after 2^32 blocks. Chain hex:encode for text." doc
   "Encryption" category
   key _check-key
   mode "CTR32" blockmode:ctr-as iv 16 padding "pkcs7" = [ key _encrypt-block ] blockmode:encrypt ;

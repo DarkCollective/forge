@@ -3,7 +3,7 @@
 \ FL on the core words; no primitives. Every unit is a ratio to a base unit (metre, square metre,
 \ kilogram, metre per second, bit) taken from an exact definition (SI, the international yard and
 \ pound of 1959, NIST SP 811 appendix B), so the only rounding is the last one, to a number of
-\ decimal places (20 by default, the BigNumber default CyberChef rounds to). The unit lists here are Forge's own.
+\ decimal places (20 by default). The unit lists here are Forge's own.
 IN: units
 
 \ ---- decimal text to a fraction ----
@@ -199,7 +199,7 @@ CHOICE: data-unit
   "bit 1 1;nibble 4 1;byte 8 1;kilobit 1000 1;megabit 1000000 1;gigabit 1000000000 1;terabit 1000000000000 1;kibibit 1024 1;mebibit 1048576 1;gibibit 1073741824 1;tebibit 1099511627776 1;kilobyte 8000 1;megabyte 8000000 1;gigabyte 8000000000 1;terabyte 8000000000000 1;petabyte 8000000000000000 1;exabyte 8000000000000000000 1;kibibyte 8192 1;mebibyte 8388608 1;gibibyte 8589934592 1;tebibyte 8796093022208 1;pebibyte 9007199254740992 1;exbibyte 9223372036854775808 1" ;
 
 : convert-distance ( value:str from:choice<distance-unit>="metre" to:choice<distance-unit>="kilometre" digits:int[0..60]=20 -- str )
-  "A length converted from one unit to another. The value is decimal text (an optional sign, digits with an optional point, an optional exponent such as 1.5e3); anything else is an error. The sum is exact (the units are defined as exact ratios of the metre: the inch is 0.0254 m, the nautical mile 1852 m, the astronomical unit 149,597,870,700 m, the light year 9,460,730,472,580,800 m), and the result is rounded half away from zero to the given number of decimal places (20 by default, as CyberChef's BigNumber does) and written in plain decimal form with no trailing zeros." doc
+  "A length converted from one unit to another. The value is decimal text (an optional sign, digits with an optional point, an optional exponent such as 1.5e3); anything else is an error. The sum is exact (the units are defined as exact ratios of the metre: the inch is 0.0254 m, the nautical mile 1852 m, the astronomical unit 149,597,870,700 m, the light year 9,460,730,472,580,800 m), and the result is rounded half away from zero to the given number of decimal places (20 by default) and written in plain decimal form with no trailing zeros." doc
   "Conversions" category
   value from to _distance digits _convert ;
 
@@ -213,7 +213,7 @@ META: convert-distance
 ;
 
 : convert-area ( value:str from:choice<area-unit>="square-metre" to:choice<area-unit>="hectare" digits:int[0..60]=20 -- str )
-  "An area converted from one unit to another. The value is decimal text (an optional sign, digits with an optional point, an optional exponent); anything else is an error. The sum is exact (the international inch, foot and yard give the square inch 0.00064516 m2, the acre 4046.8564224 m2 and the square mile 2,589,988.110336 m2), and the result is rounded half away from zero to the given number of decimal places (20 by default, as CyberChef's BigNumber does) and written in plain decimal form with no trailing zeros." doc
+  "An area converted from one unit to another. The value is decimal text (an optional sign, digits with an optional point, an optional exponent); anything else is an error. The sum is exact (the international inch, foot and yard give the square inch 0.00064516 m2, the acre 4046.8564224 m2 and the square mile 2,589,988.110336 m2), and the result is rounded half away from zero to the given number of decimal places (20 by default) and written in plain decimal form with no trailing zeros." doc
   "Conversions" category
   value from to _area digits _convert ;
 
@@ -227,7 +227,7 @@ META: convert-area
 ;
 
 : convert-mass ( value:str from:choice<mass-unit>="kilogram" to:choice<mass-unit>="pound" digits:int[0..60]=20 -- str )
-  "A mass converted from one unit to another. The value is decimal text (an optional sign, digits with an optional point, an optional exponent); anything else is an error. The sum is exact (the international pound is 0.45359237 kg, the ounce a sixteenth of it, the stone 14 pounds, the short ton 2000 and the long ton 2240 pounds, the grain 64.79891 mg, the metric carat 200 mg, the troy ounce 31.1034768 g), and the result is rounded half away from zero to the given number of decimal places (20 by default, as CyberChef's BigNumber does) and written in plain decimal form with no trailing zeros." doc
+  "A mass converted from one unit to another. The value is decimal text (an optional sign, digits with an optional point, an optional exponent); anything else is an error. The sum is exact (the international pound is 0.45359237 kg, the ounce a sixteenth of it, the stone 14 pounds, the short ton 2000 and the long ton 2240 pounds, the grain 64.79891 mg, the metric carat 200 mg, the troy ounce 31.1034768 g), and the result is rounded half away from zero to the given number of decimal places (20 by default) and written in plain decimal form with no trailing zeros." doc
   "Conversions" category
   value from to _mass digits _convert ;
 
@@ -241,7 +241,7 @@ META: convert-mass
 ;
 
 : convert-speed ( value:str from:choice<speed-unit>="metre-per-second" to:choice<speed-unit>="kilometre-per-hour" digits:int[0..60]=20 -- str )
-  "A speed converted from one unit to another. The value is decimal text (an optional sign, digits with an optional point, an optional exponent); anything else is an error. The sum is exact (the mile per hour is 0.44704 m/s, the knot 1852 m per hour, the speed of light 299,792,458 m/s), and the result is rounded half away from zero to the given number of decimal places (20 by default, as CyberChef's BigNumber does) and written in plain decimal form with no trailing zeros. Mach is not offered: it depends on the air." doc
+  "A speed converted from one unit to another. The value is decimal text (an optional sign, digits with an optional point, an optional exponent); anything else is an error. The sum is exact (the mile per hour is 0.44704 m/s, the knot 1852 m per hour, the speed of light 299,792,458 m/s), and the result is rounded half away from zero to the given number of decimal places (20 by default) and written in plain decimal form with no trailing zeros. Mach is not offered: it depends on the air." doc
   "Conversions" category
   value from to _speed digits _convert ;
 
@@ -255,7 +255,7 @@ META: convert-speed
 ;
 
 : convert-data ( value:str from:choice<data-unit>="byte" to:choice<data-unit>="bit" digits:int[0..60]=20 -- str )
-  "An amount of data converted from one unit to another. The value is decimal text (an optional sign, digits with an optional point, an optional exponent); anything else is an error. The decimal units (kilo, mega, giga, tera, peta, exa) are powers of 1000 and the binary units (kibi, mebi, gibi, tebi, pebi, exbi: IEC 80000-13) powers of 1024; a byte is 8 bits and a nibble 4. The sum is exact and the result is rounded half away from zero to the given number of decimal places (20 by default, as CyberChef's BigNumber does) and written in plain decimal form with no trailing zeros." doc
+  "An amount of data converted from one unit to another. The value is decimal text (an optional sign, digits with an optional point, an optional exponent); anything else is an error. The decimal units (kilo, mega, giga, tera, peta, exa) are powers of 1000 and the binary units (kibi, mebi, gibi, tebi, pebi, exbi: IEC 80000-13) powers of 1024; a byte is 8 bits and a nibble 4. The sum is exact and the result is rounded half away from zero to the given number of decimal places (20 by default) and written in plain decimal form with no trailing zeros." doc
   "Conversions" category
   value from to _data digits _convert ;
 

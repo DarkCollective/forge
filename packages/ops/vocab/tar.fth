@@ -109,7 +109,7 @@ IN: tar
   [ type "record" = ] filter ;
 
 : untar ( data:bytes verify:bool=true -- list )
-  "List a tar archive: one record per file or directory in archive order, with name (a ustar prefix is joined with a slash; a GNU long name, type L, is used), size, dir, mtime (Unix seconds), mode (the permission bits, 0 to 4095) and data (empty for a directory). Read are ustar, the older v7 headers and the GNU long-name form; entries that are not files or directories (links, devices, FIFOs) and the extended headers (GNU K, PAX x and g) are skipped, and PAX path and size records are not applied. The archive ends at two zero blocks or at the end of the data. With verify (the default; CyberChef does not check) every header checksum must match (E_COERCE); off, a damaged header is read as it is. Empty input, a bad octal field or data that ends early is E_COERCE. An entry is a slice of the input, so the total is never above the input. Use tar:entry to go on with one file." doc
+  "List a tar archive: one record per file or directory in archive order, with name (a ustar prefix is joined with a slash; a GNU long name, type L, is used), size, dir, mtime (Unix seconds), mode (the permission bits, 0 to 4095) and data (empty for a directory). Read are ustar, the older v7 headers and the GNU long-name form; entries that are not files or directories (links, devices, FIFOs) and the extended headers (GNU K, PAX x and g) are skipped, and PAX path and size records are not applied. The archive ends at two zero blocks or at the end of the data. With verify (the default) every header checksum must match (E_COERCE); off, a damaged header is read as it is. Empty input, a bad octal field or data that ends early is E_COERCE. An entry is a slice of the input, so the total is never above the input. Use tar:entry to go on with one file." doc
   "Compression" category
   data verify _entries ;
 
@@ -177,7 +177,7 @@ META: entry
   _seal ;
 
 : tar ( data:bytes filename:str="file.txt" mode:int=436 mtime:int=0 uid:int=0 gid:int=0 -- bytes )
-  "A tar archive (POSIX ustar) holding the input as one file named filename, as CyberChef's Tar does (one file; it writes the current time, so its bytes differ on every run). The header holds the permission bits mode (436 is 0664, CyberChef's), the Unix time mtime (0 by default, so the output is the same on every run), uid and gid (0), type 0 and no owner names; the data is padded to 512 bytes and two zero blocks end the archive. A name of up to 100 bytes goes in the name field; a longer one (up to 255) is cut at a slash into the ustar prefix and name, otherwise E_RANGE. An empty name or a NUL is E_RANGE, and so is a mode, id or time that does not fit its field. GNU tar, bsdtar and Python read the output." doc
+  "A tar archive (POSIX ustar) holding the input as one file named filename. The header holds the permission bits mode (436 is 0664), the Unix time mtime (0 by default, so the output is the same on every run), uid and gid (0), type 0 and no owner names; the data is padded to 512 bytes and two zero blocks end the archive. A name of up to 100 bytes goes in the name field; a longer one (up to 255) is cut at a slash into the ustar prefix and name, otherwise E_RANGE. An empty name or a NUL is E_RANGE, and so is a mode, id or time that does not fit its field. GNU tar, bsdtar and Python read the output." doc
   "Compression" category
   mode 0 4095 "mode" check-int-range
   uid 0 2097151 "uid" check-int-range

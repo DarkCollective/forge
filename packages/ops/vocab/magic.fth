@@ -238,9 +238,9 @@ META: is-format
   [ found [ _block ] map "\n\n" join ] if ;
 
 META: magic
-  use-when "You do not know how the data is encoded or compressed and want a text report of the recipes the Magic engine suggests, like CyberChef's Magic." ;
+  use-when "You do not know how the data is encoded or compressed and want a text report of the recipes the Magic engine suggests." ;
   see-also magic:identify magic:is-format filetype:detect ;
   param depth "The most operations in a candidate, 1 to 6. A larger depth takes longer." ;
-  param intensive "Accepted for CyberChef's sake; it has no effect until the extensive mode exists." ;
+  param intensive "Accepted but it has no effect until the extensive mode exists." ;
   param crib "A regular expression the wanted output must match, such as flag\\{ or the start of a known text. Empty for none." ;
 ;

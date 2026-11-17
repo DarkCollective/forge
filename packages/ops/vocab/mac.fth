@@ -1,7 +1,7 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ mac: Format MAC addresses (WP 5.53). A MAC address is read as twelve hex digits (colons, hyphens and dots between
-\ them are dropped) and written in the notations CyberChef offers: plain, hyphens, colons, Cisco dots and the
-\ modified EUI-64 interface identifier of an IPv6 address. All FL.
+\ them are dropped) and written in the notations plain, hyphens, colons, Cisco dots and the modified EUI-64 interface
+\ identifier of an IPv6 address. All FL.
 IN: mac
 
 \ The twelve hex digits of a MAC address, lower case, from any of the usual notations.
@@ -37,7 +37,7 @@ IN: mac
   dup len 0 = [ drop "" ] [ "\n" join "\n" cat ] if ;
 
 : format ( data:str output-case:choice{both|upper|lower}="both" no-delimiter:bool=true dash-delimiter:bool=true colon-delimiter:bool=true cisco-style:bool=false ipv6-interface-id:bool=false -- str )
-  "Shows each MAC address in several notations. The input is addresses separated by commas, white space or line feeds (empty pieces are skipped), each as twelve hex digits with or without colons, hyphens or dots between them. For each address the output lists the chosen notations one per line, in this order: plain (001a2b3c4d5e), hyphens (00-1a-2b-3c-4d-5e), colons (00:1a:2b:3c:4d:5e), Cisco dots (001a.2b3c.4d5e) and the IPv6 interface identifier (021a:2bff:fe3c:4d5e: ff fe in the middle and the universal/local bit flipped, RFC 4291 appendix A); with output-case both every notation is given in lower case and then in upper case. A blank line ends each address, so the output ends with a line feed. Text that is not a MAC address is E_COERCE (CyberChef has no checks). Empty input gives empty output." doc
+  "Shows each MAC address in several notations. The input is addresses separated by commas, white space or line feeds (empty pieces are skipped), each as twelve hex digits with or without colons, hyphens or dots between them. For each address the output lists the chosen notations one per line, in this order: plain (001a2b3c4d5e), hyphens (00-1a-2b-3c-4d-5e), colons (00:1a:2b:3c:4d:5e), Cisco dots (001a.2b3c.4d5e) and the IPv6 interface identifier (021a:2bff:fe3c:4d5e: ff fe in the middle and the universal/local bit flipped, RFC 4291 appendix A); with output-case both every notation is given in lower case and then in upper case. A blank line ends each address, so the output ends with a line feed. Text that is not a MAC address is E_COERCE. Empty input gives empty output." doc
   "Networking" category
   data "[,\\s]+" "" regex:split [ len 0 > ] filter
   [ output-case no-delimiter dash-delimiter colon-delimiter cisco-style ipv6-interface-id _one ] map

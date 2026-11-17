@@ -1,10 +1,8 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ rc2: the RC2 block cipher (RFC 2268), on the shared blockmode layer (see "Cipher conventions" in
 \ packages/ops/README.md). The single-block primitives and the key check are private TypeScript
-\ (src/prims/rc2.ts); the modes and PKCS#7 padding come from blockmode. CyberChef's RC2 offers only ECB
-\ and CBC (CBC when an IV is given, ECB when it is blank) and no effective-key-bits setting; here the mode
-\ is explicit, and the effective key bits of RFC 2268 are a parameter whose default, 128, is the one
-\ CyberChef's library uses whatever the key length. Bytes in and bytes out.
+\ (src/prims/rc2.ts); the modes and PKCS#7 padding come from blockmode. The modes are ECB and CBC; the mode is
+\ explicit, and the effective key bits of RFC 2268 are a parameter whose default is 128. Bytes in and bytes out.
 IN: rc2
 
 USING: blockmode ;

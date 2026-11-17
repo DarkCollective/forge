@@ -1,7 +1,7 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ salsa20: the Salsa20/20 stream cipher (Bernstein, eSTREAM), a stream cipher like chacha, with the Salsa20
 \ keystream from the audited @noble/ciphers (src/prims/salsa20.ts). Noble runs 20 rounds only, so there is
-\ no rounds parameter (CyberChef's 12 and 8 are not offered; see docs/coverage/stream-ciphers.json).
+\ no rounds parameter.
 IN: salsa20
 
 : encrypt ( bytes key:key{hex|utf8|latin1|base64} nonce:key{hex|utf8|latin1|base64}="" counter:int[0..]=0 -- bytes )

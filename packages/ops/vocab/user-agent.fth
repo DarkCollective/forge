@@ -1,10 +1,10 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ user-agent: Parse User Agent (WP 5.53). CyberChef uses ua-parser-js; Forge has no such dependency (version 2 of the
-\ library is AGPL, and version 1.x would put a library full of its own regular expressions behind the regex seam).
-\ The parser here is a compact table of rules written in FL over regex:find-all: for each of browser, engine, OS, device
-\ and CPU the first rule whose pattern matches the User-Agent string gives the name, and the first group of the pattern
-\ gives the version. The table covers the browsers, engines, systems and devices that make up nearly all real traffic;
-\ a User-Agent that none of the rules knows shows "unknown", as CyberChef does. The layout is CyberChef's.
+\ user-agent: Parse User Agent (WP 5.53). Forge has no dependency on a User-Agent parsing library (version 2 of
+\ ua-parser-js is AGPL, and version 1.x would put a library full of its own regular expressions behind the regex
+\ seam). The parser here is a compact table of rules written in FL over regex:find-all: for each of browser, engine,
+\ OS, device and CPU the first rule whose pattern matches the User-Agent string gives the name, and the first group of
+\ the pattern gives the version. The table covers the browsers, engines, systems and devices that make up nearly all
+\ real traffic; a User-Agent that none of the rules knows shows "unknown".
 IN: user-agent
 
 \ ---- the rule engine ----
@@ -219,7 +219,7 @@ MEMO: _cpu-rules ( -- list )
   ua _browser-rules _first ua _engine-rules _first ua _os-rules _first ua _device ua _cpu-rules _first _assemble ;
 
 : parse ( data:str -- str )
-  "Browser, device, engine, operating system and CPU architecture of a User-Agent string, in CyberChef's layout (Browser Name and Version; Device Model, Type and Vendor; Engine Name and Version; OS Name and Version; CPU Architecture), with unknown for what the rules do not find. CyberChef uses the ua-parser-js library; Forge uses its own table of rules (about 70 patterns: Chrome, Chromium, Edge, Firefox, Safari and Mobile Safari, Opera, Samsung Internet, UC, Yandex, Vivaldi, IE, the Android browser and a few apps; the Blink, WebKit, Gecko, Trident, EdgeHTML and Presto engines; Windows with the release name (NT 10.0 is 10), macOS, iOS, Android, Chromium OS, Ubuntu, Debian, Fedora, the BSDs, Solaris, Tizen and Linux; Apple, Samsung and Google devices, the model from Android build strings, consoles and smart TVs; the amd64, ia32, arm, arm64, ia64, ppc, mips and sparc CPUs), so a rare or new agent can come out differently. The first rule of each kind that matches wins. A leading User-Agent: label is ignored, and white space around the string is dropped. An agent of more than 4,096 characters is E_RANGE." doc
+  "Browser, device, engine, operating system and CPU architecture of a User-Agent string, (Browser Name and Version; Device Model, Type and Vendor; Engine Name and Version; OS Name and Version; CPU Architecture), with unknown for what the rules do not find. Forge uses its own table of rules (about 70 patterns: Chrome, Chromium, Edge, Firefox, Safari and Mobile Safari, Opera, Samsung Internet, UC, Yandex, Vivaldi, IE, the Android browser and a few apps; the Blink, WebKit, Gecko, Trident, EdgeHTML and Presto engines; Windows with the release name (NT 10.0 is 10), macOS, iOS, Android, Chromium OS, Ubuntu, Debian, Fedora, the BSDs, Solaris, Tizen and Linux; Apple, Samsung and Google devices, the model from Android build strings, consoles and smart TVs; the amd64, ia32, arm, arm64, ia64, ppc, mips and sparc CPUs), so a rare or new agent can come out differently. The first rule of each kind that matches wins. A leading User-Agent: label is ignored, and white space around the string is dropped. An agent of more than 4,096 characters is E_RANGE." doc
   "Networking" category
   data _clean _report ;
 

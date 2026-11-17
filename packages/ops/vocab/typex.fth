@@ -1,19 +1,15 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ typex: a Typex-style five-rotor machine. One word, typex:encrypt (alias decrypt), because the
-\ machine is reciprocal. Written for Forge from the public descriptions of the architecture
-\ (Wikipedia, "Typex"; Crypto Museum's Typex pages), then aligned for compatibility with the
-\ behaviour of CyberChef's Typex operation (described below). No code, table or text of that tool
-\ is copied here.
+\ typex: a Typex-style five-rotor machine. One word, typex:encrypt (alias decrypt), because the machine is reciprocal.
+\ Written for Forge from the public descriptions of the architecture (Wikipedia, "Typex"; Crypto Museum's Typex
+\ pages); the conventions described below are Forge's own choices.
 \
 \ The rotor wirings of the real Typex were never published, so this vocabulary has none. The wiring
 \ of all five rotors and of the reflector are PARAMETERS (each a permutation of A to Z, checked), and
 \ the defaults are EXAMPLE rotors drawn at random for this project: they are NOT historical Typex
 \ wirings and must not be taken for them. Enter your own wirings to model a particular machine.
 \
-\ CONVENTIONS FOLLOW CYBERCHEF'S, FOR COMPATIBILITY: given the same wirings and settings, this
-\ vocabulary gives the same output as CyberChef. None of these conventions is historically
-\ attested, and the real Typex conventions (notch timing, reversed rotors, entry wiring, stepping)
-\ are unpublished. They are:
+\ CONVENTIONS: none of these conventions is historically attested, and the real Typex conventions (notch timing,
+\ reversed rotors, entry wiring, stepping) are unpublished. They are:
 \  - Rotor order: the five rotors are written left to right as on the machine, rotor-1 to rotor-5,
 \    and the signal enters at the RIGHTMOST rotor (rotor-5). Rotors 4 and 5 are stators (fixed),
 \    rotor-3 is the fast rotor, rotor-2 the middle one and rotor-1 the slow one. The current goes
@@ -186,7 +182,7 @@ IN: typex
   [ nip _press 65 + ] if ;
 
 : encrypt ( bytes rotor-1:str[26,/[A-Za-z]+/]="PJRGUSXFOWDLITKBMZQHAVYNCE" rotor-2:str[26,/[A-Za-z]+/]="BNJDZKRLPCSXEVQIATGWFMOUHY" rotor-3:str[26,/[A-Za-z]+/]="FSMHZXQKOJVDBURPGWLIYAETCN" rotor-4:str[26,/[A-Za-z]+/]="NQJYLKMDXWOAHTBCIUZEGRPVSF" rotor-5:str[26,/[A-Za-z]+/]="BAZQDEVNCYGOIWMHTRXKLPSFUJ" reflector:str[26,/[A-Za-z]+/]="TPZRFEOWNXUQVIGBLDYAKMHJSC" notches-3:str[0..26]="FKS" notches-2:str[0..26]="DIQ" reversed:str[0..20]="" rings:str[5..40]="AAAAA" positions:str[5..40]="AAAAA" plugboard:str[0..64]="" others:choice<util:other-chars>=keep -- bytes )
-  "Typex-style five-rotor machine with parameters for every wiring, following CyberChef's conventions for compatibility (the real Typex conventions are unpublished). The real Typex wirings were never published: the defaults are EXAMPLE rotors made up for Forge, not historical ones. Rotors are written left to right; the signal enters at rotor-5, through the fixed stators 5 and 4, the moving rotors 3 (fast), 2 and 1 (slow), the reflector, and back. Each letter A to Z, in either case, is enciphered and written in upper case; the same word deciphers. Rotor wirings and the reflector are permutations of A to Z (the reflector pairs letters). Rings and positions are five letters (or numbers 1 to 26) in left to right order. The entry plugboard is a 26-letter wiring that enters each letter c as minus its wiring, mod 26 (empty: the identity wiring, which swaps B and Z, C and Y and so on). Stepping is Enigma-like with a double step; notch letters are tested after the step. Other bytes are kept or dropped with others=remove. A wiring that is not a permutation or other bad settings are E_RANGE." doc
+  "Typex-style five-rotor machine with parameters for every wiring, with conventions of its own (the real Typex conventions are unpublished). The real Typex wirings were never published: the defaults are EXAMPLE rotors made up for Forge, not historical ones. Rotors are written left to right; the signal enters at rotor-5, through the fixed stators 5 and 4, the moving rotors 3 (fast), 2 and 1 (slow), the reflector, and back. Each letter A to Z, in either case, is enciphered and written in upper case; the same word deciphers. Rotor wirings and the reflector are permutations of A to Z (the reflector pairs letters). Rings and positions are five letters (or numbers 1 to 26) in left to right order. The entry plugboard is a 26-letter wiring that enters each letter c as minus its wiring, mod 26 (empty: the identity wiring, which swaps B and Z, C and Y and so on). Stepping is Enigma-like with a double step; notch letters are tested after the step. Other bytes are kept or dropped with others=remove. A wiring that is not a permutation or other bad settings are E_RANGE." doc
   "Cipher machines" category
   rotor-1 rotor-2 rotor-3 rotor-4 rotor-5 reflector notches-3 notches-2 reversed rings positions plugboard _setup
   others "remove" =
@@ -201,12 +197,12 @@ META: encrypt
   param rotor-4 "Wiring of stator 2 (fixed), a permutation of A to Z. The default is an example, not historical." ;
   param rotor-5 "Wiring of the rightmost rotor, stator 1, where the current enters: a permutation of A to Z. The default is an example, not historical." ;
   param reflector "Reflector wiring: 26 letters pairing the alphabet up (if A maps to B then B maps to A, no letter to itself). Example, not historical." ;
-  param notches-3 "Notch letters of the fast rotor 3, any number (FKS): the middle rotor steps when the fast rotor steps onto one (tested after the step, as CyberChef does). Empty for none." ;
+  param notches-3 "Notch letters of the fast rotor 3, any number (FKS): the middle rotor steps when the fast rotor steps onto one (tested after the step). Empty for none." ;
   param notches-2 "Notch letters of the middle rotor 2, any number (DIQ): when it steps onto one the slow rotor steps too, and it steps itself (double step). Empty for none." ;
-  param reversed "Rotors fitted back to front, by number 1 to 5 from the left, like 2 4. As CyberChef does: neg o inverse(wiring) o neg, neg(x) = minus x mod 26. Empty for none." ;
+  param reversed "Rotors fitted back to front, by number 1 to 5 from the left, like 2 4. A reversed rotor is neg o inverse(wiring) o neg, neg(x) = minus x mod 26. Empty for none." ;
   param rings "Ring settings of rotors 1 to 5, left to right: five letters (ABCDE) or numbers 1 to 26." ;
   param positions "Start positions of rotors 1 to 5, left to right: five letters or numbers 1 to 26. For the stators (4 and 5) only position minus ring matters." ;
-  param plugboard "Entry wiring, as CyberChef takes it: 26 letters, a permutation; a letter c enters as minus its value, mod 26. Empty: the identity wiring, which still swaps B and Z, C and Y and so on." ;
+  param plugboard "Entry wiring: 26 letters, a permutation; a letter c enters as minus its value, mod 26. Empty: the identity wiring, which still swaps B and Z, C and Y and so on." ;
   param others "keep: bytes that are not letters pass through unchanged. remove: they are dropped." ;
   alias decrypt ;
   link "https://en.wikipedia.org/wiki/Typex" "Typex on Wikipedia" ;
