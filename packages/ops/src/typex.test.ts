@@ -21,8 +21,8 @@ import { loadBundleNode } from "./sources-node.js";
 // typex is FL (vocab/typex.fth); these tests drive typex:encrypt through the runtime. Typex rotor
 // wirings are unpublished, so the vectors in vocab/typex.test.json are self-derived with an
 // independent simulator, and the tests here are round trips and structural properties. The
-// conventions (rotor order, notch timing, reversed rotors, entry plugboard, stepping) follow
-// the usual ones.
+// conventions (rotor order, notch timing, reversed rotors, entry plugboard, stepping) are
+// those of the vocabulary's documentation.
 const { str, bytes } = valueHelpers;
 const runtime = assembleRuntime(await loadBundleNode(["typex"]));
 

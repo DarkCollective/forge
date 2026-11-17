@@ -18,7 +18,7 @@
  * Tests for the `filetype` vocabulary (vocab/filetype.fth, src/prims/filetype.ts, the table in
  * src/filetype-sigs.ts): Detect File Type, Scan for Embedded Files, Extract Files and the entry op.
  *
- * The samples (src/fixtures/filetype.json, hex) were made by independent tools, never by this toolkit:
+ * The samples (src/fixtures/filetype.json, hex) were made by independent tools only:
  * Pillow (PNG, JPEG, GIF, BMP, TIFF, WebP, ICO), Python's zipfile, gzip, bz2, lzma, wave and sqlite3,
  * GNU tar, openssl (a DER certificate and its PEM), cc (a 872-byte ELF), ffmpeg (MP3, Ogg, M4A, Matroska)
  * and, where no tool exists in the sandbox, bytes written by hand from the format documents (pcap and

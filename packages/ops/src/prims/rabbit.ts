@@ -21,7 +21,7 @@
  * section 2.5, the counter constants A of section 2.2 and the extraction scheme of section 2.7. The RFC
  * writes every 128-bit value most significant byte first, which is what `little` false does ("big
  * endian", the default). `little` true reverses the key, the IV and each 16-byte key stream block, which is
- * the little-endian byte order of Crypto++ (the usual convention). A short last block takes the
+ * the little-endian byte order of Crypto++ (the Crypto++ convention). A short last block takes the
  * low-order end of the key stream block in big-endian order (the rightmost bytes) and the leading bytes of
  * the reversed block in little-endian order. The word `rabbit:crypt` (vocab/rabbit.fth) holds the metadata.
  */
