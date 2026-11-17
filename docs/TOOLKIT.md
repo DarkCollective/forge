@@ -49,9 +49,9 @@ Goals 3 and 6 pull against goal 1. A Relix engine in the browser is a second pla
 
 ### 2.1 Forge today
 
-From PLAN.md §7: **363 ops in 155 vocabularies**. CyberChef coverage: **198 covered, 140 redesigned, 5 dropped, 163 not yet, of 506**. 4,488 op vectors in 155 files. The tree has 161 `.fth` files in `packages/ops/vocab`: the 155 op vocabularies plus six internal ones.
+From PLAN.md §7: **363 ops in 155 vocabularies**. 4,488 op vectors in 155 files. The tree has 161 `.fth` files in `packages/ops/vocab`: the 155 op vocabularies plus six internal ones.
 
-**Triage of the 184 "not yet" ops** (the orchestrator's classification, not yet in the coverage JSON):
+**Triage of the 184 "not yet" ops** (the orchestrator's classification):
 
 | Class | Count | Contents |
 |---|---|---|
@@ -209,7 +209,7 @@ A pack is a workspace package `packs/<name>` holding:
 - extension value kinds (§6);
 - parameter widgets and output viewers;
 - an optional UI feature (a pane), registered like `apps/web/src/modules.ts`;
-- test vectors (`*.test.json`) and coverage JSON;
+- test vectors (`*.test.json`);
 - a **manifest**: id, version, vocabularies, capabilities, size.
 
 ### 5.2 Discovery, loading, enabling
@@ -238,7 +238,6 @@ Only FL-only vocabulary files are shared. They import as untrusted units, which 
 | Rule 6 unchanged: viewers build DOM with `createElement` and `textContent`, never `innerHTML` | UI.md §4 |
 | `media-src blob:` added to the CSP (media pack only; owner-approved infra change in `infra/`) | PLAN §10, UI.md §4 |
 | Nothing else in the CSP changes (`img-src` already allows `blob:`; canvas works; `wasm-unsafe-eval` is already present) | |
-| Core coverage table gains a `pack` status (`pack:media`, `pack:code`, …) | COVERAGE.md generator |
 
 ---
 
@@ -443,7 +442,7 @@ With FL v0.2 (generic words, tagged literals, ext values) landing first, the pac
 
 Beautify, minify and syntax highlighting. JSON beautify and minify fall out of the core JSON words and stay in core.
 
-The coverage table marks these ops `pack:media` or `pack:code`. Lowest priority of the programme.
+These ops belong to `pack:media` or `pack:code`. Lowest priority of the programme.
 
 ---
 
@@ -533,7 +532,7 @@ Sizes are relative. "Revisits" lists LANGUAGE.md decisions or sections touched (
 |---|---|---|
 | Encodings, hashes, ciphers, compression, text and byte utilities | FL / Forge | Relix gets them as the `fl` function library (browser bridge, §8.4; JVM `relix-fl`, §8.7). Relix gains base64, hex, URL and crypto without writing them. |
 | Relational operators, optimiser, provenance, recursion, solver operators | Relix | Forge never writes table joins or grouping in FL; the relix pack delegates. Existing text-level list ops (`lines:sort`, `set:*`, `arith:*`) stay as they are (text in, text out). |
-| Scalar functions present on both sides (md5/sha, regex, string, date, JSON path, edit distance) | Both, before Relix 1.0 | No rewrite on either side before Relix 1.0. Held together by shared vectors: run Forge's vectors against the Relix built-ins and the reverse in a throwaway cross-check, as PLAN §7 did with CyberChef. After 1.0, making Relix's non-pushdown built-ins delegate to FL is an open question (Q6). |
+| Scalar functions present on both sides (md5/sha, regex, string, date, JSON path, edit distance) | Both, before Relix 1.0 | No rewrite on either side before Relix 1.0. Held together by shared vectors: run Forge's vectors against the Relix built-ins and the reverse in a throwaway cross-check, as PLAN §7 did for earlier waves. After 1.0, making Relix's non-pushdown built-ins delegate to FL is an open question (Q6). |
 | CSV and JSON parsing in the browser | Forge core | Forge's parsers feed Relix through in-memory tables; the compiled engine's own file readers are not shipped. |
 | Expression parsing | Relix (operands), symbolic kernel (algebra) | The Relix operand parser comes with the compiled engine; the symbolic parser is the kernel's. Align operator precedence and call syntax, document the differences, write no third parser. |
 | Query builder UI | Forge recipe pane | Relix's own query-builder sketch (local server plus static page) is not built separately. It can host the Forge relix pack against a local engine later. |
@@ -616,7 +615,7 @@ L10 needs the `ext` tag (X1), so X1 is built inside Phase T2 although it appears
 | P4 | Pack manager UI and IndexedDB store | `apps/web/src/packs/*` | P2 | So | Enable and disable persist per browser |
 | P5 | Shared-recipe enable offer and notice | `apps/web/src/*` | P4, X3 | So | Opening a recipe naming a pack op offers to enable |
 | P6 | Effect labels and `RunOptions.deny` wired into the baker | `packages/lang/src/types.ts`, `packages/worker` | X1 | So | A denied capability produces a structured error |
-| P7 | Per-pack size budgets in `npm run size`; `pack` coverage status | size script, coverage generator | P1 | Ha | Budget breach fails CI |
+| P7 | Per-pack size budgets in `npm run size` | size script | P1 | Ha | Budget breach fails CI |
 | P8 | Demo pack with one ext kind and one viewer | `packs/demo/*` | P2, X2 | Ha | Loads lazily under production headers |
 | D1 | `csv` words and the one CSV parser in core | `packages/ops/vocab/csv.fth`, `prims/csv.ts` | L3 | So | RFC 4180 vectors pass |
 | D2 | `table` kind: columnar, typed, null mask | `packages/ops/src/table/*` | X1 | So | Size cost near the §2.4 columnar figure |
@@ -762,7 +761,7 @@ T5 and T6 depend on Gate T3 only, not on T4, so they can run in parallel with th
 
 ## 15. Relationship to other documents
 
-- **PLAN.md.** The Phase 6 line "Relix vocabulary integration as an `relix:` vocab of primitives" is superseded by this plan. PLAN §9 gains the decisions T1 to T8 once approved. The coverage table gains the `pack` status.
+- **PLAN.md.** The Phase 6 line "Relix vocabulary integration as an `relix:` vocab of primitives" is superseded by this plan. PLAN §9 gains the decisions T1 to T8 once approved.
 - **SYMBOLIC.md.** Superseded in part: S2, S3, S5, S6 and S7 (§9.3). S8 to S14, S20 and S21 stand. A v2 is written in WP SP5.
 - **LANGUAGE.md.** A v0.2 is written in WP SP1.
 - **RECIPES.md.** A v2 is written in WP SP2. The §2.2 internal-vocabulary drift (two named, six in `INTERNAL_VOCABS`) is fixed there.

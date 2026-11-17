@@ -73,7 +73,7 @@ Options: raw cells (classic Forth) versus tagged values.
 **Recommend tagged values.** A stack slot is a discriminated union:
 `bytes (Uint8Array) | string | number | bigint | bool | list | quote | record`.
 
-CyberChef's central abstraction is that data flows as bytes and ops are lenient about it. Reproduce that with explicit rules instead of implicit magic:
+Forge's central abstraction is that data flows as bytes and ops are lenient about it. Make that work with explicit rules instead of implicit magic:
 
 - **Bytes is the canonical interchange type.** A string is a UTF-8 view of bytes. An op declares input and output types in its effect (`bytes -- bytes`, `str -- str`).
 - The runtime owns a small **coercion table**, applied only at word boundaries where the declared input type differs from the actual top of stack. Examples: `str -> bytes` (UTF-8 encode), `bytes -> str` (UTF-8 decode, with a replacement-character policy), `number -> bigint`, `list<byte-ish> -> bytes`. Anything else is a type error.
@@ -92,7 +92,7 @@ Options: tree-walking over tokens, compiled closures, bytecode VM.
 - **Async words** (WebCrypto, `fetch`-free ops only) work in a VM by letting a primitive return a Promise. The run loop awaits it and resumes, so the whole VM state is plain data. A closure compiler would need async everywhere or colored functions.
 - **Worker execution**: the VM state is serialisable and message-passing is simple.
 
-A tree-walker is fastest to build and fine for a first prototype. Closures are faster but lose all the above. Because CyberChef-style workloads are dominated by a few heavy primitives over large buffers, VM dispatch overhead is irrelevant. The primitive does the work.
+A tree-walker is fastest to build and fine for a first prototype. Closures are faster but lose all the above. Because the typical workloads are dominated by a few heavy primitives over large buffers, VM dispatch overhead is irrelevant. The primitive does the work.
 
 Concrete shape: a `run(program, state, {maxSteps, signal})` loop that yields to the event loop every N steps (or on each async primitive) and checks an `AbortSignal`. Run it in a dedicated Worker, and terminate the Worker as the hard backstop for runaway primitives such as a pathological regex or a huge allocation.
 
