@@ -7,8 +7,8 @@ Type contracts: `packages/ops/src/types.ts`, `packages/recipe/src/types.ts`, `pa
 > **Supersedes.** This document replaces LANGUAGE.md §14 ("Recipe compilation"), which is now a pointer here. Where the two
 > differ (the header `( bytes -- any )`, the `recipe:as-bytes` normaliser, the compiled vocabulary), this document rules.
 
-> **Project rule.** Forge is inspired by CyberChef but is **not compatible** with it. Every name, format and
-> default in this document is Forge's own. Nothing here mirrors a CyberChef recipe format, operation name or URL.
+> **Project rule.** Forge is an independent implementation. Every name, format and
+> default in this document is Forge's own.
 
 The key words MUST, MUST NOT, SHOULD and MAY are used as in RFC 2119.
 
@@ -78,7 +78,7 @@ compile without loading any operation code.
 | R18 | The `recipe` support vocabulary ships in **`@forge/ops`** (it needs the regex primitives) and is **internal**: it is never in the catalogue (`INTERNAL_VOCABS`). | `@forge/recipe` stays runtime-free. |
 | R19 | `@forge/ops` gets a third type contract (`src/types.ts`) beyond the two the brief asked for. | Four WPs need `Catalogue` and `VocabBundle` on day one. |
 | R20 | Gate 2's browser half is a Vite **harness page driven by Playwright** (added as a dev dependency by WP 2.4), plus a Node `worker_threads` run of the *same worker core*. | PLAN §6 introduces Playwright in Phase 3; Gate 2 needs a real Web Worker earlier. The harness is also usable by hand in the Browser pane. |
-| R21 | Generic words (`disabled`, `breakpoint`, `fork`, `subsection`, `note`) and the four text encodings of `toggle`/`key` (`utf8 hex latin1 base64`) are kept: they are standard vocabulary, not CyberChef-specific names or formats. | Avoiding every shared English word would make Forge worse, not more original. |
+| R21 | Generic words (`disabled`, `breakpoint`, `fork`, `subsection`, `note`) and the four text encodings of `toggle`/`key` (`utf8 hex latin1 base64`) are kept: they are standard vocabulary, not names or formats specific to any other tool. | Avoiding every shared English word would make Forge worse, not more original. |
 | R22 | PLAN §3.6's "words hand-written outside the canonical subset appear as a single opaque step" is **deferred to Phase 3**. In Phase 2 text outside the canonical subset is a parse error. | The parser must never run arbitrary FL (R5); an opaque step needs a UI and a trust decision. |
 | R23 | Compiled recipes are loaded into the internal vocabulary **`bake`** (word `bake:main`), never into `user`. User units cannot define into bundled or internal vocabularies (`E_READONLY`). | A user word can never collide with, shadow or replace the recipe word or an op. |
 | R24 | `@forge/ops` exports no loader from its main entry. `createBakerCore` **requires** a `loadBundle`, so the same core runs in Node and in the browser. | No hidden `node:fs` in a browser bundle; no hidden default. |
@@ -1057,7 +1057,7 @@ Three catalogue ops, category `"Forensics"`: two that say what the data is, and 
 |---|---|---|
 | `magic:identify` | `( data:bytes -- str )` | the id of the most specific identification (`gzip`, `png`, `pem`, `json`, `utf8-text`, `base64`, `hex`, ...), or `"unknown"` when there is none. Not a predicate: as the test of an `if` it is `not-predicate`. |
 | `magic:is-format` | `( data:bytes format:choice<magic-format> -- bool )` | true when the identification's id is `format` or its family is `format` (so `zip` is true for an OOXML file or a JAR, and `utf8-text` for plain ASCII text); false for unidentified data. A chainable predicate: the test of an `if` step (§3.2). |
-| `magic:magic` | `( data:bytes depth:int[1..6]=3 intensive:bool=false crib:regex="" -- str )` | the report form of the Magic engine (§8.9), as CyberChef's Magic operation: a text report of the best candidates, or `"no candidate"`. Not a predicate (the output is `str`). `needsHardKill` is true. |
+| `magic:magic` | `( data:bytes depth:int[1..6]=3 intensive:bool=false crib:regex="" -- str )` | the report form of the Magic engine (§8.9), as an operation: a text report of the best candidates, or `"no candidate"`. Not a predicate (the output is `str`). `needsHardKill` is true. |
 
 `format` is the shared `CHOICE: magic-format`, which lists every id of the Detect File Type table (`SIGNATURE_IDS`) and of the generic kinds (`GENERIC_IDS`), each once, in that order, with the display name as its help. A vocabulary test fails when the list and the two sources differ, so a stale or missing id is caught; an id outside the list is `bad-param` (§3.4). `"unknown"` is not an option: test for the formats you expect and let the `else` branch take the rest.
 
@@ -2074,7 +2074,7 @@ Until Playwright is part of CI (PLAN §6, Phase 3), the owner or the orchestrato
 ### 10.4 Definition of done for Phase 2
 
 Gate 2 above, and: `npm run lint`, `typecheck`, `test` and `build` pass; the op test vectors pass (§9.3); the golden tests of §12 pass;
-the three schemas validate their examples with Ajv `strict: true`; the catalogue builds with all twelve ops; no CyberChef name, format or text was copied.
+the three schemas validate their examples with Ajv `strict: true`; the catalogue builds with all twelve ops; no third-party name, format or text was copied.
 
 ---
 

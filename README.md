@@ -1,6 +1,6 @@
 # Forge
 
-Forge is a browser-only, CyberChef-like toolkit for codes and ciphers. Its core is a Forth-like language interpreter written in TypeScript; operations are defined in that language and composed into recipes in a static web app.
+Forge is a browser-only toolkit for codes and ciphers. Its core is a Forth-like language interpreter written in TypeScript; operations are defined in that language and composed into recipes in a static web app.
 
 The detailed plan lives in `docs/PLAN.md`.
 
