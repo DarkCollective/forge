@@ -1002,6 +1002,51 @@
     }
   },
   {
+    "name": "from-pem: an Ed25519 public key of 33 bytes",
+    "ref": "hand-built SPKI DER (RFC 8410, key 33 bytes 01..21); RFC 8037: 32 bytes",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN PUBLIC KEY-----\nMCswBQYDK2VwAyIAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh\n-----END PUBLIC KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "from-pem: an Ed25519 private key of 31 bytes",
+    "ref": "hand-built PKCS #8 DER (RFC 8410, key 31 bytes 01..1f); RFC 8037: 32 bytes",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMC0CAQAwBQYDK2VwBCEEHwECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8=\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "from-pem: an Ed25519 private key of 33 bytes",
+    "ref": "hand-built PKCS #8 DER (RFC 8410, key 33 bytes 01..21); RFC 8037: 32 bytes",
+    "op": "jwk:from-pem",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "-----BEGIN PRIVATE KEY-----\nMC8CAQAwBQYDK2VwBCMEIQECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8g\nIQ==\n-----END PRIVATE KEY-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
     "name": "from-pem: indent over 32",
     "ref": "json:stringify range",
     "op": "jwk:from-pem",

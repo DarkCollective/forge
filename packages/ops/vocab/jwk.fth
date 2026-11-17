@@ -81,8 +81,8 @@ MEMO: _rows ( -- list )
   crv point d crv _by-name _size _ec-parts ;
 
 : _okp-parts ( crv:str x:bytes d:bytes size:int -- record )
-  x len size <> [ "the " crv cat " public key is " cat size int>str cat " bytes, not " cat x len int>str cat cat fail-coerce ] when
-  d len 0 > d len size <> and [ "the " crv cat " private key is " cat size int>str cat " bytes, not " cat d len int>str cat cat fail-coerce ] when
+  x len size <> [ "the " crv cat " public key is " cat size int>str cat " bytes, not " cat x len int>str cat fail-coerce ] when
+  d len 0 > d len size <> and [ "the " crv cat " private key is " cat size int>str cat " bytes, not " cat d len int>str cat fail-coerce ] when
   { { "kty" "OKP" } { "crv" crv } { "x" x _b64u } }
   d len 0 > [ { { "d" d _b64u } } cat ] when
   >record ;
