@@ -12,14 +12,14 @@ USING: adler32 crc ;
 \ ---- raw ----
 
 : deflate ( data:bytes level:int=6 -- bytes )
-  "A raw DEFLATE stream (RFC 1951) of the input. level is 0 (stored blocks, CyberChef's None) or 1 to 9 (fflate picks fixed or dynamic Huffman blocks by size: CyberChef's Dynamic Huffman Coding is the default 6; there is no Fixed-only mode); any other level is E_RANGE. The bytes differ from other encoders' but every inflater reads them." doc
+  "A raw DEFLATE stream (RFC 1951) of the input. level is 0 (stored blocks) or 1 to 9 (fflate picks fixed or dynamic Huffman blocks by size; the default is 6; there is no fixed-only mode); any other level is E_RANGE. The bytes differ from other encoders' but every inflater reads them." doc
   "Compression" category
   level 0 9 "the compression level" check-int-range
   data level _deflate ;
 
 META: deflate
   use-when "You have bytes and need a raw DEFLATE stream, without a zlib or gzip wrapper, for example to put inside a zip entry." ;
-  param level "The compression level: 0 stores, 1 to 9 compress (6 default). CyberChef's None is 0 and its Dynamic Huffman Coding is any level from 1; Fixed Huffman Coding has no equivalent." ;
+  param level "The compression level: 0 stores, 1 to 9 compress (6 default)." ;
   see-also deflate:inflate deflate:zlib-deflate deflate:gzip ;
   inverse inflate ;
   link "https://www.rfc-editor.org/rfc/rfc1951" "RFC 1951: DEFLATE compressed data format" ;
@@ -27,14 +27,14 @@ META: deflate
 ;
 
 : inflate ( data:bytes start:int=0 -- bytes )
-  "Inflate a raw DEFLATE stream (RFC 1951) that begins at byte start of the input (CyberChef's Start index); bytes after the stream are ignored. A corrupt or cut-short stream is E_COERCE naming the fault; a start beyond the input is E_RANGE; output past the value limit stops with E_LIMIT_VALUE (the decompression bomb rule of the Wave 6 conventions)." doc
+  "Inflate a raw DEFLATE stream (RFC 1951) that begins at byte start of the input; bytes after the stream are ignored. A corrupt or cut-short stream is E_COERCE naming the fault; a start beyond the input is E_RANGE; output past the value limit stops with E_LIMIT_VALUE (the decompression bomb rule of the Wave 6 conventions)." doc
   "Compression" category
   start 0 data len "the start index" check-int-range
   data start _inflate drop ;
 
 META: inflate
   use-when "You have a raw DEFLATE stream, such as the data inside a zip entry, and want the bytes it holds." ;
-  param start "The byte offset in the input where the DEFLATE stream begins (CyberChef's Start index)." ;
+  param start "The byte offset in the input where the DEFLATE stream begins." ;
   checks input binary ;
   expects "raw DEFLATE data" ;
   see-also deflate:deflate deflate:zlib-inflate deflate:gunzip ;
@@ -91,7 +91,7 @@ META: zlib-deflate
   verify [ out data e _check-adler ] when out ;
 
 : zlib-inflate ( data:bytes start:int=0 verify:bool=true -- bytes )
-  "Inflate zlib data (RFC 1950) that begins at byte start. The header is checked (not zlib, another method, a preset dictionary: E_COERCE), and with verify (the default; CyberChef's Verify result is off) the Adler-32 trailer must be present and match the output, otherwise E_COERCE. Without verify the trailer is not read. Output past the value limit stops with E_LIMIT_VALUE. CyberChef's buffer size and expansion options do not exist here: the primitive manages its own buffers." doc
+  "Inflate zlib data (RFC 1950) that begins at byte start. The header is checked (not zlib, another method, a preset dictionary: E_COERCE), and with verify (the default) the Adler-32 trailer must be present and match the output, otherwise E_COERCE. Without verify the trailer is not read. Output past the value limit stops with E_LIMIT_VALUE. The primitive manages its own buffers." doc
   "Compression" category
   start 0 data len "the start index" check-int-range
   data start _zlib-check-header
@@ -100,7 +100,7 @@ META: zlib-deflate
 META: zlib-inflate
   use-when "You have zlib data, usually starting with 78 9c or 78 da, and want the bytes inside, such as an HTTP deflate body or PNG image data." ;
   param start "The byte offset in the input where the zlib header begins." ;
-  param verify "Check the Adler-32 trailer (CyberChef's Verify result); off, the trailer is not read." ;
+  param verify "Check the Adler-32 trailer; off, the trailer is not read." ;
   checks input binary ;
   expects "zlib data" ;
   see-also deflate:zlib-deflate deflate:inflate adler32:checksum ;
@@ -142,7 +142,7 @@ META: zlib-inflate
   data _crc32 rev data len 4 int>le-bytes cat ;
 
 : gzip ( data:bytes level:int=6 filename:str="" comment:str="" header-crc:bool=false mtime:int=0 -- bytes )
-  "A gzip file (RFC 1952) of the input: a 10-byte header, the optional zero-terminated Latin-1 file name and comment, the optional header CRC-16 (CyberChef's Include file checksum), the raw DEFLATE stream, and the little-endian CRC-32 and length. level is 0 to 9 as for deflate:deflate (E_RANGE otherwise). mtime is the modification time in Unix seconds, 0 by default (CyberChef writes the current time, which makes its output differ on every run); the OS byte is 255 (unknown) and XFL follows the level as gzip writes it. A file name or comment with a NUL or above U+00FF is E_RANGE." doc
+  "A gzip file (RFC 1952) of the input: a 10-byte header, the optional zero-terminated Latin-1 file name and comment, the optional header CRC-16, the raw DEFLATE stream, and the little-endian CRC-32 and length. level is 0 to 9 as for deflate:deflate (E_RANGE otherwise). mtime is the modification time in Unix seconds, 0 by default, so the output is the same on every run; the OS byte is 255 (unknown) and XFL follows the level as gzip writes it. A file name or comment with a NUL or above U+00FF is E_RANGE." doc
   "Compression" category
   level 0 9 "the compression level" check-int-range
   mtime 0 4294967295 "mtime" check-int-range
@@ -155,7 +155,7 @@ META: gzip
   param level "The compression level, 0 (stored) to 9; 6 is the default." ;
   param filename "The original file name stored in the header (Latin-1); empty stores none." ;
   param comment "A comment stored in the header (Latin-1); empty stores none." ;
-  param header-crc "Add the CRC-16 of the header to the header (CyberChef's Include file checksum)." ;
+  param header-crc "Add the CRC-16 of the header to the header." ;
   param mtime "The modification time in Unix seconds (0 to 4294967295); 0 means none, and keeps the output the same on every run." ;
   checks output magic-bytes format "gzip" ;
   see-also deflate:gunzip deflate:deflate crc:checksum ;

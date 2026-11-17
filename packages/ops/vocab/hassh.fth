@@ -1,10 +1,10 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ hassh: HASSH Client Fingerprint and HASSH Server Fingerprint (Salesforce), the CyberChef operations of the same
-\ names. The input is the SSH binary packet that carries SSH_MSG_KEXINIT (RFC 4253 sections 6 and 7.1): packet length,
-\ padding length, message 20, the 16-byte cookie, ten name-lists, first_kex_packet_follows, a reserved word and the
-\ padding. HASSH is the MD5 of "kex;encryption;mac;compression" where the three lists after the key exchange list
-\ are the client-to-server ones for the client and the server-to-client ones for the server. FL only: the packet has
-\ ten fields, and the MD5 is the md5 word.
+\ hassh: HASSH Client Fingerprint and HASSH Server Fingerprint (Salesforce). The input is the SSH binary packet that
+\ carries SSH_MSG_KEXINIT (RFC 4253 sections 6 and 7.1): packet length, padding length, message 20, the 16-byte cookie,
+\ ten name-lists, first_kex_packet_follows, a reserved word and the padding. HASSH is the MD5 of
+\ "kex;encryption;mac;compression" where the three lists after the key exchange list are the client-to-server ones for
+\ the client and the server-to-client ones for the server. FL only: the packet has ten fields, and the MD5 is the md5
+\ word.
 IN: hassh
 
 USING: md5 hex base64 ;
@@ -89,7 +89,7 @@ USING: md5 hex base64 ;
   } case ;
 
 : client ( data:bytes input-format:choice<util:wire-format>="hex" output-format:choice<util:fingerprint-output>="hash" -- str )
-  "The HASSH fingerprint (Salesforce) of an SSH client, from the SSH_MSG_KEXINIT packet it sends, as CyberChef's HASSH Client Fingerprint. The input is the SSH binary packet (hex text, Base64 text or raw bytes): the 4-byte packet length, the padding length, the message code 20, the 16-byte cookie, the ten name-lists (key exchange, server host key, encryption, MAC, compression and language, each client to server and then server to client), first_kex_packet_follows, 4 reserved bytes and the padding; exactly one packet, with nothing before or after it (the identification string and a MAC are not part of it). The HASSH string joins four lists with semicolons: the key exchange algorithms, the encryption, MAC and compression algorithms from client to server, each list as the client wrote it (commas inside). The fingerprint is the MD5 of that string as 32 lower-case hex digits. output-format: hash, string or full (CyberChef's layout: the hash, the string and the four lists under their headings). A length that does not match the data, a message code other than 20, padding under 4 bytes, a name-list that runs past the payload, a name-list with a byte that is not printable ASCII, and bytes in the payload after the last field are E_COERCE with the offset (CyberChef checks only the length and the message code, and takes text without looking at it)." doc
+  "The HASSH fingerprint (Salesforce) of an SSH client, from the SSH_MSG_KEXINIT packet it sends. The input is the SSH binary packet (hex text, Base64 text or raw bytes): the 4-byte packet length, the padding length, the message code 20, the 16-byte cookie, the ten name-lists (key exchange, server host key, encryption, MAC, compression and language, each client to server and then server to client), first_kex_packet_follows, 4 reserved bytes and the padding; exactly one packet, with nothing before or after it (the identification string and a MAC are not part of it). The HASSH string joins four lists with semicolons: the key exchange algorithms, the encryption, MAC and compression algorithms from client to server, each list as the client wrote it (commas inside). The fingerprint is the MD5 of that string as 32 lower-case hex digits. output-format: hash, string or full (the hash, the string and the four lists under their headings). A length that does not match the data, a message code other than 20, padding under 4 bytes, a name-list that runs past the payload, a name-list with a byte that is not printable ASCII, and bytes in the payload after the last field are E_COERCE with the offset." doc
   "Networking" category
   data input-format util:wire-input _lists 2 4 6 _fields
   dup ";" join output-format "Client to Server" _out ;
@@ -104,7 +104,7 @@ META: client
 ;
 
 : server ( data:bytes input-format:choice<util:wire-format>="hex" output-format:choice<util:fingerprint-output>="hash" -- str )
-  "The HASSHServer fingerprint (Salesforce) of an SSH server, from the SSH_MSG_KEXINIT packet it sends, as CyberChef's HASSH Server Fingerprint. The input is the same binary packet as for HASSH Client Fingerprint (hex text, Base64 text or raw bytes), sent by the server. The HASSH string joins four lists with semicolons: the key exchange algorithms, the encryption, MAC and compression algorithms from server to client, each as the server wrote it. The fingerprint is the MD5 of that string as 32 lower-case hex digits. output-format: hash, string or full (the hash, the string and the four lists under their headings, as CyberChef). Malformed packets are E_COERCE, as for the client." doc
+  "The HASSHServer fingerprint (Salesforce) of an SSH server, from the SSH_MSG_KEXINIT packet it sends. The input is the same binary packet as for HASSH Client Fingerprint (hex text, Base64 text or raw bytes), sent by the server. The HASSH string joins four lists with semicolons: the key exchange algorithms, the encryption, MAC and compression algorithms from server to client, each as the server wrote it. The fingerprint is the MD5 of that string as 32 lower-case hex digits. output-format: hash, string or full (the hash, the string and the four lists under their headings). Malformed packets are E_COERCE, as for the client." doc
   "Networking" category
   data input-format util:wire-input _lists 3 5 7 _fields
   dup ";" join output-format "Server to Client" _out ;

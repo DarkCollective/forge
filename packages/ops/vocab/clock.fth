@@ -15,7 +15,7 @@ IN: clock
   now-ms 1000 div ;
 
 : get-time ( bytes unit:choice<util:time-unit>="seconds" -- str )
-  "The current time since the Unix epoch (1970-01-01T00:00:00Z) in the chosen unit (seconds by default, as CyberChef's Get Time), as decimal text, rounded down. The input is ignored. The host clock counts milliseconds, so microseconds and nanoseconds are that count times 1,000 and 1,000,000 (the finer digits are zero). The output differs on every call (the word carries the +time effect)." doc
+  "The current time since the Unix epoch (1970-01-01T00:00:00Z) in the chosen unit (seconds by default), as decimal text, rounded down. The input is ignored. The host clock counts milliseconds, so microseconds and nanoseconds are that count times 1,000 and 1,000,000 (the finer digits are zero). The output differs on every call (the word carries the +time effect)." doc
   "Date/Time" category
   drop
   now-ms

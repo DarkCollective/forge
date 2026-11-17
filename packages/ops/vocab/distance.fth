@@ -40,7 +40,7 @@ MEMO: _pop-table ( -- bytes )
   } cond ;
 
 : hamming ( data:str delimiter:str[1..]="\n\n" unit:choice{byte|char|bit}="byte" format:choice<util:raw-or-hex>="raw" -- int )
-  "The Hamming distance of two samples of equal length: the number of positions at which they differ. The input holds both samples, cut at the delimiter (a blank line by default); anything but exactly two samples, or samples of different length, is E_COERCE. The unit is the byte (of the UTF-8 text, or of the decoded hex), the char (a code point; raw input only) or the bit (the differing bits of the bytes). With format hex each sample is read as hexadecimal bytes (white space is ignored). CyberChef's options and defaults, except that its Hamming distance counts bytes of the text as UTF-8 and adds the char unit." doc
+  "The Hamming distance of two samples of equal length: the number of positions at which they differ. The input holds both samples, cut at the delimiter (a blank line by default); anything but exactly two samples, or samples of different length, is E_COERCE. The unit is the byte (of the UTF-8 text, or of the decoded hex), the char (a code point; raw input only) or the bit (the differing bits of the bytes). With format hex each sample is read as hexadecimal bytes (white space is ignored)." doc
   "Analysis" category
   data delimiter _two dup 0 nth swap 1 nth unit format _measure ;
 

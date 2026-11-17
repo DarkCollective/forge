@@ -14,13 +14,13 @@ CHOICE: stream-format
 ;
 
 : compress ( data:bytes format:choice<stream-format>="default" -- bytes )
-  "LZString-compress text (lz-string 1.5.0). The input is UTF-8 text (anything else is E_COERCE). The output is bytes: default is the library's 16-bit code units as UCS-2 big-endian byte pairs (what its compressToUint8Array writes; CyberChef shows the same units as a string, which cannot carry lone surrogates), utf16 is compressToUTF16 as UTF-8, base64 is compressToBase64 and uri is compressToEncodedURIComponent, both ASCII." doc
+  "LZString-compress text (lz-string 1.5.0). The input is UTF-8 text (anything else is E_COERCE). The output is bytes: default is the library's 16-bit code units as UCS-2 big-endian byte pairs (what its compressToUint8Array writes), utf16 is compressToUTF16 as UTF-8, base64 is compressToBase64 and uri is compressToEncodedURIComponent, both ASCII." doc
   "Compression" category
   data format _compress ;
 
 META: compress
   use-when "You have text and want it in the lz-string form that web apps use, for example to keep a compressed value in a URL or in storage." ;
-  param format "default: the 16-bit units as big-endian byte pairs; utf16: compressToUTF16 (UTF-8); base64: compressToBase64; uri: compressToEncodedURIComponent. CyberChef offers default, UTF16 and Base64." ;
+  param format "default: the 16-bit units as big-endian byte pairs; utf16: compressToUTF16 (UTF-8); base64: compressToBase64; uri: compressToEncodedURIComponent." ;
   checks input utf8 ;
   expects "text" ;
   see-also lzstring:decompress ;

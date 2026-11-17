@@ -1,8 +1,6 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ luhn: the Luhn check digit (ISO/IEC 7812-1 annex B; Luhn mod N for an even radix), written in FL on
-\ the core words; no primitives. CyberChef's Luhn Checksum prints the sum, the check digit and
-\ the input with the digit appended, and never says whether an input is valid. Here the two
-\ questions a user has are two words: the check digit, and a validity flag.
+\ luhn: the Luhn check digit (ISO/IEC 7812-1 annex B; Luhn mod N for an even radix), written in FL on the core words;
+\ no primitives. The two questions a user has are two words: the check digit, and a validity flag.
 IN: luhn
 
 : _check-radix ( radix:int -- )

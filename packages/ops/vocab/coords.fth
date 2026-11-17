@@ -566,7 +566,7 @@ META: convert
 : _hav ( lat1:int lon1:int lat2:int lon2:int radius:num -- str )
   lat1 _rad lat2 _rad lon2 lon1 - _rad _hav-a _hav-c radius 1000000.0 * * round 3 _fixed ;
 
-\ The four numbers of CyberChef's one-line input "lat1, lng1, lat2, lng2" as two positions.
+\ The four numbers of a one-line input "lat1, lng1, lat2, lng2" as two positions.
 : _split4 ( t:list -- list )
   { t 0 nth "," cat t 1 nth cat t 2 nth "," cat t 3 nth cat } ;
 
@@ -578,7 +578,7 @@ META: convert
   when ;
 
 : haversine ( data:str radius:num=6371 -- str )
-  "The great-circle distance between two positions, from the haversine formula on a sphere of the given radius in kilometres (6371, the mean radius of the earth, by default). The input is the two positions on two lines, each in any format convert reads with auto, or CyberChef's one line of four decimal degrees, lat1, lng1, lat2, lng2 (comma and an optional space between) (decimal degrees, degrees and minutes, degrees minutes and seconds, geohash, UTM or MGRS); the result is in metres, to the millimetre, as decimal text. Like CyberChef it treats the earth as a sphere, so it can differ from the geodesic on the ellipsoid by up to about 0.5 percent." doc
+  "The great-circle distance between two positions, from the haversine formula on a sphere of the given radius in kilometres (6371, the mean radius of the earth, by default). The input is the two positions on two lines, each in any format convert reads with auto, or one line of four decimal degrees, lat1, lng1, lat2, lng2 (comma and an optional space between) (decimal degrees, degrees and minutes, degrees minutes and seconds, geohash, UTM or MGRS); the result is in metres, to the millimetre, as decimal text. It treats the earth as a sphere, so it can differ from the geodesic on the ellipsoid by up to about 0.5 percent." doc
   "Conversions" category
   radius 0.0 > not [ "the radius must be above 0" fail-range ] when
   data _two-lines dup len 2 = not [ "give exactly two positions, one on each line" fail-coerce ] when

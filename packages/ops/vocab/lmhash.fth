@@ -1,9 +1,8 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ lmhash: the LAN Manager password hash (MS-NLMP 3.3.1 LMOWFv1). The text is upper-cased, encoded as
-\ ISO 8859-1, zero-padded or truncated to 14 bytes, and the constant "KGS!@#$%" is DES-encrypted under
-\ each 7-byte half. Upper-casing comes before the truncation, as CyberChef's "LM Hash" does. The DES
-\ work is the public des:encrypt, used for one block in ECB with no padding. Its own vocabulary, like
-\ nthash, because its input is text.
+\ lmhash: the LAN Manager password hash (MS-NLMP 3.3.1 LMOWFv1). The text is upper-cased, encoded as ISO 8859-1,
+\ zero-padded or truncated to 14 bytes, and the constant "KGS!@#$%" is DES-encrypted under each 7-byte half.
+\ Upper-casing comes before the truncation. The DES work is the public des:encrypt, used for one block in ECB with no
+\ padding. Its own vocabulary, like nthash, because its input is text.
 IN: lmhash
 
 \ Group i of the 56 bits of the bytes b (a zero byte is added so the last group can read two bytes): the

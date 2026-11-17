@@ -92,8 +92,8 @@ IN: file-mode
   } cond ;
 
 \ ---- the breakdown ----
-\ The layout is CyberChef's: the textual and octal forms, the file type and the special bits as lines of words, a
-\ blank line, and a box of the read, write and execute bits with an X for each one that is set.
+\ The layout: the textual and octal forms, the file type and the special bits as lines of words, a blank line, and a
+\ box of the read, write and execute bits with an X for each one that is set.
 
 : _cell ( mode:int mask:int -- str ) mode mask band 0 <> [ "   X   " ] [ "       " ] if ;
 
@@ -116,7 +116,7 @@ IN: file-mode
   "Execute" mode 64 8 1 _row cat "\n" cat _rule cat ;
 
 : parse ( data:str -- str )
-  "A UNIX file mode explained, in the layout of CyberChef's Parse UNIX file permissions. The input is the mode in octal (755, 0644, 4755) or as symbolic text (rwxr-xr-x), with the file type character of ls -l in front if you like (drwxr-xr-x: - d l b c p s D). The output has the lines Textual representation: (a - is written for the file type when none was given) and Octal representation:, then File type: when one was given, then The setuid flag is set, The setgid flag is set and The sticky bit is set for each of those bits that is on, a blank line, and a box that has an X under User, Group and Other for each read, write and execute bit that is set. s, t and S, T show a special bit together with, or without, the execute bit." doc
+  "A UNIX file mode explained. The input is the mode in octal (755, 0644, 4755) or as symbolic text (rwxr-xr-x), with the file type character of ls -l in front if you like (drwxr-xr-x: - d l b c p s D). The output has the lines Textual representation: (a - is written for the file type when none was given) and Octal representation:, then File type: when one was given, then The setuid flag is set, The setgid flag is set and The sticky bit is set for each of those bits that is on, a blank line, and a box that has an X under User, Group and Other for each read, write and execute bit that is set. s, t and S, T show a special bit together with, or without, the execute bit." doc
   "Conversions" category
   data _parse-mode _report ;
 

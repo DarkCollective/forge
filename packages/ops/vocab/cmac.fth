@@ -1,9 +1,9 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ cmac: CMAC (NIST SP 800-38B, RFC 4493) over AES or Triple DES, the parameters of CyberChef's "CMAC"
-\ (key, algorithm). The MAC is raw bytes; chain hex:encode for CyberChef's hex text. The construction is FL
-\ over the public words aes:encrypt and triple-des:encrypt, used as block functions: one block in ECB with
-\ no padding gives the subkey seed, and CBC with a zero IV and no padding gives the CBC-MAC state of the
-\ blocks before the last one, in a single call whatever the length of the data.
+\ cmac: CMAC (NIST SP 800-38B, RFC 4493) over AES or Triple DES, with the parameters key and algorithm. The MAC is raw
+\ bytes; chain hex:encode for hex text. The construction is FL over the public words aes:encrypt and
+\ triple-des:encrypt, used as block functions: one block in ECB with no padding gives the subkey seed, and CBC with a
+\ zero IV and no padding gives the CBC-MAC state of the blocks before the last one, in a single call whatever the
+\ length of the data.
 IN: cmac
 
 \ The block size in bytes: 16 for AES, 8 for Triple DES.
@@ -58,7 +58,7 @@ IN: cmac
 META: digest
   use-when "You have a block-cipher key, AES or Triple DES, and a message, and need the CMAC tag that a standard or protocol names for them." ;
   param key "The MAC key: 16, 24 or 32 bytes for AES, 16 or 24 bytes for Triple DES." ;
-  param algorithm "The block cipher: AES (default, as CyberChef) or TDES (Triple DES)." ;
+  param algorithm "The block cipher: AES (default) or TDES (Triple DES)." ;
   see-also hmac:digest hex:encode ;
   link "https://www.rfc-editor.org/rfc/rfc4493" "RFC 4493: AES-CMAC" ;
 ;

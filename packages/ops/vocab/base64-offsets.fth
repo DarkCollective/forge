@@ -1,8 +1,8 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ base64-offsets: Show Base64 offsets, the CyberChef operation of that name, as text (CyberChef marks the characters with
-\ HTML; Forge does not). Written in FL over the base64 primitive: the data is encoded in the standard alphabet and the
-\ characters are translated into the chosen alphabet with a 256-byte table, so a 64 KiB input costs a few thousand
-\ VM steps. Offset 1 and 2 are the encodings of the data behind one and two unknown bytes (zeros here).
+\ base64-offsets: Show Base64 offsets, as text (the characters are not marked up). Written in FL over the base64
+\ primitive: the data is encoded in the standard alphabet and the characters are translated into the chosen alphabet
+\ with a 256-byte table, so a 64 KiB input costs a few thousand VM steps. Offset 1 and 2 are the encodings of the data
+\ behind one and two unknown bytes (zeros here).
 IN: base64-offsets
 
 USING: alphabet list ;
@@ -75,7 +75,7 @@ USING: alphabet list ;
   data alpha _table show alpha len 64 > [ alpha 64 nth cp>str ] [ "" ] if _run ;
 
 : show ( data:bytes alphabet:str="A-Za-z0-9+/=" show-variable:bool=true input-type:choice{raw|hex|base64}=raw -- str )
-  "Show how the Base64 encoding of the data looks when it starts at each of the three alignments, as CyberChef's Show Base64 offsets does, as text. Offset 0 is the encoding of the data. Offsets 1 and 2 are what the same bytes look like when one or two other bytes (zeros here) come before them. With show-variable on (the default) the three lines are labelled Offset 0:, Offset 1: and Offset 2: and hold the whole encoding: the leading characters that only stand for the unknown bytes (CyberChef colours them red and green), the last character when the data stops inside a three-byte group (it depends on the bytes that would follow), and the = padding. With it off the three lines have no label and hold only the characters that the data alone fixes. CyberChef colours the characters and shows the static part decoded as a tooltip, and writes four lines of explanation above the offsets; text has neither, so Forge writes neither. The alphabet is written with ranges (A-Za-z0-9+/=) and has 64 characters, or 65 when the last one is the padding (no padding without it). input-type reads the data as it is, as hex (an addition to CyberChef's raw and Base64) or as Base64 text first. The alphabet must be 64 or 65 different ASCII characters; empty data (CyberChef: Please enter a string.) and hex or Base64 text that is not valid are E_COERCE." doc
+  "Show how the Base64 encoding of the data looks when it starts at each of the three alignments, as text. Offset 0 is the encoding of the data. Offsets 1 and 2 are what the same bytes look like when one or two other bytes (zeros here) come before them. With show-variable on (the default) the three lines are labelled Offset 0:, Offset 1: and Offset 2: and hold the whole encoding: the leading characters that only stand for the unknown bytes, the last character when the data stops inside a three-byte group (it depends on the bytes that would follow), and the = padding. With it off the three lines have no label and hold only the characters that the data alone fixes. The alphabet is written with ranges (A-Za-z0-9+/=) and has 64 characters, or 65 when the last one is the padding (no padding without it). input-type reads the data as it is, as hex or as Base64 text first. The alphabet must be 64 or 65 different ASCII characters; empty data and hex or Base64 text that is not valid are E_COERCE." doc
   "Data format" category
   data input-type _input alphabet _alphabet show-variable _go ;
 

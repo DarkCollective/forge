@@ -1,12 +1,11 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ gost28147: the GOST 28147-89 block cipher (RFC 5830) with CyberChef's S-box choices, the modes ECB, CBC, CFB,
-\ OFB and CTR, optional CryptoPro key meshing (RFC 4357 section 2.3.2), and the RFC 4357 key wrap and unwrap
-\ (sections 6.1 to 6.5). The cipher block is a private primitive pair (src/prims/gost28147.ts); ECB, CBC, CFB
-\ and OFB without meshing run on the shared blockmode layer. The GOST counter mode ("gamma", RFC 5830 section
-\ 6.2, with its own constants, not a plain counter) and any mode with key meshing change the key or the
-\ register inside the stream, which a block quotation cannot, so they go to the private _crypt-ext. The hash
-\ GOST R 34.11-94 is the separate vocabulary gost. Not covered from CyberChef: Magma and Kuznyechik (the 2015
-\ ciphers), the Signal-COM S-boxes (E-SC, D-SC) and its SC key wrap.
+\ gost28147: the GOST 28147-89 block cipher (RFC 5830) with a choice of S-boxes, the modes ECB, CBC, CFB, OFB and CTR,
+\ optional CryptoPro key meshing (RFC 4357 section 2.3.2), and the RFC 4357 key wrap and unwrap (sections 6.1 to 6.5).
+\ The cipher block is a private primitive pair (src/prims/gost28147.ts); ECB, CBC, CFB and OFB without meshing run on
+\ the shared blockmode layer. The GOST counter mode ("gamma", RFC 5830 section 6.2, with its own constants, not a plain
+\ counter) and any mode with key meshing change the key or the register inside the stream, which a block quotation
+\ cannot, so they go to the private _crypt-ext. The hash GOST R 34.11-94 is the separate vocabulary gost. Not covered:
+\ Magma and Kuznyechik (the 2015 ciphers), the Signal-COM S-boxes (E-SC, D-SC) and its SC key wrap.
 IN: gost28147
 
 \ The key meshing (or key wrapping) variant: none, or the CryptoPro one.
@@ -72,7 +71,7 @@ META: decrypt
 ;
 
 : wrap-key ( bytes key:key{hex|utf8|latin1|base64} ukm:key{hex|utf8|latin1|base64} sbox:choice<util:gost-sbox>="E-TEST" wrapping:choice<meshing>="NO" -- bytes )
-  "GOST 28147-89 key wrap (RFC 4357 section 6.1, or with wrapping CP section 6.3, which diversifies the key by the UKM first). The input is the 32-byte content key (E_COERCE otherwise), key is the 32-byte key encryption key (E_RANGE) and ukm the 8-byte user key material (E_RANGE). The output is CEK_ENC (the content key in ECB under the KEK) followed by CEK_MAC (the 4-byte IMIT with the UKM as the initial register), 36 bytes: CyberChef's layout, which leaves out the UKM that RFC 4357 puts in front (chain the UKM bytes in front with cat to get the RFC's 44 bytes). Not covered: CyberChef's SC (Signal-COM) wrapping." doc
+  "GOST 28147-89 key wrap (RFC 4357 section 6.1, or with wrapping CP section 6.3, which diversifies the key by the UKM first). The input is the 32-byte content key (E_COERCE otherwise), key is the 32-byte key encryption key (E_RANGE) and ukm the 8-byte user key material (E_RANGE). The output is CEK_ENC (the content key in ECB under the KEK) followed by CEK_MAC (the 4-byte IMIT with the UKM as the initial register), 36 bytes, without the UKM that RFC 4357 puts in front (chain the UKM bytes in front with cat to get the RFC's 44 bytes). Not covered: the SC (Signal-COM) wrapping." doc
   "Encryption" category
   key ukm sbox wrapping _wrap ;
 

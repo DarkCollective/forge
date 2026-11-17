@@ -1,11 +1,9 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ ascon: the Ascon lightweight family as CyberChef offers it, in the version of NIST SP 800-232:
-\ Ascon-Hash256, Ascon-Mac and Ascon-AEAD128, with no variant parameters (CyberChef has none). Bytes in and
-\ bytes out; the key and the nonce are key-type parameters. CyberChef's Input and Output menus (raw or
-\ hex) are chain steps (hex:decode, hex:encode). The permutation and the modes are _hash, _mac and
-\ _aead, private primitives (src/prims/ascon.ts): the permutation is a bit-sliced loop far too slow
-\ in FL at 64 KiB. Ascon-Mac is the PRF-based MAC of the Ascon designers' reference code, not a
-\ word of SP 800-232 itself.
+\ ascon: the Ascon lightweight family in the version of NIST SP 800-232: Ascon-Hash256, Ascon-Mac and Ascon-AEAD128,
+\ with no variant parameters. Bytes in and bytes out; the key and the nonce are key-type parameters. Hex input and
+\ output are chain steps (hex:decode, hex:encode). The permutation and the modes are _hash, _mac and _aead, private
+\ primitives (src/prims/ascon.ts): the permutation is a bit-sliced loop far too slow in FL at 64 KiB. Ascon-Mac is the
+\ PRF-based MAC of the Ascon designers' reference code, not a word of SP 800-232 itself.
 IN: ascon
 
 : hash ( bytes -- bytes )
@@ -30,7 +28,7 @@ META: mac
 ;
 
 : encrypt ( data:bytes key:key{hex|utf8|latin1|base64} nonce:key{hex|utf8|latin1|base64} ad:key{hex|utf8|latin1|base64}="" -- bytes )
-  "Ascon-AEAD128 authenticated encryption (NIST SP 800-232) of the input. The key and the nonce are 16 bytes each (E_RANGE otherwise); never reuse a nonce under one key. The additional data ad is authenticated but not encrypted, and must be the same when decrypting. The output is the ciphertext followed by the 16-byte tag, as in CyberChef. Chain hex:encode for text." doc
+  "Ascon-AEAD128 authenticated encryption (NIST SP 800-232) of the input. The key and the nonce are 16 bytes each (E_RANGE otherwise); never reuse a nonce under one key. The additional data ad is authenticated but not encrypted, and must be the same when decrypting. The output is the ciphertext followed by the 16-byte tag. Chain hex:encode for text." doc
   "Encryption" category
   data key nonce ad false _aead ;
 

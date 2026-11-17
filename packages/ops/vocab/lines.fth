@@ -260,7 +260,7 @@ META: tail
   items nums zip " " width repeat-str width _join-numbered ;
 
 : add-numbers ( data:str delimiter:choice<util:delimiter>="newline" offset:int=0 -- str )
-  "Put a line number in front of every piece of the text (lines by default): the number, right-aligned with spaces to the width of the count of pieces (the width of 10 pieces is 2, so 1 is written ' 1'), then a space. The width does not grow with the offset, as in CyberChef: a number that is wider than that is written in full. The first piece is number 1 plus the offset." doc
+  "Put a line number in front of every piece of the text (lines by default): the number, right-aligned with spaces to the width of the count of pieces (the width of 10 pieces is 2, so 1 is written ' 1'), then a space. The width does not grow with the offset: a number that is wider than that is written in full. The first piece is number 1 plus the offset." doc
   "Utils" category
   data delimiter util:delimiter split
   dup 0 swap len range [ offset + 1 + int>str ] map
@@ -276,7 +276,7 @@ META: add-numbers
 ;
 
 : remove-numbers ( data:str delimiter:choice<util:delimiter>="newline" -- str )
-  "Remove a line number from the start of every piece of the text (lines by default): up to 5 spaces or tabs, one or more digits, then one white space character or one of : | - , . ) ] (the numbers add-numbers writes, and the usual ones of listings), as CyberChef does: only that one separator goes, so two spaces after the number leave one. A piece with digits but no separator after them is left as it is." doc
+  "Remove a line number from the start of every piece of the text (lines by default): up to 5 spaces or tabs, one or more digits, then one white space character or one of : | - , . ) ] (the numbers add-numbers writes, and the usual ones of listings): only that one separator goes, so two spaces after the number leave one. A piece with digits but no separator after them is left as it is." doc
   "Utils" category
   data delimiter util:delimiter split
   [ "^[ \t]{0,5}[0-9]+[\\s:|\\-,.)\\]]" "" "" regex:replace ] map
@@ -296,7 +296,7 @@ META: remove-numbers
   items [ position "start" = [ fill swap cat ] [ fill cat ] if ] map ;
 
 : pad ( data:str delimiter:choice<util:delimiter>="newline" position:choice<util:start-or-end>="start" length:int[0..65536]=5 character:str[1..]=" " -- str )
-  "Add length characters of padding to every piece of the text (lines by default), at the start or at the end, as CyberChef's Pad lines does: the length is how many characters are added, not the length to pad to, so every piece grows by length code points whatever its own length. A character of several code points is repeated and cut to length, as JavaScript's padStart does." doc
+  "Add length characters of padding to every piece of the text (lines by default), at the start or at the end: the length is how many characters are added, not the length to pad to, so every piece grows by length code points whatever its own length. A character of several code points is repeated and cut to length, as JavaScript's padStart does." doc
   "Utils" category
   data delimiter util:delimiter split
   character length character len div 1 + repeat-str 0 length slice
@@ -377,7 +377,7 @@ META: wrap
   if
   "\n" join "\n" cat ;
 
-\ The box of CyberChef: a rule above, under the header row (when there is one) and below, no rule between the rows.
+\ The box: a rule above, under the header row (when there is one) and below, no rule between the rows.
 : _ascii ( rows:list widths:list header:bool -- str )
   rows [ widths " " widths 0 [ max ] reduce repeat-str _line ] map
   widths "-" widths 0 [ max ] reduce 2 + repeat-str _rule
@@ -388,7 +388,7 @@ META: wrap
   { head widths sp _line widths [ dash swap 0 swap slice ] map widths sp _line }
   body [ widths sp _line ] map cat "\n" join ;
 
-\ A pipe table: like CyberChef's, the first row is always the header (the dashes under it are as wide as the column).
+\ A pipe table: the first row is always the header (the dashes under it are as wide as the column).
 : _markdown ( rows:list widths:list -- str )
   rows 0 nth rows 1 rows len slice widths
   " " widths 0 [ max ] reduce repeat-str
@@ -416,7 +416,7 @@ META: wrap
   [ cell _parse-row ] map ;
 
 : to-table ( data:str cell-delimiter:choice{space|comma|semicolon|colon|tab}="comma" row-delimiter:choice{newline|crlf|cr}="newline" first-row-header:bool=false format:choice{ascii|markdown}="ascii" -- str )
-  "Lay delimited text out as a table, in the layouts of CyberChef's To Table. The text is cut into rows at the row delimiter (a trailing empty row is dropped; with newline a carriage return before the line feed is dropped too) and each row into cells at the cell delimiter. A cell that starts with a double quote runs to the closing quote and may hold the delimiter (a doubled quote is one quote); a quoted cell cannot hold a row delimiter. Short rows are filled with empty cells (CyberChef draws them short). ascii draws a box: a rule of + and - above the rows, one under the header row when first-row-header is on and one below the last row, with | between the cells and no rule between the rows; markdown writes a pipe table whose header is always the first row, as in CyberChef (first-row-header does not change it), with the dashes under the header as wide as the column and | in cells escaped. Every line ends with a line feed. Column widths are counted in characters. An empty input gives an empty output; CyberChef's HTML format is not offered." doc
+  "Lay delimited text out as a table. The text is cut into rows at the row delimiter (a trailing empty row is dropped; with newline a carriage return before the line feed is dropped too) and each row into cells at the cell delimiter. A cell that starts with a double quote runs to the closing quote and may hold the delimiter (a doubled quote is one quote); a quoted cell cannot hold a row delimiter. Short rows are filled with empty cells. ascii draws a box: a rule of + and - above the rows, one under the header row when first-row-header is on and one below the last row, with | between the cells and no rule between the rows; markdown writes a pipe table whose header is always the first row (first-row-header does not change it), with the dashes under the header as wide as the column and | in cells escaped. Every line ends with a line feed. Column widths are counted in characters. An empty input gives an empty output." doc
   "Utils" category
   data "" =
   [ "" ]
@@ -435,8 +435,8 @@ META: to-table
 
 \ ---- file tree ----
 
-\ The parts of a path: cut at the separator, and a first empty part (a leading separator) is dropped. Other empty
-\ parts stay, as in CyberChef's File Tree.
+\ The parts of a path: cut at the separator, and a first empty part (a leading separator) is dropped. Other empty parts
+\ stay.
 : _tree-parts ( path:str separator:str -- list )
   path separator split
   dup len 0 > [ dup 0 nth "" = [ 1 over len slice ] when ] when ;
@@ -456,7 +456,7 @@ META: to-table
   [ dup parts swap 0 swap slice "/" join "\0" cat swap 1 - parts swap _tree-line cat ] map ;
 
 : file-tree ( data:str delimiter:choice<util:delimiter>="newline" separator:str[1..]="/" -- str )
-  "Draw a list of paths (one per line by default) as a tree, in CyberChef's style: the paths are made unique and sorted by code point, and each path writes a line for every part of it that has not been written yet. A first part is written as it is, a deeper part behind |   for every level above it minus one and the arrow |---, so a/b/c and a/d give a, |---b, |   |---c and |---d. A leading separator is ignored (one only); other empty parts are kept. There is no line for the root. The output is always cut at line feeds, whatever the delimiter. An empty input gives an empty output." doc
+  "Draw a list of paths (one per line by default) as a tree: the paths are made unique and sorted by code point, and each path writes a line for every part of it that has not been written yet. A first part is written as it is, a deeper part behind |   for every level above it minus one and the arrow |---, so a/b/c and a/d give a, |---b, |   |---c and |---d. A leading separator is ignored (one only); other empty parts are kept. There is no line for the root. The output is always cut at line feeds, whatever the delimiter. An empty input gives an empty output." doc
   "Utils" category
   data delimiter util:delimiter split list:unique list:sort :> paths
   [ paths [ separator _tree-parts _tree-entries emit-all ] each ] collect

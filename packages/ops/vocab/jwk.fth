@@ -1,12 +1,12 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ jwk: PEM to JWK and JWK to PEM (CyberChef's two ops), between PEM keys (SubjectPublicKeyInfo "PUBLIC KEY", PKCS #8
-\ "PRIVATE KEY", PKCS #1 "RSA PRIVATE KEY" and "RSA PUBLIC KEY", SEC 1 "EC PRIVATE KEY", and the public key of a
-\ "CERTIFICATE") and JSON Web Keys (RFC 7517, RFC 7518 sections 6.2 and 6.3, RFC 8037) for RSA, EC (P-256, P-384, P-521,
-\ secp256k1) and OKP (Ed25519, X25519, Ed448, X448) keys. DER is read and written with the shared asn1 words, JSON with
-\ the shared json words, base64url with util. The only primitives are jwk:_public (the public key of a private key)
-\ and jwk:_on-curve (a point check), over @noble/curves, see src/prims/jwk.ts.
-\ The JWK members are base64url without padding of the unsigned big-endian integers or fixed-length byte strings; the
-\ members of the objects are written in the order of RFC 7518 (kty, n, e, d, p, q, dp, dq, qi; kty, crv, x, y, d).
+\ jwk: PEM to JWK and JWK to PEM, between PEM keys (SubjectPublicKeyInfo "PUBLIC KEY", PKCS #8 "PRIVATE KEY", PKCS #1
+\ "RSA PRIVATE KEY" and "RSA PUBLIC KEY", SEC 1 "EC PRIVATE KEY", and the public key of a "CERTIFICATE") and JSON Web
+\ Keys (RFC 7517, RFC 7518 sections 6.2 and 6.3, RFC 8037) for RSA, EC (P-256, P-384, P-521, secp256k1) and OKP
+\ (Ed25519, X25519, Ed448, X448) keys. DER is read and written with the shared asn1 words, JSON with the shared json
+\ words, base64url with util. The only primitives are jwk:_public (the public key of a private key) and jwk:_on-curve
+\ (a point check), over @noble/curves, see src/prims/jwk.ts. The JWK members are base64url without padding of the
+\ unsigned big-endian integers or fixed-length byte strings; the members of the objects are written in the order of RFC
+\ 7518 (kty, n, e, d, p, q, dp, dq, qi; kty, crv, x, y, d).
 IN: jwk
 
 USING: asn1 json sha2 ;
@@ -211,7 +211,7 @@ MEMO: _rows ( -- list )
   jwk "kid" jwk _thumbprint put ;
 
 : from-pem ( data:str set-kid:bool=false indent:int=0 -- str )
-  "Convert PEM keys to JSON Web Keys (PEM to JWK, RFC 7517). The input is PEM text with PUBLIC KEY (SubjectPublicKeyInfo), PRIVATE KEY (PKCS #8), RSA PRIVATE KEY and RSA PUBLIC KEY (PKCS #1), EC PRIVATE KEY (SEC 1, with its curve) blocks, or CERTIFICATE blocks (the key of the certificate). RSA keys give kty, n, e (and d, p, q, dp, dq, qi for a private key); EC keys on P-256, P-384, P-521 and secp256k1 give kty, crv, x, y (and d); Ed25519, X25519, Ed448 and X448 keys give kty OKP, crv, x (and d, RFC 8037). Numbers and keys are base64url without padding, the coordinates and the private key at the full size of the curve. A private key that carries no public key (every OKP key, and an EC key written without it) has it derived. As in CyberChef each key is one line of compact JSON and several keys are several lines; set-kid adds the kid member, the RFC 7638 JWK Thumbprint (SHA-256, base64url) of the key, as CyberChef's option does. indent (Forge's addition, default 0 for CyberChef's compact text) is the spaces per level within each key's JSON. Encrypted keys, compressed EC points, multi-prime RSA keys, other algorithms and other PEM labels (EC PARAMETERS excepted) are E_COERCE; no key block is E_COERCE." doc
+  "Convert PEM keys to JSON Web Keys (PEM to JWK, RFC 7517). The input is PEM text with PUBLIC KEY (SubjectPublicKeyInfo), PRIVATE KEY (PKCS #8), RSA PRIVATE KEY and RSA PUBLIC KEY (PKCS #1), EC PRIVATE KEY (SEC 1, with its curve) blocks, or CERTIFICATE blocks (the key of the certificate). RSA keys give kty, n, e (and d, p, q, dp, dq, qi for a private key); EC keys on P-256, P-384, P-521 and secp256k1 give kty, crv, x, y (and d); Ed25519, X25519, Ed448 and X448 keys give kty OKP, crv, x (and d, RFC 8037). Numbers and keys are base64url without padding, the coordinates and the private key at the full size of the curve. A private key that carries no public key (every OKP key, and an EC key written without it) has it derived. Each key is one line of compact JSON and several keys are several lines; set-kid adds the kid member, the RFC 7638 JWK Thumbprint (SHA-256, base64url) of the key. indent (default 0, compact text) is the spaces per level within each key's JSON. Encrypted keys, compressed EC points, multi-prime RSA keys, other algorithms and other PEM labels (EC PARAMETERS excepted) are E_COERCE; no key block is E_COERCE." doc
   "Public Key" category
   data str>bytes asn1:pem-decode [ _key-block? ] filter
   dup len 0 = [ "no PEM key block (-----BEGIN ...-----) found in the input" fail-coerce ] when
@@ -221,7 +221,7 @@ MEMO: _rows ( -- list )
 META: from-pem
   use-when "You have a public or private key in PEM and need it as a JSON Web Key, for example for a JWKS endpoint or a JOSE library." ;
   param set-kid "Add kid, the RFC 7638 thumbprint of the key (SHA-256, base64url)." ;
-  param indent "Spaces per level in each key's JSON; 0 (the default, CyberChef's) writes compact JSON." ;
+  param indent "Spaces per level in each key's JSON; 0 (the default) writes compact JSON." ;
   see-also jwk:to-pem pem:to-hex ;
   link "https://www.rfc-editor.org/rfc/rfc7517" "RFC 7517: JSON Web Key" ;
   link "https://www.rfc-editor.org/rfc/rfc8037" "RFC 8037: Ed25519 and X25519 keys in JOSE" ;

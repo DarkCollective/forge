@@ -1,7 +1,7 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ hash-analysis: guess which hash functions could have made a digest, from its length alone. Written in
-\ FL, no primitives. The output is a text report (like CyberChef's Analyse hash), not bytes. The length
-\ is counted in bits from the hex digits (four per digit), so a half byte is a size too.
+\ hash-analysis: guess which hash functions could have made a digest, from its length alone. Written in FL, no
+\ primitives. The output is a text report, not bytes. The length is counted in bits from the hex digits (four per
+\ digit), so a half byte is a size too.
 IN: hash-analysis
 
 \ Digest size in bits, then "|", then the algorithms with that digest size. Some of them (Tiger,

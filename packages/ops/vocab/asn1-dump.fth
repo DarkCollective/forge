@@ -1,14 +1,13 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ asn1-dump: Parse ASN.1 hex string (CyberChef's op). The result is TEXT, an indented outline in the layout of
-\ jsrsasign's dump that CyberChef prints (checked by running both): one element per line, two spaces per level, the type
-\ name and then the value, a line feed after every line. As in CyberChef start counts hex characters and only the
-\ element at start is shown (with what is inside it); truncate counts hex characters kept at each end of a long value,
-\ which is then written first..(total Nbytes)..last. Where jsrsasign is wrong Forge is not: it opens an OCTET STRING or
-\ BIT STRING only when the whole content is exactly one DER element, never guesses at the content of a primitive
-\ context tag, and writes ENUMERATED in decimal. The tree behind the text (records) is the shared reader asn1:parse-all,
-\ which FL code uses directly. The outline is text, not a record tree, because it is meant to be read and copied (the
-\ output pane shows a tree at most 6 levels deep, and an X.509 certificate nests deeper once the OCTET STRINGs of its
-\ extensions are opened).
+\ asn1-dump: Parse ASN.1 hex string. The result is TEXT, an indented outline in the layout of jsrsasign's dump: one
+\ element per line, two spaces per level, the type name and then the value, a line feed after every line. start counts
+\ hex characters and only the element at start is shown (with what is inside it); truncate counts hex characters kept
+\ at each end of a long value, which is then written first..(total Nbytes)..last. Where jsrsasign is wrong Forge is
+\ not: it opens an OCTET STRING or BIT STRING only when the whole content is exactly one DER element, never guesses at
+\ the content of a primitive context tag, and writes ENUMERATED in decimal. The tree behind the text (records) is the
+\ shared reader asn1:parse-all, which FL code uses directly. The outline is text, not a record tree, because it is
+\ meant to be read and copied (the output pane shows a tree at most 6 levels deep, and an X.509 certificate nests
+\ deeper once the OCTET STRINGs of its extensions are opened).
 IN: asn1-dump
 
 USING: asn1 ;
@@ -212,14 +211,14 @@ MEMO: _string-tags ( -- list )
     [ d swap 0 trunc false false _dump ] map "\n" join "\n" cat ] if ;
 
 : parse ( data:str start:int=0 truncate:int=32 -- str )
-  "An outline of the ASN.1 structure written as hex digits (Parse ASN.1 hex string), in the layout of CyberChef's jsrsasign dump: one element per line, two spaces of indent per level, the type name and the value, a line feed after every line. INTEGER and ENUMERATED are not alike: INTEGER shows its hex, ENUMERATED its decimal value. OBJECT IDENTIFIER shows its name and arcs (ObjectIdentifier sha256WithRSAEncryption (1 2 840 113549 1 1 11)), character strings their text in single quotes (UTCTime and GeneralizedTime without), BOOLEAN TRUE or FALSE, an empty SEQUENCE SEQUENCE {}, and an OCTET STRING or BIT STRING whose whole content is exactly one DER element is written OCTETSTRING, encapsulates (BITSTRING, encapsulates) with the element below it; other values are hex (a BIT STRING with its unused-bits octet first). A value of more than truncate bytes is shown as its first truncate hex characters, ..(total Nbytes).., and its last truncate hex characters; 0 shows everything. Context tags print as [0], [1], ... with their hex. start is the position of the element to show, counted in hex characters (even, as in CyberChef); only that element is shown, with what it contains, and the bytes after it are not read. Bad hex, a cut-short or indefinite-length element or nesting deeper than 64 levels is E_COERCE; a start beyond the data or odd, or a negative truncate, is E_RANGE." doc
+  "An outline of the ASN.1 structure written as hex digits (Parse ASN.1 hex string), in the layout of jsrsasign's dump: one element per line, two spaces of indent per level, the type name and the value, a line feed after every line. INTEGER and ENUMERATED are not alike: INTEGER shows its hex, ENUMERATED its decimal value. OBJECT IDENTIFIER shows its name and arcs (ObjectIdentifier sha256WithRSAEncryption (1 2 840 113549 1 1 11)), character strings their text in single quotes (UTCTime and GeneralizedTime without), BOOLEAN TRUE or FALSE, an empty SEQUENCE SEQUENCE {}, and an OCTET STRING or BIT STRING whose whole content is exactly one DER element is written OCTETSTRING, encapsulates (BITSTRING, encapsulates) with the element below it; other values are hex (a BIT STRING with its unused-bits octet first). A value of more than truncate bytes is shown as its first truncate hex characters, ..(total Nbytes).., and its last truncate hex characters; 0 shows everything. Context tags print as [0], [1], ... with their hex. start is the position of the element to show, counted in hex characters (even); only that element is shown, with what it contains, and the bytes after it are not read. Bad hex, a cut-short or indefinite-length element or nesting deeper than 64 levels is E_COERCE; a start beyond the data or odd, or a negative truncate, is E_RANGE." doc
   "Public Key" category
   start 0 < start 2 mod 0 <> or [ "the start index counts hex characters and must be even and not negative" fail-range ] when
   data hex>bytes start 2 div truncate _run ;
 
 META: parse
   use-when "You have DER or BER data as hex, such as a certificate, key or signature, and want to see its nested structure to find a field or check a format." ;
-  param start "The position of the element to show, in hex characters (even), as in CyberChef." ;
+  param start "The position of the element to show, in hex characters (even)." ;
   param truncate "Show at most this many hex characters at each end of a long value, with ..(total Nbytes).. between (0: show all)." ;
   link "https://en.wikipedia.org/wiki/ASN.1" "ASN.1 on Wikipedia" ;
   link "https://www.itu.int/rec/T-REC-X.690/en" "ITU-T X.690: BER, CER and DER encoding rules" ;

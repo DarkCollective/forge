@@ -4,9 +4,9 @@
 \ regex:find-all; the data is read as one character per byte (Latin-1), so binary input never fails and the
 \ patterns, which are all ASCII, find their matches in it. The output is one match per line.
 \
-\ The words share three options, as CyberChef's extractors do: display-total (a "Total found: N" line and a blank
-\ line in front), sort (by code point, list:sort) and unique (each match once, in the order of first appearance).
-\ Unique comes first, then sort, then the total.
+\ The words share three options: display-total (a "Total found: N" line and a blank line in front), sort (by code
+\ point, list:sort) and unique (each match once, in the order of first appearance). Unique comes first, then sort, then
+\ the total.
 IN: extract
 
 \ ---- shared: matching, unique, output ----
@@ -49,7 +49,7 @@ IN: extract
   } case ;
 
 : strings ( data:bytes encoding:choice{single|utf16le|utf16be|all}="single" min-length:int[1..100000]=4 match:choice{printable|alphanumeric}="alphanumeric" null-terminated:bool=false display-total:bool=false sort:bool=false unique:bool=false -- str )
-  "The runs of printable characters in the data, like the Unix strings tool, one per line. encoding single reads one byte per character, utf16le and utf16be two bytes per character (a printable ASCII character with a zero byte next to it, after it for little-endian and before it for big-endian; the zero bytes are removed from the output), and all looks for the three kinds together. min-length is how many characters make a string. match printable takes the characters from space to tilde (U+0020 to U+007E); alphanumeric (the default, as CyberChef's Alphanumeric + punctuation) takes the letters, digits and the punctuation / - : . , _ $ % ' \" ( ) [ ] < > = ! { } @ and the space. With null-terminated a string counts only when a zero byte follows it (two zero bytes in UTF-16). Only ASCII characters are found. The input is read as bytes, so any binary file will do. With display-total the output starts with Total found: N and a blank line, with sort the strings are sorted by code point, with unique each is kept once (first appearance)." doc
+  "The runs of printable characters in the data, like the Unix strings tool, one per line. encoding single reads one byte per character, utf16le and utf16be two bytes per character (a printable ASCII character with a zero byte next to it, after it for little-endian and before it for big-endian; the zero bytes are removed from the output), and all looks for the three kinds together. min-length is how many characters make a string. match printable takes the characters from space to tilde (U+0020 to U+007E); alphanumeric (the default) takes the letters, digits and the punctuation / - : . , _ $ % ' \" ( ) [ ] < > = ! { } @ and the space. With null-terminated a string counts only when a zero byte follows it (two zero bytes in UTF-16). Only ASCII characters are found. The input is read as bytes, so any binary file will do. With display-total the output starts with Total found: N and a blank line, with sort the strings are sorted by code point, with unique each is kept once (first appearance)." doc
   "Extractors" category
   data bytes>latin1
   encoding match _class min-length int>str null-terminated _strings-regex
@@ -95,7 +95,7 @@ MEMO: _v6-forms ( -- str )
 MEMO: _v6-pattern ( -- str )
   "(?<![\\w:.])(?:" _v6-forms cat ")(?![\\w:])(?!\\.\\d)" cat ;
 
-\ Private and loopback IPv4: 10/8, 172.16/12, 192.168/16 and 127/8 (CyberChef's local addresses; 169.254/16 stays).
+\ Private and loopback IPv4: 10/8, 172.16/12, 192.168/16 and 127/8 (the local addresses; 169.254/16 stays).
 : _local? ( ip:str -- bool )
   ip "^(?:10\\.|127\\.|192\\.168\\.|172\\.(?:1[6-9]|2\\d|3[01])\\.)" "" regex:test ;
 
@@ -107,7 +107,7 @@ MEMO: _v6-pattern ( -- str )
   } cond ;
 
 : ip-addresses ( data:bytes ipv4:bool=true ipv6:bool=false remove-local:bool=false display-total:bool=false sort:bool=false unique:bool=false -- str )
-  "The IP addresses in the data, one per line. ipv4 finds dotted-quad addresses (four decimal numbers from 0 to 255, leading zeros allowed, not part of a longer dotted number); ipv6 finds the forms of RFC 4291 section 2.2 (full, with :: and with an IPv4 tail), in either letter case. A :: standing alone is found as well. remove-local drops the IPv4 addresses in 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 (private) and 127.0.0.0/8 (loopback), the local addresses CyberChef removes; 169.254.0.0/16 (link-local) is kept. With both ipv4 and ipv6 off nothing is found. With display-total the output starts with Total found: N and a blank line, with sort the addresses are sorted as text (by code point, so 10.0.0.9 comes after 10.0.0.10), with unique each is kept once (first appearance). The data is read byte by byte, so binary data will do." doc
+  "The IP addresses in the data, one per line. ipv4 finds dotted-quad addresses (four decimal numbers from 0 to 255, leading zeros allowed, not part of a longer dotted number); ipv6 finds the forms of RFC 4291 section 2.2 (full, with :: and with an IPv4 tail), in either letter case. A :: standing alone is found as well. remove-local drops the IPv4 addresses in 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 (private) and 127.0.0.0/8 (loopback), the local addresses; 169.254.0.0/16 (link-local) is kept. With both ipv4 and ipv6 off nothing is found. With display-total the output starts with Total found: N and a blank line, with sort the addresses are sorted as text (by code point, so 10.0.0.9 comes after 10.0.0.10), with unique each is kept once (first appearance). The data is read byte by byte, so binary data will do." doc
   "Extractors" category
   data bytes>latin1
   ipv4 ipv6 or
@@ -194,7 +194,7 @@ META: urls
   dup "(?<![\\w.-])(?:[A-Za-z0-9" swap cat "](?:[A-Za-z0-9" cat over cat "-]{0,61}[A-Za-z0-9" cat over cat "])?\\.)+(?:[A-Za-z]{2,63}|xn--[A-Za-z0-9-]{1,59})(?![\\w-])(?!\\.\\w)" cat nip ;
 
 : domains ( data:bytes display-total:bool=false sort:bool=false unique:bool=false underscore:bool=false -- str )
-  "The domain names in the data, one per line: two or more dot-separated labels (letters, digits, inner hyphens and, with underscore, _; at most 63 characters each) ending in a top-level label of two or more letters, or an xn-- label. The shape is all that is checked: the top-level label is not looked up in a list, so a file name such as report.txt is found as well (CyberChef's option to keep only valid top-level domains is not offered; its Underscore option is: with underscore on, names such as _dmarc.example.com are found whole, with it off, the default, a name with an underscore in a label is not found). A name inside a longer word or after a hyphen or dot is read from its start. With display-total the output starts with Total found: N and a blank line, with sort the names are sorted by code point, with unique each is kept once (first appearance). The data is read byte by byte, so binary data will do." doc
+  "The domain names in the data, one per line: two or more dot-separated labels (letters, digits, inner hyphens and, with underscore, _; at most 63 characters each) ending in a top-level label of two or more letters, or an xn-- label. The shape is all that is checked: the top-level label is not looked up in a list, so a file name such as report.txt is found as well (with underscore on, names such as _dmarc.example.com are found whole, with it off, the default, a name with an underscore in a label is not found). A name inside a longer word or after a hyphen or dot is read from its start. With display-total the output starts with Total found: N and a blank line, with sort the names are sorted by code point, with unique each is kept once (first appearance). The data is read byte by byte, so binary data will do." doc
   "Extractors" category
   data bytes>latin1
   underscore _domain-pattern
@@ -261,8 +261,7 @@ MEMO: _digest-lengths ( -- list )
 : _of-length ( found:list n:int -- list )
   found [ len n = ] filter ;
 
-\ With all: the values of each usual length together, the shortest length first, each in the order of the text (the
-\ order CyberChef writes them in).
+\ With all: the values of each usual length together, the shortest length first, each in the order of the text.
 : _by-length ( found:list -- list )
   [ _digest-lengths [ found swap _of-length emit-all ] each ] collect ;
 

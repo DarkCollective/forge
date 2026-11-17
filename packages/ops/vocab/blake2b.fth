@@ -1,8 +1,8 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ blake2b: BLAKE2b, RFC 7693, with the output sizes of CyberChef's BLAKE2b operation (512, 384, 256, 160
-\ and 128 bits, here in bytes: 64, 48, 32, 20 and 16) and an optional key for the keyed (MAC) mode. The
-\ digest is raw bytes; chain hex:encode for text. The hash itself is _hash, a private primitive
-\ (src/prims/blake2b.ts) over the audited @noble/hashes library; the parameters and the metadata are FL.
+\ blake2b: BLAKE2b, RFC 7693, with the output sizes 512, 384, 256, 160 and 128 bits (here in bytes: 64, 48, 32, 20 and
+\ 16) and an optional key for the keyed (MAC) mode. The digest is raw bytes; chain hex:encode for text. The hash itself
+\ is _hash, a private primitive (src/prims/blake2b.ts) over the audited @noble/hashes library; the parameters and the
+\ metadata are FL.
 IN: blake2b
 
 : digest ( bytes size:int[16|20|32|48|64]=64 key:key{utf8|hex|latin1|base64}[0..64]="" -- bytes )
@@ -12,7 +12,7 @@ IN: blake2b
 
 META: digest
   use-when "You need a BLAKE2b digest of a chosen size, or a keyed BLAKE2b value, to match one from a library or format that names BLAKE2b." ;
-  param size "The output size in bytes: 16, 20, 32, 48 or 64 (CyberChef's 128, 160, 256, 384 and 512 bits)." ;
+  param size "The output size in bytes: 16, 20, 32, 48 or 64 (128, 160, 256, 384 and 512 bits)." ;
   param key "The MAC key, up to 64 bytes. Empty (the default) for the unkeyed hash." ;
   see-also blake3:digest ;
   link "https://www.rfc-editor.org/rfc/rfc7693" "RFC 7693: the BLAKE2 hash functions" ;

@@ -1,7 +1,6 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ brotli: Brotli decompression (RFC 7932), beyond CyberChef's set of decoders. The decoder is a
-\ vendored copy of the brotli 2.1.0 decoder with an output cap (src/vendor/brotli, src/prims/brotli.ts).
-\ Compression is not offered (the compressor is not used).
+\ brotli: Brotli decompression (RFC 7932). The decoder is a vendored copy of the brotli 2.1.0 decoder with an output
+\ cap (src/vendor/brotli, src/prims/brotli.ts). Compression is not offered (the compressor is not used).
 IN: brotli
 
 : decompress ( data:bytes -- bytes )

@@ -24,13 +24,13 @@ IN: defang
 
 \ ---- Defang URL and Fang URL ----
 
-\ CyberChef's patterns, with lookbehinds added: a match cannot start inside a run of letters (that changes nothing:
-\ the leftmost match already starts at the front of the run), and a domain cannot start after a dot or a hyphen that
-\ follows a letter or digit, so a long run of labels is read once and not once from every position, which took
-\ seconds at 64 KiB. The cross-check of WP 5.59b found that the first version of the domain lookbehind also refused a
-\ start after a dot or hyphen that follows something else, and so skipped ".example.com" and "*.example.com". The
-\ patterns match a full URL (scheme in capital letters or not, ://, a host with at least one dot, an optional port, an
-\ optional path that does not end in . ! , or ?) and a domain name (labels of 1 to 63 characters).
+\ The patterns carry lookbehinds: a match cannot start inside a run of letters (that changes nothing: the leftmost
+\ match already starts at the front of the run), and a domain cannot start after a dot or a hyphen that follows a
+\ letter or digit, so a long run of labels is read once and not once from every position, which took seconds at 64 KiB.
+\ The cross-check of WP 5.59b found that the first version of the domain lookbehind also refused a start after a dot or
+\ hyphen that follows something else, and so skipped ".example.com" and "*.example.com". The patterns match a full URL
+\ (scheme in capital letters or not, ://, a host with at least one dot, an optional port, an optional path that does
+\ not end in . ! , or ?) and a domain name (labels of 1 to 63 characters).
 : _url-pattern ( -- str )
   "(?<![A-Z])[A-Z]+://[-\\w]+(?:\\.\\w[-\\w]*)+(?::\\d+)?(?:/[^.!,?\"<>\\[\\]{}\\s\\x7F-\\xFF]*(?:[.!,?]+[^.!,?\"<>\\[\\]{}\\s\\x7F-\\xFF]+)*)?" ;
 
@@ -45,7 +45,7 @@ IN: defang
   slashes [ "://" split "[://]" join ] when ;
 
 : defang-url ( data:str escape-dots:bool=true escape-http:bool=true escape-slashes:bool=true process:choice{valid-domains-and-full-urls|only-full-urls|everything}="valid-domains-and-full-urls" -- str )
-  "Makes URLs harmless to click (hxxp[://]example[.]com/a): escape-dots writes every . as [.], escape-http writes http (any letter case) as hxxp, and escape-slashes writes :// as [://]. process says what is changed: only the full URLs (a scheme and ://, a host with a dot, an optional port and path, as CyberChef finds them), the full URLs and then the domain names in the text (a name of dot-separated labels ending in two to 63 letters), or everything, the whole input as one URL. The patterns are CyberChef's." doc
+  "Makes URLs harmless to click (hxxp[://]example[.]com/a): escape-dots writes every . as [.], escape-http writes http (any letter case) as hxxp, and escape-slashes writes :// as [://]. process says what is changed: only the full URLs (a scheme and ://, a host with a dot, an optional port and path), the full URLs and then the domain names in the text (a name of dot-separated labels ending in two to 63 letters), or everything, the whole input as one URL." doc
   "Networking" category
   [ escape-dots escape-http escape-slashes _defang-one ] :> one
   process "everything" =

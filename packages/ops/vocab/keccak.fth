@@ -1,8 +1,8 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ keccak: Keccak as submitted to the SHA-3 competition, with the original padding (0x01) rather than the
-\ FIPS 202 domain padding (0x06), so its digests differ from sha3:digest. CyberChef's Keccak operation
-\ is this. One word with a size parameter. The digest is raw bytes; chain hex:encode for text. The hash
-\ itself is _hash, a private primitive (src/prims/keccak.ts) over the audited @noble/hashes library.
+\ keccak: Keccak as submitted to the SHA-3 competition, with the original padding (0x01) rather than the FIPS 202
+\ domain padding (0x06), so its digests differ from sha3:digest. One word with a size parameter. The digest is raw
+\ bytes; chain hex:encode for text. The hash itself is _hash, a private primitive (src/prims/keccak.ts) over the
+\ audited @noble/hashes library.
 IN: keccak
 
 : digest ( bytes size:choice<util:sha3-size>="512" -- bytes )

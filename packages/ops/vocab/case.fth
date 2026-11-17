@@ -33,7 +33,7 @@ META: swap-case
     _k 1 + _k! ] if ;
 
 : alternating ( data:str first:choice<util:letter-case>="lower" -- str )
-  "Alternate the case of the letters: the first letter is lower case (or upper case with first set to upper), the next the other case, and so on. Characters without case are kept and do not count, so the alternation carries on across them and Hello, World! becomes hElLo, WoRlD! (the W is the sixth letter, so it is upper case). CyberChef's Alternating Caps starts with a lower case letter too." doc
+  "Alternate the case of the letters: the first letter is lower case (or upper case with first set to upper), the next the other case, and so on. Characters without case are kept and do not count, so the alternation carries on across them and Hello, World! becomes hElLo, WoRlD! (the W is the sixth letter, so it is upper case)." doc
   "Text" category
   0 _k!
   data str>codes [ cp>str first "upper" = _alt-ch ] map "" join ;
@@ -61,7 +61,7 @@ META: alternating
   if ;
 
 : all-casings ( data:str delimiter:choice<util:delimiter>="newline" -- str )
-  "Every combination of upper and lower case of the letters in the text, one per line (or joined by the delimiter), as CyberChef's Get All Casings does. Letters with a different upper and lower case form get both; everything else is kept. The first combination is all lower case, and the first letter varies fastest (the second combination has the first letter in upper case). At most 12 such letters (4,096 combinations): more is E_RANGE. Unlike CyberChef, which counts every character, the number of combinations is two to the power of the letters only." doc
+  "Every combination of upper and lower case of the letters in the text, one per line (or joined by the delimiter). Letters with a different upper and lower case form get both; everything else is kept. The first combination is all lower case, and the first letter varies fastest (the second combination has the first letter in upper case). At most 12 such letters (4,096 combinations): more is E_RANGE. The number of combinations is two to the power of such letters only." doc
   "Text" category
   data _casing-tokens
   dup [ _cased? ] filter len 12 >
@@ -154,7 +154,7 @@ META: all-casings
   } cond ;
 
 : to-insensitive-regex ( pattern:str -- str )
-  "Rewrite a regular expression (ECMAScript syntax) so that it matches without regard to case, whatever flags it runs with: every letter outside a class becomes a class of both its cases, the lower case first as in CyberChef (h and H both become [hH]), and in a character class the other case of each letter or range of ASCII letters is added, so [a-f] becomes [a-fA-F]. Escapes (\\d, \\x41, \\u00e9, \\p{Lu}, \\k<name>), group names and quantifiers are copied unchanged. Letters whose other case is not one code point (the German sharp s) are left as they are. The output is the pattern text only, no slashes." doc
+  "Rewrite a regular expression (ECMAScript syntax) so that it matches without regard to case, whatever flags it runs with: every letter outside a class becomes a class of both its cases, the lower case first (h and H both become [hH]), and in a character class the other case of each letter or range of ASCII letters is added, so [a-f] becomes [a-fA-F]. Escapes (\\d, \\x41, \\u00e9, \\p{Lu}, \\k<name>), group names and quantifiers are copied unchanged. Letters whose other case is not one code point (the German sharp s) are left as they are. The output is the pattern text only, no slashes." doc
   "Text" category
   pattern _pieces [ _piece-to ] map "" join ;
 
