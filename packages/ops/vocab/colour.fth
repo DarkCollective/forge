@@ -23,8 +23,8 @@ IN: colour
   parts len 2 = [ "0" parts 1 nth cat "000" cat 0 4 slice str>int + ] when ;
 
 : _milli-signed ( u:str neg:bool -- int )
-  u "-" starts-with? u "+" starts-with? or [ 1 u len slice ] [ u ] if
-  "." split _milli-parts neg [ neg ] when ;
+  u "-" starts-with? u "+" starts-with? or [ u 1 u len slice ] [ u ] if
+  "." split _milli-parts neg [ core:neg ] when ;
 
 \ A number with an optional sign and an optional % or deg, times 1000.
 : _milli ( t:str -- int ) t _strip-unit dup "-" starts-with? _milli-signed ;

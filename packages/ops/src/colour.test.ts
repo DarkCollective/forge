@@ -133,6 +133,14 @@ describe("colour:parse", () => {
     expect(lines(await parse("#000000ff")).Hex).toBe("#000000");
   });
 
+  test("a sign before a number is read: +1.5 and -1.5 (milli-units)", async () => {
+    // hue -120 is 240 (blue), +0.5 of alpha is 128 of 255, a sign before a channel is accepted
+    expect(lines(await parse("hsl(-120, 100%, 50%)")).Hex).toBe("#0000ff");
+    expect(lines(await parse("hsl(+240, 100%, 50%)")).Hex).toBe("#0000ff");
+    expect(lines(await parse("rgba(+0, +0, +0, +.5)")).Hex).toBe("#00000080");
+    expect(lines(await parse("rgb(+255.0, +127.5, -0)")).Hex).toBe("#ff8000");
+  });
+
   test("the reports of the 16 corners of the colour cube are exact", async () => {
     for (const r of [0, 255])
       for (const g of [0, 255])

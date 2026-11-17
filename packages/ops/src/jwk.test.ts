@@ -238,6 +238,32 @@ describe("details", () => {
     expect(code(await fromPem(pemOf("EC PRIVATE KEY", der)))).toBe("E_COERCE");
   });
 
+  test("an OKP key of the wrong size is E_COERCE with the sizes in the message", async () => {
+    // DER built by hand (RFC 8410): SEQUENCE { [version 0,] AlgorithmIdentifier id-Ed25519, key }
+    const tlv = (tag: string, body: string): string =>
+      `${tag}${(body.length / 2).toString(16).padStart(2, "0")}${body}`;
+    const alg = "300506032b6570";
+    const okp = (keyHex: string, priv: boolean): string =>
+      pemOf(
+        priv ? "PRIVATE KEY" : "PUBLIC KEY",
+        u8(
+          priv
+            ? tlv("30", `020100${alg}${tlv("04", tlv("04", keyHex))}`)
+            : tlv("30", `${alg}${tlv("03", `00${keyHex}`)}`),
+        ),
+      );
+    const pub = await fromPem(okp("01".repeat(33), false));
+    expect(code(pub)).toBe("E_COERCE");
+    expect(pub.ok ? "" : pub.error.message).toContain("the Ed25519 public key is 32 bytes, not 33");
+    // The private-key check of _okp-parts is not reachable through an op: jwk:_public refuses a private key of
+    // the wrong size first, with its own message. The error code is still E_COERCE.
+    for (const n of [31, 33]) {
+      const priv = await fromPem(okp("01".repeat(n), true));
+      expect(code(priv)).toBe("E_COERCE");
+      expect(priv.ok ? "" : priv.error.message).toContain(`32 bytes, not ${n}`);
+    }
+  });
+
   test("the point check and the key derivation of the primitives", () => {
     const one = new Uint8Array(32);
     one[31] = 1;

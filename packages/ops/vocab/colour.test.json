@@ -148,6 +148,48 @@
     }
   },
   {
+    "name": "hue with a plus sign",
+    "ref": "hand-computed: hsl(+120, 100%, 50%) is pure green (CSS Color 4 hslToRgb)",
+    "op": "colour:parse",
+    "params": {},
+    "input": {
+      "value": "hsl(+120, 100%, 50%)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Hex:  #00ff00\nRGB:  rgb(0, 255, 0)\nRGBA: rgba(0, 255, 0, 1)\nHSL:  hsl(120, 100%, 50%)\nHSLA: hsla(120, 100%, 50%, 1)\nCMYK: cmyk(100%, 0%, 100%, 0%)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "negative hue wraps",
+    "ref": "hand-computed: hsl(-240, 100%, 50%) is the same as hsl(120, 100%, 50%), pure green",
+    "op": "colour:parse",
+    "params": {},
+    "input": {
+      "value": "hsl(-240, 100%, 50%)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Hex:  #00ff00\nRGB:  rgb(0, 255, 0)\nRGBA: rgba(0, 255, 0, 1)\nHSL:  hsl(120, 100%, 50%)\nHSLA: hsla(120, 100%, 50%, 1)\nCMYK: cmyk(100%, 0%, 100%, 0%)",
+      "enc": "utf8"
+    }
+  },
+  {
+    "name": "negative hue with a decimal part",
+    "ref": "hand-computed: hsl(-240.0, 100%, 50%) is the same as hsl(120, 100%, 50%), pure green",
+    "op": "colour:parse",
+    "params": {},
+    "input": {
+      "value": "hsl(-240.0, 100%, 50%)",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Hex:  #00ff00\nRGB:  rgb(0, 255, 0)\nRGBA: rgba(0, 255, 0, 1)\nHSL:  hsl(120, 100%, 50%)\nHSLA: hsla(120, 100%, 50%, 1)\nCMYK: cmyk(100%, 0%, 100%, 0%)",
+      "enc": "utf8"
+    }
+  },
+  {
     "name": "cmyk function",
     "ref": "R = 255 (1-C)(1-K): cmyk(0 50 100 0) is rgb(255 127.5 0), rounded up to 128",
     "op": "colour:parse",
