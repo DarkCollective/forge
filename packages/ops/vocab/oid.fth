@@ -1,7 +1,7 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ oid: Hex to Object Identifier and Object Identifier to Hex (CyberChef's two ops), over the shared codec of the
-\ internal asn1 vocabulary (asn1:oid-decode, asn1:oid-encode). The hex is the content bytes of an OBJECT
-\ IDENTIFIER, without the tag and length (2a864886f70d010101, not 06092a864886f70d010101).
+\ oid: Hex to Object Identifier and Object Identifier to Hex, over the shared codec of the internal asn1 vocabulary
+\ (asn1:oid-decode, asn1:oid-encode). The hex is the content bytes of an OBJECT IDENTIFIER, without the tag and length
+\ (2a864886f70d010101, not 06092a864886f70d010101).
 IN: oid
 
 USING: asn1 ;

@@ -1,8 +1,8 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ shake: SHAKE128 and SHAKE256, FIPS 202: extendable-output functions, so the length is a parameter. The
-\ output is raw bytes; chain hex:encode for text. The length is in bytes, not bits: CyberChef's Shake
-\ takes bits (default 512), so its 512 is 64 here. The hash itself is _hash, a private primitive
-\ (src/prims/shake.ts) over the audited @noble/hashes library; the parameters and the metadata are FL.
+\ shake: SHAKE128 and SHAKE256, FIPS 202: extendable-output functions, so the length is a parameter. The output is raw
+\ bytes; chain hex:encode for text. The length is in bytes, not bits (512 bits is 64 bytes). The hash itself is _hash,
+\ a private primitive (src/prims/shake.ts) over the audited @noble/hashes library; the parameters and the metadata are
+\ FL.
 IN: shake
 
 : digest ( bytes variant:choice{"128"|"256"}="256" length:int[1..65536]=64 -- bytes )

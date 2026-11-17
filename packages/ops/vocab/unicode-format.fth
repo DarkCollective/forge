@@ -12,7 +12,7 @@ IN: unicode-format
   s str>codes [ dup 10 = over 13 = or [ cp>str ] [ cp>str marks cat ] if ] map "" join ;
 
 : decorate ( str underline:bool=false strikethrough:bool=false -- str )
-  "Put combining characters after each character of the text so that it looks underlined (U+0332 COMBINING LOW LINE) and or struck through (U+0336 COMBINING LONG STROKE OVERLAY) wherever Unicode text is shown. Line feeds and carriage returns are left alone. Both options false (the default, as in CyberChef) leaves the text unchanged; with both on the strikethrough mark goes first, then the underline. The marks go after every code point, also after one that is itself a combining mark." doc
+  "Put combining characters after each character of the text so that it looks underlined (U+0332 COMBINING LOW LINE) and or struck through (U+0336 COMBINING LONG STROKE OVERLAY) wherever Unicode text is shown. Line feeds and carriage returns are left alone. Both options false (the default) leaves the text unchanged; with both on the strikethrough mark goes first, then the underline. The marks go after every code point, also after one that is itself a combining mark." doc
   "Language" category
   underline strikethrough _marks _decorate ;
 

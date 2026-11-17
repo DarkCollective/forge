@@ -1,12 +1,11 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ x509: Parse X.509 certificate, Parse X.509 certificate bundles, Parse X.509 CRL, Parse CSR and Public Key from
-\ Certificate (CyberChef's five operations), and Parse SSH Host Key (the same kind of text report, for the keys of SSH;
-\ it shares the hex, text and bit-length helpers, so it lives here), over the shared DER reader of the internal asn1
-\ vocabulary. The results
-\ are TEXT reports (README, "How a parser reports"): CyberChef's layout of labels and sections (Version, Serial
-\ number, Algorithm ID, Validity, Issuer, Subject, Public Key, Certificate Signature, Extensions), with the values of
-\ the extensions written as OpenSSL's `x509 -text` writes them so that every value can be checked against it.
-\ No primitive: the reader is asn1:parse-all and the node words; the text is FL.
+\ Certificate, and Parse SSH Host Key (the same kind of text report, for the keys of SSH; it shares the hex, text and
+\ bit-length helpers, so it lives here), over the shared DER reader of the internal asn1 vocabulary. The results are
+\ TEXT reports (README, "How a parser reports"): labels and sections (Version, Serial number, Algorithm ID, Validity,
+\ Issuer, Subject, Public Key, Certificate Signature, Extensions), with the values of the extensions written as
+\ OpenSSL's `x509 -text` writes them so that every value can be checked against it. No primitive: the reader is
+\ asn1:parse-all and the node words; the text is FL.
 \
 \ Structure read (RFC 5280, RFC 2986):
 \   Certificate  ::= SEQUENCE { tbs, signatureAlgorithm, signature BIT STRING }
@@ -728,7 +727,7 @@ MEMO: _cert-labels ( -- list )
 \ ---- the operations ----
 
 : parse ( data:bytes input-format:choice<cert-format>="pem" -- str )
-  "Parse one X.509 certificate (RFC 5280) and report it as text, in the layout of CyberChef's Parse X.509 certificate: Version, Serial number (decimal and hex), Algorithm ID, Validity (UTC), Issuer and Subject (one attribute per line), Public Key (algorithm, size, modulus and exponent, or curve and point, or the DSA numbers), Certificate Signature and Extensions. input-format is pem (the default; PEM blocks of other kinds, such as a private key in the same file, are ignored), der-hex (hex digits), base64 (of the DER) or raw (the DER bytes). Extension values are written as OpenSSL's x509 -text writes them (Basic Constraints, Key Usage, Extended Key Usage, Subject and Issuer Alternative Name, Subject and Authority Key Identifier, CRL Distribution Points, Authority and Subject Information Access, Certificate Policies, Name Constraints, ...) and any other extension as hex. More than one certificate, none, bytes after the certificate or a malformed structure is E_COERCE; use Parse X.509 certificate bundles for several." doc
+  "Parse one X.509 certificate (RFC 5280) and report it as text, in this layout: Version, Serial number (decimal and hex), Algorithm ID, Validity (UTC), Issuer and Subject (one attribute per line), Public Key (algorithm, size, modulus and exponent, or curve and point, or the DSA numbers), Certificate Signature and Extensions. input-format is pem (the default; PEM blocks of other kinds, such as a private key in the same file, are ignored), der-hex (hex digits), base64 (of the DER) or raw (the DER bytes). Extension values are written as OpenSSL's x509 -text writes them (Basic Constraints, Key Usage, Extended Key Usage, Subject and Issuer Alternative Name, Subject and Authority Key Identifier, CRL Distribution Points, Authority and Subject Information Access, Certificate Policies, Name Constraints, ...) and any other extension as hex. More than one certificate, none, bytes after the certificate or a malformed structure is E_COERCE; use Parse X.509 certificate bundles for several." doc
   "Public Key" category
   data input-format _cert-labels _blobs
   dup len 1 <> [ "expected one certificate, found " over len int>str cat "; use x509:parse-bundle for several" cat fail-coerce ] when
@@ -786,12 +785,12 @@ META: public-key
 : _crl-base ( tbs:record -- int )
   tbs 0 asn1:child "universal" 2 asn1:is? [ 1 ] [ 0 ] if ;
 
-\ "2 (0x1)": the 1-based version and the value in the DER, as CyberChef writes it (no padding).
+\ "2 (0x1)": the 1-based version and the value in the DER (no padding).
 : _crl-version ( tbs:record -- str )
   tbs _crl-base 1 = [ tbs 0 asn1:child asn1:node>int ] [ 0 ] if
   dup 1 + int>str " (0x" cat swap 16 int>str-radix cat ")" cat ;
 
-\ ---- dates as RFC 1123 (Wed, 11 Nov 2026 22:55:51 GMT), the form CyberChef's CRL report uses ----
+\ ---- dates as RFC 1123 (Wed, 11 Nov 2026 22:55:51 GMT), the form the CRL report uses ----
 
 : _dow2 ( yy:int m:int d:int -- int )
   yy yy 4 div + yy 100 div - yy 400 div + { 0 3 2 5 0 3 5 1 4 6 2 4 } m 1 - nth + d + 7 mod ;
@@ -867,8 +866,7 @@ MEMO: _month-names ( -- list )
 : _crl-ext-block ( exts:list -- str )
   exts len 0 = [ "" ] [ "    CRL extensions:\n" exts [ 8 _ext-at ] map "\n" join cat ] if ;
 
-\ The layout of CyberChef's Parse X.509 CRL (the shape of openssl crl -text), indented with spaces where CyberChef
-\ mixes in tabs.
+\ The layout of the CRL report (the shape of openssl crl -text), indented with spaces.
 : _crl-lines ( tbs:record rest:list sig:bytes -- str )
   { "Certificate Revocation List (CRL):"
     "    Version: " tbs _crl-version cat
@@ -966,7 +964,7 @@ META: parse-csr
 \ section 6.6 and RFC 5656 (a string is a 32-bit length and the bytes; an mpint is a string with a signed big-endian
 \ number). The words are prefixed _ssh.
 
-\ One line "Label: value", the layout of CyberChef's Parse SSH Host Key.
+\ One line "Label: value".
 : _ssh-kv ( label:str value:str -- str )
   label ": " cat value cat ;
 
@@ -1009,8 +1007,8 @@ META: parse-csr
   b len 0 = [ 0 ] [ b asn1:der>int ] if ;
 
 \ ---- the fields of each key type ----
-\ The labels and the 0x hex of the fields as they are in the key blob (an mpint with its leading 00) are CyberChef's;
-\ the Length lines are an addition.
+\ The labels and the 0x hex of the fields are as they are in the key blob (an mpint with its leading 00); the Length
+\ lines are added.
 
 : _ssh-hex ( b:bytes -- str )
   "0x" b bytes>hex cat ;

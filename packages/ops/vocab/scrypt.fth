@@ -1,8 +1,8 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ scrypt: the password-based key derivation function of RFC 7914, with the parameters of CyberChef's
-\ "Scrypt" (salt, N, r, p, key length; the password is the input). The key is raw bytes; chain
-\ hex:encode for text. The work is _derive, a private primitive (src/prims/scrypt.ts) over the audited
-\ @noble/hashes library: scrypt is memory-hard and far too slow in FL.
+\ scrypt: the password-based key derivation function of RFC 7914, with the parameters salt, N, r, p and key length
+\ (the password is the input). The key is raw bytes; chain hex:encode for text. The work is _derive, a private
+\ primitive (src/prims/scrypt.ts) over the audited @noble/hashes library: scrypt is memory-hard and far too slow in
+\ FL.
 IN: scrypt
 
 : derive ( password:bytes salt:key{hex|base64|utf8|latin1}="" n:int=16384 r:int=8 p:int=1 length:int=64 -- bytes )
@@ -13,9 +13,9 @@ IN: scrypt
 META: derive
   use-when "You have a password, a salt and the N, r and p settings, and need the scrypt key, for example to open a wallet file or to reproduce a stored hash." ;
   param salt "The salt, any length, empty by default." ;
-  param n "The cost N, a power of two (CyberChef's Iterations); memory is 128 * N * r bytes, at most 256 MiB." ;
-  param r "The block size r (CyberChef's Memory factor)." ;
-  param p "The parallelism p (CyberChef's Parallelization factor)." ;
+  param n "The cost N, a power of two; memory is 128 * N * r bytes, at most 256 MiB." ;
+  param r "The block size r." ;
+  param p "The parallelism p." ;
   param length "The length of the derived key in bytes, 1 to 4096." ;
   see-also pbkdf2:derive hex:encode ;
   link "https://www.rfc-editor.org/rfc/rfc7914" "RFC 7914: the scrypt function" ;

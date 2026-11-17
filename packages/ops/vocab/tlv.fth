@@ -1,6 +1,6 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ tlv: Parse TLV, the CyberChef operation of that name. The walk over the elements, the range checks and the JSON
-\ text are all FL; the elements are gathered with a collector, so the walk is linear.
+\ tlv: Parse TLV. The walk over the elements, the range checks and the JSON text are all FL; the elements are gathered
+\ with a collector, so the walk is linear.
 IN: tlv
 
 USING: json ;
@@ -29,7 +29,7 @@ USING: json ;
     [ data q n util:be-int q n + ]
   } cond ;
 
-\ The fixed-width length at p, little-endian as CyberChef reads it: the length and the offset after it.
+\ The fixed-width length at p, little-endian: the length and the offset after it.
 : _fixed-length ( data:bytes p:int lw:int -- int int )
   data len p - lw < [
     "the length needs " lw int>str cat " bytes but only " cat data len p - int>str cat
@@ -42,10 +42,10 @@ USING: json ;
 : _short ( what:str count:int left:int at:int -- )
   what " " cat count int>str cat " bytes but only " cat left int>str cat " are left (truncated)" cat at _cut ;
 
-\ The elements of the data as a list of records of key (left out when tw is 0), length and value, as CyberChef's
-\ Parse TLV lists them: the tag and value bytes as lists of ints. Both widths 0 is E_RANGE, unless the lengths are
-\ BER. The walk is one loop in one quotation, with the offset p of the next element on the stack: a record per
-\ element goes straight into the collector, so the cost is linear.
+\ The elements of the data as a list of records of key (left out when tw is 0), length and value: the tag and value
+\ bytes as lists of ints. Both widths 0 is E_RANGE, unless the lengths are BER. The walk is one loop in one quotation,
+\ with the offset p of the next element on the stack: a record per element goes straight into the collector, so the
+\ cost is linear.
 : _parse ( data:bytes tw:int lw:int ber:bool -- list )
   tw 0 = lw 0 = and ber not and [ "the tag width and the length width cannot both be 0 bytes" fail-range ] when
   data len :> n
@@ -71,7 +71,7 @@ USING: json ;
   ] collect ;
 
 : parse ( data:bytes tag-bytes:int=1 length-bytes:int=1 ber:bool=false indent:int=4 -- str )
-  "Read a run of tag-length-value elements and write them as JSON text, as CyberChef's Parse TLV does: an array with one object per element, with the tag bytes as an array of numbers (key; left out when tag-bytes is 0, for length-value data), the length (a number) and the value bytes as an array of numbers (value). The tag is tag-bytes bytes (0 to 16) and the length length-bytes bytes (0 to 8, little-endian, as CyberChef reads it); with ber on the length is read in the BER/DER form of X.690 instead (a byte below 128, or 128 plus the number of length bytes that follow, big-endian, up to 6; the indefinite form and the reserved byte 255 are E_COERCE) and length-bytes is not used. Both widths 0 is E_RANGE. Elements are not opened: a constructed value stays a list of bytes. Empty input gives []. A header or a value that runs past the end of the data is E_COERCE with the offset (CyberChef silently returns the shorter value). indent is the spaces per level (default 4, as CyberChef writes it; 0 gives compact text; an addition to CyberChef's)" doc
+  "Read a run of tag-length-value elements and write them as JSON text: an array with one object per element, with the tag bytes as an array of numbers (key; left out when tag-bytes is 0, for length-value data), the length (a number) and the value bytes as an array of numbers (value). The tag is tag-bytes bytes (0 to 16) and the length length-bytes bytes (0 to 8, little-endian); with ber on the length is read in the BER/DER form of X.690 instead (a byte below 128, or 128 plus the number of length bytes that follow, big-endian, up to 6; the indefinite form and the reserved byte 255 are E_COERCE) and length-bytes is not used. Both widths 0 is E_RANGE. Elements are not opened: a constructed value stays a list of bytes. Empty input gives []. A header or a value that runs past the end of the data is E_COERCE with the offset. indent is the spaces per level (default 4; 0 gives compact text)" doc
   "Data format" category
   tag-bytes 0 16 "the tag width" check-int-range
   length-bytes 0 8 "the length width" check-int-range

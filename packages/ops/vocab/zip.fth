@@ -185,7 +185,7 @@ USING: crc deflate ;
   metas [ contents swap nth _record ] mapi ;
 
 : unzip ( data:bytes verify:bool=true -- list )
-  "List a zip archive (PKWARE APPNOTE): one record per entry in directory order, with name (as stored), size, dir, mtime (Unix seconds; the DOS time is read as UTC; 0 when the entry has none), mode (the Unix permission bits for an entry made on Unix, else 0) and data (empty for a directory). The central directory is read, so archives written to a stream (data descriptors) and archives with bytes in front work. Stored and deflate entries only: an encrypted entry, another method, ZIP64 or a multi-disk archive is E_COERCE naming it. With verify (the default; CyberChef's Verify result is off) every entry's size and CRC-32 must match the directory (E_COERCE otherwise); off, damaged data is returned as it is. Corrupt or cut-short data is E_COERCE. The sum of all the entries is capped by the value limit (E_LIMIT_VALUE, 16 MiB for shared recipes, 64 MiB otherwise) while they are inflated, whatever sizes the archive claims. CyberChef's Password is not supported. To go on with one file, use zip:entry." doc
+  "List a zip archive (PKWARE APPNOTE): one record per entry in directory order, with name (as stored), size, dir, mtime (Unix seconds; the DOS time is read as UTC; 0 when the entry has none), mode (the Unix permission bits for an entry made on Unix, else 0) and data (empty for a directory). The central directory is read, so archives written to a stream (data descriptors) and archives with bytes in front work. Stored and deflate entries only: an encrypted entry, another method, ZIP64 or a multi-disk archive is E_COERCE naming it. With verify (the default) every entry's size and CRC-32 must match the directory (E_COERCE otherwise); off, damaged data is returned as it is. Corrupt or cut-short data is E_COERCE. The sum of all the entries is capped by the value limit (E_LIMIT_VALUE, 16 MiB for shared recipes, 64 MiB otherwise) while they are inflated, whatever sizes the archive claims. Passwords are not supported. To go on with one file, use zip:entry." doc
   "Compression" category
   data _entries :> metas
   metas [ _check-entry ] each
@@ -194,7 +194,7 @@ USING: crc deflate ;
 
 META: unzip
   use-when "You have a zip archive that is not encrypted, and want to list its entries and read their contents." ;
-  param verify "Check each entry's size and CRC-32 against the directory (CyberChef's Verify result); off, damaged data is returned anyway." ;
+  param verify "Check each entry's size and CRC-32 against the directory; off, damaged data is returned anyway." ;
   see-also zip:entry zip:zip deflate:inflate ;
   link "https://en.wikipedia.org/wiki/ZIP_(file_format)" "ZIP file format on Wikipedia" ;
   checks input magic-bytes format "zip" ;
@@ -274,7 +274,7 @@ META: entry
   _zip-end ;
 
 : zip ( data:bytes filename:str="file.txt" comment:str="" method:choice{deflate|store}="deflate" os:choice{msdos|unix|macintosh}="msdos" level:int=6 mtime:int=0 mode:int=420 -- bytes )
-  "A zip archive (PKWARE APPNOTE) holding the input as one file named filename (CyberChef's Zip takes one file too), the way every unzip reads it. method is deflate (the default; at level 0 the DEFLATE blocks are stored) or store (CyberChef's None (Store); the level is then not used). level is 0 to 9 as for deflate:deflate (E_RANGE otherwise). comment is the file's comment in the central directory. os is the host recorded in the entry: msdos (the default), unix (which also stores the permission bits mode, 420 is 0644) or macintosh. The name and comment are UTF-8 (the UTF-8 flag is set when they are not ASCII); an empty name, a NUL or more than 65535 bytes is E_RANGE. mtime is the modification time in Unix seconds, 0 by default (and then the format's earliest time, 1980-01-01 00:00:00; CyberChef writes its own idea of the time, so its bytes differ on every run); times are stored at DOS precision (2 seconds), read as UTC, and run from 1980 to 2107 (E_RANGE otherwise). CyberChef's Password (ZipCrypto) is not supported, and neither is its Fixed Huffman Coding (see the coverage note). The compressed bytes differ from CyberChef's; every unzip reads them." doc
+  "A zip archive (PKWARE APPNOTE) holding the input as one file named filename, the way every unzip reads it. method is deflate (the default; at level 0 the DEFLATE blocks are stored) or store (the level is then not used). level is 0 to 9 as for deflate:deflate (E_RANGE otherwise). comment is the file's comment in the central directory. os is the host recorded in the entry: msdos (the default), unix (which also stores the permission bits mode, 420 is 0644) or macintosh. The name and comment are UTF-8 (the UTF-8 flag is set when they are not ASCII); an empty name, a NUL or more than 65535 bytes is E_RANGE. mtime is the modification time in Unix seconds, 0 by default (and then the format's earliest time, 1980-01-01 00:00:00); times are stored at DOS precision (2 seconds), read as UTC, and run from 1980 to 2107 (E_RANGE otherwise). Passwords (ZipCrypto) and Fixed Huffman Coding are not supported. Every unzip reads the result." doc
   "Compression" category
   level 0 9 "the compression level" check-int-range
   mode 0 4095 "mode" check-int-range
@@ -295,7 +295,7 @@ META: zip
   use-when "You have bytes and need a zip file that holds them as one named file, for a recipient or tool that expects a zip." ;
   param filename "The name the file gets inside the archive (UTF-8)." ;
   param comment "A comment stored with the file (UTF-8); empty stores none." ;
-  param method "deflate compresses; store keeps the bytes as they are (CyberChef's None (Store))." ;
+  param method "deflate compresses; store keeps the bytes as they are." ;
   param os "The host system recorded in the entry: msdos, unix or macintosh." ;
   param level "The DEFLATE level, 0 (stored blocks) to 9; 6 is the default. Not used with the store method." ;
   param mtime "The modification time in Unix seconds, 1980 to 2107 (0 means 1980-01-01 00:00:00 and keeps the output the same on every run)." ;

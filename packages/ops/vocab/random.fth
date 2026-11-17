@@ -1,7 +1,7 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
 \ random: the shared source of randomness (+random) for every vocabulary. This vocabulary is internal (it is in
-\ INTERNAL_VOCABS): its words are callable from every vocabulary (random:below, or USING: random) and are never
-\ listed in the catalogue; the CyberChef operations built on it are in `prng`. The primitives (src/prims/random.ts)
+\ INTERNAL_VOCABS): its words are callable from every vocabulary (random:below, or USING: random) and are never listed
+\ in the catalogue; the random generator operations built on it are in `prng`. The primitives (src/prims/random.ts)
 \ read the host CSPRNG, crypto.getRandomValues, never Math.random; a host without it is E_PRIMITIVE.
 \
 \   random:bytes-of ( n:int -- bytes )   n random bytes (n >= 0; E_RANGE below 0; E_LIMIT_VALUE above the value limit)

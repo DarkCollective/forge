@@ -1,5 +1,5 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ prng: the random generators of CyberChef, over the shared `random` vocabulary (host CSPRNG, crypto.getRandomValues).
+\ prng: the random generators, over the shared `random` vocabulary (host CSPRNG, crypto.getRandomValues).
 \ Both words ignore their input: they are generators, and an op needs a data input to sit in a recipe. They carry the
 \ +random effect, so their output cannot have fixed vectors; the vectors are errors and ranges of size one, and the
 \ structure (length, range, spread) is tested in src/prng.test.ts.

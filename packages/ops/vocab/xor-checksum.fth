@@ -1,5 +1,5 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ xor-checksum: the column-wise XOR of the blocks of the data (CyberChef's XOR Checksum), written
+\ xor-checksum: the column-wise XOR of the blocks of the data, written
 \ in FL on the core words; no primitives. 65536 bytes take about 0.79 million steps with a block
 \ size of 4, 2.4 million with 65536 (default limit: 10 million).
 IN: xor-checksum

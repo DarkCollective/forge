@@ -1,6 +1,6 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ uri: Parse URI (WP 5.53): the parts of a URI (RFC 3986) printed in CyberChef's layout: protocol, auth, host name,
-\ port, path, the query arguments decoded one per line, and the fragment. All FL over the regex words.
+\ uri: Parse URI (WP 5.53): the parts of a URI (RFC 3986) printed one per line: protocol, auth, host name, port, path,
+\ the query arguments decoded one per line, and the fragment. All FL over the regex words.
 IN: uri
 
 \ The text of a URI component with its %XX escapes decoded as UTF-8; text that is not valid UTF-8 or has a bare % is
@@ -142,7 +142,7 @@ IN: uri
     "Hash:\t\t" s _frag-present? [ "#" s _frag cat ] [ "" ] if _line } "" join ;
 
 : parse ( data:str -- str )
-  "The parts of a URI (RFC 3986) in CyberChef's layout, one per line and only those that are there: Protocol (the scheme and a colon, lower case), Auth (the user information before the last @, percent-decoded), Hostname (lower case, without the brackets of an IPv6 address), Port, Path name, Arguments (the query: one line per argument, the names padded to the longest, = and the value decoded as URLSearchParams does, + as a space and %XX as UTF-8; an argument given twice shows its values joined by a comma; one without a value shows only its name) and Hash (the fragment with its #). White space around the URI is dropped, and empty input gives empty output. The authority is read when the part after the scheme starts with //; a URI without one (mailto:a@b.example, a path alone) has no host. A port that is not digits is E_COERCE. For http, https, ftp, gopher, file, ws and wss with a host and no path the path is /. This is the RFC 3986 reading with the output of Node's legacy url.parse that CyberChef prints; escapes in the path are not changed, as that parser would for spaces." doc
+  "The parts of a URI (RFC 3986) one per line and only those that are there: Protocol (the scheme and a colon, lower case), Auth (the user information before the last @, percent-decoded), Hostname (lower case, without the brackets of an IPv6 address), Port, Path name, Arguments (the query: one line per argument, the names padded to the longest, = and the value decoded as URLSearchParams does, + as a space and %XX as UTF-8; an argument given twice shows its values joined by a comma; one without a value shows only its name) and Hash (the fragment with its #). White space around the URI is dropped, and empty input gives empty output. The authority is read when the part after the scheme starts with //; a URI without one (mailto:a@b.example, a path alone) has no host. A port that is not digits is E_COERCE. For http, https, ftp, gopher, file, ws and wss with a host and no path the path is /. This is the RFC 3986 reading with the output of Node's legacy url.parse; escapes in the path are not changed, as that parser would for spaces." doc
   "Networking" category
   data "^\\s+" "" "" regex:replace rev "^\\s+" "" "" regex:replace rev :> s
   s len 0 =
