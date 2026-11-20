@@ -92,5 +92,33 @@
     "expect": {
       "error": "E_RANGE"
     }
+  },
+  {
+    "name": "XSalsa20/20: a short text, checked against an independent implementation",
+    "ref": "key and nonce: libsodium test/default/stream_xsalsa20.c; ciphertext from a separate pure-Python HSalsa20 and Salsa20/20 that reproduces the 64-byte keystream of the first vector",
+    "op": "xsalsa20:encrypt",
+    "params": {
+      "key": {
+        "value": "1b27556473e985d462cd51197a9a46c76009549eac6474f206c4ee0844f68389",
+        "enc": "hex"
+      },
+      "nonce": {
+        "value": "69696ee955b62b73cd62bda875fc73d68219e0036b7a0b37",
+        "enc": "hex"
+      },
+      "counter": 0
+    },
+    "input": {
+      "value": "Hello, Forge!",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "a6c3cb49733252d70263a5ae00",
+      "enc": "hex"
+    },
+    "example": {
+      "title": "Encrypt a short text with a 32-byte key and 24-byte nonce",
+      "note": "The key and nonce are the libsodium test pair. The output has the same length as the text (13 bytes); running it through the same op with the same key and nonce gives the text back."
+    }
   }
 ]

@@ -1934,5 +1934,25 @@
       "enc": "utf8"
     },
     "expect": "pass"
+  },
+  {
+    "name": "parse-bundle: one real root certificate (Amazon Root CA 3) as PEM",
+    "ref": "Amazon Root CA 3, a short EC certificate; every value compared with Python cryptography",
+    "op": "x509:parse-bundle",
+    "params": {
+      "input-format": "pem"
+    },
+    "input": {
+      "value": "-----BEGIN CERTIFICATE-----\nMIIBtjCCAVugAwIBAgITBmyf1XSXNmY/Owua2eiedgPySjAKBggqhkjOPQQDAjA5\nMQswCQYDVQQGEwJVUzEPMA0GA1UEChMGQW1hem9uMRkwFwYDVQQDExBBbWF6b24g\nUm9vdCBDQSAzMB4XDTE1MDUyNjAwMDAwMFoXDTQwMDUyNjAwMDAwMFowOTELMAkG\nA1UEBhMCVVMxDzANBgNVBAoTBkFtYXpvbjEZMBcGA1UEAxMQQW1hem9uIFJvb3Qg\nQ0EgMzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABCmXp8ZBf8ANm+gBG1bG8lKl\nui2yEujSLtf6ycXYqm0fc4E7O5hrOXwzpcVOho6AF2hiRVd9RFgdszflZwjrZt6j\nQjBAMA8GA1UdEwEB/wQFMAMBAf8wDgYDVR0PAQH/BAQDAgGGMB0GA1UdDgQWBBSr\nttvXBp43rDCGB5Fwx5zEGbF4wDAKBggqhkjOPQQDAgNJADBGAiEA4IWSoxe3jfkr\nBqWTrBqYaGFy+uGh0PsceGCmQ5nFuMQCIQCcAu/xlJyzlvnrxir4tiz+OpAUFteM\nYyRIHN8wfdVoOw==\n-----END CERTIFICATE-----\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "value": "Certificate 1 of 1\nVersion:          3 (0x02)\nSerial number:    143266986699090766294700635381230934788665930 (0x066c9fd5749736663f3b0b9ad9e89e7603f24a)\nAlgorithm ID:     ecdsa-with-SHA256\nValidity\n  Not Before:     2015-05-26 00:00:00 UTC\n  Not After:      2040-05-26 00:00:00 UTC\nIssuer\n  C  = US\n  O  = Amazon\n  CN = Amazon Root CA 3\nSubject\n  C  = US\n  O  = Amazon\n  CN = Amazon Root CA 3\nFingerprints\n  MD5:            a0d4ef0bf7b5d849952aecf5c4fc8187\n  SHA1:           0d44dd8c3c8c1a1a58756481e90f2e2affb3d26e\n  SHA256:         18ce6cfe7bf14e60b2e347b8dfe868cb31d02ebb3ada271569f50343b46db3a4\nPublic Key\n  Algorithm:      EC\n  Curve Name:     prime256v1\n  Length:         256 bits\n  pub:            04:29:97:a7:c6:41:7f:c0:0d:9b:e8:01:1b:56:c6:f2:\n                  52:a5:ba:2d:b2:12:e8:d2:2e:d7:fa:c9:c5:d8:aa:6d:\n                  1f:73:81:3b:3b:98:6b:39:7c:33:a5:c5:4e:86:8e:80:\n                  17:68:62:45:57:7d:44:58:1d:b3:37:e5:67:08:eb:66:\n                  de\nCertificate Signature\n  Algorithm:      ecdsa-with-SHA256\n  r:              e0:85:92:a3:17:b7:8d:f9:2b:06:a5:93:ac:1a:98:68:\n                  61:72:fa:e1:a1:d0:fb:1c:78:60:a6:43:99:c5:b8:c4\n  s:              9c:02:ef:f1:94:9c:b3:96:f9:eb:c6:2a:f8:b6:2c:fe:\n                  3a:90:14:16:d7:8c:63:24:48:1c:df:30:7d:d5:68:3b\n\nExtensions\n  X509v3 Basic Constraints: critical\n    CA:TRUE\n  X509v3 Key Usage: critical\n    Digital Signature, Certificate Sign, CRL Sign\n  X509v3 Subject Key Identifier:\n    AB:B6:DB:D7:06:9E:37:AC:30:86:07:91:70:C7:9C:C4:19:B1:78:C0",
+      "enc": "utf8"
+    },
+    "example": {
+      "title": "Read the certificates of a PEM file",
+      "note": "A bundle of one certificate, so the heading is Certificate 1 of 1. A file with several CERTIFICATE blocks gives one report each, numbered in order, separated by a blank line."
+    }
   }
 ]

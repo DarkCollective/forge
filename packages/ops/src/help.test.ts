@@ -420,8 +420,8 @@ describe("the bundled help document", () => {
   });
 
   // Ratchet: a later batch of discovery text raises these two numbers, never lowers them.
-  const MIN_WITH_USE_WHEN = 458;
-  const MIN_WITH_EXAMPLE = 441;
+  const MIN_WITH_USE_WHEN = 461;
+  const MIN_WITH_EXAMPLE = 448;
 
   test("every catalogue operation has a non-empty use-when", () => {
     const missing = catalogue.ops
