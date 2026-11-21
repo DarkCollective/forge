@@ -25,6 +25,8 @@ import { FORGE_EVENTS, emit } from "../state/events.js";
 import type { FocusPaneDetail } from "../state/events.js";
 import { getStep } from "../state/recipe-ops.js";
 import { StoreController } from "../state/store-controller.js";
+import { describeValue } from "../bake/format.js";
+import { bakeUi } from "../bake/ui-state.js";
 import { baseStyles, paneStyles } from "../styles/shared.js";
 import { icons } from "../styles/icons.js";
 import { bytesToHex, formatBytes } from "./codec.js";
@@ -188,6 +190,43 @@ export class ForgeOutput extends LitElement {
         text-transform: uppercase;
         font-size: var(--text-xs);
       }
+      .registers {
+        border: var(--border-width) solid var(--border-strong);
+        border-radius: var(--radius-m);
+        background: var(--surface-2);
+        padding: var(--space-3);
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+        flex: none;
+      }
+      .registers h3 {
+        margin: 0;
+        font-size: var(--text-md);
+      }
+      .registers ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+        font-size: var(--text-sm);
+      }
+      .registers li {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: var(--space-1) var(--space-3);
+      }
+      .registers .reg-value {
+        font-family: var(--font-mono);
+        overflow-wrap: anywhere;
+        min-width: 0;
+      }
+      .registers .redacted {
+        font-style: italic;
+      }
       .partial {
         border-top: var(--border-width) solid var(--border-strong);
         padding-top: var(--space-2);
@@ -201,6 +240,7 @@ export class ForgeOutput extends LitElement {
 
   private readonly bake = new StoreController(this, store, (s) => s.bake);
   private readonly recipe = new StoreController(this, store, (s) => s.recipe);
+  private readonly registers = new StoreController(this, bakeUi, (s) => s.pausedRegisters);
 
   @state() private view: OutputView | null = preferredView;
   @state() private flash = "";
@@ -360,6 +400,45 @@ ${cut ? text.slice(0, TEXT_DISPLAY_LIMIT) : text}</pre>`;
     return this.renderBytesOrScalar(value, view);
   }
 
+  // ---- registers at a pause (RECIPES-1.1.md sections 4.9, 4.10) -----------------------------------
+
+  /** The registers in scope at the pause: plain text only. Nothing when there are none or no pause. */
+  private renderRegisters() {
+    const bake = this.bake.value;
+    const regs = this.registers.value;
+    if (bake.status !== "paused" || regs.length === 0) return nothing;
+    const recipe = this.recipe.value;
+    return html`<section class="registers" aria-labelledby="regs-title">
+      <h3 id="regs-title">Registers at this pause</h3>
+      <ul>
+        ${regs.map((r) => {
+          const hidden = r.value.kind === "other" && r.value.repr === "<redacted>";
+          return html`<li>
+            <code>${r.name}</code>
+            ${
+              hidden
+                ? html`<span class="reg-value redacted">&lt;redacted&gt;</span>`
+                : html`<span class="reg-value" title=${describeValue(r.value, 400)}
+                    >${describeValue(r.value)}</span
+                  >`
+            }
+            <button
+              type="button"
+              class="ghost"
+              aria-label="Show ${stepLabel(recipe, r.path)} that defines register ${r.name}"
+              @click=${() => this.showStep(r.path)}
+            >
+              Show step
+            </button>
+          </li>`;
+        })}
+      </ul>
+      <p class="note">
+        A register that feeds a key parameter is hidden. The data still shows the input as it is.
+      </p>
+    </section>`;
+  }
+
   // ---- error panel -------------------------------------------------------------------------------
 
   private renderIssue(issue: RecipeIssue) {
@@ -398,6 +477,18 @@ ${cut ? text.slice(0, TEXT_DISPLAY_LIMIT) : text}</pre>`;
       html`<section class="error-panel" role="alert" aria-labelledby="err-title">
         <h3 id="err-title">Bake failed: <code>${error.code}</code></h3>
         <p class="msg">${error.message}</p>
+        ${
+          typeof error.detail?.["register"] === "string"
+            ? html`<p class="note">
+                ${
+                  typeof error.detail["param"] === "string"
+                    ? html`The parameter <code>${error.detail["param"]}</code> was supplied by`
+                    : html`A parameter was supplied by`
+                }
+                register <code>${error.detail["register"]}</code>.
+              </p>`
+            : nothing
+        }
         <dl class="kv">
           ${
             error.word === null
@@ -549,7 +640,10 @@ ${cut ? text.slice(0, TEXT_DISPLAY_LIMIT) : text}</pre>`;
               </p>`
             : nothing
         }
-        <div class=${classMap({ content: true, stale })}>${body}</div>
+        ${this.renderRegisters()}
+        <div class=${classMap({ content: true, stale: stale && bake.status !== "paused" })}>
+          ${body}
+        </div>
         <div class="footer">
           ${
             bytesLength === null

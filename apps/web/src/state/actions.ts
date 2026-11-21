@@ -181,7 +181,12 @@ export function createActions(store: AppStore, persist = true) {
       commit(ops.insertStep(get().recipe, listPath, index, defaultOpStep(op)));
       return ops.childPath(listPath, index);
     },
+    /**
+     * Insert a step and return its path. Throws a RangeError (and changes nothing: no commit, no history entry)
+     * when the step is or contains a `return` and the list does not allow one (RECIPES-1.1.md section 4.12).
+     */
     insertStep(listPath: ListPath, index: number, step: Step): StepPath {
+      if (!ops.canPlace(step, listPath)) throw new RangeError(ops.BAD_POSITION_TEXT);
       const list = ops.getList(get().recipe, listPath);
       const at = clamp(index, 0, list.length);
       commit(ops.insertStep(get().recipe, listPath, at, step));

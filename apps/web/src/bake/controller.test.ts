@@ -186,6 +186,40 @@ describe("debugging", () => {
     await controller.dispose();
   });
 
+  it("keeps the registers of a pause in the ui store and clears them on resume (WP 6.40, CR137)", async () => {
+    const { store, actions, ui, controller } = setup({ autoBake: false });
+    const REG: Recipe = {
+      forge: 1,
+      steps: [
+        {
+          kind: "register",
+          name: "hexed",
+          steps: [{ kind: "op", op: "hex:encode", params: { case: "lower", delimiter: "none" } }],
+        },
+        {
+          kind: "op",
+          op: "hex:encode",
+          params: { case: "lower", delimiter: "none" },
+          breakpoint: true,
+        },
+      ],
+    } as never;
+    actions.loadDocument({ recipe: REG });
+    actions.setInputBytes(store.get().activeInputId, enc("Hi"));
+    ui.set({ debug: true });
+    await controller.start();
+    controller.bakeNow();
+    await until(() => store.get().bake.status === "paused");
+    const regs = ui.get().pausedRegisters;
+    expect(regs.map((r) => r.name)).toEqual(["hexed"]);
+    expect(regs[0]?.path).toBe("/steps/0");
+    expect(regs[0]?.value).toMatchObject({ kind: "str", text: "4869" });
+    controller.continue();
+    await controller.idle();
+    expect(ui.get().pausedRegisters).toEqual([]);
+    await controller.dispose();
+  });
+
   it("starts paused in debug mode and steps through", async () => {
     const { store, actions, ui, controller } = setup({ autoBake: false });
     actions.loadDocument({ recipe: HEX });

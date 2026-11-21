@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { encodeShare } from "@forge/recipe";
+import { encodeShare, recipeUsesV11, registerInfo } from "@forge/recipe";
 import type { EncodeShareResult } from "@forge/recipe";
 import { css, html, nothing } from "lit";
 import { customElement, state } from "lit/decorators.js";
@@ -217,6 +217,23 @@ export class ForgeShareDialog extends ForgeDialog {
     </div>`;
   }
 
+  /** One line each, plain text (RECIPES-1.1.md sections 1.3 and 4.9, Q18). */
+  private renderV11Notes() {
+    const s = store.get();
+    if (!recipeUsesV11(s.recipe)) return nothing;
+    const secret =
+      s.catalogue.status === "ready" &&
+      registerInfo(s.recipe, s.catalogue.catalogue).some((r) => r.secret);
+    return html`<p class="notice v11" role="note">
+      This recipe needs Forge 1.1 or later; older versions show an
+      error.${
+        secret
+          ? " A register takes its key from the input, so a link that includes the input includes the key."
+          : ""
+      }
+    </p>`;
+  }
+
   protected override renderBody() {
     const s = store.get();
     const tab = s.inputs.find((t) => t.id === s.activeInputId);
@@ -226,6 +243,7 @@ export class ForgeShareDialog extends ForgeDialog {
         you include it), toggle values and any key parameters are written in clear text in the link
         (compressed, not encrypted). Do not share secrets this way.
       </p>
+      ${this.renderV11Notes()}
       <label class="check">
         <input type="checkbox" .checked=${this.includeInput} @change=${this.onIncludeInput} />
         <span>
