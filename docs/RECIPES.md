@@ -1,6 +1,6 @@
-# Recipes, operations and the bake host: Phase 2 specification, v1
+# Recipes, operations and the bake host: Phase 2 specification, v1 and v1.1
 
-Status: draft v1 (2026-11-09). Normative for Phase 2 (PLAN §7: WPs 2.1 to 2.5, Gate 2). It builds on
+Status: v1 drafted 2026-11-09 and normative for Phase 2 (PLAN §7: WPs 2.1 to 2.5, Gate 2). Version 1.1 (`register` and `return`, Appendix A) was folded in by WP 6.41 on 2026-11-21 from [RECIPES-1.1.md](RECIPES-1.1.md), the approved proposal, which is now a historical note. Where that note and this file differ, this file describes the code. It builds on
 [LANGUAGE.md](LANGUAGE.md) (FL v0.2, which is additive over the v0.1 that this document was written against) and the principles in [PLAN.md](PLAN.md) §1, §3.6, §4, §5 and §10.
 Type contracts: `packages/ops/src/types.ts`, `packages/recipe/src/types.ts`, `packages/worker/src/types.ts`.
 
@@ -16,7 +16,7 @@ The key words MUST, MUST NOT, SHOULD and MAY are used as in RFC 2119.
 
 1. Overview and design decisions
 2. Operations and the catalogue
-3. Recipe JSON v1
+3. Recipe JSON v1.1
 4. The `regex`, `recipe` and `magic` vocabularies
 5. Recipe to FL compilation
 6. The canonical text form
@@ -26,6 +26,7 @@ The key words MUST, MUST NOT, SHOULD and MAY are used as in RFC 2119.
 10. Gate 2 and the seed operations
 11. Work packages and file layout
 12. Conformance examples
+13. Appendix A: Changes in v1.1
 
 ---
 
@@ -82,6 +83,12 @@ compile without loading any operation code.
 | R22 | PLAN §3.6's "words hand-written outside the canonical subset appear as a single opaque step" is **deferred to Phase 3**. In Phase 2 text outside the canonical subset is a parse error. | The parser must never run arbitrary FL (R5); an opaque step needs a UI and a trust decision. |
 | R23 | Compiled recipes are loaded into the internal vocabulary **`bake`** (word `bake:main`), never into `user`. User units cannot define into bundled or internal vocabularies (`E_READONLY`). | A user word can never collide with, shadow or replace the recipe word or an op. |
 | R24 | `@forge/ops` exports no loader from its main entry. `createBakerCore` **requires** a `loadBundle`, so the same core runs in Node and in the browser. | No hidden `node:fs` in a browser bundle; no hidden default. |
+| R25 | **Register is a container step whose children compute a value from a copy of the data**; any op chain can produce it. | One concept covers slices, decoded fields and predicate results; no new primitive; no regex needed for slicing. |
+| R26 | A **reference is `{ "ref": name }`**, allowed in op and op-test parameters of any type, checked statically for scope and at run time by the word-entry checks. | No string escaping; constraints stay in one place (the op's header). |
+| R27 | Registers are **lexical**, compile to **`$name` locals** bound by `:>`, and a visible name cannot be bound again. | FL's own scoping gives per-piece and per-iteration binding for free; `$` keeps names clear of every word. |
+| R28 | **Return ends the whole recipe** and is valid only at the root and in `if` branches, compiled to `core:exit` in a lowered `if`. | It is where FL can jump; a scoped return needs an FL change. |
+| R29 | `forge` stays 1; a v1 reader rejects the new kinds. | Goldens keep their meaning; the schema stays one file. |
+| R30 | The step to ip map uses **line membership**, not monotonic lines. | Lowered `if` code is not in line order. |
 
 ---
 
@@ -420,11 +427,17 @@ A user word never gets help from the document, whatever its name. Help from user
 
 ---
 
-## 3. Recipe JSON v1
+## 3. Recipe JSON v1.1
 
 Types: `packages/recipe/src/types.ts`. The accept/reject behaviour of the JSON Schema in §3.9 and of the reference
 validator (§3.7) MUST agree on every structural question; the validator additionally knows the catalogue and
 produces precise issues.
+
+Version 1.1 adds two step kinds, `register` and `return` (§3.2), and the register reference `{ "ref": … }` as a
+parameter value (§3.4), with their issues (§3.7), limits (§3.8) and schema (§3.9). It is additive: a recipe that uses
+none of them is a v1 recipe, with the same canonical JSON, text and share fragment (CR124 and the goldens of §12). `forge`
+stays `1` for both (R29), so a v1 reader rejects a v1.1 recipe with an error rather than misreading it (Appendix A.11).
+The compiled FL of the new constructs is in §5, and their text form in §6.
 
 ### 3.1 The document
 
@@ -440,7 +453,7 @@ produces precise issues.
 
 No other keys. `name`, `description` and `catalogue` are metadata and never affect baking. A recipe with a different
 `catalogue` than the one in use is valid and produces a `catalogue-mismatch` warning; the real safeguard is per-step
-pinning (§3.10).
+pinning (§3.10). The `forge` field is `1` for v1 and v1.1 recipes.
 
 ### 3.2 Steps
 
@@ -514,6 +527,51 @@ returns `bytes`. The caps are hard limits (`RECIPE_LIMITS.maxRepeat`).
 **`comment`** — a note in the recipe. `{ "kind": "comment", "text": "…" }` (at most 2000 characters). No other fields.
 It compiles to a comment line (§5) and has no effect.
 
+**`register`** (v1.1): compute a value from a copy of the data and bind it to a name.
+
+```jsonc
+{ "kind": "register", "name": "iv", "steps": [ /* Step[] */ ], "disabled": false, "breakpoint": false, "note": "…" }
+```
+
+`name` matches `^[a-z][a-z0-9-]{0,31}$` (at most 32 characters; `bad-value` otherwise). The children run on a copy of the
+data, in order, as the children of any container do, with one difference: the first child receives the data with its
+own tag. There is no `recipe:as-bytes` in front, so a `str` stays a `str`, and an op coerces at its own word boundary as
+always (§3.3). The value the last child leaves is bound to `name`, whatever its tag. The data leaving the step is the
+data that entered it, so a register has the stack effect `( x -- x )` and may stand between any two steps. A register
+with no children binds the data itself. A failing child fails the recipe at its own path, and nothing is bound.
+
+Scope is lexical, and every step list is a scope (R27). A register is visible to the later steps of its own list and to
+everything nested in them, including the `test` of an `if` that follows it. A register in the `steps` of a `fork`,
+`subsection` or `repeat` is bound afresh for each piece, match or iteration, and no value survives to the steps after the
+container. A register in a branch of an `if` is visible in that branch only. A register is not visible inside its own
+children (`unknown-register`, `not-yet-defined`). A name that is visible at a `register` step cannot be bound again
+(`duplicate-register`, at the name); two sibling scopes may use the same name. The validator's view of disabled steps is
+in §3.7: an enabled step sees only enabled definitions, a disabled step sees all of them, and duplicates are checked among
+the enabled ones. A disabled `register` defines nothing in the text. The reason is FL's own rule for `:>` (LANGUAGE §7.1):
+the compiled text does not load otherwise.
+
+**`return`** (v1.1): stop here, and give the current data as the output.
+
+```jsonc
+{ "kind": "return", "disabled": false, "breakpoint": false, "note": "…" }
+```
+
+A leaf with no fields besides the common three. It ends the **whole recipe**: the current data is the output, whatever its
+tag, and no later step runs. It is valid in the root `steps` list and in the `then` and `else` lists of an `if` that is
+itself in a valid position, to any depth of `if`. In the children of a `fork`, `subsection`, `repeat` or `register` it is
+`bad-position` (§3.7). An enabled step after an enabled `return` in the same list is `unreachable-step`, a warning; a branch
+that ends in a `return` does not make the steps after its `if` unreachable, because the warning does not look through an
+`if`. An `if` with a return in a branch:
+
+```json
+{ "kind": "if", "test": { "kind": "op", "op": "magic:is-format", "params": { "format": "gzip" } },
+  "then": [ { "kind": "op", "op": "gzip:decompress" }, { "kind": "return" } ] }
+```
+
+A scoped return, which ends only the current piece, match or iteration, would need a quotation-level exit in FL, and FL
+has none that compiles inside `fork`, `map` or `times` (LANGUAGE §8). That is a possible later change, and would only
+widen the valid positions; the step and its JSON would not change.
+
 Disabled steps: `disabled: true` on a container disables all its children too. A disabled step still has to be valid
 (§3.7), and keeps its position in the tree so JSON-pointer paths do not move.
 
@@ -565,12 +623,51 @@ Key parameters (`type: "key"`) hold secrets; **`toggle` is not secret**. The val
 `key` values (§7.4). **UI contract:** the input, `toggle` values and `key` literals are written in the clear into share links
 (§7) and into the text form (§6); the UI must say so before creating either.
 
+**Register references** (v1.1). A parameter value MAY be `{ "ref": "<name>" }` (`RegisterRef`) instead of a literal. It is
+accepted in the `params` of an `op` step and of an `op` test of an `if`, for any parameter type (`bool` and `choice`
+included, see Q7 of RECIPES-1.1.md). It fills a required parameter, so `missing-param` is not raised for it. It is not accepted in `fork.split`
+or `fork.join`, `subsection.pattern` or `flags`, the regex test of an `if`, or `repeat.times` and `repeat.max`: there it
+is `bad-value` with `constraint: "register references go in op parameters"`, and the schema rejects it too (§3.9). The name
+MUST be visible at the step (§3.7). A reference is in normal form already: `normalise` copies it, `resolve` keeps it as
+given (it neither adds the default nor normalises it by type), and `canonical` keeps it. In the text form it is the local
+`$name` (§5.2, §6.2).
+
+The value is checked when the recipe runs, by the word-entry sequence of LANGUAGE §10.5, exactly as a literal is. The
+recipe layer adds no conversion of its own, and the register must hold a tag that the parameter type accepts:
+
+| parameter type | runtime tag | a register of tag … is accepted | otherwise |
+|---|---|---|---|
+| `bytes`, `toggle`, `key` | `bytes` | `bytes`; `str` (UTF-8 encoded) | `E_COERCE` (a lone surrogate), `E_TYPE` (any other tag); the byte-length constraint is `E_PARAM_INVALID` |
+| `str`, `charset`, `regex`, `choice` | `str` | `str`; `bytes` (strict UTF-8 decoding) | `E_COERCE` (not UTF-8), `E_TYPE`; length, `charset` shape, regex compile and option membership are `E_PARAM_INVALID` |
+| `int` | `int` | `int`; `num` that is integral | `E_COERCE` (not integral), `E_TYPE`; the range is `E_PARAM_INVALID` |
+| `num` | `num` | `num`; `int` that fits | `E_COERCE`, `E_TYPE`; the range is `E_PARAM_INVALID` |
+| `number` | `int` or `num` | either | `E_TYPE` |
+| `bool` | `bool` | `bool` | `E_TYPE` |
+
+The `{ value, enc }` of a `toggle` or `key` is not involved: the encoding is how a literal is typed, and a register holds
+bytes already decoded. If the data holds a key as hex text, the register's children decode it (`hex:decode` as the last
+child).
+
+The validator checks only the reference itself (shape, name, scope). It skips the constraint, the option list, the regex
+compile and the hex digits of a referenced value, and these are checked in the Worker at word entry. A failure is an
+ordinary `BakeError`:
+
+| failure | `error.code` | `error.detail` | `error.path` |
+|---|---|---|---|
+| constraint, option, regex does not compile | `E_PARAM_INVALID` | `param`, `constraint`, `value` (redacted for a `key` slot) | the op step |
+| wrong tag | `E_TYPE` | `expected`, `actual`, `param` | the op step |
+| not UTF-8, not integral | `E_COERCE` | as LANGUAGE §11 | the op step |
+| op-specific check (for example an AES key length, `E_RANGE`) | `E_RANGE` | the op's own detail | the op step |
+
+When `detail.param` names a parameter that the step supplies by reference, the baker adds `detail.register` (the name, never
+a value) to the error (§8.2). An `E_RANGE` from a helper word of the op has no `detail.param`, so it gets no `detail.register`.
+
 ### 3.5 Omitted parameters and defaults
 
 A parameter missing from `params` takes `ParamSpec.default` from the catalogue **at compile or resolve time**. If it
 has no default (`required: true`) the issue is `missing-param`, at the path where the parameter would be
 (`/steps/0/params/pattern`). A name in `params` that is not a parameter of the op is `unknown-param`. `null` is never
-a valid value.
+a valid value. A reference (§3.4) fills a required parameter, so it never gives `missing-param`.
 
 Defaults have exactly the JSON shape of §3.4 (`ParamDefault`): a `bytes` default is hex, a `toggle`/`key` default is
 `{value, enc}`, a `choice` default is the option string.
@@ -583,9 +680,9 @@ Three functions, all total on valid recipes, pure, and idempotent:
 
 1. Keys are written in this order. Recipe: `forge name description catalogue steps`. Steps: `kind` first, then
    `op params hash` (op), `split join steps` (fork), `pattern flags encoding steps` (subsection),
-   `test then else` (if), `times until max steps` (repeat), `text` (comment), then `disabled breakpoint note` on
+   `test then else` (if), `times until max steps` (repeat), `text` (comment), `name steps` (register), then `disabled breakpoint note` on
    every kind but `comment`. Test objects: `kind op params hash` or `kind pattern flags encoding`. `params` keys are
-   sorted by code point. Encoded objects: `value enc`.
+   sorted by code point. Encoded objects: `value enc`. A reference: `ref` alone.
 2. These are omitted: `disabled: false`, `breakpoint: false`, empty `note`, `name` or `description`, `params: {}`,
    `flags: ""`, `encoding: "utf8"` (of a subsection or a regex test), `else: []`, and `max` equal to 100.
 3. `flags` is rewritten as the unique characters of `ims` in that order (`"mi"` becomes `"im"`).
@@ -599,14 +696,16 @@ It adds nothing: `params` stay as the author wrote them.
 2. Every parameter of every op step and op test is made explicit: the given value, else the default. Values are
    normalised according to the **parameter's type** (a `bytes` hex string is normalised although it has no `enc`; an
    `int` given as a decimal string that fits a safe integer becomes a number). `params` keys end up in `ParamSpec`
-   order, and `params` is present exactly when the op has parameters.
+   order, and `params` is present exactly when the op has parameters. A reference (§3.4) counts as a given value: it is kept as
+   written, is not replaced by the default, and is not normalised by type.
 3. Nothing else changes. In particular `hash` pins are kept (see `pinRecipe`).
 
 **`canonical(recipe, catalogue) = resolve(normalise(recipe), catalogue)`**: all parameters explicit, in `ParamSpec`
 order, everything else in `normalise` form. This is the form the text parser returns, and the form the identity of
 §6.5 is stated on. It is idempotent.
 
-`pinRecipe(recipe, catalogue)` sets `hash` on every op step and op test from the catalogue (overwriting).
+`pinRecipe(recipe, catalogue)` sets `hash` on every op step and op test from the catalogue (overwriting). It recurses
+into the children of `register` steps.
 
 ### 3.7 Issues and validation
 
@@ -639,7 +738,7 @@ user-supplied value.
 | `required` | error | a required field is missing | `field` |
 | `unknown-field` | error | a key the object does not have | `field` |
 | `bad-version` | error | `forge` is not `1` | `value` |
-| `bad-kind` | error | `kind` is missing or not one of the six | `value` |
+| `bad-kind` | error | `kind` is missing or not one of the eight | `value` |
 | `bad-value` | error | a structural constraint fails: enum, pattern, range, `maxLength`, an empty `split`, a lone surrogate | `constraint` |
 | `exclusive` | error | a `repeat` without exactly one of `times`/`until`, or `max` without `until` | |
 | `limit` | error | `RECIPE_LIMITS` exceeded: too many steps, too deep, too much JSON | `limit`, `max` |
@@ -654,16 +753,32 @@ user-supplied value.
 | `alias-used` | warning | `op` is an alias | `op`, `canonical` |
 | `catalogue-mismatch` | warning | `recipe.catalogue` is set and differs from `catalogue.version` | `recipe`, `current` |
 | `secret-in-url` | warning | emitted only by `encodeShare` (§7.4): a `key` parameter would be put in a link | `param` |
+| `unknown-register` | error | a reference whose name is not visible at its step (§3.2); the `ref` member | `register`, `reason`: `not-defined`, `not-yet-defined`, `out-of-scope` or `disabled` |
+| `duplicate-register` | error | a `register` whose name is already visible among the enabled definitions; the `name` member | `register`, `first` (the path of the visible definition) |
+| `bad-position` | error | a `return` that is not in the root or in `if` branches (§3.2) | `kind`, `container` (the nearest enclosing step that is not an `if`), `containerKind` |
+| `unreachable-step` | warning | the first enabled step after an enabled `return` in the same list (one warning per list) | `after` (the path of the `return`) |
 
 Limits are checked first, on the whole input, so a hostile document costs a bounded amount of work. Structural
 checks run before catalogue checks, and catalogue checks only run on structurally valid steps. All issues of one
 pass are reported (the validator does not stop at the first), up to 100; the 101st is a `limit` issue.
 
+**Scope pass (v1.1).** After the structural and catalogue checks, one iterative walk checks every reference against the
+registers in scope. It keeps a stack of the names defined in each open step list (at most 8 lists and 64 names), so its
+cost is linear in the number of steps. The same view is available for one step as `registersInScope` (`registers.ts`). A
+step that already has an error of its own is skipped, so a reference inside a step with an unknown op gives `unknown-op`
+only. The `reason` of `unknown-register` says why the name is not visible: `not-defined` (no register of that name
+anywhere), `not-yet-defined` (defined later in the same or an enclosing list, or the register being defined), `out-of-scope`
+(defined in a closed scope that does not contain the reference) or `disabled` (defined only by disabled steps). A `register`
+beyond `RECIPE_LIMITS.maxRegisters` is a `limit` issue (`limit: "maxRegisters"`, `max: 64`). The other existing codes cover the
+rest: `bad-value` for a malformed name or reference, `type` and `unknown-field` for the shape of a reference (`ref` that is not
+a string, or a second key), and `bad-kind` for an unknown kind. A reference where a parameter is required gives no
+`missing-param`, and a reference is never a `bad-param` or a `bad-regex` (its value is checked at run time, §3.4).
+
 ### 3.8 Limits (`RECIPE_LIMITS`)
 
 | limit | value |
 |---|---|
-| steps in the whole tree | 500 |
+| steps in the whole tree (`register` and `return` count as steps) | 500 |
 | container nesting depth (defined below) | 8 |
 | raw JSON nesting depth (pre-walk) | 64 |
 | JSON size (UTF-8 bytes of `JSON.stringify`) | 262 144 |
@@ -671,6 +786,8 @@ pass are reported (the validator does not stop at the first), up to 100; the 101
 | `name` / `description` / `note` / comment `text` | 120 / 2000 / 500 / 2000 characters |
 | regex source | 1024 code points |
 | `repeat.times` and `repeat.max` | 1000 (default `max` 100) |
+| `register` steps in the whole tree, enabled or not | 64 (`RECIPE_LIMITS.maxRegisters`; the 65th is a `limit` issue) |
+| register name | 32 characters (`RECIPE_LIMITS.maxRegisterNameChars`, with the name pattern of §3.2) |
 
 ### 3.9 JSON Schema
 
@@ -689,6 +806,11 @@ What is in the schema and what is validator-only:
 | | regexes compile (`bad-regex`); parameter checks against the catalogue; ops exist; pins; aliases |
 
 A document the schema rejects, the validator rejects. The converse is not required (the validator is stricter).
+
+For v1.1 the schema gains the `ref`, `registerStep` and `returnStep` definitions below, and the two step kinds in `step`.
+The validator-only checks added are: the scope and existence of references, `duplicate-register`, `bad-position`,
+`unreachable-step`, the register count, and the rule that a reference is not a `fork` separator. The schema rejects that
+last one too, and the validator reports it as `bad-value` with the more specific constraint (CR113).
 
 **Depth, defined.** The *depth* of a step is the number of step lists it is inside: a step in the root `steps` list has depth 1; a child of
 that step's `steps` (or `then`/`else`) has depth 2, and so on. `maxDepth` is the largest allowed depth of any step: 8. Example: in
@@ -719,7 +841,9 @@ that step's `steps` (or `then`/`else`) has depth 2, and so on. `maxDepth` is the
         { "$ref": "#/$defs/subsectionStep" },
         { "$ref": "#/$defs/ifStep" },
         { "$ref": "#/$defs/repeatStep" },
-        { "$ref": "#/$defs/commentStep" }
+        { "$ref": "#/$defs/commentStep" },
+        { "$ref": "#/$defs/registerStep" },
+        { "$ref": "#/$defs/returnStep" }
       ]
     },
     "common": {
@@ -748,8 +872,41 @@ that step's `steps` (or `then`/`else`) has depth 2, and so on. `maxDepth` is the
         { "type": "number" },
         { "type": "string" },
         { "type": "boolean" },
-        { "$ref": "#/$defs/encoded" }
+        { "$ref": "#/$defs/encoded" },
+        { "$ref": "#/$defs/ref" }
       ]
+    },
+    "ref": {
+      "type": "object",
+      "properties": { "ref": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,31}$" } },
+      "required": ["ref"],
+      "additionalProperties": false
+    },
+    "registerStep": {
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/common" }],
+      "properties": {
+        "kind": { "const": "register" },
+        "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,31}$" },
+        "steps": { "$ref": "#/$defs/steps" },
+        "disabled": true,
+        "breakpoint": true,
+        "note": true
+      },
+      "required": ["kind", "name", "steps"],
+      "additionalProperties": false
+    },
+    "returnStep": {
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/common" }],
+      "properties": {
+        "kind": { "const": "return" },
+        "disabled": true,
+        "breakpoint": true,
+        "note": true
+      },
+      "required": ["kind"],
+      "additionalProperties": false
     },
     "params": {
       "type": "object",
@@ -909,6 +1066,9 @@ A step without `hash` is never a mismatch. `encodeShare` pins when it is given a
 pins" (`pinRecipe`) after the user has looked at a warning. A pin never selects an old implementation: Forge ships one
 version of each op.
 
+`pinRecipe` and the pinning of `encodeShare` recurse into the children of `register` steps (v1.1). A
+reference has no `hash`.
+
 ---
 
 ## 4. The `regex`, `recipe` and `magic` vocabularies
@@ -1023,6 +1183,10 @@ IN: recipe
   dup body call as-bytes
   dup2 = cap 1 = or
   [ nip ] [ nip cap 1 - body recurse ] if ;
+
+: peek ( any body:quot -- any any )
+  "Run body on a copy of the data; leave the data and push what body leaves." doc
+  dup body call ;
 ```
 
 Stack effects, for reference (all consume and produce exactly one value besides what they name):
@@ -1037,6 +1201,7 @@ Stack effects, for reference (all consume and produce exactly one value besides 
 | `recipe:branch` | `( bytes test:quot then:quot else:quot -- any )` | `if`. `test` is `( bytes -- bool )`; `then` and `else` are `( bytes -- any )`. |
 | `recipe:repeat` | `( bytes n:int[1..1000] body:quot -- bytes )` | `repeat` with `times` |
 | `recipe:settle` | `( bytes cap:int[1..1000] body:quot -- bytes )` | `repeat` with `until: "stable"` (`cap` is `max`) |
+| `recipe:peek` | `( any body:quot -- any any )` | the word of a `register` step (v1.1): runs `body` on a copy of the data and leaves the data and what `body` leaves. Every step is `( x -- y )`, so `body` leaves one value. |
 
 A quotation argument (`body`, `test`, `then`, `else`) MUST consume exactly the data value and leave exactly one value;
 the combinators check this (`E_EFFECT`). The compiler guarantees it because every op step is `( x -- y )` (§3.3).
@@ -1088,7 +1253,8 @@ The word is `bake:main`: the `word` option (any unreserved word name, default `m
 word cannot collide with a user word. It is one colon definition and nothing else: no `IN:`, no `USING:`; **every word is written qualified**
 (`base64:decode`, `recipe:section`, and core words such as `fork` unqualified, as they are `core`). The header is
 `( bytes -- any )` (R3): input is the bytes of the input pane, output is whatever the last step leaves. An empty
-recipe compiles to a word with an empty body, which returns its input unchanged.
+recipe compiles to a word with an empty body, which returns its input unchanged. Two words are not written as §5.1 says: `core:exit` (a `return` step) is always
+qualified (LANGUAGE §8), and the core `if` of a lowered `if` (§5.3) is unqualified, as `fork` is.
 
 The text ends with a newline. Lines end with `\n` (LF only). The unit is a valid FL source unit: it loads with
 `runtime.load(text, { unit: "recipe", scope: { current: "bake", using: [] } })` and never needs `trusted`.
@@ -1106,6 +1272,7 @@ Each parameter, in `ParamSpec` order, becomes one **literal group**, pushed befo
 | `str`, `choice`, `regex`, `charset` | a string literal (below) |
 | `bytes` | `#[` + bytes as lowercase hex pairs, each preceded by a space, + ` ]`; empty is `#[ ]` |
 | `toggle`, `key`, and `split`/`join` of a fork (an `Encoded`) | by `enc`: `utf8` a string literal; `hex` the `#[ … ]` literal; `latin1` a string literal followed by ` recipe:latin1`; `base64` a string literal followed by ` recipe:base64` (value in normal form) |
+| a reference, `{ "ref": name }`, in a parameter of any type (v1.1) | the local `$name`, in the position of the parameter |
 
 **String literals.** `"` + the characters + `"`, where `\` is written `\\`, `"` is `\"`, U+0000 is `\0`, LF `\n`, CR `\r`,
 tab `\t`, any other C0 or C1 control character (U+0001 to U+001F except those, and U+007F to U+009F) as `\xHH` with
@@ -1115,6 +1282,10 @@ line breaks, and none can appear raw). The result never contains a raw line brea
 An op step's literal group is the groups of its parameters joined by one space, then one space, then the qualified
 name: `13 classical:rot`, `"standard" base64:decode`, `"" "x" "i" regex:replace`. An op with no parameters is just its
 name.
+
+**References** (v1.1). The local `$name` is the register's name with a `$`, bound by the close line of its `register`
+step (§5.3). No word of `core` or of a bundle begins with `$` (LANGUAGE §2.11), so a register cannot shadow a word. A
+reference is never written inside a `{ }` list literal, and the compiler never emits one.
 
 ### 5.3 Steps
 
@@ -1131,6 +1302,9 @@ comment of §6.2. `⟨lits⟩` is a literal group.
 | `repeat`, `times` | open: `recipe:as-bytes ⟨n⟩ [⟨anns⟩`; the children; close: `] recipe:repeat` |
 | `repeat`, `until` | open: `recipe:as-bytes ⟨max⟩ [⟨anns⟩` (`100` if omitted); the children; close: `] recipe:settle` |
 | `comment` | `\ # ⟨json-string⟩` |
+| `register` (v1.1) | open: `[⟨anns⟩`; the children, indented; close: `] recipe:peek :> $name` |
+| `return` (v1.1) | `core:exit⟨anns⟩` |
+| `if`, lowered (v1.1), when the `if` is enabled and an enabled `return` is in its enabled subtree | open: `recipe:as-bytes dup ⟨test⟩ [⟨anns⟩`, where `⟨test⟩` is the regex or op test of the rows above without its brackets; then the `then` children; `] [`; the `else` children; close: `] if` |
 
 The `else` part is always written (`] [` then `] recipe:branch`), empty if there are no `else` steps. In the `if`
 lines the test is a quotation `( bytes -- bool )` on the first line; the `then` and `else` quotations span lines. A
@@ -1140,6 +1314,14 @@ literal (RFC 8259) in which only `"`, `\` and C0 controls are escaped (`\n`, `\r
 `fork` uses the **core combinator**: `⟨split⟩ ⟨join⟩ [ … ] fork` is `( data sep join quot -- data )` (LANGUAGE §8), and
 `recipe:as-bytes` guarantees `data` is `bytes`, so the separators (strings are coerced to the tag of the data) are
 bytes and the result is `bytes`.
+
+**Lowered `if`** (v1.1). `core:exit` is valid only where FL compiles the enclosing `if` to a jump (LANGUAGE §8, Lowering).
+So an `if` whose enabled subtree contains an enabled `return` (through `then`, `else` and nested `if`s) is compiled to the
+lowered form, with its test written inline after a `dup` (it consumes a copy of the data, as `recipe:branch` does) and the
+core `if` as the closer. Every other `if` keeps `recipe:branch`. An `if` inside a disabled step is commented out as a whole,
+so it keeps `recipe:branch`. The line count of an `if` is the same in both forms, so enabling a `return` changes the text of
+its `if` but no step line. A disabled `return` is `\ ~ core:exit`, and its `if` keeps `recipe:branch` (CR122). The example
+is CR120 (§12.8.3).
 
 ### 5.4 Disabled steps, comments, breakpoints
 
@@ -1160,11 +1342,16 @@ step is its first line, the `endLine` the line of its close (or its only line).
 
 The map to instruction indices needs the loaded word. `resolveStepIps(word, lines, positions)` is pure, with
 `positions` = `CompiledWord.positions` of `runtime.lookup(word).code` (`positions[ip].line` is the source line of
-instruction `ip`, 1-based, in the loaded text, the same numbering because the text is loaded as a whole). Since
-code is emitted in source order, `positions[·].line` is non-decreasing, and for each **enabled** step:
+instruction `ip`, 1-based, in the loaded text, the same numbering because the text is loaded as a whole). Since v1.1 this rule does not assume that `positions[·].line` is non-decreasing. A lowered `if` (§5.3) puts its `jumpf`
+and `jump` on the line of its closing `if`, before the code of the branches, which has smaller lines. So for each
+**enabled** step with lines `[startLine, endLine]` (`resolveStepIps`, `packages/recipe/src/stepmap.ts`):
 
-- `startIp` = the smallest `ip` with `positions[ip].line >= startLine`;
-- `endIp` = the smallest `ip` with `positions[ip].line > endLine` (the length of `code` if none).
+- `startIp` = the smallest `ip` whose `positions[ip].line` lies in `[startLine, endLine]`;
+- `endIp` = the largest such `ip` plus one.
+
+A step with no instruction of its own gets the empty range at the first instruction after its last line. For a text
+whose lines do not decrease, which every v1 text is, this gives the ranges of the rule it replaces (CR124). The change is
+in `resolveStepIps` only (R30; CR120 gives the numbers).
 
 The result is `StepIpMap`:
 
@@ -1173,7 +1360,7 @@ The result is `StepIpMap`:
   (steps with that `startIp`, outermost first);
 - `breakpoints: Breakpoint[]` = `{ word, ip: startIp }` for every enabled step with `breakpoint: true`.
 
-Because a step's last instruction is on its last line, its `endIp` is the first instruction of the next line that has
+In a text with no lowered `if`, because a step's last instruction is on its last line, its `endIp` is the first instruction of the next line that has
 code, which for a last child is the `ret` of the quotation, and for the last top-level step the `ret` of the word.
 Both exist. Worked example: §12.2.
 
@@ -1238,16 +1425,27 @@ line        = indent , { "\ ~ " } , body , EOL ;
 indent      = { " " } ;
 body        = comment
             | op-line , [ anns ]
+            | return-line , [ anns ]
             | container-open , [ anns ]
-            | "] [" 
-            | "] " , closer ;
+            | register-open , [ anns ]
+            | "] ["
+            | "] " , closer
+            | register-close ;
 comment     = "\ # " , json-string ;
 op-line     = { group , " " } , qname ;
-container-open = "recipe:as-bytes" , { " " , atom } , " [" ;
+return-line = "core:exit" ;                                  (* v1.1 *)
+register-open  = "[" ;                                       (* the whole line; v1.1 *)
+register-close = "] recipe:peek :> " , local ;               (* v1.1 *)
+local       = "$" , reg-name ;                               (* v1.1 *)
+reg-name    = lower , { lower | digit | "-" } ;              (* 1 to 32 characters; lower: a to z; digit: 0 to 9 *)
+container-open = "recipe:as-bytes" , [ " dup" ] , { " " , atom } , " [" ;   (* " dup" only with the closer "if" *)
 atom        = group | qname | "[" | "]" ;        (* interpreted by the closer, 6.3 *)
-group       = FL-int | FL-float | FL-bool | FL-bytes | FL-string | FL-string , " " , helper ;
+group       = FL-int | FL-float | FL-bool | FL-bytes | FL-string
+            | FL-string , " " , helper
+            | local ;                                        (* v1.1: a reference, in a parameter of any type *)
 helper      = "recipe:latin1" | "recipe:base64" ;
-closer      = "fork" | "recipe:section" | "recipe:branch" | "recipe:repeat" | "recipe:settle" ;
+closer      = "fork" | "recipe:section" | "recipe:branch" | "recipe:repeat"
+            | "recipe:settle" | "if" ;                       (* "if" is the lowered form, v1.1 *)
 anns        = "  \ " , ann , { " " , ann } ;
 ann         = "@pin=" , hex64 | "@break" | "@note=" , json-string ;
 ```
@@ -1256,9 +1454,11 @@ ann         = "@pin=" , hex64 | "@break" | "@note=" , json-string ;
   is a missing field. The header MUST be the first line and its version MUST be `1`.
 - A **disabled prefix** `\ ~ ` is repeated once per disabled level. The number of prefixes on a line is its **level**.
 - The annotations are one trailing comment that starts with two spaces and `\ @`. They appear at most once per line,
-  in the fixed order `@pin`, `@break`, `@note`. They sit on op lines and on the **open line** of a container; else,
-  close and comment lines have none.
+  in the fixed order `@pin`, `@break`, `@note`. They sit on op lines, on the **open line** of a container or register, and on a `core:exit` line (v1.1); else,
+  close and comment lines have none. A `@pin=` on a register or return line is `bad-value` ("a pin on this line has nothing to pin").
 - On an op line the annotation is a plain trailing FL line comment, so it has no effect when the text is run.
+- (v1.1) `dup` follows `recipe:as-bytes` only in a lowered `if`, which requires it. A `$name` is a reference wherever a
+  parameter group may stand (§3.4).
 
 **Levels.** Let `d(S)` be the number of disabled steps among a step `S` and all its ancestors. Every line that belongs
 to `S` itself (its op or comment line, or the open, else and close lines of a container) has level `d(S)`. So a child
@@ -1310,13 +1510,27 @@ step is never disabled itself, so its level equals its container's.
 7. **Result.** The assembled recipe goes through `validateRecipe` (with the catalogue) and then `canonical`. The output
    is that value: parameters explicit; `flags: ""`, `encoding: "utf8"`, `max: 100`, empty `else` omitted.
 
+**v1.1 additions.** The steps above gain these cases. (a) A line whose only token is `[` is a **register open**; its frame
+is a register frame whose children go to `steps`. (b) A line `] recipe:peek :> $name` is a **register close**; `name` MUST
+match `^[a-z][a-z0-9-]{0,31}$` (else `bad-value`, `constraint: "pattern …"`), and the frame MUST be a register frame. (c) A
+line whose only token is the qualified name `core:exit` is a **return** step. It is checked before the op-line rule, which
+would report `unknown-op` for `core`; any other token on it is `bad-value`. (d) A closer `if` MUST have the leading `dup`
+and then either a regex test (`FL-string FL-string FL-string recipe:matches`; `@pin=` only with an op test) or literal
+groups and one qualified name (an op test). Without the leading `dup`, or with `dup` and another closer, it is `bad-value`
+with `constraint: "block structure"`; it completes an `if` as `recipe:branch` does. (e) A `$name` word token is a reference
+in the position of a parameter group of any type, and becomes `{ "ref": name }`; the type check is skipped for it, as in the
+validator. Any other word token is the usual `bad-value`. The parser still never recurses and never loads FL. After
+assembly, `validateRecipe` and `canonical` run as before, so the scope errors come out as they do for JSON.
+
 ### 6.4 Parser errors
 
 Issues use the codes of §3.7 with `path` = the JSON pointer of the step being built, or `""` for header problems.
 Because the text has lines, every parser issue also carries `detail.line` (1-based) and `detail.col`. Additional
 checks: a missing header or `;` is `required`; text after `;` is `unknown-field`; an unterminated block, a close
 without an open, a mismatched close word or wrong level is `bad-value` with `detail.constraint: "block structure"`; more than
-`RECIPE_LIMITS.maxJsonBytes` of text is `limit`. The parser has the same limits as the validator and MUST NOT recurse
+`RECIPE_LIMITS.maxJsonBytes` of text is `limit`. For v1.1: a `core:exit` line with another token before it, a `@pin=` on a register or return line, and a register name
+outside the pattern are `bad-value`, with the messages of §6.3; a closer `if` without its leading `dup` is `bad-value` with
+`constraint: "block structure"`. The parser has the same limits as the validator and MUST NOT recurse
 (the container stack is explicit), so nesting depth 8 is also its bound.
 
 ### 6.5 Round trip
@@ -1328,7 +1542,8 @@ For every valid recipe `r` and its catalogue `c`:
 
 and `compileRecipe(canonical(r, c), c).text === compileRecipe(r, c).text`. The text cannot represent: a `name` with a
 line break (it is a JSON string, so it can), nothing is lost. Disabled steps, comments, notes, breakpoints, pins, and
-`name`/`description`/`catalogue` all survive. Goldens: §12.3.
+`name`/`description`/`catalogue` all survive. Goldens: §12.3. For v1.1, CR125 and CR126 check the text of CR119 and CR120 against their canonical JSON, CR127 the
+structure errors of the new lines, and CR128 a reference to an `int` parameter (§12.8).
 
 ---
 
@@ -1368,6 +1583,10 @@ bytes; at most 8 pairs. Encoding fails with `fragment-too-long` / `input-too-lar
 Encoders need not produce identical bytes on different platforms (the deflate stream is implementation-defined);
 decoders MUST accept any valid deflate-raw stream. Goldens therefore test *decoding* of fixed fragments and *round trips*,
 never the encoder's exact output (§12.5).
+
+The share format is unchanged: `SHARE_FORMAT_VERSION` is 1, the limits of this section are unchanged, and a recipe that uses
+`register` or `return` is encoded and decoded like any other (§7.3 step 7 validates it). A v1 reader decodes such a link
+to `invalid-recipe` with the issues of the new kinds, and not to a different recipe (Appendix A.10).
 
 ### 7.2 Encoding
 
@@ -1412,6 +1631,12 @@ A `key` parameter may hold secret key material. (`toggle` parameters, the input 
 them, and `key` values, are in the clear in the link and in the text form, which the UI must tell the user, §3.4.) `encodeShare` with a catalogue adds one warning `secret-in-url`
 (path of the parameter) for every op step whose `key` parameter is present and differs from its default. The UI is
 expected to ask before creating such a link. The input bytes are never inspected.
+
+**Registers** (v1.1). A `key` parameter that a reference supplies has no literal in the recipe, so `encodeShare` adds no
+`secret-in-url` warning for it: its key material comes from the input, which is not inspected. A register is **secret**
+when at least one reference to it, in its scope, is the value of a `key` parameter (`registerInfo`, `RegisterInfo.secret`,
+computed without running the recipe). The share dialog then adds one sentence (UI.md §2.3). Display is redacted (§8.4), which
+is a safety net for logs and panels and not a secrecy boundary (LANGUAGE §10.14).
 
 ### 7.5 Hostile fragments
 
@@ -1494,9 +1719,10 @@ active, `bake` first cancels it (it ends `E_ABORTED`) and waits for it to finish
 
 1. Not initialised → result with `E_NOT_READY`.
 2. `validateRecipe(recipe, catalogue, { pins })`. Errors → `E_RECIPE_INVALID` with `issues`. Warnings are kept in `warnings`.
-3. If `trust` is `"untrusted"`, the recipe needs a hard kill (§4.1) and `!hardKill` → `E_UNSAFE_HOST` (detail `{ reason: "regex" }`).
+3. If `trust` is `"untrusted"`, the recipe needs a hard kill (§4.1) and `!hardKill` → `E_UNSAFE_HOST` (detail `{ reason: "regex" }`). `recipeNeedsHardKill` recurses into the children of `register` steps; a `return` needs
+nothing.
 4. `compileRecipe` → text, `lines`. A compile failure after a successful validation is `E_INTERNAL`.
-5. `runtime.load(text, { unit: "recipe", scope: { current: "bake", using: [] } })`; `resolveStepIps(word, lines, entry.code.positions)`
+5. `runtime.load(text, { unit: "recipe", scope: { current: "bake", using: [] } })`; `resolveStepIps(word, lines, entry.code.positions)`, by line membership (§5.5)
    with `word` = `bake:main`.
 6. Run `runtime.call(word, [bytes(input)], runOptions)` where `runOptions` has: the effective limits (§8.6), `signal`, `abortFlag` (when
    given), `breakpoints` (§5.6), and the `onStep` hook. `trace` is off.
@@ -1518,6 +1744,12 @@ active, `bake` first cancels it (it ends `E_ABORTED`) and waits for it to finish
 `BakeError`: `code` (`ErrorCode` or the four of R17), `message`, `path` (the step, §5.7; `null` when none applies),
 `word`, `detail` (the `ForgeError`'s `toJSON().detail`: JSON-safe, values already rendered as text and **secrets redacted**),
 `issues?` (for `E_RECIPE_INVALID`), `terminated?`. The stack snapshot of the `ForgeError` is **not** forwarded.
+
+v1.1 adds to `BakeError.detail` the key `register` (the name), when `detail.param` names a parameter that the failing step
+supplies by reference (§3.4). A value is never added. Values in `detail` are rendered by `ForgeError.toJSON`, which cuts a
+value to 80 code points (`reprShort`), so a large register value reaches the client cut, and redacted if it is a secret.
+The steps still open at a `return` are closed at the end time, as at a failure, and the final `progress` event of a
+successful bake has `done` equal to `total` (CR138).
 
 **Coercions.** `RunResult.coercions` is filtered to entries with `slot === 0` whose `word` is the `op` of an enabled op step
 of this recipe; each becomes `{ path, op, from, to }`. **The path comes from VM step ordering**: the hook (§5.6) appends `(event.step, innermost open
@@ -1584,6 +1816,18 @@ Rules:
   `result`; it carries the latest started `path`, `done`/`total` top-level steps, `vmSteps`, `elapsedMs`. `paused`
   is sent at every pause (`reason`: `start` for `startPaused`, `breakpoint`, or `step`) with `data` the value about to enter the step; `resumed` when the
   bake continues. Events are only sent for the active bake.
+
+- **Registers** (v1.1). `paused` gains one optional field, `registers`, listing the registers that have a value at the step
+  about to start, outermost first. It is omitted when the list is empty. `path` is the defining `register` step, and `value`
+  is the value rendered as in §8.3, or `{ kind: "other", tag, repr: "<redacted>" }` for a secret register (§7.4). The
+  values come from `StepEvent.frames()`, which is built only at a pause, so a bake that never pauses pays nothing. The
+  protocol stays `1` (Q15 of RECIPES-1.1.md): a client that ignores the field loses nothing, and the worker's message check
+  accepts it. `BakeResult` gains no field, so the final values of registers are not reported (Q14 of RECIPES-1.1.md).
+
+```ts
+interface RegisterView { readonly name: string; readonly path: string; readonly value: OutputValue }
+// BakeEvent "paused": … , registers?: readonly RegisterView[]
+```
 
 ### 8.5 Cancellation, the watchdog, termination
 
@@ -1668,6 +1912,11 @@ receive. Reaching the end ends the bake normally. `step`/`continue` when not pau
 
 The VM does not charge the time spent awaiting an `onStep` hook to its wall-clock deadline (`vm.ts` extends the deadline by the pause), so
 nothing special is done for `maxMillis`. Only the **client's** deadline timer must stop while paused (§8.5), because it runs outside the VM.
+
+**Registers and return** (v1.1). `step()` after a `register` start goes to the register's first child. A pause inside the
+children of a register shows the registers defined before that register (`paused.registers`, §8.4). A `return` is a step:
+with `breakpoint: true` the bake pauses before its `core:exit`, with `data` the value about to become the output, and
+`step()` after it ends the bake, because no step follows.
 
 ### 8.9 The Magic engine (`@forge/worker/magic`)
 
@@ -2518,3 +2767,826 @@ Required entries of the vector files (more are welcome). `enc` is `utf8` unless 
 | `regex:replace` | `pattern: "(\\w+) (\\w+)"`, `replacement: "$2, $1"` | `John Smith` | `Smith, John` |
 | `regex:split` | `pattern: "\\d+"` | `a1b22c` | `{json: ["a","b","c"]}` |
 | `regex:split` | `pattern: ","` | `a,b,,c` | `{json: ["a","b","","c"]}` |
+
+### 12.8 Register and return: conformance cases (CR101 to CR138)
+
+The cases of Recipe JSON v1.1 were first written as a proposal ([RECIPES-1.1.md](RECIPES-1.1.md), section 6). They are kept
+here with their numbers and text, as LANGUAGE.md section 16 keeps the FL cases. Each case is a fenced block with the info
+string `recipe-case`. Nothing reads that info string: no file under `packages/` or `apps/` reads this document. The first
+line of a block is `# CRnnn title`. A block holds sections introduced by a line that starts with `@`; the text after a
+section line, up to the next one, is its body. The sections are:
+
+| section | meaning |
+|---|---|
+| `@catalogue` | always the shipped catalogue (`dist/catalogue.json` of `@forge/ops`). Ops used: `aes:decrypt`, `bytes-slice:take`, `bytes-slice:remove`, `classical:rot`, `hex:decode`, `hex:encode`, `regex:replace`, `regex:test`, `search:count`, `text:upper`, `text:lower`, `text:reverse`. Pins are absent unless a case shows one |
+| `@recipe` | recipe JSON (wrapped for reading; compared as parsed JSON) |
+| `@issues` | the issues of `validateRecipe` with pins `ignore`: one per line `severity code path key=value …`, or `none` |
+| `@canonical` | the JSON of `canonical(recipe, catalogue)`, compared as `JSON.stringify` text |
+| `@text` | the compiled text (`compileRecipe`, no `name`), without line numbers; `@lines` and `@ranges` follow with `StepLine` and `[startIp, endIp)` |
+| `@parse` | the input of `parseRecipeText` |
+| `@input`, `@output` | the input as `utf8 "…"` or `hex …`, the output as `str "…"` or `bytes hex …` (the text of a bytes output follows) |
+| `@error` | `CODE path=… word=… detail.k=v …` of a failed bake |
+
+Cases marked **(run)** have a hand-written FL text whose behaviour was checked by running it. Each case is asserted by the
+tests named in the index below, which were written with the code (WPs 6.35 to 6.40).
+
+| Case | Title | Asserted by |
+|---|---|---|
+| CR101 | recipe M is valid | `packages/recipe/src/registers.test.ts` |
+| CR102 | a register name has a pattern and is required | `packages/recipe/src/registers.test.ts` |
+| CR103 | closed objects: a register and a return take no other fields | `packages/recipe/src/registers.test.ts` |
+| CR104 | a reference to a register that does not exist | `packages/recipe/src/registers.test.ts` |
+| CR105 | use before definition, and a reference inside the register's own children | `packages/recipe/src/registers.test.ts` |
+| CR106 | a register defined in a closed scope is not visible after it | `packages/recipe/src/registers.test.ts` |
+| CR107 | a visible name cannot be bound again | `packages/recipe/src/registers.test.ts` |
+| CR108 | sibling scopes may reuse a name | `packages/recipe/src/registers.test.ts` |
+| CR109 | a disabled definition: an enabled user is an error, a disabled user is not | `packages/recipe/src/registers.test.ts` |
+| CR110 | return is not valid in a container other than an if | `packages/recipe/src/registers.test.ts` |
+| CR111 | return is valid at the root and through if branches to any depth | `packages/recipe/src/registers.test.ts` |
+| CR112 | unreachable steps are a warning; a branch that ends in a return does not make the rest unreachable | `packages/recipe/src/registers.test.ts` |
+| CR113 | a reference is not a value of a fork separator | `packages/recipe/src/registers.test.ts` |
+| CR114 | malformed references | `packages/recipe/src/registers.test.ts` |
+| CR115 | a reference fills a required parameter, and its constraint is not checked statically | `packages/recipe/src/registers.test.ts` |
+| CR116 | the register limit | `packages/recipe/src/registers.test.ts` |
+| CR117 | a reference in an op test of an if sees the registers visible at the if | `packages/recipe/src/registers.test.ts` |
+| CR118 | normalise and canonical with registers, references and return | `packages/recipe/src/registers.test.ts` |
+| CR119 | recipe M compiles to registers and locals (run) | `packages/recipe/src/v11-compile.test.ts`; `packages/ops/src/recipe.test.ts` |
+| CR120 | an if that contains a return is compiled with the core if, and the step map uses line membership (run) | `packages/recipe/src/v11-compile.test.ts`; `packages/ops/src/recipe.test.ts` |
+| CR121 | nested ifs with a return are all lowered; an unrelated if keeps recipe:branch (run, bakes in CR135) | `packages/recipe/src/v11-compile.test.ts`; `packages/ops/src/recipe.test.ts` |
+| CR122 | a disabled return: the if is compiled as in v1, the line numbers do not move (run) | `packages/recipe/src/v11-compile.test.ts` |
+| CR123 | a register inside a fork child, and a reference to a regex parameter (run, bakes in CR134) | `packages/recipe/src/v11-compile.test.ts`; `packages/ops/src/recipe.test.ts` |
+| CR124 | compatibility: a recipe without the new kinds compiles to the text it has today | `packages/recipe/src/v11-compile.test.ts` |
+| CR125 | the text of CR119 parses to the canonical JSON of recipe M, and back | `packages/recipe/src/v11-compile.test.ts` |
+| CR126 | the text of CR120 parses to the canonical JSON of its recipe, and back | `packages/recipe/src/v11-compile.test.ts` |
+| CR127 | structure errors of the new lines | `packages/recipe/src/v11-compile.test.ts` |
+| CR128 | a reference to an int parameter, and the lines of an op with several (round trip) | `packages/recipe/src/v11-compile.test.ts` |
+| CR129 | a link round trip of recipe M, with and without a catalogue | `packages/recipe/src/registers.test.ts` |
+| CR130 | a literal key still warns, a reference does not | `packages/recipe/src/registers.test.ts` |
+| CR131 | recipe M decrypts the blob (run) | `packages/ops/src/recipe.test.ts`; `packages/worker/src/core.v11.test.ts`; `apps/web/e2e/register-recipe-m.spec.ts` |
+| CR132 | a register that supplies an int parameter (run) | `packages/ops/src/recipe.test.ts`; `packages/worker/src/core.v11.test.ts` |
+| CR133 | deferred validation: the same recipe, three failures (run) | `packages/worker/src/core.v11.test.ts`; `apps/web/e2e/register-recipe-m.spec.ts` |
+| CR134 | a register per fork piece, as a regex parameter (run) | `packages/ops/src/recipe.test.ts`; `packages/worker/src/core.v11.test.ts` |
+| CR135 | return taken, not taken, and from a nested if (run) | `packages/ops/src/recipe.test.ts`; `packages/worker/src/core.v11.test.ts` |
+| CR136 | return at the root skips what follows, and keeps the tag of the data (run) | `packages/ops/src/recipe.test.ts`; `packages/worker/src/core.v11.test.ts` |
+| CR137 | registers at a pause (specified; the redaction rule of section 4.9) | `packages/worker/src/core.v11.test.ts`; `apps/web/e2e/register-recipe-m.spec.ts`; `packages/worker/src/protocol.test.ts`; `apps/web/src/bake/controller.test.ts` |
+| CR138 | steps that never started have no report, and progress ends complete (specified) | `packages/worker/src/core.v11.test.ts` |
+
+#### 12.8.1 Validation (CR101 to CR117)
+
+```recipe-case
+# CR101 recipe M is valid
+@recipe
+{ "forge": 1, "steps": [
+  { "kind": "register", "name": "iv",
+    "steps": [ { "kind": "op", "op": "bytes-slice:take", "params": { "start": 0, "length": 16 } } ] },
+  { "kind": "register", "name": "key",
+    "steps": [ { "kind": "op", "op": "bytes-slice:take", "params": { "start": 16, "length": 32 } } ] },
+  { "kind": "op", "op": "bytes-slice:remove", "params": { "start": 0, "length": 48 } },
+  { "kind": "op", "op": "aes:decrypt",
+    "params": { "key": { "ref": "key" }, "iv": { "ref": "iv" }, "mode": "CBC" } } ] }
+@issues
+none
+```
+
+```recipe-case
+# CR102 a register name has a pattern and is required
+@recipe
+{ "forge": 1, "steps": [ { "kind": "register", "name": "IV", "steps": [] },
+                         { "kind": "register", "steps": [] } ] }
+@issues
+error bad-value /steps/0/name constraint="pattern ^[a-z][a-z0-9-]{0,31}$"
+error required /steps/1/name field=name
+```
+
+```recipe-case
+# CR103 closed objects: a register and a return take no other fields
+@recipe
+{ "forge": 1, "steps": [ { "kind": "register", "name": "a", "steps": [], "extra": 1 },
+                         { "kind": "return", "steps": [] } ] }
+@issues
+error unknown-field /steps/0/extra field=extra
+error unknown-field /steps/1/steps field=steps
+```
+
+```recipe-case
+# CR104 a reference to a register that does not exist
+@recipe
+{ "forge": 1, "steps": [ { "kind": "op", "op": "aes:decrypt", "params": { "key": { "ref": "k" } } } ] }
+@issues
+error unknown-register /steps/0/params/key/ref register=k reason=not-defined
+```
+
+```recipe-case
+# CR105 use before definition, and a reference inside the register's own children
+@recipe
+{ "forge": 1, "steps": [
+  { "kind": "op", "op": "aes:decrypt", "params": { "key": { "ref": "k" } } },
+  { "kind": "register", "name": "k", "steps": [
+      { "kind": "op", "op": "aes:decrypt", "params": { "key": { "ref": "k" } } } ] } ] }
+@issues
+error unknown-register /steps/0/params/key/ref register=k reason=not-yet-defined
+error unknown-register /steps/1/steps/0/params/key/ref register=k reason=not-yet-defined
+```
+
+```recipe-case
+# CR106 a register defined in a closed scope is not visible after it
+@recipe
+{ "forge": 1, "steps": [
+  { "kind": "fork", "split": { "value": "\n", "enc": "utf8" }, "join": { "value": "0a", "enc": "hex" },
+    "steps": [ { "kind": "register", "name": "k", "steps": [] },
+               { "kind": "op", "op": "aes:decrypt", "params": { "key": { "ref": "k" } } } ] },
+  { "kind": "op", "op": "aes:decrypt", "params": { "key": { "ref": "k" } } } ] }
+@issues
+error unknown-register /steps/1/params/key/ref register=k reason=out-of-scope
+```
+
+```recipe-case
+# CR107 a visible name cannot be bound again
+@recipe
+{ "forge": 1, "steps": [
+  { "kind": "register", "name": "a", "steps": [] },
+  { "kind": "register", "name": "a", "steps": [] },
+  { "kind": "fork", "split": { "value": "\n", "enc": "utf8" }, "join": { "value": "", "enc": "utf8" },
+    "steps": [ { "kind": "register", "name": "a", "steps": [] } ] } ] }
+@issues
+error duplicate-register /steps/1/name register=a first=/steps/0
+error duplicate-register /steps/2/steps/0/name register=a first=/steps/0
+```
+
+```recipe-case
+# CR108 sibling scopes may reuse a name
+@recipe
+{ "forge": 1, "steps": [
+  { "kind": "if", "test": { "kind": "regex", "pattern": "x" },
+    "then": [ { "kind": "register", "name": "a", "steps": [] } ],
+    "else": [ { "kind": "register", "name": "a", "steps": [] } ] },
+  { "kind": "fork", "split": { "value": "\n", "enc": "utf8" }, "join": { "value": "0a", "enc": "hex" },
+    "steps": [ { "kind": "register", "name": "a", "steps": [] } ] } ] }
+@issues
+none
+```
+
+```recipe-case
+# CR109 a disabled definition: an enabled user is an error, a disabled user is not
+@recipe
+{ "forge": 1, "steps": [
+  { "kind": "register", "name": "a", "disabled": true, "steps": [] },
+  { "kind": "op", "op": "aes:decrypt", "params": { "key": { "ref": "a" } } },
+  { "kind": "op", "op": "aes:decrypt", "disabled": true, "params": { "key": { "ref": "a" } } } ] }
+@issues
+error unknown-register /steps/1/params/key/ref register=a reason=disabled
+@recipe
+{ "forge": 1, "steps": [
+  { "kind": "register", "name": "a", "disabled": true, "steps": [] },
+  { "kind": "register", "name": "a", "steps": [] } ] }
+@issues
+none
+```
+
+The enabled step at index 1 sees only definitions made by enabled steps, and the one at index 0 is disabled, so it gets `disabled` as the reason. The disabled step at index 2 sees all definitions and is fine. In the second recipe the enabled `a` is not a duplicate, because duplicates are checked among enabled definitions only.
+
+```recipe-case
+# CR110 return is not valid in a container other than an if
+@recipe
+{ "forge": 1, "steps": [
+  { "kind": "fork", "split": { "value": "\n", "enc": "utf8" }, "join": { "value": "0a", "enc": "hex" },
+    "steps": [ { "kind": "return" } ] },
+  { "kind": "subsection", "pattern": "a", "steps": [
+      { "kind": "if", "test": { "kind": "regex", "pattern": "x" }, "then": [ { "kind": "return" } ] } ] },
+  { "kind": "repeat", "times": 2, "steps": [ { "kind": "return" } ] },
+  { "kind": "register", "name": "a", "steps": [ { "kind": "return" } ] } ] }
+@issues
+error bad-position /steps/0/steps/0 kind=return container=/steps/0 containerKind=fork
+error bad-position /steps/1/steps/0/then/0 kind=return container=/steps/1 containerKind=subsection
+error bad-position /steps/2/steps/0 kind=return container=/steps/2 containerKind=repeat
+error bad-position /steps/3/steps/0 kind=return container=/steps/3 containerKind=register
+```
+
+```recipe-case
+# CR111 return is valid at the root and through if branches to any depth
+@recipe
+{ "forge": 1, "steps": [
+  { "kind": "if", "test": { "kind": "regex", "pattern": "a" },
+    "then": [ { "kind": "if", "test": { "kind": "regex", "pattern": "b" },
+                "then": [ { "kind": "return" } ],
+                "else": [ { "kind": "op", "op": "text:upper" } ] } ],
+    "else": [ { "kind": "return" } ] },
+  { "kind": "return" } ] }
+@issues
+none
+```
+
+```recipe-case
+# CR112 unreachable steps are a warning; a branch that ends in a return does not make the rest unreachable
+@recipe
+{ "forge": 1, "steps": [
+  { "kind": "if", "test": { "kind": "regex", "pattern": "a" }, "then": [ { "kind": "return" } ] },
+  { "kind": "op", "op": "text:upper" },
+  { "kind": "return" },
+  { "kind": "comment", "text": "after" },
+  { "kind": "op", "op": "text:lower", "disabled": true },
+  { "kind": "op", "op": "text:reverse" } ] }
+@issues
+warning unreachable-step /steps/5 after=/steps/2
+```
+
+```recipe-case
+# CR113 a reference is not a value of a fork separator
+@recipe
+{ "forge": 1, "steps": [
+  { "kind": "register", "name": "sep", "steps": [] },
+  { "kind": "fork", "split": { "ref": "sep" }, "join": { "value": "", "enc": "utf8" }, "steps": [] } ] }
+@issues
+error bad-value /steps/1/split constraint="register references go in op parameters"
+```
+
+```recipe-case
+# CR114 malformed references
+@recipe
+{ "forge": 1, "steps": [
+  { "kind": "register", "name": "a", "steps": [] },
+  { "kind": "op", "op": "aes:decrypt", "params": { "key": { "ref": 5 }, "iv": { "ref": "A" } } },
+  { "kind": "op", "op": "aes:decrypt", "params": { "key": { "ref": "a", "x": 1 } } } ] }
+@issues
+error type /steps/1/params/key/ref expected="a string"
+error bad-value /steps/1/params/iv/ref constraint="pattern ^[a-z][a-z0-9-]{0,31}$"
+error unknown-field /steps/2/params/key/x field=x
+```
+
+```recipe-case
+# CR115 a reference fills a required parameter, and its constraint is not checked statically
+@recipe
+{ "forge": 1, "steps": [
+  { "kind": "register", "name": "n", "steps": [ { "kind": "op", "op": "search:count", "params": { "pattern": "a" } } ] },
+  { "kind": "op", "op": "classical:rot", "params": { "amount": { "ref": "n" } } },
+  { "kind": "op", "op": "aes:decrypt", "params": { "key": { "ref": "n" } } } ] }
+@issues
+none
+```
+
+`classical:rot` takes an `int[0..25]`: a literal 26 is `bad-param` (§12.4), a reference to any register is accepted and checked at run time (CR133). `aes:decrypt` has a required `key`, so no `missing-param`.
+
+```recipe-case
+# CR116 the register limit
+@recipe
+(65 root steps; step i is { "kind": "register", "name": "r<i+1>", "steps": [] }, so r1 to r65)
+@issues
+error limit /steps/64 limit=maxRegisters max=64
+```
+
+```recipe-case
+# CR117 a reference in an op test of an if sees the registers visible at the if
+@recipe
+{ "forge": 1, "steps": [
+  { "kind": "if", "test": { "kind": "op", "op": "regex:test", "params": { "pattern": { "ref": "p" } } }, "then": [] },
+  { "kind": "register", "name": "p", "steps": [] },
+  { "kind": "if", "test": { "kind": "op", "op": "regex:test", "params": { "pattern": { "ref": "p" } } }, "then": [] } ] }
+@issues
+error unknown-register /steps/0/test/params/pattern/ref register=p reason=not-yet-defined
+```
+
+#### 12.8.2 Normal forms (CR118)
+
+```recipe-case
+# CR118 normalise and canonical with registers, references and return
+@recipe
+{ "steps": [
+  { "disabled": false, "kind": "register", "note": "", "name": "p",
+    "steps": [ { "params": { "length": 2, "start": 0 }, "op": "bytes-slice:take", "kind": "op" } ] },
+  { "kind": "if", "test": { "pattern": "x", "kind": "regex" },
+    "then": [ { "kind": "return", "breakpoint": false, "disabled": false } ] },
+  { "op": "regex:replace", "kind": "op", "params": { "replacement": "-", "pattern": { "ref": "p" } } } ],
+  "forge": 1 }
+@canonical
+{"forge":1,"steps":[{"kind":"register","name":"p","steps":[{"kind":"op","op":"bytes-slice:take","params":{"start":0,"length":2,"each-line":false}}]},{"kind":"if","test":{"kind":"regex","pattern":"x"},"then":[{"kind":"return"}]},{"kind":"op","op":"regex:replace","params":{"pattern":{"ref":"p"},"replacement":"-","flags":""}}]}
+```
+
+`normalise` alone gives the same without `each-line` and `flags`, with `params` keys sorted (`length`, `start`; `pattern`, `replacement`). The reference is untouched in both forms.
+
+#### 12.8.3 JSON to FL (CR119 to CR124)
+
+```recipe-case
+# CR119 recipe M compiles to registers and locals (run)
+@recipe
+(recipe M, CR101)
+@text
+\ forge-recipe 1
+: main ( bytes -- any )
+  [
+    0 16 false bytes-slice:take
+  ] recipe:peek :> $iv
+  [
+    16 32 false bytes-slice:take
+  ] recipe:peek :> $key
+  0 48 false bytes-slice:remove
+  $key $iv "CBC" "pkcs7" #[ ] aes:decrypt
+;
+@lines
+/steps/0 3-5 register
+/steps/0/steps/0 4-4 op
+/steps/1 6-8 register
+/steps/1/steps/0 7-7 op
+/steps/2 9-9 op
+/steps/3 10-10 op
+@ranges
+/steps/0 [0, 8)
+/steps/0/steps/0 [1, 5)
+/steps/1 [8, 16)
+/steps/1/steps/0 [9, 13)
+/steps/2 [16, 20)
+/steps/3 [20, 26)
+```
+
+The loaded word has 27 instructions (`ret` at 26). `$key` and `$iv` are `local` instructions, `:> ` is a `bind` on the close line of its register.
+
+```recipe-case
+# CR120 an if that contains a return is compiled with the core if, and the step map uses line membership (run)
+@recipe
+{ "forge": 1, "steps": [
+  { "kind": "op", "op": "hex:decode" },
+  { "kind": "if", "test": { "kind": "regex", "pattern": "^a" },
+    "then": [ { "kind": "op", "op": "hex:encode", "params": { "delimiter": "none", "case": "upper" } },
+              { "kind": "return" } ] },
+  { "kind": "op", "op": "text:reverse" } ] }
+@text
+\ forge-recipe 1
+: main ( bytes -- any )
+  hex:decode
+  recipe:as-bytes dup "^a" "" "utf8" recipe:matches [
+    "none" "upper" hex:encode
+    core:exit
+  ] [
+  ] if
+  text:reverse
+;
+@lines
+/steps/0 3-3 op
+/steps/1 4-8 if
+/steps/1/then/0 5-5 op
+/steps/1/then/1 6-6 return
+/steps/2 9-9 op
+@ranges
+/steps/0 [0, 1)
+/steps/1 [1, 13)
+/steps/1/then/0 [8, 11)
+/steps/1/then/1 [11, 12)
+/steps/2 [13, 14)
+```
+
+The loaded word has 15 instructions (`ret` at 14): `0 call hex:decode`, `1 call recipe:as-bytes`, `2 stack dup`, `3 to 5` the three literals, `6 call recipe:matches`, `7 jumpf` (line 8), `8 to 10` the literals and `hex:encode`, `11 exit` (line 6), `12 jump` (line 8), `13 call text:reverse`, `14 ret`. The rule of §5.5 would give both children the range `[7, 7)`. `events`: `0: - | /steps/0`; `1: /steps/0 | /steps/1`; `8: - | /steps/1/then/0`; `11: /steps/1/then/0 | /steps/1/then/1`; `12: /steps/1/then/1 | -`; `13: /steps/1 | /steps/2`; `14: /steps/2 | -`. `breakpoints` for a `breakpoint: true` on the return: `[ { "word": "bake:main", "ip": 11 } ]`.
+
+```recipe-case
+# CR121 nested ifs with a return are all lowered; an unrelated if keeps recipe:branch (run, bakes in CR135)
+@recipe
+{ "forge": 1, "steps": [
+  { "kind": "op", "op": "hex:decode" },
+  { "kind": "if", "test": { "kind": "regex", "pattern": "^a" },
+    "then": [ { "kind": "if", "test": { "kind": "regex", "pattern": "b$" },
+                "then": [ { "kind": "op", "op": "hex:encode", "params": { "delimiter": "none", "case": "upper" } },
+                          { "kind": "return" } ] },
+              { "kind": "op", "op": "text:upper" } ] },
+  { "kind": "if", "test": { "kind": "regex", "pattern": "z" }, "then": [ { "kind": "op", "op": "text:lower" } ] },
+  { "kind": "op", "op": "hex:encode" } ] }
+@text
+\ forge-recipe 1
+: main ( bytes -- any )
+  hex:decode
+  recipe:as-bytes dup "^a" "" "utf8" recipe:matches [
+    recipe:as-bytes dup "b$" "" "utf8" recipe:matches [
+      "none" "upper" hex:encode
+      core:exit
+    ] [
+    ] if
+    text:upper
+  ] [
+  ] if
+  recipe:as-bytes [ "z" "" "utf8" recipe:matches ] [
+    text:lower
+  ] [
+  ] recipe:branch
+  "none" "lower" hex:encode
+;
+```
+
+```recipe-case
+# CR122 a disabled return: the if is compiled as in v1, the line numbers do not move (run)
+@recipe
+(the recipe of CR120 with "disabled": true on the return)
+@text
+\ forge-recipe 1
+: main ( bytes -- any )
+  hex:decode
+  recipe:as-bytes [ "^a" "" "utf8" recipe:matches ] [
+    "none" "upper" hex:encode
+    \ ~ core:exit
+  ] [
+  ] recipe:branch
+  text:reverse
+;
+@lines
+/steps/1 4-8 if
+/steps/1/then/1 6-6 return
+```
+
+```recipe-case
+# CR123 a register inside a fork child, and a reference to a regex parameter (run, bakes in CR134)
+@recipe
+{ "forge": 1, "steps": [
+  { "kind": "fork", "split": { "value": "\n", "enc": "utf8" }, "join": { "value": "0a", "enc": "hex" },
+    "steps": [
+      { "kind": "register", "name": "pat",
+        "steps": [ { "kind": "op", "op": "bytes-slice:take", "params": { "start": 0, "length": 2 } } ] },
+      { "kind": "op", "op": "bytes-slice:remove", "params": { "start": 0, "length": 3 } },
+      { "kind": "op", "op": "regex:replace", "params": { "pattern": { "ref": "pat" }, "replacement": "-" } } ] } ] }
+@text
+\ forge-recipe 1
+: main ( bytes -- any )
+  recipe:as-bytes "\n" #[ 0a ] [
+    [
+      0 2 false bytes-slice:take
+    ] recipe:peek :> $pat
+    0 3 false bytes-slice:remove
+    $pat "-" "" regex:replace
+  ] fork
+;
+```
+
+```recipe-case
+# CR124 compatibility: a recipe without the new kinds compiles to the text it has today
+@recipe
+(the recipe of RECIPES.md section 12.2, "Demo")
+@text
+(exactly the 21 lines of RECIPES.md section 12.2, byte for byte; the ranges of section 12.2 are unchanged
+ by the line-membership rule)
+```
+
+#### 12.8.4 Text and JSON (CR125 to CR128)
+
+```recipe-case
+# CR125 the text of CR119 parses to the canonical JSON of recipe M, and back
+@parse
+(the @text of CR119)
+@canonical
+{"forge":1,"steps":[{"kind":"register","name":"iv","steps":[{"kind":"op","op":"bytes-slice:take","params":{"start":0,"length":16,"each-line":false}}]},{"kind":"register","name":"key","steps":[{"kind":"op","op":"bytes-slice:take","params":{"start":16,"length":32,"each-line":false}}]},{"kind":"op","op":"bytes-slice:remove","params":{"start":0,"length":48,"each-line":false}},{"kind":"op","op":"aes:decrypt","params":{"key":{"ref":"key"},"iv":{"ref":"iv"},"mode":"CBC","padding":"pkcs7","aad":{"value":"","enc":"hex"}}}]}
+```
+
+`compileRecipe` of that JSON returns the text of CR119 again.
+
+```recipe-case
+# CR126 the text of CR120 parses to the canonical JSON of its recipe, and back
+@parse
+(the @text of CR120)
+@canonical
+{"forge":1,"steps":[{"kind":"op","op":"hex:decode"},{"kind":"if","test":{"kind":"regex","pattern":"^a"},"then":[{"kind":"op","op":"hex:encode","params":{"delimiter":"none","case":"upper"}},{"kind":"return"}]},{"kind":"op","op":"text:reverse"}]}
+```
+
+```recipe-case
+# CR127 structure errors of the new lines
+@parse
+\ forge-recipe 1
+: main ( bytes -- any )
+  recipe:as-bytes [ "^a" "" "utf8" recipe:matches ] [
+    text:upper
+  ] [
+  ] if
+;
+@issues
+bad-value /steps/0 constraint="block structure" line=6
+@parse
+\ forge-recipe 1
+: main ( bytes -- any )
+  [
+    text:upper
+  ] recipe:peek :> $IV
+;
+@issues
+bad-value /steps/0/name constraint="pattern ^[a-z][a-z0-9-]{0,31}$" line=5
+@parse
+\ forge-recipe 1
+: main ( bytes -- any )
+  [
+    text:upper
+;
+@issues
+bad-value /steps/0 constraint="block structure"
+@parse
+\ forge-recipe 1
+: main ( bytes -- any )
+  1 core:exit
+;
+@issues
+bad-value /steps/0 line=3
+```
+
+The first text has the closer `if` without `dup`; the second a name outside the pattern; the third an unterminated register; the fourth an atom before `core:exit`.
+
+```recipe-case
+# CR128 a reference to an int parameter, and the lines of an op with several (round trip)
+@recipe
+{ "forge": 1, "steps": [
+  { "kind": "register", "name": "n", "steps": [ { "kind": "op", "op": "search:count", "params": { "pattern": "a" } } ] },
+  { "kind": "op", "op": "classical:rot", "params": { "amount": { "ref": "n" } } } ] }
+@text
+\ forge-recipe 1
+: main ( bytes -- any )
+  [
+    "a" "string" false search:count
+  ] recipe:peek :> $n
+  $n classical:rot
+;
+```
+
+`parseRecipeText` of this text returns `canonical(recipe)`: the `$n` group is accepted for the `int` parameter `amount` and becomes `{ "ref": "n" }`.
+
+#### 12.8.5 Share (CR129 and CR130)
+
+```recipe-case
+# CR129 a link round trip of recipe M, with and without a catalogue
+@recipe
+(recipe M, CR101; the input is the 64 bytes of CR131 with ie hex)
+@issues
+(encodeShare: ok, fragment starts "v=1&r=", warnings none; decodeShare: the recipe deep-equals normalise(recipe),
+ the input and ie hex come back; with a catalogue the op steps carry pins and the references are untouched)
+```
+
+```recipe-case
+# CR130 a literal key still warns, a reference does not
+@recipe
+{ "forge": 1, "steps": [
+  { "kind": "op", "op": "aes:decrypt",
+    "params": { "key": { "value": "000102030405060708090a0b0c0d0e0f", "enc": "hex" } } } ] }
+@issues
+(encodeShare warnings) warning secret-in-url /steps/0/params/key param=key
+@recipe
+{ "forge": 1, "steps": [ { "kind": "register", "name": "k", "steps": [] },
+  { "kind": "op", "op": "aes:decrypt", "params": { "key": { "ref": "k" } } } ] }
+@issues
+(encodeShare warnings) none
+```
+
+#### 12.8.6 Bake, pauses and progress (CR131 to CR138)
+
+The input of CR131 is the blob `iv ++ key ++ ciphertext`, built with `aes:encrypt` (AES-256-CBC, PKCS#7) from the plaintext `attack at dawn`:
+
+```
+iv  = a0a1a2a3a4a5a6a7a8a9aaabacadaeaf
+key = 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f
+ct  = 6f498b8b870a0d8175f26312b99705c8
+```
+
+```recipe-case
+# CR131 recipe M decrypts the blob (run)
+@recipe
+(recipe M, CR101)
+@input
+hex a0a1a2a3a4a5a6a7a8a9aaabacadaeaf000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f6f498b8b870a0d8175f26312b99705c8
+@output
+bytes 61747461636b206174206461776e
+(text "attack at dawn")
+```
+
+```recipe-case
+# CR132 a register that supplies an int parameter (run)
+@recipe
+(the recipe of CR128)
+@input
+utf8 "banana"
+@output
+bytes 656471647164
+(text "edqdqd": three letters a, so rot 3)
+```
+
+```recipe-case
+# CR133 deferred validation: the same recipe, three failures (run)
+@recipe
+(the recipe of CR128)
+@input
+utf8 "aaaaaaaaaaaaaaaaaaaaaaaaaa"
+@error
+E_PARAM_INVALID path=/steps/1 word=classical:rot detail.param=amount detail.constraint=[0..25] detail.value=26 detail.register=n
+@recipe
+{ "forge": 1, "steps": [
+  { "kind": "register", "name": "n",
+    "steps": [ { "kind": "op", "op": "bytes-slice:take", "params": { "start": 0, "length": 1 } } ] },
+  { "kind": "op", "op": "classical:rot", "params": { "amount": { "ref": "n" } } } ] }
+@input
+utf8 "banana"
+@error
+E_TYPE path=/steps/1 word=classical:rot detail.param=amount detail.expected=int detail.actual=bytes detail.register=n
+@recipe
+{ "forge": 1, "steps": [
+  { "kind": "register", "name": "p",
+    "steps": [ { "kind": "op", "op": "bytes-slice:take", "params": { "start": 0, "length": 1 } } ] },
+  { "kind": "op", "op": "bytes-slice:remove", "params": { "start": 0, "length": 2 } },
+  { "kind": "op", "op": "regex:replace", "params": { "pattern": { "ref": "p" }, "replacement": "-" } } ] }
+@input
+utf8 "(:xxabxx"
+@error
+E_PARAM_INVALID path=/steps/2 word=regex:replace detail.param=pattern detail.constraint=regex detail.register=p
+```
+
+The step paths come from the recipe frame of `ForgeError.frames` as in §5.7 (the frame of `bake:main` is the first, `bake:main@9` in the first run). The `detail` keys other than `register` are what the FL runtime reports **(run)**; `register` is added by the baker.
+
+```recipe-case
+# CR134 a register per fork piece, as a regex parameter (run)
+@recipe
+(the recipe of CR123)
+@input
+utf8 "ab:xxabxx\ncd:yycdyy"
+@output
+bytes 78782d78780a79792d7979
+(text "xx-xx\nyy-yy": each piece takes its own two-character pattern)
+```
+
+```recipe-case
+# CR135 return taken, not taken, and from a nested if (run)
+@recipe
+(the recipe of CR120)
+@input
+utf8 "6162"
+@output
+str "6162"
+@input
+utf8 "6362"
+@output
+str "bc"
+@recipe
+(the recipe of CR121)
+@input
+utf8 "6162"
+@output
+str "6162"
+@input
+utf8 "6161"
+@output
+str "4141"
+@input
+utf8 "6263"
+@output
+str "6263"
+```
+
+The first input of the CR120 recipe decodes to `ab`, matches `^a`, and is returned as upper-case hex without reaching `text:reverse`; the second decodes to `cb`, does not match, and goes on to `text:reverse` (`bc`). For CR121: `ab` matches `^a` and `b$`, so it returns at once; `aa` matches `^a` only, so `text:upper` runs, then the last `hex:encode`; `bc` matches neither.
+
+```recipe-case
+# CR136 return at the root skips what follows, and keeps the tag of the data (run)
+@recipe
+{ "forge": 1, "steps": [ { "kind": "op", "op": "hex:decode" }, { "kind": "return" }, { "kind": "op", "op": "text:upper" } ] }
+@input
+utf8 "6162"
+@output
+bytes 6162
+(text "ab")
+@issues
+warning unreachable-step /steps/2 after=/steps/1
+```
+
+```recipe-case
+# CR137 registers at a pause (specified; the redaction rule of section 4.9)
+@recipe
+(recipe M, CR101, with "breakpoint": true on /steps/3, bake with debug: {})
+@input
+(the blob of CR131)
+@paused
+path=/steps/3 reason=breakpoint registers=[
+  { name: "iv",  path: "/steps/0", value: { kind: "other", tag: "bytes", repr: "<redacted>" } },
+  { name: "key", path: "/steps/1", value: { kind: "other", tag: "bytes", repr: "<redacted>" } } ]
+@recipe
+(the recipe of CR123, "breakpoint": true on /steps/0/steps/1, debug: {})
+@input
+utf8 "ab:xxabxx\ncd:yycdyy"
+@paused
+path=/steps/0/steps/1 reason=breakpoint registers=[
+  { name: "pat", path: "/steps/0/steps/0", value: { kind: "bytes", text: "ab" } } ]
+(and again before the second piece, with pat = "cd")
+```
+
+Both registers of recipe M are secret because `iv` and `key` of `aes:decrypt` are declared `key`. `pat` feeds a `regex` parameter, so it is shown. The pause of the second recipe repeats for each piece.
+
+```recipe-case
+# CR138 steps that never started have no report, and progress ends complete (specified)
+@recipe
+(the recipe of CR120)
+@input
+utf8 "6162"
+@output
+str "6162"
+@steps
+/steps/0 runs=1; /steps/1 runs=1; /steps/1/then/0 runs=1; /steps/1/then/1 runs=1
+(no entry for /steps/2)
+@progress
+final: done=3 total=3
+```
+
+---
+
+## Appendix A. Changes in v1.1
+
+This appendix lists every new step kind, field, reference form, issue code, limit, export and protocol field of Recipe JSON
+v1.1, with the section that defines it. It is a checklist for people who write tools against the format: an editor plugin,
+a converter, a second validator. It adds no rule of its own; where it is short, the section named is the rule.
+
+### A.1 What did not change
+
+- A recipe that uses neither `register` nor `return` has the same canonical JSON, the same text (byte for byte), the same
+  issues and the same share fragment as in v1 (CR124 and the goldens of §12).
+- `"forge"` is `1`. `RECIPE_FORMAT_VERSION`, `SHARE_FORMAT_VERSION`, the text header `\ forge-recipe 1` and the schema
+  `$id` are unchanged. `PROTOCOL_VERSION` is `1`.
+- The existing values of `RECIPE_LIMITS` and `SHARE_LIMITS`, and the meaning of every existing issue code, are unchanged.
+- No catalogue op is added, and no op hash or catalogue `version` changes. `recipe:peek` is internal to the `recipe`
+  vocabulary and is never in the catalogue (§4.3).
+
+### A.2 Step kinds (§3.2)
+
+| kind | fields | meaning |
+|---|---|---|
+| `register` | `name` (required, `^[a-z][a-z0-9-]{0,31}$`), `steps` (required), `disabled`, `breakpoint`, `note` | binds the value its children compute from a copy of the data to `name`; the data is unchanged |
+| `return` | `disabled`, `breakpoint`, `note` | ends the whole recipe with the current data; valid at the root and in `if` branches only |
+
+`STEP_KINDS` now has eight kinds: `op`, `fork`, `subsection`, `if`, `repeat`, `comment`, `register`, `return`. Objects stay
+closed: an unknown field is an error.
+
+### A.3 Parameter values (§3.4)
+
+| form | where it may appear | notes |
+|---|---|---|
+| `{ "ref": "<name>" }` | the `params` of an `op` step and of an `op` test of an `if`, for any parameter type | a `RegisterRef`; not in `fork.split` or `join`, `subsection`, a regex test, `repeat.times` or `repeat.max` |
+
+### A.4 Issue codes (§3.7)
+
+| code | severity | `detail` |
+|---|---|---|
+| `unknown-register` | error | `register`, `reason`: `not-defined`, `not-yet-defined`, `out-of-scope` or `disabled` |
+| `duplicate-register` | error | `register`, `first` (the path of the visible definition) |
+| `bad-position` | error | `kind`, `container` (the nearest enclosing step that is not an `if`), `containerKind` |
+| `unreachable-step` | warning | `after` (the path of the `return`) |
+
+The existing codes also report the new constructs: `bad-value` (a malformed register name or reference, a reference as a
+`fork` separator, a `core:exit` line with another token, a pin on a register or return line), `limit` (`limit:
+"maxRegisters"`), `type` and `unknown-field` (the shape of a reference), and `bad-kind` (a kind that is not one of the eight).
+
+### A.5 Limits (§3.8)
+
+| limit | value |
+|---|---|
+| `register` steps in a recipe, enabled or not | 64 (`RECIPE_LIMITS.maxRegisters`) |
+| characters in a register name | 32 (`RECIPE_LIMITS.maxRegisterNameChars`, with the pattern of A.2) |
+
+The other limits are unchanged, and `register` and `return` count as steps.
+
+### A.6 Text form (§6)
+
+| line | meaning |
+|---|---|
+| `[` alone | register open |
+| `] recipe:peek :> $name` | register close; `name` matches the pattern of A.2 |
+| `core:exit` alone | return; nothing may come before it on the line |
+| `$name` in a parameter position | a reference to a register in scope |
+| `recipe:as-bytes dup` … `] if` | a lowered `if`, whose test is inline and whose closer is the core `if` |
+
+A parser of the text form accepts these lines and rejects the others as §6.4 says. The text form of a v1 recipe is unchanged.
+
+### A.7 Compiled FL (§4.3, §5)
+
+- `recipe:peek ( any body:quot -- any any )`, in the internal `recipe` vocabulary.
+- Locals `$name`, bound with `:>` on the close line of a register. No word of `core` or of a bundle begins with `$`.
+- `core:exit`, and the core `if` in the lowered form of an `if` that contains an enabled `return`.
+- The step map uses line membership (§5.5). For a text whose lines do not decrease, which every v1 text is, the ranges are the
+  same as before.
+
+### A.8 Exports
+
+| package | export |
+|---|---|
+| `@forge/recipe` | types `RegisterRef`, `RegisterStep`, `ReturnStep`, `RegisterInfo`; `STEP_KINDS`, `RECIPE_ISSUE_CODES` and `RECIPE_LIMITS` with the additions of A.2, A.4 and A.5 |
+| `@forge/recipe` | `isRegisterRef(v)`, `REGISTER_NAME_RE`, `recipeUsesV11(recipe)`, `registerInfo(recipe, catalogue)`, `registersInScope(recipe, stepPath, catalogue?)` |
+| `@forge/worker` | type `RegisterView { name, path, value }`; the optional `registers` field of the `paused` event; the optional `register` key of `BakeError.detail` |
+
+`registersInScope` gives the registers that a reference in that step could use, outermost first. A path that ends at a list
+means the position after its last step. Without a catalogue, `secret` is false for every register.
+
+### A.9 Bake errors and debugging (§8)
+
+- `detail.register` is added to an error of A.3's table when the failing parameter is one a register supplies. It holds the
+  name, never a value, and it is absent for an `E_RANGE` from a helper word of the op.
+- A secret register (one that feeds a `key` parameter) is shown as `{ "kind": "other", "tag": …, "repr": "<redacted>" }`.
+- A `return` ends the bake with `ok: true` and the current data as the output.
+
+### A.10 Share links (§7)
+
+A link to a recipe with registers or returns is an ordinary `v=1` fragment. A reference to a `key` parameter adds no
+`secret-in-url` warning (§7.4). A v1 reader that decodes such a link gets `invalid-recipe` with the issues of the new kinds,
+which is the safe failure (§7.3 step 7). The share dialog of the web app states the version requirement (UI.md §2.3).
+
+### A.11 A v1 reader and a v1.1 recipe
+
+Observed on the v1 code, before this wave: a `register` step gives `bad-kind`; a `{ "ref": … }` parameter gives `unknown-field`
+and `required`; a `return` in an `if` branch gives `bad-kind`; text with a `core:exit` line gives `unknown-op`; text with `[`
+and `] recipe:peek :> $iv` gives `bad-value`; text with `$iv` as a parameter gives `bad-value`. The messages are less explicit
+than a version error would be. That was accepted (R29): the reader fails closed and never misreads the recipe.
+
+### A.12 Editor plugins
+
+The JSON needs no change in an editor plugin. A plugin that highlights, completes or checks compiled recipe text needs `$`
+locals, a qualified `core:exit` and the word `recipe:peek`. Those checks are a backlog item for the forge-plugin repository
+(RECIPES-1.1.md section 4.13). They have not been verified against that plugin.
