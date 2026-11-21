@@ -21,21 +21,13 @@ import type { SourcePos } from "@forge/lang";
 import { opIndex } from "./opindex.js";
 import type { CatalogueView, IpEvent, Recipe, Step, StepIp, StepIpMap, StepLine } from "./types.js";
 
-/** The smallest index in `[0, positions.length]` whose line satisfies `pred` (lines never decrease). */
-function firstIp(positions: readonly SourcePos[], pred: (line: number) => boolean): number {
-  let lo = 0;
-  let hi = positions.length;
-  while (lo < hi) {
-    const mid = (lo + hi) >> 1;
-    if (pred((positions[mid] as SourcePos).line)) hi = mid;
-    else lo = mid + 1;
-  }
-  return lo;
-}
-
 /**
- * Maps the enabled steps of `lines` to instruction ranges. `startIp` is the first instruction on or after the
- * step's first line, `endIp` the first instruction after its last line.
+ * Maps the enabled steps of `lines` to instruction ranges by line membership (RECIPES-1.1.md section 3.5): `startIp`
+ * is the smallest instruction whose line lies in the step's lines, `endIp` the largest such instruction plus one.
+ * It does not assume that lines never decrease along the code, which a lowered `if` breaks; for a text whose
+ * lines do not decrease the result is the same as "the first instruction on or after the first line, up to the
+ * first instruction after the last line". A step with no instruction of its own gets the empty range at the first
+ * instruction after its last line.
  */
 export function resolveStepIps(
   word: string,
@@ -45,11 +37,21 @@ export function resolveStepIps(
   const steps: StepIp[] = [];
   for (const line of lines) {
     if (line.disabled || line.kind === "comment") continue;
+    let lo = -1;
+    let hi = -1;
+    let after = positions.length;
+    for (let ip = 0; ip < positions.length; ip++) {
+      const l = (positions[ip] as SourcePos).line;
+      if (l >= line.startLine && l <= line.endLine) {
+        if (lo < 0) lo = ip;
+        hi = ip + 1;
+      } else if (l > line.endLine && after === positions.length) after = ip;
+    }
     steps.push({
       path: line.path,
       kind: line.kind,
-      startIp: firstIp(positions, (l) => l >= line.startLine),
-      endIp: firstIp(positions, (l) => l > line.endLine),
+      startIp: lo < 0 ? after : lo,
+      endIp: lo < 0 ? after : hi,
       breakpoint: line.breakpoint,
     });
   }
@@ -116,6 +118,7 @@ export function recipeNeedsHardKill(recipe: Recipe, catalogue: CatalogueView): b
         break;
       case "fork":
       case "repeat":
+      case "register":
         stack.push(...step.steps);
         break;
     }

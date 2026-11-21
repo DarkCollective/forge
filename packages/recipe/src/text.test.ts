@@ -13,6 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { join } from "node:path";
 import { describe, expect, test } from "vitest";
 import { Rng, genRecipe } from "../test/gen.js";
 import {
@@ -29,6 +32,8 @@ import { canonicalRecipe } from "./normalise.js";
 import { parseRecipeText } from "./text.js";
 import type { CatalogueView, Recipe, RecipeIssue } from "./types.js";
 import { validateRecipe } from "./validate.js";
+
+const here = join(fileURLToPath(import.meta.url), "..");
 
 function compileText(recipe: unknown, catalogue: CatalogueView = seed): string {
   const out = compileRecipe(recipe, catalogue, { pins: "ignore" });
@@ -129,6 +134,20 @@ describe("parseRecipeText: the round trip (RECIPES.md section 6.5)", () => {
       n++;
     }
     expect(n).toBeGreaterThanOrEqual(10);
+  });
+
+  test("every valid document of corpus/v11/valid, on the shipped catalogue (RECIPES-1.1.md section 4.7)", () => {
+    const shipped = JSON.parse(
+      readFileSync(join(here, "..", "..", "ops", "dist", "catalogue.json"), "utf8"),
+    ) as CatalogueView;
+    const files = fixtureFiles("corpus/v11/valid");
+    expect(files.length).toBeGreaterThanOrEqual(9);
+    for (const file of files) {
+      const doc = JSON.parse(fixtureText("corpus/v11/valid", file)) as unknown;
+      const checked = validateRecipe(doc, shipped, { pins: "ignore" });
+      expect([file, checked.ok]).toEqual([file, true]);
+      expectRoundTrip(doc, shipped);
+    }
   });
 
   test("a hand-written set of awkward recipes", () => {

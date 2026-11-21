@@ -27,6 +27,7 @@ import { clip } from "./limits.js";
 import { canonicalRecipe } from "./normalise.js";
 import { opIndex } from "./opindex.js";
 import type { OpIndex } from "./opindex.js";
+import { REGISTER_NAME_RE } from "./registers.js";
 import { validateRecipe } from "./validate.js";
 import { RECIPE_LIMITS } from "./types.js";
 import type {
@@ -49,6 +50,7 @@ const CLOSERS: ReadonlySet<string> = new Set([
   "recipe:branch",
   "recipe:repeat",
   "recipe:settle",
+  "if",
 ]);
 
 /** A parser issue, thrown to stop at the first problem. Only `parseRecipeText` catches it. */
@@ -147,7 +149,8 @@ function parseAnns(tail: string): Anns | null {
 // ---------------------------------------------------------------------------------------------
 
 interface Group {
-  readonly kind: "int" | "float" | "bool" | "bytes" | "str";
+  /** `ref` is a register reference `$name`; its value is the name. */
+  readonly kind: "int" | "float" | "bool" | "bytes" | "str" | "ref";
   readonly value: number | bigint | boolean | string | Uint8Array;
   readonly helper?: "latin1" | "base64";
 }
@@ -182,6 +185,10 @@ function groupsOf(tokens: readonly Token[]): Group[] | null {
         groups.push({ kind: "str", value: t.value });
         break;
       }
+      case "word":
+        if (!t.text.startsWith("$")) return null;
+        groups.push({ kind: "ref", value: t.text.slice(1) });
+        break;
       default:
         return null;
     }
@@ -197,6 +204,8 @@ function toEncoded(g: Group): Encoded | null {
 
 /** The JSON value of a parameter from its literal group; null when the group is of the wrong kind. */
 function paramFromGroup(type: string, g: Group): ParamValue | null {
+  // A reference takes the place of a value of any type; the validator checks it (RECIPES-1.1.md section 2.4).
+  if (g.kind === "ref") return { ref: g.value as string };
   const plain = g.helper === undefined;
   switch (type) {
     case "int":
@@ -230,6 +239,10 @@ interface Frame {
   readonly line: number;
   readonly col: number;
   readonly isIf: boolean;
+  /** An `if` open line with the inline test, `recipe:as-bytes dup ... [`, closed by `] if`. */
+  readonly lowered: boolean;
+  /** A register open line, `[`, closed by `] recipe:peek :> $name`. */
+  readonly register: boolean;
   inElse: boolean;
   hasElse: boolean;
   readonly then: Obj[];
@@ -325,7 +338,8 @@ function complete(
   const noPin = (): void => {
     if (f.anns.pin !== undefined) bad("a pin on this line has nothing to pin");
   };
-  if (f.isIf !== (closer === "recipe:branch")) {
+  const isIfCloser = closer === "recipe:branch" || closer === "if";
+  if (f.register || f.isIf !== isIfCloser || (f.isIf && f.lowered !== (closer === "if"))) {
     return structure(f.path, "the closing word does not match the open line", line, column);
   }
   switch (closer) {
@@ -361,14 +375,19 @@ function complete(
       step.steps = f.then;
       return finish();
     }
+    case "if":
     case "recipe:branch": {
       if (!f.hasElse) bad("an if block needs its ] [ line");
-      const inner = f.atoms.slice(1, -1);
+      // recipe:branch: `[ test ]`, a quotation; if: `dup test`, inline.
+      const inner = f.lowered ? f.atoms.slice(1) : f.atoms.slice(1, -1);
+      if (f.lowered) {
+        if (inner.length === 0) bad("the test is missing");
+      }
       if (
-        f.atoms[f.atoms.length - 1]?.kind !== "rbracket" ||
+        (!f.lowered && f.atoms[f.atoms.length - 1]?.kind !== "rbracket") ||
         inner.some((t) => t.kind === "lbracket" || t.kind === "rbracket")
       ) {
-        bad("the test is one quotation");
+        bad(f.lowered ? "the test is inline" : "the test is one quotation");
       }
       const m = inner[3];
       if (inner.length === 4 && m?.kind === "qword" && m.text === "recipe:matches") {
@@ -581,7 +600,43 @@ function parse(text: string, catalogue: CatalogueView): ValidationResult {
       continue;
     }
 
-    // 4. a close line
+    // 4a. a register close line
+    if (
+      tokens.length === 4 &&
+      first.kind === "rbracket" &&
+      tokens[1]?.kind === "qword" &&
+      tokens[1].text === "recipe:peek" &&
+      tokens[2]?.kind === "word" &&
+      tokens[2].text === ":>" &&
+      tokens[3]?.kind === "word"
+    ) {
+      noAnns();
+      const frame = stack.pop();
+      if (frame === undefined) structure(here, "close line without an open line", lineNo, col);
+      if (!frame.register)
+        structure(frame.path, "the closing word does not match the open line", lineNo, col);
+      if (frame.level !== level) structure(frame.path, "wrong level on a close line", lineNo, col);
+      const local = (tokens[3] as Token).text;
+      const name = local.startsWith("$") ? local.slice(1) : "";
+      if (!REGISTER_NAME_RE.test(name)) {
+        stop(
+          "bad-value",
+          `${frame.path}/name`,
+          "a register name starts with a lowercase letter and has 1 to 32 lowercase letters, digits or hyphens",
+          lineNo,
+          col,
+          { constraint: `pattern ${REGISTER_NAME_RE.source}` },
+        );
+      }
+      const step: Obj = { kind: "register", name, steps: frame.then };
+      if (frame.level > level0()) step.disabled = true;
+      if (frame.anns.breakpoint === true) step.breakpoint = true;
+      if (frame.anns.note !== undefined) step.note = frame.anns.note;
+      listOf().push(step);
+      continue;
+    }
+
+    // 4b. a close line
     if (first.kind === "rbracket") {
       noAnns();
       const closer = tokens.length === 2 ? last : undefined;
@@ -593,7 +648,7 @@ function parse(text: string, catalogue: CatalogueView): ValidationResult {
         stop(
           "bad-value",
           here,
-          "expected ] followed by fork, recipe:section, recipe:branch, recipe:repeat or recipe:settle",
+          "expected ] followed by fork, recipe:section, recipe:branch, recipe:repeat, recipe:settle or if",
           lineNo,
           col,
         );
@@ -619,6 +674,7 @@ function parse(text: string, catalogue: CatalogueView): ValidationResult {
       }
       const path = begin(lineNo, col);
       const atoms = tokens.slice(1, -1);
+      const lowered = atoms[0]?.kind === "word" && atoms[0].text === "dup";
       stack.push({
         level,
         atoms,
@@ -626,12 +682,62 @@ function parse(text: string, catalogue: CatalogueView): ValidationResult {
         path,
         line: lineNo,
         col,
-        isIf: atoms[0]?.kind === "lbracket",
+        isIf: atoms[0]?.kind === "lbracket" || lowered,
+        lowered,
+        register: false,
         inElse: false,
         hasElse: false,
         then: [],
         other: [],
       });
+      continue;
+    }
+
+    // 5b. a register open line
+    if (tokens.length === 1 && first.kind === "lbracket") {
+      if (level !== parentLevel && level !== parentLevel + 1) {
+        structure(here, "wrong level on an open line", lineNo, col);
+      }
+      if (anns.pin !== undefined) {
+        stop("bad-value", here, "a pin on this line has nothing to pin", lineNo, col);
+      }
+      const path = begin(lineNo, col);
+      stack.push({
+        level,
+        atoms: [],
+        anns,
+        path,
+        line: lineNo,
+        col,
+        isIf: false,
+        lowered: false,
+        register: true,
+        inElse: false,
+        hasElse: false,
+        then: [],
+        other: [],
+      });
+      continue;
+    }
+
+    // 6a. a return line
+    const lastTok = tokens[tokens.length - 1] as Token;
+    if (lastTok.kind === "qword" && lastTok.text === "core:exit") {
+      if (tokens.length !== 1) {
+        stop("bad-value", here, "core:exit takes nothing before it", lineNo, col);
+      }
+      if (level !== parentLevel && level !== parentLevel + 1) {
+        structure(here, "wrong level on a step line", lineNo, col);
+      }
+      if (anns.pin !== undefined) {
+        stop("bad-value", here, "a pin on this line has nothing to pin", lineNo, col);
+      }
+      begin(lineNo, col);
+      const ret: Obj = { kind: "return" };
+      if (anns.breakpoint === true) ret.breakpoint = true;
+      if (anns.note !== undefined) ret.note = anns.note;
+      if (level > parentLevel) ret.disabled = true;
+      listOf().push(ret);
       continue;
     }
 
