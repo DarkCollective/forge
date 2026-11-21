@@ -203,6 +203,16 @@ export interface DebugOptions {
   readonly startPaused?: boolean;
 }
 
+/**
+ * A register bound at a pause (RECIPES-1.1.md section 4.10). `path` is the defining `register` step. A secret
+ * register (section 4.9) is `{ kind: "other", tag, repr: "<redacted>" }` and its bytes never leave the baker.
+ */
+export interface RegisterView {
+  readonly name: string;
+  readonly path: string;
+  readonly value: OutputValue;
+}
+
 export type BakeEvent =
   | {
       readonly type: "progress";
@@ -224,6 +234,11 @@ export type BakeEvent =
       readonly reason: "start" | "breakpoint" | "step";
       /** The value about to enter the step (the top of the stack). */
       readonly data: OutputValue;
+      /**
+       * The registers visible at the step, outermost first, that are bound so far (RECIPES-1.1.md section 4.10).
+       * Absent when there are none (and in the messages of a v1 baker); a client may ignore it.
+       */
+      readonly registers?: readonly RegisterView[];
     }
   | { readonly type: "resumed"; readonly id: number };
 

@@ -176,6 +176,18 @@ const result = (over: Record<string, unknown> = {}) => ({
   ...over,
 });
 
+/** Rows of the `rejects` table: a `paused` event whose `registers` is the given malformed value. */
+function pausedWithRegisters(cases: [string, unknown][]): [string, unknown][] {
+  return cases.map(([n, registers]) => [
+    `paused with registers that are ${n}`,
+    {
+      type: "event",
+      id: 1,
+      event: { type: "paused", id: 1, path: "/a", data: { kind: "str", text: "" }, registers },
+    },
+  ]);
+}
+
 describe("isWorkerMessage", () => {
   test.each([
     ["ready", { type: "ready", reqId: 1, info }],
@@ -200,6 +212,42 @@ describe("isWorkerMessage", () => {
           path: "/steps/0",
           reason: "step",
           data: { kind: "str", text: "" },
+        },
+      },
+    ],
+    [
+      "paused with registers (RECIPES-1.1.md CR137)",
+      {
+        type: "event",
+        id: 1,
+        event: {
+          type: "paused",
+          id: 1,
+          path: "/steps/3",
+          reason: "breakpoint",
+          data: { kind: "str", text: "" },
+          registers: [
+            {
+              name: "iv",
+              path: "/steps/0",
+              value: { kind: "other", tag: "bytes", repr: "<redacted>" },
+            },
+            { name: "pat", path: "/steps/1", value: { kind: "str", text: "ab" } },
+          ],
+        },
+      },
+    ],
+    [
+      "paused with an empty registers list",
+      {
+        type: "event",
+        id: 1,
+        event: {
+          type: "paused",
+          id: 1,
+          path: "/a",
+          data: { kind: "str", text: "" },
+          registers: [],
         },
       },
     ],
@@ -238,6 +286,14 @@ describe("isWorkerMessage", () => {
       { type: "event", id: 1, event: { type: "progress", id: 1 } },
     ],
     ["paused without data", { type: "event", id: 1, event: { type: "paused", id: 1, path: "/a" } }],
+    ...pausedWithRegisters([
+      ["not an array", "iv"],
+      ["an entry that is not an object", [1]],
+      ["an entry without a name", [{ path: "/steps/0", value: { kind: "str", text: "" } }]],
+      ["an entry without a path", [{ name: "a", value: { kind: "str", text: "" } }]],
+      ["an entry without a value", [{ name: "a", path: "/steps/0" }]],
+      ["an entry with an unknown field", [{ name: "a", path: "/p", value: {}, extra: 1 }]],
+    ]),
     ["result with a bad id", { type: "result", id: "1", result: result() }],
     ["result that is not an object", { type: "result", id: 1, result: 5 }],
     ["result with no steps", { type: "result", id: 1, result: result({ steps: undefined }) }],
