@@ -16,6 +16,7 @@
 /** FL literal rendering of parameter values (RECIPES.md section 5.2). */
 import type { ParamSpec } from "@forge/lang";
 import { hexDecode, normaliseEncodedValue } from "./encoding.js";
+import { isRegisterRef } from "./registers.js";
 import type { Encoded, ParamValue } from "./types.js";
 
 const HEX = "0123456789abcdef";
@@ -81,8 +82,12 @@ export function encodedLiteral(e: Encoded): string {
   }
 }
 
-/** The literal group of one parameter value, by the parameter's type. */
+/**
+ * The literal group of one parameter value, by the parameter's type. A register reference is the local
+ * `$name`, whatever the type (RECIPES-1.1.md section 2.7).
+ */
 export function paramLiteral(spec: ParamSpec, value: ParamValue): string {
+  if (isRegisterRef(value)) return `$${value.ref}`;
   switch (spec.type) {
     case "int":
       return intLiteral(value as number | string);

@@ -75,6 +75,21 @@ function opText(em: Emitter, op: OpStep | OpTest): string {
   return groups.join(" ");
 }
 
+/**
+ * True iff the `if` step has an enabled `return` in its subtree, through `then`, `else` and nested `if`s. Such an
+ * `if` is compiled to the lowered form (RECIPES-1.1.md section 3.4). Disabled steps are ignored.
+ */
+function hasEnabledReturn(step: Extract<Step, { kind: "if" }>): boolean {
+  const stack: Step[] = [...step.then, ...(step.else ?? [])];
+  while (stack.length > 0) {
+    const s = stack.pop() as Step;
+    if (s.kind === "comment" || s.disabled === true) continue;
+    if (s.kind === "return") return true;
+    if (s.kind === "if") stack.push(...s.then, ...(s.else ?? []));
+  }
+  return false;
+}
+
 function emitSteps(
   em: Emitter,
   steps: readonly Step[],
@@ -133,16 +148,28 @@ function emitSteps(
                 undefined,
               ]
             : [opText(em, test), test.hash];
+        // A disabled `if` (level > 0) has nothing enabled inside it, so it keeps recipe:branch.
+        const lowered = level === 0 && hasEnabledReturn(step);
         em.out.push(
-          `${prefix}recipe:as-bytes [ ${testText} ] [` +
+          (lowered
+            ? `${prefix}recipe:as-bytes dup ${testText} [`
+            : `${prefix}recipe:as-bytes [ ${testText} ] [`) +
             annotations(pin, step.breakpoint, step.note),
         );
         child(step.then, "then");
         em.out.push(`${prefix}] [`);
         child(step.else ?? [], "else");
-        em.out.push(`${prefix}] recipe:branch`);
+        em.out.push(`${prefix}] ${lowered ? "if" : "recipe:branch"}`);
         break;
       }
+      case "register":
+        em.out.push(`${prefix}[` + annotations(undefined, step.breakpoint, step.note));
+        child(step.steps, "steps");
+        em.out.push(`${prefix}] recipe:peek :> $${step.name}`);
+        break;
+      case "return":
+        em.out.push(`${prefix}core:exit` + annotations(undefined, step.breakpoint, step.note));
+        break;
       case "repeat": {
         const settle = step.until !== undefined;
         const count = settle ? (step.max ?? 100) : (step.times ?? 1);
