@@ -223,6 +223,46 @@ All packages: Apache header on every new file; Lit components with the tokens an
 - **A baker of its own**: `controller.ts` (pure, tested with a fake baker and a fake engine) creates a second `BakerClient` (`createWebBaker`, a Web Worker, so a hard kill is available) on the first run, initialised with all vocabularies and the user words, and again only when the user words change or after a cancelled or killed run. A normal bake is never blocked by Magic, one bake runs at a time per baker, and a page that never uses Magic starts no second worker. The engine (`import("@forge/worker/magic")`, its own chunk) and the checks (`checksLoader`, the lazy `checks.json` of the Operations pane) are loaded on the first run. The budget count only grows by the dialog element and the button (`npm run size`); the engine, the checks and the second worker are lazy.
 - **Tests**: `controller.test.ts` and the view helpers (`magic-view.ts`) are unit tested in the node environment; `e2e/magic.spec.ts` runs a layered input (Base64 of gzip of Base64) and checks the top candidate, Add to recipe, the replace prompt and Undo, Add first step, Cancel, the empty and no-candidate messages, depth and crib, and axe in the three themes and in the compact layout.
 
+**Registers and return** (WP 6.39 and 6.40; RECIPES.md §3.2, §3.4, §8.4; Recipe JSON v1.1).
+
+- **Recipe pane.** The block menu gains **Register** and **Return** (`BlockKind`, `BLOCK_LABELS`, `defaultBlock`). A new
+  register takes the first free name of `value`, `value-2`, `value-3` and so on (`uniqueRegisterName`). A register card is
+  titled "Register" followed by its name, holds its children in a list captioned "Computed from a copy of the data", and has an
+  editable **Register name** field checked by the pattern of RECIPES.md §3.2. Renaming a register re-points the references to
+  it that are in scope, in one undo step, and the announcement gives the count ("Register renamed to <name>. Updated 2
+  references to it."). When the new name is already visible, the references are not changed and the announcement says so. A
+  return is a one-line card, "Return", with "stop here and output" beside it.
+- **Placement.** A Return may go only at the top of the recipe or inside the branches of an `if`. A drop or a move anywhere
+  else is refused, and the announcement is `BAD_POSITION_TEXT`. `actions.insertStep` refuses the same placement by throwing a
+  `RangeError`, with no change and no history entry. A register may go wherever a step may go.
+- **Warnings and errors.** A step after an enabled Return in the same list shows "This step never runs: the Return at step N
+  ends the recipe first. Move it above the Return, or remove it." `duplicate-register` and `bad-position` show on the step card
+  through the usual step-level issue helper. The texts are those of the issue list in RECIPES.md §3.7 and the placement message above.
+- **Parameter form, Value / Register.** Each parameter of an op step and of an op test has a two-button switch, **Value** and
+  **Register** (`aria-pressed`, grouped as "Source of <parameter>"). In Register mode the field is a select of the registers in
+  scope at the step (`registersInScope`), the value written is `{ "ref": name }`, and the typed field is replaced by the
+  select. The help line says the value is checked when the recipe runs. With no register in scope the Register button is
+  unavailable and the hint "No register defined before this step." is shown. A reference to a name that is not in scope
+  shows "There is no register named "<name>". Add a Register block above this step, or switch this parameter back to a
+  value." A `key` parameter that a register feeds keeps its key hint. The switch is offered on op and op-test parameters only.
+  The other fields of RECIPES.md §3.4 (fork separators, a subsection pattern, the regex test of an `if`, repeat counts) take
+  no reference.
+- **Debug panel.** While a bake is paused, the output pane shows the section "Registers at this pause" (`forge-output`). Each
+  register that has a value at the pause is a line with its name, its value in the text view that the data uses, and a
+  **Show step** button that selects the step that defines it. A secret register (one that feeds a `key` parameter) shows
+  `<redacted>` and a note says that it is hidden. The section is absent when the bake is not paused or no register has a
+  value. The paused output is not dimmed while paused.
+- **Errors.** A parameter error whose value came from a register says "The parameter `<p>` was supplied by register `<r>`."
+  The error keeps its code, word and step as before.
+- **Share dialog.** When the recipe uses v1.1 (`recipeUsesV11`), the dialog shows one plain-text note above the link: "This
+  recipe needs Forge 1.1 or later; older versions show an error." When a register is secret, the same note adds "A register
+  takes its key from the input, so a link that includes the input includes the key." No `secret-in-url` warning is raised for
+  a reference (RECIPES.md §7.4); the key sentence above is the warning instead.
+- **Tests.** The pure helpers are unit tested (`apps/web/src/recipe/registers.ts`, `apps/web/src/params/registers.ts`,
+  `apps/web/src/state/recipe-ops.ts`). `apps/web/e2e/register-return.spec.ts` covers keyboard-only add, rename, reorder and
+  placement of a return, with axe. `apps/web/e2e/register-recipe-m.spec.ts` runs recipe M (CR131), a pause with the registers
+  listed and redacted (CR137), a register error (CR133), the share-dialog notes and the FL dialog, and checks axe at the pause.
+
 ### 2.4 Dependency order for parallel work
 
 3.1 first (done). Then 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, pages are independent of each other (they meet only through the store and the tag names). 3.3 imports `issuesForPath` from 3.4 and 3.4 may be developed against the recipe-ops helpers; until both land each can stub the other (the placeholder exists). 3.9 starts when most others have merged but may scaffold the server and axe harness against the shell immediately.
