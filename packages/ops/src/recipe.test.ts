@@ -263,3 +263,206 @@ describe("recipe vocabulary is internal", () => {
     expect(names.some((n) => n.startsWith("recipe:") || n.startsWith("bake:"))).toBe(false);
   });
 });
+
+// ---------------------------------------------------------------------------------------------
+// RECIPES-1.1.md (WP 6.35): the internal word `recipe:peek` and the compiled forms that the proposal
+// relies on. The recipe compiler is not changed yet, so each case's compiled FL text (section 6, the
+// `@text` of the case) is loaded and run as it is, on the shipped bundle.
+
+const hexBytes = (hex: string): Uint8Array =>
+  Uint8Array.from(hex.match(/../g) ?? [], (h) => Number.parseInt(h, 16));
+
+/** The FL text of a `recipe-proposed` case, as written in the proposal. */
+const CR119 = String.raw`\ forge-recipe 1
+: main ( bytes -- any )
+  [
+    0 16 false bytes-slice:take
+  ] recipe:peek :> $iv
+  [
+    16 32 false bytes-slice:take
+  ] recipe:peek :> $key
+  0 48 false bytes-slice:remove
+  $key $iv "CBC" "pkcs7" #[ ] aes:decrypt
+;
+`;
+
+const CR120 = String.raw`\ forge-recipe 1
+: main ( bytes -- any )
+  hex:decode
+  recipe:as-bytes dup "^a" "" "utf8" recipe:matches [
+    "none" "upper" hex:encode
+    core:exit
+  ] [
+  ] if
+  text:reverse
+;
+`;
+
+const CR121 = String.raw`\ forge-recipe 1
+: main ( bytes -- any )
+  hex:decode
+  recipe:as-bytes dup "^a" "" "utf8" recipe:matches [
+    recipe:as-bytes dup "b$" "" "utf8" recipe:matches [
+      "none" "upper" hex:encode
+      core:exit
+    ] [
+    ] if
+    text:upper
+  ] [
+  ] if
+  recipe:as-bytes [ "z" "" "utf8" recipe:matches ] [
+    text:lower
+  ] [
+  ] recipe:branch
+  "none" "lower" hex:encode
+;
+`;
+
+const CR123 = String.raw`\ forge-recipe 1
+: main ( bytes -- any )
+  recipe:as-bytes "\n" #[ 0a ] [
+    [
+      0 2 false bytes-slice:take
+    ] recipe:peek :> $pat
+    0 3 false bytes-slice:remove
+    $pat "-" "" regex:replace
+  ] fork
+;
+`;
+
+const CR128 = String.raw`\ forge-recipe 1
+: main ( bytes -- any )
+  [
+    "a" "string" false search:count
+  ] recipe:peek :> $n
+  $n classical:rot
+;
+`;
+
+const CR136 = String.raw`\ forge-recipe 1
+: main ( bytes -- any )
+  hex:decode
+  core:exit
+  text:upper
+;
+`;
+
+describe("RECIPES-1.1 (WP 6.35): recipe:peek", () => {
+  test("recipe:peek is internal: not a catalogue op, with a doc string", async () => {
+    const rt = assembleRuntime(await loadBundleNode("all"));
+    const names = buildCatalogue(rt).ops.map((op) => op.qname);
+    expect(names).not.toContain("recipe:peek");
+    expect(rt.meta("recipe:peek").doc).toMatch(/copy of the data/);
+  });
+
+  test("peek leaves the data and pushes what the body leaves", async () => {
+    const r = await bake(
+      unit("recipe:as-bytes [ 0 1 false bytes-slice:take ] recipe:peek swap drop"),
+      ascii("abc"),
+    );
+    expect(top(r)).toEqual({ tag: "bytes", v: ascii("a") });
+    expect(r.stack).toHaveLength(1);
+  });
+});
+
+describe("RECIPES-1.1 CR119 to CR123: the compiled texts load", () => {
+  test("CR119 recipe M compiles to registers and locals, and loads (the first two registers and the decrypt)", async () => {
+    const rt = assembleRuntime(await loadBundleNode("all"));
+    loadUnit(rt, CR119);
+    const entry = rt.lookup("bake:main");
+    if (entry.kind !== "fl" || entry.code === null) throw new Error("not compiled");
+    // The proposal: 27 instructions, ret at 26.
+    expect(entry.code.code).toHaveLength(27);
+    expect(entry.code.code[26]?.op).toBe("ret");
+  });
+
+  test("CR120 an if that contains a return loads, and the word has 15 instructions (ret at 14)", async () => {
+    const rt = assembleRuntime(await loadBundleNode("all"));
+    loadUnit(rt, CR120);
+    const entry = rt.lookup("bake:main");
+    if (entry.kind !== "fl" || entry.code === null) throw new Error("not compiled");
+    expect(entry.code.code).toHaveLength(15);
+    expect(entry.code.code[14]?.op).toBe("ret");
+  });
+
+  test("CR121 nested ifs with a return load", async () => {
+    const rt = assembleRuntime(await loadBundleNode("all"));
+    expect(() => loadUnit(rt, CR121)).not.toThrow();
+  });
+
+  test("CR123 a register inside a fork child, and a $name as a regex parameter, load", async () => {
+    const rt = assembleRuntime(await loadBundleNode("all"));
+    expect(() => loadUnit(rt, CR123)).not.toThrow();
+  });
+});
+
+describe("RECIPES-1.1 CR131 to CR136: the compiled texts bake to the stated outputs", () => {
+  test("CR131 recipe M decrypts the blob built with aes:encrypt (a $name local works)", async () => {
+    const input = hexBytes(
+      "a0a1a2a3a4a5a6a7a8a9aaabacadaeaf" +
+        "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f" +
+        "6f498b8b870a0d8175f26312b99705c8",
+    );
+    const r = await bake(CR119, input);
+    expect(top(r)).toEqual({ tag: "bytes", v: hexBytes("61747461636b206174206461776e") });
+    expect(new TextDecoder().decode(hexBytes("61747461636b206174206461776e"))).toBe(
+      "attack at dawn",
+    );
+  });
+
+  test("CR132 a register supplies an int parameter (banana: three a, so rot 3)", async () => {
+    const r = await bake(CR128, ascii("banana"));
+    expect(top(r)).toEqual({ tag: "bytes", v: hexBytes("656471647164") });
+  });
+
+  test("CR134 a register per fork piece, as a regex parameter", async () => {
+    const r = await bake(CR123, ascii("ab:xxabxx\ncd:yycdyy"));
+    expect(top(r)).toEqual({ tag: "bytes", v: hexBytes("78782d78780a79792d7979") });
+  });
+
+  test("CR135 return taken and not taken (the recipe of CR120)", async () => {
+    expect(top(await bake(CR120, ascii("6162")))).toEqual({ tag: "str", v: "6162" });
+    expect(top(await bake(CR120, ascii("6362")))).toEqual({ tag: "str", v: "bc" });
+  });
+
+  test("CR135 nested return, taken from the inner if and not taken (the recipe of CR121)", async () => {
+    expect(top(await bake(CR121, ascii("6162")))).toEqual({ tag: "str", v: "6162" });
+    expect(top(await bake(CR121, ascii("6161")))).toEqual({ tag: "str", v: "4141" });
+    expect(top(await bake(CR121, ascii("6263")))).toEqual({ tag: "str", v: "6263" });
+  });
+
+  test("CR136 return at the root skips what follows and keeps the tag of the data", async () => {
+    const r = await bake(CR136, ascii("6162"));
+    expect(top(r)).toEqual({ tag: "bytes", v: ascii("ab") });
+    expect(r.stack).toHaveLength(1);
+  });
+});
+
+describe("RECIPES-1.1 section 2.7 facts the proposal relies on", () => {
+  test("a register bound inside a quotation is not visible after it (E_UNDEFINED at load)", async () => {
+    const outside = unit(
+      "[ 0 2 false bytes-slice:take :> $inner $inner ] recipe:peek :> $outer\n  $inner",
+    );
+    const rt = assembleRuntime(await loadBundleNode("all"));
+    let code: unknown = null;
+    try {
+      loadUnit(rt, outside);
+    } catch (e) {
+      code = (e as { code?: unknown }).code;
+    }
+    expect(code).toBe("E_UNDEFINED");
+  });
+
+  test("the same text with the inner name used inside the quotation loads and bakes", async () => {
+    const inside = unit(
+      "[ 0 2 false bytes-slice:take :> $inner $inner ] recipe:peek :> $outer\n  $outer nip",
+    );
+    expect(top(await bake(inside, ascii("abc")))).toEqual({ tag: "bytes", v: ascii("ab") });
+  });
+
+  test("a nested lowered if whose return is taken leaves the word with the data on the stack", async () => {
+    const r = await bake(CR121, ascii("6162"));
+    expect(r.ok).toBe(true);
+    expect(r.stack).toHaveLength(1);
+  });
+});
