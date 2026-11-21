@@ -1,0 +1,15 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "op",
+      "op": "aes:decrypt",
+      "params": {
+        "key": {
+          "value": "000102030405060708090a0b0c0d0e0f",
+          "enc": "hex"
+        }
+      }
+    }
+  ]
+}

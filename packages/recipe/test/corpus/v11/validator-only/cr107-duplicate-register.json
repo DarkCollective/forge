@@ -1,0 +1,33 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "register",
+      "name": "a",
+      "steps": []
+    },
+    {
+      "kind": "register",
+      "name": "a",
+      "steps": []
+    },
+    {
+      "kind": "fork",
+      "split": {
+        "value": "\n",
+        "enc": "utf8"
+      },
+      "join": {
+        "value": "",
+        "enc": "utf8"
+      },
+      "steps": [
+        {
+          "kind": "register",
+          "name": "a",
+          "steps": []
+        }
+      ]
+    }
+  ]
+}

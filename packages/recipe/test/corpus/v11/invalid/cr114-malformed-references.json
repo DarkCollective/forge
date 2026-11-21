@@ -1,0 +1,32 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "register",
+      "name": "a",
+      "steps": []
+    },
+    {
+      "kind": "op",
+      "op": "aes:decrypt",
+      "params": {
+        "key": {
+          "ref": 5
+        },
+        "iv": {
+          "ref": "A"
+        }
+      }
+    },
+    {
+      "kind": "op",
+      "op": "aes:decrypt",
+      "params": {
+        "key": {
+          "ref": "a",
+          "x": 1
+        }
+      }
+    }
+  ]
+}

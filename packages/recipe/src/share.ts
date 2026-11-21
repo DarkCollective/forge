@@ -24,6 +24,7 @@ import { deflateRaw, inflateRaw } from "./deflate.js";
 import { base64UrlDecode, base64UrlEncode, utf8DecodeStrict, utf8Encode } from "./encoding.js";
 import { isEncodedShape, normaliseRecipe, pinOps } from "./normalise.js";
 import { opIndex } from "./opindex.js";
+import { isRegisterRef } from "./registers.js";
 import { validateRecipe } from "./validate.js";
 import { SHARE_FORMAT_VERSION, SHARE_LIMITS } from "./types.js";
 import type {
@@ -96,9 +97,11 @@ function forEachOp(steps: readonly Step[], visit: (op: OpLike, path: string) => 
       case "fork":
       case "subsection":
       case "repeat":
+      case "register":
         push(step.steps, "steps");
         break;
       case "comment":
+      case "return":
         break;
     }
   }
@@ -114,6 +117,8 @@ function secretWarnings(recipe: Recipe, catalogue: CatalogueView): RecipeIssue[]
     for (const spec of entry.op.params) {
       if (spec.type !== "key" || !Object.hasOwn(op.params, spec.name)) continue;
       const given = (op.params as Record<string, unknown>)[spec.name];
+      // A reference carries no literal: the key comes from the data, not from the link (section 4.9).
+      if (isRegisterRef(given)) continue;
       const def = spec.default;
       const same =
         isEncodedShape(given) &&

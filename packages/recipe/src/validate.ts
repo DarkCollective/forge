@@ -27,6 +27,7 @@ import { MAX_ISSUES, clip, codePointLength, echo, hasLoneSurrogate, prewalk } fr
 import { opIndex } from "./opindex.js";
 import type { OpIndex } from "./opindex.js";
 import { childPointer } from "./pointer.js";
+import { REGISTER_NAME_RE, findDuplicate, lookupRegister, scanScopes } from "./registers.js";
 import { RECIPE_LIMITS, STEP_KINDS } from "./types.js";
 import type {
   CatalogueView,
@@ -60,6 +61,11 @@ const COMMENT_FIELDS = new Set(["kind", "text"]);
 const REGEX_TEST_FIELDS = new Set(["kind", "pattern", "flags", "encoding"]);
 const OP_TEST_FIELDS = new Set(["kind", "op", "params", "hash"]);
 const ENCODED_FIELDS = new Set(["value", "enc"]);
+const REGISTER_FIELDS = new Set(["kind", "name", "steps", ...COMMON]);
+const RETURN_FIELDS = new Set(["kind", ...COMMON]);
+const REF_FIELDS = new Set(["ref"]);
+const REGISTER_NAME_CONSTRAINT = "pattern ^[a-z][a-z0-9-]{0,31}$";
+const REF_IN_STRUCTURE = "register references go in op parameters";
 
 interface Ctx {
   readonly issues: RecipeIssue[];
@@ -67,6 +73,10 @@ interface Ctx {
   /** Set when the walk must stop: the issue cap or the step cap was hit. */
   done: boolean;
   steps: number;
+  /** `register` steps seen so far. */
+  registers: number;
+  /** Paths of steps that have an error of their own (not counting their children): the scope pass skips them. */
+  readonly errored: Set<string>;
   readonly catalogue: CatalogueView | undefined;
   readonly index: OpIndex | undefined;
   readonly pins: PinPolicy;
@@ -305,6 +315,10 @@ function checkInteger(ctx: Ctx, v: unknown, path: string, min: number, max: numb
 function checkEncoded(ctx: Ctx, v: unknown, path: string, separator: boolean): void {
   const fields = fieldsOf(ctx, v, path);
   if (fields === null) return;
+  if (fields.has("ref")) {
+    badValue(ctx, path, REF_IN_STRUCTURE, "a register reference is not allowed here");
+    return;
+  }
   checkFields(ctx, fields, path, ENCODED_FIELDS, ["value", "enc"]);
   const value = fields.get("value");
   const enc = fields.get("enc");
@@ -328,7 +342,29 @@ function checkEncoded(ctx: Ctx, v: unknown, path: string, separator: boolean): v
   }
 }
 
-/** Structural check of one parameter value: number, string, boolean or an encoded object. */
+/** True for an object that has an own `ref` member: it is read as a register reference, never as `{ value, enc }`. */
+function isRefShaped(v: unknown): boolean {
+  return isPlainObject(v) && Object.hasOwn(v, "ref");
+}
+
+/** A register reference `{ ref: name }` (RECIPES-1.1.md section 2.4). Existence and scope are checked later. */
+function checkRef(ctx: Ctx, v: unknown, path: string): void {
+  const fields = fieldsOf(ctx, v, path);
+  if (fields === null) return;
+  checkFields(ctx, fields, path, REF_FIELDS, ["ref"]);
+  if (fields.has("ref")) {
+    checkMatches(
+      ctx,
+      fields.get("ref"),
+      `${path}/ref`,
+      REGISTER_NAME_RE,
+      REGISTER_NAME_CONSTRAINT,
+      RECIPE_LIMITS.maxRegisterNameChars,
+    );
+  }
+}
+
+/** Structural check of one parameter value: number, string, boolean, an encoded object or a reference. */
 function checkParamShape(ctx: Ctx, v: unknown, path: string): void {
   if (typeof v === "number") {
     if (!Number.isFinite(v)) typeIssue(ctx, path, "a finite number");
@@ -338,6 +374,8 @@ function checkParamShape(ctx: Ctx, v: unknown, path: string): void {
     }
   } else if (typeof v === "boolean") {
     // always fine
+  } else if (isRefShaped(v)) {
+    checkRef(ctx, v, path);
   } else if (isPlainObject(v)) {
     checkEncoded(ctx, v, path, false);
   } else {
@@ -547,7 +585,8 @@ function checkOpAgainstCatalogue(
         err(ctx, "unknown-param", keyPath, `${op.qname} has no parameter '${clip(key, 40)}'`, {
           param: clip(key, 40),
         });
-      } else {
+      } else if (!isRefShaped(value)) {
+        // A reference is checked at run time, at word entry (RECIPES-1.1.md section 2.5).
         checkParamValue(ctx, spec, value, keyPath);
       }
     }
@@ -660,19 +699,25 @@ function validateStep(ctx: Ctx, value: unknown, path: string, depth: number): vo
       ctx,
       "bad-kind",
       `${path}/kind`,
-      "kind is not one of op, fork, subsection, if, repeat, comment",
+      "kind is not one of op, fork, subsection, if, repeat, comment, register, return",
       {
         ...(fields.has("kind") ? { value: echo(kind) } : {}),
       },
     );
     return;
   }
+  const own = ctx.errors;
+  /** Remembers that the step has an error of its own, before its children are validated. */
+  const mark = (): void => {
+    if (ctx.errors > own) ctx.errored.add(path);
+  };
   switch (kind) {
     case "op": {
       const before = ctx.errors;
       checkFields(ctx, fields, path, OP_FIELDS, ["kind", "op"]);
       checkCommon(ctx, fields, path);
       validateOpLike(ctx, fields, path, false, before);
+      mark();
       return;
     }
     case "fork":
@@ -680,7 +725,37 @@ function validateStep(ctx: Ctx, value: unknown, path: string, depth: number): vo
       checkCommon(ctx, fields, path);
       if (fields.has("split")) checkEncoded(ctx, fields.get("split"), `${path}/split`, true);
       if (fields.has("join")) checkEncoded(ctx, fields.get("join"), `${path}/join`, false);
+      mark();
       if (fields.has("steps")) validateSteps(ctx, fields.get("steps"), `${path}/steps`, depth + 1);
+      return;
+    case "register":
+      if (++ctx.registers > RECIPE_LIMITS.maxRegisters) {
+        err(ctx, "limit", path, `more than ${RECIPE_LIMITS.maxRegisters} registers`, {
+          limit: "maxRegisters",
+          max: RECIPE_LIMITS.maxRegisters,
+        });
+        ctx.done = true;
+        return;
+      }
+      checkFields(ctx, fields, path, REGISTER_FIELDS, ["kind", "name", "steps"]);
+      checkCommon(ctx, fields, path);
+      if (fields.has("name")) {
+        checkMatches(
+          ctx,
+          fields.get("name"),
+          `${path}/name`,
+          REGISTER_NAME_RE,
+          REGISTER_NAME_CONSTRAINT,
+          RECIPE_LIMITS.maxRegisterNameChars,
+        );
+      }
+      mark();
+      if (fields.has("steps")) validateSteps(ctx, fields.get("steps"), `${path}/steps`, depth + 1);
+      return;
+    case "return":
+      checkFields(ctx, fields, path, RETURN_FIELDS, ["kind"]);
+      checkCommon(ctx, fields, path);
+      mark();
       return;
     case "subsection":
       checkFields(ctx, fields, path, SUBSECTION_FIELDS, ["kind", "pattern", "steps"]);
@@ -690,12 +765,14 @@ function validateStep(ctx: Ctx, value: unknown, path: string, depth: number): vo
       if (fields.has("encoding")) {
         checkEnum(ctx, fields.get("encoding"), `${path}/encoding`, SECTION_ENCODINGS);
       }
+      mark();
       if (fields.has("steps")) validateSteps(ctx, fields.get("steps"), `${path}/steps`, depth + 1);
       return;
     case "if":
       checkFields(ctx, fields, path, IF_FIELDS, ["kind", "test", "then"]);
       checkCommon(ctx, fields, path);
       if (fields.has("test")) validateIfTest(ctx, fields.get("test"), `${path}/test`);
+      mark();
       if (fields.has("then")) validateSteps(ctx, fields.get("then"), `${path}/then`, depth + 1);
       if (fields.has("else")) validateSteps(ctx, fields.get("else"), `${path}/else`, depth + 1);
       return;
@@ -718,6 +795,7 @@ function validateStep(ctx: Ctx, value: unknown, path: string, depth: number): vo
       } else if (fields.has("max") && !hasUntil) {
         err(ctx, "exclusive", `${path}/max`, "max goes with until");
       }
+      mark();
       if (fields.has("steps")) validateSteps(ctx, fields.get("steps"), `${path}/steps`, depth + 1);
       return;
     }
@@ -727,6 +805,75 @@ function validateStep(ctx: Ctx, value: unknown, path: string, depth: number): vo
       if (fields.has("text")) {
         checkString(ctx, fields.get("text"), `${path}/text`, RECIPE_LIMITS.maxCommentChars);
       }
+  }
+}
+
+// ---------------------------------------------------------------------------------------------
+// The scope pass (RECIPES-1.1.md sections 2.3, 3.2 and 4.3)
+// ---------------------------------------------------------------------------------------------
+
+const UNKNOWN_REGISTER_TEXT: Readonly<Record<string, string>> = {
+  "not-defined": "no register of this name is defined",
+  "not-yet-defined": "the register is defined later, or is the register being defined",
+  "out-of-scope": "the register is defined in a scope that does not contain this reference",
+  disabled: "the register is defined only by disabled steps",
+};
+
+/**
+ * After the structure and the catalogue: existence and scope of references, `duplicate-register`,
+ * `bad-position` and `unreachable-step`. A step that already has an error is skipped, so a reference inside
+ * a step with an unknown op gives `unknown-op` only.
+ */
+function validateScopes(ctx: Ctx, input: unknown): void {
+  const scan = scanScopes(input, { skip: ctx.errored });
+  for (const e of scan.events) {
+    switch (e.t) {
+      case "def": {
+        const first = e.skipped ? undefined : findDuplicate(scan, e.def);
+        if (first !== undefined) {
+          err(
+            ctx,
+            "duplicate-register",
+            `${e.def.path}/name`,
+            `the register '${e.def.name}' is already defined`,
+            { register: e.def.name, first: first.path },
+          );
+        }
+        break;
+      }
+      case "ref": {
+        const found = lookupRegister(scan, e.name, e.frames, e.disabled);
+        if ("reason" in found) {
+          err(
+            ctx,
+            "unknown-register",
+            e.path,
+            `unknown register '${e.name}': ${UNKNOWN_REGISTER_TEXT[found.reason] ?? found.reason}`,
+            { register: e.name, reason: found.reason },
+          );
+        }
+        break;
+      }
+      case "bad-position":
+        err(
+          ctx,
+          "bad-position",
+          e.path,
+          "a return is valid only at the top of the recipe and inside the branches of an if",
+          { kind: "return", container: e.container, containerKind: e.containerKind },
+        );
+        break;
+      case "unreachable":
+        add(
+          ctx,
+          "unreachable-step",
+          "warning",
+          e.path,
+          "this step can never run: an earlier return in the same list ends the recipe",
+          { after: e.after },
+        );
+        break;
+    }
   }
 }
 
@@ -795,6 +942,8 @@ export function validateRecipe(
     errors: 0,
     done: false,
     steps: 0,
+    registers: 0,
+    errored: new Set(),
     catalogue,
     index: catalogue === undefined ? undefined : opIndex(catalogue),
     pins: options?.pins ?? "warn",
@@ -807,6 +956,7 @@ export function validateRecipe(
       err(ctx, "limit", "", `the document exceeds a limit (${failure.limit})`, detail);
     } else {
       validateRoot(ctx, input);
+      if (!ctx.done) validateScopes(ctx, input);
     }
   } catch {
     // A hostile object (a throwing Proxy, say) must not escape.

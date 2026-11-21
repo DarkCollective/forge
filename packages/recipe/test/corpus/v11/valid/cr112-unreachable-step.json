@@ -1,0 +1,37 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "if",
+      "test": {
+        "kind": "regex",
+        "pattern": "a"
+      },
+      "then": [
+        {
+          "kind": "return"
+        }
+      ]
+    },
+    {
+      "kind": "op",
+      "op": "text:upper"
+    },
+    {
+      "kind": "return"
+    },
+    {
+      "kind": "comment",
+      "text": "after"
+    },
+    {
+      "kind": "op",
+      "op": "text:lower",
+      "disabled": true
+    },
+    {
+      "kind": "op",
+      "op": "text:reverse"
+    }
+  ]
+}

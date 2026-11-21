@@ -1207,6 +1207,36 @@ describe("validateRecipe: issue codes", () => {
       [{ forge: 1, steps: [{ kind: "op", op: "text:upper", hash: "f".repeat(64) }] }, seed],
       [{ forge: 1, steps: [{ kind: "op", op: "classical:rot13" }] }, seed],
       [{ forge: 1, catalogue: "0".repeat(16), steps: [] }, seed],
+      // registers and return (RECIPES-1.1.md section 4.3)
+      [
+        { forge: 1, steps: [{ kind: "op", op: "text:upper", params: { x: { ref: "nope" } } }] },
+        undefined,
+      ],
+      [
+        {
+          forge: 1,
+          steps: [
+            { kind: "register", name: "a", steps: [] },
+            { kind: "register", name: "a", steps: [] },
+          ],
+        },
+        seed,
+      ],
+      [
+        {
+          forge: 1,
+          steps: [
+            {
+              kind: "fork",
+              split: { value: "x", enc: "utf8" },
+              join: { value: "", enc: "utf8" },
+              steps: [{ kind: "return" }],
+            },
+          ],
+        },
+        seed,
+      ],
+      [{ forge: 1, steps: [{ kind: "return" }, { kind: "op", op: "text:upper" }] }, seed],
     ];
     for (const [doc, cat] of docs) for (const i of run(doc, cat).issues) seen.add(i.code);
     expect([...seen].sort()).toEqual([...fromValidator].sort());

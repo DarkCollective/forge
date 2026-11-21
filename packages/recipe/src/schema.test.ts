@@ -30,6 +30,13 @@ function corpus(dir: "valid" | "invalid"): [string, unknown][] {
   ]);
 }
 
+function v11(dir: "valid" | "invalid" | "validator-only"): [string, unknown][] {
+  return fixtureFiles(`corpus/v11/${dir}`).map((f) => [
+    f.replace(/\.json$/, ""),
+    JSON.parse(fixtureText(`corpus/v11/${dir}`, f)) as unknown,
+  ]);
+}
+
 describe("recipe.schema.json and validateRecipe agree (RECIPES.md section 11.3, item 5)", () => {
   test("the schema is a valid draft 2020-12 schema in strict mode", () => {
     expect(schema.$id).toBe("urn:forge:schema:recipe:1");
@@ -101,5 +108,42 @@ describe("recipe.schema.json and validateRecipe agree (RECIPES.md section 11.3, 
     const nine = { forge: 1, steps: deep };
     expect(accepts(nine)).toBe(true);
     expect(validateRecipe(nine).ok).toBe(false);
+  });
+});
+
+describe("the Recipe JSON v1.1 corpus (RECIPES-1.1.md sections 4.2 and 6)", () => {
+  test("the v1.1 corpus is not empty", () => {
+    expect(v11("valid").length).toBeGreaterThanOrEqual(8);
+    expect(v11("invalid").length).toBeGreaterThanOrEqual(4);
+    expect(v11("validator-only").length).toBeGreaterThanOrEqual(8);
+  });
+
+  test.each(v11("valid"))("valid v1.1 document %s is accepted by both", (_name, doc) => {
+    expect(accepts(doc)).toBe(true);
+    const result = validateRecipe(doc);
+    expect(result.issues.filter((i) => i.severity === "error")).toEqual([]);
+    expect(result.ok).toBe(true);
+  });
+
+  test.each(v11("invalid"))("invalid v1.1 document %s is rejected by both", (_name, doc) => {
+    expect(accepts(doc)).toBe(false);
+    const result = validateRecipe(doc);
+    expect(result.ok).toBe(false);
+    expect(result.issues.some((i) => i.severity === "error")).toBe(true);
+  });
+
+  test.each(v11("validator-only"))(
+    "v1.1 document %s is a question only the validator answers (scope, position, count)",
+    (_name, doc) => {
+      expect(accepts(doc)).toBe(true);
+      const result = validateRecipe(doc);
+      expect(result.ok).toBe(false);
+      expect(result.issues.some((i) => i.severity === "error")).toBe(true);
+    },
+  );
+
+  test("the schema still accepts every document that it accepted before: the same $id and forge const", () => {
+    expect(schema.$id).toBe("urn:forge:schema:recipe:1");
+    expect(schema.properties.forge).toEqual({ const: 1 });
   });
 });

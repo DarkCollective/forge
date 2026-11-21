@@ -1,0 +1,57 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "fork",
+      "split": {
+        "value": "\n",
+        "enc": "utf8"
+      },
+      "join": {
+        "value": "0a",
+        "enc": "hex"
+      },
+      "steps": [
+        {
+          "kind": "return"
+        }
+      ]
+    },
+    {
+      "kind": "subsection",
+      "pattern": "a",
+      "steps": [
+        {
+          "kind": "if",
+          "test": {
+            "kind": "regex",
+            "pattern": "x"
+          },
+          "then": [
+            {
+              "kind": "return"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "repeat",
+      "times": 2,
+      "steps": [
+        {
+          "kind": "return"
+        }
+      ]
+    },
+    {
+      "kind": "register",
+      "name": "a",
+      "steps": [
+        {
+          "kind": "return"
+        }
+      ]
+    }
+  ]
+}

@@ -32,5 +32,13 @@ export { compileRecipe } from "./compile.js";
 export { attributeError, recipeNeedsHardKill, resolveStepIps } from "./stepmap.js";
 export { parseRecipeText } from "./text.js";
 export { decodeShare, encodeShare } from "./share.js";
+export {
+  REGISTER_NAME_RE,
+  isRegisterRef,
+  recipeUsesV11,
+  registerInfo,
+  registersInScope,
+} from "./registers.js";
+export type { RegisterInfo } from "./registers.js";
 export { escapePointer, unescapePointer } from "./pointer.js";
 export { decodeEncoded, encodeBytes } from "./encoding.js";

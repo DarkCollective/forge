@@ -1,0 +1,16 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "register",
+      "name": "a",
+      "steps": [],
+      "disabled": true
+    },
+    {
+      "kind": "register",
+      "name": "a",
+      "steps": []
+    }
+  ]
+}

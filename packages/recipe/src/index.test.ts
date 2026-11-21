@@ -18,7 +18,7 @@ import * as recipe from "./index.js";
 
 test("the recipe contract constants exist", () => {
   expect(recipe.RECIPE_FORMAT_VERSION).toBe(1);
-  expect(recipe.STEP_KINDS).toHaveLength(6);
+  expect(recipe.STEP_KINDS).toHaveLength(8);
   expect(recipe.SHARE_LIMITS.maxRecipeBytes).toBe(recipe.RECIPE_LIMITS.maxJsonBytes);
 });
 
@@ -34,6 +34,7 @@ test("the package exports exactly what RECIPES.md section 11.5 lists", () => {
     "DEFAULT_RECIPE_VOCAB",
     "RECIPE_ISSUE_CODES",
     "SHARE_ERROR_CODES",
+    "REGISTER_NAME_RE",
   ];
   const functions = [
     "validateRecipe",
@@ -52,6 +53,10 @@ test("the package exports exactly what RECIPES.md section 11.5 lists", () => {
     "unescapePointer",
     "decodeEncoded",
     "encodeBytes",
+    "isRegisterRef",
+    "recipeUsesV11",
+    "registerInfo",
+    "registersInScope",
   ];
   expect(Object.keys(recipe).sort()).toEqual([...consts, ...functions].sort());
   for (const name of functions)

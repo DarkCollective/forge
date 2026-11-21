@@ -1,0 +1,40 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "if",
+      "test": {
+        "kind": "regex",
+        "pattern": "a"
+      },
+      "then": [
+        {
+          "kind": "if",
+          "test": {
+            "kind": "regex",
+            "pattern": "b"
+          },
+          "then": [
+            {
+              "kind": "return"
+            }
+          ],
+          "else": [
+            {
+              "kind": "op",
+              "op": "text:upper"
+            }
+          ]
+        }
+      ],
+      "else": [
+        {
+          "kind": "return"
+        }
+      ]
+    },
+    {
+      "kind": "return"
+    }
+  ]
+}

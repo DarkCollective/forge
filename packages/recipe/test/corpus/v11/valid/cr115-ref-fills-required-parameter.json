@@ -1,0 +1,36 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "register",
+      "name": "n",
+      "steps": [
+        {
+          "kind": "op",
+          "op": "search:count",
+          "params": {
+            "pattern": "a"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "op",
+      "op": "classical:rot",
+      "params": {
+        "amount": {
+          "ref": "n"
+        }
+      }
+    },
+    {
+      "kind": "op",
+      "op": "aes:decrypt",
+      "params": {
+        "key": {
+          "ref": "n"
+        }
+      }
+    }
+  ]
+}
