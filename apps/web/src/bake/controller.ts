@@ -210,6 +210,8 @@ export function createBakeController(deps: BakeControllerDeps): BakeController {
   // ---- baking ----------------------------------------------------------------------------------
 
   function clearRun() {
+    // The registers shown at a pause (RECIPES-1.1.md section 4.10) live only as long as the pause.
+    if (ui.get().pausedRegisters.length > 0) ui.set({ pausedRegisters: [] });
     return { runningPath: null, progress: null, paused: null } as const;
   }
 
@@ -229,11 +231,13 @@ export function createBakeController(deps: BakeControllerDeps): BakeController {
           runningPath: event.path,
           paused: { path: event.path, reason: event.reason, data: event.data },
         });
+        ui.set({ pausedRegisters: event.registers ?? [] });
         actions.selectStep(event.path);
         actions.announce(`Paused at step ${stepLabel(event.path)}.`);
         break;
       case "resumed":
         actions.setBake({ status: "baking", paused: null });
+        if (ui.get().pausedRegisters.length > 0) ui.set({ pausedRegisters: [] });
         break;
     }
   }

@@ -36,6 +36,34 @@ describe("recipe actions", () => {
     expect(store.get().issues.filter((i) => i.severity === "error")).toEqual([]);
   });
 
+  it("insertStep refuses a misplaced Return and leaves the recipe and history alone (WP 6.40)", () => {
+    const { store, actions } = setup();
+    const ret = { kind: "return" } as never;
+    actions.addOp("a:a");
+    const before = store.get().recipe;
+    const pastBefore = store.get().history.past.length;
+    // into a fork's branch, into a register, and a register that contains a return
+    const fork = { kind: "fork", steps: [] } as never;
+    actions.insertStep("/steps", 1, fork);
+    const forkList = "/steps/1/steps";
+    const after = store.get().recipe;
+    const past = store.get().history.past.length;
+    expect(() => actions.insertStep(forkList, 0, ret)).toThrow(RangeError);
+    expect(() =>
+      actions.insertStep("/steps", 0, { kind: "register", name: "r", steps: [ret] } as never),
+    ).not.toThrow();
+    expect(() =>
+      actions.insertStep(forkList, 0, { kind: "register", name: "q", steps: [ret] } as never),
+    ).toThrow(RangeError);
+    expect(store.get().recipe.steps).toHaveLength(after.steps.length + 1);
+    expect(past).toBe(pastBefore + 1);
+    expect(before.steps).toHaveLength(1);
+    // allowed places still work: the top of the recipe and an If branch
+    expect(actions.insertStep("/steps", 0, ret)).toBe("/steps/0");
+    actions.insertStep("/steps", 0, { kind: "if", then: [] } as never);
+    expect(actions.insertStep("/steps/0/then", 0, ret)).toBe("/steps/0/then/0");
+  });
+
   it("flags unknown ops once a catalogue is known", () => {
     const { store, actions } = setup();
     actions.addOp("nope:nope");

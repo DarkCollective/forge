@@ -15,6 +15,7 @@
  */
 // State that belongs to the bake package only (the shared AppState has no field for it): the debug
 // switches of the controls and the notice about a share link that could not be loaded cleanly.
+import type { RegisterView } from "@forge/worker";
 import { createStore } from "../state/store.js";
 import type { Store } from "../state/store.js";
 
@@ -33,12 +34,19 @@ export interface BakeUiState {
   /** In debug mode, also pause before the first step. */
   readonly startPaused: boolean;
   readonly notice: LinkNotice | null;
+  /** The registers in scope at the current pause (secret ones already redacted by the baker); empty otherwise. */
+  readonly pausedRegisters: readonly RegisterView[];
 }
 
 export type BakeUiStore = Store<BakeUiState>;
 
 export function createBakeUiStore(): BakeUiStore {
-  return createStore<BakeUiState>({ debug: false, startPaused: false, notice: null });
+  return createStore<BakeUiState>({
+    debug: false,
+    startPaused: false,
+    notice: null,
+    pausedRegisters: [],
+  });
 }
 
 export const bakeUi: BakeUiStore = createBakeUiStore();
