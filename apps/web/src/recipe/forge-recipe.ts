@@ -30,11 +30,13 @@ import { customElement, state } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 import type { Catalogue } from "@forge/ops";
 import type { BakeResult, StepReport } from "@forge/worker";
-import type { Encoded, IfStep, Recipe, RecipeIssue, Step } from "@forge/recipe";
+import type { Encoded, IfStep, Recipe, RecipeIssue, RegisterStep, Step } from "@forge/recipe";
+import { describeIssue } from "../params/issues.js";
 import { actions, store } from "../state/app.js";
-import { beginPointerDrag, onDragChange, registerDropTarget } from "../state/dnd.js";
+import { beginPointerDrag, canDropOn, onDragChange, registerDropTarget } from "../state/dnd.js";
 import type { DragPayload } from "../state/dnd.js";
 import {
+  BAD_POSITION_TEXT,
   childLists,
   childPath,
   getList,
@@ -53,10 +55,16 @@ import type { BlockKind } from "./defaults.js";
 import { escapeText, toggleFlag, unescapeText, usesEscapes } from "./fields.js";
 import { recipeIcons } from "./icons.js";
 import { fieldIssues, issueCounts, stepLevelIssues } from "./issues.js";
-import { moveTarget } from "./move.js";
+import { blockedByPosition, moveTarget } from "./move.js";
 import type { MoveKey } from "./move.js";
 import { ownerOfList, pathAfterMove, stepNumber } from "./paths.js";
 import { recipeStyles } from "./recipe-styles.js";
+import {
+  blockPlacement,
+  referenceCount,
+  registerNameProblem,
+  renameRegister,
+} from "./registers.js";
 
 type CatalogueOp = Catalogue["ops"][number];
 
@@ -72,6 +80,8 @@ const KIND_TITLES: Readonly<Record<string, string>> = {
   subsection: "Subsection",
   if: "If",
   repeat: "Repeat",
+  register: "Register",
+  return: "Return",
   comment: "Comment",
 };
 
@@ -212,6 +222,14 @@ export class ForgeRecipe extends LitElement {
       const info = this.opInfo(step.op);
       return { name: info?.name ?? step.op, vocab: info?.vocab ?? null };
     }
+    if (step.kind === "register") {
+      const word = KIND_TITLES["register"] as string;
+      return {
+        name: typeof step.name === "string" && step.name !== "" ? `${word} ${step.name}` : word,
+        vocab: null,
+      };
+    }
+    if (step.kind === "return") return { name: "Return", vocab: "stop here and output" };
     return { name: KIND_TITLES[step.kind] ?? step.kind, vocab: null };
   }
 
@@ -332,7 +350,11 @@ export class ForgeRecipe extends LitElement {
   private moveButton(path: StepPath, key: MoveKey): void {
     const next = this.move(path, key);
     if (next === null) {
-      actions.announce(`${this.label(path)} cannot move ${key === "in" ? "into a block" : key}`);
+      actions.announce(
+        blockedByPosition(store.get().recipe, path, key)
+          ? `${this.label(path)} cannot move there. ${BAD_POSITION_TEXT}`
+          : `${this.label(path)} cannot move ${key === "in" ? "into a block" : key}`,
+      );
       return;
     }
     this.select(next);
@@ -343,14 +365,11 @@ export class ForgeRecipe extends LitElement {
   private addBlock(kind: BlockKind): void {
     const recipe = store.get().recipe;
     const sel = store.get().ui.selectedPath;
-    let listPath: ListPath = "/steps";
-    let index = recipe.steps.length;
-    if (sel !== null && getStep(recipe, sel) !== undefined) {
-      const at = splitStepPath(sel);
-      listPath = at.listPath;
-      index = at.index + 1;
-    }
-    const path = actions.insertStep(listPath, index, defaultBlock(kind));
+    const step = defaultBlock(kind, recipe);
+    // A Return is only valid at the top or in If branches: when the selection sits elsewhere, it goes after
+    // the block that holds the selection (and the announcement says where it landed).
+    const { listPath, index } = blockPlacement(recipe, sel, step);
+    const path = actions.insertStep(listPath, index, step);
     actions.selectStep(path);
     actions.announce(`Added ${BLOCK_LABELS[kind]}. ${this.locate(path)}`);
     void this.focusCard(path);
@@ -420,8 +439,11 @@ export class ForgeRecipe extends LitElement {
       e.stopPropagation();
       const next = this.move(lift.path, key);
       if (next === null) {
+        const why = blockedByPosition(store.get().recipe, lift.path, key)
+          ? `${BAD_POSITION_TEXT} `
+          : "";
         actions.announce(
-          `Cannot move ${key === "in" ? "into a block" : key === "out" ? "out of this block" : key} here. ${this.locate(lift.path)}`,
+          `Cannot move ${key === "in" ? "into a block" : key === "out" ? "out of this block" : key} here. ${why}${this.locate(lift.path)}`,
         );
         return;
       }
@@ -554,7 +576,7 @@ export class ForgeRecipe extends LitElement {
         lane,
         registerDropTarget({
           element: lane,
-          accepts: (p) => !(p.type === "step" && isWithin(listPath(), p.path)),
+          accepts: (p) => canDropOn(store.get().recipe, p, listPath()),
           onOver: (_p, at) => {
             const gap = this.gapAt(lane, at.y);
             const cur = this.drop;
@@ -592,7 +614,10 @@ export class ForgeRecipe extends LitElement {
       void this.focusCard(path);
       return;
     }
-    if (isWithin(listPath, payload.path)) return;
+    if (!canDropOn(store.get().recipe, payload, listPath)) {
+      if (!isWithin(listPath, payload.path)) actions.announce(BAD_POSITION_TEXT);
+      return;
+    }
     const next = pathAfterMove(payload.path, listPath, gap);
     actions.moveStep(payload.path, listPath, gap);
     actions.selectStep(next);
@@ -639,7 +664,8 @@ export class ForgeRecipe extends LitElement {
       ${issues.map(
         (i) =>
           html`<li class=${i.severity}>
-            <span class="sev">${i.severity === "error" ? "Error" : "Warning"}:</span> ${i.message}
+            <span class="sev">${i.severity === "error" ? "Error" : "Warning"}:</span>
+            ${describeIssue(i)}
           </li>`,
       )}
     </ul>`;
@@ -842,6 +868,10 @@ export class ForgeRecipe extends LitElement {
         return this.ifFields(step, path);
       case "repeat":
         return this.repeatFields(step, path);
+      case "register":
+        return this.registerFields(step, path);
+      case "return":
+        return nothing;
       case "comment": {
         const id = idOf(path, "text");
         const key = `${path}|text`;
@@ -867,6 +897,87 @@ export class ForgeRecipe extends LitElement {
         </div>`;
       }
     }
+  }
+
+  /**
+   * The name of a register. It is committed on change (Enter or leaving the field), not while typing, because
+   * a rename also re-points the references to it and every keystroke would be one. A name that does not
+   * fit the pattern is not committed: the field says why and the recipe keeps the old name.
+   */
+  private registerFields(step: RegisterStep, path: StepPath) {
+    const id = idOf(path, "name");
+    const key = `${path}|name`;
+    const issues = fieldIssues(this.issues.value, path, "name");
+    const draft = this.drafts.get(key);
+    const problem = draft === undefined ? "" : registerNameProblem(draft);
+    const used = referenceCount(store.get().recipe, path);
+    const described = [
+      `${id}-hint`,
+      problem !== "" ? `${id}-problem` : "",
+      issues.length > 0 ? `${id}-err` : "",
+    ]
+      .filter((x) => x !== "")
+      .join(" ");
+    const commit = (text: string): void => {
+      const fault = registerNameProblem(text);
+      if (fault !== "") {
+        actions.announce(`Name not changed. ${fault}`);
+        return;
+      }
+      this.drafts.delete(key);
+      const result = renameRegister(store.get().recipe, path, text);
+      if (result.recipe !== store.get().recipe) actions.setRecipe(result.recipe);
+      if (text === step.name) {
+        this.requestUpdate();
+        return;
+      }
+      const refs =
+        result.updated > 0
+          ? ` Updated ${result.updated} ${result.updated === 1 ? "reference" : "references"} to it.`
+          : "";
+      const clash = result.clash
+        ? " That name is already in use here, so references were not changed."
+        : "";
+      actions.announce(`Register renamed to ${text}.${refs}${clash}`);
+    };
+    return html`<div class="field">
+      <label for=${id}>Register name</label>
+      <input
+        id=${id}
+        class="mono"
+        type="text"
+        maxlength="64"
+        autocomplete="off"
+        spellcheck="false"
+        aria-invalid=${problem !== "" || this.errorsOf(issues) ? "true" : nothing}
+        aria-describedby=${described}
+        .value=${draft ?? step.name}
+        @input=${(e: Event) => {
+          this.drafts.set(key, (e.target as HTMLInputElement).value);
+          this.requestUpdate();
+        }}
+        @change=${(e: Event) => commit((e.target as HTMLInputElement).value)}
+        @blur=${() => {
+          if (this.drafts.delete(key)) this.requestUpdate();
+        }}
+      />
+      <span class="hint" id="${id}-hint"
+        >Later steps use this name to read the
+        value.${
+          used > 0
+            ? ` Used by ${used} ${used === 1 ? "parameter" : "parameters"}; renaming updates them.`
+            : ""
+        }</span
+      >
+      ${
+        problem !== ""
+          ? html`<ul class="issues" id="${id}-problem">
+              <li class="error"><span class="sev">Error:</span> ${problem}</li>
+            </ul>`
+          : nothing
+      }
+      ${this.issueList(`${id}-err`, issues)}
+    </div>`;
   }
 
   private ifFields(step: IfStep, path: StepPath) {
@@ -1306,7 +1417,9 @@ export class ForgeRecipe extends LitElement {
                     l.steps,
                     this.laneTitle(step, l.key),
                     true,
-                    `Drop steps here, or add one with the operations pane.`,
+                    step.kind === "register"
+                      ? "No steps: the register holds the data as it is at this point. Add steps to compute something else."
+                      : `Drop steps here, or add one with the operations pane.`,
                   ),
                 )}
               </div>`
@@ -1319,6 +1432,8 @@ export class ForgeRecipe extends LitElement {
     if (key === "then") return "Then";
     if (key === "else") return "Else";
     switch (step.kind) {
+      case "register":
+        return "Computed from a copy of the data";
       case "fork":
         return "Run on each piece";
       case "subsection":
@@ -1424,7 +1539,8 @@ export class ForgeRecipe extends LitElement {
                   <p><strong>This recipe has no steps yet.</strong></p>
                   <p>
                     Search the operations pane and choose Add, or drag an operation here. Use Add
-                    block for forks, subsections, conditions, repeats and comments.
+                    block for forks, subsections, conditions, repeats, registers, returns and
+                    comments.
                   </p>
                 </div>
               </div>`

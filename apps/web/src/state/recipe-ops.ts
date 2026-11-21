@@ -123,6 +123,7 @@ export function childLists(
     case "fork":
     case "subsection":
     case "repeat":
+    case "register":
       return [{ key: "steps", path: `${stepPath}/steps`, steps: step.steps }];
     case "if":
       return [
@@ -137,6 +138,70 @@ export function childLists(
 /** True when `path` is `ancestor` or lies below it. */
 export function isWithin(path: string, ancestor: string): boolean {
   return path === ancestor || path.startsWith(ancestor + "/");
+}
+
+/**
+ * True when a `return` step may sit directly in this list: the root list, or a `then` / `else` branch of
+ * an `if` that is itself in such a list (RECIPES-1.1.md section 3.2). Any other container (fork,
+ * subsection, repeat, register) closes it.
+ */
+export function listAllowsReturn(listPath: ListPath): boolean {
+  const tokens = parsePath(listPath);
+  if (tokens[0] !== "steps") return false;
+  // After "steps": index, then|else, index, then|else, ...
+  for (let i = 1; i < tokens.length; i += 1) {
+    const token = tokens[i] as string;
+    if (i % 2 === 1 ? !INDEX.test(token) : token !== "then" && token !== "else") return false;
+  }
+  return tokens.length % 2 === 1;
+}
+
+/** True when `step` is a `return` or has one anywhere below it. */
+export function containsReturn(step: Step): boolean {
+  const todo: Step[] = [step];
+  while (todo.length > 0) {
+    const s = todo.pop() as Step;
+    if (s.kind === "return") return true;
+    for (const child of childLists(s, "")) todo.push(...child.steps);
+  }
+  return false;
+}
+
+/** The text announced and shown when a drop or an add is refused because of a `return`. */
+export const BAD_POSITION_TEXT =
+  "A Return can only go at the top of the recipe or inside the branches of an If.";
+
+/**
+ * Whether `step` may be placed in the list: always, unless it is or contains a `return` and the list
+ * does not allow one. (A moved block keeps the structure it already has inside.)
+ */
+export function canPlace(step: Step, listPath: ListPath): boolean {
+  return listAllowsReturn(listPath) || !containsReturn(step);
+}
+
+function registerNamesOf(steps: readonly Step[], into: Set<string>): void {
+  for (const step of steps) {
+    if (step.kind === "register") into.add(step.name);
+    for (const child of childLists(step, "")) registerNamesOf(child.steps, into);
+  }
+}
+
+/** Every register name used anywhere in the recipe, enabled or not. */
+export function registerNames(recipe: Recipe): ReadonlySet<string> {
+  const names = new Set<string>();
+  registerNamesOf(recipe.steps, names);
+  return names;
+}
+
+/** `base`, or the first of `base-2`, `base-3`, ... that no register of the recipe uses (at most 32 characters). */
+export function uniqueRegisterName(recipe: Recipe, base = "value"): string {
+  const used = registerNames(recipe);
+  if (!used.has(base) && base.length <= 32) return base;
+  for (let n = 2; ; n += 1) {
+    const suffix = `-${n}`;
+    const candidate = `${base.slice(0, 32 - suffix.length)}${suffix}`;
+    if (!used.has(candidate)) return candidate;
+  }
 }
 
 /** Insert `step` into the list at `index` (clamped to 0..length). Creates an omitted `else` list. */
@@ -165,7 +230,8 @@ export function removeStep(recipe: Recipe, path: StepPath): Recipe {
  * Move a step. `toIndexGap` is the gap index in the *target list as it is before the move* (0 = before
  * the first item, length = after the last), which is what a drop indicator shows. `toList` is likewise
  * a path in the recipe before the move. Moving a step into itself or its own descendants returns the
- * recipe unchanged.
+ * recipe unchanged, and so does moving a `return` (or a block that holds one) where it is not allowed
+ * (`canPlace`).
  */
 export function moveStep(
   recipe: Recipe,
@@ -176,6 +242,7 @@ export function moveStep(
   if (isWithin(toList, from)) return recipe;
   const step = getStep(recipe, from);
   if (step === undefined) throw new RangeError(`no step at ${from}`);
+  if (!canPlace(step, toList)) return recipe;
   const src = splitStepPath(from);
   let targetTokens = parsePath(toList);
   const srcTokens = parsePath(src.listPath);
@@ -201,7 +268,11 @@ export function duplicateStep(recipe: Recipe, path: StepPath): Recipe {
   const step = getStep(recipe, path);
   if (step === undefined) throw new RangeError(`no step at ${path}`);
   const { listPath, index } = splitStepPath(path);
-  return insertStep(recipe, listPath, index + 1, structuredClone(step));
+  const copy = structuredClone(step);
+  // A copy of a register next to the original would hide the same name (RECIPES-1.1.md section 2.3).
+  const next: Step =
+    copy.kind === "register" ? { ...copy, name: uniqueRegisterName(recipe, copy.name) } : copy;
+  return insertStep(recipe, listPath, index + 1, next);
 }
 
 /** Shallow-merge `patch` into the step. A key whose value is `undefined` is deleted. */

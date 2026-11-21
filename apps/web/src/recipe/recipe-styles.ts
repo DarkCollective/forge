@@ -109,6 +109,15 @@ export const recipeStyles = css`
   .card.op {
     border-inline-start-color: var(--accent);
   }
+  .card.register {
+    border-inline-start-color: var(--link);
+  }
+  .card.return {
+    border-inline-start-color: var(--ok);
+  }
+  .card.return .card-head {
+    padding-block-end: 0;
+  }
   .card.comment {
     background: var(--surface-2);
     border-style: dashed;

@@ -16,7 +16,14 @@
 // Keyboard move targets of the recipe pane (UI.md WP 3.3). Pure: given the recipe and a step, say
 // which list and gap a key press moves it to, in the pre-move coordinates `moveStep` takes.
 import type { Recipe } from "@forge/recipe";
-import { childLists, getList, getStep, parsePath, splitStepPath } from "../state/recipe-ops.js";
+import {
+  canPlace,
+  childLists,
+  getList,
+  getStep,
+  parsePath,
+  splitStepPath,
+} from "../state/recipe-ops.js";
 import type { ListPath, StepPath } from "../state/recipe-ops.js";
 import { ownerOfList } from "./paths.js";
 
@@ -35,6 +42,22 @@ export interface MoveTarget {
  * Returns null when the key has no effect.
  */
 export function moveTarget(recipe: Recipe, path: StepPath, key: MoveKey): MoveTarget | null {
+  const target = rawMoveTarget(recipe, path, key);
+  if (target === null) return null;
+  const step = getStep(recipe, path);
+  return step !== undefined && canPlace(step, target.listPath) ? target : null;
+}
+
+/**
+ * True when the key would move the step, but the place it leads to does not allow it: a `return` (or a
+ * block holding one) may not enter a fork, subsection, repeat or register (RECIPES-1.1.md section 3.2).
+ * The pane then announces the reason instead of a plain "cannot move".
+ */
+export function blockedByPosition(recipe: Recipe, path: StepPath, key: MoveKey): boolean {
+  return rawMoveTarget(recipe, path, key) !== null && moveTarget(recipe, path, key) === null;
+}
+
+function rawMoveTarget(recipe: Recipe, path: StepPath, key: MoveKey): MoveTarget | null {
   const { listPath, index } = splitStepPath(path);
   const count = getList(recipe, listPath).length;
   if (index >= count) return null;
