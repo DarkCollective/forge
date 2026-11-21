@@ -18,7 +18,7 @@
  * The bake engine (RECIPES.md section 8.2): validate, compile, load, run, attribute. The same code runs
  * in process and behind the worker protocol.
  */
-import { bytes as bytesValue, formatErrorMessage, isForgeError } from "@forge/lang";
+import { REDACTED, bytes as bytesValue, formatErrorMessage, isForgeError } from "@forge/lang";
 import type {
   CompiledWord,
   ForgeErrorShape,
@@ -33,11 +33,14 @@ import type { Catalogue } from "@forge/ops";
 import {
   attributeError,
   compileRecipe,
+  isRegisterRef,
   recipeNeedsHardKill,
+  registerInfo,
+  registersInScope,
   resolveStepIps,
   validateRecipe,
 } from "@forge/recipe";
-import type { RecipeIssue, Step, StepIpMap, StepLine } from "@forge/recipe";
+import type { Recipe, RecipeIssue, Step, StepIpMap, StepLine } from "@forge/recipe";
 import { effectiveLimits } from "./limits.js";
 import { createRunMagicHost } from "./magic/host.js";
 import type { MagicEnvironment } from "./magic/host.js";
@@ -55,6 +58,7 @@ import type {
   BakerInit,
   InitInfo,
   OutputValue,
+  RegisterView,
   StepReport,
 } from "./types.js";
 
@@ -115,8 +119,55 @@ function collectOps(
     else if (step.kind === "if") {
       collectOps(step.then, `${path}/then`, disabled, aliases, out);
       collectOps(step.else ?? [], `${path}/else`, disabled, aliases, out);
-    } else if (step.kind === "fork" || step.kind === "subsection" || step.kind === "repeat") {
+    } else if (
+      step.kind === "fork" ||
+      step.kind === "subsection" ||
+      step.kind === "repeat" ||
+      step.kind === "register"
+    ) {
       collectOps(step.steps, `${path}/steps`, disabled, aliases, out);
+    }
+  });
+}
+
+/** An op step, or the op test of an `if` step, with the registers that supply its parameters. */
+interface RefStep {
+  readonly op: string;
+  /** Parameter name to register name. */
+  readonly refs: ReadonlyMap<string, string>;
+}
+
+/** Steps (by path) that supply at least one parameter by register reference (RECIPES-1.1.md section 2.5). */
+function collectRefs(steps: readonly Step[], prefix: string, out: Map<string, RefStep>): void {
+  const refsOf = (
+    op: string,
+    params: Readonly<Record<string, unknown>> | undefined,
+  ): RefStep | null => {
+    const refs = new Map<string, string>();
+    for (const [name, value] of Object.entries(params ?? {})) {
+      if (isRegisterRef(value)) refs.set(name, value.ref);
+    }
+    return refs.size === 0 ? null : { op, refs };
+  };
+  steps.forEach((step, i) => {
+    const path = `${prefix}/${i}`;
+    if (step.kind === "op") {
+      const found = refsOf(step.op, step.params);
+      if (found !== null) out.set(path, found);
+    } else if (step.kind === "if") {
+      if (step.test.kind === "op") {
+        const found = refsOf(step.test.op, step.test.params);
+        if (found !== null) out.set(path, found);
+      }
+      collectRefs(step.then, `${path}/then`, out);
+      collectRefs(step.else ?? [], `${path}/else`, out);
+    } else if (
+      step.kind === "fork" ||
+      step.kind === "subsection" ||
+      step.kind === "repeat" ||
+      step.kind === "register"
+    ) {
+      collectRefs(step.steps, `${path}/steps`, out);
     }
   });
 }
@@ -154,6 +205,14 @@ class Tracker {
 
   closeAll(now: number): void {
     this.closeFrom(0, now);
+  }
+
+  /**
+   * A run that ended normally has finished every top-level step: the ones a `return` skipped never started,
+   * and the ones it left open never got their `ends` event (RECIPES-1.1.md section 3.5, CR138).
+   */
+  completeTopLevel(): void {
+    this.done = this.total;
   }
 
   private closeFrom(i: number, now: number): void {
@@ -379,7 +438,7 @@ export function createBakerCore(options: BakerCoreOptions): Baker {
         map,
         limits.maxTraceEntries,
         input,
-        validation.recipe.steps,
+        validation.recipe,
         finish,
         emit,
         runtime,
@@ -402,7 +461,7 @@ export function createBakerCore(options: BakerCoreOptions): Baker {
     map: StepIpMap,
     maxLog: number,
     input: Uint8Array,
-    steps: readonly Step[],
+    recipe: Recipe,
     finish: Finish,
     emit: (event: BakeEvent) => void,
     runtime: ForgeRuntime,
@@ -419,8 +478,42 @@ export function createBakerCore(options: BakerCoreOptions): Baker {
     let stepping = debug?.startPaused === true;
     let startPending = stepping;
 
+    const secretOf = new Map(registerInfo(recipe, catalogue).map((r) => [r.path, r.secret]));
+    // The locals of the recipe word's frames at a pause, innermost first (a register bound in a quotation
+    // frame, such as a fork piece, is found there). Read once per pause, before the first await: frames()
+    // is valid only during the hook call, and the values are immutable.
+    const localsOf = (ev: StepEvent): ReadonlyMap<string, Value> => {
+      const found = new Map<string, Value>();
+      for (const frame of ev.frames()) {
+        if (frame.word !== word) continue;
+        for (const l of frame.locals) if (!found.has(l.name)) found.set(l.name, l.value);
+      }
+      return found;
+    };
+    const registersAt = (
+      path: string,
+      locals: ReadonlyMap<string, Value>,
+    ): readonly RegisterView[] => {
+      const views: RegisterView[] = [];
+      for (const r of registersInScope(recipe, path, catalogue)) {
+        const value = locals.get(`$${r.name}`) ?? locals.get(r.name);
+        if (value === undefined) continue;
+        views.push({
+          name: r.name,
+          path: r.path,
+          value:
+            r.secret || secretOf.get(r.path) === true
+              ? { kind: "other", tag: value.tag, repr: REDACTED }
+              : renderValue(value),
+        });
+      }
+      return views;
+    };
+    const hasRegisters = secretOf.size > 0;
+
     const pause = async (ev: StepEvent, starts: readonly string[]): Promise<void> => {
       const data = renderValue(ev.stack[ev.stack.length - 1] as Value);
+      let locals: ReadonlyMap<string, Value> | null = null;
       for (const path of starts) {
         const flagged = breakpointOf.get(path) === true;
         if (!stepping && !flagged) continue;
@@ -430,7 +523,19 @@ export function createBakerCore(options: BakerCoreOptions): Baker {
         const wait = new Promise<Resume>((resolve) => {
           act.resume = resolve;
         });
-        emit({ type: "paused", id, path, reason, data });
+        let registers: readonly RegisterView[] = [];
+        if (hasRegisters) {
+          locals ??= localsOf(ev);
+          registers = registersAt(path, locals);
+        }
+        emit({
+          type: "paused",
+          id,
+          path,
+          reason,
+          data,
+          ...(registers.length === 0 ? {} : { registers }),
+        });
         const choice = await wait;
         act.resume = null;
         if (signal.aborted) return;
@@ -461,7 +566,9 @@ export function createBakerCore(options: BakerCoreOptions): Baker {
       for (const alias of op.aliases) aliases.set(`${vocab}:${alias}`, op.qname);
     }
     const opByPath = new Map<string, string>();
-    collectOps(steps, "/steps", disabled, aliases, opByPath);
+    collectOps(recipe.steps, "/steps", disabled, aliases, opByPath);
+    const refSteps = new Map<string, RefStep>();
+    collectRefs(recipe.steps, "/steps", refSteps);
     const opNames = new Set(opByPath.values());
 
     let res: RunResult;
@@ -489,7 +596,10 @@ export function createBakerCore(options: BakerCoreOptions): Baker {
     }
 
     const end = performance.now();
+    // Steps still open at the end (a `return` leaves the `return` and the `if`s around it open) are closed
+    // at the end time, as at a failure (RECIPES-1.1.md section 3.5).
     tracker.closeAll(end);
+    if (res.ok) tracker.completeTopLevel();
     const last = tracker.progress(id, res.steps, t0, end, true);
     if (last !== null) emit(last);
 
@@ -518,10 +628,17 @@ export function createBakerCore(options: BakerCoreOptions): Baker {
       return finish({ ok: true, output: renderValue(top) }, extra);
     }
     const err: ForgeErrorShape = res.error;
+    const errPath = attributeError(word, err.frames, map);
+    const detail = err.toJSON().detail as Record<string, unknown>;
+    // A deferred check of a parameter that a register supplies: name the register (section 2.5).
+    const refStep = errPath === null ? undefined : refSteps.get(errPath);
+    const param = detail["param"];
+    const register =
+      refStep !== undefined && typeof param === "string" ? refStep.refs.get(param) : undefined;
     const error = bakeError(err.code, err.message, {
-      path: attributeError(word, err.frames, map),
+      path: errPath,
       word: err.word,
-      detail: err.toJSON().detail as Record<string, unknown>,
+      detail: register === undefined ? detail : { ...detail, register },
     });
     return finish(
       { ok: false, error, ...(top === undefined ? {} : { partial: renderValue(top) }) },

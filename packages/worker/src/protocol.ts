@@ -158,6 +158,16 @@ function isBakeError(value: unknown): boolean {
   );
 }
 
+function isRegisterView(value: unknown): boolean {
+  return (
+    isObject(value) &&
+    onlyKeys(value, ["name", "path", "value"]) &&
+    typeof ownData(value, "name") === "string" &&
+    typeof ownData(value, "path") === "string" &&
+    isObject(ownData(value, "value"))
+  );
+}
+
 function isEvent(value: unknown): boolean {
   if (!isObject(value) || !isId(ownData(value, "id"))) return false;
   switch (ownData(value, "type")) {
@@ -165,8 +175,16 @@ function isEvent(value: unknown): boolean {
       return ["done", "total", "vmSteps", "elapsedMs"].every(
         (k) => typeof ownData(value, k) === "number",
       );
-    case "paused":
-      return typeof ownData(value, "path") === "string" && isObject(ownData(value, "data"));
+    case "paused": {
+      // `registers` is optional: a `paused` message of the v1 shape stays valid (RECIPES-1.1.md section 4.10).
+      const registers = ownData(value, "registers");
+      return (
+        typeof ownData(value, "path") === "string" &&
+        isObject(ownData(value, "data")) &&
+        (registers === undefined ||
+          (Array.isArray(registers) && registers.every((r: unknown) => isRegisterView(r))))
+      );
+    }
     case "resumed":
       return true;
     default:
