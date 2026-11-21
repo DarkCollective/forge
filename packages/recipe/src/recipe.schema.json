@@ -53,6 +53,12 @@
         },
         {
           "$ref": "#/$defs/commentStep"
+        },
+        {
+          "$ref": "#/$defs/registerStep"
+        },
+        {
+          "$ref": "#/$defs/returnStep"
         }
       ]
     },
@@ -109,6 +115,9 @@
         },
         {
           "$ref": "#/$defs/encoded"
+        },
+        {
+          "$ref": "#/$defs/ref"
         }
       ]
     },
@@ -372,6 +381,60 @@
         }
       },
       "required": ["value", "enc"],
+      "additionalProperties": false
+    },
+    "ref": {
+      "type": "object",
+      "properties": {
+        "ref": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{0,31}$"
+        }
+      },
+      "required": ["ref"],
+      "additionalProperties": false
+    },
+    "registerStep": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/common"
+        }
+      ],
+      "properties": {
+        "kind": {
+          "const": "register"
+        },
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{0,31}$"
+        },
+        "steps": {
+          "$ref": "#/$defs/steps"
+        },
+        "disabled": true,
+        "breakpoint": true,
+        "note": true
+      },
+      "required": ["kind", "name", "steps"],
+      "additionalProperties": false
+    },
+    "returnStep": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/common"
+        }
+      ],
+      "properties": {
+        "kind": {
+          "const": "return"
+        },
+        "disabled": true,
+        "breakpoint": true,
+        "note": true
+      },
+      "required": ["kind"],
       "additionalProperties": false
     }
   }

@@ -43,7 +43,16 @@ export const RECIPE_FORMAT_VERSION = 1 as const;
 /** Value of the `v` key of a share fragment. */
 export const SHARE_FORMAT_VERSION = 1 as const;
 
-export const STEP_KINDS = ["op", "fork", "subsection", "if", "repeat", "comment"] as const;
+export const STEP_KINDS = [
+  "op",
+  "fork",
+  "subsection",
+  "if",
+  "repeat",
+  "comment",
+  "register",
+  "return",
+] as const;
 export type StepKind = (typeof STEP_KINDS)[number];
 
 /** Limits applied by `validateRecipe` to every recipe, whatever its source. */
@@ -67,6 +76,10 @@ export const RECIPE_LIMITS = Object.freeze({
   defaultRepeatCap: 100,
   /** Regex source length, equal to `DEFAULT_LIMITS.maxRegexLength`. */
   maxRegexChars: 1024,
+  /** `register` steps in the whole tree, enabled or not (RECIPES-1.1.md section 2.8). */
+  maxRegisters: 64,
+  /** Characters of a register name; the name pattern expresses it. */
+  maxRegisterNameChars: 32,
 });
 
 /** Limits applied by the share codec to untrusted fragments. */
@@ -100,8 +113,13 @@ export interface Encoded {
   readonly enc: EncodingName;
 }
 
-/** The JSON value of a parameter (RECIPES.md section 3.4). */
-export type ParamValue = number | string | boolean | Encoded;
+/** A reference to a register, `{ "ref": name }` (RECIPES-1.1.md section 2.4). */
+export interface RegisterRef {
+  readonly ref: string;
+}
+
+/** The JSON value of a parameter (RECIPES.md section 3.4; a reference is RECIPES-1.1.md section 2.4). */
+export type ParamValue = number | string | boolean | Encoded | RegisterRef;
 
 export type ParamValues = Readonly<Record<string, ParamValue>>;
 
@@ -178,7 +196,31 @@ export interface CommentStep {
   readonly text: string;
 }
 
-export type Step = OpStep | ForkStep | SubsectionStep | IfStep | RepeatStep | CommentStep;
+/**
+ * Runs its children on a copy of the data and binds the value they leave to `name`; the data is unchanged
+ * (RECIPES-1.1.md section 2.2).
+ */
+export interface RegisterStep extends StepCommon {
+  readonly kind: "register";
+  /** Matches `^[a-z][a-z0-9-]{0,31}$`. */
+  readonly name: string;
+  readonly steps: readonly Step[];
+}
+
+/** Ends the whole recipe with the current data (RECIPES-1.1.md section 3.1). */
+export interface ReturnStep extends StepCommon {
+  readonly kind: "return";
+}
+
+export type Step =
+  | OpStep
+  | ForkStep
+  | SubsectionStep
+  | IfStep
+  | RepeatStep
+  | CommentStep
+  | RegisterStep
+  | ReturnStep;
 
 export interface Recipe {
   readonly forge: typeof RECIPE_FORMAT_VERSION;
@@ -243,6 +285,12 @@ export const RECIPE_ISSUE_CODES = [
   "catalogue-mismatch",
   // warning from the share codec
   "secret-in-url",
+  // registers and return (RECIPES-1.1.md section 4.3)
+  "unknown-register",
+  "duplicate-register",
+  "bad-position",
+  // warning
+  "unreachable-step",
 ] as const;
 
 export type RecipeIssueCode = (typeof RECIPE_ISSUE_CODES)[number];

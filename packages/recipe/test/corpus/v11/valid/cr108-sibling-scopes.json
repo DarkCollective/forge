@@ -1,0 +1,44 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "if",
+      "test": {
+        "kind": "regex",
+        "pattern": "x"
+      },
+      "then": [
+        {
+          "kind": "register",
+          "name": "a",
+          "steps": []
+        }
+      ],
+      "else": [
+        {
+          "kind": "register",
+          "name": "a",
+          "steps": []
+        }
+      ]
+    },
+    {
+      "kind": "fork",
+      "split": {
+        "value": "\n",
+        "enc": "utf8"
+      },
+      "join": {
+        "value": "0a",
+        "enc": "hex"
+      },
+      "steps": [
+        {
+          "kind": "register",
+          "name": "a",
+          "steps": []
+        }
+      ]
+    }
+  ]
+}

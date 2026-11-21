@@ -22,6 +22,7 @@ import type { ParamSpec } from "@forge/lang";
 import { hexDecode, hexEncode, normaliseEncodedValue } from "./encoding.js";
 import { opIndex } from "./opindex.js";
 import type { OpIndex } from "./opindex.js";
+import { isRegisterRef } from "./registers.js";
 import { RECIPE_LIMITS } from "./types.js";
 import type {
   CatalogueView,
@@ -74,6 +75,8 @@ function normaliseParams(params: ParamValues | undefined): ParamValues | undefin
   return Object.fromEntries(
     keys.map((k) => {
       const v = (params as Obj)[k] as ParamValue;
+      // A reference is already normal; it is rebuilt from its one key.
+      if (isRegisterRef(v)) return [k, { ref: v.ref }];
       return [k, isEncodedShape(v) ? normaliseEncoded(v) : v];
     }),
   );
@@ -135,6 +138,12 @@ function normaliseStep(step: Step): Step {
     case "comment":
       out.text = step.text;
       break;
+    case "register":
+      out.name = step.name;
+      out.steps = step.steps.map(normaliseStep);
+      break;
+    case "return":
+      break;
   }
   copyCommon(out, step);
   return out as unknown as Step;
@@ -180,10 +189,12 @@ function mapSteps(steps: readonly Step[], fn: <T extends OpLike>(o: T) => T): St
       case "op":
         return fn(s);
       case "comment":
+      case "return":
         return s;
       case "fork":
       case "subsection":
       case "repeat":
+      case "register":
         return { ...s, steps: mapSteps(s.steps, fn) };
       case "if": {
         const test = s.test.kind === "op" ? fn(s.test) : s.test;
@@ -229,7 +240,11 @@ function resolveOp<T extends OpLike>(index: OpIndex, o: T): T {
           ? (o.params as Obj)[spec.name]
           : spec.default;
       if (given !== undefined) {
-        entries.push([spec.name, normaliseByType(spec, given as ParamValue)]);
+        // A reference is a given value: no default is materialised and no by-type normalisation applies.
+        entries.push([
+          spec.name,
+          isRegisterRef(given) ? { ref: given.ref } : normaliseByType(spec, given as ParamValue),
+        ]);
       }
     }
     params = Object.fromEntries(entries);

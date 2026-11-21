@@ -1,0 +1,36 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "if",
+      "test": {
+        "kind": "op",
+        "op": "regex:test",
+        "params": {
+          "pattern": {
+            "ref": "p"
+          }
+        }
+      },
+      "then": []
+    },
+    {
+      "kind": "register",
+      "name": "p",
+      "steps": []
+    },
+    {
+      "kind": "if",
+      "test": {
+        "kind": "op",
+        "op": "regex:test",
+        "params": {
+          "pattern": {
+            "ref": "p"
+          }
+        }
+      },
+      "then": []
+    }
+  ]
+}

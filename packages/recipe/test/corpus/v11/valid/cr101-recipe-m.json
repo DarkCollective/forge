@@ -1,0 +1,54 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "register",
+      "name": "iv",
+      "steps": [
+        {
+          "kind": "op",
+          "op": "bytes-slice:take",
+          "params": {
+            "start": 0,
+            "length": 16
+          }
+        }
+      ]
+    },
+    {
+      "kind": "register",
+      "name": "key",
+      "steps": [
+        {
+          "kind": "op",
+          "op": "bytes-slice:take",
+          "params": {
+            "start": 16,
+            "length": 32
+          }
+        }
+      ]
+    },
+    {
+      "kind": "op",
+      "op": "bytes-slice:remove",
+      "params": {
+        "start": 0,
+        "length": 48
+      }
+    },
+    {
+      "kind": "op",
+      "op": "aes:decrypt",
+      "params": {
+        "key": {
+          "ref": "key"
+        },
+        "iv": {
+          "ref": "iv"
+        },
+        "mode": "CBC"
+      }
+    }
+  ]
+}

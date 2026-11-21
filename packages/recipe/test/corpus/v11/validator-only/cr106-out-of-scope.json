@@ -1,0 +1,41 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "fork",
+      "split": {
+        "value": "\n",
+        "enc": "utf8"
+      },
+      "join": {
+        "value": "0a",
+        "enc": "hex"
+      },
+      "steps": [
+        {
+          "kind": "register",
+          "name": "k",
+          "steps": []
+        },
+        {
+          "kind": "op",
+          "op": "aes:decrypt",
+          "params": {
+            "key": {
+              "ref": "k"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "kind": "op",
+      "op": "aes:decrypt",
+      "params": {
+        "key": {
+          "ref": "k"
+        }
+      }
+    }
+  ]
+}

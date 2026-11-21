@@ -1,0 +1,15 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "register",
+      "name": "a",
+      "steps": [],
+      "extra": 1
+    },
+    {
+      "kind": "return",
+      "steps": []
+    }
+  ]
+}

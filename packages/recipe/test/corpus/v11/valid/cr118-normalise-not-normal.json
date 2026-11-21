@@ -1,0 +1,45 @@
+{
+  "steps": [
+    {
+      "disabled": false,
+      "kind": "register",
+      "note": "",
+      "name": "p",
+      "steps": [
+        {
+          "params": {
+            "length": 2,
+            "start": 0
+          },
+          "op": "bytes-slice:take",
+          "kind": "op"
+        }
+      ]
+    },
+    {
+      "kind": "if",
+      "test": {
+        "pattern": "x",
+        "kind": "regex"
+      },
+      "then": [
+        {
+          "kind": "return",
+          "breakpoint": false,
+          "disabled": false
+        }
+      ]
+    },
+    {
+      "op": "regex:replace",
+      "kind": "op",
+      "params": {
+        "replacement": "-",
+        "pattern": {
+          "ref": "p"
+        }
+      }
+    }
+  ],
+  "forge": 1
+}

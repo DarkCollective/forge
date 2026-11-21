@@ -1,0 +1,21 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "register",
+      "name": "sep",
+      "steps": []
+    },
+    {
+      "kind": "fork",
+      "split": {
+        "ref": "sep"
+      },
+      "join": {
+        "value": "",
+        "enc": "utf8"
+      },
+      "steps": []
+    }
+  ]
+}
