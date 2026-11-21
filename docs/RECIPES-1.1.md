@@ -1,6 +1,6 @@
 # Recipe JSON v1.1, additive wave: specification proposal
 
-Status: **proposal for the owner to decide** (WP 6.34). Nothing in this document is implemented, and no text of [RECIPES.md](RECIPES.md), [LANGUAGE.md](LANGUAGE.md), [UI.md](UI.md) or [PLAN.md](PLAN.md) has been changed, except one new row in the Phase 6 table of PLAN.md that points here. RECIPES.md stays "draft v1, normative for Phase 2" until the owner accepts this proposal; the implementation work packages of section 7 then amend it, and the last one folds this file into RECIPES.md.
+Status: **approved by the owner** (2026-11-21) with every recommended answer of section 8 accepted; being implemented in WPs 6.35 to 6.41 (written in WP 6.34).
 
 `packages/recipe` is a frozen Phase 1 to 2 contract (CLAUDE.md). The owner has approved *writing* a proposal for an additive wave, modelled on how FL v0.2 was done ([LANGUAGE-0.2.md](LANGUAGE-0.2.md), WP 6.2): a proposal with numbered open questions, each with a recommended answer; the owner decides; later work packages implement; a fold-in merges the result into the main specification. Implementing this wave needs a second decision, listed as question Q1: to unfreeze `packages/recipe` for additive changes, and to let the work packages edit one internal vocabulary file of `packages/ops`, and parts of `packages/worker` and `apps/web`.
 

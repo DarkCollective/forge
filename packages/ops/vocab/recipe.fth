@@ -46,3 +46,11 @@ CHOICE: text-encoding
   dup body call as-bytes
   dup2 = cap 1 = or
   [ nip ] [ nip cap 1 - body recurse ] if ;
+
+\ ---- registers ----
+
+\ The compiled form of a register step (RECIPES-1.1 section 2.7): run the body on a copy of the
+\ data, then bind what it leaves with `:>`. The data is left as it was. Internal, never a catalogue word.
+: peek ( any body:quot -- any any )
+  "Run body on a copy of the data; leave the data and push what body leaves." doc
+  dup body call ;
