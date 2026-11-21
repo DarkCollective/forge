@@ -91,11 +91,23 @@ function outputType(output: { readonly kind: string; readonly tag?: string }): D
   return isValueType(output.kind) ? output.kind : "unknown";
 }
 
-/** Last step that changes the data: skips comments and disabled steps (a disabled container is skipped whole). */
+/**
+ * Last step that changes the data: skips comments, disabled steps (a disabled container is skipped whole)
+ * and registers. A register is transparent: the data leaves it as it entered (RECIPES-1.1.md section 2.2),
+ * so the data type after it is the data type before it. A register-fed parameter changes nothing here
+ * either: fit looks at the data an operation takes, never at where its parameters come from.
+ */
 export function lastActive(steps: readonly Step[]): Step | undefined {
   for (let i = steps.length - 1; i >= 0; i--) {
     const step = steps[i];
-    if (step === undefined || step.kind === "comment" || step.disabled === true) continue;
+    if (
+      step === undefined ||
+      step.kind === "comment" ||
+      step.kind === "register" ||
+      step.disabled === true
+    ) {
+      continue;
+    }
     return step;
   }
   return undefined;
@@ -134,6 +146,9 @@ function utf8Of(bytes: Uint8Array): Utf8State {
 
 /** The type inferred from the last active step, with no bake to go by. */
 function staticType(recipe: Recipe, ops: readonly CatalogueOp[] | null): DataType {
+  // An enabled return in the root list ends the recipe there: the steps after it do not run, so there is
+  // no data type to show at the end (RECIPES-1.1.md section 4.12).
+  if (recipe.steps.some((s) => s.kind === "return" && s.disabled !== true)) return "unknown";
   const last = lastActive(recipe.steps);
   if (last === undefined) return "bytes";
   switch (last.kind) {

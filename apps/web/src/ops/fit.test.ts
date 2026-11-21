@@ -28,6 +28,7 @@ import {
   dataTypeAtEnd,
   fitLevel,
   fits,
+  lastActive,
   sameFacts,
   whyNotFit,
 } from "./fit.js";
@@ -380,5 +381,46 @@ describe("hints and the header line", () => {
     expect(dataLine({ type: "bytes", utf8: "invalid" })).toBe("bytes");
     expect(dataLine({ type: "bytes", utf8: "unknown" })).toBe("bytes");
     expect(dataLine({ type: "str", utf8: "unknown" })).toBe("text");
+  });
+});
+
+describe("registers and returns (RECIPES-1.1.md section 4.12)", () => {
+  const at = (recipe: Recipe): DataType => dataTypeAtEnd({ recipe, bake: noBake, ops: OPS });
+  const reg = (name: string, steps: Step[] = []): Step =>
+    ({ kind: "register", name, steps }) as unknown as Step;
+  const ret = { kind: "return" } as unknown as Step;
+
+  it("a register is transparent: the data type after it is the data type before it", () => {
+    expect(at(rec(o("t:toStr"), reg("x", [o("t:toList")])))).toBe("str");
+    expect(at(rec(o("t:toStr"), reg("x"), reg("y", [o("t:toNumber")])))).toBe("str");
+  });
+
+  it("a recipe that is only registers has the input as its data", () => {
+    expect(at(rec(reg("x", [o("t:toList")])))).toBe("bytes");
+    expect(lastActive(rec(reg("x")).steps)).toBeUndefined();
+  });
+
+  it("a disabled register is skipped like any disabled step", () => {
+    expect(at(rec(o("t:toStr"), { ...reg("x"), disabled: true } as unknown as Step))).toBe("str");
+  });
+
+  it("an enabled return in the root list leaves no data type to show", () => {
+    expect(at(rec(o("t:toStr"), ret))).toBe("unknown");
+    expect(at(rec(ret, o("t:toStr")))).toBe("unknown");
+    expect(at(rec(o("t:toStr"), { ...ret, disabled: true } as unknown as Step))).toBe("str");
+  });
+
+  it("a return inside an if does not change the type the if leaves (unknown, as before)", () => {
+    const ifStep = { kind: "if", then: [ret] } as unknown as Step;
+    expect(at(rec(o("t:toStr"), ifStep))).toBe("unknown");
+  });
+
+  it("a register-fed parameter does not make an operation show as not fitting", () => {
+    // Fit reads the data and the operation's data input only; the parameter source never enters.
+    const fed = o("t:toStr", { params: { key: { ref: "k" } } });
+    const data = at(rec(reg("k"), fed));
+    expect(data).toBe("str");
+    expect(fits("str", data)).toBe(true);
+    expect(fitLevel("str", data)).toBe("fits");
   });
 });

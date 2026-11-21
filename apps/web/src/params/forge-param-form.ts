@@ -34,7 +34,15 @@ import {
   textToValue,
   valueToText,
 } from "./convert.js";
-import { paramIssues } from "./issues.js";
+import { describeIssue, paramIssues } from "./issues.js";
+import {
+  firstRef,
+  modeOf,
+  pickerOptions,
+  refName,
+  registerChoices,
+  valueAfterSwitchBack,
+} from "./registers.js";
 
 /** Debounce for typing; selects, checkboxes and resets write immediately (UI.md WP 3.4). */
 const TYPING_DEBOUNCE_MS = 150;
@@ -99,6 +107,33 @@ export class ForgeParamForm extends LitElement {
       .tag {
         font-size: var(--text-xs);
         color: var(--text-muted);
+      }
+      .mode {
+        display: inline-flex;
+        border: var(--border-width) solid var(--border-strong);
+        border-radius: var(--radius-s);
+        overflow: hidden;
+      }
+      .mode button {
+        min-height: var(--hit-min);
+        padding-inline: var(--space-2);
+        font-size: var(--text-xs);
+        border: 0;
+        border-radius: 0;
+        background: var(--surface);
+        color: var(--text);
+      }
+      .mode button + button {
+        border-inline-start: var(--border-width) solid var(--border-strong);
+      }
+      .mode button[aria-pressed="true"] {
+        background: var(--accent);
+        color: var(--accent-fg);
+        font-weight: var(--weight-bold);
+      }
+      .mode button[aria-disabled="true"] {
+        opacity: 0.5;
+        cursor: not-allowed;
       }
       .reset {
         margin-inline-start: auto;
@@ -181,6 +216,8 @@ export class ForgeParamForm extends LitElement {
   private readonly catalogue = new StoreController(this, store, (s) => s.catalogue);
 
   private drafts = new Map<string, Draft>();
+  /** The value each parameter had before the user switched it to a register, restored on the way back. */
+  private lastValues = new Map<string, unknown>();
   private timers = new Map<string, number>();
   @state() private revealed = new Set<string>();
 
@@ -299,7 +336,38 @@ export class ForgeParamForm extends LitElement {
     this.onText(spec, next);
   }
 
+  /** Switch a parameter between a typed value and a register reference (the Value / Register switch). */
+  private setMode(
+    spec: ParamSpec,
+    mode: "value" | "register",
+    choices: ReturnType<typeof registerChoices>,
+  ): void {
+    const stored = this.params()[spec.name];
+    if (modeOf(stored) === mode) return;
+    const timer = this.timers.get(spec.name);
+    if (timer !== undefined) window.clearTimeout(timer);
+    this.timers.delete(spec.name);
+    const draft = this.drafts.get(spec.name);
+    this.drafts.delete(spec.name);
+    if (mode === "register") {
+      const ref = firstRef(choices);
+      if (ref === undefined) return;
+      // Remember what was typed (or stored) so that switching back brings it back.
+      if (draft?.pending === true) {
+        this.lastValues.set(spec.name, textToValue(spec, draft.text, this.currentEnc(spec)));
+      } else if (stored !== undefined) this.lastValues.set(spec.name, stored);
+      else this.lastValues.delete(spec.name);
+      this.write(spec.name, ref);
+      actions.announce(`${spec.name} now reads the register ${ref.ref}`);
+    } else {
+      this.write(spec.name, valueAfterSwitchBack(this.lastValues.get(spec.name)));
+      this.lastValues.delete(spec.name);
+      actions.announce(`${spec.name} is a value again`);
+    }
+  }
+
   private reset(spec: ParamSpec): void {
+    this.lastValues.delete(spec.name);
     const timer = this.timers.get(spec.name);
     if (timer !== undefined) window.clearTimeout(timer);
     this.timers.delete(spec.name);
@@ -334,8 +402,10 @@ export class ForgeParamForm extends LitElement {
     if (op.params.length === 0 && extras.length === 0) {
       return html`<span class="help">This operation has no parameters.</span>`;
     }
+    const choices = registerChoices(this.recipe.value, this.path, catalogue.catalogue);
     return html`<div class="fields" role="group" aria-label=${`Parameters of ${op.name}`}>
-      ${op.params.map((p) => this.renderField(p))} ${extras.map((k) => this.renderExtra(k))}
+      ${op.params.map((p) => this.renderField(p, choices))}
+      ${extras.map((k) => this.renderExtra(k))}
     </div>`;
   }
 
@@ -366,13 +436,16 @@ export class ForgeParamForm extends LitElement {
       ${errors.map(
         (e) =>
           html`<li class=${e.severity}>
-            <strong>${e.severity === "error" ? "Error:" : "Note:"}</strong> ${e.message}
+            <strong>${e.severity === "error" ? "Error:" : "Note:"}</strong> ${describeIssue(e)}
           </li>`,
       )}
     </ul>`;
   }
 
-  private renderField(spec: ParamSpec): TemplateResult {
+  private renderField(
+    spec: ParamSpec,
+    choices: ReturnType<typeof registerChoices>,
+  ): TemplateResult {
     const name = spec.name;
     const id = `p-${name}`;
     const helpId = `help-${name}`;
@@ -383,41 +456,113 @@ export class ForgeParamForm extends LitElement {
     const invalid = errors.some((e) => e.severity === "error");
     const present = Object.hasOwn(this.params(), name);
     const describedBy = [helpId, errors.length > 0 ? errId : ""].filter(Boolean).join(" ");
+    const mode = modeOf(this.params()[name]);
+    const viaRegister = mode === "register";
 
     const helpParts: string[] = [];
     if (spec.doc !== undefined && spec.doc !== "") helpParts.push(spec.doc);
-    const hint = constraintHint(spec);
-    if (hint !== "") helpParts.push(`${hint}.`);
-    if (spec.default !== undefined && spec.type !== "bool" && spec.type !== "choice") {
-      const d = defaultText(spec);
-      if (d !== "") helpParts.push(`Default: ${d}.`);
-    }
-    if (spec.type === "regex") {
-      helpParts.push("ECMAScript syntax, Unicode mode; flags are set separately.");
-    }
-    if (spec.type === "key") {
-      helpParts.push("Stored in the clear in share links and the text form.");
+    if (viaRegister) {
+      // A reference is checked when the recipe runs, so the static hints do not apply (RECIPES-1.1.md 2.4).
+      helpParts.push("Reads the register when the recipe runs; its value is checked then.");
+      const chosen = choices.find((c) => c.name === refName(this.params()[name]));
+      if (chosen?.secret === true || spec.type === "key") {
+        helpParts.push("A key: its value is stored in the clear in share links and the text form.");
+      }
+    } else {
+      const hint = constraintHint(spec);
+      if (hint !== "") helpParts.push(`${hint}.`);
+      if (spec.default !== undefined && spec.type !== "bool" && spec.type !== "choice") {
+        const d = defaultText(spec);
+        if (d !== "") helpParts.push(`Default: ${d}.`);
+      }
+      if (spec.type === "regex") {
+        helpParts.push("ECMAScript syntax, Unicode mode; flags are set separately.");
+      }
+      if (spec.type === "key") {
+        helpParts.push("Stored in the clear in share links and the text form.");
+      }
     }
     const resetLabel = spec.required ? "Clear" : "Reset";
-
-    const head =
-      spec.type === "bool"
-        ? nothing
-        : html`<div class="head">
-            <label for=${id}>${name}</label>
-            ${spec.required ? html`<span class="tag">required</span>` : nothing}
-            ${this.renderReset(spec, present, resetLabel)}
-          </div>`;
+    const showLabel = spec.type !== "bool" || viaRegister;
+    const noRegisters = choices.length === 0 && !viaRegister;
 
     return html`<div class="field" data-param=${name}>
-      ${head} ${this.renderControl(spec, id, describedBy, invalid)}
+      <div class="head">
+        ${showLabel ? html`<label for=${id}>${name}</label>` : nothing}
+        ${showLabel && spec.required ? html`<span class="tag">required</span>` : nothing}
+        ${this.renderSwitch(spec, mode, choices)} ${this.renderReset(spec, present, resetLabel)}
+      </div>
       ${
-        spec.type === "bool" && present
-          ? html`<div class="head">${this.renderReset(spec, present, resetLabel)}</div>`
-          : nothing
+        viaRegister
+          ? this.renderRegisterControl(spec, id, describedBy, invalid ? "true" : "false", choices)
+          : this.renderControl(spec, id, describedBy, invalid)
       }
       <p class="help" id=${helpId}>${helpParts.join(" ")}</p>
+      ${
+        noRegisters
+          ? html`<p class="help" id="reg-hint-${name}">No register defined before this step.</p>`
+          : nothing
+      }
       ${this.renderErrors(errId, errors)}
+    </div>`;
+  }
+
+  /** The Value / Register switch: two toggle buttons; Register is unavailable while no register is in scope. */
+  private renderSwitch(
+    spec: ParamSpec,
+    mode: "value" | "register",
+    choices: ReturnType<typeof registerChoices>,
+  ) {
+    const blocked = mode === "value" && choices.length === 0;
+    return html`<span class="mode" role="group" aria-label=${`Source of ${spec.name}`}>
+      <button
+        type="button"
+        aria-pressed=${mode === "value" ? "true" : "false"}
+        aria-label=${`Use a value for ${spec.name}`}
+        @click=${() => this.setMode(spec, "value", choices)}
+      >
+        Value
+      </button>
+      <button
+        type="button"
+        aria-pressed=${mode === "register" ? "true" : "false"}
+        aria-label=${`Use a register for ${spec.name}`}
+        aria-disabled=${blocked ? "true" : nothing}
+        aria-describedby=${blocked ? `reg-hint-${spec.name}` : nothing}
+        @click=${() => {
+          if (!blocked) this.setMode(spec, "register", choices);
+        }}
+      >
+        Register
+      </button>
+    </span>`;
+  }
+
+  /** The picker of Register mode: the registers in scope at this step; the stored name stays listed when it is not one. */
+  private renderRegisterControl(
+    spec: ParamSpec,
+    id: string,
+    describedBy: string,
+    invalidAttr: string,
+    choices: ReturnType<typeof registerChoices>,
+  ) {
+    const current = refName(this.params()[spec.name]);
+    const options = pickerOptions(choices, current);
+    return html`<div class="control">
+      <select
+        id=${id}
+        aria-invalid=${invalidAttr}
+        aria-describedby=${describedBy}
+        @change=${(e: Event) =>
+          this.write(spec.name, { ref: (e.target as HTMLSelectElement).value })}
+      >
+        ${options.map(
+          (o) =>
+            html`<option value=${o.name} ?selected=${o.name === current}>
+              ${o.name}${o.secret ? " (key)" : ""}${o.inScope ? "" : " (not available here)"}
+            </option>`,
+        )}
+      </select>
     </div>`;
   }
 

@@ -17,10 +17,25 @@
 // target), UI.md section 3.3. It works across shadow roots, needs no HTML5 DnD (which has no touch
 // support and poor keyboard story), and never moves the real element: a ghost label follows the
 // pointer. Keyboard users do not use this module; each pane offers its own keyboard route.
-import type { StepPath } from "./recipe-ops.js";
+import type { Recipe } from "@forge/recipe";
+import { canPlace, getStep, isWithin } from "./recipe-ops.js";
+import type { ListPath, StepPath } from "./recipe-ops.js";
 
 export type DragPayload =
   { readonly type: "op"; readonly op: string } | { readonly type: "step"; readonly path: StepPath };
+
+/**
+ * Whether a drag payload may be dropped into a list of the recipe. An operation goes anywhere. A step
+ * may not go into itself or below itself, and a `return` (or a block holding one) may only go to the
+ * root list or an `if` branch reached through `if` branches (RECIPES-1.1.md section 3.2). Pointer drops
+ * offer a lane only when this is true; the keyboard route uses the same rule (`canPlace`).
+ */
+export function canDropOn(recipe: Recipe, payload: DragPayload, listPath: ListPath): boolean {
+  if (payload.type === "op") return true;
+  if (isWithin(listPath, payload.path)) return false;
+  const step = getStep(recipe, payload.path);
+  return step === undefined ? false : canPlace(step, listPath);
+}
 
 export interface PointerPosition {
   readonly x: number;

@@ -56,6 +56,7 @@ const FIELDS = new Set([
   "note",
   "text",
   "params",
+  "name",
 ]);
 
 /** Own issues not shown by a field or the parameter form: unknown-op, hash-mismatch, alias-used, ... */

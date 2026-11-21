@@ -13,19 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { REGISTER_NAME_RE, validateRecipe } from "@forge/recipe";
 import type { Recipe, Step } from "@forge/recipe";
 import { describe, expect, it } from "vitest";
 import {
+  canPlace,
   childLists,
+  containsReturn,
   countSteps,
   duplicateStep,
   getStep,
   insertStep,
+  listAllowsReturn,
   moveStep,
   patchStep,
   removeStep,
   setParam,
   splitStepPath,
+  uniqueRegisterName,
 } from "./recipe-ops.js";
 
 const op = (name: string): Step => ({ kind: "op", op: name });
@@ -155,5 +160,114 @@ describe("recipe-ops", () => {
   it("does not follow prototype keys", () => {
     expect(() => patchStep(base, "/steps/__proto__", { x: 1 })).toThrow(RangeError);
     expect(getStep(base, "/steps/0/__proto__")).toBeUndefined();
+  });
+});
+
+describe("returns and registers", () => {
+  const ret: Step = { kind: "return" };
+  const reg = (name: string, steps: Step[] = []): Step => ({ kind: "register", name, steps });
+  const fork = (steps: Step[]): Step => ({
+    kind: "fork",
+    split: { value: "\n", enc: "utf8" },
+    join: { value: "\n", enc: "utf8" },
+    steps,
+  });
+  const iff = (then: Step[], other?: Step[]): Step => ({
+    kind: "if",
+    test: { kind: "regex", pattern: "x" },
+    then,
+    ...(other === undefined ? {} : { else: other }),
+  });
+
+  it("allows a return in the root list and in if branches at any depth, and nowhere else", () => {
+    for (const ok of [
+      "/steps",
+      "/steps/1/then",
+      "/steps/1/else",
+      "/steps/2/then/0/else",
+      "/steps/0/then/3/then/1/else",
+    ]) {
+      expect(listAllowsReturn(ok), ok).toBe(true);
+    }
+    for (const bad of [
+      "/steps/1/steps",
+      "/steps/1/then/0/steps",
+      "/steps/0/steps/2/then",
+      "/steps/1/steps/0/else",
+      "/steps/1",
+      "/other",
+    ]) {
+      expect(listAllowsReturn(bad), bad).toBe(false);
+    }
+  });
+
+  it("knows which blocks hold a return", () => {
+    expect(containsReturn(ret)).toBe(true);
+    expect(containsReturn(iff([op("a:a"), ret]))).toBe(true);
+    expect(containsReturn(fork([iff([ret])]))).toBe(true);
+    expect(containsReturn(iff([op("a:a")], [reg("x")]))).toBe(false);
+  });
+
+  it("canPlace refuses a return, or a block holding one, outside the valid lists", () => {
+    expect(canPlace(ret, "/steps")).toBe(true);
+    expect(canPlace(ret, "/steps/1/then")).toBe(true);
+    expect(canPlace(ret, "/steps/1/steps")).toBe(false);
+    expect(canPlace(iff([ret]), "/steps/0/steps")).toBe(false);
+    expect(canPlace(op("a:a"), "/steps/0/steps")).toBe(true);
+    expect(canPlace(reg("x"), "/steps/0/steps")).toBe(true);
+  });
+
+  it("moveStep leaves the recipe unchanged when a return would land in a fork, a register or a repeat", () => {
+    const r: Recipe = {
+      forge: 1,
+      steps: [ret, fork([]), reg("x"), { kind: "repeat", times: 2, steps: [] }, iff([])],
+    };
+    expect(moveStep(r, "/steps/0", "/steps/1/steps", 0)).toBe(r);
+    expect(moveStep(r, "/steps/0", "/steps/2/steps", 0)).toBe(r);
+    expect(moveStep(r, "/steps/0", "/steps/3/steps", 0)).toBe(r);
+    const ok = moveStep(r, "/steps/0", "/steps/4/then", 0);
+    expect(ok).not.toBe(r);
+    expect(getStep(ok, "/steps/3/then/0")?.kind).toBe("return");
+  });
+
+  it("moveStep also refuses an if that holds a return, but moves a register anywhere", () => {
+    const r: Recipe = { forge: 1, steps: [iff([ret]), fork([]), reg("x")] };
+    expect(moveStep(r, "/steps/0", "/steps/1/steps", 0)).toBe(r);
+    const m = moveStep(r, "/steps/2", "/steps/1/steps", 0);
+    expect(getStep(m, "/steps/1/steps/0")?.kind).toBe("register");
+  });
+
+  it("childLists gives a register its steps", () => {
+    const step = reg("x", [op("a:a")]);
+    expect(childLists(step, "/steps/0").map((l) => l.path)).toEqual(["/steps/0/steps"]);
+    expect(childLists(ret, "/steps/0")).toEqual([]);
+  });
+
+  it("generates unique register names: value, value-2, ...", () => {
+    expect(uniqueRegisterName({ forge: 1, steps: [] })).toBe("value");
+    const one: Recipe = { forge: 1, steps: [reg("value")] };
+    expect(uniqueRegisterName(one)).toBe("value-2");
+    const nested: Recipe = {
+      forge: 1,
+      steps: [reg("value"), fork([reg("value-2", [reg("value-3")])])],
+    };
+    expect(uniqueRegisterName(nested)).toBe("value-4");
+    expect(uniqueRegisterName(nested, "iv")).toBe("iv");
+  });
+
+  it("keeps generated names within 32 characters and valid", () => {
+    const long = "a".repeat(32);
+    const name = uniqueRegisterName({ forge: 1, steps: [reg(long)] }, long);
+    expect(name).toHaveLength(32);
+    expect(name.endsWith("-2")).toBe(true);
+    expect(REGISTER_NAME_RE.test(name)).toBe(true);
+  });
+
+  it("duplicating a register gives the copy a free name", () => {
+    const r: Recipe = { forge: 1, steps: [reg("iv", [op("a:a")])] };
+    const d = duplicateStep(r, "/steps/0");
+    expect((getStep(d, "/steps/1") as { name: string }).name).toBe("iv-2");
+    expect((getStep(d, "/steps/0") as { name: string }).name).toBe("iv");
+    expect(validateRecipe(d).issues.filter((i) => i.code === "duplicate-register")).toEqual([]);
   });
 });

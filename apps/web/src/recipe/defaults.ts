@@ -14,21 +14,36 @@
  * limitations under the License.
  */
 // Valid default container steps for the "Add block" menu (RECIPES section 3).
-import type { Step } from "@forge/recipe";
+import type { Recipe, Step } from "@forge/recipe";
+import { uniqueRegisterName } from "../state/recipe-ops.js";
 
-export type BlockKind = "fork" | "subsection" | "if" | "repeat" | "comment";
+export type BlockKind = "fork" | "subsection" | "if" | "repeat" | "register" | "return" | "comment";
 
-export const BLOCK_KINDS: readonly BlockKind[] = ["fork", "subsection", "if", "repeat", "comment"];
+export const BLOCK_KINDS: readonly BlockKind[] = [
+  "fork",
+  "subsection",
+  "if",
+  "repeat",
+  "register",
+  "return",
+  "comment",
+];
 
 export const BLOCK_LABELS: Readonly<Record<BlockKind, string>> = {
   fork: "Fork (split, run, join)",
   subsection: "Subsection (regex matches)",
   if: "If (then / else)",
   repeat: "Repeat",
+  register: "Register (remember a value)",
+  return: "Return (stop and output)",
   comment: "Comment",
 };
 
-export function defaultBlock(kind: BlockKind): Step {
+/**
+ * The step "Add block" creates. A register gets the next free name ("value", "value-2", ...), which needs
+ * the recipe it is added to (RECIPES-1.1.md section 4.12); without one it is "value".
+ */
+export function defaultBlock(kind: BlockKind, recipe?: Recipe): Step {
   switch (kind) {
     case "fork":
       return {
@@ -43,6 +58,14 @@ export function defaultBlock(kind: BlockKind): Step {
       return { kind: "if", test: { kind: "regex", pattern: "." }, then: [] };
     case "repeat":
       return { kind: "repeat", times: 2, steps: [] };
+    case "register":
+      return {
+        kind: "register",
+        name: recipe === undefined ? "value" : uniqueRegisterName(recipe),
+        steps: [],
+      };
+    case "return":
+      return { kind: "return" };
     case "comment":
       return { kind: "comment", text: "Comment" };
   }
