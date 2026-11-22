@@ -322,6 +322,8 @@ Nothing executes until a terminal. Then the whole tree goes parse-free, straight
 - **Generated steps.** Operator steps are generated, not hand-written. One operator table (name, glyph, keyword, arity, parameter shapes, doc key) generates the `.fth` wrappers and metadata. Proposal to Relix: publish this as a `relix.operators` catalog relation, and expose parameter names in `relix.functions`, so Relix is the single source. That is post-1.0 unless the owner pulls it into 1.0 (Q1).
 - **Help text** comes from the Relix reference pages (the `relix-docs` artifact), not rewritten.
 
+The lane and slot design for binary operators (the pipe rule, swap sides, the Tree view, recipe JSON for slots) is in [RELIX-LANES.md](RELIX-LANES.md).
+
 ### 8.3 The engine (face c): spike R0 first
 
 **Candidates.**
@@ -767,3 +769,4 @@ T5 and T6 depend on Gate T3 only, not on T4, so they can run in parallel with th
 - **RECIPES.md.** A v2 is written in WP SP2. The §2.2 internal-vocabulary drift (two named, six in `INTERNAL_VOCABS`) is fixed there.
 - **UI.md.** Amended in WP SP3 (rules 6 and 8, the CSP, viewers and pack rules).
 - **New documents.** PACKS.md (SP4) and RELIX.md (SP6).
+- **RELIX-LANES.md.** Design proposal for binary Relix operators in the recipe pane (lanes, slots, Tree view, recipe JSON for slots). It elaborates §8.2 and refines WP R6.
