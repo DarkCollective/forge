@@ -1,8 +1,8 @@
 # The Relix pack: specification (pack, value mapping, operator table)
 
-Status: draft v1 (2026-11-23). A proposal for the owner to approve at Gate T1, not normative. It builds on [TOOLKIT.md](TOOLKIT.md) (§1 goals, §2.6 Relix facts, §3 decisions T1 to T22, §4 to §8, §12 one implementation per capability, §13 work packages, §14 open questions), the Gate T0 results [r0-relix-in-browser.md](research/r0-relix-in-browser.md) and [x0-ext-values.md](research/x0-ext-values.md), [RELIX-LANES.md](RELIX-LANES.md) (binary operators in the recipe pane), [RECIPES.md](RECIPES.md) (§2 catalogue, §8 bake limits and cancellation, §9 op vectors) and [LANGUAGE.md](LANGUAGE.md) (`META:`, parameter types, errors). Relix facts come from the `relix-core` source tree at commit `1758be6` (1.0.0-rc13), read-only, and from the R0 spike code in `DarkCollective/relix-web`. This is work package SP6 of TOOLKIT §13.3.
+Status: draft v1, **approved at Gate T1 on 2026-11-23**. The owner accepted every recommended answer in §14 (RQ1 to RQ8 and TOOLKIT Q1, Q2, Q3, Q5, Q6 and Q11), so the pack is specified as written here. Implementation is by the work packages of §15. The recipe-format details are normative in [RECIPES-1.2.md](RECIPES-1.2.md), and the editor design is in [RELIX-LANES.md](RELIX-LANES.md). It builds on [TOOLKIT.md](TOOLKIT.md) (§1 goals, §2.6 Relix facts, §3 decisions T1 to T22, §4 to §8, §12 one implementation per capability, §13 work packages, §14 open questions), the Gate T0 results [r0-relix-in-browser.md](research/r0-relix-in-browser.md) and [x0-ext-values.md](research/x0-ext-values.md), [RELIX-LANES.md](RELIX-LANES.md) (binary operators in the recipe pane), [RECIPES-1.2.md](RECIPES-1.2.md) (the recipe format v1.2: slots, named inputs, conversions), [RECIPES.md](RECIPES.md) (§2 catalogue, §8 bake limits and cancellation, §9 op vectors) and [LANGUAGE.md](LANGUAGE.md) (`META:`, parameter types, errors). Relix facts come from the `relix-core` source tree at commit `1758be6` (1.0.0-rc13), read-only, and from the R0 spike code in `DarkCollective/relix-web`. This is work package SP6 of TOOLKIT §13.3.
 
-> **Packages are frozen.** `packages/*` hold frozen Phase 1 to 2 contracts (CLAUDE.md). This document asks for changes to them (the `ext` tag, the worker protocol, the recipe format, the catalogue). None of those changes starts before the owner approves the version bump at Gate T1. Where a change belongs to another specification (SP1 to SP5), this document names it and does not define it. In particular, **the recipe JSON for slots is SP2's** (`docs/RECIPES-1.2.md` or `RECIPES-2.0.md`), and this document does not define it.
+> **Packages are frozen.** `packages/*` hold frozen Phase 1 to 2 contracts (CLAUDE.md). This document asks for changes to them (the `ext` tag, the worker protocol, the recipe format, the catalogue). The owner approved the version bump at Gate T1 (2026-11-23), so those changes may now start, by their work packages. Where a change belongs to another specification (SP1 to SP5), this document names it and does not define it. In particular, **the recipe JSON for slots is SP2's** (`docs/RECIPES-1.2.md`, v1.2 with `"forge": 1`), and this document does not define it.
 
 > **Estimates are marked.** Every figure that comes from a file is cited. A figure that is a proposal or an estimate says so. Work package sizes are relative (S, M, L). There are no calendar dates in the work package plan.
 
@@ -40,6 +40,8 @@ The `relix` pack is a first-party Forge pack (TOOLKIT §5, T7). It adds:
 - the Relix engine, compiled to JavaScript and loaded lazily in the bake Worker;
 - the `fl` function library, which lets Relix queries call Forge ops (§6);
 - viewers and parameter helpers for its kinds.
+
+The core op `input:tab` (§3.2.1) reads a tab as bytes. It is **not** part of the pack, so it works when the pack is off.
 
 It has three faces of one thing (TOOLKIT §8): value-level words (this document, §3), recipe steps and nested lanes (RELIX-LANES and SP2), and the engine (§1.3).
 
@@ -140,7 +142,7 @@ A `relix-expr` holds the text of one clause of an operator: a condition, a proje
 |---|---|
 | Payload | `{ text }`. The text is one clause, with no statement separator. |
 | Shapes | The kind has no shape in its payload. The **shape** (condition, projection list, sort keys, ...) comes from the operator table: each parameter of each operator names its shape (§4.2). The helper looks it up by `(op, param)`. This needs no change to `ParamSpec`. |
-| Recipe JSON, FL text, share URL | A string. The recipe validator accepts a string of at most 4,096 characters (X0 §6.1); SP2 owns the limit. |
+| Recipe JSON, FL text, share URL | A string. The recipe validator accepts a string of at most 4,096 code points (X0 §6.1; RECIPES-1.2 §3.2, `maxExtChars`). |
 | `fromText` (VM coercion `str` to `ext`) | Tier 1 only: not empty, at most the length limit, no NUL, quotes and brackets balanced. It is a small dependency-free module. It does **not** parse Relix. |
 | Engine syntax check | Tier 2: when the node is built and the engine is loaded, the pack parses the clause with the engine's own parser (§2.3.1). A bad clause is `E_COERCE` at the building step, with the line and column inside the text (§7.1). |
 | Semantic check | Unknown columns, wrong types and unknown functions need a schema. They are found by `relix:schema` or at run time and are attributed to the step and parameter (§7.3). |
@@ -167,7 +169,7 @@ Why two tiers. T20 asks that a kind's parser be one dependency-free module share
 | `relix-expr` | `str` | `toText` | printing, copy | none |
 | `relation` | `bytes`, `str`-taking ops | none | | `E_TYPE`; the type badge is red (RELIX-LANES §6) |
 
-**Where the implicit steps come from.** The implicit lift and the implicit run are **inserted by the recipe compiler**, not by a VM coercion. The compiler knows each op's input and output kind from the catalogue (`inputKind`, `outputKind`; X0 R5) and writes `relix:from` or `relix:run` between two steps. The inserted word is marked `implicit` in the step map, so the trace shows `relation -> table` (TOOLKIT §8.1). The reason: a VM coercion is synchronous, and a run may await an FL batch (§6.5). The bake also appends `relix:run` when the last step's output is a `relation`, so the output pane shows a table. In hand-written FL, a `relation` reaching a `table` slot is `E_TYPE` with a hint to write `relix:run`. This refines TOOLKIT §8.1, which says a relation "that reaches a non-Relix op" is run implicitly. Only an op that takes a `table` triggers it. An op that takes `bytes` or `str` does not, because a table has no byte form without an explicit `table:>csv` (decision RX5).
+**Where the implicit steps come from.** The implicit lift and the implicit run are **inserted by the recipe compiler**, not by a VM coercion. The compiler knows each op's input and output kind from the catalogue (`inputKind`, `outputKind`; X0 R5) and writes `relix:from` or `relix:run` between two steps. The inserted word is marked `implicit` in the step map, so the trace shows `relation -> table` (TOOLKIT §8.1). The reason: a VM coercion is synchronous, and a run may await an FL batch (§6.5). The bake also appends `relix:run` when the last step's output is a `relation`, so the output pane shows a table. In hand-written FL, a `relation` reaching a `table` slot is `E_TYPE` with a hint to write `relix:run`. RECIPES-1.2 §6.9 gives the mechanism. The pack declares the two conversions in its manifest (`table` to `relation` with `relix:from`; `relation` to `table` with `relix:run`, also applied to the value a recipe ends with), the catalogue carries them as `conversions`, and the compiler writes the words with the annotation `@implicit`. Both words have a default for every parameter (`relix:from` name `""`, `relix:run` limit `0`), because the compiler writes them. This refines TOOLKIT §8.1, which says a relation "that reaches a non-Relix op" is run implicitly. Only an op that takes a `table` triggers it. An op that takes `bytes` or `str` does not, because a table has no byte form without an explicit `table:>csv` (decision RX5).
 
 ### 2.5 Size and limit accounting (X0 R8)
 
@@ -185,7 +187,7 @@ The engine's own memory (the TeaVM heap that holds `BigDecimal` rows while a que
 
 ## 3. The `relix:` vocabulary
 
-One vocabulary, `relix`, so the qualified names are `relix:select`, `relix:from` and so on. (The recipe examples in RELIX-LANES already use `relix:input`, `relix:select` and `relix:join`.) The operator words are generated from the operator table (§4). The sources and terminals are hand-written FL over a small set of TypeScript primitives (`prims/relix.ts`).
+One vocabulary, `relix`, so the qualified names are `relix:select`, `relix:from` and so on. (The recipe examples in RELIX-LANES already use `relix:input`, `relix:select` and `relix:theta-join`.) The operator words are generated from the operator table (§4). The sources and terminals are hand-written FL over a small set of TypeScript primitives (`prims/relix.ts`).
 
 ### 3.1 Conventions
 
@@ -196,19 +198,38 @@ One vocabulary, `relix`, so the qualified names are `relix:select`, `relix:from`
 
 ### 3.2 Sources
 
-A source starts a lane. It reads nothing from above.
+A source starts a lane. It reads nothing from above. The "Stack effect" column shows what the word leaves. The real header of every source starts with the data input `any`, which the source ignores, because a catalogue op needs at least one input (RECIPES-1.2 §7.1). For example, `relix:input` is `( any tab:str format:choice{csv|tsv|json|ndjson}=csv header:bool=true -- ext{relation} )`. The same holds for `relix:inline`, `relix:generate`, `relix:unit`, `relix:empty`, `relix:recur` and `input:tab`.
 
 | Word | Stack effect | Parameters | Notes |
 |---|---|---|---|
-| `relix:input` | `( -- relation )` | `tab:str` (required, the name of an input tab, X5); `format:choice{csv\|tsv\|json\|ndjson}=csv`; `header:toggle=true` | Reads the named tab, parses it with the **core** table parsers (D1; there is no second parser, TOOLKIT §12), and lifts the result to a leaf named after the tab. See RQ1 for how this differs from RELIX-LANES §9.1. |
+| `relix:input` | `( -- relation )` | `tab:str` (required, the name of an input tab, X5); `format:choice{csv\|tsv\|json\|ndjson}=csv`; `header:bool=true` | Reads the named tab, **parses it itself** with the **core** table parsers selected by `format` (D1; there is no second parser, TOOLKIT §12), and lifts the result to a leaf named after the tab. Decided in RQ1. A Parse CSV step after it is wrong, because its input is a relation. A tab that needs byte steps first (Base64, decompression, another charset) starts with the core op `input:tab` (§3.2.1), then the byte steps, then Parse CSV. |
 | `relix:from` | `( table name:str="" -- relation )` | `name`: the Relix name of the table. Empty means a generated name. | The explicit lift (§2.4). The name is written as a delimited identifier when it is not a plain identifier or is a reserved word (`Lexer.reservedWords()`). Two different tables with the same name in one relation is an error (§7.4). |
 | `relix:inline` | `( -- relation )` | `table:expr` (shape `inline-table`) | An inline table in the Relix syntax (`ScriptParser`, `InlineTable`, `CsvInlineTable`, `MarkdownInlineTable`). Used for fixtures and for import (§9). Limited by the parameter text limit. |
 | `relix:generate` | `( -- relation )` | `generator:choice{Range\|Naturals\|Primes}`; `lo:int`, `hi:int`, `step:int=1` (for `Range`) | The built-in generators (`source ... from generator`; reference `language/generator-source.md`). `Naturals` and `Primes` never end, so the engine refuses a blocking operator over them unless a bound sits above (§7.4). |
 | `relix:unit` | `( -- relation )` | none | The nullary relation with one empty tuple (`UNIT`, alias `DEE`; `TruthRelationNode`). |
 | `relix:empty` | `( -- relation )` | none | The nullary relation with no tuple (`EMPTY`, alias `DUM`; `TruthRelationNode`). |
-| `relix:recur` | `( -- relation )` | `name:str` | The accumulator of the enclosing `FIX` or `ITERATE` (`RecursiveRefNode`). Valid only inside a `step` slot of §3.5; elsewhere `E_PARAM_INVALID` at build time. |
+| `relix:recur` | `( -- relation )` | `name:str` | The accumulator of the enclosing `FIX` or `ITERATE` (`RecursiveRefNode`). Valid only inside a `step` slot of §3.5. The recipe validator reports it elsewhere as `bad-position` (RECIPES-1.2 §5.2). Hand-written FL that does it gets `E_PARAM_INVALID` at build time. A `name` that matches no enclosing `fix` or `iterate` is `E_PARAM_INVALID` too (§7.4). |
 
-A source used in a slot lane is the first step of that lane (RELIX-LANES §2.1, Q5). A saved relation (a recipe promoted to a word, PLAN §3.6) is also a source: a user word with the effect `( -- relation )`. It prints as a view or inline (§9.1).
+A source used in a slot lane normally is the first step of that lane (RELIX-LANES §2.1). A lane may also start with byte steps, and a lane that needs them starts with `input:tab` (RECIPES-1.2 §4.3). A saved relation (a recipe promoted to a word, PLAN §3.6) is also a source: a user word with the effect `( -- relation )`. It prints as a view or inline (§9.1).
+
+### 3.2.1 `input:tab`, the bytes source (core)
+
+`input:tab` is the **core** source that reads an input tab as raw bytes. It exists so that a recipe can run byte steps (Base64, decompression, a charset change) on a tab before it is parsed. Decision RQ1 fixed the name. It is consistent in this document, in RECIPES-1.2 and in RELIX-LANES.
+
+| Aspect | Specification |
+|---|---|
+| Word | `input:tab` |
+| Effect | `( any tab:str -- bytes )`. Written `( -- bytes )` in the style of §3.2: the data input `any` is ignored. |
+| Parameters | `tab:str` (required): the name of an input tab. It is matched against the bake's named inputs exactly (case-sensitive, no trimming, no Unicode normalisation; RECIPES-1.2 §7.1). |
+| Result | The raw bytes of the tab as the page holds them. No decoding, no byte-order-mark handling and no line-ending change. |
+| Vocabulary | `input`, a **core** vocabulary (`packages/ops/vocab/input.fth`, with the primitive in `packages/ops/src/prims/input.ts`). It is not in the `relix` pack and works with no pack enabled. |
+| Category | `Input` |
+| Errors | `E_PARAM_INVALID` (`param: "tab"`, `reason: "no-such-input"`, `detail.tabs` the names available) for a name the bake does not have (RECIPES-1.2 §7.4). |
+| Reader | The bake's named inputs, through the input host (RECIPES-1.2 §7.2 and §7.3; X5). |
+| Hard kill | None. |
+| Relation to `relix:input` | `relix:input` is FL over it: `input:tab`, then the core parser that `format` names, then `relix:from` with the tab name. There is one reader of tabs. |
+
+A recipe that starts from a Base64 CSV tab is `input:tab`, `base64:decode`, `csv:parse`, and then the first Relix step. The compiler lifts the table to a relation there (§2.4). A recipe that starts from a plain CSV tab is `relix:input` alone.
 
 ### 3.3 Unary operators
 
@@ -216,11 +237,11 @@ A source used in a slot lane is the first step of that lane (RELIX-LANES §2.1, 
 
 ### 3.4 Binary operators
 
-`( left:relation right:relation params... -- relation )`. One word per row of the binary table in §4.5. `left` and `right` are the two **slots** of the step (RELIX-LANES §2.1). In a recipe the step's data from above feeds one slot (`pipe`) and the other slot holds a lane. **The recipe JSON for this (`pipe`, `left`, `right`) is SP2's, and so is how the catalogue marks a parameter as a slot and how the compiler orders the two relations on the stack.** The word itself always takes `left` below `right`.
+`( left:relation right:relation params... -- relation )`. One word per row of the binary table in §4.5. `left` and `right` are the two **slots** of the step (RELIX-LANES §2.1). In a recipe the step's data from above feeds one slot (`pipe`) and the other slot holds a lane. **The recipe JSON for this (`pipe`, `left`, `right`) is RECIPES-1.2 §4.** That file also says how the catalogue marks the slot parameter (`slot: "right"`, §4.5, derived from this header) and how the compiler orders the two relations on the stack (§6.1). The word itself always takes `left` below `right`.
 
 ### 3.5 Base-and-step operators
 
-`FIX` and `ITERATE` take a base and a step that reads its own result. `( base:relation step:relation params... -- relation )`. In a recipe these are steps with two slots named `base` and `step`. The `step` lane starts with `relix:recur name`. SP2 defines the slot names and whether the data from above may feed `base` (recommended: yes, as `pipe: "base"`; the `step` lane is always explicit). See RQ5.
+`FIX` and `ITERATE` take a base and a step that reads its own result. `( base:relation step:relation params... -- relation )`. **Decided (RQ5):** in a recipe these are steps with two slots named `base` and `step`. The data from above may feed `base` only, as `"pipe": "base"`. The `step` lane is always explicit and starts with `relix:recur name`, which reads the accumulator. `"pipe": "step"` does not exist. The catalogue marks the slot parameter `step` (`slot: "step"`), and the data input is `base`. RECIPES-1.2 §4 and its Q5 specify the JSON, the validator rules and the compiled form.
 
 ### 3.6 Terminals
 
@@ -228,9 +249,9 @@ A terminal turns a `relation` into something else. Terminals are the only words 
 
 | Word | Stack effect | Parameters | Result and notes |
 |---|---|---|---|
-| `relix:run` | `( relation -- table )` | `limit:int` (optional; at most the pack row limit, §8) | Executes the query (parse, analyse, optimise, plan, execute; FL batch loop §6.5). Result columns are typed as in §5.3. The trace records the step and, when implicit, `relation -> table`. |
-| `relix:explain` | `( relation -- str )` | `format:choice{text\|json}=text`; `asWritten:toggle=false` | The physical plan with row estimates (`Relation.explain`, `explainJson`; `PhysicalPlanPrinter`, `PhysicalPlanJson`). By default it plans the rewritten tree, which is what runs. Reads no data. |
-| `relix:optimized` | `( relation -- str )` | `rewrites:toggle=false` | The rewritten logical tree as Relix text (`Relation.optimized().render()`). With `rewrites`, a second section lists the rules that fired (`TransformationRecord`). |
+| `relix:run` | `( relation -- table )` | `limit:int[0..]=0` (`0` means the pack row limit, §8; a larger value is cut to it) | Executes the query (parse, analyse, optimise, plan, execute; FL batch loop §6.5). Result columns are typed as in §5.3. The trace records the step and, when implicit, `relation -> table`. |
+| `relix:explain` | `( relation -- str )` | `format:choice{text\|json}=text`; `asWritten:bool=false` | The physical plan with row estimates (`Relation.explain`, `explainJson`; `PhysicalPlanPrinter`, `PhysicalPlanJson`). By default it plans the rewritten tree, which is what runs. Reads no data. |
+| `relix:optimized` | `( relation -- str )` | `rewrites:bool=false` | The rewritten logical tree as Relix text (`Relation.optimized().render()`). With `rewrites`, a second section lists the rules that fired (`TransformationRecord`). |
 | `relix:schema` | `( relation -- table )` | none | One row per output column: `name`, `type`, `ordinal` (the shape of `relix.schema`). Needs analysis only, no data. |
 | `relix:>text` | `( relation -- str )` | `spelling:choice{keywords\|glyphs}=keywords` | The Relix text that would run, normalised through the engine's printer (§9.1). |
 | `relix:parse` | `( text:str -- relation )` | none | Parses a Relix expression. Free relation names become `tab` leaves, bound to input tabs at run (X5); an unbound name is an error at schema or run time (§7.4). A script (statements) is not accepted; use import (§9.2). |
@@ -252,7 +273,7 @@ The table has **52 rows**: 29 unary, 2 base-and-step and 21 binary. It is built 
 - **Word** is the name in the `relix` vocabulary: `relix:<word>`.
 - **Glyph** and **keyword**: the glyph and the ASCII spelling the printer writes (`Spelling.GLYPHS`, `Spelling.KEYWORDS`). A dash means the operator has no glyph (`Lexer` has no glyph case for it). Accepted aliases are listed in the notes.
 - **AST class** is the `relix-ast` record that the parser builds.
-- **Parameters** use `name:type`. A `?` after the name means optional. `expr(shape)` is `ext{relix-expr}` with the named shape (§4.2). Other types are FL parameter types (`int`, `num`, `str`, `toggle`, `choice{...}`).
+- **Parameters** use `name:type`. A `?` after the name means optional. `expr(shape)` is `ext{relix-expr}` with the named shape (§4.2). Other types are FL parameter types (`int`, `num`, `str`, `bool`, `choice{...}`).
 - **Sides** (binary rows): `symmetric` means swapping the two relations gives the same rows; `ordered` means it does not; `mirror` names the operator that swapping turns it into.
 - **Browser**: `yes`, `yes (seed)`, `partial`, `no` (§4.6).
 - **Doc key** is the page under `docs/reference` in `relix-core`, and the key for help text (§10).
@@ -289,23 +310,23 @@ All have the stack effect `( relation params... -- relation )`. Category in brac
 | 3 | `rename` [columns] | ρ | `RENAME` | `RenameNode` | `spec:expr(rename)` | yes | `operators/rename.md` |
 | 4 | `group` [groups] | γ | `GROUP` (`GROUP BY`) | `AggregationNode` | `spec:expr(group)` | yes | `operators/group.md` |
 | 5 | `sort` [rows] | τ | `SORT` (`ORDER`, `ORDER BY`) | `SortNode` | `keys:expr(sort)` | yes | `operators/sort.md` |
-| 6 | `limit` [rows] | λ | `LIMIT` | `LimitNode` | `count:int[0..]`; `offset:int[0..]=0`; `ties:toggle=false` | yes | `operators/limit.md` |
+| 6 | `limit` [rows] | λ | `LIMIT` | `LimitNode` | `count:int[0..]`; `offset:int[0..]=0`; `ties:bool=false` | yes | `operators/limit.md` |
 | 7 | `distinct` [rows] | δ | `DISTINCT` | `DistinctNode` | none | yes | `operators/distinct.md` |
 | 8 | `unnest` [columns] | μ | `UNNEST` | `UnnestNode` | `column:str`; `ordinality:str=""` | yes | `operators/unnest.md` |
 | 9 | `why` [results] | ω | `WHY` | `WhyNode` | none | yes | `operators/why.md` |
 | 10 | `forall` [groups] | ∀ | `FORALL` | `UniversalNode` | `keys:expr(cols)` (may be empty); `cond:expr(cond)` | yes | `operators/forall.md` |
-| 11 | `closure` [graphs] | ⁺ (postfix) | `CLOSURE`, `RCLOSURE` | `ClosureNode` | `from:str`; `to:str`; `reflexive:toggle=false`; `undirected:toggle=false` | yes | `advanced/closure.md` |
+| 11 | `closure` [graphs] | ⁺ (postfix) | `CLOSURE`, `RCLOSURE` | `ClosureNode` | `from:str`; `to:str`; `reflexive:bool=false`; `undirected:bool=false` | yes | `advanced/closure.md` |
 | 12 | `cluster` [graphs] | none | `CLUSTER` | `ClusterNode` | `from:str`; `to:str`; `label:str` | yes | `advanced/cluster.md` |
-| 13 | `path` [graphs] | none | `PATH` | `PathNode` | `from:str`; `to:str`; `undirected:toggle=false`; `minHops:int[0..]=1`; `maxHops:int[1..]`; `depth:str` | yes | `advanced/path.md` |
-| 14 | `trace` [graphs] | none | `TRACE` | `TraceNode` | `from:str`; `to:str`; `undirected:toggle=false`; `weight:str`; `sense:choice{minimize\|maximize}`; `path:str` | yes | `advanced/trace.md` |
+| 13 | `path` [graphs] | none | `PATH` | `PathNode` | `from:str`; `to:str`; `undirected:bool=false`; `minHops:int[0..]=1`; `maxHops:int[1..]`; `depth:str` | yes | `advanced/path.md` |
+| 14 | `trace` [graphs] | none | `TRACE` | `TraceNode` | `from:str`; `to:str`; `undirected:bool=false`; `weight:str`; `sense:choice{minimize\|maximize}`; `path:str` | yes | `advanced/trace.md` |
 | 15 | `sample` [sampling] | none | `SAMPLE p` | `SampleNode` | `probability:num[0..1]`; `seed:int` (optional) | yes (seed) | `advanced/sample-bernoulli.md` |
 | 16 | `sample-rows` [sampling] | none | `SAMPLE n ROWS` | `ReservoirSampleNode` | `count:int[0..]`; `seed:int` (optional) | yes (seed) | `advanced/sample-reservoir.md` |
 | 17 | `shuffle` [sampling] | none | `SHUFFLE` | `ShuffleNode` | `seed:int` (optional) | yes (seed) | `operators/shuffle.md` |
 | 18 | `roll` [sampling] | none | `ROLL` | `RollNode` | `weight:expr(operand)` (optional, the `BY` clause); `seed:int` (optional) | yes (seed) | `operators/roll.md` |
 | 19 | `solve` [solving] | none | `SOLVE` | `SolveNode` | `equations:expr(equations)`; `per:expr(cols)` (optional); `within:num` (optional); `maxRounds:int` (optional); `start:expr(starts)` (optional) | yes | `advanced/solve.md` |
 | 20 | `optimize` [solving] | none | `OPTIMIZE` | `OptimizeNode` | `spec:expr(optimize)` | **no** | `advanced/optimize.md` |
-| 21 | `top` [groups] | none | `TOP` | `TopKNode` | `count:int[0..]`; `offset:int[0..]=0`; `ties:toggle=false`; `keys:expr(sort)`; `per:expr(cols)` (optional) | yes | `advanced/top.md` |
-| 22 | `cover` [sampling] | none | `COVER` | `CoverNode` | `strength:int[1..]`; `exact:toggle=false` | partial | `advanced/cover.md` |
+| 21 | `top` [groups] | none | `TOP` | `TopKNode` | `count:int[0..]`; `offset:int[0..]=0`; `ties:bool=false`; `keys:expr(sort)`; `per:expr(cols)` (optional) | yes | `advanced/top.md` |
+| 22 | `cover` [sampling] | none | `COVER` | `CoverNode` | `strength:int[1..]`; `exact:bool=false` | partial | `advanced/cover.md` |
 | 23 | `downsample` [windows] | none | `DOWNSAMPLE` | `DownsampleNode` | `timestamp:str`; `interval:str`; `function:choice{avg\|sum\|min\|max\|count}`; `per:expr(cols)` (optional); `rows:int[1..]` (optional, `FOR n ROWS`) | yes | `advanced/downsample.md` |
 | 24 | `rolling` [windows] | none | `ROLLING` | `WindowNode` | `aggregate:expr(agg-call)`; `frame:expr(frame)`; `sort:expr(sort)`; `per:expr(cols)` (optional); `as:str` | yes | `operators/rolling.md` |
 | 25 | `window` [windows] | none | `WINDOW` | `WindowNode` | `function:expr(window-fn)`; `frame:expr(frame)` (optional); `sort:expr(sort)`; `per:expr(cols)` (optional); `as:str` | yes | `operators/window-offset.md`, `operators/window-ranking.md` |
@@ -357,9 +378,9 @@ Effect `( left:relation right:relation params... -- relation )`. Slots `left` an
 | 38 | `semi-join` [joins] | ⋉ | `SEMI` | `SemiJoinNode` | `on:expr(cond)` | ordered | yes | `joins/semi-join.md` |
 | 39 | `anti-join` [joins] | ▷ | `ANTI` | `AntiJoinNode` | `on:expr(cond)` | ordered | yes | `joins/anti-join.md` |
 | 40 | `universal-semi-join` [joins] | none | `USEMI` | `PairwiseUniversalNode` | `on:expr(cond)` | ordered | yes | `joins/universal-semi-join.md` |
-| 41 | `asof-join` [joins] | none | `ASOF` | `AsOfJoinNode` | `on:expr(cond)`; `inner:toggle=false`; `within:expr(operand)` (optional); `ties:choice{first\|last}=last` | ordered | yes | `joins/asof-join.md` |
+| 41 | `asof-join` [joins] | none | `ASOF` | `AsOfJoinNode` | `on:expr(cond)`; `inner:bool=false`; `within:expr(operand)` (optional); `ties:choice{first\|last}=last` | ordered | yes | `joins/asof-join.md` |
 | 42 | `interval-join` [joins] | none | `IJOIN` | `IntervalJoinNode` | `relation:choice{precedes\|preceded_by\|meets\|met_by\|overlaps\|overlapped_by\|starts\|started_by\|during\|contains\|finishes\|finished_by\|equals\|intersects}`; `leftStart:str`; `leftEnd:str`; `rightStart:str`; `rightEnd:str` | ordered | yes | `joins/interval-join.md` |
-| 43 | `lateral` [joins] | none | `LATERAL`, `OUTER LATERAL` | `LateralJoinNode` | `outer:toggle=false` | ordered | yes | `joins/lateral-join.md` |
+| 43 | `lateral` [joins] | none | `LATERAL`, `OUTER LATERAL` | `LateralJoinNode` | `outer:bool=false` | ordered | yes | `joins/lateral-join.md` |
 | 44 | `cross` [sets] | × | `CROSS` | `ProductNode` | none | symmetric | yes | `set-operations/cross.md` |
 | 45 | `union` [sets] | ∪ | `UNION` | `UnionNode` | none | symmetric | yes | `set-operations/union.md` |
 | 46 | `union-all` [sets] | ⊎ | `UALL` (`UNION ALL`) | `UnionAllNode` | none | symmetric | yes | `set-operations/union-all.md` |
@@ -379,7 +400,7 @@ Notes:
 - **42 `interval-join`**: the Allen relation names are the 13 in the reference plus `INTERSECTS` (the parser's error text lists 14). The four column names are positional, written `(lStart, lEnd, rStart, rEnd)`.
 - **43 `lateral`**: the parser accepts `left LATERAL fn(args)` and `left LATERAL ( relation )`. The word exposes only the relation form: the right slot is a lane. The function form needs a table-valued function from a script `def`, and a Forge-generated script has none (§6.7). `outer` writes `OUTER LATERAL`. The right lane may read columns of the left row.
 - **44 `cross`**: `CROSS` and `CROSS JOIN` (`isWord(operator, "CROSS") && isWord(current, "JOIN")`).
-- **Sides.** The `mirror` entries let the editor turn "swap sides" into the mirror operator where that keeps the rows (RELIX-LANES §3). Whether it does is SP2's and the lanes design's; this column only states the algebra. `symmetric` means the same rows; the column order of the result may differ.
+- **Sides.** The `mirror` entries let the editor turn "swap sides" into the mirror operator where that keeps the rows (RELIX-LANES §3). Whether it does is the lanes design's (RELIX-LANES §3); this column only states the algebra. `symmetric` means the same rows; the column order of the result may differ.
 
 ### 4.6 Browser availability
 
@@ -441,7 +462,7 @@ META: select
 
 ### 4.9 Where the table lives
 
-**Recommendation: in Forge, until Relix publishes it** (RX11).
+**Decision: in Forge, until Relix publishes it** (RX11).
 
 - The table is checked against the engine, so a stale table is caught by tests, not by users (§12.2): every concrete `RelNode` kind has a row or an entry in §4.7, every keyword is in `Lexer.reservedWords()`, and every row's reference "Syntax" example parses and prints.
 - `relix-web` contains an exhaustive pattern switch over the sealed `RelNode` hierarchy (the import helper, §9.2). A new node kind in a Relix release is then a compile error in `relix-web`, which is the earliest possible signal.
@@ -512,7 +533,7 @@ A result becomes a `table` by §5.1. The null mask comes from NULL cells. The re
 
 ### 5.5 `rat` when the symbolic pack is on (TOOLKIT Q5)
 
-**Recommendation: yes, narrowly** (RX9). A finite decimal is a rational, so the mapping is exact in one direction and partial in the other.
+**Decision: yes, narrowly** (RX9). A finite decimal is a rational, so the mapping is exact in one direction and partial in the other.
 
 - NUMBER to `rat` (unscaled value over 10^scale, reduced) happens **only where the FL slot is declared `ext{rat}`**. It is chosen by the declared type, never by the value. Without the symbolic pack nothing changes.
 - `rat` to NUMBER is exact when the reduced denominator has no prime factor other than 2 and 5. Otherwise `E_COERCE` with a hint to approximate first (the symbolic pack's `>num`).
@@ -522,7 +543,7 @@ Why: it gives the symbolic pack exact arithmetic on Relix decimals without a los
 
 ### 5.6 Bytes (TOOLKIT Q3)
 
-**Recommendation: a tagged struct, `{ bytes_hex: "<lowercase hex>" }`** (RX8). Not plain hex text.
+**Decision: a tagged struct, `{ bytes_hex: "<lowercase hex>" }`** (RX8). Not plain hex text.
 
 - **Inputs.** An FL `bytes` slot accepts a Relix STRING (FL's own `str` to `bytes` coercion, UTF-8) or the carrier struct (decoded from hex). So `fl.base64.encode('hello')` works on text.
 - **Outputs.** An FL op that returns `bytes` returns the carrier. `fl.hex.encode(fl.sha2.sha256(x))` composes: the digest travels as the carrier and `hex.encode` receives exact bytes.
@@ -595,7 +616,7 @@ Each exposed op becomes a `StrictScalarFunction` with:
 - category `fl`, so `relix.funcs("fl")` lists them;
 - doc key `fl/<vocab>/<word>`, answered by `FunctionLibrary.documentation` from the op's `doc` text (plain text, §10).
 
-Choice and toggle parameters are passed as STRING and BOOLEAN literals and checked by FL at the call (`E_PARAM_INVALID`).
+Choice parameters are passed as STRING literals and `bool` parameters as BOOLEAN literals, and FL checks them at the call (`E_PARAM_INVALID`). (A `toggle` parameter in FL is a bytes parameter with an encoding. The boolean type is `bool`, which is what the Relix flags of §4 use.)
 
 **Registration is lazy.** The session scans the printed script for `fl.` names and registers only those. A run does not build hundreds of signatures, and the engine's `relix.functions` shows only the ones in use. An `fl.*` name that is not an exposed op is the engine's "Unknown function" error, at its position (§7). The completion helper lists all exposed ops from the catalogue.
 
@@ -685,7 +706,7 @@ Relix gives the start of a construct only (`SourceLocation` is file, line, colum
 
 The pack writes the script itself, so it knows where every node and every parameter text sits. While printing (§9.1), the printer records a **script map**: for each node, its range in the script and its `origin` (the recipe step path); for each `relix-expr` parameter, its range. An engine position (line, column) becomes a script offset, then the innermost range that contains it, then `path = <origin>/params/<name>` and the offset inside the text. A position in generated text outside any parameter (a keyword, a source declaration) maps to the node's step without a parameter.
 
-For a binary step, the path follows SP2's slot paths (`/steps/4/right/steps/2`; RELIX-LANES §8).
+For a slot step, the path follows the slot paths of RECIPES-1.2 §5.3 (`/steps/4/right/steps/2`, `/steps/1/step/steps/0`; RELIX-LANES §8).
 
 ### 7.4 Pack-level errors
 
@@ -693,7 +714,8 @@ For a binary step, the path follows SP2's slot paths (`/steps/4/right/steps/2`; 
 |---|---|
 | Two different tables with the same Relix name in one relation | `E_PARAM_INVALID` (`param: "name"`) at the second `relix:from` |
 | A `tab` leaf names no input tab | `E_PARAM_INVALID` (`param: "tab"`) at the step that built the leaf |
-| `relix:recur` outside a `step` slot | `E_PARAM_INVALID` at build |
+| `relix:recur` outside a `step` slot (the recipe validator catches it first as `bad-position`; this is for hand-written FL) | `E_PARAM_INVALID` at build |
+| `relix:recur` with a `name` that matches no enclosing `relix:fix` or `relix:iterate` | `E_PARAM_INVALID` (`param: "name"`) at build |
 | `cover` with `exact` | `E_PARAM_INVALID` (`param: "exact"`, `constraint: "not in the browser (T13)"`) |
 | `optimize` | `E_USER` at build, message naming T13 |
 | A relation over the node or text limit | `E_LIMIT_VALUE` |
@@ -740,7 +762,7 @@ The bake already has three layers (RECIPES §8.5): a cancel message that aborts 
 1. **During an FL batch** the VM is running, so the existing flag and message stop it.
 2. **During an engine run** the VM is blocked in one synchronous call. The session sets the engine's poll to read **the same per-bake `Int32Array`** (R0's `self.relixCancelFlag` read `Atomics.load(flag, 0) === 1`, the same encoding). With patch 0006 the engine's own `QueryCancellation.check()` consults the poll (every 512th check in R0's shim); without it the poll is read only while sources are read. R0 measured a stop 1 to 5 ms after the flag was set, with the Worker still usable (criterion 7). The session maps the stop to `E_ABORTED`.
 3. **The deadline.** The engine's `timeout` stops it at the bake's deadline, checked as rows pass between operators (`WorkBudget`). `E_LIMIT_TIME`.
-4. **The watchdog** still terminates the Worker if neither works (a page that is not cross-origin isolated has no flag). The next bake loads the engine again: about 1 s of cold start (R0). This is why every engine-running word is marked as needing a killable Worker (§3.1); an untrusted bake without one refuses them, as for regex primitives (RECIPES §4.1, §8.6). The catalogue's `needsHardKill` is computed from regex primitives today; SP2 or P2 extends the rule (§16).
+4. **The watchdog** still terminates the Worker if neither works (a page that is not cross-origin isolated has no flag). The next bake loads the engine again: about 1 s of cold start (R0). This is why every engine-running word is marked as needing a killable Worker (§3.1); an untrusted bake without one refuses them, as for regex primitives (RECIPES §4.1, §8.6). The catalogue's `needsHardKill` is computed from regex primitives today. RECIPES-1.2 §19.1 (a) extends the rule: a primitive declares `hardKill: true`, and the pack declares it on each primitive that runs the engine. The compiler appends `relix:run` to a recipe that ends in a relation, and `recipeNeedsHardKill` counts it.
 
 ### 8.3 Laziness and timing
 
@@ -764,7 +786,7 @@ The view loads the engine chunk on first use. A parse failure here means the pac
 
 | Recipe content | In the text |
 |---|---|
-| Byte and text steps before a source (`base64` decode, CSV parse) | Left out. The view lists them: "3 steps before `orders` are not Relix". The leaf is named after the tab or the `relix:from` name. |
+| Byte and text steps before the first Relix step (`input:tab`, `base64` decode, CSV parse) | Left out. The view lists them: "3 steps before `orders` are not Relix". The leaf is named after the tab of the `input:tab` that starts the chain, or the `relix:from` name. |
 | Table data | Not included. Leaves are names. An option "include data" writes leaves of at most 200 rows as inline tables (proposal), so the script runs on its own. |
 | Layout: `pipe`, swap state, lanes, Tree positions | Lost. Text has no layout. |
 | Step comments, disabled steps, breakpoints, `hash` pins | Lost. (Comments could become Relix comments later; not in v1.) |
@@ -780,7 +802,7 @@ Import turns a script into a recipe. It needs the engine to parse.
 1. **Parse** with `ScriptParser`. A syntax error is shown with its position and nothing is imported.
 2. **Decompose.** A helper in `relix-web` walks the parsed `Script` and returns JSON: statements, and for each relational expression a tree of `{ kind, params, children }` with each parameter printed by the engine's own printer in keyword spelling. The helper is an exhaustive pattern switch over the sealed `RelNode` hierarchy, so a new node kind in a Relix release does not compile in `relix-web` until it is handled (§4.9). `LogicalPlanJson` is not enough for this: it gives each node's `op`, a display `label`, its schema and its children, but not its parameters as separate texts.
 3. **Check the statements.** Accepted: `query`; named relations `N := { }`; `source ... from generator`; inline tables. Refused, each listed with its position: `connection`, `source` from database, CSV, JSON, HTTP, Mongo, GEDCOM or log (TOOLKIT T3), `import` (no files), `def` (user functions; v1 does not import them), `env`, `relate`, `namespace`. A refused source is offered as "bind `Orders` to an input tab", never done automatically.
-4. **Build the recipe.** The chosen `query` (the last one by default, or the one picked in the import dialog) becomes the main line. At each binary node the left child continues the main line (`pipe: "left"`) and the right child becomes a slot lane. `FIX` and `ITERATE` get `base` and `step` lanes. A named relation used once is inlined; one used twice is offered as a saved relation, or duplicated. A relation name that the script does not define becomes `relix:input tab=<name>`, and the dialog asks which tab it is.
+4. **Build the recipe.** The chosen `query` (the last one by default, or the one picked in the import dialog) becomes the main line. At each binary node the left child continues the main line (`pipe: "left"`) and the right child becomes a slot lane. At a `FIX` or `ITERATE` node the base child continues the main line (`pipe: "base"`) and the step child becomes the `step` lane, which starts with `relix:recur`. A named relation used once is inlined; one used twice is offered as a saved relation, or duplicated. A relation name that the script does not define becomes `relix:input tab=<name>`, and the dialog asks which tab it is.
 5. **Unsupported nodes.** `optimize` and `cover exact` import as steps that fail at build, with their text kept.
 
 **The round trip (R7's done-when, made precise).** For a recipe of `relix:` steps and sources only, `import(view(r))` equals `r` after normalising every parameter text through the engine printer and every binary step to `pipe: "left"` (mirror operators swapped back where the original had `pipe: "right"`). Byte steps, layout and the lost items of §9.1 are outside the identity. A golden list of such recipes is the test.
@@ -807,7 +829,7 @@ The generator (§4.8) reads `relix-reference.json` and the operator table and wr
 | `param` help | Short Forge-written labels in the operator table. The reference has no per-parameter text to copy. |
 | `see-also` | The `# See Also:` links of the page, mapped to `relix:` words where a page is an operator page. |
 | `link` | None in v1. `link` needs an `https` URL (LANGUAGE §5.9). When the owner names a public URL for the reference, the generator adds one link per page. |
-| `examples` (help) | Op vectors with the `example` key (RECIPES §9.1). The generated vectors of §12.3 mark the first worked example of each page as an example. This needs the help format to carry the vector's setup steps (T22), which SP2 owns. |
+| `examples` (help) | Op vectors with the `example` key (RECIPES §9.1). The generated vectors of §12.3 mark the first worked example of each page as an example. The help example carries the vector's `setup`, `finish`, `inputs` and slot fields (T22; RECIPES-1.2 §10.3). |
 | The full page | Shown by the help dialog from `relix-reference.json`, loaded lazily with the pack, as plain text with `textContent`. Markdown is not rendered (UI.md §4, rule 6): headings and code blocks are shown as plain blocks. |
 
 `fl.*` functions get their documentation from the FL op's own `doc` (§6.3), so Relix tools that read `FunctionLibrary.documentation` see Forge's text.
@@ -885,7 +907,7 @@ From R0 (§5), made permanent in `relix-web` CI (R11):
 
 ### 12.3 Op vectors for `relix:` words
 
-Every `relix:` word needs vectors (RECIPES §9). A word that takes a relation needs a relation to run on, and the vector format has only a byte input. T22 adds a **setup-steps** field; its name and shape are SP2's. This document writes it as `setup`:
+Every `relix:` word needs vectors (RECIPES §9). A word that takes a relation needs a relation to run on, and the vector format has only a byte input. T22's `setup` field, and the `finish` field that turns a table output into bytes, are defined in RECIPES-1.2 §10. A Relix vector looks like this:
 
 ```json
 {
@@ -894,14 +916,19 @@ Every `relix:` word needs vectors (RECIPES §9). A word that takes a relation ne
   "op": "relix:select",
   "params": { "cond": "age > 18" },
   "setup": [
-    { "op": "relix:inline", "params": { "table": "| name | age |\n|---|---|\n| Ann | 30 |\n| Bob | 12 |" } }
+    {
+      "kind": "op",
+      "op": "relix:inline",
+      "params": { "table": "| name | age |\n|---|---|\n| Ann | 30 |\n| Bob | 12 |" }
+    }
   ],
+  "finish": [{ "kind": "op", "op": "table:to-json" }],
   "input": { "value": "", "enc": "utf8" },
-  "expect": { "json": { "$ext": "table", "text": "<the table's faithful text form>" } }
+  "expect": { "value": "[{\"name\":\"Ann\",\"age\":30}]", "enc": "utf8" }
 }
 ```
 
-(Illustrative. The field names, how `setup` composes with `input`, and how a table output is compared are SP2's and D2's.)
+(Illustrative. `relix:inline` is a source, so it ignores `input`. The compiler puts `relix:run` between `relix:select` and `table:to-json` (RECIPES-1.2 §6.9). A vector for `relix:input` or `input:tab` uses `inputs` for its tab (RECIPES-1.2 §10.2). The expected value of a real vector comes from the JVM result, as below.)
 
 **Generated from the reference.** A script turns the reference examples into vectors: for each operator page, each example whose expression is one operator over inline tables becomes a vector for that operator's word, with `ref` set to the page and example. The JVM result is the expected value. Each row except `optimize` gets at least one vector this way; the rest are hand-written (bounds, nulls, empty inputs, errors).
 
@@ -946,30 +973,32 @@ Every `relix:` word needs vectors (RECIPES §9). A word that takes a relation ne
 | RX15 | View as Relix is printed by the engine (`ScriptPrinter`); import uses a `decompose` helper with an exhaustive switch over `RelNode`. | One printer; new node kinds are caught at compile time (§9). |
 | RX16 | Help text is generated from `relix-docs` pages into `META:` clauses and a lazily loaded plain-text reference file; nothing is rewritten. | TOOLKIT §8.2; UI.md rule 6 (§10). |
 | RX17 | The conformance suite gates on 95% overall, 100% for decimal, date and regex examples, and on an exact expected-differences list. | T12, T11 (§12). |
+| RX18 | **RQ1:** `relix:input` reads and parses a tab (`tab`, `format`, `header`) with the core parsers. A new core op `input:tab ( -- bytes )` reads a tab as raw bytes, for byte steps first. | One reader of tabs; byte recipes keep working; the pack stays optional (§3.2, §3.2.1). |
+| RX19 | **RQ5:** `FIX` and `ITERATE` are recipe steps with the slots `base` and `step`. The data above feeds `base` only. The `step` lane starts with `relix:recur`. | The engine's own shape; no new format mechanism (§3.5; RECIPES-1.2 §4). |
 
 ---
 
 ## 14. Open questions
 
-Each has a recommended answer. TOOLKIT's own questions come first.
+**All of these were decided at Gate T1 on 2026-11-23: the owner accepted every recommended answer.** The last column is the decision. Where a decision adds detail to the recommendation, it says so. TOOLKIT's own questions come first.
 
-| ID | Question | Recommended answer |
+| ID | Question | Decision (was: recommended answer) |
 |---|---|---|
-| TOOLKIT Q1 | Which Relix API additions come into 1.0? | **None into 1.0**; all after, in this order: (1) `relix.operators` (§4.9); (2) public fragment parsers (condition, projection list, sort keys, group list; RQ4); (3) span ends and structured diagnostics with a reason code; (4) a public execution entry that takes limits and a cancellation poll without `relix-embed` (makes patch 0006 a documented host poll); (5) a Value-to-JSON or columnar result writer; (6) per-operator actual row counts in the event feed; (7) parameter names in `relix.functions`. Forge works without any of them. |
+| TOOLKIT Q1 | Which Relix API additions come into 1.0? | **Decided: none into 1.0**; all after, in this order: (1) `relix.operators` (§4.9); (2) public fragment parsers (condition, projection list, sort keys, group list; RQ4); (3) span ends and structured diagnostics with a reason code; (4) a public execution entry that takes limits and a cancellation poll without `relix-embed` (makes patch 0006 a documented host poll); (5) a Value-to-JSON or columnar result writer; (6) per-operator actual row counts in the event feed; (7) parameter names in `relix.functions`. Forge works without any of them. |
 | TOOLKIT Q2 | Naming of FL ops in Relix | **Decided: `fl.<vocab>.<word>`** (RX7). |
-| TOOLKIT Q3 | Bytes: tagged struct or hex text? | **Tagged struct `{ bytes_hex }`** (RX8). |
-| TOOLKIT Q5 | `rat` for NUMBER with the symbolic pack? | **Yes, by declared slot type only** (RX9). |
-| TOOLKIT Q6 | Should Relix's non-pushdown built-ins later delegate to FL? | **No.** Both keep their implementations, held together by shared vectors (C1). Delegation would make JVM Relix depend on GraalJS for core functions, against T2's "optional". Revisit only if C1 finds differences that cannot be closed. |
+| TOOLKIT Q3 | Bytes: tagged struct or hex text? | **Decided: tagged struct `{ bytes_hex }`** (RX8). |
+| TOOLKIT Q5 | `rat` for NUMBER with the symbolic pack? | **Decided: yes, by declared slot type only** (RX9). |
+| TOOLKIT Q6 | Should Relix's non-pushdown built-ins later delegate to FL? | **Decided: no.** Both keep their implementations, held together by shared vectors (C1). Delegation would make JVM Relix depend on GraalJS for core functions, against T2's "optional". Revisit only if C1 finds differences that cannot be closed. |
 | TOOLKIT Q9 | Exotic operators in the browser | **Decided (T13).** Confirmed by this document: `optimize` out, `cover` partial, `solve` in (SP6 probe), seeded forms as §1.4. |
-| TOOLKIT Q11 | Where does `relix-fl` live? | **Its own repository, `DarkCollective/relix-fl`**, like `relix-web`. It keeps GraalJS and its licence out of every engine build, and it consumes the published engine like any third-party library. |
-| RQ1 | `relix:input` is `( -- relation )` here (as briefed), with a `format` parameter and the core parsers. RELIX-LANES §2.1, §6 and §9.1 treat an input tab as `bytes` and follow it with byte steps and Parse CSV. Which? | **Keep `( -- relation )` for `relix:input`** and give bytes-first lanes a core op that reads a tab as bytes (X5's to name, for example `input:tab ( -- bytes )`). RELIX-LANES §9.1's first step then becomes that op. SP2 and the orchestrator settle the name with this document. |
-| RQ2 | Per-step row counts (R8): from the engine's events or by count queries? | **Start with count queries on demand** (`γ COUNT(*)` over the step's prefix, run when the user asks for a step's count), and use the event feed's row metrics where they exist. Ask Relix for per-operator counts (Q1 item 6). |
-| RQ3 | Decimals that do not fit a double in a result: text column (this document) or a decimal column in D2? | **Text column with `origin` in v1**; a `dec` column only if users hit it. |
-| RQ4 | Fragment parsing uses wrapper templates (§4.2). Acceptable until Relix has public fragment parsers? | **Yes.** The templates are tested per shape (R5a); the ask is Q1 item 2. |
-| RQ5 | Slots for `FIX` and `ITERATE`: names and the pipe rule | **Slots `base` and `step`; the data above may feed `base` only; the `step` lane is always explicit and starts with `relix:recur`.** SP2 decides. |
-| RQ6 | Does "include data" in View as Relix belong in v1? | **Yes, with a 200-row cap per table** (proposal): it makes the text runnable in JVM Relix for small examples. |
-| RQ7 | The seeded-random limit (T11): fix now? | **Fix `nextInt(bound)` and `Collections.shuffle` in the supplement** when R1b next touches it; SP6's probes suggest it is small (size S, estimate). T11 allows deferring it. |
-| RQ8 | A "try" form that turns an FL error into NULL? | **Not in v1.** If wanted, a parallel family `fl.try.<vocab>.<word>` generated from the same list. |
+| TOOLKIT Q11 | Where does `relix-fl` live? | **Decided: its own repository, `DarkCollective/relix-fl`**, like `relix-web`. It keeps GraalJS and its licence out of every engine build, and it consumes the published engine like any third-party library. |
+| RQ1 | `relix:input` is `( -- relation )` here (as briefed), with a `format` parameter and the core parsers. RELIX-LANES §2.1, §6 and §9.1 treated an input tab as `bytes` and followed it with byte steps and Parse CSV. Which? | **Decided: `relix:input ( -- relation )`** with `tab`, `format` (`csv`, `tsv`, `json`, `ndjson`; default `csv`) and `header`, reading and parsing a tab itself with the core table parsers. A new **core** op **`input:tab ( -- bytes )`** with the parameter `tab` reads a tab as raw bytes for the byte-step route (§3.2.1). The name is fixed: RECIPES-1.2 (Q16) and RELIX-LANES use it. RELIX-LANES §9.1's first step is `input:tab`, then From Base64, then Parse CSV, and a lane that reads a CSV tab is `relix:input` alone. |
+| RQ2 | Per-step row counts (R8): from the engine's events or by count queries? | **Decided: start with count queries on demand** (`γ COUNT(*)` over the step's prefix, run when the user asks for a step's count), and use the event feed's row metrics where they exist. Ask Relix for per-operator counts (Q1 item 6). |
+| RQ3 | Decimals that do not fit a double in a result: text column (this document) or a decimal column in D2? | **Decided: text column with `origin` in v1**; a `dec` column only if users hit it. |
+| RQ4 | Fragment parsing uses wrapper templates (§4.2). Acceptable until Relix has public fragment parsers? | **Decided: yes.** The templates are tested per shape (R5a); the ask is Q1 item 2. |
+| RQ5 | Slots for `FIX` and `ITERATE`: names and the pipe rule | **Decided: slots `base` and `step`; the data above may feed `base` only; the `step` lane is always explicit and starts with `relix:recur`.** This replaces the first draft of RECIPES-1.2, which had left FIX and ITERATE out of the format. RECIPES-1.2 §4 and its Q5 specify it. |
+| RQ6 | Does "include data" in View as Relix belong in v1? | **Decided: yes, with a 200-row cap per table** (proposal): it makes the text runnable in JVM Relix for small examples. |
+| RQ7 | The seeded-random limit (T11): fix now? | **Decided: fix `nextInt(bound)` and `Collections.shuffle` in the supplement** when R1b next touches it; SP6's probes suggest it is small (size S, estimate). T11 allows deferring it. |
+| RQ8 | A "try" form that turns an FL error into NULL? | **Decided: not in v1.** If wanted, a parallel family `fl.try.<vocab>.<word>` generated from the same list. |
 
 ---
 
@@ -983,18 +1012,18 @@ These refine TOOLKIT §13.6's R-rows. Ids keep the TOOLKIT number and add a lett
 | R1b | Build: patch series check per Relix release, supplements module, ES-module wrapper, hashed artifact, size gate, NOTICE | `relix-web/scripts/*`, `relix-web/patches/*`, `relix-web/classlib/*` | R0 | M | So | A clean build from a published engine produces the module; patches apply or the job fails; size at most 3 MB gzip |
 | R2a | `operators.json` and its schema, first drafted by script from `RelNode` and the reference, then completed by hand (help lines, shapes, categories) | `packs/relix/gen/operators.json`, `operators.schema.json` | SP6 | M | So | All 52 rows of §4; the coverage, spelling and reference tests of §12.2 pass |
 | R2b | Generator: `.fth` with `META:`, printer table, help source; `--check` mode | `packs/relix/gen/*.ts`, `packs/relix/vocab/relix-ops.fth` | R2a | M | Ha | Generated output committed; `gen:relix --check` in CI; the round-trip test of §12.2 passes |
-| R3 | `relation` and `relix-expr` kinds (payload, text, equality, `sizeOf` with conformance tests, viewer data); sources and terminals; `_node` primitive | `packs/relix/src/kinds/*`, `packs/relix/vocab/relix.fth`, `packs/relix/prims/relix.ts` | R1a, R2b, X1, D2 | L | So | Vectors of §12.3 for every source and terminal pass; X1's kind conformance passes for both kinds |
-| R4 | Table interchange (§5.3) with `origin` and `json` columns; implicit lift and run inserted by the compiler (§2.4); end-of-recipe run | `packs/relix/src/interchange/*`, compiler hook per SP2 | R3, D2, SP2 | M | So | Every column type and nulls round-trip; the trace shows `relation -> table` |
+| R3 | `relation` and `relix-expr` kinds (payload, text, equality, `sizeOf` with conformance tests, viewer data); sources and terminals (`relix:input` is FL over the core `input:tab`, which RECIPES-1.2 RW5 delivers); `_node` primitive | `packs/relix/src/kinds/*`, `packs/relix/vocab/relix.fth`, `packs/relix/prims/relix.ts` | R1a, R2b, X1, D2, RW5 | L | So | Vectors of §12.3 for every source and terminal pass; X1's kind conformance passes for both kinds |
+| R4 | Table interchange (§5.3) with `origin` and `json` columns; implicit lift and run inserted by the compiler (§2.4); end-of-recipe run | `packs/relix/src/interchange/*`, the conversion declarations in the manifest; the compiler side is RECIPES-1.2 RW3 (§6.9) | R3, D2, RW3 | M | So | Every column type and nulls round-trip; the trace shows `relation -> table` |
 | R5a | Tier-1 shape check module; the wrapper templates of §4.2, tested per shape | `packs/relix/src/expr-check/*` | R1a | S | So | Each shape: valid samples pass, invalid ones report the right column |
 | R5b | Tier-2 check through the Worker (`ext.check`), completion from schema and catalogue, the field UI | `packs/relix/ui/*` | R5a, X3, X5 | M | So | A bad expression shows its position before the bake; completion offers columns and `fl.*` names |
-| R6 | Nested-lane UI | as RELIX-LANES §11 | SP2, R3 | as RELIX-LANES | So | as TOOLKIT |
+| R6 | Nested-lane UI | as RELIX-LANES §11 | RW1, RW3, R3 | as RELIX-LANES | So | as TOOLKIT |
 | R7a | View as Relix (§9.1), both spellings, lost-content list, include-data option | `packs/relix/src/view/*`, `apps/web` view hook | R1a, R3 | M | So | Golden texts for the example recipes; the lost-content list is shown |
 | R7b | Import (§9.2) with the statement check and binding dialog | `packs/relix/src/import/*`, `apps/web` dialog | R7a | M | So | The round-trip identity of §9.2 holds on the golden list; refused statements are listed with positions |
 | R8 | Per-step schema (from analysis) and on-demand counts (RQ2) | `packs/relix/ui/*` | R3, X5 | S | Ha | Schema on every Relix step; a count on request |
 | R9a | `fl` exposure rules (§6.3), names (§6.2), value mapping both ways (§5) | `packs/relix/src/fl-bridge/map.ts`, `exposure.ts` | R1a, R4 | M | So | The property tests of §12.4 pass; the exposure report lists every excluded op and why |
 | R9b | Discover, batch, replay loop (§6.5), errors (§7.5), limits | `packs/relix/src/fl-bridge/batch.ts` | R9a | M | So | The batching tests of §12.4 pass; a query over 10,000 rows calls an FL op once per distinct value |
 | R10 | `relix-reference.json` and help generation (§10) | `relix-web/scripts/reference.*`, `packs/relix/gen/help-*.ts` | R2b | S | Ha | Every row has `doc` and `use-when` from the reference; the help dialog shows the page as plain text |
-| R11 | Conformance harness and expected-differences gate (§12.1); vectors generated from the reference (§12.3) | `relix-web/harness/*`, `packs/relix/test/*` | R1a, R1b, SP2 (vector format) | M | Ha | The pass rate is reported against T12; a change in the differences list fails the job |
+| R11 | Conformance harness and expected-differences gate (§12.1); vectors generated from the reference (§12.3) | `relix-web/harness/*`, `packs/relix/test/*` | R1a, R1b, RW8 (the vector format) | M | Ha | The pass rate is reported against T12; a change in the differences list fails the job |
 | R13 | Pack manifest and budget, lazy load in the bake Worker, cancellation wiring (shared flag, poll, deadline), `needsHardKill` for engine-running words | `packs/relix/manifest.*`, `packages/worker` hook per P2 | R1a, P2 | M | So | Cancellation tests of §12.4 pass; the pack loads lazily under the production headers |
 | R14 | Security tests (§11.2): injection, text rendering, refused statements | `packs/relix/test/security/*` | R3, R7b | S | Ha | Every case of §11.2 has a test |
 
@@ -1017,11 +1046,11 @@ This document does not edit them. The orchestrator applies or briefs these.
 
 **TOOLKIT.md**
 
-1. §8.1: `relix:why` is an operator (`WhyNode`, `Relation.why()`), not a terminal; the terminals are `run`, `explain`, `optimized`, `schema`, `>text`, `parse`. Add the sources `relix:input`, `relix:inline`, `relix:generate`, `relix:unit`, `relix:empty`, `relix:recur`. Implicit run is inserted by the compiler and triggered only by ops that take a table (RX5). "Parse-free" becomes a later optimisation (RX2).
+1. §8.1: `relix:why` is an operator (`WhyNode`, `Relation.why()`), not a terminal; the terminals are `run`, `explain`, `optimized`, `schema`, `>text`, `parse`. Add the sources `relix:input` (which parses), `relix:inline`, `relix:generate`, `relix:unit`, `relix:empty`, `relix:recur`, and the core bytes source `input:tab`. Implicit run is inserted by the compiler and triggered only by ops that take a table (RX5). "Parse-free" becomes a later optimisation (RX2).
 2. §8.2: 52 operators: 29 unary, 21 binary, 2 base-and-step with slots `base` and `step`. Point to RELIX.md §4.
 3. §8.3 and T11: the seeded forms are `ROLL`, `SHUFFLE`, `SAMPLE p` and `SAMPLE n ROWS`; SP6 probes show `ROLL` (uniform) and `SHUFFLE` differ, the others matched.
 4. §8.4: library `fl`, naming decided (RX7); mapping table replaced by RELIX.md §5; the NULL rule is the bridge's (the engine passes NULL to functions); "planner hoists" replaced by discover, batch, replay (RX6); table-valued words through ARRAY and `μ`, because the SPI has no table-valued functions.
-5. §14.2: Q2, Q3, Q5 decided; recommendations for Q1, Q6, Q11 as in §14.
+5. §14.2: Q2, Q3, Q5 decided; Q1, Q6, Q11 decided as in §14.
 6. §13.3: SP6 done. §13.6: R-rows replaced by §15 (R1 split into R1a and R1b, R2 into R2a and R2b, R5, R7 and R9 split, R12 dropped, R13 and R14 added). §13.11's count changes accordingly.
 
 **Other specifications**
@@ -1029,13 +1058,13 @@ This document does not edit them. The orchestrator applies or briefs these.
 7. **D2** (`table`): an optional `origin` annotation per column, and a `json` column kind (§2.1).
 8. **X1**: nothing beyond T18 and T19. (The kind-to-kind lift is done by the compiler, not the VM.)
 9. **X3 / X5**: the helper contract may return a promise; a generic `ext.check` request from the page to the bake Worker; per-step input schema in the bake result (already T20).
-10. **SP2**: `ParamSpec` marking of slot parameters; slots `base`/`step` for `FIX`/`ITERATE` (RQ5); compiler insertion of `relix:from` and `relix:run` marked `implicit`; the `setup` field of op vectors and help examples (T22); `needsHardKill` for engine-running words; the 4,096-character limit for `relix-expr` text.
+10. **SP2**: `ParamSpec` marking of slot parameters; slots `base`/`step` for `FIX`/`ITERATE` (RQ5); compiler insertion of `relix:from` and `relix:run` marked `implicit`; the `setup` field of op vectors and help examples (T22); `needsHardKill` for engine-running words; the 4,096-character limit for `relix-expr` text. **All answered in RECIPES-1.2 §19.1**, with the mechanism in its §4.5, §6.9 and §10.
 11. **SP3 / UI.md**: the relation viewer (text, schema line), the help dialog's plain-text reference view, the "unavailable in the browser" badge for `optimize`.
 12. **SP4 / PACKS.md**: a pack whose chunk is an ES module loaded inside the bake Worker; the pack's `NOTICE`.
 13. **SP1**: how FL holds JSON `null` (decides nested NULLs, §5.4).
 
 **RELIX-LANES.md**
 
-14. §2.1, §6, §9.1: the type of `relix:input` (RQ1). §2.1's v1 binary list stays a subset of §4.5. `lateral` has only the relation form.
+14. §2.1, §6, §9.1: the type of `relix:input` (RQ1). Done in the Gate T1 edit of RELIX-LANES.md. §2.1's v1 binary list stays a subset of §4.5. `lateral` has only the relation form.
 
 **R0 result (a record, not to be edited)**: its criterion-8 note on NULL (§5.4) and its seeded-random list (§1.4) are superseded by this document.
