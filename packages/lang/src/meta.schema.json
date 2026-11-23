@@ -225,6 +225,7 @@
         "quot",
         "record",
         "file",
+        "ext",
         "choice",
         "toggle",
         "regex",

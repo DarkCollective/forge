@@ -41,6 +41,8 @@ import {
 } from "./output-model.js";
 import type { OutputView } from "./output-model.js";
 import "./forge-hex-view.js";
+import "./table-view.js";
+import { renderExt } from "./viewers.js";
 
 /** The text view shows at most this many characters (all of it is still copied and downloaded). */
 const TEXT_DISPLAY_LIMIT = 512 * 1024;
@@ -333,6 +335,7 @@ export class ForgeOutput extends LitElement {
     if (value.kind === "bytes" && view === "hex") {
       return html`<forge-hex-view .bytes=${value.bytes} label="Output bytes"></forge-hex-view>`;
     }
+    if (value.kind === "ext") return html`${renderExt(value)}`;
     if (value.kind === "list" || value.kind === "record") {
       return html`<ul class="tree" aria-label="Output structure">
         ${this.renderTree(value, null, 0)}

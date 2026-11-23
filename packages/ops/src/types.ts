@@ -82,6 +82,7 @@ export const UI_PARAM_TYPES: readonly ParamType[] = Object.freeze([
   "regex",
   "charset",
   "key",
+  "ext",
 ]);
 
 // ---------------------------------------------------------------------------------------------
@@ -102,6 +103,9 @@ export interface CatalogueOp {
   readonly input: ParamType;
   /** Type of the single output (`effect.outputs[0]`). */
   readonly output: ParamType;
+  /** X0 spike: the ext kind of the data input / output when its type is `ext` (`ext{table}`); absent otherwise. */
+  readonly inputKind?: string;
+  readonly outputKind?: string;
   /** `effect.text`, the canonical stack-effect text. */
   readonly effect: string;
   /** `WordMeta.params` unchanged. */

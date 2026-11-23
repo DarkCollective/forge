@@ -179,7 +179,9 @@ const TYPE_NAMES: readonly string[] = [
   "regex",
   "charset",
 ];
-const OPTION_TYPES: readonly string[] = ["choice", "toggle", "key"];
+const OPTION_TYPES: readonly string[] = ["choice", "toggle", "key", "ext"];
+/** X0: the kind name inside `ext{kind}`. */
+const EXT_KIND_RE = /^[a-z][a-z0-9-]*$/;
 const ENCODINGS: readonly string[] = ["hex", "utf8", "latin1", "base64"];
 /** ptypes that may carry a constraint (spec 5.5). */
 const CONSTRAINT_TYPES: readonly string[] = [
@@ -478,6 +480,13 @@ class HeaderParser {
     if (m === null) fail("expected a parameter name or a type");
     const name = (m as RegExpExecArray)[0];
     const rest = it.text.slice(name.length);
+    if (name === "ext" && rest[0] === "{") {
+      if (this.mode === "strict" && index >= 1) {
+        fail("a public word's parameters must be named and typed (name:type)");
+      }
+      const spec = this.parseType(it, it.start);
+      return makeSlot(null, spec.type, spec.options);
+    }
     if (rest === "") {
       if (this.mode === "strict" && index >= 1) {
         fail("a public word's parameters must be named and typed (name:type)");
@@ -503,12 +512,20 @@ class HeaderParser {
     if (m === null) fail("expected an output name or a type");
     const name = (m as RegExpExecArray)[0];
     const rest = it.text.slice(name.length);
+    if (name === "ext" && rest[0] === "{") {
+      const spec = this.parseType(it, it.start);
+      return makeSlot(null, spec.type, spec.options);
+    }
     if (rest === "") {
       if (TYPE_NAMES.includes(name)) return makeSlot(null, name as ParamType);
       this.checkName(it, name);
       return makeSlot(name, "any");
     }
     const type = rest.slice(1);
+    if (rest[0] === ":" && /^ext\{[a-z][a-z0-9-]*\}$/.test(type)) {
+      this.checkName(it, name);
+      return makeSlot(name, "ext", [type.slice(4, -1)]);
+    }
     if (rest[0] !== ":" || !TYPE_NAMES.includes(type)) {
       fail("an output is 'type', 'name:type' or a label, without constraint or default");
     }
@@ -532,7 +549,11 @@ class HeaderParser {
       const r = this.parseOptions(it, i);
       options = r.options;
       i = r.next;
-      if (type !== "choice" && !options.every((o) => ENCODINGS.includes(o))) {
+      if (type === "ext") {
+        if (options.length !== 1 || !EXT_KIND_RE.test(options[0] as string)) {
+          fail("'ext' takes one kind name: ext{kind}");
+        }
+      } else if (type !== "choice" && !options.every((o) => ENCODINGS.includes(o))) {
         fail(`encodings must be among ${ENCODINGS.join(", ")}`);
       }
     } else if (type === "choice" && t[i] === "<") {
@@ -541,6 +562,8 @@ class HeaderParser {
       i = r.next;
     } else if (type === "choice") {
       fail("'choice' needs options: choice{a|b} or choice<type>");
+    } else if (type === "ext") {
+      fail("'ext' needs a kind: ext{kind}");
     } else if (OPTION_TYPES.includes(type)) {
       options = [...DEFAULT_ENCODINGS];
     }

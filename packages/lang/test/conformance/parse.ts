@@ -120,6 +120,7 @@ const TAG_TABLE: Record<Tag, true> = {
   quot: true,
   record: true,
   file: true,
+  ext: true,
 };
 const EFFECT_LABELS: readonly EffectLabel[] = ["+async", "+random", "+time"];
 const DIAGNOSTIC_CODES = ["W_REDEFINED", "W_SHADOW"] as const;

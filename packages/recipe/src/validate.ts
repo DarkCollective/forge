@@ -526,6 +526,12 @@ function checkParamValue(ctx: Ctx, spec: ParamSpec, v: unknown, path: string): v
       if (typeof v !== "string") return bad("expected a string");
       if (checkRegexSource(ctx, v, path)) lengthCheck(codePointLength(v));
       return;
+    case "ext":
+      // X0 spike: an ext parameter is its text form. The kind's fromText runs when the recipe bakes
+      // (the recipe layer has no kind registry), and live in the parameter widget.
+      if (typeof v !== "string") return bad("expected the text form of an ext value");
+      if (codePointLength(v) > 4096) return bad("text form is longer than 4096 characters");
+      return;
     case "bytes": {
       if (typeof v !== "string") return bad("expected a hex string");
       const bytes = hexDecode(v);

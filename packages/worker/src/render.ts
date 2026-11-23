@@ -18,7 +18,7 @@
  * Rendering values for display (RECIPES.md section 8.3), the JSON form used by the vector runner
  * (section 9.1) and the comparison helper `stripTimings` (section 10.3).
  */
-import { REDACTED, isSecret, reprShort } from "@forge/lang";
+import { REDACTED, extText, getExtKind, isSecret, reprShort } from "@forge/lang";
 import type { Value } from "@forge/lang";
 import { RENDER_LIMITS } from "./types.js";
 import type {
@@ -31,6 +31,10 @@ import type {
 
 /** Values rendered by one call, however the limits above multiply (a list of lists of lists...). */
 const MAX_NODES = 100_000;
+
+/** X0 spike: rows handed to an ext viewer, and characters of an ext text form kept. */
+const EXT_VIEW_ROWS = 100;
+const EXT_TEXT_CHARS = 4_000;
 
 const strictUtf8 = new TextDecoder("utf-8", { fatal: true });
 
@@ -77,6 +81,17 @@ export const renderValue: RenderValueFn = (value) => {
           entries.push({ key, value: render(item, depth + 1) });
         }
         return { kind: "record", entries, total: v.v.size };
+      }
+      case "ext": {
+        const k = getExtKind(v.kind);
+        const text = extText(v.kind, v.v, EXT_TEXT_CHARS);
+        if (k?.view === undefined) return { kind: "ext", extKind: v.kind, text };
+        return {
+          kind: "ext",
+          extKind: v.kind,
+          text: text.length > EXT_TEXT_CHARS ? text.slice(0, EXT_TEXT_CHARS) + "..." : text,
+          view: k.view(v.v, { maxRows: EXT_VIEW_ROWS }),
+        };
       }
       default:
         return other(v);
@@ -126,6 +141,8 @@ export const outputToJson: OutputToJsonFn = (output) => {
       }
       return record;
     }
+    case "ext":
+      return { $ext: output.extKind, text: output.text };
     case "other":
       return { $other: output.repr };
   }

@@ -34,6 +34,7 @@ import {
   textToValue,
   valueToText,
 } from "./convert.js";
+import { getParamHelper, schemaOf } from "./ext-widgets.js";
 import { describeIssue, paramIssues } from "./issues.js";
 import {
   firstRef,
@@ -200,6 +201,22 @@ export class ForgeParamForm extends LitElement {
         outline: var(--focus-width) solid var(--focus);
         outline-offset: var(--focus-offset);
       }
+      .ext-status {
+        margin: var(--space-1) 0 0;
+        font-size: var(--text-xs);
+      }
+      .ext-status.ok {
+        color: var(--ok);
+      }
+      .ext-status.bad {
+        color: var(--danger);
+      }
+      .cols {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-1);
+        margin-top: var(--space-1);
+      }
       .unknown {
         border: var(--border-width) dashed var(--border-strong);
         border-radius: var(--radius-s);
@@ -214,6 +231,7 @@ export class ForgeParamForm extends LitElement {
   private readonly recipe = new StoreController(this, store, (s) => s.recipe);
   private readonly issues = new StoreController(this, store, (s) => s.issues);
   private readonly catalogue = new StoreController(this, store, (s) => s.catalogue);
+  private readonly bake = new StoreController(this, store, (s) => s.bake);
 
   private drafts = new Map<string, Draft>();
   /** The value each parameter had before the user switched it to a register, restored on the way back. */
@@ -620,6 +638,8 @@ export class ForgeParamForm extends LitElement {
       case "toggle":
       case "key":
         return this.renderEncoded(spec, id, describedBy, invalidAttr);
+      case "ext":
+        return this.renderExtParam(spec, id, describedBy, invalidAttr);
       default:
         break;
     }
@@ -680,6 +700,64 @@ export class ForgeParamForm extends LitElement {
         @blur=${onBlur}
         @keydown=${numeric ? (e: KeyboardEvent) => this.onKeyDown(spec, e) : nothing}
       />
+    </div>`;
+  }
+
+  /**
+   * X0 spike: an `ext{kind}` parameter. The stored value is the kind's text form (a string), so the field
+   * is a text input; a registered helper for the kind adds a live check and column names to offer. The
+   * schema comes from the last bake output when it is a table (a per-step schema would need the bake
+   * protocol to report one: see the X0 result).
+   */
+  private renderExtParam(spec: ParamSpec, id: string, describedBy: string, invalidAttr: string) {
+    const kind = spec.options?.[0] ?? "";
+    const helper = getParamHelper(kind);
+    const text = this.textOf(spec);
+    const result = this.bake.value.result;
+    const schema = schemaOf(result !== null && result.ok ? result.output : null);
+    const check = helper === undefined || text === "" ? null : helper.check(text, schema);
+    const statusId = `ext-status-${spec.name}`;
+    return html`<div class="control ext">
+      <input
+        type="text"
+        id=${id}
+        class="mono"
+        autocomplete="off"
+        autocapitalize="off"
+        spellcheck="false"
+        .value=${live(text)}
+        aria-invalid=${check !== null && !check.ok ? "true" : invalidAttr}
+        aria-describedby=${check === null ? describedBy : `${describedBy} ${statusId}`}
+        @input=${(e: Event) => this.onText(spec, (e.target as HTMLInputElement).value)}
+        @blur=${() => this.onBlur(spec)}
+      />
+      ${
+        check === null
+          ? nothing
+          : html`<p class="ext-status ${check.ok ? "ok" : "bad"}" id=${statusId} role="status">
+              ${check.message}
+            </p>`
+      }
+      ${
+        schema === undefined
+          ? nothing
+          : html`<div class="cols" role="group" aria-label="Columns of the input table">
+              ${schema.map(
+                (c) =>
+                  html`<button
+                    type="button"
+                    class="ghost"
+                    @click=${() =>
+                      this.onText(
+                        spec,
+                        text === "" || text.endsWith(" ") ? text + c.name : `${text} ${c.name}`,
+                      )}
+                  >
+                    ${c.name} <span class="tag">${c.type}</span>
+                  </button>`,
+              )}
+            </div>`
+      }
     </div>`;
   }
 

@@ -38,6 +38,15 @@ export const isCatalogueOp: IsCatalogueOpFn = (meta: WordMeta): boolean =>
   !meta.effect.variadicInput &&
   meta.qname === `${meta.vocab}:${meta.name}`;
 
+/** X0 spike: `{ inputKind: "table" }` for an `ext{table}` slot, nothing for any other slot. */
+function extKindOf(
+  key: "inputKind" | "outputKind",
+  slot: { type: string; options?: readonly string[] } | undefined,
+): Partial<Record<"inputKind" | "outputKind", string>> {
+  const kind = slot?.type === "ext" ? slot.options?.[0] : undefined;
+  return kind === undefined ? {} : { [key]: kind };
+}
+
 /** Does the word, or any word it calls (transitively, FL words only), run the regex engine? */
 function reachesRegexEngine(runtime: ForgeRuntime, qname: string): boolean {
   const seen = new Set<string>();
@@ -80,6 +89,8 @@ export const buildCatalogue: BuildCatalogueFn = (runtime, options = {}) => {
         seeAlso: meta.seeAlso,
         input: (meta.effect.inputs[0] as { type: CatalogueOp["input"] }).type,
         output: (meta.effect.outputs[0] as { type: CatalogueOp["output"] }).type,
+        ...extKindOf("inputKind", meta.effect.inputs[0]),
+        ...extKindOf("outputKind", meta.effect.outputs[0]),
         effect: meta.effect.text,
         params: meta.params,
         effects: meta.effects,

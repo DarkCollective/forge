@@ -110,6 +110,17 @@ export type OutputValue =
       readonly entries: readonly { readonly key: string; readonly value: OutputValue }[];
       readonly total: number;
     }
+  /**
+   * X0 spike: an extension value. `text` is the kind's text form (cut), always present, so a UI that
+   * has no viewer for `extKind` shows it like a `str`. `view` is whatever the kind's `view` returned
+   * (structured-clone-safe), for the viewer registered for that kind.
+   */
+  | {
+      readonly kind: "ext";
+      readonly extKind: string;
+      readonly text: string;
+      readonly view?: unknown;
+    }
   /** `quot`, `file`, and values below `RENDER_LIMITS.maxDepth`: the repr, cut to `maxReprChars`. */
   | { readonly kind: "other"; readonly tag: Tag; readonly repr: string };
 

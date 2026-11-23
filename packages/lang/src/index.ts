@@ -65,6 +65,8 @@ export {
 } from "./values.js";
 export type { CoerceResult } from "./values.js";
 export { CORE_VOCAB, createDictionary, isPrivateName, listWords } from "./dictionary.js";
+export { ext, extText, getExtKind, listExtKinds, registerExtKind } from "./ext.js";
+export type { ExtKind } from "./ext.js";
 export { read } from "./reader.js";
 export {
   INTRINSIC_NAMES,

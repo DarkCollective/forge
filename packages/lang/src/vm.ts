@@ -222,6 +222,7 @@ const VALUE_TAGS: ReadonlySet<string> = new Set<Tag>([
   "quot",
   "record",
   "file",
+  "ext",
 ]);
 
 /** The setters of `StepEvent` take host data: refuse anything that is not a tagged value. */
@@ -1144,7 +1145,7 @@ class Machine {
         const slot = inputs[i] as StackSlot;
         let v = ds[start + i] as Value;
         if (slot.type !== "any") {
-          const r = coerceTracked(v, slot.type, slot.name ?? i);
+          const r = coerceTracked(v, slot.type, slot.name ?? i, slot.options?.[0]);
           if (r.coercion !== null) {
             this.addCoercion({
               word: qname,

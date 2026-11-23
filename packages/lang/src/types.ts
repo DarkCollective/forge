@@ -109,7 +109,8 @@ export type ReadFn = (source: string, opts?: ReadOptions) => Token[];
 // Values (spec sections 3 and 4)
 // ---------------------------------------------------------------------------------------------
 
-export type Tag = "bytes" | "str" | "int" | "num" | "bool" | "list" | "quot" | "record" | "file";
+export type Tag =
+  "bytes" | "str" | "int" | "num" | "bool" | "list" | "quot" | "record" | "file" | "ext";
 
 /** Payload of a `file` value (reserved in v0.1). */
 export interface FileValue {
@@ -144,7 +145,9 @@ export type Value =
   | { readonly tag: "list"; readonly v: readonly Value[] }
   | { readonly tag: "quot"; readonly v: Quotation }
   | { readonly tag: "record"; readonly v: ReadonlyMap<string, Value> }
-  | { readonly tag: "file"; readonly v: FileValue };
+  | { readonly tag: "file"; readonly v: FileValue }
+  /** X0 spike: an extension value. `kind` names a registered `ExtKind` (ext.ts); `v` is its payload. */
+  | { readonly tag: "ext"; readonly kind: string; readonly v: unknown };
 
 // ---------------------------------------------------------------------------------------------
 // Errors (spec section 11)
@@ -255,6 +258,7 @@ export type ParamType =
   | "quot"
   | "record"
   | "file"
+  | "ext"
   | "choice"
   | "toggle"
   | "regex"
@@ -284,7 +288,7 @@ export interface StackSlot {
   /** Name (a header `name:` or a bare label), or null for an anonymous slot. */
   readonly name: string | null;
   readonly type: ParamType;
-  /** `choice` options, or the listed encodings of `toggle` / `key`. */
+  /** `choice` options, the listed encodings of `toggle` / `key`, or (X0 spike) the one-element kind list of `ext{kind}`. */
   readonly options?: readonly string[];
   readonly constraint?: Constraint;
   readonly default?: ParamDefault;

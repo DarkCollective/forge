@@ -49,6 +49,7 @@ const TAGS: ReadonlySet<string> = new Set<Tag>([
   "quot",
   "record",
   "file",
+  "ext",
 ]);
 
 /** Parsed effects of every registered definition, keyed by the definition object. */
@@ -302,6 +303,13 @@ function toValue(
         checkValue(def, v, index, maxIntBits, argPayloads);
       }
       return { tag: "record", v: x as Map<string, Value> };
+    }
+    case "ext": {
+      // X0: a primitive with an `ext{kind}` output returns the bare payload; the call boundary tags it.
+      const kind = slot.options?.[0];
+      if (kind === undefined) throw badResult(def, "an ext{kind} slot", x, index);
+      if (typeof x !== "object" || x === null) throw badResult(def, `a ${kind} payload`, x, index);
+      return { tag: "ext", kind, v: x };
     }
     case "quot":
       if (typeof x !== "object" || x === null) throw badResult(def, "a quotation", x, index);

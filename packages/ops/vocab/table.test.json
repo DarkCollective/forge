@@ -1,0 +1,86 @@
+[
+  {
+    "name": "typed columns and a null from an empty cell",
+    "ref": "hand-computed: age is all numbers (num), active is all true or false (bool), the empty age cell is null",
+    "op": "table:from-csv",
+    "params": {},
+    "input": {
+      "value": "name,age,active\r\nAda,36,true\r\nAlan,41,false\r\nGrace,,true\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": {
+        "$ext": "table",
+        "text": "name:str,age:num,active:bool\r\nAda,36,true\r\nAlan,41,false\r\nGrace,,true"
+      }
+    },
+    "example": {
+      "title": "CSV text read as a table",
+      "note": "The output pane shows a grid with the column types. The table kind prints as typed CSV."
+    }
+  },
+  {
+    "name": "RFC 4180 quoting: a comma, a doubled quote and a line break inside cells",
+    "ref": "hand-computed from RFC 4180; the text form quotes them again",
+    "op": "table:from-csv",
+    "params": {},
+    "input": {
+      "value": "a,b\r\n\"x,1\",\"he said \"\"hi\"\"\"\r\n\"l1\r\nl2\",z\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": {
+        "$ext": "table",
+        "text": "a:str,b:str\r\n\"x,1\",\"he said \"\"hi\"\"\"\r\n\"l1\r\nl2\",z"
+      }
+    }
+  },
+  {
+    "name": "a repeated header name is E_COERCE",
+    "ref": "prototype rule of table:from-csv",
+    "op": "table:from-csv",
+    "params": {},
+    "input": { "value": "a,a\r\n1,2\r\n", "enc": "utf8" },
+    "expect": { "error": "E_COERCE" }
+  },
+  {
+    "name": "a condition is checked and kept as a relix-expr value",
+    "ref": "hand-computed: the text form of a relix-expr is its text",
+    "op": "table:to-expr",
+    "params": {},
+    "input": { "value": "age > 30 and name <> \"Bob\"", "enc": "utf8" },
+    "expect": { "json": { "$ext": "relix-expr", "text": "age > 30 and name <> \"Bob\"" } }
+  },
+  {
+    "name": "a condition without a value is E_COERCE",
+    "ref": "prototype grammar of relix-expr",
+    "op": "table:to-expr",
+    "params": {},
+    "input": { "value": "age >", "enc": "utf8" },
+    "expect": { "error": "E_COERCE" }
+  },
+  {
+    "name": "to-json needs a table, so bytes are E_TYPE (a one-step vector cannot hold a table)",
+    "ref": "the vector runner bakes one step on bytes; table:from-csv then table:to-json is tested in src/table.test.ts",
+    "op": "table:to-json",
+    "params": { "indent": 2 },
+    "input": { "value": "a,b", "enc": "utf8" },
+    "expect": { "error": "E_TYPE" }
+  },
+  {
+    "name": "to-csv needs a table, so bytes are E_TYPE",
+    "ref": "as for table:to-json",
+    "op": "table:to-csv",
+    "params": {},
+    "input": { "value": "a,b", "enc": "utf8" },
+    "expect": { "error": "E_TYPE" }
+  },
+  {
+    "name": "filter needs a table, so bytes are E_TYPE",
+    "ref": "as for table:to-json",
+    "op": "table:filter",
+    "params": { "expr": "a > 1" },
+    "input": { "value": "a,b", "enc": "utf8" },
+    "expect": { "error": "E_TYPE" }
+  }
+]

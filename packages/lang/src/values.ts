@@ -24,6 +24,7 @@
  */
 
 import { ForgeError, REDACTED } from "./errors.js";
+import { getExtKind } from "./ext.js";
 import type {
   CoercionRecord,
   Constraint,
@@ -287,6 +288,13 @@ export function equals(a: Value, b: Value): boolean {
       case "quot":
         if (x.v !== (y as typeof x).v) return false;
         break;
+      case "ext": {
+        const e = y as typeof x;
+        if (x.kind !== e.kind) return false;
+        const k = getExtKind(x.kind);
+        if (k === undefined ? x.v !== e.v : !k.equals(x.v, e.v)) return false;
+        break;
+      }
       case "file": {
         const f = (y as typeof x).v;
         if (x.v.name !== f.name || x.v.type !== f.type || !bytesEqual(x.v.bytes, f.bytes)) {
@@ -439,6 +447,11 @@ function render(value: Value, budget: number): { text: string; complete: boolean
         case "quot":
           over = emit("<quot>");
           break;
+        case "ext": {
+          const k = getExtKind(w.kind);
+          over = emit(k === undefined ? `<ext ${w.kind}>` : k.toText(w.v, Math.max(budget, 0) + 1));
+          break;
+        }
         case "file":
           over = emit(
             `<file ${quoteString(w.v.name)} ${quoteString(w.v.type)} ${w.v.bytes.length} bytes>`,
@@ -523,6 +536,7 @@ function typeError(value: Value, to: ParamType, param?: string | number): ForgeE
 }
 
 function coerceError(from: Tag, to: Tag, why: string, param?: string | number): ForgeError {
+  // (X0: `to` may be "ext")
   const detail: Record<string, unknown> = { from, to };
   if (param !== undefined) detail.param = param;
   return new ForgeError({
@@ -537,18 +551,46 @@ function coerceError(from: Tag, to: Tag, why: string, param?: string | number): 
  * tag changed. Throws E_TYPE (no coercion path) or E_COERCE (path exists, value fails it).
  * `param` (slot name or index) is only added to the error detail.
  */
-export function coerceTracked(value: Value, to: ParamType, param?: string | number): CoerceResult {
+export function coerceTracked(
+  value: Value,
+  to: ParamType,
+  param?: string | number,
+  extKind?: string,
+): CoerceResult {
   const target = runtimeTypeOf(to);
   if (target === "any") return { value, coercion: null };
   if (target === "number") {
     if (value.tag === "int" || value.tag === "num") return { value, coercion: null };
     throw typeError(value, to, param);
   }
-  if (value.tag === target) return { value, coercion: null };
   const changed = (v: Value): CoerceResult => ({
     value: v,
     coercion: { from: value.tag, to: target },
   });
+  if (target === "ext") {
+    // X0: ext{kind} accepts a value of that kind; a str is parsed with the kind's fromText.
+    if (value.tag === "ext") {
+      if (extKind !== undefined && value.kind !== extKind) {
+        throw new ForgeError({
+          code: "E_TYPE",
+          message: `expected ext{${extKind}}, got ext{${value.kind}}`,
+          detail: { expected: `ext{${extKind}}`, actual: `ext{${value.kind}}`, param },
+        });
+      }
+      return { value, coercion: null };
+    }
+    const k = extKind === undefined ? undefined : getExtKind(extKind);
+    if (value.tag === "str" && k?.fromText !== undefined) {
+      try {
+        return changed({ tag: "ext", kind: k.kind, v: k.fromText(value.v) });
+      } catch (e) {
+        if (e instanceof ForgeError) throw e;
+        throw coerceError("str", "ext", (e as Error).message, param);
+      }
+    }
+    throw typeError(value, to, param);
+  }
+  if (value.tag === target) return { value, coercion: null };
   if (value.tag === "str" && target === "bytes") {
     if (hasLoneSurrogate(value.v)) {
       throw coerceError("str", "bytes", "string contains a lone surrogate", param);
@@ -688,6 +730,21 @@ export function validate(
   index?: number,
 ): void {
   if (!tagAllowed(slot.type, value.tag)) throw typeError(value, slot.type, slot.name ?? index);
+  if (slot.type === "ext" && value.tag === "ext") {
+    const want = slot.options?.[0];
+    if (want !== undefined && value.kind !== want) {
+      throw new ForgeError({
+        code: "E_TYPE",
+        message: `expected ext{${want}}, got ext{${value.kind}}`,
+        detail: {
+          expected: `ext{${want}}`,
+          actual: `ext{${value.kind}}`,
+          param: slot.name ?? index,
+        },
+      });
+    }
+    return;
+  }
   const c = slot.constraint;
   const fail = (constraint: string, why: string): never => {
     const param = slot.name ?? index ?? 0;
@@ -796,6 +853,11 @@ export function sizeOf(value: Value): number {
       case "quot":
         total += 16;
         break;
+      case "ext": {
+        const k = getExtKind(x.kind);
+        total += 16 + (k === undefined ? 0 : k.sizeOf(x.v));
+        break;
+      }
       case "file":
         total += 2 * x.v.name.length + 2 * x.v.type.length + x.v.bytes.byteLength;
         break;

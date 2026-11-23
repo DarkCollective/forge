@@ -23,7 +23,7 @@ import type { BakeState } from "../state/types.js";
 
 /** The runtime tags a value can carry (LANGUAGE.md section 4.2 rows). */
 export type ValueType =
-  "bytes" | "str" | "int" | "num" | "bool" | "list" | "quot" | "record" | "file";
+  "bytes" | "str" | "int" | "num" | "bool" | "list" | "quot" | "record" | "file" | "ext";
 
 /** A value type, or `unknown` when it cannot be told (so nothing is ruled out). */
 export type DataType = ValueType | "unknown";
@@ -56,6 +56,7 @@ const VALUE_TYPES: readonly string[] = [
   "quot",
   "record",
   "file",
+  "ext",
 ];
 
 function isValueType(tag: string): tag is ValueType {
@@ -262,6 +263,7 @@ const NOUN: Readonly<Record<ValueType, string>> = {
   quot: "quotation",
   record: "record",
   file: "file",
+  ext: "extension value",
 };
 
 /** The data type in plain words, as in "Data here: text". */

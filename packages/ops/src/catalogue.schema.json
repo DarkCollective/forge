@@ -50,6 +50,8 @@
         "output": {
           "$ref": "https://forge.darkcollective.com/schemas/word-meta.schema.json#/$defs/paramType"
         },
+        "inputKind": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+        "outputKind": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
         "effect": { "type": "string", "maxLength": 4000 },
         "params": {
           "type": "array",

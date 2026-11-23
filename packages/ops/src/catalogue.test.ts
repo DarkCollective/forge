@@ -503,6 +503,7 @@ describe("module facts", () => {
       "regex",
       "charset",
       "key",
+      "ext",
     ]);
   });
 });
