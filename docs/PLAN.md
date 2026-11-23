@@ -625,6 +625,10 @@ Decided 2026-11-13:
 12. **Magic has both forms**: a button in the UI (6.30) and recipe operations (`magic:identify`, `magic:is-format`, `magic:magic`; 6.32, 6.33), so that a recipe can branch on what the data is through the existing `if` step. Not yet decided by the owner, and kept as the plan's defaults: the check combination rule, the evaluator limits, Magic's depth and branching, intensive mode and extensive language support (see "Magic and content checks").
 13. **A `binary` check test** (the negation of `utf8`, `unknown` on short data) is part of the `checks` clause, so an operation that expects binary data and has no signature (a decryptor, raw deflate) goes amber on valid text whatever the input encoding.
 
+Decided 2026-11-23:
+
+14. **Gate T0 for R0 and X0** (the toolkit programme, [TOOLKIT.md](TOOLKIT.md) §3, T9 to T22): the Relix engine goes into the browser on TeaVM's JavaScript backend; the extension-value shape is accepted with the amendments of the X0 result. L0 and J0 have not run and stay open.
+
 ## 10. Hosting and deployment
 
 Forge is a fully static site (`apps/web/dist`), hosted the same way as the Relix site, whose setup is in `relix/infra`.

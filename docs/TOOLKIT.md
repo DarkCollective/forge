@@ -1,6 +1,6 @@
 # Forge toolkit: Relix, symbolic algebra and packs (programme plan)
 
-Status: draft v1 (2026-11-11). A plan, not yet normative. It builds on [PLAN.md](PLAN.md) (§1 principles, §3.5 primitives, §5 security, §7 phases, §8 orchestration, §9 decisions), [SYMBOLIC.md](SYMBOLIC.md) (v1), [LANGUAGE.md](LANGUAGE.md) (FL v0.1), [RECIPES.md](RECIPES.md) and [UI.md](UI.md) (§4 CSP). Relix facts come from the `relix-core` source tree, `relix/docs/design/query-builder.md` and `relix/.claude/BACKLOG.md`.
+Status: draft v1 (2026-11-11), amended 2026-11-23 with the owner's Gate T0 decisions for R0 and X0 (§3). A plan, not yet normative. It builds on [PLAN.md](PLAN.md) (§1 principles, §3.5 primitives, §5 security, §7 phases, §8 orchestration, §9 decisions), [SYMBOLIC.md](SYMBOLIC.md) (v1), [LANGUAGE.md](LANGUAGE.md) (FL v0.1), [RECIPES.md](RECIPES.md) and [UI.md](UI.md) (§4 CSP). Relix facts come from the `relix-core` source tree, `relix/docs/design/query-builder.md` and `relix/.claude/BACKLOG.md`.
 
 > **Packages are frozen.** `packages/*` hold frozen Phase 1–2 contracts (CLAUDE.md). Most of this plan changes them. Nothing in it starts before the owner approves the version bump at the gate of Phase T1 (§13.3). The spikes of Phase T0 are throwaway code on branches and change no contract.
 
@@ -10,7 +10,7 @@ Status: draft v1 (2026-11-11). A plan, not yet normative. It builds on [PLAN.md]
 
 1. Goals and scope
 2. Where we are
-3. Decisions T1 to T8
+3. Decisions T1 to T8, and Gate T0 (T9 to T22)
 4. Architecture
 5. The pack system
 6. Extension values and viewers
@@ -143,7 +143,7 @@ A table of 10,000 rows by 10 integer columns costs about **4.08 MB** as a list o
 
 ---
 
-## 3. Decisions T1 to T8
+## 3. Decisions T1 to T8, and Gate T0
 
 Decisions T1 to T7 were taken with the owner on 2026-11-11. **T8 is the orchestrator's recommendation** and is not yet owner-approved. Ids use the prefix T to avoid collisions with LANGUAGE.md's D-numbers, PLAN §9 and SYMBOLIC.md's S-numbers.
 
@@ -157,6 +157,29 @@ Decisions T1 to T7 were taken with the owner on 2026-11-11. **T8 is the orchestr
 | T6 | FL v0.2 may include breaking fixes. The in-repo corpus is migrated in one mechanical sweep. | Goal 4; the fixes in §11.5 cannot be additive. |
 | T7 | Plugin model: first-party packs are separate workspace packages built and deployed with the site, because the CSP allows only same-origin script. Third parties may share FL-only vocabularies, which already run as untrusted code. | UI.md §4 rules 4, 5 and 8. |
 | T8 | **Recommendation.** A relation and a symbolic expression are both "expression values": built by words, carried on the stack, printed and parsed by a registered text form, and evaluated only by explicit terminal words. One mechanism (extension value kinds, tagged literals, budgets, viewers) serves both. | Two clients of one mechanism are cheaper than two mechanisms (§6.5). |
+
+### Gate T0 decisions (owner, 2026-11-23)
+
+The owner decided Gate T0 for **R0 and X0 only**. **L0 and J0 have not run.** The L0 decision (go or cap) and the J0 decision (whether the JVM bridge goes ahead) stay open, and Gate T0 is not closed until they are decided. Ids continue the T series. Detail is in the result documents.
+
+| ID | Decision | Source |
+|---|---|---|
+| T9 | **R0: go, on TeaVM's JavaScript backend.** The TypeScript fallback (§8.5) is not needed for the core. | [R0](research/r0-relix-in-browser.md) §1, §12 |
+| T10 | **Accept the R0 patch set:** five engine patches plus the optional cancellation patch 0006. Upstream them after the Relix 1.0 freeze. 0002 and 0005 change no behaviour. 0003 needs a numerics review. 0004 upstreams as a guarded call. 0001 goes with T11. | [R0](research/r0-relix-in-browser.md) §12 item 1 |
+| T11 | **Browser-build limits accepted.** Locale collation and seeded `java.util.Random` (`ROLL`, `SHUFFLE`) differ from the JVM and are documented limits. The fixes (an `Intl.Collator` bridge, size M; a JDK-compatible `Random`, size S to M) are deferred. | [R0](research/r0-relix-in-browser.md) §12 item 2 |
+| T12 | **Q7 closed.** The provisional R0 thresholds are the standing thresholds: at least 95% of examples identical, at most 3 MB gzip, cold start at most 2 s, a 10,000-row join or group at most 1 s. | [R0](research/r0-relix-in-browser.md) §2, §12 item 3 |
+| T13 | **Q9 closed.** `OPTIMIZE` and `COVER EXACT` need the solver and are out of the browser. `SOLVE`, `ROLL` and `SHUFFLE` are in, with the seeded-random limit of T11. | [R0](research/r0-relix-in-browser.md) §12 item 4 |
+| T14 | **Host callbacks (FL called from Relix) are synchronous only, with batching** in the FL bridge. The async build (+51% gzip) is rejected. | [R0](research/r0-relix-in-browser.md) §9, §12 item 5 |
+| T15 | **Wasm GC is a later optimisation.** Re-test it when TeaVM's Wasm runtime no longer uses `new Function`, which Forge's CSP forbids. | [R0](research/r0-relix-in-browser.md) §8, §12 item 6 |
+| T16 | **Spike code location (partial answer to Q11).** The R0 spike code lives in the private repository `DarkCollective/relix-web`, so `relix-web` is its own repository. Where `relix-fl` lives stays open. | [R0](research/r0-relix-in-browser.md) §13 item 1 |
+| T17 | **X0: the shape is accepted** for X1, X2, X3, D2 and D3, with the amendments of [X0](research/x0-ext-values.md) §11 (see §13.5). | [X0](research/x0-ext-values.md) §1, §11 |
+| T18 | **Extension kind registry (R1, R2, R3).** A process-wide registry, keyed by kind name. Registration is idempotent and the last one wins. A pack that claims a kind another pack owns is refused at the manifest (P1). `StackSlot.kind` and `ParamSpec.kind` are added. | [X0](research/x0-ext-values.md) §10 R1 to R3 |
+| T19 | **Contract and checks (R4, R5, R8).** X1 and X2 are a contract version bump at Gate T1. Kind-aware fit checks and badges go in X2. `sizeOf` is O(1), a conservative upper bound and cached, with a conformance test per kind. | [X0](research/x0-ext-values.md) §10 R4, R5, R8 |
+| T20 | **Kind parsers and schema (R6, R12, R7).** A kind's parser is one dependency-free module imported by both the worker and the page. Decide it with P1. A per-step schema in the bake result goes with X5, and X3 depends on it. | [X0](research/x0-ext-values.md) §10 R6, R7, R12 |
+| T21 | **Table decisions (R9, R10, R11, Q4).** D3 ships first-N rows with the total and a stated limit for 1.0. Rows on demand are deferred. D2 gets a faithful text form and an `int` column. **Q4 closed:** `table` is core, not a pack. D1 parses straight into columns. | [X0](research/x0-ext-values.md) §10 R9 to R11, Q-A, §1 item 5 |
+| T22 | **Vector format.** Op vectors need a setup-steps field, so that ops taking a table can have real vectors. This is an amendment to the spec WP that owns the vector format (SP2). | [X0](research/x0-ext-values.md) §11 |
+
+**Gate T0 status.** R0: decided (T9 to T16). X0: decided (T17 to T22). L0: pending. J0: pending.
 
 ---
 
@@ -289,7 +312,7 @@ A `relation` and a `sym` share a life cycle: construct with words, hold on the s
 - **One parser each.** Core owns one CSV parser and one JSON parser and serialiser. This closes the wave 4 "no JSON" gap.
 - **Words.** `csv:parse ( bytes … -- table )`, `json:parse`, `table:>csv`, `table:>json`, `table:columns`, `table:rows`.
 - **Viewer.** A virtualised grid of the first N rows with the total.
-- **Core or pack.** Recommendation: `table`, `json` and `csv` in **core** (small, and needed by core data-format ops); relational operations in the **relix** pack. Open question Q4.
+- **Core or pack.** Recommendation: `table`, `json` and `csv` in **core** (small, and needed by core data-format ops); relational operations in the **relix** pack. Q4 is closed (2026-11-23, T21): `table` is core, not a pack.
 - **Memory.** The size meter charges what a value costs once. A live-size meter or structural sharing for tables is a risk item (§14.1).
 
 ---
@@ -326,6 +349,8 @@ The lane and slot design for binary operators (the pipe rule, swap sides, the Tr
 
 ### 8.3 The engine (face c): spike R0 first
 
+**R0 done 2026-11-23: go on TeaVM's JavaScript backend.** All eight criteria pass at the thresholds below. Result: [r0-relix-in-browser.md](research/r0-relix-in-browser.md). Decisions T9 to T16 (§3).
+
 **Candidates.**
 
 | Candidate | Notes |
@@ -336,7 +361,7 @@ The lane and slot design for binary operators (the pipe rule, swap sides, the Tr
 
 **Assembly.** The engine jars minus `relix-embed`, `relix-connectors-std` and the ojAlgo solver. A small Java shim wires the pipeline with `FunctionCatalog.of(...)` and in-memory sources. It lives in a new module or repository (`relix-web`) that consumes the **published** engine jar, so the 1.0 freeze is respected.
 
-**R0 pass criteria.** These are proposed thresholds for the owner to confirm (Q7). Figures marked "estimate" are guesses to be replaced.
+**R0 pass criteria.** These were proposed thresholds. The owner confirmed them on 2026-11-23 as the standing thresholds (Q7 closed, T12). Figures marked "estimate" were guesses; they are now the limits.
 
 | # | Criterion |
 |---|---|
@@ -348,6 +373,8 @@ The lane and slot design for binary operators (the pipe rule, swap sides, the Tr
 | 6 | Cold start at most 2 s and a 10,000-row group or join at most 1 s on a mid-range laptop (estimates) |
 | 7 | Cancellation works (worker terminate or cooperative) |
 | 8 | A JavaScript callback from a `StrictScalarFunction` works |
+
+Measured results (2026-11-23): 241 of 248 examples identical (97.2%); 1.33 MB gzip; cold start 1.07 s; a 10,000-row join 0.23 s; no CSP violation on the JavaScript backend. Limits of the browser build (T11): locale collation (`COLLATE 'en-US'`) is not available, and seeded `ROLL` and `SHUFFLE` draw a different sequence from the JVM. `OPTIMIZE` and `COVER EXACT` are out (T13). Wasm GC is two to three times faster, but its runtime uses `new Function`, which the CSP forbids. It is a later optimisation, to be re-tested when TeaVM drops that (T15).
 
 ### 8.4 FL from Relix inside Forge
 
@@ -372,15 +399,19 @@ A `FunctionLibrary` named `fl` (naming open, Q2) exposes:
 
 **Sync against async.** The FL VM is async (async primitives are awaited, PLAN §3.4); the compiled engine is synchronous. Options: TeaVM's async transformation, or evaluating FL-function columns in batches outside the engine (the planner hoists them). R0 must test this.
 
+*Decided 2026-11-23 (T14, [R0](research/r0-relix-in-browser.md) §9):* host callbacks are synchronous only. The planner hoists FL-function columns and the bridge evaluates them in batches before the engine runs. TeaVM's async build works but is 51% larger (2.0 MB against 1.33 MB gzip) and slower, so it is rejected.
+
 **Batch first.** Per-row calls are slow, so the bridge maps a word over a column.
 
 ### 8.5 The fallback
 
 If R0 fails: a TypeScript engine for the core operators (π σ ρ γ τ λ δ, joins, set operators, TOP, basic WINDOW), held to the same reference-example corpus. Exotic operators report "needs full Relix". This is a **second engine** and conflicts with goal 6. That is why it is the fallback and not the plan.
 
+*2026-11-23:* R0 passed (T9), so the fallback is not needed for the core. It stays here as the record of the alternative.
+
 ### 8.6 The solver
 
-`OPTIMIZE` needs a solver. ojAlgo will not be in the browser. A browser `MathProgrammingSolver` provider could later come from the symbolic pack's exact simplex. This is a stretch item, not in the base scope (Q9).
+`OPTIMIZE` needs a solver. ojAlgo will not be in the browser. A browser `MathProgrammingSolver` provider could later come from the symbolic pack's exact simplex. This is a stretch item, not in the base scope. *Decided 2026-11-23 (Q9, T13):* `OPTIMIZE` and `COVER EXACT` are out of the browser; `SOLVE`, `ROLL` and `SHUFFLE` are in.
 
 ### 8.7 FL from JVM Relix (T2)
 
@@ -560,19 +591,21 @@ Parallel, time-boxed, throwaway code. Each ends in a written result and an owner
 
 | WP | Deliverable | Owns | Depends on | Agent | Done when |
 |---|---|---|---|---|---|
-| R0 | Relix engine compiled to JS or Wasm, in-memory path; report against §8.3 criteria | scratch repo or branch (not `packages/*`) | none | So | Result document lists each criterion as pass or fail with measurements |
+| R0 ✅ | Relix engine compiled to JS or Wasm, in-memory path; report against §8.3 criteria | scratch repo or branch (not `packages/*`) | none | So | Result document lists each criterion as pass or fail with measurements. Done 2026-11-23: [r0-relix-in-browser.md](research/r0-relix-in-browser.md) |
 | L0 | Kernel-tier compiler prototype; TEA, SHA-1, MD4, RC4 in FL | scratch branch | none | So | Result document with vectors and timings against §11.3 |
 | J0 | FL VM bundle run in GraalJS; one op called from a Java test | scratch repo | none | So | Result lists start-up, per-call cost and ops that degrade |
-| X0 | `ext` value, registry, one viewer and one parameter kind prototype | scratch branch | none | So | A table kind renders in the UI under the production headers |
+| X0 ✅ | `ext` value, registry, one viewer and one parameter kind prototype | scratch branch | none | So | A table kind renders in the UI under the production headers. Done 2026-11-23: [x0-ext-values.md](research/x0-ext-values.md) |
 
 **Gate T0.** The owner reads the four results and decides: R0 go or fallback; L0 go or cap; whether J0 allows the JVM bridge; whether the X0 shape is accepted.
+
+**Gate T0 outcome (owner, 2026-11-23), for R0 and X0 only.** R0: go on TeaVM's JavaScript backend (T9 to T16). X0: shape accepted with the amendments of [X0 §11](research/x0-ext-values.md) (T17 to T22). **L0 and J0 have not run.** Their decisions (L0 go or cap; whether J0 allows the JVM bridge) are pending, so Gate T0 is not fully closed. Work that depends only on R0 or X0 may be briefed now.
 
 ### 13.3 Phase T1: specifications
 
 | WP | Deliverable | Owns | Depends on | Agent | Done when |
 |---|---|---|---|---|---|
 | SP1 | LANGUAGE.md v0.2 (§11) | `docs/LANGUAGE.md` | Gate T0 | So | Every proposal in §11.6 has a normative section and a list of conformance blocks |
-| SP2 | RECIPES.md v2: ext parameters, relation-valued parameters, named inputs, pack ops, pin behaviour | `docs/RECIPES.md` | SP1 | So | Schema changes listed; §2.2 internal-vocabulary drift fixed |
+| SP2 | RECIPES.md v2: ext parameters, relation-valued parameters, named inputs, pack ops, pin behaviour, and a setup-steps field in the op vector format so that ops taking a table can have real vectors (T22) | `docs/RECIPES.md` | SP1 | So | Schema changes listed; §2.2 internal-vocabulary drift fixed |
 | SP3 | UI.md amendments: viewers, pack rules, CSP | `docs/UI.md` | SP1 | So | Rules 6 and 8 amendments and the `media-src` change written |
 | SP4 | PACKS.md | `docs/PACKS.md` | SP1 | So | Manifest schema, discovery, init protocol, capability model |
 | SP5 | SYMBOLIC.md v2 (§9.3) | `docs/SYMBOLIC.md` | SP1 | So | Decision table updated; WP table rewritten |
@@ -606,11 +639,11 @@ L10 needs the `ext` tag (X1), so X1 is built inside Phase T2 although it appears
 
 | WP | Deliverable | Owns | Depends on | Agent | Done when |
 |---|---|---|---|---|---|
-| X1 | `ext` tag core: registry, equality, size, text form, header `ext{kind}` | `packages/lang/src/types.ts`, `values.ts`, `meta.ts` | Gate T1 | So | v0.1 conformance unchanged |
-| X2 | `OutputValue` ext kind and viewer registry | `packages/worker/src/render.ts`, `apps/web/src/io/*` | X1 | So | Unknown kinds fall back to text; DOM built without `innerHTML` |
-| X3 | `ext` parameters in recipe JSON, URL and UI | `packages/recipe`, `packages/ops/src/types.ts`, `apps/web/src/params/*` | X1, SP2 | So | An ext parameter round-trips JSON, FL and URL |
+| X1 | `ext` tag core: registry, equality, size, text form, header `ext{kind}`. Amended 2026-11-23 ([X0 §11](research/x0-ext-values.md)): `StackSlot.kind` and `ParamSpec.kind`; process-wide idempotent registry; O(1) `sizeOf` with a per-kind test; `str` to `ext` coercion | `packages/lang/src/types.ts`, `values.ts`, `meta.ts`, plus `ext.ts` (new), `primitives.ts`, `vm.ts`, `errors.ts`, `meta.schema.json` | Gate T1 | So | v0.1 conformance unchanged; header round-trips; an `ext` value passes through `list`, `record` and `fork`; size limits apply; a module evaluated twice registers cleanly |
+| X2 | `OutputValue` ext kind and viewer registry. Amended: kind-aware `fit.ts`, badges and "Data here" line; viewer contract; shadow-root rule in UI.md §4; Copy and Download per kind; contract bump with X1 | `packages/worker/src/render.ts`, `apps/web/src/io/*` | X1 | So | Unknown kinds fall back to text; DOM built without `innerHTML`; a viewer that throws does not hide the value; axe passes in three themes |
+| X3 | `ext` parameters in recipe JSON, URL and UI. Amended: needs the per-step schema from X5; the kind parser is one module shared by worker and page (decide with P1); helper contract `check`, optional `complete` | `packages/recipe`, `packages/ops/src/types.ts`, `apps/web/src/params/*` | X1, SP2, X5 | So | An ext parameter round-trips JSON, FL and URL |
 | X4 | Tagged literals | `packages/lang/src/reader.ts`, `compiler.ts` | X1 | So | Error offset points at the bad character |
-| X5 | Named inputs in the bake protocol and UI | `packages/worker/src/protocol.ts`, `apps/web/src/bake/*` | SP2 | So | A step can read another input tab by name |
+| X5 | Named inputs in the bake protocol and UI. Amended: also a per-step schema in the bake result, which X3 needs | `packages/worker/src/protocol.ts`, `apps/web/src/bake/*` | SP2 | So | A step can read another input tab by name |
 | P1 | Pack manifest and build-time discovery | `packs/*/manifest.*`, `packages/ops/src/bundle.ts` | SP4 | So | Manifest generated and validated |
 | P2 | Composite provider and baker `init` with pack ids | `packages/worker`, `packages/ops/src/bundle.ts` | P1 | So | Ids not in the manifest are refused |
 | P3 | Dependency-closure loading in place of `vocabs: "all"` | `apps/web/src/bake/controller.ts`, `packages/worker` | P2 | So | Core start-up no longer loads all primitive chunks |
@@ -619,9 +652,9 @@ L10 needs the `ext` tag (X1), so X1 is built inside Phase T2 although it appears
 | P6 | Effect labels and `RunOptions.deny` wired into the baker | `packages/lang/src/types.ts`, `packages/worker` | X1 | So | A denied capability produces a structured error |
 | P7 | Per-pack size budgets in `npm run size` | size script | P1 | Ha | Budget breach fails CI |
 | P8 | Demo pack with one ext kind and one viewer | `packs/demo/*` | P2, X2 | Ha | Loads lazily under production headers |
-| D1 | `csv` words and the one CSV parser in core | `packages/ops/vocab/csv.fth`, `prims/csv.ts` | L3 | So | RFC 4180 vectors pass |
-| D2 | `table` kind: columnar, typed, null mask | `packages/ops/src/table/*` | X1 | So | Size cost near the §2.4 columnar figure |
-| D3 | `table` words and table viewer (virtualised grid) | `packages/ops/vocab/table.fth`, `apps/web/src/io/table-view.ts` | D2, X2 | So | Grid shows first N rows with total |
+| D1 | `csv` words and the one CSV parser in core. Amended: parses straight into columns, not via a list of lists | `packages/ops/vocab/csv.fth`, `prims/csv.ts` | L3 | So | RFC 4180 vectors pass |
+| D2 | `table` kind: columnar, typed, null mask. Amended: `int` column, faithful text form (null distinct from empty), honest size charge; `table` is core (Q4) | `packages/ops/src/table/*` | X1 | So | Size cost near the §2.4 columnar figure (at most 0.8 MB for numbers and 2.0 MB for 8-character strings at 10,000 by 10); equality, size, text and view tested; `table:to-json` and `table:to-csv` round-trip nulls |
+| D3 | `table` words and table viewer (virtualised grid). Amended: first N rows with the total and a stated limit for 1.0; rows on demand deferred (R9) | `packages/ops/vocab/table.fth`, `apps/web/src/io/table-view.ts` | D2, X2 | So | Grid shows first N rows with total |
 | D4 | Wave 1b data-format ops on `table` | `packages/ops/vocab/*` | D1, D3 | Ha | Vectors pass |
 
 **Gate T3.** A demo pack with one ext kind and one viewer loads lazily under production headers. Core start-up no longer loads all primitive chunks.
@@ -729,12 +762,12 @@ T5 and T6 depend on Gate T3 only, not on T4, so they can run in parallel with th
 
 | # | Risk | Mitigation |
 |---|---|---|
-| 1 | R0 fails, or the chunk is too large | Fallback engine (§8.5), reduced to core operators; or a local engine later |
-| 2 | `BigDecimal`, time and regex behaviour diverge between the compiled engine and the JVM | The reference-example corpus is the gate (R0 criterion 3); R11 |
-| 3 | Sync engine against async FL | Batch hoisting outside the engine; R0 tests it |
+| 1 | R0 fails, or the chunk is too large | Fallback engine (§8.5), reduced to core operators; or a local engine later. **Retired 2026-11-23:** R0 passed at 1.33 MB gzip (T9). What remains is the patch fork and TeaVM stability ([R0](research/r0-relix-in-browser.md) §11) |
+| 2 | `BigDecimal`, time and regex behaviour diverge between the compiled engine and the JVM | The reference-example corpus is the gate (R0 criterion 3); R11. **Reduced 2026-11-23:** all 63 decimal, 38 date/time and 10 regex examples agree. Collation and seeded random differ (T11) |
+| 3 | Sync engine against async FL | Batch hoisting outside the engine; R0 tests it. **Resolved 2026-11-23:** synchronous callbacks with batching (T14) |
 | 4 | L0 fails, so goal 5 is capped at roughly the current FL share for crypto | The plan says so (§11.3); the 53 cores stay TypeScript |
 | 5 | The breaking v0.2 migration churns parallel op work | One sweep at a wave boundary (L12); no op WPs in flight |
-| 6 | Frozen-contract changes in `packages/*` | Explicit version bump at Gate T1 |
+| 6 | Frozen-contract changes in `packages/*` | Explicit version bump at Gate T1. X0 confirmed that X1 and X2 are source-breaking and belong in that bump (T19) |
 | 7 | The Relix 1.0 freeze delays engine-side asks | Asks (Q1) are scheduled after 1.0 unless the owner pulls them in; the pack works from the published jar |
 | 8 | CSP relaxation for media | Limited to `media-src blob:`; owner-approved; media pack only |
 | 9 | Scope: this is several products | Phase gates; packs optional and independent after T3 |
@@ -748,14 +781,14 @@ T5 and T6 depend on Gate T3 only, not on T4, so they can run in parallel with th
 | Q1 | Which Relix API additions to pull into 1.0 versus after: a `relix.operators` catalog, parameter names in `relix.functions`, a public Value to JSON writer, span ends? |
 | Q2 | Naming of FL ops as Relix functions: `fl.base64_decode` or another scheme? |
 | Q3 | NULL and bytes mapping (§8.4): bytes as a tagged struct or as hex text? |
-| Q4 | Are `table`, `json` and `csv` core (recommended) or a pack? |
+| Q4 | Are `table`, `json` and `csv` core (recommended) or a pack? **Decided 2026-11-23 (T21): `table` is core, not a pack.** `json` and `csv` stay core, as recommended. |
 | Q5 | Is the `rat` mapping for NUMBER wanted when the symbolic pack is on? |
 | Q6 | Should Relix's non-pushdown built-ins later delegate to FL? (The owner chose "also in JVM Relix", not "FL replaces Relix built-ins".) |
-| Q7 | R0 thresholds (§8.3): confirm or replace the proposed values and the estimates. |
+| Q7 | R0 thresholds (§8.3): confirm or replace the proposed values and the estimates. **Decided 2026-11-23 (T12): the provisional thresholds are confirmed as the standing thresholds.** |
 | Q8 | Are Render Markdown and OCR dropped? |
-| Q9 | Are exotic operators (SOLVE, OPTIMIZE, COVER) in scope for the browser? |
+| Q9 | Are exotic operators (SOLVE, OPTIMIZE, COVER) in scope for the browser? **Decided 2026-11-23 (T13): `OPTIMIZE` and `COVER EXACT` are out of the browser; `SOLVE`, `ROLL` and `SHUFFLE` are in.** |
 | Q10 | How should pinned share URLs behave across the v0.2 hash change, beyond the existing `hash-mismatch` warning? |
-| Q11 | Where do `relix-web` and `relix-fl` live: new repositories or the relix umbrella? |
+| Q11 | Where do `relix-web` and `relix-fl` live: new repositories or the relix umbrella? **Partly decided 2026-11-23 (T16): `relix-web` is its own repository (`DarkCollective/relix-web`, private). Where `relix-fl` lives is open.** |
 | Q12 | Are PLAN.md Phase 6 items (Magic, recipe store, PWA, CLI) re-sequenced behind this programme? |
 | Q13 | Is T8 (relations and symbolic expressions as one kind of expression value) accepted? |
 
