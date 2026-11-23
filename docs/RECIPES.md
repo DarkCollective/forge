@@ -111,7 +111,7 @@ A vocabulary needs at least one of the two. The vocabulary name is the file name
 **A word is listed in the catalogue** (it is an *op* as far as recipes and the UI are concerned) iff all of these hold:
 
 1. `meta.op` is true, and `meta.exported` is true (so it is public). A word marked `helper` in its `META:` block (LANGUAGE §5.9) has `meta.op` false although it is public and has inputs, so it is not an op: a shared word can be public, callable from every vocabulary and absent from the catalogue.
-2. `meta.vocab` is not in `INTERNAL_VOCABS` (`recipe`, `bake`, `util`, `blockmode`, `random`, `list`, `json`, `asn1`; `packages/ops/src/types.ts`).
+2. `meta.vocab` is not in `INTERNAL_VOCABS` (`packages/ops/src/types.ts`). The constant holds eight vocabularies: `recipe` (the words compiled recipes call, §4.3), `bake` (where the baker loads the compiled recipe word, R23), `util` (shared FL helpers of the op vocabularies), `blockmode` (the block cipher modes and PKCS#7 padding), `random` (the host CSPRNG words), `list` (the shared sort and shuffle words), `json` (the shared JSON reader and writer) and `asn1` (the shared DER, OID and PEM words). The constant is the authority: if this list and the constant differ, the constant wins. `clock` is not internal, because its one word with no input is never an op. There is no `raise` vocabulary: the typed failure words are in `core` (LANGUAGE.md §13.6).
 3. `meta.kind` is `"fl"` or `"primitive"`.
 4. Every parameter has a type in `UI_PARAM_TYPES`: `bytes str int num number bool choice toggle regex charset key`.
    (No `any list quot record file` parameters.)
