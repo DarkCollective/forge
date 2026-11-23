@@ -1,6 +1,6 @@
 # Forge toolkit: Relix, symbolic algebra and packs (programme plan)
 
-Status: draft v1 (2026-11-11), amended 2026-11-23 with the owner's Gate T0 decisions for R0 and X0 (§3). A plan, not yet normative. It builds on [PLAN.md](PLAN.md) (§1 principles, §3.5 primitives, §5 security, §7 phases, §8 orchestration, §9 decisions), [SYMBOLIC.md](SYMBOLIC.md) (v1), [LANGUAGE.md](LANGUAGE.md) (FL v0.1), [RECIPES.md](RECIPES.md) and [UI.md](UI.md) (§4 CSP). Relix facts come from the `relix-core` source tree, `relix/docs/design/query-builder.md` and `relix/.claude/BACKLOG.md`.
+Status: draft v1 (2026-11-11), amended 2026-11-23 with the owner's Gate T0 decisions for R0 and X0 and, the same day, the Gate T1 decisions for SP2 and SP6 (§3). A plan, not yet normative. It builds on [PLAN.md](PLAN.md) (§1 principles, §3.5 primitives, §5 security, §7 phases, §8 orchestration, §9 decisions), [SYMBOLIC.md](SYMBOLIC.md) (v1), [LANGUAGE.md](LANGUAGE.md) (FL v0.1), [RECIPES.md](RECIPES.md) and [UI.md](UI.md) (§4 CSP). Relix facts come from the `relix-core` source tree, `relix/docs/design/query-builder.md` and `relix/.claude/BACKLOG.md`.
 
 > **Packages are frozen.** `packages/*` hold frozen Phase 1–2 contracts (CLAUDE.md). Most of this plan changes them. Nothing in it starts before the owner approves the version bump at the gate of Phase T1 (§13.3). The spikes of Phase T0 are throwaway code on branches and change no contract.
 
@@ -10,7 +10,7 @@ Status: draft v1 (2026-11-11), amended 2026-11-23 with the owner's Gate T0 decis
 
 1. Goals and scope
 2. Where we are
-3. Decisions T1 to T8, and Gate T0 (T9 to T22)
+3. Decisions T1 to T8, Gate T0 (T9 to T22) and Gate T1 (T23 to T34)
 4. Architecture
 5. The pack system
 6. Extension values and viewers
@@ -80,9 +80,9 @@ No media op is implemented today. Earlier waves replaced visual output with text
 | Start-up | The app calls `init` with `vocabs: "all"` (see `apps/web/src/bake/controller.ts`), so all 70 primitive chunks load at worker start. |
 | Output | `OutputValue` has no table, image or audio kind. |
 | CSP (UI.md §4) | Rule 6 forbids HTML or Markdown rendering of computed text. Rule 8 limits `fetch` to the catalogue. The CSP has no `media-src`, so audio and video are blocked (`default-src 'none'`). `img-src` allows `blob:`, and canvas works. |
-| Recipe shape | Steps are single-input (`( bytes -- any )`). A recipe is a tree, not a DAG. Parameters cannot be trees. The bake takes one input (the active tab only). |
+| Recipe shape | Steps are single-input (`( bytes -- any )`). A recipe is a tree, not a DAG. **Slots** replace "parameters cannot be trees": a binary operator step carries lanes (`pipe`, `left`, `right`) beside `params` ([RECIPES-1.2](RECIPES-1.2.md) §4, T24). The bake takes one input (the active tab only) until X5. |
 | Language | `EffectLabel` is a closed union (`+async`, `+random`, `+time`; `packages/lang/src/types.ts`). Value has nine tags with exhaustive switches. |
-| Doc drift | RECIPES §2.2 and R18 name two internal vocabularies (`recipe`, `bake`). `INTERNAL_VOCABS` in `packages/ops/src/types.ts` holds six (`recipe`, `bake`, `util`, `blockmode`, `random`, `list`). Fixed in Phase T1. |
+| Doc drift | RECIPES §2.2 and R18 name two internal vocabularies (`recipe`, `bake`). `INTERNAL_VOCABS` in `packages/ops/src/types.ts` holds **eight** (`recipe`, `bake`, `util`, `blockmode`, `random`, `list`, `json`, `asn1`), not six. The §2.2 correction is done: it is written in [RECIPES-1.2](RECIPES-1.2.md) §13 and in rule 2 of RECIPES.md §2.2. |
 
 ### 2.4 Table cost under the FL size meter
 
@@ -143,7 +143,7 @@ A table of 10,000 rows by 10 integer columns costs about **4.08 MB** as a list o
 
 ---
 
-## 3. Decisions T1 to T8, and Gate T0
+## 3. Decisions T1 to T8, Gate T0 and Gate T1
 
 Decisions T1 to T7 were taken with the owner on 2026-11-11. **T8 is the orchestrator's recommendation** and is not yet owner-approved. Ids use the prefix T to avoid collisions with LANGUAGE.md's D-numbers, PLAN §9 and SYMBOLIC.md's S-numbers.
 
@@ -166,7 +166,7 @@ The owner decided Gate T0 for **R0 and X0 only**. **L0 and J0 have not run.** Th
 |---|---|---|
 | T9 | **R0: go, on TeaVM's JavaScript backend.** The TypeScript fallback (§8.5) is not needed for the core. | [R0](research/r0-relix-in-browser.md) §1, §12 |
 | T10 | **Accept the R0 patch set:** five engine patches plus the optional cancellation patch 0006. Upstream them after the Relix 1.0 freeze. 0002 and 0005 change no behaviour. 0003 needs a numerics review. 0004 upstreams as a guarded call. 0001 goes with T11. | [R0](research/r0-relix-in-browser.md) §12 item 1 |
-| T11 | **Browser-build limits accepted.** Locale collation and seeded `java.util.Random` (`ROLL`, `SHUFFLE`) differ from the JVM and are documented limits. The fixes (an `Intl.Collator` bridge, size M; a JDK-compatible `Random`, size S to M) are deferred. | [R0](research/r0-relix-in-browser.md) §12 item 2 |
+| T11 | **Browser-build limits accepted.** Locale collation and seeded `java.util.Random` differ from the JVM and are documented limits. The seeded forms that differ are `SHUFFLE SEED` and uniform `ROLL SEED`; `SAMPLE … SEED` and `ROLL BY … SEED` match ([RELIX.md](RELIX.md) §1.4; refined by T34). The fixes (an `Intl.Collator` bridge, size M; a JDK-compatible `Random`, size S to M) are deferred. | [R0](research/r0-relix-in-browser.md) §12 item 2 |
 | T12 | **Q7 closed.** The provisional R0 thresholds are the standing thresholds: at least 95% of examples identical, at most 3 MB gzip, cold start at most 2 s, a 10,000-row join or group at most 1 s. | [R0](research/r0-relix-in-browser.md) §2, §12 item 3 |
 | T13 | **Q9 closed.** `OPTIMIZE` and `COVER EXACT` need the solver and are out of the browser. `SOLVE`, `ROLL` and `SHUFFLE` are in, with the seeded-random limit of T11. | [R0](research/r0-relix-in-browser.md) §12 item 4 |
 | T14 | **Host callbacks (FL called from Relix) are synchronous only, with batching** in the FL bridge. The async build (+51% gzip) is rejected. | [R0](research/r0-relix-in-browser.md) §9, §12 item 5 |
@@ -180,6 +180,34 @@ The owner decided Gate T0 for **R0 and X0 only**. **L0 and J0 have not run.** Th
 | T22 | **Vector format.** Op vectors need a setup-steps field, so that ops taking a table can have real vectors. This is an amendment to the spec WP that owns the vector format (SP2). | [X0](research/x0-ext-values.md) §11 |
 
 **Gate T0 status.** R0: decided (T9 to T16). X0: decided (T17 to T22). L0: pending. J0: pending.
+
+### Gate T1 decisions (owner, 2026-11-23)
+
+The owner decided Gate T1 for **SP2 ([RECIPES-1.2.md](RECIPES-1.2.md)) and SP6 ([RELIX.md](RELIX.md)) only.** SP1, SP3, SP4 and SP5 have not been written. Ids continue the T series. Each row names the answers of the spec that it takes; the spec holds the reasoning.
+
+**SP2: every recommended answer is accepted, Q1 to Q15, except Q5.** T25 changes Q5.
+
+| ID | Decision | Source |
+|---|---|---|
+| T23 | **Format version and bake protocol.** The recipe wave is **v1.2 and keeps `"forge": 1`**: every item is additive and a new construct fails closed for an older reader. Bake `PROTOCOL_VERSION` becomes **2** (a `protocol: 1` client gets `E_PROTOCOL` at `init`). | [RECIPES-1.2](RECIPES-1.2.md) §17 Q1, Q8; §2, §12 |
+| T24 | **Slot model.** The catalogue marks a binary operator by derivation: `CatalogueOp.slot` is set when the data input and the first parameter are both `ext{relation}`, with no `META:` clause. A slot lane may start with something other than a source. `pipe` on a first step is valid. A register is not a slot's source. The validator reports no `slot-type`; `fit.ts` and the run-time `E_TYPE` cover it. There are two slots, `left` and `right`; an N-ary union is a chain of `relix:union` steps. | RECIPES-1.2 §17 Q2, Q3, Q4, Q5 (first part), Q6, Q14; §4, §5 |
+| T25 | **`FIX` and `ITERATE` are in the format.** This is the exception to SP2 Q5, which had left them out. They are steps with the slots **`base` and `step`**. The data from above feeds `base` only. The `step` lane is always explicit and starts with `relix:recur`. This is **conflict 1 between the two specs; RELIX.md's answer wins** (RQ5). | [RELIX.md](RELIX.md) §14 RQ5, §3.5; RECIPES-1.2 §17 Q5 |
+| T26 | **Packs in recipes and share links.** There is no `packs` field. Pack ops are named by their qualified names, and `PackIndex` tells the validator which vocabularies belong to a pack that is off. The failures are `pack-not-enabled` and `packs-needed` (the second carries the recipe). The validator skips `catalogue-mismatch` for a recipe with a pack op, and `encodeShare` omits `catalogue` for it. A share link carries only the input tabs that a `relix:input` step names; the dialog offers them, selected by default. | RECIPES-1.2 §17 Q9, Q11, Q7; §8, §11 |
+| T27 | **Pins across hash changes (Q10).** Ops carry `previousHashes`. Only ops whose vectors are identical in both releases get one, and an old pin to such an op is silent. The `pins:compat` script has to run on the pre-sweep tag, so it runs before the v0.2 sweep (L12). | RECIPES-1.2 §17 Q10; §9 |
+| T28 | **Vectors, per-step schema, ext strings.** Vectors gain `finish` beside `setup` (T22), so an op that returns a table can have a vector. The per-step schema travels in `StepReport.out` of the final result and in `dataInfo` of the `paused` event. Ext strings are not normalised; a page action can tidy one through the kind. | RECIPES-1.2 §17 Q12, Q13, Q15; §3.4, §7.5, §10 |
+
+**SP6: every recommended answer is accepted, RX1 to RX17 and RQ1 to RQ8, together with the answers to TOOLKIT Q1, Q2, Q3, Q5, Q6 and Q11.**
+
+| ID | Decision | Source |
+|---|---|---|
+| T29 | **The Relix pack as specified.** RX1 to RX17 stand: one pack and one vocabulary (`relix`); a relation is a tree that terminals print as Relix text, and "parse-free" is a later optimisation; 52 operators, one word each, 51 usable in the browser; implicit lift and run inserted by the recipe compiler and marked `implicit`; no new error codes; engine limits through `ExecutionContext`. **The operator table stays in Forge** (`packs/relix/gen/operators.json`) until Relix publishes `relix.operators`. | [RELIX.md](RELIX.md) §13 RX1 to RX17 |
+| T30 | **`relix:input`.** This is **conflict 2 between the two specs; RELIX.md's answer wins** (RQ1). `relix:input ( -- relation )` parses a tab itself, with the parameters `format` and `header`. A new core op, **`input:tab ( -- bytes )`**, reads a tab as raw bytes for byte steps. The first step of a bytes-first lane in RELIX-LANES becomes `input:tab`. | RELIX.md §14 RQ1, §3.2; RECIPES-1.2 §18 (requirement 2 on SP6) |
+| T31 | **Asks of Relix (Q1): nothing into 1.0.** After 1.0, in this order: (1) `relix.operators`; (2) public fragment parsers; (3) span ends and structured diagnostics with a reason code; (4) a public execution entry with limits and a cancellation poll; (5) a Value-to-JSON or columnar result writer; (6) per-operator row counts in the event feed; (7) parameter names in `relix.functions`. Forge works without any of them. | RELIX.md §14 (TOOLKIT Q1) |
+| T32 | **FL from Relix.** Names are **`fl.<vocab>.<word>`**, hyphens as underscores (Q2). Bytes cross as the struct **`{ bytes_hex }`** (Q3). `rat` is used **only where the parameter is declared `ext{rat}`** (Q5). There is no `try` form in v1 (RQ8). FL is called by **discover, batch, replay** (RX6). | RELIX.md §14 Q2, Q3, Q5, RQ8; §5, §6 |
+| T33 | **No delegation, and where `relix-fl` lives.** Relix's built-ins do not delegate to FL (Q6): both keep their implementations, held together by shared vectors (C1). **`relix-fl` gets its own repository**, `DarkCollective/relix-fl`, like `relix-web` (Q11, with T16). | RELIX.md §14 (TOOLKIT Q6, Q11) |
+| T34 | **Smaller Relix answers.** RQ2: per-step counts come from on-demand count queries. RQ3: decimals that do not fit a double are a text column with `origin` in v1. RQ4: fragment checks use wrapper templates until Relix has fragment parsers. RQ6: View as Relix can include data, with a 200-row cap per table. RQ7: fix the seeded `nextInt(bound)` and `Collections.shuffle` differences in the supplement when R1b next touches it (T11 allows deferring them; this brings the fix forward). | RELIX.md §14 RQ2, RQ3, RQ4, RQ6, RQ7 |
+
+**Gate T1 status.** SP2: decided (T23 to T28). SP6: decided (T29 to T34). **Gate T1 stays open for the rest.** SP1 (LANGUAGE v0.2 remainder), SP3 (UI.md), SP4 (PACKS.md) and SP5 (SYMBOLIC v2) have not been written. The frozen-contract version bump for X1 and X2 (T19) is not yet approved, and no work package that changes `packages/*` starts before it. The two specs raise two new questions, Q14 and Q15 (§14.2).
 
 ---
 
@@ -327,22 +355,22 @@ The pack has three faces of one thing.
 
 | Kind | Shape |
 |---|---|
-| Sources | `relix:from ( table name:str -- relation )` |
-| Unary operators | `( relation params… -- relation )` |
+| Sources | `relix:input ( -- relation )` (reads and parses an input tab, T30), `relix:from ( table name:str -- relation )`, `relix:inline`, `relix:generate`, `relix:unit`, `relix:empty`, `relix:recur` (the accumulator inside a `step` slot) |
+| Unary operators | `( relation params… -- relation )`, including `relix:why` (`WhyNode`: a relational operator that adds a nested `provenance` column, not a terminal) |
 | Binary operators | `( relation right:relation … -- relation )` |
-| Terminals | `relix:run ( relation -- table )`, `relix:explain`, `relix:optimized` (text), `relix:schema`, `relix:why`, `relix:>text`, `relix:parse` |
+| Terminals | `relix:run ( relation -- table )`, `relix:explain`, `relix:optimized` (text), `relix:schema`, `relix:>text`, `relix:parse` |
 
-Nothing executes until a terminal. Then the whole tree goes parse-free, straight into analyse, optimise, plan and execute, so the optimiser sees the whole query. This mirrors ADR-0027 ("a Relation is a value"). A `relation` that reaches a non-Relix op, or the end of the recipe, is **run implicitly**; the trace records the coercion `relation → table`.
+Nothing executes until a terminal. Then the tree is printed as Relix text and the engine parses, analyses, optimises, plans and executes it, so the optimiser sees the whole query. This mirrors ADR-0027 ("a Relation is a value"). Going from the tree to the analyser without the text ("parse-free") is a later optimisation (RELIX.md RX2). A `relation` that reaches an op that takes a table, or the end of the recipe, is **run implicitly**. The recipe compiler inserts the implicit run and the implicit lift (`table → relation`), marks them `implicit`, and the trace records the coercion `relation → table`. Only an op that takes a table triggers a run (RX5). The words are specified in [RELIX.md](RELIX.md) §3.
 
 ### 8.2 Recipes and drag and drop (face b)
 
 - **Unary operators are ordinary recipe steps.** A recipe is already a linear pipeline.
-- **Binary operators** are steps with a **relation-valued parameter**, shown as a nested lane. A relational expression is a tree, which matches the recipe tree; the nested lane reuses the fork and subsection block UI. The recipe format needs parameters that can be trees (RECIPES v2).
+- **Binary operators** are steps with two **slots**, `left` and `right`, shown as nested lanes; `pipe` says which slot the data from above feeds. The slot is not in `params`. A relational expression is a tree, which matches the recipe tree, and the lane reuses the fork and subsection block UI. Slots are the next wave of the recipe format, v1.2, which keeps `"forge": 1` (T23, T24; [RECIPES-1.2](RECIPES-1.2.md) §4). `FIX` and `ITERATE` are steps with the slots `base` and `step` (T25).
 - **Shared sub-expressions** are named relations: saved recipes promoted to words (PLAN §3.6 "recipes are words"). They are the analogue of `N := { … }`.
 - **Predicates, projections, aggregates and sort keys** are `ext{relix-expr}`-style parameters: Relix operand or predicate text, validated live by the Relix parser. First a text field with completion from the input schema; later a structured builder widget.
-- **Multiple inputs.** The bake protocol gains **named inputs** (all input tabs, by name), so `relix:input name` can read another tab. This is a `@forge/worker` protocol change (X5).
+- **Multiple inputs.** The bake protocol gains **named inputs** (all input tabs, by name), so `relix:input name` can read another tab. This is a `@forge/worker` protocol change (X5; protocol 2, T23). `input:tab` reads a tab as bytes (T30).
 - **Recipe and Relix text.** "View as Relix" prints the recipe as a `.relix` script through the engine's printer. Importing a `.relix` script produces a recipe. Each step shows its schema (from `schema()`) and row counts.
-- **Generated steps.** Operator steps are generated, not hand-written. One operator table (name, glyph, keyword, arity, parameter shapes, doc key) generates the `.fth` wrappers and metadata. Proposal to Relix: publish this as a `relix.operators` catalog relation, and expose parameter names in `relix.functions`, so Relix is the single source. That is post-1.0 unless the owner pulls it into 1.0 (Q1).
+- **Generated steps.** Operator steps are generated, not hand-written. One operator table of **52 operators** (29 unary, 21 binary, 2 base-and-step; [RELIX.md](RELIX.md) §4) holds name, glyph, keyword, arity, parameter shapes and doc key, and generates the `.fth` wrappers and metadata. The table stays in Forge until Relix publishes `relix.operators` (T29). Proposal to Relix: publish this as a `relix.operators` catalog relation, and expose parameter names in `relix.functions`, so Relix is the single source. That is post-1.0 unless the owner pulls it into 1.0 (Q1).
 - **Help text** comes from the Relix reference pages (the `relix-docs` artifact), not rewritten.
 
 The lane and slot design for binary operators (the pipe rule, swap sides, the Tree view, recipe JSON for slots) is in [RELIX-LANES.md](RELIX-LANES.md).
@@ -374,32 +402,26 @@ The lane and slot design for binary operators (the pipe rule, swap sides, the Tr
 | 7 | Cancellation works (worker terminate or cooperative) |
 | 8 | A JavaScript callback from a `StrictScalarFunction` works |
 
-Measured results (2026-11-23): 241 of 248 examples identical (97.2%); 1.33 MB gzip; cold start 1.07 s; a 10,000-row join 0.23 s; no CSP violation on the JavaScript backend. Limits of the browser build (T11): locale collation (`COLLATE 'en-US'`) is not available, and seeded `ROLL` and `SHUFFLE` draw a different sequence from the JVM. `OPTIMIZE` and `COVER EXACT` are out (T13). Wasm GC is two to three times faster, but its runtime uses `new Function`, which the CSP forbids. It is a later optimisation, to be re-tested when TeaVM drops that (T15).
+Measured results (2026-11-23): 241 of 248 examples identical (97.2%); 1.33 MB gzip; cold start 1.07 s; a 10,000-row join 0.23 s; no CSP violation on the JavaScript backend. Limits of the browser build (T11): locale collation (`COLLATE 'en-US'`) is not available, and two seeded forms draw a different sequence from the JVM: `SHUFFLE SEED` and uniform `ROLL SEED`. `SAMPLE … SEED` and `ROLL BY … SEED` match (SP6 probes, [RELIX.md](RELIX.md) §1.4; T34). `OPTIMIZE` and `COVER EXACT` are out (T13). Wasm GC is two to three times faster, but its runtime uses `new Function`, which the CSP forbids. It is a later optimisation, to be re-tested when TeaVM drops that (T15).
 
 ### 8.4 FL from Relix inside Forge
 
-A `FunctionLibrary` named `fl` (naming open, Q2) exposes:
+A `FunctionLibrary` named `fl` exposes functions named `fl.<vocab>.<word>`, with hyphens as underscores (Q2, T32):
 
 1. every catalogue op whose data input and output map to Relix scalars, as a Relix function;
 2. user words and promoted recipes;
-3. table-valued FL words, for `LATERAL` and table-valued function use.
+3. table-valued FL words, as a function that returns an ARRAY of STRUCT, which `μ` turns into rows (the function SPI has no table-valued functions; RELIX.md §6.7).
 
-**Value mapping (proposed):**
+**Value mapping.** The mapping table is in [RELIX.md](RELIX.md) §5 and is not repeated here. The decisions that shape it:
 
-| Relix | FL | Note |
-|---|---|---|
-| NUMBER (`BigDecimal`) | `int` when integral, else `num` | and `rat` when the symbolic pack is on (open, Q5) |
-| STRING | `str` | |
-| BOOLEAN | `bool` | |
-| struct | `record` | |
-| array | `list` | |
-| NULL | none | FL has no null. FL functions are **strict**: NULL in gives NULL out without calling FL. A table's null mask carries nulls. |
-| bytes | `bytes` | Relix has no bytes type. Results cross as a tagged struct or as hex text (open, Q3). |
-| dates | ISO `str` | until Forge has a date value |
+- NUMBER maps to `int` when integral, else `num`, and to `rat` only where the parameter is declared `ext{rat}` (Q5, T32).
+- **NULL.** FL has no null. The bridge does NULL in, NULL out: if any argument is NULL, it returns NULL and does not call FL. The bridge has to do this because the engine calls a function even when an argument is NULL (RELIX.md §5.4). This corrects the R0 note (criterion 8), which said the engine skips the call. A table's null mask carries nulls.
+- **Bytes.** Relix has no bytes type. Bytes cross as the struct `{ bytes_hex }` (Q3, T32).
+- Dates cross as ISO `str` until Forge has a date value.
 
-**Sync against async.** The FL VM is async (async primitives are awaited, PLAN §3.4); the compiled engine is synchronous. Options: TeaVM's async transformation, or evaluating FL-function columns in batches outside the engine (the planner hoists them). R0 must test this.
+**Sync against async.** The FL VM is async (async primitives are awaited, PLAN §3.4); the compiled engine is synchronous. Options: TeaVM's async transformation, or evaluating FL-function calls in batches outside the engine. R0 tested this.
 
-*Decided 2026-11-23 (T14, [R0](research/r0-relix-in-browser.md) §9):* host callbacks are synchronous only. The planner hoists FL-function columns and the bridge evaluates them in batches before the engine runs. TeaVM's async build works but is 51% larger (2.0 MB against 1.33 MB gzip) and slower, so it is rejected.
+*Decided 2026-11-23 (T14, [R0](research/r0-relix-in-browser.md) §9):* host callbacks are synchronous only. The bridge uses **discover, batch, replay** (RELIX.md §6.5, RX6): a run discovers the calls the query makes, FL is called in batches over the distinct arguments, and the query runs again against a cache of the results. Hoisting columns into a plan would fail for a call over a join result, an aggregate or another call. TeaVM's async build works but is 51% larger (2.0 MB against 1.33 MB gzip) and slower, so it is rejected.
 
 **Batch first.** Per-row calls are slow, so the bridge maps a word over a column.
 
@@ -549,7 +571,7 @@ Sizes are relative. "Revisits" lists LANGUAGE.md decisions or sections touched (
 | Mid-body local binding (**done**, LANGUAGE.md A.2) | 84 closure-binding helpers; 221 single-use helpers; 984 private words called once | Fewer helpers | Additive | M | D10, §5.7 |
 | Load-time and memoised constants (memoised **done**, LANGUAGE.md §5.13; load-time open) | 101 zero-input constants; 22 rebuild tables per call; 3 `CONSTANT`s | Cheaper tables | Additive | M | D4 |
 | Shared `choice` types (**done** without value mapping, LANGUAGE.md §5.12) | 237 headers, 116 distinct lists, 70% copies | Fewer copies | Additive | S | D3 |
-| "Public not an op" (**done**, `helper`, LANGUAGE.md §5.9), friend visibility (open) | `cmac`, `lmhash`; six internal vocabularies in code | Cross-vocabulary reuse | Additive | M | §5.7 |
+| "Public not an op" (**done**, `helper`, LANGUAGE.md §5.9), friend visibility (open) | `cmac`, `lmhash`; eight internal vocabularies in code | Cross-vocabulary reuse | Additive | M | §5.7 |
 | Forward declarations, `exit` (**done**, LANGUAGE.md §8), any `VARIABLE` initial value, record literal | 106 `VARIABLE`s, 89 in five machine simulations | Simpler state machines | Additive | M | D6, D31, D10, §17.1 |
 | Mutable buffer (open), linear builder (**done** as collectors, LANGUAGE.md §8) | 9 stateful-loop primitives (727 code lines) | Those primitives to FL | Additive | L | D44, D18 |
 | 32-bit word intrinsics, `charge` | TEA 478 steps per byte; SHA-1 186 | Cost-weighted limits | Additive | M | D44 |
@@ -605,13 +627,15 @@ Parallel, time-boxed, throwaway code. Each ends in a written result and an owner
 | WP | Deliverable | Owns | Depends on | Agent | Done when |
 |---|---|---|---|---|---|
 | SP1 | LANGUAGE.md v0.2 (§11) | `docs/LANGUAGE.md` | Gate T0 | So | Every proposal in §11.6 has a normative section and a list of conformance blocks |
-| SP2 | RECIPES.md v2: ext parameters, relation-valued parameters, named inputs, pack ops, pin behaviour, and a setup-steps field in the op vector format so that ops taking a table can have real vectors (T22) | `docs/RECIPES.md` | SP1 | So | Schema changes listed; §2.2 internal-vocabulary drift fixed |
+| SP2 ✅ | The recipe wave v1.2: ext parameters, slots for binary operators, named inputs, pack ops, pin behaviour, and `setup` and `finish` fields in the op vector format (T22). **Deliverable: a proposal file**; RECIPES.md changes at the fold-in (RW9) | `docs/RECIPES-1.2.md` | none (it did not in fact depend on SP1) | So | Schema changes listed; §2.2 internal-vocabulary drift fixed. Done 2026-11-23: [RECIPES-1.2.md](RECIPES-1.2.md); decided T23 to T28 |
 | SP3 | UI.md amendments: viewers, pack rules, CSP | `docs/UI.md` | SP1 | So | Rules 6 and 8 amendments and the `media-src` change written |
 | SP4 | PACKS.md | `docs/PACKS.md` | SP1 | So | Manifest schema, discovery, init protocol, capability model |
 | SP5 | SYMBOLIC.md v2 (§9.3) | `docs/SYMBOLIC.md` | SP1 | So | Decision table updated; WP table rewritten |
-| SP6 | RELIX.md: pack spec, value mapping, operator table | `docs/RELIX.md` | SP1, R0 | So | Mapping table complete; naming (Q2) decided |
+| SP6 ✅ | RELIX.md: pack spec, value mapping, operator table | `docs/RELIX.md` | SP1, R0 | So | Mapping table complete; naming (Q2) decided. Done 2026-11-23: [RELIX.md](RELIX.md); decided T29 to T34. Its one question for SP1 is how FL holds JSON `null` (Q14) |
 
 **Gate T1.** The owner approves the frozen-contract changes. CLAUDE.md says `packages/*` are frozen; this plan needs an explicit version bump of FL, the recipe schema and the worker protocol.
+
+**Gate T1 outcome (owner, 2026-11-23), for SP2 and SP6 only.** SP2: every recommended answer accepted, with FIX and ITERATE added to the format (T23 to T28). SP6: every recommended answer accepted (T29 to T34). The two conflicts between the specs are resolved for SP6 (T25, T30). **SP1, SP3, SP4 and SP5 have not been written**, so Gate T1 stays open, and so does the frozen-contract version bump for X1 and X2 (T19). The recipe format itself needs no bump (T23). Work that depends only on SP2 or SP6 may be briefed now, but nothing that changes `packages/*` starts.
 
 ### 13.4 Phase T2: FL v0.2 and corpus migration
 
@@ -641,14 +665,14 @@ L10 needs the `ext` tag (X1), so X1 is built inside Phase T2 although it appears
 |---|---|---|---|---|---|
 | X1 | `ext` tag core: registry, equality, size, text form, header `ext{kind}`. Amended 2026-11-23 ([X0 §11](research/x0-ext-values.md)): `StackSlot.kind` and `ParamSpec.kind`; process-wide idempotent registry; O(1) `sizeOf` with a per-kind test; `str` to `ext` coercion | `packages/lang/src/types.ts`, `values.ts`, `meta.ts`, plus `ext.ts` (new), `primitives.ts`, `vm.ts`, `errors.ts`, `meta.schema.json` | Gate T1 | So | v0.1 conformance unchanged; header round-trips; an `ext` value passes through `list`, `record` and `fork`; size limits apply; a module evaluated twice registers cleanly |
 | X2 | `OutputValue` ext kind and viewer registry. Amended: kind-aware `fit.ts`, badges and "Data here" line; viewer contract; shadow-root rule in UI.md §4; Copy and Download per kind; contract bump with X1 | `packages/worker/src/render.ts`, `apps/web/src/io/*` | X1 | So | Unknown kinds fall back to text; DOM built without `innerHTML`; a viewer that throws does not hide the value; axe passes in three themes |
-| X3 | `ext` parameters in recipe JSON, URL and UI. Amended: needs the per-step schema from X5; the kind parser is one module shared by worker and page (decide with P1); helper contract `check`, optional `complete` | `packages/recipe`, `packages/ops/src/types.ts`, `apps/web/src/params/*` | X1, SP2, X5 | So | An ext parameter round-trips JSON, FL and URL |
+| X3 | `ext` parameters in recipe JSON, URL and UI. Amended: needs the per-step schema from X5 (`StepReport.out`, `dataInfo`); the kind parser is one module shared by worker and page (decide with P1); helper contract `check`, optional `complete`. The recipe half is RW2 (RECIPES-1.2 §18) | `packages/recipe`, `packages/ops/src/types.ts`, `apps/web/src/params/*` | X1, SP2 (done), X5, RW2 | So | An ext parameter round-trips JSON, FL and URL |
 | X4 | Tagged literals | `packages/lang/src/reader.ts`, `compiler.ts` | X1 | So | Error offset points at the bad character |
-| X5 | Named inputs in the bake protocol and UI. Amended: also a per-step schema in the bake result, which X3 needs | `packages/worker/src/protocol.ts`, `apps/web/src/bake/*` | SP2 | So | A step can read another input tab by name |
+| X5 | Named inputs in the bake protocol and UI: `BakeOptions.inputs`, `PROTOCOL_VERSION` 2 (T23). Amended: also a per-step schema in the bake result (`StepReport.out`, `dataInfo`; RECIPES-1.2 §7.5), which X3 needs. The worker half is RW5 | `packages/worker/src/protocol.ts`, `apps/web/src/bake/*` | SP2 (done), RW5 | So | A step can read another input tab by name; a `protocol: 1` client gets `E_PROTOCOL` |
 | P1 | Pack manifest and build-time discovery | `packs/*/manifest.*`, `packages/ops/src/bundle.ts` | SP4 | So | Manifest generated and validated |
 | P2 | Composite provider and baker `init` with pack ids | `packages/worker`, `packages/ops/src/bundle.ts` | P1 | So | Ids not in the manifest are refused |
-| P3 | Dependency-closure loading in place of `vocabs: "all"` | `apps/web/src/bake/controller.ts`, `packages/worker` | P2 | So | Core start-up no longer loads all primitive chunks |
+| P3 | Dependency-closure loading in place of `vocabs: "all"`. Uses `opVocabs` (RW6) | `apps/web/src/bake/controller.ts`, `packages/worker` | P2, RW6 | So | Core start-up no longer loads all primitive chunks |
 | P4 | Pack manager UI and IndexedDB store | `apps/web/src/packs/*` | P2 | So | Enable and disable persist per browser |
-| P5 | Shared-recipe enable offer and notice | `apps/web/src/*` | P4, X3 | So | Opening a recipe naming a pack op offers to enable |
+| P5 | Shared-recipe enable offer and notice. Needs `packs-needed` and `PackIndex` (RW6, T26) | `apps/web/src/*` | P4, X3, RW6 | So | Opening a recipe naming a pack op offers to enable |
 | P6 | Effect labels and `RunOptions.deny` wired into the baker | `packages/lang/src/types.ts`, `packages/worker` | X1 | So | A denied capability produces a structured error |
 | P7 | Per-pack size budgets in `npm run size` | size script | P1 | Ha | Budget breach fails CI |
 | P8 | Demo pack with one ext kind and one viewer | `packs/demo/*` | P2, X2 | Ha | Loads lazily under production headers |
@@ -657,28 +681,38 @@ L10 needs the `ext` tag (X1), so X1 is built inside Phase T2 although it appears
 | D3 | `table` words and table viewer (virtualised grid). Amended: first N rows with the total and a stated limit for 1.0; rows on demand deferred (R9) | `packages/ops/vocab/table.fth`, `apps/web/src/io/table-view.ts` | D2, X2 | So | Grid shows first N rows with total |
 | D4 | Wave 1b data-format ops on `table` | `packages/ops/vocab/*` | D1, D3 | Ha | Vectors pass |
 
+RECIPES-1.2 §18 holds ten work packages for the recipe wave, RW1 to RW10, each with a "Maps to" column naming the row here that it is part of or overlaps (RW1 and RW3 to RW8 sit under X3, X5, P3, P5 and R6; RW9 is the fold-in into RECIPES.md; RW10 is the web app's format-facing work). They are not counted again in §13.11.
+
 **Gate T3.** A demo pack with one ext kind and one viewer loads lazily under production headers. Core start-up no longer loads all primitive chunks.
 
 ### 13.6 Phase T4: Relix pack, then the JVM bridge
 
 | WP | Deliverable | Owns | Depends on | Agent | Done when |
 |---|---|---|---|---|---|
-| R1 | `relix-web` shim and build (location per Q11) | `relix-web/*` | R0, Gate T1 | So | Reference-example corpus runs in a browser worker |
-| R2 | Operator table and wrapper generator | `packs/relix/gen/*` | SP6 | So | Generated `.fth` and metadata for every operator in the table |
-| R3 | `relation` ext kind and value-level words | `packs/relix/vocab/*` | R1, X1, D2 | So | Build, `relix:run`, `explain`, `schema`, `>text`, `parse` pass vectors |
-| R4 | Table-to-engine and engine-to-table interchange; implicit run coercion | `packs/relix/prims/*` | R3 | So | Null mask and typed columns round-trip |
-| R5 | `relix-expr` parameter with live validation and schema completion | `packs/relix/ui/*` | X3, R1 | So | A bad expression is reported at its position |
-| R6 | Nested-lane UI for relation-valued parameters | `apps/web/src/recipe/*` | SP2, R3 | So | A binary operator step shows a lane; e2e passes |
-| R7 | "View as Relix" and `.relix` import | `packs/relix/*`, `apps/web` | R3 | So | Recipe to text to recipe is the identity on supported steps |
-| R8 | Per-step schema and row counts | `packs/relix/ui/*` | R3 | Ha | Counts shown on each step |
-| R9 | `fl` function library in the browser (batch-first bridge) | `packs/relix/fl-bridge/*` | R1, R4 | So | A Relix query calls an FL op over a column |
-| R10 | Help from `relix-docs` | `packs/relix/docs/*` | R2 | Ha | Help text comes from the reference pages |
-| R11 | Conformance harness: reference examples against the browser engine | `packs/relix/test/*` | R1 | Ha | Pass rate reported against the §8.3 criteria |
-| R12 | TypeScript fallback engine (only if R0 failed) | `packs/relix/engine-ts/*` | Gate T0 | So | Held to the same corpus; exotic operators report "needs full Relix" |
+| R1a | `relix-web` session shim: tables, limits and poll, terminals, structured diagnostics, print and normalise, `decompose`, the `fl` cache library, version string | `relix-web/shim/*` | R0, Gate T1 | So | Every entry point has JVM and browser tests; limits fire with their codes |
+| R1b | `relix-web` build: patch-series check per Relix release, supplements module (the T34 random fix), ES-module wrapper, hashed artifact, size gate, NOTICE | `relix-web/scripts/*`, `patches/*`, `classlib/*` | R0 | So | A clean build from a published engine gives the module at most 3 MB gzip (T12) |
+| R2a | `operators.json` and its schema (52 rows), drafted by script from `RelNode` and the reference, then completed by hand | `packs/relix/gen/operators.json` | SP6 (done) | So | All 52 rows; coverage, spelling and reference tests pass |
+| R2b | Generator: `.fth` with `META:`, printer table, help source; `--check` mode | `packs/relix/gen/*.ts`, `vocab/relix-ops.fth` | R2a | Ha | Generated output committed; `gen:relix --check` in CI |
+| R3 | `relation` and `relix-expr` kinds, sources (including `relix:input`, T30) and terminals | `packs/relix/vocab/*`, `src/kinds/*`, `prims/*` | R1a, R2b, X1, D2 | So | Build, `relix:run`, `explain`, `schema`, `>text`, `parse` pass vectors |
+| R4 | Table-to-engine and engine-to-table interchange; implicit lift and run inserted by the compiler (T29) | `packs/relix/src/interchange/*`, compiler hook | R3, D2, SP2 (done) | So | Null mask and typed columns round-trip; the trace shows `relation -> table` |
+| R5a | Tier-1 shape check module and the wrapper templates for fragments (T34) | `packs/relix/src/expr-check/*` | R1a | So | Each shape: valid samples pass, invalid ones report the right column |
+| R5b | Tier-2 check through the Worker, completion from schema and catalogue, the field UI | `packs/relix/ui/*` | R5a, X3, X5 | So | A bad expression is reported at its position before the bake |
+| R6 | Nested-lane UI for slots (as RELIX-LANES §11, with RW3 and RW10) | `apps/web/src/recipe/*` | SP2 (done), R3 | So | A binary operator step shows lanes; `FIX` and `ITERATE` show `base` and `step`; e2e passes |
+| R7a | "View as Relix", both spellings, include-data option with a 200-row cap (T34) | `packs/relix/src/view/*` | R1a, R3 | So | Golden texts; the lost-content list is shown |
+| R7b | `.relix` import with the statement check and binding dialog | `packs/relix/src/import/*` | R7a | So | Recipe to text to recipe is the identity on supported steps |
+| R8 | Per-step schema and on-demand row counts (T34) | `packs/relix/ui/*` | R3, X5 | Ha | Schema on every Relix step; a count on request |
+| R9a | `fl` exposure rules, names (T32), value mapping both ways | `packs/relix/src/fl-bridge/map.ts`, `exposure.ts` | R1a, R4 | So | Property tests pass; the exposure report lists every excluded op and why |
+| R9b | Discover, batch, replay loop; FL errors; limits | `packs/relix/src/fl-bridge/batch.ts` | R9a | So | A query over 10,000 rows calls an FL op once per distinct value |
+| R10 | Help from `relix-docs` | `relix-web/scripts/reference.*`, `packs/relix/gen/help-*.ts` | R2b | Ha | Help text comes from the reference pages |
+| R11 | Conformance harness: reference examples against the browser engine, with an expected-differences gate | `relix-web/harness/*`, `packs/relix/test/*` | R1a, R1b, SP2 (done) | Ha | Pass rate reported against T12; a change in the differences list fails the job |
+| R13 | Pack manifest and budget, lazy load in the bake Worker, cancellation wiring (shared flag, poll, deadline), `needsHardKill` for engine-running words | `packs/relix/manifest.*`, `packages/worker` hook | R1a, P2 | So | Cancellation tests pass; the pack loads lazily under the production headers |
+| R14 | Security tests: injection, text rendering, refused statements | `packs/relix/test/security/*` | R3, R7b | Ha | Every case of RELIX.md §11.2 has a test |
 | J1 | `@forge/embed` single-file bundle | `packages/embed/*` | Gate T2, J0 | So | Runs under Node and GraalJS |
 | J2 | `relix-fl` module (`FunctionLibrary`, GraalJS) | `relix-fl/*` (location per Q11) | J1; Relix 1.0 | So | Found by `ServiceLoader`; an FL op callable in a query |
 | J3 | Value mapping and vector run in CI | `relix-fl/test/*` | J2, SP6 | Ha | Op `*.test.json` vectors pass through the bridge |
 | J4 | List of degraded ops (WebCrypto, `CompressionStream`) and licence note | `relix-fl/README*` | J2 | Ha | List complete |
+
+The R-rows are refined in RELIX.md §15, which holds the files, sizes and "done when" checks. R1, R2, R5, R7 and R9 split into a and b; R13 (manifest and cancellation) and R14 (security tests) are new; **R12 (the TypeScript fallback engine) is dropped**, because R0 passed (T9).
 
 **Gate T4.** In the browser, under the production CSP: a recipe decodes Base64, parses CSV, filters, joins a second input tab, groups, shows a table, and round-trips through "view as Relix"; and a Relix query calls an FL op. The J packages complete after Relix 1.0.
 
@@ -728,13 +762,14 @@ L10 needs the `ext` tag (X1), so X1 is built inside Phase T2 although it appears
  T0 spikes:  R0   L0   J0   X0
               \    |    |    /
                v   v    v   v
- T1 specs:   SP1 -> SP2 SP3 SP4 SP5 SP6        [Gate T1: owner]
+ T1 specs:   SP1 -> SP3 SP4 SP5 ; SP2 SP6 done  [Gate T1: owner]
                          |
  T2 FL v0.2:  L2..L10 (+X1) -> L12 (wave boundary) -> L13
                          |  (L11 only if L0 passed)
  T3 packs:    X1 -> X2 X3 X4 X5 ; P1 -> P2 -> P3 P4 P5 ; D1 D2 -> D3 -> D4
                          |
- T4 Relix:    R1 -> R3 -> R4 -> R9 ; R5 R6 R7 R8 ; (R12 if R0 failed)
+ T4 Relix:    R1a R1b -> R2a -> R2b -> R3 -> R4 -> R9a -> R9b ; R1a -> R5a -> R5b ;
+              R3 -> R6 R7a -> R7b R8 ; R2b -> R10 ; R1a R1b -> R11 ; R1a -> R13 ; R7b -> R14
               J1 -> J2 -> J3   (after Relix 1.0)
  T5 symbolic: S1 -> S2 S3 -> S4 -> S5 S6 ; S7 S8 -> S9 -> S10
  T6 media:    M1 -> M2 -> M3 M5 M6 M7 ; M4 ; M8 ; M9
@@ -747,12 +782,12 @@ T5 and T6 depend on Gate T3 only, not on T4, so they can run in parallel with th
 ### 13.11 What can start now
 
 - The four spikes: R0, L0, J0, X0.
-- Drafts of the six specifications SP1 to SP6 (SP6 waits for the R0 mapping results; none is merged before Gate T0).
+- Drafts of the specifications SP1, SP3, SP4 and SP5. SP2 and SP6 are written and decided at Gate T1 (T23 to T34).
 - L1, the corpus-stats scripts, which change no contract.
 
 **Scheduling rule.** The L12 sweep runs at a wave boundary. The remaining core waves from PLAN.md (wave 1b data formats, now depending on D; wave 6 compression; wave 7 public key, networking, forensics) run in parallel throughout, but no op work package may be in flight while L12 runs.
 
-**Count.** The tables hold 69 work packages (13 + 17 + 16 + 10 + 9 + 4), plus 4 spikes and 6 specifications. Several are conditional (L11, L13 in part, R12, J2 to J4). The Phase T3 and T4 tables can be merged in pairs if coarser packages are preferred.
+**Count.** The tables hold 75 work packages (13 + 17 + 22 + 10 + 9 + 4), plus 4 spikes and 6 specifications. The Phase T4 count went from 16 to 22: R12 is dropped, five rows split and R13 and R14 are new (18 R-rows and 4 J-rows). The RW packages of RECIPES-1.2 §18 overlap rows of Phase T3 and T4 and are not counted again. Several are conditional (L11, L13 in part, J2 to J4). The Phase T3 and T4 tables can be merged in pairs if coarser packages are preferred.
 
 ---
 
@@ -773,33 +808,38 @@ T5 and T6 depend on Gate T3 only, not on T4, so they can run in parallel with th
 | 9 | Scope: this is several products | Phase gates; packs optional and independent after T3 |
 | 10 | GraalJS constraints (start-up, missing browser APIs, licence) | J0 measures; J4 lists degraded ops |
 | 11 | Table memory under the allocation meter | Columnar representation; propose a live-size meter or structural sharing for tables |
+| 12 | A catalogue that depends on which packs are enabled: `catalogue-mismatch` would fire for every reader with a different set of packs on, and a recipe could name an op the reader's catalogue lacks | The validator skips `catalogue-mismatch` for a recipe with a pack op and `encodeShare` omits `catalogue` for it; `pack-not-enabled` and `packs-needed` say what is missing (T26; RECIPES-1.2 §8.5) |
 
 ### 14.2 Open questions for the owner
 
 | # | Question |
 |---|---|
-| Q1 | Which Relix API additions to pull into 1.0 versus after: a `relix.operators` catalog, parameter names in `relix.functions`, a public Value to JSON writer, span ends? |
-| Q2 | Naming of FL ops as Relix functions: `fl.base64_decode` or another scheme? |
-| Q3 | NULL and bytes mapping (§8.4): bytes as a tagged struct or as hex text? |
+| Q1 | Which Relix API additions to pull into 1.0 versus after: a `relix.operators` catalog, parameter names in `relix.functions`, a public Value to JSON writer, span ends? **Decided 2026-11-23 (T31): none into 1.0; an ordered list of asks after it.** |
+| Q2 | Naming of FL ops as Relix functions: `fl.base64_decode` or another scheme? **Decided 2026-11-23 (T32): `fl.<vocab>.<word>`, hyphens as underscores.** |
+| Q3 | NULL and bytes mapping (§8.4): bytes as a tagged struct or as hex text? **Decided 2026-11-23 (T32): bytes as the struct `{ bytes_hex }`; the bridge does NULL in, NULL out.** |
 | Q4 | Are `table`, `json` and `csv` core (recommended) or a pack? **Decided 2026-11-23 (T21): `table` is core, not a pack.** `json` and `csv` stay core, as recommended. |
-| Q5 | Is the `rat` mapping for NUMBER wanted when the symbolic pack is on? |
-| Q6 | Should Relix's non-pushdown built-ins later delegate to FL? (The owner chose "also in JVM Relix", not "FL replaces Relix built-ins".) |
+| Q5 | Is the `rat` mapping for NUMBER wanted when the symbolic pack is on? **Decided 2026-11-23 (T32): yes, only where the parameter is declared `ext{rat}`.** |
+| Q6 | Should Relix's non-pushdown built-ins later delegate to FL? (The owner chose "also in JVM Relix", not "FL replaces Relix built-ins".) **Decided 2026-11-23 (T33): no. Both keep their implementations, held together by shared vectors.** |
 | Q7 | R0 thresholds (§8.3): confirm or replace the proposed values and the estimates. **Decided 2026-11-23 (T12): the provisional thresholds are confirmed as the standing thresholds.** |
 | Q8 | Are Render Markdown and OCR dropped? |
 | Q9 | Are exotic operators (SOLVE, OPTIMIZE, COVER) in scope for the browser? **Decided 2026-11-23 (T13): `OPTIMIZE` and `COVER EXACT` are out of the browser; `SOLVE`, `ROLL` and `SHUFFLE` are in.** |
-| Q10 | How should pinned share URLs behave across the v0.2 hash change, beyond the existing `hash-mismatch` warning? |
-| Q11 | Where do `relix-web` and `relix-fl` live: new repositories or the relix umbrella? **Partly decided 2026-11-23 (T16): `relix-web` is its own repository (`DarkCollective/relix-web`, private). Where `relix-fl` lives is open.** |
+| Q10 | How should pinned share URLs behave across the v0.2 hash change, beyond the existing `hash-mismatch` warning? **Decided 2026-11-23 (T27): `previousHashes` on ops whose vectors are identical in both releases; an old pin to such an op is silent.** |
+| Q11 | Where do `relix-web` and `relix-fl` live: new repositories or the relix umbrella? **Partly decided 2026-11-23 (T16): `relix-web` is its own repository (`DarkCollective/relix-web`, private). Where `relix-fl` lives is open.** **Decided in full 2026-11-23 (T33): `relix-fl` is its own repository, `DarkCollective/relix-fl`.** |
 | Q12 | Are PLAN.md Phase 6 items (Magic, recipe store, PWA, CLI) re-sequenced behind this programme? |
 | Q13 | Is T8 (relations and symbolic expressions as one kind of expression value) accepted? |
+| Q14 | How does FL hold JSON `null`? It decides how nested NULLs (a struct field or array element) cross the Relix bridge; until SP1 decides, the bridge refuses them with `E_COERCE` ([RELIX.md](RELIX.md) §5.4, §16 item 13). Raised by SP6; for SP1. |
+| Q15 | Which version bump covers the frozen contracts at Gate T1: FL, the worker protocol and the X1 and X2 contract (T19)? The recipe format needs none (T23); the worker protocol goes to 2 (T23). Open until SP1, SP3, SP4 and SP5 are written. |
 
 ---
 
 ## 15. Relationship to other documents
 
-- **PLAN.md.** The Phase 6 line "Relix vocabulary integration as an `relix:` vocab of primitives" is superseded by this plan. PLAN §9 gains the decisions T1 to T8 once approved.
+- **PLAN.md.** The Phase 6 line "Relix vocabulary integration as an `relix:` vocab of primitives" is superseded by this plan. PLAN §9 gains the decisions T1 to T8 once approved; items 14 and 15 of PLAN §9 point to T9 to T22 and T23 onwards.
 - **SYMBOLIC.md.** Superseded in part: S2, S3, S5, S6 and S7 (§9.3). S8 to S14, S20 and S21 stand. A v2 is written in WP SP5.
 - **LANGUAGE.md.** A v0.2 is written in WP SP1.
-- **RECIPES.md.** A v2 is written in WP SP2. The §2.2 internal-vocabulary drift (two named, six in `INTERNAL_VOCABS`) is fixed there.
+- **RECIPES.md.** The recipe wave is specified in [RECIPES-1.2.md](RECIPES-1.2.md) (WP SP2, decided T23 to T28). RECIPES.md changes at the fold-in (RW9). The §2.2 internal-vocabulary drift (two named, eight in `INTERNAL_VOCABS`) is fixed.
+- **RECIPES-1.2.md.** The proposal for v1.2 of the recipe format: ext parameters, slots, named inputs, pack ops, pins, vectors, share links and the bake protocol. Its work packages are RW1 to RW10 (§18).
 - **UI.md.** Amended in WP SP3 (rules 6 and 8, the CSP, viewers and pack rules).
-- **New documents.** PACKS.md (SP4) and RELIX.md (SP6).
+- **RELIX.md.** The Relix pack specification (WP SP6, decided T29 to T34): value kinds, the `relix:` vocabulary, the operator table, the value mapping, the `fl` library, errors, limits, help and tests. Its work packages refine §13.6.
+- **New documents.** PACKS.md (SP4), not yet written.
 - **RELIX-LANES.md.** Design proposal for binary Relix operators in the recipe pane (lanes, slots, Tree view, recipe JSON for slots). It elaborates §8.2 and refines WP R6.
