@@ -50,6 +50,7 @@ import {
   newMemoSlot,
 } from "./compiler-memo.js";
 import { isPrivateName } from "./dictionary.js";
+import { ext, getExtKind, getLiteralTag } from "./ext.js";
 import {
   WordMetaBuilder,
   computeHash,
@@ -531,6 +532,42 @@ function headerItems(text: string, base: SourcePos): { text: string; pos: Source
   return out;
 }
 
+/** Whether `t` is a literal token (a value the compiler can build), without building it. */
+function isLiteralToken(t: Token): boolean {
+  switch (t.kind) {
+    case "int":
+    case "char":
+    case "float":
+    case "str":
+    case "bytes":
+    case "bool":
+    case "tstr":
+      return true;
+    default:
+      return false;
+  }
+}
+
+/** The source position at `offset`, counting from `from` (a position of the same source). */
+function advancePos(source: string, from: SourcePos, offset: number): SourcePos {
+  let line = from.line;
+  let col = from.col;
+  for (let k = from.offset; k < offset; k++) {
+    const c = source.charCodeAt(k);
+    if (c === 0x0a) {
+      line++;
+      col = 1;
+    } else if (c === 0x0d) {
+      if (source.charCodeAt(k + 1) === 0x0a && k + 1 < offset) k++;
+      line++;
+      col = 1;
+    } else {
+      col++;
+    }
+  }
+  return { offset, line, col };
+}
+
 function literalValue(t: Token): Value | undefined {
   switch (t.kind) {
     case "int":
@@ -665,6 +702,65 @@ class Compiler {
     }
   }
 
+  /**
+   * The value of a literal token. A tagged literal is evaluated here, at compile time (LANGUAGE-0.3.md
+   * section 6.3): the registered `parse` builds the payload and the result is `ext(kind, payload)`.
+   */
+  private literal(t: Token, word: string | null = null): Value | undefined {
+    if (t.kind !== "tstr") return literalValue(t);
+    const reg = getLiteralTag(t.tag);
+    if (reg === undefined) {
+      return this.fail("E_SYNTAX", `the literal tag '${t.tag}' is not registered`, t.pos, word, {
+        reason: "unregistered tag",
+        tag: t.tag,
+      });
+    }
+    const kind = getExtKind(reg.kind);
+    if (kind === undefined) {
+      return this.fail(
+        "E_SYNTAX",
+        `the literal tag '${t.tag}' names the unregistered kind '${reg.kind}'`,
+        t.pos,
+        word,
+        { reason: "unregistered kind", tag: t.tag, kind: reg.kind },
+      );
+    }
+    let payload: unknown;
+    try {
+      payload = reg.parse(t.value);
+    } catch (e) {
+      const raw = e instanceof ForgeError ? e.detail.offset : (e as { offset?: unknown })?.offset;
+      const offset =
+        typeof raw === "number" && Number.isInteger(raw) && raw >= 0 && raw <= t.value.length
+          ? raw
+          : null;
+      // The body starts after `tag"`; with no escape at or before the character, the decoded
+      // offset is the source offset from the body start.
+      const exact = offset !== null && (t.escapeAt === null || offset < t.escapeAt);
+      const at = exact
+        ? advancePos(this.source, t.pos, t.pos.offset + t.tag.length + 1 + offset)
+        : t.pos;
+      const why = e instanceof Error ? e.message : String(e);
+      return this.fail("E_SYNTAX", `bad ${t.tag} literal: ${why}`, at, word, {
+        kind: reg.kind,
+        tag: t.tag,
+        ...(offset === null ? {} : { offset }),
+      });
+    }
+    const size = kind.sizeOf(payload);
+    const max = this.ctx.limits.maxValueBytes;
+    if (size > max) {
+      return this.fail(
+        "E_LIMIT_VALUE",
+        `the ${t.tag} literal holds ${size} bytes, over maxValueBytes ${max}`,
+        t.pos,
+        word,
+        { limit: max, value: size, kind: reg.kind },
+      );
+    }
+    return ext(reg.kind, payload);
+  }
+
   private syntax(t: Token, expected: string, word: string | null = null): never {
     const what = t.kind === "eof" ? "end of input" : `'${t.text}'`;
     return this.fail("E_SYNTAX", `unexpected ${what}; expected ${expected}`, t.pos, word, {
@@ -797,7 +893,7 @@ class Compiler {
       }
       const follower = this.peek(1);
       if (
-        literalValue(t) !== undefined &&
+        isLiteralToken(t) &&
         follower.kind === "word" &&
         (follower.text === "CONSTANT" || follower.text === "VARIABLE")
       ) {
@@ -1132,7 +1228,7 @@ class Compiler {
 
   private parseItem(st: BodyState, depth: number): Item {
     const t = this.next();
-    const lit = literalValue(t);
+    const lit = this.literal(t, st.word);
     if (lit !== undefined) return { k: "lit", value: lit, pos: t.pos };
     switch (t.kind) {
       case "word":
@@ -1226,7 +1322,7 @@ class Compiler {
 
   private constOrVar(): void {
     const litTok = this.next();
-    const value = literalValue(litTok) as Value;
+    const value = this.literal(litTok) as Value;
     const kw = this.next();
     const isVar = kw.text === "VARIABLE";
     const nameTok = this.nameOperand(kw.text);
@@ -1242,7 +1338,7 @@ class Compiler {
     this.claim(vocab, name, nameTok.pos);
     if (isVar) this.claim(vocab, setter, nameTok.pos);
 
-    const type = value.tag as ParamType;
+    const type = (value.tag === "ext" ? `ext{${value.kind}}` : value.tag) as ParamType;
     const sourceText = this.source.slice(litTok.pos.offset, nameTok.end.offset);
     const source = { unit: this.ctx.unit, text: sourceText, pos: litTok.pos };
     const parse = (text: string): StackEffect => this.ctx.parseHeader(text, nameTok.pos, "lenient");
