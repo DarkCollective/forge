@@ -53,6 +53,7 @@ export type TokenKind =
   | "bool"
   | "word"
   | "qword"
+  | "tstr"
   | "lbracket"
   | "rbracket"
   | "lbrace"
@@ -76,6 +77,17 @@ export type Token =
   /** A char literal; `value` is the code point. The compiler treats it as an `int`. */
   | (TokenBase & { readonly kind: "char"; readonly value: number })
   | (TokenBase & { readonly kind: "bytes"; readonly value: Uint8Array })
+  /**
+   * A tagged literal `tag"body"` (LANGUAGE-0.3.md section 6). `value` is the decoded body;
+   * `escapeAt` is the UTF-16 index in `value` where the first escape sequence's output begins
+   * (null when the body has none), which the compiler needs to place a parse error.
+   */
+  | (TokenBase & {
+      readonly kind: "tstr";
+      readonly tag: string;
+      readonly value: string;
+      readonly escapeAt: number | null;
+    })
   | (TokenBase & { readonly kind: "bool"; readonly value: boolean })
   /** Unqualified word, including the keywords `:` `;` `IN:` `USING:` `META:` and reserved words. */
   | (TokenBase & { readonly kind: "word" })
@@ -96,6 +108,8 @@ export type Token =
 export interface ReadOptions {
   readonly maxSourceChars?: number;
   readonly maxIntBits?: number;
+  /** The literal tags to accept (section 6.2). A tag not in the set is lexed as before (E_LEX). */
+  readonly literalTags?: ReadonlySet<string>;
 }
 
 /**

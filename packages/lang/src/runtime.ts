@@ -27,6 +27,7 @@ import { compile, createIntrinsicEntries, createPrimitiveEntry } from "./compile
 import { DEFAULT_MEMO_CACHE_BYTES, DEFAULT_MEMO_LIMITS, newMemoBudget } from "./compiler-memo.js";
 import { warmMemo } from "./runtime-memo.js";
 import { createDictionary, listWords } from "./dictionary.js";
+import { listLiteralTags } from "./ext.js";
 import { ForgeError } from "./errors.js";
 import { isVocabName, parseHeader, renderHelp, renderSee } from "./meta.js";
 import { createPrimitiveRegistry, definePrimitive } from "./primitives.js";
@@ -161,6 +162,7 @@ export function createRuntime(options: RuntimeOptions = {}): ForgeRuntime {
       const tokens = read(source, {
         maxSourceChars: limits.maxSourceChars,
         maxIntBits: limits.maxIntBits,
+        literalTags: new Set(listLiteralTags()),
       });
       return compile(tokens, source, {
         mode: "console",
@@ -195,6 +197,7 @@ export function createRuntime(options: RuntimeOptions = {}): ForgeRuntime {
       const tokens = read(source, {
         maxSourceChars: limits.maxSourceChars,
         maxIntBits: limits.maxIntBits,
+        literalTags: new Set(listLiteralTags()),
       });
       const startScope = opts.scope ?? { current: USER_VOCAB, using: [] };
       const result = compile(tokens, source, {

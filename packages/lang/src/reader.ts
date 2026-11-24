@@ -66,6 +66,12 @@ const CH_SPACE = 0x20;
 const CH_QUOTE = 0x22;
 const CH_APOS = 0x27;
 const CH_BACKSLASH = 0x5c;
+/** A literal tag: `lower {lower | digit | "-"}`, 1 to 32 characters (LANGUAGE-0.3.md section 6.1). */
+const MAX_TAG = 32;
+
+function isLower(c: number): boolean {
+  return c >= 0x61 && c <= 0x7a;
+}
 
 /** The six whitespace characters of spec 2.1. */
 function isWs(c: number): boolean {
@@ -193,6 +199,7 @@ export function read(source: string, opts?: ReadOptions): Token[] {
     new ForgeError({ code: "E_LEX", message, pos: posAt(offset) });
 
   const tokens: Token[] = [];
+  const literalTags = opts?.literalTags;
 
   /** Index of the first standalone `)` at or after `from`, or -1. */
   const findClose = (from: number, trackStrings: boolean): number => {
@@ -229,6 +236,54 @@ export function read(source: string, opts?: ReadOptions): Token[] {
       continue;
     }
     const start = i;
+
+    if (literalTags !== undefined && literalTags.size > 0 && isLower(c)) {
+      // Tagged literal (0.3 section 6): a registered tag directly followed by `"`.
+      let t = i + 1;
+      while (
+        t < n &&
+        t - i <= MAX_TAG &&
+        (isLower(src.charCodeAt(t)) || isDigit(src.charCodeAt(t)) || src.charCodeAt(t) === 0x2d)
+      ) {
+        t++;
+      }
+      const tag = src.slice(i, t);
+      if (t < n && src.charCodeAt(t) === CH_QUOTE && t - i <= MAX_TAG && literalTags.has(tag)) {
+        let seg = t + 1;
+        let value = "";
+        let escapeAt: number | null = null;
+        let k = seg;
+        for (;;) {
+          if (k >= n) throw lex("unterminated tagged literal", start);
+          const d = src.charCodeAt(k);
+          if (d === CH_QUOTE) break;
+          if (d === CH_BACKSLASH) {
+            value += src.slice(seg, k);
+            const esc = readEscape(src, k, false);
+            if (esc === null) throw lex("invalid escape in tagged literal", k);
+            escapeAt ??= value.length;
+            value += String.fromCodePoint(esc.cp);
+            k = esc.next;
+            seg = k;
+          } else {
+            k++;
+          }
+        }
+        value += src.slice(seg, k);
+        i = k + 1;
+        checkLiteralEnd(i, start, "tagged literal");
+        tokens.push({
+          kind: "tstr",
+          tag,
+          value,
+          escapeAt,
+          text: src.slice(start, i),
+          pos: posAt(start),
+          end: posAt(i),
+        });
+        continue;
+      }
+    }
 
     if (c === CH_QUOTE) {
       // String literal (2.6).
