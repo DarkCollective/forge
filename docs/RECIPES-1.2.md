@@ -1,6 +1,6 @@
 # Recipe format v1.2: the Relix wave
 
-Status: **approved at Gate T1 on 2026-11-23.** It is still to be folded into [RECIPES.md](RECIPES.md) after implementation (work package RW9). Until the fold-in, RECIPES.md is the specification of v1 and v1.1, and this file is the specification of the v1.2 additions. Where the two differ on a v1.2 feature, this file wins. This is work package SP2 of the toolkit programme ([TOOLKIT.md](TOOLKIT.md) §13.3). It followed the precedent of [RECIPES-1.1.md](RECIPES-1.1.md): a separate proposal first, approval by the owner, implementation by work packages, and only then a fold-in into RECIPES.md. The owner's answers to the open questions are recorded in section 17. The one edit made to RECIPES.md by this work package is the §2.2 correction of section 13.
+Status: **approved at Gate T1 on 2026-11-23.** It is still to be folded into [RECIPES.md](RECIPES.md) after implementation (work package RW9). Until the fold-in, RECIPES.md is the specification of v1 and v1.1, and this file is the specification of the v1.2 additions. Where the two differ on a v1.2 feature, this file wins. This is work package SP2 of the toolkit programme ([TOOLKIT.md](TOOLKIT.md) §13.3). It followed the precedent of [RECIPES-1.1.md](RECIPES-1.1.md): a separate proposal first, approval by the owner, implementation by work packages, and only then a fold-in into RECIPES.md. The owner's answers to the open questions are recorded in section 17. The one edit made to RECIPES.md by this work package is the §2.2 correction of section 13. Section 8.5, the lists of sections 12 and 14 and Q11 of section 17 were amended at Gate T1 on 2026-11-24 by PACKS.md decision PK9, and each says so.
 
 The file name follows decision Q1 (v1.2, `"forge": 1` stays). The file keeps its name.
 
@@ -857,7 +857,7 @@ For a binary step's two inputs: the left or piped input is `dataSourcePath` of t
 
 ## 8. Pack ops
 
-TOOLKIT §5 defines packs. A pack has a manifest with its vocabularies. Discovery, the manifest and the `init` pack ids belong to PACKS.md (SP4). This section gives the recipe side.
+TOOLKIT §5 defines packs. A pack has a manifest with its vocabularies. Discovery, the manifest and the `init` pack ids belong to PACKS.md (SP4; approved at Gate T1, 2026-11-24). This section gives the recipe side.
 
 ### 8.1 Naming
 
@@ -900,11 +900,19 @@ The page shows the notice of TOOLKIT §5.2 ("this recipe uses the Relix pack, fi
 
 ### 8.4 Pins and hashes
 
-A pack op has a catalogue `hash` like any op, and `pinRecipe` and `encodeShare` pin it. The rules of RECIPES §3.10 apply unchanged. One requirement is new: a pack whose op calls code that its FL does not hash (an engine compiled to JavaScript, for `relix`) MUST make the hash change when that code's behaviour changes. A primitive's hash covers its header and its `version` (RECIPES §3.10), so the pack declares this by including the engine's version in the `version` of each of its primitives. SP4 states it in PACKS.md and P1 tests it.
+A pack op has a catalogue `hash` like any op, and `pinRecipe` and `encodeShare` pin it. The rules of RECIPES §3.10 apply unchanged. One requirement is new: a pack whose op calls code that its FL does not hash (an engine compiled to JavaScript, for `relix`) MUST make the hash change when that code's behaviour changes. A primitive's hash covers its header and its `version` (RECIPES §3.10), so the pack declares this by including the engine's version in the `version` of each of its primitives. PACKS.md §5.5 states it (the checks `external-sha` and `external-version`), and P1 tests it.
 
 ### 8.5 `recipe.catalogue` and packs
 
-`Catalogue.version` is a content id of the ops in the catalogue in use (RECIPES §2.3). With packs it differs for each set of enabled packs, so `recipe.catalogue` would raise `catalogue-mismatch` for every reader with a different set. Decided (Q11): the validator does not raise `catalogue-mismatch` for a recipe that has at least one op in a pack vocabulary (it needs `packs`), and `encodeShare` omits `catalogue` for such a recipe. The per-step pins are the safeguard (RECIPES §3.1).
+*This section was amended at Gate T1, 2026-11-24 (PACKS PK9).*
+
+`Catalogue.version` is a content id of the ops in the catalogue in use (RECIPES §2.3). With packs it differs for each set of enabled packs, so a `recipe.catalogue` that held it would raise `catalogue-mismatch` for every reader with a different set.
+
+**Rule (PACKS PK9, PACKS.md §5.4): `recipe.catalogue` is the core catalogue version, or it is absent.** The page keeps the merged catalogue for the operations pane, the forms and `fit`. It passes the recipe layer (`validateRecipe`, `encodeShare`, `compileRecipe` and every stamp) a view of it whose `version` is the core version. So a recipe with no pack op is compared against the core version whatever packs are on, and a pack-free recipe does not warn because two readers differ only in their packs.
+
+The two rules of Q11 still hold for a recipe that has a pack op. The validator does not raise `catalogue-mismatch` for a recipe that has at least one op in a pack vocabulary (it needs `packs`), and `encodeShare` omits `catalogue` for it. The page never stamps such a recipe, so its `catalogue` is absent.
+
+**The baker drops `catalogue-mismatch`.** Under closure loading the baker's catalogue is partial (PACKS.md §4.4), so its version is neither the core version nor the merged one. The baker removes `catalogue-mismatch` from the warnings it returns. The page validated the recipe against the full catalogue and owns that warning. The per-step pins are the safeguard (RECIPES §3.1).
 
 ### 8.6 Vectors for pack ops
 
@@ -1115,7 +1123,9 @@ All of it is in `packages/worker`. Section 7 gives the meaning. This section is 
 | `BAKE_INPUT_LIMITS = { maxInputs: 32, maxInputNameChars: 120 }` and `RENDER_LIMITS.maxSchemaColumns = 256` | `types.ts`, `render.ts` | |
 | the input host, read by the core op `input:tab` (and so by `relix:input`) | `core.ts`, `ops` (`input-host.ts`, as `magic-host.ts`; the primitive in `src/prims/input.ts`, vocabulary `input`) | section 7.3 |
 | the baker's early tab check | `core.ts` | section 7.4, a SHOULD |
-| `init` | unchanged here | the pack ids of `init` are PACKS.md's (SP4, P2). If they land in this wave, the same bump covers them |
+| `init` gains `packs?: readonly string[]` on `BakerInit`, and `InitInfo` gains `packs` | `types.ts`, `protocol.ts` (the strict guard), `core.ts`, `client.ts`, `port.ts` | PACKS.md §4.2 (PK7). **It rides the same protocol 2 bump** (PACKS PQ7: work package P2b lands with RW5, so one bump covers both). A `protocol: 1` client is refused at `init` with `E_PROTOCOL`. *Amended at Gate T1, 2026-11-24.* |
+| `BakeOptions.deny?: readonly EffectLabel[]` | `types.ts`, `core.ts` | PACKS.md §6.5, additive, protocol 2 |
+| the baker removes `catalogue-mismatch` from the warnings it returns | `core.ts` | section 8.5; PACKS.md §5.4 (P3) |
 
 **Why the protocol is bumped.** The v1.1 worker refuses a `bake` message with an `inputs` key and answers `fatal` (observed, section 2.1). A page and a worker from different builds (a cached worker chunk after an update) would fail on the first bake with that message. With `protocol: 2`, the same mismatch fails at `init` with `E_PROTOCOL`, which the page already shows. RECIPES-1.1 kept `1` because its change was an optional field of a worker message that an old client could ignore. This one is a request field that an old worker rejects.
 
@@ -1163,6 +1173,7 @@ Existing codes with new uses: `bad-param` (an ext string that is not a string, i
 | schema columns in a report | 256 | `RENDER_LIMITS.maxSchemaColumns` |
 | `previousHashes` per op | 4 | catalogue schema |
 | vector `setup`, `finish`, lane steps, `inputs` | 8 each | `vectors.schema.json` |
+| vector `ref` | 1000 characters (was 200) | `vectors.schema.json` (RW8; LANGUAGE-0.3 Q16, §12.8) |
 
 `maxPairs` (8) is unchanged: a link has at most six pairs.
 
@@ -1172,7 +1183,7 @@ Existing codes with new uses: `bad-param` (an ext string that is not a string, i
 |---|---|
 | `@forge/recipe` | `OpStep` gains `pipe?`, `left?`, `right?`, `base?`, `step?`; types `SlotName` (`"left" \| "right" \| "base" \| "step"`), `SlotLane { steps }`, `PackIndex`, `PackUse`, `ImplicitLine`, `Conversion`; `StepLine` gains `implicit?`; `RECIPE_ISSUE_CODES` and `RECIPE_LIMITS` as above; `SHARE_LIMITS` as above; `ShareErrorCode` gains `"packs-needed"`; `ShareError` gains `recipe?`, `packs?`; `ShareState` gains `inputName?`, `tabs?`; `DecodeShareResult` ok gains `inputName?`, `tabs?`; `ValidateOptions.packs?`, `DecodeShareOptions.packs?`; `CatalogueOpView` gains `slot?`, `previousHashes?`; the catalogue view gains `conversions?` |
 | `@forge/recipe` | functions `recipeUsesSlots(recipe)`, `recipeUsesV12(recipe, { catalogue?, packs? })`, `inputNames(recipe)`, `dataSourcePath(recipe, path)`, `opVocabs(recipe)`, `packsUsed(recipe, index)`, `planConversions(recipe, catalogue)`; constants `NAMED_INPUT_OPS`, `NAMED_INPUT_PARAM`, `RECUR_OP`, `SLOT_NAMES`, `SLOT_FAMILIES` |
-| `@forge/worker` | `BakeInput`, `BakeOptions.inputs`, `StepOutputInfo`, `SchemaColumn`, `StepReport.out`, `StepReport.implicit`, `BakeEvent.paused.dataInfo`, `BAKE_INPUT_LIMITS`, `RENDER_LIMITS.maxSchemaColumns`, `PROTOCOL_VERSION = 2` |
+| `@forge/worker` | `BakeInput`, `BakeOptions.inputs`, `StepOutputInfo`, `SchemaColumn`, `StepReport.out`, `StepReport.implicit`, `BakeEvent.paused.dataInfo`, `BAKE_INPUT_LIMITS`, `RENDER_LIMITS.maxSchemaColumns`, `PROTOCOL_VERSION = 2`, and from PACKS.md: `BakerInit.packs`, `InitInfo.packs`, `BakeOptions.deny` |
 | `@forge/ops` | `CatalogueOp.slot?`, `CatalogueOp.previousHashes?`, `Catalogue.conversions?`, `SLOT_KINDS`, `SLOT_FAMILIES`, `PrimitiveDef.hardKill?` (section 19.1 a); the core vocabulary `input` with the op `input:tab`; the catalogue schema allows the new fields; `vectors.schema.json` gains the fields of section 10; `HelpExample` gains the optional vector fields of section 10.3 |
 
 `recipeUsesSlots` is true iff some op step has `pipe`, `left`, `right`, `base` or `step`. `recipeUsesV12` is true iff `recipeUsesSlots` is true, or `inputNames` is not empty (so a recipe that only reads a tab with `input:tab` is a v1.2 recipe), or (with `catalogue`) some op step has an `ext` parameter given a value, or (with `packs`) some op is in a pack vocabulary. With no options only the first two tests run. It decides the sentence of the share dialog (section 11.5). `recipeUsesV11` is unchanged.
@@ -1188,6 +1199,7 @@ Source-breaking members, for code that switches exhaustively: `ShareErrorCode` `
 - `CatalogueOp.previousHashes?: string[]` (section 9.2).
 - Rule 4 of RECIPES §2.2: an `ext` parameter counts only for a kind registered with `fromText`.
 - The catalogue `version` is a hash of `JSON.stringify(ops)` (RECIPES §2.3), so adding either field to an op changes the version, as any change to an op does.
+- With packs, the version of the merged catalogue differs for each set of enabled packs. A recipe's `catalogue` stamp is the **core** version, never the merged one (section 8.5, PACKS PK9).
 
 ---
 
@@ -1757,7 +1769,7 @@ The owner decided these at Gate T1 on 2026-11-23. **Every recommended answer was
 
 **Q10. Pins across hash changes (TOOLKIT Q10).** Decided: **`previousHashes`** (section 9). Only ops whose vectors are identical in both releases get one, and an old pin to such an op is silent. The alternatives are in section 9.3. The owner confirms before the v0.2 sweep, because the script has to run on the pre-sweep tag.
 
-**Q11. `recipe.catalogue` and packs.** Decided: **the validator skips `catalogue-mismatch` for a recipe that has an op in a pack vocabulary, and `encodeShare` omits `catalogue` for it** (section 8.5). The alternative is to leave the warning, which fires for every reader with a different set of packs on.
+**Q11. `recipe.catalogue` and packs.** Decided: **the validator skips `catalogue-mismatch` for a recipe that has an op in a pack vocabulary, and `encodeShare` omits `catalogue` for it** (section 8.5). The alternative is to leave the warning, which fires for every reader with a different set of packs on. *Amended at Gate T1, 2026-11-24 (PACKS PK9): `recipe.catalogue` is the core catalogue version or absent, so a pack-free recipe is compared against the core version whatever packs are on, and the baker drops `catalogue-mismatch`. The two rules above still hold for a recipe that has a pack op.*
 
 **Q12. Add `finish` beside `setup` in vectors?** Decided: **yes** (section 10.2). T22 names only `setup`. Without `finish`, an op that returns a table cannot have a vector, and `table:to-json` has to be the op under test for every such case.
 
@@ -1790,7 +1802,7 @@ Ids have the prefix RW (recipe wave). "Maps to" says which TOOLKIT row or RELIX-
 | RW5 | The bake protocol and the tab sources: `inputs`, `PROTOCOL_VERSION` 2, the input host, the core vocabulary `input` with the op `input:tab` (the primitive and its `META:`), the early tab check over `NAMED_INPUT_OPS`, `StepReport.out` and `.implicit`, `dataInfo`, limits, the message guards, `core`, `client`, `port` | `packages/worker/src/*`, `packages/ops/src/prims/input.ts`, `packages/ops/src/input-host.ts`, `packages/ops/vocab/input.fth` and its vectors | RW1, X1 (`ExtKind.schema`) | X5 | So | CR242 to CR246, CR262 and CR266 hold; `input:tab` has vectors with `inputs` (RW8's format, or a hand-written test until RW8 lands); a `protocol: 1` client gets `E_PROTOCOL` at `init`; the in-process baker, the client and the Node host pass the same tests |
 | RW6 | Share: `n`, `t`, the bundle codec, `packs-needed`, `PackIndex`, `opVocabs`, `packsUsed`, limits | `packages/recipe/src/share.ts`, `types.ts`, `index.ts` | RW1 | P5 (the codec half), P3 (`opVocabs`) | So | CR226 to CR228, CR239 to CR241 hold; the hostile-fragment cases of RECIPES §7.5 still pass; a v1.1 fragment is decoded as before |
 | RW7 | Pins: `previousHashes` in the pin check; the script `pins:compat` and its test | `packages/recipe/src/validate.ts`, `packages/ops/scripts/pins-compat.ts`, `vocab/pins-compat.json` | RW4, and the v0.2 sweep (SP1 and T2) for the first real run | TOOLKIT Q10 | So | CR227 and CR251 hold; the script's output on two fixture catalogues is tested |
-| RW8 | Vectors and help examples: `setup`, `finish`, `inputs` and the slot fields in `vectors.schema.json`; the runner; `HelpExample` fields and the `buildHelp` copy; pack vector discovery | `packages/worker/src/vectors.ts`, `packages/ops/vocab/vectors.schema.json`, `vocab/vectors.test.ts`, `buildHelp` | RW1, RW3, RW5 | T22 | So | CR247 to CR250 and CR265 hold; an existing vector file is unchanged and passes |
+| RW8 | Vectors and help examples: `setup`, `finish`, `inputs` and the slot fields in `vectors.schema.json`, and the vector `ref` cap of 1000 characters (LANGUAGE-0.3 Q16); the runner; `HelpExample` fields and the `buildHelp` copy; pack vector discovery | `packages/worker/src/vectors.ts`, `packages/ops/vocab/vectors.schema.json`, `vocab/vectors.test.ts`, `buildHelp` | RW1, RW3, RW5 | T22 | So | CR247 to CR250 and CR265 hold; an existing vector file is unchanged and passes |
 | RW9 | The fold-in: RECIPES.md sections 2.2, 3, 5, 6, 7, 8, 9 and 12, a new Appendix B, UI.md §2.3 pointers, and this file becomes a historical note (as RECIPES-1.1.md did) | `docs/RECIPES.md`, `docs/RECIPES-1.2.md` | RW1 to RW8 | as WP 6.41 | So | the "where each piece goes" table below is complete; the cases of section 15 are `recipe-case` blocks with their tests named |
 | RW10 | The web app's format-facing work: share dialog notes and the tab and pack lists, the enable offer, `fit` for slot lanes and for the conversions of `planConversions`, the issue texts for the new codes and reasons, the missing-tab text | `apps/web/src/*` | RW1, RW3, RW5, RW6 | RL2 to RL7 (the editor), P4 and P5, X3 (UI half) | So | the editor packages of RELIX-LANES §11.2 own the gestures. This package adds the texts and the dialogs, and passes axe |
 
@@ -1857,7 +1869,7 @@ This work package changes this file and the §2.2 rule of RECIPES.md. The Gate T
 
 **UI.md (SP3)**
 
-- §2.3: the share dialog sentence for the new wave, the tab and pack lists, the missing-tab and `pack-not-enabled` texts, the help dialog's display of `setup` and `finish` (section 10.3), and the use of `StepReport.out` for the ext field. Not part of this work package.
+- §2.3: the share dialog sentence for the new wave, the tab and pack lists, the missing-tab and `pack-not-enabled` texts, the help dialog's display of `setup` and `finish` (section 10.3), and the use of `StepReport.out` for the ext field. Not part of this work package. *Met at Gate T1 (2026-11-24) by the proposal UI-TOOLKIT.md*: §5.6 (the share dialog sentence and the tab and pack lists), §5.3 (the missing-tab text), §6.6 (the `pack-not-enabled` text), §3 (the use of `StepReport.out`) and §9.1 (`setup` and `finish` in the help dialog). UI.md itself changes as the work packages of UI-TOOLKIT.md §12 land. The page-level "missing tab" notice is not a recipe issue code.
 
 **PLAN.md**
 

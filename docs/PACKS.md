@@ -1,12 +1,12 @@
 # Packs: manifest, discovery, init protocol and capabilities (specification)
 
-Status: draft v1 (2026-11-23). A proposal for the owner to approve at Gate T1, not normative. It is work package SP4 of the toolkit programme ([TOOLKIT.md](TOOLKIT.md) §13.3). It builds on [TOOLKIT.md](TOOLKIT.md) (§1 goals, §3 decisions T1 to T34, §4 architecture, §5 the pack system, §6 extension values and viewers, §8 the Relix pack, §10 media and code packs, §12, §13.5 rows P1 to P8 and X1 to X5, §13.6 row R13, §14 risk 12), [PLAN.md](PLAN.md) (§1 principles, §3.3 vocabularies, §3.5 primitives, §3.6 recipes are words, §5 security, §10 hosting), [RECIPES.md](RECIPES.md) (§2 the catalogue, §8 the bake API), [RECIPES-1.2.md](RECIPES-1.2.md) (§6.9 conversions, §8 pack ops, §9 `previousHashes`, §12 protocol 2, §14 lists, §19.1 hard kill), [RELIX.md](RELIX.md) (§1.5 loading, §8 limits and cancellation, §11 security, §15 work packages), [UI.md](UI.md) (§4 the CSP rules) and [research/x0-ext-values.md](research/x0-ext-values.md) (§3.2 the registry, §10 R1, R2, R6 and R12, §11 P8). The ext tag and its text forms belong to the language proposal (SP1). Screens and dialogs belong to the UI proposal (SP3). This document owns the manifest and the pack mechanics.
+Status: draft v1 (2026-11-23), **approved at Gate T1 on 2026-11-24**. The owner accepted every recommended answer: decisions PK1 to PK24 and questions PQ1 to PQ15 (section 12). It is still a proposal in this sense: it is not normative until its work packages land (section 13) and TOOLKIT.md and PLAN.md take it in. It is work package SP4 of the toolkit programme ([TOOLKIT.md](TOOLKIT.md) §13.3). It builds on [TOOLKIT.md](TOOLKIT.md) (§1 goals, §3 decisions T1 to T34, §4 architecture, §5 the pack system, §6 extension values and viewers, §8 the Relix pack, §10 media and code packs, §12, §13.5 rows P1 to P8 and X1 to X5, §13.6 row R13, §14 risk 12), [PLAN.md](PLAN.md) (§1 principles, §3.3 vocabularies, §3.5 primitives, §3.6 recipes are words, §5 security, §10 hosting), [RECIPES.md](RECIPES.md) (§2 the catalogue, §8 the bake API), [RECIPES-1.2.md](RECIPES-1.2.md) (§6.9 conversions, §8 pack ops, §9 `previousHashes`, §12 protocol 2, §14 lists, §19.1 hard kill), [RELIX.md](RELIX.md) (§1.5 loading, §8 limits and cancellation, §11 security, §15 work packages), [UI.md](UI.md) (§4 the CSP rules) and [research/x0-ext-values.md](research/x0-ext-values.md) (§3.2 the registry, §10 R1, R2, R6 and R12, §11 P8). The ext tag and its text forms belong to the language proposal (SP1). Screens and dialogs belong to the UI proposal (SP3). This document owns the manifest and the pack mechanics.
 
-> **Packages are frozen.** `packages/*` hold frozen Phase 1 to 2 contracts (CLAUDE.md). This proposal asks for changes to `@forge/ops` (the bundle loader, the catalogue build), `@forge/worker` (the `init` message, `deny`) and `@forge/lang` (one new effect label). It adds one new package, `@forge/packs`. Nothing here starts before the owner approves the contract changes at Gate T1 (TOOLKIT §13.3). The changes that are not source-breaking are listed in section 13, work package by work package.
+> **Packages are frozen.** `packages/*` hold frozen Phase 1 to 2 contracts (CLAUDE.md). This proposal asks for changes to `@forge/ops` (the bundle loader, the catalogue build), `@forge/worker` (the `init` message, `deny`) and `@forge/lang` (one new effect label). It adds one new package, `@forge/packs`. The owner approved the contract changes at Gate T1 (2026-11-24), so the work packages of section 13 may start in the order given there. The changes that are not source-breaking are listed in section 13, work package by work package.
 
 > **Estimates are marked.** A figure that comes from a file cites it. A figure that is a proposal or an estimate says so. Sizes of work packages are relative (S, M, L). There are no calendar dates.
 
-> **Names shared with the other specifications.** `ext{kind}` is the header syntax for an extension kind. The kinds named here are `table` (core, T21), `relation` and `relix-expr` (the `relix` pack) and `rat` (the symbolic pack). Pack ids are lower-kebab-case. `PackIndex`, `pack-not-enabled` and `packs-needed` are defined in RECIPES-1.2 §8 and used here without change. `input:tab` is core.
+> **Names shared with the other specifications.** `ext{kind}` is the header syntax for an extension kind. The kinds named here are `table` (core, T21), `relation` and `relix-expr` (the `relix` pack) and `rat` (the symbolic pack). The kind names `null` and `array` belong to the language (LANGUAGE-0.3.md §4.2, Q15) and are reserved with `table`: a pack may not claim them (section 2.4, `kind-reserved`). Pack ids are lower-kebab-case. `PackIndex`, `pack-not-enabled` and `packs-needed` are defined in RECIPES-1.2 §8 and used here without change. `input:tab` is core.
 
 ## Contents
 
@@ -21,7 +21,7 @@ Status: draft v1 (2026-11-23). A proposal for the owner to approve at Gate T1, n
 9. Versioning and compatibility
 10. Testing
 11. Decisions
-12. Open questions
+12. Questions, decided
 13. Work packages
 14. Changes needed in other documents
 
@@ -60,7 +60,7 @@ T7 says first-party packs are separate workspace packages built and deployed wit
 - Loading any script, worker, WASM module or style from a URL, from storage or from data. Everything a pack loads is a same-origin file of the build (UI.md §4 rules 4, 5 and 8).
 - `eval`, `new Function`, `importScripts`, string timers, `innerHTML` and its relatives. The lint rules of section 8.5 enforce this.
 - Network code of any kind (`fetch`, `XMLHttpRequest`, `WebSocket`, `EventSource`, `sendBeacon`), except the one loader the host provides for catalogue fragments. Relix queries read in-browser data only (T3).
-- Writing to `localStorage`, `IndexedDB` or cookies. A pack keeps no state of its own in v1 (open question PQ12).
+- Writing to `localStorage`, `IndexedDB` or cookies. A pack keeps no state of its own in v1 (question PQ12).
 - Code by authors outside the repository, and any pack the user supplies at run time.
 
 **What is not a pack.** Third-party sharing of FL-only vocabularies (TOOLKIT §5.3) stays as it is. A shared vocabulary is an untrusted `user` unit. It cannot bind primitives, register kinds, declare capabilities or ship chunks, and it needs no manifest. This document does not change it. A pack is never untrusted code. This is the line the whole document keeps: **recipes and shared FL are untrusted; packs are first-party code that the user chooses to load.**
@@ -97,7 +97,7 @@ The vocabulary names of `symbolic`, `media` and `code` are the owners' to settle
 
 ### 2.1 Where it lives and what it is
 
-Each pack has one file, `packs/<id>/manifest.json`. It is **data**. No tool imports pack code to read it. The generator (section 3) validates it with the JSON Schema below and with the cross-checks of section 2.4. TOOLKIT §13.5 says `packs/*/manifest.*`. This document narrows that to JSON (decision PK2, open question PQ3): a manifest that is code can do work at build time that nobody reviews as data.
+Each pack has one file, `packs/<id>/manifest.json`. It is **data**. No tool imports pack code to read it. The generator (section 3) validates it with the JSON Schema below and with the cross-checks of section 2.4. TOOLKIT §13.5 says `packs/*/manifest.*`. This document narrows that to JSON (decision PK2, question PQ3): a manifest that is code can do work at build time that nobody reviews as data.
 
 The manifest is the single source for: the pack manager, the generated registries of the page and the worker (section 3.3), the catalogue fragment, the size budget, the capability prompt and the CI checks. Nothing in it is written twice by hand. Facts that the code can derive are not in it (op names, parameters, effect labels per word, hashes).
 
@@ -335,7 +335,7 @@ Two properties of this schema are deliberate. **No manifest that validates can a
 | `requires.packApi` | yes | The pack API level (`PACK_API`, section 9) the pack was written for. A mismatch fails the build. |
 | `requires.packs` | no | Ids of packs that must be enabled for this one to work. Ids only, no version ranges (decision PK4). The graph must be acyclic. Core is always present and is not listed. |
 | `vocabularies` | yes | The vocabularies the pack provides. Each is one file, `vocab/<name>.fth`, or a primitives-only module `src/prims/<name>.ts`, or both (the rule of RECIPES §2.1). `internal: true` means the vocabulary is a helper space: it is never in the catalogue and a recipe that names it is `unknown-op`, as for the core `INTERNAL_VOCABS`. |
-| `kinds` | no | The extension kinds the pack **owns**. A kind name is owned by exactly one pack, and `table` is owned by core (T18). `label` is the noun the UI shows ("table", "rational number"; UI-TOOLKIT §6.7 calls it `noun`). `viewer` says the page entry registers a viewer. `paramHelper` says the kind can be a recipe parameter, and then `parser` names the one module the worker and the page share. |
+| `kinds` | no | The extension kinds the pack **owns**. A kind name is owned by exactly one pack, and the names `table`, `null` and `array` are owned by core and reserved (T18; LANGUAGE-0.3.md Q15). A pack may not claim them (`kind-reserved`). `label` is the noun the UI shows ("table", "rational number"; UI-TOOLKIT §6.7 calls it `noun`). `viewer` says the page entry registers a viewer. `paramHelper` says the kind can be a recipe parameter, and then `parser` names the one module the worker and the page share. |
 | `conversions` | no | The conversions of RECIPES-1.2 §6.9. `buildCatalogue` copies them into the pack's catalogue fragment. |
 | `entries` | yes | `worker`: the module that provides the vocabulary sources and registers the kinds (section 4.5). `page`: the module that registers viewers and helpers. A pack with a viewer or a helper must have a page entry (the schema says so). |
 | `capabilities.effects` | yes | The effect labels the pack's primitives use beyond what core grants (section 6). An explicit `[]` states that the pack asks for nothing. |
@@ -356,7 +356,8 @@ The generator (`packs:gen`) and the build run these. Each has a stable code, whi
 | `id-reserved` | The id is one of the reserved ids. |
 | `vocab-clash` | A vocabulary name is also a core vocabulary (a file in `packages/ops/vocab`, a module in `packages/ops/src/prims`, a name in `INTERNAL_VOCABS`, `core` or `user`) or another pack's vocabulary. |
 | `vocab-file` | A listed vocabulary has no `.fth` file and no primitive module, or a file under `vocab/` or `src/prims/` is not listed. One `.fth` file belongs to one vocabulary, and its `IN:` names it (RECIPES §2.4 rule 1). |
-| `kind-clash` | A kind name is owned by another pack, or is a core kind (`table`). This is the T18 refusal "at the manifest". |
+| `kind-clash` | A kind name is owned by another pack. This is the T18 refusal "at the manifest". |
+| `kind-reserved` | A kind name is one of the **reserved core kind names**: `table` (`@forge/ops`, T21), `null` and `array` (`@forge/lang`, LANGUAGE-0.3.md §4.2, §7 and §10). A pack never owns them. The set is the constant `CORE_KIND_NAMES` in `@forge/packs`, and a test compares it with the kinds that `@forge/lang` and `@forge/ops` register when they load, so a new core kind cannot be missed. |
 | `kind-unknown` | An `ext{kind}` header in the pack's FL names a kind that the pack does not own, core does not own and a required pack does not own. |
 | `kind-registered` | The pack's worker entry registers a set of kinds that differs from `kinds`. (A test, section 10.) |
 | `viewer-missing`, `helper-missing` | A kind says `viewer` or `paramHelper` and the page entry does not export one. (A test.) |
@@ -576,7 +577,7 @@ The root `package.json` workspaces gain `packs/*`. A pack is built like `@forge/
 | `packs/<id>/dist/catalogue.json` | The pack's ops as an ordinary catalogue (section 5.1). | The page (fetched), the CI. |
 | `packs/<id>/dist/help.json`, `checks.json` | The pack's help and content-check fragments, in the formats of RECIPES §2.7 and the checks document. | The page (lazy). |
 
-Both registries come from the same manifests, so the page and the worker cannot disagree about what a pack is. They are committed, so that `npm run typecheck` needs no generation step, and `--check` keeps them true (open question PQ6). The page does **not** fetch a manifest at run time. The manifest facts are compiled into its entry chunk, a few hundred bytes a pack (an estimate; P7 measures it). This refines TOOLKIT §5.5, which said that `fetch` may read the pack manifest: only the fragments are fetched (decision PK5).
+Both registries come from the same manifests, so the page and the worker cannot disagree about what a pack is. They are committed, so that `npm run typecheck` needs no generation step, and `--check` keeps them true (question PQ6). The page does **not** fetch a manifest at run time. The manifest facts are compiled into its entry chunk, a few hundred bytes a pack (an estimate; P7 measures it). This refines TOOLKIT §5.5, which said that `fetch` may read the pack manifest: only the fragments are fetched (decision PK5).
 
 ### 3.4 Emitting chunks under the CSP
 
@@ -636,7 +637,7 @@ The enabled set is a list of pack ids, closed under `requires.packs`. The sequen
 5. The console client does the same in its `init` message (section 4.6).
 6. The page registers a lazy viewer stub and a lazy helper stub for every kind of every enabled pack (section 4.5).
 
-No code of a pack runs in steps 1 to 6 except what a feature of the pack declares (open question PQ10).
+No code of a pack runs in steps 1 to 6 except what a feature of the pack declares (question PQ10).
 
 ### 4.2 Messages
 
@@ -749,13 +750,13 @@ The loader adds the transitive dependencies of `S` and the vocabulary `recipe` (
 
 - **`sourceVocabs(source)`** is a new pure function in `@forge/ops`. It returns the vocabularies that a unit's text names (`USING:` forms and qualified words), by the same extraction that `scanVocab` uses for rule 2 of RECIPES §2.4. A user word may call any op, so the user unit's closure belongs in `S`.
 - **`conversionVocabs`.** A recipe that has `relix:` steps and a `csv:parse` step gets `relix:from` inserted by the compiler. If the recipe's only Relix words were in another vocabulary of the same pack, the conversion's vocabulary might not be in `opVocabs`. Adding the conversion vocabularies of the packs that the recipe touches closes that gap (RECIPES-1.2 §6.9).
-- **The catalogue-wide exception.** The vocabulary `magic` searches the catalogue with a nested baker that has "the same vocabularies" (RECIPES §8.6). A recipe that names a `magic:` op therefore loads all of core. The list of such vocabularies is a core constant, `CATALOGUE_WIDE_VOCABS`, which holds `magic` (decision PK8). Magic does not search packs in v1 (open question PQ5).
+- **The catalogue-wide exception.** The vocabulary `magic` searches the catalogue with a nested baker that has "the same vocabularies" (RECIPES §8.6). A recipe that names a `magic:` op therefore loads all of core. The list of such vocabularies is a core constant, `CATALOGUE_WIDE_VOCABS`, which holds `magic` (decision PK8). Magic does not search packs in v1 (question PQ5).
 - **Grow only.** The controller keeps the set `loaded` that the baker has. Before a bake it computes `S` for the recipe. If `S ⊆ loaded` it bakes. Otherwise it re-inits with `loaded ∪ S` and then bakes. A re-init rebuilds the runtime, so the set only grows within a session. A change of the enabled packs or of the user source resets it (section 4.7).
 - **The console** is a REPL where the user may type any word. When it first opens it loads core plus every enabled pack (`vocabs: "all"`). It does not load at start-up unless the user words are non-empty, as UI.md §5.2 says today. Then it needs `sourceVocabs` only to decide that it must start.
 
 **What the page needs to know about the catalogue.** The ops pane, the validator and the parameter forms use the catalogue the page loaded (core JSON plus fragments). They do not depend on what the baker loaded. Section 5.4 says what the baker's own catalogue version means.
 
-**Cost.** A re-init assembles every loaded unit again and imports the primitive modules that are not cached. For a typical closure this is tens of milliseconds (estimate; P3 measures it). The end-to-end smoke test `ops-smoke.spec.ts` bakes two vectors from each of 155 vocabularies, which would re-init up to 155 times with a growing set. P3 measures this, and if it is slow the test passes a test-only hook that loads the whole set once. A later optimisation is incremental extension of a loaded runtime (open question PQ9).
+**Cost.** A re-init assembles every loaded unit again and imports the primitive modules that are not cached. For a typical closure this is tens of milliseconds (estimate; P3 measures it). The end-to-end smoke test `ops-smoke.spec.ts` bakes two vectors from each of 155 vocabularies, which would re-init up to 155 times with a growing set. P3 measures this, and if it is slow the test passes a test-only hook that loads the whole set once. A later optimisation is incremental extension of a loaded runtime (question PQ9).
 
 ### 4.5 Registering kinds in the worker and the page
 
@@ -793,7 +794,7 @@ interface BakeContext {
 
 `registerKinds` runs before any unit of the bundle loads, so a header that names `ext{kind}` finds its kind. `activate` is where `relix` installs its cancellation poll (RELIX.md §8.2) and its `fl` function library (RELIX.md §6.1) over `host.catalogue`. It must not load an engine chunk or do work proportional to data. The engine loads on the first primitive that needs it. The names `BakeContext` and `onBake` are a proposal that R13 refines.
 
-The `fl` library reads the catalogue of **all enabled packs**, so the ops it exposes depend on which packs are on (RELIX.md §6.3). That is a read of the effective catalogue, not a dependency, so the manifest declares nothing for it (open question PQ13).
+The `fl` library reads the catalogue of **all enabled packs**, so the ops it exposes depend on which packs are on (RELIX.md §6.3). That is a read of the effective catalogue, not a dependency, so the manifest declares nothing for it (question PQ13).
 
 **Pack page entry.** `src/page.ts` default-exports a `PagePack`:
 
@@ -937,7 +938,7 @@ The generator checks both directions. `effect-undeclared` fires when an op of th
 
 ### 6.4 Granting
 
-Enabling a pack grants every capability its manifest requests. There is no per-capability switch in v1 (open question PQ4: the pack manager shows what is requested, and the user takes it or leaves the pack).
+Enabling a pack grants every capability its manifest requests. There is no per-capability switch in v1 (question PQ4: the pack manager shows what is requested, and the user takes it or leaves the pack).
 
 The store records the grant with the pack (section 7.1): the labels and CSP sources the manifest requested at the time. At start-up the page compares the manifest of this build with the stored grant. If the build requests **more** than was granted, the pack's state is `needs-review`. It is off until the user reviews and confirms again. A pack update therefore cannot widen its own permissions silently (decision PK12).
 
@@ -1001,7 +1002,7 @@ The enabled set is per browser, kept in IndexedDB (UI.md §4 rule 10). It is one
 
 `version` and `granted` are what the build offered when the user enabled. `at` is a timestamp for display. `pending` is the id of a pack whose load was in progress (section 8.4). The store keeps a record for a pack that is `enabled: false`, so that disabling and enabling again does not lose nothing important, and it keeps records of packs the build no longer has. A record that fails validation is dropped. If IndexedDB is unavailable, the in-memory fallback of `persist/db.ts` applies, and the enabled set lasts for the session (section 7.3 shows the message).
 
-By default every pack is off (decision PK14, open question PQ1). The store holds nothing that is sent anywhere. The privacy page states that the list of enabled packs is stored locally (section 14).
+By default every pack is off (decision PK14, question PQ1). The store holds nothing that is sent anywhere. The privacy page states that the list of enabled packs is stored locally (section 14).
 
 ### 7.2 The pack manager
 
@@ -1027,7 +1028,7 @@ Two things trigger the offer: opening a shared link and opening a saved recipe.
 1. **A shared link.** `decodeShare` is called with `packs: PackIndex`. When every error of the recipe is `pack-not-enabled`, it fails with `packs-needed` and carries the recipe, the pack ids and what the link carried (RECIPES-1.2 §8.3).
 2. **A saved recipe, or a recipe that the user edits.** `validateRecipe` with `PackIndex` reports `pack-not-enabled` on the steps. The page shows the same offer.
 
-The offer is a dialog (SP3 owns it) with fixed wording that uses only values from the **build**: the pack's `name` and `description`, the closure, the capabilities and the notice "first-party code from this site, running in your browser; nothing is sent". Nothing in it is taken from the link. The pack ids come from `packsUsed`, which maps the recipe's vocabularies through the build's registry, so an id that the build does not know cannot appear. The buttons are Enable and Not now. On Enable the page:
+The offer is a dialog (SP3 owns it) with fixed wording that uses only values from the **build**: the pack's `name` and `description`, the closure, the capabilities and the notice "first-party code from this site, running in your browser; nothing is sent". Nothing in it is taken from the link. The pack ids come from `packsUsed`, which maps the recipe's vocabularies through the build's registry, so an id that the build does not know cannot appear. The capability sentences come from one fixed table in the app (an effect label or a CSP source maps to one sentence, section 2.8), never from the manifest or the link. The decisions are Enable and Not now. UI-TOOLKIT.md §6.5 words them "Turn on and open" and "Open without the pack", and adds Cancel, which discards the link and changes nothing. On Enable the page:
 
 1. writes the store (section 7.1) with the grant;
 2. runs the fan-out of section 4.7;
@@ -1131,7 +1132,7 @@ There are five numbers. Each has one job.
 
 **A pack that the build drops.** The store keeps its record (`unavailable`). Recipes that name its ops become `unknown-op`.
 
-**The enabled set and `PROTOCOL_VERSION`.** `packs` is in the `init` message, which the strict guard of `protocol.ts` refuses when it has an unknown key. So the field cannot be added after protocol 2 has shipped without a new bump. P2b must land in the same release as RW5 (open question PQ7).
+**The enabled set and `PROTOCOL_VERSION`.** `packs` is in the `init` message, which the strict guard of `protocol.ts` refuses when it has an unknown key. So the field cannot be added after protocol 2 has shipped without a new bump. P2b must land in the same release as RW5 (question PQ7).
 
 ---
 
@@ -1160,7 +1161,7 @@ Cases that the schema alone decides (the first draft of the corpus):
 | PC13 | `"channel": "beta"` | `schema` |
 | PC14 | an unknown top-level key | `schema` |
 
-Cases for the other codes (`vocab-clash` with a vocabulary named `base64`, `kind-clash` with a kind named `table` or one that another fixture pack owns, `requires-cycle`, `core-depends-on-pack`, `effect-unused`, `conversion-op` with an op that needs a parameter without a default, `external-version` with a primitive whose `version` lacks the engine's) belong to the same corpus and use the fixture tree.
+Cases for the other codes (`vocab-clash` with a vocabulary named `base64`, `kind-clash` with a kind that another fixture pack owns, `kind-reserved` with a kind named `table`, `null` or `array` (three files, one per name), `requires-cycle`, `core-depends-on-pack`, `effect-unused`, `conversion-op` with an op that needs a parameter without a default, `external-version` with a primitive whose `version` lacks the engine's) belong to the same corpus and use the fixture tree.
 
 ### 10.2 Mechanics
 
@@ -1196,13 +1197,13 @@ The end-to-end test `apps/web/e2e/packs.spec.ts` (WP P8b) runs against the build
 
 ## 11. Decisions
 
-Ids use the prefix PK. Each is a proposal for the owner. TOOLKIT's T-numbers continue the series when the owner accepts them.
+Ids use the prefix PK. **All of them were approved at Gate T1 on 2026-11-24.** TOOLKIT's T-numbers continue the series (T35 onward).
 
 | ID | Decision | Reason |
 |---|---|---|
 | PK1 | A pack is a first-party workspace package `packs/<id>` (`@forge/pack-<id>`) with a manifest. Third parties share FL-only vocabularies, which are not packs. | T7; PLAN §5. |
 | PK2 | The manifest is `manifest.json`, data validated by a JSON Schema and cross-checks. No tool imports pack code to read it. | A manifest that is code can do unreviewed work at build time (section 2.1). |
-| PK3 | Pack ids, vocabulary names and kind names are lower-kebab-case. A vocabulary name is unique across core and packs, and a kind name is owned by exactly one pack or by core. A clash fails the build. | T18; RECIPES-1.2 §8.1. |
+| PK3 | Pack ids, vocabulary names and kind names are lower-kebab-case. A vocabulary name is unique across core and packs, and a kind name is owned by exactly one pack or by core. Core owns `table`, `null` and `array`, and a pack may not claim them (`kind-reserved`). A clash fails the build. | T18; RECIPES-1.2 §8.1. |
 | PK4 | Core never depends on a pack. A pack depends on core and on `requires.packs`, by id only, with no version ranges. The graph is acyclic. | Packs are built from one commit (section 9); ranges would assert nothing. |
 | PK5 | The manifest facts are compiled into the page and the worker (generated, committed registries). The page does not fetch a manifest. It fetches catalogue and help fragments. | Fewer runtime requests and one less file to keep in step; refines TOOLKIT §5.5. |
 | PK6 | A pack loads in three lazy levels: its entries, its primitive modules, its engine chunk. All are same-origin hashed ES modules reached by `import()`. | UI.md §4 rules 4, 5 and 8; RELIX.md §1.5. |
@@ -1227,27 +1228,27 @@ Ids use the prefix PK. Each is a proposal for the owner. TOOLKIT's T-numbers con
 
 ---
 
-## 12. Open questions
+## 12. Questions, decided
 
-Each has a recommended answer. None blocks writing the work packages, except where it says so.
+**All of them were decided at Gate T1 on 2026-11-24: the owner accepted every recommended answer.** The last column is the decision. None blocks writing the work packages.
 
-| ID | Question | Recommended answer |
+| ID | Question | Decision (the recommended answer, accepted) |
 |---|---|---|
-| PQ1 | Is any pack on by default? | **No**, every pack off in v1. Revisit `relix` after Gate T4, when the owner can see how often users enable it. |
-| PQ2 | Should "enable for this session only" exist, for opening one link? | **No** in v1. One click enables, the pack manager disables. A session-only mode needs a second state and a second message for little gain. |
-| PQ3 | `manifest.json` only, or also `manifest.ts`? | **JSON only** (PK2). |
-| PQ4 | May the user grant some of a pack's capabilities and not others? | **No** in v1. A pack that wants `+media` for some ops and not others should be two packs. |
-| PQ5 | Does Magic search pack ops? | **No** in v1. Magic searches core (`CATALOGUE_WIDE_VOCABS`). A manifest flag `magic` can come later, if an owner wants a pack's decoders in the search. |
-| PQ6 | Are the generated registries committed or generated on every build? | **Committed**, with `packs:gen --check` in CI, as R2b does. It keeps `npm run typecheck` free of a generation step. |
-| PQ7 | Does `packs` ride protocol 2 or force protocol 3? | **Protocol 2.** P2b is scheduled with RW5 so that one bump covers both. If protocol 2 has already shipped, `packs` needs 3, because the strict guard refuses an unknown key. **This needs the owner's attention before P2b starts.** |
-| PQ8 | Does the console load everything it may need at first open, or the closure of what the user types? | **Everything enabled, at first open.** It is a REPL. |
-| PQ9 | Should a loaded runtime be extendable without a full re-init? | **Not in v1.** Measure the cost in P3. If the smoke test or real use shows a problem, add `init` with `extend: true` later. |
-| PQ10 | May a pack contribute UI features (panes, menu items) that load at start-up? | **Yes, if declared** (`features` in the page entry), with `budget.page` as the limit. SP3 decides how a pack places a feature. A pack with no feature pays nothing at start-up. |
-| PQ11 | Is `THIRD-PARTY-NOTICES.txt` deployed at a public path? | **Yes**, as a static file linked from the About page, as the licences require. |
-| PQ12 | May a pack keep its own state (for example a saved Relix query library)? | **No** in v1. A pack with a need proposes an API (a namespaced `kv` handle) as a separate decision. |
-| PQ13 | Does a pack declare that it reads the catalogue of other packs (the Relix `fl` bridge)? | **No.** It reads the effective catalogue, which is not a dependency. The exposure report of the bridge lists what was exposed (RELIX.md §6.3). |
-| PQ14 | The eager `.fth` text of every core vocabulary is in the worker chunk. Make it lazy per vocabulary? | **Defer.** It is not in the core budget (the worker is a lazy asset). Measure after P3. A lazy glob needs a scan that does not need the sources. |
-| PQ15 | RELIX.md §4.8 names `vocab/relix-ops.fth`. Allow several files per vocabulary instead of renaming? | **Rename**: the generator writes `vocab/relix.fth` whole (PK23). Several files per vocabulary would change `createBundleLoader`. |
+| PQ1 | Is any pack on by default? | Decided: **No**, every pack off in v1. Revisit `relix` after Gate T4, when the owner can see how often users enable it. |
+| PQ2 | Should "enable for this session only" exist, for opening one link? | Decided: **No** in v1. One click enables, the pack manager disables. A session-only mode needs a second state and a second message for little gain. |
+| PQ3 | `manifest.json` only, or also `manifest.ts`? | Decided: **JSON only** (PK2). |
+| PQ4 | May the user grant some of a pack's capabilities and not others? | Decided: **No** in v1. A pack that wants `+media` for some ops and not others should be two packs. |
+| PQ5 | Does Magic search pack ops? | Decided: **No** in v1. Magic searches core (`CATALOGUE_WIDE_VOCABS`). A manifest flag `magic` can come later, if an owner wants a pack's decoders in the search. |
+| PQ6 | Are the generated registries committed or generated on every build? | Decided: **Committed**, with `packs:gen --check` in CI, as R2b does. It keeps `npm run typecheck` free of a generation step. |
+| PQ7 | Does `packs` ride protocol 2 or force protocol 3? | Decided: **Protocol 2.** P2b lands with RW5 so that one bump covers both. If protocol 2 has already shipped when P2b starts, `packs` needs 3, because the strict guard refuses an unknown key, so P2b must not be scheduled after RW5 has merged without it. |
+| PQ8 | Does the console load everything it may need at first open, or the closure of what the user types? | Decided: **Everything enabled, at first open.** It is a REPL. |
+| PQ9 | Should a loaded runtime be extendable without a full re-init? | Decided: **Not in v1.** Measure the cost in P3. If the smoke test or real use shows a problem, add `init` with `extend: true` later. |
+| PQ10 | May a pack contribute UI features (panes, menu items) that load at start-up? | Decided: **Yes, if declared** (`features` in the page entry), with `budget.page` as the limit. SP3 decides how a pack places a feature. A pack with no feature pays nothing at start-up. |
+| PQ11 | Is `THIRD-PARTY-NOTICES.txt` deployed at a public path? | Decided: **Yes**, as a static file linked from the About page, as the licences require. |
+| PQ12 | May a pack keep its own state (for example a saved Relix query library)? | Decided: **No** in v1. A pack with a need proposes an API (a namespaced `kv` handle) as a separate decision. |
+| PQ13 | Does a pack declare that it reads the catalogue of other packs (the Relix `fl` bridge)? | Decided: **No.** It reads the effective catalogue, which is not a dependency. The exposure report of the bridge lists what was exposed (RELIX.md §6.3). |
+| PQ14 | The eager `.fth` text of every core vocabulary is in the worker chunk. Make it lazy per vocabulary? | Decided: **Defer.** It is not in the core budget (the worker is a lazy asset). Measure after P3. A lazy glob needs a scan that does not need the sources. |
+| PQ15 | RELIX.md §4.8 names `vocab/relix-ops.fth`. Allow several files per vocabulary instead of renaming? | Decided: **Rename**: the generator writes `vocab/relix.fth` whole (PK23). Several files per vocabulary would change `createBundleLoader`. |
 
 ---
 
@@ -1257,7 +1258,7 @@ These refine TOOLKIT §13.5 rows P1 to P8. Ids keep the TOOLKIT number and add a
 
 | WP | Scope | Files (proposal) | Depends on | Size | Agent | Done when |
 |---|---|---|---|---|---|---|
-| P1a | The `@forge/packs` package: manifest types, the schema of section 2.2, `validateManifest`, the cross-checks of section 2.4 that need no runtime, the core name sets, `PACK_API`, the corpus of section 10.1 | `packages/packs/*` | SP4 approved, Gate T1 | M | So | Every `valid` manifest passes and every `invalid` fails with its code; the manifests of this document validate; the schema is strict under Ajv |
+| P1a | The `@forge/packs` package: manifest types, the schema of section 2.2, `validateManifest`, the cross-checks of section 2.4 that need no runtime, the core name sets (core vocabularies, and the reserved kind names `table`, `null` and `array`), `PACK_API`, the corpus of section 10.1 | `packages/packs/*` | SP4 approved, Gate T1 | M | So | Every `valid` manifest passes and every `invalid` fails with its code; the manifests of this document validate; the schema is strict under Ajv |
 | P1b | Discovery and generation: `packs:gen` and `--check`, the two generated registries, the fragment build driver, the `forgePacks()` Vite plugin and report, root workspace and script wiring, the ESLint guard rails, `.gitignore` entries | `packages/packs/src/gen/*`, `apps/web/vite.config.ts`, `apps/web/src/packs/registry.generated.ts`, `apps/web/src/bake/worker-packs.generated.ts`, root `package.json`, `eslint.config.js` | P1a, P1c | M | So | The generator runs on a fixture tree and on the demo pack; `--check` fails on a stale file; a static import from core into `packs/` fails the build; the forbidden-API fixtures fail lint |
 | P1c | Catalogue support: `buildCatalogue` options `internalVocabs` and `onlyVocabs`, `mergeCatalogues`, `catalogueVersionOf`, the merge-equality test | `packages/ops/src/catalogue.ts`, `packages/ops/src/types.ts`, `packages/packs/src/merge.ts` | RW4 (RECIPES-1.2), P1a | S | So | Merge equality holds for every closed subset of the fixture packs; core-only output is byte-identical to today's |
 | P2a | The composite provider, `createPackProvider`, `createNodePackProvider`, and `createPackLoader` | `packages/ops/src/bundle.ts`, `packages/ops/src/packs.ts`, `packages/packs/src/loader.ts` | P1a | M | So | A clash throws; unknown, unclosed and conflicting lists are refused with the reasons of section 4.2; a module evaluated twice registers cleanly |
@@ -1289,7 +1290,7 @@ Dependency sketch:
 
 ## 14. Changes needed in other documents
 
-This document edits none of them. The orchestrator applies or briefs these.
+This document edits none of them. The orchestrator applies or briefs these. **Applied at Gate T1 (2026-11-24)** in the files that the specification work owns: items 10 and 11 in RECIPES-1.2.md (§8.4, §8.5, §12, §14.3, Q11), items 12 to 14 in RELIX.md, and the pack parts of item 15 to 17 in UI-TOOLKIT.md (rule 8, §6). Items for TOOLKIT.md, PLAN.md and UI.md are left to the orchestrator and to the work packages.
 
 **TOOLKIT.md**
 
@@ -1306,7 +1307,7 @@ This document edits none of them. The orchestrator applies or briefs these.
 **RECIPES-1.2.md**
 
 10. §8.4 and §12: "SP4 states it in PACKS.md" is now section 5.5. The `init` row of §12 becomes `packs?: readonly string[]` on `BakerInit` and `packs` on `InitInfo`, in the same protocol 2 bump. §14.3 gains `BakerInit.packs`, `InitInfo.packs`, `BakeOptions.deny`.
-11. §8.5: add that `recipe.catalogue` is the core catalogue version when present (PK9), and that the baker drops `catalogue-mismatch`.
+11. §8.5: add that `recipe.catalogue` is the core catalogue version, or absent (PK9), and that the baker drops `catalogue-mismatch`. *Applied.*
 
 **RELIX.md**
 

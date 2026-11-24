@@ -1,21 +1,21 @@
 # FL v0.3: the remaining language proposals of TOOLKIT §11
 
-Status: **a proposal, 2026-11-23. Not normative.** This is work package SP1 of the toolkit programme ([TOOLKIT.md](TOOLKIT.md) §13.3). It waits for the owner at Gate T1. Until the owner approves it, [LANGUAGE.md](LANGUAGE.md) ("FL language specification, v0.2") is the only specification of FL. This file is **documentation only**: no code, no vector and no other document changed with it.
+Status: **a proposal, 2026-11-23, approved at Gate T1 on 2026-11-24.** The owner accepted every recommended answer of section 19 (Q1 to Q18). This is work package SP1 of the toolkit programme ([TOOLKIT.md](TOOLKIT.md) §13.3). It is still a proposal in this sense: until its work packages land and L14 folds it in, [LANGUAGE.md](LANGUAGE.md) ("FL language specification, v0.2") is the only specification of FL, and the harness reads only that file. This file is **documentation only**: no code, no vector and no other document changed with it.
 
-The file name follows the version recommendation of section 2 (v0.3). **If the owner decides another number, the file is renamed to match** (`LANGUAGE-0.3.md` to `LANGUAGE-<version>.md`) and nothing else in it changes except the version words.
+The file name follows the version of section 2 (v0.3), which the owner confirmed at Gate T1 (Q1), so the file keeps its name.
 
 It follows the precedent of [LANGUAGE-0.2.md](LANGUAGE-0.2.md) (the additive wave: a separate proposal, approval by the owner, implementation by work packages, then a fold-in into LANGUAGE.md as an appendix) and of [RECIPES-1.1.md](RECIPES-1.1.md) and [RECIPES-1.2.md](RECIPES-1.2.md). This file does **not** rewrite the normative text of LANGUAGE.md. At the fold-in (work package L14, section 20) LANGUAGE.md becomes "v0.3", gains an Appendix B, "Changes in v0.3", and takes the conformance cases of section 17 under their numbers.
 
 It builds on [LANGUAGE.md](LANGUAGE.md) in full (§2 lexical grammar, §3 values, §4 coercion, §5 defining forms, §6 name resolution, §7 locals, §8 control flow, §10 execution model, §11 errors, §12 metadata, §13 `core`, §16 conformance, §17 decisions D1 to D68, Appendix A); on [TOOLKIT.md](TOOLKIT.md) (§3 decisions T1 to T34, especially T6 and T17 to T21; §6 extension values; §9 the symbolic pack; §11 FL v0.3 as it stands, with the items marked **done**; §13.3 to §13.4 rows SP1 and L1 to L13; §14.2 Q14 and Q15); on [research/x0-ext-values.md](research/x0-ext-values.md) (the accepted shape of the `ext` value, §3, §7, §10 R1 to R12, §11); on [RELIX.md](RELIX.md) (§2 value kinds, §5.4 NULL, §16) and [RECIPES-1.2.md](RECIPES-1.2.md) (§3 ext parameters); and on the studies [research/mutable-array.md](research/mutable-array.md), [research/int-words.md](research/int-words.md), [research/slow-ops.md](research/slow-ops.md) and [research/forth.md](research/forth.md).
 
-> **Packages are frozen.** `packages/*` hold frozen Phase 1 and 2 contracts (CLAUDE.md). This wave changes `packages/lang` (types, reader, compiler, VM, primitives, metadata) and, through the work packages of section 20, `packages/ops` (the shared JSON words, the corpus sweep) and the one-line `ext` cases that the new union members force in `packages/worker` and `apps/web` (section 15). Each is an owner-approved change at Gate T1 ([TOOLKIT.md](TOOLKIT.md) §13.3). **Nothing here starts before that gate.** No existing export changes meaning. Where a union gains a member, section 15 says so.
+> **Packages are frozen.** `packages/*` hold frozen Phase 1 and 2 contracts (CLAUDE.md). This wave changes `packages/lang` (types, reader, compiler, VM, primitives, metadata) and, through the work packages of section 20, `packages/ops` (the shared JSON words, the corpus sweep) and the one-line `ext` cases that the new union members force in `packages/worker` and `apps/web` (section 15). Each is an owner-approved change at Gate T1 ([TOOLKIT.md](TOOLKIT.md) §13.3). **Nothing here started before that gate. The gate has passed (2026-11-24), so the work packages of section 20 may start in the order given there.** No existing export changes meaning. Where a union gains a member, section 15 says so.
 
 > **Names shared with the other Gate T1 specifications.** The UI proposal (SP3) and PACKS.md (SP4) use the same names as this file: the type `ext{kind}`; the kind names `table`, `relation`, `relix-expr` and `rat`; a pack id is a lower-kebab-case name; an `ext` kind registers by name, and the pack manifest owns kind names (T18). This file defines **no** manifest and **no** UI. It adds two kind names of its own, **`null`** and **`array`**, which belong to the language and which the manifest must treat as reserved (sections 4.2, 7 and 10).
 
 ## Contents
 
 1. What the wave contains
-2. Versioning: the facts, the recommendation, and the answer to Q15
+2. Versioning: the facts, the decision, and the answer to Q15
 3. Conventions of this proposal
 4. The `ext` value (X1)
 5. Generic words and generic arithmetic (L10)
@@ -31,8 +31,8 @@ It builds on [LANGUAGE.md](LANGUAGE.md) in full (§2 lexical grammar, §3 values
 15. Frozen-contract changes in `packages/lang`
 16. Tooling affected
 17. Conformance cases (C401 to C594)
-18. Design decisions (D69 to D96, proposed)
-19. Open questions, each with a recommended answer
+18. Design decisions (D69 to D96, approved at Gate T1)
+19. Questions, each decided at Gate T1
 20. Work packages
 21. What the other documents need
 
@@ -59,7 +59,7 @@ Every row of the TOOLKIT §11.6 table that is **not** marked done is here. The c
 | 13 | 32-bit word words and bulk word conversion | 32-bit intrinsics; L7 | additive | 10.4 |
 | 14 | `PrimitiveContext.charge` and cost accounting | `charge`; L8 | additive | 11 |
 | 15 | The effect label `+media` | L-D; P6 | additive | 11.4 |
-| 16 | `reduce` argument order | L-E; L9 | **no change recommended** (open question Q6) | 12.1 |
+| 16 | `reduce` argument order | L-E; L9 | **no change** (Q6, decided) | 12.1 |
 | 17 | `/` on integers beyond 2^53 | L-E; L9 | additive in effect (an error becomes a value) | 12.2 |
 | 18 | Header-constraint violations: one code, and `runtime.call` header defaults | L-E; L9 | **breaking** for the code; additive for the defaults | 12.3, 12.4 |
 | 19 | The `raise`/`range` name clash | L-E; L9 | closed (the `raise` vocabulary was removed on 2026-11-15) | 12.5 |
@@ -73,7 +73,7 @@ Of the 22 rows, **one** changes the behaviour of a program that ran under v0.2 (
 
 ---
 
-## 2. Versioning: the facts, the recommendation, and the answer to Q15
+## 2. Versioning: the facts, the decision, and the answer to Q15
 
 ### 2.1 Observed on the v0.2 code
 
@@ -121,22 +121,22 @@ The test is the one of RECIPES-1.2 §2, applied to a language: (a) does any v0.2
 | Pattern strings, `\f`, the longer `doc` | These were errors. | `E_HEADER`, `E_LEX`, `E_META` | Yes |
 | **A violated header constraint raises `E_RANGE`** (interval, set or length) | **A `try` handler and a vector that expect `E_PARAM_INVALID` change.** At most 20 vector expectations in 10 files (measured, section 14). | `E_PARAM_INVALID` | **No. Breaking** |
 
-### 2.3 Recommendation: v0.3
+### 2.3 Decision: v0.3
 
-**Recommended: this wave is FL v0.3, in the file `docs/LANGUAGE-0.3.md`.** The owner decides (Q1). The facts:
+**This wave is FL v0.3, in the file `docs/LANGUAGE-0.3.md`** (Q1, decided at Gate T1). The facts:
 
 1. LANGUAGE.md is "v0.2". The earlier numbers were one per wave (v0.1, then the additive v0.2). The study [research/int-words.md](research/int-words.md) §5 already names `docs/LANGUAGE-0.3.md` as the file of the next proposal.
 2. Exactly one item changes the behaviour of a v0.2 program (row 18). In a 0.x series that is a minor step. It needs a number that a recipe, a vector file and a pin can name, and it needs the owner's approval, which Gate T1 gives.
 3. **It is not 1.0.** A 1.0 would be a compatibility promise. The `ext` mechanism, generic dispatch and the kernel tier have no client in production yet (Gate T3 proves the first one). The version that makes the promise should come after a pack has shipped on it.
 4. **It is not two waves.** A split into a 0.3 (additive) and a 0.4 (breaking) would run the wave boundary of T6 twice: two windows with no op work in flight, two sweeps of vector expectations, two rounds of `previousHashes` (T27). With the recommendations of this file the one breaking item is small, and one boundary is enough.
-5. If the owner removes row 18 (Q7), the wave is wholly additive and keeps the number v0.3: v0.2 was an additive wave and took a number too.
+5. Had the owner removed row 18 (Q7), the wave would be wholly additive and would keep the number v0.3: v0.2 was an additive wave and took a number too. The owner kept row 18.
 
 ### 2.4 The answer to Q15, language side
 
 TOOLKIT Q15 asks which version bump covers the frozen contracts at Gate T1: FL, the worker protocol and the X1 and X2 contract (T19). **The language side:**
 
 - **One number for FL: v0.3.** `FORGE_LANG_VERSION` in `packages/lang/src/index.ts` (today `"0.0.0"`, which tracks nothing) becomes `"0.3.0"`, and the `@forge/lang` package version becomes `0.3.0`. The merge that closes the wave sets both (work package L12, section 20), so that no half-finished state carries the number.
-- **The worker protocol is not part of this number.** It goes to `PROTOCOL_VERSION` 2 (T23, RECIPES-1.2 §12), and that bump also carries the `OutputValue` `ext` variant of X2. The `ext` tag of this file is what makes the variant necessary; the protocol number is not changed by anything else here.
+- **The worker protocol is not part of this number.** It goes to `PROTOCOL_VERSION` 2 (T23, RECIPES-1.2 §12), and that bump also carries the `OutputValue` `ext` variant of X2 and the `packs` field of `init` (PACKS.md §4.2, PQ7: work package P2b lands with RW5, so that one bump covers all three). The `ext` tag of this file is what makes the variant necessary; the protocol number is not changed by anything else here.
 - **The recipe format needs none** (T23): `"forge": 1` stays.
 - **The catalogue `version`** changes at the sweep (every rewritten word has a new hash, and `ParamSpec.kind` adds a field). That is automatic: it is computed.
 - **`meta.schema.json`** widens (`ext` in `paramType`, `kind`, `values`, `generic`, `friends`, `kernel`). It has no version in its `$id`; the file ships with the package, so no consumer sees a mismatch.
@@ -145,7 +145,7 @@ TOOLKIT Q15 asks which version bump covers the frozen contracts at Gate T1: FL, 
 
 | Stage | What lands | Why that order |
 |---|---|---|
-| G0 | The owner approves this file (and SP3, SP4, SP5). Nothing in `packages/*` changes. | Gate T1 |
+| G0 | The owner approves this file (and SP3, SP4, SP5). Nothing in `packages/*` changes. **Done at Gate T1, 2026-11-24, for SP1, SP3 and SP4.** | Gate T1 |
 | G1 | **X1 with its forced edits, and X2 together.** X1 changes `Tag`, `Value` and `ParamType`, so every exhaustive `switch` over them in `packages/worker`, `packages/ops`, `packages/recipe` and `apps/web` stops compiling. X0 §7 lists them. The package X1 therefore **owns the one-line `ext` cases** in those files, and X2 adds the viewer behind them. Main never fails to typecheck. | One source-breaking step, once. T19 |
 | G2 | The additive words and forms, each as its package finishes: L2, L3, L5, L6, L7a, L8, X4. | Each is additive. None changes a number. |
 | G3 | **The wave-boundary group: L9b (the constraint code), L10 if it is not already in, then L12 (the sweep of vector expectations and of the `json` callers), in one merge group.** `FORGE_LANG_VERSION` becomes `0.3.0` here. | L9b makes vectors fail until the sweep has rewritten them. T6 |
@@ -343,7 +343,7 @@ The result is metered like any primitive result (§10.8). A method that returns 
 
 ### 5.4 What is not in this wave
 
-User-written generic words (`GENERIC:`, `METHOD:`, `EXTENDS:` of SYMBOLIC.md S16) are **not** proposed. They would need early-binding rules (D5), a hash rule for method tables, and an `E_AMBIGUOUS` rule between two packs that extend one word, and the three clients named in TOOLKIT §6.4 (symbolic arithmetic, table words, matrices) all get their methods from a TypeScript kind. Open question Q4 records the choice. A pack that wants FL-level behaviour writes ordinary words that call a kind's functions.
+User-written generic words (`GENERIC:`, `METHOD:`, `EXTENDS:` of SYMBOLIC.md S16) are **not** proposed. They would need early-binding rules (D5), a hash rule for method tables, and an `E_AMBIGUOUS` rule between two packs that extend one word, and the three clients named in TOOLKIT §6.4 (symbolic arithmetic, table words, matrices) all get their methods from a TypeScript kind. Q4 records the choice (decided at Gate T1). A pack that wants FL-level behaviour writes ordinary words that call a kind's functions.
 
 Cases: C431 to C445.
 
@@ -397,7 +397,7 @@ Measured for this proposal on 2026-11-23 at `38a5122`: `grep -rn 'json:null' pac
 
 ### 7.2 Q14: the answer
 
-**Recommended: JSON `null` is the value of the `ext` kind `null`.** *(Open question Q3 has the alternatives.)*
+**Decided: JSON `null` is the value of the `ext` kind `null`.** *(Q3 records the alternatives, which were not taken.)*
 
 - `null` is an `ext` kind registered by `@forge/lang` itself (section 4.2). Its payload is one frozen object; `equals` is always true; `sizeOf` is 0 (so a null costs 16 bytes); `toText` and `repr` are `null`; it has **no** `fromText` and no methods; it is `storable`.
 - New `core` words: **`null ( -- ext{null} )`** and **`null? ( any -- bool )`** (true for the null, false for every other value, never an error).
@@ -650,7 +650,7 @@ Cases: C567 to C572.
 
 ## 12. The breaking fixes of TOOLKIT §11.5 (L9)
 
-TOOLKIT §11.5 lists nine fixes. Each is classified here. **Only 12.3 breaks a v0.2 program.** 12.1 recommends **no change**; if the owner disagrees, Q6 gives the exact alternative.
+TOOLKIT §11.5 lists nine fixes. Each is classified here. **Only 12.3 breaks a v0.2 program.** 12.1 is **no change** (Q6, decided); Q6 records the alternative that was not taken.
 
 ### 12.1 `reduce` argument order: no change
 
@@ -668,7 +668,7 @@ Only Haskell puts the start value before the sequence. The quotation order match
 
 **The cost of a swap.** The corpus holds 88 lines that mention `reduce`, in 41 vocabulary files (measured on 2026-11-23 with `grep -c reduce`, comments and doc strings included, so an upper bound). A swap to `init seq quot` is not a text rewrite of two adjacent tokens, because `seq` and `init` are arbitrary expressions. The codemod can only insert `-rot swap rot` before `reduce`, which makes every call longer and slower (three steps per call).
 
-**Recommended: keep the order; fix the trap in the documentation.** §8 and §13.6 gain the table above and one example. The conformance case C573 pins the order and the quotation's stack picture, so that no later change is silent. Kind: **no change**.
+**Decided (Q6): keep the order; fix the trap in the documentation.** §8 and §13.6 gain the table above and one example. The conformance case C573 pins the order and the quotation's stack picture, so that no later change is silent. Kind: **no change**.
 
 ### 12.2 `/` on integers beyond 2^53
 
@@ -710,7 +710,7 @@ String and char literals gain `\f` (U+000C). **Kind: additive** (it was `E_LEX`)
 
 ### 12.8 Length caps
 
-The `doc` clause and declaration cap rises from 2000 to **8000** code points (`meta.schema.json` `maxLength`). The `use-when` (160), `expects` (64), `link` and per-parameter (200) caps do not change. **Kind: additive** (a longer `doc` was `E_META`). The vector `ref` cap of 200 characters (PLAN wave 3) is not a language item; it belongs to the vector format (RECIPES-1.2 §10, `vectors.schema.json`), and **1000** is recommended there (section 21). A conformance block would need an 8,001-character literal, so L9a tests the cap by a unit test, not a block.
+The `doc` clause and declaration cap rises from 2000 to **8000** code points (`meta.schema.json` `maxLength`). The `use-when` (160), `expects` (64), `link` and per-parameter (200) caps do not change. **Kind: additive** (a longer `doc` was `E_META`). The vector `ref` cap of 200 characters (PLAN wave 3) is not a language item; it belongs to the vector format (RECIPES-1.2 §10, `vectors.schema.json`), and the cap becomes **1000** there (Q16, decided; section 21). A conformance block would need an 8,001-character literal, so L9a tests the cap by a unit test, not a block.
 
 ### 12.9 Named inputs and the stack: reviewed, no change
 
@@ -756,7 +756,7 @@ Cases: C593 and C594 (conditional on L0; they test only item 1).
 | Generic words | nothing | nothing | 0 |
 | New names in `core` (35 words) | a vocabulary that defined the same name keeps its own; a **local** of the same name draws `W_SHADOW` | L12 lists every `W_SHADOW` that the 35 names cause (`first`, `last`, `index-of`, `thaw`, `null`, … are plausible parameter names) and renames only where a body needs the core word | to be counted by L1 |
 
-**What the sweep does not do.** It does not adopt `record{`, `DEFER:`, constant expressions, `friend`, choice values or the new core words in existing words; that is optional migration (L13 and later) and changes hashes. With the recommendations of this file **the sweep rewrites no word's source except the `json` callers**. TOOLKIT §11.5 described a sweep of all 161 files; that assumed the `reduce` swap and a new arithmetic header. The `previousHashes` script still runs first (T27) because the `json` callers change.
+**What the sweep does not do.** It does not adopt `record{`, `DEFER:`, constant expressions, `friend`, choice values or the new core words in existing words; that is optional migration (L13 and later) and changes hashes. With the decisions of this file **the sweep rewrites no word's source except the `json` callers**. TOOLKIT §11.5 described a sweep of all 161 files; that assumed the `reduce` swap and a new arithmetic header. The `previousHashes` script still runs first (T27) because the `json` callers change.
 
 ### 14.2 What the sweep must keep
 
@@ -2715,9 +2715,9 @@ META: f
 
 ---
 
-## 18. Design decisions (D69 to D96, proposed)
+## 18. Design decisions (D69 to D96, approved at Gate T1)
 
-These continue the D-numbers of LANGUAGE.md §17. They become decisions when the owner approves the answers of section 19.
+These continue the D-numbers of LANGUAGE.md §17. They became decisions when the owner approved the answers of section 19 at Gate T1 (2026-11-24).
 
 | # | Decision | Rationale |
 |---|---|---|
@@ -2752,45 +2752,45 @@ These continue the D-numbers of LANGUAGE.md §17. They become decisions when the
 
 ---
 
-## 19. Open questions, each with a recommended answer
+## 19. Questions, each decided at Gate T1
 
-Each question starts with its version where it has one. The recommended answer is what this file specifies.
+**The owner decided every question at Gate T1 on 2026-11-24 and accepted the recommended answer each time.** Each question starts with its version where it has one. The decided answer is what this file specifies.
 
-**Q1. Version: is this wave FL v0.3, with the file `docs/LANGUAGE-0.3.md`?** Recommended: **yes, v0.3** (section 2.3): one breaking item, one wave boundary, not a 1.0. The alternatives are 1.0 (rejected: no pack has shipped on `ext` yet) and a split into v0.3 and v0.4 (rejected: two sweeps).
+**Q1. Version: is this wave FL v0.3, with the file `docs/LANGUAGE-0.3.md`?** Decided at Gate T1, 2026-11-24: **yes, v0.3** (section 2.3): one breaking item, one wave boundary, not a 1.0. The alternatives are 1.0 (rejected: no pack has shipped on `ext` yet) and a split into v0.3 and v0.4 (rejected: two sweeps).
 
-**Q2. Version staging: how is the bump staged (Q15, language side)?** Recommended: **one number, `FORGE_LANG_VERSION` `"0.3.0"`, set at the wave-boundary merge (L12)**; X1 and X2 land together with the forced one-line `ext` cases (G1); L9b and L12 land in one group (G3); the worker protocol is `PROTOCOL_VERSION` 2 and the recipe format stays `"forge": 1` (section 2.4).
+**Q2. Version staging: how is the bump staged (Q15, language side)?** Decided at Gate T1, 2026-11-24: **one number, `FORGE_LANG_VERSION` `"0.3.0"`, set at the wave-boundary merge (L12)**; X1 and X2 land together with the forced one-line `ext` cases (G1); L9b and L12 land in one group (G3); the worker protocol is `PROTOCOL_VERSION` 2 and the recipe format stays `"forge": 1` (section 2.4).
 
-**Q3. v0.3: how does FL hold JSON `null` (Q14)?** Recommended: **`ext{null}`**, with the words `null` and `null?` (section 7). Alternatives: keep the sentinel record (no language change, keeps `type` `record` and the `jwk` guards); a tenth tag `null` (a second source-breaking union change). If the owner keeps the sentinel, section 7 shrinks to the JSON words and RELIX.md §5.4 needs the sentinel as its representation.
+**Q3. v0.3: how does FL hold JSON `null` (Q14)?** Decided at Gate T1, 2026-11-24: **`ext{null}`**, with the words `null` and `null?` (section 7). Alternatives: keep the sentinel record (no language change, keeps `type` `record` and the `jwk` guards); a tenth tag `null` (a second source-breaking union change). Had the owner kept the sentinel, section 7 would shrink to the JSON words and RELIX.md §5.4 would need the sentinel as its representation. RELIX.md §5.1, §5.2 and §5.4 now use `ext{null}`.
 
-**Q4. v0.3: are generic words a closed list with kind methods (section 5), or user-declared (`GENERIC:`, `METHOD:`)?** Recommended: **closed list, kind methods**, header text and hashes unchanged. User-declared generics wait for a client.
+**Q4. v0.3: are generic words a closed list with kind methods (section 5), or user-declared (`GENERIC:`, `METHOD:`)?** Decided at Gate T1, 2026-11-24: **closed list, kind methods**, header text and hashes unchanged. User-declared generics wait for a client.
 
-**Q5. v0.3: is the mutable array an `ext` kind with five intrinsics?** Recommended: **yes** (section 10). Alternatives: a new tag (the study's option B as written); step zero only (`set-nth`, `index-of`, which is already in section 8). This also needs the owner to see that `array` and `null` are reserved kind names.
+**Q5. v0.3: is the mutable array an `ext` kind with five intrinsics?** Decided at Gate T1, 2026-11-24: **yes** (section 10). Alternatives: a new tag (the study's option B as written); step zero only (`set-nth`, `index-of`, which is already in section 8). The owner also accepted that `array` and `null` are reserved kind names (Q15).
 
-**Q6. v0.3: does `reduce` change its argument order?** Recommended: **no** (section 12.1). If the owner wants `init seq quot`: `reduce` becomes `( init seq quot -- acc )`; the quotation keeps `( acc elem )`; the sweep inserts `-rot swap rot` before every `reduce` whose arguments are not literal (88 lines mention it in 41 files), the 88 callers change hash, and `C573` changes to `10 { 1 2 3 } [ - ] reduce`.
+**Q6. v0.3: does `reduce` change its argument order?** Decided at Gate T1, 2026-11-24: **no** (section 12.1). The alternative, not taken, is `init seq quot`: `reduce` would become `( init seq quot -- acc )`; the quotation keeps `( acc elem )`; the sweep would insert `-rot swap rot` before every `reduce` whose arguments are not literal (88 lines mention it in 41 files), the 88 callers would change hash, and `C573` would change to `10 { 1 2 3 } [ - ] reduce`.
 
-**Q7. v0.3: does a violated interval, set or length constraint raise `E_RANGE` (breaking)?** Recommended: **yes** (section 12.3), with the vector expectation rewrite (at most 20). Alternative: leave `E_PARAM_INVALID`, and the wave is wholly additive.
+**Q7. v0.3: does a violated interval, set or length constraint raise `E_RANGE` (breaking)?** Decided at Gate T1, 2026-11-24: **yes** (section 12.3), with the vector expectation rewrite (at most 20). Alternative: leave `E_PARAM_INVALID`, and the wave is wholly additive.
 
-**Q8. v0.3: are computed constants constant expressions run by the compiler, not by the VM at load?** Recommended: **yes** (section 9.1). `load()` cannot run FL (D23, and the VM is async). `warm()` remains the explicit load budget for `MEMO:`.
+**Q8. v0.3: are computed constants constant expressions run by the compiler, not by the VM at load?** Decided at Gate T1, 2026-11-24: **yes** (section 9.1). `load()` cannot run FL (D23, and the VM is async). `warm()` remains the explicit load budget for `MEMO:`.
 
-**Q9. v0.3: are choice values specified now and implemented last?** Recommended: **yes**, and dropped if the L1 count of `choice … case` tables is small (section 9.2).
+**Q9. v0.3: are choice values specified now and implemented last?** Decided at Gate T1, 2026-11-24: **yes**, and dropped if the L1 count of `choice … case` tables is small (section 9.2).
 
-**Q10. v0.3: forward declarations by `DEFER:` with a group hash for cycles?** Recommended: **yes** (section 9.4). The alternative is no mutual recursion (D6), which keeps hashing simple.
+**Q10. v0.3: forward declarations by `DEFER:` with a group hash for cycles?** Decided at Gate T1, 2026-11-24: **yes** (section 9.4). The alternative is no mutual recursion (D6), which keeps hashing simple.
 
-**Q11. v0.3: is friend access a `friend` clause on a private word?** Recommended: **yes** (section 9.3). It removes the need for internal vocabularies in new code.
+**Q11. v0.3: is friend access a `friend` clause on a private word?** Decided at Gate T1, 2026-11-24: **yes** (section 9.3). It removes the need for internal vocabularies in new code.
 
-**Q12. v0.3: is a re-entrancy form for `VARIABLE` (`with-variable`) added?** Recommended: **no**; state the rule (section 9.5).
+**Q12. v0.3: is a re-entrancy form for `VARIABLE` (`with-variable`) added?** Decided at Gate T1, 2026-11-24: **no**; state the rule (section 9.5).
 
-**Q13. v0.3: are the 32-bit words (L7b) built before L0 reports?** Recommended: **no**: specify now, build after L0; drop them if L11 makes them unnecessary.
+**Q13. v0.3: are the 32-bit words (L7b) built before L0 reports?** Decided at Gate T1, 2026-11-24: **no**: specify now, build after L0; drop them if L11 makes them unnecessary.
 
-**Q14. v0.3: may an `ext` parameter have a string default?** Recommended: **yes** (section 4.3). This refines X0 §3.3, because RECIPES-1.2 §3.4 already assumes it.
+**Q14. v0.3: may an `ext` parameter have a string default?** Decided at Gate T1, 2026-11-24: **yes** (section 4.3). This refines X0 §3.3, because RECIPES-1.2 §3.4 already assumes it.
 
-**Q15. v0.3: are `null` and `array` reserved core kind names?** Recommended: **yes**; the manifest of PACKS.md (SP4) must refuse a pack that claims them, as it refuses `table`, `relation`, `relix-expr` and `rat` for non-owners (T18).
+**Q15. v0.3: are `null` and `array` reserved core kind names?** Decided at Gate T1, 2026-11-24: **yes**; the manifest of PACKS.md (SP4) refuses a pack that claims them, with the check code `kind-reserved` (PACKS.md §2.4), as it refuses `relation`, `relix-expr` and `rat` for non-owners (T18, `kind-clash`). `table` is reserved the same way.
 
-**Q16. v0.3: is the `doc` cap 8000 and the vector `ref` cap 1000?** Recommended: **yes** (section 12.8). The `ref` cap is the vector schema owner's.
+**Q16. v0.3: is the `doc` cap 8000 and the vector `ref` cap 1000?** Decided at Gate T1, 2026-11-24: **yes** (section 12.8). The `ref` cap is the vector schema owner's.
 
-**Q17. v0.3: are the two `ext` words `ext-kind` and `ext>text` enough?** Recommended: **yes**; a word that builds a value of a kind from text is the coercion at a typed slot, and a tagged literal.
+**Q17. v0.3: are the two `ext` words `ext-kind` and `ext>text` enough?** Decided at Gate T1, 2026-11-24: **yes**; a word that builds a value of a kind from text is the coercion at a typed slot, and a tagged literal.
 
-**Q18. v0.3: which spelling for the table export words, `table:>csv` and `table:>json` (TOOLKIT §7) or `table:to-csv` and `table:to-json` (the D2 row, X0, RECIPES-1.2, RELIX.md, UI-TOOLKIT)?** Recommended: **`table:to-csv` and `table:to-json`.** Reasons: (a) every approved document and the X0 prototype already use `to-`; RECIPES-1.2 and RELIX.md name `table:to-json` in vectors and examples; (b) the `A>B` spelling in FL is the convention of **`core`** conversion words (`str>int`, `bytes>hex`, `json>value`), which are one-step primitives of a closed vocabulary; an op of a data vocabulary uses `to-` and `from-` (`csv:to-json`, `csv:from-json`, `yaml:to-json`); (c) `table:to-json` keeps the family of `csv:to-json`. TOOLKIT §7 should be corrected. The same section writes `json:parse`; after L3 the word is the core `json>value`.
+**Q18. v0.3: which spelling for the table export words, `table:>csv` and `table:>json` (TOOLKIT §7) or `table:to-csv` and `table:to-json` (the D2 row, X0, RECIPES-1.2, RELIX.md, UI-TOOLKIT)?** Decided at Gate T1, 2026-11-24: **`table:to-csv` and `table:to-json`.** Reasons: (a) every approved document and the X0 prototype already use `to-`; RECIPES-1.2 and RELIX.md name `table:to-json` in vectors and examples; (b) the `A>B` spelling in FL is the convention of **`core`** conversion words (`str>int`, `bytes>hex`, `json>value`), which are one-step primitives of a closed vocabulary; an op of a data vocabulary uses `to-` and `from-` (`csv:to-json`, `csv:from-json`, `yaml:to-json`); (c) `table:to-json` keeps the family of `csv:to-json`. TOOLKIT §7 should be corrected. The same section writes `json:parse`; after L3 the word is the core `json>value`.
 
 ---
 
@@ -2823,24 +2823,24 @@ Ids continue TOOLKIT §13.4 and §13.5. "Maps to" names the TOOLKIT row. All pac
 
 ## 21. What the other documents need
 
-This file edits none of them. The orchestrator applies or briefs these.
+This file edits none of them. The orchestrator applies or briefs these. **Applied at Gate T1 (2026-11-24)** in the files that the specification work owns: RELIX.md (§5.1, §5.2, §5.4, §16 item 13), RECIPES-1.2.md (the `ref` cap, as a work-package item of RW8 and in §14.2), PACKS.md (the reserved kind names and `kind-reserved`) and UI-TOOLKIT.md (`null` and `array` render as text). The items for TOOLKIT.md, SYMBOLIC.md, `docs/research/` and the editor plugin are left to the orchestrator.
 
 **TOOLKIT.md**
 
 1. §11 title and §13.3 row SP1: "FL v0.2" becomes "FL v0.3"; the status of the table rows (section 1 of this file lists each). Q14 and Q15 get this file's answers, once the owner decides.
 2. §7 (the table words): `table:>csv` and `table:>json` become `table:to-csv` and `table:to-json` (Q18); `json:parse` becomes `json>value`.
-3. §11.5: `reduce` order recommended unchanged; generic arithmetic is additive; the `raise`/`range` clash is closed; the sweep rewrites no word source except the `json` callers (section 14).
+3. §11.5: `reduce` order unchanged (Q6, decided); generic arithmetic is additive; the `raise`/`range` clash is closed; the sweep rewrites no word source except the `json` callers (section 14).
 4. §13.4: L-rows refined to H0, L5a, L5b, L7a, L7b, L9a, L9b, L14; L12's "all 4,488 vectors pass unchanged" becomes "pass except the listed expectation codes"; the counts 4,488, 161 and 1,853 are older than the tree (`packages/ops/README.md` counts 7,302 vectors; 208 `.fth` files); L1 refreshes them.
 5. §6.1: the registry is process-wide, not a `RuntimeOptions` field (T18); a string default is allowed on an `ext` parameter.
 6. §3: new decisions for the owner's answers (T35 and up).
 
-**RELIX.md**: §5.4 and the "NULL inside a struct or array" row of §5.1: a nested NULL maps to `ext{null}` and back (Q14); §5.2 "other `ext` kinds not mappable" gains the exception `null`; §16 item 13 is answered.
+**RELIX.md** (applied): §5.4 and the "NULL inside a struct or array" row of §5.1: a nested NULL maps to `ext{null}` and back (Q14); §5.2 "other `ext` kinds not mappable" gains the exception `null`; §16 item 13 is answered.
 
-**RECIPES-1.2.md**: §3.1 rule 4 stays; the string default on an `ext` parameter is confirmed (Q14 here). The vector `ref` cap (200) is the vector schema's; 1000 is recommended (Q16).
+**RECIPES-1.2.md** (applied): §3.1 rule 4 stays; the string default on an `ext` parameter is confirmed (Q14 here). The vector `ref` cap (200) lives in `vectors.schema.json`, not in RECIPES-1.2 itself; it becomes 1000 (Q16), as a work-package item of RW8 and a row of RECIPES-1.2 §14.2.
 
-**PACKS.md (SP4)**: the manifest reserves the kind names `null`, `array`, `table`; a pack declares its literal tags beside its kinds; the labels `+media` (and later `+net`) are declared by the language, granted by the pack system.
+**PACKS.md (SP4)** (applied): the manifest reserves the kind names `null`, `array` and `table` (the check `kind-reserved`); a pack declares its literal tags beside its kinds; the label `+media` is declared by the language and granted by the pack system. `+net` is not defined (PACKS.md PK11, D91).
 
-**The UI proposal (SP3)**: no kind named `null` or `array` needs a viewer: both render as text. A kind with a `view` is for X2 only.
+**The UI proposal (SP3)** (applied, UI-TOOLKIT.md §1.9): no kind named `null` or `array` needs a viewer: both render through the text fallback. A kind with a `view` is for X2 only.
 
 **SYMBOLIC.md v2 (SP5)**: S15 to S19 become this file's sections 4, 5, 6 and 11. S16 is answered by section 5 (kind methods, no `GENERIC:`); S17 by section 6; S19 by section 11. Its rules and words are FL and call kind functions.
 
