@@ -31,14 +31,13 @@
 import type { TestCase } from "./parse.js";
 
 /**
- * Cases that are required to pass. X1 (the `ext` value) opts in C401 to C428 and C456 to C461 except
- * C456 and C457 (the word `json>value`, L3), whose `ext` rules are covered by `src/ext.test.ts` until
- * L3 lands. X4 (tagged literals) adds C427 and C446 to C455.
+ * Cases that are required to pass. X1 (the `ext` value) opts in C401 to C428; X4 (tagged literals) adds
+ * C427 and C446 to C455; L3 (JSON in core) adds C456 to C470; L2 adds C471 to C492.
  */
 export const ENABLED_PROPOSED: readonly string[] = [
   "C401-C428",
   "C446-C455",
-  "C458-C461",
+  "C456-C470",
   "C471-C492",
 ];
 

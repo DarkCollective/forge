@@ -83,6 +83,7 @@ export {
   registerLiteralTag,
 } from "./ext.js";
 export type { ExtKind, ExtMethods, GenericWord, KindSamples, LiteralTag } from "./ext.js";
+export { JSON_MAX_DEPTH, JSON_MAX_INDENT, jsonToValue, valueToJson } from "./vocab/json.js";
 export { read } from "./reader.js";
 export {
   INTRINSIC_NAMES,
