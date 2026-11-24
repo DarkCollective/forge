@@ -16,6 +16,9 @@
 /*
  * Extracts the conformance suite of docs/LANGUAGE.md section 16 (the `fl-test` blocks) and the
  * `forth U-*` units of section 15 into typed test cases. Pure: no runtime is needed.
+ *
+ * Blocks fenced `fl-proposed` (docs/LANGUAGE-0.3.md section 3) are parsed with the same grammar into
+ * `Spec.proposed`; they are never part of `Spec.cases`, so they are not required to pass. See README.md.
  */
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -58,6 +61,7 @@ export const KNOWN_DIRECTIVES = [
   "hash-eq",
   "hash-ne",
   "meta",
+  "call",
 ] as const;
 export type DirectiveName = (typeof KNOWN_DIRECTIVES)[number];
 
@@ -121,7 +125,39 @@ const TAG_TABLE: Record<Tag, true> = {
   record: true,
   file: true,
 };
-const EFFECT_LABELS: readonly EffectLabel[] = ["+async", "+random", "+time"];
+/** A coercion tag as the conformance blocks write it: v0.2's tags plus LANGUAGE-0.3.md's `ext`. */
+export type CaseTag = Tag | "ext";
+/** An effect label as the conformance blocks write it: v0.2's labels plus LANGUAGE-0.3.md's `+media`. */
+export type CaseLabel = EffectLabel | "+media";
+
+const CASE_TAGS: ReadonlySet<string> = new Set<string>([...Object.keys(TAG_TABLE), "ext"]);
+const EFFECT_LABELS: readonly CaseLabel[] = ["+async", "+random", "+time", "+media"];
+
+/**
+ * The top-level fields of `WordMeta` (LANGUAGE.md section 10.5 and LANGUAGE-0.3.md section 15) that
+ * a `@meta` path may start with. `generic` is the v0.3 flag; the other new fields are nested:
+ * `params[i].kind`, `params[i].values`, `discovery.friends` and `discovery.kernel`.
+ */
+export const META_FIELDS: readonly string[] = [
+  "name",
+  "vocab",
+  "qname",
+  "kind",
+  "exported",
+  "op",
+  "effect",
+  "params",
+  "category",
+  "doc",
+  "aliases",
+  "seeAlso",
+  "effects",
+  "version",
+  "hash",
+  "source",
+  "discovery",
+  "generic",
+];
 const DIAGNOSTIC_CODES = ["W_REDEFINED", "W_SHADOW"] as const;
 export type DiagnosticCode = (typeof DIAGNOSTIC_CODES)[number];
 
@@ -154,13 +190,19 @@ export interface UnitSpec {
 export interface CoercionExpectation {
   readonly word: string;
   readonly slot: number;
-  readonly from: Tag;
-  readonly to: Tag;
+  readonly from: CaseTag;
+  readonly to: CaseTag;
 }
 
 export interface RunSpec {
   readonly line: number;
+  /** The console source of `@run`; "" for `@call`. */
   readonly source: string;
+  /**
+   * `@call <qname>` (LANGUAGE-0.3.md section 3): run `runtime.call(qname, args)` instead of `run()`,
+   * with the stack in force (`@stack-in` for the first run) as the arguments, deepest first.
+   */
+  readonly call: string | undefined;
   /** Expected output, or undefined when `@out` is absent. */
   readonly out: string | undefined;
   /** Expected final stack in `.s` format, or undefined. */
@@ -196,7 +238,7 @@ export interface TestCase {
   readonly sharedVars: boolean;
   readonly limits: Partial<Limits>;
   readonly abortMs: number | undefined;
-  readonly deny: readonly EffectLabel[];
+  readonly deny: readonly CaseLabel[];
   readonly breakpoints: readonly Breakpoint[];
   readonly hook: "record" | "stop" | undefined;
   readonly hits: readonly string[] | undefined;
@@ -207,10 +249,15 @@ export interface TestCase {
   readonly directives: readonly DirectiveName[];
   /** True for tests that assert only the error code and race the clock (`@abort`, `maxMillis`). */
   readonly timing: boolean;
+  /** True for a case read from an `fl-proposed` block. */
+  readonly proposed: boolean;
 }
 
 export interface Spec {
+  /** The `fl-test` cases: the suite that must pass. */
   readonly cases: readonly TestCase[];
+  /** The `fl-proposed` cases: parsed and validated, run only when opted in (see proposed.ts). */
+  readonly proposed: readonly TestCase[];
   /** Units from `forth U-*` code blocks, by name (e.g. `U-rot`). */
   readonly units: ReadonlyMap<string, string>;
 }
@@ -225,9 +272,14 @@ interface RawBlock {
   readonly lines: readonly string[];
 }
 
-function extractFences(markdown: string): { tests: RawBlock[]; units: Map<string, RawBlock> } {
+function extractFences(markdown: string): {
+  tests: RawBlock[];
+  proposed: RawBlock[];
+  units: Map<string, RawBlock>;
+} {
   const all = markdown.split(/\r?\n/);
   const tests: RawBlock[] = [];
+  const proposed: RawBlock[] = [];
   const units = new Map<string, RawBlock>();
   let i = 0;
   while (i < all.length) {
@@ -252,7 +304,13 @@ function extractFences(markdown: string): { tests: RawBlock[]; units: Map<string
     const block: RawBlock = { line: start + 1, lines: body };
     if (info === "fl-test") {
       tests.push(block);
-    } else if (/^fl-test\b/i.test(info) || /^fl[_-]?test/i.test(info)) {
+    } else if (info === "fl-proposed") {
+      proposed.push(block);
+    } else if (
+      /^fl-test\b/i.test(info) ||
+      /^fl[_-]?test/i.test(info) ||
+      /^fl[_-]?prop/i.test(info)
+    ) {
       throw new SpecParseError(start + 1, null, `suspicious fence info string "${info}"`);
     } else {
       const u = /^forth (U-\S+)$/.exec(info);
@@ -265,7 +323,7 @@ function extractFences(markdown: string): { tests: RawBlock[]; units: Map<string
       }
     }
   }
-  return { tests, units };
+  return { tests, proposed, units };
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -517,6 +575,13 @@ function parseMeta(s: Section, fail: Fail): MetaExpectation[] {
     const path = parseMetaPath(pathText);
     if (path === undefined)
       return fail(line, `@meta path "${pathText}" is not a dotted/indexed path`);
+    const head = path[0];
+    if (typeof head !== "string" || !META_FIELDS.includes(head)) {
+      return fail(
+        line,
+        `@meta path "${pathText}" does not start with a WordMeta field (${META_FIELDS.join(", ")})`,
+      );
+    }
     let expected: unknown;
     try {
       expected = JSON.parse(rhs);
@@ -544,7 +609,7 @@ function parsePairs(s: Section, fail: Fail): [string, string] {
 
 function splitSections(block: RawBlock, fail: Fail): { title: string; sections: Section[] } {
   const first = block.lines[0];
-  if (first === undefined) return fail(block.line, "empty fl-test block");
+  if (first === undefined) return fail(block.line, "empty test block");
   const sections: Section[] = [];
   let cur: { name: DirectiveName; line: number; arg: string; body: string[] } | undefined;
   for (let k = 1; k < block.lines.length; k++) {
@@ -566,7 +631,7 @@ function splitSections(block: RawBlock, fail: Fail): { title: string; sections: 
   return { title: first, sections };
 }
 
-function parseBlock(block: RawBlock, unitNames: ReadonlySet<string>): TestCase {
+function parseBlock(block: RawBlock, unitNames: ReadonlySet<string>, proposed: boolean): TestCase {
   let label: string | null = null;
   const fail: Fail = (line, message) => {
     throw new SpecParseError(line, label, message);
@@ -612,6 +677,7 @@ function parseBlock(block: RawBlock, unitNames: ReadonlySet<string>): TestCase {
   interface MutRun {
     line: number;
     source: string;
+    call: string | undefined;
     out: string | undefined;
     stack: string | undefined;
     error: ErrorExpectation | undefined;
@@ -623,7 +689,7 @@ function parseBlock(block: RawBlock, unitNames: ReadonlySet<string>): TestCase {
   let sharedVars = false;
   const limits: Partial<Record<keyof Limits, number>> = {};
   let abortMs: number | undefined;
-  const deny: EffectLabel[] = [];
+  const deny: CaseLabel[] = [];
   const breakpoints: Breakpoint[] = [];
   let hook: "record" | "stop" | undefined;
   let hits: string[] | undefined;
@@ -683,12 +749,35 @@ function parseBlock(block: RawBlock, unitNames: ReadonlySet<string>): TestCase {
         runs.push({
           line: s.line,
           source: source(s),
+          call: undefined,
           out: undefined,
           stack: undefined,
           error: undefined,
           coercions: undefined,
         });
         break;
+      case "call": {
+        // `@call <qname>`: the name is on the directive line and the body is empty.
+        const name = s.arg;
+        if (!/^[^\s:]+:[^\s:]+$/.test(name)) {
+          return fail(
+            s.line,
+            `@call needs one qualified name "vocab:word" on its line, got "${name}"`,
+          );
+        }
+        if (s.body.some((l) => l.trim() !== ""))
+          return fail(s.line, "@call takes no body, only a name");
+        runs.push({
+          line: s.line,
+          source: "",
+          call: name,
+          out: undefined,
+          stack: undefined,
+          error: undefined,
+          coercions: undefined,
+        });
+        break;
+      }
       case "stack-in": {
         once(stackIn, s);
         noArg(s);
@@ -779,7 +868,7 @@ function parseBlock(block: RawBlock, unitNames: ReadonlySet<string>): TestCase {
           if (!(EFFECT_LABELS as readonly string[]).includes(t)) {
             return fail(s.line, `@deny names unknown effect label "${t}"`);
           }
-          deny.push(t as EffectLabel);
+          deny.push(t as CaseLabel);
         }
         break;
       }
@@ -794,11 +883,16 @@ function parseBlock(block: RawBlock, unitNames: ReadonlySet<string>): TestCase {
             return fail(s.line, `@coercions line needs "word slot from to": ${l}`);
           }
           for (const t of [from, to]) {
-            if (!Object.prototype.hasOwnProperty.call(TAG_TABLE, t as string)) {
+            if (!CASE_TAGS.has(t as string)) {
               return fail(s.line, `@coercions has unknown tag "${t}"`);
             }
           }
-          list.push({ word: word as string, slot: Number(slot), from: from as Tag, to: to as Tag });
+          list.push({
+            word: word as string,
+            slot: Number(slot),
+            from: from as CaseTag,
+            to: to as CaseTag,
+          });
         }
         lastRun.coercions = list;
         break;
@@ -864,7 +958,10 @@ function parseBlock(block: RawBlock, unitNames: ReadonlySet<string>): TestCase {
   }
 
   // Cross-section rules.
-  if (runs.length === 0 && units.length === 0 && uses.length === 0) {
+  // A block that only asserts `@meta` of words that already exist (C443 asks about `core:+`) is
+  // allowed to have nothing to load or run; LANGUAGE-0.3.md section 3 does not say either way.
+  const asksOnly = meta.length > 0 || hashEq.length > 0 || hashNe.length > 0;
+  if (runs.length === 0 && units.length === 0 && uses.length === 0 && !asksOnly) {
     return fail(block.line, "test has no @run, @unit or @use");
   }
   if (stackIn !== undefined && runs.length === 0) return fail(block.line, "@stack-in without @run");
@@ -898,22 +995,28 @@ function parseBlock(block: RawBlock, unitNames: ReadonlySet<string>): TestCase {
     meta,
     directives: used,
     timing: abortMs !== undefined || limits.maxMillis !== undefined,
+    proposed,
   };
 }
 
 /**
  * Parses one spec text. Throws SpecParseError at the first malformed block. `file` names the
- * document in error messages. Blocks fenced `fl-proposed` (or anything but `fl-test`) are ignored.
+ * document in error messages. `fl-test` blocks become `cases`, `fl-proposed` blocks `proposed`
+ * (same grammar, same validation); any other fence is ignored.
  */
 export function parseSpec(markdown: string, file = "LANGUAGE.md"): Spec {
   const previous = currentFile;
   currentFile = file;
   try {
-    const { tests, units } = extractFences(markdown);
+    const { tests, proposed, units } = extractFences(markdown);
     const unitText = new Map<string, string>();
     for (const [name, block] of units) unitText.set(name, block.lines.join("\n") + "\n");
     const names = new Set(unitText.keys());
-    return { cases: tests.map((b) => parseBlock(b, names)), units: unitText };
+    return {
+      cases: tests.map((b) => parseBlock(b, names, false)),
+      proposed: proposed.map((b) => parseBlock(b, names, true)),
+      units: unitText,
+    };
   } finally {
     currentFile = previous;
   }
@@ -927,12 +1030,13 @@ export function parseSpecs(
   docs: readonly { readonly file: string; readonly text: string }[],
 ): Spec {
   const cases: TestCase[] = [];
+  const proposed: TestCase[] = [];
   const units = new Map<string, string>();
   const caseFile = new Map<number, string>();
   const unitFile = new Map<string, string>();
   for (const doc of docs) {
     const spec = parseSpec(doc.text, doc.file);
-    for (const c of spec.cases) {
+    for (const c of [...spec.cases, ...spec.proposed]) {
       const other = caseFile.get(c.id);
       if (other !== undefined) {
         throw new SpecParseError(
@@ -942,7 +1046,7 @@ export function parseSpecs(
         );
       }
       caseFile.set(c.id, doc.file);
-      cases.push(c);
+      (c.proposed ? proposed : cases).push(c);
     }
     for (const [name, text] of spec.units) {
       const other = unitFile.get(name);
@@ -957,13 +1061,14 @@ export function parseSpecs(
       units.set(name, text);
     }
   }
-  return { cases, units };
+  return { cases, proposed, units };
 }
 
 /** Every `@directive` name that appears at the start of a line inside fl-test blocks (raw scan). */
 export function scanDirectiveNames(markdown: string): Set<string> {
   const names = new Set<string>();
-  for (const b of extractFences(markdown).tests) {
+  const fences = extractFences(markdown);
+  for (const b of [...fences.tests, ...fences.proposed]) {
     for (const l of b.lines) {
       const m = /^@([^\s]*)/.exec(l);
       if (m !== null) names.add(m[1] as string);
@@ -985,6 +1090,11 @@ export function specDocPaths(): readonly { readonly file: string; readonly path:
   return [{ file: "LANGUAGE.md", path: specPath() }];
 }
 
+/** The path of docs/LANGUAGE-0.3.md, the document that stages the `fl-proposed` cases. */
+export function proposedSpecPath(): string {
+  return fileURLToPath(new URL("../../../../docs/LANGUAGE-0.3.md", import.meta.url).href);
+}
+
 /** The text of LANGUAGE.md. */
 export function readSpec(): string {
   return readFileSync(specPath(), "utf8");
@@ -995,6 +1105,17 @@ export function loadSpec(): Spec {
   return parseSpecs(
     specDocPaths().map(({ file, path }) => ({ file, text: readFileSync(path, "utf8") })),
   );
+}
+
+/**
+ * The staged cases: the `fl-proposed` blocks of LANGUAGE-0.3.md, read together with the suite so
+ * that an id cannot be in both. A block moved into LANGUAGE.md as `fl-test` leaves this list.
+ */
+export function loadProposed(): Spec {
+  return parseSpecs([
+    ...specDocPaths().map(({ file, path }) => ({ file, text: readFileSync(path, "utf8") })),
+    { file: "LANGUAGE-0.3.md", text: readFileSync(proposedSpecPath(), "utf8") },
+  ]);
 }
 
 /** True when the case asserts something beyond "succeeds" (spec 16.1 allows the latter, rarely). */
