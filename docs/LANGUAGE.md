@@ -1242,6 +1242,8 @@ All stack words operate above the current floor (§10.1).
 | `/` | P | `( number number -- num )` | float division; zero divisor `E_DIV_ZERO` |
 | `div` | P | `( int int -- int )` | exact floor division (correct for any size); zero divisor `E_DIV_ZERO` |
 | `mod` | P | `( int int -- int )` | floor modulo (sign of the divisor); zero `E_DIV_ZERO` |
+| `divmod` | P | `( a:int b:int -- q:int r:int )` | floor quotient and floor remainder, `div` and `mod` in one step (`-7 2 divmod` gives `-4` and `1`); `b` zero is `E_DIV_ZERO` |
+| `tdiv` | P | `( a:int b:int -- int )` | division that rounds toward zero (`-7 2 tdiv` is `-3`); `b` zero is `E_DIV_ZERO`. Promotes `util:tdiv`, which required `b` positive |
 | `pow` | P | `( int int -- int )` | integer power; exponent < 0 `E_RANGE`; result over `maxIntBits` `E_LIMIT_VALUE` |
 | `gcd` | P | `( int int -- int )` | greatest common divisor, never negative; `gcd(0,0)` is 0 |
 | `invmod` | P | `( a:int m:int -- int )` | modular inverse of a mod m in `[0, m)`; m < 1 or no inverse `E_RANGE` |
@@ -1294,6 +1296,11 @@ For `len cat slice nth rev` the first operand selects the sequence kind (`str` b
 | `cat` | P | `( any any -- any )` | concatenate two of the same kind (`E_TYPE` if kinds differ) |
 | `slice` | P | `( any from:int to:int -- any )` | sub-sequence `[from, to)`; need 0 ≤ from ≤ to ≤ len else `E_RANGE` |
 | `nth` | P | `( any i:int -- any )` | element i: 1-code-point `str`, byte as `int`, or list element; out of range `E_RANGE` |
+| `first` | P | `( any -- any )` | element 0 of a `str` (a 1-code-point `str`), `bytes` (an `int`) or `list`, as `nth` gives it; an empty sequence is `E_RANGE` (there is no null, §3.1) |
+| `second` | P | `( any -- any )` | element 1, as `nth` gives it; a sequence of fewer than two elements is `E_RANGE` |
+| `last` | P | `( any -- any )` | the last element, as `nth` gives it; an empty sequence is `E_RANGE` |
+| `index-of` | P | `( any any -- int )` | the first position of `x` in a list (by `=`), in bytes (`x` an `int` 0 to 255, else `E_RANGE`) or in a `str` (`x` a `str`, a substring; the position in code points; the empty substring gives 0). **−1 when absent**, as `find` does. `util:index-of`, which raises `E_RANGE`, is not changed |
+| `set-nth` | P | `( any i:int any -- any )` | a copy of a list or bytes with element `i` replaced (bytes take an `int` 0 to 255, else `E_RANGE`); `i` out of range is `E_RANGE`; a `str` is `E_TYPE` |
 | `rev` | P | `( any -- any )` | reverse (by code point for `str`) |
 | `split` | P | `( str sep:str -- list )` | split at every occurrence of `sep` into a list of `str`; `""` gives `{ "" }`, a trailing separator gives a trailing `""`; empty `sep` `E_RANGE` |
 | `join` | P | `( list sep:str -- str )` | join a list of `str` with `sep`; non-`str` element `E_TYPE` |
@@ -1340,6 +1347,10 @@ For `len cat slice nth rev` the first operand selects the sequence kind (`str` b
 | `codes>str` | P | `( list -- str )` | from a list of code-point `int`s; invalid or surrogate `E_RANGE`; non-int `E_TYPE` |
 | `bytes>list` | P | `( bytes -- list )` | list of `int` 0..255 |
 | `list>bytes` | P | `( list -- bytes )` | each element an `int` 0..255 (`E_RANGE`/`E_TYPE`) |
+| `zero-pad` | P | `( n:int w:int -- str )` | the decimal digits of a non-negative `n`, left-padded with `0` to at least `w` digits, never cut (`7 3 zero-pad` is `007`); a negative `n` is `E_RANGE`. Promotes `util:zero-pad` |
+| `num>float-bytes` | P | `( n:num width:int little:bool -- bytes )` | the IEEE 754 binary32 (`width` 32, rounded to the nearest single) or binary64 (`width` 64) bytes of `n`; another width is `E_RANGE`; a finite `n` that overflows binary32 is `E_RANGE` |
+| `float-bytes>num` | P | `( b:bytes little:bool -- num )` | the number in 4 or 8 bytes; any other length is `E_RANGE`; a NaN or infinity pattern is `E_RANGE` (a `num` is always finite, §3.2) |
+| `float-bytes-class` | P | `( b:bytes little:bool -- str )` | `"finite"`, `"nan"`, `"inf"` or `"-inf"`, so that `float:decode` can still report the patterns a `num` cannot hold; any other length than 4 or 8 is `E_RANGE` |
 
 Ciphers over text should operate on `bytes` (see §15.1). The Latin-1 pair is the lossless bridge between a byte string and a JS string; UTF-8 is the default everywhere else (§4.2).
 
@@ -1419,7 +1430,7 @@ Nineteen words that more than one op vocabulary needed were promoted from the in
 
 Resolution is unaffected for existing code (§6.2 puts the current vocabulary and imports before `core`): inside `IN: util` and with `USING: util`, `between?` still resolves to `util:between?`; elsewhere it was `E_UNDEFINED` and is now `core:between?`. The `util` vocabulary is not touched. `fail-coerce` and `fail-range` (§13.6) are the `core` counterparts of `raise:coerce` and `raise:range`; the `raise` vocabulary was removed on 2026-11-15 (TOOLKIT §11.1). Because the hash covers source text and callees and not the vocabulary (§12.4), a promoted word whose text and callees are those of its `util` twin has the same hash (`between?`, `space?`, `sum`, `cp>str`, `zero-bytes`, `hex-digit?`); one that calls a word that differs between the two (`fail-range` against `raise:range`, or a private helper) has a different hash (`check-int-range`, `count-leading`, `trim-end`). The set is the generic `util` words called from at least six vocabularies of the bundle; the domain words stay in `util`. The prelude defines one private helper, `core:_lead-step` (for `count-leading`), visible only inside `core`.
 
-Total: **160** words (12 stack + 37 arithmetic, comparison and maths, counting `< > <= >=` individually + 9 logic and bitwise + 20 sequences and records + 21 conversion + 29 control + 7 printing and introspection + 19 prelude words). By kind: 40 intrinsic, 96 primitive (69 from v0.1, 21 from v0.2 and 6 integer words added after v0.2, `int>be-bytes` among them, moved from the prelude), 5 runtime-supplied and 19 prelude words. The 102 words of v0.1 are unchanged. The prelude also defines one private helper, `core:_lead-step`, which is not counted.
+Total: **171** words (12 stack + 39 arithmetic, comparison and maths, counting `< > <= >=` individually + 9 logic and bitwise + 25 sequences and records + 25 conversion + 29 control + 7 printing and introspection + 19 prelude words). By kind: 40 intrinsic, 107 primitive (69 from v0.1, 21 from v0.2, 6 integer words added after v0.2, `int>be-bytes` among them, moved from the prelude, and 11 of Group L-A, §8 of LANGUAGE-0.3), 5 runtime-supplied and 19 prelude words. The 102 words of v0.1 are unchanged. The prelude also defines one private helper, `core:_lead-step`, which is not counted.
 
 Recipe-oriented vocabularies (`encoding`, `classical`, …) arrive in Phase 4. Nothing in `core` can reach the network, DOM, storage or clock.
 

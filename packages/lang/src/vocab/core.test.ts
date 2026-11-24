@@ -141,13 +141,13 @@ describe("the core table", () => {
   const namesOf = (kind: string): string[] =>
     rows.filter((r) => r.kind === kind).map((r) => r.names[0] as string);
 
-  test("section 13 declares 160 words: 40 intrinsic, 96 primitive, 5 runtime-supplied, 19 prelude", () => {
-    expect(rows).toHaveLength(160);
+  test("section 13 declares 171 words: 40 intrinsic, 107 primitive, 5 runtime-supplied, 19 prelude", () => {
+    expect(rows).toHaveLength(171);
     expect(rows.filter((r) => r.kind === "I")).toHaveLength(40);
-    expect(rows.filter((r) => r.kind === "P")).toHaveLength(96);
+    expect(rows.filter((r) => r.kind === "P")).toHaveLength(107);
     expect(rows.filter((r) => r.kind === "R")).toHaveLength(5);
     expect(rows.filter((r) => r.kind === "F")).toHaveLength(19);
-    expect(section).toContain("Total: **160** words");
+    expect(section).toContain("Total: **171** words");
   });
 
   test("primitives + intrinsics + runtime-supplied + prelude words equal the table exactly", () => {
@@ -157,8 +157,8 @@ describe("the core table", () => {
       ...CORE_RUNTIME_WORDS,
       ...PRELUDE_WORDS,
     ];
-    expect(all).toHaveLength(160);
-    expect(new Set(all).size).toBe(160);
+    expect(all).toHaveLength(171);
+    expect(new Set(all).size).toBe(171);
     expect([...all].sort()).toEqual(rows.map((r) => r.names[0] as string).sort());
   });
 
@@ -194,9 +194,9 @@ describe("the core table", () => {
 
   test("registerCorePrimitives registers into vocabulary core, once", () => {
     // the 69 words of the v0.1 table, the 21 primitives of FL 0.2, the 6 integer words and the
-    // 4 words of FL 0.3 (`ext-kind`, `ext>text`, `null`, `null?`)
-    expect(registry.list("core")).toHaveLength(100);
-    expect(CORE_PRIMITIVES).toHaveLength(100);
+    // 4 words of FL 0.3 (`ext-kind`, `ext>text`, `null`, `null?`) and the 11 of Group L-A
+    expect(registry.list("core")).toHaveLength(111);
+    expect(CORE_PRIMITIVES).toHaveLength(111);
     expect(() => registerCorePrimitives(registry)).toThrowError(/already registered/);
   });
 });
@@ -1354,6 +1354,236 @@ describe("the ext words of FL 0.3", () => {
     expect(out[0]).toMatchObject({ tag: "ext", kind: "null" });
     expect(run("null?", [nullValue()])).toBe("true");
     for (const v of [I(0), S(""), F, L(), R(), pair(1, 2)]) expect(run("null?", [v])).toBe("false");
+  });
+});
+
+// ---------------------------------------------------------------------------------------------
+// Group L-A (LANGUAGE-0.3.md section 8)
+// ---------------------------------------------------------------------------------------------
+
+const hexOf = (v: Value): string =>
+  Array.from((v as { v: Uint8Array }).v, (b) => b.toString(16).padStart(2, "0")).join("");
+
+describe("first, second, last", () => {
+  test("elements of a list, bytes and str, as nth gives them", () => {
+    expect(run("first", [L(I(5), I(6), I(7))])).toBe("5");
+    expect(run("second", [L(I(5), I(6), I(7))])).toBe("6");
+    expect(run("last", [L(I(5), I(6), I(7))])).toBe("7");
+    expect(run("last", [S("héllo")])).toBe('"o"');
+    expect(run("first", [S("héllo")])).toBe('"h"');
+    expect(run("second", [S("héllo")])).toBe('"é"');
+    expect(run("first", [B(10, 11)])).toBe("10");
+    expect(run("last", [B(10, 11)])).toBe("11");
+    expect(run("second", [B(10, 11)])).toBe("11");
+  });
+  test("a one-element sequence: first and last are the element", () => {
+    expect(run("first", [L(I(1))])).toBe("1");
+    expect(run("last", [L(I(1))])).toBe("1");
+    expect(run("last", [S("z")])).toBe('"z"');
+  });
+  test("a code point outside the BMP is one element", () => {
+    expect(run("first", [S("𝄞a")])).toBe('"𝄞"');
+    expect(run("last", [S("a𝄞")])).toBe('"𝄞"');
+  });
+  test("an empty sequence has no first or last, and one element has no second: E_RANGE", () => {
+    expect(codeOf("first", [L()])).toBe("E_RANGE");
+    expect(codeOf("last", [L()])).toBe("E_RANGE");
+    expect(codeOf("first", [S("")])).toBe("E_RANGE");
+    expect(codeOf("last", [B()])).toBe("E_RANGE");
+    expect(codeOf("second", [L(I(1))])).toBe("E_RANGE");
+    expect(codeOf("second", [L()])).toBe("E_RANGE");
+    expect(codeOf("second", [S("a")])).toBe("E_RANGE");
+  });
+  test("a value that is not a sequence is E_TYPE", () => {
+    expect(codeOf("first", [I(5)])).toBe("E_TYPE");
+    expect(codeOf("second", [N(1)])).toBe("E_TYPE");
+    expect(codeOf("last", [F])).toBe("E_TYPE");
+  });
+});
+
+describe("divmod and tdiv", () => {
+  const pair = (args: Value[]): string[] => callWith("divmod", args).map((v) => repr(v));
+
+  test("divmod follows floor semantics, for each sign", () => {
+    expect(pair([I(7), I(2)])).toEqual(["3", "1"]);
+    expect(pair([I(-7), I(2)])).toEqual(["-4", "1"]);
+    expect(pair([I(7), I(-2)])).toEqual(["-4", "-1"]);
+    expect(pair([I(-7), I(-2)])).toEqual(["3", "-1"]);
+    expect(pair([I(6), I(3)])).toEqual(["2", "0"]);
+    expect(pair([I(0), I(-5)])).toEqual(["0", "0"]);
+  });
+  test("divmod agrees with div and mod, including beyond the safe range", () => {
+    const a = -(2n ** 70n) - 5n;
+    const b = 3n;
+    const [q, r] = pair([big(a), big(b)]) as [string, string];
+    expect(q).toBe(run("div", [big(a), big(b)]));
+    expect(r).toBe(run("mod", [big(a), big(b)]));
+    expect(BigInt(q) * b + BigInt(r)).toBe(a);
+    expect(BigInt(r) >= 0n && BigInt(r) < b).toBe(true);
+  });
+  test("divmod by zero is E_DIV_ZERO", () => {
+    expect(codeOf("divmod", [I(1), I(0)])).toBe("E_DIV_ZERO");
+  });
+  test("tdiv rounds toward zero", () => {
+    expect(run("tdiv", [I(-7), I(2)])).toBe("-3");
+    expect(run("tdiv", [I(7), I(-2)])).toBe("-3");
+    expect(run("tdiv", [I(7), I(2)])).toBe("3");
+    expect(run("tdiv", [I(-7), I(-2)])).toBe("3");
+    expect(run("tdiv", [I(0), I(-5)])).toBe("0");
+    expect(run("tdiv", [I(-6), I(3)])).toBe("-2");
+  });
+  test("tdiv beyond the safe range rounds toward zero", () => {
+    const x = -(2n ** 70n);
+    expect(run("tdiv", [big(x), I(3)])).toBe((x / 3n).toString());
+  });
+  test("tdiv by zero is E_DIV_ZERO", () => {
+    expect(codeOf("tdiv", [I(1), I(0)])).toBe("E_DIV_ZERO");
+  });
+});
+
+describe("zero-pad", () => {
+  test("digits left-padded with zeros to at least w, never cut", () => {
+    expect(run("zero-pad", [I(7), I(3)])).toBe('"007"');
+    expect(run("zero-pad", [I(1234), I(2)])).toBe('"1234"');
+    expect(run("zero-pad", [I(1234), I(4)])).toBe('"1234"');
+    expect(run("zero-pad", [I(0), I(1)])).toBe('"0"');
+    expect(run("zero-pad", [I(0), I(3)])).toBe('"000"');
+    expect(run("zero-pad", [I(5), I(0)])).toBe('"5"');
+    expect(run("zero-pad", [I(5), I(-2)])).toBe('"5"');
+  });
+  test("a bigint is padded like any other", () => {
+    expect(run("zero-pad", [big(2n ** 70n), I(2)])).toBe(`"${(2n ** 70n).toString()}"`);
+    expect(run("zero-pad", [I(12), I(40)])).toBe(`"${"0".repeat(38)}12"`);
+  });
+  test("a negative n is E_RANGE", () => {
+    expect(codeOf("zero-pad", [I(-5), I(3)])).toBe("E_RANGE");
+    expect(codeOf("zero-pad", [big(-(2n ** 70n)), I(3)])).toBe("E_RANGE");
+  });
+  test("a width over maxValueBytes is E_LIMIT_VALUE", () => {
+    expect(codeOf("zero-pad", [I(1), I(100)], { maxValueBytes: 10 })).toBe("E_LIMIT_VALUE");
+    expect(codeOf("zero-pad", [I(1), big(2n ** 80n)])).toBe("E_LIMIT_VALUE");
+  });
+});
+
+describe("index-of", () => {
+  test("a list: the first element equal by =, or -1", () => {
+    expect(run("index-of", [L(I(1), I(2), I(3)), I(3)])).toBe("2");
+    expect(run("index-of", [L(I(1), I(2), I(3)), I(9)])).toBe("-1");
+    expect(run("index-of", [L(), I(9)])).toBe("-1");
+    expect(run("index-of", [L(S("a"), I(1), I(1)), I(1)])).toBe("1");
+    expect(run("index-of", [L(I(1), I(2)), N(2)])).toBe("1");
+  });
+  test("bytes: an int 0 to 255, first position or -1", () => {
+    expect(run("index-of", [B(1, 2), I(2)])).toBe("1");
+    expect(run("index-of", [B(1, 2), I(9)])).toBe("-1");
+    expect(run("index-of", [B(), I(0)])).toBe("-1");
+    expect(run("index-of", [B(255), I(255)])).toBe("0");
+  });
+  test("bytes: a value outside 0 to 255, or not an int, is E_RANGE", () => {
+    expect(codeOf("index-of", [B(1), I(300)])).toBe("E_RANGE");
+    expect(codeOf("index-of", [B(1), I(-1)])).toBe("E_RANGE");
+    expect(codeOf("index-of", [B(1), big(2n ** 70n)])).toBe("E_RANGE");
+    expect(codeOf("index-of", [B(1), S("1")])).toBe("E_RANGE");
+  });
+  test("str: a substring, position in code points, or -1", () => {
+    expect(run("index-of", [S("héllo"), S("l")])).toBe("2");
+    expect(run("index-of", [S("héllo"), S("llo")])).toBe("2");
+    expect(run("index-of", [S("héllo"), S("z")])).toBe("-1");
+    expect(run("index-of", [S("𝄞x"), S("x")])).toBe("1");
+    expect(run("index-of", [S("abc"), S("")])).toBe("0");
+    expect(run("index-of", [S(""), S("")])).toBe("0");
+    expect(run("index-of", [S("abc"), S("abcd")])).toBe("-1");
+  });
+  test("str: a match that would split a surrogate pair does not count", () => {
+    expect(run("index-of", [S("𝄞"), S("\udd1e")])).toBe("-1");
+    expect(run("index-of", [S("𝄞"), S("\ud834")])).toBe("-1");
+  });
+  test("a non-str x on a str is E_TYPE; a value that is not a sequence is E_TYPE", () => {
+    expect(codeOf("index-of", [S("abc"), I(98)])).toBe("E_TYPE");
+    expect(codeOf("index-of", [I(5), I(5)])).toBe("E_TYPE");
+  });
+});
+
+describe("set-nth", () => {
+  test("a copy of a list with element i replaced", () => {
+    expect(run("set-nth", [L(I(1), I(2), I(3)), I(1), I(9)])).toBe("{ 1 9 3 }");
+    expect(run("set-nth", [L(I(1)), I(0), L(I(9))])).toBe("{ { 9 } }");
+  });
+  test("a copy of bytes with element i replaced", () => {
+    const [out] = callWith("set-nth", [B(1, 2), I(0), I(255)]);
+    expect(hexOf(out as Value)).toBe("ff02");
+    const [last] = callWith("set-nth", [B(0, 0, 0), I(2), I(0)]);
+    expect(hexOf(last as Value)).toBe("000000");
+  });
+  test("an index out of range is E_RANGE, for a list and for bytes", () => {
+    expect(codeOf("set-nth", [L(I(1)), I(5), I(0)])).toBe("E_RANGE");
+    expect(codeOf("set-nth", [L(I(1)), I(-1), I(0)])).toBe("E_RANGE");
+    expect(codeOf("set-nth", [L(I(1)), big(2n ** 70n), I(0)])).toBe("E_RANGE");
+    expect(codeOf("set-nth", [B(1), I(1), I(0)])).toBe("E_RANGE");
+    expect(codeOf("set-nth", [L(), I(0), I(0)])).toBe("E_RANGE");
+  });
+  test("a byte value outside 0 to 255, or not an int, is E_RANGE", () => {
+    expect(codeOf("set-nth", [B(1), I(0), I(256)])).toBe("E_RANGE");
+    expect(codeOf("set-nth", [B(1), I(0), I(-1)])).toBe("E_RANGE");
+    expect(codeOf("set-nth", [B(1), I(0), S("x")])).toBe("E_RANGE");
+  });
+  test("a str is E_TYPE, and so is a value that is not a sequence", () => {
+    expect(codeOf("set-nth", [S("abc"), I(0), S("x")])).toBe("E_TYPE");
+    expect(codeOf("set-nth", [I(1), I(0), I(0)])).toBe("E_TYPE");
+  });
+  test("a list result over maxValueBytes is E_LIMIT_VALUE", () => {
+    expect(codeOf("set-nth", [L(I(1)), I(0), S("x".repeat(1000))], { maxValueBytes: 50 })).toBe(
+      "E_LIMIT_VALUE",
+    );
+  });
+});
+
+describe("num>float-bytes, float-bytes>num and float-bytes-class", () => {
+  test("binary64 and binary32 bytes, big and little endian", () => {
+    expect(hexOf(callWith("num>float-bytes", [N(1), I(64), F])[0] as Value)).toBe(
+      "3ff0000000000000",
+    );
+    expect(hexOf(callWith("num>float-bytes", [N(1), I(32), T])[0] as Value)).toBe("0000803f");
+    expect(hexOf(callWith("num>float-bytes", [N(0.1), I(32), F])[0] as Value)).toBe("3dcccccd");
+  });
+  test("a finite num beyond the binary32 range is E_RANGE, and binary64 takes it", () => {
+    expect(hexOf(callWith("num>float-bytes", [N(3.5e38), I(64), F])[0] as Value)).toHaveLength(16);
+    expect(codeOf("num>float-bytes", [N(3.5e38), I(32), F])).toBe("E_RANGE");
+    expect(codeOf("num>float-bytes", [N(1e39), I(32), F])).toBe("E_RANGE");
+  });
+  test("a width other than 32 or 64 is E_RANGE", () => {
+    expect(codeOf("num>float-bytes", [N(1), I(16), F])).toBe("E_RANGE");
+    expect(codeOf("num>float-bytes", [N(1), I(0), F])).toBe("E_RANGE");
+    expect(codeOf("num>float-bytes", [N(1), big(2n ** 70n), F])).toBe("E_RANGE");
+  });
+  test("float-bytes>num reads 4 or 8 bytes in either order", () => {
+    expect(run("float-bytes>num", [B(0x3f, 0xf0, 0, 0, 0, 0, 0, 0), F])).toBe("1.0");
+    expect(run("float-bytes>num", [B(0x3f, 0x80, 0, 0), F])).toBe("1.0");
+    expect(run("float-bytes>num", [B(0, 0, 0x80, 0x3f), T])).toBe("1.0");
+  });
+  test("a round trip through binary64 is exact", () => {
+    const [b] = callWith("num>float-bytes", [N(0.1), I(64), T]);
+    expect(run("float-bytes>num", [b as Value, T])).toBe("0.1");
+  });
+  test("any other length than 4 or 8 is E_RANGE", () => {
+    expect(codeOf("float-bytes>num", [B(1, 2, 3), F])).toBe("E_RANGE");
+    expect(codeOf("float-bytes-class", [B(1, 2, 3), F])).toBe("E_RANGE");
+  });
+  test("a NaN or infinity pattern is E_RANGE from float-bytes>num", () => {
+    expect(codeOf("float-bytes>num", [B(0x7f, 0xf8, 0, 0, 0, 0, 0, 0), F])).toBe("E_RANGE");
+    expect(codeOf("float-bytes>num", [B(0x7f, 0xf0, 0, 0, 0, 0, 0, 0), F])).toBe("E_RANGE");
+    expect(codeOf("float-bytes>num", [B(0xff, 0xf0, 0, 0, 0, 0, 0, 0), F])).toBe("E_RANGE");
+    expect(codeOf("float-bytes>num", [B(0x7f, 0x80, 0, 0), F])).toBe("E_RANGE");
+  });
+  test("float-bytes-class names the class of every pattern", () => {
+    expect(run("float-bytes-class", [B(0x7f, 0xf8, 0, 0, 0, 0, 0, 0), F])).toBe('"nan"');
+    expect(run("float-bytes-class", [B(0x7f, 0xf0, 0, 0, 0, 0, 0, 0), F])).toBe('"inf"');
+    expect(run("float-bytes-class", [B(0xff, 0xf0, 0, 0, 0, 0, 0, 0), F])).toBe('"-inf"');
+    expect(run("float-bytes-class", [B(0x3f, 0xf0, 0, 0, 0, 0, 0, 0), F])).toBe('"finite"');
+    expect(run("float-bytes-class", [B(0, 0, 0, 0, 0, 0, 0, 1), F])).toBe('"finite"');
+    expect(run("float-bytes-class", [B(0x7f, 0xc0, 0, 0), F])).toBe('"nan"');
+    expect(run("float-bytes-class", [B(0, 0, 0xc0, 0x7f), T])).toBe('"nan"');
+    expect(run("float-bytes-class", [B(0, 0, 0x80, 0x7f), T])).toBe('"inf"');
   });
 });
 

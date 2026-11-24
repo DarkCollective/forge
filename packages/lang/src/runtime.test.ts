@@ -72,10 +72,10 @@ describe("createRuntime", () => {
     expect(rt.dictionary.vocabs()).toEqual(["core", "user"]);
     expect(listWords(rt.dictionary, "user")).toEqual([]);
     const core = listWords(rt.dictionary, "core");
-    // The 160 words of the tables of docs/LANGUAGE.md section 13 (the single source, parsed by
-    // vocab/core.test.ts): 40 intrinsic, 90 primitive, 5 runtime-supplied and 20 prelude words,
+    // The 171 words of the tables of docs/LANGUAGE.md section 13 (the single source, parsed by
+    // vocab/core.test.ts): 40 intrinsic, 107 primitive, 5 runtime-supplied and 19 prelude words,
     // and the 4 words of FL 0.3 (`ext-kind`, `ext>text`, `null`, `null?`).
-    expect(core).toHaveLength(164);
+    expect(core).toHaveLength(175);
     const expected = new Set([
       ...CORE_INTRINSIC_WORDS,
       ...CORE_PRIMITIVES.map((d) => d.name),
@@ -495,7 +495,7 @@ describe("runtime-supplied words", () => {
     );
     expect(await out(rt, '"zed" words .')).toBe('{ "a" "b" "ｚ" "😀" }\n');
     expect(await out(rt, "vocabs .")).toBe('{ "core" "user" "zed" }\n');
-    expect(await out(rt, '"core" words len .')).toBe("164\n");
+    expect(await out(rt, '"core" words len .')).toBe("175\n");
     expect(await out(rt, '"user" words .')).toBe("{ }\n");
     expect(failure(await rt.run('"nosuch" words')).code).toBe("E_NO_VOCAB");
   });
