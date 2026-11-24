@@ -19,6 +19,10 @@ import { defineConfig, devices } from "@playwright/test";
 // which parallel worktrees need: with a shared port, reuseExistingServer would make each run test the other's build.
 const PORT = Number(process.env.FORGE_E2E_PORT ?? 4783);
 
+// FORGE_E2E_CHROMIUM names a Chromium executable to launch instead of the browser Playwright installed. It is for
+// containers where the pinned Playwright's browser build is absent. Unset, the chromium project is exactly as in CI.
+const CHROMIUM = process.env.FORGE_E2E_CHROMIUM;
+
 export default defineConfig({
   testDir: "./e2e",
   testMatch: /.*\.spec\.ts/,
@@ -35,7 +39,11 @@ export default defineConfig({
   projects: [
     {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"], viewport: { width: 1400, height: 900 } },
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport: { width: 1400, height: 900 },
+        ...(CHROMIUM ? { launchOptions: { executablePath: CHROMIUM } } : {}),
+      },
     },
   ],
   webServer: {
