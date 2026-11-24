@@ -1,0 +1,32 @@
+{
+  "$schema": "../../packages/packs/src/manifest.schema.json",
+  "format": 1,
+  "id": "relix",
+  "name": "Demo",
+  "summary": "A test pack with one kind, one viewer and one helper.",
+  "description": "A tiny pack for tests: one extension kind, one viewer and one parameter helper.",
+  "version": "0.1.0",
+  "channel": "internal",
+  "licence": "Apache-2.0",
+  "requires": {
+    "packApi": 1,
+    "packs": ["loop"]
+  },
+  "vocabularies": [
+    {
+      "name": "relix"
+    }
+  ],
+  "kinds": [],
+  "entries": {
+    "worker": "src/worker.ts"
+  },
+  "capabilities": {
+    "effects": []
+  },
+  "budget": {
+    "total": 40000,
+    "worker": 30000,
+    "page": 15000
+  }
+}

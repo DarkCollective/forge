@@ -1,0 +1,71 @@
+{
+  "$schema": "../../packages/packs/src/manifest.schema.json",
+  "format": 1,
+  "id": "relix",
+  "name": "Relix",
+  "summary": "Build and run relational queries on your tables.",
+  "description": "Relational algebra on tables: build queries as recipe steps and run them in the browser.",
+  "version": "0.1.0",
+  "channel": "stable",
+  "licence": "Apache-2.0",
+  "notice": "NOTICE",
+  "requires": {
+    "packApi": 1
+  },
+  "vocabularies": [
+    {
+      "name": "relix"
+    }
+  ],
+  "kinds": [
+    {
+      "name": "relation",
+      "label": "relation",
+      "viewer": true,
+      "paramHelper": false
+    },
+    {
+      "name": "relix-expr",
+      "label": "Relix expression",
+      "viewer": false,
+      "paramHelper": true,
+      "parser": "src/kinds/relix-expr/shape.ts"
+    }
+  ],
+  "conversions": [
+    {
+      "from": "table",
+      "to": "relation",
+      "op": "relix:from"
+    },
+    {
+      "from": "relation",
+      "to": "table",
+      "op": "relix:run",
+      "atEnd": true
+    }
+  ],
+  "entries": {
+    "worker": "/src/worker.ts",
+    "page": "src/page.ts"
+  },
+  "capabilities": {
+    "effects": []
+  },
+  "externalCode": [
+    {
+      "id": "relix-web",
+      "version": "1.0.0-rc13+web.1",
+      "path": "engine/relix-web.mjs",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "licence": "Apache-2.0",
+      "maxGzip": 3000000,
+      "primitives": "*"
+    }
+  ],
+  "budget": {
+    "total": 3300000,
+    "worker": 3200000,
+    "page": 60000
+  }
+}
