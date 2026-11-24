@@ -143,11 +143,172 @@
     "sectionEncoding": {
       "enum": ["utf8", "latin1"]
     },
+    "slot": {
+      "type": "object",
+      "properties": {
+        "steps": {
+          "$ref": "#/$defs/steps"
+        }
+      },
+      "required": ["steps"],
+      "additionalProperties": false
+    },
     "opStep": {
       "type": "object",
       "allOf": [
         {
           "$ref": "#/$defs/common"
+        },
+        {
+          "if": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/hasPipe"
+              },
+              {
+                "$ref": "#/$defs/hasLeft"
+              },
+              {
+                "$ref": "#/$defs/hasRight"
+              },
+              {
+                "$ref": "#/$defs/hasBase"
+              },
+              {
+                "$ref": "#/$defs/hasStep"
+              }
+            ]
+          },
+          "then": {
+            "oneOf": [
+              {
+                "properties": {
+                  "pipe": {
+                    "const": "left"
+                  },
+                  "left": true,
+                  "right": true,
+                  "base": true,
+                  "step": true
+                },
+                "required": ["pipe", "right"],
+                "not": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/hasLeft"
+                    },
+                    {
+                      "$ref": "#/$defs/hasBase"
+                    },
+                    {
+                      "$ref": "#/$defs/hasStep"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "properties": {
+                  "pipe": {
+                    "const": "right"
+                  },
+                  "left": true,
+                  "right": true,
+                  "base": true,
+                  "step": true
+                },
+                "required": ["pipe", "left"],
+                "not": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/hasRight"
+                    },
+                    {
+                      "$ref": "#/$defs/hasBase"
+                    },
+                    {
+                      "$ref": "#/$defs/hasStep"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "properties": {
+                  "pipe": true,
+                  "left": true,
+                  "right": true,
+                  "base": true,
+                  "step": true
+                },
+                "required": ["left", "right"],
+                "not": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/hasPipe"
+                    },
+                    {
+                      "$ref": "#/$defs/hasBase"
+                    },
+                    {
+                      "$ref": "#/$defs/hasStep"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "properties": {
+                  "pipe": {
+                    "const": "base"
+                  },
+                  "left": true,
+                  "right": true,
+                  "base": true,
+                  "step": true
+                },
+                "required": ["pipe", "step"],
+                "not": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/hasBase"
+                    },
+                    {
+                      "$ref": "#/$defs/hasLeft"
+                    },
+                    {
+                      "$ref": "#/$defs/hasRight"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "properties": {
+                  "pipe": true,
+                  "left": true,
+                  "right": true,
+                  "base": true,
+                  "step": true
+                },
+                "required": ["base", "step"],
+                "not": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/hasPipe"
+                    },
+                    {
+                      "$ref": "#/$defs/hasLeft"
+                    },
+                    {
+                      "$ref": "#/$defs/hasRight"
+                    }
+                  ]
+                },
+                "type": "object"
+              }
+            ]
+          }
         }
       ],
       "properties": {
@@ -162,6 +323,21 @@
         },
         "hash": {
           "$ref": "#/$defs/hash"
+        },
+        "pipe": {
+          "enum": ["left", "right", "base"]
+        },
+        "left": {
+          "$ref": "#/$defs/slot"
+        },
+        "right": {
+          "$ref": "#/$defs/slot"
+        },
+        "base": {
+          "$ref": "#/$defs/slot"
+        },
+        "step": {
+          "$ref": "#/$defs/slot"
         },
         "disabled": true,
         "breakpoint": true,
@@ -436,6 +612,41 @@
       },
       "required": ["kind"],
       "additionalProperties": false
+    },
+    "hasPipe": {
+      "type": "object",
+      "properties": {
+        "pipe": true
+      },
+      "required": ["pipe"]
+    },
+    "hasLeft": {
+      "type": "object",
+      "properties": {
+        "left": true
+      },
+      "required": ["left"]
+    },
+    "hasRight": {
+      "type": "object",
+      "properties": {
+        "right": true
+      },
+      "required": ["right"]
+    },
+    "hasBase": {
+      "type": "object",
+      "properties": {
+        "base": true
+      },
+      "required": ["base"]
+    },
+    "hasStep": {
+      "type": "object",
+      "properties": {
+        "step": true
+      },
+      "required": ["step"]
     }
   }
 }

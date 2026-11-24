@@ -1,0 +1,25 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "if",
+      "test": {
+        "kind": "op",
+        "op": "text:has",
+        "pipe": "left",
+        "right": {
+          "steps": [
+            {
+              "kind": "op",
+              "op": "relix:input",
+              "params": {
+                "tab": "b"
+              }
+            }
+          ]
+        }
+      },
+      "then": []
+    }
+  ]
+}

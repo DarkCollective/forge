@@ -1,0 +1,25 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "right": {
+        "steps": [
+          {
+            "op": "relix:input",
+            "kind": "op",
+            "params": {
+              "tab": "b"
+            }
+          }
+        ]
+      },
+      "note": "join",
+      "pipe": "left",
+      "params": {
+        "on": "a = b"
+      },
+      "op": "relix:theta-join",
+      "kind": "op"
+    }
+  ]
+}

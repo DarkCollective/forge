@@ -23,7 +23,7 @@ import { hexDecode, hexEncode, normaliseEncodedValue } from "./encoding.js";
 import { opIndex } from "./opindex.js";
 import type { OpIndex } from "./opindex.js";
 import { isRegisterRef } from "./registers.js";
-import { RECIPE_LIMITS } from "./types.js";
+import { RECIPE_LIMITS, SLOT_NAMES } from "./types.js";
 import type {
   CatalogueView,
   Encoded,
@@ -105,6 +105,12 @@ function normaliseStep(step: Step): Step {
       const params = normaliseParams(step.params);
       if (params !== undefined) out.params = params;
       if (step.hash !== undefined) out.hash = step.hash;
+      // Key order of a slot step: `pipe left right base step`, then the common fields (RECIPES-1.2.md section 15.5).
+      if (step.pipe !== undefined) out.pipe = step.pipe;
+      for (const slot of SLOT_NAMES) {
+        const lane = step[slot];
+        if (lane !== undefined) out[slot] = { steps: lane.steps.map(normaliseStep) };
+      }
       break;
     }
     case "fork":
@@ -186,8 +192,18 @@ function rebuildOp<T extends OpLike>(
 function mapSteps(steps: readonly Step[], fn: <T extends OpLike>(o: T) => T): Step[] {
   return steps.map((s): Step => {
     switch (s.kind) {
-      case "op":
-        return fn(s);
+      case "op": {
+        const o = fn(s);
+        let out: Obj | undefined;
+        for (const slot of SLOT_NAMES) {
+          const lane = o[slot];
+          if (lane !== undefined) {
+            out ??= { ...o };
+            out[slot] = { ...lane, steps: mapSteps(lane.steps, fn) };
+          }
+        }
+        return out === undefined ? o : (out as unknown as OpStep);
+      }
       case "comment":
       case "return":
         return s;
@@ -230,7 +246,8 @@ function normaliseByType(spec: ParamSpec, v: ParamValue): ParamValue {
 function resolveOp<T extends OpLike>(index: OpIndex, o: T): T {
   const entry = index.find(o.op);
   if (entry === undefined) return o;
-  const specs = entry.op.params;
+  // The slot parameter is never in `params`: its value is the lane (RECIPES-1.2.md section 4.5).
+  const specs = entry.op.params.filter((spec) => spec.name !== entry.op.slot);
   let params: ParamValues | undefined;
   if (specs.length > 0) {
     const entries: [string, ParamValue][] = [];

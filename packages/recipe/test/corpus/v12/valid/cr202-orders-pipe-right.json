@@ -1,0 +1,67 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "op",
+      "op": "input:tab",
+      "params": {
+        "tab": "orders.b64"
+      }
+    },
+    {
+      "kind": "op",
+      "op": "base64:decode"
+    },
+    {
+      "kind": "op",
+      "op": "csv:parse"
+    },
+    {
+      "kind": "op",
+      "op": "relix:select",
+      "params": {
+        "cond": "status = 'paid'"
+      }
+    },
+    {
+      "kind": "op",
+      "op": "relix:theta-join",
+      "params": {
+        "on": "customer_id = id"
+      },
+      "pipe": "right",
+      "left": {
+        "steps": [
+          {
+            "kind": "op",
+            "op": "relix:input",
+            "params": {
+              "tab": "customers.csv"
+            }
+          },
+          {
+            "kind": "op",
+            "op": "relix:select",
+            "params": {
+              "cond": "country = 'NZ'"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "kind": "op",
+      "op": "relix:group",
+      "params": {
+        "spec": "region; sum(total) as revenue"
+      }
+    },
+    {
+      "kind": "op",
+      "op": "relix:sort",
+      "params": {
+        "keys": "revenue desc"
+      }
+    }
+  ]
+}

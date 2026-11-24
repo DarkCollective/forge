@@ -18,6 +18,7 @@
  * The map is pure: it needs only `StepLine[]` from the compiler and `CompiledWord.positions` of the loaded word.
  */
 import type { SourcePos } from "@forge/lang";
+import { childLists } from "./children.js";
 import { opIndex } from "./opindex.js";
 import type { CatalogueView, IpEvent, Recipe, Step, StepIp, StepIpMap, StepLine } from "./types.js";
 
@@ -114,14 +115,12 @@ export function recipeNeedsHardKill(recipe: Recipe, catalogue: CatalogueView): b
         return true;
       case "if":
         if (step.test.kind === "regex" || needs(step.test.op)) return true;
-        stack.push(...step.then, ...(step.else ?? []));
         break;
-      case "fork":
-      case "repeat":
-      case "register":
-        stack.push(...step.steps);
+      default:
         break;
     }
+    // Lanes of a slot step, `then` and `else`, and the children of containers (RECIPES-1.2.md section 6.8).
+    for (const child of childLists(step)) stack.push(...child.steps);
   }
   return false;
 }

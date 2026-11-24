@@ -94,6 +94,49 @@ export const SHARE_LIMITS = Object.freeze({
   maxPairs: 8,
 });
 
+/** The four slot names of an op step (RECIPES-1.2.md section 4.1), in document order. */
+export const SLOT_NAMES = ["left", "right", "base", "step"] as const;
+export type SlotName = (typeof SLOT_NAMES)[number];
+
+/** The values `OpStep.pipe` may take: the slots the data from above can feed (`"step"` does not exist). */
+export type SlotPipe = "left" | "right" | "base";
+
+/** One family of slots (RECIPES-1.2.md section 4.5): which slots an op has and which of them the data above may feed. */
+export interface SlotFamily {
+  /** The two slots, in document order. */
+  readonly slots: readonly [SlotName, SlotName];
+  /** The slots that `pipe` may name. */
+  readonly pipeable: readonly SlotPipe[];
+  /** The slot that is the op's data input. */
+  readonly data: SlotName;
+}
+
+/**
+ * The slot families, keyed by the name of the slot parameter (`CatalogueOpView.slot`): `right` makes a binary op,
+ * `step` a base-and-step op (RECIPES-1.2.md section 4.5).
+ */
+export const SLOT_FAMILIES: Readonly<Record<"right" | "step", SlotFamily>> = Object.freeze({
+  right: Object.freeze({
+    slots: Object.freeze(["left", "right"] as const),
+    pipeable: Object.freeze(["left", "right"] as const),
+    data: "left",
+  }),
+  step: Object.freeze({
+    slots: Object.freeze(["base", "step"] as const),
+    pipeable: Object.freeze(["base"] as const),
+    data: "base",
+  }),
+});
+
+/** The op that reads the accumulator inside a `step` lane (RECIPES-1.2.md section 5.2). Used by name. */
+export const RECUR_OP = "relix:recur";
+
+/** The ops that read an input tab by name (RECIPES-1.2.md section 7.1). Used by name. */
+export const NAMED_INPUT_OPS: readonly string[] = Object.freeze(["input:tab", "relix:input"]);
+
+/** The parameter of `NAMED_INPUT_OPS` that holds the tab name. */
+export const NAMED_INPUT_PARAM = "tab";
+
 /** The vocabulary that holds the words compiled recipes call (FL: `recipe:section` and so on). */
 export const RECIPE_VOCAB = "recipe";
 
@@ -130,6 +173,11 @@ export interface StepCommon {
   readonly note?: string;
 }
 
+/** A slot: a lane, as a `fork`'s `steps` is (RECIPES-1.2.md section 4.2). Closed, so it can grow fields later. */
+export interface SlotLane {
+  readonly steps: readonly Step[];
+}
+
 export interface OpStep extends StepCommon {
   readonly kind: "op";
   /** Canonical qualified name, `vocab:word`. */
@@ -137,6 +185,15 @@ export interface OpStep extends StepCommon {
   readonly params?: ParamValues;
   /** The op's `hash` when the recipe was pinned. */
   readonly hash?: string;
+  /**
+   * The slot that the data above feeds; that slot is absent (RECIPES-1.2.md section 4.2). The four slot fields
+   * follow: the slots of the op's family that `pipe` does not name each hold a lane.
+   */
+  readonly pipe?: SlotPipe;
+  readonly left?: SlotLane;
+  readonly right?: SlotLane;
+  readonly base?: SlotLane;
+  readonly step?: SlotLane;
 }
 
 export interface ForkStep extends StepCommon {
@@ -250,6 +307,11 @@ export interface CatalogueOpView {
   readonly hash: string;
   /** See `CatalogueOp.needsHardKill` in `@forge/ops`. */
   readonly needsHardKill: boolean;
+  /**
+   * The name of the slot parameter, `"right"` or `"step"`, when the op is a slot op (RECIPES-1.2.md section 4.5).
+   * The slot parameter is never in a step's `params`: its value is the lane.
+   */
+  readonly slot?: string;
 }
 
 export interface CatalogueView {
@@ -291,6 +353,11 @@ export const RECIPE_ISSUE_CODES = [
   "bad-position",
   // warning
   "unreachable-step",
+  // slots (RECIPES-1.2.md section 5.2)
+  "bad-slot",
+  "missing-slot",
+  // warning
+  "unused-pipe",
 ] as const;
 
 export type RecipeIssueCode = (typeof RECIPE_ISSUE_CODES)[number];

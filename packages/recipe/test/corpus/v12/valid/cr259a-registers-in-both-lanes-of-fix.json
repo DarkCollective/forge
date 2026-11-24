@@ -1,0 +1,62 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "register",
+      "name": "k",
+      "steps": [
+        {
+          "kind": "op",
+          "op": "table:to-json"
+        }
+      ]
+    },
+    {
+      "kind": "op",
+      "op": "relix:fix",
+      "params": {
+        "name": "R"
+      },
+      "base": {
+        "steps": [
+          {
+            "kind": "op",
+            "op": "relix:input",
+            "params": {
+              "tab": "a"
+            }
+          },
+          {
+            "kind": "op",
+            "op": "relix:select",
+            "params": {
+              "cond": {
+                "ref": "k"
+              }
+            }
+          }
+        ]
+      },
+      "step": {
+        "steps": [
+          {
+            "kind": "op",
+            "op": "relix:recur",
+            "params": {
+              "name": "R"
+            }
+          },
+          {
+            "kind": "op",
+            "op": "relix:select",
+            "params": {
+              "cond": {
+                "ref": "k"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

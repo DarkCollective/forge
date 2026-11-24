@@ -17,13 +17,18 @@ export type * from "./types.js";
 export {
   DEFAULT_RECIPE_VOCAB,
   DEFAULT_RECIPE_WORD,
+  NAMED_INPUT_OPS,
+  NAMED_INPUT_PARAM,
   RECIPE_FORMAT_VERSION,
   RECIPE_ISSUE_CODES,
   RECIPE_LIMITS,
   RECIPE_VOCAB,
+  RECUR_OP,
   SHARE_ERROR_CODES,
   SHARE_FORMAT_VERSION,
   SHARE_LIMITS,
+  SLOT_FAMILIES,
+  SLOT_NAMES,
   STEP_KINDS,
 } from "./types.js";
 export { validateRecipe } from "./validate.js";
@@ -40,5 +45,7 @@ export {
   registersInScope,
 } from "./registers.js";
 export type { RegisterInfo } from "./registers.js";
+export { dataSourcePath, inputNames, recipeUsesSlots, recipeUsesV12 } from "./uses.js";
+export type { InputName, UsesV12Options } from "./uses.js";
 export { escapePointer, unescapePointer } from "./pointer.js";
 export { decodeEncoded, encodeBytes } from "./encoding.js";

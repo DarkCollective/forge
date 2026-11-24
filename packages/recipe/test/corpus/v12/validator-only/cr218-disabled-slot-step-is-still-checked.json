@@ -1,0 +1,18 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "op",
+      "op": "csv:parse"
+    },
+    {
+      "kind": "op",
+      "op": "relix:union",
+      "pipe": "left",
+      "right": {
+        "steps": []
+      },
+      "disabled": true
+    }
+  ]
+}
