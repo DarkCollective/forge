@@ -1,0 +1,27 @@
+{
+  "format": 1,
+  "id": "tiny",
+  "name": "Tiny",
+  "summary": "The smallest manifest.",
+  "description": "The smallest manifest that validates.",
+  "version": "0.0.1",
+  "channel": "internal",
+  "licence": "MIT",
+  "requires": {
+    "packApi": 1
+  },
+  "vocabularies": [
+    {
+      "name": "tiny"
+    }
+  ],
+  "entries": {
+    "worker": "src/worker.ts"
+  },
+  "capabilities": {
+    "effects": []
+  },
+  "budget": {
+    "total": 1
+  }
+}

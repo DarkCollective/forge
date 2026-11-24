@@ -1,0 +1,368 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:forge:schema:pack-manifest:1",
+  "title": "Forge pack manifest, format 1",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "format": {
+      "const": 1
+    },
+    "id": {
+      "$ref": "#/$defs/packId"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 600
+    },
+    "version": {
+      "$ref": "#/$defs/semver"
+    },
+    "channel": {
+      "enum": ["stable", "internal"]
+    },
+    "licence": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9.+-]{1,40}$"
+    },
+    "notice": {
+      "$ref": "#/$defs/path"
+    },
+    "requires": {
+      "type": "object",
+      "properties": {
+        "packApi": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "packs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/packId"
+          },
+          "uniqueItems": true,
+          "maxItems": 16
+        }
+      },
+      "required": ["packApi"],
+      "additionalProperties": false
+    },
+    "vocabularies": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/$defs/kebab"
+          },
+          "internal": {
+            "type": "boolean"
+          }
+        },
+        "required": ["name"],
+        "additionalProperties": false
+      }
+    },
+    "kinds": {
+      "type": "array",
+      "maxItems": 32,
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/$defs/kebab"
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          "viewer": {
+            "type": "boolean"
+          },
+          "paramHelper": {
+            "type": "boolean"
+          },
+          "parser": {
+            "$ref": "#/$defs/path"
+          }
+        },
+        "required": ["name", "label", "viewer", "paramHelper"],
+        "additionalProperties": false,
+        "if": {
+          "properties": {
+            "paramHelper": {
+              "const": true
+            }
+          },
+          "required": ["paramHelper"]
+        },
+        "then": {
+          "type": "object",
+          "properties": {
+            "parser": true
+          },
+          "required": ["parser"]
+        }
+      }
+    },
+    "conversions": {
+      "type": "array",
+      "maxItems": 16,
+      "items": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "$ref": "#/$defs/kebab"
+          },
+          "to": {
+            "$ref": "#/$defs/kebab"
+          },
+          "op": {
+            "$ref": "#/$defs/qname"
+          },
+          "atEnd": {
+            "const": true
+          }
+        },
+        "required": ["from", "to", "op"],
+        "additionalProperties": false
+      }
+    },
+    "entries": {
+      "type": "object",
+      "properties": {
+        "worker": {
+          "$ref": "#/$defs/path"
+        },
+        "page": {
+          "$ref": "#/$defs/path"
+        }
+      },
+      "required": ["worker"],
+      "additionalProperties": false
+    },
+    "capabilities": {
+      "type": "object",
+      "properties": {
+        "effects": {
+          "type": "array",
+          "items": {
+            "enum": ["+async", "+random", "+time", "+media"]
+          },
+          "uniqueItems": true
+        },
+        "csp": {
+          "type": "object",
+          "properties": {
+            "img-src": {
+              "$ref": "#/$defs/cspSources"
+            },
+            "media-src": {
+              "$ref": "#/$defs/cspSources"
+            },
+            "font-src": {
+              "$ref": "#/$defs/cspSources"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": ["effects"],
+      "additionalProperties": false
+    },
+    "externalCode": {
+      "type": "array",
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/kebab"
+          },
+          "version": {
+            "type": "string",
+            "pattern": "^[0-9A-Za-z.+_-]{1,64}$"
+          },
+          "path": {
+            "$ref": "#/$defs/path"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "licence": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9.+-]{1,40}$"
+          },
+          "maxGzip": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "primitives": {
+            "oneOf": [
+              {
+                "const": "*"
+              },
+              {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "$ref": "#/$defs/qname"
+                },
+                "uniqueItems": true
+              }
+            ]
+          }
+        },
+        "required": ["id", "version", "path", "sha256", "licence", "maxGzip", "primitives"],
+        "additionalProperties": false
+      }
+    },
+    "budget": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "worker": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": ["total"],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "format",
+    "id",
+    "name",
+    "summary",
+    "description",
+    "version",
+    "channel",
+    "licence",
+    "requires",
+    "vocabularies",
+    "entries",
+    "capabilities",
+    "budget"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kinds": {
+            "type": "array",
+            "contains": {
+              "type": "object",
+              "anyOf": [
+                {
+                  "properties": {
+                    "viewer": {
+                      "const": true
+                    }
+                  },
+                  "required": ["viewer"]
+                },
+                {
+                  "properties": {
+                    "paramHelper": {
+                      "const": true
+                    }
+                  },
+                  "required": ["paramHelper"]
+                }
+              ]
+            }
+          }
+        },
+        "required": ["kinds"]
+      },
+      "then": {
+        "properties": {
+          "entries": {
+            "type": "object",
+            "properties": {
+              "page": true
+            },
+            "required": ["page"]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "externalCode": {
+            "type": "array",
+            "minItems": 1
+          }
+        },
+        "required": ["externalCode"]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "notice": true
+        },
+        "required": ["notice"]
+      }
+    }
+  ],
+  "$defs": {
+    "packId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+      "maxLength": 32
+    },
+    "kebab": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+      "maxLength": 32
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?$"
+    },
+    "path": {
+      "type": "string",
+      "pattern": "^(?!/)(?!.*\\.\\.)[A-Za-z0-9._/-]{1,120}$"
+    },
+    "qname": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*:[^\\s:]{1,64}$"
+    },
+    "cspSources": {
+      "type": "array",
+      "items": {
+        "enum": ["blob:", "data:"]
+      },
+      "uniqueItems": true,
+      "minItems": 1
+    }
+  }
+}

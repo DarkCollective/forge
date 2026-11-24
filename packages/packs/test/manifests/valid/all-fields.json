@@ -1,0 +1,76 @@
+{
+  "$schema": "../../packages/packs/src/manifest.schema.json",
+  "format": 1,
+  "id": "full",
+  "name": "Full",
+  "summary": "Every optional field.",
+  "description": "A manifest that uses every optional field once.",
+  "version": "1.2.3-rc.1",
+  "channel": "stable",
+  "licence": "BSD-3-Clause",
+  "notice": "NOTICE",
+  "requires": {
+    "packApi": 1,
+    "packs": ["other"]
+  },
+  "vocabularies": [
+    {
+      "name": "full",
+      "internal": false
+    },
+    {
+      "name": "full-util",
+      "internal": true
+    }
+  ],
+  "kinds": [
+    {
+      "name": "full-kind",
+      "label": "full kind",
+      "viewer": true,
+      "paramHelper": true,
+      "parser": "src/kinds/full-kind/parse.ts"
+    }
+  ],
+  "conversions": [
+    {
+      "from": "table",
+      "to": "full-kind",
+      "op": "full:from"
+    },
+    {
+      "from": "full-kind",
+      "to": "table",
+      "op": "full:to",
+      "atEnd": true
+    }
+  ],
+  "entries": {
+    "worker": "src/worker.ts",
+    "page": "src/page.ts"
+  },
+  "capabilities": {
+    "effects": ["+async", "+random", "+time", "+media"],
+    "csp": {
+      "img-src": ["blob:", "data:"],
+      "media-src": ["blob:"],
+      "font-src": ["data:"]
+    }
+  },
+  "externalCode": [
+    {
+      "id": "engine",
+      "version": "2.0.0+build.7",
+      "path": "engine/engine.mjs",
+      "sha256": "abababababababababababababababababababababababababababababababab",
+      "licence": "ISC",
+      "maxGzip": 1000,
+      "primitives": ["full:run", "full:stop"]
+    }
+  ],
+  "budget": {
+    "total": 5000,
+    "worker": 3000,
+    "page": 2000
+  }
+}

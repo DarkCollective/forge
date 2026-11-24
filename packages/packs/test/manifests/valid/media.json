@@ -1,0 +1,52 @@
+{
+  "$schema": "../../packages/packs/src/manifest.schema.json",
+  "format": 1,
+  "id": "media",
+  "name": "Media",
+  "summary": "Work with images, audio, charts and QR codes.",
+  "description": "Images, audio, charts and QR codes.",
+  "version": "0.1.0",
+  "channel": "internal",
+  "licence": "Apache-2.0",
+  "requires": {
+    "packApi": 1
+  },
+  "vocabularies": [
+    {
+      "name": "image"
+    },
+    {
+      "name": "audio"
+    },
+    {
+      "name": "qr"
+    }
+  ],
+  "kinds": [
+    {
+      "name": "image",
+      "label": "image",
+      "viewer": true,
+      "paramHelper": false
+    },
+    {
+      "name": "audio",
+      "label": "audio",
+      "viewer": true,
+      "paramHelper": false
+    }
+  ],
+  "entries": {
+    "worker": "src/worker.ts",
+    "page": "src/page.ts"
+  },
+  "capabilities": {
+    "effects": ["+async", "+media"],
+    "csp": {
+      "media-src": ["blob:"]
+    }
+  },
+  "budget": {
+    "total": 400000
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "$schema": "../../packages/packs/src/manifest.schema.json",
+  "format": 1,
+  "id": "needy",
+  "name": "Demo",
+  "summary": "A test pack with one kind, one viewer and one helper.",
+  "description": "A tiny pack for tests: one extension kind, one viewer and one parameter helper.",
+  "version": "0.1.0",
+  "channel": "internal",
+  "licence": "Apache-2.0",
+  "requires": {
+    "packApi": 1,
+    "packs": ["other"]
+  },
+  "vocabularies": [
+    {
+      "name": "needy"
+    },
+    {
+      "name": "needy-helpers",
+      "internal": true
+    }
+  ],
+  "kinds": [
+    {
+      "name": "needy-kind",
+      "label": "kind",
+      "viewer": false,
+      "paramHelper": false
+    }
+  ],
+  "entries": {
+    "worker": "src/worker.ts",
+    "page": "src/page.ts"
+  },
+  "capabilities": {
+    "effects": []
+  },
+  "budget": {
+    "total": 40000,
+    "worker": 30000,
+    "page": 15000
+  }
+}
