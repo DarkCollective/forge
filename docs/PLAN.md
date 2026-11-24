@@ -636,6 +636,8 @@ Decided 2026-11-24:
 
 16. **Gate T1 for SP1, SP3 and SP4** ([TOOLKIT.md](TOOLKIT.md) §3, T35 to T52): every recommended answer is accepted. FL becomes **v0.3** ([LANGUAGE-0.3.md](LANGUAGE-0.3.md)), with the `ext` value, generic words, tagged literals, JSON `null` as `ext{null}`, and one breaking item, `E_RANGE` for interval, set and length violations; the version bump is staged G1 to G4. The UI proposal ([UI-TOOLKIT.md](UI-TOOLKIT.md)) is accepted, with `media-src blob:` applied at T6 and a CSP golden test now. The pack specification ([PACKS.md](PACKS.md)) is accepted: the manifest is compiled into the page, every pack is off by default, and `init.packs` rides protocol 2. Four conflicts between documents are resolved (CSP rule 8, `recipe.catalogue`, the reserved kind names `null` and `array`, and stale corpus counts). SP5 (SYMBOLIC v2) is not written, so Gate T1 stays open for it.
 
+17. **Scope of the toolkit programme** ([TOOLKIT.md](TOOLKIT.md) §3, T56 to T58): Relix is the immediate goal. Symbolic math (Phase T5, SP5) and the media and code packs (Phase T6) are future goals, deferred, with the `media-src blob:` CSP change and Q8 (Render Markdown, OCR). Spike L0, L7b, L11 and the cipher and hash half of L13 leave the critical path. J0 and J1 to J4 stay after Relix 1.0, and Gate T1 is closed for the Relix scope. Relations are expression values (T8 accepted, Q13 closed). The operations drawer gains a "Suggested next" group built from the existing type fit and content checks, shipped as work package F1 with a fix for the stale "Data here" line.
+
 ## 10. Hosting and deployment
 
 Forge is a fully static site (`apps/web/dist`), hosted the same way as the Relix site, whose setup is in `relix/infra`.

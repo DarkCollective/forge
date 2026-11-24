@@ -260,6 +260,27 @@ Step cards gain two small pieces (UI.md WP 3.3, the card header):
 
 The checks of RELIX-LANES §6 hold, using the same function: a slot lane is checked from its first step; a lane that starts with a source ignores the data it is given; a lane must end in `table` or `relation`. The message on a slot (not a card) says what to add: "The data above is bytes. Add Parse CSV above this step." or "This side ends as bytes. Add Parse CSV to it." These are page checks. The validator reports no `slot-type` (T24), and the bake's `E_TYPE` is the last defence.
 
+### 2.6 "Suggested next" (T58)
+
+**UI.md changes.** §2.3 WP 3.2 (the operations pane gains a group at the top). The work package is F1 ([TOOLKIT.md](TOOLKIT.md) §13.5).
+
+**What it lists.** The operations that fit what the last step produces, for **any** kind of value: raw text suggests text operations; Base64 or gzip data suggests the matching decoders; a `relation` suggests the relational operators (select, project, join, group, sort and so on); a `table` suggests the table words and the op that lifts it into a relation.
+
+**Where it sits.** A group named "Suggested next" at the top of the operations drawer, above the browse sections and in the search view. It is not shown when nothing fits or when the data type is unknown. An op appears in it and also in its own section; the group is a shortcut, not a move.
+
+**How it is derived.** There is no new mechanism. The list is built from the two that exist:
+
+- **Type fit.** `fitLevel` (§2.1, §2.2) compares the op's `input` and `inputKind` with the data here. Green and amber ops are candidates; red ops never are.
+- **Content identification and checks.** The "Data here" line (§2.3) and each op's `expects` and `checks` (UI.md WP 6.28). A check that passes keeps an op in the list and ranks it up; an op whose check fails stays amber and ranks below those that pass. An unknown result changes nothing.
+
+**Ordering.** The fit level first (green, then amber), then the existing order of the drawer. Within a level, ops whose content check passed come before the rest. The group is capped at a short list (a proposal: eight rows; F1 fixes the number), so it stays a shortcut.
+
+**Accessibility.** The group is a labelled group (`role="group"` with its heading as the label), and its rows behave like the rows of the other groups: the same keys and the same accessible name, which carries the fit mark and hint. Colour is never the only signal (§2.2). axe passes in the three themes.
+
+**"Fits the data" is unchanged.** The toggle still hides only red ops, in the browse view and in search. The new group never shows a red op, so the toggle has nothing to hide in it.
+
+**The stale "Data here" line.** F1 also fixes a defect D3 found: when the lazy table viewer loads, the facts cached in `StoreController` are not recomputed on `onViewersChanged`, so "Data here" in `forge-operations` never shows the table's shape (§2.3), and the footer does not either. The suggestions read the same facts, so they need the fix. The line must update when a lazy viewer loads.
+
 ---
 
 ## 3. Ext parameter fields
