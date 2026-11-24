@@ -40,8 +40,8 @@ FL_PROPOSED=all npm test -w @forge/lang     # everything: expect many failures
 
 ## The §17.0 fixtures
 
-They need features that do not exist before X1 and L8, so `ext-fixtures.ts` never imports `src/ext.ts`.
+They needed features that did not exist before X1 and L8, so `ext-fixtures.ts` never imports `src/ext.ts`; `ext-kinds.test.ts` (X1) registers them through the real module and runs `kindConformance` on each.
 
-- Kinds and tags are plain data in the shape of `ExtKind` and `registerLiteralTag`. `registerExtFixtures(api)` registers them once per process; `ext-support.ts` calls it with the exports of `src/ext.ts` when that file exists. X1 should check that the shapes still match.
-- The primitives are probed one by one with `createRuntime`: a runtime that does not know `ext{fx-pair}` or `+media` rejects the primitive and it is left out. Before X1, `fx:charge` and `fx:spin` are bound (and fail cleanly without `ctx.charge`); after X1 and L8, all seven are. The v0.2 suite gets them only once `src/ext.ts` exists.
-- Primitives that take an `ext` argument accept either the payload or the `ext` Value; they return an `ext` Value built with `ext()`. X1 decides which form a primitive really sees and should adjust `ext-fixtures.ts`.
+- Kinds and tags are plain data in the shape of `ExtKind` and `registerLiteralTag`. `registerExtFixtures(api)` registers them once per process; `ext-support.ts` calls it with the exports of `src/ext.ts` when that file exists. X1 checked that the shapes match (`ext-kinds.test.ts`).
+- The primitives are probed one by one with `createRuntime`: a runtime that does not know `ext{fx-pair}` or `+media` rejects the primitive and it is left out. Since X1 every primitive but `fx:media-op` (label `+media`, L8) is bound, and `fx:charge` and `fx:spin` still fail cleanly without `ctx.charge`; after L8 all seven are. The v0.2 suite gets them because `src/ext.ts` exists.
+- A primitive whose slot is `ext{kind}` receives the **bare payload** and returns the bare payload; the call boundary tags it with the slot's kind (LANGUAGE-0.3.md section 4.8, decided by X1). A primitive whose slot is `any` sees whole `Value`s. The fixtures follow this; only the `methods` of a kind (generic words, L10) work on whole `Value`s.

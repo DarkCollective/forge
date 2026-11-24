@@ -36,6 +36,7 @@ import type {
   Tag,
   Value,
 } from "./types.js";
+import { getExtKind } from "./ext.js";
 import { normaliseInt, num, runtimeTypeOf } from "./values.js";
 
 const EFFECT_LABELS: readonly string[] = ["+async", "+random", "+time"];
@@ -49,6 +50,7 @@ const TAGS: ReadonlySet<string> = new Set<Tag>([
   "quot",
   "record",
   "file",
+  "ext",
 ]);
 
 /** Parsed effects of every registered definition, keyed by the definition object. */
@@ -248,6 +250,27 @@ function checkValue(
     case "bytes":
       if (!(x.v instanceof Uint8Array)) throw badResult(def, "a Uint8Array", x.v, index);
       return aliased || argPayloads.includes(x.v) ? { tag: "bytes", v: x.v.slice() } : x;
+    case "ext": {
+      // An `any` result may carry an ext value, but it must name a registered kind (section 4.8).
+      const kind: unknown = x.kind;
+      if (typeof kind !== "string" || getExtKind(kind) === undefined) {
+        throw new ForgeError({
+          code: "E_TYPE",
+          message: `${qnameOf(def)}: result ${index} is an ext value of the unregistered kind '${String(kind)}'`,
+          word: qnameOf(def),
+          vocab: def.vocab,
+          detail: {
+            expected: "a registered ext kind",
+            actual: `ext{${String(kind)}}`,
+            where: "result",
+            index,
+            kind,
+            reason: "unregistered",
+          },
+        });
+      }
+      return x;
+    }
     default:
       return aliased ? ({ ...x } as Value) : x;
   }
@@ -306,6 +329,30 @@ function toValue(
     case "quot":
       if (typeof x !== "object" || x === null) throw badResult(def, "a quotation", x, index);
       return { tag: "quot", v: x as never };
+    case "ext": {
+      // A primitive with an `ext{kind}` output returns the bare payload; the call boundary tags it
+      // with the slot's kind (LANGUAGE-0.3.md section 4.8).
+      const kind = slot.kind;
+      if (kind === undefined) throw badResult(def, "an ext{kind} slot", x, index);
+      if (x === undefined) throw badResult(def, `a ${kind} payload`, x, index);
+      if (getExtKind(kind) === undefined) {
+        throw new ForgeError({
+          code: "E_TYPE",
+          message: `${qnameOf(def)}: result ${index} names the unregistered ext kind '${kind}'`,
+          word: qnameOf(def),
+          vocab: def.vocab,
+          detail: {
+            expected: `ext{${kind}}`,
+            actual: "unregistered",
+            where: "result",
+            index,
+            kind,
+            reason: "unregistered",
+          },
+        });
+      }
+      return { tag: "ext", kind, v: x };
+    }
     default: {
       const f = x as { name?: unknown; type?: unknown; bytes?: unknown } | null;
       if (

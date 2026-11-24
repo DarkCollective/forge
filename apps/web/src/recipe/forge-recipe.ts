@@ -55,6 +55,15 @@ import type { BlockKind } from "./defaults.js";
 import { escapeText, toggleFlag, unescapeText, usesEscapes } from "./fields.js";
 import { recipeIcons } from "./icons.js";
 import { fieldIssues, issueCounts, stepLevelIssues } from "./issues.js";
+import { extShape } from "../io/viewers.js";
+import {
+  dataAboveStatic,
+  inputMark,
+  lastActive,
+  needOf,
+  opOutputType,
+  outputBadge,
+} from "../ops/fit.js";
 import { blockedByPosition, moveTarget } from "./move.js";
 import type { MoveKey } from "./move.js";
 import { ownerOfList, pathAfterMove, stepNumber } from "./paths.js";
@@ -1134,6 +1143,47 @@ export class ForgeRecipe extends LitElement {
 
   // ------------------------------------------------------------------------------- rendering
 
+  /**
+   * The badges for extension kinds (UI-TOOLKIT.md section 2.4): what an op step leaves when that is an extension
+   * value, and an input mark when the data above does not fit its kind. Both stay out of the way of a recipe
+   * with no extension value. The data above is worked out from the declared outputs of the steps before, for
+   * the steps of the main line.
+   */
+  private kindChips(path: StepPath, step: Step): Chip[] {
+    if (step.kind !== "op") return [];
+    const info = this.opInfo(step.op);
+    if (info === undefined) return [];
+    const chips: Chip[] = [];
+    const recipe = this.recipe.value;
+    const match = /^\/steps\/(\d+)$/.exec(path);
+    const result = this.bake.value.result;
+    let reported: { kind: string; shape: string | null } | undefined;
+    if (match !== null && result !== null && result.ok && !this.bake.value.stale) {
+      const last = lastActive(recipe.steps);
+      if (last === step && result.output.kind === "ext") {
+        reported = { kind: result.output.extKind, shape: extShape(result.output) };
+      }
+    }
+    const badge = outputBadge(opOutputType(info), reported);
+    if (badge !== null) chips.push({ text: `Output: ${badge}`, tone: "type" });
+    if (match !== null) {
+      const above = dataAboveStatic(
+        recipe.steps,
+        Number(match[1]),
+        this.catalogue()?.ops ?? null,
+        true,
+      );
+      const mark = inputMark(needOf(info), above);
+      if (mark !== null) {
+        chips.push({
+          text: `Input: ${mark.text}`,
+          tone: mark.level === "no" ? "error" : "warning",
+        });
+      }
+    }
+    return chips;
+  }
+
   private chipsFor(path: StepPath, step: Step): Chip[] {
     const chips: Chip[] = [];
     if (step.kind !== "comment") {
@@ -1158,6 +1208,7 @@ export class ForgeRecipe extends LitElement {
       const runs = report.runs > 1 ? ` x${report.runs}` : "";
       chips.push({ text: `${ms} ms${runs}`, tone: bake.stale ? "time stale" : "time" });
     }
+    chips.push(...this.kindChips(path, step));
     const counts = issueCounts(this.issues.value, path);
     if (counts.errors > 0) {
       chips.push({

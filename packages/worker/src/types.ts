@@ -74,6 +74,10 @@ export const RENDER_LIMITS = Object.freeze({
   maxTextBytes: 16 * 1024 * 1024,
   /** Characters kept of an `other` repr. */
   maxReprChars: 200,
+  /** Code units kept of the text form of an `ext` value (UI-TOOLKIT.md section 1, Q2). */
+  maxExtTextChars: 4_000,
+  /** Rows asked of a kind's `view` (UI-TOOLKIT.md section 1.7, Q1). */
+  maxExtRows: 100,
 });
 
 /** Minimum interval between `progress` events of one bake. */
@@ -109,6 +113,22 @@ export type OutputValue =
       readonly kind: "record";
       readonly entries: readonly { readonly key: string; readonly value: OutputValue }[];
       readonly total: number;
+    }
+  /**
+   * An extension value (LANGUAGE-0.3.md section 4, UI-TOOLKIT.md section 1). `text` is the kind's text form,
+   * always present and cut at `RENDER_LIMITS.maxExtTextChars` code units (ending in `...` when cut), so a
+   * page that has no viewer for `extKind` shows it like a `str`. `truncated` says that the text was cut: it
+   * is what lets Copy and Download say "first 4,000 characters" instead of guessing from a trailing `...`.
+   * `view` is what the kind's `view` returned (structured-clone-safe, at most `RENDER_LIMITS.maxExtRows`
+   * rows asked for), absent when the kind has no `view` or its `view` threw. The payload itself never
+   * crosses the worker boundary.
+   */
+  | {
+      readonly kind: "ext";
+      readonly extKind: string;
+      readonly text: string;
+      readonly truncated: boolean;
+      readonly view?: unknown;
     }
   /** `quot`, `file`, and values below `RENDER_LIMITS.maxDepth`: the repr, cut to `maxReprChars`. */
   | { readonly kind: "other"; readonly tag: Tag; readonly repr: string };

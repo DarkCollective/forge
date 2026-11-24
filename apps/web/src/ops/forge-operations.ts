@@ -62,7 +62,7 @@ import {
   sameSource,
 } from "./content.js";
 import type { ContentSource, ContentView } from "./content.js";
-import { convertHint, dataFactsAtEnd, fitLevel, sameFacts, whyNotFit } from "./fit.js";
+import { convertHint, dataFactsAtEnd, fitLevel, needOf, sameFacts, whyNotFit } from "./fit.js";
 import type { DataFacts, DataTypeInput, FitLevel } from "./fit.js";
 import { helpFor } from "./help.js";
 import { helpLoader } from "./help-loader.js";
@@ -374,7 +374,7 @@ export class ForgeOperations extends LitElement {
     if (cat.status !== "ready") return null;
     const { type, utf8 } = this.dataFacts.value;
     const keep = this.fitOnly
-      ? (op: CatalogueOp) => fitLevel(op.input, type, utf8) !== "no"
+      ? (op: CatalogueOp) => fitLevel(needOf(op), type, utf8) !== "no"
       : undefined;
     return buildListModel(
       cat.catalogue.ops,
@@ -594,12 +594,13 @@ export class ForgeOperations extends LitElement {
     const favourite = this.favourites.value.includes(op.qname);
     const showingHelp = this.helpIndex === index;
     const { type, utf8 } = this.dataFacts.value;
-    const fit = fitLevel(op.input, type, utf8);
-    const why = whyNotFit(op.input, type, utf8);
+    const need = needOf(op);
+    const fit = fitLevel(need, type, utf8);
+    const why = whyNotFit(need, type, utf8);
     // A red stays red and says why; otherwise the content tier may turn a pass into "expects" and a fail amber.
     const note = fit === "no" ? undefined : this.contentView()?.rows.get(op.qname);
     const level = contentLevel(fit, note);
-    const converts = contentHint(note, convertHint(op.input, type, utf8));
+    const converts = contentHint(note, convertHint(need, type, utf8));
     const dataFit = level === "fits" ? "yes" : level;
     let hint: TemplateResult | typeof nothing = nothing;
     if (why !== "") hint = html`<span class="row-hint">${why}</span>`;

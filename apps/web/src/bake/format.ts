@@ -72,6 +72,8 @@ export function describeValue(value: OutputValue, max = 60): string {
       return `list of ${value.total}`;
     case "record":
       return `record with ${value.total} ${value.total === 1 ? "entry" : "entries"}`;
+    case "ext":
+      return `ext{${value.extKind}}: ${clip(value.text, max)}`;
     case "other":
       return `${value.tag}: ${clip(value.repr, max)}`;
   }

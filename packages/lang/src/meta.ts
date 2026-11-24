@@ -138,6 +138,7 @@ export function slotText(slot: StackSlot): string {
   if (slot.type === "any" && slot.name !== null) return slot.name;
   let out = slot.name === null ? "" : `${slot.name}:`;
   out += slot.type;
+  if (slot.type === "ext" && slot.kind !== undefined) out += `{${slot.kind}}`;
   const o = slot.options;
   if (o !== undefined && (slot.type === "choice" || o.join("|") !== DEFAULT_ENCODINGS.join("|"))) {
     out += optionsText(o);
@@ -181,6 +182,8 @@ const TYPE_NAMES: readonly string[] = [
 ];
 const OPTION_TYPES: readonly string[] = ["choice", "toggle", "key"];
 const ENCODINGS: readonly string[] = ["hex", "utf8", "latin1", "base64"];
+/** The kind name inside `ext{kind}` (LANGUAGE-0.3.md section 4.3): 1 to 64 characters. */
+const EXT_KIND_RE = /^[a-z][a-z0-9-]{0,63}$/;
 /** ptypes that may carry a constraint (spec 5.5). */
 const CONSTRAINT_TYPES: readonly string[] = [
   "int",
@@ -282,6 +285,8 @@ interface Item {
 interface TypeSpec {
   readonly type: ParamType;
   readonly options?: string[];
+  /** The kind of an `ext{kind}` type. */
+  readonly kind?: string;
   readonly constraint?: Constraint;
   readonly default?: ParamDefault;
 }
@@ -292,11 +297,13 @@ function makeSlot(
   options?: readonly string[],
   constraint?: Constraint,
   def?: ParamDefault,
+  kind?: string,
 ): StackSlot {
   return {
     name,
     type,
     ...(options === undefined ? {} : { options }),
+    ...(kind === undefined ? {} : { kind }),
     ...(constraint === undefined ? {} : { constraint }),
     ...(def === undefined ? {} : { default: def }),
   };
@@ -478,6 +485,15 @@ class HeaderParser {
     if (m === null) fail("expected a parameter name or a type");
     const name = (m as RegExpExecArray)[0];
     const rest = it.text.slice(name.length);
+    if (name === "ext" && (rest === "" || rest[0] === "{")) {
+      // A bare `ext` needs a kind; `ext{kind}` is an anonymous ext slot.
+      if (rest === "") fail("'ext' needs a kind: ext{kind}");
+      if (this.mode === "strict" && index >= 1) {
+        fail("a public word's parameters must be named and typed (name:type)");
+      }
+      const spec = this.parseType(it, it.start);
+      return makeSlot(null, spec.type, undefined, undefined, spec.default, spec.kind);
+    }
     if (rest === "") {
       if (this.mode === "strict" && index >= 1) {
         fail("a public word's parameters must be named and typed (name:type)");
@@ -494,7 +510,7 @@ class HeaderParser {
     names.add(name);
     const spec = this.parseType(it, it.start + name.length + 1);
     if (index === 0 && spec.default !== undefined) fail("the data input may not have a default");
-    return makeSlot(name, spec.type, spec.options, spec.constraint, spec.default);
+    return makeSlot(name, spec.type, spec.options, spec.constraint, spec.default, spec.kind);
   }
 
   private parseOutput(it: Item): StackSlot {
@@ -503,12 +519,20 @@ class HeaderParser {
     if (m === null) fail("expected an output name or a type");
     const name = (m as RegExpExecArray)[0];
     const rest = it.text.slice(name.length);
+    if (name === "ext" && (rest === "" || rest[0] === "{")) {
+      if (rest === "") fail("'ext' needs a kind: ext{kind}");
+      return this.extOutput(it, null, it.start);
+    }
     if (rest === "") {
       if (TYPE_NAMES.includes(name)) return makeSlot(null, name as ParamType);
       this.checkName(it, name);
       return makeSlot(name, "any");
     }
     const type = rest.slice(1);
+    if (rest[0] === ":" && /^ext(?:\{|$)/.test(type)) {
+      this.checkName(it, name);
+      return this.extOutput(it, name, it.start + name.length + 1);
+    }
     if (rest[0] !== ":" || !TYPE_NAMES.includes(type)) {
       fail("an output is 'type', 'name:type' or a label, without constraint or default");
     }
@@ -516,18 +540,41 @@ class HeaderParser {
     return makeSlot(name, type as ParamType);
   }
 
+  /** An output slot of type `ext{kind}`: no constraint and no default (an output is a type only). */
+  private extOutput(it: Item, name: string | null, from: number): StackSlot {
+    const spec = this.parseType(it, from);
+    if (spec.constraint !== undefined || spec.default !== undefined) {
+      this.fail(
+        "an output is 'type', 'name:type' or a label, without constraint or default",
+        it.start,
+        it.text,
+      );
+    }
+    return makeSlot(name, spec.type, undefined, undefined, undefined, spec.kind);
+  }
+
   /** Parses `ptype [options] [constraint] [= default]` starting at absolute index `i` of the item. */
   private parseType(it: Item, from: number): TypeSpec {
     const t = this.text;
     const fail = (m: string): never => this.fail(m, it.start, it.text);
     const word = /^[a-z]+/.exec(t.slice(from, it.end))?.[0] ?? "";
-    if (!TYPE_NAMES.includes(word) && !OPTION_TYPES.includes(word)) {
+    if (!TYPE_NAMES.includes(word) && !OPTION_TYPES.includes(word) && word !== "ext") {
       fail(`unknown parameter type '${t.slice(from, it.end).replace(/[[{=].*$/s, "")}'`);
     }
     const type = word as ParamType;
     let i = from + word.length;
     let options: string[] | undefined;
-    if (t[i] === "{") {
+    let kind: string | undefined;
+    if (type === "ext") {
+      if (t[i] !== "{") fail("'ext' needs a kind: ext{kind}");
+      const close = t.indexOf("}", i);
+      if (close < 0 || close >= it.end) fail("unterminated 'ext{': expected '}'");
+      kind = t.slice(i + 1, close);
+      if (!EXT_KIND_RE.test(kind)) {
+        fail(`'${kind}' is not a kind name: lower-case letters, digits and '-', at most 64`);
+      }
+      i = close + 1;
+    } else if (t[i] === "{") {
       if (!OPTION_TYPES.includes(type)) fail(`'${type}' takes no options`);
       const r = this.parseOptions(it, i);
       options = r.options;
@@ -561,6 +608,7 @@ class HeaderParser {
     return {
       type,
       ...(options === undefined ? {} : { options }),
+      ...(kind === undefined ? {} : { kind }),
       ...(constraint === undefined ? {} : { constraint }),
       ...(def === undefined ? {} : { default: def }),
     };
@@ -737,6 +785,10 @@ class HeaderParser {
         value = str(meta);
         break;
       }
+      case "ext":
+        // The text form of a value of the kind; the kind's `fromText` checks it where the kind is
+        // registered (the catalogue build and the first bake), never here (section 4.3).
+        return asString();
       case "choice": {
         meta = raw[0] === '"' ? asString() : raw;
         value = str(meta);

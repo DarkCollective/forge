@@ -84,6 +84,7 @@ import {
   reprShort,
   runtimeTypeOf,
   sizeOf,
+  typeText,
   validate,
 } from "./values.js";
 
@@ -222,6 +223,7 @@ const VALUE_TAGS: ReadonlySet<string> = new Set<Tag>([
   "quot",
   "record",
   "file",
+  "ext",
 ]);
 
 /** The setters of `StepEvent` take host data: refuse anything that is not a tagged value. */
@@ -344,11 +346,13 @@ function internalError(message: string): ForgeError {
   return new ForgeError({ code: "E_INTERNAL", message });
 }
 
-function tagMatches(type: StackSlot["type"], tag: Value["tag"]): boolean {
-  const rt = runtimeTypeOf(type);
+/** Does the value fit the slot's declared type (and, for `ext{kind}`, its kind)? */
+function tagMatches(slot: StackSlot, v: Value): boolean {
+  const rt = runtimeTypeOf(slot.type);
   if (rt === "any") return true;
-  if (rt === "number") return tag === "int" || tag === "num";
-  return rt === tag;
+  if (rt === "number") return v.tag === "int" || v.tag === "num";
+  if (rt === "ext") return v.tag === "ext" && v.kind === slot.kind;
+  return rt === v.tag;
 }
 
 function isValidCodePoint(n: number): boolean {
@@ -1144,7 +1148,7 @@ class Machine {
         const slot = inputs[i] as StackSlot;
         let v = ds[start + i] as Value;
         if (slot.type !== "any") {
-          const r = coerceTracked(v, slot.type, slot.name ?? i);
+          const r = coerceTracked(v, slot.type, slot.name ?? i, slot.kind);
           if (r.coercion !== null) {
             this.addCoercion({
               word: qname,
@@ -1268,8 +1272,15 @@ class Machine {
         for (let j = 0; j < outs.length; j++) {
           const slot = outs[j] as StackSlot;
           const v = ds[ds.length - outs.length + j] as Value;
-          if (!tagMatches(slot.type, v.tag)) {
-            throw typeError(slot.type, v.tag, { where: "output", param: slot.name ?? j });
+          if (!tagMatches(slot, v)) {
+            throw typeError(
+              typeText(slot.type, slot.kind),
+              typeText(v.tag, v.tag === "ext" ? v.kind : undefined),
+              {
+                where: "output",
+                param: slot.name ?? j,
+              },
+            );
           }
         }
       }

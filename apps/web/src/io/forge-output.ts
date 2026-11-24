@@ -22,7 +22,7 @@ import type { BakeError, OutputValue } from "@forge/worker";
 import type { RecipeIssue } from "@forge/recipe";
 import { actions, store } from "../state/app.js";
 import { FORGE_EVENTS, emit } from "../state/events.js";
-import type { FocusPaneDetail } from "../state/events.js";
+import type { FocusPaneDetail, MenuSelectDetail } from "../state/events.js";
 import { getStep } from "../state/recipe-ops.js";
 import { StoreController } from "../state/store-controller.js";
 import { describeValue } from "../bake/format.js";
@@ -32,21 +32,49 @@ import { icons } from "../styles/icons.js";
 import { bytesToHex, formatBytes } from "./codec.js";
 import {
   chooseView,
+  copyLabel,
   detailText,
   downloadBytes,
+  downloadLabel,
   downloadSpec,
   outputBytes,
   outputText,
   stepLabel,
+  typeReadout,
 } from "./output-model.js";
 import type { OutputView } from "./output-model.js";
+import {
+  extBytesOps,
+  extCopyText,
+  extDownloadFile,
+  extSummary,
+  getViewer,
+  kindNoun,
+  onViewersChanged,
+  registerViewer,
+  renderExt,
+  viewerState,
+} from "./viewers.js";
+import type { ExtOutput, Viewer, ViewerPlace } from "./viewers.js";
 import "./forge-hex-view.js";
+import "../shell/forge-menu.js";
+import type { MenuItem } from "../shell/forge-menu.js";
 
 /** The text view shows at most this many characters (all of it is still copied and downloaded). */
 const TEXT_DISPLAY_LIMIT = 512 * 1024;
 
 /** The view the user last chose; remembered for the session (UI.md WP 3.5). */
 let preferredView: OutputView | null = null;
+
+/** A viewer's node for one ext output, kept while the output, the viewer and the layout stay as they are. */
+interface ExtNode {
+  readonly viewer: Viewer | undefined;
+  readonly state: string;
+  readonly compact: boolean;
+  readonly place: ViewerPlace;
+  readonly node: HTMLElement;
+  readonly controller: AbortController;
+}
 
 /** Output pane: the last bake result as text, hex dump or tree, with copy, download and move to input. */
 @customElement("forge-output")
@@ -227,6 +255,17 @@ export class ForgeOutput extends LitElement {
       .registers .redacted {
         font-style: italic;
       }
+      .reg-ext summary {
+        cursor: pointer;
+        font-size: var(--text-sm);
+      }
+      .ext-fallback {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+        min-width: 0;
+      }
       .partial {
         border-top: var(--border-width) solid var(--border-strong);
         padding-top: var(--space-2);
@@ -238,6 +277,12 @@ export class ForgeOutput extends LitElement {
     `,
   ];
 
+  /**
+   * Where a viewer is registered in the page (UI-TOOLKIT.md section 1.2). A pack registers from its own chunk
+   * with `registerViewer` of `viewers.ts`; this is the same function, reachable from the element for tests.
+   */
+  static readonly registerViewer = registerViewer;
+
   private readonly bake = new StoreController(this, store, (s) => s.bake);
   private readonly recipe = new StoreController(this, store, (s) => s.recipe);
   private readonly registers = new StoreController(this, bakeUi, (s) => s.pausedRegisters);
@@ -245,6 +290,10 @@ export class ForgeOutput extends LitElement {
   @state() private view: OutputView | null = preferredView;
   @state() private flash = "";
   private flashTimer: ReturnType<typeof setTimeout> | undefined;
+  /** The nodes of ext outputs, so that a re-render keeps a viewer's state (scroll, focus) instead of rebuilding it. */
+  private extNodes = new WeakMap<ExtOutput, ExtNode>();
+  private readonly extControllers = new Set<AbortController>();
+  private stopViewers: (() => void) | undefined;
 
   /** Move focus to the pane's main control (called by the shell's pane shortcuts). */
   focusPrimary(): void {
@@ -254,8 +303,19 @@ export class ForgeOutput extends LitElement {
     target?.focus();
   }
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    // A lazy viewer that has arrived, or a viewer registered later, replaces the text form.
+    this.stopViewers = onViewersChanged(() => this.requestUpdate());
+  }
+
   override disconnectedCallback(): void {
     clearTimeout(this.flashTimer);
+    this.stopViewers?.();
+    this.stopViewers = undefined;
+    for (const c of this.extControllers) c.abort();
+    this.extControllers.clear();
+    this.extNodes = new WeakMap();
     super.disconnectedCallback();
   }
 
@@ -277,7 +337,11 @@ export class ForgeOutput extends LitElement {
 
   private async copy(value: OutputValue, view: OutputView): Promise<void> {
     const text =
-      view === "hex" && value.kind === "bytes" ? bytesToHex(value.bytes, " ") : outputText(value);
+      value.kind === "ext"
+        ? extCopyText(value)
+        : view === "hex" && value.kind === "bytes"
+          ? bytesToHex(value.bytes, " ")
+          : outputText(value);
     if (text === null) {
       this.say("Nothing to copy as text; switch to the hex view");
       return;
@@ -293,17 +357,34 @@ export class ForgeOutput extends LitElement {
   private download(value: OutputValue): void {
     const spec = downloadSpec(value);
     if (spec === null) return;
-    const blob = new Blob([downloadBytes(value) as BlobPart], { type: spec.mime });
+    // An ext value is saved as the viewer says, else as its text form (UI-TOOLKIT.md section 1.5).
+    const file = value.kind === "ext" ? extDownloadFile(value) : null;
+    const filename = file === null ? spec.filename : file.filename;
+    const blob = new Blob([(file === null ? downloadBytes(value) : file.bytes) as BlobPart], {
+      type: file === null ? spec.mime : file.mime,
+    });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = spec.filename;
+    a.download = filename;
     a.hidden = true;
     document.body.append(a);
     a.click();
     a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 10_000);
-    this.say(`Downloading ${spec.filename}`);
+    this.say(
+      value.kind === "ext" && value.truncated
+        ? `Downloading ${filename}: the first ${value.text.length.toLocaleString("en-US")} characters`
+        : `Downloading ${filename}`,
+    );
+  }
+
+  /** Convert to bytes (UI-TOOLKIT.md section 1.5): adds the op at the end of the main line and says so. */
+  private convertToBytes(value: ExtOutput, op: string): void {
+    const choice = extBytesOps(value).find((o) => o.op === op);
+    if (choice === undefined) return;
+    actions.addOp(op);
+    actions.announce(`Added ${choice.label} at the end of the recipe. The output is now bytes.`);
   }
 
   private moveToInput(value: OutputValue, newTab: boolean): void {
@@ -329,7 +410,45 @@ export class ForgeOutput extends LitElement {
 
   // ---- value rendering ---------------------------------------------------------------------------
 
-  private renderBytesOrScalar(value: OutputValue, view: OutputView): TemplateResult {
+  /**
+   * The node of an ext output: the registered viewer's, or the text fallback. Cached per output, so that a
+   * re-render for another reason keeps what the viewer holds. A viewer that fails is announced once.
+   */
+  private renderExtNode(value: ExtOutput, place: ViewerPlace): TemplateResult {
+    const viewer = getViewer(value.extKind);
+    const state = viewerState(value.extKind);
+    const compact = store.get().ui.compact;
+    const held = this.extNodes.get(value);
+    if (
+      held !== undefined &&
+      held.viewer === viewer &&
+      held.state === state &&
+      held.compact === compact &&
+      held.place === place
+    ) {
+      return html`${held.node}`;
+    }
+    if (held !== undefined) {
+      held.controller.abort();
+      this.extControllers.delete(held.controller);
+    }
+    const controller = new AbortController();
+    this.extControllers.add(controller);
+    const node = renderExt(
+      value,
+      { place, compact, signal: controller.signal },
+      { announce: (text) => queueMicrotask(() => actions.announce(text)) },
+    );
+    this.extNodes.set(value, { viewer, state, compact, place, node, controller });
+    return html`${node}`;
+  }
+
+  private renderBytesOrScalar(
+    value: OutputValue,
+    view: OutputView,
+    place: ViewerPlace = "output",
+  ): TemplateResult {
+    if (value.kind === "ext") return this.renderExtNode(value, place);
     if (value.kind === "bytes" && view === "hex") {
       return html`<forge-hex-view .bytes=${value.bytes} label="Output bytes"></forge-hex-view>`;
     }
@@ -386,6 +505,8 @@ ${cut ? text.slice(0, TEXT_DISPLAY_LIMIT) : text}</pre>`;
                   }`
           }
         </li>`;
+      case "ext":
+        return html`<li>${label}<span class="tag">ext{${value.extKind}}</span> ${value.text}</li>`;
       case "other":
         return html`<li>${label}<span class="tag">${value.tag}</span> ${value.repr}</li>`;
       case "str":
@@ -395,9 +516,9 @@ ${cut ? text.slice(0, TEXT_DISPLAY_LIMIT) : text}</pre>`;
     }
   }
 
-  private renderValue(value: OutputValue): TemplateResult {
+  private renderValue(value: OutputValue, place: ViewerPlace = "output"): TemplateResult {
     const view = chooseView(value, this.view);
-    return this.renderBytesOrScalar(value, view);
+    return this.renderBytesOrScalar(value, view, place);
   }
 
   // ---- registers at a pause (RECIPES-1.1.md sections 4.9, 4.10) -----------------------------------
@@ -413,14 +534,20 @@ ${cut ? text.slice(0, TEXT_DISPLAY_LIMIT) : text}</pre>`;
       <ul>
         ${regs.map((r) => {
           const hidden = r.value.kind === "other" && r.value.repr === "<redacted>";
+          const ext = r.value.kind === "ext" ? r.value : null;
           return html`<li>
             <code>${r.name}</code>
             ${
               hidden
                 ? html`<span class="reg-value redacted">&lt;redacted&gt;</span>`
-                : html`<span class="reg-value" title=${describeValue(r.value, 400)}
-                    >${describeValue(r.value)}</span
-                  >`
+                : ext !== null
+                  ? html`<details class="reg-ext">
+                      <summary>${extSummary(ext)}</summary>
+                      ${this.renderExtNode(ext, "register")}
+                    </details>`
+                  : html`<span class="reg-value" title=${describeValue(r.value, 400)}
+                      >${describeValue(r.value)}</span
+                    >`
             }
             <button
               type="button"
@@ -436,6 +563,22 @@ ${cut ? text.slice(0, TEXT_DISPLAY_LIMIT) : text}</pre>`;
       <p class="note">
         A register that feeds a key parameter is hidden. The data still shows the input as it is.
       </p>
+    </section>`;
+  }
+
+  /** The data that enters the next step, when it is an extension value: drawn by its viewer (section 1.1). */
+  private renderPausedData() {
+    const bake = this.bake.value;
+    if (bake.status !== "paused" || bake.paused === null || bake.paused.data.kind !== "ext") {
+      return nothing;
+    }
+    const data = bake.paused.data;
+    return html`<section class="registers" aria-labelledby="paused-title">
+      <h3 id="paused-title">Data at this pause</h3>
+      <details class="reg-ext" open>
+        <summary>${extSummary(data)}</summary>
+        ${this.renderExtNode(data, "paused")}
+      </details>
     </section>`;
   }
 
@@ -535,7 +678,7 @@ ${cut ? text.slice(0, TEXT_DISPLAY_LIMIT) : text}</pre>`;
             ? nothing
             : html`<div class="partial">
                 <h4>Value at the failure</h4>
-                ${this.renderValue(partial)}
+                ${this.renderValue(partial, "partial")}
               </div>`
         }
       </section>`,
@@ -543,6 +686,24 @@ ${cut ? text.slice(0, TEXT_DISPLAY_LIMIT) : text}</pre>`;
   }
 
   // ---- render ------------------------------------------------------------------------------------
+
+  /**
+   * An ext value has no bytes, so "Move to input" is replaced by a "Convert to bytes" menu when its viewer
+   * declares ops that make bytes (UI-TOOLKIT.md section 1.5). A kind with none shows no menu.
+   */
+  private renderConvert(value: ExtOutput) {
+    const ops = extBytesOps(value);
+    if (ops.length === 0) return nothing;
+    const items: MenuItem[] = ops.map((o) => ({ id: o.op, label: o.label }));
+    return html`<forge-menu
+      label="Convert to bytes"
+      .items=${items}
+      @forge-menu-select=${(e: CustomEvent<MenuSelectDetail>) =>
+        this.convertToBytes(value, e.detail.id)}
+    >
+      <span slot="trigger">Convert to bytes</span>
+    </forge-menu>`;
+  }
 
   private renderTools(value: OutputValue | null, view: OutputView) {
     const spec = value === null ? null : downloadSpec(value);
@@ -573,6 +734,7 @@ ${cut ? text.slice(0, TEXT_DISPLAY_LIMIT) : text}</pre>`;
       }
       <button
         type="button"
+        aria-label=${copyLabel(value)}
         ?disabled=${value === null}
         @click=${() => value && this.copy(value, view)}
       >
@@ -580,26 +742,31 @@ ${cut ? text.slice(0, TEXT_DISPLAY_LIMIT) : text}</pre>`;
       </button>
       <button
         type="button"
+        aria-label=${downloadLabel(value)}
         ?disabled=${spec === null}
         @click=${() => value && this.download(value)}
       >
         Download
       </button>
-      <button
-        type="button"
-        ?disabled=${!canMove}
-        @click=${() => value && this.moveToInput(value, false)}
-      >
-        Move to input
-      </button>
-      <button
-        type="button"
-        class="ghost"
-        ?disabled=${!canMove}
-        @click=${() => value && this.moveToInput(value, true)}
-      >
-        To new tab
-      </button>
+      ${
+        value !== null && value.kind === "ext"
+          ? this.renderConvert(value)
+          : html`<button
+                type="button"
+                ?disabled=${!canMove}
+                @click=${() => value && this.moveToInput(value, false)}
+              >
+                Move to input
+              </button>
+              <button
+                type="button"
+                class="ghost"
+                ?disabled=${!canMove}
+                @click=${() => value && this.moveToInput(value, true)}
+              >
+                To new tab
+              </button>`
+      }
     </div>`;
   }
 
@@ -640,7 +807,7 @@ ${cut ? text.slice(0, TEXT_DISPLAY_LIMIT) : text}</pre>`;
               </p>`
             : nothing
         }
-        ${this.renderRegisters()}
+        ${this.renderPausedData()} ${this.renderRegisters()}
         <div class=${classMap({ content: true, stale: stale && bake.status !== "paused" })}>
           ${body}
         </div>
@@ -651,9 +818,14 @@ ${cut ? text.slice(0, TEXT_DISPLAY_LIMIT) : text}</pre>`;
               : html`<span>Length: ${bytesLength.toLocaleString("en-US")} bytes</span>`
           }
           ${
-            value !== null && value.kind !== "bytes"
-              ? html`<span>Type: ${value.kind}</span>`
-              : nothing
+            value !== null && value.kind === "ext"
+              ? html`<span
+                  ><span aria-hidden="true">Type: ${typeReadout(value)}</span
+                  ><span class="sr-only">Type: ${kindNoun(value.extKind)}</span></span
+                >`
+              : value !== null && value.kind !== "bytes"
+                ? html`<span>Type: ${typeReadout(value)}</span>`
+                : nothing
           }
           ${
             bake.elapsedMs === null || result === null

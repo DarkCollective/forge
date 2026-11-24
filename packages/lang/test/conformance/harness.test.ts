@@ -230,10 +230,17 @@ describe("the section 17.0 primitives", () => {
     expect(extPrimitives().map((d) => `${d.vocab}:${d.name}`)).toEqual([...EXT_PRIMITIVE_NAMES]);
   });
 
-  it("on the v0.2 runtime, fx:charge and fx:spin are accepted and the others are not", () => {
+  it("after X1 every fixture primitive but fx:media-op (label +media, L8) is accepted", () => {
     const { accepted, rejected } = supportedExtPrimitives(createRuntime);
-    expect(accepted.map((d) => d.name)).toEqual(["charge", "spin"]);
-    expect(rejected).toEqual(["fx:pair", "fx:pair-a", "fx:other", "fx:big", "fx:media-op"]);
+    expect(accepted.map((d) => d.name)).toEqual([
+      "pair",
+      "pair-a",
+      "other",
+      "big",
+      "charge",
+      "spin",
+    ]);
+    expect(rejected).toEqual(["fx:media-op"]);
   });
 
   it("fx:spin fails instead of looping when the context has no charge", () => {
@@ -261,11 +268,11 @@ describe("the section 17.0 primitives", () => {
 
   it("fx:pair, fx:pair-a, fx:other, fx:big and fx:media-op behave as specified", () => {
     const d = (n: string) => extPrimitives().find((x) => x.name === n);
-    expect(d("pair")?.fn(1n, 2n, {})).toEqual({ tag: "ext", kind: "fx-pair", v: { a: 1, b: 2 } });
+    // A primitive with an ext{kind} slot takes and returns the bare payload (LANGUAGE-0.3.md 4.8).
+    expect(d("pair")?.fn(1n, 2n, {})).toEqual({ a: 1, b: 2 });
     expect(d("pair-a")?.fn({ a: 4, b: 5 }, {})).toBe(4);
-    expect(d("pair-a")?.fn({ tag: "ext", kind: "fx-pair", v: { a: 6, b: 7 } }, {})).toBe(6);
-    expect(d("other")?.fn({})).toEqual({ tag: "ext", kind: "fx-other", v: {} });
-    expect(d("big")?.fn(9, {})).toEqual({ tag: "ext", kind: "fx-big", v: 9 });
+    expect(d("other")?.fn({})).toEqual({});
+    expect(d("big")?.fn(9, {})).toBe(9);
     expect(d("media-op")?.fn({})).toBe(1);
     expect(d("media-op")?.effects).toEqual(["+media"]);
   });

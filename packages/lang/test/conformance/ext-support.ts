@@ -19,12 +19,7 @@
  * fail cleanly without it); after X1 and L8 it is all of them, with the kinds and tags registered.
  */
 import type { CreateRuntimeFn, PrimitiveDef } from "../../src/types.js";
-import {
-  extPrimitives,
-  plainExt,
-  registerExtFixtures,
-  type ExtRegistryApi,
-} from "./ext-fixtures.js";
+import { extPrimitives, registerExtFixtures, type ExtRegistryApi } from "./ext-fixtures.js";
 
 /** The exports of `src/ext.ts`, or undefined while that module does not exist (before X1). */
 export async function loadExtApi(): Promise<ExtRegistryApi | undefined> {
@@ -56,7 +51,7 @@ export function supportedExtPrimitives(
   if (ext !== undefined) registerExtFixtures(ext);
   const accepted: PrimitiveDef[] = [];
   const rejected: string[] = [];
-  for (const def of extPrimitives(ext?.ext ?? plainExt)) {
+  for (const def of extPrimitives()) {
     try {
       createRuntime({ primitives: [def] });
       accepted.push(def);

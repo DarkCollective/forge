@@ -243,13 +243,6 @@ export function registerExtFixtures(api: ExtRegistryApi): boolean {
   return true;
 }
 
-/** `ext` operands reach a primitive as the payload or as the Value; both are accepted (X1 decides). */
-function payloadOf(x: unknown): unknown {
-  return typeof x === "object" && x !== null && (x as { tag?: unknown }).tag === "ext"
-    ? (x as ExtValue).v
-    : x;
-}
-
 /** The qualified names of the primitives of section 17.0, in table order. */
 export const EXT_PRIMITIVE_NAMES = [
   "fx:pair",
@@ -267,12 +260,13 @@ interface ChargeContext {
 }
 
 /**
- * The primitives of section 17.0, all in vocabulary `fx`. A runtime that lacks the feature a
- * primitive needs rejects it when it is registered (a header `ext{fx-pair}`, the label `+media`) or
- * fails when it runs (no `ctx.charge`); `run.ts` handles both, and none of them loops forever
- * without `charge`.
+ * The primitives of section 17.0, all in vocabulary `fx`. A primitive whose slot is `ext{kind}`
+ * receives the bare payload and returns the bare payload; the call boundary tags it with the slot's
+ * kind (LANGUAGE-0.3.md section 4.8, decided by X1). A runtime that lacks the feature a primitive
+ * needs rejects it when it is registered (the label `+media`) or fails when it runs (no
+ * `ctx.charge`); `run.ts` handles both, and none of them loops forever without `charge`.
  */
-export function extPrimitives(mk: MakeExt = plainExt): readonly PrimitiveDef[] {
+export function extPrimitives(): readonly PrimitiveDef[] {
   const needCharge = (ctx: unknown, qname: string): ((n: number) => void) => {
     const c = (ctx as ChargeContext | undefined)?.charge;
     if (typeof c !== "function") throw new Error(`${qname} needs PrimitiveContext.charge (L8)`);
@@ -283,20 +277,16 @@ export function extPrimitives(mk: MakeExt = plainExt): readonly PrimitiveDef[] {
       "fx",
       "pair",
       "( a:int b:int -- ext{fx-pair} )",
-      (a, b) => mk("fx-pair", { a: Number(a), b: Number(b) }),
+      (a, b): PairPayload => ({ a: Number(a), b: Number(b) }),
       { doc: "Builds an fx-pair (conformance fixture)." },
     ),
-    definePrimitive(
-      "fx",
-      "pair-a",
-      "( p:ext{fx-pair} -- int )",
-      (p) => (payloadOf(p) as PairPayload).a,
-      { doc: "The first component of an fx-pair (conformance fixture)." },
-    ),
-    definePrimitive("fx", "other", "( -- ext{fx-other} )", () => mk("fx-other", {}), {
+    definePrimitive("fx", "pair-a", "( p:ext{fx-pair} -- int )", (p) => (p as PairPayload).a, {
+      doc: "The first component of an fx-pair (conformance fixture).",
+    }),
+    definePrimitive("fx", "other", "( -- ext{fx-other} )", () => ({}), {
       doc: "An fx-other value (conformance fixture).",
     }),
-    definePrimitive("fx", "big", "( n:int -- ext{fx-big} )", (n) => mk("fx-big", Number(n)), {
+    definePrimitive("fx", "big", "( n:int -- ext{fx-big} )", (n) => Number(n), {
       doc: "An fx-big of size n (conformance fixture).",
     }),
     definePrimitive(

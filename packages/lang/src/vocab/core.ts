@@ -29,6 +29,7 @@ import { CORE_VOCAB } from "../dictionary.js";
 import { definePrimitive } from "../primitives.js";
 import { INT_PRIMITIVES } from "./intwords.js";
 import { NUMERIC_PRIMITIVES } from "./numeric.js";
+import { NULL_PAYLOAD, extText } from "../ext.js";
 import type {
   EffectLabel,
   IntrinsicName,
@@ -1226,10 +1227,49 @@ const CORE_PRIMITIVES_V02: readonly PrimitiveDef[] = Object.freeze([
   ),
 ]);
 
-/** The 90 `core` words of kind P: the 69 of the v0.1 table followed by the 21 added by FL 0.2. */
+/**
+ * The 4 `core` words of kind P added by FL 0.3 with the `ext` value (LANGUAGE-0.3.md sections 4.6 and
+ * 7.2): `ext-kind` and `ext>text`, and the `null` kind's `null` and `null?`.
+ */
+const CORE_PRIMITIVES_V03: readonly PrimitiveDef[] = Object.freeze([
+  core(
+    "ext-kind",
+    "( any -- str )",
+    "conversion",
+    "The kind name of an ext value; any other tag is E_TYPE.",
+    (a: Value) => {
+      if (a.tag !== "ext") throw typeError("ext", a.tag, 0);
+      return a.kind;
+    },
+  ),
+  core(
+    "ext>text",
+    "( any -- str )",
+    "conversion",
+    "The text form of an ext value, cut at half of maxValueBytes code units; any other tag is E_TYPE.",
+    (a: Value, ctx: PrimitiveContext) => {
+      if (a.tag !== "ext") throw typeError("ext", a.tag, 0);
+      return extText(a.kind, a.v, Math.floor(ctx.limits.maxValueBytes / 2));
+    },
+  ),
+  core("null", "( -- ext{null} )", "conversion", "The null value (kind null).", () => NULL_PAYLOAD),
+  core(
+    "null?",
+    "( any -- bool )",
+    "conversion",
+    "True for the null value, false for every other value; never an error.",
+    (a: Value) => a.tag === "ext" && a.kind === "null",
+  ),
+]);
+
+/**
+ * The 100 `core` words of kind P: the 69 of the v0.1 table, the 21 added by FL 0.2 and the 4 added by
+ * FL 0.3 with the `ext` value.
+ */
 export const CORE_PRIMITIVES: readonly PrimitiveDef[] = Object.freeze([
   ...CORE_PRIMITIVES_V01,
   ...CORE_PRIMITIVES_V02,
+  ...CORE_PRIMITIVES_V03,
 ]);
 
 /** Registers every primitive of `core` kind P into a registry. */

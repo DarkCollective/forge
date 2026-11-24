@@ -128,6 +128,7 @@ const TAGS: ReadonlySet<string> = new Set([
   "quot",
   "record",
   "file",
+  "ext",
 ]);
 
 function isValueLike(x: unknown): x is Value {
