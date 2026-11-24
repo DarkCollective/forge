@@ -37,3 +37,4 @@ export type {
   ManifestVocabulary,
   PackManifest,
 } from "./types.js";
+export { catalogueVersionOf, mergeCatalogues } from "./merge.js";
