@@ -30,7 +30,13 @@ export {
 } from "./types.js";
 export { scanVocab } from "./scan.js";
 export { assembleRuntime, createBundleLoader } from "./bundle.js";
-export { buildCatalogue, catalogueIssues, isCatalogueOp, parsePinsCompat } from "./catalogue.js";
+export {
+  buildCatalogue,
+  catalogueIssues,
+  catalogueVersionOf,
+  isCatalogueOp,
+  parsePinsCompat,
+} from "./catalogue.js";
 export { buildHelp } from "./help.js";
 export { buildChecks } from "./checks-doc.js";
 export { REGEX_LIMITS, execAll, isRegexPrimitive, markRegexPrimitive } from "./regex-engine.js";

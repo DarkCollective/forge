@@ -212,6 +212,16 @@ export interface BuildCatalogueOptions {
    * `buildCatalogue` throws.
    */
   readonly conversions?: readonly CatalogueConversion[];
+  /**
+   * Further vocabularies to skip, as `INTERNAL_VOCABS` are skipped: the internal vocabularies of a pack (PACKS.md
+   * section 5.1). They add to `INTERNAL_VOCABS` and never replace it.
+   */
+  readonly internalVocabs?: readonly string[];
+  /**
+   * Keep only the ops of these vocabularies, so a fragment built from core plus a pack holds the pack's ops alone
+   * (PACKS.md section 5.1). Applied after the internal-vocabulary skips. Default: every vocabulary.
+   */
+  readonly onlyVocabs?: readonly string[];
 }
 
 /** `buildCatalogue(runtime, options?)`: derive the catalogue from the loaded runtime. Skips `core` and `INTERNAL_VOCABS`. */

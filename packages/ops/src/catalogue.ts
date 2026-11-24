@@ -177,11 +177,24 @@ export function catalogueIssues(catalogue: Catalogue): string[] {
   return issues;
 }
 
+/**
+ * The version of a list of catalogue ops: the first 16 hex digits of SHA-256 over the canonical JSON text of the list
+ * (RECIPES-1.2.md section 14.4, PACKS.md section 5.2). `buildCatalogue` and `mergeCatalogues` both use it, and so does the
+ * baker's skew check, which applies it to a filtered list. Conversions are not part of it.
+ */
+export function catalogueVersionOf(ops: readonly CatalogueOp[]): string {
+  return sha256(JSON.stringify(ops)).slice(0, 16);
+}
+
 export const buildCatalogue: BuildCatalogueFn = (runtime, options = {}) => {
   const bundleVocabs = options.bundleVocabs;
+  const extraInternal = options.internalVocabs;
+  const only = options.onlyVocabs;
   const ops: CatalogueOp[] = [];
   for (const vocab of runtime.dictionary.vocabs()) {
     if (vocab === CORE_VOCAB || INTERNAL_VOCABS.includes(vocab)) continue;
+    if (extraInternal?.includes(vocab) === true) continue;
+    if (only !== undefined && !only.includes(vocab)) continue;
     for (const name of listWords(runtime.dictionary, vocab)) {
       const meta = runtime.meta(`${vocab}:${name}`);
       // an alias is listed under its own name but resolves to the canonical entry
@@ -235,7 +248,7 @@ export const buildCatalogue: BuildCatalogueFn = (runtime, options = {}) => {
   checkConversions(conversions, ops);
   return {
     format: CATALOGUE_FORMAT,
-    version: sha256(JSON.stringify(ops)).slice(0, 16),
+    version: catalogueVersionOf(ops),
     vocabs,
     ops,
     ...(conversions.length === 0 ? {} : { conversions }),

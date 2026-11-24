@@ -34,6 +34,7 @@ describe("the main entry (RECIPES 11.5)", () => {
       "buildChecks",
       "buildHelp",
       "catalogueIssues",
+      "catalogueVersionOf",
       "createBundleLoader",
       "execAll",
       "isCatalogueOp",
