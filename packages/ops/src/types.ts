@@ -100,8 +100,12 @@ export interface CatalogueOp {
   readonly seeAlso: readonly string[];
   /** Type of the data input (`effect.inputs[0]`). */
   readonly input: ParamType;
+  /** The kind of an `ext{kind}` data input (`table` for `ext{table}`); absent for every other type. */
+  readonly inputKind?: string;
   /** Type of the single output (`effect.outputs[0]`). */
   readonly output: ParamType;
+  /** The kind of an `ext{kind}` output; absent for every other type. */
+  readonly outputKind?: string;
   /** `effect.text`, the canonical stack-effect text. */
   readonly effect: string;
   /** `WordMeta.params` unchanged. */

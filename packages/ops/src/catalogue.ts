@@ -70,6 +70,8 @@ export const buildCatalogue: BuildCatalogueFn = (runtime, options = {}) => {
         options.warn?.(`${message}; it is not in the catalogue`);
         continue;
       }
+      const input = meta.effect.inputs[0] as { type: CatalogueOp["input"]; kind?: string };
+      const output = meta.effect.outputs[0] as { type: CatalogueOp["output"]; kind?: string };
       ops.push({
         qname: meta.qname,
         name: meta.name,
@@ -78,8 +80,10 @@ export const buildCatalogue: BuildCatalogueFn = (runtime, options = {}) => {
         doc: meta.doc,
         aliases: meta.aliases,
         seeAlso: meta.seeAlso,
-        input: (meta.effect.inputs[0] as { type: CatalogueOp["input"] }).type,
-        output: (meta.effect.outputs[0] as { type: CatalogueOp["output"] }).type,
+        input: input.type,
+        ...(input.kind === undefined ? {} : { inputKind: input.kind }),
+        output: output.type,
+        ...(output.kind === undefined ? {} : { outputKind: output.kind }),
         effect: meta.effect.text,
         params: meta.params,
         effects: meta.effects,

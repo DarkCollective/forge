@@ -1,0 +1,151 @@
+[
+  {
+    "name": "a table with an int, a str with a null and an empty string, and a bool",
+    "ref": "the faithful text form (X0 R10): JSON with a column header and nulls, hand-written",
+    "op": "table:from-text",
+    "params": {},
+    "input": {
+      "value": "{\"columns\":[{\"name\":\"id\",\"type\":\"int\"},{\"name\":\"name\",\"type\":\"str\"},{\"name\":\"ok\",\"type\":\"bool\"}],\"rows\":[[1,\"Ada\",true],[2,\"\",false],[null,null,null]]}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": {
+        "$ext": "table",
+        "text": "{\"columns\":[{\"name\":\"id\",\"type\":\"int\"},{\"name\":\"name\",\"type\":\"str\"},{\"name\":\"ok\",\"type\":\"bool\"}],\"rows\":[[1,\"Ada\",true],[2,\"\",false],[null,null,null]]}"
+      }
+    },
+    "example": {
+      "title": "Read a table back from its text form",
+      "note": "A null stays apart from the empty string, and an integer beyond 2^53 is written as a string of digits."
+    }
+  },
+  {
+    "name": "an integer beyond 2^53 written as digits is kept exactly, a num -0 is kept",
+    "ref": "the faithful text form (X0 R10), 9007199254740993 is 2^53 + 1",
+    "op": "table:from-text",
+    "params": {},
+    "input": {
+      "value": "{\"columns\":[{\"name\":\"big\",\"type\":\"int\"},{\"name\":\"x\",\"type\":\"num\"}],\"rows\":[[\"9007199254740993\",-0],[\"-9223372036854775808\",1.5]]}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": {
+        "$ext": "table",
+        "text": "{\"columns\":[{\"name\":\"big\",\"type\":\"int\"},{\"name\":\"x\",\"type\":\"num\"}],\"rows\":[[\"9007199254740993\",-0],[\"-9223372036854775808\",1.5]]}"
+      }
+    }
+  },
+  {
+    "name": "a table with no rows",
+    "ref": "the faithful text form (X0 R10), hand-written",
+    "op": "table:from-text",
+    "params": {},
+    "input": {
+      "value": "{\"columns\":[{\"name\":\"a\",\"type\":\"str\"}],\"rows\":[]}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": {
+        "$ext": "table",
+        "text": "{\"columns\":[{\"name\":\"a\",\"type\":\"str\"}],\"rows\":[]}"
+      }
+    }
+  },
+  {
+    "name": "text that is not a table",
+    "ref": "the faithful text form (X0 R10)",
+    "op": "table:from-text",
+    "params": {},
+    "input": {
+      "value": "name,age\nAda,36\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a repeated column name",
+    "ref": "the faithful text form (X0 R10)",
+    "op": "table:from-text",
+    "params": {},
+    "input": {
+      "value": "{\"columns\":[{\"name\":\"a\",\"type\":\"str\"},{\"name\":\"a\",\"type\":\"str\"}],\"rows\":[]}",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "table:to-json needs a table, and a recipe input is bytes (the table comes from an earlier step)",
+    "ref": "docs/LANGUAGE-0.3.md section 4.4: only a str coerces to an ext slot",
+    "op": "table:to-json",
+    "params": {
+      "indent": 2
+    },
+    "input": {
+      "value": "a,b\n1,2\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_TYPE"
+    }
+  },
+  {
+    "name": "table:to-csv needs a table, and a recipe input is bytes (the table comes from an earlier step)",
+    "ref": "docs/LANGUAGE-0.3.md section 4.4: only a str coerces to an ext slot",
+    "op": "table:to-csv",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n"
+    },
+    "input": {
+      "value": "a,b\n1,2\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_TYPE"
+    }
+  },
+  {
+    "name": "output: the JSON text is printable UTF-8",
+    "op": "table:to-json",
+    "checks": "output",
+    "data": {
+      "value": "[\n  {\n    \"id\": 1,\n    \"name\": null\n  }\n]",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "output: control bytes are not printable text",
+    "op": "table:to-json",
+    "checks": "output",
+    "data": {
+      "value": "0102030405060708",
+      "enc": "hex"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "output: the CSV text is printable UTF-8",
+    "op": "table:to-csv",
+    "checks": "output",
+    "data": {
+      "value": "id,name\r\n1,\"Ada\"\r\n2,\r\n",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "output: control bytes are not printable text",
+    "op": "table:to-csv",
+    "checks": "output",
+    "data": {
+      "value": "0102030405060708",
+      "enc": "hex"
+    },
+    "expect": "fail"
+  }
+]
