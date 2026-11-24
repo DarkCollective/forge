@@ -172,6 +172,8 @@ It uses Lit web components and plain CSS grid with custom properties for themes 
 
 ## 7. Phases and work packages
 
+*Dated note (2026-11-24, L1):* the current counts are **461 ops in 201 vocabularies**, **208** `.fth` files and **7,589** vectors in 201 `.test.json` files, measured by `npm run corpus-stats -w @forge/ops` (report: [research/corpus-baseline-2026-11-24.md](research/corpus-baseline-2026-11-24.md)). The wave lines below record the counts of their own dates, such as 363 ops in 155 vocabularies at wave 6 and 458 ops in 200 vocabularies at wave 7. They are history and are not updated.
+
 Each work package (WP) is sized for one sub-agent and has a verifiable "done". The orchestrator reviews every WP's diff and re-runs the full CI locally before merging. **Gate** = what must be true before the next phase starts.
 
 ### Phase 0 — Foundations ✅

@@ -49,7 +49,7 @@ Goals 3 and 6 pull against goal 1. A Relix engine in the browser is a second pla
 
 ### 2.1 Forge today
 
-From PLAN.md §7: **363 ops in 155 vocabularies**. 4,488 op vectors in 155 files. The tree had 161 `.fth` files in `packages/ops/vocab`: the 155 op vocabularies plus six internal ones. **All of these counts are stale; L1 refreshes them (T52).** Measured on 2026-11-24: the tree has **208** `.fth` files in `packages/ops/vocab` (28,759 lines) and 201 `.test.json` files holding **7,589** vectors.
+**461 ops in 201 vocabularies** (measured 2026-11-24, L1, from the catalogue of the built package). The tree has **208** `.fth` files in `packages/ops/vocab` (28,759 lines) and 201 `.test.json` files holding **7,589** vectors (measured 2026-11-24, L1). The 363 ops in 155 vocabularies and the 4,488 vectors of PLAN §7 are the wave 6 counts of 2026-11-11 and are superseded. The 161 `.fth` files of that time were the 155 op vocabularies plus six internal ones; today there are 201 op vocabularies and seven internal ones (measured 2026-11-24, L1). The full report is in [research/corpus-baseline-2026-11-24.md](research/corpus-baseline-2026-11-24.md).
 
 **Triage of the 184 "not yet" ops** (the orchestrator's classification):
 
@@ -90,24 +90,25 @@ A table of 10,000 rows by 10 integer columns costs about **4.08 MB** as a list o
 
 ### 2.5 The FL corpus (measured)
 
-*Dated note (2026-11-24):* the survey below was taken when the tree had 150 `.fth` files. The tree has 208 now, so every count in this section is a count of the survey, and none is current (stale; L1 refreshes, T52).
+*Dated note (2026-11-24):* the figures below were re-measured by `npm run corpus-stats -w @forge/ops` on the tree of 2026-11-24 (measured 2026-11-24, L1; T52). The report, with the definition of each measure, is [research/corpus-baseline-2026-11-24.md](research/corpus-baseline-2026-11-24.md). The survey figures of 2026-11-14 are given in brackets. Where the survey gave no definition, the script's definition is L1's choice, and the report says so.
 
 | Measure | Value |
 |---|---|
-| Files, lines | 150 `.fth` files, 16,792 lines (stale; L1 refreshes. The tree has 208 files and 28,759 lines on 2026-11-24) |
-| Colon words | 1,853; 439 public, 1,414 private (stale; L1 refreshes) |
-| Private words called exactly once | 984 |
-| Primitives | 70 modules, 9,190 TypeScript lines, 119 primitives |
-| Stack shuffling | 3.5 per 100 tokens |
-| Single-use helpers that only bind a closure variable | 84 |
-| Small single-use named helpers | 221 |
-| Zero-input words used as constants | 101; 22 of them rebuild tables on every call (`html:decode` about 5 ms per call, the CRC table about 20,000 steps per call); only 3 `CONSTANT`s exist |
-| `choice{}` headers | 237 with 116 distinct lists; 70% of occurrences are copies (`pkcs7\|none` 24 times, the delimiter list 23, block modes 20) |
-| else-if chains | 234; 96 at depth 3 or more |
-| `try` uses | 12, all for control flow (about 1 ms per caught error) |
-| Qualified `raise:` calls | 253 |
-| `VARIABLE`s | 106; 89 of them in five machine simulations |
-| `util` | 82 public words; 37 used by three or more vocabularies (top: `between?` 59 calls, `cp>str` 58, `space?` 42, `delimiter` 33, `zero-pad` 26, `int>be-bytes` 24) |
+| Files, lines | 208 `.fth` files, 28,759 lines (measured 2026-11-24, L1) [survey: 150 files, 16,792 lines] |
+| Colon words | 3,254; 609 public, 2,645 private (measured 2026-11-24, L1) [survey: 1,853; 439 public, 1,414 private] |
+| Private words called exactly once | 1,816 (measured 2026-11-24, L1) [survey: 984] |
+| Single-use helpers that only bind a closure variable | 0 (measured 2026-11-24, L1) [survey: 84]. Definition: a private single-use word whose whole body is one quotation that uses a named input |
+| Small single-use named helpers | 98 (measured 2026-11-24, L1) [survey: 221]. Definition: a private single-use word, not a closure helper, with a body of at most 5 tokens |
+| Stack shuffling | 1.95 per 100 tokens (measured 2026-11-24, L1) [survey: 3.5]. Tokens: 100,410 reader tokens |
+| Zero-input words used as constants | 67 words with an output (not `MEMO:`), of which 10 build a literal on each call; 119 `MEMO:` words; 7 `CONSTANT`s (measured 2026-11-24, L1) [survey: 101 words, 22 rebuilding, 3 `CONSTANT`s] |
+| `choice{}` headers | 94 occurrences with 92 distinct lists; 4 occurrences whose list recurs (measured 2026-11-24, L1) [survey: 237 with 116 distinct lists, 70% copies; the survey's definition of a copy is not in the text] |
+| Else-if chains | 9 chains of 12 links; 1 of depth 3 or more, the deepest of depth 5 (measured 2026-11-24, L1) [survey: 234 chains, 96 at depth 3 or more]. The script counts an `if` whose else quotation ends with another `if`; the survey's definition is not in the text, so the two are not comparable |
+| `try` uses | 31 (measured 2026-11-24, L1) [survey: 12] |
+| Qualified `raise:` calls | 0 (measured 2026-11-24, L1) [survey: 253; the `raise` vocabulary was removed on 2026-11-15] |
+| `VARIABLE`s | 106; 87 in the five busiest files, `bombe`, `typex`, `enigma`, `lorenz` and `punycode` (measured 2026-11-24, L1) [survey: 106; 89 in five machine simulations] |
+| `util` | 80 public words; 32 used by three or more vocabularies (measured 2026-11-24, L1) [survey: 82 and 37]. Top calls: `be-int` 52, `delimiter` 34, `zero-pad` 22, `letter?` 20, `match-texts` 16, `decode-table` 15. The survey's leaders (`between?`, `cp>str`, `space?`) are core words now |
+
+*Measured 2026-11-24, L1:* the tree has **193** `definePrimitive(` calls in **101** primitive modules, with **21,723** TypeScript lines (16,741 code lines). 22 modules import `@noble`, with 43 primitives between them (survey: 119 primitives in 70 modules, 9,190 lines). The table below is the survey's own classification by reason, which the script does not repeat (see the report's *Not measured*).
 
 **Why the 119 primitives exist:**
 
@@ -234,14 +235,17 @@ The owner decided the rest of Gate T1 that exists: **SP1 ([LANGUAGE-0.3.md](LANG
 | T49 | **The catalogue and the recipe stamp.** Pack catalogue fragments merge to equal one runtime's catalogue for every closed subset. **Conflict 2: PACKS PK9 amends the approved RECIPES-1.2 §8.5.** `recipe.catalogue` is the **core catalogue version**, or absent. The page passes the recipe layer a view of its merged catalogue with the core version, and the baker drops `catalogue-mismatch`. The two rules of T26 stand for a recipe with a pack op: the validator skips `catalogue-mismatch` and `encodeShare` omits `catalogue`. A pack does not declare that it reads other packs' catalogues. | PACKS §11 PK9, PK10; §5.4; §12 PQ13 |
 | T50 | **Capabilities.** Effect labels are a closed list defined in core; packs request labels and cannot define them. Enabling a pack grants what its manifest requests, and a build that requests more puts the pack in `needs-review`, off until the user confirms. The baker's `deny` is the grantable labels that no enabled pack requests, plus the caller's `BakeOptions.deny`; the VM enforces it with `E_FORBIDDEN`, which `try` cannot catch. `externalCode` declares compiled code with a version, a hash and a ceiling. Lint guard rails are not a sandbox. A manifest may ask only for `blob:` and `data:` in `img-src`, `media-src` and `font-src`, and the deployed CSP must already allow them. The user does not grant some capabilities and refuse others. | PACKS §11 PK11 to PK13, PK17 to PK19; §12 PQ4 |
 | T51 | **Enabling and failure.** **No pack is on by default** (PQ1; revisit `relix` after Gate T4). The enabled set is one document under the `kv` key `packs`. Internal packs are built only with `FORGE_PACKS_INTERNAL=1`. The enable offer needs a click and shows only text from the build; no link, URL parameter or recipe enables a pack. Enabling re-inits the workers and disabling replaces them. A `pending` mark and an init deadline keep a pack that did not finish loading from locking the user out. There is no "enable for this session only". | PACKS §11 PK14 to PK16, PK21; §12 PQ1, PQ2 |
-| T52 | **Stale corpus counts.** **Conflict 4:** TOOLKIT's corpus counts are older than the tree. Verified on 2026-11-24: **208** `.fth` files in `packages/ops/vocab` (28,759 lines), and **201** `.test.json` files with **7,589** vectors (the top-level arrays, counted by script). LANGUAGE-0.3 took 7,302 vectors in 200 files from `packages/ops/README.md`; the tree now has more. No other new number is stated. Where this document gives a count as current it is marked "(stale; L1 refreshes)". **L1 refreshes all of them** (§13.4). | LANGUAGE-0.3 §21 item 4 |
+| T52 | **Stale corpus counts.** **Conflict 4:** TOOLKIT's corpus counts are older than the tree. Verified on 2026-11-24: **208** `.fth` files in `packages/ops/vocab` (28,759 lines), and **201** `.test.json` files with **7,589** vectors (the top-level arrays, counted by script). LANGUAGE-0.3 took 7,302 vectors in 200 files from `packages/ops/README.md`; the tree now has more. No other new number is stated. Where this document gave a count as current it was marked stale. **L1 measured all of them on 2026-11-24** (§2.1, §2.5, §11.5; §13.4). | LANGUAGE-0.3 §21 item 4 |
+| T53 | **Staging of packages work.** Work on `packages/*` may start now, staged per T35 with G1 first. Gate T1 stays open only for SP5 (SYMBOLIC v2), which gates only the symbolic pack (Phase T5). | T35; §13.3 status note |
+| T54 | **Where the hand-written `relix:` words live.** They sit in `packs/relix/gen/words.fth`, and the generator copies them into `vocab/relix.fth`, so that PK23 (one file per vocabulary) holds. | [RELIX](RELIX.md) R2b and R3; PACKS PK23 |
+| T55 | **Two owner decisions owed to D1 and P4.** D1 names the JSON-to-table parser, which no document had fixed. P4 decides where the fixed table of capability sentences lives (PACKS PK15, [UI-TOOLKIT](UI-TOOLKIT.md) §6). Both are recorded in §13.5. | §13.5 D1 and P4 rows; PACKS PK15; UI-TOOLKIT §6 |
 
 **The four conflicts, as resolved.**
 
 1. **CSP rule 8 (T46).** PACKS.md wins over UI-TOOLKIT §7.3: the manifest is compiled in, `fetch` is for catalogue fragments and non-JS pack files, and pack code loads by `import()`.
 2. **`recipe.catalogue` (T49).** PACKS PK9 amends the approved RECIPES-1.2 §8.5: the field is the core catalogue version or absent.
 3. **Kind names (T36).** `null` and `array` are reserved core kind names, which the pack manifest refuses.
-4. **Corpus counts (T52).** The counts here are stale; L1 refreshes them.
+4. **Corpus counts (T52).** The counts here were stale; L1 has measured them on 2026-11-24.
 
 **Gate T1 status.** SP1, SP2, SP3, SP4 and SP6 are decided (T23 to T52). **SP5 (SYMBOLIC v2) is not written**, so Gate T1 stays open for it; it gates the symbolic pack (S rows) only. The frozen-contract version bump is **staged per T35** (G1 to G4), and Q15 is answered. `media-src blob:` waits for T6 (T46). Q14 and Q15 are answered (§14.2). Work packages that change `packages/*` follow the staging of T35.
 
@@ -551,7 +555,7 @@ These ops belong to `pack:media` or `pack:code`. Lowest priority of the programm
 
 **Principle.** Every proposal carries a corpus number. The measuring scripts are kept as `npm run corpus-stats -w @forge/ops`, so each change reports before and after (private single-use helpers, shuffle density, primitive count and TypeScript lines, zero-input table rebuilds).
 
-**Status.** FL v0.2 shipped part of this section. Items marked **(done)** are in [LANGUAGE.md](LANGUAGE.md) (see its [Appendix A](LANGUAGE.md#appendix-a-changes-in-v02)) and are no longer proposals. **Everything else is specified in [LANGUAGE-0.3.md](LANGUAGE-0.3.md) (WP SP1) and decided at Gate T1 (T35 to T41):** the wave is FL v0.3, and LANGUAGE-0.3 §1 lists each open item with its section. LANGUAGE.md changes at the fold-in (L14). The corpus figures below are those of the survey of §2.5 and are stale (L1 refreshes, T52).
+**Status.** FL v0.2 shipped part of this section. Items marked **(done)** are in [LANGUAGE.md](LANGUAGE.md) (see its [Appendix A](LANGUAGE.md#appendix-a-changes-in-v02)) and are no longer proposals. **Everything else is specified in [LANGUAGE-0.3.md](LANGUAGE-0.3.md) (WP SP1) and decided at Gate T1 (T35 to T41):** the wave is FL v0.3, and LANGUAGE-0.3 §1 lists each open item with its section. LANGUAGE.md changes at the fold-in (L14). The corpus figures of §2.5 were re-measured on 2026-11-24 by L1 (T52), and the survey figures are kept beside them there.
 
 ### 11.1 Group L-A: prelude and core words (additive)
 
@@ -599,13 +603,13 @@ T6 allowed breaking fixes. LANGUAGE-0.3 §12 classified the nine items again and
 - Named inputs and their interplay with the stack: reviewed, no change.
 - Core arithmetic made generic: **additive** (T37). Plain numbers are bit-identical and the header text and hash of each word do not change. This item was listed here as breaking before SP1.
 
-**Migration.** The sweep is smaller than first planned. It rewrites no word source except the callers of the `json` vocabulary (LANGUAGE-0.3 §14: callers in 16 files, 8 `json:null` lines in 4 files), and it rewrites at most 20 vector expectations in 10 files for the `E_RANGE` change. L9b and L12 merge in one group at a **wave boundary** (no op work packages in flight; G3 of T35). All vectors pass except the listed expectation codes. The catalogue version bumps, and `previousHashes` are generated first, on the pre-sweep tag (T27). The earlier plan, a codemod over all `.fth` files with "all 4,488 vectors unchanged", assumed the `reduce` swap and a new arithmetic header; both are gone (stale; L1 refreshes the counts).
+**Migration.** The sweep is smaller than first planned. It rewrites no word source except the callers of the `json` vocabulary (LANGUAGE-0.3 §14: callers in 16 files, 8 `json:null` lines in 4 files), and it rewrites at most 20 vector expectations in 10 files for the `E_RANGE` change. L9b and L12 merge in one group at a **wave boundary** (no op work packages in flight; G3 of T35). All vectors pass except the listed expectation codes. The catalogue version bumps, and `previousHashes` are generated first, on the pre-sweep tag (T27). The earlier plan, a codemod over all `.fth` files with "all 4,488 vectors unchanged", assumed the `reduce` swap and a new arithmetic header; both are gone (measured 2026-11-24, L1: the sweep touches 20 vector expectations in 10 files, as §14.1 says; 15 files call `json:` and 4 lines hold `json:null` or `json:null?` in 2 files, against 16 files and 8 lines in 4 files of LANGUAGE-0.3 §14.1; 83 definitions call `reduce`, against 88 callers in the plan. The tree now has 208 `.fth` files, not 161.).
 
 **Share URLs.** RECIPES R8 and §3.10: a recipe step may carry an op `hash` pin. A mismatch is a warning by default (`pins: "warn"`) and an error under `"strict"`; a pin never selects an old implementation. `encodeShare` pins when it is given a catalogue. So after the sweep, unpinned URLs keep working; pinned URLs run the current op and show a `hash-mismatch` warning (or refuse, under `strict`), except for ops with a `previousHashes` entry (T27).
 
 ### 11.6 Proposal table
 
-The rows that are not marked done are specified in LANGUAGE-0.3 (§1 maps each to a section). Sizes are relative. "Revisits" lists LANGUAGE.md decisions or sections touched (§17 decision ids D3, D4, D5, D6, D10, D11, D18, D31, D44; §5.7 public and private words; §13 core vocabulary; §17.1 items deliberately left out, as that list stands after v0.2).
+The rows that are not marked done are specified in LANGUAGE-0.3 (§1 maps each to a section). The corpus evidence column is the 2026-11-14 survey; the figures measured on 2026-11-24 are in §2.5. Sizes are relative. "Revisits" lists LANGUAGE.md decisions or sections touched (§17 decision ids D3, D4, D5, D6, D10, D11, D18, D31, D44; §5.7 public and private words; §13 core vocabulary; §17.1 items deliberately left out, as that list stands after v0.2).
 
 | Proposal | Corpus evidence | Unlocks | Kind | Size | Revisits |
 |---|---|---|---|---|---|
@@ -685,11 +689,13 @@ Parallel, time-boxed, throwaway code. Each ends in a written result and an owner
 
 **Gate T1 outcome (owner, 2026-11-24), for SP1, SP3 and SP4.** Every recommended answer is accepted (T35 to T52), and four conflicts between documents are resolved (T36, T46, T49, T52). The frozen-contract version bump is staged per T35 (G1 to G4). **SP5 is not written**, so Gate T1 stays open for it only. `media-src blob:` waits for T6 (T46).
 
+**Status (2026-11-24, L1):** Gate T1 is decided for every spec except SP5. SP5 (SYMBOLIC v2) is not written, and it gates only the symbolic pack (Phase T5). The owner's decisions of the same day are T53 to T55.
+
 ### 13.4 Phase T2: FL v0.3 and corpus migration
 
 | WP | Deliverable | Owns | Depends on | Agent | Done when |
 |---|---|---|---|---|---|
-| L1 | `npm run corpus-stats` scripts and a baseline report. **Also refreshes every stale count of this document** (§2.1, §2.5, §11.5, §13.4; T52) and counts the `W_SHADOW` names that LANGUAGE-0.3 §14.1 leaves to it | `packages/ops/scripts/corpus-stats.*` | none (may start now) | Ha | Report reproduces the §2.5 figures on today's tree; the stale marks are replaced by measured numbers |
+| L1 | `npm run corpus-stats` scripts and a baseline report. **Also refreshes every stale count of this document** (§2.1, §2.5, §11.5, §13.4; T52) and counts the `W_SHADOW` names that LANGUAGE-0.3 §14.1 leaves to it | `packages/ops/scripts/corpus-stats.*` | none (may start now) | Ha | Report reproduces the §2.5 figures on today's tree; the stale marks are replaced by measured numbers. Dated note (2026-11-24): done. The report is [research/corpus-baseline-2026-11-24.md](research/corpus-baseline-2026-11-24.md). Its figures differ from the survey's where the survey's definitions are not in the text, and the survey figures are kept beside the measured ones. W_SHADOW: 10 locals of two of the 35 new core names (`first` 6, `last` 4) in 9 files; neither name is already an own word there. The `} case` tables of choice-headed words, the count that L5b's drop rule uses: 3 |
 | H0 | The test-harness additions of LANGUAGE-0.3 §3: fixtures, `@call`, `@meta` paths | `packages/lang/test/conformance/*` | Gate T1 | So | The 317 existing blocks pass; the fixtures exist; a fixture block runs |
 | L2 | Group L-A words (LANGUAGE-0.3 §8, T39): `first second last divmod tdiv zero-pad index-of set-nth`, float bytes | `packages/lang/src/vocab/*` | H0 | Ha | C471 to C492 pass; the `core` table test passes |
 | L3 | JSON in core and one JSON implementation (LANGUAGE-0.3 §7, T38): `json>value`, `value>json`, `null`, `null?`; the `json` vocabulary of `@forge/ops` becomes wrappers | `packages/lang/src/vocab/json.ts`, `packages/ops/src/prims/json.ts` | X1, L2 | So | C456 to C470 pass; round-trip properties pass; one JSON implementation |
@@ -729,14 +735,14 @@ L3 and L10 need the `ext` tag (X1), so X1 is built inside Phase T2 although it a
 | P2a | The composite provider and the pack loaders | `packages/ops/src/bundle.ts`, `packs.ts`, `packages/packs/src/loader.ts` | P1a | So | A clash throws; unknown, unclosed and conflicting lists are refused with their reasons; a module evaluated twice registers cleanly |
 | P2b | Baker `init` with pack ids (`BakerInit.packs`, `InitInfo.packs`, the guard, the `init-error` mapping, the init deadline); the console `init`; the app's worker entries. **Rides protocol 2** (T48) | `packages/worker/src/*`, `apps/web/src/bake/worker.ts`, `apps/web/src/fl/*` | P1b, P2a, **RW5** | So | Ids not in the manifest are refused; a `protocol: 1` client gets `E_PROTOCOL`; `gate2:browser` passes |
 | P3 | Dependency-closure loading in place of `vocabs: "all"`, the baker's `catalogue-mismatch` drop (T49), the recipe view of the catalogue. Uses `opVocabs` | `apps/web/src/bake/controller.ts`, `packages/ops/src/*`, `packages/worker/src/core.ts` | P2b, **RW6** | So | Core start-up no longer loads all primitive chunks; the re-init cost is reported |
-| P4 | The pack manager UI, the IndexedDB store (key `packs`), `state.packs`, lazy viewer stubs (UI-TOOLKIT §6) | `apps/web/src/packs/*` | P2b, SP3 (done) | So | Enable and disable persist per browser; `needs-review`, `unavailable`, `blocked` and `failed` work; axe passes in three themes |
+| P4 | The pack manager UI, the IndexedDB store (key `packs`), `state.packs`, lazy viewer stubs (UI-TOOLKIT §6). Also decides where the fixed table of capability sentences lives (T55; PACKS PK15, UI-TOOLKIT §6) | `apps/web/src/packs/*` | P2b, SP3 (done) | So | Enable and disable persist per browser; `needs-review`, `unavailable`, `blocked` and `failed` work; axe passes in three themes |
 | P5 | The enable offer and notice for `packs-needed` and saved recipes, the share-dialog pack lines. Needs `PackIndex` | `apps/web/src/packs/offer/*`, `apps/web/src/bake/forge-share-dialog.ts` | P4, X3, **RW6** | So | Opening a recipe that names a pack op offers to enable; no URL or recipe enables a pack |
 | P6 | `+media` in `EffectLabel`, the baker's `deny`, `BakeOptions.deny`, `E_FORBIDDEN` with `detail.pack`, the effect checks | `packages/lang/src/types.ts`, `packages/worker/src/*`, `packages/packs/src/checks/effects.ts` | X1, P1a | So | A denied capability produces a structured error that `try` does not catch |
 | P7 | Per-pack size budgets in `npm run size`, from the report | `apps/web/scripts/check-size.mjs` | P1b | Ha | A budget breach fails CI; the 250 kB core budget still applies |
 | P8a | The demo pack: manifest, vocabulary, kind, viewer, parser, helper, vectors | `packs/demo/*` | P2b, X2 | Ha | The pack loads and bakes in Node; vectors pass |
 | P8b | The Gate T3 end-to-end test, the second build with internal packs, `gate4:browser --packs` | `apps/web/e2e/packs.spec.ts`, `apps/web/scripts/serve-prod.mjs`, `.github/workflows/ci.yml` | P4, P5, P8a | So | Every check of PACKS §10.4 passes under the production headers |
 | P9 | `THIRD-PARTY-NOTICES.txt` generation and the link from the About page | `packages/packs/src/gen/notices.ts`, `apps/web/pages/*` | P1b | Ha | The file lists every pack's NOTICE and `externalCode` licence |
-| D1 | `csv` words and the one CSV parser in core. Amended: parses straight into columns, not via a list of lists | `packages/ops/vocab/csv.fth`, `prims/csv.ts` | L3 | So | RFC 4180 vectors pass |
+| D1 | `csv` words and the one CSV parser in core. Amended: parses straight into columns, not via a list of lists. Names the JSON-to-table parser (T55; no document fixed it before 2026-11-24) | `packages/ops/vocab/csv.fth`, `prims/csv.ts` | L3 | So | RFC 4180 vectors pass |
 | D2 | `table` kind: columnar, typed, null mask. Amended: `int` column, faithful text form (null distinct from empty), honest size charge; `table` is core (Q4). Export words `table:to-csv` and `table:to-json` (T38) | `packages/ops/src/table/*` | X1 | So | Size cost near the §2.4 columnar figure (at most 0.8 MB for numbers and 2.0 MB for 8-character strings at 10,000 by 10); equality, size, text and view tested; `table:to-json` and `table:to-csv` round-trip nulls |
 | D3 | `table` words and table viewer (virtualised grid). Amended: first 100 rows with the total and a stated limit for 1.0, whole up to 5,000 cells then windowed, the null and empty rules of UI-TOOLKIT §1.7; rows on demand deferred (R9, T42) | `packages/ops/vocab/table.fth`, `apps/web/src/io/table-view.ts` | D2, X2 | So | Grid shows first N rows with total |
 | D4 | Wave 1b data-format ops on `table` | `packages/ops/vocab/*` | D1, D3 | Ha | Vectors pass |
@@ -819,7 +825,7 @@ The R-rows are refined in RELIX.md §15, which holds the files, sizes and "done 
 ### 13.10 Dependency sketch
 
 ```
- T0 spikes:  R0   L0   J0   X0
+ T0 spikes:  R0 (done)   L0   J0   X0 (done)
               \    |    |    /
                v   v    v   v
  T1 specs:   SP1 SP2 SP3 SP4 SP6 done ; SP5 not written  [Gate T1: owner]
@@ -841,9 +847,10 @@ T5 and T6 depend on Gate T3 only, not on T4, so they can run in parallel with th
 
 ### 13.11 What can start now
 
-- The four spikes: R0, L0, J0, X0.
-- A draft of SP5 (SYMBOLIC.md v2). SP1 to SP4 and SP6 are written and decided at Gate T1 (T23 to T52).
-- L1, the corpus-stats scripts, which change no contract. L1 also refreshes the stale counts (T52).
+- Spikes: R0 and X0 are done (T9 to T22). L0 and J0 are still open.
+- In progress: H0 and L1. L1 is the corpus-stats scripts, which change no contract, and it has refreshed the counts (T52).
+- Next: X1 with X2 (G1 of T35).
+- A draft of SP5 (SYMBOLIC.md v2). SP1 to SP4 and SP6 are written and decided at Gate T1 (T23 to T55).
 - Packages that change `packages/*` follow the staging of T35 (G1 first).
 
 **Scheduling rule.** The L12 sweep runs at a wave boundary. The remaining core waves from PLAN.md (wave 1b data formats, now depending on D; wave 6 compression; wave 7 public key, networking, forensics) run in parallel throughout, but no op work package may be in flight while L12 runs.

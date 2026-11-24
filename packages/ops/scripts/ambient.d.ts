@@ -19,6 +19,7 @@ declare const process: {
   readonly stdout: { write(chunk: string): boolean };
   readonly stderr: { write(chunk: string): boolean };
   exitCode: number | undefined;
+  readonly argv: string[];
 };
 
 declare module "node:fs" {
@@ -26,9 +27,14 @@ declare module "node:fs" {
   export function readdirSync(path: string): string[];
   export function writeFileSync(path: string, data: string): void;
   export function mkdirSync(path: string, options?: { recursive?: boolean }): string | undefined;
+  export function existsSync(path: string): boolean;
+}
+declare module "node:path" {
+  export function resolve(...paths: string[]): string;
 }
 declare module "node:url" {
   export function fileURLToPath(url: string): string;
+  export function pathToFileURL(path: string): { href: string };
 }
 interface ImportMeta {
   readonly url: string;
