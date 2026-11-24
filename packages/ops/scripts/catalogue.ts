@@ -27,8 +27,8 @@ import { fileURLToPath } from "node:url";
 import { WORD_META_SCHEMA } from "@forge/lang";
 import Ajv2020 from "ajv/dist/2020.js";
 import { assembleRuntime } from "../dist/bundle.js";
-import { buildCatalogue } from "../dist/catalogue.js";
-import { loadBundleNode } from "../dist/sources-node.js";
+import { buildCatalogue, catalogueIssues } from "../dist/catalogue.js";
+import { loadBundleNode, loadPinsCompatNode } from "../dist/sources-node.js";
 
 const here = fileURLToPath(import.meta.url).replaceAll("\\", "/");
 const root = here.slice(0, here.lastIndexOf("/", here.lastIndexOf("/") - 1));
@@ -37,6 +37,7 @@ const schemaText = readFileSync(`${root}/src/catalogue.schema.json`, "utf8");
 async function main(): Promise<void> {
   const runtime = assembleRuntime(await loadBundleNode("all"));
   const catalogue = buildCatalogue(runtime, {
+    pinsCompat: loadPinsCompatNode(root),
     warn: (message) => process.stderr.write(`${message}\n`),
   });
 
@@ -46,6 +47,9 @@ async function main(): Promise<void> {
   if (!validate(catalogue)) {
     throw new Error(`catalogue.schema.json: ${ajv.errorsText(validate.errors)}`);
   }
+
+  const issues = catalogueIssues(catalogue);
+  if (issues.length > 0) throw new Error(`catalogue: ${issues.join("; ")}`);
 
   mkdirSync(`${root}/dist`, { recursive: true });
   writeFileSync(`${root}/dist/catalogue.json`, JSON.stringify(catalogue, null, 2) + "\n");

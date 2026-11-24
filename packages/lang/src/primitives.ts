@@ -67,6 +67,8 @@ export interface PrimitiveOptions {
   readonly doc?: string;
   readonly category?: string;
   readonly version?: string;
+  /** The primitive runs an engine the shared cancel flag cannot stop (RECIPES-1.2.md section 19.1 a). */
+  readonly hardKill?: boolean;
 }
 
 /**

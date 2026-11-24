@@ -68,7 +68,9 @@ export const INTERNAL_VOCABS: readonly string[] = Object.freeze([
 
 /**
  * Parameter types a UI form can edit and a recipe can carry as JSON. An exported word is a catalogue
- * op only if every one of its parameters has one of these types.
+ * op only if every one of its parameters has one of these types. `ext` is in the list with a clause
+ * (RECIPES-1.2.md section 3.1): a parameter of type `ext` counts only when its kind is registered with a
+ * `fromText`, since the recipe carries the text form of the value.
  */
 export const UI_PARAM_TYPES: readonly ParamType[] = Object.freeze([
   "bytes",
@@ -82,7 +84,41 @@ export const UI_PARAM_TYPES: readonly ParamType[] = Object.freeze([
   "regex",
   "charset",
   "key",
+  "ext",
 ]);
+
+/**
+ * The `ext` kinds whose values are relations (RECIPES-1.2.md section 4.5). An op whose data input and first
+ * parameter both have type `ext` with one of these kinds is a slot op.
+ */
+export const SLOT_KINDS: readonly string[] = Object.freeze(["relation"]);
+
+/**
+ * The slot families (RECIPES-1.2.md section 4.5), keyed by the name of the slot parameter. `slots` are the lanes
+ * of the family, `pipeable` the slots the data from above may feed, and `data` the slot that the data input is.
+ * A slot parameter with any other name is a build error in `buildCatalogue`.
+ */
+export const SLOT_FAMILIES: Readonly<
+  Record<
+    string,
+    {
+      readonly slots: readonly string[];
+      readonly pipeable: readonly string[];
+      readonly data: string;
+    }
+  >
+> = Object.freeze({
+  right: Object.freeze({
+    slots: Object.freeze(["left", "right"]),
+    pipeable: Object.freeze(["left", "right"]),
+    data: "left",
+  }),
+  step: Object.freeze({
+    slots: Object.freeze(["base", "step"]),
+    pipeable: Object.freeze(["base"]),
+    data: "base",
+  }),
+});
 
 // ---------------------------------------------------------------------------------------------
 // The catalogue (RECIPES.md section 2.3)
@@ -115,10 +151,33 @@ export interface CatalogueOp {
   /** `WordMeta.hash`. */
   readonly hash: string;
   /**
+   * Earlier hashes that still count for a pin (RECIPES-1.2.md section 9.2): at most 4, newest first, each 64 lowercase
+   * hex digits, none equal to `hash`. Read from `pins-compat.json`; absent when the op has none.
+   */
+  readonly previousHashes?: readonly string[];
+  /**
    * True when the op, or any word it calls (transitively, through `CompiledWord.deps`), is a regex-engine
-   * primitive (RECIPES.md section 4.1). Computed from the loaded runtime, never written by hand.
+   * primitive (RECIPES.md section 4.1) or a primitive that declares `hardKill: true` (RECIPES-1.2.md section 19.1 a).
+   * Computed from the loaded runtime, never written by hand.
    */
   readonly needsHardKill: boolean;
+  /**
+   * The name of the slot parameter (RECIPES-1.2.md section 4.5): `"right"` for a binary op, `"step"` for a base-and-step
+   * op. Derived by `buildCatalogue` when the data input and the first parameter are both `ext` of a kind in `SLOT_KINDS`;
+   * absent for every other op.
+   */
+  readonly slot?: string;
+}
+
+/** One implicit conversion between ext kinds (RECIPES-1.2.md section 6.9), declared by a pack. */
+export interface CatalogueConversion {
+  /** An ext kind name, or a tag. */
+  readonly from: string;
+  readonly to: string;
+  /** The qualified name of the word that converts. */
+  readonly op: string;
+  /** Also apply it to the value that the recipe ends with. */
+  readonly atEnd?: true;
 }
 
 /** The catalogue document (`dist/catalogue.json`). */
@@ -130,7 +189,12 @@ export interface Catalogue {
   readonly vocabs: readonly string[];
   /** Sorted by `qname` in code-point order. */
   readonly ops: readonly CatalogueOp[];
+  /** Implicit conversions declared by packs (RECIPES-1.2.md section 6.9); absent when there are none. Not part of `version`. */
+  readonly conversions?: readonly CatalogueConversion[];
 }
+
+/** The content of `vocab/pins-compat.json`: qualified op name to earlier hashes that still count (RECIPES-1.2.md section 9.2). */
+export type PinsCompat = Readonly<Record<string, readonly string[]>>;
 
 export interface BuildCatalogueOptions {
   /**
@@ -140,6 +204,14 @@ export interface BuildCatalogueOptions {
    */
   readonly bundleVocabs?: readonly string[];
   readonly warn?: (message: string) => void;
+  /** Earlier hashes per op (`pins-compat.json`, see `parsePinsCompat`). An entry for an op that is not in the catalogue is ignored. */
+  readonly pinsCompat?: PinsCompat;
+  /**
+   * Conversions the pack manifest declares (RECIPES-1.2.md section 6.9). Each `op` must be a catalogue op whose data input is the
+   * `from` kind (or tag) and whose output is the `to` kind (or tag), and whose parameters all have defaults; otherwise
+   * `buildCatalogue` throws.
+   */
+  readonly conversions?: readonly CatalogueConversion[];
 }
 
 /** `buildCatalogue(runtime, options?)`: derive the catalogue from the loaded runtime. Skips `core` and `INTERNAL_VOCABS`. */

@@ -22,7 +22,14 @@
  * Both globs are relative to this file, which sits next to `vocab/` (one level up) in `src/` and in `dist/`.
  */
 import { createBundleLoader } from "./bundle.js";
-import type { LoadBundleFn, PrimitiveModule, SourceFile, VocabSourceProvider } from "./types.js";
+import { parsePinsCompat } from "./catalogue.js";
+import type {
+  LoadBundleFn,
+  PinsCompat,
+  PrimitiveModule,
+  SourceFile,
+  VocabSourceProvider,
+} from "./types.js";
 
 function baseName(path: string): string {
   return path.slice(path.lastIndexOf("/") + 1);
@@ -65,3 +72,14 @@ export const loadBundleVite: LoadBundleFn = (names) => {
   defaultLoader ??= createBundleLoader(createViteProvider());
   return defaultLoader(names);
 };
+
+/** `vocab/pins-compat.json` (RECIPES-1.2.md section 9.2); an absent file is an empty object. */
+export function loadPinsCompatVite(): PinsCompat {
+  const files = import.meta.glob<string>("../vocab/pins-compat.json", {
+    query: "?raw",
+    import: "default",
+    eager: true,
+  });
+  const text = Object.values(files)[0];
+  return text === undefined ? {} : parsePinsCompat(text);
+}

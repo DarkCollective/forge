@@ -271,9 +271,17 @@ describe("rules of RECIPES 2.2", () => {
   test("rule 4: every parameter type must be a UI type", () => {
     const base = meta("classical:rot");
     const param = base.params[0] as WordMeta["params"][number];
-    for (const type of UI_PARAM_TYPES) {
+    for (const type of UI_PARAM_TYPES.filter((t) => t !== "ext")) {
       expect(isCatalogueOp({ ...base, params: [{ ...param, type }] })).toBe(true);
     }
+    // `ext` is a UI type only with a kind registered with a `fromText` (RECIPES-1.2.md section 3.1)
+    expect(isCatalogueOp({ ...base, params: [{ ...param, type: "ext" }] })).toBe(false);
+    expect(isCatalogueOp({ ...base, params: [{ ...param, type: "ext", kind: "table" }] })).toBe(
+      true,
+    );
+    expect(isCatalogueOp({ ...base, params: [{ ...param, type: "ext", kind: "no-such" }] })).toBe(
+      false,
+    );
     for (const type of ["any", "list", "quot", "record", "file"] as const) {
       expect(isCatalogueOp({ ...base, params: [{ ...param, type }] })).toBe(false);
     }
@@ -503,6 +511,7 @@ describe("module facts", () => {
       "regex",
       "charset",
       "key",
+      "ext",
     ]);
   });
 });

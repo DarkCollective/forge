@@ -11,11 +11,25 @@
       "items": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,63}$" },
       "uniqueItems": true
     },
-    "ops": { "type": "array", "items": { "$ref": "#/$defs/op" } }
+    "ops": { "type": "array", "items": { "$ref": "#/$defs/op" } },
+    "conversions": { "type": "array", "items": { "$ref": "#/$defs/conversion" } }
   },
   "required": ["format", "version", "vocabs", "ops"],
   "additionalProperties": false,
   "$defs": {
+    "conversion": {
+      "type": "object",
+      "properties": {
+        "from": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,63}$" },
+        "to": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,63}$" },
+        "op": {
+          "$ref": "https://forge.darkcollective.com/schemas/word-meta.schema.json#/$defs/qname"
+        },
+        "atEnd": { "const": true }
+      },
+      "required": ["from", "to", "op"],
+      "additionalProperties": false
+    },
     "op": {
       "type": "object",
       "properties": {
@@ -66,7 +80,14 @@
         },
         "version": { "type": "string", "maxLength": 200 },
         "hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
-        "needsHardKill": { "type": "boolean" }
+        "previousHashes": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "maxItems": 4,
+          "uniqueItems": true
+        },
+        "needsHardKill": { "type": "boolean" },
+        "slot": { "enum": ["right", "step"] }
       },
       "required": [
         "qname",

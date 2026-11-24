@@ -24,11 +24,13 @@ export {
   HELP_FORMAT,
   HELP_MAX_BYTES,
   INTERNAL_VOCABS,
+  SLOT_FAMILIES,
+  SLOT_KINDS,
   UI_PARAM_TYPES,
 } from "./types.js";
 export { scanVocab } from "./scan.js";
 export { assembleRuntime, createBundleLoader } from "./bundle.js";
-export { buildCatalogue, isCatalogueOp } from "./catalogue.js";
+export { buildCatalogue, catalogueIssues, isCatalogueOp, parsePinsCompat } from "./catalogue.js";
 export { buildHelp } from "./help.js";
 export { buildChecks } from "./checks-doc.js";
 export { REGEX_LIMITS, execAll, isRegexPrimitive, markRegexPrimitive } from "./regex-engine.js";

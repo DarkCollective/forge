@@ -21,7 +21,14 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { createBundleLoader } from "./bundle.js";
-import type { LoadBundleFn, PrimitiveModule, SourceFile, VocabSourceProvider } from "./types.js";
+import { parsePinsCompat } from "./catalogue.js";
+import type {
+  LoadBundleFn,
+  PinsCompat,
+  PrimitiveModule,
+  SourceFile,
+  VocabSourceProvider,
+} from "./types.js";
 
 const MODULE_PATH = fileURLToPath(import.meta.url).replaceAll("\\", "/");
 
@@ -84,3 +91,12 @@ export const loadBundleNode: LoadBundleFn = (names) => {
   defaultLoader ??= createBundleLoader(createNodeProvider());
   return defaultLoader(names);
 };
+
+/**
+ * Reads `<root>/vocab/pins-compat.json` (RECIPES-1.2.md section 9.2). An absent or empty file is an empty
+ * object. `root` defaults to the package root.
+ */
+export function loadPinsCompatNode(root: string = DEFAULT_ROOT): PinsCompat {
+  const path = `${root.replaceAll("\\", "/").replace(/\/+$/, "")}/vocab/pins-compat.json`;
+  return existsSync(path) ? parsePinsCompat(readFileSync(path, "utf8")) : {};
+}
