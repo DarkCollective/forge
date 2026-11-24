@@ -16,6 +16,10 @@
 import type { Feature } from "../state/feature.js";
 import "./forge-input.js";
 import "./forge-output.js";
+import { registerViewerLoader } from "./viewers.js";
+
+// The table viewer is core and loads on the first table output (UI-TOOLKIT.md section 1.2, rule 5).
+registerViewerLoader("table", () => import("./table-view.js"));
 
 /** Entry of the "io" work package: import its elements, export its `feature`. */
 export const feature: Feature = { name: "io" };
