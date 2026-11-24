@@ -714,6 +714,12 @@ export interface PrimitiveDef {
   readonly doc?: string;
   readonly category?: string;
   readonly version?: string;
+  /**
+   * True for a primitive that runs an engine that cannot be stopped by the shared cancel flag (RECIPES-1.2.md
+   * section 19.1 a). `@forge/ops` `buildCatalogue` sets `needsHardKill` on every op that reaches such a primitive,
+   * as it does for the regex primitives. Absent means false.
+   */
+  readonly hardKill?: boolean;
 }
 
 /** The registry parses primitive effects with the header parser, which is injected (WP 1.7 gets it from WP 1.8). */
