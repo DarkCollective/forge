@@ -178,7 +178,7 @@ test("the index lists every operation, grouped by category, and its links resolv
   await page.goto("/ops/");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Operations");
   await expect(page.locator("ul.op-list > li")).toHaveCount(OPS);
-  expect(OPS).toBe(461);
+  expect(OPS).toBe(464);
   const sections = await page.locator("main section h2").allTextContents();
   expect(sections.length).toBeGreaterThan(10);
   expect([...sections].sort()).toEqual(sections);
