@@ -35,7 +35,12 @@ import type { TestCase } from "./parse.js";
  * C456 and C457 (the word `json>value`, L3), whose `ext` rules are covered by `src/ext.test.ts` until
  * L3 lands. X4 (tagged literals) adds C427 and C446 to C455.
  */
-export const ENABLED_PROPOSED: readonly string[] = ["C401-C428", "C446-C455", "C458-C461"];
+export const ENABLED_PROPOSED: readonly string[] = [
+  "C401-C428",
+  "C446-C455",
+  "C458-C461",
+  "C471-C492",
+];
 
 export class SelectionError extends Error {
   constructor(message: string) {
