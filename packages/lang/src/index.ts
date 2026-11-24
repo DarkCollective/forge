@@ -60,11 +60,29 @@ export {
   runtimeTypeOf,
   sizeOf,
   str,
+  typeText,
   validate,
   valueHelpers,
 } from "./values.js";
 export type { CoerceResult } from "./values.js";
 export { CORE_VOCAB, createDictionary, isPrivateName, listWords } from "./dictionary.js";
+export {
+  CORE_EXT_KINDS,
+  NULL_PAYLOAD,
+  RESERVED_EXT_KINDS,
+  ext,
+  extRepr,
+  extText,
+  getExtKind,
+  getLiteralTag,
+  kindConformance,
+  listExtKinds,
+  listLiteralTags,
+  nullValue,
+  registerExtKind,
+  registerLiteralTag,
+} from "./ext.js";
+export type { ExtKind, ExtMethods, GenericWord, KindSamples, LiteralTag } from "./ext.js";
 export { read } from "./reader.js";
 export {
   INTRINSIC_NAMES,

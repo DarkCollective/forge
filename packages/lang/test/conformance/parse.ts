@@ -124,6 +124,7 @@ const TAG_TABLE: Record<Tag, true> = {
   quot: true,
   record: true,
   file: true,
+  ext: true,
 };
 /** A coercion tag as the conformance blocks write it: v0.2's tags plus LANGUAGE-0.3.md's `ext`. */
 export type CaseTag = Tag | "ext";

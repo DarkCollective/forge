@@ -20,13 +20,53 @@ import type { CatalogueOp } from "@forge/ops";
 import type { ParamType } from "@forge/lang";
 import type { Recipe, Step } from "@forge/recipe";
 import type { BakeState } from "../state/types.js";
+import { extShape, extTypeText, kindNoun, kindRepairs } from "../io/viewers.js";
 
-/** The runtime tags a value can carry (LANGUAGE.md section 4.2 rows). */
+/**
+ * The runtime tags a value can carry (LANGUAGE.md section 4.2 rows). `ext` alone is an extension value
+ * whose kind is not known; one whose kind is known is an `ExtType`.
+ */
 export type ValueType =
-  "bytes" | "str" | "int" | "num" | "bool" | "list" | "quot" | "record" | "file";
+  "bytes" | "str" | "int" | "num" | "bool" | "list" | "quot" | "record" | "file" | "ext";
 
-/** A value type, or `unknown` when it cannot be told (so nothing is ruled out). */
-export type DataType = ValueType | "unknown";
+/** An extension value of a known kind: `ext{table}`, `ext{relation}` (UI-TOOLKIT.md section 2.1). */
+export type ExtType = `ext{${string}}`;
+
+/** A value type, an extension type, or `unknown` when it cannot be told (so nothing is ruled out). */
+export type DataType = ValueType | ExtType | "unknown";
+
+/** The kind inside an `ExtType`, or undefined for any other data type. */
+export function extKindOf(data: DataType): string | undefined {
+  return data.startsWith("ext{") && data.endsWith("}") ? data.slice(4, -1) : undefined;
+}
+
+/** What an operation's data input needs: its type and, for `ext`, its kind (`CatalogueOp.input` and `inputKind`). */
+export interface Need {
+  readonly type: ParamType;
+  readonly kind?: string | undefined;
+}
+
+/**
+ * A conversion between kinds that the recipe compiler can insert (RECIPES-1.2.md section 6.9). `lift` is true
+ * when it cannot fail and does no work (the `table` to `relation` lift): it is green. Otherwise it is amber.
+ */
+export interface KindConversion {
+  readonly from: string;
+  readonly to: string;
+  readonly lift: boolean;
+  /** The amber hint, for example "runs the query first". */
+  readonly hint?: string;
+}
+
+/** The need of a catalogue operation: its data input, with its kind when the catalogue carries one. */
+export function needOf(op: CatalogueOp): Need {
+  const kind = (op as { readonly inputKind?: unknown }).inputKind;
+  return typeof kind === "string" ? { type: op.input, kind } : { type: op.input };
+}
+
+function normaliseNeed(need: ParamType | Need): Need {
+  return typeof need === "string" ? { type: need } : need;
+}
 
 /** Whether bytes are well-formed UTF-8: known to be, known not to be, or not known. */
 export type Utf8State = "valid" | "invalid" | "unknown";
@@ -35,6 +75,8 @@ export type Utf8State = "valid" | "invalid" | "unknown";
 export interface DataFacts {
   readonly type: DataType;
   readonly utf8: Utf8State;
+  /** For an extension value, the viewer's few words on its shape ("4 columns, 12,408 rows"), when known. */
+  readonly shape?: string;
 }
 
 /** The three levels of fit (the traffic light): green, amber, red. */
@@ -56,6 +98,7 @@ const VALUE_TYPES: readonly string[] = [
   "quot",
   "record",
   "file",
+  "ext",
 ];
 
 function isValueType(tag: string): tag is ValueType {
@@ -84,11 +127,29 @@ function runtimeType(type: ParamType): ValueType | "any" | "number" {
 }
 
 /** Tag of a bake output (`OutputValue.kind`, with `other` carrying its own tag), or unknown. */
-function outputType(output: { readonly kind: string; readonly tag?: string }): DataType {
+function outputType(output: {
+  readonly kind: string;
+  readonly tag?: string;
+  readonly extKind?: string;
+}): DataType {
+  if (output.kind === "ext") {
+    return output.extKind === undefined ? "ext" : (extTypeText(output.extKind) as ExtType);
+  }
   if (output.kind === "other") {
     return output.tag !== undefined && isValueType(output.tag) ? output.tag : "unknown";
   }
   return isValueType(output.kind) ? output.kind : "unknown";
+}
+
+/** The type an operation leaves: its declared output, with the kind of an `ext` output when the catalogue carries it. */
+export function opOutputType(op: CatalogueOp): DataType {
+  const out = runtimeType(op.output);
+  if (out === "any" || out === "number") return "unknown";
+  if (out === "ext") {
+    const kind = (op as { readonly outputKind?: unknown }).outputKind;
+    return typeof kind === "string" ? (extTypeText(kind) as ExtType) : "unknown";
+  }
+  return out;
 }
 
 /**
@@ -159,8 +220,7 @@ function staticType(recipe: Recipe, ops: readonly CatalogueOp[] | null): DataTyp
     case "op": {
       const op = ops?.find((o) => o.qname === last.op);
       if (op === undefined) return "unknown";
-      const out = runtimeType(op.output);
-      return out === "any" || out === "number" ? "unknown" : out;
+      return opOutputType(op);
     }
     default:
       return "unknown";
@@ -182,6 +242,10 @@ export function dataFactsAtEnd(input: DataTypeInput): DataFacts {
   if (bake.result !== null && bake.result.ok && !bake.stale) {
     const output = bake.result.output;
     const type = outputType(output);
+    if (output.kind === "ext") {
+      const shape = extShape(output);
+      return shape === null ? { type, utf8: "unknown" } : { type, utf8: "unknown", shape };
+    }
     if (output.kind === "bytes") {
       let utf8: Utf8State = "unknown";
       if (output.text !== null) utf8 = "valid";
@@ -208,12 +272,12 @@ export function dataTypeAtEnd(input: DataTypeInput): DataType {
 
 /** Equality of two facts, for the store selector. */
 export function sameFacts(a: DataFacts, b: DataFacts): boolean {
-  return a.type === b.type && a.utf8 === b.utf8;
+  return a.type === b.type && a.utf8 === b.utf8 && a.shape === b.shape;
 }
 
 /**
- * How well an operation whose data input is `opInput` takes data of type `data`, from LANGUAGE.md
- * section 4.2 (rows are the value, columns the declared input; every other cell is "-"):
+ * How well an operation whose data input is `need` takes data of type `data`, from LANGUAGE.md section 4.2
+ * (rows are the value, columns the declared input; every other cell is "-"):
  *   "ok" cells give `fits` (green): unknown data, an `any` input, equal types, `int` or `num` into
  *     `number`.
  *   "co" cells give `converts` (amber): `bytes`->`str`, `str`->`bytes`, `int`->`num`, `num`->`int`. The
@@ -221,15 +285,33 @@ export function sameFacts(a: DataFacts, b: DataFacts): boolean {
  *   "-" cells give `no` (red): str<->int, bool<->anything, list<->bytes, int->str and so on.
  * With `utf8` known, `bytes`->`str` is refined: valid gives `fits`, invalid gives `no` (the conversion
  * will certainly fail), unknown stays `converts`.
+ *
+ * Extension values are compared by kind (UI-TOOLKIT.md section 2.2): `ext{k}` fits an input of `ext{k}` (and
+ * `any`); another kind fits only through a declared conversion, green when it is a lift and amber otherwise;
+ * a tag never fits an `ext{k}` input and an extension value never fits a typed input. An `ext` input whose
+ * kind is not known takes any extension value.
  */
 export function fitLevel(
-  opInput: ParamType,
+  need: ParamType | Need,
   data: DataType,
   utf8: Utf8State = "unknown",
+  conversions: readonly KindConversion[] = [],
 ): FitLevel {
   if (data === "unknown") return "fits";
-  const want = runtimeType(opInput);
-  if (want === "any" || want === data) return "fits";
+  const n = normaliseNeed(need);
+  const want = runtimeType(n.type);
+  if (want === "any") return "fits";
+  const dataKind = extKindOf(data);
+  if (want === "ext") {
+    if (data === "ext") return "fits";
+    if (dataKind === undefined) return "no";
+    if (n.kind === undefined || n.kind === dataKind) return "fits";
+    const conv = conversions.find((c) => c.from === dataKind && c.to === n.kind);
+    if (conv === undefined) return "no";
+    return conv.lift ? "fits" : "converts";
+  }
+  if (data === "ext" || dataKind !== undefined) return "no";
+  if (want === data) return "fits";
   if (want === "number") return data === "int" || data === "num" ? "fits" : "no";
   switch (data) {
     case "bytes":
@@ -248,8 +330,8 @@ export function fitLevel(
 }
 
 /** Whether the operation is not ruled out (green or amber). */
-export function fits(opInput: ParamType, data: DataType): boolean {
-  return fitLevel(opInput, data) !== "no";
+export function fits(need: ParamType | Need, data: DataType): boolean {
+  return fitLevel(need, data) !== "no";
 }
 
 const NOUN: Readonly<Record<ValueType, string>> = {
@@ -262,43 +344,92 @@ const NOUN: Readonly<Record<ValueType, string>> = {
   quot: "quotation",
   record: "record",
   file: "file",
+  ext: "extension value",
 };
 
-/** The data type in plain words, as in "Data here: text". */
+/**
+ * The data type in plain words, as in "Data here: text". An extension value takes the noun its viewer
+ * registered ("table"), and "<kind> extension value" when the kind has no viewer.
+ */
 export function dataLabel(data: DataType): string {
-  return data === "unknown" ? "any" : NOUN[data];
+  if (data === "unknown") return "any";
+  const kind = extKindOf(data);
+  return kind === undefined ? NOUN[data as ValueType] : kindNoun(kind);
 }
 
-/** The pane header's wording: the type, and "(valid text)" for bytes known to be well-formed UTF-8. */
+/**
+ * The pane header's wording: the type, "(valid text)" for bytes known to be well-formed UTF-8, and the shape
+ * of an extension value when its viewer states one: "table (4 columns, 12,408 rows)", "relation (lazy)".
+ */
 export function dataLine(facts: DataFacts): string {
   const label = dataLabel(facts.type);
-  return facts.type === "bytes" && facts.utf8 === "valid" ? `${label} (valid text)` : label;
+  if (facts.type === "bytes" && facts.utf8 === "valid") return `${label} (valid text)`;
+  if (extKindOf(facts.type) !== undefined && facts.shape !== undefined) {
+    return `${label} (${facts.shape})`;
+  }
+  return label;
+}
+
+/** "a table", "an extension value", "a list"; `bytes`, `text` and `true or false` take none. */
+function withIndefinite(noun: string): string {
+  if (noun === "bytes" || noun === "text" || noun === "true or false") return noun;
+  return `${/^[aeiou]/i.test(noun) ? "an" : "a"} ${noun}`;
 }
 
 /** The same with an article where English wants one: "bytes", "text", "a list". */
 function withArticle(type: ValueType | "number"): string {
   if (type === "number") return "a number";
-  const noun = NOUN[type];
-  return type === "bytes" || type === "str" || type === "bool" ? noun : `a ${noun}`;
+  return withIndefinite(NOUN[type]);
 }
 
-/** Why an operation is red, for example "needs a list" (the pane header says what the data is). Empty when it is not red. */
-export function whyNotFit(opInput: ParamType, data: DataType, utf8: Utf8State = "unknown"): string {
-  if (fitLevel(opInput, data, utf8) !== "no") return "";
-  const want = runtimeType(opInput);
+/**
+ * Why an operation is red, for example "needs a list" (the pane header says what the data is). Empty when it is
+ * not red. For kinds: "needs a table; this is a relation", "needs a table. Add Parse CSV first." (when the kind
+ * registers a repair from the data's type), "needs text; this is a table".
+ */
+export function whyNotFit(
+  need: ParamType | Need,
+  data: DataType,
+  utf8: Utf8State = "unknown",
+  conversions: readonly KindConversion[] = [],
+): string {
+  if (fitLevel(need, data, utf8, conversions) !== "no") return "";
+  const n = normaliseNeed(need);
+  const want = runtimeType(n.type);
   if (want === "any") return "";
+  const dataKind = extKindOf(data);
+  if (want === "ext") {
+    if (n.kind === undefined) return "needs an extension value";
+    const wanted = `needs ${withIndefinite(kindNoun(n.kind))}`;
+    if (dataKind !== undefined) return `${wanted}; this is ${withIndefinite(kindNoun(dataKind))}`;
+    const repair = kindRepairs(n.kind).find((r) => r.from === data);
+    return repair === undefined ? wanted : `${wanted}. Add ${repair.label} first.`;
+  }
+  if (dataKind !== undefined) {
+    return `needs ${withArticle(want)}; this is ${withIndefinite(kindNoun(dataKind))}`;
+  }
+  if (data === "ext") return `needs ${withArticle(want)}; this is an extension value`;
   if (data === "bytes" && want === "str" && utf8 === "invalid") return "needs valid text";
   return `needs ${withArticle(want)}`;
 }
 
 /** The short hint an amber row shows, for example "text only if valid UTF-8". Empty unless amber. */
 export function convertHint(
-  opInput: ParamType,
+  need: ParamType | Need,
   data: DataType,
   utf8: Utf8State = "unknown",
+  conversions: readonly KindConversion[] = [],
 ): string {
-  if (fitLevel(opInput, data, utf8) !== "converts") return "";
-  switch (runtimeType(opInput)) {
+  if (fitLevel(need, data, utf8, conversions) !== "converts") return "";
+  const n = normaliseNeed(need);
+  if (n.type === "ext") {
+    const dataKind = extKindOf(data);
+    const conv = conversions.find((c) => c.from === dataKind && c.to === n.kind);
+    return (
+      conv?.hint ?? (n.kind === undefined ? "" : `converts to ${withIndefinite(kindNoun(n.kind))}`)
+    );
+  }
+  switch (runtimeType(n.type)) {
     case "str":
       return "text only if valid UTF-8";
     case "bytes":
@@ -310,4 +441,66 @@ export function convertHint(
     default:
       return "";
   }
+}
+
+/**
+ * The output badge of a step card (UI-TOOLKIT.md section 2.4) for an extension value: the noun and, when it is
+ * known, the shape: "table", "table, 4 columns", "relation, lazy". Null for every other type, so a recipe with no
+ * extension value shows no new badge. `reported` is what a bake left at the step, when it is known.
+ */
+export function outputBadge(
+  declared: DataType,
+  reported?: { readonly kind: string; readonly shape?: string | null },
+): string | null {
+  const kind = reported?.kind ?? extKindOf(declared);
+  if (kind === undefined) return null;
+  const shape = reported?.shape ?? null;
+  const noun = kindNoun(kind);
+  return shape === null || shape === "" ? noun : `${noun}, ${shape}`;
+}
+
+/** The input mark of a step card: shown only when an extension kind is involved and the level is not green. */
+export interface InputMark {
+  readonly level: Exclude<FitLevel, "fits">;
+  readonly text: string;
+}
+
+export function inputMark(
+  need: ParamType | Need,
+  dataAbove: DataType,
+  utf8: Utf8State = "unknown",
+  conversions: readonly KindConversion[] = [],
+): InputMark | null {
+  const n = normaliseNeed(need);
+  const involved = n.type === "ext" || dataAbove === "ext" || extKindOf(dataAbove) !== undefined;
+  if (!involved) return null;
+  const level = fitLevel(n, dataAbove, utf8, conversions);
+  if (level === "fits") return null;
+  const text =
+    level === "no"
+      ? whyNotFit(n, dataAbove, utf8, conversions)
+      : convertHint(n, dataAbove, utf8, conversions);
+  return { level, text: text === "" ? "does not fit the data above" : text };
+}
+
+/**
+ * The type the data has entering step `index` of a list of steps, from the declared outputs alone (no bake):
+ * the output of the last active step before it, `bytes` for the first step of the root list (the input), and
+ * `unknown` anywhere else. Used for the input mark of a card.
+ */
+export function dataAboveStatic(
+  steps: readonly Step[],
+  index: number,
+  ops: readonly CatalogueOp[] | null,
+  isRoot: boolean,
+): DataType {
+  const before = lastActive(steps.slice(0, index));
+  if (before === undefined) return isRoot ? "bytes" : "unknown";
+  if (before.kind !== "op") {
+    return before.kind === "fork" || before.kind === "subsection" || before.kind === "repeat"
+      ? "bytes"
+      : "unknown";
+  }
+  const op = ops?.find((o) => o.qname === before.op);
+  return op === undefined ? "unknown" : opOutputType(op);
 }

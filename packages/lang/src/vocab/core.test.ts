@@ -15,8 +15,9 @@
  */
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { describe, expect, test } from "vitest";
+import { beforeAll, describe, expect, test } from "vitest";
 import { ForgeError } from "../errors.js";
+import { nullValue, registerExtKind } from "../ext.js";
 import { parseHeader } from "../meta.js";
 import { callPrimitive, createPrimitiveRegistry } from "../primitives.js";
 import type { ErrorCode, Limits, PrimitiveContext, Value } from "../types.js";
@@ -117,6 +118,10 @@ const MAX_SAFE = Number.MAX_SAFE_INTEGER;
 // The table
 // ---------------------------------------------------------------------------------------------
 
+/** The words FL 0.3 adds with the `ext` value; LANGUAGE.md (v0.2) does not list them. */
+const V03_WORDS: readonly string[] = ["ext-kind", "ext>text", "null", "null?"];
+const v02 = (names: readonly string[]): string[] => names.filter((n) => !V03_WORDS.includes(n));
+
 describe("the core table", () => {
   // The tables of docs/LANGUAGE.md section 13 are the single source: names, kinds and effects.
   const doc = readFileSync(
@@ -147,7 +152,7 @@ describe("the core table", () => {
 
   test("primitives + intrinsics + runtime-supplied + prelude words equal the table exactly", () => {
     const all = [
-      ...CORE_PRIMITIVES.map((d) => d.name),
+      ...v02(CORE_PRIMITIVES.map((d) => d.name)),
       ...CORE_INTRINSIC_WORDS,
       ...CORE_RUNTIME_WORDS,
       ...PRELUDE_WORDS,
@@ -158,7 +163,7 @@ describe("the core table", () => {
   });
 
   test("each list matches the kind column of the table", () => {
-    expect(CORE_PRIMITIVES.map((d) => d.name).sort()).toEqual(namesOf("P").sort());
+    expect(v02(CORE_PRIMITIVES.map((d) => d.name)).sort()).toEqual(namesOf("P").sort());
     expect([...CORE_INTRINSIC_WORDS].sort()).toEqual(namesOf("I").sort());
     expect([...CORE_RUNTIME_WORDS].sort()).toEqual(namesOf("R").sort());
     expect([...PRELUDE_WORDS].sort()).toEqual(namesOf("F").sort());
@@ -188,9 +193,10 @@ describe("the core table", () => {
   });
 
   test("registerCorePrimitives registers into vocabulary core, once", () => {
-    // the 69 words of the v0.1 table, the 21 primitives of FL 0.2 and the 6 integer words
-    expect(registry.list("core")).toHaveLength(96);
-    expect(CORE_PRIMITIVES).toHaveLength(96);
+    // the 69 words of the v0.1 table, the 21 primitives of FL 0.2, the 6 integer words and the
+    // 4 words of FL 0.3 (`ext-kind`, `ext>text`, `null`, `null?`)
+    expect(registry.list("core")).toHaveLength(100);
+    expect(CORE_PRIMITIVES).toHaveLength(100);
     expect(() => registerCorePrimitives(registry)).toThrowError(/already registered/);
   });
 });
@@ -1315,6 +1321,39 @@ describe("fail-coerce and fail-range", () => {
     const b = await rt.run('"bad-bytes" fail-coerce');
     expect(!b.ok && b.error.code).toBe("E_COERCE");
     expect(!b.ok && b.error.detail).toMatchObject({ reason: "bad-bytes" });
+  });
+});
+
+describe("the ext words of FL 0.3", () => {
+  const pair = (a: number, b: number): Value => ({
+    tag: "ext",
+    kind: "ext-test-pair",
+    v: { a, b },
+  });
+  beforeAll(() => {
+    registerExtKind<{ a: number; b: number }>({
+      kind: "ext-test-pair",
+      equals: (x, y) => x.a === y.a && x.b === y.b,
+      sizeOf: () => 16,
+      toText: (p, max) => `${p.a},${p.b}`.slice(0, max),
+    });
+  });
+  test("ext-kind names the kind and refuses another tag", () => {
+    expect(run("ext-kind", [pair(1, 2)])).toBe('"ext-test-pair"');
+    expect(run("ext-kind", [nullValue()])).toBe('"null"');
+    expect(codeOf("ext-kind", [I(5)])).toBe("E_TYPE");
+  });
+  test("ext>text is the text form, cut at half of maxValueBytes", () => {
+    expect(run("ext>text", [pair(1, 2)])).toBe('"1,2"');
+    expect(run("ext>text", [pair(123456, 7)], { maxValueBytes: 6 })).toBe('"123"');
+    expect(codeOf("ext>text", [S("x")])).toBe("E_TYPE");
+  });
+  test("null is the null value, and null? tells it from every other value", () => {
+    const out = callWith("null", []);
+    expect(out).toHaveLength(1);
+    expect(out[0]).toMatchObject({ tag: "ext", kind: "null" });
+    expect(run("null?", [nullValue()])).toBe("true");
+    for (const v of [I(0), S(""), F, L(), R(), pair(1, 2)]) expect(run("null?", [v])).toBe("false");
   });
 });
 

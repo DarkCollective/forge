@@ -18,7 +18,7 @@
  * Rendering values for display (RECIPES.md section 8.3), the JSON form used by the vector runner
  * (section 9.1) and the comparison helper `stripTimings` (section 10.3).
  */
-import { REDACTED, isSecret, reprShort } from "@forge/lang";
+import { REDACTED, extText, getExtKind, isSecret, reprShort } from "@forge/lang";
 import type { Value } from "@forge/lang";
 import { RENDER_LIMITS } from "./types.js";
 import type {
@@ -40,6 +40,32 @@ function utf8Text(bytes: Uint8Array): string | null {
     return strictUtf8.decode(bytes);
   } catch {
     return null;
+  }
+}
+
+/** An `ext` output: the text form cut at the limit with the flag, and the kind's `view` when it has one. */
+function extOutput(kind: string, payload: unknown): OutputValue {
+  const max = RENDER_LIMITS.maxExtTextChars;
+  // Ask for one code unit more than is kept: a longer answer means the text was cut (a kind cuts a
+  // longer text to exactly what it was asked for, so "more than max" is the only signal needed).
+  let text: string;
+  try {
+    text = extText(kind, payload, max + 1);
+  } catch {
+    text = `<ext ${kind}>`;
+  }
+  const truncated = text.length > max;
+  if (truncated) text = text.slice(0, max - 3) + "...";
+  const k = getExtKind(kind);
+  if (k?.view === undefined) return { kind: "ext", extKind: kind, text, truncated };
+  try {
+    const view = k.view(payload, { maxRows: RENDER_LIMITS.maxExtRows });
+    return view === undefined
+      ? { kind: "ext", extKind: kind, text, truncated }
+      : { kind: "ext", extKind: kind, text, truncated, view };
+  } catch {
+    // A kind whose view fails still has its text form; the page shows that.
+    return { kind: "ext", extKind: kind, text, truncated };
   }
 }
 
@@ -78,6 +104,8 @@ export const renderValue: RenderValueFn = (value) => {
         }
         return { kind: "record", entries, total: v.v.size };
       }
+      case "ext":
+        return extOutput(v.kind, v.v);
       default:
         return other(v);
     }
@@ -126,6 +154,11 @@ export const outputToJson: OutputToJsonFn = (output) => {
       }
       return record;
     }
+    case "ext":
+      // The text form is what a vector compares (`{ "$ext": kind, "text": ... }`); a cut text says so.
+      return output.truncated
+        ? { $ext: output.extKind, text: output.text, $truncated: true }
+        : { $ext: output.extKind, text: output.text };
     case "other":
       return { $other: output.repr };
   }

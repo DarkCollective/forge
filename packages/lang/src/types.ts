@@ -109,7 +109,8 @@ export type ReadFn = (source: string, opts?: ReadOptions) => Token[];
 // Values (spec sections 3 and 4)
 // ---------------------------------------------------------------------------------------------
 
-export type Tag = "bytes" | "str" | "int" | "num" | "bool" | "list" | "quot" | "record" | "file";
+export type Tag =
+  "bytes" | "str" | "int" | "num" | "bool" | "list" | "quot" | "record" | "file" | "ext";
 
 /** Payload of a `file` value (reserved in v0.1). */
 export interface FileValue {
@@ -144,7 +145,12 @@ export type Value =
   | { readonly tag: "list"; readonly v: readonly Value[] }
   | { readonly tag: "quot"; readonly v: Quotation }
   | { readonly tag: "record"; readonly v: ReadonlyMap<string, Value> }
-  | { readonly tag: "file"; readonly v: FileValue };
+  | { readonly tag: "file"; readonly v: FileValue }
+  /**
+   * An extension value (LANGUAGE-0.3.md section 4.1). `kind` names a registered `ExtKind` (ext.ts);
+   * `v` is the kind's payload, opaque to the VM and immutable.
+   */
+  | { readonly tag: "ext"; readonly kind: string; readonly v: unknown };
 
 // ---------------------------------------------------------------------------------------------
 // Errors (spec section 11)
@@ -255,6 +261,7 @@ export type ParamType =
   | "quot"
   | "record"
   | "file"
+  | "ext"
   | "choice"
   | "toggle"
   | "regex"
@@ -286,6 +293,8 @@ export interface StackSlot {
   readonly type: ParamType;
   /** `choice` options, or the listed encodings of `toggle` / `key`. */
   readonly options?: readonly string[];
+  /** The kind of an `ext{kind}` slot (LANGUAGE-0.3.md section 4.3); present exactly when `type` is `"ext"`. */
+  readonly kind?: string;
   readonly constraint?: Constraint;
   readonly default?: ParamDefault;
   /** Help text from `META: … param`. */
@@ -998,7 +1007,12 @@ export interface ValueConstructors {
 export type NormaliseIntFn = (n: number | bigint) => number | bigint;
 
 /** Apply the coercion table (spec 4.2) of one value to a declared runtime type. Throws E_TYPE / E_COERCE. */
-export type CoerceFn = (value: Value, to: ParamType) => Value;
+export type CoerceFn = (
+  value: Value,
+  to: ParamType,
+  param?: string | number,
+  kind?: string,
+) => Value;
 
 /** Validate a coerced value against a slot's constraint, options, charset and regex rules. Throws E_PARAM_INVALID. */
 export type ValidateFn = (value: Value, slot: StackSlot, limits: Readonly<Limits>) => void;

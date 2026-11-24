@@ -49,6 +49,8 @@ export function outputText(value: OutputValue): string | null {
     case "num":
     case "bool":
       return String(value.value);
+    case "ext":
+      return value.text;
     case "other":
       return value.repr;
     case "list":
@@ -69,6 +71,8 @@ export function describeValue(value: OutputValue, indent = ""): string {
     case "num":
     case "bool":
       return String(value.value);
+    case "ext":
+      return `<ext{${value.extKind}}> ${value.text}`;
     case "other":
       return `<${value.tag}> ${value.repr}`;
     case "list": {
@@ -119,9 +123,31 @@ export function downloadSpec(value: OutputValue): DownloadSpec | null {
       return { filename: "forge-output.txt", mime: "text/plain;charset=utf-8" };
     case "list":
     case "record":
+    case "ext":
     case "other":
       return { filename: "forge-output.txt", mime: "text/plain;charset=utf-8" };
   }
+}
+
+/**
+ * The accessible name of Copy or Download. For an ext value whose text the worker cut, it says so (UI-TOOLKIT.md
+ * section 1.5): the page only holds the first characters, and the whole value is reached by Convert to bytes.
+ */
+export function copyLabel(value: OutputValue | null): string {
+  return value !== null && value.kind === "ext" && value.truncated
+    ? `Copy the first ${value.text.length.toLocaleString("en-US")} characters`
+    : "Copy";
+}
+
+export function downloadLabel(value: OutputValue | null): string {
+  return value !== null && value.kind === "ext" && value.truncated
+    ? `Download the first ${value.text.length.toLocaleString("en-US")} characters`
+    : "Download";
+}
+
+/** "Type: ext{table}" for an ext value, "Type: list" for the others (UI-TOOLKIT.md section 1.6). */
+export function typeReadout(value: OutputValue): string {
+  return value.kind === "ext" ? `ext{${value.extKind}}` : value.kind;
 }
 
 /** The bytes a download of `value` contains (structured values are saved as their text rendering). */
