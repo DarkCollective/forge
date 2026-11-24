@@ -34,6 +34,22 @@ function isAbortedAssetChunk(requestUrl: string, pageUrl: string): boolean {
 }
 
 /**
+ * True for the favicon request (`<link rel="icon" href="/favicon.svg">` in index.html) when it was cancelled with
+ * `net::ERR_ABORTED`: a navigation or a close that overtakes the load. That exact error, same origin and the exact
+ * path `/favicon.svg` are all required; a 404, a CSP block or any other failure of the favicon still counts.
+ */
+function isAbortedFavicon(requestUrl: string, pageUrl: string, errorText: string): boolean {
+  if (errorText !== "net::ERR_ABORTED") return false;
+  try {
+    const u = new URL(requestUrl);
+    const p = new URL(pageUrl);
+    return u.origin === p.origin && u.pathname === "/favicon.svg";
+  } catch {
+    return false;
+  }
+}
+
+/**
  * The shared fixture: every test fails on any console error or warning, uncaught page error, failed request or
  * `securitypolicyviolation` event, and the page must be cross-origin isolated (the production headers).
  */
@@ -54,7 +70,10 @@ export const test = base.extend<{ problems: string[]; ignoredProblems: RegExp[] 
         // A lazily loaded op chunk (same-origin script under /assets/) is cancelled with
         // net::ERR_ABORTED when the page navigates or closes mid-load. That is a timing artefact, not
         // a defect; every other failure (a 404, a CSP block, another origin or path) still counts.
+        // The favicon (/favicon.svg) is cancelled the same way, in this container's Chromium, when a
+        // test navigates or closes quickly; it is excused by the same rule, narrowed to that one path.
         if (errorText === "net::ERR_ABORTED" && isAbortedAssetChunk(r.url(), page.url())) return;
+        if (isAbortedFavicon(r.url(), page.url(), errorText)) return;
         problems.push(`requestfailed: ${r.url()} ${errorText}`);
       });
       await page.addInitScript(() => {
