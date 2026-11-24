@@ -1,6 +1,6 @@
 # The Relix pack: specification (pack, value mapping, operator table)
 
-Status: draft v1, **approved at Gate T1 on 2026-11-23**. The owner accepted every recommended answer in §14 (RQ1 to RQ8 and TOOLKIT Q1, Q2, Q3, Q5, Q6 and Q11), so the pack is specified as written here. Implementation is by the work packages of §15. The recipe-format details are normative in [RECIPES-1.2.md](RECIPES-1.2.md), and the editor design is in [RELIX-LANES.md](RELIX-LANES.md). It builds on [TOOLKIT.md](TOOLKIT.md) (§1 goals, §2.6 Relix facts, §3 decisions T1 to T22, §4 to §8, §12 one implementation per capability, §13 work packages, §14 open questions), the Gate T0 results [r0-relix-in-browser.md](research/r0-relix-in-browser.md) and [x0-ext-values.md](research/x0-ext-values.md), [RELIX-LANES.md](RELIX-LANES.md) (binary operators in the recipe pane), [RECIPES-1.2.md](RECIPES-1.2.md) (the recipe format v1.2: slots, named inputs, conversions), [RECIPES.md](RECIPES.md) (§2 catalogue, §8 bake limits and cancellation, §9 op vectors) and [LANGUAGE.md](LANGUAGE.md) (`META:`, parameter types, errors). Relix facts come from the `relix-core` source tree at commit `1758be6` (1.0.0-rc13), read-only, and from the R0 spike code in `DarkCollective/relix-web`. This is work package SP6 of TOOLKIT §13.3.
+Status: draft v1, **approved at Gate T1 on 2026-11-23**. The owner accepted every recommended answer in §14 (RQ1 to RQ8 and TOOLKIT Q1, Q2, Q3, Q5, Q6 and Q11), so the pack is specified as written here. Implementation is by the work packages of §15. The recipe-format details are normative in [RECIPES-1.2.md](RECIPES-1.2.md), and the editor design is in [RELIX-LANES.md](RELIX-LANES.md). It builds on [TOOLKIT.md](TOOLKIT.md) (§1 goals, §2.6 Relix facts, §3 decisions T1 to T22, §4 to §8, §12 one implementation per capability, §13 work packages, §14 open questions), the Gate T0 results [r0-relix-in-browser.md](research/r0-relix-in-browser.md) and [x0-ext-values.md](research/x0-ext-values.md), [RELIX-LANES.md](RELIX-LANES.md) (binary operators in the recipe pane), [RECIPES-1.2.md](RECIPES-1.2.md) (the recipe format v1.2: slots, named inputs, conversions), [RECIPES.md](RECIPES.md) (§2 catalogue, §8 bake limits and cancellation, §9 op vectors) and [LANGUAGE.md](LANGUAGE.md) (`META:`, parameter types, errors). Relix facts come from the `relix-core` source tree at commit `1758be6` (1.0.0-rc13), read-only, and from the R0 spike code in `DarkCollective/relix-web`. This is work package SP6 of TOOLKIT §13.3. **Amended at Gate T1 on 2026-11-24** to match the other approved specifications: a nested NULL maps to `ext{null}` (§5.1, §5.2, §5.4; LANGUAGE-0.3.md §7), the generated vocabulary file is `vocab/relix.fth` (§4.8, PACKS.md PQ15), the manifest and the worker hook of R13 are PACKS.md §2.5 and §4.5, and the table export words are `table:to-csv` and `table:to-json`.
 
 > **Packages are frozen.** `packages/*` hold frozen Phase 1 to 2 contracts (CLAUDE.md). This document asks for changes to them (the `ext` tag, the worker protocol, the recipe format, the catalogue). The owner approved the version bump at Gate T1 (2026-11-23), so those changes may now start, by their work packages. Where a change belongs to another specification (SP1 to SP5), this document names it and does not define it. In particular, **the recipe JSON for slots is SP2's** (`docs/RECIPES-1.2.md`, v1.2 with `"forge": 1`), and this document does not define it.
 
@@ -23,7 +23,7 @@ Status: draft v1, **approved at Gate T1 on 2026-11-23**. The owner accepted ever
 11. Security
 12. Testing
 13. Decisions
-14. Open questions
+14. Questions, decided
 15. Work packages
 16. Changes needed in other documents
 
@@ -103,7 +103,7 @@ The chunk is a hashed, same-origin file loaded only when a bake needs a `relix:`
 
 ## 2. Value kinds: `table`, `relation`, `relix-expr`
 
-All three are `ext` kinds (TOOLKIT §6; X0 §3). `table` belongs to core (T21). `relation` and `relix-expr` belong to the pack. The kind registry is process-wide and idempotent (T18). The pack claims `relation` and `relix-expr`, and the manifest refuses a second pack that claims either (P1).
+All three are `ext` kinds (TOOLKIT §6; X0 §3). `table` belongs to core (T21). `relation` and `relix-expr` belong to the pack. The kind registry is process-wide and idempotent (T18). The pack claims `relation` and `relix-expr`, and the manifest refuses a second pack that claims either (P1). It also refuses any pack that claims a core kind name: `table`, `null` or `array` (PACKS.md §2.4, `kind-reserved`).
 
 ### 2.1 `ext{table}`
 
@@ -158,7 +158,7 @@ Why two tiers. T20 asks that a kind's parser be one dependency-free module share
 
 | From | To | How | When | Recorded as |
 |---|---|---|---|---|
-| `bytes` | `table` | Core words (`csv:parse`, `json:parse`, D1) | explicit step | the step |
+| `bytes` | `table` | The table words of D1 (`csv:parse` and the JSON table parser; the core word `json>value` makes a value, not a table) | explicit step | the step |
 | `table` | `relation` | `relix:from name` (explicit, names the table) | explicit step | the step |
 | `table` | `relation` | **lift**: an anonymous `from` with a generated name `T<n>` | implicit, when a `relix:` word takes `relation` and gets a `table` | `table -> relation` |
 | `relation` | `table` | `relix:run` | explicit step | the step |
@@ -169,7 +169,7 @@ Why two tiers. T20 asks that a kind's parser be one dependency-free module share
 | `relix-expr` | `str` | `toText` | printing, copy | none |
 | `relation` | `bytes`, `str`-taking ops | none | | `E_TYPE`; the type badge is red (RELIX-LANES §6) |
 
-**Where the implicit steps come from.** The implicit lift and the implicit run are **inserted by the recipe compiler**, not by a VM coercion. The compiler knows each op's input and output kind from the catalogue (`inputKind`, `outputKind`; X0 R5) and writes `relix:from` or `relix:run` between two steps. The inserted word is marked `implicit` in the step map, so the trace shows `relation -> table` (TOOLKIT §8.1). The reason: a VM coercion is synchronous, and a run may await an FL batch (§6.5). The bake also appends `relix:run` when the last step's output is a `relation`, so the output pane shows a table. In hand-written FL, a `relation` reaching a `table` slot is `E_TYPE` with a hint to write `relix:run`. RECIPES-1.2 §6.9 gives the mechanism. The pack declares the two conversions in its manifest (`table` to `relation` with `relix:from`; `relation` to `table` with `relix:run`, also applied to the value a recipe ends with), the catalogue carries them as `conversions`, and the compiler writes the words with the annotation `@implicit`. Both words have a default for every parameter (`relix:from` name `""`, `relix:run` limit `0`), because the compiler writes them. This refines TOOLKIT §8.1, which says a relation "that reaches a non-Relix op" is run implicitly. Only an op that takes a `table` triggers it. An op that takes `bytes` or `str` does not, because a table has no byte form without an explicit `table:>csv` (decision RX5).
+**Where the implicit steps come from.** The implicit lift and the implicit run are **inserted by the recipe compiler**, not by a VM coercion. The compiler knows each op's input and output kind from the catalogue (`inputKind`, `outputKind`; X0 R5) and writes `relix:from` or `relix:run` between two steps. The inserted word is marked `implicit` in the step map, so the trace shows `relation -> table` (TOOLKIT §8.1). The reason: a VM coercion is synchronous, and a run may await an FL batch (§6.5). The bake also appends `relix:run` when the last step's output is a `relation`, so the output pane shows a table. In hand-written FL, a `relation` reaching a `table` slot is `E_TYPE` with a hint to write `relix:run`. RECIPES-1.2 §6.9 gives the mechanism. The pack declares the two conversions in its manifest (`table` to `relation` with `relix:from`; `relation` to `table` with `relix:run`, also applied to the value a recipe ends with), the catalogue carries them as `conversions`, and the compiler writes the words with the annotation `@implicit`. Both words have a default for every parameter (`relix:from` name `""`, `relix:run` limit `0`), because the compiler writes them. This refines TOOLKIT §8.1, which says a relation "that reaches a non-Relix op" is run implicitly. Only an op that takes a `table` triggers it. An op that takes `bytes` or `str` does not, because a table has no byte form without an explicit `table:to-csv` (decision RX5).
 
 ### 2.5 Size and limit accounting (X0 R8)
 
@@ -435,7 +435,7 @@ One file, `packs/relix/gen/operators.json`, holds the table: for each row the wo
 
 `npm run gen:relix` (R2b) reads it and writes:
 
-- `packs/relix/vocab/relix-ops.fth`: one FL word per row, each with `META:` clauses. The words call one private primitive, `_node`, which builds a tree node. The file starts with the Apache-2.0 header and a "generated, do not edit" line.
+- `packs/relix/vocab/relix.fth`: one FL word per row, each with `META:` clauses. The words call one private primitive, `_node`, which builds a tree node. The file starts with the Apache-2.0 header and a "generated, do not edit" line. **The file is `relix.fth`, not `relix-ops.fth`** (amended at Gate T1, 2026-11-24; PACKS.md PK23 and PQ15): one `.fth` file belongs to one vocabulary and is named after it, and the generator writes it whole. The sources and terminals of §3.2 and §3.6 are words of the same vocabulary `relix`, so they are in this file too. They are written by hand in `packs/relix/gen/words.fth`, and the generator copies that file into `relix.fth` after the header, so that nobody edits the generated file.
 - `packs/relix/gen/printer-table.json`: for the session, the spelling and the parameter order of each row, so that printing a node needs no FL.
 - `packs/relix/gen/help-source.json`: the doc key, the `use-when` text and the parameter help of each row, for §10.
 
@@ -476,7 +476,7 @@ This section completes TOOLKIT §8.4. There are two places where values cross: *
 
 The engine has 11 value kinds (`relix-value`, the sealed `Value`): `NumberValue` (`BigDecimal`), `StringValue`, `BooleanValue`, `NullValue`, `StructValue`, `ArrayValue`, `DateValue`, `TimeValue`, `TimestampValue`, `ZonedTimestampValue`, `DurationValue`. Column types are `ScalarType`: `ANY`, `STRING`, `NUMBER`, `BOOLEAN`, `DATE`, `TIME`, `TIMESTAMP`, `DURATION`, `TIMESTAMPTZ`. There is no bytes type, and Relix adds functions, not value types (ADR-0026).
 
-FL has nine tags (`bytes str int num bool list quot record file`, LANGUAGE §3.1) and no null. Its coercions are fixed (LANGUAGE §4.2): `str` to `bytes` is UTF-8, `bytes` to `str` is strict UTF-8, `int` to `num` is exact, `num` to `int` is exact.
+FL has nine tags (`bytes str int num bool list quot record file`, LANGUAGE §3.1) and, in v0.2, no null. From v0.3, JSON `null` is the value of the `ext` kind `null`, with the core words `null` and `null?` (LANGUAGE-0.3.md §7, approved at Gate T1 on 2026-11-24). Its coercions are fixed (LANGUAGE §4.2): `str` to `bytes` is UTF-8, `bytes` to `str` is strict UTF-8, `int` to `num` is exact, `num` to `int` is exact.
 
 ### 5.1 Relix to FL
 
@@ -487,7 +487,7 @@ FL has nine tags (`bytes str int num bool list quot record file`, LANGUAGE §3.1
 | STRING | `str` | `str` column | Lossless. Relix strings are Java strings (UTF-16), so are FL strings. A lone surrogate is kept; FL refuses it only when it encodes it to bytes. |
 | BOOLEAN | `bool` | `bool` column | |
 | NULL, top-level argument | no FL call; the result is NULL (§5.4) | null mask bit | |
-| NULL, inside a struct or array | refused: `E_COERCE`, `reason: "null inside a nested value"` (§5.4) | inside the JSON text as `null` | |
+| NULL, inside a struct or array | `ext{null}`, as the value of the `record` field or the `list` element (§5.4) | inside the JSON text as `null` | Amended at Gate T1, 2026-11-24 (it was refused with `E_COERCE`). |
 | STRUCT (`StructValue`, ordered map) | `record` (same keys, values mapped recursively) | `json` column (D2 ask), canonical JSON, keys in the struct's order | A struct with two keys that differ only in case crosses (FL keys are case-sensitive). |
 | ARRAY (`ArrayValue`) | `list` (elements mapped recursively) | `json` column | |
 | DATE | `str`, ISO `2026-11-23` (`LocalDate.toString`) | `str` column, `origin` `DATE` | Until Forge has a date value (TOOLKIT §8.4). |
@@ -513,6 +513,7 @@ A result column whose declared type is `ANY` (an open schema, a `WHY` provenance
 | `record` | STRUCT, keys in insertion order, recursively | from a `json` column | Two keys that differ only in case are refused (`E_COERCE`), because Relix field lookup is case-insensitive (`StructValue.field`) and would pick one silently. |
 | `quot`, `file` | not mappable | not mappable | An op that returns one is not exposed (§6.3). |
 | `ext{table}` | ARRAY of STRUCT, one struct per row (§6.7) | not a cell | Table-valued words only. |
+| `ext{null}` | NULL, as the value of a `record` field or a `list` element, or as the whole result | not a cell (a null cell is the null mask) | The one `ext` kind besides `table` that crosses (§5.4). A NULL top-level argument still returns NULL with no FL call. |
 | other `ext` kinds | not mappable | not mappable | |
 
 **Numbers in transfer.** In v1, NUMBER cells cross the TeaVM boundary as decimal text, both ways. That is exact by construction and is what R0 did. Shipping `Float64Array` columns would be faster, but it needs TeaVM's `Double.toString` to give the same shortest form as JavaScript's, which nothing has tested. R1a measures both and may switch only after the conformance suite (§12) passes with typed arrays.
@@ -525,10 +526,10 @@ A result becomes a `table` by §5.1. The null mask comes from NULL cells. The re
 
 ### 5.4 NULL
 
-- **FL has no null** (LANGUAGE §3.1).
+- **FL v0.2 has no null** (LANGUAGE §3.1). **FL v0.3 holds JSON `null` as `ext{null}`** (LANGUAGE-0.3.md §7, Q14, approved at Gate T1 on 2026-11-24). A typed slot rejects it with `E_TYPE`; only `any` and the containers carry it.
 - **The engine does not skip NULL arguments.** `OperandEvaluator.invoke` evaluates every argument of a `StrictScalarFunction` and calls it, NULLs included; "strict" there means "arguments evaluated first", not "NULL in, NULL out". Built-in functions check for NULL themselves (for example `UCase`: "NULL in → NULL out"). SP6 confirmed this on the spike: a host function was called with a NULL argument. R0 §2 (criterion 8) says "NULL in gives NULL out without a call"; that was the behaviour of its JavaScript test function, not of the engine.
 - **So the bridge implements strictness.** If any argument of an `fl.*` call is NULL, the bridge returns NULL and does not call FL. This is TOOLKIT §8.4's rule, enforced in the Java library (§6.5), so a NULL never reaches FL.
-- **Nested NULLs** (a struct field or array element that is NULL) have no FL form. The FL JSON words (TOOLKIT L3, SP1) will choose how JSON `null` is held in FL. Until they do, the bridge refuses a nested NULL with `E_COERCE`. When SP1 decides, the bridge uses the same representation.
+- **Nested NULLs** (a struct field or array element that is NULL) map to `ext{null}` and back. A STRUCT field or ARRAY element that is NULL arrives in FL as `ext{null}` inside the `record` or `list`. An `ext{null}` inside a `record` or `list` that an `fl.*` function returns becomes a NULL field or element. This replaces the earlier rule that refused a nested NULL with `E_COERCE` (amended at Gate T1, 2026-11-24; LANGUAGE-0.3.md §21). The top-level rule above is unchanged: a NULL argument returns NULL and FL is not called.
 - **Tables carry nulls** in the null mask, in both directions.
 
 ### 5.5 `rat` when the symbolic pack is on (TOOLKIT Q5)
@@ -937,7 +938,7 @@ Every `relix:` word needs vectors (RECIPES §9). A word that takes a relation ne
 ### 12.4 The bridge and the session
 
 - **Value mapping.** Property tests over §5: integers at and beyond 2^53, decimals with long fractions and with trailing zeros, strings with astral characters and lone surrogates, nested structs and arrays, every date and time type, carriers, case-colliding keys.
-- **NULL.** A NULL argument returns NULL with no FL call (a call counter proves it). A nested NULL is refused.
+- **NULL.** A NULL argument returns NULL with no FL call (a call counter proves it). A nested NULL crosses as `ext{null}`, and an `ext{null}` in a returned `record` or `list` comes back as NULL.
 - **Batching.** Depth 1, 2 and 3 calls; the number of rounds; deduplication (FL calls equal distinct tuples); an FL error on a row the final query filters out does not fail the query; an error it reaches fails it with the FL code and the right path; `maxRounds` and `maxFlCalls`.
 - **Cancellation.** Set the flag during an engine run and during a batch: `E_ABORTED` within 50 ms (proposal) and the Worker answers the next bake. Deadline: `E_LIMIT_TIME`.
 - **Limits.** Each engine knob of §8.1 fires and maps to its code.
@@ -978,7 +979,7 @@ Every `relix:` word needs vectors (RECIPES §9). A word that takes a relation ne
 
 ---
 
-## 14. Open questions
+## 14. Questions, decided
 
 **All of these were decided at Gate T1 on 2026-11-23: the owner accepted every recommended answer.** The last column is the decision. Where a decision adds detail to the recommendation, it says so. TOOLKIT's own questions come first.
 
@@ -1011,8 +1012,8 @@ These refine TOOLKIT §13.6's R-rows. Ids keep the TOOLKIT number and add a lett
 | R1a | Session shim: register tables once, run with an `ExecutionContext` carrying the §8 limits and poll, terminals (`explain`, `optimized`, `schema`, JSON forms), structured diagnostics, fragment check (§2.3.1), print and normalise (§9.1), `decompose` (§9.2), the `fl` cache library (§6.5), version string | `relix-web/shim/*` | R0, Gate T1 | L | So | Every entry point has JVM and browser tests; the version examples leave the expected-differences list; limits fire with their codes |
 | R1b | Build: patch series check per Relix release, supplements module, ES-module wrapper, hashed artifact, size gate, NOTICE | `relix-web/scripts/*`, `relix-web/patches/*`, `relix-web/classlib/*` | R0 | M | So | A clean build from a published engine produces the module; patches apply or the job fails; size at most 3 MB gzip |
 | R2a | `operators.json` and its schema, first drafted by script from `RelNode` and the reference, then completed by hand (help lines, shapes, categories) | `packs/relix/gen/operators.json`, `operators.schema.json` | SP6 | M | So | All 52 rows of §4; the coverage, spelling and reference tests of §12.2 pass |
-| R2b | Generator: `.fth` with `META:`, printer table, help source; `--check` mode | `packs/relix/gen/*.ts`, `packs/relix/vocab/relix-ops.fth` | R2a | M | Ha | Generated output committed; `gen:relix --check` in CI; the round-trip test of §12.2 passes |
-| R3 | `relation` and `relix-expr` kinds (payload, text, equality, `sizeOf` with conformance tests, viewer data); sources and terminals (`relix:input` is FL over the core `input:tab`, which RECIPES-1.2 RW5 delivers); `_node` primitive | `packs/relix/src/kinds/*`, `packs/relix/vocab/relix.fth`, `packs/relix/prims/relix.ts` | R1a, R2b, X1, D2, RW5 | L | So | Vectors of §12.3 for every source and terminal pass; X1's kind conformance passes for both kinds |
+| R2b | Generator: `.fth` with `META:`, printer table, help source; `--check` mode; it copies the hand-written `gen/words.fth` (§4.8) into the file | `packs/relix/gen/*.ts`, `packs/relix/vocab/relix.fth` | R2a | M | Ha | Generated output committed; `gen:relix --check` in CI; the round-trip test of §12.2 passes |
+| R3 | `relation` and `relix-expr` kinds (payload, text, equality, `sizeOf` with conformance tests, viewer data); sources and terminals (`relix:input` is FL over the core `input:tab`, which RECIPES-1.2 RW5 delivers); `_node` primitive | `packs/relix/src/kinds/*`, `packs/relix/gen/words.fth` (the sources and terminals, copied into `vocab/relix.fth` by R2b's generator), `packs/relix/prims/relix.ts` | R1a, R2b, X1, D2, RW5 | L | So | Vectors of §12.3 for every source and terminal pass; X1's kind conformance passes for both kinds |
 | R4 | Table interchange (§5.3) with `origin` and `json` columns; implicit lift and run inserted by the compiler (§2.4); end-of-recipe run | `packs/relix/src/interchange/*`, the conversion declarations in the manifest; the compiler side is RECIPES-1.2 RW3 (§6.9) | R3, D2, RW3 | M | So | Every column type and nulls round-trip; the trace shows `relation -> table` |
 | R5a | Tier-1 shape check module; the wrapper templates of §4.2, tested per shape | `packs/relix/src/expr-check/*` | R1a | S | So | Each shape: valid samples pass, invalid ones report the right column |
 | R5b | Tier-2 check through the Worker (`ext.check`), completion from schema and catalogue, the field UI | `packs/relix/ui/*` | R5a, X3, X5 | M | So | A bad expression shows its position before the bake; completion offers columns and `fl.*` names |
@@ -1024,7 +1025,7 @@ These refine TOOLKIT §13.6's R-rows. Ids keep the TOOLKIT number and add a lett
 | R9b | Discover, batch, replay loop (§6.5), errors (§7.5), limits | `packs/relix/src/fl-bridge/batch.ts` | R9a | M | So | The batching tests of §12.4 pass; a query over 10,000 rows calls an FL op once per distinct value |
 | R10 | `relix-reference.json` and help generation (§10) | `relix-web/scripts/reference.*`, `packs/relix/gen/help-*.ts` | R2b | S | Ha | Every row has `doc` and `use-when` from the reference; the help dialog shows the page as plain text |
 | R11 | Conformance harness and expected-differences gate (§12.1); vectors generated from the reference (§12.3) | `relix-web/harness/*`, `packs/relix/test/*` | R1a, R1b, RW8 (the vector format) | M | Ha | The pass rate is reported against T12; a change in the differences list fails the job |
-| R13 | Pack manifest and budget, lazy load in the bake Worker, cancellation wiring (shared flag, poll, deadline), `needsHardKill` for engine-running words | `packs/relix/manifest.*`, `packages/worker` hook per P2 | R1a, P2 | M | So | Cancellation tests of §12.4 pass; the pack loads lazily under the production headers |
+| R13 | Pack manifest `packs/relix/manifest.json` as PACKS.md §2.5 (with its budget and `externalCode`), lazy load in the bake Worker, cancellation wiring (shared flag, poll, deadline) through the hook `WorkerPackHost.onBake` (PACKS.md §4.5), `needsHardKill` for engine-running words and the version rule (RECIPES-1.2 §19.1 a; PACKS.md §5.5) | `packs/relix/manifest.json`, `packs/relix/src/worker.ts`, the hook per P2b | R1a, P1a, P2b | M | So | Cancellation tests of §12.4 pass; the pack loads lazily under the production headers |
 | R14 | Security tests (§11.2): injection, text rendering, refused statements | `packs/relix/test/security/*` | R3, R7b | S | Ha | Every case of §11.2 has a test |
 
 TOOLKIT's R12 (the TypeScript fallback engine) is dropped: R0 passed (T9).
@@ -1059,9 +1060,9 @@ This document does not edit them. The orchestrator applies or briefs these.
 8. **X1**: nothing beyond T18 and T19. (The kind-to-kind lift is done by the compiler, not the VM.)
 9. **X3 / X5**: the helper contract may return a promise; a generic `ext.check` request from the page to the bake Worker; per-step input schema in the bake result (already T20).
 10. **SP2**: `ParamSpec` marking of slot parameters; slots `base`/`step` for `FIX`/`ITERATE` (RQ5); compiler insertion of `relix:from` and `relix:run` marked `implicit`; the `setup` field of op vectors and help examples (T22); `needsHardKill` for engine-running words; the 4,096-character limit for `relix-expr` text. **All answered in RECIPES-1.2 §19.1**, with the mechanism in its §4.5, §6.9 and §10.
-11. **SP3 / UI.md**: the relation viewer (text, schema line), the help dialog's plain-text reference view, the "unavailable in the browser" badge for `optimize`.
-12. **SP4 / PACKS.md**: a pack whose chunk is an ES module loaded inside the bake Worker; the pack's `NOTICE`.
-13. **SP1**: how FL holds JSON `null` (decides nested NULLs, §5.4).
+11. **SP3 / UI.md**: the relation viewer (text, schema line), the help dialog's plain-text reference view, the "unavailable in the browser" badge for `optimize`. **Met by UI-TOOLKIT.md** §1.8 (the relation viewer), §9.1 (the plain-text reference view) and §9.2 (the "Not in the browser" badge). Item 9 adds: the generic `ext.check` request is a message of the bake Worker that the page sends only when it is idle (UI-TOOLKIT.md §3.5).
+12. **SP4 / PACKS.md**: a pack whose chunk is an ES module loaded inside the bake Worker; the pack's `NOTICE`. **Answered in PACKS.md** §3.4 (chunks under the CSP), §4.5 (the worker entry and `WorkerPackHost.onBake`) and §2.3 (`notice`). The manifest of this pack is PACKS.md §2.5.
+13. **SP1**: how FL holds JSON `null` (decides nested NULLs, §5.4). **Answered in LANGUAGE-0.3.md §7 (Q14, approved at Gate T1 on 2026-11-24): `ext{null}`.** Applied here in §5.1, §5.2 and §5.4.
 
 **RELIX-LANES.md**
 

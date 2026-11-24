@@ -1,8 +1,8 @@
 # UI amendments for the toolkit programme (SP3)
 
-Status: **proposal, 2026-11-23, not normative.** This is work package SP3 of the toolkit programme ([TOOLKIT.md](TOOLKIT.md) §13.3). It is for the owner to approve at Gate T1. Until it is approved and its work packages have landed, [UI.md](UI.md) describes the shipped app and wins on every point. This file does **not** edit UI.md. It follows the precedent of [RECIPES-1.1.md](RECIPES-1.1.md) and [RECIPES-1.2.md](RECIPES-1.2.md): a separate proposal first, approval by the owner, implementation by work packages, and only then a fold-in. Each work package that lands updates UI.md for what it shipped, as the earlier packages did, and the last one turns this file into a historical note.
+Status: **proposal, 2026-11-23, approved at Gate T1 on 2026-11-24.** The owner accepted every recommended answer (Q1 to Q16 of §11) and the CSP text of §7. This is work package SP3 of the toolkit programme ([TOOLKIT.md](TOOLKIT.md) §13.3). It is still a proposal in this sense: until its work packages have landed, [UI.md](UI.md) describes the shipped app and wins on every point. This file does **not** edit UI.md. It follows the precedent of [RECIPES-1.1.md](RECIPES-1.1.md) and [RECIPES-1.2.md](RECIPES-1.2.md): a separate proposal first, approval by the owner, implementation by work packages, and only then a fold-in. Each work package that lands updates UI.md for what it shipped, as the earlier packages did, and the last one turns this file into a historical note.
 
-It says, section by section, what each later work package will change in UI.md. The one exception to "later" is §7, the CSP text, which is written out in full so that the owner can approve it now.
+It says, section by section, what each later work package will change in UI.md. The one exception to "later" is §7, the CSP text, which is written out in full and was approved at Gate T1. The packs sections (§6, §7) follow [PACKS.md](PACKS.md) (SP4), which was approved at the same gate and wins where the two differ (the manifest, the store, the pack states, the capability model).
 
 ## What it builds on
 
@@ -17,12 +17,12 @@ It says, section by section, what each later work package will change in UI.md. 
 
 These names are fixed across SP1 (language), SP3 (this file) and SP4 (packs). This file uses them as given and does not define them.
 
-- The value tag `ext{kind}`, and the kinds `table`, `relation`, `relix-expr` and `rat`.
+- The value tag `ext{kind}`, and the kinds `table`, `relation`, `relix-expr` and `rat`. The kind names `null` and `array` belong to the language (LANGUAGE-0.3.md §4.2) and are reserved core kind names with `table`: a pack may not claim them (PACKS.md §2.4, `kind-reserved`).
 - Pack ids are lower-kebab-case (`relix`, `symbolic`, `media`, `code`).
 - The issue codes `pack-not-enabled` and `packs-needed`, and the type `PackIndex` (RECIPES-1.2 §8).
 - The ops `input:tab` and `relix:input`, and the parameter name `tab`.
 - The pack **manifest** is defined by PACKS.md (SP4). This file uses only what a person sees: a pack has an id, a name, a one-line summary, a size, a state (off or on) and a list of the kinds and vocabularies it adds. Where the UI needs a field from the manifest, §6.7 lists it as an ask of SP4.
-- The language (FL v0.2) is SP1's. This file never depends on a word of it.
+- The language (FL v0.3, LANGUAGE-0.3.md) is SP1's. This file never depends on a word of it, except the table export words `table:to-csv` and `table:to-json` (LANGUAGE-0.3.md Q18).
 
 ## Contents
 
@@ -36,13 +36,13 @@ These names are fixed across SP1 (language), SP3 (this file) and SP4 (packs). Th
 8. Errors from Relix
 9. Smaller items and a list of UI.md edits by section
 10. Accessibility and test list
-11. Open questions, with recommendations
+11. Questions, decided at Gate T1
 12. Work package mapping
 13. Edits needed in other documents
 
 ## How to read the sections
 
-Each of §1 to §8 starts with a short box, **UI.md changes**, that lists the UI.md sections the change touches. The rest of the section holds the proposed rules. Sketches are ASCII. A sentence with "must" is a proposed rule for the work package. A sentence with "recommend" is a choice for the owner. File names are proposals, as in the earlier proposal files, and each work package brief fixes them.
+Each of §1 to §8 starts with a short box, **UI.md changes**, that lists the UI.md sections the change touches. The rest of the section holds the proposed rules. Sketches are ASCII. A sentence with "must" is a proposed rule for the work package. A sentence with "recommend" was a choice for the owner, and the owner accepted it at Gate T1. File names are proposals, as in the earlier proposal files, and each work package brief fixes them.
 
 ---
 
@@ -190,7 +190,7 @@ A `relation` is a lazy query. Its viewer shows the Relix text form in monospace 
 
 ### 1.9 Other kinds
 
-`relix-expr` and `rat` need no special viewer. The text fallback, with the normal look (no explanatory sentence, because a viewer for them is not expected), is their viewer. Kinds from later packs follow the same contract: `image` draws to a `<canvas>` or an `<img>` whose `src` is a `blob:` URL made by the viewer and revoked through `ctx.signal`; `audio` uses a native `<audio controls>` element, whose controls are accessible without work and never autoplay. Both need `media-src blob:` (§7).
+`relix-expr` and `rat` need no special viewer, and neither do the reserved kinds `null` and `array` (the language's own kinds; LANGUAGE-0.3.md §4.2, §7, §10): **all four render through the text fallback.** The fallback shows the kind's text form (`null` for a null; the array's text form for an array), and the footer reads `Type: ext{null}` or `Type: ext{array}`. A kind of the language never has a `view`; a kind with a `view` is for X2 only. The text fallback, with the normal look (no explanatory sentence, because a viewer for them is not expected), is their viewer. Kinds from later packs follow the same contract: `image` draws to a `<canvas>` or an `<img>` whose `src` is a `blob:` URL made by the viewer and revoked through `ctx.signal`; `audio` uses a native `<audio controls>` element, whose controls are accessible without work and never autoplay. Both need `media-src blob:` (§7).
 
 ---
 
@@ -420,7 +420,7 @@ RELIX-LANES §4.2 is the table of drop rules and stands. The page-level facts th
 |---|---|
 | Targets | Gaps in any lane, and slot boxes (a whole present slot, or an empty one). A slot lane is a list, so the existing gap code is reused. |
 | Op onto the piped slot | Refused, with the text of RELIX-LANES §4.2: "The left side takes the data above. Drop the operation on the main line instead." The text names the actual side. |
-| Table onto a gap between steps | **Join it in**: a join with the pipe on the left and the table on the right (Q7 in §11 recommends keeping this default). A table that is an input tab becomes a `relix:input` source when its format is CSV, TSV, JSON or NDJSON, and an `input:tab` source otherwise. |
+| Table onto a gap between steps | **Join it in**: a join with the pipe on the left and the table on the right (Q7 in §11, decided: keep this default). A table that is an input tab becomes a `relix:input` source when its format is CSV, TSV, JSON or NDJSON, and an `input:tab` source otherwise. |
 | The chip onto the other slot | Swap sides. |
 | A step into its own slot | Refused: "A step can't be moved into its own slot." |
 | Feedback | Targets that accept the payload are highlighted, with a shape cue (a dashed outline) and not colour alone. Gaps grow as today. Escape cancels and announces "Drag cancelled." |
@@ -454,7 +454,7 @@ Announcements (all through `actions.announce`, all plain text):
 RELIX-LANES L4 defines three views of one model. This proposal sets their UI as follows.
 
 - **A view control in the recipe pane header**: a `role="tablist"` with two tabs, **Lanes** and **Tree**, with roving tabindex and Arrow keys, Home and End (as the compact tab bar, UI.md §1.4). Lanes is the default and the only view in the compact layout (below 900 px, the Tree tab is hidden). Edits in either view call the same tree actions, so undo and redo are shared and `ui.selectedPath` carries across views.
-- **As text** is a button beside the tablist, **As text...**, that opens the existing `forge-fl-dialog`, which becomes the **"View as text"** dialog with a tab per text form: **FL** (as now, `compileRecipe`), **Relix** (R7a, the engine's printer; keywords by default, with a "Use symbols" switch, an "Include data" option capped at 200 rows per table, and the list of what the text lost, RELIX.md §9.1) and **JSON** (the recipe). A dialog is wider than the 350 px pane and works in the compact layout. It reuses the dialog's Copy button and its `lines` highlight. Q9 in §11 records the choice, which differs from RELIX-LANES §5.3 only in being a dialog.
+- **As text** is a button beside the tablist, **As text...**, that opens the existing `forge-fl-dialog`, which becomes the **"View as text"** dialog with a tab per text form: **FL** (as now, `compileRecipe`), **Relix** (R7a, the engine's printer; keywords by default, with a "Use symbols" switch, an "Include data" option capped at 200 rows per table, and the list of what the text lost, RELIX.md §9.1) and **JSON** (the recipe). A dialog is wider than the 350 px pane and works in the compact layout. It reuses the dialog's Copy button and its `lines` highlight. Q9 in §11 records the choice (decided at Gate T1). RELIX-LANES §5.3 was amended to match: As text is a dialog.
 - **Import** (R7b, `.relix` into a recipe) is a button in the same dialog, "Import a .relix script...". It opens an import dialog with the statement check (refused statements listed with positions) and the binding step ("Which tab is `Orders`?", RELIX.md §9.2).
 
 ### 4.6 The Tree view (RL4)
@@ -633,10 +633,11 @@ The top bar's More menu gains **Packs...**, above "Keyboard shortcuts". It opens
 ```
 
 - One row per pack from the build-time manifest: **name**, a **one-line summary**, what it **adds** (a count of operations and the names of its kinds), the **size** (the pack's budget, gzip, from the manifest, P7), and a **switch** (`role="switch"`, `aria-checked`, labelled with the pack name). The list is a `role="list"`; the dialog's heading is `h2` and the pack names are `h3`.
-- **States.** A pack is **off**, **turning on** (the switch is disabled and the row says "Turning on..." in a `role="status"` line), **on**, or **failed** ("The Relix pack did not load: `<message>`." and **Try again**). The row says how many steps of the current recipe use the pack, "3 steps of this recipe use it", from `packsUsed`.
+- **States** are those of PACKS.md §7.3: **off**, **on**, **needs-review**, **failed**, **unavailable** and **blocked**, plus a transient **turning on** (the switch is disabled and the row says "Turning on..." in a `role="status"` line). `failed` shows "The Relix pack did not load: `<message>`." and **Try again**. `needs-review` means this build asks for more than the user granted before (a new capability): the row is off, shows what is new, and the switch turns it on after the user has read it ("Review and turn on"). `unavailable` is a stored record for a pack this build does not have: the row says "This pack is not part of this version of Forge." and has no switch. `blocked` is on but a required pack is not on: the row names the pack and offers to turn it on. The row says how many steps of the current recipe use the pack, "3 steps of this recipe use it", from `packsUsed`.
 - **Turning off** a pack that the recipe uses first shows the row's own confirm text, not a second dialog: "3 steps use this pack. They stay in the recipe and show an error until you turn it on again." with **Turn off** and **Keep on**. A pack the recipe does not use turns off at once.
+- **Capability sentences.** Each row, and the offer of §6.5, says in plain words what the pack can do ("plays audio you produce"; "no extra capabilities"). The app derives the sentences from `capabilities` in the manifest by **one fixed table in the app**: each effect label and each CSP source maps to one sentence (PACKS.md §2.8, §6.6; decision PK15). A pack author writes no sentence, and nothing from a link or a recipe reaches it.
 - **Turning on** loads the pack's chunks lazily (§6.4), then updates the catalogue and the baker. The person hears "Relix pack is on. 51 operations added." through `actions.announce`. Turning off says "Relix pack is off. 51 operations removed."
-- **Persistence.** The set of enabled pack ids is data, so it lives in IndexedDB, in the existing `kv` store under the key `packs` (so no schema migration, `DB_VERSION` stays 1), as `{ v: 1, enabled: [ids] }`. It is read on start-up, and every id is checked against the build-time manifest. An unknown id is dropped silently (UI.md §4 rule 6: nothing from storage is used unchecked). It is **per browser**, never part of a share link, and not in `localStorage`. All packs are off in a fresh browser (Q13 in §11).
+- **Persistence.** The enabled set is data, so it lives in IndexedDB, in the existing `kv` store under the key `packs` (so no schema migration, `DB_VERSION` stays 1), as the one document of PACKS.md §7.1: `{ v: 1, packs: { <id>: { enabled, version, granted, at } }, pending }`. It is read on start-up, and every record is validated and checked against the build's registry. A record that fails validation is dropped silently (UI.md §4 rule 6: nothing from storage is used unchecked). The `pending` mark guards against a pack that crashed while loading (PACKS.md §8.4). It is **per browser**, never part of a share link, and not in `localStorage`. All packs are off in a fresh browser (Q13 in §11). **The privacy page** (UI.md §8, `/privacy/`) says that the list of enabled packs is stored in this browser only and is never sent anywhere.
 - **No "always allow".** The dialog has no "turn on packs for shared links" setting. Every shared recipe that needs a pack asks (§6.5).
 - **Keyboard and screen reader.** Each switch is reachable in tab order, toggles with Space, and its row text is its description (`aria-describedby`). A running state is announced once. Focus stays on the switch after a change.
 - Axe in three themes, and the compact layout (the dialog already has a compact form).
@@ -646,10 +647,10 @@ The top bar's More menu gains **Packs...**, above "Keyboard shortcuts". It opens
 Enabling a pack does three things in order, and the row reports the first that fails:
 
 1. **The UI chunk.** The pack's UI feature (its viewers, ext widgets and any pane) loads with one dynamic `import()` from a fixed table the build generates (§7.3, rule 8). Its viewers register (§1.2) and its ext widgets register (§3.2).
-2. **The catalogue.** The catalogue for the enabled set is loaded (a same-origin file the build emits, named by the manifest). `state.catalogue` changes, so the operations pane, fit, issues and the drawer update at once.
-3. **The baker.** The baker is re-initialised with the enabled pack ids (`baker.init`, P2). The engine chunk itself is **not** loaded until a bake needs it: a recipe with no `relix:` word never pays the 1.3 MB (R13, RELIX.md §1.5). The first bake that does needs it shows the status "Loading the Relix engine..." in the bake controls' `role="status"` text (a worker event for this is an ask of R13, §6.7). If the load fails, the bake fails with `E_INTERNAL` and the load error, and the error panel shows **Bake again** (§8).
+2. **The catalogue.** The catalogue fragment of the pack (and of the packs it requires) is fetched from a same-origin file whose name the build's generated registry holds (PACKS.md §5.1), and merged with the core catalogue. `state.catalogue` changes, so the operations pane, fit, issues and the drawer update at once.
+3. **The baker.** The baker is re-initialised with the enabled pack ids (`baker.init`, P2b; `packs` rides protocol 2 with the named inputs, because P2b lands with RW5, PACKS.md PQ7). The engine chunk itself is **not** loaded until a bake needs it: a recipe with no `relix:` word never pays the 1.3 MB (R13, RELIX.md §1.5). The first bake that does needs it shows the status "Loading the Relix engine..." in the bake controls' `role="status"` text (a worker event for this is an ask of R13, §6.7). If the load fails, the bake fails with `E_INTERNAL` and the load error, and the error panel shows **Bake again** (§8).
 
-Disabling reverses 1 to 3. A running bake is cancelled and restarted by the existing auto-bake rule, because the catalogue changed.
+Disabling reverses 1 to 3, and replaces the workers, because the kind registry has no unregister (PACKS.md §4.7, PK16). A running bake is cancelled and restarted by the existing auto-bake rule, because the catalogue changed.
 
 ### 6.4 State and actions
 
@@ -657,7 +658,7 @@ The shell owner (WP 3.1) adds, on request of P4:
 
 ```ts
 // state/types.ts (proposed)
-type PackStatus = "off" | "loading" | "on" | "failed";
+type PackStatus = "off" | "loading" | "on" | "failed" | "needs-review" | "unavailable" | "blocked"; // the states of PACKS.md §7.3, plus the transient "loading"
 interface PacksState {
   readonly status: Readonly<Record<string, PackStatus>>; // by pack id, for every pack in the manifest
   readonly message: Readonly<Record<string, string>>; // the failure text, by pack id
@@ -667,16 +668,19 @@ interface PacksState {
 // actions: setPackEnabled(id: string, enabled: boolean): Promise<void>; the one place a pack is switched
 ```
 
-`state.issues` is computed with `validateRecipe(recipe, catalogue, { packs: packIndex(state) })`, where `packIndex` builds the `PackIndex` of RECIPES-1.2 §8.2 (`vocabs` from the manifest, `enabled` from `state.packs`). `decodeShare` gets the same option. `src/packs/` holds the manager, the offer dialog, the persistence and these helpers (TOOLKIT P4 names `apps/web/src/packs/*`).
+`state.issues` is computed with `validateRecipe(recipe, catalogueView, { packs: packIndex(state) })`, where `packIndex` is `createPackIndex` of PACKS.md §5.3 (`vocabs` from the build's registry, `enabled` from `state.packs`, without the packs in `needs-review` or `failed`). `catalogueView` is the **recipe view** of the merged catalogue: the same ops, with `version` replaced by the core catalogue version (PACKS.md §5.4, PK9; RECIPES-1.2 §8.5). The same view goes to `encodeShare` and `compileRecipe`; the ops pane and the forms read the merged catalogue itself. `decodeShare` gets the same option. `src/packs/` holds the manager, the offer dialog, the persistence and these helpers (TOOLKIT P4 names `apps/web/src/packs/*`). **Feature order.** The app's feature list (UI.md §3.4, `modules.ts`) gains a `packs` feature that starts **after `persist` and before `bake`**: it needs the stored set first, and the bake controller needs the enabled set and the merged catalogue to initialise the baker.
 
 ### 6.5 The enable offer for a shared recipe (P5)
 
-`decodeShare` fails with the code `packs-needed` when every error is `pack-not-enabled` (RECIPES-1.2 §8.3). The failure carries the decoded `recipe`, the pack ids `packs` and what the link held (`input`, `inputName`, `tabs`). The page shows `forge-pack-offer-dialog` (`DialogId` `"pack-offer"`), not a banner, because it asks for a decision:
+`decodeShare` fails with the code `packs-needed` when every error is `pack-not-enabled` (RECIPES-1.2 §8.3). The failure carries the decoded `recipe`, the pack ids `packs` and what the link held (`input`, `inputName`, `tabs`). The page shows `forge-pack-offer-dialog` (`DialogId` `"pack-offer"`), not a banner, because it asks for a decision. Its text uses **only values from the build** (PACKS.md §7.4, PK15): the pack's `name` and `description`, the packs it requires, the capability sentences of §6.2 and the first-party notice. Nothing in it comes from the link:
 
 ```
  This recipe needs the Relix pack
  ------------------------------------------------------------------------
  It uses 7 steps from the Relix pack: Select, Theta join, Group, Sort and 3 more.
+
+ Relix: Build and run relational queries on your tables.
+ No extra capabilities.
 
  The Relix pack is part of Forge. It loads from this site and cannot reach
  any other site. It is about 1.4 MB, loaded now and then kept by your browser.
@@ -684,8 +688,8 @@ interface PacksState {
  [ Turn on and open ]   [ Open without the pack ]   [ Cancel ]
 ```
 
-- **Turn on and open** is the primary button and has the focus. It enables every pack the link needs (all are first-party; one button covers several: "Turn on Relix and Media and open"), waits for the catalogue, validates again with the new `PackIndex`, and opens the recipe with its input and tabs by the flow of §5.7. If the pack fails to load, the dialog stays open with the failure text and **Try again**.
-- **Open without the pack** loads the recipe into the editor with `pack-not-enabled` shown on each step. Nothing runs (the recipe has errors, so auto-bake is skipped, as it is for any invalid recipe). It lets a person read a recipe without enabling anything.
+- **Turn on and open** is the primary button and has the focus. It is the "Enable" of PACKS.md §7.4. It enables every pack the link needs, with the packs they require (all are first-party; one button covers several: "Turn on Relix and Media and open"), writes the store with the grant, waits for the catalogue, validates again with the new `PackIndex`, and opens the recipe with its input and tabs by the flow of §5.7. A pack in `needs-review` is offered as "Review and turn on", with what is new. A click is required: **no link, URL parameter or recipe turns a pack on** (PK15). If the pack fails to load, the dialog stays open with the failure text and **Try again**.
+- **Open without the pack** (the "Not now" of PACKS.md §7.4) loads the recipe into the editor with `pack-not-enabled` shown on each step. Nothing runs (the recipe has errors, so auto-bake is skipped, as it is for any invalid recipe). It lets a person read a recipe without enabling anything.
 - **Cancel** discards the link and leaves the document as it was.
 - The pack ids come from the page's own `PackIndex`, not from the link's text, and are still checked against the manifest before use (TOOLKIT §5.2; UI.md §4 rule 6). The link carries no pack list at all (T26).
 - The list of steps comes from `packsUsed(recipe, index).paths`, shown as display names (text).
@@ -710,7 +714,7 @@ interface PacksState {
 - **Status bar.** The right side reads "N operations · catalogue `<version>`" and gains " · 2 packs on" when any pack is on.
 - **Console.** The console worker gets the same pack ids at its own `init`, so `help`, `see` and typed words match the editor (UI.md §5, P2).
 
-What the UI needs from the manifest (SP4 decides the form): the **id** (lower-kebab-case), a **display name**, a **one-line summary** of at most 120 characters, a plain-text **description**, the **version**, the **size budget** (gzip bytes), the **vocabularies**, the **kinds** the pack registers with a `noun` for each ("table", "rational number"), the **conversions** it declares (RECIPES-1.2 §6.9), a **plain-words list of what it can do** (the capability model, TOOLKIT §5.4, in a sentence a person reads), its **dependencies** on other packs, and its **UI entry** (the chunk that holds viewers and widgets). A summary of the manifest, with these fields and no code, is bundled into the app as a JSON module, so the manager and `PackIndex` need no request. The pack's chunks and its catalogue file are fetched or imported by names the manifest holds. Asks of R13: a worker event that says the engine chunk is loading, and the structured Relix detail of §8.
+What the UI needs from the manifest (SP4 decides the form): the **id** (lower-kebab-case), a **display name**, a **one-line summary** of at most 120 characters, a plain-text **description**, the **version**, the **size budget** (gzip bytes), the **vocabularies**, the **kinds** the pack registers with a `noun` for each ("table", "rational number"), the **conversions** it declares (RECIPES-1.2 §6.9), the **capabilities it requests** (effect labels and CSP sources; the app turns them into sentences by the one fixed table of §6.2, so the manifest holds no sentence), its **dependencies** on other packs, and its **UI entry** (the chunk that holds viewers and widgets). PACKS.md §2.8 answers each of these. The manifest facts are compiled into the app by the generated registry (a committed TypeScript module that holds no pack code), so the manager and `PackIndex` need no request. The pack's chunks are imported through the build's fixed table, and its catalogue fragment is fetched by a name the generated registry holds. The page never fetches a manifest (PACKS.md PK5). Asks of R13: a worker event that says the engine chunk is loading, and the structured Relix detail of §8.
 
 ---
 
@@ -765,7 +769,7 @@ The question the task asks, feature by feature. The answer is no, except where t
 | Canvas drawing, `OffscreenCanvas` in a worker, `createImageBitmap` | none | none |
 | `<img src="blob:...">`, `canvas.toBlob` then an object URL | `img-src 'self' data: blob:` | none |
 | `<audio>` or `<video>` with a `blob:` `src` | `media-src` | **add `media-src blob:`** |
-| `fetch` of the pack manifest summary, a pack's catalogue file | `connect-src 'self'` | none |
+| `fetch` of a pack's catalogue, help and checks fragments, and a pack's own hashed non-JS files (the pack manifest is compiled in and is not fetched) | `connect-src 'self'` | none |
 | Loading a `.wasm` file for a later pack | `script-src 'wasm-unsafe-eval'` for `WebAssembly.compile` | none (already present) |
 | Shared-memory cancellation, `crossOriginIsolated` | COOP and COEP | none; a same-origin chunk or `blob:` URL passes `require-corp`. |
 | Trusted Types | not enabled | not proposed; not tested by X0. |
@@ -798,7 +802,7 @@ This is the proposed text. A change relative to today is marked **(changed)** or
 
 **Rule 8 (changed).**
 
-> 8. **Only same-origin requests** (`connect-src 'self'`, `script-src 'self'`, `worker-src 'self'`): the catalogue, the pack manifest summary and a pack's catalogue file, lazy op chunks, lazy pack chunks (the Relix engine module among them), and workers. A pack is loaded through a fixed table that the build generates, one literal `import("...")` per pack, looked up by an id that has been checked against the build-time manifest (TOOLKIT §5.2). A chunk name or a pack id never comes from data. `fetch` is used for the catalogue, the pack manifest and the files the manifest names, and nowhere else; no other app code calls it. A pack runs under this same CSP, so it cannot reach any other origin. There is no analytics, no font, no CDN and no third-party anything.
+> 8. **Only same-origin requests** (`connect-src 'self'`, `script-src 'self'`, `worker-src 'self'`). `fetch` is for the catalogue, for pack catalogue, help and checks fragments, and for a pack's own hashed non-JS files, and nowhere else; no other app code calls it. Pack code is not fetched: it loads by `import()` of same-origin hashed modules (lazy op chunks, lazy pack chunks, the Relix engine module among them), and workers load the same way. A pack is loaded through a fixed table that the build generates, one literal `import("...")` per pack, looked up by an id that has been checked against the build's registry (TOOLKIT §5.2; PACKS.md §3.4). The pack manifest is compiled into the page and the worker and is never fetched (PACKS.md PK5). A chunk name or a pack id never comes from data. A pack runs under this same CSP, so it cannot reach any other origin. There is no analytics, no font, no CDN and no third-party anything.
 
 **Rule 9** unchanged. (Packs add no `<iframe>`.)
 
@@ -818,13 +822,13 @@ This is the proposed text. A change relative to today is marked **(changed)** or
 
 ### 7.4 Adopted stylesheets, and what was and was not tested
 
-X0 §8 found that `new CSSStyleSheet()`, `replaceSync` and `adoptedStyleSheets` raise no violation under `style-src 'self'` and that axe reported nothing for a grid in an open shadow root. That test ran in **Chromium**, the only browser of the e2e suite (UI.md §6). Rule 6b(iii) is written so that a browser without adopted stylesheets (an older Safari) still shows a readable, unstyled viewer. Q16 in §11 recommends adding a Firefox and WebKit smoke of the table viewer and the CSP test, which UI.md §6 already allows when the CI image has them. Untested items: a viewer that draws on a `<canvas>`, a `blob:` image or audio element (needs the new directive), and Trusted Types.
+X0 §8 found that `new CSSStyleSheet()`, `replaceSync` and `adoptedStyleSheets` raise no violation under `style-src 'self'` and that axe reported nothing for a grid in an open shadow root. That test ran in **Chromium**, the only browser of the e2e suite (UI.md §6). Rule 6b(iii) is written so that a browser without adopted stylesheets (an older Safari) still shows a readable, unstyled viewer. Q16 in §11 (decided) adds a Firefox and WebKit smoke of the table viewer and the CSP test, which UI.md §6 already allows when the CI image has them. Untested items: a viewer that draws on a `<canvas>`, a `blob:` image or audio element (needs the new directive), and Trusted Types.
 
 ### 7.5 What the host needs: `serve-prod.mjs`, `infra/`, PLAN §10
 
 - **`apps/web/scripts/serve-prod.mjs`: no change for the CSP.** `readCsp()` reads the string from `infra/site.tf` (the `csp = "..."` local), so the e2e suite tests what is deployed and the one-line change in `site.tf` reaches it by itself. Two notes: (1) the MIME table already has `.js`, `.mjs`, `.json`, `.wasm` and `.css`; a pack's files must use those extensions, because a module script needs a JavaScript MIME type. (2) The server does not send `Permissions-Policy`, HSTS or `X-Frame-Options`, which `site.tf` does. That is a gap between the test server and production, not a CSP point, and not proposed here.
 - **`infra/site.tf`: one line**, the diff of §7.1. **This is an infra change. It needs the owner's approval and a `terraform apply`** (CLAUDE.md). `infra/README.md` repeats the CSP if it lists it and changes with it. No change to `cf_function.js` (it rewrites directory paths) and none to the cache behaviours, provided pack chunks live under `/assets/` so that they get the immutable policy. P1 and P7 own that rule for pack build output.
-- **PLAN §10**: the CSP bullet gains `media-src blob:`; the `connect-src` sentence ("needed only to fetch lazy WASM, `.fth` and catalogue files") becomes "needed to fetch the catalogue, the pack manifest and pack catalogue files"; one bullet notes that pack chunks load with `import()` under `script-src 'self'`. PLAN §10 also lists no `Permissions-Policy`, which `site.tf` sets; that omission is not new.
+- **PLAN §10**: the CSP bullet gains `media-src blob:`; the `connect-src` sentence ("needed only to fetch lazy WASM, `.fth` and catalogue files") becomes "needed to fetch the catalogue, pack catalogue, help and checks fragments and a pack's own hashed non-JS files; the pack manifest is compiled in"; one bullet notes that pack chunks load with `import()` under `script-src 'self'`. PLAN §10 also lists no `Permissions-Policy`, which `site.tf` sets; that omission is not new.
 
 **Staging.** (1) UI.md rules 5, 6, 8, 10, 12 and 13 land with X2 and P4, because viewers and the pack manager need them, and they change no header. (2) The CSP golden test lands at the same time, against the **current** string, so any later edit to the header is deliberate. (3) `media-src blob:` is applied **with the media pack's work package (T6)**, not before: a directive nothing uses is a wider policy for no gain (Q15 in §11). At that point the owner approves the one-line `site.tf` edit and runs `terraform apply`, the golden test's expected string changes in the same pull request, and PLAN §10 follows.
 
@@ -902,7 +906,7 @@ An operation that cannot run in the browser build (`relix:optimize`; `relix:cove
 
 ### 9.3 Reference pages (UI.md §8)
 
-The generated reference pages under `/ops/` come from the catalogue at build time. Recommend that the pages for pack operations are generated too (Q14 in §11), each marked "Part of the Relix pack, which is off by default" with an **Open in Forge** link. The link goes through the offer dialog of §6.5, so it works from a cold browser. The build does not load the engine. The page text comes from the pack's metadata.
+The generated reference pages under `/ops/` come from the catalogue at build time. The pages for pack operations are generated too (Q14 in §11, decided), each marked "Part of the Relix pack, which is off by default" with an **Open in Forge** link. The link goes through the offer dialog of §6.5, so it works from a cold browser. The build does not load the engine. The page text comes from the pack's metadata.
 
 ### 9.4 The shortcuts dialog
 
@@ -1002,28 +1006,28 @@ Every new text sink is covered by the same set of strings (`<img src=x onerror=a
 
 ---
 
-## 11. Open questions, with recommendations
+## 11. Questions, decided at Gate T1
 
-Each question has a recommendation. None is decided. Q6, Q7 and Q8 answer the open editor questions of RELIX-LANES (its Q4, its Q1 and the second point of its Q5). The others are raised by this file.
+**All of them were decided at Gate T1 on 2026-11-24: the owner accepted every recommendation.** The last column is the decision. Q6, Q7 and Q8 answered the editor questions of RELIX-LANES (its Q4, its Q1 and the second point of its Q5), and RELIX-LANES §12.2 records them. The others were raised by this file.
 
-| # | Question | Recommendation |
+| # | Question | Decision (the recommendation, accepted) |
 |---|---|---|
-| Q1 | The table viewer: how many rows, and when to window? (T21 says first N with a stated limit.) | N is 100, as X0 measured. Draw whole up to 5,000 cells, window beyond that, so find-in-page and browse mode keep working in the common case. Set `aria-rowcount` to the rows present and state the total in the limit sentence. No sorting in 1.0. D3 confirms the 100 and the column cap (256, like the schema). |
-| Q2 | Copy and Download only see `output.text`, cut at 4,000 characters. How does the page know it was cut? | X2 adds `truncated: true` to the `ext` output (a field of the contract bump of T19, no extra cost). The buttons say "first 4,000 characters", and Convert to bytes gives the whole value. Without the flag the page would have to guess from a trailing `...`. |
-| Q3 | "Move to input" cannot work for an ext value. A disabled button, or a menu? | A **Convert to bytes** menu that adds `table:to-csv` or `table:to-json` (the viewer's `bytesOps`). One click, visible, one undo step, and the bytes route is then the existing one. |
-| Q4 | Which conversions show as amber? | The lift (`table` to `relation`) is green with a badge: it cannot fail and costs nothing. The run (`relation` to `table`) is amber with "runs the query first": it executes, can fail, may be slow. Both carry the coercion badge. |
-| Q5 | Where does the async `relix-expr` check run? | In the bake Worker, only when it is idle, one request queued, never cancelling a bake. The page never starts a second engine for a check. A bake is the work and a check is advice. Needs the generic `ext.check` message from X5 and R13. |
-| Q6 | RELIX-LANES Q4: is the Tree view editable in v1? | **Read-only**, with the L and R sockets and Swap sides and Make main line as buttons, and "Enter selects and goes to Lanes". A second editable view needs a second hit-test and keyboard design, and a 2-D diagram is the hard part of accessibility. Revisit after v1 with the keyboard tests in hand. |
-| Q7 | RELIX-LANES Q1: the default pipe side of "join it in". | The data above on the **left**, the dropped table on the right, with an announcement that names the Swap. No toast: a toast with a button is a poor fit for assistive technology, and Undo and Swap sides already exist. |
-| Q8 | RELIX-LANES Q5, second point: after Main line, if the other slot is empty, what is the first step? | The question goes away: **Make main line is disabled** when the other lane has no enabled step, with the reason shown. The normal-form rule 1 case is then unreachable by this button. |
-| Q9 | RELIX-LANES §5.3: is As text a third in-pane view or a dialog? | A **dialog** (the "View as text" dialog with tabs FL, Relix, JSON), opened by a button beside the Lanes and Tree tabs. It is wider than the pane, works in the compact layout, and extends the dialog that exists. |
-| Q10 | Which tabs does a bake send? | Only the tabs `inputNames(recipe)` lists, plus the active tab, and all tabs if any tab name comes from a register. Each bake copies and transfers the buffers, and auto-bake runs on every keystroke. This is a rule for X5's controller. |
-| Q11 | What happens when a tab that steps read is renamed or closed? | Offer, in one undo step, to update the steps (rename) or confirm (close). A silent break is the worst outcome. |
-| Q12 | A link that carries tabs: merge or replace? | The carried names win: same name replaces that tab's bytes, a new name adds a tab, the recipe replaces the recipe, and a confirm step lists what will be replaced. Exact names are the contract, so merging by renaming would break the recipe. |
-| Q13 | Pack defaults and discovery. | All packs **off** in a fresh browser (T5), the choice kept per browser in IndexedDB, **no "always trust" setting**, and no search into packs that are off in 1.0 (the drawer's one-line "Packs: ..." and the Packs dialog are the way in). Search into off packs needs an index of operation names and text, which is a build and size decision for P1 and P7. |
-| Q14 | Reference pages (`/ops/`) for pack operations? | **Yes**, generated from pack metadata, marked as part of an optional pack, with an Open in Forge link that goes through the offer. People find operations through search engines. |
-| Q15 | When is `media-src blob:` applied? | At **T6**, with the media pack, not now. Least privilege until used. Land the UI.md text and the CSP golden test earlier, against today's string. The owner approves and applies the one-line `site.tf` change. |
-| Q16 | Run a Firefox and WebKit smoke of the viewer and the CSP test? | Yes, if the CI image has them (UI.md §6 allows it). The adopted-stylesheet finding is Chromium only. It is a smoke, not the full suite. |
+| Q1 | The table viewer: how many rows, and when to window? (T21 says first N with a stated limit.) | Decided: N is 100, as X0 measured. Draw whole up to 5,000 cells, window beyond that, so find-in-page and browse mode keep working in the common case. Set `aria-rowcount` to the rows present and state the total in the limit sentence. No sorting in 1.0. D3 confirms the 100 and the column cap (256, like the schema). |
+| Q2 | Copy and Download only see `output.text`, cut at 4,000 characters. How does the page know it was cut? | Decided: X2 adds `truncated: true` to the `ext` output (a field of the contract bump of T19, no extra cost). The buttons say "first 4,000 characters", and Convert to bytes gives the whole value. Without the flag the page would have to guess from a trailing `...`. |
+| Q3 | "Move to input" cannot work for an ext value. A disabled button, or a menu? | Decided: A **Convert to bytes** menu that adds `table:to-csv` or `table:to-json` (the viewer's `bytesOps`). One click, visible, one undo step, and the bytes route is then the existing one. |
+| Q4 | Which conversions show as amber? | Decided: The lift (`table` to `relation`) is green with a badge: it cannot fail and costs nothing. The run (`relation` to `table`) is amber with "runs the query first": it executes, can fail, may be slow. Both carry the coercion badge. |
+| Q5 | Where does the async `relix-expr` check run? | Decided: In the bake Worker, only when it is idle, one request queued, never cancelling a bake. The page never starts a second engine for a check. A bake is the work and a check is advice. Needs the generic `ext.check` message from X5 and R13. |
+| Q6 | RELIX-LANES Q4: is the Tree view editable in v1? | Decided: **Read-only**, with the L and R sockets and Swap sides and Make main line as buttons, and "Enter selects and goes to Lanes". A second editable view needs a second hit-test and keyboard design, and a 2-D diagram is the hard part of accessibility. Revisit after v1 with the keyboard tests in hand. |
+| Q7 | RELIX-LANES Q1: the default pipe side of "join it in". | Decided: The data above on the **left**, the dropped table on the right, with an announcement that names the Swap. No toast: a toast with a button is a poor fit for assistive technology, and Undo and Swap sides already exist. |
+| Q8 | RELIX-LANES Q5, second point: after Main line, if the other slot is empty, what is the first step? | Decided: The question goes away: **Make main line is disabled** when the other lane has no enabled step, with the reason shown. The normal-form rule 1 case is then unreachable by this button. |
+| Q9 | RELIX-LANES §5.3: is As text a third in-pane view or a dialog? | Decided: A **dialog** (the "View as text" dialog with tabs FL, Relix, JSON), opened by a button beside the Lanes and Tree tabs. It is wider than the pane, works in the compact layout, and extends the dialog that exists. |
+| Q10 | Which tabs does a bake send? | Decided: Only the tabs `inputNames(recipe)` lists, plus the active tab, and all tabs if any tab name comes from a register. Each bake copies and transfers the buffers, and auto-bake runs on every keystroke. This is a rule for X5's controller. |
+| Q11 | What happens when a tab that steps read is renamed or closed? | Decided: Offer, in one undo step, to update the steps (rename) or confirm (close). A silent break is the worst outcome. |
+| Q12 | A link that carries tabs: merge or replace? | Decided: The carried names win: same name replaces that tab's bytes, a new name adds a tab, the recipe replaces the recipe, and a confirm step lists what will be replaced. Exact names are the contract, so merging by renaming would break the recipe. |
+| Q13 | Pack defaults and discovery. | Decided: All packs **off** in a fresh browser (T5), the choice kept per browser in IndexedDB, **no "always trust" setting**, and no search into packs that are off in 1.0 (the drawer's one-line "Packs: ..." and the Packs dialog are the way in). Search into off packs needs an index of operation names and text, which is a build and size decision for P1 and P7. |
+| Q14 | Reference pages (`/ops/`) for pack operations? | Decided: **Yes**, generated from pack metadata, marked as part of an optional pack, with an Open in Forge link that goes through the offer. People find operations through search engines. |
+| Q15 | When is `media-src blob:` applied? | Decided: At **T6**, with the media pack, not now. Least privilege until used. Land the UI.md text and the CSP golden test earlier, against today's string. The owner approves and applies the one-line `site.tf` change. |
+| Q16 | Run a Firefox and WebKit smoke of the viewer and the CSP test? | Decided: Yes, if the CI image has them (UI.md §6 allows it). The adopted-stylesheet finding is Chromium only. It is a smoke, not the full suite. |
 
 ---
 
@@ -1066,32 +1070,32 @@ Which package carries each change. Rows are those of TOOLKIT §13.5 and §13.6, 
 
 ## 13. Edits needed in other documents
 
-This file edits none of them. The orchestrator applies or briefs these.
+This file edits none of them. The orchestrator applies or briefs these. **Applied at Gate T1 (2026-11-24)** in the files that the specification work owns: item 11 in RECIPES-1.2.md (§19.2), item 12 in RELIX-LANES.md (§5, §5.3, §12.2, RL4) and item 13 in RELIX.md (§16, items 9 and 11). The items for TOOLKIT.md, PLAN.md and UI.md are left to the orchestrator and to the work packages.
 
 **TOOLKIT.md**
 
 1. §13.3, row SP3: "UI.md amendments: viewers, pack rules, CSP" becomes first a proposal file, `docs/UI-TOOLKIT.md`, with UI.md changing as work packages land (as SP2 did). "Owns" becomes `docs/UI-TOOLKIT.md`. Mark it written once approved. "Depends on SP1" is not needed for this proposal.
 2. §5.5: **rule 6 is amended, not "unchanged"**: it gains the viewer and shadow-root rules (§7.3). Rule 8 amended as written. Add rule 13 (packs) and the amendments to rules 5, 7, 10 and 12. Replace "Nothing else in the CSP changes" with a pointer to UI-TOOLKIT.md §7.1 and §7.2, which also says when `media-src blob:` is applied (T6).
-3. §7 and §13.5 disagree on the names of the table export words: §7 writes `table:>csv` and `table:>json`, and the D2 row writes `table:to-csv` and `table:to-json`. This file uses `table:to-csv` and `table:to-json`. SP1 or the D2 brief should settle the spelling.
+3. §7 and §13.5 disagree on the names of the table export words: §7 writes `table:>csv` and `table:>json`, and the D2 row writes `table:to-csv` and `table:to-json`. This file uses `table:to-csv` and `table:to-json`. SP1 settled the spelling (LANGUAGE-0.3.md Q18, decided at Gate T1): `table:to-csv` and `table:to-json`, and the word that parses JSON text is the core `json>value`.
 4. §6.2: the viewer table lists `rat`, `cplx`, `qty` and `matrix` with viewer "text". Add that a kind with no `view` is drawn by the text fallback, and that a viewer is a `render(output, ctx)` function with optional `copyText`, `download` and `bytesOps` (UI-TOOLKIT.md §1.2).
 5. §5.2, §5.5: the enable offer (P5) and the pack manager (P4) point to UI-TOOLKIT.md §6, and the notice text of §6.5 is the text that §5.2 asks for.
 6. §13.5, rows X2, X3, X5, P4, P5 and D3: add the specifics that this file fixes. X2: the `truncated` flag on the `ext` output (Q2), `bytesOps`, the CSP golden test. X3: the helper contract with a position in the result and an async `checkAsync`. X5: only named tabs are sent (Q10), unique tab names. P4: the `kv` key, the `packs` state, the `DialogId` additions. D3: the 100-row limit, windowing at 5,000 cells, the null and empty rules.
-7. §14.2: add the open questions Q1 to Q16 of UI-TOOLKIT.md §11 by reference, or list those the owner must decide (Q2, Q3, Q4, Q6, Q7, Q9, Q13, Q15).
+7. §14.2: add the questions Q1 to Q16 of UI-TOOLKIT.md §11 by reference. All are decided (Gate T1, 2026-11-24).
 8. §14.1, risk 8 ("CSP relaxation for media"): add that it is applied at T6 and guarded by the CSP golden test.
 9. §15, UI.md bullet: "Amended in WP SP3" becomes "Amended as work packages land, from the proposal UI-TOOLKIT.md (WP SP3)". Add a UI-TOOLKIT.md bullet.
 10. §2.3 blockers or §14.1: the `serve-prod.mjs` server omits `Permissions-Policy`, HSTS and `X-Frame-Options`, which `site.tf` sets. Not a blocker, but the e2e suite does not test those headers.
 
 **RECIPES-1.2.md** (§19.2, "UI.md (SP3)")
 
-11. The bullet that asks for UI.md edits is met by UI-TOOLKIT.md §5.6 (share dialog sentence, tab and pack lists), §5.3 (the missing-tab text), §6.6 (the `pack-not-enabled` text), §3 (the use of `StepReport.out`) and §9.1 (`setup` and `finish` in the help dialog). Note the page-level "missing tab" notice is not a recipe issue code.
+11. *Applied.* The bullet that asks for UI.md edits is met by UI-TOOLKIT.md §5.6 (share dialog sentence, tab and pack lists), §5.3 (the missing-tab text), §6.6 (the `pack-not-enabled` text), §3 (the use of `StepReport.out`) and §9.1 (`setup` and `finish` in the help dialog). Note the page-level "missing tab" notice is not a recipe issue code.
 
 **RELIX-LANES.md**
 
-12. §5.3 and L4: As text is a dialog beside the Lanes and Tree tabs (Q9). §12.2, Q1, Q4 and Q5 (second point): record the recommendations of Q7, Q6 and Q8 once decided.
+12. *Applied.* §5.3 and L4: As text is a dialog beside the Lanes and Tree tabs (Q9). §12.2, Q1, Q4 and Q5 (second point): record the decisions of Q7, Q6 and Q8.
 
 **RELIX.md** (§16, item 11)
 
-13. Item 11 (SP3 / UI.md) is met by UI-TOOLKIT.md §1.8 (the relation viewer), §9.1 (the plain-text reference view) and §9.2 (the "Not in the browser" badge). §16 item 9 adds: the generic `ext.check` request is a message of the bake Worker that the page sends only when it is idle (UI-TOOLKIT.md §3.5).
+13. *Applied.* Item 11 (SP3 / UI.md) is met by UI-TOOLKIT.md §1.8 (the relation viewer), §9.1 (the plain-text reference view) and §9.2 (the "Not in the browser" badge). §16 item 9 adds: the generic `ext.check` request is a message of the bake Worker that the page sends only when it is idle (UI-TOOLKIT.md §3.5).
 
 **PLAN.md**
 
