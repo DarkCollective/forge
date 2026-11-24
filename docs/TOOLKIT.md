@@ -1,6 +1,6 @@
 # Forge toolkit: Relix, symbolic algebra and packs (programme plan)
 
-Status: draft v1 (2026-11-11), amended 2026-11-23 with the owner's Gate T0 decisions for R0 and X0 and, the same day, the Gate T1 decisions for SP2 and SP6 (§3). A plan, not yet normative. It builds on [PLAN.md](PLAN.md) (§1 principles, §3.5 primitives, §5 security, §7 phases, §8 orchestration, §9 decisions), [SYMBOLIC.md](SYMBOLIC.md) (v1), [LANGUAGE.md](LANGUAGE.md) (FL v0.1), [RECIPES.md](RECIPES.md) and [UI.md](UI.md) (§4 CSP). Relix facts come from the `relix-core` source tree, `relix/docs/design/query-builder.md` and `relix/.claude/BACKLOG.md`.
+Status: draft v1 (2026-11-11), amended 2026-11-23 with the owner's Gate T0 decisions for R0 and X0 and, the same day, the Gate T1 decisions for SP2 and SP6, and on 2026-11-24 with the rest of the Gate T1 decisions, for SP1, SP3 and SP4 (§3, T35 to T52). A plan, not yet normative. It builds on [PLAN.md](PLAN.md) (§1 principles, §3.5 primitives, §5 security, §7 phases, §8 orchestration, §9 decisions), [SYMBOLIC.md](SYMBOLIC.md) (v1), [LANGUAGE.md](LANGUAGE.md) (FL v0.1), [RECIPES.md](RECIPES.md) and [UI.md](UI.md) (§4 CSP). Relix facts come from the `relix-core` source tree, `relix/docs/design/query-builder.md` and `relix/.claude/BACKLOG.md`.
 
 > **Packages are frozen.** `packages/*` hold frozen Phase 1–2 contracts (CLAUDE.md). Most of this plan changes them. Nothing in it starts before the owner approves the version bump at the gate of Phase T1 (§13.3). The spikes of Phase T0 are throwaway code on branches and change no contract.
 
@@ -10,7 +10,7 @@ Status: draft v1 (2026-11-11), amended 2026-11-23 with the owner's Gate T0 decis
 
 1. Goals and scope
 2. Where we are
-3. Decisions T1 to T8, Gate T0 (T9 to T22) and Gate T1 (T23 to T34)
+3. Decisions T1 to T8, Gate T0 (T9 to T22) and Gate T1 (T23 to T52)
 4. Architecture
 5. The pack system
 6. Extension values and viewers
@@ -18,7 +18,7 @@ Status: draft v1 (2026-11-11), amended 2026-11-23 with the owner's Gate T0 decis
 8. The Relix pack
 9. The symbolic pack
 10. Media and code packs
-11. FL v0.2
+11. FL v0.3
 12. One implementation per capability
 13. Phases, gates and work packages
 14. Risks and open questions
@@ -37,7 +37,7 @@ The owner set six goals.
 5. **More in FL.** Write as many operations as possible in FL.
 6. **One implementation per capability.** No duplicated effort between Relix and Forge.
 
-**In scope:** a pack system; extension value kinds with viewers; a table value; a Relix pack; FL callable from Relix in the browser and on the JVM; a symbolic pack; media and code packs; FL v0.2 and a mechanical migration of the in-repo corpus.
+**In scope:** a pack system; extension value kinds with viewers; a table value; a Relix pack; FL callable from Relix in the browser and on the JVM; a symbolic pack; media and code packs; FL v0.3 and a mechanical migration of the in-repo corpus.
 
 **Not in scope:** HTTP or database sources for Relix inside Forge (T3); third-party code that is not FL (T7); replacing Relix's built-in functions with FL (an open question, Q6); any addition to the Relix 1.0.0 scope before the owner pulls it in (Q1).
 
@@ -49,7 +49,7 @@ Goals 3 and 6 pull against goal 1. A Relix engine in the browser is a second pla
 
 ### 2.1 Forge today
 
-From PLAN.md §7: **363 ops in 155 vocabularies**. 4,488 op vectors in 155 files. The tree has 161 `.fth` files in `packages/ops/vocab`: the 155 op vocabularies plus six internal ones.
+From PLAN.md §7: **363 ops in 155 vocabularies**. 4,488 op vectors in 155 files. The tree had 161 `.fth` files in `packages/ops/vocab`: the 155 op vocabularies plus six internal ones. **All of these counts are stale; L1 refreshes them (T52).** Measured on 2026-11-24: the tree has **208** `.fth` files in `packages/ops/vocab` (28,759 lines) and 201 `.test.json` files holding **7,589** vectors.
 
 **Triage of the 184 "not yet" ops** (the orchestrator's classification):
 
@@ -90,10 +90,12 @@ A table of 10,000 rows by 10 integer columns costs about **4.08 MB** as a list o
 
 ### 2.5 The FL corpus (measured)
 
+*Dated note (2026-11-24):* the survey below was taken when the tree had 150 `.fth` files. The tree has 208 now, so every count in this section is a count of the survey, and none is current (stale; L1 refreshes, T52).
+
 | Measure | Value |
 |---|---|
-| Files, lines | 150 `.fth` files, 16,792 lines |
-| Colon words | 1,853; 439 public, 1,414 private |
+| Files, lines | 150 `.fth` files, 16,792 lines (stale; L1 refreshes. The tree has 208 files and 28,759 lines on 2026-11-24) |
+| Colon words | 1,853; 439 public, 1,414 private (stale; L1 refreshes) |
 | Private words called exactly once | 984 |
 | Primitives | 70 modules, 9,190 TypeScript lines, 119 primitives |
 | Stack shuffling | 3.5 per 100 tokens |
@@ -155,7 +157,7 @@ Decisions T1 to T7 were taken with the owner on 2026-11-11. **T8 is the orchestr
 | T4 | Symbolic algebra is an optional pack: a small TypeScript kernel plus rules and words written in FL. This supersedes SYMBOLIC.md S6 (value vocabularies live in `packages/ops`) and S7 (all-TypeScript engine). SYMBOLIC.md needs a v2. | Goal 5; user-extensible rules; the answer to the 48 question in §9.1. |
 | T5 | Media and rendering ops and code-tidy ops become optional packs in the same app: off by default, lazily loaded, with their own output viewers. | Goal 3. |
 | T6 | FL v0.2 may include breaking fixes. The in-repo corpus is migrated in one mechanical sweep. | Goal 4; the fixes in §11.5 cannot be additive. |
-| T7 | Plugin model: first-party packs are separate workspace packages built and deployed with the site, because the CSP allows only same-origin script. Third parties may share FL-only vocabularies, which already run as untrusted code. | UI.md §4 rules 4, 5 and 8. |
+| T7 | Plugin model: first-party packs are separate workspace packages built and deployed with the site, because the CSP allows only same-origin script. Third parties may share FL-only vocabularies, which already run as untrusted code. **Those vocabularies are not packs** (PACKS.md §1.2, PK1). | UI.md §4 rules 4, 5 and 8. |
 | T8 | **Recommendation.** A relation and a symbolic expression are both "expression values": built by words, carried on the stack, printed and parsed by a registered text form, and evaluated only by explicit terminal words. One mechanism (extension value kinds, tagged literals, budgets, viewers) serves both. | Two clients of one mechanism are cheaper than two mechanisms (§6.5). |
 
 ### Gate T0 decisions (owner, 2026-11-23)
@@ -183,7 +185,7 @@ The owner decided Gate T0 for **R0 and X0 only**. **L0 and J0 have not run.** Th
 
 ### Gate T1 decisions (owner, 2026-11-23)
 
-The owner decided Gate T1 for **SP2 ([RECIPES-1.2.md](RECIPES-1.2.md)) and SP6 ([RELIX.md](RELIX.md)) only.** SP1, SP3, SP4 and SP5 have not been written. Ids continue the T series. Each row names the answers of the spec that it takes; the spec holds the reasoning.
+The owner decided Gate T1 for **SP2 ([RECIPES-1.2.md](RECIPES-1.2.md)) and SP6 ([RELIX.md](RELIX.md)) only.** SP1, SP3, SP4 and SP5 had not been written then; SP1, SP3 and SP4 are decided in part 2 below. Ids continue the T series. Each row names the answers of the spec that it takes; the spec holds the reasoning.
 
 **SP2: every recommended answer is accepted, Q1 to Q15, except Q5.** T25 changes Q5.
 
@@ -207,7 +209,41 @@ The owner decided Gate T1 for **SP2 ([RECIPES-1.2.md](RECIPES-1.2.md)) and SP6 (
 | T33 | **No delegation, and where `relix-fl` lives.** Relix's built-ins do not delegate to FL (Q6): both keep their implementations, held together by shared vectors (C1). **`relix-fl` gets its own repository**, `DarkCollective/relix-fl`, like `relix-web` (Q11, with T16). | RELIX.md §14 (TOOLKIT Q6, Q11) |
 | T34 | **Smaller Relix answers.** RQ2: per-step counts come from on-demand count queries. RQ3: decimals that do not fit a double are a text column with `origin` in v1. RQ4: fragment checks use wrapper templates until Relix has fragment parsers. RQ6: View as Relix can include data, with a 200-row cap per table. RQ7: fix the seeded `nextInt(bound)` and `Collections.shuffle` differences in the supplement when R1b next touches it (T11 allows deferring them; this brings the fix forward). | RELIX.md §14 RQ2, RQ3, RQ4, RQ6, RQ7 |
 
-**Gate T1 status.** SP2: decided (T23 to T28). SP6: decided (T29 to T34). **Gate T1 stays open for the rest.** SP1 (LANGUAGE v0.2 remainder), SP3 (UI.md), SP4 (PACKS.md) and SP5 (SYMBOLIC v2) have not been written. The frozen-contract version bump for X1 and X2 (T19) is not yet approved, and no work package that changes `packages/*` starts before it. The two specs raise two new questions, Q14 and Q15 (§14.2).
+**Gate T1 status after part 1.** SP2 and SP6 are decided (T23 to T34). The status after part 2 is at the end of part 2.
+
+### Gate T1 decisions, part 2 (owner, 2026-11-24)
+
+The owner decided the rest of Gate T1 that exists: **SP1 ([LANGUAGE-0.3.md](LANGUAGE-0.3.md)), SP3 ([UI-TOOLKIT.md](UI-TOOLKIT.md)) and SP4 ([PACKS.md](PACKS.md)). Every recommended answer in the three is accepted.** Ids continue the T series. This part groups the answers by topic, one id per topic; the specs hold the question numbers and the reasoning, and this table points to them instead of repeating them. Four conflicts between documents are resolved in it (below the table).
+
+| ID | Decision | Source |
+|---|---|---|
+| T35 | **FL version and staging.** The wave is **FL v0.3**, not 1.0 and not two waves. There is one number: `FORGE_LANG_VERSION` and `@forge/lang` become `0.3.0` at the wave-boundary merge (L12). The bump is staged: **G1** X1 with its forced one-line `ext` cases, together with X2; **G2** the additive words and forms as each package finishes; **G3** L9b, L10 (if not already in) and L12 in one merge group; **G4** L13 and, if L0 passes, L11. The worker protocol is 2 (T23), the recipe format stays `"forge": 1` (T23) and the catalogue version is computed. This answers Q15 (§14.2). | [LANGUAGE-0.3](LANGUAGE-0.3.md) §2.3, §2.4, §19 Q1, Q2 |
+| T36 | **The `ext` value in the language.** FL gets a tenth tag, `ext`. The kind registry is process-wide, keyed by name, idempotent, last registration wins, and FL code cannot register (T18 stands). `ext{kind}` is a header type and `StackSlot.kind` holds the kind. `str` coerces to it through `fromText`. **A string default is allowed on an `ext` parameter; a constraint is not** (refines X0 §3.3). Two words, `ext-kind` and `ext>text`. `sizeOf` is O(1) and tested per kind. **Conflict 3: `null` and `array` are reserved core kind names**, like `table`, `relation`, `relix-expr` and `rat`; the pack manifest refuses a pack that claims one (T47). | LANGUAGE-0.3 §4, §19 Q14, Q15, Q17; D69 to D74 |
+| T37 | **Generic words and tagged literals.** Generic words are a **closed list dispatched through kind methods**; there is no user-written `GENERIC:` or `METHOD:`. Core arithmetic is generic and **additive**: plain numbers stay bit-identical and the header text and hashes of the words do not change. Tagged literals `tag"…"` are read only for registered tags and evaluated at compile time; an unregistered tag stays `E_LEX`. | LANGUAGE-0.3 §5, §6, §19 Q4; D75 to D78 |
+| T38 | **JSON, `null` and the table words (answers Q14).** JSON `null` is **`ext{null}`**, with the words `null` and `null?`. `json>value` and `value>json` are `core` primitives and the one JSON implementation. A nested NULL in a struct or array crosses the Relix bridge as `ext{null}` and back (RELIX.md §5.4, §16 item 13). The table export words are **`table:to-csv` and `table:to-json`**, and `json:parse` is `json>value` (§7 corrected). | LANGUAGE-0.3 §7, §19 Q3, Q18; D79, D80 |
+| T39 | **Defining forms.** Computed constants are **constant expressions** of foldable words, run by the compiler with no VM; `CONSTANT` takes a scalar; `warm()` stays the load budget for `MEMO:`. Choice values are specified now and built last (L5b), and dropped if L1's count of `choice … case` tables is small. `DEFER:` declares a word, with a group hash for cycles. `friend` lets named vocabularies reach a private word. `VARIABLE` takes any storable value, with no re-entrancy form. `record{ … }` is the record literal. | LANGUAGE-0.3 §9, §19 Q8 to Q12; D81 to D86 |
+| T40 | **Mutable array, 32-bit words, `charge`.** `array` is an **`ext` kind** with five in-place intrinsics, and cannot be stored; a write to a sealed array is `E_EFFECT`. The 32-bit words are specified now and **built only after L0** (dropped if L11 makes them unnecessary). `PrimitiveContext.charge(n)` is deterministic. `+media` is an effect label; `+net` is not added. | LANGUAGE-0.3 §10, §11, §19 Q5, Q13; D87 to D91 |
+| T41 | **The fixes of §11.5.** `reduce` is **unchanged**. `/` of two integers is the correctly rounded quotient at any size. **A violated interval, set or length constraint raises `E_RANGE`**; the other four constraint kinds stay `E_PARAM_INVALID`. This is the one breaking item: at most 20 vector expectations in 10 files change. `runtime.call` applies header defaults. The `raise`/`range` clash is closed (the `raise` vocabulary was removed on 2026-11-15). Pattern strings, `\f`, a `doc` cap of 8000 and a vector `ref` cap of 1000 are added. Named inputs are reviewed with no change. | LANGUAGE-0.3 §12, §19 Q6, Q7, Q16; D92 to D96 |
+| T42 | **Viewers.** The table viewer shows the first 100 rows, drawn whole up to 5,000 cells and windowed beyond that, with no sorting in 1.0. X2 adds a **`truncated` flag** to the `ext` output. A **Convert to bytes** menu adds `table:to-csv` or `table:to-json`. The lift `table` to `relation` is green with a badge; the run `relation` to `table` is amber, "runs the query first". | [UI-TOOLKIT](UI-TOOLKIT.md) §11 Q1 to Q4; §1, §2 |
+| T43 | **Lanes, Tree and the Relix field.** The Tree view is **read-only** in v1. "Join it in" puts the data above on the **left**. **Make main line is disabled** when the other lane has no enabled step. **As text is a dialog** beside the Lanes and Tree tabs. The async `relix-expr` check runs in the bake Worker only when it is idle, one request queued, and never cancels a bake. | UI-TOOLKIT §11 Q5 to Q9; §3.5, §4 |
+| T44 | **Named inputs and share links.** A bake sends only the tabs that `inputNames(recipe)` lists plus the active tab (all tabs if a tab name comes from a register). Renaming or closing a tab that a step reads offers an update in one undo step. In a link that carries tabs, the carried names win and a confirm step lists what is replaced. | UI-TOOLKIT §11 Q10 to Q12; §5 |
+| T45 | **Packs in the UI.** All packs are **off** in a fresh browser (T5), kept per browser in IndexedDB, with no "always trust" setting and no search into packs that are off in 1.0. Reference pages for pack operations are generated from pack metadata, marked as part of an optional pack, with an Open in Forge link that goes through the enable offer. | UI-TOOLKIT §11 Q13, Q14; §6 |
+| T46 | **The CSP and UI.md §4.** **`media-src blob:` is applied at T6**, with the media pack (M1), not before. The UI.md text and a **CSP golden test** land earlier, against today's string; the expected string changes in M1's pull request. The owner approves the `site.tf` line and runs `terraform apply`. A Firefox and WebKit smoke of the table viewer and the CSP test runs if CI can. Rules 5, 6, 7, 10 and 12 are amended and rule 13 (packs) is added, as UI-TOOLKIT §7.3 writes them. **Conflict 1: rule 8 follows PACKS.md.** The pack manifest is compiled into the page and the worker. `fetch` reads catalogue, help and checks fragments and a pack's own hashed non-JS files. Pack code loads by `import()` of same-origin hashed modules. The words "the pack manifest" leave rule 8, which replaces the rule 8 text of UI-TOOLKIT §7.3. | UI-TOOLKIT §11 Q15, Q16; §7; [PACKS](PACKS.md) §14 item 4, PK5 |
+| T47 | **Packs: definition, manifest, discovery.** A pack is a first-party workspace package `packs/<id>` (`@forge/pack-<id>`) with a `manifest.json`, validated by a schema and cross-checks; no tool imports pack code to read it. Pack ids, vocabulary names and kind names are lower-kebab-case and permanent (no aliases); a kind has one owner; core never depends on a pack; `requires.packs` names ids only. **The manifest facts are compiled into the page and the worker** as committed, generated registries (`packs:gen --check` in CI), so the page fetches no manifest. A pack loads in three lazy levels. One `.fth` file per vocabulary, named after it, so the generator writes `vocab/relix.fth`. `PACK_API` is an integer bumped on an incompatible contract change. Pack notices are gathered into a public `THIRD-PARTY-NOTICES.txt`. A pack may declare UI features within `budget.page`; a pack keeps no state of its own in v1. A new package `@forge/packs` holds the validator and generator. | PACKS §11 PK1 to PK6, PK20, PK22 to PK24; §12 PQ3, PQ6, PQ10 to PQ12, PQ15 |
+| T48 | **Init protocol and loading.** `init` carries `packs`, closed under `requires`; the worker refuses unknown and unclosed lists with `E_PROTOCOL`; `vocabs: "all"` means core plus the enabled packs. Loading is by the closure of what a recipe, the user unit and the touched conversions use; re-init grows the set. `magic` loads all of core and does not search packs. The console loads everything enabled at first open. A loaded runtime is not extended without a re-init in v1. **`init.packs` rides protocol 2, and P2b lands with RW5**, so one bump covers both. If protocol 2 had shipped first, `packs` would need protocol 3, because the guard refuses an unknown key; the schedule rules that out. | PACKS §11 PK7, PK8; §12 PQ5, PQ7 to PQ9, PQ14 |
+| T49 | **The catalogue and the recipe stamp.** Pack catalogue fragments merge to equal one runtime's catalogue for every closed subset. **Conflict 2: PACKS PK9 amends the approved RECIPES-1.2 §8.5.** `recipe.catalogue` is the **core catalogue version**, or absent. The page passes the recipe layer a view of its merged catalogue with the core version, and the baker drops `catalogue-mismatch`. The two rules of T26 stand for a recipe with a pack op: the validator skips `catalogue-mismatch` and `encodeShare` omits `catalogue`. A pack does not declare that it reads other packs' catalogues. | PACKS §11 PK9, PK10; §5.4; §12 PQ13 |
+| T50 | **Capabilities.** Effect labels are a closed list defined in core; packs request labels and cannot define them. Enabling a pack grants what its manifest requests, and a build that requests more puts the pack in `needs-review`, off until the user confirms. The baker's `deny` is the grantable labels that no enabled pack requests, plus the caller's `BakeOptions.deny`; the VM enforces it with `E_FORBIDDEN`, which `try` cannot catch. `externalCode` declares compiled code with a version, a hash and a ceiling. Lint guard rails are not a sandbox. A manifest may ask only for `blob:` and `data:` in `img-src`, `media-src` and `font-src`, and the deployed CSP must already allow them. The user does not grant some capabilities and refuse others. | PACKS §11 PK11 to PK13, PK17 to PK19; §12 PQ4 |
+| T51 | **Enabling and failure.** **No pack is on by default** (PQ1; revisit `relix` after Gate T4). The enabled set is one document under the `kv` key `packs`. Internal packs are built only with `FORGE_PACKS_INTERNAL=1`. The enable offer needs a click and shows only text from the build; no link, URL parameter or recipe enables a pack. Enabling re-inits the workers and disabling replaces them. A `pending` mark and an init deadline keep a pack that did not finish loading from locking the user out. There is no "enable for this session only". | PACKS §11 PK14 to PK16, PK21; §12 PQ1, PQ2 |
+| T52 | **Stale corpus counts.** **Conflict 4:** TOOLKIT's corpus counts are older than the tree. Verified on 2026-11-24: **208** `.fth` files in `packages/ops/vocab` (28,759 lines), and **201** `.test.json` files with **7,589** vectors (the top-level arrays, counted by script). LANGUAGE-0.3 took 7,302 vectors in 200 files from `packages/ops/README.md`; the tree now has more. No other new number is stated. Where this document gives a count as current it is marked "(stale; L1 refreshes)". **L1 refreshes all of them** (§13.4). | LANGUAGE-0.3 §21 item 4 |
+
+**The four conflicts, as resolved.**
+
+1. **CSP rule 8 (T46).** PACKS.md wins over UI-TOOLKIT §7.3: the manifest is compiled in, `fetch` is for catalogue fragments and non-JS pack files, and pack code loads by `import()`.
+2. **`recipe.catalogue` (T49).** PACKS PK9 amends the approved RECIPES-1.2 §8.5: the field is the core catalogue version or absent.
+3. **Kind names (T36).** `null` and `array` are reserved core kind names, which the pack manifest refuses.
+4. **Corpus counts (T52).** The counts here are stale; L1 refreshes them.
+
+**Gate T1 status.** SP1, SP2, SP3, SP4 and SP6 are decided (T23 to T52). **SP5 (SYMBOLIC v2) is not written**, so Gate T1 stays open for it; it gates the symbolic pack (S rows) only. The frozen-contract version bump is **staged per T35** (G1 to G4), and Q15 is answered. `media-src blob:` waits for T6 (T46). Q14 and Q15 are answered (§14.2). Work packages that change `packages/*` follow the staging of T35.
 
 ---
 
@@ -215,7 +251,7 @@ The owner decided Gate T1 for **SP2 ([RECIPES-1.2.md](RECIPES-1.2.md)) and SP6 (
 
 Four layers.
 
-1. **Core.** `@forge/lang` v0.2 and the core op vocabularies: codes, ciphers, encodings, data formats, parsing, hashing, crypto, compression, networking parsers, text and byte utilities.
+1. **Core.** `@forge/lang` v0.3 and the core op vocabularies: codes, ciphers, encodings, data formats, parsing, hashing, crypto, compression, networking parsers, text and byte utilities.
 2. **Pack system.** Manifest, discovery, enabling, lazy loading, capabilities.
 3. **Extension values and viewers.** The `ext` value tag, its registry, and per-kind output viewers and parameter widgets.
 4. **Packs.** `data` (tables), `relix`, `symbolic`, `media`, `code`.
@@ -239,7 +275,7 @@ Four layers.
       +---^--+   +---^---+   +---^----+  +-------+  +--------+
           |          |           |
  +--------+----------+-----------+-------------------------------+
- | (1) core: @forge/lang v0.2 + @forge/ops core vocabularies     |
+ | (1) core: @forge/lang v0.3 + @forge/ops core vocabularies     |
  |     table, json, csv in core; generic arithmetic; ext tag     |
  +---------------------------------------------------------------+
 
@@ -254,41 +290,48 @@ The `table` kind, `csv` and `json` are small and needed by core data-format ops,
 
 ### 5.1 What a pack is
 
-A pack is a workspace package `packs/<name>` holding:
+A pack is a workspace package `packs/<id>` (`@forge/pack-<id>`) holding:
 
 - `vocab/*.fth` and `prims/*.ts`;
 - extension value kinds (§6);
 - parameter widgets and output viewers;
 - an optional UI feature (a pane), registered like `apps/web/src/modules.ts`;
 - test vectors (`*.test.json`);
-- a **manifest**: id, version, vocabularies, capabilities, size.
+- a **manifest** (`manifest.json`, data checked by a schema, [PACKS.md](PACKS.md) §2): id, version, vocabularies, kinds, viewers, helpers, entries, capabilities, `requires`, budget, licence and NOTICE.
+
+What may and may not be in a pack is PACKS.md §1.2. Third-party FL-only vocabularies are not packs (T7, PK1).
 
 ### 5.2 Discovery, loading, enabling
 
-- Packs are discovered **at build time** into one manifest. A composite `VocabSourceProvider` merges core and enabled packs.
-- The baker `init` message carries **pack ids**. They are validated against the build-time manifest. An id taken from a URL is never used verbatim without that check (UI.md §4 rule 6).
-- `vocabs: "all"` is replaced by loading the **dependency closure** of what the recipe or console uses. This also stops core loading all 70 primitive chunks at start.
-- Enabling is per browser, stored in IndexedDB (UI.md §4 rule 10).
-- Opening a shared recipe that names a pack op **offers to enable the pack**. The pack is first-party code on the same origin, and the UI shows a visible notice saying so.
-- Packs are outside the 250 kB gzip core-plus-shell budget (PLAN §6). Each pack declares its own budget in its manifest, and `npm run size` checks it.
+- Packs are discovered **at build time** (PACKS §3). `packs:gen` writes two committed registries, so **the manifest facts are compiled into the page and the worker, and the page does not fetch a manifest** (PK5). A composite `VocabSourceProvider` merges core and enabled packs.
+- The baker `init` message carries **pack ids**, closed under `requires`. The worker refuses unknown and unclosed lists with `E_PROTOCOL` (PACKS §4.2). An id taken from a URL is never used verbatim without that check (UI.md §4 rule 6).
+- `vocabs: "all"` is replaced by loading the **dependency closure** of what the recipe or console uses (PACKS §4.4); with packs it means core plus the enabled packs. This also stops core loading all 70 primitive chunks at start.
+- Enabling is per browser and stored as one document under the `kv` key `packs` in IndexedDB (UI.md §4 rule 10; PACKS §7.1). Every pack is off by default (T5, T51).
+- Opening a shared recipe that names a pack op **offers to enable the pack**. The offer needs a click and shows only text from the build, with a visible notice that the pack is first-party code on the same origin (UI-TOOLKIT §6.5). No link or recipe enables a pack.
+- Packs are outside the 250 kB gzip core-plus-shell budget (PLAN §6); the registry glue is inside it. Each pack declares its own budget in its manifest, and `npm run size` checks it.
 
 ### 5.3 Third-party sharing
 
-Only FL-only vocabulary files are shared. They import as untrusted units, which exists today as the `user` unit. The extension is named vocabularies with export and import. They cannot bind primitives and run under the untrusted limits (PLAN §5).
+Only FL-only vocabulary files are shared. They import as untrusted units, which exists today as the `user` unit. The extension is named vocabularies with export and import. They cannot bind primitives and run under the untrusted limits (PLAN §5). They are not packs (T7, PK1).
 
 ### 5.4 Capabilities
 
-- `EffectLabel` gains labels such as `+media` (and later `+net`). Wire `RunOptions.deny` into the baker so a pack's capabilities are granted explicitly rather than ambient.
-- A word that needs a capability the run has not granted is refused with a structured error.
+- `EffectLabel` gains **`+media`** only. `+net` is not defined (T3, PK11).
+- The baker's `deny` is computed from the enabled set (PACKS §6.5), so a pack's capabilities are granted explicitly rather than ambient. `RunOptions.deny` is wired in by P6.
+- A word that needs a capability the run has not granted is refused with `E_FORBIDDEN`, carrying `detail.effect` and `detail.pack`. `try` does not catch it.
 
 ### 5.5 Required changes to UI.md, PLAN and the CSP
 
 | Change | Where |
 |---|---|
-| Rule 8 amended: `fetch` may also read the pack manifest and same-origin pack chunks | UI.md §4 |
-| Rule 6 unchanged: viewers build DOM with `createElement` and `textContent`, never `innerHTML` | UI.md §4 |
-| `media-src blob:` added to the CSP (media pack only; owner-approved infra change in `infra/`) | PLAN §10, UI.md §4 |
-| Nothing else in the CSP changes (`img-src` already allows `blob:`; canvas works; `wasm-unsafe-eval` is already present) | |
+| Rule 5 amended: a dynamic `import()` takes a literal specifier or an entry of the build's chunk table, never a string made from data | UI.md §4; UI-TOOLKIT §7.3 |
+| Rule 6 **amended, not unchanged**: it gains the viewer and shadow-root rules. Viewers still build DOM with `createElement` and `textContent`, never `innerHTML` | UI.md §4; UI-TOOLKIT §7.3 |
+| Rule 7 amended: media never starts by itself | UI.md §4 |
+| Rule 8 amended (T46): the manifest is compiled in; `fetch` reads catalogue, help and checks fragments and a pack's own hashed non-JS files; pack code loads by `import()` of same-origin hashed modules | UI.md §4; PACKS §14 item 4 |
+| Rules 10 and 12 amended; rule 13 (packs) added | UI.md §4; UI-TOOLKIT §7.3 |
+| `media-src blob:` added to the CSP **at T6** (media pack, M1; owner-approved infra change in `infra/`), checked by the manifest check `csp-unsatisfied` | PLAN §10, UI.md §4 |
+| A CSP golden test (`csp.spec.ts`) lands with X2, against today's string | UI-TOOLKIT §7.5 |
+| Nothing else in the CSP changes (`img-src` already allows `blob:`; canvas works; `wasm-unsafe-eval` is already present) | UI-TOOLKIT §7.1, §7.2 |
 
 ---
 
@@ -296,12 +339,15 @@ Only FL-only vocabulary files are shared. They import as untrusted units, which 
 
 ### 6.1 The `ext` tag
 
-Adopt SYMBOLIC.md B1 as the single mechanism. The host registers an `ext` tag through `RuntimeOptions`. Each kind provides:
+Adopt SYMBOLIC.md B1 as the single mechanism. Kinds are registered in a **process-wide registry keyed by kind name**, not through a `RuntimeOptions` field (T18, T36; LANGUAGE-0.3 §4.2). Registration is idempotent, the last one wins, and FL code cannot register. Each kind provides:
 
 - `equals`, `display` and `repr`;
-- `sizeOf`, so the size meter (§2.4) accounts for it;
+- `sizeOf`, so the size meter (§2.4) accounts for it (O(1), conservative, cached);
 - `toText` and `fromText`;
-- limits.
+- limits;
+- `methods`, for the generic words (§6.4).
+
+`ext{kind}` is a header type. A string default is allowed on an `ext` parameter; a constraint is not (T36). The kind names `table`, `relation`, `relix-expr`, `rat`, `null` and `array` are owned by core or by a named pack, and the manifest refuses a pack that claims one.
 
 ### 6.2 Output values and viewers
 
@@ -322,9 +368,9 @@ Adopt SYMBOLIC.md B1 as the single mechanism. The host registers an `ext` tag th
 
 ### 6.4 Literals, budgets and generic words
 
-- **B3 tagged literals:** `relix" … "` and `sym" … "`, parsed at compile time. `sym"` is `E_LEX` today, so no valid program changes token kind.
+- **B3 tagged literals:** `relix" … "` and `sym" … "`, parsed at compile time and read only for registered tags (LANGUAGE-0.3 §6). `sym"` is `E_LEX` today, so no valid program changes token kind.
 - **B5 `charge(n)`:** primitives account their work in `maxSteps` and poll abort and deadline.
-- **B2 generic words:** SYMBOLIC.md left these conditional (S16, open question 3). They are now justified by three clients: symbolic arithmetic, table and relational words, and matrices. Because T6 allows breaking changes, **core arithmetic becomes generic** instead of being shadowed by a vocabulary.
+- **B2 generic words:** SYMBOLIC.md left these conditional (S16, open question 3). They are now justified by three clients: symbolic arithmetic, table and relational words, and matrices. **Core arithmetic becomes generic** through kind methods instead of being shadowed by a vocabulary, and this is **additive**: plain numbers are bit-identical and no header text or hash changes (T37).
 
 ### 6.5 The unifying view (T8)
 
@@ -338,7 +384,7 @@ A `relation` and a `sym` share a life cycle: construct with words, hold on the s
 
 - **Representation.** Columnar, typed columns, and an **explicit null mask**, because FL has no null. Columnar is about 1.6 MB against 4.08 MB for list-of-records at 10,000 rows by 10 integer columns (§2.4).
 - **One parser each.** Core owns one CSV parser and one JSON parser and serialiser. This closes the wave 4 "no JSON" gap.
-- **Words.** `csv:parse ( bytes … -- table )`, `json:parse`, `table:>csv`, `table:>json`, `table:columns`, `table:rows`.
+- **Words.** `csv:parse ( bytes … -- table )`, `json>value` (core, LANGUAGE-0.3 §7; it replaces `json:parse`), `table:to-csv`, `table:to-json`, `table:columns`, `table:rows`. The export words use `to-`, not `>` (T38).
 - **Viewer.** A virtualised grid of the first N rows with the total.
 - **Core or pack.** Recommendation: `table`, `json` and `csv` in **core** (small, and needed by core data-format ops); relational operations in the **relix** pack. Q4 is closed (2026-11-23, T21): `table` is core, not a pack.
 - **Memory.** The size meter charges what a value costs once. A live-size meter or structural sharing for tables is a risk item (§14.1).
@@ -415,7 +461,7 @@ A `FunctionLibrary` named `fl` exposes functions named `fl.<vocab>.<word>`, with
 **Value mapping.** The mapping table is in [RELIX.md](RELIX.md) §5 and is not repeated here. The decisions that shape it:
 
 - NUMBER maps to `int` when integral, else `num`, and to `rat` only where the parameter is declared `ext{rat}` (Q5, T32).
-- **NULL.** FL has no null. The bridge does NULL in, NULL out: if any argument is NULL, it returns NULL and does not call FL. The bridge has to do this because the engine calls a function even when an argument is NULL (RELIX.md §5.4). This corrects the R0 note (criterion 8), which said the engine skips the call. A table's null mask carries nulls.
+- **NULL.** FL has no null. The bridge does NULL in, NULL out: if any argument is NULL, it returns NULL and does not call FL. The bridge has to do this because the engine calls a function even when an argument is NULL (RELIX.md §5.4). This corrects the R0 note (criterion 8), which said the engine skips the call. A table's null mask carries nulls. A NULL nested in a struct or array maps to `ext{null}` and back (T38).
 - **Bytes.** Relix has no bytes type. Bytes cross as the struct `{ bytes_hex }` (Q3, T32).
 - Dates cross as ISO `str` until Forge has a date value.
 
@@ -449,7 +495,7 @@ Forge publishes a single-file, dependency-free runtime bundle, `@forge/embed` (l
 
 ### 9.1 Integral or plugin?
 
-On the HP 48 algebraics are integral to the object system. Here the **mechanism** (ext values, generic arithmetic, tagged literals) is integral to FL v0.2, and the **content** (the CAS) is a pack. That is the answer to the owner's question: integral where it shapes the language, a plugin where it is a body of rules.
+On the HP 48 algebraics are integral to the object system. Here the **mechanism** (ext values, generic arithmetic, tagged literals) is integral to FL v0.3, and the **content** (the CAS) is a pack. That is the answer to the owner's question: integral where it shapes the language, a plugin where it is a body of rules.
 
 ### 9.2 Structure
 
@@ -464,17 +510,17 @@ The rule set is therefore user-extensible in FL (the HP 48 spirit) and honours g
 
 ### 9.3 Effect on SYMBOLIC.md
 
-With FL v0.2 (generic words, tagged literals, ext values) landing first, the pack starts at what SYMBOLIC.md called Stage B. Stage A's record encoding and shadowing are skipped. A SYMBOLIC.md v2 must be written (work package SP5).
+With FL v0.3 (generic words, tagged literals, ext values) landing first, the pack starts at what SYMBOLIC.md called Stage B. Stage A's record encoding and shadowing are skipped. A SYMBOLIC.md v2 must be written (work package SP5).
 
 | SYMBOLIC.md decision | Status |
 |---|---|
-| S2 (two stages) | Superseded: one stage on v0.2 |
+| S2 (two stages) | Superseded: one stage on v0.3 |
 | S3 (expression as `int`, `num` or `record`) | Superseded: `ext{sym}` |
 | S5 (generic arithmetic by shadowing) | Superseded: generic core arithmetic |
 | S6 (value vocabularies internal, in `packages/ops`) | Superseded: they live in the pack (T4) |
 | S7 (all-TypeScript engine) | Superseded: small kernel plus FL (T4) |
 | S8 to S14, S20, S21 | Stand |
-| S4, S15 to S19 | Not decided here. S4 (canonical form C1) is kept; S15 to S19 become core v0.2 features (§6, §11). SP5 confirms each. |
+| S4, S15 to S19 | Not decided here. S4 (canonical form C1) is kept; S15 to S19 become FL v0.3 features (LANGUAGE-0.3 §4, §5, §6 and §11; decided T35 to T41). SP5 confirms each. |
 
 ---
 
@@ -501,11 +547,11 @@ These ops belong to `pack:media` or `pack:code`. Lowest priority of the programm
 
 ---
 
-## 11. FL v0.2
+## 11. FL v0.3
 
 **Principle.** Every proposal carries a corpus number. The measuring scripts are kept as `npm run corpus-stats -w @forge/ops`, so each change reports before and after (private single-use helpers, shuffle density, primitive count and TypeScript lines, zero-input table rebuilds).
 
-**Status.** FL v0.2 has shipped part of this section. Items marked **(done)** are in [LANGUAGE.md](LANGUAGE.md) (see its [Appendix A](LANGUAGE.md#appendix-a-changes-in-v02)) and are no longer proposals; everything else is still future work.
+**Status.** FL v0.2 shipped part of this section. Items marked **(done)** are in [LANGUAGE.md](LANGUAGE.md) (see its [Appendix A](LANGUAGE.md#appendix-a-changes-in-v02)) and are no longer proposals. **Everything else is specified in [LANGUAGE-0.3.md](LANGUAGE-0.3.md) (WP SP1) and decided at Gate T1 (T35 to T41):** the wave is FL v0.3, and LANGUAGE-0.3 §1 lists each open item with its section. LANGUAGE.md changes at the fold-in (L14). The corpus figures below are those of the survey of §2.5 and are stale (L1 refreshes, T52).
 
 ### 11.1 Group L-A: prelude and core words (additive)
 
@@ -539,27 +585,27 @@ These ops belong to `pack:media` or `pack:code`. Lowest priority of the programm
 
 ### 11.4 Group L-D: extension
 
-The `ext` tag, generic words, tagged literals, `charge` and new effect labels (§5.4, §6).
+The `ext` tag, generic words, tagged literals, `charge` and new effect labels (§5.4, §6). Specified in LANGUAGE-0.3 §4 to §6 and §11; decided T36, T37 and T40.
 
-### 11.5 Group L-E: breaking fixes (T6)
+### 11.5 Group L-E: the fixes (T6; classified again by SP1)
 
-- `reduce` argument order.
-- `/` on integers beyond 2^53.
-- Header-constraint violations raise `E_RANGE`-class errors consistently, and `runtime.call` applies header defaults (both from the wave 5 language gap list in PLAN §7).
-- The `raise`/`range` name clash.
-- Regex parameters with spaces or parentheses.
-- The `\f` escape.
-- Help and ref length caps.
-- Named inputs and their interplay with the stack, reviewed.
-- Core arithmetic made generic.
+T6 allowed breaking fixes. LANGUAGE-0.3 §12 classified the nine items again and decided them (T41). **Only one breaks a v0.2 program.**
 
-**Migration.** A codemod work package rewrites all 161 `.fth` files in one sweep at a **wave boundary** (no op work packages in flight). All 4,488 vectors must pass unchanged. Word hashes all change, so the catalogue version bumps.
+- `reduce` argument order: **unchanged** (D92). It matches Factor, JavaScript and Python, and a swap costs steps and changes 88 callers' hashes.
+- `/` on integers beyond 2^53: additive in effect (an error becomes a value).
+- Header-constraint violations: an interval, set or length violation raises `E_RANGE`; the other four constraint kinds keep `E_PARAM_INVALID`. **This is the one breaking item.** `runtime.call` applies header defaults (additive).
+- The `raise`/`range` name clash: **closed**. The `raise` vocabulary was removed on 2026-11-15, so no language change is needed.
+- Regex parameters with spaces or parentheses, the `\f` escape and the `doc` length cap (8000): additive.
+- Named inputs and their interplay with the stack: reviewed, no change.
+- Core arithmetic made generic: **additive** (T37). Plain numbers are bit-identical and the header text and hash of each word do not change. This item was listed here as breaking before SP1.
 
-**Share URLs.** RECIPES R8 and §3.10: a recipe step may carry an op `hash` pin. A mismatch is a warning by default (`pins: "warn"`) and an error under `"strict"`; a pin never selects an old implementation. `encodeShare` pins when it is given a catalogue. So after the sweep, unpinned URLs keep working; pinned URLs run the current op and show a `hash-mismatch` warning (or refuse, under `strict`). Whether the UI should say more than that is Q10.
+**Migration.** The sweep is smaller than first planned. It rewrites no word source except the callers of the `json` vocabulary (LANGUAGE-0.3 §14: callers in 16 files, 8 `json:null` lines in 4 files), and it rewrites at most 20 vector expectations in 10 files for the `E_RANGE` change. L9b and L12 merge in one group at a **wave boundary** (no op work packages in flight; G3 of T35). All vectors pass except the listed expectation codes. The catalogue version bumps, and `previousHashes` are generated first, on the pre-sweep tag (T27). The earlier plan, a codemod over all `.fth` files with "all 4,488 vectors unchanged", assumed the `reduce` swap and a new arithmetic header; both are gone (stale; L1 refreshes the counts).
+
+**Share URLs.** RECIPES R8 and §3.10: a recipe step may carry an op `hash` pin. A mismatch is a warning by default (`pins: "warn"`) and an error under `"strict"`; a pin never selects an old implementation. `encodeShare` pins when it is given a catalogue. So after the sweep, unpinned URLs keep working; pinned URLs run the current op and show a `hash-mismatch` warning (or refuse, under `strict`), except for ops with a `previousHashes` entry (T27).
 
 ### 11.6 Proposal table
 
-Sizes are relative. "Revisits" lists LANGUAGE.md decisions or sections touched (§17 decision ids D3, D4, D5, D6, D10, D11, D18, D31, D44; §5.7 public and private words; §13 core vocabulary; §17.1 items deliberately left out, as that list stands after v0.2).
+The rows that are not marked done are specified in LANGUAGE-0.3 (§1 maps each to a section). Sizes are relative. "Revisits" lists LANGUAGE.md decisions or sections touched (§17 decision ids D3, D4, D5, D6, D10, D11, D18, D31, D44; §5.7 public and private words; §13 core vocabulary; §17.1 items deliberately left out, as that list stands after v0.2).
 
 | Proposal | Corpus evidence | Unlocks | Kind | Size | Revisits |
 |---|---|---|---|---|---|
@@ -577,7 +623,7 @@ Sizes are relative. "Revisits" lists LANGUAGE.md decisions or sections touched (
 | 32-bit word intrinsics, `charge` | TEA 478 steps per byte; SHA-1 186 | Cost-weighted limits | Additive | M | D44 |
 | Kernel tier (L0) | 53 cipher and hash cores, 3,626 lines (57% of primitive code) | Cores to FL, if L0 passes | Additive | L | D5, D44 |
 | `ext` tag, tagged literals, generic words | Three clients (symbolic, tables, matrices) | Packs, T8 | Additive | L | D11, §17.1 |
-| Breaking fixes (L-E) | Wave 5 gap list | Consistent errors, generic arithmetic | **Breaking** | M | D5 |
+| The fixes of L-E (decided T41; generic arithmetic is additive, T37) | Wave 5 gap list | Consistent errors | One breaking item (`E_RANGE`); the rest additive or no change | M | D5 |
 
 ---
 
@@ -605,7 +651,7 @@ Sizes are relative. "Revisits" lists LANGUAGE.md decisions or sections touched (
 
 CLAUDE.md applies. The orchestrator breaks the work into work packages (WPs) and delegates each to an inexpensive sub-agent: Sonnet (**So**) for spec-critical work, Haiku (**Ha**) for well-specified or repetitive work. Independent WPs run in parallel, each in its own git worktree on a `wp/<id>` branch, with explicit file ownership. After each WP the orchestrator reads the diff, checks the file ownership, merges, and re-runs `npm run lint && npm run typecheck && npm test && npm run build`, plus `npm run e2e` and `npm run size`. At the end of a phase: `npm run gate2:browser -w @forge/worker` and a check of the built app served with `node apps/web/scripts/serve-prod.mjs`. Every new source file carries the Apache-2.0 header. No attribution trailers. No push, `terraform apply` or AWS change without the owner.
 
-WP id prefixes: **L** FL v0.2; **P** pack system; **X** extension values; **D** data; **R** Relix pack; **J** JVM bridge; **S** symbolic; **M** media and code; **SP** specifications; **C** convergence. Spikes use their own ids (R0, L0, J0, X0). Decision ids use T. File paths in the "owns" column are proposals; the brief for each WP fixes them. Per-WP sizes are set when the briefs are written; sizes for FL proposals are in §11.6.
+WP id prefixes: **L** FL v0.3 (and **H** its test harness); **P** pack system; **RW** the recipe wave of RECIPES-1.2 §18; **RL** the lane editor of RELIX-LANES §11.2; **X** extension values; **D** data; **R** Relix pack; **J** JVM bridge; **S** symbolic; **M** media and code; **SP** specifications; **C** convergence. Spikes use their own ids (R0, L0, J0, X0). Decision ids use T. File paths in the "owns" column are proposals; the brief for each WP fixes them. Per-WP sizes are set when the briefs are written; sizes for FL proposals are in §11.6.
 
 ### 13.2 Phase T0: spikes
 
@@ -626,36 +672,45 @@ Parallel, time-boxed, throwaway code. Each ends in a written result and an owner
 
 | WP | Deliverable | Owns | Depends on | Agent | Done when |
 |---|---|---|---|---|---|
-| SP1 | LANGUAGE.md v0.2 (§11) | `docs/LANGUAGE.md` | Gate T0 | So | Every proposal in §11.6 has a normative section and a list of conformance blocks |
+| SP1 ✅ | FL v0.3: the open items of §11. **Deliverable: a proposal file**; LANGUAGE.md changes at the fold-in (L14) | `docs/LANGUAGE-0.3.md` | Gate T0 | So | Every open proposal in §11.6 has a section and conformance cases (C401 to C594). Written 2026-11-23: [LANGUAGE-0.3.md](LANGUAGE-0.3.md); decided 2026-11-24 (T35 to T41) |
 | SP2 ✅ | The recipe wave v1.2: ext parameters, slots for binary operators, named inputs, pack ops, pin behaviour, and `setup` and `finish` fields in the op vector format (T22). **Deliverable: a proposal file**; RECIPES.md changes at the fold-in (RW9) | `docs/RECIPES-1.2.md` | none (it did not in fact depend on SP1) | So | Schema changes listed; §2.2 internal-vocabulary drift fixed. Done 2026-11-23: [RECIPES-1.2.md](RECIPES-1.2.md); decided T23 to T28 |
-| SP3 | UI.md amendments: viewers, pack rules, CSP | `docs/UI.md` | SP1 | So | Rules 6 and 8 amendments and the `media-src` change written |
-| SP4 | PACKS.md | `docs/PACKS.md` | SP1 | So | Manifest schema, discovery, init protocol, capability model |
-| SP5 | SYMBOLIC.md v2 (§9.3) | `docs/SYMBOLIC.md` | SP1 | So | Decision table updated; WP table rewritten |
+| SP3 ✅ | The UI proposal: viewers, kind-aware fit, ext fields, lanes and slots, named inputs, packs, the CSP. **Deliverable: a proposal file**; UI.md changes as work packages land (as for SP2) | `docs/UI-TOOLKIT.md` | none (it did not in fact depend on SP1) | So | Rules 5 to 8, 10, 12 and 13 written in full, and the `media-src` change. Written 2026-11-23: [UI-TOOLKIT.md](UI-TOOLKIT.md); decided 2026-11-24 (T42 to T46) |
+| SP4 ✅ | PACKS.md | `docs/PACKS.md` | SP1 | So | Manifest schema, discovery, init protocol, capability model. Written 2026-11-23: [PACKS.md](PACKS.md); decided 2026-11-24 (T47 to T51) |
+| SP5 | SYMBOLIC.md v2 (§9.3). **Not written** | `docs/SYMBOLIC.md` | SP1 (done) | So | Decision table updated; WP table rewritten |
 | SP6 ✅ | RELIX.md: pack spec, value mapping, operator table | `docs/RELIX.md` | SP1, R0 | So | Mapping table complete; naming (Q2) decided. Done 2026-11-23: [RELIX.md](RELIX.md); decided T29 to T34. Its one question for SP1 is how FL holds JSON `null` (Q14) |
 
 **Gate T1.** The owner approves the frozen-contract changes. CLAUDE.md says `packages/*` are frozen; this plan needs an explicit version bump of FL, the recipe schema and the worker protocol.
 
-**Gate T1 outcome (owner, 2026-11-23), for SP2 and SP6 only.** SP2: every recommended answer accepted, with FIX and ITERATE added to the format (T23 to T28). SP6: every recommended answer accepted (T29 to T34). The two conflicts between the specs are resolved for SP6 (T25, T30). **SP1, SP3, SP4 and SP5 have not been written**, so Gate T1 stays open, and so does the frozen-contract version bump for X1 and X2 (T19). The recipe format itself needs no bump (T23). Work that depends only on SP2 or SP6 may be briefed now, but nothing that changes `packages/*` starts.
+**Gate T1 outcome (owner, 2026-11-23), for SP2 and SP6.** SP2: every recommended answer accepted, with FIX and ITERATE added to the format (T23 to T28). SP6: every recommended answer accepted (T29 to T34). The two conflicts between those specs are resolved (T25, T30). The recipe format itself needs no bump (T23).
 
-### 13.4 Phase T2: FL v0.2 and corpus migration
+**Gate T1 outcome (owner, 2026-11-24), for SP1, SP3 and SP4.** Every recommended answer is accepted (T35 to T52), and four conflicts between documents are resolved (T36, T46, T49, T52). The frozen-contract version bump is staged per T35 (G1 to G4). **SP5 is not written**, so Gate T1 stays open for it only. `media-src blob:` waits for T6 (T46).
+
+### 13.4 Phase T2: FL v0.3 and corpus migration
 
 | WP | Deliverable | Owns | Depends on | Agent | Done when |
 |---|---|---|---|---|---|
-| L1 | `npm run corpus-stats` scripts and a baseline report | `packages/ops/scripts/corpus-stats.*` | none (may start now) | Ha | Report reproduces the §2.5 numbers |
-| L2 | Group L-A words (prelude, maths, failure, sort/find, `case`) | `packages/lang/src/core/*` | Gate T1 | So | Conformance blocks pass |
-| L3 | JSON parse and serialise in core | `packages/lang`, `packages/ops/prims/json.ts` | L2 | So | Round-trip properties pass; one JSON implementation |
-| L4 | Mid-body local binding | `packages/lang/src/reader.ts`, `compiler.ts` | Gate T1 | So | Existing programs compile identically |
-| L5 | Load-time constants, memoised words, shared `choice` types | `packages/lang`, `meta*` | L4 | So | Load budget tested |
-| L6 | Visibility marker, friend access, forward declarations, `exit`, `VARIABLE`, record literal | `packages/lang` | L4 | So | `cmac`/`lmhash` primitives can be removed |
-| L7 | Mutable buffer, linear builder, 32-bit intrinsics | `packages/lang`, `values.ts` | L2 | So | Aliasing rules tested; D44 purity kept |
-| L8 | `charge`, cost-weighted accounting, polling inside primitives | `packages/lang/src/vm.ts`, `primitives.ts` | L7 | So | A primitive hits `maxSteps` deterministically in Node and a Worker |
-| L9 | Breaking fixes L-E (language part) | `packages/lang` | L2 | So | Each fix in §11.5 has a conformance block |
-| L10 | Generic arithmetic and generic words | `packages/lang/src/compiler.ts`, `dictionary.ts`, `vm.ts` | X1, L9 | So | Plain numbers bit-identical to v0.1; step overhead measured |
-| L11 | Kernel tier (only if L0 passes) | `packages/lang/src/kernel/*` | L7, L0 | So | Every kernel word equals the interpreted run |
-| L12 | Codemod over the 161 `.fth` files | `packages/ops/vocab/*.fth` | L2 to L10 | So | All 4,488 vectors pass unchanged; catalogue version bumped; run at a wave boundary. Dated note (2026-11-15): the v0.2 subset of the migration is done, that is the forms available in v0.2 (typed `fail-*` words, promoted core words, shared `CHOICE:` types, `cond`/`case`, `:>`, collectors, `MEMO:`) over all 207 vocabularies. The L-E breaking fixes, generic arithmetic and the kernel tier were not part of it. |
-| L13 | Move primitives to FL (the 7 + 3 + 9 made possible by L2 and L7; the cipher and hash cores only if L11 passes) | `packages/ops/prims/*`, `vocab/*` | L12, L11 | Ha | Vectors unchanged; corpus-stats report shows the change in primitive count and lines. Dated note (2026-11-14): the analysis `log2`, the coords maths, the list `sort`, `sort-by` and `shuffle`, `cmac`, `lmhash` and the `hex` primitive are now FL, and `base64` is FL with two private helpers (`_sextets`, `_unsextets`). |
+| L1 | `npm run corpus-stats` scripts and a baseline report. **Also refreshes every stale count of this document** (§2.1, §2.5, §11.5, §13.4; T52) and counts the `W_SHADOW` names that LANGUAGE-0.3 §14.1 leaves to it | `packages/ops/scripts/corpus-stats.*` | none (may start now) | Ha | Report reproduces the §2.5 figures on today's tree; the stale marks are replaced by measured numbers |
+| H0 | The test-harness additions of LANGUAGE-0.3 §3: fixtures, `@call`, `@meta` paths | `packages/lang/test/conformance/*` | Gate T1 | So | The 317 existing blocks pass; the fixtures exist; a fixture block runs |
+| L2 | Group L-A words (LANGUAGE-0.3 §8, T39): `first second last divmod tdiv zero-pad index-of set-nth`, float bytes | `packages/lang/src/vocab/*` | H0 | Ha | C471 to C492 pass; the `core` table test passes |
+| L3 | JSON in core and one JSON implementation (LANGUAGE-0.3 §7, T38): `json>value`, `value>json`, `null`, `null?`; the `json` vocabulary of `@forge/ops` becomes wrappers | `packages/lang/src/vocab/json.ts`, `packages/ops/src/prims/json.ts` | X1, L2 | So | C456 to C470 pass; round-trip properties pass; one JSON implementation |
+| L4 | Mid-body local binding. **Done in v0.2** (`:>`, LANGUAGE.md §7.1) | n/a | n/a | n/a | n/a |
+| L5a | Constant expressions (LANGUAGE-0.3 §9.1) | `compiler.ts`, `compiler-const.ts` | X4, L2 | So | C493 to C500 pass; no VM code runs at load |
+| L5b | Choice values (§9.2). Last of the group; dropped if the L1 count of `choice … case` tables is small | `compiler-choice.ts`, `meta.ts` | L5a | So | C501 to C506 pass; no existing `effect.text` or hash changes |
+| L6 | `friend`, `DEFER:` with the group hash, `VARIABLE` of any value, `record{` (§9.3 to §9.6). Visibility marker and `exit` are done | `packages/lang` (`compiler.ts`, `dictionary.ts`, `meta.ts`, `reader.ts`, `vm.ts`) | L5a, X1 | So | C507 to C536 pass; a vocabulary can call another's private word by `friend`, so `cmac` and `lmhash` need no primitive |
+| L7a | `ext{array}`, its five intrinsics, `thaw`, `anew`, `anew-bytes` (§10.1 to §10.3) | `vm.ts`, `values.ts`, `vocab/array.ts` | X1, L2 | So | C537 to C556 pass; aliasing rules tested; D44 holds for primitives |
+| L7b | 32-bit words and bulk word conversion (§10.4). **Gated on L0** | `vocab/word32.ts` | L7a, L0 | Ha | C557 to C566 pass |
+| L8 | `charge`, cost-weighted accounting, `+media` (§11) | `vm.ts`, `primitives.ts`, `types.ts` | X1 | So | C567 to C572 pass; a primitive hits `maxSteps` at the same step in Node and a Worker |
+| L9a | The additive fixes (§12.2, §12.4, §12.6 to §12.8): `/`, `runtime.call` defaults, pattern strings, `\f`, the `doc` cap | `vocab/core.ts`, `runtime.ts`, `meta.ts`, `reader.ts`, `meta.schema.json` | L2 | So | C576 to C579 and C585 to C592 pass; the search for `E_COERCE` from `/` finds nothing |
+| L9b | The `E_RANGE` constraint code (§12.3). **Merges only in G3** | `values.ts`, `vm.ts` | L9a | So | C580 to C584 pass; the vectors fail until L12 rewrites the listed expectations |
+| L10 | Generic arithmetic and generic words (§5): the `generic` flag, dispatch, kind `methods`, `sort` by `compare` | `primitives.ts`, `vm.ts`, `values.ts`, `types.ts` | X1 | So | C431 to C445 pass; plain numbers bit-identical; overhead within 2% on the 10^6-step benchmark |
+| L11 | Kernel tier (§13). **Only if L0 passes** | `packages/lang/src/kernel/*` | L7a, L0 | So | C593 and C594 pass; every kernel word equals the interpreted run |
+| L12 | The sweep (§14): the `json` callers, the expectation codes of §12.3, `previousHashes` first (T27), `FORGE_LANG_VERSION` `0.3.0`. Run at a wave boundary, in the group G3 of T35 | `packages/ops/vocab/*.fth`, `*.test.json`, `src/prims/*` | L2, L3, L9b, L10 | So | All vectors pass except the listed expectation codes; catalogue version bumped. Dated note (2026-11-15): the v0.2 subset of the migration is done, that is the forms available in v0.2 (typed `fail-*` words, promoted core words, shared `CHOICE:` types, `cond`/`case`, `:>`, collectors, `MEMO:`) over all 207 vocabularies. The L-E fixes, generic arithmetic and the kernel tier were not part of it. |
+| L13 | Move primitives to FL (the 7 + 3 + 9 made possible by L2 and L7a; the cipher and hash cores only if L11 passes) | `packages/ops/prims/*`, `vocab/*` | L12, L7a, L11 | Ha | Vectors unchanged; corpus-stats report shows the change in primitive count and lines. Dated note (2026-11-14): the analysis `log2`, the coords maths, the list `sort`, `sort-by` and `shuffle`, `cmac`, `lmhash` and the `hex` primitive are now FL, and `base64` is FL with two private helpers (`_sextets`, `_unsextets`). |
+| L14 | The fold-in: LANGUAGE.md becomes v0.3 with an Appendix B, takes the cases of LANGUAGE-0.3 §17 under their numbers, and LANGUAGE-0.3.md becomes a historical note | `docs/LANGUAGE.md`, `docs/LANGUAGE-0.3.md` | all of the above | So | The harness reads LANGUAGE.md only |
 
-L10 needs the `ext` tag (X1), so X1 is built inside Phase T2 although it appears in the T3 table; the gate for T2 covers it.
+The files and "done when" checks of the L rows are those of LANGUAGE-0.3 §20, which wins if they differ. X1 and X4 of that section are the rows X1 and X4 of §13.5.
+
+L3 and L10 need the `ext` tag (X1), so X1 is built inside Phase T2 although it appears in the T3 table; the gate for T2 covers it. The staging of the version bump (G1 to G4) is T35.
 
 **Gate T2.** Conformance tests, op vectors, `gate2:browser` and `gate4:browser` green; the corpus-stats before/after report is attached.
 
@@ -663,25 +718,30 @@ L10 needs the `ext` tag (X1), so X1 is built inside Phase T2 although it appears
 
 | WP | Deliverable | Owns | Depends on | Agent | Done when |
 |---|---|---|---|---|---|
-| X1 | `ext` tag core: registry, equality, size, text form, header `ext{kind}`. Amended 2026-11-23 ([X0 §11](research/x0-ext-values.md)): `StackSlot.kind` and `ParamSpec.kind`; process-wide idempotent registry; O(1) `sizeOf` with a per-kind test; `str` to `ext` coercion | `packages/lang/src/types.ts`, `values.ts`, `meta.ts`, plus `ext.ts` (new), `primitives.ts`, `vm.ts`, `errors.ts`, `meta.schema.json` | Gate T1 | So | v0.1 conformance unchanged; header round-trips; an `ext` value passes through `list`, `record` and `fork`; size limits apply; a module evaluated twice registers cleanly |
-| X2 | `OutputValue` ext kind and viewer registry. Amended: kind-aware `fit.ts`, badges and "Data here" line; viewer contract; shadow-root rule in UI.md §4; Copy and Download per kind; contract bump with X1 | `packages/worker/src/render.ts`, `apps/web/src/io/*` | X1 | So | Unknown kinds fall back to text; DOM built without `innerHTML`; a viewer that throws does not hide the value; axe passes in three themes |
-| X3 | `ext` parameters in recipe JSON, URL and UI. Amended: needs the per-step schema from X5 (`StepReport.out`, `dataInfo`); the kind parser is one module shared by worker and page (decide with P1); helper contract `check`, optional `complete`. The recipe half is RW2 (RECIPES-1.2 §18) | `packages/recipe`, `packages/ops/src/types.ts`, `apps/web/src/params/*` | X1, SP2 (done), X5, RW2 | So | An ext parameter round-trips JSON, FL and URL |
-| X4 | Tagged literals | `packages/lang/src/reader.ts`, `compiler.ts` | X1 | So | Error offset points at the bad character |
-| X5 | Named inputs in the bake protocol and UI: `BakeOptions.inputs`, `PROTOCOL_VERSION` 2 (T23). Amended: also a per-step schema in the bake result (`StepReport.out`, `dataInfo`; RECIPES-1.2 §7.5), which X3 needs. The worker half is RW5 | `packages/worker/src/protocol.ts`, `apps/web/src/bake/*` | SP2 (done), RW5 | So | A step can read another input tab by name; a `protocol: 1` client gets `E_PROTOCOL` |
-| P1 | Pack manifest and build-time discovery | `packs/*/manifest.*`, `packages/ops/src/bundle.ts` | SP4 | So | Manifest generated and validated |
-| P2 | Composite provider and baker `init` with pack ids | `packages/worker`, `packages/ops/src/bundle.ts` | P1 | So | Ids not in the manifest are refused |
-| P3 | Dependency-closure loading in place of `vocabs: "all"`. Uses `opVocabs` (RW6) | `apps/web/src/bake/controller.ts`, `packages/worker` | P2, RW6 | So | Core start-up no longer loads all primitive chunks |
-| P4 | Pack manager UI and IndexedDB store | `apps/web/src/packs/*` | P2 | So | Enable and disable persist per browser |
-| P5 | Shared-recipe enable offer and notice. Needs `packs-needed` and `PackIndex` (RW6, T26) | `apps/web/src/*` | P4, X3, RW6 | So | Opening a recipe naming a pack op offers to enable |
-| P6 | Effect labels and `RunOptions.deny` wired into the baker | `packages/lang/src/types.ts`, `packages/worker` | X1 | So | A denied capability produces a structured error |
-| P7 | Per-pack size budgets in `npm run size` | size script | P1 | Ha | Budget breach fails CI |
-| P8 | Demo pack with one ext kind and one viewer | `packs/demo/*` | P2, X2 | Ha | Loads lazily under production headers |
+| X1 | `ext` tag core (LANGUAGE-0.3 §4, T36): process-wide idempotent registry, equality, O(1) `sizeOf` with a per-kind test, text form, header `ext{kind}`, `StackSlot.kind` and `ParamSpec.kind`, `str` to `ext` coercion, `ext-kind` and `ext>text`, the reserved `null` kind and words, and `kindConformance`. **Owns the forced one-line `ext` cases** in `packages/{ops,recipe,worker}` and `apps/web` (G1 of T35) | `packages/lang/src/{types,values,meta,primitives,vm,errors}.ts`, `ext.ts` (new), `meta.schema.json`, `vocab/core.ts`; the forced cases | H0, Gate T1 | So | C401 to C428 and C456 to C461 pass; v0.2 conformance unchanged; header round-trips; an `ext` value passes through `list`, `record` and `fork`; size limits apply; a module evaluated twice registers cleanly; main still typechecks |
+| X2 | `OutputValue` ext kind with the `truncated` flag, the viewer registry and contract (UI-TOOLKIT §1), kind-aware `fit.ts`, badges and the "Data here" line (§2), Copy, Download and Convert to bytes (`bytesOps`), **the CSP golden test against today's string** (§7.5). Contract bump with X1 | `packages/worker/src/render.ts`, `apps/web/src/io/*`, `apps/web/e2e/csp.spec.ts` | X1 | So | Unknown kinds fall back to text; DOM built without `innerHTML`; a viewer that throws does not hide the value; axe passes in three themes; the golden test passes |
+| X3 | `ext` parameters in recipe JSON, URL and UI (UI-TOOLKIT §3): the helper contract with a position in the result and an async `checkAsync`. Needs the per-step schema from X5 (`StepReport.out`, `dataInfo`). The kind parser is one module shared by worker and page (decide with P1a). The recipe half is RW2 | `packages/recipe`, `packages/ops/src/types.ts`, `apps/web/src/params/*` | X1, SP2 (done), X5, RW2 | So | An ext parameter round-trips JSON, FL and URL |
+| X4 | Tagged literals (LANGUAGE-0.3 §6): the `tstr` token, `registerLiteralTag`, compile-time evaluation | `packages/lang/src/reader.ts`, `compiler.ts`, `ext.ts` | X1 | So | C446 to C455 pass; the error offset points at the bad character |
+| X5 | Named inputs in the bake protocol and UI: `BakeOptions.inputs`, `PROTOCOL_VERSION` 2 (T23), the per-step schema in the bake result (RECIPES-1.2 §7.5), only the named tabs sent (T44), unique tab names. The worker half is RW5 | `packages/worker/src/protocol.ts`, `apps/web/src/bake/*` | SP2 (done), RW5 | So | A step can read another input tab by name; a `protocol: 1` client gets `E_PROTOCOL` |
+| P1a | `@forge/packs`: manifest types, the schema, `validateManifest`, the cross-checks that need no runtime, core name sets, `PACK_API`, the corpus of PACKS §10.1 | `packages/packs/*` | Gate T1 | So | Every valid manifest passes and every invalid one fails with its code; the strict schema runs under Ajv |
+| P1c | Catalogue support: `buildCatalogue` options, `mergeCatalogues`, `catalogueVersionOf`, the merge-equality test | `packages/ops/src/catalogue.ts`, `types.ts`, `packages/packs/src/merge.ts` | RW4, P1a | So | Merge equality holds for every closed subset of the fixture packs; core-only output is byte-identical to today's |
+| P1b | Discovery and generation: `packs:gen` and `--check`, the two generated registries, the `forgePacks()` Vite plugin, ESLint guard rails | `packages/packs/src/gen/*`, `apps/web/vite.config.ts`, the generated registries, `eslint.config.js` | P1a, P1c | So | The generator runs on a fixture tree and the demo pack; `--check` fails on a stale file; a static import from core into `packs/` fails the build |
+| P2a | The composite provider and the pack loaders | `packages/ops/src/bundle.ts`, `packs.ts`, `packages/packs/src/loader.ts` | P1a | So | A clash throws; unknown, unclosed and conflicting lists are refused with their reasons; a module evaluated twice registers cleanly |
+| P2b | Baker `init` with pack ids (`BakerInit.packs`, `InitInfo.packs`, the guard, the `init-error` mapping, the init deadline); the console `init`; the app's worker entries. **Rides protocol 2** (T48) | `packages/worker/src/*`, `apps/web/src/bake/worker.ts`, `apps/web/src/fl/*` | P1b, P2a, **RW5** | So | Ids not in the manifest are refused; a `protocol: 1` client gets `E_PROTOCOL`; `gate2:browser` passes |
+| P3 | Dependency-closure loading in place of `vocabs: "all"`, the baker's `catalogue-mismatch` drop (T49), the recipe view of the catalogue. Uses `opVocabs` | `apps/web/src/bake/controller.ts`, `packages/ops/src/*`, `packages/worker/src/core.ts` | P2b, **RW6** | So | Core start-up no longer loads all primitive chunks; the re-init cost is reported |
+| P4 | The pack manager UI, the IndexedDB store (key `packs`), `state.packs`, lazy viewer stubs (UI-TOOLKIT §6) | `apps/web/src/packs/*` | P2b, SP3 (done) | So | Enable and disable persist per browser; `needs-review`, `unavailable`, `blocked` and `failed` work; axe passes in three themes |
+| P5 | The enable offer and notice for `packs-needed` and saved recipes, the share-dialog pack lines. Needs `PackIndex` | `apps/web/src/packs/offer/*`, `apps/web/src/bake/forge-share-dialog.ts` | P4, X3, **RW6** | So | Opening a recipe that names a pack op offers to enable; no URL or recipe enables a pack |
+| P6 | `+media` in `EffectLabel`, the baker's `deny`, `BakeOptions.deny`, `E_FORBIDDEN` with `detail.pack`, the effect checks | `packages/lang/src/types.ts`, `packages/worker/src/*`, `packages/packs/src/checks/effects.ts` | X1, P1a | So | A denied capability produces a structured error that `try` does not catch |
+| P7 | Per-pack size budgets in `npm run size`, from the report | `apps/web/scripts/check-size.mjs` | P1b | Ha | A budget breach fails CI; the 250 kB core budget still applies |
+| P8a | The demo pack: manifest, vocabulary, kind, viewer, parser, helper, vectors | `packs/demo/*` | P2b, X2 | Ha | The pack loads and bakes in Node; vectors pass |
+| P8b | The Gate T3 end-to-end test, the second build with internal packs, `gate4:browser --packs` | `apps/web/e2e/packs.spec.ts`, `apps/web/scripts/serve-prod.mjs`, `.github/workflows/ci.yml` | P4, P5, P8a | So | Every check of PACKS §10.4 passes under the production headers |
+| P9 | `THIRD-PARTY-NOTICES.txt` generation and the link from the About page | `packages/packs/src/gen/notices.ts`, `apps/web/pages/*` | P1b | Ha | The file lists every pack's NOTICE and `externalCode` licence |
 | D1 | `csv` words and the one CSV parser in core. Amended: parses straight into columns, not via a list of lists | `packages/ops/vocab/csv.fth`, `prims/csv.ts` | L3 | So | RFC 4180 vectors pass |
-| D2 | `table` kind: columnar, typed, null mask. Amended: `int` column, faithful text form (null distinct from empty), honest size charge; `table` is core (Q4) | `packages/ops/src/table/*` | X1 | So | Size cost near the §2.4 columnar figure (at most 0.8 MB for numbers and 2.0 MB for 8-character strings at 10,000 by 10); equality, size, text and view tested; `table:to-json` and `table:to-csv` round-trip nulls |
-| D3 | `table` words and table viewer (virtualised grid). Amended: first N rows with the total and a stated limit for 1.0; rows on demand deferred (R9) | `packages/ops/vocab/table.fth`, `apps/web/src/io/table-view.ts` | D2, X2 | So | Grid shows first N rows with total |
+| D2 | `table` kind: columnar, typed, null mask. Amended: `int` column, faithful text form (null distinct from empty), honest size charge; `table` is core (Q4). Export words `table:to-csv` and `table:to-json` (T38) | `packages/ops/src/table/*` | X1 | So | Size cost near the §2.4 columnar figure (at most 0.8 MB for numbers and 2.0 MB for 8-character strings at 10,000 by 10); equality, size, text and view tested; `table:to-json` and `table:to-csv` round-trip nulls |
+| D3 | `table` words and table viewer (virtualised grid). Amended: first 100 rows with the total and a stated limit for 1.0, whole up to 5,000 cells then windowed, the null and empty rules of UI-TOOLKIT §1.7; rows on demand deferred (R9, T42) | `packages/ops/vocab/table.fth`, `apps/web/src/io/table-view.ts` | D2, X2 | So | Grid shows first N rows with total |
 | D4 | Wave 1b data-format ops on `table` | `packages/ops/vocab/*` | D1, D3 | Ha | Vectors pass |
 
-RECIPES-1.2 §18 holds ten work packages for the recipe wave, RW1 to RW10, each with a "Maps to" column naming the row here that it is part of or overlaps (RW1 and RW3 to RW8 sit under X3, X5, P3, P5 and R6; RW9 is the fold-in into RECIPES.md; RW10 is the web app's format-facing work). They are not counted again in §13.11.
+The P rows are PACKS §13, which holds their files and checks and wins if they differ; P1c, P9 and P8b are new, and P1, P2 and P8 split. RECIPES-1.2 §18 holds ten work packages for the recipe wave, RW1 to RW10, each with a "Maps to" column naming the row here that it is part of or overlaps (RW1 and RW3 to RW8 sit under X3, X5, P3, P5 and R6; RW9 is the fold-in into RECIPES.md; RW10 is the web app's format-facing work). They are not counted again in §13.11.
 
 **Gate T3.** A demo pack with one ext kind and one viewer loads lazily under production headers. Core start-up no longer loads all primitive chunks.
 
@@ -692,12 +752,12 @@ RECIPES-1.2 §18 holds ten work packages for the recipe wave, RW1 to RW10, each 
 | R1a | `relix-web` session shim: tables, limits and poll, terminals, structured diagnostics, print and normalise, `decompose`, the `fl` cache library, version string | `relix-web/shim/*` | R0, Gate T1 | So | Every entry point has JVM and browser tests; limits fire with their codes |
 | R1b | `relix-web` build: patch-series check per Relix release, supplements module (the T34 random fix), ES-module wrapper, hashed artifact, size gate, NOTICE | `relix-web/scripts/*`, `patches/*`, `classlib/*` | R0 | So | A clean build from a published engine gives the module at most 3 MB gzip (T12) |
 | R2a | `operators.json` and its schema (52 rows), drafted by script from `RelNode` and the reference, then completed by hand | `packs/relix/gen/operators.json` | SP6 (done) | So | All 52 rows; coverage, spelling and reference tests pass |
-| R2b | Generator: `.fth` with `META:`, printer table, help source; `--check` mode | `packs/relix/gen/*.ts`, `vocab/relix-ops.fth` | R2a | Ha | Generated output committed; `gen:relix --check` in CI |
+| R2b | Generator: `.fth` with `META:`, printer table, help source; `--check` mode | `packs/relix/gen/*.ts`, `vocab/relix.fth` (one `.fth` per vocabulary, PK23) | R2a | Ha | Generated output committed; `gen:relix --check` in CI |
 | R3 | `relation` and `relix-expr` kinds, sources (including `relix:input`, T30) and terminals | `packs/relix/vocab/*`, `src/kinds/*`, `prims/*` | R1a, R2b, X1, D2 | So | Build, `relix:run`, `explain`, `schema`, `>text`, `parse` pass vectors |
 | R4 | Table-to-engine and engine-to-table interchange; implicit lift and run inserted by the compiler (T29) | `packs/relix/src/interchange/*`, compiler hook | R3, D2, SP2 (done) | So | Null mask and typed columns round-trip; the trace shows `relation -> table` |
 | R5a | Tier-1 shape check module and the wrapper templates for fragments (T34) | `packs/relix/src/expr-check/*` | R1a | So | Each shape: valid samples pass, invalid ones report the right column |
 | R5b | Tier-2 check through the Worker, completion from schema and catalogue, the field UI | `packs/relix/ui/*` | R5a, X3, X5 | So | A bad expression is reported at its position before the bake |
-| R6 | Nested-lane UI for slots (as RELIX-LANES §11, with RW3 and RW10) | `apps/web/src/recipe/*` | SP2 (done), R3 | So | A binary operator step shows lanes; `FIX` and `ITERATE` show `base` and `step`; e2e passes |
+| R6 | Nested-lane UI for slots (as RELIX-LANES §11, whose RL2 to RL7 carry its parts, with RW3 and RW10; the Tree view is read-only, T43) | `apps/web/src/recipe/*` | SP2 (done), R3 | So | A binary operator step shows lanes; `FIX` and `ITERATE` show `base` and `step`; e2e passes |
 | R7a | "View as Relix", both spellings, include-data option with a 200-row cap (T34) | `packs/relix/src/view/*` | R1a, R3 | So | Golden texts; the lost-content list is shown |
 | R7b | `.relix` import with the statement check and binding dialog | `packs/relix/src/import/*` | R7a | So | Recipe to text to recipe is the identity on supported steps |
 | R8 | Per-step schema and on-demand row counts (T34) | `packs/relix/ui/*` | R3, X5 | Ha | Schema on every Relix step; a count on request |
@@ -705,7 +765,7 @@ RECIPES-1.2 §18 holds ten work packages for the recipe wave, RW1 to RW10, each 
 | R9b | Discover, batch, replay loop; FL errors; limits | `packs/relix/src/fl-bridge/batch.ts` | R9a | So | A query over 10,000 rows calls an FL op once per distinct value |
 | R10 | Help from `relix-docs` | `relix-web/scripts/reference.*`, `packs/relix/gen/help-*.ts` | R2b | Ha | Help text comes from the reference pages |
 | R11 | Conformance harness: reference examples against the browser engine, with an expected-differences gate | `relix-web/harness/*`, `packs/relix/test/*` | R1a, R1b, SP2 (done) | Ha | Pass rate reported against T12; a change in the differences list fails the job |
-| R13 | Pack manifest and budget, lazy load in the bake Worker, cancellation wiring (shared flag, poll, deadline), `needsHardKill` for engine-running words | `packs/relix/manifest.*`, `packages/worker` hook | R1a, P2 | So | Cancellation tests pass; the pack loads lazily under the production headers |
+| R13 | Pack manifest and budget, lazy load in the bake Worker, cancellation wiring (shared flag, poll, deadline), `needsHardKill` for engine-running words | `packs/relix/manifest.json` (PACKS §2.5), `packages/worker` hook (`WorkerPackHost.onBake`) | R1a, P2b | So | Cancellation tests pass; the pack loads lazily under the production headers |
 | R14 | Security tests: injection, text rendering, refused statements | `packs/relix/test/security/*` | R3, R7b | Ha | Every case of RELIX.md §11.2 has a test |
 | J1 | `@forge/embed` single-file bundle | `packages/embed/*` | Gate T2, J0 | So | Runs under Node and GraalJS |
 | J2 | `relix-fl` module (`FunctionLibrary`, GraalJS) | `relix-fl/*` (location per Q11) | J1; Relix 1.0 | So | Found by `ServiceLoader`; an FL op callable in a query |
@@ -737,7 +797,7 @@ The R-rows are refined in RELIX.md §15, which holds the files, sizes and "done 
 
 | WP | Deliverable | Owns | Depends on | Agent | Done when |
 |---|---|---|---|---|---|
-| M1 | Media pack skeleton and `media-src blob:` CSP change (owner-approved) | `packs/media/*`, `infra/` | Gate T3 | So | Pack loads; CSP test passes |
+| M1 | Media pack skeleton and `media-src blob:` CSP change (owner-approved, `terraform apply`; T46). The CSP golden test's expected string changes in the same pull request | `packs/media/*`, `infra/` | Gate T3 | So | Pack loads; the golden test passes with the new string |
 | M2 | Image kind, canvas decode and encode, image viewer | `packs/media/*` | M1 | So | Image round trip in a worker |
 | M3 | 14 image transforms, format conversion, text overlay | `packs/media/vocab/*` | M2 | Ha | Vectors on small fixtures |
 | M4 | Audio and video player viewer | `packs/media/*` | M1 | So | Plays under production headers |
@@ -762,11 +822,11 @@ The R-rows are refined in RELIX.md §15, which holds the files, sizes and "done 
  T0 spikes:  R0   L0   J0   X0
               \    |    |    /
                v   v    v   v
- T1 specs:   SP1 -> SP3 SP4 SP5 ; SP2 SP6 done  [Gate T1: owner]
+ T1 specs:   SP1 SP2 SP3 SP4 SP6 done ; SP5 not written  [Gate T1: owner]
                          |
- T2 FL v0.2:  L2..L10 (+X1) -> L12 (wave boundary) -> L13
+ T2 FL v0.3:  H0 -> X1 (G1) -> L2..L10 -> L9b + L12 (G3, wave boundary) -> L13 -> L14
                          |  (L11 only if L0 passed)
- T3 packs:    X1 -> X2 X3 X4 X5 ; P1 -> P2 -> P3 P4 P5 ; D1 D2 -> D3 -> D4
+ T3 packs:    X1 -> X2 X3 X4 X5 ; P1a -> P1c -> P1b -> P2b (RW5) -> P3 (RW6), P4 -> P5 (RW6) -> P8b ; D1 D2 -> D3 -> D4
                          |
  T4 Relix:    R1a R1b -> R2a -> R2b -> R3 -> R4 -> R9a -> R9b ; R1a -> R5a -> R5b ;
               R3 -> R6 R7a -> R7b R8 ; R2b -> R10 ; R1a R1b -> R11 ; R1a -> R13 ; R7b -> R14
@@ -782,12 +842,13 @@ T5 and T6 depend on Gate T3 only, not on T4, so they can run in parallel with th
 ### 13.11 What can start now
 
 - The four spikes: R0, L0, J0, X0.
-- Drafts of the specifications SP1, SP3, SP4 and SP5. SP2 and SP6 are written and decided at Gate T1 (T23 to T34).
-- L1, the corpus-stats scripts, which change no contract.
+- A draft of SP5 (SYMBOLIC.md v2). SP1 to SP4 and SP6 are written and decided at Gate T1 (T23 to T52).
+- L1, the corpus-stats scripts, which change no contract. L1 also refreshes the stale counts (T52).
+- Packages that change `packages/*` follow the staging of T35 (G1 first).
 
 **Scheduling rule.** The L12 sweep runs at a wave boundary. The remaining core waves from PLAN.md (wave 1b data formats, now depending on D; wave 6 compression; wave 7 public key, networking, forensics) run in parallel throughout, but no op work package may be in flight while L12 runs.
 
-**Count.** The tables hold 75 work packages (13 + 17 + 22 + 10 + 9 + 4), plus 4 spikes and 6 specifications. The Phase T4 count went from 16 to 22: R12 is dropped, five rows split and R13 and R14 are new (18 R-rows and 4 J-rows). The RW packages of RECIPES-1.2 §18 overlap rows of Phase T3 and T4 and are not counted again. Several are conditional (L11, L13 in part, J2 to J4). The Phase T3 and T4 tables can be merged in pairs if coarser packages are preferred.
+**Count.** The tables hold 85 work packages (18 + 22 + 22 + 10 + 9 + 4), plus 4 spikes and 6 specifications. Phase T2 went from 13 to 18: H0 and L14 are new, and L5, L7 and L9 split in two (SP1; L4 is done). Phase T3 went from 17 to 22: P1 to P8 became the 13 rows P1a to P9 (SP4). The Phase T4 count went from 16 to 22: R12 is dropped, five rows split and R13 and R14 are new (18 R-rows and 4 J-rows). The RW packages of RECIPES-1.2 §18 and the RL packages of RELIX-LANES §11.2 overlap rows of Phase T3 and T4 and are not counted again. Several are conditional (L7b, L11, L13 in part, J2 to J4). The Phase T3 and T4 tables can be merged in pairs if coarser packages are preferred.
 
 ---
 
@@ -801,14 +862,18 @@ T5 and T6 depend on Gate T3 only, not on T4, so they can run in parallel with th
 | 2 | `BigDecimal`, time and regex behaviour diverge between the compiled engine and the JVM | The reference-example corpus is the gate (R0 criterion 3); R11. **Reduced 2026-11-23:** all 63 decimal, 38 date/time and 10 regex examples agree. Collation and seeded random differ (T11) |
 | 3 | Sync engine against async FL | Batch hoisting outside the engine; R0 tests it. **Resolved 2026-11-23:** synchronous callbacks with batching (T14) |
 | 4 | L0 fails, so goal 5 is capped at roughly the current FL share for crypto | The plan says so (§11.3); the 53 cores stay TypeScript |
-| 5 | The breaking v0.2 migration churns parallel op work | One sweep at a wave boundary (L12); no op WPs in flight |
-| 6 | Frozen-contract changes in `packages/*` | Explicit version bump at Gate T1. X0 confirmed that X1 and X2 are source-breaking and belong in that bump (T19) |
+| 5 | The v0.3 migration churns parallel op work | One sweep at a wave boundary (L12, group G3 of T35); no op WPs in flight. The sweep is small: one breaking item (`E_RANGE`) and the `json` callers (T41) |
+| 6 | Frozen-contract changes in `packages/*` | Explicit version bump at Gate T1. X0 confirmed that X1 and X2 are source-breaking and belong in that bump (T19). **Decided 2026-11-24:** the bump is staged G1 to G4 (T35) |
 | 7 | The Relix 1.0 freeze delays engine-side asks | Asks (Q1) are scheduled after 1.0 unless the owner pulls them in; the pack works from the published jar |
-| 8 | CSP relaxation for media | Limited to `media-src blob:`; owner-approved; media pack only |
+| 8 | CSP relaxation for media | Limited to `media-src blob:`; owner-approved; media pack only. **Applied at T6** (M1), not before, and guarded by the CSP golden test (T46; UI-TOOLKIT §7.1, §7.5) |
 | 9 | Scope: this is several products | Phase gates; packs optional and independent after T3 |
 | 10 | GraalJS constraints (start-up, missing browser APIs, licence) | J0 measures; J4 lists degraded ops |
 | 11 | Table memory under the allocation meter | Columnar representation; propose a live-size meter or structural sharing for tables |
-| 12 | A catalogue that depends on which packs are enabled: `catalogue-mismatch` would fire for every reader with a different set of packs on, and a recipe could name an op the reader's catalogue lacks | The validator skips `catalogue-mismatch` for a recipe with a pack op and `encodeShare` omits `catalogue` for it; `pack-not-enabled` and `packs-needed` say what is missing (T26; RECIPES-1.2 §8.5) |
+| 12 | A catalogue that depends on which packs are enabled: `catalogue-mismatch` would fire for every reader with a different set of packs on, and a recipe could name an op the reader's catalogue lacks | The validator skips `catalogue-mismatch` for a recipe with a pack op and `encodeShare` omits `catalogue` for it; `pack-not-enabled` and `packs-needed` say what is missing (T26; RECIPES-1.2 §8.5). PACKS §5.4 closes the rest: `recipe.catalogue` is the core version (T49) |
+| 13 | A pack that fails to load or crashes the tab | A `pending` mark in the store, an init deadline, and the `failed` and `unavailable` states, so a crash loop cannot lock the user out; disabling replaces the workers (PACKS §8.4, PK16, PK21; T51) |
+| 14 | Fragment drift: the merged catalogue of core and pack fragments differs from the one built from a single runtime | The `fragment-drift` check in `packs:gen --check` and CI; merge equality for every closed subset (PACKS §5.2, PK10; T49) |
+
+**Note, not a risk.** `apps/web/scripts/serve-prod.mjs`, the server that the e2e suite runs against, omits `Permissions-Policy`, HSTS and `X-Frame-Options`, which `infra/site.tf` sets, so the e2e suite does not test those headers. It is not a blocker and not part of the CSP. A separate task is queued for it.
 
 ### 14.2 Open questions for the owner
 
@@ -827,19 +892,24 @@ T5 and T6 depend on Gate T3 only, not on T4, so they can run in parallel with th
 | Q11 | Where do `relix-web` and `relix-fl` live: new repositories or the relix umbrella? **Partly decided 2026-11-23 (T16): `relix-web` is its own repository (`DarkCollective/relix-web`, private). Where `relix-fl` lives is open.** **Decided in full 2026-11-23 (T33): `relix-fl` is its own repository, `DarkCollective/relix-fl`.** |
 | Q12 | Are PLAN.md Phase 6 items (Magic, recipe store, PWA, CLI) re-sequenced behind this programme? |
 | Q13 | Is T8 (relations and symbolic expressions as one kind of expression value) accepted? |
-| Q14 | How does FL hold JSON `null`? It decides how nested NULLs (a struct field or array element) cross the Relix bridge; until SP1 decides, the bridge refuses them with `E_COERCE` ([RELIX.md](RELIX.md) §5.4, §16 item 13). Raised by SP6; for SP1. |
-| Q15 | Which version bump covers the frozen contracts at Gate T1: FL, the worker protocol and the X1 and X2 contract (T19)? The recipe format needs none (T23); the worker protocol goes to 2 (T23). Open until SP1, SP3, SP4 and SP5 are written. |
+| Q14 | How does FL hold JSON `null`? It decides how nested NULLs (a struct field or array element) cross the Relix bridge. Raised by SP6; for SP1. **Decided 2026-11-24 (T38): `ext{null}`, with the words `null` and `null?`.** A nested NULL maps to `ext{null}` and back ([RELIX.md](RELIX.md) §5.4, §16 item 13), and the bridge no longer refuses it with `E_COERCE`. `null` is a reserved core kind name (T36). |
+| Q15 | Which version bump covers the frozen contracts at Gate T1: FL, the worker protocol and the X1 and X2 contract (T19)? **Decided 2026-11-24 (T35, T48): FL v0.3, `0.3.0` set at L12; the worker protocol 2 (T23), which also carries `init.packs` (PQ7) and the `ext` output of X2; the recipe format stays `"forge": 1`; `PACK_API` is an integer in the pack manifest contract. The bump is staged G1 to G4.** |
+
+The open questions of UI-TOOLKIT §11 (Q1 to Q16) and PACKS §12 (PQ1 to PQ15) are all decided with their recommended answers (T42 to T51). They are not repeated here.
 
 ---
 
 ## 15. Relationship to other documents
 
-- **PLAN.md.** The Phase 6 line "Relix vocabulary integration as an `relix:` vocab of primitives" is superseded by this plan. PLAN §9 gains the decisions T1 to T8 once approved; items 14 and 15 of PLAN §9 point to T9 to T22 and T23 onwards.
+- **PLAN.md.** The Phase 6 line "Relix vocabulary integration as an `relix:` vocab of primitives" is superseded by this plan. PLAN §9 gains the decisions T1 to T8 once approved; items 14, 15 and 16 of PLAN §9 point to T9 to T22, T23 to T34 and T35 onwards.
 - **SYMBOLIC.md.** Superseded in part: S2, S3, S5, S6 and S7 (§9.3). S8 to S14, S20 and S21 stand. A v2 is written in WP SP5.
-- **LANGUAGE.md.** A v0.2 is written in WP SP1.
+- **LANGUAGE.md.** v0.2 is the current specification. The next wave is [LANGUAGE-0.3.md](LANGUAGE-0.3.md) (WP SP1, decided T35 to T41): the `ext` value, generic words, tagged literals, JSON and `null`, defining forms, the array, `charge`, and the fixes of §11.5. LANGUAGE.md becomes v0.3 at the fold-in (L14).
+- **LANGUAGE-0.3.md.** The proposal for FL v0.3 (WP SP1). Its work packages are H0 and the L rows of §13.4, and it wins over §11 where they differ.
 - **RECIPES.md.** The recipe wave is specified in [RECIPES-1.2.md](RECIPES-1.2.md) (WP SP2, decided T23 to T28). RECIPES.md changes at the fold-in (RW9). The §2.2 internal-vocabulary drift (two named, eight in `INTERNAL_VOCABS`) is fixed.
 - **RECIPES-1.2.md.** The proposal for v1.2 of the recipe format: ext parameters, slots, named inputs, pack ops, pins, vectors, share links and the bake protocol. Its work packages are RW1 to RW10 (§18).
-- **UI.md.** Amended in WP SP3 (rules 6 and 8, the CSP, viewers and pack rules).
+- **UI.md.** Amended as work packages land, from the proposal [UI-TOOLKIT.md](UI-TOOLKIT.md) (WP SP3, decided T42 to T46): rules 5 to 8, 10, 12 and 13, viewers, ext fields, lanes, named inputs, the pack manager and the CSP.
+- **UI-TOOLKIT.md.** The UI proposal (WP SP3). Its work packages are carried by the X, D, P and R rows (UI-TOOLKIT §12) and by RL2 to RL7 of RELIX-LANES.
 - **RELIX.md.** The Relix pack specification (WP SP6, decided T29 to T34): value kinds, the `relix:` vocabulary, the operator table, the value mapping, the `fl` library, errors, limits, help and tests. Its work packages refine §13.6.
-- **New documents.** PACKS.md (SP4), not yet written.
+- **PACKS.md.** The pack specification (WP SP4, decided T47 to T51): the manifest, discovery, the init protocol, the catalogue and packs, the capability model, enabling, security, versioning and testing. Its work packages P1a to P9 replace the P rows of §13.5.
+- **New documents.** SYMBOLIC.md v2 (SP5), not yet written.
 - **RELIX-LANES.md.** Design proposal for binary Relix operators in the recipe pane (lanes, slots, Tree view, recipe JSON for slots). It elaborates §8.2 and refines WP R6.
