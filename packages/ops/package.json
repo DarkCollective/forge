@@ -39,6 +39,7 @@
     "build": "tsc -p tsconfig.build.json && tsc -p tsconfig.scripts.json && node dist-scripts/catalogue.js && node dist-scripts/help.js && node dist-scripts/checks.js",
     "hash-snapshot": "tsc -p tsconfig.build.json && tsc -p tsconfig.scripts.json && node dist-scripts/hash-snapshot.js",
     "dupes": "tsc -p tsconfig.build.json && tsc -p tsconfig.scripts.json && node dist-scripts/dupes.js",
+    "corpus-stats": "tsc -p tsconfig.scripts.json && node dist-scripts/corpus-stats.js",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
