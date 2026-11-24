@@ -1,11 +1,50 @@
 \ Copyright 2026 Darkcollective, LLC. Licensed under the Apache License, Version 2.0.
-\ csv: CSV (RFC 4180) to JSON and JSON to CSV. The scan of the CSV text and its writer are the private primitives
-\ csv:_parse and csv:_write (src/prims/csv.ts; a per-character FL scanner is far too slow at 64 KiB); the header rules,
-\ the mapping between rows and JSON values and the checks are FL over the shared json words. Every CSV cell is a
-\ string; JSON values that are not strings are written as their JSON text (a null as an empty cell).
+\ csv: CSV (RFC 4180) to a table, to JSON and from JSON. The scan of the CSV text and its writer are the private
+\ primitives csv:_parse, csv:_to-table and csv:_write (src/prims/csv.ts; a per-character FL scanner is far too slow at
+\ 64 KiB); the header rules, the mapping between rows and JSON values and the checks are FL over the shared json words.
+\
+\   csv:parse ( data cell-delimiter row-delimiter quote header -- table )   CSV into typed table columns (D1)
+\   csv:parse-tsv ( data header -- table )                                  the same, tab-separated
+\
+\ csv:to-json keeps every CSV cell a string; JSON values that are not strings are written as their JSON text (a null as
+\ an empty cell). csv:parse is the one parser that reads cells into a table: it keeps null (an empty unquoted cell)
+\ apart from the empty string (""), and gives a column the type its cells have.
 IN: csv
 
 USING: json list ;
+
+\ ---- CSV to a table ----
+
+: parse ( data:str cell-delimiter:str="," row-delimiter:str="\\r\\n" quote:str="\"" header:bool=true -- ext{table} )
+  "Read CSV (RFC 4180) into a table. The cells go straight into typed columns. An empty cell is null, and a quoted empty cell (two double quotes) is the empty string. A column is int when every cell is an integer in 64 bits (007 and +5 are text, not integers), num when every cell is a decimal or exponent number (an int and a num together make num), bool when every cell is true or false in any case, and str for anything else, so a column that mixes types keeps its text. Each character of the cell delimiter ends a cell and each character of the row delimiter ends a row (the default row delimiter accepts CRLF, LF and CR); both read the escapes \\r \\n \\t \\\\ and \\xHH. A cell that starts with the quote character runs to the closing quote and may hold delimiters and line breaks, and a doubled quote in it is one quote; a quote inside an unquoted cell is kept. An unterminated quote or text after a closing quote is E_COERCE with the position. Empty lines are skipped and the last row needs no row end. With header the first row names the columns (a repeated name is E_COERCE); without it the columns are c1, c2 and so on. A row with another number of cells than the first is E_COERCE. A byte order mark at the start is dropped." doc
+  "Data format" category
+  data cell-delimiter row-delimiter quote header csv:_to-table ;
+
+META: parse
+  use-when "You have CSV text from a spreadsheet or an export and want a table with typed columns, for the table words or for Relix." ;
+  param cell-delimiter "The characters that end a cell; each one counts. Escapes like \\t are read." ;
+  param row-delimiter "The characters that end a row; each one counts, and a CR followed by an LF is one. Escapes like \\r\\n are read." ;
+  param quote "The one character that quotes a cell." ;
+  param header "Read the first row as the column names; off, the columns are c1, c2 and so on." ;
+  expects "CSV text" ;
+  checks input utf8 ;
+  see-also parse-tsv to-json ;
+  link "https://www.rfc-editor.org/rfc/rfc4180" "RFC 4180: CSV format" ;
+  link "https://en.wikipedia.org/wiki/Comma-separated_values" "Comma-separated values on Wikipedia" ;
+;
+
+: parse-tsv ( data:str header:bool=true -- ext{table} )
+  "Read tab-separated text into a table, as csv:parse does with a tab as the cell delimiter: rows end at CRLF, LF or CR, a cell that starts with a double quote is quoted, an empty cell is null and a quoted empty cell is the empty string, and a column takes the type its cells have. With header the first row names the columns; without it they are c1, c2 and so on." doc
+  "Data format" category
+  data "\\t" "\\r\\n" "\"" header csv:_to-table ;
+
+META: parse-tsv
+  use-when "You have tab-separated text, such as a paste from a spreadsheet, and want a table with typed columns." ;
+  param header "Read the first row as the column names; off, the columns are c1, c2 and so on." ;
+  expects "Tab-separated text" ;
+  checks input utf8 ;
+  see-also parse ;
+;
 
 \ ---- CSV to JSON ----
 

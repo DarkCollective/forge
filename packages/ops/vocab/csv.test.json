@@ -867,5 +867,435 @@
       "enc": "utf8"
     },
     "expect": "pass"
+  },
+  {
+    "name": "types are read off the text: int, str, num, bool",
+    "ref": "RFC 4180 and the table text form (X0 R10), hand-written",
+    "op": "csv:parse",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "quote": "\"",
+      "header": true
+    },
+    "input": {
+      "value": "id,name,score,ok\r\n1,Ada,1.5,true\r\n2,Alan,2,FALSE\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": {
+        "$ext": "table",
+        "text": "{\"columns\":[{\"name\":\"id\",\"type\":\"int\"},{\"name\":\"name\",\"type\":\"str\"},{\"name\":\"score\",\"type\":\"num\"},{\"name\":\"ok\",\"type\":\"bool\"}],\"rows\":[[1,\"Ada\",1.5,true],[2,\"Alan\",2,false]]}"
+      }
+    },
+    "example": {
+      "title": "Parse CSV into a table with typed columns",
+      "note": "A column is int, num or bool when every cell reads as one, and str otherwise."
+    }
+  },
+  {
+    "name": "an empty cell is null and a quoted empty cell is the empty string",
+    "ref": "RFC 4180 and the table text form (X0 R10), hand-written",
+    "op": "csv:parse",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "quote": "\"",
+      "header": true
+    },
+    "input": {
+      "value": "a,b\r\n1,\r\n2,\"\"\r\n,x\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": {
+        "$ext": "table",
+        "text": "{\"columns\":[{\"name\":\"a\",\"type\":\"int\"},{\"name\":\"b\",\"type\":\"str\"}],\"rows\":[[1,null],[2,\"\"],[null,\"x\"]]}"
+      }
+    },
+    "example": {
+      "title": "Null against the empty string",
+      "note": "An empty cell is null. Two double quotes are the empty string. The table keeps them apart."
+    }
+  },
+  {
+    "name": "RFC 4180: quoted cells hold commas, doubled quotes and line breaks",
+    "ref": "RFC 4180 and the table text form (X0 R10), hand-written",
+    "op": "csv:parse",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "quote": "\"",
+      "header": true
+    },
+    "input": {
+      "value": "a,b,c\r\n\"x,1\",\"he said \"\"hi\"\"\",\"line1\r\nline2\"\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": {
+        "$ext": "table",
+        "text": "{\"columns\":[{\"name\":\"a\",\"type\":\"str\"},{\"name\":\"b\",\"type\":\"str\"},{\"name\":\"c\",\"type\":\"str\"}],\"rows\":[[\"x,1\",\"he said \\\"hi\\\"\",\"line1\\r\\nline2\"]]}"
+      }
+    }
+  },
+  {
+    "name": "LF rows, empty lines and a last row with no line end",
+    "ref": "RFC 4180 and the table text form (X0 R10), hand-written",
+    "op": "csv:parse",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "quote": "\"",
+      "header": true
+    },
+    "input": {
+      "value": "a,b\n\n1,2\n\n3,4",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": {
+        "$ext": "table",
+        "text": "{\"columns\":[{\"name\":\"a\",\"type\":\"int\"},{\"name\":\"b\",\"type\":\"int\"}],\"rows\":[[1,2],[3,4]]}"
+      }
+    }
+  },
+  {
+    "name": "leading zeros, a plus sign and huge digits stay text",
+    "ref": "RFC 4180 and the table text form (X0 R10), hand-written",
+    "op": "csv:parse",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "quote": "\"",
+      "header": true
+    },
+    "input": {
+      "value": "zip,n,big\r\n007,+5,123456789012345678901234567890\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": {
+        "$ext": "table",
+        "text": "{\"columns\":[{\"name\":\"zip\",\"type\":\"str\"},{\"name\":\"n\",\"type\":\"str\"},{\"name\":\"big\",\"type\":\"str\"}],\"rows\":[[\"007\",\"+5\",\"123456789012345678901234567890\"]]}"
+      }
+    }
+  },
+  {
+    "name": "an integer beyond 2^53 is exact",
+    "ref": "RFC 4180 and the table text form (X0 R10), hand-written",
+    "op": "csv:parse",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "quote": "\"",
+      "header": true
+    },
+    "input": {
+      "value": "n\r\n9007199254740993\r\n-9223372036854775808\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": {
+        "$ext": "table",
+        "text": "{\"columns\":[{\"name\":\"n\",\"type\":\"int\"}],\"rows\":[[\"9007199254740993\"],[\"-9223372036854775808\"]]}"
+      }
+    }
+  },
+  {
+    "name": "an int and a num in one column make a num",
+    "ref": "RFC 4180 and the table text form (X0 R10), hand-written",
+    "op": "csv:parse",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "quote": "\"",
+      "header": true
+    },
+    "input": {
+      "value": "x\r\n1\r\n2.5\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": {
+        "$ext": "table",
+        "text": "{\"columns\":[{\"name\":\"x\",\"type\":\"num\"}],\"rows\":[[1],[2.5]]}"
+      }
+    }
+  },
+  {
+    "name": "a column that mixes types keeps its text",
+    "ref": "RFC 4180 and the table text form (X0 R10), hand-written",
+    "op": "csv:parse",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "quote": "\"",
+      "header": true
+    },
+    "input": {
+      "value": "x\r\n1\r\nabc\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": {
+        "$ext": "table",
+        "text": "{\"columns\":[{\"name\":\"x\",\"type\":\"str\"}],\"rows\":[[\"1\"],[\"abc\"]]}"
+      }
+    }
+  },
+  {
+    "name": "without a header the columns are c1, c2",
+    "ref": "RFC 4180 and the table text form (X0 R10), hand-written",
+    "op": "csv:parse",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "quote": "\"",
+      "header": false
+    },
+    "input": {
+      "value": "1,x\r\n2,y\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": {
+        "$ext": "table",
+        "text": "{\"columns\":[{\"name\":\"c1\",\"type\":\"int\"},{\"name\":\"c2\",\"type\":\"str\"}],\"rows\":[[1,\"x\"],[2,\"y\"]]}"
+      }
+    }
+  },
+  {
+    "name": "another cell delimiter, row delimiter and quote",
+    "ref": "RFC 4180 and the table text form (X0 R10), hand-written",
+    "op": "csv:parse",
+    "params": {
+      "cell-delimiter": ";",
+      "row-delimiter": "|",
+      "quote": "'",
+      "header": true
+    },
+    "input": {
+      "value": "a;b|'x;1';2|",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": {
+        "$ext": "table",
+        "text": "{\"columns\":[{\"name\":\"a\",\"type\":\"str\"},{\"name\":\"b\",\"type\":\"int\"}],\"rows\":[[\"x;1\",2]]}"
+      }
+    }
+  },
+  {
+    "name": "Unicode names and cells",
+    "ref": "RFC 4180 and the table text form (X0 R10), hand-written",
+    "op": "csv:parse",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "quote": "\"",
+      "header": true
+    },
+    "input": {
+      "value": "naïve,日本\r\n😀,\"é,日\"\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": {
+        "$ext": "table",
+        "text": "{\"columns\":[{\"name\":\"naïve\",\"type\":\"str\"},{\"name\":\"日本\",\"type\":\"str\"}],\"rows\":[[\"😀\",\"é,日\"]]}"
+      }
+    }
+  },
+  {
+    "name": "a header and no rows",
+    "ref": "RFC 4180 and the table text form (X0 R10), hand-written",
+    "op": "csv:parse",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "quote": "\"",
+      "header": true
+    },
+    "input": {
+      "value": "a,b\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": {
+        "$ext": "table",
+        "text": "{\"columns\":[{\"name\":\"a\",\"type\":\"str\"},{\"name\":\"b\",\"type\":\"str\"}],\"rows\":[]}"
+      }
+    }
+  },
+  {
+    "name": "a row with too few cells",
+    "ref": "RFC 4180 and the table text form (X0 R10), hand-written",
+    "op": "csv:parse",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "quote": "\"",
+      "header": true
+    },
+    "input": {
+      "value": "a,b\r\n1,2\r\n3\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a row with too many cells",
+    "ref": "RFC 4180 and the table text form (X0 R10), hand-written",
+    "op": "csv:parse",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "quote": "\"",
+      "header": true
+    },
+    "input": {
+      "value": "a,b\r\n1,2,3\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "an unterminated quote",
+    "ref": "RFC 4180 and the table text form (X0 R10), hand-written",
+    "op": "csv:parse",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "quote": "\"",
+      "header": true
+    },
+    "input": {
+      "value": "a\r\n\"x\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "text after a closing quote",
+    "ref": "RFC 4180 and the table text form (X0 R10), hand-written",
+    "op": "csv:parse",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "quote": "\"",
+      "header": true
+    },
+    "input": {
+      "value": "a\r\n\"x\"y\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "a repeated header name",
+    "ref": "RFC 4180 and the table text form (X0 R10), hand-written",
+    "op": "csv:parse",
+    "params": {
+      "cell-delimiter": ",",
+      "row-delimiter": "\\r\\n",
+      "quote": "\"",
+      "header": true
+    },
+    "input": {
+      "value": "a,a\r\n1,2\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_COERCE"
+    }
+  },
+  {
+    "name": "input: CSV text is valid UTF-8",
+    "op": "csv:parse",
+    "checks": "input",
+    "data": {
+      "value": "a,b\r\n1,2\r\n",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "input: bytes that are not UTF-8 fail",
+    "op": "csv:parse",
+    "checks": "input",
+    "data": {
+      "value": "fffe0001",
+      "enc": "hex"
+    },
+    "expect": "fail"
+  },
+  {
+    "name": "tabs separate the cells",
+    "ref": "tab-separated text, hand-written",
+    "op": "csv:parse-tsv",
+    "params": {
+      "header": true
+    },
+    "input": {
+      "value": "name\tage\r\nAda\t36\r\n\"x\ty\"\t\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": {
+        "$ext": "table",
+        "text": "{\"columns\":[{\"name\":\"name\",\"type\":\"str\"},{\"name\":\"age\",\"type\":\"int\"}],\"rows\":[[\"Ada\",36],[\"x\\ty\",null]]}"
+      }
+    },
+    "example": {
+      "title": "Parse tab-separated text",
+      "note": "The same parser as csv:parse, with a tab as the cell delimiter."
+    }
+  },
+  {
+    "name": "tab-separated text without a header",
+    "ref": "tab-separated text, hand-written",
+    "op": "csv:parse-tsv",
+    "params": {
+      "header": false
+    },
+    "input": {
+      "value": "1\t2.5\r\n",
+      "enc": "utf8"
+    },
+    "expect": {
+      "json": {
+        "$ext": "table",
+        "text": "{\"columns\":[{\"name\":\"c1\",\"type\":\"int\"},{\"name\":\"c2\",\"type\":\"num\"}],\"rows\":[[1,2.5]]}"
+      }
+    }
+  },
+  {
+    "name": "input: tab-separated text is valid UTF-8",
+    "op": "csv:parse-tsv",
+    "checks": "input",
+    "data": {
+      "value": "a\tb\r\n",
+      "enc": "utf8"
+    },
+    "expect": "pass"
+  },
+  {
+    "name": "input: bytes that are not UTF-8 fail",
+    "op": "csv:parse-tsv",
+    "checks": "input",
+    "data": {
+      "value": "fffe0001",
+      "enc": "hex"
+    },
+    "expect": "fail"
   }
 ]
