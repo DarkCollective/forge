@@ -1237,6 +1237,38 @@ describe("validateRecipe: issue codes", () => {
         seed,
       ],
       [{ forge: 1, steps: [{ kind: "return" }, { kind: "op", op: "text:upper" }] }, seed],
+      // slots (RECIPES-1.2.md section 5.2): missing-slot, bad-slot, unused-pipe
+      [{ forge: 1, steps: [{ kind: "op", op: "a:b", pipe: "left" }] }, undefined],
+      [
+        {
+          forge: 1,
+          steps: [
+            {
+              kind: "op",
+              op: "a:b",
+              pipe: "left",
+              left: { steps: [{ kind: "op", op: "a:c" }] },
+              right: { steps: [{ kind: "op", op: "a:c" }] },
+            },
+          ],
+        },
+        undefined,
+      ],
+      [
+        {
+          forge: 1,
+          steps: [
+            { kind: "op", op: "a:c" },
+            {
+              kind: "op",
+              op: "a:b",
+              left: { steps: [{ kind: "op", op: "a:c" }] },
+              right: { steps: [{ kind: "op", op: "a:c" }] },
+            },
+          ],
+        },
+        undefined,
+      ],
     ];
     for (const [doc, cat] of docs) for (const i of run(doc, cat).issues) seen.add(i.code);
     expect([...seen].sort()).toEqual([...fromValidator].sort());

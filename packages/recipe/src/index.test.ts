@@ -35,6 +35,12 @@ test("the package exports exactly what RECIPES.md section 11.5 lists", () => {
     "RECIPE_ISSUE_CODES",
     "SHARE_ERROR_CODES",
     "REGISTER_NAME_RE",
+    // RECIPES-1.2.md section 14.3 (RW1)
+    "NAMED_INPUT_OPS",
+    "NAMED_INPUT_PARAM",
+    "RECUR_OP",
+    "SLOT_NAMES",
+    "SLOT_FAMILIES",
   ];
   const functions = [
     "validateRecipe",
@@ -57,6 +63,10 @@ test("the package exports exactly what RECIPES.md section 11.5 lists", () => {
     "recipeUsesV11",
     "registerInfo",
     "registersInScope",
+    "recipeUsesSlots",
+    "recipeUsesV12",
+    "inputNames",
+    "dataSourcePath",
   ];
   expect(Object.keys(recipe).sort()).toEqual([...consts, ...functions].sort());
   for (const name of functions)

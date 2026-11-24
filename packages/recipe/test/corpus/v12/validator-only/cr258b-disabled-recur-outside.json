@@ -1,0 +1,13 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "op",
+      "op": "relix:recur",
+      "params": {
+        "name": "R"
+      },
+      "disabled": true
+    }
+  ]
+}

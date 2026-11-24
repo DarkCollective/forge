@@ -1,0 +1,35 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "op",
+      "op": "csv:parse"
+    },
+    {
+      "kind": "op",
+      "op": "relix:union",
+      "left": {
+        "steps": [
+          {
+            "kind": "op",
+            "op": "relix:input",
+            "params": {
+              "tab": "a"
+            }
+          }
+        ]
+      },
+      "right": {
+        "steps": [
+          {
+            "kind": "op",
+            "op": "relix:input",
+            "params": {
+              "tab": "b"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

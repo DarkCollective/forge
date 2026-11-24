@@ -1,0 +1,60 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "op",
+      "op": "relix:recur",
+      "params": {
+        "name": "R"
+      }
+    },
+    {
+      "kind": "op",
+      "op": "relix:fix",
+      "params": {
+        "name": "R"
+      },
+      "base": {
+        "steps": [
+          {
+            "kind": "op",
+            "op": "relix:recur",
+            "params": {
+              "name": "R"
+            }
+          }
+        ]
+      },
+      "step": {
+        "steps": [
+          {
+            "kind": "op",
+            "op": "relix:union",
+            "left": {
+              "steps": [
+                {
+                  "kind": "op",
+                  "op": "relix:recur",
+                  "params": {
+                    "name": "R"
+                  }
+                }
+              ]
+            },
+            "right": {
+              "steps": [
+                {
+                  "kind": "op",
+                  "op": "relix:input",
+                  "params": {
+                    "tab": "a"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

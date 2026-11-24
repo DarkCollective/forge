@@ -1,0 +1,51 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "register",
+      "name": "x",
+      "steps": []
+    },
+    {
+      "kind": "op",
+      "op": "relix:union",
+      "left": {
+        "steps": [
+          {
+            "kind": "register",
+            "name": "y",
+            "steps": []
+          },
+          {
+            "kind": "op",
+            "op": "relix:input",
+            "params": {
+              "tab": "a"
+            }
+          }
+        ]
+      },
+      "right": {
+        "steps": [
+          {
+            "kind": "register",
+            "name": "y",
+            "steps": []
+          },
+          {
+            "kind": "register",
+            "name": "x",
+            "steps": []
+          },
+          {
+            "kind": "op",
+            "op": "relix:input",
+            "params": {
+              "tab": "b"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -27,7 +27,8 @@
 import { dataProp } from "./limits.js";
 import { opIndex } from "./opindex.js";
 import { childPointer } from "./pointer.js";
-import { RECIPE_LIMITS, STEP_KINDS } from "./types.js";
+import { childLists } from "./children.js";
+import { RECIPE_LIMITS, RECUR_OP, SLOT_NAMES, STEP_KINDS } from "./types.js";
 import type { CatalogueView, Recipe, RegisterRef, Step } from "./types.js";
 
 /** The shape of a register name (RECIPES-1.1.md section 2.2). */
@@ -90,7 +91,11 @@ export type ScopeEvent =
       readonly path: string;
       readonly container: string;
       readonly containerKind: string;
+      /** The slot name, when the container is a slot step and the `return` is in one of its lanes. */
+      readonly slot?: string;
     }
+  /** A `relix:recur` outside every `step` lane (RECIPES-1.2.md section 5.2). */
+  | { readonly t: "recur-position"; readonly path: string }
   | { readonly t: "unreachable"; readonly path: string; readonly after: string };
 
 export interface ScopeScan {
@@ -118,7 +123,9 @@ interface ListRec {
   readonly base: readonly ScopeFrame[];
   readonly disabled: boolean;
   /** The nearest enclosing step that is not an `if`, or null at the root and under `if`s only. */
-  readonly nonIf: { readonly path: string; readonly kind: string } | null;
+  readonly nonIf: { readonly path: string; readonly kind: string; readonly slot?: string } | null;
+  /** True inside a `step` lane, at any depth (RECIPES-1.2.md section 5.2). */
+  readonly inStep: boolean;
   next: number;
   returnPath: string | null;
   warned: boolean;
@@ -154,6 +161,7 @@ export function scanScopes(root: unknown, options: ScanOptions = {}): ScopeScan 
     base: readonly ScopeFrame[],
     disabled: boolean,
     nonIf: ListRec["nonIf"],
+    inStep: boolean,
   ): ListRec => {
     const rec: ListRec = {
       items,
@@ -163,6 +171,7 @@ export function scanScopes(root: unknown, options: ScanOptions = {}): ScopeScan 
       base,
       disabled,
       nonIf,
+      inStep,
       next: 0,
       returnPath: null,
       warned: false,
@@ -172,7 +181,7 @@ export function scanScopes(root: unknown, options: ScanOptions = {}): ScopeScan 
     }
     return rec;
   };
-  stack.push(open(rootSteps, "/steps", 1, [], false, null));
+  stack.push(open(rootSteps, "/steps", 1, [], false, null, false));
 
   while (stack.length > 0) {
     const list = stack[stack.length - 1] as ListRec;
@@ -219,25 +228,53 @@ export function scanScopes(root: unknown, options: ScanOptions = {}): ScopeScan 
       }
     };
     /** Child lists, to be walked in the order given (the stack is last in, first out). */
-    const children: [key: string, container: ListRec["nonIf"]][] = [];
+    const children: {
+      key: string;
+      items: unknown;
+      container: ListRec["nonIf"];
+      stepLane: boolean;
+    }[] = [];
     const nonIfHere = { path, kind };
 
     switch (kind) {
-      case "op":
+      case "op": {
         if (!skipped) refsOf(step, path);
+        if (!skipped && !list.inStep && dataProp(step, "op") === RECUR_OP) {
+          events.push({ t: "recur-position", path });
+        }
+        for (const slot of SLOT_NAMES) {
+          const lane = dataProp(step, slot);
+          if (isObj(lane)) {
+            children.push({
+              key: `${slot}/steps`,
+              items: dataProp(lane, "steps"),
+              container: { path, kind, slot },
+              stepLane: slot === "step",
+            });
+          }
+        }
         break;
+      }
       case "if": {
         const test = dataProp(step, "test");
         if (!skipped && isObj(test) && dataProp(test, "kind") === "op") {
           refsOf(test, `${path}/test`);
         }
-        children.push(["then", list.nonIf], ["else", list.nonIf]);
+        children.push(
+          { key: "then", items: dataProp(step, "then"), container: list.nonIf, stepLane: false },
+          { key: "else", items: dataProp(step, "else"), container: list.nonIf, stepLane: false },
+        );
         break;
       }
       case "fork":
       case "subsection":
       case "repeat":
-        children.push(["steps", nonIfHere]);
+        children.push({
+          key: "steps",
+          items: dataProp(step, "steps"),
+          container: nonIfHere,
+          stepLane: false,
+        });
         break;
       case "register": {
         const name = dataProp(step, "name");
@@ -249,7 +286,12 @@ export function scanScopes(root: unknown, options: ScanOptions = {}): ScopeScan 
           else same.push(def);
           events.push({ t: "def", def, skipped });
         }
-        children.push(["steps", nonIfHere]);
+        children.push({
+          key: "steps",
+          items: dataProp(step, "steps"),
+          container: nonIfHere,
+          stepLane: false,
+        });
         break;
       }
       case "return":
@@ -260,6 +302,7 @@ export function scanScopes(root: unknown, options: ScanOptions = {}): ScopeScan 
               path,
               container: list.nonIf.path,
               containerKind: list.nonIf.kind,
+              ...(list.nonIf.slot === undefined ? {} : { slot: list.nonIf.slot }),
             });
           }
         }
@@ -271,10 +314,19 @@ export function scanScopes(root: unknown, options: ScanOptions = {}): ScopeScan 
 
     if (list.depth + 1 <= RECIPE_LIMITS.maxDepth) {
       const opened: ListRec[] = [];
-      for (const [key, nonIf] of children) {
-        const items = dataProp(step, key);
-        if (Array.isArray(items)) {
-          opened.push(open(items, `${path}/${key}`, list.depth + 1, frames, disabled, nonIf));
+      for (const child of children) {
+        if (Array.isArray(child.items)) {
+          opened.push(
+            open(
+              child.items,
+              `${path}/${child.key}`,
+              list.depth + 1,
+              frames,
+              disabled,
+              child.container,
+              list.inStep || child.stepLane,
+            ),
+          );
         }
       }
       for (let i = opened.length - 1; i >= 0; i--) stack.push(opened[i] as ListRec);
@@ -405,16 +457,11 @@ export function recipeUsesV11(recipe: Recipe): boolean {
         break;
       case "if":
         if (step.test.kind === "op" && refIn(step.test.params)) return true;
-        stack.push(...step.then, ...(step.else ?? []));
         break;
-      case "fork":
-      case "subsection":
-      case "repeat":
-        stack.push(...step.steps);
-        break;
-      case "comment":
+      default:
         break;
     }
+    for (const child of childLists(step)) stack.push(...child.steps);
   }
   return false;
 }

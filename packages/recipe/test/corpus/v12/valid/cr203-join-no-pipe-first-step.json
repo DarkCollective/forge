@@ -1,0 +1,34 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "op",
+      "op": "relix:theta-join",
+      "params": {
+        "on": "customer_id = id"
+      },
+      "left": {
+        "steps": [
+          {
+            "kind": "op",
+            "op": "relix:input",
+            "params": {
+              "tab": "orders.csv"
+            }
+          }
+        ]
+      },
+      "right": {
+        "steps": [
+          {
+            "kind": "op",
+            "op": "relix:input",
+            "params": {
+              "tab": "customers.csv"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

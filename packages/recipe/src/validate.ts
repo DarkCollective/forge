@@ -28,14 +28,16 @@ import { opIndex } from "./opindex.js";
 import type { OpIndex } from "./opindex.js";
 import { childPointer } from "./pointer.js";
 import { REGISTER_NAME_RE, findDuplicate, lookupRegister, scanScopes } from "./registers.js";
-import { RECIPE_LIMITS, STEP_KINDS } from "./types.js";
+import { RECIPE_LIMITS, SLOT_FAMILIES, SLOT_NAMES, STEP_KINDS } from "./types.js";
 import type {
+  CatalogueOpView,
   CatalogueView,
   IssueSeverity,
   PinPolicy,
   Recipe,
   RecipeIssue,
   RecipeIssueCode,
+  SlotName,
   ValidateOptions,
   ValidationResult,
 } from "./types.js";
@@ -52,7 +54,11 @@ const SECTION_ENCODINGS: readonly string[] = ["utf8", "latin1"];
 
 const ROOT_FIELDS = new Set(["forge", "name", "description", "catalogue", "steps"]);
 const COMMON = ["disabled", "breakpoint", "note"] as const;
-const OP_FIELDS = new Set(["kind", "op", "params", "hash", ...COMMON]);
+/** The five keys of a slot step, in the order that issues name the first of them (RECIPES-1.2.md section 5.2). */
+const SLOT_KEYS = ["pipe", "left", "right", "base", "step"] as const;
+const PIPE_VALUES: readonly string[] = ["left", "right", "base"];
+const OP_FIELDS = new Set(["kind", "op", "params", "hash", ...SLOT_KEYS, ...COMMON]);
+const SLOT_FIELDS = new Set(["steps"]);
 const FORK_FIELDS = new Set(["kind", "split", "join", "steps", ...COMMON]);
 const SUBSECTION_FIELDS = new Set(["kind", "pattern", "flags", "encoding", "steps", ...COMMON]);
 const IF_FIELDS = new Set(["kind", "test", "then", "else", ...COMMON]);
@@ -577,11 +583,19 @@ function checkOpAgainstCatalogue(
   }
   const specs = new Map<string, ParamSpec>();
   for (const spec of op.params) specs.set(spec.name, spec);
+  const slotParam = slotFamilyOf(op) === undefined ? undefined : op.slot;
   if (params !== null) {
     for (const [key, value] of params) {
       const keyPath = childPointer(`${path}/params`, key);
       const spec = specs.get(key);
-      if (spec === undefined) {
+      if (slotParam !== undefined && key === slotParam) {
+        // The slot parameter's value is the lane, never a parameter (RECIPES-1.2.md section 4.5).
+        err(ctx, "bad-slot", keyPath, `'${slotParam}' is a slot of ${op.qname}, not a parameter`, {
+          reason: "slot-in-params",
+          op: op.qname,
+          slot: slotParam,
+        });
+      } else if (spec === undefined) {
         err(ctx, "unknown-param", keyPath, `${op.qname} has no parameter '${clip(key, 40)}'`, {
           param: clip(key, 40),
         });
@@ -592,6 +606,7 @@ function checkOpAgainstCatalogue(
     }
   }
   for (const spec of op.params) {
+    if (spec.name === slotParam) continue;
     if (spec.required && (params === null || !params.has(spec.name))) {
       err(
         ctx,
@@ -614,6 +629,172 @@ function checkOpAgainstCatalogue(
       { expected: op.hash, actual: hash },
     );
   }
+}
+
+// ---------------------------------------------------------------------------------------------
+// Slots (RECIPES-1.2.md section 5.2)
+// ---------------------------------------------------------------------------------------------
+
+type FamilyName = keyof typeof SLOT_FAMILIES;
+
+/** The family of a catalogue op, or undefined when it is not a slot op (or names a slot parameter that has no family). */
+function slotFamilyOf(op: CatalogueOpView): FamilyName | undefined {
+  const name = op.slot;
+  return name === "right" || name === "step" ? name : undefined;
+}
+
+const familyOfKey = (key: string): FamilyName =>
+  key === "left" || key === "right" ? "right" : "step";
+
+/** The family a `pipe` value belongs to: `base` is a base-and-step pipe, the others are binary. */
+const familyOfPipe = (pipe: string): FamilyName => (pipe === "base" ? "step" : "right");
+
+/** True iff the list has a step that is enabled and not a comment. Reads own data properties only. */
+function hasEnabledStep(list: unknown): boolean {
+  if (!Array.isArray(list)) return true; // already reported as a type issue
+  for (let i = 0; i < list.length; i++) {
+    const d = Object.getOwnPropertyDescriptor(list, i);
+    if (d === undefined || !("value" in d) || !isPlainObject(d.value)) continue;
+    const kind = Object.getOwnPropertyDescriptor(d.value, "kind")?.value as unknown;
+    if (kind === "comment") continue;
+    if (Object.getOwnPropertyDescriptor(d.value, "disabled")?.value === true) continue;
+    return true;
+  }
+  return false;
+}
+
+/** The lane of a slot: its `steps` value, once the slot object itself has been checked. */
+interface Lane {
+  readonly slot: SlotName;
+  readonly steps: unknown;
+}
+
+/**
+ * The slot rules of one op step (the table of RECIPES-1.2.md section 5.2). Returns the lanes to validate, in document
+ * order. A step with `mixed-slots`, `wrong-slots`, `not-slot-op` or a bad `pipe` gets no further slot issue, because the
+ * family it meant is not known.
+ */
+function checkSlots(
+  ctx: Ctx,
+  fields: Map<string, unknown>,
+  path: string,
+  earlierStep: boolean,
+): Lane[] {
+  const opName = fields.get("op");
+  const entry = typeof opName === "string" ? ctx.index?.find(opName) : undefined;
+  const detailOp: Record<string, unknown> = typeof opName === "string" ? { op: clip(opName) } : {};
+  const present = SLOT_KEYS.filter((k) => fields.has(k));
+  if (present.length === 0) {
+    if (entry !== undefined && slotFamilyOf(entry.op) !== undefined) {
+      err(
+        ctx,
+        "missing-slot",
+        path,
+        `${entry.op.qname} needs its slots (${SLOT_KEYS.join(", ")})`,
+        {
+          reason: "no-slots",
+          op: entry.op.qname,
+        },
+      );
+    }
+    return [];
+  }
+  const start = ctx.errors;
+
+  let pipe: string | undefined;
+  let pipeOk = true;
+  if (fields.has("pipe")) {
+    pipeOk = checkEnum(ctx, fields.get("pipe"), `${path}/pipe`, PIPE_VALUES);
+    if (pipeOk) pipe = fields.get("pipe") as string;
+  }
+
+  const lanes: Lane[] = [];
+  for (const slot of SLOT_NAMES) {
+    if (!fields.has(slot)) continue;
+    const slotPath = `${path}/${slot}`;
+    const lane = fieldsOf(ctx, fields.get(slot), slotPath);
+    if (lane === null) continue;
+    checkFields(ctx, lane, slotPath, SLOT_FIELDS, ["steps"]);
+    if (lane.has("steps")) lanes.push({ slot, steps: lane.get("steps") });
+  }
+  if (!pipeOk) return lanes;
+
+  const families = new Set<FamilyName>();
+  for (const slot of SLOT_NAMES) if (fields.has(slot)) families.add(familyOfKey(slot));
+  if (pipe !== undefined) families.add(familyOfPipe(pipe));
+  if (families.size > 1) {
+    err(ctx, "bad-slot", path, "the keys of both slot families are present", {
+      reason: "mixed-slots",
+      ...detailOp,
+    });
+    return lanes;
+  }
+  const family = [...families][0] as FamilyName;
+
+  if (entry !== undefined) {
+    const own = slotFamilyOf(entry.op);
+    const first = present[0] as string;
+    if (own === undefined) {
+      err(ctx, "bad-slot", `${path}/${first}`, `${entry.op.qname} has no slots`, {
+        reason: "not-slot-op",
+        op: entry.op.qname,
+      });
+      return lanes;
+    }
+    if (own !== family) {
+      err(ctx, "bad-slot", `${path}/${first}`, `${entry.op.qname} takes other slots`, {
+        reason: "wrong-slots",
+        op: entry.op.qname,
+        expected: SLOT_FAMILIES[own].slots.join(","),
+      });
+      return lanes;
+    }
+  }
+
+  const slots = SLOT_FAMILIES[family].slots;
+  if (pipe !== undefined && fields.has(pipe)) {
+    err(
+      ctx,
+      "bad-slot",
+      `${path}/${pipe}`,
+      `the slot '${pipe}' is the piped one, so it is absent`,
+      {
+        reason: "piped-slot-present",
+        slot: pipe,
+        ...detailOp,
+      },
+    );
+  }
+  for (const slot of slots) {
+    if (slot !== pipe && !fields.has(slot)) {
+      err(ctx, "missing-slot", `${path}/${slot}`, `the slot '${slot}' needs a lane`, {
+        slot,
+        reason: "absent",
+      });
+    }
+  }
+  for (const lane of lanes) {
+    if (!hasEnabledStep(lane.steps)) {
+      err(
+        ctx,
+        "missing-slot",
+        `${path}/${lane.slot}`,
+        `the lane '${lane.slot}' has no enabled step`,
+        { slot: lane.slot, reason: "empty" },
+      );
+    }
+  }
+  if (pipe === undefined && earlierStep && ctx.errors === start) {
+    add(
+      ctx,
+      "unused-pipe",
+      "warning",
+      path,
+      "this step has a lane in every slot, so the data above it is not used",
+      detailOp,
+    );
+  }
+  return lanes;
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -647,11 +828,21 @@ function validateOpLike(
   }
 }
 
+/** True for an enabled step that is not a comment: what makes a later slot step's missing `pipe` worth a warning. */
+function isEnabledStep(v: unknown): boolean {
+  if (!isPlainObject(v)) return false;
+  if (Object.getOwnPropertyDescriptor(v, "kind")?.value === "comment") return false;
+  return Object.getOwnPropertyDescriptor(v, "disabled")?.value !== true;
+}
+
 function validateSteps(ctx: Ctx, value: unknown, path: string, depth: number): void {
   const list = elementsOf(ctx, value, path);
   if (list === null) return;
+  let earlier = false;
   for (let i = 0; i < list.length && !ctx.done; i++) {
-    if (list[i] !== UNREADABLE) validateStep(ctx, list[i], childPointer(path, i), depth);
+    if (list[i] === UNREADABLE) continue;
+    validateStep(ctx, list[i], childPointer(path, i), depth, earlier);
+    if (!earlier && isEnabledStep(list[i])) earlier = true;
   }
 }
 
@@ -675,7 +866,13 @@ function validateIfTest(ctx: Ctx, value: unknown, path: string): void {
   }
 }
 
-function validateStep(ctx: Ctx, value: unknown, path: string, depth: number): void {
+function validateStep(
+  ctx: Ctx,
+  value: unknown,
+  path: string,
+  depth: number,
+  earlierStep: boolean,
+): void {
   if (++ctx.steps > RECIPE_LIMITS.maxSteps) {
     err(ctx, "limit", path, `more than ${RECIPE_LIMITS.maxSteps} steps`, {
       limit: "maxSteps",
@@ -717,7 +914,11 @@ function validateStep(ctx: Ctx, value: unknown, path: string, depth: number): vo
       checkFields(ctx, fields, path, OP_FIELDS, ["kind", "op"]);
       checkCommon(ctx, fields, path);
       validateOpLike(ctx, fields, path, false, before);
+      const lanes = checkSlots(ctx, fields, path, earlierStep);
       mark();
+      for (const lane of lanes) {
+        validateSteps(ctx, lane.steps, `${path}/${lane.slot}/steps`, depth + 1);
+      }
       return;
     }
     case "fork":
@@ -859,8 +1060,24 @@ function validateScopes(ctx: Ctx, input: unknown): void {
           ctx,
           "bad-position",
           e.path,
-          "a return is valid only at the top of the recipe and inside the branches of an if",
-          { kind: "return", container: e.container, containerKind: e.containerKind },
+          e.slot === undefined
+            ? "a return is valid only at the top of the recipe and inside the branches of an if"
+            : "a return is not valid inside a slot lane; put it after the step that owns the slot",
+          {
+            kind: "return",
+            container: e.container,
+            containerKind: e.containerKind,
+            ...(e.slot === undefined ? {} : { slot: e.slot }),
+          },
+        );
+        break;
+      case "recur-position":
+        err(
+          ctx,
+          "bad-position",
+          e.path,
+          "relix:recur is valid only inside the step lane of a base-and-step op",
+          { kind: "relix:recur", reason: "outside-step-slot" },
         );
         break;
       case "unreachable":

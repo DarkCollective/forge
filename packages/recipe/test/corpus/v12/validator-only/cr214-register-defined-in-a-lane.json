@@ -1,0 +1,56 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "op",
+      "op": "csv:parse"
+    },
+    {
+      "kind": "register",
+      "name": "min-age",
+      "steps": [
+        {
+          "kind": "op",
+          "op": "table:to-json"
+        }
+      ]
+    },
+    {
+      "kind": "op",
+      "op": "relix:theta-join",
+      "params": {
+        "on": {
+          "ref": "min-age"
+        }
+      },
+      "pipe": "left",
+      "right": {
+        "steps": [
+          {
+            "kind": "op",
+            "op": "relix:input",
+            "params": {
+              "tab": {
+                "ref": "min-age"
+              }
+            }
+          },
+          {
+            "kind": "register",
+            "name": "inner",
+            "steps": []
+          }
+        ]
+      }
+    },
+    {
+      "kind": "op",
+      "op": "relix:select",
+      "params": {
+        "cond": {
+          "ref": "inner"
+        }
+      }
+    }
+  ]
+}

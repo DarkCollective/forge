@@ -1,0 +1,31 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "op",
+      "op": "input:tab",
+      "params": {
+        "tab": "orders.b64"
+      }
+    },
+    {
+      "kind": "op",
+      "op": "relix:theta-join",
+      "params": {
+        "on": "a = b"
+      },
+      "pipe": "left",
+      "right": {
+        "steps": [
+          {
+            "kind": "op",
+            "op": "relix:input",
+            "params": {
+              "tab": "customers.csv"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

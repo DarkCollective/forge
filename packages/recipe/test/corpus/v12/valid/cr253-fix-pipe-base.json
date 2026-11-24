@@ -1,0 +1,50 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "op",
+      "op": "relix:input",
+      "params": {
+        "tab": "edges.csv"
+      }
+    },
+    {
+      "kind": "op",
+      "op": "relix:fix",
+      "params": {
+        "name": "R"
+      },
+      "pipe": "base",
+      "step": {
+        "steps": [
+          {
+            "kind": "op",
+            "op": "relix:recur",
+            "params": {
+              "name": "Reach"
+            }
+          },
+          {
+            "kind": "op",
+            "op": "relix:theta-join",
+            "params": {
+              "on": "dst = src2"
+            },
+            "pipe": "left",
+            "right": {
+              "steps": [
+                {
+                  "kind": "op",
+                  "op": "relix:input",
+                  "params": {
+                    "tab": "edges.csv"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -22,6 +22,7 @@ import { encodedLiteral, jsonStringLiteral, paramLiteral, stringLiteral } from "
 import { canonicalRecipe } from "./normalise.js";
 import { opIndex } from "./opindex.js";
 import type { OpIndex } from "./opindex.js";
+import { recipeUsesSlots } from "./uses.js";
 import { validateRecipe } from "./validate.js";
 import { DEFAULT_RECIPE_VOCAB, DEFAULT_RECIPE_WORD } from "./types.js";
 import type {
@@ -236,6 +237,11 @@ export function compileRecipe(
       return optionIssue("the vocab option is not a vocabulary name", "vocab name");
     const checked = validateRecipe(recipe, catalogue, { pins: options?.pins ?? "warn" });
     if (!checked.ok) return { ok: false, issues: checked.issues };
+    // The slot forms are compiled by a later work package (RECIPES-1.2.md section 6.1). Until then a recipe with a slot
+    // step is refused here: emitting its op alone would silently drop its lanes.
+    if (recipeUsesSlots(checked.recipe)) {
+      return optionIssue("the compiler does not support slot steps yet", "no slot compilation");
+    }
     const { text, lines } = emitRecipe(canonicalRecipe(checked.recipe, catalogue), catalogue, word);
     return { ok: true, text, word: `${vocab}:${word}`, lines, issues: checked.issues };
   } catch {

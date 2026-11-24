@@ -1,0 +1,71 @@
+{
+  "forge": 1,
+  "steps": [
+    {
+      "kind": "op",
+      "op": "relix:input",
+      "params": {
+        "tab": "a"
+      }
+    },
+    {
+      "kind": "op",
+      "op": "relix:fix",
+      "params": {
+        "name": "R"
+      },
+      "left": {
+        "steps": [
+          {
+            "kind": "op",
+            "op": "relix:input",
+            "params": {
+              "tab": "a"
+            }
+          }
+        ]
+      },
+      "step": {
+        "steps": [
+          {
+            "kind": "op",
+            "op": "relix:input",
+            "params": {
+              "tab": "b"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "kind": "op",
+      "op": "relix:fix",
+      "params": {
+        "name": "R"
+      },
+      "pipe": "base",
+      "base": {
+        "steps": [
+          {
+            "kind": "op",
+            "op": "relix:input",
+            "params": {
+              "tab": "a"
+            }
+          }
+        ]
+      },
+      "step": {
+        "steps": [
+          {
+            "kind": "op",
+            "op": "relix:input",
+            "params": {
+              "tab": "b"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
