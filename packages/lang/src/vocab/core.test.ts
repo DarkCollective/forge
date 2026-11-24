@@ -141,13 +141,13 @@ describe("the core table", () => {
   const namesOf = (kind: string): string[] =>
     rows.filter((r) => r.kind === kind).map((r) => r.names[0] as string);
 
-  test("section 13 declares 171 words: 40 intrinsic, 107 primitive, 5 runtime-supplied, 19 prelude", () => {
-    expect(rows).toHaveLength(171);
+  test("section 13 declares 173 words: 40 intrinsic, 109 primitive, 5 runtime-supplied, 19 prelude", () => {
+    expect(rows).toHaveLength(173);
     expect(rows.filter((r) => r.kind === "I")).toHaveLength(40);
-    expect(rows.filter((r) => r.kind === "P")).toHaveLength(107);
+    expect(rows.filter((r) => r.kind === "P")).toHaveLength(109);
     expect(rows.filter((r) => r.kind === "R")).toHaveLength(5);
     expect(rows.filter((r) => r.kind === "F")).toHaveLength(19);
-    expect(section).toContain("Total: **171** words");
+    expect(section).toContain("Total: **173** words");
   });
 
   test("primitives + intrinsics + runtime-supplied + prelude words equal the table exactly", () => {
@@ -157,8 +157,8 @@ describe("the core table", () => {
       ...CORE_RUNTIME_WORDS,
       ...PRELUDE_WORDS,
     ];
-    expect(all).toHaveLength(171);
-    expect(new Set(all).size).toBe(171);
+    expect(all).toHaveLength(173);
+    expect(new Set(all).size).toBe(173);
     expect([...all].sort()).toEqual(rows.map((r) => r.names[0] as string).sort());
   });
 
@@ -195,8 +195,8 @@ describe("the core table", () => {
   test("registerCorePrimitives registers into vocabulary core, once", () => {
     // the 69 words of the v0.1 table, the 21 primitives of FL 0.2, the 6 integer words and the
     // 4 words of FL 0.3 (`ext-kind`, `ext>text`, `null`, `null?`) and the 11 of Group L-A
-    expect(registry.list("core")).toHaveLength(111);
-    expect(CORE_PRIMITIVES).toHaveLength(111);
+    expect(registry.list("core")).toHaveLength(113);
+    expect(CORE_PRIMITIVES).toHaveLength(113);
     expect(() => registerCorePrimitives(registry)).toThrowError(/already registered/);
   });
 });
@@ -1584,6 +1584,26 @@ describe("num>float-bytes, float-bytes>num and float-bytes-class", () => {
     expect(run("float-bytes-class", [B(0x7f, 0xc0, 0, 0), F])).toBe('"nan"');
     expect(run("float-bytes-class", [B(0, 0, 0xc0, 0x7f), T])).toBe('"nan"');
     expect(run("float-bytes-class", [B(0, 0, 0x80, 0x7f), T])).toBe('"inf"');
+  });
+});
+
+// ---------------------------------------------------------------------------------------------
+// JSON in core (LANGUAGE-0.3.md section 7; the round-trip properties are in json.test.ts)
+// ---------------------------------------------------------------------------------------------
+
+describe("json>value and value>json", () => {
+  test("json>value reads every kind of JSON value, null as ext{null}", () => {
+    expect(run("json>value", [S('[1,2.5,"a",true,null,{"k":[]}]')])).toContain("null");
+    const [v] = callWith("json>value", [S("null")]);
+    expect(v).toEqual(nullValue());
+  });
+  test("value>json writes compact and indented text", () => {
+    expect(callWith("value>json", [L(I(1), R(["a", I(2)])), I(0)])[0]).toEqual(S('[1,{"a":2}]'));
+    expect(callWith("value>json", [L(I(1)), I(2)])[0]).toEqual(S("[\n  1\n]"));
+    expect(callWith("value>json", [nullValue(), I(0)])[0]).toEqual(S("null"));
+    expect(codeOf("value>json", [I(1), I(33)])).toBe("E_RANGE");
+    expect(codeOf("value>json", [I(1), I(-1)])).toBe("E_RANGE");
+    expect(codeOf("value>json", [B(1), I(0)])).toBe("E_TYPE");
   });
 });
 

@@ -28,6 +28,7 @@ import { ForgeError } from "../errors.js";
 import { CORE_VOCAB } from "../dictionary.js";
 import { definePrimitive } from "../primitives.js";
 import { INT_PRIMITIVES } from "./intwords.js";
+import { JSON_PRIMITIVES } from "./json.js";
 import { LA_PRIMITIVES } from "./la-words.js";
 import { NUMERIC_PRIMITIVES } from "./numeric.js";
 import { NULL_PAYLOAD, extText } from "../ext.js";
@@ -1264,14 +1265,16 @@ const CORE_PRIMITIVES_V03: readonly PrimitiveDef[] = Object.freeze([
 ]);
 
 /**
- * The 111 `core` words of kind P: the 69 of the v0.1 table, the 21 added by FL 0.2, the 4 added by
- * FL 0.3 with the `ext` value and the 11 of Group L-A (LANGUAGE-0.3.md section 8, `vocab/la-words.ts`).
+ * The 113 `core` words of kind P: the 69 of the v0.1 table, the 21 added by FL 0.2, the 4 added by
+ * FL 0.3 with the `ext` value, the 11 of Group L-A (LANGUAGE-0.3.md section 8, `vocab/la-words.ts`) and
+ * the 2 JSON words (section 7, `vocab/json.ts`).
  */
 export const CORE_PRIMITIVES: readonly PrimitiveDef[] = Object.freeze([
   ...CORE_PRIMITIVES_V01,
   ...CORE_PRIMITIVES_V02,
   ...CORE_PRIMITIVES_V03,
   ...LA_PRIMITIVES,
+  ...JSON_PRIMITIVES,
 ]);
 
 /** Registers every primitive of `core` kind P into a registry. */
