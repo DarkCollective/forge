@@ -518,6 +518,14 @@ function checkParamValue(ctx: Ctx, spec: ParamSpec, v: unknown, path: string): v
       if (typeof v !== "string") return bad("expected a string");
       lengthCheck(codePointLength(v));
       return;
+    case "ext":
+      // Kind-blind (RECIPES-1.2.md section 3.3): a string within the limit and nothing else. The text is the
+      // kind's to check, in the baker; a lone surrogate was reported by the shape check.
+      if (typeof v !== "string") return bad("expected a string");
+      if (codePointLength(v) > RECIPE_LIMITS.maxExtChars) {
+        bad("length is out of range", `length <= ${RECIPE_LIMITS.maxExtChars}`);
+      }
+      return;
     case "choice":
       if (typeof v !== "string") return bad("expected a string");
       if (spec.options === undefined || !spec.options.includes(v)) bad("not an option");

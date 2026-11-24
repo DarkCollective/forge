@@ -80,6 +80,8 @@ export const RECIPE_LIMITS = Object.freeze({
   maxRegisters: 64,
   /** Characters of a register name; the name pattern expresses it. */
   maxRegisterNameChars: 32,
+  /** Code points of an `ext` parameter's text (RECIPES-1.2.md section 3.2); the content is the bake's to check. */
+  maxExtChars: 4096,
 });
 
 /** Limits applied by the share codec to untrusted fragments. */

@@ -124,9 +124,9 @@ export const combined: CatalogueView = {
 };
 
 /**
- * The fixture catalogue of RECIPES-1.2.md section 15 (hand-written, arbitrary hashes). The `ext` parameters that
- * RW2 will check (`cond`, `on`, `spec`, `keys`) are typed `str` here, so that the slot rules are tested alone; the
- * slot parameter keeps its `ext{relation}` type and the op its `slot` name.
+ * The fixture catalogue of RECIPES-1.2.md section 15 (hand-written, arbitrary hashes). The `ext` parameters
+ * (`cond`, `on`, `spec`, `keys`) are `ext{relix-expr}`; the slot parameter is `ext{relation}` and the op has its
+ * `slot` name.
  */
 const slotOp = (
   qname: string,
@@ -147,11 +147,11 @@ export const slotCatalogue: CatalogueView = {
       { name: "header", type: "bool", default: true },
     ]),
     op("relix:recur", "any", "ext", [{ name: "name", type: "str" }]),
-    op("relix:select", "ext", "ext", [{ name: "cond", type: "str" }]),
-    op("relix:group", "ext", "ext", [{ name: "spec", type: "str" }]),
-    op("relix:sort", "ext", "ext", [{ name: "keys", type: "str" }]),
-    slotOp("relix:theta-join", "right", [{ name: "on", type: "str" }]),
-    slotOp("relix:left-join", "right", [{ name: "on", type: "str" }]),
+    op("relix:select", "ext", "ext", [{ name: "cond", type: "ext", kind: "relix-expr" }]),
+    op("relix:group", "ext", "ext", [{ name: "spec", type: "ext", kind: "relix-expr" }]),
+    op("relix:sort", "ext", "ext", [{ name: "keys", type: "ext", kind: "relix-expr" }]),
+    slotOp("relix:theta-join", "right", [{ name: "on", type: "ext", kind: "relix-expr" }]),
+    slotOp("relix:left-join", "right", [{ name: "on", type: "ext", kind: "relix-expr" }]),
     slotOp("relix:union", "right", []),
     slotOp("relix:fix", "step", [{ name: "name", type: "str" }]),
     op("csv:parse", "bytes", "ext", []),
