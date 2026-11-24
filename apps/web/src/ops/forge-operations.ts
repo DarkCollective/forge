@@ -17,7 +17,8 @@
 // search, help and the way to put an operation into the recipe.
 //
 // Keyboard (documented here and in the shortcuts dialog):
-//   Search box: type to filter; Down or Enter moves into the list; Escape clears the search.
+//   Search box: type to filter; Down or Enter moves into the list (onto the first match, below "Suggested next");
+//     Escape clears the search.
 //   List (roving focus, role listbox): Up/Down move, Home/End first/last, PageUp/PageDown by 10,
 //     Enter adds the operation to the recipe, F toggles its favourite, ? opens its full help (a
 //     dialog: use-when line, examples with Try it, inverse, links; WP 6.13),
@@ -34,6 +35,9 @@
 //   Content tier (content.ts, WP 6.28): the header says what the data is ("bytes (gzip data)"), and a row says
 //     what its op expects ("Expects gzip data; this looks like PNG image"); failed input checks make a row
 //     amber, a red is never changed. It loads lazily and runs 150 ms after the last change of the data.
+//   "Suggested next" (suggest.ts, T58) is a group at the top, in both views: the operations that fit the data
+//     here, green before amber and passed checks first, at most eight. It is a shortcut: the rows are also
+//     in their own sections, and behave like every row (same keys, same accessible name).
 //   "Fits the data" (toggle button, Tab reaches it) hides only the red operations (cannot take the data
 //     at the end of the recipe); amber and green stay. Red rows stay addable when shown.
 // The row's own star, help and add buttons are pointer and touch shortcuts: they are out of the Tab
@@ -45,6 +49,7 @@ import type { TemplateResult } from "lit";
 import { customElement, query, state } from "lit/decorators.js";
 import type { CatalogueOp } from "@forge/ops";
 import { loadCatalogue } from "../catalogue.js";
+import { onViewersChanged } from "../io/viewers.js";
 import { actions, store } from "../state/app.js";
 import { beginPointerDrag } from "../state/dnd.js";
 import { StoreController } from "../state/store-controller.js";
@@ -67,6 +72,7 @@ import type { DataFacts, DataTypeInput, FitLevel } from "./fit.js";
 import { helpFor } from "./help.js";
 import { helpLoader } from "./help-loader.js";
 import { buildListModel } from "./group.js";
+import { rankSuggestions } from "./suggest.js";
 import type { ListModel, ListSection } from "./group.js";
 
 const SEARCH_ID = "op-search";
@@ -345,6 +351,7 @@ export class ForgeOperations extends LitElement {
   );
   /** The content tier for `source`, computed after the debounce; null until the checks have loaded. */
   @state() private content: ContentView | null = null;
+  private stopViewers: (() => void) | undefined;
   private contentTimer: ReturnType<typeof setTimeout> | undefined;
   private contentWanted: ContentSource | null | undefined;
   private contentCatalogue: unknown;
@@ -382,6 +389,7 @@ export class ForgeOperations extends LitElement {
       this.query,
       this.overrides,
       keep,
+      rankSuggestions(cat.catalogue.ops, this.dataFacts.value, this.contentView()),
     );
   }
 
@@ -390,7 +398,16 @@ export class ForgeOperations extends LitElement {
     this.syncContent();
   }
 
+  override connectedCallback(): void {
+    super.connectedCallback();
+    // A lazy viewer that has arrived states the shape of its values ("4 columns, 250 rows"): the facts
+    // cached above were computed before it and are read again.
+    this.stopViewers = onViewersChanged(() => this.dataFacts.refresh());
+  }
+
   override disconnectedCallback(): void {
+    this.stopViewers?.();
+    this.stopViewers = undefined;
     clearTimeout(this.contentTimer);
     this.contentWanted = undefined;
     super.disconnectedCallback();
@@ -700,9 +717,20 @@ export class ForgeOperations extends LitElement {
 
   // ---- actions ---------------------------------------------------------------------------------
 
+  /**
+   * The row the search box hands over to: the first match of a search, so that "type, Enter, Enter" adds the
+   * best match as it always did, even though "Suggested next" sits above the results. Otherwise the first row.
+   */
+  private entryIndex(): number {
+    const model = this.currentModel();
+    if (model === null || model.mode !== "search") return 0;
+    const results = model.sections.find((s) => s.kind === "results");
+    return results === undefined ? 0 : results.start;
+  }
+
   private readonly onQueryInput = (e: Event): void => {
     this.query = (e.target as HTMLInputElement).value;
-    this.cursor = 0;
+    this.cursor = this.entryIndex();
     this.helpIndex = null;
   };
 
@@ -715,7 +743,7 @@ export class ForgeOperations extends LitElement {
       if ((this.currentModel()?.visible.length ?? 0) === 0) {
         // Every group is folded: the first group header is the next stop.
         this.renderRoot.querySelector<HTMLElement>(".group-toggle")?.focus();
-      } else this.focusRow(0);
+      } else this.focusRow(this.entryIndex());
     }
   };
 
@@ -734,7 +762,7 @@ export class ForgeOperations extends LitElement {
 
   private readonly toggleFit = (): void => {
     this.fitOnly = !this.fitOnly;
-    this.cursor = 0;
+    this.cursor = this.entryIndex();
     this.helpIndex = null;
     actions.announce(
       this.fitOnly ? "Showing only operations that fit the data" : "Showing all operations",

@@ -30,12 +30,17 @@ import {
 } from "./fixtures";
 
 const ops = (page: Page): Locator => page.locator("forge-operations");
-const toggles = (page: Page): Locator => page.locator("forge-operations .group-toggle");
+const toggles = (page: Page): Locator =>
+  page.locator("forge-operations .group-toggle").filter({ hasNotText: /Suggested next/ });
+const sectionRows = (page: Page): Locator =>
+  page.locator("forge-operations .section:not([data-kind=suggested]) [role=option]");
 const fitToggle = (page: Page): Locator =>
   page.locator("forge-operations").getByRole("button", { name: "Fits the data" });
 const dataLine = (page: Page): Locator => page.locator("forge-operations .data-type");
 const option = (page: Page, qname: string): Locator =>
-  page.locator(`forge-operations [role=option][title="${qname}"]`);
+  page.locator(
+    `forge-operations .section:not([data-kind=suggested]) [role=option][title="${qname}"]`,
+  );
 
 test("the categories start closed, Favourites open, and each header shows its count", async ({
   page,
@@ -50,7 +55,7 @@ test("the categories start closed, Favourites open, and each header shows its co
     await expect(t).toHaveAttribute("aria-expanded", /Favourites/i.test(label) ? "true" : "false");
   }
   // Nothing is starred yet, so no operation row is on screen.
-  await expect(ops(page).locator("[role=option]")).toHaveCount(0);
+  await expect(sectionRows(page)).toHaveCount(0);
 });
 
 test("a closed category opens and closes from the keyboard, and the arrow keys work in it", async ({
@@ -68,10 +73,10 @@ test("a closed category opens and closes from the keyboard, and the arrow keys w
   await expect(first).toHaveAttribute("aria-expanded", "false");
   await page.keyboard.press("Enter");
   await expect(first).toHaveAttribute("aria-expanded", "true");
-  const rows = ops(page).locator("[role=option]");
+  const rows = sectionRows(page);
   expect(await rows.count()).toBeGreaterThan(1);
-  // Tab from the header reaches the roving row; the arrows move between rows.
-  await page.keyboard.press("Tab");
+  // The list has one roving tab stop (on its first row, in "Suggested next"); the arrows move between rows.
+  await rows.nth(0).focus();
   await expect(rows.nth(0)).toBeFocused();
   await page.keyboard.press("ArrowDown");
   await expect(rows.nth(1)).toBeFocused();

@@ -28,7 +28,11 @@ async function openHelp(page: Page, qname: string): Promise<void> {
   await opSearch(page).fill(qname);
   await page.keyboard.press("Enter");
   await expect(
-    page.locator(`forge-operations [role=option][title="${qname}"]`).first(),
+    page
+      .locator(
+        `forge-operations .section:not([data-kind=suggested]) [role=option][title="${qname}"]`,
+      )
+      .first(),
   ).toBeFocused();
   await page.keyboard.press("?");
   await expect(dialog(page)).toBeVisible();
@@ -59,7 +63,11 @@ test("help for base64:decode shows the use-when line, an example and a link", as
   // Escape closes it and focus returns to the row.
   await page.keyboard.press("Escape");
   await expect(dialog(page)).toBeHidden();
-  await expect(page.locator('forge-operations [role=option][title="base64:decode"]')).toBeFocused();
+  await expect(
+    page.locator(
+      'forge-operations .section:not([data-kind=suggested]) [role=option][title="base64:decode"]',
+    ),
+  ).toBeFocused();
 });
 
 test("Try it on an empty workbench runs the example", async ({ page }) => {
@@ -165,7 +173,9 @@ test("an operation with no help data shows the old help only", async ({ page }) 
   await expect(async () => {
     await page.keyboard.press("Alt+1");
     await opSearch(page).fill("tohex");
-    await expect(page.locator("forge-operations [role=option]").first()).toContainText("tohex", {
+    await expect(
+      page.locator("forge-operations .section:not([data-kind=suggested]) [role=option]").first(),
+    ).toContainText("tohex", {
       timeout: 1000,
     });
   }).toPass({ timeout: 20_000 });
@@ -259,7 +269,11 @@ test.describe("compact layout", () => {
     await openApp(page);
     await page.getByRole("tab", { name: "Operations", exact: true }).click();
     await opSearch(page).fill("base64:decode");
-    await page.locator('forge-operations button[aria-label="Help for base64:decode"]').click();
+    await page
+      .locator(
+        'forge-operations .section:not([data-kind=suggested]) button[aria-label="Help for base64:decode"]',
+      )
+      .click();
     await expect(dialog(page)).toBeVisible();
     const box = (await dialog(page).boundingBox())!;
     expect(box.x).toBeGreaterThanOrEqual(0);

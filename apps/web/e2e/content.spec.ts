@@ -24,7 +24,9 @@ import { test, expect, openApp, opSearch } from "./fixtures";
 const GUNZIP = "deflate:gunzip";
 const dataLine = (page: Page): Locator => page.locator("forge-operations .data-type");
 const gunzip = (page: Page): Locator =>
-  page.locator(`forge-operations [role=option][title="${GUNZIP}"]`);
+  page.locator(
+    `forge-operations .section:not([data-kind=suggested]) [role=option][title="${GUNZIP}"]`,
+  );
 const fitToggle = (page: Page): Locator =>
   page.locator("forge-operations").getByRole("button", { name: "Fits the data" });
 
