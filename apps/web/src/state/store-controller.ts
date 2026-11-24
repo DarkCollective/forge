@@ -40,6 +40,17 @@ export class StoreController<S extends object, T> implements ReactiveController 
     return this.current;
   }
 
+  /**
+   * Recomputes the value now, for a change the store cannot see (a lazy viewer that has arrived changes what
+   * a selector reads from outside the state). Re-renders the host only when the value differs.
+   */
+  refresh(): void {
+    const next = this.selector(this.store.get());
+    if (this.equals(this.current, next)) return;
+    this.current = next;
+    this.host.requestUpdate();
+  }
+
   hostConnected(): void {
     this.current = this.selector(this.store.get());
     this.unsubscribe = this.store.select(

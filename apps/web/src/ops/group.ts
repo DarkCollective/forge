@@ -21,7 +21,7 @@ import { searchOps } from "./search.js";
 /** The vocabulary of user words (WP 3.7 promotes recipes into it). Shown in their own group. */
 export const USER_VOCAB = "user";
 
-export type SectionKind = "favourites" | "user" | "category" | "results";
+export type SectionKind = "suggested" | "favourites" | "user" | "category" | "results";
 
 export interface ListSection {
   /** Stable key, used for collapse state and element ids: `favourites`, `user`, `category:<name>`, `other`, `results`. */
@@ -50,12 +50,15 @@ export interface ListModel {
 
 /** Sections that start open in the browse view. Every other section starts collapsed. */
 export function opensByDefault(kind: SectionKind): boolean {
-  return kind === "favourites" || kind === "user";
+  return kind === "suggested" || kind === "favourites" || kind === "user";
 }
 
 export const OTHER_TITLE = "Other";
 export const USER_TITLE = "User words";
 export const FAVOURITES_TITLE = "Favourites";
+export const SUGGESTED_TITLE = "Suggested next";
+/** How many rows "Suggested next" holds (UI-TOOLKIT.md section 2.6 proposed eight; F1 keeps it). */
+export const SUGGESTED_CAP = 8;
 
 /** The operations named in `favourites`, in favourite order. Unknown names are skipped. */
 export function favouriteOps(
@@ -112,6 +115,9 @@ export function groupByCategory(
  *
  * `overrides` maps a section id to the user's choice (true = open). A section with no choice follows
  * `opensByDefault`: Favourites and User words start open, the categories (and "Other") start closed.
+ * `suggested` is the ranked list of "Suggested next" (suggest.ts): a group above the rest, in both views, capped
+ * at `SUGGESTED_CAP`; in a search it keeps only the operations that match the query. Like Favourites it adds
+ * rows, not matches, so it is not counted in `total`.
  * `keep`, when given, drops operations it rejects from every section (and from the match count);
  * browse sections left empty by it are not listed, and `hidden` counts what it removed.
  */
@@ -121,6 +127,7 @@ export function buildListModel(
   query: string,
   overrides: ReadonlyMap<string, boolean> = new Map(),
   keep?: (op: CatalogueOp) => boolean,
+  suggested: readonly CatalogueOp[] = [],
 ): ListModel {
   const raw: {
     id: string;
@@ -140,14 +147,35 @@ export function buildListModel(
 
   if (query.trim() !== "") {
     mode = "search";
+    const results = filter(searchOps(ops, query));
+    const matching = new Set(results.map((o) => o.qname));
+    const picked = suggested.filter((o) => matching.has(o.qname)).slice(0, SUGGESTED_CAP);
+    if (picked.length > 0) {
+      raw.push({
+        id: "suggested",
+        kind: "suggested",
+        title: SUGGESTED_TITLE,
+        ops: picked,
+        collapsible: true,
+      });
+    }
     raw.push({
       id: "results",
       kind: "results",
       title: "Results",
-      ops: filter(searchOps(ops, query)),
+      ops: results,
       collapsible: false,
     });
   } else {
+    if (suggested.length > 0) {
+      raw.push({
+        id: "suggested",
+        kind: "suggested",
+        title: SUGGESTED_TITLE,
+        ops: suggested.slice(0, SUGGESTED_CAP),
+        collapsible: true,
+      });
+    }
     // Favourites are counted in `hidden` only through the category groups, so nothing is counted twice.
     const favs = favouriteOps(ops, favourites);
     const favKept = keep === undefined ? favs : favs.filter(keep);
@@ -184,7 +212,7 @@ export function buildListModel(
       collapsible: section.collapsible,
     });
     if (!isCollapsed) visible.push(...section.ops);
-    if (section.kind !== "favourites") total += section.ops.length;
+    if (section.kind !== "favourites" && section.kind !== "suggested") total += section.ops.length;
   }
   return { mode, sections, visible, total, hidden };
 }

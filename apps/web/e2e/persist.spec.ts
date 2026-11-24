@@ -116,7 +116,9 @@ test("promote a recipe to a user word, find it under User words and bake the sam
   const search = page.locator("forge-operations input#op-search");
   await expect(async () => {
     await search.fill("tohex");
-    await expect(page.locator("forge-operations [role=option]").first()).toContainText("tohex", {
+    await expect(
+      page.locator("forge-operations .section:not([data-kind=suggested]) [role=option]").first(),
+    ).toContainText("tohex", {
       timeout: 1000,
     });
   }).toPass({ timeout: 20_000 });
@@ -124,7 +126,10 @@ test("promote a recipe to a user word, find it under User words and bake the sam
   await expect(page.locator("forge-operations")).toContainText(/User words/i);
   await search.fill("tohex");
 
-  await page.locator("forge-operations [role=option]").first().focus();
+  await page
+    .locator("forge-operations .section:not([data-kind=suggested]) [role=option]")
+    .first()
+    .focus();
   await page.keyboard.press("Enter");
   await expect(cards(page)).toHaveCount(1);
   await page.keyboard.press("Alt+3");
