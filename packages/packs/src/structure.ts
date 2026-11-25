@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import schema from "./manifest.schema.json";
+import schema from "./manifest.schema.json" with { type: "json" };
 import { MANIFEST_FORMAT } from "./names.js";
 import type { ManifestProblem } from "./types.js";
 

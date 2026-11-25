@@ -11,13 +11,18 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
-    "./manifest.schema.json": "./dist/manifest.schema.json"
+    "./manifest.schema.json": "./dist/manifest.schema.json",
+    "./vite": {
+      "types": "./dist/gen/vite-plugin.d.ts",
+      "default": "./dist/gen/vite-plugin.js"
+    }
   },
   "files": [
     "dist"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json && node -e \"require('node:fs').copyFileSync('src/manifest.schema.json','dist/manifest.schema.json')\"",
+    "packs:gen": "node dist/gen/cli.js",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {

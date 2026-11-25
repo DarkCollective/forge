@@ -1,0 +1,1 @@
+export const run = (el: { innerHTML: string }): void => { el.innerHTML = "<b>x</b>"; };

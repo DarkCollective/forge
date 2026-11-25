@@ -1,0 +1,43 @@
+{
+  "format": 1,
+  "id": "alpha",
+  "name": "Alpha",
+  "summary": "The alpha fixture pack.",
+  "description": "The alpha fixture pack, for the generator tests.",
+  "version": "0.1.0",
+  "channel": "stable",
+  "licence": "Apache-2.0",
+  "requires": {
+    "packApi": 1
+  },
+  "vocabularies": [
+    {
+      "name": "a1"
+    },
+    {
+      "name": "a1x",
+      "internal": true
+    }
+  ],
+  "kinds": [
+    {
+      "name": "alpha-tally",
+      "label": "tally",
+      "viewer": true,
+      "paramHelper": true,
+      "parser": "src/kinds/tally/parse.ts"
+    }
+  ],
+  "entries": {
+    "worker": "src/worker.ts",
+    "page": "src/page.ts"
+  },
+  "capabilities": {
+    "effects": []
+  },
+  "budget": {
+    "total": 40000,
+    "worker": 30000,
+    "page": 15000
+  }
+}

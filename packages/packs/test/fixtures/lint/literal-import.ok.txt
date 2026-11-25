@@ -1,0 +1,1 @@
+export const run = (): Promise<unknown> => import("./worker.js");

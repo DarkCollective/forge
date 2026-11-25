@@ -1,0 +1,1 @@
+export const run = (r: { createContextualFragment(h: string): unknown }): unknown => r.createContextualFragment("<b>x</b>");

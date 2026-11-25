@@ -16,6 +16,7 @@
 import { existsSync, mkdirSync, renameSync, rmSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { forgePacks } from "@forge/packs/vite";
 import { defineConfig, type Plugin } from "vite";
 import { pageInputs, referenceTemplateInput } from "./vite.pages.js";
 import { referencePagesDev, writeReferencePages } from "./vite.reference.js";
@@ -50,6 +51,12 @@ function flattenPages(outDir: string): Plugin {
   };
 }
 
+// Packs (PACKS.md section 3): `forgePacks()` attributes the chunks of each pack, fails the build on a static import from
+// core into packs/ (`core-imports-pack`) or on an internal pack in a production build (`channel-production`), and writes
+// reports/packs.json (not deployed, ignored by git). It runs in the page build and, for the bake and console workers, in
+// the worker build.
+const packsDir = here("../../packs");
+
 const ISOLATION_HEADERS = {
   "Cross-Origin-Opener-Policy": "same-origin",
   "Cross-Origin-Embedder-Policy": "require-corp",
@@ -76,8 +83,12 @@ export default defineConfig({
     },
   },
   // Primitive modules are lazy chunks, which a module worker can only load as ES modules.
-  worker: { format: "es" },
-  plugins: [flattenPages(here("./dist")), referencePagesDev()],
+  worker: { format: "es", plugins: () => [forgePacks({ packsDir, side: "worker" })] },
+  plugins: [
+    flattenPages(here("./dist")),
+    referencePagesDev(),
+    forgePacks({ packsDir, reportPath: here("./reports/packs.json") }),
+  ],
   // The same isolation headers as production, so SharedArrayBuffer cancellation works in `npm run dev`.
   server: { headers: ISOLATION_HEADERS },
   preview: { headers: ISOLATION_HEADERS },

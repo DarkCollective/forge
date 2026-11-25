@@ -1,0 +1,1 @@
+export const run = (): void => { setInterval("go()", 1); };

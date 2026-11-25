@@ -1,0 +1,1 @@
+export const run = (name: string): Promise<unknown> => import(`./${name}.js`);

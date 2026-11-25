@@ -1,0 +1,36 @@
+{
+  "format": 1,
+  "id": "gamma",
+  "name": "Gamma",
+  "summary": "The gamma fixture pack.",
+  "description": "The gamma fixture pack, for the generator tests.",
+  "version": "0.1.0",
+  "channel": "stable",
+  "licence": "Apache-2.0",
+  "requires": {
+    "packApi": 1
+  },
+  "vocabularies": [
+    {
+      "name": "c1"
+    }
+  ],
+  "conversions": [
+    {
+      "from": "str",
+      "to": "int",
+      "op": "c1:size"
+    }
+  ],
+  "entries": {
+    "worker": "src/worker.ts"
+  },
+  "capabilities": {
+    "effects": []
+  },
+  "budget": {
+    "total": 40000,
+    "worker": 30000,
+    "page": 15000
+  }
+}

@@ -1,0 +1,1 @@
+export const run = (el: { insertAdjacentHTML(p: string, h: string): void }): void => { el.insertAdjacentHTML("beforeend", "<b>x</b>"); };

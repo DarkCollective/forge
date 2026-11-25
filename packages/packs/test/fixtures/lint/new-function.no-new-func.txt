@@ -1,0 +1,1 @@
+export const run = new Function("return 1");

@@ -1,0 +1,29 @@
+{
+  "format": 1,
+  "id": "delta",
+  "name": "Delta",
+  "summary": "The delta fixture pack.",
+  "description": "The delta fixture pack, for the generator tests.",
+  "version": "0.1.0",
+  "channel": "internal",
+  "licence": "Apache-2.0",
+  "requires": {
+    "packApi": 1
+  },
+  "vocabularies": [
+    {
+      "name": "d1"
+    }
+  ],
+  "entries": {
+    "worker": "src/worker.ts"
+  },
+  "capabilities": {
+    "effects": []
+  },
+  "budget": {
+    "total": 40000,
+    "worker": 30000,
+    "page": 15000
+  }
+}

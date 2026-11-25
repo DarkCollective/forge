@@ -1,0 +1,2 @@
+export const run = (xs: readonly number[]): number => xs.reduce((a, b) => a + b, 0);
+export const html = (el: { textContent: string | null }): string => el.textContent ?? "";

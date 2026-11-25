@@ -10,3 +10,6 @@ coverage
 *.tfstate*
 test-results
 playwright-report
+
+# the pack size report (PACKS.md section 3.5), not deployed
+apps/web/reports

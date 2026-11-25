@@ -10,7 +10,8 @@
   "type": "module",
   "workspaces": [
     "packages/*",
-    "apps/*"
+    "apps/*",
+    "packs/*"
   ],
   "engines": {
     "node": ">=20"
@@ -24,6 +25,8 @@
     "typecheck": "npm run build -w @forge/lang && npm run build -w @forge/ops && npm run build -w @forge/recipe && npm run build -w @forge/packs && npm run build -w @forge/worker && npm run typecheck --workspaces --if-present",
     "dev": "npm run dev -w @forge/web",
     "e2e": "npm run e2e -w @forge/web",
+    "packs:gen": "npm run packs:gen -w @forge/packs",
+    "packs:check": "npm run packs:gen -w @forge/packs -- --check",
     "repl": "npm run build -w @forge/lang && node packages/lang/dist-scripts/repl.js"
   },
   "devDependencies": {

@@ -1,0 +1,31 @@
+{
+  "format": 1,
+  "id": "beta",
+  "name": "Beta",
+  "summary": "The beta fixture pack.",
+  "description": "The beta fixture pack, for the generator tests.",
+  "version": "0.1.0",
+  "channel": "stable",
+  "licence": "Apache-2.0",
+  "requires": {
+    "packApi": 1,
+    "packs": ["alpha"]
+  },
+  "vocabularies": [
+    {
+      "name": "b1"
+    }
+  ],
+  "entries": {
+    "worker": "src/worker.ts",
+    "page": "src/page.ts"
+  },
+  "capabilities": {
+    "effects": []
+  },
+  "budget": {
+    "total": 40000,
+    "worker": 30000,
+    "page": 15000
+  }
+}
