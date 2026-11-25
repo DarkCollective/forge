@@ -611,7 +611,19 @@ describe("the catalogue", () => {
       output: "ext",
       outputKind: "table",
     });
+    expect(by("table:from-json")).toMatchObject({
+      input: "str",
+      output: "ext",
+      outputKind: "table",
+    });
+    expect(by("table:from-ndjson")).toMatchObject({
+      input: "str",
+      output: "ext",
+      outputKind: "table",
+    });
     expect(ops.map((o) => o.qname).sort()).toEqual([
+      "table:from-json",
+      "table:from-ndjson",
       "table:from-text",
       "table:to-csv",
       "table:to-json",
