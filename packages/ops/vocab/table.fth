@@ -7,6 +7,8 @@
 \   table:from-rows ( names:list rows:list -- table )   a table from column names and a list of rows (lists of cells)
 \   table:from-records ( records:list -- table )        a table from records; its columns are every key, first seen first
 \   table:from-text ( text:str -- table )               a table from its text form (what ext>text writes)
+\   table:from-json ( data header -- table )            JSON text: an array of records, an array of arrays or one record
+\   table:from-ndjson ( data header -- table )          one record or array on each line (NDJSON, JSON Lines)
 \   table:columns ( t -- list )                         the column names
 \   table:types ( t -- list )                           the column types: str, int, num or bool
 \   table:rows ( t -- list )                            the rows, each a list of cells (null for a null cell)
@@ -17,7 +19,7 @@
 \   table:to-csv ( t cell-delimiter row-delimiter -- str ) RFC 4180 text with a header row, null cells empty
 \
 \ A cell is a str, an int (within 64 bits), a num, a bool or null (the FL `null`, which is not the empty string).
-\ csv:parse into a table is a later work package (D1): until then, a table is built from FL values or from its text form.
+\ A table is also read from CSV (csv:parse), from JSON (table:from-json) and from NDJSON (table:from-ndjson).
 IN: table
 
 USING: list ;
@@ -59,6 +61,32 @@ META: from-text
   use-when "You have the text form of a table, as written by ext>text or saved from a table output, and want the table back." ;
   expects "The text form of a table: JSON with a column header and rows" ;
   see-also to-json ;
+;
+
+: from-json ( data:str header:bool=true -- ext{table} )
+  "Read JSON text into a table. The text is an array of records (an object each), an array of arrays or one record (one row). For records the columns are every key, each once, in the order they are first seen, and a record that lacks a key has null there; header is not used. For arrays the first array is the header row of column names when header is on, and without it the columns are c1, c2 and so on; every array must have as many cells as the first. A JSON null is a null cell. A column takes the one type its cells have: ints, nums, bools or strs, an int and a num together make a num, and a column of nulls only is a str column. A column that mixes any other types, an integer beyond 64 bits, a nested array or record in a cell, a repeated column name or text that is not JSON is E_COERCE." doc
+  "Data format" category
+  data header table:_from-json ;
+
+META: from-json
+  use-when "You have JSON text, such as an export from an API with one object for each row, and want a table with typed columns." ;
+  param header "For an array of arrays, read the first array as the column names; off, the columns are c1, c2 and so on. Records name their own columns." ;
+  expects "JSON text: an array of objects, an array of arrays or one object" ;
+  checks input utf8 ;
+  see-also from-ndjson ;
+;
+
+: from-ndjson ( data:str header:bool=true -- ext{table} )
+  "Read newline-delimited JSON (NDJSON, JSON Lines) into a table: one JSON value on each line, an object or an array, with blank lines skipped. The lines are read as the elements of table:from-json, so the columns, the header option and the column types are the same; a line that is not JSON is E_COERCE and names its line number." doc
+  "Data format" category
+  data header table:_from-ndjson ;
+
+META: from-ndjson
+  use-when "You have a log or an export with one JSON object on each line and want a table with typed columns." ;
+  param header "For lines that are arrays, read the first line as the column names; off, the columns are c1, c2 and so on." ;
+  expects "NDJSON text: one JSON object or array on each line" ;
+  checks input utf8 ;
+  see-also from-json ;
 ;
 
 \ ---- inspect ----

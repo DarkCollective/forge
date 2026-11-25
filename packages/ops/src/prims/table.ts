@@ -28,10 +28,17 @@
  *  - `_from-text ( text:str -- ext{table} )`: a table from its text form.
  *  - `_columns`, `_types`, `_rows`, `_column`, `_count`: the table read back as FL values.
  *  - `_to-json ( t indent:int -- str )`, `_to-csv ( t cell:str row:str -- str )`.
+ *  - `_from-json ( data:str header:bool -- ext{table} )`: JSON text that is an array of records (the columns are
+ *    every key, first seen first, and a record without a key has null there), an array of arrays (the first is
+ *    the header row when `header` is true; otherwise the columns are c1, c2 and so on), or one record (one row).
+ *  - `_from-ndjson ( data:str header:bool -- ext{table} )`: one JSON value on each line (blank lines are skipped),
+ *    read as the elements of such an array. The lines are read one at a time, so the whole text is never a tree.
+ *    A JSON null is a null cell, and a nested array or record is E_COERCE (a cell is a scalar).
  */
-import { ForgeError, definePrimitive, nullValue, valueHelpers } from "@forge/lang";
+import { ForgeError, definePrimitive, jsonToValue, nullValue, valueHelpers } from "@forge/lang";
 import type { PrimitiveContext, PrimitiveDef, Value } from "@forge/lang";
 import { limitFailure, rangeFailure } from "../prim-util.js";
+import { ColumnAccumulator } from "../table/builder.js";
 import { INT64_MAX, INT64_MIN, buildPayload, cellAt } from "../table/payload.js";
 import type { Cell, ColumnInput, ColumnType, TablePayload } from "../table/payload.js";
 import { registerTableKind } from "../table/kind.js";
@@ -165,6 +172,112 @@ function guardText(ctx: PrimitiveContext, text: string, what: string): string {
   return text;
 }
 
+function jsonCoerce(reason: string, extra: Record<string, unknown> = {}): ForgeError {
+  return new ForgeError({
+    code: "E_COERCE",
+    message: `cannot convert JSON to table: ${reason}`,
+    detail: { from: "json", to: "table", reason, ...extra },
+  });
+}
+
+function finishJson(acc: ColumnAccumulator, ctx: PrimitiveContext): TablePayload {
+  const { rows, columns } = acc.finish();
+  const payload = buildPayload(rows, columns);
+  const max = ctx.limits.maxValueBytes;
+  if (payload.size > max) throw limitFailure("maxValueBytes", max, payload.size, "JSON table");
+  return payload;
+}
+
+/** Collects the elements of an array (or the lines of NDJSON) into columns. */
+class Shaper {
+  private acc: ColumnAccumulator | null = null;
+  private mode: "record" | "list" | null = null;
+  private headerPending: boolean;
+  private count = 0;
+
+  constructor(
+    header: boolean,
+    private readonly what: string,
+  ) {
+    this.headerPending = header;
+  }
+
+  add(v: Value): void {
+    this.count++;
+    const where = `${this.what} ${this.count}`;
+    if (v.tag === "record") {
+      if (this.mode === "list")
+        throw jsonCoerce(`${where} is a record but the first one is a list`);
+      this.mode ??= "record";
+      this.acc ??= new ColumnAccumulator();
+      this.acc.addRecord(v.v.entries());
+    } else if (v.tag === "list") {
+      if (this.mode === "record")
+        throw jsonCoerce(`${where} is a list but the first one is a record`);
+      this.mode ??= "list";
+      if (this.acc === null) {
+        if (this.headerPending) {
+          const names = v.v.map((n, k) => {
+            if (n.tag !== "str")
+              throw jsonCoerce(`the name of column ${k + 1} in the header is not a str`);
+            return n.v;
+          });
+          this.acc = ColumnAccumulator.withNames(names);
+          this.headerPending = false;
+          return;
+        }
+        this.acc = ColumnAccumulator.withNames(v.v.map((_c, k) => `c${k + 1}`));
+      }
+      this.acc.addRow(v.v);
+    } else {
+      throw jsonCoerce(`${where} is a ${v.tag}; expected a record or a list`);
+    }
+  }
+
+  done(ctx: PrimitiveContext): TablePayload {
+    return finishJson(this.acc ?? new ColumnAccumulator(), ctx);
+  }
+}
+
+function parseJsonTable(text: string, header: boolean, ctx: PrimitiveContext): TablePayload {
+  const v = jsonToValue(text.charCodeAt(0) === 0xfeff ? text.slice(1) : text, ctx);
+  const shaper = new Shaper(header, "element");
+  if (v.tag === "list") for (const item of v.v) shaper.add(item);
+  else if (v.tag === "record") shaper.add(v);
+  else
+    throw jsonCoerce(
+      `the JSON is a ${v.tag}; expected an array of records, an array of arrays or one record`,
+    );
+  return shaper.done(ctx);
+}
+
+function parseNdjsonTable(text: string, header: boolean, ctx: PrimitiveContext): TablePayload {
+  const shaper = new Shaper(header, "line");
+  const data = text.charCodeAt(0) === 0xfeff ? text.slice(1) : text;
+  let line = 0;
+  let from = 0;
+  const n = data.length;
+  while (from < n) {
+    let end = data.indexOf("\n", from);
+    if (end < 0) end = n;
+    line++;
+    const raw = data.slice(from, end);
+    from = end + 1;
+    if (raw.trim() === "") continue;
+    let v: Value;
+    try {
+      v = jsonToValue(raw, ctx);
+    } catch (e) {
+      if (e instanceof ForgeError && e.code === "E_COERCE") {
+        throw jsonCoerce(`line ${line} is not JSON (${e.message})`, { line });
+      }
+      throw e;
+    }
+    shaper.add(v);
+  }
+  return shaper.done(ctx);
+}
+
 export const primitives: readonly PrimitiveDef[] = [
   definePrimitive(
     "table",
@@ -252,6 +365,24 @@ export const primitives: readonly PrimitiveDef[] = [
     },
     {
       doc: "Private. The table as RFC 4180 text: a header row, then a row for each row, each ending with the row delimiter. A null is an empty cell and the empty string is two double quotes. Both delimiters read the escapes \\r \\n \\t \\\\ and \\xHH.",
+    },
+  ),
+  definePrimitive(
+    "table",
+    "_from-json",
+    "( data:str header:bool -- ext{table} )",
+    (data: string, header: boolean, ctx: PrimitiveContext) => parseJsonTable(data, header, ctx),
+    {
+      doc: "Private. JSON text as a table: an array of records (the columns are every key, first seen first), an array of arrays (the first is the header row when header is true, else the columns are c1, c2, and so on) or one record (one row). A column takes the one type its cells have (an int and a num make a num, only nulls make a str); a JSON null is a null cell. Any other mix, a nested array or record in a cell, a ragged row or text that is not JSON is E_COERCE.",
+    },
+  ),
+  definePrimitive(
+    "table",
+    "_from-ndjson",
+    "( data:str header:bool -- ext{table} )",
+    (data: string, header: boolean, ctx: PrimitiveContext) => parseNdjsonTable(data, header, ctx),
+    {
+      doc: "Private. Newline-delimited JSON as a table: one record or array on each line (blank lines are skipped), shaped as the elements of the array of table:_from-json.",
     },
   ),
 ];

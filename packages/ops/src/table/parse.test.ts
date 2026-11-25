@@ -16,7 +16,7 @@
 
 /*
  * Tests for the table parsers of D1: `csv:parse` and `csv:parse-tsv` (src/prims/csv.ts, src/table/builder.ts)
- * and `json-table:parse` and `json-table:parse-ndjson` (src/prims/json-table.ts): the RFC 4180 vectors, null
+ * and `table:from-json` and `table:from-ndjson` (src/prims/table.ts): the RFC 4180 vectors, null
  * against the empty string, the column types, Unicode, errors, round trips with the writers and the size of
  * input the old list-of-lists path could not read.
  */
@@ -29,7 +29,7 @@ import { cellAt } from "./payload.js";
 import type { Cell, TablePayload } from "./payload.js";
 
 const { str, bool, int } = valueHelpers;
-const runtime = assembleRuntime(await loadBundleNode(["csv", "json-table", "table"]));
+const runtime = assembleRuntime(await loadBundleNode(["csv", "table"]));
 
 type Result = Awaited<ReturnType<typeof runtime.call>>;
 
@@ -52,9 +52,9 @@ const csvPlain = (data: string, header = true) =>
 const tsv = (data: string, header = true) =>
   runtime.call("csv:parse-tsv", [str(data), bool(header)]);
 const json = (data: string, header = true) =>
-  runtime.call("json-table:parse", [str(data), bool(header)]);
+  runtime.call("table:from-json", [str(data), bool(header)]);
 const ndjson = (data: string, header = true) =>
-  runtime.call("json-table:parse-ndjson", [str(data), bool(header)]);
+  runtime.call("table:from-ndjson", [str(data), bool(header)]);
 
 /** The table as `[names, types, rows]` for comparison. */
 function shape(p: TablePayload): [string[], string[], Cell[][]] {
@@ -302,7 +302,7 @@ describe("csv:parse-tsv", () => {
   });
 });
 
-describe("json-table:parse", () => {
+describe("table:from-json", () => {
   test("an array of records: columns in first-seen order, null for a missing key", async () => {
     const p = await P(json('[{"a":1,"b":"x"},{"b":"y","c":true},{"a":2.5,"c":null}]'));
     expect(shape(p)).toEqual([
@@ -376,7 +376,7 @@ describe("json-table:parse", () => {
   });
 });
 
-describe("json-table:parse-ndjson", () => {
+describe("table:from-ndjson", () => {
   test("one record on each line, blank lines skipped, CRLF accepted", async () => {
     const p = await P(ndjson('{"a":1,"b":"x"}\r\n\r\n{"a":2}\n  \n{"b":null,"c":true}\n'));
     expect(shape(p)).toEqual([
@@ -473,14 +473,12 @@ describe("a size the list-of-lists path could not read", () => {
     }
     const data = lines.join("\n");
     const t0 = performance.now();
-    const r = await runtime.call("json-table:parse-ndjson", [str(data), bool(true)], {
+    const r = await runtime.call("table:from-ndjson", [str(data), bool(true)], {
       limits: { maxValueBytes: 256 * 1024 * 1024 },
     });
     const ms = performance.now() - t0;
     expect((await P(r)).rows).toBe(rows);
-    console.log(
-      `json-table:parse-ndjson 100,000 rows x 10: ${data.length} chars, ${Math.round(ms)} ms`,
-    );
+    console.log(`table:from-ndjson 100,000 rows x 10: ${data.length} chars, ${Math.round(ms)} ms`);
     expect(ms).toBeLessThan(30_000);
   });
 });
