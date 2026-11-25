@@ -79,7 +79,7 @@ describe("init", () => {
   test("returns the full set of vocabularies, with recipe and its dependencies", async () => {
     const baker = createBakerCore({ loadBundle: loadBundleNode });
     const info = await baker.init({ vocabs: ["hex"] });
-    expect(info.protocol).toBe(1);
+    expect(info.protocol).toBe(2);
     expect(info.vocabs).toEqual(["base64", "hex", "recipe", "regex"]);
     expect(info.catalogueVersion).toMatch(/^[0-9a-f]{16}$/);
     const all = await baker.init();

@@ -18,6 +18,7 @@
  * The main-thread client (RECIPES.md sections 8.5 and 8.7): promises over a `WorkerHost`, the shared
  * abort flag, and the watchdog that terminates a worker that cannot be stopped any other way.
  */
+import { checkBakeInputs } from "./inputs.js";
 import { effectiveLimits } from "./limits.js";
 import { isWorkerMessage } from "./protocol.js";
 import { PROTOCOL_VERSION, WATCHDOG_DEFAULTS } from "./types.js";
@@ -32,6 +33,7 @@ import type {
   CreateBakerClientFn,
   InitInfo,
   SerialBakeOptions,
+  WireInput,
   WorkerHost,
   WorkerMessage,
 } from "./types.js";
@@ -245,11 +247,32 @@ export const createBakerClient: CreateBakerClientFn = (options): BakerClient => 
     if (!(await hostReady)) return notReady(id, "the worker could not be initialised");
     if (h !== host) return synthesised(id, "E_INTERNAL", "the worker failed", null, 0, true);
 
-    const { onEvent: listener, abortFlag: _ignored, ...serial } = bakeOptions;
+    const { onEvent: listener, abortFlag: _ignored, inputs, ...serial } = bakeOptions;
     void _ignored;
     const wire: SerialBakeOptions = serial;
+    const effective = effectiveLimits(bakeOptions.trust ?? "untrusted", bakeOptions.limits);
+    // The rules of RECIPES-1.2.md section 7.2 are checked here, before anything is sent, and again by the core.
+    const bad = checkBakeInputs(inputs, input.length, effective.maxTotalBytes);
+    if (bad !== null) {
+      return {
+        id,
+        ok: false,
+        error: bad,
+        steps: [],
+        coercions: [],
+        coercionsTruncated: false,
+        warnings: [],
+        stats: { elapsedMs: 0, vmSteps: 0, effects: [] },
+      };
+    }
     const copy = new ArrayBuffer(input.length);
     new Uint8Array(copy).set(input);
+    // Each input is copied as `input` is, so the caller keeps its own bytes and the worker owns the transferred ones.
+    const wireInputs: WireInput[] | undefined = inputs?.map((i) => {
+      const data = new ArrayBuffer(i.bytes.length);
+      new Uint8Array(data).set(i.bytes);
+      return { name: i.name, data };
+    });
 
     const useFlag =
       sharedAllowed &&
@@ -264,7 +287,7 @@ export const createBakerClient: CreateBakerClientFn = (options): BakerClient => 
       t0: performance.now(),
       onEvent: listener,
       flag: sab === undefined ? null : new Int32Array(sab),
-      maxMillis: effectiveLimits(bakeOptions.trust ?? "untrusted", bakeOptions.limits).maxMillis,
+      maxMillis: effective.maxMillis,
       settled,
       settle,
       lastPath: null,
@@ -281,10 +304,11 @@ export const createBakerClient: CreateBakerClientFn = (options): BakerClient => 
         id,
         recipe,
         input: copy,
+        ...(wireInputs === undefined ? {} : { inputs: wireInputs }),
         options: wire,
         ...(sab === undefined ? {} : { abort: sab }),
       },
-      [copy],
+      [copy, ...(wireInputs ?? []).map((i) => i.data)],
     );
     return settled;
   }

@@ -84,7 +84,7 @@ const isResult = (id: number) => (m: WorkerMessage) => m.type === "result" && m.
 
 async function ready(loader = fxLoader): Promise<Harness> {
   const h = attach(createBakerCore({ loadBundle: loader, hardKill: true }));
-  h.send({ type: "init", reqId: 1, protocol: 1, init: {} });
+  h.send({ type: "init", reqId: 1, protocol: 2, init: {} });
   await h.waitFor((m) => m.type === "ready");
   return h;
 }
@@ -93,8 +93,8 @@ describe("init", () => {
   test("ready carries the info; a protocol mismatch is an init-error", async () => {
     const h = await ready();
     const m = h.of("ready")[0];
-    expect(m).toMatchObject({ type: "ready", reqId: 1, info: { protocol: 1 } });
-    h.send({ type: "init", reqId: 2, protocol: 2, init: {} });
+    expect(m).toMatchObject({ type: "ready", reqId: 1, info: { protocol: 2 } });
+    h.send({ type: "init", reqId: 2, protocol: 1, init: {} });
     expect(h.of("init-error")[0]).toMatchObject({
       reqId: 2,
       error: { code: "E_PROTOCOL" },
@@ -103,7 +103,7 @@ describe("init", () => {
 
   test("a failing init is an init-error with the text", async () => {
     const h = attach(createBakerCore({ loadBundle: fxLoader }));
-    h.send({ type: "init", reqId: 5, protocol: 1, init: { vocabs: ["nope"] } });
+    h.send({ type: "init", reqId: 5, protocol: 2, init: { vocabs: ["nope"] } });
     const m = await h.waitFor((x) => x.type === "init-error");
     expect(m).toMatchObject({ reqId: 5, error: { code: "E_INTERNAL" } });
     expect(JSON.stringify(m)).toContain("nope");
@@ -256,7 +256,7 @@ describe("bake", () => {
     const h = await ready();
     h.send(bakeMsg(1, rec(op("fx:sleep", { ms: 60_000 })), "a", { trust: "trusted" }));
     await h.waitFor((m) => m.type === "event");
-    h.send({ type: "init", reqId: 2, protocol: 1, init: {} });
+    h.send({ type: "init", reqId: 2, protocol: 2, init: {} });
     await h.waitFor((m) => m.type === "ready" && m.reqId === 2);
     expect(h.of("result")[0]).toMatchObject({ result: { error: { code: "E_ABORTED" } } });
     h.send(bakeMsg(2, rec(op("fx:sleep", { ms: 60_000 })), "a", { trust: "trusted" }));
@@ -274,7 +274,7 @@ describe("hostile input", () => {
     const h = await ready();
     h.send({ type: "bake", id: "x" });
     expect(h.of("fatal")).toHaveLength(1);
-    h.send({ type: "init", reqId: 3, protocol: 1, init: {} });
+    h.send({ type: "init", reqId: 3, protocol: 2, init: {} });
     h.send(bakeMsg(1, rec()));
     await new Promise((r) => setTimeout(r, 20));
     expect(h.of("fatal")).toHaveLength(1);
@@ -321,7 +321,7 @@ describe("hostile input", () => {
       dispose: () => Promise.resolve(),
     };
     const h = attach(core);
-    h.send({ type: "init", reqId: 1, protocol: 1, init: {} });
+    h.send({ type: "init", reqId: 1, protocol: 2, init: {} });
     expect(await h.waitFor((x) => x.type === "init-error")).toMatchObject({
       error: { message: "plain" },
     });

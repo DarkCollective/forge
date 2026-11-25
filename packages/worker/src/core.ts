@@ -28,11 +28,20 @@ import type {
   Value,
   FlWordEntry,
 } from "@forge/lang";
-import { assembleRuntime, buildCatalogue, buildChecks, provideMagicHost } from "@forge/ops";
+import {
+  assembleRuntime,
+  buildCatalogue,
+  buildChecks,
+  noSuchInputDetail,
+  noSuchInputMessage,
+  provideInputHost,
+  provideMagicHost,
+} from "@forge/ops";
 import type { Catalogue } from "@forge/ops";
 import {
   attributeError,
   compileRecipe,
+  inputNames,
   isRegisterRef,
   recipeNeedsHardKill,
   registerInfo,
@@ -41,10 +50,11 @@ import {
   validateRecipe,
 } from "@forge/recipe";
 import type { Recipe, RecipeIssue, Step, StepIpMap, StepLine } from "@forge/recipe";
+import { checkBakeInputs } from "./inputs.js";
 import { effectiveLimits } from "./limits.js";
 import { createRunMagicHost } from "./magic/host.js";
 import type { MagicEnvironment } from "./magic/host.js";
-import { renderValue } from "./render.js";
+import { outputInfo, renderValue } from "./render.js";
 import { PROGRESS_INTERVAL_MS, PROTOCOL_VERSION } from "./types.js";
 import type {
   Baker,
@@ -59,6 +69,8 @@ import type {
   InitInfo,
   OutputValue,
   RegisterView,
+  StepImplicit,
+  StepOutputInfo,
   StepReport,
 } from "./types.js";
 
@@ -130,6 +142,31 @@ function collectOps(
   });
 }
 
+/**
+ * The implicit conversions of each step (RECIPES-1.2.md section 6.9), from `StepLine.implicit` (the lines the
+ * compiler inserted, each naming its op) and the conversions of the catalogue (which say what the op converts).
+ * A conversion with no entry in the catalogue is left out. Empty for a recipe the compiler inserted nothing into.
+ */
+export function implicitOf(
+  lines: readonly StepLine[],
+  catalogue: Catalogue,
+): ReadonlyMap<string, readonly StepImplicit[]> {
+  const out = new Map<string, readonly StepImplicit[]>();
+  const byOp = new Map((catalogue.conversions ?? []).map((c) => [c.op, c] as const));
+  if (byOp.size === 0) return out;
+  for (const line of lines) {
+    const inserted = (line as { implicit?: readonly { readonly op: string }[] }).implicit;
+    if (inserted === undefined) continue;
+    const list: StepImplicit[] = [];
+    for (const { op } of inserted) {
+      const c = byOp.get(op);
+      if (c !== undefined) list.push({ op, from: c.from, to: c.to });
+    }
+    if (list.length > 0) out.set(line.path, list);
+  }
+  return out;
+}
+
 /** An op step, or the op test of an `if` step, with the registers that supply its parameters. */
 interface RefStep {
   readonly op: string;
@@ -174,7 +211,7 @@ function collectRefs(steps: readonly Step[], prefix: string, out: Map<string, Re
 
 /** Everything a running bake accumulates: step timings, the step log, progress. */
 class Tracker {
-  readonly reports = new Map<string, { ms: number; runs: number }>();
+  readonly reports = new Map<string, { ms: number; runs: number; out?: StepOutputInfo }>();
   private readonly open: { path: string; t0: number }[] = [];
   private readonly log: { step: number; path: string | null }[] = [];
   private logFullAt: number | null = null;
@@ -191,15 +228,19 @@ class Tracker {
     this.open.push({ path, t0: now });
     const r = this.reports.get(path) ?? { ms: 0, runs: 0 };
     r.runs++;
+    // Only the last run reports what it left, and only when that run finished (RECIPES-1.2.md section 7.5).
+    delete r.out;
     this.reports.set(path, r);
     this.lastPath = path;
   }
 
-  end(path: string, now: number): void {
+  end(path: string, now: number, out?: StepOutputInfo): void {
     let i = this.open.length - 1;
     while (i >= 0 && (this.open[i] as { path: string }).path !== path) i--;
     if (i < 0) return;
     this.closeFrom(i, now);
+    const report = this.reports.get(path);
+    if (out !== undefined && report !== undefined) report.out = out;
     if (TOP_LEVEL.test(path)) this.done++;
   }
 
@@ -388,11 +429,31 @@ export function createBakerCore(options: BakerCoreOptions): Baker {
     if (ready === null) return failed("E_NOT_READY", "the baker has not been initialised");
     const { runtime, catalogue } = ready;
 
+    // A bad request: no step runs and the recipe is not looked at (RECIPES-1.2.md section 7.2).
+    const badInputs = checkBakeInputs(opts.inputs, input.length, limits.maxTotalBytes);
+    if (badInputs !== null) return finish({ ok: false, error: badInputs });
+
     const validation = validateRecipe(recipe, catalogue, { pins: opts.pins ?? "warn" });
     if (!validation.ok) {
       return failed("E_RECIPE_INVALID", "the recipe is not valid", { issues: validation.issues });
     }
     warnings = validation.issues;
+    // The early tab check (section 7.4, layer 2): the first literal tab name that the bake does not have fails it
+    // before any step runs, with the error that the primitive would give.
+    if (options.earlyInputCheck !== false) {
+      const have = new Set((opts.inputs ?? []).map((i) => i.name));
+      const missing = inputNames(validation.recipe).find((n) => !have.has(n.name));
+      if (missing !== undefined) {
+        return failed("E_PARAM_INVALID", noSuchInputMessage(missing.name), {
+          path: missing.path,
+          word: "input:tab",
+          detail: noSuchInputDetail(
+            missing.name,
+            (opts.inputs ?? []).map((i) => i.name),
+          ),
+        });
+      }
+    }
     if (trust === "untrusted" && !hardKill && recipeNeedsHardKill(validation.recipe, catalogue)) {
       return failed(
         "E_UNSAFE_HOST",
@@ -512,7 +573,9 @@ export function createBakerCore(options: BakerCoreOptions): Baker {
     const hasRegisters = secretOf.size > 0;
 
     const pause = async (ev: StepEvent, starts: readonly string[]): Promise<void> => {
-      const data = renderValue(ev.stack[ev.stack.length - 1] as Value);
+      const top = ev.stack[ev.stack.length - 1] as Value;
+      const data = renderValue(top);
+      const dataInfo = outputInfo(top);
       let locals: ReadonlyMap<string, Value> | null = null;
       for (const path of starts) {
         const flagged = breakpointOf.get(path) === true;
@@ -534,6 +597,7 @@ export function createBakerCore(options: BakerCoreOptions): Baker {
           path,
           reason,
           data,
+          dataInfo,
           ...(registers.length === 0 ? {} : { registers }),
         });
         const choice = await wait;
@@ -550,7 +614,12 @@ export function createBakerCore(options: BakerCoreOptions): Baker {
       if (at === undefined) return;
       vmStepsSeen = ev.step;
       const now = performance.now();
-      for (const path of at.ends) tracker.end(path, now);
+      if (at.ends.length > 0) {
+        // What every step that ends here left: the top of the stack (RECIPES-1.2.md section 7.5).
+        const top = ev.stack[ev.stack.length - 1];
+        const info = top === undefined ? undefined : outputInfo(top);
+        for (const path of at.ends) tracker.end(path, now, info);
+      }
       for (const path of at.starts) tracker.start(path, now);
       tracker.mark(ev.step);
       const progress = tracker.progress(id, ev.step, t0, now, false);
@@ -581,6 +650,15 @@ export function createBakerCore(options: BakerCoreOptions): Baker {
       { signal, limits, startedAt: t0, steps: () => vmStepsSeen },
     );
     const withdrawMagic = provideMagicHost(signal, magicRun.host);
+    // `input:tab` reads the named inputs through this host (section 7.3); a bake with none installs none.
+    const named = new Map((opts.inputs ?? []).map((i) => [i.name, i.bytes] as const));
+    const withdrawInputs =
+      opts.inputs === undefined
+        ? (): void => undefined
+        : provideInputHost(signal, {
+            read: (name) => named.get(name),
+            names: () => [...named.keys()],
+          });
     try {
       res = await runtime.call(word, [bytesValue(input)], {
         limits,
@@ -593,6 +671,7 @@ export function createBakerCore(options: BakerCoreOptions): Baker {
       return finish({ ok: false, error: bakeError("E_INTERNAL", errorMessage(e)) }, {});
     } finally {
       withdrawMagic();
+      withdrawInputs();
     }
 
     const end = performance.now();
@@ -610,8 +689,18 @@ export function createBakerCore(options: BakerCoreOptions): Baker {
       if (path === null ? !opNames.has(c.word) : opByPath.get(path) !== c.word) continue;
       coercions.push({ path, op: c.word, from: c.from, to: c.to });
     }
+    const implicit = implicitOf(lines, catalogue);
     const extra = {
-      steps: [...tracker.reports].map(([path, r]) => ({ path, ms: r.ms, runs: r.runs })),
+      steps: [...tracker.reports].map(([path, r]): StepReport => {
+        const conversions = implicit.get(path);
+        return {
+          path,
+          ms: r.ms,
+          runs: r.runs,
+          ...(r.out === undefined ? {} : { out: r.out }),
+          ...(conversions === undefined ? {} : { implicit: conversions }),
+        };
+      }),
       coercions,
       coercionsTruncated: res.coercions.length >= limits.maxTraceEntries,
       vmSteps: res.steps + magicRun.charge.steps,
@@ -637,7 +726,8 @@ export function createBakerCore(options: BakerCoreOptions): Baker {
       refStep !== undefined && typeof param === "string" ? refStep.refs.get(param) : undefined;
     const error = bakeError(err.code, err.message, {
       path: errPath,
-      word: err.word,
+      // The private reader of tabs is an implementation detail: the error names the op (section 7.4).
+      word: err.word === "input:_read" ? "input:tab" : err.word,
       detail: register === undefined ? detail : { ...detail, register },
     });
     return finish(

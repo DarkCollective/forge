@@ -18,6 +18,7 @@
 // worker_threads host is `@forge/worker/node`, the Web Worker entry `@forge/worker/worker-web`.
 export type * from "./types.js";
 export {
+  BAKE_INPUT_LIMITS,
   PROGRESS_INTERVAL_MS,
   PROTOCOL_VERSION,
   RENDER_LIMITS,

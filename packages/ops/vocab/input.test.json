@@ -1,0 +1,17 @@
+[
+  {
+    "name": "tab: a bake with no named inputs finds no tab",
+    "ref": "RECIPES-1.2.md 7.4; the runner passes no inputs, so reads are tested in packages/worker/src/inputs.test.ts",
+    "op": "input:tab",
+    "params": {
+      "tab": "orders.csv"
+    },
+    "input": {
+      "value": "",
+      "enc": "utf8"
+    },
+    "expect": {
+      "error": "E_PARAM_INVALID"
+    }
+  }
+]

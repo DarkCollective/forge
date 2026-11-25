@@ -127,6 +127,9 @@ export const attachBakerCore: AttachBakerCoreFn = (port, core) => {
     try {
       const result = await core.bake(msg.recipe, new Uint8Array(msg.input), {
         ...msg.options,
+        ...(msg.inputs === undefined
+          ? {}
+          : { inputs: msg.inputs.map((i) => ({ name: i.name, bytes: new Uint8Array(i.data) })) }),
         ...(msg.abort === undefined ? {} : { abortFlag: new Int32Array(msg.abort) }),
         onEvent: (event) => post({ type: "event", id: msg.id, event: { ...event, id: msg.id } }),
       });

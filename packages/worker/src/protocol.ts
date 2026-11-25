@@ -28,6 +28,11 @@ const MAX_UNIT_CHARS = 1_048_576;
 const MAX_UNITS = 64;
 const MAX_VOCABS = 256;
 const MAX_NAME_CHARS = 256;
+/**
+ * Entries of `inputs` that the shape guard lets through. Anything above `BAKE_INPUT_LIMITS.maxInputs` is a bad
+ * request answered with a result (`input-count`), not a malformed message, so the guard only stops the absurd.
+ */
+const MAX_WIRE_INPUTS = 4096;
 
 function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -64,6 +69,19 @@ function isSharedArrayBuffer(value: unknown): boolean {
 
 function isString(value: unknown, max: number): value is string {
   return typeof value === "string" && value.length <= max;
+}
+
+/** `inputs` of a `bake` message: the shape only. The names and counts are rules for the core (inputs.ts). */
+function isWireInputs(value: unknown): boolean {
+  if (value === undefined) return true;
+  if (!Array.isArray(value) || value.length > MAX_WIRE_INPUTS) return false;
+  return value.every(
+    (v: unknown) =>
+      isObject(v) &&
+      onlyKeys(v, ["name", "data"]) &&
+      typeof ownData(v, "name") === "string" &&
+      isArrayBuffer(ownData(v, "data")),
+  );
 }
 
 function isInit(value: unknown): boolean {
@@ -129,11 +147,14 @@ export function isClientMessage(value: unknown): value is ClientMessage {
         isInit(ownData(value, "init"))
       );
     case "bake": {
-      if (!onlyKeys(value, ["type", "id", "recipe", "input", "options", "abort"])) return false;
+      if (!onlyKeys(value, ["type", "id", "recipe", "input", "inputs", "options", "abort"])) {
+        return false;
+      }
       const abort = ownData(value, "abort");
       return (
         isId(ownData(value, "id")) &&
         isArrayBuffer(ownData(value, "input")) &&
+        isWireInputs(ownData(value, "inputs")) &&
         isOptions(ownData(value, "options")) &&
         (abort === undefined || isSharedArrayBuffer(abort))
       );
@@ -178,9 +199,13 @@ function isEvent(value: unknown): boolean {
     case "paused": {
       // `registers` is optional: a `paused` message of the v1 shape stays valid (RECIPES-1.1.md section 4.10).
       const registers = ownData(value, "registers");
+      // `dataInfo` is optional too (RECIPES-1.2.md section 7.5): a client may ignore it.
+      const dataInfo = ownData(value, "dataInfo");
       return (
         typeof ownData(value, "path") === "string" &&
         isObject(ownData(value, "data")) &&
+        (dataInfo === undefined ||
+          (isObject(dataInfo) && typeof ownData(dataInfo, "tag") === "string")) &&
         (registers === undefined ||
           (Array.isArray(registers) && registers.every((r: unknown) => isRegisterView(r))))
       );

@@ -26,7 +26,7 @@ import type {
   WorkerMessage,
 } from "./types.js";
 
-const INFO = { protocol: 1 as const, catalogueVersion: "0123456789abcdef", vocabs: ["hex"] };
+const INFO = { protocol: 2 as const, catalogueVersion: "0123456789abcdef", vocabs: ["hex"] };
 
 class FakeHost implements WorkerHost {
   readonly sent: ClientMessage[] = [];
@@ -145,7 +145,7 @@ describe("init and bake", () => {
     const c = client();
     expect(await c.init({ vocabs: ["hex"] })).toEqual(INFO);
     const h = hosts[0] as FakeHost;
-    expect(h.of("init")[0]).toMatchObject({ protocol: 1, init: { vocabs: ["hex"] } });
+    expect(h.of("init")[0]).toMatchObject({ protocol: 2, init: { vocabs: ["hex"] } });
     h.autoReady = false;
     const p = c.init();
     await tick();

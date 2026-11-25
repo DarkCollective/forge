@@ -41,7 +41,18 @@ import type { PinPolicy, RecipeIssue } from "@forge/recipe";
 // ---------------------------------------------------------------------------------------------
 
 /** Version of the message protocol. */
-export const PROTOCOL_VERSION = 1 as const;
+export const PROTOCOL_VERSION = 2 as const;
+
+/**
+ * Bounds on the named inputs of one bake (RECIPES-1.2.md sections 7.2 and 14.2). The total size is bounded by
+ * `limits.maxTotalBytes` of the effective limits.
+ */
+export const BAKE_INPUT_LIMITS = Object.freeze({
+  /** Named inputs in one bake. */
+  maxInputs: 32,
+  /** Code points in a tab name. */
+  maxInputNameChars: 120,
+});
 
 /**
  * Limits for a bake with `trust: "untrusted"` (the default). Any field a caller overrides can only be
@@ -78,6 +89,10 @@ export const RENDER_LIMITS = Object.freeze({
   maxExtTextChars: 4_000,
   /** Rows asked of a kind's `view` (UI-TOOLKIT.md section 1.7, Q1). */
   maxExtRows: 100,
+  /** Columns kept in the schema of a step's output (RECIPES-1.2.md section 7.5); more sets `schemaTruncated`. */
+  maxSchemaColumns: 256,
+  /** Code points kept of a column name in a schema. */
+  maxSchemaNameChars: 120,
 });
 
 /** Minimum interval between `progress` events of one bake. */
@@ -137,6 +152,32 @@ export type OutputValue =
 // Results (RECIPES.md section 8.2)
 // ---------------------------------------------------------------------------------------------
 
+/** One column of the schema of a value (RECIPES-1.2.md section 7.5). */
+export interface SchemaColumn {
+  readonly name: string;
+  readonly type: string;
+}
+
+/** What a step left on the stack, without the value (RECIPES-1.2.md section 7.5). */
+export interface StepOutputInfo {
+  /** The FL tag of the value: bytes, str, int, num, bool, list, record, ext, other. */
+  readonly tag: string;
+  /** The ext kind, when `tag` is `"ext"`. */
+  readonly kind?: string;
+  /** Present when the kind provides one. */
+  readonly schema?: readonly SchemaColumn[];
+  /** True when the value has more than `RENDER_LIMITS.maxSchemaColumns` columns. */
+  readonly schemaTruncated?: true;
+}
+
+/** An implicit conversion the compiler inserted for a step (RECIPES-1.2.md section 6.9). */
+export interface StepImplicit {
+  /** The qualified op of the inserted word. */
+  readonly op: string;
+  readonly from: string;
+  readonly to: string;
+}
+
 /** Time spent in one recipe step, summed over every time it ran (a fork child runs once per piece). */
 export interface StepReport {
   /** JSON pointer of the step. */
@@ -145,6 +186,13 @@ export interface StepReport {
   readonly ms: number;
   /** Number of times the step started. */
   readonly runs: number;
+  /**
+   * What the step left, from its last run (RECIPES-1.2.md section 7.5). Absent for a step that failed or never
+   * finished.
+   */
+  readonly out?: StepOutputInfo;
+  /** The implicit conversions of the step, when it has any (section 6.9). */
+  readonly implicit?: readonly StepImplicit[];
 }
 
 /** An implicit data conversion at the data input of an op step. */
@@ -259,8 +307,17 @@ export type BakeEvent =
        * Absent when there are none (and in the messages of a v1 baker); a client may ignore it.
        */
       readonly registers?: readonly RegisterView[];
+      /** What `data` is, without the value (RECIPES-1.2.md section 7.5). Optional: a client may ignore it. */
+      readonly dataInfo?: StepOutputInfo;
     }
   | { readonly type: "resumed"; readonly id: number };
+
+/** A named input tab of a bake (RECIPES-1.2.md section 7.2). */
+export interface BakeInput {
+  /** The name of the tab: 1 to 120 code points, well-formed, no control character. Matched exactly. */
+  readonly name: string;
+  readonly bytes: Uint8Array;
+}
 
 export interface BakeOptions {
   /** Default `"untrusted"`. */
@@ -270,6 +327,11 @@ export interface BakeOptions {
   /** Default `"warn"`. */
   readonly pins?: PinPolicy;
   readonly debug?: DebugOptions;
+  /**
+   * The named tabs that `input:tab` and `relix:input` read (RECIPES-1.2.md section 7.2). The main input is not
+   * named implicitly: a host that wants a step to read the active tab passes it here as well.
+   */
+  readonly inputs?: readonly BakeInput[];
   readonly onEvent?: (event: BakeEvent) => void;
   /**
    * For hosts: a shared flag the VM polls (element 0 nonzero aborts the bake). The worker side of the
@@ -279,7 +341,13 @@ export interface BakeOptions {
 }
 
 /** `BakeOptions` as sent over a message port (no functions, no typed arrays: the flag travels as `bake.abort`). */
-export type SerialBakeOptions = Omit<BakeOptions, "onEvent" | "abortFlag">;
+export type SerialBakeOptions = Omit<BakeOptions, "onEvent" | "abortFlag" | "inputs">;
+
+/** A named input as it travels in a `bake` message (RECIPES-1.2.md section 12): transferred, like `input`. */
+export interface WireInput {
+  readonly name: string;
+  readonly data: ArrayBuffer;
+}
 
 // ---------------------------------------------------------------------------------------------
 // The Baker interface (RECIPES.md section 8.2)
@@ -333,6 +401,12 @@ export interface BakerCoreOptions {
    * entries set it: their host (`BakerClient`) owns the watchdog.
    */
   readonly hardKill?: boolean;
+  /**
+   * Test hook. The baker checks the literal tab names of `input:tab` and `relix:input` steps against the bake's
+   * inputs before any step runs (RECIPES-1.2.md section 7.4, layer 2). False leaves only the primitive's own
+   * check, which gives the same error after the steps before it have run. Default true.
+   */
+  readonly earlyInputCheck?: boolean;
 }
 
 export type CreateBakerCoreFn = (options?: BakerCoreOptions) => Baker;
@@ -354,6 +428,8 @@ export type ClientMessage =
       readonly recipe: unknown;
       /** Transferred: the worker owns this buffer. */
       readonly input: ArrayBuffer;
+      /** Transferred as well. Absent when the bake has no named inputs. */
+      readonly inputs?: readonly WireInput[];
       readonly options: SerialBakeOptions;
       /** A `SharedArrayBuffer` of 4 bytes, present only when the page is cross-origin isolated. Element 0 nonzero means cancel. */
       readonly abort?: SharedArrayBuffer;

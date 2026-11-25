@@ -47,3 +47,10 @@ export type {
   MagicHostReport,
   MagicHostRequest,
 } from "./magic-host.js";
+export {
+  inputHostFor,
+  noSuchInputDetail,
+  noSuchInputMessage,
+  provideInputHost,
+} from "./input-host.js";
+export type { InputHost } from "./input-host.js";

@@ -26,6 +26,7 @@ import type {
   OutputToJsonFn,
   OutputValue,
   RenderValueFn,
+  StepOutputInfo,
   StripTimingsFn,
 } from "./types.js";
 
@@ -174,3 +175,76 @@ export const stripTimings: StripTimingsFn = (result) => {
   };
   return stripped as BakeResult;
 };
+
+// ---------------------------------------------------------------------------------------------
+// The per-step schema (RECIPES-1.2.md section 7.5)
+// ---------------------------------------------------------------------------------------------
+
+const INFO_TAGS: ReadonlySet<string> = new Set([
+  "bytes",
+  "str",
+  "int",
+  "num",
+  "bool",
+  "list",
+  "record",
+  "ext",
+]);
+
+const cutChars = (text: string, max: number): string =>
+  text.length <= max ? text : [...text].slice(0, max).join("");
+
+/** `[{ name, type }]` from whatever a kind returned, or null when it is not that shape. */
+function columnsOf(found: unknown): readonly { name: string; type: string }[] | null {
+  if (!Array.isArray(found)) return null;
+  const out: { name: string; type: string }[] = [];
+  for (const c of found as unknown[]) {
+    if (typeof c !== "object" || c === null) return null;
+    const { name, type } = c as { name?: unknown; type?: unknown };
+    if (typeof name !== "string" || typeof type !== "string") return null;
+    out.push({ name, type });
+  }
+  return out;
+}
+
+/**
+ * The columns of an ext value: the kind's optional `schema(payload)` (LANGUAGE-0.3.md section 4), which must be
+ * O(1) or cached. A kind with no `schema` but a `view` that names its columns (the `table` kind) is asked for a
+ * view of no rows. Anything that throws, or has another shape, gives no schema.
+ */
+function extColumns(
+  kind: string,
+  payload: unknown,
+): readonly { name: string; type: string }[] | null {
+  const k = getExtKind(kind);
+  if (k === undefined) return null;
+  try {
+    const schema = (k as unknown as { schema?: unknown }).schema;
+    if (typeof schema === "function") {
+      return columnsOf((schema as (p: unknown) => unknown).call(k, payload));
+    }
+    if (k.view === undefined) return null;
+    const view = k.view(payload, { maxRows: 0 }) as { columns?: unknown } | undefined;
+    return columnsOf(view?.columns);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * What a value is, without the value: its tag, and for an ext value its kind and, when the kind has one, its
+ * schema (at most `RENDER_LIMITS.maxSchemaColumns` columns, names cut to `RENDER_LIMITS.maxSchemaNameChars`).
+ */
+export function outputInfo(value: Value): StepOutputInfo {
+  if (value.tag !== "ext") return { tag: INFO_TAGS.has(value.tag) ? value.tag : "other" };
+  const columns = extColumns(value.kind, value.v);
+  if (columns === null) return { tag: "ext", kind: value.kind };
+  const max = RENDER_LIMITS.maxSchemaColumns;
+  const schema = columns.slice(0, max).map((c) => ({
+    name: cutChars(c.name, RENDER_LIMITS.maxSchemaNameChars),
+    type: cutChars(c.type, RENDER_LIMITS.maxSchemaNameChars),
+  }));
+  return columns.length > max
+    ? { tag: "ext", kind: value.kind, schema, schemaTruncated: true }
+    : { tag: "ext", kind: value.kind, schema };
+}

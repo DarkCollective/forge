@@ -27,7 +27,7 @@ const bake = (over: Record<string, unknown> = {}) => ({
 const init = (over: Record<string, unknown> = {}) => ({
   type: "init",
   reqId: 1,
-  protocol: 1,
+  protocol: 2,
   init: {},
   ...over,
 });
@@ -162,7 +162,7 @@ describe("isClientMessage rejects hostile messages", () => {
   });
 });
 
-const info = { protocol: 1, catalogueVersion: "0123456789abcdef", vocabs: [] };
+const info = { protocol: 2, catalogueVersion: "0123456789abcdef", vocabs: [] };
 const error = { code: "E_PROTOCOL", message: "m", path: null, word: null, detail: {} };
 const result = (over: Record<string, unknown> = {}) => ({
   id: 1,

@@ -17,7 +17,7 @@ import { expect, test } from "vitest";
 import { PROTOCOL_VERSION, UNTRUSTED_LIMITS, WATCHDOG_DEFAULTS } from "./index.js";
 
 test("the worker contract constants exist", () => {
-  expect(PROTOCOL_VERSION).toBe(1);
+  expect(PROTOCOL_VERSION).toBe(2);
   expect(UNTRUSTED_LIMITS.maxMillis).toBeGreaterThan(0);
   expect(WATCHDOG_DEFAULTS.cancelGraceMs).toBeGreaterThan(0);
 });
