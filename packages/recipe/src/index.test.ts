@@ -67,6 +67,7 @@ test("the package exports exactly what RECIPES.md section 11.5 lists", () => {
     "recipeUsesV12",
     "inputNames",
     "dataSourcePath",
+    "planConversions",
   ];
   expect(Object.keys(recipe).sort()).toEqual([...consts, ...functions].sort());
   for (const name of functions)

@@ -314,11 +314,31 @@ export interface CatalogueOpView {
    * The slot parameter is never in a step's `params`: its value is the lane.
    */
   readonly slot?: string;
+  /** The kind of an `ext{kind}` data input; absent for every other type (RECIPES-1.2.md section 6.9). */
+  readonly inputKind?: string;
+  /** The kind of an `ext{kind}` output; absent for every other type. */
+  readonly outputKind?: string;
+}
+
+/**
+ * One implicit conversion between kinds (RECIPES-1.2.md section 6.9), declared by a pack. `@forge/ops`'
+ * `CatalogueConversion` is assignable to it. The package compares the names as strings and knows nothing else.
+ */
+export interface CatalogueConversionView {
+  /** An ext kind name, or a tag. */
+  readonly from: string;
+  readonly to: string;
+  /** The qualified name of the word that converts. */
+  readonly op: string;
+  /** Also apply it to the value that the recipe ends with. */
+  readonly atEnd?: true;
 }
 
 export interface CatalogueView {
   readonly version: string;
   readonly ops: readonly CatalogueOpView[];
+  /** The conversions that the compiler inserts (RECIPES-1.2.md section 6.9); absent or empty when there are none. */
+  readonly conversions?: readonly CatalogueConversionView[];
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -414,6 +434,35 @@ export interface StepLine {
   readonly disabled: boolean;
   /** The step's `breakpoint` flag. */
   readonly breakpoint: boolean;
+  /**
+   * The conversions that the compiler inserted for this step (RECIPES-1.2.md section 6.9), each on a line inside
+   * `startLine` to `endLine`. Absent when there are none, so a recipe without conversions has the entries it always had.
+   */
+  readonly implicit?: readonly ImplicitLine[];
+}
+
+/** One line of the compiled text that is not a step of the recipe: an inserted conversion. */
+export interface ImplicitLine {
+  /** The 1-based line of the conversion. */
+  readonly line: number;
+  /** The qualified name of the word on it. */
+  readonly op: string;
+}
+
+/**
+ * One conversion that `planConversions` inserts (RECIPES-1.2.md section 6.9). `at` says where: `"before"` the step at
+ * `path`; at the `"lane-end"` of the lane `slot` of the slot step at `path`; or at the `"end"` of the recipe, where
+ * `path` is the last enabled step of the main line (empty when there is none).
+ */
+export interface Conversion {
+  readonly at: "before" | "lane-end" | "end";
+  readonly path: string;
+  /** The lane, for `"lane-end"`. */
+  readonly slot?: SlotName;
+  /** The qualified name of the converting word. */
+  readonly op: string;
+  readonly from: string;
+  readonly to: string;
 }
 
 export type CompileOutcome =

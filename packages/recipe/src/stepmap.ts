@@ -19,6 +19,7 @@
  */
 import type { SourcePos } from "@forge/lang";
 import { childLists } from "./children.js";
+import { planConversions } from "./conversions.js";
 import { opIndex } from "./opindex.js";
 import type { CatalogueView, IpEvent, Recipe, Step, StepIp, StepIpMap, StepLine } from "./types.js";
 
@@ -103,6 +104,8 @@ export function attributeError(
 export function recipeNeedsHardKill(recipe: Recipe, catalogue: CatalogueView): boolean {
   const index = opIndex(catalogue);
   const needs = (name: string): boolean => index.find(name)?.op.needsHardKill === true;
+  // The words the compiler inserts (RECIPES-1.2.md section 6.9) count as steps, by the same planning function.
+  if (planConversions(recipe, catalogue).some((c) => needs(c.op))) return true;
   const stack: Step[] = [...recipe.steps];
   while (stack.length > 0) {
     const step = stack.pop() as Step;

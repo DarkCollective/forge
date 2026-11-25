@@ -49,7 +49,7 @@ function spec(
   return { required: s.default === undefined, ...s, index } as ParamSpec;
 }
 
-function op(
+export function op(
   qname: string,
   input: string,
   output: string,

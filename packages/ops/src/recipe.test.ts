@@ -466,3 +466,108 @@ describe("RECIPES-1.1 section 2.7 facts the proposal relies on", () => {
     expect(r.stack).toHaveLength(1);
   });
 });
+
+/*
+ * RECIPES-1.2.md section 6.1 (RW3): the compiled forms of a slot step, run on a real runtime. The two fixture ops of
+ * section 15 are defined here with the core word `cat`: `fx:cat` is binary (`slot: "right"`) and `fx:then` is
+ * base-and-step (`slot: "step"`). The texts are the ones `compileRecipe` gives (packages/recipe/src/slots-compile.test.ts
+ * compiles the recipes and compares them with these, written out by hand).
+ */
+async function bakeFixture(text: string, input: string): Promise<RunResult> {
+  const rt = assembleRuntime(await loadBundleNode("all"));
+  rt.setCurrentVocab("fx");
+  rt.load(
+    ": cat ( str right:str -- str ) right core:cat ;\n: then ( str step:str -- str ) step core:cat ;\n",
+    { unit: "fixture", scope: { current: "fx", using: [] } },
+  );
+  loadUnit(rt, text);
+  return rt.call("bake:main", [bytes(ascii(input))]);
+}
+
+const SLOT_UNIT = (body: string) => `\\ forge-recipe 1\n: main ( bytes -- any )\n${body}\n;\n`;
+
+describe("RECIPES-1.2 CR232 to CR235 and CR260 (run): slot steps", () => {
+  const LEFT = ["  text:upper", "  [", "    text:lower", "  ] recipe:peek"];
+  const RIGHT = ["  text:upper", "  [", "    text:lower", "  ] recipe:peek swap"];
+  const NONE = [...RIGHT, "  [", "    text:reverse", "  ] recipe:peek nip"];
+
+  test("CR232 pipe left: the data and the lane's result, in that order", async () => {
+    const r = await bakeFixture(SLOT_UNIT([...LEFT, "  fx:cat"].join("\n")), "Ab");
+    expect(top(r)).toEqual({ tag: "str", v: "ABab" });
+    expect(r.stack).toHaveLength(1);
+  });
+
+  test("CR233 pipe right: swap puts the lane first", async () => {
+    const r = await bakeFixture(SLOT_UNIT([...RIGHT, "  fx:cat"].join("\n")), "Ab");
+    expect(top(r)).toEqual({ tag: "str", v: "abAB" });
+    expect(r.stack).toHaveLength(1);
+  });
+
+  test("CR234 no pipe: swap and nip leave the two lanes, and the data above is dropped", async () => {
+    const r = await bakeFixture(SLOT_UNIT([...NONE, "  fx:cat"].join("\n")), "Ab");
+    expect(top(r)).toEqual({ tag: "str", v: "abBA" });
+    expect(r.stack).toHaveLength(1);
+  });
+
+  test("CR235 a register above the step is read in a lane; a register defined in a lane works", async () => {
+    const above = SLOT_UNIT(
+      [
+        "  [",
+        "    text:lower",
+        "  ] recipe:peek :> $q",
+        "  text:upper",
+        "  [",
+        '    "^.*$" $q "" regex:replace',
+        "  ] recipe:peek",
+        "  fx:cat",
+      ].join("\n"),
+    );
+    expect(top(await bakeFixture(above, "Ab"))).toEqual({ tag: "str", v: "ABab" });
+    const inside = SLOT_UNIT(
+      [
+        "  text:upper",
+        "  [",
+        "    [",
+        "      text:reverse",
+        "    ] recipe:peek :> $r",
+        '    "^.*$" $r "" regex:replace',
+        "  ] recipe:peek swap",
+        "  fx:cat",
+      ].join("\n"),
+    );
+    expect(top(await bakeFixture(inside, "Ab"))).toEqual({ tag: "str", v: "BAAB" });
+  });
+
+  test("a nested lane works, and an empty lane leaves the copy", async () => {
+    const nested = SLOT_UNIT(
+      [
+        "  text:upper",
+        "  [",
+        "    [",
+        "      text:reverse",
+        "    ] recipe:peek",
+        "    fx:cat",
+        "  ] recipe:peek",
+        "  fx:cat",
+      ].join("\n"),
+    );
+    // the inner step: copy "AB", its lane "BA": "ABBA"; the outer: "AB" and "ABBA"
+    expect(top(await bakeFixture(nested, "Ab"))).toEqual({ tag: "str", v: "ABABBA" });
+    const empty = SLOT_UNIT(["  text:upper", "  [", "  ] recipe:peek", "  fx:cat"].join("\n"));
+    expect(top(await bakeFixture(empty, "Ab"))).toEqual({ tag: "str", v: "ABAB" });
+  });
+
+  test("CR260 a base-and-step op has the texts of a binary op: pipe base, and no pipe", async () => {
+    const piped = SLOT_UNIT([...LEFT, "  fx:then"].join("\n"));
+    expect(top(await bakeFixture(piped, "Ab"))).toEqual({ tag: "str", v: "ABab" });
+    const none = SLOT_UNIT([...NONE, "  fx:then"].join("\n"));
+    expect(top(await bakeFixture(none, "Ab"))).toEqual({ tag: "str", v: "abBA" });
+  });
+
+  test("a step with a slot is in the same stack position as any other: the word still leaves one value", async () => {
+    const text = SLOT_UNIT([...LEFT, "  fx:cat", "  text:reverse"].join("\n"));
+    const r = await bakeFixture(text, "Ab");
+    expect(top(r)).toEqual({ tag: "str", v: "baBA" });
+    expect(r.stack).toHaveLength(1);
+  });
+});

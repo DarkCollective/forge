@@ -18,17 +18,19 @@
  * the unit the baker loads and the text a person reads and pastes. Pure and deterministic.
  */
 import { isReservedWord, isVocabName, isWordName } from "@forge/lang";
+import { planConversions } from "./conversions.js";
 import { encodedLiteral, jsonStringLiteral, paramLiteral, stringLiteral } from "./literals.js";
 import { canonicalRecipe } from "./normalise.js";
 import { opIndex } from "./opindex.js";
 import type { OpIndex } from "./opindex.js";
-import { recipeUsesSlots } from "./uses.js";
 import { validateRecipe } from "./validate.js";
-import { DEFAULT_RECIPE_VOCAB, DEFAULT_RECIPE_WORD } from "./types.js";
+import { DEFAULT_RECIPE_VOCAB, DEFAULT_RECIPE_WORD, SLOT_FAMILIES } from "./types.js";
 import type {
   CatalogueView,
   CompileOptions,
   CompileOutcome,
+  Conversion,
+  ImplicitLine,
   OpStep,
   OpTest,
   ParamValue,
@@ -44,10 +46,19 @@ export const HEADER_LINE = "\\ forge-recipe 1";
 /** The prefix of a disabled line, repeated once per disabled level. */
 export const DISABLED_PREFIX = "\\ ~ ";
 
+/** The annotation of a line that the compiler inserted (RECIPES-1.2.md section 6.5). */
+export const IMPLICIT_ANNOTATION = "  \\ @implicit";
+
 interface Emitter {
   readonly index: OpIndex;
   readonly out: string[];
   readonly lines: StepLine[];
+  /** The conversions to insert before a step, by the step's path. */
+  readonly before: ReadonlyMap<string, Conversion>;
+  /** The conversions at the end of a lane, by `<path of the slot step>|<slot>`. */
+  readonly laneEnd: ReadonlyMap<string, Conversion>;
+  /** The conversion at the end of the recipe, written after the main-line step at `end.path`. */
+  readonly end: Conversion | undefined;
 }
 
 function annotations(
@@ -62,12 +73,16 @@ function annotations(
   return parts.length === 0 ? "" : `  \\ ${parts.join(" ")}`;
 }
 
-/** `lits qname`: the literal groups in `ParamSpec` order, then the name. */
+/**
+ * `lits qname`: the literal groups in `ParamSpec` order, then the name. The slot parameter of a slot op has no group:
+ * its value is a lane, written before the literals (RECIPES-1.2.md section 6.1).
+ */
 function opText(em: Emitter, op: OpStep | OpTest): string {
   const entry = em.index.find(op.op);
   const groups: string[] = [];
   if (entry !== undefined) {
     for (const spec of entry.op.params) {
+      if (spec.name === entry.op.slot) continue;
       const value = (op.params as Record<string, ParamValue> | undefined)?.[spec.name];
       if (value !== undefined) groups.push(paramLiteral(spec, value));
     }
@@ -101,9 +116,18 @@ function emitSteps(
   steps.forEach((step, i) => {
     const path = `${basePath}/${i}`;
     const level = parentLevel + (step.kind !== "comment" && step.disabled === true ? 1 : 0);
-    const prefix = "  ".repeat(nesting + 1) + DISABLED_PREFIX.repeat(level);
+    const indent = "  ".repeat(nesting + 1);
+    const prefix = indent + DISABLED_PREFIX.repeat(level);
     const startLine = em.out.length + 1;
     const slot = em.lines.length;
+    // The conversions of a step are written on lines of its own, never disabled, and lie inside its range.
+    const implicit: ImplicitLine[] = [];
+    const insert = (conv: Conversion | undefined, at: string): void => {
+      if (conv === undefined) return;
+      em.out.push(`${at}${implicitText(em, conv.op)}`);
+      implicit.push({ line: em.out.length, op: conv.op });
+    };
+    insert(em.before.get(path), indent);
     em.lines.push({
       path,
       kind: step.kind,
@@ -116,9 +140,45 @@ function emitSteps(
       emitSteps(em, list, `${path}/${key}`, nesting + 1, level);
     };
     switch (step.kind) {
-      case "op":
+      case "op": {
+        const entry = em.index.find(step.op);
+        const family =
+          entry?.op.slot === undefined
+            ? undefined
+            : SLOT_FAMILIES[entry.op.slot as keyof typeof SLOT_FAMILIES];
+        if (family !== undefined && slotKeys(step)) {
+          // The lanes first, then the literals and the op (RECIPES-1.2.md section 6.1). Which lanes there are, and what
+          // closes each, is decided by `pipe`.
+          const lanes =
+            step.pipe === undefined
+              ? [
+                  { slot: family.slots[0], closer: "] recipe:peek swap" },
+                  { slot: family.slots[1], closer: "] recipe:peek nip" },
+                ]
+              : step.pipe === "right"
+                ? [{ slot: "left" as const, closer: "] recipe:peek swap" }]
+                : [
+                    {
+                      slot: family.slots[family.slots[0] === step.pipe ? 1 : 0],
+                      closer: "] recipe:peek",
+                    },
+                  ];
+          for (const lane of lanes) {
+            em.out.push(`${prefix}[`);
+            emitSteps(
+              em,
+              (step[lane.slot] as { steps: readonly Step[] }).steps,
+              `${path}/${lane.slot}/steps`,
+              nesting + 1,
+              level,
+            );
+            insert(em.laneEnd.get(`${path}|${lane.slot}`), "  ".repeat(nesting + 2));
+            em.out.push(`${prefix}${lane.closer}`);
+          }
+        }
         em.out.push(prefix + opText(em, step) + annotations(step.hash, step.breakpoint, step.note));
         break;
+      }
       case "comment":
         em.out.push(`${prefix}\\ # ${jsonStringLiteral(step.text)}`);
         break;
@@ -183,8 +243,33 @@ function emitSteps(
         break;
       }
     }
-    em.lines[slot] = { ...(em.lines[slot] as StepLine), endLine: em.out.length };
+    if (em.end !== undefined && nesting === 0 && em.end.path === path) insert(em.end, indent);
+    em.lines[slot] = {
+      ...(em.lines[slot] as StepLine),
+      endLine: em.out.length,
+      ...(implicit.length === 0 ? {} : { implicit }),
+    };
   });
+}
+
+/** `lits qname  \ @implicit`: the conversion word with the defaults of its parameters, in `ParamSpec` order. */
+function implicitText(em: Emitter, op: string): string {
+  const spec = em.index.find(op)?.op.params ?? [];
+  const groups = spec.flatMap((p) =>
+    p.default === undefined ? [] : [paramLiteral(p, p.default as ParamValue)],
+  );
+  return `${[...groups, op].join(" ")}${IMPLICIT_ANNOTATION}`;
+}
+
+/** True iff the op step has a slot key, that is a lane or a `pipe` (RECIPES-1.2.md section 4.1). */
+function slotKeys(step: OpStep): boolean {
+  return (
+    step.pipe !== undefined ||
+    step.left !== undefined ||
+    step.right !== undefined ||
+    step.base !== undefined ||
+    step.step !== undefined
+  );
 }
 
 /** The text of an already canonical recipe, and the lines of its steps. */
@@ -193,7 +278,23 @@ export function emitRecipe(
   catalogue: CatalogueView,
   word: string,
 ): { text: string; lines: StepLine[] } {
-  const em: Emitter = { index: opIndex(catalogue), out: [HEADER_LINE], lines: [] };
+  const plan = planConversions(recipe, catalogue);
+  const before = new Map<string, Conversion>();
+  const laneEnd = new Map<string, Conversion>();
+  let end: Conversion | undefined;
+  for (const c of plan) {
+    if (c.at === "before") before.set(c.path, c);
+    else if (c.at === "lane-end") laneEnd.set(`${c.path}|${c.slot as string}`, c);
+    else end = c;
+  }
+  const em: Emitter = {
+    index: opIndex(catalogue),
+    out: [HEADER_LINE],
+    lines: [],
+    before,
+    laneEnd,
+    end,
+  };
   if (recipe.name !== undefined) em.out.push(`\\ name ${jsonStringLiteral(recipe.name)}`);
   if (recipe.description !== undefined) {
     em.out.push(`\\ description ${jsonStringLiteral(recipe.description)}`);
@@ -203,6 +304,8 @@ export function emitRecipe(
   }
   em.out.push(`: ${word} ( bytes -- any )`);
   emitSteps(em, recipe.steps, "/steps", 0, 0);
+  // With no enabled step the conversion at the end belongs to no step: it still runs, on the input.
+  if (end !== undefined && end.path === "") em.out.push(`  ${implicitText(em, end.op)}`);
   em.out.push(";");
   return { text: `${em.out.join("\n")}\n`, lines: em.lines };
 }
@@ -237,11 +340,6 @@ export function compileRecipe(
       return optionIssue("the vocab option is not a vocabulary name", "vocab name");
     const checked = validateRecipe(recipe, catalogue, { pins: options?.pins ?? "warn" });
     if (!checked.ok) return { ok: false, issues: checked.issues };
-    // The slot forms are compiled by a later work package (RECIPES-1.2.md section 6.1). Until then a recipe with a slot
-    // step is refused here: emitting its op alone would silently drop its lanes.
-    if (recipeUsesSlots(checked.recipe)) {
-      return optionIssue("the compiler does not support slot steps yet", "no slot compilation");
-    }
     const { text, lines } = emitRecipe(canonicalRecipe(checked.recipe, catalogue), catalogue, word);
     return { ok: true, text, word: `${vocab}:${word}`, lines, issues: checked.issues };
   } catch {

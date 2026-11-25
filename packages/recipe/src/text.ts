@@ -21,7 +21,7 @@
  */
 import { read } from "@forge/lang";
 import type { SourcePos, Token } from "@forge/lang";
-import { DISABLED_PREFIX, HEADER_LINE } from "./compile.js";
+import { DISABLED_PREFIX, HEADER_LINE, IMPLICIT_ANNOTATION } from "./compile.js";
 import { hexEncode, utf8Encode } from "./encoding.js";
 import { clip } from "./limits.js";
 import { canonicalRecipe } from "./normalise.js";
@@ -108,11 +108,14 @@ interface Anns {
   pin?: string;
   breakpoint?: boolean;
   note?: string;
+  /** `@implicit`: a line the compiler inserted. It stands alone (RECIPES-1.2.md section 6.5). */
+  implicit?: boolean;
 }
 
-/** The trailing annotation comment `  \ @pin=<hash> @break @note="..."`, or null when it is malformed. */
+/** The trailing annotation comment `  \ @pin=<hash> @break @note="..." `, or `  \ @implicit`; null when malformed. */
 function parseAnns(tail: string): Anns | null {
   if (tail.trim() === "") return {};
+  if (tail === IMPLICIT_ANNOTATION) return { implicit: true };
   if (!tail.startsWith("  \\ ")) return null;
   const out: Anns = {};
   let s = tail.slice(4);
@@ -241,12 +244,29 @@ interface Frame {
   readonly isIf: boolean;
   /** An `if` open line with the inline test, `recipe:as-bytes dup ... [`, closed by `] if`. */
   readonly lowered: boolean;
-  /** A register open line, `[`, closed by `] recipe:peek :> $name`. */
+  /**
+   * A lone `[` open line. It is a register when it closes with `] recipe:peek :> $name` and a lane when it closes with
+   * `] recipe:peek`, optionally followed by `swap` or `nip` (RECIPES-1.2.md section 6.6).
+   */
   readonly register: boolean;
   inElse: boolean;
   hasElse: boolean;
   readonly then: Obj[];
   readonly other: Obj[];
+  /** The lanes of this frame's list that are closed and wait for their op line. */
+  readonly pending: PendingLane[];
+}
+
+/** A closed lane that waits for the op line that completes its slot step (RECIPES-1.2.md section 6.6). */
+interface PendingLane {
+  /** What follows `] recipe:peek`: nothing, `swap` or `nip`. */
+  readonly closer: "" | "swap" | "nip";
+  readonly steps: Obj[];
+  readonly level: number;
+  /** The path that the steps of the lane had while it was open: the lane's own place is not known until the op line. */
+  readonly path: string;
+  readonly line: number;
+  readonly col: number;
 }
 
 /** Builds an op step from the tokens of an op line (or the inside of an op test). */
@@ -284,7 +304,8 @@ function opFromTokens(
       column,
     );
   }
-  const specs = entry.op.params;
+  // The slot parameter has no literal: its value is a lane (RECIPES-1.2.md section 6.6).
+  const specs = entry.op.params.filter((spec) => spec.name !== entry.op.slot);
   if (groups.length !== specs.length) {
     return stop(
       "bad-param",
@@ -510,16 +531,31 @@ function parse(text: string, catalogue: CatalogueView): ValidationResult {
     const key = top.isIf ? (top.inElse ? "else" : "then") : "steps";
     return `${top.path}/${key}/${list.length}`;
   };
-  /** Counts a new step against the limits, and returns its path. */
-  const begin = (line: number, col: number): string => {
-    const path = nextPath();
+  const rootPending: PendingLane[] = [];
+  /** The closed lanes of the list that is being read. */
+  const pendingOf = (): PendingLane[] => {
+    const top = stack[stack.length - 1];
+    return top === undefined ? rootPending : top.pending;
+  };
+  /** Only a lane or the op line of a slot step may follow a closed lane. */
+  const noPending = (path: string, line: number, col: number): void => {
+    if (pendingOf().length > 0) {
+      structure(path, "a lane must be followed by another lane or by the op line", line, col);
+    }
+  };
+  /**
+   * Counts a new step against the limits, and returns its path. `lane` is the path of a second lane: a lane is not a
+   * step and is not counted, and its place is its own, since the step it belongs to is not known yet.
+   */
+  const begin = (line: number, col: number, lane?: string): string => {
+    const path = lane ?? nextPath();
     if (stack.length + 1 > RECIPE_LIMITS.maxDepth) {
       stop("limit", path, "steps are nested too deeply", line, col, {
         limit: "maxDepth",
         max: RECIPE_LIMITS.maxDepth,
       });
     }
-    if (++stepCount > RECIPE_LIMITS.maxSteps) {
+    if (lane === undefined && ++stepCount > RECIPE_LIMITS.maxSteps) {
       stop("limit", path, "too many steps", line, col, {
         limit: "maxSteps",
         max: RECIPE_LIMITS.maxSteps,
@@ -548,6 +584,7 @@ function parse(text: string, catalogue: CatalogueView): ValidationResult {
       const value = jsonString(rest.slice(4));
       if (value === null)
         stop("bad-value", here, "a comment step holds one JSON string", lineNo, col);
+      noPending(here, lineNo, col);
       if (level !== parentLevel)
         structure(here, "a comment has the level of its container", lineNo, col);
       begin(lineNo, col);
@@ -577,7 +614,12 @@ function parse(text: string, catalogue: CatalogueView): ValidationResult {
     if (anns === null) stop("bad-value", here, "malformed annotation comment", lineNo, col);
     const first = tokens[0] as Token;
     const noAnns = (): void => {
-      if (anns.pin !== undefined || anns.breakpoint !== undefined || anns.note !== undefined) {
+      if (
+        anns.pin !== undefined ||
+        anns.breakpoint !== undefined ||
+        anns.note !== undefined ||
+        anns.implicit === true
+      ) {
         stop(
           "bad-value",
           here,
@@ -591,12 +633,70 @@ function parse(text: string, catalogue: CatalogueView): ValidationResult {
     // 3. an else line
     if (tokens.length === 2 && first.kind === "rbracket" && last.kind === "lbracket") {
       noAnns();
+      noPending(here, lineNo, col);
       const frame = stack[stack.length - 1];
       if (frame === undefined) structure(here, "else line outside a block", lineNo, col);
       if (frame.level !== level) structure(frame.path, "wrong level on an else line", lineNo, col);
       if (!frame.isIf || frame.hasElse) structure(frame.path, "unexpected else line", lineNo, col);
       frame.inElse = true;
       frame.hasElse = true;
+      continue;
+    }
+
+    // 4. a slot close line: `] recipe:peek`, `] recipe:peek swap` or `] recipe:peek nip`. The lane is kept until the
+    // op line that completes the slot step (RECIPES-1.2.md section 6.6).
+    const peekWord = tokens[1];
+    const swapWord = tokens[2];
+    if (
+      (tokens.length === 2 || tokens.length === 3) &&
+      first.kind === "rbracket" &&
+      peekWord?.kind === "qword" &&
+      peekWord.text === "recipe:peek" &&
+      (swapWord === undefined ||
+        (swapWord.kind === "word" && (swapWord.text === "swap" || swapWord.text === "nip")))
+    ) {
+      noAnns();
+      noPending(here, lineNo, col);
+      const frame = stack.pop();
+      if (frame === undefined) structure(here, "close line without an open line", lineNo, col);
+      if (!frame.register)
+        structure(frame.path, "the closing word does not match the open line", lineNo, col);
+      if (frame.level !== level) structure(frame.path, "wrong level on a close line", lineNo, col);
+      if (frame.anns.breakpoint === true || frame.anns.note !== undefined) {
+        stop(
+          "bad-value",
+          frame.path,
+          "a lane's open line carries no annotation: they sit on the op line",
+          frame.line,
+          frame.col,
+        );
+      }
+      const closer = swapWord === undefined ? "" : (swapWord.text as "swap" | "nip");
+      const waiting = pendingOf();
+      // The closers of one slot step are `[peek]`, `[swap]` or `[swap, nip]`, and nothing else.
+      const first0 = waiting[0];
+      const fits =
+        closer === "nip" ? waiting.length === 1 && first0?.closer === "swap" : waiting.length === 0;
+      if (!fits) {
+        structure(
+          frame.path,
+          closer === "nip"
+            ? "nip follows a swap lane"
+            : "a slot step has one lane closed by peek, a swap lane, or a swap lane and a nip lane",
+          lineNo,
+          col,
+        );
+      }
+      // The `[` of the first lane was counted as a step; the op line counts the slot step.
+      if (waiting.length === 0) stepCount--;
+      waiting.push({
+        closer,
+        steps: frame.then,
+        level: frame.level,
+        path: frame.path,
+        line: lineNo,
+        col,
+      });
       continue;
     }
 
@@ -611,6 +711,7 @@ function parse(text: string, catalogue: CatalogueView): ValidationResult {
       tokens[3]?.kind === "word"
     ) {
       noAnns();
+      noPending(here, lineNo, col);
       const frame = stack.pop();
       if (frame === undefined) structure(here, "close line without an open line", lineNo, col);
       if (!frame.register)
@@ -639,6 +740,7 @@ function parse(text: string, catalogue: CatalogueView): ValidationResult {
     // 4b. a close line
     if (first.kind === "rbracket") {
       noAnns();
+      noPending(here, lineNo, col);
       const closer = tokens.length === 2 ? last : undefined;
       if (
         closer === undefined ||
@@ -669,6 +771,10 @@ function parse(text: string, catalogue: CatalogueView): ValidationResult {
       tokens.length >= 2 &&
       last.kind === "lbracket"
     ) {
+      noPending(here, lineNo, col);
+      if (anns.implicit === true) {
+        stop("bad-value", here, "only an op line is implicit", lineNo, col);
+      }
       if (level !== parentLevel && level !== parentLevel + 1) {
         structure(here, "wrong level on an open line", lineNo, col);
       }
@@ -689,19 +795,30 @@ function parse(text: string, catalogue: CatalogueView): ValidationResult {
         hasElse: false,
         then: [],
         other: [],
+        pending: [],
       });
       continue;
     }
 
-    // 5b. a register open line
+    // 5b. a register open line, or the open line of a lane: the closer says which
     if (tokens.length === 1 && first.kind === "lbracket") {
       if (level !== parentLevel && level !== parentLevel + 1) {
         structure(here, "wrong level on an open line", lineNo, col);
       }
-      if (anns.pin !== undefined) {
-        stop("bad-value", here, "a pin on this line has nothing to pin", lineNo, col);
+      if (anns.pin !== undefined || anns.implicit === true) {
+        stop(
+          "bad-value",
+          here,
+          anns.implicit === true
+            ? "only an op line is implicit"
+            : "a pin on this line has nothing to pin",
+          lineNo,
+          col,
+        );
       }
-      const path = begin(lineNo, col);
+      // A lane after the first has no place of its own yet: the step it belongs to is the one the op line completes.
+      const waiting = pendingOf().length;
+      const path = begin(lineNo, col, waiting === 0 ? undefined : `${here}/@lane${waiting}`);
       stack.push({
         level,
         atoms: [],
@@ -716,6 +833,7 @@ function parse(text: string, catalogue: CatalogueView): ValidationResult {
         hasElse: false,
         then: [],
         other: [],
+        pending: [],
       });
       continue;
     }
@@ -723,6 +841,10 @@ function parse(text: string, catalogue: CatalogueView): ValidationResult {
     // 6a. a return line
     const lastTok = tokens[tokens.length - 1] as Token;
     if (lastTok.kind === "qword" && lastTok.text === "core:exit") {
+      noPending(here, lineNo, col);
+      if (anns.implicit === true) {
+        stop("bad-value", here, "only an op line is implicit", lineNo, col);
+      }
       if (tokens.length !== 1) {
         stop("bad-value", here, "core:exit takes nothing before it", lineNo, col);
       }
@@ -742,11 +864,50 @@ function parse(text: string, catalogue: CatalogueView): ValidationResult {
     }
 
     // 6. an op line
+    // A line the compiler inserted is dropped, and nothing about it is checked: the compiler writes it again.
+    if (anns.implicit === true) continue;
     if (level !== parentLevel && level !== parentLevel + 1) {
       structure(here, "wrong level on a step line", lineNo, col);
     }
     const path = begin(lineNo, col);
     const step = opFromTokens(tokens, index, path, lineNo, col);
+    const lanes = pendingOf();
+    if (lanes.length > 0) {
+      // The slot step: its lanes are the closed lanes above, and `pipe` and the slot names follow from the closers and
+      // from the slot family of the op (RECIPES-1.2.md section 6.6). A lane at another level is not part of this step.
+      for (const lane of lanes) {
+        if (lane.level !== level) {
+          structure(path, "the lanes and the op line of a slot step have one level", lineNo, col);
+        }
+      }
+      const byStep = index.find(step.op as string)?.op.slot === "step";
+      const closers = lanes.map((l) => l.closer).join(" ");
+      // [peek]: the data above is the first slot, [swap]: it is the second, [swap nip]: no data above. A base-and-step
+      // op has no second pipeable slot: it is assembled as a binary step and the validator names the mistake.
+      const given: [string, PendingLane][] =
+        closers === ""
+          ? [[byStep ? "step" : "right", lanes[0] as PendingLane]]
+          : closers === "swap"
+            ? [["left", lanes[0] as PendingLane]]
+            : [
+                [byStep ? "base" : "left", lanes[0] as PendingLane],
+                [byStep ? "step" : "right", lanes[1] as PendingLane],
+              ];
+      if (closers === "") step.pipe = byStep ? "base" : "left";
+      else if (closers === "swap") step.pipe = "right";
+      for (const [name, lane] of given) {
+        step[name] = { steps: lane.steps };
+        // The positions of the lane's steps were taken under a provisional path.
+        const from = `${lane.path}/steps/`;
+        for (const [key, pos] of [...positions]) {
+          if (key.startsWith(from)) {
+            positions.delete(key);
+            positions.set(`${path}/${name}/steps/${key.slice(from.length)}`, pos);
+          }
+        }
+      }
+      lanes.length = 0;
+    }
     if (anns.pin !== undefined) step.hash = anns.pin;
     if (anns.breakpoint === true) step.breakpoint = true;
     if (anns.note !== undefined) step.note = anns.note;
@@ -756,6 +917,10 @@ function parse(text: string, catalogue: CatalogueView): ValidationResult {
 
   const open = stack[stack.length - 1];
   if (open !== undefined) structure(open.path, "a block is never closed", open.line, open.col);
+  const dangling = rootPending[0];
+  if (dangling !== undefined) {
+    structure(dangling.path, "a lane has no op line after it", dangling.line, dangling.col);
+  }
 
   const recipe: Obj = { forge: 1 };
   for (const key of ["name", "description", "catalogue"]) {

@@ -34,6 +34,7 @@ export {
 export { validateRecipe } from "./validate.js";
 export { canonicalRecipe, normaliseRecipe, pinRecipe, resolveRecipe } from "./normalise.js";
 export { compileRecipe } from "./compile.js";
+export { planConversions } from "./conversions.js";
 export { attributeError, recipeNeedsHardKill, resolveStepIps } from "./stepmap.js";
 export { parseRecipeText } from "./text.js";
 export { decodeShare, encodeShare } from "./share.js";
